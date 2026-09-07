@@ -45,7 +45,7 @@ const clerkAppearance = {
   options: {
     logoPlacement: 'inside' as const,
     logoLinkUrl: basePath || '/',
-    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+    logoImageUrl: `${window.location.origin}${basePath}/brand/squabblemon-wordmark.webp`,
   },
   variables: {
     colorPrimary: '#facc15',
@@ -80,8 +80,15 @@ const clerkAppearance = {
 
 function LoadingScreen() {
   return (
-    <div className="min-h-[100dvh] bg-black text-primary font-display font-black italic uppercase flex items-center justify-center text-2xl">
-      Loading...
+    <div className="min-h-[100dvh] bg-black text-primary flex flex-col items-center justify-center gap-3">
+      <img
+        src={`${basePath}/brand/squabblemon-crest.webp`}
+        alt=""
+        className="size-20 object-contain drop-shadow-[0_0_14px_rgba(250,204,21,0.25)]"
+      />
+      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
+        Loading the block
+      </span>
     </div>
   );
 }

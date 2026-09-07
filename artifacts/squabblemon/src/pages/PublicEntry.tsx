@@ -34,16 +34,13 @@ export function PublicEntry() {
         <motion.img 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          src={getAssetUrl('logo.svg')} 
+          src={getAssetUrl('brand/squabblemon-wordmark.webp')}
           alt="Squabblemon" 
-          className="w-16 h-16 md:w-24 md:h-24 mb-5 drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]" 
+          className="w-full max-w-[34rem] h-auto mb-7 drop-shadow-[0_0_18px_rgba(250,204,21,0.25)]"
         />
         
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
           <div className="font-mono text-[9px] md:text-[11px] text-primary uppercase tracking-[.28em] mb-3">The city is watching</div>
-          <h1 className="font-display font-black italic text-5xl md:text-8xl uppercase leading-[0.82] tracking-tighter mb-4">
-            Squabble<span className="text-primary">mon</span>
-          </h1>
           <p className="font-sans text-sm md:text-base text-white/70 max-w-sm mb-8 leading-relaxed">
             Build your crew, read the room, and take two of three districts in a six-round clash.
           </p>
