@@ -80,15 +80,21 @@ const clerkAppearance = {
 
 function LoadingScreen() {
   return (
-    <div className="min-h-[100dvh] bg-black text-primary flex flex-col items-center justify-center gap-3">
+    <div
+      className="brand-loader"
+      role="status"
+      aria-label="Loading Squabblemon"
+    >
+      <div className="brand-loader__halo" aria-hidden="true" />
       <img
         src={`${basePath}/brand/squabblemon-crest.webp`}
         alt=""
-        className="size-20 object-contain drop-shadow-[0_0_14px_rgba(250,204,21,0.25)]"
+        width="374"
+        height="384"
+        className="brand-loader__crest"
       />
-      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
-        Loading the block
-      </span>
+      <div className="brand-loader__meter" aria-hidden="true"><span /></div>
+      <span className="brand-loader__label">Loading the block</span>
     </div>
   );
 }

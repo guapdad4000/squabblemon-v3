@@ -55,6 +55,70 @@
   @apply bg-black/60 backdrop-blur-xl border border-white/10; 
 }
 
+.brand-loader {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.8rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 43%, #241b08 0, #0d0c08 31%, #070707 68%);
+}
+
+.brand-loader__halo {
+  position: absolute;
+  width: min(78vw, 25rem);
+  aspect-ratio: 1;
+  border: 1px solid rgb(218 166 56 / 12%);
+  border-radius: 50%;
+  box-shadow: 0 0 5rem rgb(218 166 56 / 8%), inset 0 0 5rem rgb(0 0 0 / 70%);
+}
+
+.brand-loader__crest {
+  position: relative;
+  width: clamp(7.5rem, 28vw, 11rem);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 1rem 1.5rem rgb(0 0 0 / 75%));
+  animation: brand-loader-breathe 1.8s ease-in-out infinite;
+}
+
+.brand-loader__meter {
+  position: relative;
+  width: clamp(7rem, 26vw, 10rem);
+  height: 2px;
+  overflow: hidden;
+  background: rgb(218 166 56 / 16%);
+}
+
+.brand-loader__meter span {
+  display: block;
+  width: 45%;
+  height: 100%;
+  background: #d9aa4b;
+  animation: brand-loader-scan 1.25s ease-in-out infinite;
+}
+
+.brand-loader__label {
+  position: relative;
+  color: rgb(255 255 255 / 50%);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+@keyframes brand-loader-breathe {
+  50% { transform: translateY(-3px); filter: drop-shadow(0 1rem 1.8rem rgb(218 166 56 / 16%)); }
+}
+
+@keyframes brand-loader-scan {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(330%); }
+}
+
 .cinematic-callout {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 11vw, 8rem);
@@ -126,6 +190,7 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .cinematic-callout { transform: none; }
+  .brand-loader__meter span { width: 100%; opacity: .65; }
 }
 
 :root[data-reduced-motion='true'] *,
@@ -135,4 +200,9 @@
   animation-iteration-count: 1 !important;
   transition-duration: .01ms !important;
   scroll-behavior: auto !important;
+}
+
+:root[data-reduced-motion='true'] .brand-loader__meter span {
+  width: 100%;
+  opacity: .65;
 }
