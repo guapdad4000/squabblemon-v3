@@ -1,57 +1,178 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { HelpCircle, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { HelpCircle, Volume2, VolumeX } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 
-type Card = { id:string; name:string; type:string; cost:number; power:number; ability:string; effect:string; deck?:string };
-type Deck = { id:string; name:string; archetype:string; accent:string; plan:string; cards:string[] };
-const cards:Record<string,Card> = {
- rastamon:{id:'rastamon',name:'Rastamon',type:'Plant',cost:2,power:2,ability:'Natural Cure',effect:'Cleanse another friendly card here. If removed, give it +2 Power.'},
- roaster:{id:'roaster',name:'All Jokes Roaster',type:'Air',cost:2,power:3,ability:"Ratio'd Receipts",effect:'Give the highest enemy card here -2 Power. -3 if they played here.'},
- nerd:{id:'nerd',name:'Closet Nerd',type:'Dark',cost:3,power:4,ability:'Unaware',effect:'Silence the highest-Power enemy card here.'},
- cornball:{id:'cornball',name:'Cornball',type:'Normal',cost:1,power:1,ability:'Scare the Hoes',effect:'Move the lowest enemy card if they have at least 3 here.'},
- plug:{id:'plug',name:'Plug',type:'Electric',cost:2,power:2,ability:'Connections',effect:'Your next card in another district costs 1 less Hype.'},
- streamer:{id:'streamer',name:'Live Streamer',type:'Electric',cost:2,power:1,ability:'Follower Frenzy',effect:'The first 2 cheap plays gain +1 Power.'},
- gamer:{id:'gamer',name:'Gamer',type:'Dark',cost:3,power:3,ability:'Tryhard Trigger',effect:'Cheap plays here give Gamer and that card +1 Power.'},
- techbro:{id:'techbro',name:'Techbro Rich',type:'Electric',cost:4,power:4,ability:'VC Funded Flex',effect:'Spend 1 unspent Hype to gain +2 Power.'},
- bikelife:{id:'bikelife',name:'Bikelife YN',type:'Electric',cost:2,power:2,ability:'Ride Out',effect:'May move before Lock In; gains +1 Power after moving.'},
- vibe:{id:'vibe',name:'Cool Vibe YN',type:'Water',cost:2,power:2,ability:'Wave Check',effect:'Move your lowest friendly card here and buff both.'},
- hooper:{id:'hooper',name:'Hooper',type:'Fire',cost:4,power:5,ability:'Ankle Breaker',effect:'If losing here, enemy highest gets -2 and Hooper gains +2.'},
- baby:{id:'baby',name:'Baby Momma',type:'Fire',cost:4,power:4,ability:'Mama Bear',effect:'If opponent has more cards here, gain +2 Power.'},
- oink:{id:'oink',name:'Officer Oink',type:'Normal',cost:5,power:6,ability:'Civic Pressure',effect:'Enemy cards here -1. Next round they may play only one.'},
- snow:{id:'snow',name:'Snow Bunny',type:'Water',cost:2,power:2,ability:'Cold Shoulder',effect:'Freeze the highest enemy card here.'},
- wifey:{id:'wifey',name:'Wifey',type:'Normal',cost:3,power:4,ability:'Side Eye',effect:'Block the first targeted enemy effect here each round.'},
-}
-const decks:Deck[] = [
- {id:'block',name:'THE BLOCK IS HOT',archetype:'Turf Control',accent:'LOCK',plan:'Claim two districts, tax entry, freeze threats, and close lanes.',cards:['cornball','snow','roaster','rastamon','wifey','oink','baby']},
- {id:'slide',name:'SLIDE THRU',archetype:'Movement',accent:'MOVE',plan:'Spread Power early, then relocate it late into a moving target.',cards:['cornball','bikelife','vibe','plug','snow','hooper','baby']},
- {id:'combo',name:'WHO YOU KNOW',archetype:'Combo / Network',accent:'CHAIN',plan:'Chain cheap plays, discounts, generated cards, and oversized turns.',cards:['cornball','plug','streamer','gamer','techbro','vibe','wifey']},
- {id:'receipts',name:'RECEIPTS',archetype:'Disruption',accent:'EXPOSE',plan:'Expose the plan, Silence engines, and turn investments into bad ones.',cards:['cornball','roaster','nerd','snow','plug','baby','hooper']},
- {id:'crashout',name:'CRASHOUT SEASON',archetype:'Comeback',accent:'FLIP',plan:'Absorb early deficits, then flip contested districts with late Power spikes.',cards:['cornball','rastamon','snow','wifey','baby','hooper','roaster']},
- {id:'vibes',name:'GOOD VIBES ONLY',archetype:'Sustain',accent:'CLEANSE',plan:'Cleanse, Protect, suppress hostile rules, and keep scaling pieces alive.',cards:['rastamon','wifey','snow','vibe','hooper','oink','plug']},
- {id:'compound',name:'COMPOUND INTEREST',archetype:'Growth / Scaling',accent:'GROW',plan:'Invest early in engines and convert repeated buffs into late value.',cards:['cornball','plug','streamer','rastamon','gamer','techbro','wifey']},
-];
-const districts=[['THE TOWN','Fire + Dark cards gain +2 Power.'],['GROUP CHAT','Disruption cards gain +2 Power.'],['SERVER ROOM','Electric cards gain +3 Power.']];
-const initials=(n:string)=>n.split(' ').map(x=>x[0]).slice(0,2).join('');
+import { cards, decks, districts, Card } from './data';
+import { Lobby } from './components/Lobby';
+import { Battle } from './components/Battle';
+import { ResultScreen } from './components/ResultScreen';
+import { CardInspector } from './components/CardInspector';
+import { RulesModal } from './components/RulesModal';
 
-function CardView({card,queued=false,onClick}:{card:Card;queued?:boolean;onClick?:()=>void}) {
- return <button data-testid={`card-${card.id}`} className={`hand-card ${queued?'selected':''}`} onClick={onClick}><span className="cost">{card.cost}</span><span className="type">{card.type}</span><div className="art">{initials(card.name)}</div><h4>{card.name}</h4><p>{card.ability}</p></button>
+function AppGame() {
+  const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>('lobby');
+  const [deckId, setDeckId] = useState('vibes'); 
+  const [rival, setRival] = useState('combo'); 
+  
+  const [round, setRound] = useState(1); 
+  const [hype, setHype] = useState(1);
+  const [hand, setHand] = useState<Card[]>([]); 
+  const [boards, setBoards] = useState<Card[][]>([[], [], []]); 
+  
+  const [selected, setSelected] = useState<Card | null>(null); 
+  const [selectedLane, setSelectedLane] = useState<number | null>(null); 
+  
+  const [squabble, setSquabble] = useState(false);
+  const [squabbleUsed, setSquabbleUsed] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
+  const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  const [showRules, setShowRules] = useState(false); 
+  const [sound, setSound] = useState(true); 
+  const [message, setMessage] = useState('SELECT A CARD, THEN TAP A DISTRICT');
+  
+  const [inspect, setInspect] = useState<Card | null>(null);
+  
+  const deck = decks.find(d => d.id === deckId)!; 
+  const rivalDeck = decks.find(d => d.id === rival)!;
+
+  useEffect(() => () => {
+    if (revealTimer.current) clearTimeout(revealTimer.current);
+  }, []);
+
+  const start = () => {
+    if (revealTimer.current) clearTimeout(revealTimer.current);
+    setRound(1);
+    setHype(1);
+    setBoards([[], [], []]);
+    setSelected(null);
+    setSelectedLane(null);
+    setSquabble(false);
+    setSquabbleUsed(false);
+    setIsResolving(false);
+    setMessage('SELECT A CARD, THEN TAP A DISTRICT');
+    setHand(deck.cards.slice(0, 5).map(id => ({ ...cards[id], deck: deckId, owner: 'player' })));
+    setScreen('battle');
+  };
+
+  const commit = () => {
+    if (!selected || selectedLane === null || selected.cost > hype) return;
+    
+    const next = [...boards];
+    const committedCard = {
+      ...selected,
+      power: squabble ? selected.power * 2 : selected.power,
+      owner: 'player' as const
+    };
+    next[selectedLane] = [...next[selectedLane], committedCard];
+    setBoards(next);
+    setHand(hand.filter(c => c.id !== selected.id));
+    setHype(0);
+    setIsResolving(true);
+    setMessage(squabble ? 'SQUABBLE COMMITTED. POWER DOUBLED // RIVAL REVEALING.' : 'COMMITTED. CPU IS REVEALING THEIR PLAY.');
+    if (squabble) {
+      setSquabble(false);
+      setSquabbleUsed(true);
+    }
+    setSelected(null);
+    setSelectedLane(null);
+    
+    revealTimer.current = setTimeout(() => {
+      const cpuCard = { ...cards[rivalDeck.cards[(round + 1) % rivalDeck.cards.length]], deck: rivalDeck.id, owner: 'cpu' as const };
+      const cpuLane = (round + 1) % 3;
+      const updated = [...next];
+      updated[cpuLane] = [...updated[cpuLane], cpuCard];
+      setBoards(updated);
+      setIsResolving(false);
+      setMessage(`ROUND ${round} RESOLVED // DISTRICT POWER UPDATED`);
+    }, 1200);
+  };
+
+  const nextRound = () => {
+    if (isResolving) return;
+    if (round >= 6) {
+      setScreen('result');
+      return;
+    }
+    setRound(round + 1);
+    setHype(round + 1);
+    
+    const usedCardIds = new Set([
+      ...boards.flat().filter(c => c.owner === 'player').map(c => c.id),
+      ...hand.map(c => c.id)
+    ]);
+    const drawPool = deck.cards.filter(cardKey => !usedCardIds.has(cards[cardKey].id));
+    
+    setHand([
+      ...hand,
+      ...drawPool.slice(0, 1).map(id => ({ ...cards[id], deck: deckId, owner: 'player' as const }))
+    ]);
+    
+    setMessage('NEW ROUND. HYPE RECHARGED.');
+  };
+
+  return (
+    <main className="h-[100dvh] game-bg text-white font-sans flex flex-col relative overflow-hidden">
+      <div className="noise-overlay" />
+      
+      {/* Global Topbar */}
+      <header className="h-14 md:h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-40 bg-black/40 backdrop-blur-md shrink-0">
+        <div className="font-display font-bold text-lg md:text-xl tracking-wide uppercase">
+          Squabble<em className="text-primary not-italic">mon</em>
+        </div>
+        <div className="hidden sm:block font-mono text-[10px] tracking-[0.2em] text-white/30">
+          SBL // HUMAN PLAYTEST 0.4
+        </div>
+        <div className="flex gap-3 md:gap-4">
+          <button data-testid="button-rules" onClick={() => setShowRules(true)} className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-mono tracking-widest text-white/50 hover:text-white transition-colors">
+            <HelpCircle size={14} /> <span className="hidden sm:inline">RULES</span>
+          </button>
+          <button data-testid="button-sound" onClick={() => setSound(!sound)} className="text-white/50 hover:text-white transition-colors">
+            {sound ? <Volume2 size={16} /> : <VolumeX size={16} />}
+          </button>
+        </div>
+      </header>
+
+      {screen === 'lobby' && (
+        <Lobby 
+          onStart={start} 
+          deckId={deckId} setDeckId={setDeckId} 
+          rival={rival} setRival={setRival} 
+          onShowRules={() => setShowRules(true)} 
+        />
+      )}
+
+      {screen === 'battle' && (
+        <Battle 
+          deck={deck} rivalDeck={rivalDeck} round={round} hype={hype} hand={hand} boards={boards}
+          selected={selected} setSelected={setSelected} selectedLane={selectedLane} setSelectedLane={setSelectedLane}
+          commit={commit} nextRound={nextRound} message={message} squabble={squabble} setSquabble={setSquabble} squabbleUsed={squabbleUsed} isResolving={isResolving}
+          setInspect={setInspect} archiveMatch={() => setScreen('result')}
+        />
+      )}
+
+      <AnimatePresence>
+        {inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} />}
+        {showRules && <RulesModal onClose={() => setShowRules(false)} />}
+        {screen === 'result' && (
+          <ResultScreen 
+            onRestart={start} 
+            onChangeDeck={() => setScreen('lobby')} 
+            districts={districts} boards={boards} deckId={deckId} rivalDeck={rivalDeck}
+          />
+        )}
+      </AnimatePresence>
+    </main>
+  );
 }
-function AppGame(){
- const [screen,setScreen]=useState<'lobby'|'battle'|'result'>('lobby');
- const [deckId,setDeckId]=useState('vibes'); const [rival,setRival]=useState('combo'); const [round,setRound]=useState(1); const [hype,setHype]=useState(1);
- const [hand,setHand]=useState<Card[]>([]); const [boards,setBoards]=useState<Card[][]>([[],[],[]]); const [selected,setSelected]=useState<Card|null>(null); const [selectedLane,setSelectedLane]=useState<number|null>(null); const [squabble,setSquabble]=useState(false); const [scores,setScores]=useState([0,0,0]); const [showRules,setShowRules]=useState(false); const [sound,setSound]=useState(true); const [message,setMessage]=useState('SELECT A CARD, THEN TAP A DISTRICT');
- const [inspect,setInspect]=useState<Card|null>(null);
- const deck=decks.find(d=>d.id===deckId)!; const rivalDeck=decks.find(d=>d.id===rival)!;
- const start=()=>{setRound(1);setHype(1);setBoards([[],[],[]]);setScores([0,0,0]);setSelected(null);setSelectedLane(null);setMessage('SELECT A CARD, THEN TAP A DISTRICT');setHand(deck.cards.slice(0,5).map(id=>({...cards[id],deck:deckId})));setScreen('battle')};
- const commit=()=>{if(!selected||selectedLane===null||selected.cost>hype)return; const next=[...boards]; next[selectedLane]=[...next[selectedLane],selected]; setBoards(next);setHand(hand.filter(c=>c.id!==selected.id));setHype(0);setMessage('COMMITTED. CPU IS REVEALING THEIR PLAY.');setSelected(null);setSelectedLane(null);setTimeout(()=>{const cpuCard={...cards[rivalDeck.cards[(round+1)%rivalDeck.cards.length]]};const cpuLane=(round+1)%3;const updated=[...next];updated[cpuLane]=[...updated[cpuLane],cpuCard];setBoards(updated);setMessage(`ROUND ${round} RESOLVED // TYPE CLASHES LOGGED`);},350)};
- const nextRound=()=>{if(round>=6){setScreen('result');return}setRound(round+1);setHype(round+1);setHand([...hand,...deck.cards.filter(id=>!hand.some(c=>c.id===id)&&!boards.flat().some(c=>c.id===id)).slice(0,1).map(id=>({...cards[id],deck:deckId}))]);setMessage('NEW ROUND. HYPE RECHARGED.');};
- return <main className="game-shell"><div className="grain"/><header className="topbar"><div className="logo">SQUABBLE<em>MON</em></div><div className="kicker">SBL // HUMAN PLAYTEST 0.3</div><div style={{display:'flex',gap:8}}><button className="sound" data-testid="button-rules" onClick={()=>setShowRules(true)}><HelpCircle size={14}/> RULES</button><button className="sound" data-testid="button-sound" onClick={()=>setSound(!sound)}>{sound?<Volume2 size={14}/>:<VolumeX size={14}/>}</button></div></header>
- {screen==='lobby'&&<section className="lobby-wrap"><div className="hero"><div><div className="eyebrow">PREMIUM STREET-CARD BATTLES</div><h1>MAKE YOUR<br/><span>NOISE.</span></h1><p>Three districts. Six rounds. Every card is a commitment. Pick a starter and take the room.</p></div><div className="hero-rail"><strong>1 → 6</strong><small>HYPE CURVE // FACE-DOWN COMMITMENTS</small><br/><br/><strong>2 / 3</strong><small>DISTRICTS TO OWN THE NIGHT</small></div></div><div className="section-label"><span>CHOOSE YOUR STARTER</span><span>7 ARCHETYPES // 12-CARD LOADOUTS</span></div><div className="decks">{decks.map((d,i)=><button data-testid={`deck-${d.id}`} className={`deck ${d.id===deckId?'selected':''}`} onClick={()=>setDeckId(d.id)} key={d.id}><span className="mark">{String(i+1).padStart(2,'0')}</span><span className="tag">{d.accent}</span><h3>{d.name}</h3><p>{d.archetype}<br/>{d.plan}</p></button>)}</div><div className="lobby-actions"><select data-testid="select-rival" className="select-rival" value={rival} onChange={e=>setRival(e.target.value)}>{decks.filter(d=>d.id!==deckId).map(d=><option value={d.id} key={d.id}>RIVAL // {d.name}</option>)}</select><button className="plain-btn" onClick={()=>setShowRules(true)}>HOW TO PLAY</button><button data-testid="button-start" className="gold-btn" onClick={start}>START PLAYTEST</button></div></section>}
- {screen==='battle'&&<section className="battle-wrap"><div className="battle-header"><div className="hud-stat"><b>{deck.name}</b><small>YOUR CREW // {deck.archetype}</small></div><div className="matchup"><div className="round">ROUND {round} / 6</div><strong>VS</strong></div><div className="hud-stat"><b>{hype} HYPE</b><small>RIVAL // {rivalDeck.name}</small></div></div><div className="districts">{districts.map((d,i)=><div className="district unlocked" key={d[0]}><div className="district-head"><small>DISTRICT 0{i+1}</small><h3>{d[0]}</h3><p>{d[1]}</p></div><div className="scores"><b>{scores[i]||boards[i].reduce((a,c)=>a+c.power,0)}</b><span>—</span><b className="cpu">{boards[i].length?boards[i].length*3:0}</b></div><div className="lane"><span className="lane-label">REVEALED BOARD // TAP TO INSPECT</span>{boards[i].map((c,j)=><button className="board-card" onClick={()=>setInspect(c)} key={`${c.id}-${j}`}><div className="portrait">{initials(c.name)}</div><b>{c.name}</b><span>{c.ability}</span><i className="card-power">{c.power}</i></button>)}</div>{selected&&<button className="commit" data-testid={`lane-${i}`} onClick={()=>setSelectedLane(i)}>{selectedLane===i?'DISTRICT SELECTED':'COMMIT HERE'}</button>}</div>)}</div><div className="status-line">{message}</div><div className="hand-zone"><div className="hand-top"><span>YOUR HAND // {hand.length} REMAINING</span><span>SELECT CARD → SELECT DISTRICT</span></div><div className="hand">{hand.map(c=><CardView key={c.id} card={c} queued={selected?.id===c.id} onClick={()=>{setSelected(c);setMessage(`${c.name.toUpperCase()} READY // CHOOSE A DISTRICT`)}}/>)}</div><div className="battle-controls"><div className="hype"><div className="orb"><img src="/assets/guapdad4k_AN_ORB_OF_YELLOW_LIQUD_PLAIN_WHITE_BACKGROUND_FIHGT_fdce4b3c-ed84-4761-853f-a87581f4b64e_0.gif" alt=""/></div><span className="control-note">HYPE IS YOUR COMMITMENT BUDGET</span></div><button className={`squabble-btn ${squabble?'active':''}`} onClick={()=>setSquabble(!squabble)}>{squabble?'SQUABBLE CALLED':'CALL SQUABBLE'}<br/><small>{squabble?'CLOUT DOUBLED':'RISK / REWARD'}</small></button><button data-testid="button-lock" className="gold-btn commit-btn" onClick={commit} disabled={!selected||selectedLane===null||selected.cost>hype}>LOCK IN</button></div><button data-testid="button-next-round" className="plain-btn" style={{width:'100%',marginTop:12}} onClick={nextRound}>{round>=6?'ARCHIVE MATCH':'RESOLVE ROUND '+round}</button></div></section>}
- {inspect&&<div className="modal-back" onClick={()=>setInspect(null)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setInspect(null)}>CLOSE</button><div className="eyebrow">{inspect.type} // {inspect.cost} HYPE</div><h2>{inspect.name}</h2><p>{inspect.effect}</p><div className="ability-box"><small>ABILITY</small><strong>{inspect.ability}</strong></div></div></div>}
- {screen==='result'&&<div className="modal-back"><div className="modal result"><button className="close" onClick={()=>setScreen('lobby')}><RotateCcw size={15}/></button><div className="eyebrow">MATCH ARCHIVE // COMPLETE</div><div className="result-mark">W</div><h2>YOU WON THE ROOM</h2><p>Six rounds of commitments. Two districts under your name. The receipts are clean.</p><div className="result-score">{districts.map((d,i)=><div key={d[0]}><small>{d[0]}</small><b>{i<2?'YOURS':'RIVAL'}</b></div>)}</div><button className="gold-btn" onClick={start}>RUN IT BACK</button><button className="plain-btn" style={{marginLeft:8}} onClick={()=>setScreen('lobby')}>CHANGE DECK</button></div></div>}
- {showRules&&<div className="modal-back" onClick={()=>setShowRules(false)}><div className="modal" onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setShowRules(false)}>CLOSE</button><div className="eyebrow">FIELD MANUAL // 01</div><h2>HOW TO PLAY</h2><ul><li>Choose a card from your hand, then tap a district to commit it face-down.</li><li>Spend Hype to play cards. Hype climbs from 1 to 6 across the match.</li><li>Lock In to reveal both sides. Card abilities, type clashes, and district rules resolve.</li><li>Win two of three districts after six rounds to take the room.</li><li>Call SQUABBLE once per match to double Clout. Big swing, bigger risk.</li></ul><button className="gold-btn" onClick={()=>setShowRules(false)}>I'M READY</button></div></div>}</main>
+
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppGame />
+    </QueryClientProvider>
+  );
 }
-const queryClient=new QueryClient();
-export default function App(){return <QueryClientProvider client={queryClient}><TooltipProvider><AppGame/></TooltipProvider></QueryClientProvider>}
