@@ -14,12 +14,19 @@ import { SignUpPage } from './pages/auth/SignUp';
 import { Onboarding } from './pages/game/Onboarding';
 import { Home } from './pages/game/Home';
 import { Collection } from './pages/game/Collection';
+import { Decks } from './pages/game/Decks';
+import { DeckEditor } from './pages/game/DeckEditor';
+import { DeckTest } from './pages/game/DeckTest';
 import { Missions } from './pages/game/Missions';
 import { Shop } from './pages/game/Shop';
 import { Settings } from './pages/game/Settings';
 import { Story } from './pages/game/Story';
 import { PlayLoop } from './components/PlayLoop';
 import { basePath, stripBase } from './lib/routing';
+import {
+  starterRecipes,
+  validateSavedDeck,
+} from './data';
 
 const clerkPubKey = publishableKeyFromHost(
   window.location.hostname,
@@ -85,9 +92,9 @@ function BottomNav() {
   const links = [
     { path: '/game', label: 'Hub' },
     { path: '/game/collection', label: 'Cards' },
+    { path: '/game/decks', label: 'Decks' },
     { path: '/game/missions', label: 'Missions' },
     { path: '/game/shop', label: 'Shop' },
-    { path: '/game/settings', label: 'Menu' },
   ];
 
   return (
@@ -158,6 +165,15 @@ function GameRoutes() {
   }, [bootstrap]);
 
   if (!bootstrap) return null;
+  const availableDeckIds = starterRecipes
+    .filter((recipe) =>
+      validateSavedDeck(
+        recipe.catalogCardIds,
+        bootstrap.profile.ownedCardIds,
+        recipe.hero,
+      ).valid,
+    )
+    .map((recipe) => recipe.id);
   return (
     <Switch>
       <Route path="/game/onboarding">
@@ -169,6 +185,7 @@ function GameRoutes() {
           mode="practice"
           onExit={() => setLocation('/game')}
           turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
+          availableDeckIds={availableDeckIds}
         />
       </Route>
 
@@ -179,6 +196,9 @@ function GameRoutes() {
             <Switch>
               <Route path="/"><Home bootstrap={bootstrap} /></Route>
               <Route path="/collection"><Collection bootstrap={bootstrap} /></Route>
+              <Route path="/decks"><Decks bootstrap={bootstrap} /></Route>
+              <Route path="/decks/:deckId"><DeckEditor bootstrap={bootstrap} /></Route>
+              <Route path="/decks/:deckId/test"><DeckTest bootstrap={bootstrap} /></Route>
               <Route path="/missions"><Missions bootstrap={bootstrap} /></Route>
               <Route path="/shop"><Shop bootstrap={bootstrap} /></Route>
               <Route path="/settings"><Settings bootstrap={bootstrap} /></Route>

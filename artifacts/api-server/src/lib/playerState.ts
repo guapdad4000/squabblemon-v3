@@ -1,12 +1,30 @@
-import { and, asc, eq, isNotNull, lte } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  isNotNull,
+  lte,
+  sql,
+} from "drizzle-orm";
 import {
   db,
+  playerCollectionClaimsTable,
   playerMatchesTable,
   playerMissionsTable,
+  playerPackOpeningsTable,
   playerProfilesTable,
+  type PlayerPackOpeningRecord,
   type PlayerMissionRecord,
   type PlayerProfileRecord,
 } from "@workspace/db";
+import {
+  catalogCardByEngineId,
+  catalogCardById,
+  starterRecipes,
+  validateSavedDeck,
+} from "@workspace/squabblemon-engine/data";
+import { COLLECTION_ROAD, STREET_PACK_CONFIG } from "./collectionEconomy";
 
 const missionTemplates = [
   {
@@ -111,10 +129,76 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
       );
   }
 
-  await db
-    .update(playerProfilesTable)
-    .set({ lastActiveAt: now })
-    .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  await db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${clerkUserId} for update`,
+    );
+    const [current] = await tx
+      .select()
+      .from(playerProfilesTable)
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    if (!current) return;
+
+    const normalizeCardId = (cardId: string) =>
+      catalogCardById[cardId]?.catalogId ??
+      catalogCardByEngineId[cardId]?.catalogId ??
+      null;
+    const normalizedOwned = [
+      ...new Set(
+        current.ownedCardIds
+          .map(normalizeCardId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
+    const recipeId = current.starterDeckId ?? null;
+    const discovered = new Set(
+      current.discoveredCardIds
+        .map(normalizeCardId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    for (const id of normalizedOwned) discovered.add(id);
+    if (recipeId) {
+      for (const starter of starterRecipes) {
+        discovered.add(starter.hero);
+      }
+    }
+    const normalizedDecks = current.savedDecks.map((deck) => {
+      const inferredRecipeId =
+        deck.recipeId ??
+        (deck.id.startsWith("starter-")
+          ? deck.id.replace(/^starter-/, "")
+          : null);
+      const inferredRecipe = starterRecipes.find(
+        (item) => item.id === inferredRecipeId,
+      );
+      const cardIds = deck.cardIds
+        .map(normalizeCardId)
+        .filter((id): id is string => Boolean(id))
+        .slice(0, 7);
+      return {
+        id: deck.id,
+        name: deck.name,
+        cardIds,
+        heroCardId:
+          normalizeCardId(deck.heroCardId ?? "") ??
+          (inferredRecipe
+            ? inferredRecipe.hero
+            : cardIds[0] ?? ""),
+        recipeId: inferredRecipeId,
+      };
+    });
+
+    await tx
+      .update(playerProfilesTable)
+      .set({
+        lastActiveAt: now,
+        ownedCardIds: normalizedOwned,
+        discoveredCardIds: [...discovered],
+        collectionProgress: normalizedOwned.length,
+        savedDecks: normalizedDecks,
+      })
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  });
 }
 
 export async function hasVerifiedTutorialMatch(
@@ -134,7 +218,23 @@ export async function hasVerifiedTutorialMatch(
   return Boolean(match);
 }
 
-function serializeProfile(profile: PlayerProfileRecord) {
+export function serializePackOpening(opening: PlayerPackOpeningRecord) {
+  return {
+    id: opening.id,
+    oddsVersion: opening.oddsVersion,
+    paymentMethod: opening.paymentMethod,
+    cost: opening.cost,
+    rewards: opening.rewards,
+    pityBefore: opening.pityBefore,
+    pityAfter: opening.pityAfter,
+    createdAt: opening.createdAt.toISOString(),
+  };
+}
+
+function serializeProfile(
+  profile: PlayerProfileRecord,
+  packHistory: PlayerPackOpeningRecord[],
+) {
   return {
     id: profile.clerkUserId,
     displayName: profile.displayName,
@@ -146,6 +246,9 @@ function serializeProfile(profile: PlayerProfileRecord) {
     level: profile.level,
     softCurrency: profile.softCurrency,
     packTickets: profile.packTickets,
+    styleShards: profile.styleShards,
+    packPity: profile.packPity,
+    deckSlots: profile.deckSlots,
     cosmeticCurrency: profile.cosmeticCurrency,
     collectionProgress: profile.collectionProgress,
     storyChapter: profile.storyChapter,
@@ -156,11 +259,28 @@ function serializeProfile(profile: PlayerProfileRecord) {
     termsAcceptedAt: profile.termsAcceptedAt?.toISOString() ?? null,
     settings: profile.settings,
     ownedCardIds: profile.ownedCardIds,
+    discoveredCardIds: profile.discoveredCardIds,
     ownedVariants: profile.ownedVariants,
-    savedDecks: profile.savedDecks,
+    savedDecks: profile.savedDecks.map((deck) => {
+      const heroCardId = deck.heroCardId ?? deck.cardIds[0] ?? "";
+      const legality = validateSavedDeck(
+        deck.cardIds,
+        profile.ownedCardIds,
+        heroCardId,
+      );
+      return {
+        id: deck.id,
+        name: deck.name,
+        cardIds: deck.cardIds,
+        heroCardId,
+        recipeId: deck.recipeId ?? null,
+        valid: legality.valid,
+        issues: legality.issues,
+      };
+    }),
     storyProgress: profile.storyProgress,
     inbox: profile.inbox,
-    packHistory: profile.packHistory,
+    packHistory: packHistory.map(serializePackOpening),
     lastActiveAt: profile.lastActiveAt.toISOString(),
   };
 }
@@ -257,14 +377,40 @@ export async function getPlayerBootstrap(clerkUserId: string) {
     .from(playerMissionsTable)
     .where(eq(playerMissionsTable.clerkUserId, clerkUserId))
     .orderBy(asc(playerMissionsTable.id));
+  const packHistory = await db
+    .select()
+    .from(playerPackOpeningsTable)
+    .where(eq(playerPackOpeningsTable.clerkUserId, clerkUserId))
+    .orderBy(desc(playerPackOpeningsTable.createdAt))
+    .limit(20);
+  const roadClaims = await db
+    .select({ milestoneKey: playerCollectionClaimsTable.milestoneKey })
+    .from(playerCollectionClaimsTable)
+    .where(eq(playerCollectionClaimsTable.clerkUserId, clerkUserId));
 
   if (!profile) {
     throw new Error("Player profile could not be provisioned");
   }
 
   return {
-    profile: serializeProfile(profile),
+    profile: serializeProfile(profile, packHistory),
     missions: missions.map(serializeMission),
     nextAction: getNextAction(profile, missions),
+    packConfig: STREET_PACK_CONFIG,
+    collectionRoad: COLLECTION_ROAD.map((milestone) => ({
+      id: milestone.id,
+      threshold: milestone.threshold,
+      title: milestone.title,
+      description: milestone.description,
+      rewardLabel: milestone.rewardLabel,
+      cardId: milestone.cardId,
+      status: roadClaims.some(
+        (claim) => claim.milestoneKey === milestone.id,
+      )
+        ? ("claimed" as const)
+        : profile.ownedCardIds.length >= milestone.threshold
+          ? ("claimable" as const)
+          : ("locked" as const),
+    })),
   };
 }

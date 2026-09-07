@@ -6,4 +6,8 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type PlayerProfilePackHistoryItem = { [key: string]: unknown };
+export interface PackOddsEntry {
+  label: string;
+  chance: number;
+  detail: string;
+}

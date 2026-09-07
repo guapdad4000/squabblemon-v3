@@ -1,4 +1,10 @@
-import { cards, decks, type Card, type Deck } from "./data";
+import {
+  cards,
+  catalogIdsToEngineIds,
+  decks,
+  type Card,
+  type Deck,
+} from "./data";
 
 export type Owner = "player" | "cpu";
 export type Phase = "player" | "cpu-reveal" | "resolved" | "complete";
@@ -11,6 +17,7 @@ export type CardInstance = Card & {
 export type EffectLogEntry = { cardInstanceId: string; cardId: string; owner: Owner; lane: Lane; kind: "ability" | "fire" | "water" | "move" | "blocked"; note: string };
 export type Match = {
   round: number; phase: Phase; playerDeck: string; cpuDeck: string; playerHand: CardInstance[]; cpuHand: CardInstance[];
+  playerCardIds: string[]; cpuCardIds: string[];
   boards: [CardInstance[], CardInstance[], CardInstance[]]; playerHype: number; cpuHype: number;
   playerDrawIndex: number; cpuDrawIndex: number; squabbleUsed: boolean; plugDiscountLane: Record<Owner, Lane | null>;
   cheapBuffsUsed: Record<Owner, number>; effectLog: EffectLogEntry[];
@@ -31,13 +38,43 @@ const deckById = (id: string): Deck => {
 
 export function createMatch(playerDeck: string, cpuDeck: string): Match {
   const p = deckById(playerDeck), c = deckById(cpuDeck);
+  return createMatchFromEngineCards(p.id, p.cards, c.id, c.cards);
+}
+
+export function createMatchFromEngineCards(
+  playerDeck: string,
+  playerCardIds: string[],
+  cpuDeck: string,
+  cpuCardIds: string[],
+): Match {
+  if (playerCardIds.length !== 7 || new Set(playerCardIds).size !== 7) {
+    throw new Error("Player deck must contain seven unique cards");
+  }
+  for (const cardId of [...playerCardIds, ...cpuCardIds]) {
+    if (!cards[cardId]) throw new Error(`Unknown card ${cardId}`);
+  }
   return {
     round: 1, phase: "player", playerDeck, cpuDeck,
-    playerHand: p.cards.slice(0, 5).map((id, i) => createCardInstance(id, "player", p.id, i)),
-    cpuHand: c.cards.slice(0, 5).map((id, i) => createCardInstance(id, "cpu", c.id, i)),
+    playerHand: playerCardIds.slice(0, 5).map((id, i) => createCardInstance(id, "player", playerDeck, i)),
+    cpuHand: cpuCardIds.slice(0, 5).map((id, i) => createCardInstance(id, "cpu", cpuDeck, i)),
+    playerCardIds: [...playerCardIds], cpuCardIds: [...cpuCardIds],
     boards: [[], [], []], playerHype: 1, cpuHype: 1, playerDrawIndex: 5, cpuDrawIndex: 5,
     squabbleUsed: false, plugDiscountLane: { player: null, cpu: null }, cheapBuffsUsed: { player: 0, cpu: 0 }, effectLog: [],
   };
+}
+
+export function createMatchFromCatalog(
+  playerDeck: string,
+  playerCatalogCardIds: string[],
+  cpuDeck: string,
+): Match {
+  const cpu = deckById(cpuDeck);
+  return createMatchFromEngineCards(
+    playerDeck,
+    catalogIdsToEngineIds(playerCatalogCardIds),
+    cpu.id,
+    cpu.cards,
+  );
 }
 
 export function getEffectiveCardPower(card: CardInstance): number {
@@ -161,8 +198,8 @@ export function revealCpu(match: Match): Match {
 export function nextRound(match: Match): Match {
   if (match.phase !== "resolved") throw new Error("Round is not resolved");
   if (match.round >= 6) return { ...match, phase: "complete" };
-  const draw = (owner: Owner, deck: Deck, index: number) => index < deck.cards.length ? createCardInstance(deck.cards[index], owner, deck.id, index) : null;
-  const p = draw("player", deckById(match.playerDeck), match.playerDrawIndex), c = draw("cpu", deckById(match.cpuDeck), match.cpuDrawIndex);
+  const draw = (owner: Owner, deckId: string, deckCards: string[], index: number) => index < deckCards.length ? createCardInstance(deckCards[index], owner, deckId, index) : null;
+  const p = draw("player", match.playerDeck, match.playerCardIds, match.playerDrawIndex), c = draw("cpu", match.cpuDeck, match.cpuCardIds, match.cpuDrawIndex);
   const reset = (card: CardInstance) => ({ ...card, statuses: { ...card.statuses, blocked: false } });
   return { ...match, round: match.round + 1, phase: "player", playerHype: match.round + 1, cpuHype: match.round + 1, playerHand: p ? [...match.playerHand, p] : match.playerHand, cpuHand: c ? [...match.cpuHand, c] : match.cpuHand, playerDrawIndex: match.playerDrawIndex + (p ? 1 : 0), cpuDrawIndex: match.cpuDrawIndex + (c ? 1 : 0), boards: match.boards.map((items) => items.map(reset)) as Match["boards"], effectLog: [] };
 }

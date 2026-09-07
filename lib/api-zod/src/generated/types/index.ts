@@ -6,6 +6,12 @@
  * OpenAPI spec version: 0.2.0
  */
 
+export * from './collectionRoadClaimResult';
+export * from './collectionRoadMilestone';
+export * from './collectionRoadMilestoneStatus';
+export * from './collectionRoadReward';
+export * from './craftVariantInput';
+export * from './craftVariantResult';
 export * from './healthStatus';
 export * from './matchCompleteInput';
 export * from './matchCompletion';
@@ -17,6 +23,15 @@ export * from './nextAction';
 export * from './nextActionDestination';
 export * from './onboardingProgressInput';
 export * from './onboardingProgressInputAction';
+export * from './openPackInput';
+export * from './openPackInputPaymentMethod';
+export * from './openPackResult';
+export * from './packConfig';
+export * from './packOddsEntry';
+export * from './packOpening';
+export * from './packOpeningPaymentMethod';
+export * from './packReward';
+export * from './packRewardKind';
 export * from './playerBootstrap';
 export * from './playerMatch';
 export * from './playerMatchStatus';
@@ -27,8 +42,8 @@ export * from './playerMissionStatus';
 export * from './playerProfile';
 export * from './playerProfileInboxItem';
 export * from './playerProfileOnboardingStep';
-export * from './playerProfilePackHistoryItem';
 export * from './playerProfileStoryProgress';
 export * from './playerProfileUpdate';
 export * from './playerSettings';
 export * from './savedDeck';
+export * from './saveDeckInput';

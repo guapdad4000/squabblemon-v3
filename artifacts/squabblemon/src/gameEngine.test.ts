@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  canAffordSelection, chooseCpuPlay, createCardInstance, createMatch, getEffectiveCardPower,
+  canAffordSelection, chooseCpuPlay, createCardInstance, createMatch, createMatchFromCatalog, getEffectiveCardPower,
   getLaneScore, getLegalCardCost, getMatchWinner, nextRound, pass, playCard, revealCpu, type Match,
 } from './gameEngine';
+import { starterRecipes } from './data';
 
 const custom = (id: string, owner: 'player' | 'cpu', index: number) => createCardInstance(id, owner, 'test', index);
 const playOne = (id: string, setup?: (m: Match) => Match) => {
@@ -18,6 +19,15 @@ test('initial hands are stable, owner-specific instances', () => {
   assert.equal(match.cpuHand.length, 5);
   assert.equal(new Set([...match.playerHand, ...match.cpuHand].map((c) => c.instanceId)).size, 10);
   assert(match.playerHand.every((c) => c.owner === 'player' && c.lane === null));
+});
+
+test('a legal saved catalog deck can enter the same local CPU engine', () => {
+  const recipe = starterRecipes[0];
+  const match = createMatchFromCatalog('saved-test', recipe.catalogCardIds, 'combo');
+  assert.equal(match.playerDeck, 'saved-test');
+  assert.equal(match.playerCardIds.length, 7);
+  assert.equal(match.playerHand.length, 5);
+  assert.equal(match.cpuHand.length, 5);
 });
 
 test('exact instance is removed and both owners spend their actual Hype', () => {

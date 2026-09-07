@@ -18,6 +18,31 @@ export interface SavedDeck {
   id: string;
   name: string;
   cardIds: string[];
+  heroCardId: string;
+  /** @nullable */
+  recipeId: string | null;
+  valid: boolean;
+  issues: string[];
+}
+
+export interface SaveDeckInput {
+  /**
+     * @minLength 2
+     * @maxLength 32
+     */
+  name: string;
+  /**
+     * @maxItems 7
+     * @items.maxLength 64
+     */
+  cardIds: string[];
+  /** @maxLength 64 */
+  heroCardId: string;
+  /**
+     * @maxLength 32
+     * @nullable
+     */
+  recipeId: string | null;
 }
 
 export type PlayerProfileOnboardingStep = typeof PlayerProfileOnboardingStep[keyof typeof PlayerProfileOnboardingStep];
@@ -35,7 +60,48 @@ export type PlayerProfileStoryProgress = { [key: string]: unknown };
 
 export type PlayerProfileInboxItem = { [key: string]: unknown };
 
-export type PlayerProfilePackHistoryItem = { [key: string]: unknown };
+export type PackOpeningPaymentMethod = typeof PackOpeningPaymentMethod[keyof typeof PackOpeningPaymentMethod];
+
+
+export const PackOpeningPaymentMethod = {
+  ticket: 'ticket',
+  softCurrency: 'softCurrency',
+} as const;
+
+export type PackRewardKind = typeof PackRewardKind[keyof typeof PackRewardKind];
+
+
+export const PackRewardKind = {
+  card: 'card',
+  styleShards: 'styleShards',
+  softCurrency: 'softCurrency',
+  variant: 'variant',
+} as const;
+
+export interface PackReward {
+  kind: PackRewardKind;
+  /** @nullable */
+  cardId: string | null;
+  /** @nullable */
+  variantId: string | null;
+  /** @nullable */
+  name: string | null;
+  /** @nullable */
+  rarity: string | null;
+  isNew: boolean;
+  amount: number;
+}
+
+export interface PackOpening {
+  id: string;
+  oddsVersion: string;
+  paymentMethod: PackOpeningPaymentMethod;
+  cost: number;
+  rewards: PackReward[];
+  pityBefore: number;
+  pityAfter: number;
+  createdAt: string;
+}
 
 export interface PlayerProfile {
   id: string;
@@ -49,6 +115,9 @@ export interface PlayerProfile {
   level: number;
   softCurrency: number;
   packTickets: number;
+  styleShards: number;
+  packPity: number;
+  deckSlots: number;
   cosmeticCurrency: number;
   collectionProgress: number;
   storyChapter: number;
@@ -61,11 +130,12 @@ export interface PlayerProfile {
   termsAcceptedAt: string | null;
   settings: PlayerSettings;
   ownedCardIds: string[];
+  discoveredCardIds: string[];
   ownedVariants: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
   inbox: PlayerProfileInboxItem[];
-  packHistory: PlayerProfilePackHistoryItem[];
+  packHistory: PackOpening[];
   lastActiveAt: string;
 }
 
@@ -131,10 +201,99 @@ export interface NextAction {
   rewardLabel: string | null;
 }
 
+export interface PackOddsEntry {
+  label: string;
+  chance: number;
+  detail: string;
+}
+
+export interface PackConfig {
+  id: string;
+  name: string;
+  oddsVersion: string;
+  softCurrencyCost: number;
+  ticketCost: number;
+  rewardsPerPack: number;
+  pityLimit: number;
+  odds: PackOddsEntry[];
+}
+
+export type CollectionRoadMilestoneStatus = typeof CollectionRoadMilestoneStatus[keyof typeof CollectionRoadMilestoneStatus];
+
+
+export const CollectionRoadMilestoneStatus = {
+  locked: 'locked',
+  claimable: 'claimable',
+  claimed: 'claimed',
+} as const;
+
+export interface CollectionRoadMilestone {
+  id: string;
+  threshold: number;
+  title: string;
+  description: string;
+  rewardLabel: string;
+  /** @nullable */
+  cardId: string | null;
+  status: CollectionRoadMilestoneStatus;
+}
+
 export interface PlayerBootstrap {
   profile: PlayerProfile;
   missions: PlayerMission[];
   nextAction: NextAction;
+  packConfig: PackConfig;
+  collectionRoad: CollectionRoadMilestone[];
+}
+
+export type OpenPackInputPaymentMethod = typeof OpenPackInputPaymentMethod[keyof typeof OpenPackInputPaymentMethod];
+
+
+export const OpenPackInputPaymentMethod = {
+  ticket: 'ticket',
+  softCurrency: 'softCurrency',
+} as const;
+
+export interface OpenPackInput {
+  /**
+     * @minLength 8
+     * @maxLength 80
+     */
+  idempotencyKey: string;
+  paymentMethod: OpenPackInputPaymentMethod;
+}
+
+export interface OpenPackResult {
+  bootstrap: PlayerBootstrap;
+  opening: PackOpening;
+  alreadyOpened: boolean;
+}
+
+export interface CraftVariantInput {
+  /** @maxLength 64 */
+  cardId: string;
+  /** @maxLength 96 */
+  variantId: string;
+}
+
+export interface CraftVariantResult {
+  bootstrap: PlayerBootstrap;
+  alreadyOwned: boolean;
+}
+
+export interface CollectionRoadReward {
+  /** @nullable */
+  cardId: string | null;
+  softCurrency: number;
+  styleShards: number;
+  deckSlots: number;
+  duplicateShards: number;
+}
+
+export interface CollectionRoadClaimResult {
+  bootstrap: PlayerBootstrap;
+  reward: CollectionRoadReward;
+  alreadyClaimed: boolean;
 }
 
 export interface PlayerProfileUpdate {

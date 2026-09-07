@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
 import { decks, getCardImage } from '../data';
 
-export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, isLoading, onExit }: any) {
+export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, isLoading, onExit, availableDeckIds }: any) {
   const selectedDeck = decks.find(d => d.id === deckId)!;
+  const availableDecks = availableDeckIds
+    ? decks.filter((deck) => availableDeckIds.includes(deck.id))
+    : decks;
   
   return (
     <div className="flex-1 min-h-0 min-w-0 grid grid-cols-[minmax(0,1fr)] grid-rows-[minmax(210px,1fr)_auto_auto] md:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] md:grid-rows-[1fr_auto] w-full max-w-full overflow-hidden relative bg-[#070707]">
@@ -55,7 +58,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         </div>
 
         <div className="flex min-w-0 w-full md:grid md:grid-cols-2 gap-2 overflow-x-auto md:overflow-y-auto hide-scrollbar snap-x snap-mandatory pb-1 md:pb-2">
-          {decks.map(d => {
+          {availableDecks.map(d => {
             const isSelected = d.id === deckId;
             return (
               <button

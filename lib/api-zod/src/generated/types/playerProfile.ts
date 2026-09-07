@@ -5,9 +5,9 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { PackOpening } from './packOpening';
 import type { PlayerProfileInboxItem } from './playerProfileInboxItem';
 import type { PlayerProfileOnboardingStep } from './playerProfileOnboardingStep';
-import type { PlayerProfilePackHistoryItem } from './playerProfilePackHistoryItem';
 import type { PlayerProfileStoryProgress } from './playerProfileStoryProgress';
 import type { PlayerSettings } from './playerSettings';
 import type { SavedDeck } from './savedDeck';
@@ -24,6 +24,9 @@ export interface PlayerProfile {
   level: number;
   softCurrency: number;
   packTickets: number;
+  styleShards: number;
+  packPity: number;
+  deckSlots: number;
   cosmeticCurrency: number;
   collectionProgress: number;
   storyChapter: number;
@@ -36,10 +39,11 @@ export interface PlayerProfile {
   termsAcceptedAt: Date | null;
   settings: PlayerSettings;
   ownedCardIds: string[];
+  discoveredCardIds: string[];
   ownedVariants: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
   inbox: PlayerProfileInboxItem[];
-  packHistory: PlayerProfilePackHistoryItem[];
+  packHistory: PackOpening[];
   lastActiveAt: Date;
 }

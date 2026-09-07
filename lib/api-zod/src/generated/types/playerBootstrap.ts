@@ -5,7 +5,9 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { CollectionRoadMilestone } from './collectionRoadMilestone';
 import type { NextAction } from './nextAction';
+import type { PackConfig } from './packConfig';
 import type { PlayerMission } from './playerMission';
 import type { PlayerProfile } from './playerProfile';
 
@@ -13,4 +15,6 @@ export interface PlayerBootstrap {
   profile: PlayerProfile;
   missions: PlayerMission[];
   nextAction: NextAction;
+  packConfig: PackConfig;
+  collectionRoad: CollectionRoadMilestone[];
 }

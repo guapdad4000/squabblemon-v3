@@ -31,6 +31,7 @@ import {
   getPlayerBootstrap,
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
+import { canUseRewardedRecipe } from "../lib/matchAuthorization";
 
 const router: IRouter = Router();
 
@@ -234,11 +235,19 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
           starterDeckId,
           avatarKey: deckHeroes[starterDeckId],
           ownedCardIds: deckCards[starterDeckId],
+          discoveredCardIds: [
+            ...new Set([
+              ...deckCards[starterDeckId],
+              ...Object.values(deckHeroes),
+            ]),
+          ],
           savedDecks: [
             {
               id: `starter-${starterDeckId}`,
               name: "Starter Crew",
               cardIds: deckCards[starterDeckId],
+              heroCardId: deckHeroes[starterDeckId],
+              recipeId: starterDeckId,
             },
           ],
           collectionProgress: deckCards[starterDeckId].length,
@@ -313,6 +322,19 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   if (!allowed) {
     res.status(400).json({ error: "Finish the current Rookie Road step first" });
     return;
+  }
+  if (parsed.data.mode !== "tutorial") {
+    if (
+      !canUseRewardedRecipe(
+        parsed.data.playerDeckId,
+        state.profile.ownedCardIds,
+      )
+    ) {
+      res.status(403).json({
+        error: "Unlock every card in this crew before using it for rewards",
+      });
+      return;
+    }
   }
   const [match] = await db
     .insert(playerMatchesTable)

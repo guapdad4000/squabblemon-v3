@@ -3,7 +3,7 @@ import { useStartPlayerMatch, useCompletePlayerMatch, getGetPlayerBootstrapQuery
 import { useQueryClient } from '@tanstack/react-query';
 import { LayoutGroup, AnimatePresence } from 'framer-motion';
 
-import { decks, districts, Card } from '../data';
+import { decks, districts, Card, Deck } from '../data';
 import { Lobby } from './Lobby';
 import { Battle } from './Battle';
 import { ResultScreen } from './ResultScreen';
@@ -11,7 +11,7 @@ import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { PresentationTimeline } from '../presentationTimeline';
 
-import { canAffordSelection, chooseCpuPlay, createMatch, Match, playCard, pass, nextRound, CardInstance, type Lane } from '../gameEngine';
+import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, Match, playCard, pass, nextRound, CardInstance, type Lane } from '../gameEngine';
 export type PresentationPhase =
   | 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble'
   | 'deal' | 'round-intro' | 'player-ready' | 'player-slam' | 'effects'
@@ -19,23 +19,31 @@ export type PresentationPhase =
   | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-slam'
   | 'rival-pass' | 'round-result' | 'match-finish';
 
-export function PlayLoop({ 
+export function PlayLoop({
   mode = 'practice',
   onExit,
   initialDeckId = 'block',
   initialRivalId = 'combo',
   hideLobby = false,
   turnTimerEnabled = true,
-}: { 
+  customPlayerDeck,
+  availableDeckIds,
+}: {
   mode?: 'guest' | 'practice' | 'tutorial',
   onExit: () => void,
   initialDeckId?: string,
   initialRivalId?: string,
   hideLobby?: boolean,
   turnTimerEnabled?: boolean,
+  customPlayerDeck?: Deck,
+  availableDeckIds?: string[],
 }) {
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
-  const [deckId, setDeckId] = useState(initialDeckId);
+  const [deckId, setDeckId] = useState(
+    availableDeckIds?.includes(initialDeckId)
+      ? initialDeckId
+      : availableDeckIds?.[0] ?? initialDeckId,
+  );
   const [rival, setRival] = useState(initialRivalId);
 
   const [match, setMatch] = useState<Match | null>(null);
@@ -66,7 +74,7 @@ export function PlayLoop({
   const [showRules, setShowRules] = useState(false);
   const [inspect, setInspect] = useState<CardInstance | Card | null>(null);
 
-  const deck = decks.find(d => d.id === deckId)!;
+  const deck = customPlayerDeck || decks.find(d => d.id === deckId)!;
   const rivalDeck = decks.find(d => d.id === rival)!;
 
   const cancelTimers = useCallback(() => {
@@ -113,7 +121,11 @@ export function PlayLoop({
     setServerReward(null);
     setServerRewardError(false);
     playerMovesRef.current = [];
-    setMatch(createMatch(deckId, rival));
+    if (customPlayerDeck) {
+      setMatch(createMatchFromCatalog(customPlayerDeck.id, customPlayerDeck.cards, rival));
+    } else {
+      setMatch(createMatch(deckId, rival));
+    }
     setSelectedInstanceId(null);
     setSelectedLane(null);
     setSquabble(false);
@@ -125,11 +137,11 @@ export function PlayLoop({
     setScreen('battle');
     locked.current = true;
     void runIntro();
-  }, [cancelTimers, deckId, rival, runIntro]);
+  }, [cancelTimers, customPlayerDeck, deckId, rival, runIntro]);
 
   const start = useCallback(async () => {
     setServerMatchId(null);
-    if (mode !== 'guest') {
+    if (mode !== 'guest' && !customPlayerDeck) {
       try {
         const res = await startPlayerMatch.mutateAsync({
           data: { mode: mode === 'tutorial' ? 'tutorial' : 'practice', playerDeckId: deckId, rivalDeckId: rival }
@@ -142,12 +154,14 @@ export function PlayLoop({
       }
     }
     startLocalMatch();
-  }, [deckId, mode, rival, startLocalMatch, startPlayerMatch]);
+  }, [deckId, mode, rival, startLocalMatch, startPlayerMatch, customPlayerDeck]);
 
   useEffect(() => {
-    if (hideLobby && !autoStartRef.current && !match && screen === 'battle') {
-      autoStartRef.current = true;
-      void start();
+    if (hideLobby && !match && (screen === 'lobby' || screen === 'battle')) {
+      if (!autoStartRef.current) {
+        autoStartRef.current = true;
+        void start();
+      }
     }
   }, [hideLobby, match, screen, start]);
 
@@ -158,11 +172,15 @@ export function PlayLoop({
           matchId: serverMatchId,
           data: { moves: playerMovesRef.current }
         });
-        
-        queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), {
-           profile: res.profile,
-           missions: res.missions,
-           nextAction: res.nextAction
+
+        queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), (old: any) => {
+           if (!old) return old;
+           return {
+             ...old,
+             profile: res.profile,
+             missions: res.missions,
+             nextAction: res.nextAction,
+           };
         });
         setServerReward(res.reward);
         setServerRewardError(false);
@@ -189,7 +207,7 @@ export function PlayLoop({
     setPresentationPhase('round-result');
     setPhaseMessage(`ROUND ${resolved.round} COMPLETE`);
     if (!await wait(1200, id)) return;
-    
+
     if (resolved.round >= 6) {
       const complete = nextRound(resolved);
       setMatch(complete);
@@ -296,20 +314,26 @@ export function PlayLoop({
       cancelTimers(); void enterPlayerTurn(match.round, true);
     } else if (presentationPhase === 'round-result') {
       cancelTimers();
-      if (match.round >= 6) { 
-        const complete = nextRound(match); 
-        setMatch(complete); 
+      if (match.round >= 6) {
+        const complete = nextRound(match);
+        setMatch(complete);
         void finishMatchSession(complete);
       }
       else { const next = nextRound(match); setMatch(next); void enterPlayerTurn(next.round, true); }
     }
   };
 
+  const handleRestart = () => {
+    autoStartRef.current = false;
+    setMatch(null);
+    setScreen(hideLobby ? 'battle' : 'lobby');
+  };
+
   return (
     <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg">
       <div className="noise-overlay" />
 
-      {screen === 'lobby' && (
+      {screen === 'lobby' && !hideLobby && (
         <Lobby
           onStart={start}
           deckId={deckId} setDeckId={setDeckId}
@@ -317,6 +341,7 @@ export function PlayLoop({
           onShowRules={() => setShowRules(true)}
           isLoading={startPlayerMatch.isPending}
           onExit={onExit}
+          availableDeckIds={availableDeckIds}
         />
       )}
 
@@ -342,9 +367,9 @@ export function PlayLoop({
         {inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} match={match} />}
         {showRules && <RulesModal onClose={() => setShowRules(false)} />}
         {screen === 'result' && match && (
-          <ResultScreen 
-            onRestart={() => setScreen('lobby')} 
-            onChangeDeck={() => setScreen('lobby')} 
+          <ResultScreen
+            onRestart={handleRestart}
+            onChangeDeck={() => { if (hideLobby) onExit(); else setScreen('lobby'); }}
             onGoHome={onExit}
             match={match}
             districts={districts} deckId={deckId} rivalDeck={rivalDeck}
@@ -352,7 +377,8 @@ export function PlayLoop({
             rewardError={serverRewardError}
             rewardPending={completePlayerMatch.isPending}
             onRetryReward={() => void finishMatchSession(match)}
-            isGuest={mode === 'guest'}
+            isGuest={mode === 'guest' || !!customPlayerDeck}
+            customPlayerDeck={customPlayerDeck}
           />
         )}
       </AnimatePresence>

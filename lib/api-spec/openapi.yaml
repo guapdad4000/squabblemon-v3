@@ -136,6 +136,129 @@ paths:
           description: Authentication required
         "404":
           description: Match not found
+  /player/decks/{deckId}:
+    put:
+      operationId: savePlayerDeck
+      tags: [player]
+      summary: Save a named deck draft with server-side legality checks
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveDeckInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid deck draft
+        "401":
+          description: Authentication required
+    delete:
+      operationId: deletePlayerDeck
+      tags: [player]
+      summary: Delete a saved deck
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 80
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: The last legal deck cannot be deleted
+        "401":
+          description: Authentication required
+  /player/packs/open:
+    post:
+      operationId: openPlayerPack
+      tags: [player]
+      summary: Open one Street Pack exactly once with published odds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpenPackInput"
+      responses:
+        "200":
+          description: Persisted pack result and updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenPackResult"
+        "400":
+          description: Invalid payment or insufficient balance
+        "401":
+          description: Authentication required
+  /player/collection/craft:
+    post:
+      operationId: craftPlayerVariant
+      tags: [player]
+      summary: Craft one visual card variant with Style Shards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CraftVariantInput"
+      responses:
+        "200":
+          description: Updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CraftVariantResult"
+        "400":
+          description: Unknown, locked, or unaffordable variant
+        "401":
+          description: Authentication required
+  /player/collection-road/{milestoneId}/claim:
+    post:
+      operationId: claimCollectionRoadMilestone
+      tags: [player]
+      summary: Claim a deterministic collection milestone exactly once
+      parameters:
+        - name: milestoneId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 48
+      responses:
+        "200":
+          description: Persisted milestone reward and updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionRoadClaimResult"
+        "400":
+          description: Milestone is not claimable
+        "401":
+          description: Authentication required
+        "404":
+          description: Milestone not found
   /player/missions/{missionId}/claim:
     post:
       operationId: claimPlayerMission
@@ -187,7 +310,38 @@ components:
           type: array
           items:
             type: string
-      required: [id, name, cardIds]
+        heroCardId:
+          type: string
+        recipeId:
+          type: [string, "null"]
+        valid:
+          type: boolean
+        issues:
+          type: array
+          items:
+            type: string
+      required: [id, name, cardIds, heroCardId, recipeId, valid, issues]
+    SaveDeckInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 32
+        cardIds:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            maxLength: 64
+        heroCardId:
+          type: string
+          maxLength: 64
+        recipeId:
+          type: [string, "null"]
+          maxLength: 32
+      required: [name, cardIds, heroCardId, recipeId]
+      additionalProperties: false
     PlayerProfile:
       type: object
       properties:
@@ -211,6 +365,12 @@ components:
         softCurrency:
           type: integer
         packTickets:
+          type: integer
+        styleShards:
+          type: integer
+        packPity:
+          type: integer
+        deckSlots:
           type: integer
         cosmeticCurrency:
           type: integer
@@ -236,6 +396,10 @@ components:
           type: array
           items:
             type: string
+        discoveredCardIds:
+          type: array
+          items:
+            type: string
         ownedVariants:
           type: array
           items:
@@ -255,8 +419,7 @@ components:
         packHistory:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: "#/components/schemas/PackOpening"
         lastActiveAt:
           type: string
           format: date-time
@@ -271,6 +434,9 @@ components:
         - level
         - softCurrency
         - packTickets
+        - styleShards
+        - packPity
+        - deckSlots
         - cosmeticCurrency
         - collectionProgress
         - storyChapter
@@ -281,6 +447,7 @@ components:
         - termsAcceptedAt
         - settings
         - ownedCardIds
+        - discoveredCardIds
         - ownedVariants
         - savedDecks
         - storyProgress
@@ -353,7 +520,173 @@ components:
             $ref: "#/components/schemas/PlayerMission"
         nextAction:
           $ref: "#/components/schemas/NextAction"
-      required: [profile, missions, nextAction]
+        packConfig:
+          $ref: "#/components/schemas/PackConfig"
+        collectionRoad:
+          type: array
+          items:
+            $ref: "#/components/schemas/CollectionRoadMilestone"
+      required: [profile, missions, nextAction, packConfig, collectionRoad]
+    PackOddsEntry:
+      type: object
+      properties:
+        label:
+          type: string
+        chance:
+          type: number
+        detail:
+          type: string
+      required: [label, chance, detail]
+    PackConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        oddsVersion:
+          type: string
+        softCurrencyCost:
+          type: integer
+        ticketCost:
+          type: integer
+        rewardsPerPack:
+          type: integer
+        pityLimit:
+          type: integer
+        odds:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackOddsEntry"
+      required:
+        [id, name, oddsVersion, softCurrencyCost, ticketCost, rewardsPerPack, pityLimit, odds]
+    PackReward:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [card, styleShards, softCurrency, variant]
+        cardId:
+          type: [string, "null"]
+        variantId:
+          type: [string, "null"]
+        name:
+          type: [string, "null"]
+        rarity:
+          type: [string, "null"]
+        isNew:
+          type: boolean
+        amount:
+          type: integer
+      required: [kind, cardId, variantId, name, rarity, isNew, amount]
+    PackOpening:
+      type: object
+      properties:
+        id:
+          type: string
+        oddsVersion:
+          type: string
+        paymentMethod:
+          type: string
+          enum: [ticket, softCurrency]
+        cost:
+          type: integer
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackReward"
+        pityBefore:
+          type: integer
+        pityAfter:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, oddsVersion, paymentMethod, cost, rewards, pityBefore, pityAfter, createdAt]
+    OpenPackInput:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 80
+        paymentMethod:
+          type: string
+          enum: [ticket, softCurrency]
+      required: [idempotencyKey, paymentMethod]
+      additionalProperties: false
+    OpenPackResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        opening:
+          $ref: "#/components/schemas/PackOpening"
+        alreadyOpened:
+          type: boolean
+      required: [bootstrap, opening, alreadyOpened]
+    CraftVariantInput:
+      type: object
+      properties:
+        cardId:
+          type: string
+          maxLength: 64
+        variantId:
+          type: string
+          maxLength: 96
+      required: [cardId, variantId]
+      additionalProperties: false
+    CraftVariantResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        alreadyOwned:
+          type: boolean
+      required: [bootstrap, alreadyOwned]
+    CollectionRoadReward:
+      type: object
+      properties:
+        cardId:
+          type: [string, "null"]
+        softCurrency:
+          type: integer
+        styleShards:
+          type: integer
+        deckSlots:
+          type: integer
+        duplicateShards:
+          type: integer
+      required: [cardId, softCurrency, styleShards, deckSlots, duplicateShards]
+    CollectionRoadMilestone:
+      type: object
+      properties:
+        id:
+          type: string
+        threshold:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        rewardLabel:
+          type: string
+        cardId:
+          type: [string, "null"]
+        status:
+          type: string
+          enum: [locked, claimable, claimed]
+      required: [id, threshold, title, description, rewardLabel, cardId, status]
+    CollectionRoadClaimResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        reward:
+          $ref: "#/components/schemas/CollectionRoadReward"
+        alreadyClaimed:
+          type: boolean
+      required: [bootstrap, reward, alreadyClaimed]
     PlayerProfileUpdate:
       type: object
       properties:

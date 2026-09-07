@@ -3,7 +3,7 @@ import { decks, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { MatchReward } from '@workspace/api-client-react';
 
-export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest }: any) {
+export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck }: any) {
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
@@ -11,7 +11,7 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
   const isVictory = winner === 'player';
   const isDraw = winner === 'draw';
 
-  const playerDeck = decks.find(deck => deck.id === m.playerDeck)!;
+  const playerDeck = customPlayerDeck || decks.find(deck => deck.id === m.playerDeck)!;
   const cpuDeck = decks.find(deck => deck.id === m.cpuDeck)!;
 
   return (
@@ -38,13 +38,13 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         className="fixed -right-[8%] md:right-[1%] bottom-[-8%] h-[70%] md:h-[88%] w-[48%] object-contain object-right-bottom grayscale brightness-75 drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] pointer-events-none z-0"
       />
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="relative z-10 max-w-2xl w-full py-6 md:py-10"
       >
         <div className="font-mono text-primary text-[9px] md:text-xs tracking-[0.32em] uppercase mb-4 md:mb-6">Match Archive // Complete</div>
-        
+
         <motion.div
           initial={{ rotate: -18, scale: 0 }}
           animate={{ rotate: -4, scale: 1 }}
@@ -54,11 +54,11 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         >
           {isVictory ? 'W' : isDraw ? 'D' : 'L'}
         </motion.div>
-        
+
         <h2 data-testid="status-match-result" className="text-3xl md:text-6xl font-display font-black italic uppercase leading-none mb-3 drop-shadow-[0_5px_0_rgba(0,0,0,0.85)]">
           {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
         </h2>
-        
+
         <div className="grid grid-cols-3 gap-1.5 md:gap-4 mb-7 md:mb-10">
           {results.map((r, i) => (
             <div key={i} className={`p-2.5 md:p-4 border backdrop-blur-md ${r.winner === 'player' ? 'border-primary bg-primary/15' : 'border-white/15 bg-black/70'}`} style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
@@ -107,10 +107,10 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         )}
         {isGuest && (
           <div className="mb-7 border border-primary/35 bg-primary/5 p-3 font-mono text-[9px] uppercase tracking-wider text-white/60">
-            Guest practice does not save rewards. Return home to create an account and keep your next run.
+            {customPlayerDeck ? "Deck tests do not grant rewards." : "Guest practice does not save rewards. Return home to create an account and keep your next run."}
           </div>
         )}
-        
+
         <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
           <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">
             Run It Back

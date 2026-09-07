@@ -6,13 +6,11 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface SavedDeck {
-  id: string;
-  name: string;
-  cardIds: string[];
-  heroCardId: string;
+export interface CollectionRoadReward {
   /** @nullable */
-  recipeId: string | null;
-  valid: boolean;
-  issues: string[];
+  cardId: string | null;
+  softCurrency: number;
+  styleShards: number;
+  deckSlots: number;
+  duplicateShards: number;
 }

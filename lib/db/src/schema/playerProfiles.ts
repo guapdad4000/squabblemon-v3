@@ -18,6 +18,8 @@ export type SavedDeck = {
   id: string;
   name: string;
   cardIds: string[];
+  heroCardId?: string;
+  recipeId?: string | null;
 };
 
 export const playerProfilesTable = pgTable("player_profiles", {
@@ -31,6 +33,9 @@ export const playerProfilesTable = pgTable("player_profiles", {
   level: integer("level").notNull().default(1),
   softCurrency: integer("soft_currency").notNull().default(0),
   packTickets: integer("pack_tickets").notNull().default(0),
+  styleShards: integer("style_shards").notNull().default(0),
+  packPity: integer("pack_pity").notNull().default(0),
+  deckSlots: integer("deck_slots").notNull().default(4),
   cosmeticCurrency: integer("cosmetic_currency").notNull().default(0),
   collectionProgress: integer("collection_progress").notNull().default(0),
   storyChapter: integer("story_chapter").notNull().default(1),
@@ -46,6 +51,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .notNull()
     .default({ reducedMotion: false, turnTimerEnabled: true }),
   ownedCardIds: jsonb("owned_card_ids")
+    .$type<string[]>()
+    .notNull()
+    .default([]),
+  discoveredCardIds: jsonb("discovered_card_ids")
     .$type<string[]>()
     .notNull()
     .default([]),

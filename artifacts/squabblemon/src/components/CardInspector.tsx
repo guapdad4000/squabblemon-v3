@@ -2,14 +2,36 @@ import { motion } from 'framer-motion';
 import { CardView } from './CardView';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
+import { PlayerBootstrap, useCraftPlayerVariant } from '@workspace/api-client-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
+import { catalogCardById } from '../data';
 
-export function CardInspector({ card, onClose }: any) {
+export function CardInspector({ card, onClose, bootstrap }: any) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
+  const catalogCard = bootstrap ? catalogCardById[card.catalogId || card.id] : null;
+
+  const craftVariant = useCraftPlayerVariant();
+  const queryClient = useQueryClient();
+
+  const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
+
+  const handleCraft = async (variantId: string) => {
+    if (!bootstrap || !catalogCard || !isCardOwned) return;
+    try {
+      const res = await craftVariant.mutateAsync({
+        data: { cardId: catalogCard.catalogId, variantId }
+      });
+      queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res.bootstrap);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-8 overflow-y-auto" onClick={onClose}>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -19,24 +41,34 @@ export function CardInspector({ card, onClose }: any) {
         <CardView
           card={card}
           testId="card-inspector"
-          className="w-[180px] h-[252px] md:w-[280px] md:h-[392px] shadow-2xl shadow-primary/20 pointer-events-none"
+          className={`w-[180px] h-[252px] md:w-[280px] md:h-[392px] shadow-2xl shadow-primary/20 pointer-events-none ${!isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
         />
 
         <div
-          className="relative w-full bg-[#111]/95 border border-primary/30 p-6 md:p-10 shadow-2xl overflow-hidden"
+          className="relative w-full bg-[#111]/95 border border-primary/30 p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar"
           style={{ clipPath: 'polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px))' }}
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-white to-primary" />
           <div className="flex justify-between items-center mb-5">
             <span className="font-mono text-[10px] md:text-xs text-primary uppercase tracking-[0.22em]">{card.type} class // {card.cost} Hype</span>
-            <button data-testid="button-close-inspector" onClick={onClose} className="w-9 h-9 border border-white/20 flex items-center justify-center text-white/50 hover:bg-primary hover:text-black hover:border-primary transition-colors">
+            <button data-testid="button-close-inspector" onClick={onClose} className="w-9 h-9 border border-white/20 flex items-center justify-center text-white/50 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0">
               <X size={16} />
             </button>
           </div>
-          
+
           <div className="font-mono text-[9px] text-white/30 tracking-[0.25em] uppercase mb-2">Combat dossier</div>
-          <h3 className="font-display font-black italic text-4xl md:text-6xl uppercase leading-[0.9] mb-5">{card.name}</h3>
-          
+          <h3 className="font-display font-black italic text-4xl md:text-6xl uppercase leading-[0.9] mb-3">{card.name}</h3>
+
+          {catalogCard && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-primary border border-primary/30 px-2 py-1 bg-primary/10">{catalogCard.rarity}</span>
+              <span className="font-mono text-[9px] uppercase tracking-widest text-white/70 border border-white/20 px-2 py-1 bg-white/5">{catalogCard.faction} Faction</span>
+              {catalogCard.crewTags.map((tag: string) => (
+                <span key={tag} className="font-mono text-[9px] uppercase tracking-widest text-white/50 border border-white/10 px-2 py-1 bg-black">{tag}</span>
+              ))}
+            </div>
+          )}
+
           <div className="relative bg-black/70 border-l-4 border-primary p-4 md:p-5 mb-6">
             <div className="text-[9px] md:text-[10px] font-mono tracking-widest text-white/40 mb-1">SIGNATURE ABILITY</div>
             <div className="font-display font-black italic uppercase text-lg md:text-2xl text-primary">{card.ability}</div>
@@ -63,6 +95,60 @@ export function CardInspector({ card, onClose }: any) {
                   Effective Power: {getEffectiveCardPower(instance)} <br/>
                   {instance.moved && <span className="text-purple-300">Moved districts<br/></span>}
                   <span className="text-primary/70 text-[9px] mt-1 block">{instance.lastEffectNote}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {bootstrap && catalogCard && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border-t border-white/10 pt-6">
+              <div>
+                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-2">Acquisition Sources</div>
+                <ul className="list-disc list-inside text-xs text-white/80 space-y-1 ml-2">
+                  {catalogCard.acquisitionSources.map((source: string, i: number) => <li key={i}>{source}</li>)}
+                </ul>
+
+                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mt-4 mb-2">Used In Decks</div>
+                {bootstrap.profile.savedDecks.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)).length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {bootstrap.profile.savedDecks.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)).map((deck: any) => (
+                      <span key={deck.id} className="border border-white/20 px-2 py-1 text-[10px] font-mono uppercase bg-white/5">{deck.name}</span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-xs text-white/30 italic">Not used in any saved decks.</div>
+                )}
+              </div>
+
+              <div>
+                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-2">Variants & Crafting</div>
+                <div className="space-y-3">
+                  {catalogCard.variantSlots.map((slot: any) => {
+                    const isOwned = bootstrap.profile.ownedVariants.includes(slot.id);
+                    const canAfford = bootstrap.profile.styleShards >= slot.shardCost;
+                    return (
+                      <div key={slot.id} className="border border-white/10 p-3 bg-black/40">
+                        <div className="flex justify-between items-start mb-1">
+                          <div className="font-display font-black italic uppercase text-sm">{slot.name}</div>
+                          {isOwned ? (
+                            <span className="text-[10px] text-primary font-mono uppercase tracking-widest">Unlocked</span>
+                          ) : (
+                            <span className="text-[10px] text-accent font-mono uppercase tracking-widest">{slot.shardCost} Shards</span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-white/60 mb-2">{slot.description}</p>
+                        {!isOwned && (
+                          <button
+                            onClick={() => handleCraft(slot.id)}
+                            disabled={!canAfford || craftVariant.isPending || !isCardOwned}
+                            className="w-full bg-white/10 hover:bg-white/20 disabled:opacity-50 text-[10px] font-mono uppercase py-1 border border-white/20 transition-colors"
+                          >
+                            {!isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting...' : canAfford ? 'Craft Variant' : 'Not Enough Shards'}
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

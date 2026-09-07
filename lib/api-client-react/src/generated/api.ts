@@ -20,14 +20,20 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CollectionRoadClaimResult,
+  CraftVariantInput,
+  CraftVariantResult,
   HealthStatus,
   MatchCompleteInput,
   MatchCompletion,
   MatchStartInput,
   OnboardingProgressInput,
+  OpenPackInput,
+  OpenPackResult,
   PlayerBootstrap,
   PlayerMatch,
-  PlayerProfileUpdate
+  PlayerProfileUpdate,
+  SaveDeckInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -494,6 +500,362 @@ export const useCompletePlayerMatch = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getCompletePlayerMatchMutationOptions(options));
+    }
+
+export const getSavePlayerDeckUrl = (deckId: string,) => {
+
+
+
+
+  return `/api/player/decks/${deckId}`
+}
+
+/**
+ * @summary Save a named deck draft with server-side legality checks
+ */
+export const savePlayerDeck = async (deckId: string,
+    saveDeckInput: SaveDeckInput, options?: RequestInit): Promise<PlayerBootstrap> => {
+
+  return customFetch<PlayerBootstrap>(getSavePlayerDeckUrl(deckId),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(saveDeckInput)
+  }
+);}
+
+
+
+
+
+export const getSavePlayerDeckMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof savePlayerDeck>>, TError,{deckId: string;data: BodyType<SaveDeckInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof savePlayerDeck>>, TError,{deckId: string;data: BodyType<SaveDeckInput>}, TContext> => {
+
+const mutationKey = ['savePlayerDeck'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof savePlayerDeck>>, {deckId: string;data: BodyType<SaveDeckInput>}> = (props) => {
+          const {deckId,data} = props ?? {};
+
+          return  savePlayerDeck(deckId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SavePlayerDeckMutationResult = NonNullable<Awaited<ReturnType<typeof savePlayerDeck>>>
+    export type SavePlayerDeckMutationBody = BodyType<SaveDeckInput>
+    export type SavePlayerDeckMutationError = ErrorType<void>
+
+    /**
+ * @summary Save a named deck draft with server-side legality checks
+ */
+export const useSavePlayerDeck = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof savePlayerDeck>>, TError,{deckId: string;data: BodyType<SaveDeckInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof savePlayerDeck>>,
+        TError,
+        {deckId: string;data: BodyType<SaveDeckInput>},
+        TContext
+      > => {
+      return useMutation(getSavePlayerDeckMutationOptions(options));
+    }
+
+export const getDeletePlayerDeckUrl = (deckId: string,) => {
+
+
+
+
+  return `/api/player/decks/${deckId}`
+}
+
+/**
+ * @summary Delete a saved deck
+ */
+export const deletePlayerDeck = async (deckId: string, options?: RequestInit): Promise<PlayerBootstrap> => {
+
+  return customFetch<PlayerBootstrap>(getDeletePlayerDeckUrl(deckId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeletePlayerDeckMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlayerDeck>>, TError,{deckId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePlayerDeck>>, TError,{deckId: string}, TContext> => {
+
+const mutationKey = ['deletePlayerDeck'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePlayerDeck>>, {deckId: string}> = (props) => {
+          const {deckId} = props ?? {};
+
+          return  deletePlayerDeck(deckId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePlayerDeckMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlayerDeck>>>
+
+    export type DeletePlayerDeckMutationError = ErrorType<void>
+
+    /**
+ * @summary Delete a saved deck
+ */
+export const useDeletePlayerDeck = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlayerDeck>>, TError,{deckId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deletePlayerDeck>>,
+        TError,
+        {deckId: string},
+        TContext
+      > => {
+      return useMutation(getDeletePlayerDeckMutationOptions(options));
+    }
+
+export const getOpenPlayerPackUrl = () => {
+
+
+
+
+  return `/api/player/packs/open`
+}
+
+/**
+ * @summary Open one Street Pack exactly once with published odds
+ */
+export const openPlayerPack = async (openPackInput: OpenPackInput, options?: RequestInit): Promise<OpenPackResult> => {
+
+  return customFetch<OpenPackResult>(getOpenPlayerPackUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(openPackInput)
+  }
+);}
+
+
+
+
+
+export const getOpenPlayerPackMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openPlayerPack>>, TError,{data: BodyType<OpenPackInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof openPlayerPack>>, TError,{data: BodyType<OpenPackInput>}, TContext> => {
+
+const mutationKey = ['openPlayerPack'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof openPlayerPack>>, {data: BodyType<OpenPackInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  openPlayerPack(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type OpenPlayerPackMutationResult = NonNullable<Awaited<ReturnType<typeof openPlayerPack>>>
+    export type OpenPlayerPackMutationBody = BodyType<OpenPackInput>
+    export type OpenPlayerPackMutationError = ErrorType<void>
+
+    /**
+ * @summary Open one Street Pack exactly once with published odds
+ */
+export const useOpenPlayerPack = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openPlayerPack>>, TError,{data: BodyType<OpenPackInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof openPlayerPack>>,
+        TError,
+        {data: BodyType<OpenPackInput>},
+        TContext
+      > => {
+      return useMutation(getOpenPlayerPackMutationOptions(options));
+    }
+
+export const getCraftPlayerVariantUrl = () => {
+
+
+
+
+  return `/api/player/collection/craft`
+}
+
+/**
+ * @summary Craft one visual card variant with Style Shards
+ */
+export const craftPlayerVariant = async (craftVariantInput: CraftVariantInput, options?: RequestInit): Promise<CraftVariantResult> => {
+
+  return customFetch<CraftVariantResult>(getCraftPlayerVariantUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(craftVariantInput)
+  }
+);}
+
+
+
+
+
+export const getCraftPlayerVariantMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof craftPlayerVariant>>, TError,{data: BodyType<CraftVariantInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof craftPlayerVariant>>, TError,{data: BodyType<CraftVariantInput>}, TContext> => {
+
+const mutationKey = ['craftPlayerVariant'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof craftPlayerVariant>>, {data: BodyType<CraftVariantInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  craftPlayerVariant(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CraftPlayerVariantMutationResult = NonNullable<Awaited<ReturnType<typeof craftPlayerVariant>>>
+    export type CraftPlayerVariantMutationBody = BodyType<CraftVariantInput>
+    export type CraftPlayerVariantMutationError = ErrorType<void>
+
+    /**
+ * @summary Craft one visual card variant with Style Shards
+ */
+export const useCraftPlayerVariant = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof craftPlayerVariant>>, TError,{data: BodyType<CraftVariantInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof craftPlayerVariant>>,
+        TError,
+        {data: BodyType<CraftVariantInput>},
+        TContext
+      > => {
+      return useMutation(getCraftPlayerVariantMutationOptions(options));
+    }
+
+export const getClaimCollectionRoadMilestoneUrl = (milestoneId: string,) => {
+
+
+
+
+  return `/api/player/collection-road/${milestoneId}/claim`
+}
+
+/**
+ * @summary Claim a deterministic collection milestone exactly once
+ */
+export const claimCollectionRoadMilestone = async (milestoneId: string, options?: RequestInit): Promise<CollectionRoadClaimResult> => {
+
+  return customFetch<CollectionRoadClaimResult>(getClaimCollectionRoadMilestoneUrl(milestoneId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getClaimCollectionRoadMilestoneMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimCollectionRoadMilestone>>, TError,{milestoneId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimCollectionRoadMilestone>>, TError,{milestoneId: string}, TContext> => {
+
+const mutationKey = ['claimCollectionRoadMilestone'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimCollectionRoadMilestone>>, {milestoneId: string}> = (props) => {
+          const {milestoneId} = props ?? {};
+
+          return  claimCollectionRoadMilestone(milestoneId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClaimCollectionRoadMilestoneMutationResult = NonNullable<Awaited<ReturnType<typeof claimCollectionRoadMilestone>>>
+
+    export type ClaimCollectionRoadMilestoneMutationError = ErrorType<void>
+
+    /**
+ * @summary Claim a deterministic collection milestone exactly once
+ */
+export const useClaimCollectionRoadMilestone = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimCollectionRoadMilestone>>, TError,{milestoneId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof claimCollectionRoadMilestone>>,
+        TError,
+        {milestoneId: string},
+        TContext
+      > => {
+      return useMutation(getClaimCollectionRoadMilestoneMutationOptions(options));
     }
 
 export const getClaimPlayerMissionUrl = (missionId: string,) => {

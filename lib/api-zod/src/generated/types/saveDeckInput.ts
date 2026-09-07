@@ -6,13 +6,22 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface SavedDeck {
-  id: string;
+export interface SaveDeckInput {
+  /**
+     * @minLength 2
+     * @maxLength 32
+     */
   name: string;
+  /**
+     * @maxItems 7
+     * @items.maxLength 64
+     */
   cardIds: string[];
+  /** @maxLength 64 */
   heroCardId: string;
-  /** @nullable */
+  /**
+     * @maxLength 32
+     * @nullable
+     */
   recipeId: string | null;
-  valid: boolean;
-  issues: string[];
 }
