@@ -37,9 +37,11 @@ test('exact instance is removed and both owners spend their actual Hype', () => 
   match = playCard(match, 'player', selected.instanceId, 0);
   assert(!match.playerHand.some((c) => c.instanceId === selected.instanceId));
   assert.equal(match.playerHype, 10 - selected.cost);
+  assert.equal(match.effectLog.at(-1)?.state.after.phase, 'cpu-reveal');
   const cpu = match.cpuHand[0];
   match = playCard(match, 'cpu', cpu.instanceId, 1);
   assert.equal(match.cpuHype, 10 - cpu.cost);
+  assert.equal(match.effectLog.at(-1)?.state.after.phase, 'resolved');
 });
 
 test('printed abilities resolve with an effect note, including fire and water mapping', () => {
@@ -167,7 +169,28 @@ test('SQUABBLE is a once-per-match card modifier', () => {
   const played = match.boards.flat().find((c) => c.instanceId === card.instanceId)!;
   assert.equal(played.powerModifier, card.basePower);
   assert(match.squabbleUsed);
+  const play = match.effectLog.find(event => event.type === 'play')!;
+  assert.match(play.note, /SQUABBLE/);
+  assert.equal(play.source?.before?.lane, null);
+  assert.equal(play.source?.after?.lane, 0);
+  assert.equal(play.source?.before?.power, card.basePower);
+  assert.equal(play.source?.after?.power, card.basePower * 2);
+  assert.equal(play.resources.before.playerHype, 20);
+  assert.equal(play.resources.after.playerHype, 20 - card.cost);
   assert.throws(() => playCard({ ...match, phase: 'player' }, 'player', match.playerHand[0].instanceId, 1, true));
+});
+
+test('a complete six-round pass match resolves deterministically', () => {
+  let match = createMatch('vibes', 'combo');
+  for (let round = 1; round <= 6; round += 1) {
+    match = pass(match, 'player');
+    match = pass(match, 'cpu');
+    match = nextRound(match);
+    assert.equal(match.round, round < 6 ? round + 1 : 6);
+  }
+  assert.equal(match.phase, 'complete');
+  assert.equal(match.effectLog.filter((event) => event.type === 'pass').length, 12);
+  assert.equal(match.effectLog.at(-1)?.type, 'match-complete');
 });
 
 test('CPU selects only an affordable exact hand card; rounds draw unused cards and final result is 2-of-3 or draw', () => {
@@ -185,4 +208,110 @@ test('CPU selects only an affordable exact hand card; rounds draw unused cards a
   const won: Match = { ...afterDraw, round: 6, phase: 'complete', boards: [[{ ...custom('cornball', 'player', 20), lane: 0 }], [{ ...custom('cornball', 'player', 21), lane: 1 }], []] };
   assert.equal(getMatchWinner(won), 'player');
   assert.equal(getMatchWinner({ ...won, boards: [[], [], []] }), 'draw');
+});
+
+test('battle events identify play, reveal, ability source and ordered target state changes', () => {
+  const enemy = { ...custom('hooper', 'cpu', 70), lane: 0 as const, playedRound: 1 };
+  const match = playOne('roaster', m => ({ ...m, boards: [[enemy], [], []] }));
+  assert.deepEqual(match.effectLog.map(event => event.type), ['play', 'reveal', 'ability']);
+  assert.deepEqual(match.effectLog.map(event => event.sequence), [1, 2, 3]);
+
+  const ability = match.effectLog[2];
+  assert.equal(ability.source?.cardId, 'roaster');
+  assert.equal(ability.source?.after?.lane, 0);
+  assert.equal(ability.timing, 'instant');
+  assert.equal(ability.duration, null);
+  assert.equal(ability.targets.length, 1);
+  assert.equal(ability.targets[0].cardInstanceId, enemy.instanceId);
+  assert.equal(ability.targets[0].before?.power, 5);
+  assert.equal(ability.targets[0].after?.power, 2);
+  assert.deepEqual(ability.targets[0].before?.statuses, enemy.statuses);
+  assert.equal(ability.scores.before[0].cpu, 7);
+  assert.equal(ability.scores.after[0].cpu, 4);
+  assert.equal(ability.scores.after[0].player, 3);
+});
+
+test('blocked targeted effects record both intended target and protecting Wifey', () => {
+  const wifey = { ...custom('wifey', 'cpu', 71), lane: 0 as const, statuses: { frozen: false, silenced: false, protected: true, blocked: false } };
+  const victim = { ...custom('snow', 'cpu', 72), lane: 0 as const, powerModifier: 5 };
+  const match = playOne('nerd', m => ({ ...m, boards: [[wifey, victim], [], []] }));
+  const ability = match.effectLog.at(-1)!;
+  assert.equal(ability.type, 'ability');
+  assert.deepEqual(new Set(ability.targets.map(target => target.cardInstanceId)), new Set([wifey.instanceId, victim.instanceId]));
+  assert.equal(ability.targets.find(target => target.cardInstanceId === victim.instanceId)?.after?.statuses.silenced, false);
+  assert.equal(ability.targets.find(target => target.cardInstanceId === wifey.instanceId)?.after?.statuses.blocked, true);
+});
+
+test('movement abilities are move events with authoritative lane snapshots', () => {
+  const bike = playOne('bikelife');
+  const bikeMove = bike.effectLog.at(-1)!;
+  assert.equal(bikeMove.kind, 'move');
+  assert.equal(bikeMove.source?.before?.lane, 0);
+  assert.equal(bikeMove.source?.after?.lane, 1);
+  assert.equal(bikeMove.source?.before?.moved, false);
+  assert.equal(bikeMove.source?.after?.moved, true);
+
+  const ally = { ...custom('cornball', 'player', 73), lane: 1 as const };
+  const vibe = playOne('vibe', m => ({ ...m, boards: [[], [ally], []] }));
+  const vibeMove = vibe.effectLog.at(-1)!;
+  const pulled = vibeMove.targets.find(target => target.cardInstanceId === ally.instanceId)!;
+  assert.equal(vibeMove.kind, 'move');
+  assert.equal(pulled.before?.lane, 1);
+  assert.equal(pulled.after?.lane, 0);
+
+  const enemies = [0, 1, 2].map(index => ({ ...custom('snow', 'cpu', 80 + index), lane: 0 as const }));
+  const cornball = playOne('cornball', m => ({ ...m, boards: [[...enemies], [], []] }));
+  const cornballMove = cornball.effectLog.at(-1)!;
+  assert.equal(cornballMove.kind, 'move');
+  assert.equal(cornballMove.targets[0].before?.lane, 0);
+  assert.equal(cornballMove.targets[0].after?.lane, 1);
+});
+
+test('Wifey protection has deterministic round duration, expiration, and renewal', () => {
+  let match = playOne('wifey');
+  const protection = match.effectLog.at(-1)!;
+  assert.equal(protection.timing, 'timed');
+  assert.deepEqual(protection.duration, { unit: 'round', startsAtRound: 1, expiresAtRound: 2, expiration: 'round-start' });
+  assert.equal(match.timedEffects[0].expiresAtRound, 2);
+  const firstEffectId = match.timedEffects[0].id;
+
+  match = pass(match, 'cpu');
+  match = nextRound(match);
+  const expiration = match.effectLog.find(event => event.type === 'expiration')!;
+  const roundStart = match.effectLog.at(-1)!;
+  assert.equal(expiration.round, 2);
+  assert.equal(expiration.source?.before?.statuses.protected, true);
+  assert.equal(expiration.source?.after?.statuses.protected, false);
+  assert.equal(roundStart.type, 'round-start');
+  assert.equal(roundStart.duration?.expiresAtRound, 3);
+  assert(!match.timedEffects.some(effect => effect.id === firstEffectId));
+  assert.equal(match.timedEffects[0].id.endsWith(':2'), true);
+  assert.equal(match.boards[0].find(card => card.cardId === 'wifey')?.statuses.protected, true);
+  assert.deepEqual(match.effectLog.map(event => event.sequence), match.effectLog.map((_, index) => index + 1));
+});
+
+test('passes are synchronous authoritative events and survive round transitions', () => {
+  let match = createMatch('vibes', 'combo');
+  const controller = new AbortController();
+  match = pass(match, 'player');
+  controller.abort();
+  assert.equal(match.phase, 'cpu-reveal');
+  assert.equal(match.effectLog[0].type, 'pass');
+  assert.equal(match.effectLog[0].owner, 'player');
+  assert.equal(match.effectLog[0].source, null);
+  assert.deepEqual(match.effectLog[0].scores.before, match.effectLog[0].scores.after);
+
+  match = pass(match, 'cpu');
+  const priorCount = match.effectLog.length;
+  match = nextRound(match);
+  assert.equal(match.phase, 'player');
+  assert.equal(match.effectLog.length, priorCount + 1);
+  const roundStart = match.effectLog.at(-1)!;
+  assert.equal(roundStart.type, 'round-start');
+  assert.equal(roundStart.state.before.round, 1);
+  assert.equal(roundStart.state.after.round, 2);
+  assert.equal(roundStart.state.after.phase, 'player');
+  const draws = roundStart.targets.filter((target) => target.before === null && target.after?.lane === null);
+  assert.equal(draws.length, 2);
+  assert.deepEqual(match.effectLog.map(event => event.sequence), [1, 2, 3]);
 });

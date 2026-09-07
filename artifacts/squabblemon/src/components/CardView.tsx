@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, getAssetUrl, getCardImage } from '../data';
 import { CardInstance } from '../gameEngine';
@@ -15,9 +16,12 @@ interface CardViewProps {
   effectivePower?: number;
   cost?: number;
   highlighted?: boolean;
+  effectRole?: 'source' | 'target';
+  effectKind?: 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
+  disableLayout?: boolean;
 }
 
-export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted }: CardViewProps) {
+export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -35,8 +39,8 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
   
   return (
     <motion.button
-      layoutId={instance?.instanceId}
-      layout
+      layoutId={disableLayout ? undefined : instance?.instanceId}
+      layout={!disableLayout}
       transition={{ layout: { type: 'spring', stiffness: 420, damping: 28 }, duration: 0.2 }}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
@@ -49,9 +53,11 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
       whileTap={{ scale: 0.95 }}
       className={`
         relative shrink-0 flex flex-col justify-end text-left group
-        ${isBoard ? 'w-[58px] h-[82px] md:w-[96px] md:h-[134px]' : 'w-[86px] h-[120px] md:w-[128px] md:h-[178px] shadow-xl shadow-black/80'}
+        ${isBoard ? 'battle-board-card w-[54px] h-[76px] sm:w-[68px] sm:h-[96px] lg:w-[86px] lg:h-[120px]' : 'w-[86px] h-[120px] md:w-[128px] md:h-[178px] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary' : 'z-10'}
-        ${highlighted ? 'effect-source' : ''}
+        ${highlighted || effectRole === 'source' ? 'effect-source' : ''}
+        ${effectRole === 'target' ? 'effect-target' : ''}
+        ${effectKind ? `effect-kind-${effectKind}` : ''}
         ${className}
       `}
     >
@@ -111,13 +117,13 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
       </div>
 
       {/* Status Icons overlay */}
-      {isBoard && (
-        <div className="absolute top-1 left-1 flex flex-col gap-1 z-20 pointer-events-none">
-          {isProtected && <div className="w-4 h-4 bg-yellow-400 text-black border border-black rounded-full flex items-center justify-center" title="Protected"><Shield size={10} /></div>}
-          {isBlocked && <div className="w-4 h-4 bg-accent text-white border border-black rounded-full flex items-center justify-center" title="Blocked"><Ban size={10} /></div>}
-          {isSilenced && <div className="w-4 h-4 bg-zinc-600 text-white border border-black rounded-full flex items-center justify-center" title="Silenced"><VolumeX size={10} /></div>}
-          {isFrozen && <div className="w-4 h-4 bg-blue-400 text-black border border-black rounded-full flex items-center justify-center" title="Frozen"><Snowflake size={10} /></div>}
-          {isMoved && <div className="w-4 h-4 bg-purple-500 text-white border border-black rounded-full flex items-center justify-center" title="Moved"><Wind size={10} /></div>}
+       {isBoard && (
+         <div className="card-status-rail absolute top-1 left-1 flex flex-col gap-0.5 z-20 pointer-events-none">
+           {isProtected && <div className="card-status bg-yellow-400 text-black" title="Protected for this round" aria-label="Protected for this round"><Shield size={9} /><span>R</span></div>}
+           {isBlocked && <div className="card-status bg-accent text-white" title="Block spent; resets next round" aria-label="Block spent; resets next round"><Ban size={9} /><span>R</span></div>}
+           {isSilenced && <div className="card-status bg-zinc-600 text-white" title="Silenced until cleansed" aria-label="Silenced until cleansed"><VolumeX size={9} /><span>∞</span></div>}
+           {isFrozen && <div className="card-status bg-blue-400 text-black" title="Frozen until cleansed" aria-label="Frozen until cleansed"><Snowflake size={9} /><span>∞</span></div>}
+           {isMoved && <div className="card-status bg-purple-500 text-white" title="Moved by an effect" aria-label="Moved by an effect"><Wind size={9} /></div>}
         </div>
       )}
 
