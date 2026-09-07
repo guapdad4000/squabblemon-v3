@@ -1,2 +1,3 @@
 - [Squabblemon visual bar](squabblemon-visual-bar.md) — Screens must be illustration-led and world-driven; typography-first dark layouts read as demo software.
 - [Browser presentation timers](browser-presentation-timers.md) — Wrap native browser timer functions before injecting them into cancellable timelines.
+- [Reward-verified battles](reward-verified-battles.md) — Rewarded matches replay exact player moves with the shared deterministic engine; never trust client-reported outcomes.

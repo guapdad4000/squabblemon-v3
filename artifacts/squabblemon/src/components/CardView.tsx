@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Card, getCardImage } from '../data';
+import { Card, getAssetUrl, getCardImage } from '../data';
 import { CardInstance } from '../gameEngine';
 import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
 
@@ -72,12 +72,12 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
 
            {card.type === 'Fire' && (
               <div className="absolute inset-0 z-[5] pointer-events-none mix-blend-screen opacity-45 motion-reduce:hidden">
-                <img src="/assets/guapdad4k_AN_ORB_OF_FIRE_PLAIN_WHITE_BACKGROUND_FIHGTING_GAME_070bfd20-91c4-4f46-8cec-dc40b553d84b_0.gif" className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
+                <img src={getAssetUrl('assets/guapdad4k_AN_ORB_OF_FIRE_PLAIN_WHITE_BACKGROUND_FIHGTING_GAME_070bfd20-91c4-4f46-8cec-dc40b553d84b_0.gif')} className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
               </div>
            )}
            {card.type === 'Water' && (
               <div className="absolute inset-0 z-[5] pointer-events-none mix-blend-screen opacity-45 motion-reduce:hidden hue-rotate-30">
-                <img src="/assets/guapdad4k_AN_ORB_OF_YELLOW_LIQUD_PLAIN_WHITE_BACKGROUND_FIHGT_fdce4b3c-ed84-4761-853f-a87581f4b64e_0.gif" className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
+                <img src={getAssetUrl('assets/guapdad4k_AN_ORB_OF_YELLOW_LIQUD_PLAIN_WHITE_BACKGROUND_FIHGT_fdce4b3c-ed84-4761-853f-a87581f4b64e_0.gif')} className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
               </div>
            )}
 

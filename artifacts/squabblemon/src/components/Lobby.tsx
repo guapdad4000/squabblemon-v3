@@ -1,11 +1,17 @@
 import { motion } from 'framer-motion';
 import { decks, getCardImage } from '../data';
 
-export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules }: any) {
+export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, isLoading, onExit }: any) {
   const selectedDeck = decks.find(d => d.id === deckId)!;
   
   return (
     <div className="flex-1 min-h-0 min-w-0 grid grid-cols-[minmax(0,1fr)] grid-rows-[minmax(210px,1fr)_auto_auto] md:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] md:grid-rows-[1fr_auto] w-full max-w-full overflow-hidden relative bg-[#070707]">
+      <div className="absolute top-4 left-4 z-50">
+        <button onClick={onExit} className="w-10 h-10 bg-black/50 border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full">
+           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+      </div>
+
       <div className="relative min-h-0 overflow-hidden md:row-span-2">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_35%,rgba(250,204,21,0.12),transparent_48%)]" />
         <motion.img
@@ -22,7 +28,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/45" />
 
         <div className="relative z-10 h-full flex flex-col p-4 md:p-10 pointer-events-none">
-          <div>
+          <div className="ml-12 md:ml-0">
             <div className="font-display font-black italic text-3xl md:text-7xl leading-[0.82] tracking-tighter uppercase">
               Squabble<span className="text-primary">mon</span>
             </div>
@@ -108,10 +114,11 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         <button
           data-testid="button-start"
           onClick={onStart}
-          className="relative z-10 w-full min-h-14 md:min-h-16 bg-primary hover:bg-yellow-300 text-black font-display font-black text-xl md:text-3xl italic uppercase shadow-[0_5px_0_#854d0e] active:translate-y-1 active:shadow-none transition-all"
+          disabled={isLoading}
+          className="relative z-10 w-full min-h-14 md:min-h-16 bg-primary hover:bg-yellow-300 text-black font-display font-black text-xl md:text-3xl italic uppercase shadow-[0_5px_0_#854d0e] active:translate-y-1 active:shadow-none transition-all disabled:opacity-50"
           style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))' }}
         >
-          Enter the streets
+          {isLoading ? 'Loading...' : 'Enter the streets'}
         </button>
       </div>
     </div>

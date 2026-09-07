@@ -2,12 +2,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { districts, getCardImage } from '../data';
 import { CardView } from './CardView';
 import { getDistrictResults, getEffectiveCardPower, getLaneScore, getLegalCardCost, Match } from '../gameEngine';
-import type { PresentationPhase } from '../App';
+import type { PresentationPhase } from './PlayLoop';
 
 export function Battle({
   match, deck, rivalDeck,
   selectedInstanceId, setSelectedInstanceId, selectedLane, setSelectedLane,
-  commit, skipSequence, presentationPhase, phaseMessage, timerSeconds, impactLane,
+  commit, skipSequence, presentationPhase, phaseMessage, timerSeconds, timerEnabled, impactLane,
   stagedRival, activeEffectId, activeEffectLane,
   squabble, setSquabble, setInspect, archiveMatch, onShowRules
 }: any) {
@@ -134,10 +134,12 @@ export function Battle({
              <div className="font-mono text-[9px] text-white/40 uppercase">Round</div>
              <div className="font-display font-black text-base md:text-xl leading-none">{m.round}<span className="text-white/30">/6</span></div>
            </div>
-            <div data-testid="turn-timer" aria-label={interactive ? `${timerSeconds} seconds remaining` : 'Decision timer paused'} className={`w-12 text-center border px-1 py-1 ${!interactive ? 'border-white/10 text-white/25' : timerSeconds <= 5 ? 'border-accent text-accent animate-pulse' : 'border-primary/40 text-primary'}`}>
-              <div className="font-mono text-[7px] uppercase">Time</div>
-              <div className="font-display font-black text-lg">{interactive ? timerSeconds : '—'}</div>
-            </div>
+            {timerEnabled && (
+              <div data-testid="turn-timer" aria-label={interactive ? `${timerSeconds} seconds remaining` : 'Decision timer paused'} className={`w-12 text-center border px-1 py-1 ${!interactive ? 'border-white/10 text-white/25' : timerSeconds <= 5 ? 'border-accent text-accent animate-pulse' : 'border-primary/40 text-primary'}`}>
+                <div className="font-mono text-[7px] uppercase">Time</div>
+                <div className="font-display font-black text-lg">{interactive ? timerSeconds : '—'}</div>
+              </div>
+            )}
         </div>
       </div>
 

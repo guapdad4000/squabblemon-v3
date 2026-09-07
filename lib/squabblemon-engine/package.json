@@ -1,0 +1,11 @@
+{
+  "name": "@workspace/squabblemon-engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/gameEngine.ts",
+    "./data": "./src/data.ts",
+    "./gameEngine": "./src/gameEngine.ts"
+  }
+}

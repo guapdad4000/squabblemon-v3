@@ -10,6 +10,9 @@
   "include": ["src"],
   "references": [
     {
+      "path": "../../lib/squabblemon-engine"
+    },
+    {
       "path": "../../lib/db"
     },
     {

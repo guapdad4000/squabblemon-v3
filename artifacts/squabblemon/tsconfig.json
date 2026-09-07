@@ -16,6 +16,9 @@
   },
   "references": [
     {
+      "path": "../../lib/squabblemon-engine"
+    },
+    {
       "path": "../../lib/api-client-react"
     }
   ]

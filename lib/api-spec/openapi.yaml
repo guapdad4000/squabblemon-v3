@@ -2,21 +2,22 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 0.2.0
+  description: Squabblemon player and game-loop API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: player
+    description: Authenticated player progression
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +25,141 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /player/bootstrap:
+    get:
+      operationId: getPlayerBootstrap
+      tags: [player]
+      summary: Load or provision the authenticated player
+      responses:
+        "200":
+          description: Player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "401":
+          description: Authentication required
+  /player/profile:
+    patch:
+      operationId: updatePlayerProfile
+      tags: [player]
+      summary: Update player-facing profile and settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayerProfileUpdate"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid profile update
+        "401":
+          description: Authentication required
+  /player/onboarding:
+    post:
+      operationId: advancePlayerOnboarding
+      tags: [player]
+      summary: Advance one idempotent onboarding step
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingProgressInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid or out-of-order onboarding step
+        "401":
+          description: Authentication required
+  /player/matches:
+    post:
+      operationId: startPlayerMatch
+      tags: [player]
+      summary: Issue a server match session before local play starts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchStartInput"
+      responses:
+        "201":
+          description: Match session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerMatch"
+        "400":
+          description: Invalid match setup
+        "401":
+          description: Authentication required
+  /player/matches/{matchId}/complete:
+    post:
+      operationId: completePlayerMatch
+      tags: [player]
+      summary: Complete a match once and receive server-computed rewards
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchCompleteInput"
+      responses:
+        "200":
+          description: Match rewards and updated progression
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchCompletion"
+        "400":
+          description: Invalid completion
+        "401":
+          description: Authentication required
+        "404":
+          description: Match not found
+  /player/missions/{missionId}/claim:
+    post:
+      operationId: claimPlayerMission
+      tags: [player]
+      summary: Claim a completed mission exactly once
+      parameters:
+        - name: missionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Mission is not claimable
+        "401":
+          description: Authentication required
+        "404":
+          description: Mission not found
 components:
   schemas:
     HealthStatus:
@@ -31,6 +167,313 @@ components:
       properties:
         status:
           type: string
+      required: [status]
+    PlayerSettings:
+      type: object
+      properties:
+        reducedMotion:
+          type: boolean
+        turnTimerEnabled:
+          type: boolean
+      required: [reducedMotion, turnTimerEnabled]
+    SavedDeck:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        cardIds:
+          type: array
+          items:
+            type: string
+      required: [id, name, cardIds]
+    PlayerProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        avatarKey:
+          type: string
+        onboardingStep:
+          type: string
+          enum: [profile, tutorial, crew, reward, complete]
+        starterDeckId:
+          type: [string, "null"]
+        streetRep:
+          type: integer
+        xp:
+          type: integer
+        level:
+          type: integer
+        softCurrency:
+          type: integer
+        packTickets:
+          type: integer
+        cosmeticCurrency:
+          type: integer
+        collectionProgress:
+          type: integer
+        storyChapter:
+          type: integer
+        storyNode:
+          type: integer
+        tutorialCompleted:
+          type: boolean
+        starterRewardClaimed:
+          type: boolean
+        ageConfirmedAt:
+          type: [string, "null"]
+          format: date-time
+        termsAcceptedAt:
+          type: [string, "null"]
+          format: date-time
+        settings:
+          $ref: "#/components/schemas/PlayerSettings"
+        ownedCardIds:
+          type: array
+          items:
+            type: string
+        ownedVariants:
+          type: array
+          items:
+            type: string
+        savedDecks:
+          type: array
+          items:
+            $ref: "#/components/schemas/SavedDeck"
+        storyProgress:
+          type: object
+          additionalProperties: true
+        inbox:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        packHistory:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        lastActiveAt:
+          type: string
+          format: date-time
       required:
+        - id
+        - displayName
+        - avatarKey
+        - onboardingStep
+        - starterDeckId
+        - streetRep
+        - xp
+        - level
+        - softCurrency
+        - packTickets
+        - cosmeticCurrency
+        - collectionProgress
+        - storyChapter
+        - storyNode
+        - tutorialCompleted
+        - starterRewardClaimed
+        - ageConfirmedAt
+        - termsAcceptedAt
+        - settings
+        - ownedCardIds
+        - ownedVariants
+        - savedDecks
+        - storyProgress
+        - inbox
+        - packHistory
+        - lastActiveAt
+    PlayerMission:
+      type: object
+      properties:
+        id:
+          type: string
+        cadence:
+          type: string
+          enum: [onboarding, daily, weekly]
+        title:
+          type: string
+        description:
+          type: string
+        progress:
+          type: integer
+        goal:
+          type: integer
+        rewardCurrency:
+          type: string
+          enum: [softCurrency, packTickets]
+        rewardAmount:
+          type: integer
+        status:
+          type: string
+          enum: [active, claimable, claimed]
+        resetAt:
+          type: [string, "null"]
+          format: date-time
+      required:
+        - id
+        - cadence
+        - title
+        - description
+        - progress
+        - goal
+        - rewardCurrency
+        - rewardAmount
         - status
-
+        - resetAt
+    NextAction:
+      type: object
+      properties:
+        id:
+          type: string
+        eyebrow:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+          enum: [onboarding, play, story, collection, missions, shop]
+        rewardLabel:
+          type: [string, "null"]
+      required: [id, eyebrow, title, description, destination, rewardLabel]
+    PlayerBootstrap:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/PlayerProfile"
+        missions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlayerMission"
+        nextAction:
+          $ref: "#/components/schemas/NextAction"
+      required: [profile, missions, nextAction]
+    PlayerProfileUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 24
+        avatarKey:
+          type: string
+          maxLength: 64
+        reducedMotion:
+          type: boolean
+        turnTimerEnabled:
+          type: boolean
+      additionalProperties: false
+    OnboardingProgressInput:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [accept-terms, complete-tutorial, choose-starter, claim-reward]
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 24
+        ageConfirmed:
+          type: boolean
+        termsAccepted:
+          type: boolean
+        starterDeckId:
+          type: string
+          maxLength: 32
+      required: [action]
+      additionalProperties: false
+    MatchStartInput:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [practice, tutorial, story]
+        playerDeckId:
+          type: string
+          maxLength: 32
+        rivalDeckId:
+          type: string
+          maxLength: 32
+      required: [mode, playerDeckId, rivalDeckId]
+      additionalProperties: false
+    PlayerMatch:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        mode:
+          type: string
+        playerDeckId:
+          type: string
+        rivalDeckId:
+          type: string
+        status:
+          type: string
+          enum: [active, complete]
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt]
+    MatchCompleteInput:
+      type: object
+      properties:
+        moves:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: "#/components/schemas/MatchMove"
+      required: [moves]
+      additionalProperties: false
+    MatchMove:
+      type: object
+      properties:
+        cardInstanceId:
+          type: [string, "null"]
+        lane:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 2
+        squabble:
+          type: boolean
+      required: [cardInstanceId, lane, squabble]
+      additionalProperties: false
+    MatchReward:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        xp:
+          type: integer
+        streetRep:
+          type: integer
+        softCurrency:
+          type: integer
+        packTickets:
+          type: integer
+      required: [id, label, xp, streetRep, softCurrency, packTickets]
+    MatchCompletion:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/PlayerProfile"
+        missions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlayerMission"
+        nextAction:
+          $ref: "#/components/schemas/NextAction"
+        reward:
+          $ref: "#/components/schemas/MatchReward"
+        alreadyCompleted:
+          type: boolean
+      required: [profile, missions, nextAction, reward, alreadyCompleted]
