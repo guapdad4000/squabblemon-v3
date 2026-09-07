@@ -39,6 +39,82 @@ paths:
                 $ref: "#/components/schemas/PlayerBootstrap"
         "401":
           description: Authentication required
+  /player/story:
+    get:
+      operationId: getPlayerStory
+      tags: [player]
+      summary: Load canonical chapter and node progression
+      responses:
+        "200":
+          description: Canonical story campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryCampaign"
+        "401":
+          description: Authentication required
+  /player/story/nodes/{nodeId}/complete:
+    post:
+      operationId: completePlayerStoryNode
+      tags: [player]
+      summary: Complete an available non-battle story node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryNodeCompleteInput"
+      responses:
+        "200":
+          description: Updated story and player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryNodeCompletion"
+        "400":
+          description: Unknown, locked, or battle node
+        "401":
+          description: Authentication required
+  /player/story/nodes/{nodeId}/dialogue:
+    post:
+      operationId: savePlayerStoryDialogue
+      tags: [player]
+      summary: Persist dialogue history for an unlocked story node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryDialogueProgressInput"
+      responses:
+        "200":
+          description: Updated dialogue history and canonical story state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryDialogueProgressResponse"
+        "400":
+          description: Invalid dialogue progress
+        "401":
+          description: Authentication required
+        "409":
+          description: Locked node or conflicting idempotency key
   /player/profile:
     patch:
       operationId: updatePlayerProfile
@@ -733,6 +809,9 @@ components:
         rivalDeckId:
           type: string
           maxLength: 32
+        storyNodeId:
+          type: string
+          maxLength: 80
       required: [mode, playerDeckId, rivalDeckId]
       additionalProperties: false
     PlayerMatch:
@@ -753,7 +832,14 @@ components:
         createdAt:
           type: string
           format: date-time
-      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt]
+        storyNodeId:
+          type: [string, "null"]
+        contentVersion:
+          type: [integer, "null"]
+        encounterSnapshot:
+          type: [object, "null"]
+          additionalProperties: true
+      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot]
     MatchCompleteInput:
       type: object
       properties:
@@ -793,7 +879,15 @@ components:
           type: integer
         packTickets:
           type: integer
-      required: [id, label, xp, streetRep, softCurrency, packTickets]
+        descriptions:
+          type: array
+          items:
+            type: string
+        storyRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGrantedReward"
+      required: [id, label, xp, streetRep, softCurrency, packTickets, descriptions, storyRewards]
     MatchCompletion:
       type: object
       properties:
@@ -809,4 +903,205 @@ components:
           $ref: "#/components/schemas/MatchReward"
         alreadyCompleted:
           type: boolean
-      required: [profile, missions, nextAction, reward, alreadyCompleted]
+        campaign:
+          oneOf:
+            - $ref: "#/components/schemas/StoryCampaign"
+            - type: "null"
+        story:
+          oneOf:
+            - $ref: "#/components/schemas/StoryMatchMetadata"
+            - type: "null"
+      required: [profile, missions, nextAction, reward, alreadyCompleted, campaign, story]
+    StoryReward:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [currency, card, chapter-key]
+        id:
+          type: string
+        amount:
+          type: integer
+      required: [kind, id, amount]
+    StoryGrantedReward:
+      type: object
+      properties:
+        rewardKey:
+          type: string
+        kind:
+          type: string
+          enum: [currency, card, chapter-key]
+        id:
+          type: string
+        amount:
+          type: integer
+        duplicateShards:
+          type: integer
+        description:
+          type: string
+      required: [rewardKey, kind, id, amount, duplicateShards, description]
+    StoryMapPosition:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+      required: [x, y]
+    StoryNodeProgress:
+      type: object
+      properties:
+        chapterId:
+          type: string
+        nodeId:
+          type: string
+        title:
+          type: string
+        kind:
+          type: string
+          enum: [dialogue, reward, battle]
+        status:
+          type: string
+          enum: [locked, available, cleared]
+        mapPosition:
+          $ref: "#/components/schemas/StoryMapPosition"
+        prerequisites:
+          type: array
+          items:
+            type: string
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryReward"
+        cleared:
+          type: boolean
+        stars:
+          type: integer
+        attempts:
+          type: integer
+        wins:
+          type: integer
+        lastOutcome:
+          type: [string, "null"]
+        dialogueSeen:
+          type: array
+          items:
+            type: string
+        bossHighestPhase:
+          type: integer
+        firstClearedAt:
+          type: [string, "null"]
+          format: date-time
+        lastPlayedAt:
+          type: [string, "null"]
+          format: date-time
+      required: [chapterId, nodeId, title, kind, status, mapPosition, prerequisites, rewards, cleared, stars, attempts, wins, lastOutcome, dialogueSeen, bossHighestPhase, firstClearedAt, lastPlayedAt]
+    StoryChapterProgress:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        description:
+          type: string
+        order:
+          type: integer
+        mapAssetId:
+          type: string
+        status:
+          type: string
+          enum: [locked, available, cleared]
+        completedNodes:
+          type: integer
+        totalNodes:
+          type: integer
+        stars:
+          type: integer
+        bossStatus:
+          type: string
+          enum: [locked, available, in-progress, cleared]
+      required: [id, title, subtitle, description, order, mapAssetId, status, completedNodes, totalNodes, stars, bossStatus]
+    StoryCampaign:
+      type: object
+      properties:
+        contentVersion:
+          type: integer
+        chapters:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryChapterProgress"
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryNodeProgress"
+        recommendedNodeId:
+          type: [string, "null"]
+        totalStars:
+          type: integer
+        completedNodes:
+          type: integer
+        bossStatus:
+          type: string
+          enum: [locked, available, in-progress, cleared]
+      required: [contentVersion, chapters, nodes, recommendedNodeId, totalStars, completedNodes, bossStatus]
+    StoryNodeCompleteInput:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 80
+        dialogueSeen:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 120
+      required: [idempotencyKey, dialogueSeen]
+      additionalProperties: false
+    StoryDialogueProgressInput:
+      $ref: "#/components/schemas/StoryNodeCompleteInput"
+    StoryNodeCompletion:
+      type: object
+      properties:
+        campaign:
+          $ref: "#/components/schemas/StoryCampaign"
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGrantedReward"
+        alreadyCompleted:
+          type: boolean
+      required: [campaign, bootstrap, rewards, alreadyCompleted]
+    StoryDialogueProgressResponse:
+      type: object
+      properties:
+        campaign:
+          $ref: "#/components/schemas/StoryCampaign"
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        node:
+          $ref: "#/components/schemas/StoryNodeProgress"
+        alreadyApplied:
+          type: boolean
+      required: [campaign, bootstrap, node, alreadyApplied]
+    StoryMatchMetadata:
+      type: object
+      properties:
+        nodeId:
+          type: string
+        stars:
+          type: integer
+        firstClear:
+          type: boolean
+        outcome:
+          type: string
+          enum: [win, loss, draw]
+        bossHighestPhase:
+          type: integer
+      required: [nodeId, stars, firstClear, outcome, bossHighestPhase]

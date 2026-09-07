@@ -3,3 +3,4 @@ export * from "./playerMissions";
 export * from "./playerMatches";
 export * from "./playerPackOpenings";
 export * from "./playerCollectionClaims";
+export * from "./playerStory";

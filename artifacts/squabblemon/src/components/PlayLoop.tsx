@@ -1,9 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useStartPlayerMatch, useCompletePlayerMatch, getGetPlayerBootstrapQueryKey, MatchReward, type MatchMove } from '@workspace/api-client-react';
+import { useStartPlayerMatch, useCompletePlayerMatch, getGetPlayerBootstrapQueryKey, getGetPlayerStoryQueryKey, MatchReward, type MatchMove, type StoryMatchMetadata } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { LayoutGroup, AnimatePresence } from 'framer-motion';
 
-import { decks, districts, Card, Deck } from '../data';
+import { cards, decks, districts, Card, Deck } from '../data';
 import { Lobby } from './Lobby';
 import { Battle } from './Battle';
 import { ResultScreen } from './ResultScreen';
@@ -11,7 +11,7 @@ import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { PresentationTimeline } from '../presentationTimeline';
 
-import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, Match, playCard, pass, nextRound, CardInstance, type Lane } from '../gameEngine';
+import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, Match, playCard, pass, nextRound, CardInstance, type Lane, type StoryEncounterSnapshot } from '../gameEngine';
 export type PresentationPhase =
   | 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble'
   | 'deal' | 'round-intro' | 'player-ready' | 'player-slam' | 'effects'
@@ -28,8 +28,9 @@ export function PlayLoop({
   turnTimerEnabled = true,
   customPlayerDeck,
   availableDeckIds,
+  storyNodeId,
 }: {
-  mode?: 'guest' | 'practice' | 'tutorial',
+  mode?: 'guest' | 'practice' | 'tutorial' | 'story',
   onExit: () => void,
   initialDeckId?: string,
   initialRivalId?: string,
@@ -37,6 +38,7 @@ export function PlayLoop({
   turnTimerEnabled?: boolean,
   customPlayerDeck?: Deck,
   availableDeckIds?: string[],
+  storyNodeId?: string,
 }) {
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [deckId, setDeckId] = useState(
@@ -50,6 +52,8 @@ export function PlayLoop({
   const [serverMatchId, setServerMatchId] = useState<string | null>(null);
   const [serverReward, setServerReward] = useState<MatchReward | null>(null);
   const [serverRewardError, setServerRewardError] = useState(false);
+  const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null);
+  const [startError, setStartError] = useState<string | null>(null);
 
   const startPlayerMatch = useStartPlayerMatch();
   const completePlayerMatch = useCompletePlayerMatch();
@@ -74,8 +78,18 @@ export function PlayLoop({
   const [showRules, setShowRules] = useState(false);
   const [inspect, setInspect] = useState<CardInstance | Card | null>(null);
 
-  const deck = customPlayerDeck || decks.find(d => d.id === deckId)!;
-  const rivalDeck = decks.find(d => d.id === rival)!;
+  const deck = customPlayerDeck || decks.find(d => d.id === deckId) || decks[0];
+  const rivalDeck: Deck = match?.storyEncounter
+    ? {
+        id: match.storyEncounter.enemy.deckId,
+        name: match.storyEncounter.enemy.name,
+        archetype: match.storyEncounter.enemy.behaviorProfile,
+        accent: 'STORY',
+        plan: 'A server-issued story encounter.',
+        cards: [...match.storyEncounter.enemy.cardIds],
+        hero: cards[match.storyEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero,
+      }
+    : decks.find(d => d.id === rival) || decks[0];
 
   const cancelTimers = useCallback(() => {
     timeline.current.cancelAll();
@@ -141,20 +155,51 @@ export function PlayLoop({
 
   const start = useCallback(async () => {
     setServerMatchId(null);
+    setStartError(null);
     if (mode !== 'guest' && !customPlayerDeck) {
       try {
         const res = await startPlayerMatch.mutateAsync({
-          data: { mode: mode === 'tutorial' ? 'tutorial' : 'practice', playerDeckId: deckId, rivalDeckId: rival }
+          data: { mode: mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice', playerDeckId: deckId, rivalDeckId: rival, storyNodeId }
         });
         setServerMatchId(res.id);
+        if (mode === 'story') {
+          if (!res.encounterSnapshot) throw new Error('The server did not issue a story encounter.');
+          const storyMatch = createStoryMatch(
+            res.encounterSnapshot as unknown as StoryEncounterSnapshot,
+            deckId,
+          );
+          setServerReward(null);
+          setServerRewardError(false);
+          setStoryMetadata(null);
+          playerMovesRef.current = [];
+          setMatch(storyMatch);
+          setSelectedInstanceId(null);
+          setSelectedLane(null);
+          setSquabble(false);
+          setShowRules(false);
+          setInspect(null);
+          setStagedRival(null);
+          setActiveEffectId(null);
+          setActiveEffectLane(null);
+          setScreen('battle');
+          locked.current = true;
+          void runIntro();
+          return;
+        }
       } catch (e) {
+        if (mode === 'story') {
+          setServerMatchId(null);
+          setStartError(e instanceof Error ? e.message : 'The encounter could not be started.');
+          return;
+        }
         const proceed = window.confirm("Failed to reach server. Play local practice match with no rewards?");
         if (!proceed) return;
         setServerMatchId(null);
       }
     }
+    if (mode === 'story') return;
     startLocalMatch();
-  }, [deckId, mode, rival, startLocalMatch, startPlayerMatch, customPlayerDeck]);
+  }, [deckId, mode, rival, startLocalMatch, startPlayerMatch, customPlayerDeck, storyNodeId, runIntro]);
 
   useEffect(() => {
     if (hideLobby && !match && (screen === 'lobby' || screen === 'battle')) {
@@ -182,7 +227,11 @@ export function PlayLoop({
              nextAction: res.nextAction,
            };
         });
+        if (res.campaign) {
+          queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
+        }
         setServerReward(res.reward);
+        setStoryMetadata(res.story);
         setServerRewardError(false);
       } catch (e) {
         console.error(e);
@@ -325,6 +374,7 @@ export function PlayLoop({
 
   const handleRestart = () => {
     autoStartRef.current = false;
+    setStartError(null);
     setMatch(null);
     setScreen(hideLobby ? 'battle' : 'lobby');
   };
@@ -332,6 +382,29 @@ export function PlayLoop({
   return (
     <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg">
       <div className="noise-overlay" />
+
+      {startError && !match && (
+        <div className="relative z-20 grid h-full place-items-center p-6 text-center">
+          <div className="max-w-sm border border-accent/40 bg-zinc-950 p-6">
+            <div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div>
+            <h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1>
+            <p role="alert" className="mt-3 text-sm text-white/55">{startError}</p>
+            <div className="mt-6 flex gap-2">
+              <button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 font-display font-black italic uppercase">
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={() => void start()}
+                disabled={startPlayerMatch.isPending}
+                className="flex-1 bg-primary px-4 py-3 font-display font-black italic uppercase text-black disabled:opacity-50"
+              >
+                {startPlayerMatch.isPending ? 'Retrying' : 'Retry'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {screen === 'lobby' && !hideLobby && (
         <Lobby
@@ -379,6 +452,7 @@ export function PlayLoop({
             onRetryReward={() => void finishMatchSession(match)}
             isGuest={mode === 'guest' || !!customPlayerDeck}
             customPlayerDeck={customPlayerDeck}
+            storyMetadata={storyMetadata}
           />
         )}
       </AnimatePresence>

@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/gameEngine.ts",
     "./data": "./src/data.ts",
-    "./gameEngine": "./src/gameEngine.ts"
+    "./gameEngine": "./src/gameEngine.ts",
+    "./story": "./src/story.ts"
   }
 }

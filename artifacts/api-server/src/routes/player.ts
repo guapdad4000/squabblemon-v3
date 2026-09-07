@@ -20,18 +20,39 @@ import {
   playerMatchesTable,
   playerMissionsTable,
   playerProfilesTable,
+  playerStoryNodesTable,
 } from "@workspace/db";
 import {
+  createStoryMatch,
   getDistrictResults,
   getMatchWinner,
+  type StoryEncounterSnapshot,
   verifyMatchTranscript,
+  verifyStoryMatchTranscript,
 } from "@workspace/squabblemon-engine/gameEngine";
+import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import { storyContent } from "@workspace/squabblemon-engine/story";
 import {
   ensurePlayer,
   getPlayerBootstrap,
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
 import { canUseRewardedRecipe } from "../lib/matchAuthorization";
+import {
+  getPlayerStoryCampaign,
+  requireAvailableStoryNode,
+  StoryRequestError,
+} from "../lib/storyService";
+import {
+  grantStoryRewards,
+  type GrantedStoryReward,
+} from "../lib/storyTransactions";
+import { getStoredStoryMatchResult } from "../lib/storyMatchResult";
+import {
+  createStoryMatchProgressionSnapshot,
+  parseStoryMatchProgressionSnapshot,
+  type StoryMatchProgressionSnapshot,
+} from "../lib/storyMatchSnapshot";
 
 const router: IRouter = Router();
 
@@ -306,10 +327,8 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  if (
-    !deckCards[parsed.data.playerDeckId] ||
-    !deckCards[parsed.data.rivalDeckId]
-  ) {
+  if (!deckCards[parsed.data.playerDeckId] ||
+    (parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId])) {
     res.status(400).json({ error: "Unknown crew" });
     return;
   }
@@ -336,13 +355,74 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       return;
     }
   }
+  let storyNodeId: string | null = null;
+  let storyContentVersion: number | null = null;
+  let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
+  let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
+  let playerEngineCardIds: string[] | null = null;
+  let rivalDeckId = parsed.data.rivalDeckId;
+  if (parsed.data.mode === "story") {
+    if (!parsed.data.storyNodeId) {
+      res.status(400).json({ error: "Story mode requires a story node" });
+      return;
+    }
+    const rows = await db
+      .select()
+      .from(playerStoryNodesTable)
+      .where(eq(playerStoryNodesTable.clerkUserId, userId));
+    try {
+      const { node, chapter } = requireAvailableStoryNode(
+        parsed.data.storyNodeId,
+        rows,
+      );
+      if (node.kind !== "battle") {
+        res.status(400).json({ error: "Story node is not a battle" });
+        return;
+      }
+      const recipe = starterRecipes.find(
+        (item) => item.id === parsed.data.playerDeckId,
+      );
+      if (!recipe) {
+        res.status(400).json({ error: "Unknown player crew" });
+        return;
+      }
+      storyNodeId = node.id;
+      storyContentVersion = storyContent.version;
+      storyEncounterSnapshot = structuredClone(node.encounter);
+      storyProgressionSnapshot = createStoryMatchProgressionSnapshot(
+        storyContent.version,
+        chapter,
+        node,
+      );
+      playerEngineCardIds = [...recipe.cards];
+      rivalDeckId = node.encounter.enemy.deckId;
+      createStoryMatch(
+        storyEncounterSnapshot,
+        playerEngineCardIds,
+        parsed.data.playerDeckId,
+      );
+    } catch (error) {
+      if (error instanceof StoryRequestError) {
+        res.status(error.status).json({ error: error.message });
+        return;
+      }
+      throw error;
+    }
+  }
   const [match] = await db
     .insert(playerMatchesTable)
     .values({
       clerkUserId: userId,
       mode: parsed.data.mode,
       playerDeckId: parsed.data.playerDeckId,
-      rivalDeckId: parsed.data.rivalDeckId,
+      rivalDeckId,
+      storyNodeId,
+      storyContentVersion,
+      storyEncounterSnapshot: storyEncounterSnapshot
+        ? { ...storyEncounterSnapshot }
+        : null,
+      storyProgressionSnapshot,
+      playerEngineCardIds,
     })
     .returning();
   res.status(201).json(
@@ -351,6 +431,9 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       mode: match.mode,
       playerDeckId: match.playerDeckId,
       rivalDeckId: match.rivalDeckId,
+      storyNodeId: match.storyNodeId,
+      contentVersion: match.storyContentVersion,
+      encounterSnapshot: match.storyEncounterSnapshot,
       status: "active",
       createdAt: match.createdAt.toISOString(),
     }),
@@ -387,14 +470,44 @@ router.post(
     let alreadyCompleted = Boolean(match.completedAt);
     let verifiedOutcome = match.outcome as "win" | "loss" | "draw" | null;
     let districtsWon = match.districtsWon ?? 0;
+    let verifiedMatch:
+      | ReturnType<typeof verifyMatchTranscript>
+      | ReturnType<typeof verifyStoryMatchTranscript>
+      | null = null;
+    let storyProgression: StoryMatchProgressionSnapshot | null = null;
+
+    if (match.mode === "story") {
+      try {
+        storyProgression = parseStoryMatchProgressionSnapshot(
+          match.storyProgressionSnapshot,
+        );
+        if (storyProgression.nodeId !== match.storyNodeId) {
+          throw new Error("Stored story match has mismatched node snapshots");
+        }
+      } catch (error) {
+        req.log.warn({ error, matchId: match.id }, "Rejected stale story match");
+        res.status(409).json({
+          error: "This story encounter is outdated. Return to the map and start it again.",
+        });
+        return;
+      }
+    }
 
     if (!alreadyCompleted) {
       try {
-        const verifiedMatch = verifyMatchTranscript(
-          match.playerDeckId,
-          match.rivalDeckId,
-          parsed.data.moves,
-        );
+        verifiedMatch =
+          match.mode === "story"
+            ? verifyStoryMatchTranscript(
+                match.storyEncounterSnapshot as StoryEncounterSnapshot,
+                match.playerEngineCardIds ?? [],
+                parsed.data.moves,
+                match.playerDeckId,
+              )
+            : verifyMatchTranscript(
+                match.playerDeckId,
+                match.rivalDeckId,
+                parsed.data.moves,
+              );
         const winner = getMatchWinner(verifiedMatch);
         verifiedOutcome =
           winner === "player" ? "win" : winner === "cpu" ? "loss" : "draw";
@@ -427,12 +540,20 @@ router.post(
             softCurrency: match.rewardSoftCurrency ?? 0,
             packTickets: match.rewardPackTickets ?? 0,
           }
-        : match.mode === "tutorial"
+        : match.mode === "tutorial" || match.mode === "story"
           ? { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 }
           : amounts;
 
+    let grantedStoryRewards =
+      (match.storyGrantedRewards as GrantedStoryReward[] | null) ?? [];
+    let firstStoryClear = match.storyFirstClear ?? false;
     if (!alreadyCompleted) {
       const completed = await db.transaction(async (tx) => {
+        if (match.mode === "story") {
+          await tx.execute(
+            sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
+          );
+        }
         const [updated] = await tx
           .update(playerMatchesTable)
           .set({
@@ -467,7 +588,7 @@ router.post(
                 eq(playerProfilesTable.onboardingStep, "tutorial"),
               ),
             );
-        } else {
+        } else if (match.mode !== "story") {
           await tx
             .update(playerProfilesTable)
             .set({
@@ -499,6 +620,97 @@ router.post(
               );
           }
         }
+        if (
+          match.mode === "story" &&
+          match.storyNodeId &&
+          storyProgression &&
+          verifiedMatch &&
+          match.storyEncounterSnapshot
+        ) {
+          const [prior] = await tx
+            .select()
+            .from(playerStoryNodesTable)
+            .where(
+              and(
+                eq(playerStoryNodesTable.clerkUserId, userId),
+                eq(playerStoryNodesTable.nodeId, storyProgression.nodeId),
+              ),
+            );
+          const won = verifiedOutcome === "win";
+          const stars = won
+            ? 1 +
+              (districtsWon === 3 ? 1 : 0) +
+              (!verifiedMatch.squabbleUsed ? 1 : 0)
+            : 0;
+          firstStoryClear = won && !prior?.cleared;
+          const canonicalCleared = (prior?.cleared ?? false) || won;
+          const canonicalStars = Math.max(prior?.stars ?? 0, stars);
+          const highestPhase = Math.max(
+            prior?.bossProgress.highestPhase ?? 0,
+            (verifiedMatch.storyRuntime?.activePhaseIndex ?? -1) + 1,
+          );
+          const now = new Date();
+          await tx
+            .insert(playerStoryNodesTable)
+            .values({
+              clerkUserId: userId,
+              chapterId: storyProgression.chapterId,
+              nodeId: storyProgression.nodeId,
+              cleared: won,
+              stars,
+              attempts: 1,
+              wins: won ? 1 : 0,
+              lastOutcome: verifiedOutcome,
+              dialogueSeen: prior?.dialogueSeen ?? [],
+              bossProgress: { highestPhase },
+              firstClearedAt: won ? now : null,
+              lastPlayedAt: now,
+            })
+            .onConflictDoUpdate({
+              target: [
+                playerStoryNodesTable.clerkUserId,
+                playerStoryNodesTable.nodeId,
+              ],
+              set: {
+                cleared: sql`${playerStoryNodesTable.cleared} or ${won}`,
+                stars: sql`greatest(${playerStoryNodesTable.stars}, ${stars})`,
+                attempts: sql`${playerStoryNodesTable.attempts} + 1`,
+                wins: sql`${playerStoryNodesTable.wins} + ${won ? 1 : 0}`,
+                lastOutcome: verifiedOutcome,
+                bossProgress: { highestPhase },
+                firstClearedAt: prior?.firstClearedAt ?? (won ? now : null),
+                lastPlayedAt: now,
+              },
+            });
+          if (firstStoryClear) {
+            grantedStoryRewards = await grantStoryRewards(
+              tx,
+              userId,
+              storyProgression.chapterId,
+              storyProgression.nodeId,
+              storyProgression.rewards,
+            );
+          }
+          await tx
+            .update(playerMatchesTable)
+            .set({
+              storyFirstClear: firstStoryClear,
+              storyStars: stars,
+              storyBossHighestPhase: highestPhase,
+              storyGrantedRewards: grantedStoryRewards,
+            })
+            .where(eq(playerMatchesTable.id, match.id));
+          const chapterNumber = storyProgression.chapterOrder + 1;
+          const nodeNumber = storyProgression.nodeOrder + 1;
+          await tx
+            .update(playerProfilesTable)
+            .set({
+              storyChapter: sql`greatest(${playerProfilesTable.storyChapter}, ${chapterNumber})`,
+              storyNode: sql`case when ${playerProfilesTable.storyChapter} < ${chapterNumber} then ${nodeNumber} when ${playerProfilesTable.storyChapter} = ${chapterNumber} then greatest(${playerProfilesTable.storyNode}, ${nodeNumber}) else ${playerProfilesTable.storyNode} end`,
+              storyProgress: sql`coalesce(${playerProfilesTable.storyProgress}, '{}'::jsonb) || ${JSON.stringify({ [storyProgression.nodeId]: { cleared: canonicalCleared, stars: canonicalStars } })}::jsonb`,
+            })
+            .where(eq(playerProfilesTable.clerkUserId, userId));
+        }
         return true;
       });
       alreadyCompleted = !completed;
@@ -526,6 +738,10 @@ router.post(
     };
 
     const state = await getPlayerBootstrap(userId);
+    const campaign =
+      match.mode === "story" ? await getPlayerStoryCampaign(userId) : null;
+    const storedStoryResult = getStoredStoryMatchResult(persistedMatch);
+    grantedStoryRewards = storedStoryResult.rewards;
     res.json(
       CompletePlayerMatchResponse.parse({
         ...state,
@@ -538,8 +754,12 @@ router.post(
                 ? "Dead heat"
                 : "You still earned rep",
           ...persistedReward,
+          descriptions: storedStoryResult.descriptions,
+          storyRewards: grantedStoryRewards,
         },
         alreadyCompleted,
+        campaign,
+        story: storedStoryResult.story,
       }),
     );
   },

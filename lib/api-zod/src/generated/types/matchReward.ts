@@ -5,6 +5,7 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { StoryGrantedReward } from './storyGrantedReward';
 
 export interface MatchReward {
   id: string;
@@ -13,4 +14,6 @@ export interface MatchReward {
   streetRep: number;
   softCurrency: number;
   packTickets: number;
+  descriptions: string[];
+  storyRewards: StoryGrantedReward[];
 }

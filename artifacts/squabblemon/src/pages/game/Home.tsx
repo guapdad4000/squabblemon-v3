@@ -38,12 +38,17 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/35 to-transparent" />
         <div className="relative z-10 p-5 flex flex-col items-start justify-end min-h-52 md:min-h-64 max-w-sm">
-          <div className="font-mono text-[9px] text-primary uppercase tracking-[.2em] mb-2">Crew ready</div>
-          <h2 className="font-display font-black italic text-3xl md:text-5xl uppercase leading-none mb-3">Take a room</h2>
-          <p className="text-xs md:text-sm text-white/65 mb-5">Choose a crew, size up your rival, and play a full six-round match.</p>
-          <Link href="/game/play" className="bg-primary text-black px-6 py-3 font-display font-black italic uppercase shadow-[0_4px_0_#854d0e] active:translate-y-1 active:shadow-none">
-            Play Practice
-          </Link>
+          <div className="font-mono text-[9px] text-primary uppercase tracking-[.2em] mb-2">Rookie Road</div>
+          <h2 className="font-display font-black italic text-3xl md:text-5xl uppercase leading-none mb-3">Street Story</h2>
+          <p className="text-xs md:text-sm text-white/65 mb-5">Move through the neighborhood conflicts and make a name for yourself.</p>
+          <div className="flex gap-3 w-full">
+            <Link href="/game/story" className="flex-1 text-center bg-primary text-black px-4 py-3 font-display font-black italic uppercase shadow-[0_4px_0_#854d0e] active:translate-y-1 active:shadow-none">
+              Enter Story
+            </Link>
+            <Link href="/game/play" className="flex-1 text-center bg-black/50 border border-white/20 text-white px-4 py-3 font-display font-black italic uppercase hover:bg-white/10 active:translate-y-1">
+              Practice
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -66,7 +71,7 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {[
-          ['/game/story', 'Story', 'Chapter 1'],
+          ['/game/story', 'Story', `Chapter ${profile.storyChapter || 1}`],
           ['/game/collection', 'Collection', `${profile.ownedCardIds.length} cards`],
           ['/game/missions', 'Missions', `${missions.filter((mission) => mission.status === 'claimable').length} ready`],
           ['/game/shop', 'Street Shop', `${profile.packTickets} tickets`],

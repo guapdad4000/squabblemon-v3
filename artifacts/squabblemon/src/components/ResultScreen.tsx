@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { decks, getCardImage } from '../data';
+import { cards, decks, getAssetUrl, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
-import { MatchReward } from '@workspace/api-client-react';
 
-export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck }: any) {
+export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata }: any) {
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
@@ -11,8 +10,20 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
   const isVictory = winner === 'player';
   const isDraw = winner === 'draw';
 
-  const playerDeck = customPlayerDeck || decks.find(deck => deck.id === m.playerDeck)!;
-  const cpuDeck = decks.find(deck => deck.id === m.cpuDeck)!;
+  const isStory = !!m.storyEncounter;
+  const playerDeck = customPlayerDeck || decks.find(deck => deck.id === m.playerDeck) || decks[0];
+  const cpuDeck = decks.find(deck => deck.id === m.cpuDeck) ?? {
+    ...decks[0],
+    id: m.cpuDeck,
+    name: m.storyEncounter?.enemy.name ?? 'Story Rival',
+    hero: cards[m.cpuCardIds[0]]?.id ?? decks[0].hero,
+  };
+  const cpuPortrait = m.storyEncounter
+    ? getAssetUrl(m.storyEncounter.enemy.portraitAssetId)
+    : getCardImage(cpuDeck.hero);
+  const earnedStars = isVictory
+    ? 1 + (results.every((result) => result.winner === 'player') ? 1 : 0) + (m.squabbleUsed ? 0 : 1)
+    : 0;
 
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-5 md:p-8 text-center overflow-x-hidden overflow-y-auto hide-scrollbar">
@@ -32,7 +43,7 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         initial={{ opacity: 0, x: 80 }}
         animate={{ opacity: 0.25, x: 0 }}
         transition={{ duration: 0.75 }}
-        src={getCardImage(cpuDeck.hero)}
+        src={cpuPortrait}
         alt=""
         aria-hidden="true"
         className="fixed -right-[8%] md:right-[1%] bottom-[-8%] h-[70%] md:h-[88%] w-[48%] object-contain object-right-bottom grayscale brightness-75 drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] pointer-events-none z-0"
@@ -71,7 +82,48 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
           ))}
         </div>
 
-        {!isGuest && (
+        {isStory ? (
+          <div className="mb-8 border border-white/10 bg-black/60 p-4">
+            <h3 className="font-mono text-[9px] uppercase tracking-widest text-white/50 mb-3">Story Outcome</h3>
+            {storyMetadata ? (
+               <>
+                 <div className="font-display font-black text-2xl md:text-3xl uppercase mb-2">
+                   {storyMetadata.outcome === 'win' ? 'Encounter Cleared' : 'Defeated'}
+                 </div>
+                  {storyMetadata.outcome === 'win' && (
+                    <div className="text-primary font-mono uppercase text-sm mb-4">
+                      {storyMetadata.firstClear
+                        ? `Earned this run: ${earnedStars} / 3`
+                        : `This run: ${earnedStars} / 3 · Best record: ${storyMetadata.stars} / 3`}
+                    </div>
+                  )}
+                 {storyMetadata.outcome !== 'win' && (
+                   <div className="text-white/70 text-sm mb-4">
+                     Try adjusting your lane commitments and saving your Squabble for the crucial final rounds!
+                   </div>
+                 )}
+               </>
+            ) : rewardError ? (
+               <div>
+                 <div className="text-accent text-sm font-bold uppercase mb-3">Failed to save outcome.</div>
+                 <button onClick={onRetryReward} disabled={rewardPending} className="border border-accent px-4 py-2 font-mono text-[9px] uppercase tracking-widest text-rose-200 hover:bg-accent/15 disabled:opacity-50">
+                   {rewardPending ? 'Retrying' : 'Retry Save'}
+                 </button>
+               </div>
+            ) : (
+               <div className="text-white/50 text-sm animate-pulse mb-4">Syncing with server...</div>
+            )}
+
+            {reward?.storyRewards && reward.storyRewards.length > 0 && (
+               <div className="mt-2 border-t border-white/10 pt-4">
+                 <div className="font-mono text-[9px] uppercase tracking-widest text-accent mb-2">One-Time Rewards</div>
+                 {reward.storyRewards.map((r: any) => (
+                     <div key={r.rewardKey} className="mt-2 border-l border-accent/50 pl-3 text-left text-sm text-white/90">{r.description}</div>
+                 ))}
+               </div>
+            )}
+          </div>
+        ) : !isGuest && (
           <div className="mb-8 border border-white/10 bg-black/60 p-4">
             <h3 className="font-mono text-[9px] uppercase tracking-widest text-white/50 mb-3">Post-Match Rewards</h3>
             {rewardError ? (
@@ -112,15 +164,30 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         )}
 
         <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
-          <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">
-            Run It Back
-          </button>
-          <button data-testid="button-change-deck" onClick={onChangeDeck} className="bg-black/70 border border-white/20 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/15 transition-transform active:translate-y-1">
-            Change Deck
-          </button>
-          <button onClick={onGoHome} className="bg-zinc-900 border border-white/10 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/10 transition-transform active:translate-y-1">
-            Home
-          </button>
+          {isStory ? (
+            <>
+              {storyMetadata?.outcome !== 'win' && (
+                <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">
+                  Retry Encounter
+                </button>
+              )}
+              <button onClick={onGoHome} className="bg-black/70 border border-white/20 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/15 transition-transform active:translate-y-1">
+                Continue Chapter
+              </button>
+            </>
+          ) : (
+            <>
+              <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">
+                Run It Back
+              </button>
+              <button data-testid="button-change-deck" onClick={onChangeDeck} className="bg-black/70 border border-white/20 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/15 transition-transform active:translate-y-1">
+                Change Deck
+              </button>
+              <button onClick={onGoHome} className="bg-zinc-900 border border-white/10 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/10 transition-transform active:translate-y-1">
+                Home
+              </button>
+            </>
+          )}
         </div>
       </motion.div>
     </div>

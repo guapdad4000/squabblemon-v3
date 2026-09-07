@@ -1,5 +1,7 @@
 import {
+  boolean,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -19,6 +21,18 @@ export const playerMatchesTable = pgTable("player_matches", {
   mode: text("mode").notNull(),
   playerDeckId: text("player_deck_id").notNull(),
   rivalDeckId: text("rival_deck_id").notNull(),
+  storyNodeId: text("story_node_id"),
+  storyContentVersion: integer("story_content_version"),
+  storyEncounterSnapshot: jsonb("story_encounter_snapshot")
+    .$type<Record<string, unknown>>(),
+  storyProgressionSnapshot: jsonb("story_progression_snapshot")
+    .$type<Record<string, unknown>>(),
+  playerEngineCardIds: jsonb("player_engine_card_ids").$type<string[]>(),
+  storyFirstClear: boolean("story_first_clear"),
+  storyStars: integer("story_stars"),
+  storyBossHighestPhase: integer("story_boss_highest_phase"),
+  storyGrantedRewards: jsonb("story_granted_rewards")
+    .$type<Array<Record<string, unknown>>>(),
   outcome: text("outcome"),
   rounds: integer("rounds"),
   districtsWon: integer("districts_won"),

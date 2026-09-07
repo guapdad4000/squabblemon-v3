@@ -196,6 +196,20 @@ function GameRoutes() {
         />
       </Route>
 
+      <Route path="/game/story/play/:nodeId">
+        {(params) => (
+          <PlayLoop
+            mode="story"
+            storyNodeId={params.nodeId}
+            onExit={() => setLocation(`/game/story?node=${params.nodeId}`)}
+            turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
+            availableDeckIds={availableDeckIds}
+            initialDeckId={bootstrap.profile.starterDeckId || availableDeckIds[0]}
+            hideLobby={true}
+          />
+        )}
+      </Route>
+
       <Route path="/game" nest>
         <div className="flex flex-col h-[100dvh] bg-[#070707] text-white">
           <div className="noise-overlay" />

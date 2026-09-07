@@ -33,7 +33,11 @@ import type {
   PlayerBootstrap,
   PlayerMatch,
   PlayerProfileUpdate,
-  SaveDeckInput
+  SaveDeckInput,
+  StoryCampaign,
+  StoryDialogueProgressResponse,
+  StoryNodeCompleteInput,
+  StoryNodeCompletion
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -216,6 +220,227 @@ export function useGetPlayerBootstrap<TData = Awaited<ReturnType<typeof getPlaye
 
 
 
+
+export const getGetPlayerStoryUrl = () => {
+
+
+
+
+  return `/api/player/story`
+}
+
+/**
+ * @summary Load canonical chapter and node progression
+ */
+export const getPlayerStory = async ( options?: RequestInit): Promise<StoryCampaign> => {
+
+  return customFetch<StoryCampaign>(getGetPlayerStoryUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPlayerStoryQueryKey = () => {
+    return [
+    `/api/player/story`
+    ] as const;
+    }
+
+
+export const getGetPlayerStoryQueryOptions = <TData = Awaited<ReturnType<typeof getPlayerStory>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlayerStory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPlayerStoryQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerStory>>> = ({ signal }) => getPlayerStory({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlayerStory>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPlayerStoryQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerStory>>>
+export type GetPlayerStoryQueryError = ErrorType<void>
+
+
+/**
+ * @summary Load canonical chapter and node progression
+ */
+
+export function useGetPlayerStory<TData = Awaited<ReturnType<typeof getPlayerStory>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlayerStory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPlayerStoryQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCompletePlayerStoryNodeUrl = (nodeId: string,) => {
+
+
+
+
+  return `/api/player/story/nodes/${nodeId}/complete`
+}
+
+/**
+ * @summary Complete an available non-battle story node
+ */
+export const completePlayerStoryNode = async (nodeId: string,
+    storyNodeCompleteInput: StoryNodeCompleteInput, options?: RequestInit): Promise<StoryNodeCompletion> => {
+
+  return customFetch<StoryNodeCompletion>(getCompletePlayerStoryNodeUrl(nodeId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(storyNodeCompleteInput)
+  }
+);}
+
+
+
+
+
+export const getCompletePlayerStoryNodeMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryNode>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryNode>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext> => {
+
+const mutationKey = ['completePlayerStoryNode'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completePlayerStoryNode>>, {nodeId: string;data: BodyType<StoryNodeCompleteInput>}> = (props) => {
+          const {nodeId,data} = props ?? {};
+
+          return  completePlayerStoryNode(nodeId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompletePlayerStoryNodeMutationResult = NonNullable<Awaited<ReturnType<typeof completePlayerStoryNode>>>
+    export type CompletePlayerStoryNodeMutationBody = BodyType<StoryNodeCompleteInput>
+    export type CompletePlayerStoryNodeMutationError = ErrorType<void>
+
+    /**
+ * @summary Complete an available non-battle story node
+ */
+export const useCompletePlayerStoryNode = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryNode>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof completePlayerStoryNode>>,
+        TError,
+        {nodeId: string;data: BodyType<StoryNodeCompleteInput>},
+        TContext
+      > => {
+      return useMutation(getCompletePlayerStoryNodeMutationOptions(options));
+    }
+
+export const getSavePlayerStoryDialogueUrl = (nodeId: string,) => {
+
+
+
+
+  return `/api/player/story/nodes/${nodeId}/dialogue`
+}
+
+/**
+ * @summary Persist dialogue history for an unlocked story node
+ */
+export const savePlayerStoryDialogue = async (nodeId: string,
+    storyNodeCompleteInput: StoryNodeCompleteInput, options?: RequestInit): Promise<StoryDialogueProgressResponse> => {
+
+  return customFetch<StoryDialogueProgressResponse>(getSavePlayerStoryDialogueUrl(nodeId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(storyNodeCompleteInput)
+  }
+);}
+
+
+
+
+
+export const getSavePlayerStoryDialogueMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof savePlayerStoryDialogue>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof savePlayerStoryDialogue>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext> => {
+
+const mutationKey = ['savePlayerStoryDialogue'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof savePlayerStoryDialogue>>, {nodeId: string;data: BodyType<StoryNodeCompleteInput>}> = (props) => {
+          const {nodeId,data} = props ?? {};
+
+          return  savePlayerStoryDialogue(nodeId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SavePlayerStoryDialogueMutationResult = NonNullable<Awaited<ReturnType<typeof savePlayerStoryDialogue>>>
+    export type SavePlayerStoryDialogueMutationBody = BodyType<StoryNodeCompleteInput>
+    export type SavePlayerStoryDialogueMutationError = ErrorType<void>
+
+    /**
+ * @summary Persist dialogue history for an unlocked story node
+ */
+export const useSavePlayerStoryDialogue = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof savePlayerStoryDialogue>>, TError,{nodeId: string;data: BodyType<StoryNodeCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof savePlayerStoryDialogue>>,
+        TError,
+        {nodeId: string;data: BodyType<StoryNodeCompleteInput>},
+        TContext
+      > => {
+      return useMutation(getSavePlayerStoryDialogueMutationOptions(options));
+    }
 
 export const getUpdatePlayerProfileUrl = () => {
 

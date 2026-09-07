@@ -9,6 +9,8 @@ import type { MatchReward } from './matchReward';
 import type { NextAction } from './nextAction';
 import type { PlayerMission } from './playerMission';
 import type { PlayerProfile } from './playerProfile';
+import type { StoryCampaign } from './storyCampaign';
+import type { StoryMatchMetadata } from './storyMatchMetadata';
 
 export interface MatchCompletion {
   profile: PlayerProfile;
@@ -16,4 +18,6 @@ export interface MatchCompletion {
   nextAction: NextAction;
   reward: MatchReward;
   alreadyCompleted: boolean;
+  campaign: StoryCampaign | null;
+  story: StoryMatchMetadata | null;
 }

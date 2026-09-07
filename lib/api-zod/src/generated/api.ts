@@ -127,6 +127,455 @@ export const GetPlayerBootstrapResponse = zod.object({
 
 
 /**
+ * @summary Load canonical chapter and node progression
+ */
+export const GetPlayerStoryResponse = zod.object({
+  "contentVersion": zod.number(),
+  "chapters": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string(),
+  "description": zod.string(),
+  "order": zod.number(),
+  "mapAssetId": zod.string(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "completedNodes": zod.number(),
+  "totalNodes": zod.number(),
+  "stars": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})),
+  "nodes": zod.array(zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+})),
+  "recommendedNodeId": zod.string().nullable(),
+  "totalStars": zod.number(),
+  "completedNodes": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})
+
+
+/**
+ * @summary Complete an available non-battle story node
+ */
+export const completePlayerStoryNodePathNodeIdMin = 2;
+export const completePlayerStoryNodePathNodeIdMax = 80;
+
+
+
+export const CompletePlayerStoryNodeParams = zod.object({
+  "nodeId": zod.coerce.string().min(completePlayerStoryNodePathNodeIdMin).max(completePlayerStoryNodePathNodeIdMax)
+})
+
+export const completePlayerStoryNodeBodyIdempotencyKeyMin = 8;
+export const completePlayerStoryNodeBodyIdempotencyKeyMax = 80;
+
+export const completePlayerStoryNodeBodyDialogueSeenItemMax = 120;
+
+export const completePlayerStoryNodeBodyDialogueSeenMax = 100;
+
+
+
+export const CompletePlayerStoryNodeBody = zod.object({
+  "idempotencyKey": zod.string().min(completePlayerStoryNodeBodyIdempotencyKeyMin).max(completePlayerStoryNodeBodyIdempotencyKeyMax),
+  "dialogueSeen": zod.array(zod.string().max(completePlayerStoryNodeBodyDialogueSeenItemMax)).max(completePlayerStoryNodeBodyDialogueSeenMax)
+})
+
+export const CompletePlayerStoryNodeResponse = zod.object({
+  "campaign": zod.object({
+  "contentVersion": zod.number(),
+  "chapters": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string(),
+  "description": zod.string(),
+  "order": zod.number(),
+  "mapAssetId": zod.string(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "completedNodes": zod.number(),
+  "totalNodes": zod.number(),
+  "stars": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})),
+  "nodes": zod.array(zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+})),
+  "recommendedNodeId": zod.string().nullable(),
+  "totalStars": zod.number(),
+  "completedNodes": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+}),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+}),
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "alreadyCompleted": zod.boolean()
+})
+
+
+/**
+ * @summary Persist dialogue history for an unlocked story node
+ */
+export const savePlayerStoryDialoguePathNodeIdMin = 2;
+export const savePlayerStoryDialoguePathNodeIdMax = 80;
+
+
+
+export const SavePlayerStoryDialogueParams = zod.object({
+  "nodeId": zod.coerce.string().min(savePlayerStoryDialoguePathNodeIdMin).max(savePlayerStoryDialoguePathNodeIdMax)
+})
+
+export const savePlayerStoryDialogueBodyIdempotencyKeyMin = 8;
+export const savePlayerStoryDialogueBodyIdempotencyKeyMax = 80;
+
+export const savePlayerStoryDialogueBodyDialogueSeenItemMax = 120;
+
+export const savePlayerStoryDialogueBodyDialogueSeenMax = 100;
+
+
+
+export const SavePlayerStoryDialogueBody = zod.object({
+  "idempotencyKey": zod.string().min(savePlayerStoryDialogueBodyIdempotencyKeyMin).max(savePlayerStoryDialogueBodyIdempotencyKeyMax),
+  "dialogueSeen": zod.array(zod.string().max(savePlayerStoryDialogueBodyDialogueSeenItemMax)).max(savePlayerStoryDialogueBodyDialogueSeenMax)
+})
+
+export const SavePlayerStoryDialogueResponse = zod.object({
+  "campaign": zod.object({
+  "contentVersion": zod.number(),
+  "chapters": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string(),
+  "description": zod.string(),
+  "order": zod.number(),
+  "mapAssetId": zod.string(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "completedNodes": zod.number(),
+  "totalNodes": zod.number(),
+  "stars": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})),
+  "nodes": zod.array(zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+})),
+  "recommendedNodeId": zod.string().nullable(),
+  "totalStars": zod.number(),
+  "completedNodes": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+}),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+}),
+  "node": zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+}),
+  "alreadyApplied": zod.boolean()
+})
+
+
+/**
  * @summary Update player-facing profile and settings
  */
 export const updatePlayerProfileBodyDisplayNameMin = 2;
@@ -382,12 +831,15 @@ export const startPlayerMatchBodyPlayerDeckIdMax = 32;
 
 export const startPlayerMatchBodyRivalDeckIdMax = 32;
 
+export const startPlayerMatchBodyStoryNodeIdMax = 80;
+
 
 
 export const StartPlayerMatchBody = zod.object({
   "mode": zod.enum(['practice', 'tutorial', 'story']),
   "playerDeckId": zod.string().max(startPlayerMatchBodyPlayerDeckIdMax),
-  "rivalDeckId": zod.string().max(startPlayerMatchBodyRivalDeckIdMax)
+  "rivalDeckId": zod.string().max(startPlayerMatchBodyRivalDeckIdMax),
+  "storyNodeId": zod.string().max(startPlayerMatchBodyStoryNodeIdMax).optional()
 })
 
 export const startPlayerMatchResponseIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
@@ -399,7 +851,10 @@ export const StartPlayerMatchResponse = zod.object({
   "playerDeckId": zod.string(),
   "rivalDeckId": zod.string(),
   "status": zod.enum(['active', 'complete']),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "storyNodeId": zod.string().nullable(),
+  "contentVersion": zod.number().nullable(),
+  "encounterSnapshot": zod.record(zod.string(), zod.unknown()).nullable()
 })
 
 
@@ -516,9 +971,71 @@ export const CompletePlayerMatchResponse = zod.object({
   "xp": zod.number(),
   "streetRep": zod.number(),
   "softCurrency": zod.number(),
-  "packTickets": zod.number()
+  "packTickets": zod.number(),
+  "descriptions": zod.array(zod.string()),
+  "storyRewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+}))
 }),
-  "alreadyCompleted": zod.boolean()
+  "alreadyCompleted": zod.boolean(),
+  "campaign": zod.union([zod.object({
+  "contentVersion": zod.number(),
+  "chapters": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string(),
+  "description": zod.string(),
+  "order": zod.number(),
+  "mapAssetId": zod.string(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "completedNodes": zod.number(),
+  "totalNodes": zod.number(),
+  "stars": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})),
+  "nodes": zod.array(zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+})),
+  "recommendedNodeId": zod.string().nullable(),
+  "totalStars": zod.number(),
+  "completedNodes": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+}),zod.null()]),
+  "story": zod.union([zod.object({
+  "nodeId": zod.string(),
+  "stars": zod.number(),
+  "firstClear": zod.boolean(),
+  "outcome": zod.enum(['win', 'loss', 'draw']),
+  "bossHighestPhase": zod.number()
+}),zod.null()])
 })
 
 

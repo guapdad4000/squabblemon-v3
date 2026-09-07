@@ -346,6 +346,8 @@ export interface MatchStartInput {
   playerDeckId: string;
   /** @maxLength 32 */
   rivalDeckId: string;
+  /** @maxLength 80 */
+  storyNodeId?: string;
 }
 
 export type PlayerMatchStatus = typeof PlayerMatchStatus[keyof typeof PlayerMatchStatus];
@@ -356,6 +358,11 @@ export const PlayerMatchStatus = {
   complete: 'complete',
 } as const;
 
+/**
+ * @nullable
+ */
+export type PlayerMatchEncounterSnapshot = { [key: string]: unknown } | null;
+
 export interface PlayerMatch {
   /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
   id: string;
@@ -364,6 +371,12 @@ export interface PlayerMatch {
   rivalDeckId: string;
   status: PlayerMatchStatus;
   createdAt: string;
+  /** @nullable */
+  storyNodeId: string | null;
+  /** @nullable */
+  contentVersion: number | null;
+  /** @nullable */
+  encounterSnapshot: PlayerMatchEncounterSnapshot;
 }
 
 export interface MatchMove {
@@ -386,6 +399,24 @@ export interface MatchCompleteInput {
   moves: MatchMove[];
 }
 
+export type StoryGrantedRewardKind = typeof StoryGrantedRewardKind[keyof typeof StoryGrantedRewardKind];
+
+
+export const StoryGrantedRewardKind = {
+  currency: 'currency',
+  card: 'card',
+  'chapter-key': 'chapter-key',
+} as const;
+
+export interface StoryGrantedReward {
+  rewardKey: string;
+  kind: StoryGrantedRewardKind;
+  id: string;
+  amount: number;
+  duplicateShards: number;
+  description: string;
+}
+
 export interface MatchReward {
   id: string;
   label: string;
@@ -393,6 +424,140 @@ export interface MatchReward {
   streetRep: number;
   softCurrency: number;
   packTickets: number;
+  descriptions: string[];
+  storyRewards: StoryGrantedReward[];
+}
+
+export type StoryChapterProgressStatus = typeof StoryChapterProgressStatus[keyof typeof StoryChapterProgressStatus];
+
+
+export const StoryChapterProgressStatus = {
+  locked: 'locked',
+  available: 'available',
+  cleared: 'cleared',
+} as const;
+
+export type StoryChapterProgressBossStatus = typeof StoryChapterProgressBossStatus[keyof typeof StoryChapterProgressBossStatus];
+
+
+export const StoryChapterProgressBossStatus = {
+  locked: 'locked',
+  available: 'available',
+  'in-progress': 'in-progress',
+  cleared: 'cleared',
+} as const;
+
+export interface StoryChapterProgress {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  order: number;
+  mapAssetId: string;
+  status: StoryChapterProgressStatus;
+  completedNodes: number;
+  totalNodes: number;
+  stars: number;
+  bossStatus: StoryChapterProgressBossStatus;
+}
+
+export type StoryNodeProgressKind = typeof StoryNodeProgressKind[keyof typeof StoryNodeProgressKind];
+
+
+export const StoryNodeProgressKind = {
+  dialogue: 'dialogue',
+  reward: 'reward',
+  battle: 'battle',
+} as const;
+
+export type StoryNodeProgressStatus = typeof StoryNodeProgressStatus[keyof typeof StoryNodeProgressStatus];
+
+
+export const StoryNodeProgressStatus = {
+  locked: 'locked',
+  available: 'available',
+  cleared: 'cleared',
+} as const;
+
+export interface StoryMapPosition {
+  x: number;
+  y: number;
+}
+
+export type StoryRewardKind = typeof StoryRewardKind[keyof typeof StoryRewardKind];
+
+
+export const StoryRewardKind = {
+  currency: 'currency',
+  card: 'card',
+  'chapter-key': 'chapter-key',
+} as const;
+
+export interface StoryReward {
+  kind: StoryRewardKind;
+  id: string;
+  amount: number;
+}
+
+export interface StoryNodeProgress {
+  chapterId: string;
+  nodeId: string;
+  title: string;
+  kind: StoryNodeProgressKind;
+  status: StoryNodeProgressStatus;
+  mapPosition: StoryMapPosition;
+  prerequisites: string[];
+  rewards: StoryReward[];
+  cleared: boolean;
+  stars: number;
+  attempts: number;
+  wins: number;
+  /** @nullable */
+  lastOutcome: string | null;
+  dialogueSeen: string[];
+  bossHighestPhase: number;
+  /** @nullable */
+  firstClearedAt: string | null;
+  /** @nullable */
+  lastPlayedAt: string | null;
+}
+
+export type StoryCampaignBossStatus = typeof StoryCampaignBossStatus[keyof typeof StoryCampaignBossStatus];
+
+
+export const StoryCampaignBossStatus = {
+  locked: 'locked',
+  available: 'available',
+  'in-progress': 'in-progress',
+  cleared: 'cleared',
+} as const;
+
+export interface StoryCampaign {
+  contentVersion: number;
+  chapters: StoryChapterProgress[];
+  nodes: StoryNodeProgress[];
+  /** @nullable */
+  recommendedNodeId: string | null;
+  totalStars: number;
+  completedNodes: number;
+  bossStatus: StoryCampaignBossStatus;
+}
+
+export type StoryMatchMetadataOutcome = typeof StoryMatchMetadataOutcome[keyof typeof StoryMatchMetadataOutcome];
+
+
+export const StoryMatchMetadataOutcome = {
+  win: 'win',
+  loss: 'loss',
+  draw: 'draw',
+} as const;
+
+export interface StoryMatchMetadata {
+  nodeId: string;
+  stars: number;
+  firstClear: boolean;
+  outcome: StoryMatchMetadataOutcome;
+  bossHighestPhase: number;
 }
 
 export interface MatchCompletion {
@@ -401,5 +566,36 @@ export interface MatchCompletion {
   nextAction: NextAction;
   reward: MatchReward;
   alreadyCompleted: boolean;
+  campaign: StoryCampaign | null;
+  story: StoryMatchMetadata | null;
+}
+
+export interface StoryNodeCompleteInput {
+  /**
+     * @minLength 8
+     * @maxLength 80
+     */
+  idempotencyKey: string;
+  /**
+     * @maxItems 100
+     * @items.maxLength 120
+     */
+  dialogueSeen: string[];
+}
+
+export type StoryDialogueProgressInput = StoryNodeCompleteInput;
+
+export interface StoryNodeCompletion {
+  campaign: StoryCampaign;
+  bootstrap: PlayerBootstrap;
+  rewards: StoryGrantedReward[];
+  alreadyCompleted: boolean;
+}
+
+export interface StoryDialogueProgressResponse {
+  campaign: StoryCampaign;
+  bootstrap: PlayerBootstrap;
+  node: StoryNodeProgress;
+  alreadyApplied: boolean;
 }
 

@@ -5,6 +5,7 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { PlayerMatchEncounterSnapshot } from './playerMatchEncounterSnapshot';
 import type { PlayerMatchStatus } from './playerMatchStatus';
 
 export interface PlayerMatch {
@@ -15,4 +16,10 @@ export interface PlayerMatch {
   rivalDeckId: string;
   status: PlayerMatchStatus;
   createdAt: Date;
+  /** @nullable */
+  storyNodeId: string | null;
+  /** @nullable */
+  contentVersion: number | null;
+  /** @nullable */
+  encounterSnapshot: PlayerMatchEncounterSnapshot;
 }

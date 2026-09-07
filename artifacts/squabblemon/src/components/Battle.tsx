@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { districts, getCardImage } from '../data';
+import { districts, getAssetUrl, getCardImage } from '../data';
 import { CardView } from './CardView';
-import { getDistrictResults, getEffectiveCardPower, getLaneScore, getLegalCardCost, Match } from '../gameEngine';
+import { getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type Lane } from '../gameEngine';
 import type { PresentationPhase } from './PlayLoop';
 
 export function Battle({
@@ -22,6 +23,17 @@ export function Battle({
   const phase = presentationPhase as PresentationPhase;
   const interactive = phase === 'player-ready' && m.phase === 'player';
   const canSkip = ['versus','countdown-3','countdown-2','countdown-1','squabble','deal','round-intro','round-result'].includes(phase);
+
+  const lockedLanes = m.storyEncounter ? getStoryLockedLanes(m, 'player') : [];
+  const modifierSummaries = m.storyEncounter ? getStoryModifierSummaries(m) : [];
+  const activePhase = getActiveStoryPhase(m);
+  const [showModifiers, setShowModifiers] = useState(false);
+  const rivalPortrait = m.storyEncounter
+    ? getAssetUrl(m.storyEncounter.enemy.portraitAssetId)
+    : getCardImage(rivalDeck.hero);
+  const battlefield = getAssetUrl(
+    m.storyEncounter?.battlefieldAssetId ?? 'assets/e71f5189-861e-418d-8237-fa20713b9122.png',
+  );
 
   const getActionState = () => {
     if (!interactive) return { label: canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
@@ -49,7 +61,7 @@ export function Battle({
       <div className="absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-80"
-          style={{ backgroundImage: 'url("/assets/e71f5189-861e-418d-8237-fa20713b9122.png")' }}
+          style={{ backgroundImage: `url("${battlefield}")` }}
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(103,72,25,0.08),rgba(0,0,0,0.72)_74%)]" />
         <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
@@ -58,7 +70,7 @@ export function Battle({
           key={`rival-stage-${rivalDeck.hero}`}
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 0.24, x: 0 }}
-          src={getCardImage(rivalDeck.hero)}
+          src={rivalPortrait}
           alt=""
           aria-hidden="true"
           className="absolute right-[2%] top-[5%] h-[42%] w-[30%] object-contain object-right-top grayscale brightness-75 drop-shadow-[0_18px_24px_rgba(0,0,0,0.9)]"
@@ -115,6 +127,36 @@ export function Battle({
           </div>
         </div>
          <div className="flex items-center gap-2 md:gap-4">
+            {modifierSummaries.length > 0 && (
+               <div className="relative">
+                 <button
+                   type="button"
+                   onClick={() => setShowModifiers((visible) => !visible)}
+                   aria-expanded={showModifiers}
+                   aria-controls="story-modifier-panel"
+                   className="min-h-10 px-2 border border-accent/30 bg-accent/10 font-mono text-[8px] uppercase tracking-wider text-rose-200 hover:bg-accent/20"
+                 >
+                   Mods
+                 </button>
+                 {showModifiers && (
+                   <div id="story-modifier-panel" className="absolute top-full right-0 mt-2 w-56 bg-black border border-accent p-3 z-50 text-left shadow-2xl">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="font-mono text-[8px] uppercase tracking-widest text-accent">Active rules</span>
+                        <button type="button" onClick={() => setShowModifiers(false)} className="font-mono text-[8px] uppercase text-white/50">Close</button>
+                      </div>
+                      <ul className="space-y-2">
+                        {modifierSummaries.map((mod: string) => <li key={mod} className="border-l border-accent/50 pl-2 text-[9px] text-rose-100 leading-tight">{mod}</li>)}
+                      </ul>
+                   </div>
+                 )}
+               </div>
+            )}
+            {activePhase && (
+               <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right">
+                  <div className="text-[8px] font-mono tracking-widest text-accent uppercase">Boss Phase</div>
+                  <div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div>
+               </div>
+            )}
             <button
               data-testid="button-rules-battle"
               onClick={onShowRules}
@@ -158,16 +200,17 @@ export function Battle({
         {districts.map((d: any, i: number) => {
           const cpuCards = m.boards[i].filter(c => c.owner === 'cpu');
           const playerCards = m.boards[i].filter(c => c.owner === 'player');
-            const pScore = getLaneScore(playerCards, i);
-            const cScore = getLaneScore(cpuCards, i);
+            const pScore = getLaneScoreForMatch(m, playerCards, i as Lane, 'player');
+            const cScore = getLaneScoreForMatch(m, cpuCards, i as Lane, 'cpu');
           const isSelectedLane = selectedLane === i;
-            const roundWinner = pScore === cScore ? 'draw' : pScore > cScore ? 'player' : 'cpu';
+          const isLocked = lockedLanes.includes(i as Lane);
+          const roundWinner = pScore === cScore ? 'draw' : pScore > cScore ? 'player' : 'cpu';
 
           return (
             <div
               key={i}
               data-testid={`lane-container-${i}`}
-              className={`district-lane district-lane-${i} flex-none h-[150px] md:h-auto md:flex-1 min-w-0 w-full md:w-auto grid grid-cols-[30%_40%_30%] md:flex md:flex-col relative group overflow-visible transition-all duration-300 ${impactLane === i ? 'district-impact' : ''} ${phase === 'round-result' || phase === 'match-finish' ? `district-verdict verdict-${roundWinner}` : ''} ${isSelectedLane ? 'ring-4 ring-primary bg-primary/8' : 'ring-1 ring-white/15 bg-black/72'}`}
+              className={`district-lane district-lane-${i} flex-none h-[150px] md:h-auto md:flex-1 min-w-0 w-full md:w-auto grid grid-cols-[30%_40%_30%] md:flex md:flex-col relative group overflow-visible transition-all duration-300 ${impactLane === i ? 'district-impact' : ''} ${phase === 'round-result' || phase === 'match-finish' ? `district-verdict verdict-${roundWinner}` : ''} ${isSelectedLane ? 'ring-4 ring-primary bg-primary/8' : 'ring-1 ring-white/15 bg-black/72'} ${isLocked ? 'grayscale opacity-75' : ''}`}
             >
               {activeEffectLane === i && (
                 <div className="effect-connection" aria-hidden="true">
@@ -217,11 +260,11 @@ export function Battle({
                 type="button"
                 data-testid={`lane-${i}`}
                 onClick={() => {
-                  if (interactive && selectedCard) setSelectedLane(i);
+                  if (interactive && selectedCard && !isLocked) setSelectedLane(i);
                 }}
-                disabled={!interactive || !selectedCard}
+                disabled={!interactive || !selectedCard || isLocked}
                 aria-label={selectedCard ? `Deploy ${selectedCard.name} to ${d.name}` : `${d.name} district`}
-                className="h-full md:h-auto md:w-full shrink-0 bg-zinc-950/95 border-x-2 md:border-x-0 md:border-y-2 border-zinc-800 flex items-center justify-between px-2 md:px-3 py-2 shadow-inner relative z-10 disabled:cursor-default enabled:hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className={`h-full md:h-auto md:w-full shrink-0 bg-zinc-950/95 border-x-2 md:border-x-0 md:border-y-2 border-zinc-800 flex items-center justify-between px-2 md:px-3 py-2 shadow-inner relative z-10 disabled:cursor-default ${isLocked ? 'opacity-50' : 'enabled:hover:border-primary/60'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
               >
                 <motion.div key={`cpu-${cScore}`} initial={{ scale: 1.5 }} animate={{ scale: 1 }} data-testid={`score-cpu-${i}`} className={`font-display font-black text-xl md:text-3xl ${cScore > pScore ? 'text-accent' : 'text-zinc-500'}`}>
                   {cScore}
@@ -234,7 +277,11 @@ export function Battle({
                    <div className={`mt-1 font-mono text-[7px] md:text-[8px] uppercase tracking-wide ${pScore > cScore ? 'text-primary' : cScore > pScore ? 'text-accent' : 'text-white/35'}`}>
                      {pScore > cScore ? 'You lead' : cScore > pScore ? 'Rival leads' : 'Tied'}
                    </div>
-                    {selectedCard && interactive && (
+                    {isLocked ? (
+                      <div className="mt-1 px-1.5 py-0.5 border border-accent/50 text-accent font-mono text-[6px] md:text-[8px] uppercase">
+                        Locked
+                      </div>
+                    ) : selectedCard && interactive && (
                      <div className={`mt-1 px-1.5 py-0.5 border font-mono text-[6px] md:text-[8px] uppercase ${isSelectedLane ? 'border-primary bg-primary text-black' : 'border-primary/50 text-primary'}`}>
                        {isSelectedLane ? 'Ready to lock' : 'Tap to deploy'}
                      </div>
