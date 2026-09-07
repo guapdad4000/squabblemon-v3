@@ -69,7 +69,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                 }`}
                 style={{ clipPath: 'polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px))' }}
               >
-                <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-top opacity-65" />
+                <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain object-top opacity-70" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-2">
                   <div className={`font-mono text-[6px] md:text-[7px] tracking-wider uppercase ${isSelected ? 'text-primary' : 'text-white/50'}`}>{d.accent}</div>

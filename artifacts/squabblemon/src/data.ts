@@ -35,12 +35,7 @@ export const districts = [
   { name: 'SERVER ROOM', rule: 'Electric cards gain +3 Power.' }
 ];
 
-const imageOverrides: Record<string, string> = {
-  cornball: '/assets/guapdad4k_urbAN_FIGHTING_GAME_AVATAR_DESIGN_PLAIN_WHITE_BACKG_7b493ad5-5188-4a36-b03d-a05c89951112_3.png',
-  'cool-vibe-yn': '/assets/0_0.png'
-};
-
-export const getCardImage = (id: string) => imageOverrides[id] ?? `/assets/characters/${id}.webp`;
+export const getCardImage = (id: string) => `/assets/characters/${id}.webp`;
 
 export function getLaneScore(laneCards: Card[], laneIndex: number) {
   return laneCards.reduce((score, card) => {

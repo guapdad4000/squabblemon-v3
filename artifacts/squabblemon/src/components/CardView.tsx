@@ -63,7 +63,7 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
         {/* Inner Content */}
         <div className="relative w-full h-full bg-zinc-950 overflow-hidden" style={clipStyle}>
            <div className={`absolute inset-0 bg-gradient-to-b from-zinc-800 to-black ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''}`}>
-             <img src={getCardImage(card.id)} alt={card.name} className={`absolute inset-0 w-full h-[80%] object-cover object-top opacity-90 ${isSilenced ? 'grayscale' : ''}`} />
+              <img src={getCardImage(card.id)} alt={card.name} className={`absolute inset-x-0 top-0 w-full h-[84%] object-contain object-top opacity-95 ${isSilenced ? 'grayscale' : ''}`} />
            </div>
 
            {card.type === 'Fire' && (
