@@ -1,10 +1,12 @@
-# [Project name]
+# Squabblemon
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A playable three-district competitive card battler with seven starter decks, six-round CPU matches, and production character art.
 
 ## Run & Operate
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/squabblemon run dev` — run the Squabblemon web game through its managed workflow
+- `pnpm --filter @workspace/squabblemon run typecheck` — typecheck the game
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
@@ -22,15 +24,23 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/squabblemon/src/App.tsx` — playable match flow, card/deck data, and game state
+- `artifacts/squabblemon/src/index.css` — Squabblemon visual system and responsive presentation
+- `artifacts/squabblemon/public/assets/` — local transparent character and FX art
+- `artifacts/squabblemon/reference/` — supplied prototype, rules, sprite map, and art-direction handoff
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The initial release is a self-contained solo browser game with no account or backend requirement.
+- Supplied prototype rules and balance values are preserved while the UI is implemented in React/TypeScript.
+- Match state is intentionally client-side for fast playtesting; persistence and multiplayer are future production phases.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Choose from seven starter archetypes.
+- Play six-round matches against a CPU across three contested districts.
+- Commit cards using Hype, resolve effects, and risk Clout with SQUABBLE.
+- Review concise rules, inspect cards, see match results, and rematch or change decks.
 
 ## User preferences
 
