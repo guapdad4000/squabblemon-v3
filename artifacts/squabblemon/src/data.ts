@@ -2,7 +2,7 @@ export type Card = { id:string; name:string; type:string; cost:number; power:num
 export type Deck = { id:string; name:string; archetype:string; accent:string; plan:string; cards:string[], hero: string };
 
 export const cards:Record<string,Card> = {
- rastamon:{id:'rastamon',name:'Rastamon',type:'Plant',cost:2,power:2,ability:'Natural Cure',effect:'Cleanse another friendly card here. If removed, give it +2 Power.'},
+ rastamon:{id:'rastamon',name:'Rastamon',type:'Plant',cost:2,power:2,ability:'Natural Cure',effect:'Cleanse a frozen or silenced ally here. If cleansed, give it +2 Power.'},
  roaster:{id:'all-jokes-roaster',name:'All Jokes Roaster',type:'Air',cost:2,power:3,ability:"Ratio'd Receipts",effect:'Give the highest enemy card here -2 Power. -3 if they played here.',roles:['Disruption']},
  nerd:{id:'closet-nerd',name:'Closet Nerd',type:'Dark',cost:3,power:4,ability:'Unaware',effect:'Silence the highest-Power enemy card here.',roles:['Disruption']},
  cornball:{id:'cornball',name:'Cornball',type:'Normal',cost:1,power:1,ability:'Scare the Hoes',effect:'Move the lowest enemy card if they have at least 3 here.',roles:['Movement','Disruption']},
@@ -10,12 +10,12 @@ export const cards:Record<string,Card> = {
  streamer:{id:'live-streamer',name:'Live Streamer',type:'Electric',cost:2,power:1,ability:'Follower Frenzy',effect:'The first 2 cheap plays gain +1 Power.'},
  gamer:{id:'gamer',name:'Gamer',type:'Dark',cost:3,power:3,ability:'Tryhard Trigger',effect:'Cheap plays here give Gamer and that card +1 Power.'},
  techbro:{id:'techbro-rich',name:'Techbro Rich',type:'Electric',cost:4,power:4,ability:'VC Funded Flex',effect:'Spend 1 unspent Hype to gain +2 Power.'},
- bikelife:{id:'bikelife-yn',name:'Bikelife YN',type:'Electric',cost:2,power:2,ability:'Ride Out',effect:'May move before Lock In; gains +1 Power after moving.'},
- vibe:{id:'cool-vibe-yn',name:'Cool Vibe YN',type:'Water',cost:2,power:2,ability:'Wave Check',effect:'Move your lowest friendly card here and buff both.'},
+ bikelife:{id:'bikelife-yn',name:'Bikelife YN',type:'Electric',cost:2,power:2,ability:'Ride Out',effect:'After reveal, ride to your weakest other district and gain +1 Power.'},
+ vibe:{id:'cool-vibe-yn',name:'Cool Vibe YN',type:'Water',cost:2,power:2,ability:'Wave Check',effect:'Pull your lowest ally from another district here. Both gain +1 Power.'},
  hooper:{id:'hooper',name:'Hooper',type:'Fire',cost:4,power:5,ability:'Ankle Breaker',effect:'If losing here, enemy highest gets -2 and Hooper gains +2.'},
  baby:{id:'baby-momma',name:'Baby Momma',type:'Fire',cost:4,power:4,ability:'Mama Bear',effect:'If opponent has more cards here, gain +2 Power.'},
- oink:{id:'officer-oink',name:'Officer Oink',type:'Normal',cost:5,power:6,ability:'Civic Pressure',effect:'Enemy cards here -1. Next round they may play only one.',roles:['Disruption']},
- snow:{id:'snow-bunny',name:'Snow Bunny',type:'Water',cost:2,power:2,ability:'Cold Shoulder',effect:'Freeze the highest enemy card here.',roles:['Disruption']},
+ oink:{id:'officer-oink',name:'Officer Oink',type:'Normal',cost:5,power:6,ability:'Civic Pressure',effect:'Every enemy card here loses 1 Power.',roles:['Disruption']},
+ snow:{id:'snow-bunny',name:'Snow Bunny',type:'Water',cost:2,power:2,ability:'Cold Shoulder',effect:'Freeze the highest enemy card here. Frozen cards add 0 Power until cleansed.',roles:['Disruption']},
  wifey:{id:'wifey',name:'Wifey',type:'Normal',cost:3,power:4,ability:'Side Eye',effect:'Block the first targeted enemy effect here each round.'},
 };
 

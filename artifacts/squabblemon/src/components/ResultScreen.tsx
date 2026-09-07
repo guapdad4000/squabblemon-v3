@@ -1,26 +1,21 @@
 import { motion } from 'framer-motion';
-import { decks, getCardImage, getLaneScore } from '../data';
+import { decks, getCardImage } from '../data';
+import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 
-export function ResultScreen({ onRestart, onChangeDeck, districts, boards, deckId, rivalDeck }: any) {
-  const results = districts.map((d: any, i: number) => {
-    const pScore = getLaneScore(boards[i].filter((c:any) => c.owner === 'player'), i);
-    const cScore = getLaneScore(boards[i].filter((c:any) => c.owner === 'cpu'), i);
-    return { name: d.name, player: pScore, cpu: cScore, won: pScore > cScore, tied: pScore === cScore }; 
-  });
-  
-  const playerWins = results.filter((r: any) => r.won).length;
-  const isVictory = playerWins >= 2;
-  const rivalWins = results.filter((r: any) => !r.won && !r.tied).length;
-  const isDraw = playerWins < 2 && rivalWins < 2;
-  const playerDeck = decks.find(deck => deck.id === deckId)!;
+export function ResultScreen({ onRestart, onChangeDeck, match, districts }: any) {
+  const m = match as Match;
+  const results = getDistrictResults(m);
+  const winner = getMatchWinner(m);
+
+  const isVictory = winner === 'player';
+  const isDraw = winner === 'draw';
+
+  const playerDeck = decks.find(deck => deck.id === m.playerDeck)!;
+  const cpuDeck = decks.find(deck => deck.id === m.cpuDeck)!;
 
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-5 md:p-8 text-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-45"
-        style={{ backgroundImage: 'url("/assets/0b511f5c-5ecb-467c-96b4-771a90bec889.png")' }}
-      />
-      <div className={`absolute inset-0 ${isVictory ? 'bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),rgba(0,0,0,0.93)_72%)]' : 'bg-[radial-gradient(circle_at_center,rgba(190,18,60,0.24),rgba(0,0,0,0.94)_72%)]'}`} />
+      <div className={`absolute inset-0 ${isVictory ? 'bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),rgba(0,0,0,0.93)_72%)]' : isDraw ? 'bg-[radial-gradient(circle_at_center,rgba(113,113,122,0.24),rgba(0,0,0,0.94)_72%)]' : 'bg-[radial-gradient(circle_at_center,rgba(225,29,72,0.24),rgba(0,0,0,0.94)_72%)]'}`} />
       <div className="absolute inset-x-[-20%] top-1/2 h-24 -rotate-6 bg-gradient-to-r from-transparent via-primary/15 to-transparent blur-xl" />
 
       <motion.img
@@ -36,7 +31,7 @@ export function ResultScreen({ onRestart, onChangeDeck, districts, boards, deckI
         initial={{ opacity: 0, x: 80 }}
         animate={{ opacity: 0.25, x: 0 }}
         transition={{ duration: 0.75 }}
-        src={getCardImage(rivalDeck.hero)}
+        src={getCardImage(cpuDeck.hero)}
         alt=""
         aria-hidden="true"
         className="absolute -right-[8%] md:right-[1%] bottom-[-8%] h-[70%] md:h-[88%] w-[48%] object-contain object-right-bottom grayscale brightness-75 drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)]"
@@ -53,7 +48,7 @@ export function ResultScreen({ onRestart, onChangeDeck, districts, boards, deckI
           initial={{ rotate: -18, scale: 0 }}
           animate={{ rotate: -4, scale: 1 }}
           transition={{ type: 'spring', stiffness: 180, damping: 15, delay: 0.12 }}
-          className={`mx-auto w-24 h-24 md:w-36 md:h-36 grid place-items-center border-4 md:border-[6px] text-[76px] md:text-[118px] font-display font-black italic leading-none mb-5 shadow-[0_0_60px_rgba(0,0,0,0.8)] ${isVictory ? 'text-black bg-primary border-white' : isDraw ? 'text-white bg-zinc-700 border-zinc-300' : 'text-white bg-rose-700 border-rose-300'}`}
+          className={`mx-auto w-24 h-24 md:w-36 md:h-36 grid place-items-center border-4 md:border-[6px] text-[76px] md:text-[118px] font-display font-black italic leading-none mb-5 shadow-[0_0_60px_rgba(0,0,0,0.8)] ${isVictory ? 'text-black bg-primary border-white' : isDraw ? 'text-white bg-zinc-700 border-zinc-300' : 'text-white bg-accent border-rose-300'}`}
           style={{ clipPath: 'polygon(50% 0, 88% 12%, 100% 50%, 88% 88%, 50% 100%, 12% 88%, 0 50%, 12% 12%)' }}
         >
           {isVictory ? 'W' : isDraw ? 'D' : 'L'}
@@ -65,19 +60,19 @@ export function ResultScreen({ onRestart, onChangeDeck, districts, boards, deckI
         
         <p className="text-white/60 font-sans text-xs md:text-base max-w-md mx-auto mb-6 md:mb-9">
           {isVictory
-            ? 'Six rounds of commitments. The receipts are clean. The clout is yours.'
+            ? 'You claimed at least two of three districts after six rounds. The room is yours.'
             : isDraw
               ? 'The districts are split. No clean claim, no easy clout. Run it back.'
-              : 'Six rounds of misplays. Your credibility is in the gutter. Run it back.'}
+               : 'The rival claimed at least two of three districts after six rounds. Run it back.'}
         </p>
         
         <div className="grid grid-cols-3 gap-1.5 md:gap-4 mb-7 md:mb-10">
-          {results.map((r: any, i: number) => (
-            <div key={i} className={`p-2.5 md:p-4 border backdrop-blur-md ${r.won ? 'border-primary bg-primary/15' : 'border-white/15 bg-black/70'}`} style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
-              <div className="text-[7px] md:text-[10px] font-mono tracking-widest text-white/50 mb-1 md:mb-2 truncate">{r.name}</div>
+          {results.map((r, i) => (
+            <div key={i} className={`p-2.5 md:p-4 border backdrop-blur-md ${r.winner === 'player' ? 'border-primary bg-primary/15' : 'border-white/15 bg-black/70'}`} style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
+              <div className="text-[7px] md:text-[10px] font-mono tracking-widest text-white/50 mb-1 md:mb-2 truncate">{districts[i].name}</div>
               <div className="font-display font-black text-xl md:text-3xl mb-1">{r.player} <span className="text-white/30 text-sm md:text-lg mx-0.5 md:mx-1">-</span> {r.cpu}</div>
-               <div className={`text-[7px] md:text-[10px] font-bold uppercase tracking-widest ${r.won ? 'text-primary' : 'text-white/40'}`}>
-                 {r.won ? 'Secured' : r.tied ? 'Dead Heat' : 'Lost'}
+               <div className={`text-[7px] md:text-[10px] font-bold uppercase tracking-widest ${r.winner === 'player' ? 'text-primary' : 'text-white/40'}`}>
+                 {r.winner === 'player' ? 'Secured' : r.winner === 'draw' ? 'Dead Heat' : 'Lost'}
               </div>
             </div>
           ))}

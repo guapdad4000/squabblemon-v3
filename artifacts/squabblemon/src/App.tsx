@@ -1,38 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
 
-import { cards, decks, districts, Card } from './data';
+import { decks, districts, Card } from './data';
 import { Lobby } from './components/Lobby';
 import { Battle } from './components/Battle';
 import { ResultScreen } from './components/ResultScreen';
 import { CardInspector } from './components/CardInspector';
 import { RulesModal } from './components/RulesModal';
 
+import { createMatch, Match, playCard, pass, revealCpu, nextRound, CardInstance } from './gameEngine';
+
 function AppGame() {
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>('lobby');
-  const [deckId, setDeckId] = useState('vibes'); 
-  const [rival, setRival] = useState('combo'); 
-  
-  const [round, setRound] = useState(1); 
-  const [hype, setHype] = useState(1);
-  const [hand, setHand] = useState<Card[]>([]); 
-  const [boards, setBoards] = useState<Card[][]>([[], [], []]); 
-  
-  const [selected, setSelected] = useState<Card | null>(null); 
-  const [selectedLane, setSelectedLane] = useState<number | null>(null); 
-  
+  const [deckId, setDeckId] = useState('vibes');
+  const [rival, setRival] = useState('combo');
+
+  const [match, setMatch] = useState<Match | null>(null);
+
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
+  const [selectedLane, setSelectedLane] = useState<number | null>(null);
   const [squabble, setSquabble] = useState(false);
-  const [squabbleUsed, setSquabbleUsed] = useState(false);
-  const [isResolving, setIsResolving] = useState(false);
+
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
-  const [showRules, setShowRules] = useState(false); 
-  const [message, setMessage] = useState('SELECT A CARD, THEN TAP A DISTRICT');
-  
-  const [inspect, setInspect] = useState<Card | null>(null);
-  
-  const deck = decks.find(d => d.id === deckId)!; 
+  const [showRules, setShowRules] = useState(false);
+  const [inspect, setInspect] = useState<CardInstance | Card | null>(null);
+
+  const deck = decks.find(d => d.id === deckId)!;
   const rivalDeck = decks.find(d => d.id === rival)!;
 
   useEffect(() => () => {
@@ -41,73 +35,48 @@ function AppGame() {
 
   const start = () => {
     if (revealTimer.current) clearTimeout(revealTimer.current);
-    setRound(1);
-    setHype(1);
-    setBoards([[], [], []]);
-    setSelected(null);
+    setMatch(createMatch(deckId, rival));
+    setSelectedInstanceId(null);
     setSelectedLane(null);
     setSquabble(false);
-    setSquabbleUsed(false);
-    setIsResolving(false);
-    setMessage('SELECT A CARD, THEN TAP A DISTRICT');
-    setHand(deck.cards.slice(0, 5).map(id => ({ ...cards[id], deck: deckId, owner: 'player' })));
+    setShowRules(false);
     setScreen('battle');
   };
 
   const commit = () => {
-    if (!selected || selectedLane === null || selected.cost > hype) return;
-    
-    const next = [...boards];
-    const committedCard = {
-      ...selected,
-      power: squabble ? selected.power * 2 : selected.power,
-      owner: 'player' as const
-    };
-    next[selectedLane] = [...next[selectedLane], committedCard];
-    setBoards(next);
-    setHand(hand.filter(c => c.id !== selected.id));
-    setHype(0);
-    setIsResolving(true);
-    setMessage(squabble ? 'SQUABBLE COMMITTED. POWER DOUBLED // RIVAL REVEALING.' : 'COMMITTED. CPU IS REVEALING THEIR PLAY.');
-    if (squabble) {
-      setSquabble(false);
-      setSquabbleUsed(true);
+    if (!match || match.phase !== 'player') return;
+    let nextMatch: Match;
+
+    if (selectedInstanceId) {
+      if (selectedLane === null) return;
+      try {
+        nextMatch = playCard(match, 'player', selectedInstanceId, selectedLane as 0|1|2, squabble);
+      } catch (e) {
+        console.error(e);
+        return;
+      }
+    } else {
+      nextMatch = pass(match, 'player');
     }
-    setSelected(null);
+
+    setMatch(nextMatch);
+    setSquabble(false);
+    setSelectedInstanceId(null);
     setSelectedLane(null);
     
+    if (revealTimer.current) clearTimeout(revealTimer.current);
     revealTimer.current = setTimeout(() => {
-      const cpuCard = { ...cards[rivalDeck.cards[(round + 1) % rivalDeck.cards.length]], deck: rivalDeck.id, owner: 'cpu' as const };
-      const cpuLane = (round + 1) % 3;
-      const updated = [...next];
-      updated[cpuLane] = [...updated[cpuLane], cpuCard];
-      setBoards(updated);
-      setIsResolving(false);
-      setMessage(`ROUND ${round} RESOLVED // DISTRICT POWER UPDATED`);
-    }, 1200);
+      setMatch(current => current ? revealCpu(current) : null);
+    }, 1500);
   };
 
-  const nextRound = () => {
-    if (isResolving) return;
-    if (round >= 6) {
+  const handleNextRound = () => {
+    if (!match || match.phase !== 'resolved') return;
+    const next = nextRound(match);
+    setMatch(next);
+    if (next.phase === 'complete') {
       setScreen('result');
-      return;
     }
-    setRound(round + 1);
-    setHype(round + 1);
-    
-    const usedCardIds = new Set([
-      ...boards.flat().filter(c => c.owner === 'player').map(c => c.id),
-      ...hand.map(c => c.id)
-    ]);
-    const drawPool = deck.cards.filter(cardKey => !usedCardIds.has(cards[cardKey].id));
-    
-    setHand([
-      ...hand,
-      ...drawPool.slice(0, 1).map(id => ({ ...cards[id], deck: deckId, owner: 'player' as const }))
-    ]);
-    
-    setMessage('NEW ROUND. HYPE RECHARGED.');
   };
 
   return (
@@ -115,31 +84,38 @@ function AppGame() {
       <div className="noise-overlay" />
 
       {screen === 'lobby' && (
-        <Lobby 
-          onStart={start} 
-          deckId={deckId} setDeckId={setDeckId} 
-          rival={rival} setRival={setRival} 
-          onShowRules={() => setShowRules(true)} 
+        <Lobby
+          onStart={start}
+          deckId={deckId} setDeckId={setDeckId}
+          rival={rival} setRival={setRival}
+          onShowRules={() => setShowRules(true)}
         />
       )}
 
-      {screen === 'battle' && (
-        <Battle 
-          deck={deck} rivalDeck={rivalDeck} round={round} hype={hype} hand={hand} boards={boards}
-          selected={selected} setSelected={setSelected} selectedLane={selectedLane} setSelectedLane={setSelectedLane}
-          commit={commit} nextRound={nextRound} message={message} squabble={squabble} setSquabble={setSquabble} squabbleUsed={squabbleUsed} isResolving={isResolving}
-          setInspect={setInspect} archiveMatch={() => setScreen('result')}
-        />
+      {screen === 'battle' && match && (
+        <LayoutGroup>
+          <Battle
+            match={match}
+            deck={deck} rivalDeck={rivalDeck}
+            selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId}
+            selectedLane={selectedLane} setSelectedLane={setSelectedLane}
+            commit={commit} handleNextRound={handleNextRound}
+            squabble={squabble} setSquabble={setSquabble}
+            setInspect={setInspect} archiveMatch={() => setScreen('result')}
+            onShowRules={() => setShowRules(true)}
+          />
+        </LayoutGroup>
       )}
 
       <AnimatePresence>
-        {inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} />}
+        {inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} match={match} />}
         {showRules && <RulesModal onClose={() => setShowRules(false)} />}
-        {screen === 'result' && (
+        {screen === 'result' && match && (
           <ResultScreen 
             onRestart={start} 
             onChangeDeck={() => setScreen('lobby')} 
-            districts={districts} boards={boards} deckId={deckId} rivalDeck={rivalDeck}
+            match={match}
+            districts={districts} deckId={deckId} rivalDeck={rivalDeck}
           />
         )}
       </AnimatePresence>
