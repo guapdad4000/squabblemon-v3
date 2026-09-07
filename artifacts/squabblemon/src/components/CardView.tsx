@@ -14,9 +14,10 @@ interface CardViewProps {
   isEnemy?: boolean;
   effectivePower?: number;
   cost?: number;
+  highlighted?: boolean;
 }
 
-export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost }: CardViewProps) {
+export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -35,6 +36,8 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
   return (
     <motion.button
       layoutId={instance?.instanceId}
+      layout
+      transition={{ layout: { type: 'spring', stiffness: 420, damping: 28 }, duration: 0.2 }}
       data-testid={testId ?? `card-${card.id}`}
       data-card-id={card.id}
       data-instance-id={instance?.instanceId}
@@ -48,6 +51,7 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
         relative shrink-0 flex flex-col justify-end text-left group
         ${isBoard ? 'w-[58px] h-[82px] md:w-[96px] md:h-[134px]' : 'w-[86px] h-[120px] md:w-[128px] md:h-[178px] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary' : 'z-10'}
+        ${highlighted ? 'effect-source' : ''}
         ${className}
       `}
     >
