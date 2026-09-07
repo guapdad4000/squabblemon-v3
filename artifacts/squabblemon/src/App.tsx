@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HelpCircle, Volume2, VolumeX } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 
 import { cards, decks, districts, Card } from './data';
@@ -29,7 +28,6 @@ function AppGame() {
   const revealTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   const [showRules, setShowRules] = useState(false); 
-  const [sound, setSound] = useState(true); 
   const [message, setMessage] = useState('SELECT A CARD, THEN TAP A DISTRICT');
   
   const [inspect, setInspect] = useState<Card | null>(null);
@@ -113,26 +111,8 @@ function AppGame() {
   };
 
   return (
-    <main className="h-[100dvh] game-bg text-white font-sans flex flex-col relative overflow-hidden">
+    <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg">
       <div className="noise-overlay" />
-      
-      {/* Global Topbar */}
-      <header className="h-14 md:h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-6 z-40 bg-black/40 backdrop-blur-md shrink-0">
-        <div className="font-display font-bold text-lg md:text-xl tracking-wide uppercase">
-          Squabble<em className="text-primary not-italic">mon</em>
-        </div>
-        <div className="hidden sm:block font-mono text-[10px] tracking-[0.2em] text-white/30">
-          SBL // HUMAN PLAYTEST 0.4
-        </div>
-        <div className="flex gap-3 md:gap-4">
-          <button data-testid="button-rules" onClick={() => setShowRules(true)} className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-mono tracking-widest text-white/50 hover:text-white transition-colors">
-            <HelpCircle size={14} /> <span className="hidden sm:inline">RULES</span>
-          </button>
-          <button data-testid="button-sound" onClick={() => setSound(!sound)} className="text-white/50 hover:text-white transition-colors">
-            {sound ? <Volume2 size={16} /> : <VolumeX size={16} />}
-          </button>
-        </div>
-      </header>
 
       {screen === 'lobby' && (
         <Lobby 

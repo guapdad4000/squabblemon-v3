@@ -23,7 +23,7 @@ export function CardView({ card, queued, onClick, testId, className = '', isBoar
       whileTap={{ scale: 0.95 }}
       className={`
         relative shrink-0 flex flex-col justify-end text-left group
-        ${isBoard ? 'w-[70px] h-[98px] md:w-[90px] md:h-[126px]' : 'w-[100px] h-[140px] md:w-[140px] md:h-[196px] shadow-2xl shadow-black/80'}
+        ${isBoard ? 'w-[56px] h-[78px] md:w-[90px] md:h-[126px]' : 'w-[84px] h-[117px] md:w-[140px] md:h-[196px] shadow-2xl shadow-black/80'}
         ${queued ? 'scale-110 -translate-y-6 z-50' : 'z-10'}
         ${className}
       `}
@@ -55,10 +55,10 @@ export function CardView({ card, queued, onClick, testId, className = '', isBoar
 
           {/* Bottom Data Panel */}
           <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-black via-black/90 to-transparent flex flex-col justify-end p-1.5 md:p-2">
-            <div className={`uppercase tracking-widest text-primary font-mono opacity-90 ${isBoard ? 'text-[5px] mb-0' : 'text-[7px] md:text-[9px] mb-0.5'}`}>
+            <div className={`uppercase tracking-widest text-primary font-mono opacity-90 ${isBoard ? 'text-[4px] md:text-[5px] mb-0' : 'text-[7px] md:text-[9px] mb-0.5'}`}>
               {card.type}
             </div>
-            <h4 className={`font-display font-black leading-tight text-white ${isBoard ? 'text-[8px] md:text-[10px]' : 'text-xs md:text-sm'} shadow-black drop-shadow-md`}>
+            <h4 className={`font-display font-black leading-tight text-white ${isBoard ? 'text-[7px] md:text-[10px]' : 'text-xs md:text-sm'} shadow-black drop-shadow-md`}>
               {card.name}
             </h4>
             {!isBoard && (
@@ -75,7 +75,7 @@ export function CardView({ card, queued, onClick, testId, className = '', isBoar
       <div className={`
         absolute -top-1.5 -left-1.5 md:-top-2 md:-left-2 z-20 
         flex items-center justify-center font-display font-black
-        ${isBoard ? 'w-5 h-5 text-[9px]' : 'w-7 h-7 md:w-8 md:h-8 text-xs md:text-sm'}
+        ${isBoard ? 'w-4 h-4 md:w-5 md:h-5 text-[8px] md:text-[9px]' : 'w-7 h-7 md:w-8 md:h-8 text-xs md:text-sm'}
         bg-primary text-black border-2 border-black
       `} style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
         {card.cost}
@@ -85,7 +85,7 @@ export function CardView({ card, queued, onClick, testId, className = '', isBoar
       <div className={`
         absolute -top-1.5 -right-1.5 md:-top-2 md:-right-2 z-20 
         flex items-center justify-center font-display font-black
-        ${isBoard ? 'w-5 h-5 text-[9px]' : 'w-7 h-7 md:w-8 md:h-8 text-xs md:text-sm'}
+        ${isBoard ? 'w-4 h-4 md:w-5 md:h-5 text-[8px] md:text-[9px]' : 'w-7 h-7 md:w-8 md:h-8 text-xs md:text-sm'}
         bg-white text-black border-2 border-black
       `} style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
         {card.power}
