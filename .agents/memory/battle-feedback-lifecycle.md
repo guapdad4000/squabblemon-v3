@@ -7,4 +7,4 @@ Battle sound and haptic cues must be keyed to structured event sequence plus the
 
 **Why:** Skips, navigation, fast-forward, and future replay controls can invalidate visual beats mid-sequence. Independent cue scheduling can produce late or duplicate impacts after the matching visual event is gone.
 
-**How to apply:** When adding or changing battle presentation, emit feedback only while processing the authoritative event, deduplicate within the active generation, and suppress cues for fast-forwarded or hidden presentation.
+**How to apply:** When adding or changing battle presentation, emit feedback only while processing the authoritative event, deduplicate within the active generation, and suppress cues for fast-forwarded or hidden presentation. Lifecycle resets must also stop and disconnect active audio sources and cancel vibration; invalidating future scheduling alone does not prevent a suspended mobile audio clock from resuming an old cue.

@@ -51,6 +51,8 @@ type AudioContextConstructor = typeof AudioContext;
 export class BattleFeedback {
   private context: AudioContext | null = null;
   private played = new Set<string>();
+  private activeAudio = new Set<{ oscillator: OscillatorNode; gain: GainNode }>();
+  private lifecycle = 0;
 
   constructor(
     private preferences: FeedbackPreferences,
@@ -63,8 +65,26 @@ export class BattleFeedback {
     this.preferences = preferences;
   }
 
+  unlockAudio() {
+    if (!this.preferences.audioEnabled) return;
+    const context = this.getOrCreateContext();
+    if (context?.state === 'suspended') void context.resume().catch(() => undefined);
+  }
+
   reset() {
+    this.lifecycle += 1;
     this.played.clear();
+    for (const active of this.activeAudio) {
+      try {
+        active.oscillator.stop();
+      } catch {
+        // The source may already have ended.
+      }
+      active.oscillator.disconnect();
+      active.gain.disconnect();
+    }
+    this.activeAudio.clear();
+    this.safeVibrate(0);
   }
 
   emit(event: EffectLogEntry, generation: number, reducedMotion: boolean, hidden = document.hidden) {
@@ -72,19 +92,35 @@ export class BattleFeedback {
     if (hidden || this.played.has(key)) return;
     this.played.add(key);
     const cue = cueForBattleEvent(event);
-    if (this.preferences.audioEnabled) this.play(cue);
+    if (this.preferences.audioEnabled) void this.play(cue, this.lifecycle);
     if (this.preferences.hapticsEnabled && !reducedMotion) this.haptic(cue);
   }
 
-  private play(cue: BattleCue) {
+  private getOrCreateContext() {
     const Context = this.getAudioContext();
-    if (!Context) return;
-    this.context ??= new Context();
-    if (this.context.state === 'suspended') void this.context.resume();
+    if (!Context) return null;
+    try {
+      return this.context ??= new Context();
+    } catch {
+      return null;
+    }
+  }
 
-    const now = this.context.currentTime;
-    const oscillator = this.context.createOscillator();
-    const gain = this.context.createGain();
+  private async play(cue: BattleCue, lifecycle: number) {
+    const context = this.getOrCreateContext();
+    if (!context) return;
+    if (context.state === 'suspended') {
+      try {
+        await context.resume();
+      } catch {
+        return;
+      }
+    }
+    if (context.state !== 'running' || lifecycle !== this.lifecycle || !this.preferences.audioEnabled) return;
+
+    const now = context.currentTime;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
     const tones: Record<BattleCue, [OscillatorType, number, number, number]> = {
       play: ['triangle', 105, 62, .11],
       reveal: ['square', 260, 520, .08],
@@ -102,9 +138,24 @@ export class BattleFeedback {
     gain.gain.setValueAtTime(.0001, now);
     gain.gain.exponentialRampToValueAtTime(cue === 'claim' ? .12 : .065, now + .008);
     gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
-    oscillator.connect(gain).connect(this.context.destination);
+    oscillator.connect(gain).connect(context.destination);
+    const active = { oscillator, gain };
+    this.activeAudio.add(active);
+    oscillator.onended = () => {
+      this.activeAudio.delete(active);
+      oscillator.disconnect();
+      gain.disconnect();
+    };
     oscillator.start(now);
     oscillator.stop(now + duration + .01);
+  }
+
+  private safeVibrate(pattern: number | number[]) {
+    try {
+      this.vibrate(pattern);
+    } catch {
+      // Vibration support is inconsistent; feedback must never interrupt battle.
+    }
   }
 
   private haptic(cue: BattleCue) {
@@ -116,6 +167,6 @@ export class BattleFeedback {
       claim: [18, 45, 30],
     };
     const value = pattern[cue];
-    if (value !== undefined) this.vibrate(value);
+    if (value !== undefined) this.safeVibrate(value);
   }
 }
