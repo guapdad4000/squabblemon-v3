@@ -8,6 +8,7 @@
     "./data": "./src/data.ts",
     "./gameEngine": "./src/gameEngine.ts",
     "./cardProgression": "./src/cardProgression.ts",
+    "./training": "./src/training.ts",
     "./story": "./src/story.ts"
   }
 }

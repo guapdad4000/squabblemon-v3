@@ -4,6 +4,7 @@ import { cards, decks, getAssetUrl, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { StoryCinematic } from './StoryCinematic';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
+import { cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
 
 export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
   const m = match as Match;
@@ -154,25 +155,21 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
           </div>
         ) : isGuest ? (
           <div className="mb-8 border border-primary/30 bg-black/60 p-4 font-mono text-[10px] uppercase tracking-widest text-primary">
-            Practice result only — rewards are unsaved.
+            Offline Training result — rewards are unsaved.
           </div>
         ) : (
           <div className="mb-8 border border-white/10 bg-black/60 p-4">
-            <h3 className="font-mono text-[9px] uppercase tracking-widest text-white/50 mb-3">Post-Match Rewards</h3>
+            <h3 className="font-mono text-[9px] uppercase tracking-widest text-white/50 mb-3">Training Growth</h3>
             {rewardError ? (
                <div>
-                 <div className="text-accent text-sm font-bold uppercase mb-3">Reward was not saved. Your local result still counts as practice.</div>
+                 <div className="text-accent text-sm font-bold uppercase mb-3">Training XP was not saved. Your battle result remains available on this screen.</div>
                  <button onClick={onRetryReward} disabled={rewardPending} className="border border-accent px-4 py-2 font-mono text-[9px] uppercase tracking-widest text-rose-200 hover:bg-accent/15 disabled:opacity-50">
                    {rewardPending ? 'Retrying' : 'Retry Save'}
                  </button>
                </div>
             ) : reward ? (
                <div>
-                <div className="flex justify-center gap-4">
-                 <div className="text-center">
-                   <div className="font-display font-black text-2xl text-primary">+{reward.xp}</div>
-                   <div className="font-mono text-[8px] uppercase">XP</div>
-                 </div>
+                 <div className="flex justify-center gap-4">
                  {reward.streetRep > 0 && (
                    <div className="text-center">
                      <div className="font-display font-black text-2xl text-primary">+{reward.streetRep}</div>
@@ -190,12 +187,17 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                   <div className="mt-4 grid grid-cols-2 gap-2 border-t border-white/10 pt-4 sm:grid-cols-3">
                     {reward.cardXp.map((entry: any) => {
                       const card = cards[entry.cardId];
+                       const progress = cardProgressDetails({ xp: entry.xp, level: entry.level });
                       return (
                         <div key={entry.cardId} className="flex items-center gap-2 bg-white/5 p-2 text-left">
                           <img src={getCardImage(entry.cardId)} alt="" className="h-10 w-8 object-cover object-top" />
                           <div className="min-w-0">
                             <div className="truncate font-display text-[10px] font-black uppercase">{card?.name ?? entry.cardId}</div>
                             <div className="font-mono text-[8px] uppercase text-primary">+{entry.xpGained} Card XP · LV {entry.level}</div>
+                            <div className="mt-1 h-1.5 overflow-hidden bg-white/10">
+                              <div className="h-full bg-primary" style={{ width: `${progress.progressPercent}%` }} />
+                            </div>
+                            <div className="mt-0.5 font-mono text-[6px] uppercase text-white/40">{progress.isMaxLevel ? 'Max level' : `${progress.xpIntoLevel} / ${progress.xpForNextLevel} to next level`}</div>
                             {entry.level > entry.previousLevel && <div className="font-mono text-[7px] uppercase text-white">Level up!</div>}
                           </div>
                         </div>
@@ -203,6 +205,7 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                     })}
                   </div>
                 )}
+                {reward.cardXp?.length === 0 && <div className="font-mono text-[9px] uppercase text-white/50">No owned cards participated, so no card XP was earned.</div>}
                </div>
             ) : (
                <div className="text-white/50 text-sm animate-pulse">Syncing with server...</div>
@@ -211,7 +214,7 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         )}
         {isGuest && (
           <div className="mb-7 border border-primary/35 bg-primary/5 p-3 font-mono text-[9px] uppercase tracking-wider text-white/60">
-            {customPlayerDeck ? "Deck tests do not grant rewards." : "Guest practice does not save rewards. Return home to create an account and keep your next run."}
+            {customPlayerDeck ? "Deck tests do not grant rewards." : "Offline Training does not save Card XP. Return home and sign in to keep your next run."}
           </div>
         )}
 
@@ -230,10 +233,10 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
           ) : (
             <>
               <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">
-                Run It Back
+                 Train Again
               </button>
               <button data-testid="button-change-deck" onClick={onChangeDeck} className="bg-black/70 border border-white/20 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/15 transition-transform active:translate-y-1">
-                Change Deck
+                 Adjust Crew
               </button>
               <button onClick={onGoHome} className="bg-zinc-900 border border-white/10 text-white px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-white/10 transition-transform active:translate-y-1">
                 Home

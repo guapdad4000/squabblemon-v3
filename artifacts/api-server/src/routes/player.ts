@@ -60,6 +60,7 @@ import {
   type StoryMatchProgressionSnapshot,
 } from "../lib/storyMatchSnapshot";
 import { createCardProgressionSnapshot } from "../lib/cardProgression";
+import { selectTrainingRival } from "@workspace/squabblemon-engine/training";
 
 const router: IRouter = Router();
 
@@ -358,7 +359,14 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(403).json({ error: "Match roster contains an unowned card" });
     return;
   }
-  let rivalDeckId = parsed.data.rivalDeckId;
+  let rivalDeckId =
+    parsed.data.mode === "practice"
+      ? selectTrainingRival(
+          parsed.data.playerDeckId,
+          rosterCardIds,
+          state.profile.cardProgression,
+        )
+      : parsed.data.rivalDeckId;
   if (parsed.data.mode === "story") {
     if (!parsed.data.storyNodeId) {
       res.status(400).json({ error: "Story mode requires a story node" });
@@ -525,12 +533,7 @@ router.post(
       return;
     }
 
-    const amounts =
-      verifiedOutcome === "win"
-        ? { xp: 75, streetRep: 2, softCurrency: 90, packTickets: 0 }
-        : verifiedOutcome === "draw"
-          ? { xp: 55, streetRep: 1, softCurrency: 60, packTickets: 0 }
-          : { xp: 40, streetRep: 1, softCurrency: 45, packTickets: 0 };
+    const amounts = { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 };
     const computedReward =
       match.completedAt
         ? {
@@ -757,10 +760,10 @@ router.post(
           id: `match-${match.id}`,
           label:
             persistedOutcome === "win"
-              ? "Room secured"
+              ? "Training won"
               : persistedOutcome === "draw"
                 ? "Dead heat"
-                : "You still earned rep",
+                : "Training complete",
           ...persistedReward,
           descriptions: storedStoryResult.descriptions,
           storyRewards: grantedStoryRewards,

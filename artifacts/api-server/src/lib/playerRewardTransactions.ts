@@ -174,12 +174,7 @@ export async function completeStandardMatchReward(input: {
   districtsWon: number;
   verifiedMatch: Match;
 }): Promise<{ completed: boolean; match: PlayerMatchRecord; cardXpRewards: CardXpReward[] }> {
-  const amounts =
-    input.outcome === "win"
-      ? { xp: 75, streetRep: 2, softCurrency: 90, packTickets: 0 }
-      : input.outcome === "draw"
-        ? { xp: 55, streetRep: 1, softCurrency: 60, packTickets: 0 }
-        : { xp: 40, streetRep: 1, softCurrency: 45, packTickets: 0 };
+  const amounts = { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 };
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, input.clerkUserId);
     await resetExpiredMissionsInTransaction(tx, input.clerkUserId, new Date());
@@ -255,25 +250,6 @@ export async function completeStandardMatchReward(input: {
           cardProgression: cardXp.progression,
         })
         .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
-      const progressKeys = [
-        "daily-show-up",
-        "weekly-main-character",
-        ...(input.outcome === "win" ? ["daily-take-room"] : []),
-      ];
-      for (const key of progressKeys) {
-        await tx
-          .update(playerMissionsTable)
-          .set({
-            progress: sql`least(${playerMissionsTable.goal}, ${playerMissionsTable.progress} + 1)`,
-          })
-          .where(
-            and(
-              eq(playerMissionsTable.clerkUserId, input.clerkUserId),
-              eq(playerMissionsTable.missionKey, key),
-              isNull(playerMissionsTable.claimedAt),
-            ),
-          );
-      }
     }
     const [persisted] = await tx
       .select()

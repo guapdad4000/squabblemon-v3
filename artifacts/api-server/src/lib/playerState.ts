@@ -360,11 +360,11 @@ function getNextAction(
 
   return {
     id: "play-practice",
-    eyebrow: "Keep moving",
-    title: "Take another room",
-    description: "Run a practice match to earn Street Rep and Clout.",
+    eyebrow: "Build your crew",
+    title: "XP Training",
+    description: "Train against a fair CPU rival. Played owned cards earn XP even when you lose.",
     destination: "play",
-    rewardLabel: "+40–90 Clout",
+    rewardLabel: "20–30 Card XP per participant",
   };
 }
 

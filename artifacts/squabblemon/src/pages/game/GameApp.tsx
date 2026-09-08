@@ -154,6 +154,7 @@ function GameRoutes() {
           turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
           availableDeckIds={availableDeckIds}
           equippedVariants={bootstrap.profile.equippedVariants}
+          cardProgression={bootstrap.profile.cardProgression}
         />
       </Route>
       <Route path="/game/story/play/:nodeId">
@@ -216,7 +217,7 @@ export default function GameApp() {
       <div className="min-h-[100dvh] bg-black text-white p-6 flex flex-col items-center justify-center text-center">
         <div className="font-display font-black text-accent text-3xl italic uppercase mb-4">Offline</div>
         <p className="font-mono text-xs text-white/50 mb-8">Could not connect to the server.</p>
-        <button onClick={() => setLocation('/play/guest')} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20">Play Offline Practice</button>
+        <button onClick={() => setLocation('/play/guest')} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20">Play Offline Training</button>
       </div>
     );
   }

@@ -46,7 +46,7 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               Enter Story
             </Link>
             <Link href="/game/play" className="flex-1 text-center bg-black/50 border border-white/20 text-white px-4 py-3 font-display font-black italic uppercase hover:bg-white/10 active:translate-y-1">
-              Practice
+              XP Training
             </Link>
           </div>
         </div>
@@ -69,8 +69,9 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </Link>
       </section>
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <section className="grid grid-cols-2 md:grid-cols-5 gap-2">
         {[
+          ['/game/play', 'Training', 'Card XP vs CPU'],
           ['/game/story', 'Story', `Chapter ${profile.storyChapter || 1}`],
           ['/game/collection', 'Collection', `${profile.ownedCardIds.length} cards`],
           ['/game/missions', 'Missions', `${missions.filter((mission) => mission.status === 'claimable').length} ready`],

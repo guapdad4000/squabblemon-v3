@@ -141,10 +141,10 @@ test("simultaneous match completions return one persisted reward and credit it o
     }),
   );
   const profile = await profileFor(clerkUserId);
-  assert.equal(profile.xp, results[0].match.rewardXp);
-  assert.equal(profile.softCurrency, results[0].match.rewardSoftCurrency);
-  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
-  assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 1);
+  assert.equal(profile.xp, 0);
+  assert.equal(profile.softCurrency, 0);
+  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 0);
+  assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 0);
 });
 
 test("simultaneous completions grant participating card XP once and persist the retry result", async (t) => {
@@ -358,6 +358,6 @@ test("a cadence reset racing match completion preserves current-period progress"
       verifiedMatch: createMatch("block", "slide"),
     }),
   ]);
-  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
-  assert.equal((await profileFor(clerkUserId)).xp, 40);
+  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 0);
+  assert.equal((await profileFor(clerkUserId)).xp, 0);
 });

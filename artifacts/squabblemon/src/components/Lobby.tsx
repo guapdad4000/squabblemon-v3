@@ -2,12 +2,16 @@ import { motion } from 'framer-motion';
 import { cards, catalogCardByEngineId, decks, getCardImage } from '../data';
 import { CardVariantTreatment, getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
+import { selectTrainingRival, trainingDifficulty, TRAINING_REWARD_RULES } from '@workspace/squabblemon-engine/training';
 
-export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds, equippedVariants }: any) {
+export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds, equippedVariants, cardProgression = {} }: any) {
   const selectedDeck = decks.find(d => d.id === deckId)!;
   const availableDecks = availableDeckIds
     ? decks.filter((deck) => availableDeckIds.includes(deck.id))
     : decks;
+  const recommendedRival = selectTrainingRival(selectedDeck.id, selectedDeck.cards, cardProgression);
+  const rivalDeck = decks.find((deck) => deck.id === recommendedRival)!;
+  const difficulty = trainingDifficulty(selectedDeck.id, recommendedRival, selectedDeck.cards, cardProgression);
   
   return (
     <div className="flex-1 min-h-0 min-w-0 grid grid-cols-[minmax(0,1fr)] grid-rows-[minmax(210px,1fr)_auto_auto] md:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] md:grid-rows-[1fr_auto] w-full max-w-full overflow-hidden relative bg-[#070707]">
@@ -35,9 +39,9 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         <div className="relative z-10 h-full flex flex-col p-4 md:p-10 pointer-events-none">
           <div className="ml-12 md:ml-0">
             <div className="font-display font-black italic text-3xl md:text-7xl leading-[0.82] tracking-tighter uppercase">
-              Squabble<span className="text-primary">mon</span>
+              XP <span className="text-primary">Training</span>
             </div>
-            <div className="mt-1.5 font-mono text-[8px] md:text-xs tracking-[0.26em] text-primary uppercase">Choose your crew // Take the room</div>
+            <div className="mt-1.5 font-mono text-[8px] md:text-xs tracking-[0.26em] text-primary uppercase">Low pressure // Level owned cards</div>
           </div>
 
           <motion.div
@@ -140,20 +144,19 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
       </div>
 
       <div className="relative z-30 shrink-0 min-w-0 w-full overflow-hidden bg-[#0c0c0c] md:border-l border-white/10 p-3 md:p-6 md:pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="mb-2.5 border border-white/15 bg-black p-3 text-left">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-display font-black uppercase">VS // {rivalDeck.name}</span>
+            <span className="font-mono text-[8px] uppercase text-primary">{difficulty}</span>
+          </div>
+          <div className="mt-2 font-mono text-[8px] uppercase leading-relaxed text-white/55">
+            <span className="block text-white/75">{rivalDeck.cards.map((cardId) => cards[cardId]?.name).join(' · ')}</span>
+            Played owned cards earn +{TRAINING_REWARD_RULES.winCardXp} XP on a win, +{TRAINING_REWARD_RULES.drawCardXp} on a draw, or +{TRAINING_REWARD_RULES.lossCardXp} on a loss.
+            No daily or replay limit. No currency, tickets, Street Rep, or profile XP.
+          </div>
+        </div>
         <div className="grid grid-cols-[1fr_76px] gap-2 mb-2.5">
-          <label className="relative min-w-0">
-            <span className="absolute z-10 -top-1.5 left-2.5 bg-[#0c0c0c] px-1 font-mono text-[7px] text-white/45 uppercase tracking-widest">Rival crew</span>
-            <select
-              data-testid="select-rival"
-              className="w-full h-12 bg-black border border-white/20 text-white px-3 font-display font-bold uppercase text-xs md:text-sm outline-none focus:border-primary"
-              value={rival}
-              onChange={e => setRival(e.target.value)}
-            >
-              {decks.filter(d => d.id !== deckId).map(d => (
-                <option value={d.id} key={d.id} className="bg-zinc-900">VS // {d.name}</option>
-              ))}
-            </select>
-          </label>
+          <div className="h-12 border border-white/10 bg-white/5 px-3 flex items-center font-mono text-[8px] uppercase text-white/45">Training picks a fair progression band</div>
           <button
             data-testid="button-rules-lobby"
             onClick={onShowRules}
@@ -170,7 +173,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
           className="relative z-10 w-full min-h-14 md:min-h-16 bg-primary hover:bg-yellow-300 text-black font-display font-black text-xl md:text-3xl italic uppercase shadow-[0_5px_0_#854d0e] active:translate-y-1 active:shadow-none transition-all disabled:opacity-50"
           style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px))' }}
         >
-          {isLoading ? 'Loading...' : 'Enter the streets'}
+          {isLoading ? 'Loading...' : 'Start Training'}
         </button>
       </div>
     </div>

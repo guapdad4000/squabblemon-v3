@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   CARD_RARITY_DEFINITIONS,
   catalogCardByEngineId,
