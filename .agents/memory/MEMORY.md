@@ -6,3 +6,4 @@
 - [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full presentation lifecycles in an optimized profiling build, not synthetic snapshots or animation startup.
 - [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
 - [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.
+- [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
