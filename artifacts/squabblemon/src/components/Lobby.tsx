@@ -151,6 +151,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
           </div>
           <div className="mt-2 font-mono text-[8px] uppercase leading-relaxed text-white/55">
             <span className="block text-white/75">{rivalDeck.cards.map((cardId) => cards[cardId]?.name).join(' · ')}</span>
+            <span className="my-1 block text-accent">Rival tell: {rivalDeck.plan}</span>
             Played owned cards earn +{TRAINING_REWARD_RULES.winCardXp} XP on a win, +{TRAINING_REWARD_RULES.drawCardXp} on a draw, or +{TRAINING_REWARD_RULES.lossCardXp} on a loss.
             No daily or replay limit. No currency, tickets, Street Rep, or profile XP.
           </div>

@@ -244,10 +244,16 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, initia
     districtOwnersRef.current = owners;
     if (changedLanes.length > 0) {
       setPresentationPhase('district-flipped');
-      setPhaseMessage(`${changedLanes.length === 1 ? districts[changedLanes[0]].name : `${changedLanes.length} DISTRICTS`} FLIPPED`);
+      const changes = changedLanes.map(lane => {
+        const result = getDistrictResults(resolved)[lane];
+        const owner = result.winner === 'player' ? 'YOU TOOK' : result.winner === 'cpu' ? 'RIVAL TOOK' : 'TIED';
+        return `${owner} ${districts[lane].name} ${result.player}–${result.cpu}`;
+      });
+      setPhaseMessage(changes.join(' · '));
       if (!await waitForBeat(450, 80, id)) return;
     }
-    setPresentationPhase('round-result'); setPhaseMessage(`ROUND ${resolved.round} COMPLETE · NEXT DECISION IN 1`);
+    const claims = getDistrictResults(resolved).map(result => `${districts[result.lane].name} ${result.player}–${result.cpu}`).join(' · ');
+    setPresentationPhase('round-result'); setPhaseMessage(`ROUND ${resolved.round}: ${claims}`);
     if (await waitForBeat(changedLanes.length > 0 ? 750 : 1200, 120, id)) await advanceRoundBoundary(resolved, id, fastForwardRef.current);
   }, [advanceRoundBoundary, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => { setPresentationPhase('rival-thinking'); setPhaseMessage('RIVAL THINKING'); if (!await waitForBeat(700, 90, id)) return; const choice = chooseCpuPlay(afterPlayer); const resolved = choice ? playCard(afterPlayer, 'cpu', choice.instanceId, choice.lane) : pass(afterPlayer, 'cpu'); setMatch(resolved); if (await presentEvents(resolved, afterPlayer.nextEventSequence, id, fastForwardRef.current)) await finishRound(resolved, id); }, [finishRound, presentEvents, waitForBeat]);

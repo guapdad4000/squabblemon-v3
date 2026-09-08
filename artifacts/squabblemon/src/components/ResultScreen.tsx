@@ -236,6 +236,11 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onTutorialComp
             {customPlayerDeck ? "Deck tests do not grant rewards." : "Offline Training does not save Card XP. Return home and sign in to keep your next run."}
           </div>
         )}
+        {!isStory && reward?.cardXp?.length > 0 && (
+          <div className="mb-5 font-mono text-[9px] uppercase tracking-wider text-white/55">
+            Train again to push these cards toward their next ability upgrade, or adjust your crew around the districts you lost.
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
           {isStory ? (

@@ -156,8 +156,8 @@ export function createMatchFromEngineCards(
     cpuHand: cpuCardIds.slice(0, cpuHandSize).map((id, i) => createCardInstance(id, "cpu", cpuDeck, i)),
     playerCardIds: [...playerCardIds], cpuCardIds: [...cpuCardIds],
     boards: [[], [], []],
-    playerMotion: storyEncounter?.modifiers?.startingMotion?.player ?? 1,
-    cpuMotion: storyEncounter?.modifiers?.startingMotion?.cpu ?? 1,
+    playerMotion: storyEncounter?.modifiers?.startingMotion?.player ?? 2,
+    cpuMotion: storyEncounter?.modifiers?.startingMotion?.cpu ?? 2,
     playerDrawIndex: playerHandSize, cpuDrawIndex: cpuHandSize,
     squabbleUsed: false, plugDiscountLane: { player: null, cpu: null }, cheapBuffsUsed: { player: 0, cpu: 0 },
     effectLog: [], nextEventSequence: 1, timedEffects: [],
@@ -199,6 +199,12 @@ export function getLaneScore(cardsInLane: CardInstance[], laneIndex: number): nu
       : laneIndex === 2 && card.type === 'Electric' ? 3 : 0;
     return total + getEffectiveCardPower(card) + district;
   }, 0);
+}
+export function getDistrictCardBonus(card: Pick<CardInstance, "type" | "roles">, laneIndex: Lane): number {
+  return laneIndex === 0 && (card.type === "Fire" || card.type === "Dark") ? 2
+    : laneIndex === 1 && card.roles?.includes("Disruption") ? 2
+    : laneIndex === 2 && card.type === "Electric" ? 3
+    : 0;
 }
 export function getStoryLaneBonus(match: Match, owner: Owner, laneIndex: Lane): number {
   const base = match.storyEncounter?.modifiers?.lanePowerBonuses ?? [];
@@ -348,7 +354,7 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
   if (!snapshot) return [];
   const modifiers = snapshot.modifiers;
   const summaries: string[] = [];
-  if (modifiers?.startingMotion) summaries.push(`Starting Motion: player ${modifiers.startingMotion.player ?? 1}, CPU ${modifiers.startingMotion.cpu ?? 1}`);
+  if (modifiers?.startingMotion) summaries.push(`Starting Motion: player ${modifiers.startingMotion.player ?? 2}, CPU ${modifiers.startingMotion.cpu ?? 2}`);
   if (modifiers?.handSize) summaries.push(`Opening hand: player ${modifiers.handSize.player ?? 5}, CPU ${modifiers.handSize.cpu ?? 5}`);
   for (const lock of modifiers?.laneLocks ?? []) summaries.push(`Round ${lock.round}: ${lock.owner} cannot play lane${lock.lanes.length === 1 ? "" : "s"} ${lock.lanes.join(", ")}`);
   for (const delta of modifiers?.roundMotionDeltas ?? []) summaries.push(`Round ${delta.round}: ${delta.owner} Motion ${delta.amount >= 0 ? "+" : ""}${delta.amount}`);
@@ -493,13 +499,54 @@ export function pass(match: Match, owner: Owner): Match {
   const after = { ...match, phase: owner === 'player' ? 'cpu-reveal' as const : 'resolved' as const };
   return addEvent(match, after, { type: 'pass', owner, note: `${owner} passed.` });
 }
+export type RivalIntent = {
+  style: string;
+  tell: string;
+  likelyLane: Lane | null;
+};
+const rivalStyle = (deckId: string) => decks.find((deck) => deck.id === deckId)?.archetype ?? "Adaptive";
+export function getRivalIntent(match: Match): RivalIntent {
+  const legal = match.cpuHand.flatMap((card) => ([0, 1, 2] as Lane[])
+    .filter((target) => canAffordSelection(match, "cpu", card.instanceId, target))
+    .map((target) => ({ card, lane: target })));
+  if (!legal.length) return { style: rivalStyle(match.cpuDeck), tell: "Short on Motion — likely to pass and preserve a card.", likelyLane: null };
+  const results = getDistrictResults(match);
+  const style = rivalStyle(match.cpuDeck);
+  const laneScores = ([0, 1, 2] as Lane[]).map((target) => {
+    const result = results[target];
+    const districtFit = Math.max(...legal.filter((option) => option.lane === target).map((option) => getDistrictCardBonus(option.card, target)));
+    const pressure = result.winner === "player" ? 3 : result.winner === "draw" ? 2 : 0;
+    const styleBias = style.includes("Movement") && target === (match.round % 3) ? 2
+      : style.includes("Comeback") && result.winner === "player" ? 2
+      : style.includes("Control") && result.winner !== "cpu" ? 1
+      : 0;
+    return { lane: target, score: pressure + districtFit + styleBias };
+  }).sort((a, b) => b.score - a.score || ((a.lane + match.round) % 3) - ((b.lane + match.round) % 3));
+  const likelyLane = laneScores[0].lane;
+  const laneName = ["The Town", "Group Chat", "Server Room"][likelyLane];
+  const tell = style.includes("Comeback") ? `Likes trailing districts; pressure points toward ${laneName}.`
+    : style.includes("Movement") ? `Spreads early, then shifts Power; activity points toward ${laneName}.`
+    : style.includes("Disruption") || style.includes("Control") ? `Targets contested engines; watch ${laneName}.`
+    : style.includes("Combo") || style.includes("Growth") ? `Builds cheap chains before a late spike; setup points toward ${laneName}.`
+    : `Balances district bonuses and open lanes; watch ${laneName}.`;
+  return { style, tell, likelyLane };
+}
 export function chooseCpuPlay(match: Match): { instanceId: string; lane: Lane } | null {
   if (match.phase !== "cpu-reveal") return null;
   const options = match.cpuHand.flatMap((card) => ([0, 1, 2] as Lane[]).filter((l) => canAffordSelection(match, "cpu", card.instanceId, l)).map((l) => ({ card, lane: l, cost: getLegalCardCost(match, "cpu", card, l) })));
   if (!options.length) return null;
+  const intent = getRivalIntent(match);
   const ranked = options.sort((a, b) => {
-    const av = getLaneScoreForMatch(match, inLane(match, "cpu", a.lane), a.lane, "cpu") + a.card.basePower - getLaneScoreForMatch(match, inLane(match, "player", a.lane), a.lane, "player");
-    const bv = getLaneScoreForMatch(match, inLane(match, "cpu", b.lane), b.lane, "cpu") + b.card.basePower - getLaneScoreForMatch(match, inLane(match, "player", b.lane), b.lane, "player");
+    const value = (option: typeof a) => {
+      const currentCpu = getLaneScoreForMatch(match, inLane(match, "cpu", option.lane), option.lane, "cpu");
+      const currentPlayer = getLaneScoreForMatch(match, inLane(match, "player", option.lane), option.lane, "player");
+      const district = getDistrictCardBonus(option.card, option.lane);
+      const intentBonus = option.lane === intent.likelyLane ? 3 : 0;
+      const abilitySetup = option.card.roles?.includes("Disruption") && currentPlayer > 0 ? 2 : 0;
+      return currentCpu + option.card.basePower + district - currentPlayer + intentBonus + abilitySetup;
+    };
+    const av = value(a);
+    const bv = value(b);
     return bv - av || a.cost - b.cost || a.card.instanceId.localeCompare(b.card.instanceId) || a.lane - b.lane;
   });
   return { instanceId: ranked[0].card.instanceId, lane: ranked[0].lane };
@@ -521,8 +568,10 @@ export function nextRound(match: Match): Match {
     ...match,
     round: next,
     phase: 'player',
-    playerMotion: next,
-    cpuMotion: next,
+    // One unspent Motion carries forward. Passing can set up a stronger next
+    // round, but the cap prevents late turns from becoming automatic.
+    playerMotion: Math.min(6, next + Math.min(1, match.playerMotion)),
+    cpuMotion: Math.min(6, next + Math.min(1, match.cpuMotion)),
     boards: match.boards.map((items) => items.map((card) => ({
       ...card,
       statuses: { ...card.statuses, blocked: false },

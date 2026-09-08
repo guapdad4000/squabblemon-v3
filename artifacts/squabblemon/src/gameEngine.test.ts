@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   canAffordSelection, chooseCpuPlay, createCardInstance, createMatch, createMatchFromCatalog, getEffectiveCardPower,
-  getLaneScore, getLegalCardCost, getMatchWinner, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
+  getDistrictCardBonus, getLaneScore, getLegalCardCost, getMatchWinner, getRivalIntent, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
   createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot, type Match,
 } from './gameEngine';
 import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades } from './data';
@@ -20,6 +20,37 @@ test('initial hands are stable, owner-specific instances', () => {
   assert.equal(match.cpuHand.length, 5);
   assert.equal(new Set([...match.playerHand, ...match.cpuHand].map((c) => c.instanceId)).size, 10);
   assert(match.playerHand.every((c) => c.owner === 'player' && c.lane === null));
+  assert.equal(match.playerMotion, 2);
+});
+
+test('every starter opens with multiple legal card and district decisions', () => {
+  for (const deck of starterRecipes) {
+    const match = createMatch(deck.id, 'combo');
+    const legalCards = match.playerHand.filter(card => ([0, 1, 2] as const).some(lane => canAffordSelection(match, 'player', card.instanceId, lane)));
+    assert(legalCards.length >= 2, `${deck.id} should open with a choice`);
+  }
+});
+
+test('one Motion carries forward while the six-round economy stays capped', () => {
+  let match = createMatch('block', 'combo');
+  match = pass(match, 'player');
+  match = pass(match, 'cpu');
+  match = nextRound(match);
+  assert.equal(match.playerMotion, 3);
+  assert.equal(match.cpuMotion, 3);
+  match = { ...match, playerMotion: 99, cpuMotion: 99, phase: 'resolved' };
+  assert.equal(nextRound(match).playerMotion, 4);
+});
+
+test('district bonuses and rival tells expose strategic pressure without exact moves', () => {
+  const fire = custom('hooper', 'player', 90);
+  assert.equal(getDistrictCardBonus(fire, 0), 2);
+  assert.equal(getDistrictCardBonus(fire, 2), 0);
+  const match = createMatch('block', 'slide');
+  const intent = getRivalIntent({ ...match, phase: 'cpu-reveal' });
+  assert.equal(intent.style, 'Movement');
+  assert(intent.tell.length > 20);
+  assert(intent.likelyLane !== null);
 });
 
 test('a legal saved catalog deck can enter the same local CPU engine', () => {

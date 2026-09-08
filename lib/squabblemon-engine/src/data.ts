@@ -334,8 +334,8 @@ export function validateSavedDeck(
 }
 
 export const districts = [
-  { name: "THE TOWN", rule: "Fire + Dark cards gain +2 Power." },
-  { name: "GROUP CHAT", rule: "Disruption cards gain +2 Power." },
-  { name: "SERVER ROOM", rule: "Electric cards gain +3 Power." },
+  { name: "THE TOWN", rule: "Fire + Dark cards gain +2 Power.", strategy: "A raw-Power lane. Contest it with Fire or Dark, or bluff it to pull the rival away." },
+  { name: "GROUP CHAT", rule: "Disruption cards gain +2 Power.", strategy: "Interaction pays here. Commit when your ability has a real target; abandon it when the rival is baiting disruption." },
+  { name: "SERVER ROOM", rule: "Electric cards gain +3 Power.", strategy: "The biggest district bonus. Electric threats demand an answer, but stacking here can concede the other two lanes." },
 ];
 

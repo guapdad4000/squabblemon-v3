@@ -7,3 +7,4 @@
 - [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
 - [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.
 - [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
+- [Battle Motion curve](battle-motion-curve.md) — Six-round pacing starts at 2 Motion, carries at most 1 unspent Motion, and caps at 6 to preserve tempo without automatic late turns.

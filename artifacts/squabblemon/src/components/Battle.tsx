@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { cards, districts, getAssetUrl } from '../data';
 import { CardView } from './CardView';
-import { getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type EffectLogEntry, type Lane } from '../gameEngine';
+import { getDistrictCardBonus, getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, getRivalIntent, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type EffectLogEntry, type Lane } from '../gameEngine';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
 import type { FeedbackPreferences } from '../battleFeedback';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
@@ -101,6 +101,7 @@ export function Battle({
   replay, onReplayStep, onExitReplay,
 }: any) {
   const m = match as Match;
+  const rivalIntent = getRivalIntent(m);
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
   const selectedCost = selectedCard && selectedLane !== null ? getLegalCardCost(m, 'player', selectedCard, selectedLane as Lane) : selectedCard?.cost;
   const districtResults = getDistrictResults(m);
@@ -204,18 +205,18 @@ export function Battle({
   const decisionPrompt = !interactive
     ? 'Watch the highlighted card and district. Tap Fast Forward to finish the sequence.'
     : !selectedCard && selectedLane === null
-      ? '1. Choose a card or a district first. You may also pass to save Motion.'
+      ? `1. Choose a card or district. Pass carries 1 Motion. Rival tell: ${rivalIntent.tell}`
       : !selectedCard
         ? `2. ${districts[selectedLane!].name} selected. Choose a card you can afford there.`
       : !selectedHasLegalLane
         ? `${selectedCard.name} cannot be played now. Choose another card or pass.`
       : selectedLane === null
-        ? `2. Choose a lit district for ${selectedCard.name}. Its ability: ${selectedCard.effect}`
+        ? `2. Choose a lit district for ${selectedCard.name}. ${selectedCard.effect}`
         : selectedLaneLocked
           ? `${districts[selectedLane].name} is locked this round. Choose another district.`
         : (selectedCost ?? 0) > m.playerMotion
           ? `${selectedCard.name} costs ${selectedCost} Motion in ${districts[selectedLane].name}. You have ${m.playerMotion} — ${selectedCost! - m.playerMotion} short.`
-          : `3. Review ${selectedCard.name} → ${districts[selectedLane].name}, then Lock In${m.squabbleUsed ? '.' : ' or arm SQUABBLE.'}`;
+          : `3. ${districts[selectedLane].name} gives this card +${getDistrictCardBonus(selectedCard, selectedLane)} district Power. Lock In${m.squabbleUsed ? '.' : squabble ? ' with SQUABBLE to force a swing.' : ' or save SQUABBLE for a close late district.'}`;
 
   const getActionState = () => {
     if (!interactive) return { label: canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
@@ -260,7 +261,7 @@ export function Battle({
 
     <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20">{broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(phase === 'round-intro' ? `assets/fight-night/${broadcastArtwork}.webp` : `assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span>}</motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20 pointer-events-none">{broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(phase === 'round-intro' ? `assets/fight-night/${broadcastArtwork}.webp` : `assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className="cinematic-callout text-white">{phaseMessage}</span>}</motion.div>)}</AnimatePresence>
     <div className="battle-header relative z-30 shrink-0">
-      <div className="battle-rival"><div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {rivalDeck.archetype}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div></div></div>
+      <div className="battle-rival" title={rivalIntent.tell}><div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {rivalIntent.style}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div><div data-testid="rival-intent" className="hidden xl:block max-w-64 truncate text-[8px] text-white/55">{rivalIntent.tell}</div></div></div>
       <div className="battle-match-meta">
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
@@ -321,6 +322,7 @@ export function Battle({
   replay, onReplayStep, onExitReplay,
 }: any) {
   const m = match as Match;
+  const rivalIntent = getRivalIntent(m);
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
   const selectedCost = selectedCard && selectedLane !== null ? getLegalCardCost(m, 'player', selectedCard, selectedLane as Lane) : selectedCard?.cost;
   const districtResults = getDistrictResults(m);
@@ -404,14 +406,14 @@ export function Battle({
   const decisionPrompt = !interactive
     ? 'Watch the highlighted card and district. Tap Fast Forward to finish the sequence.'
     : !selectedCard
-      ? '1. Choose a card from your hand, or pass to save Motion.'
+      ? `1. Choose a card or pass to carry 1 Motion. Rival tell: ${rivalIntent.tell}`
       : !selectedHasLegalLane
         ? `${selectedCard.name} cannot be played now: it needs more Motion or every district is locked. Choose another card or pass.`
       : selectedLane === null
-        ? `2. Choose a lit district for ${selectedCard.name}. Its ability: ${selectedCard.effect}`
+        ? `2. Choose a lit district for ${selectedCard.name}. ${selectedCard.effect}`
         : (selectedCost ?? 0) > m.playerMotion
           ? `${districts[selectedLane].name} costs ${selectedCost} Motion. You only have ${m.playerMotion}.`
-          : `3. Review ${selectedCard.name} → ${districts[selectedLane].name}, then Lock In${m.squabbleUsed ? '.' : ' or arm SQUABBLE.'}`;
+          : `3. ${districts[selectedLane].name} gives this card +${getDistrictCardBonus(selectedCard, selectedLane)} district Power. Lock In${m.squabbleUsed ? '.' : squabble ? ' with SQUABBLE to force a swing.' : ' or save SQUABBLE for a close late district.'}`;
 
   const getActionState = () => {
     if (!interactive) return { label: canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };

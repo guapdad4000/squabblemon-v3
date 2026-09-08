@@ -175,10 +175,10 @@ test("phase on-enter effects and logs are applied exactly once", () => {
   };
   let match = createStoryMatch(snapshot, "block");
   assert.equal(getActiveStoryPhase(match)?.id, "opening");
-  assert.equal(match.cpuMotion, 4);
+  assert.equal(match.cpuMotion, 5);
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
   match = revealCpu(pass(match, "player"));
-  assert.equal(match.cpuMotion, 4 - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
+  assert.equal(match.cpuMotion, 5 - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
 });
 
