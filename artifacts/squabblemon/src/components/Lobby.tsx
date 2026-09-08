@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import { decks, getCardImage } from '../data';
+import { cards, decks, getCardImage } from '../data';
 
-export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, isLoading, onExit, availableDeckIds }: any) {
+export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds }: any) {
   const selectedDeck = decks.find(d => d.id === deckId)!;
   const availableDecks = availableDeckIds
     ? decks.filter((deck) => availableDeckIds.includes(deck.id))
@@ -87,6 +87,47 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
               </button>
             );
           })}
+        </div>
+
+        <div className="mt-2.5 border-t border-white/10 pt-2.5 min-w-0">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-mono text-[8px] md:text-[10px] tracking-[0.18em] text-white/55 uppercase">Crew lineup // 7 members</span>
+            <span className="font-mono text-[7px] md:text-[9px] text-primary/80 uppercase">Tap to inspect</span>
+          </div>
+          <motion.div
+            key={`lineup-${selectedDeck.id}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-7 gap-1 md:gap-1.5"
+            data-testid={`lineup-${selectedDeck.id}`}
+          >
+            {selectedDeck.cards.map((cardId, index) => {
+              const card = cards[cardId];
+              return (
+                <button
+                  type="button"
+                  key={`${selectedDeck.id}-${cardId}`}
+                  data-testid={`button-inspect-lineup-${cardId}`}
+                  onClick={() => onInspect(card)}
+                  aria-label={`Inspect ${card.name}`}
+                  className="group relative min-w-0 h-[78px] md:h-[106px] overflow-hidden border border-white/15 bg-zinc-950 text-left hover:border-primary focus-visible:border-primary focus-visible:outline-none active:scale-95 transition"
+                  style={{ clipPath: 'polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px))' }}
+                >
+                  <img
+                    src={getCardImage(card.id)}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full object-cover object-top opacity-85 transition-transform duration-200 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
+                  <span className="absolute left-1 top-1 font-mono text-[6px] text-primary/70">0{index + 1}</span>
+                  <span className="absolute inset-x-0 bottom-0 p-1 font-display font-black text-[7px] md:text-[9px] leading-[0.9] uppercase text-white drop-shadow-[0_1px_2px_#000] break-words">
+                    {card.name}
+                  </span>
+                </button>
+              );
+            })}
+          </motion.div>
         </div>
       </div>
 
