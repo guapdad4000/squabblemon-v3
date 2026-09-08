@@ -36,6 +36,7 @@ async function expectInsideViewport(locator: Locator, page: Page) {
 }
 
 test('a real practice turn presents travel, reveal, impact, and SQUABBLE in order', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   const arena = await enterPractice(page);
   await expect(page.getByTestId('turn-timer')).toHaveAttribute('data-timer-state', 'calm');
   await choosePlayableCard(page);
@@ -102,7 +103,7 @@ test('timer exposes paused, calm, warning, and urgent states and battle controls
 
 test('the battle honors the browser motion preference', async ({ page }, testInfo) => {
   const arena = await enterPractice(page);
-  const reduced = testInfo.project.name === 'phone';
+  const reduced = testInfo.project.name.endsWith('-phone');
   await expect(arena).toHaveAttribute('data-reduced-motion', String(reduced));
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(reduced);
 });
