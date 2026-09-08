@@ -1,7 +1,7 @@
 import { Link } from 'wouter';
 import { useAuth } from '@clerk/react';
 import { motion } from 'framer-motion';
-import { getAssetUrl, getCardImage } from '../data';
+import { getAssetUrl, getCardImage } from '../lib/assets';
 
 export function PublicEntry() {
   const { isSignedIn } = useAuth();
