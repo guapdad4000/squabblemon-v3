@@ -47,3 +47,7 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Browser verification output (generated locally, not application assets)
+**/test-results/
+/artifacts/squabblemon/screenshots/
