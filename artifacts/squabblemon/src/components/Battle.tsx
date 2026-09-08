@@ -4,6 +4,7 @@ import { CardView } from './CardView';
 import { getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type Lane } from '../gameEngine';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
 import type { FeedbackPreferences } from '../battleFeedback';
+import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 export function Battle({
@@ -12,7 +13,7 @@ export function Battle({
   commit, skipSequence, presentationPhase, phaseMessage, timerSeconds, timerEnabled, impactLane,
   stagedRival, stagedPlayer, activeEffectId, activeEffectLane, activeEffect,
   squabble, setSquabble, setInspect, archiveMatch, onShowRules, presentationScores,
-  feedbackPreferences, setFeedbackPreferences,
+  feedbackPreferences, setFeedbackPreferences, decisionStartedAt,
 }: any) {
   const m = match as Match;
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
@@ -76,6 +77,50 @@ export function Battle({
   const selectedHasLegalLane = selectedCard
     ? ([0, 1, 2] as Lane[]).some(lane => !lockedLanes.includes(lane) && getLegalCardCost(m, 'player', selectedCard, lane) <= m.playerHype)
     : false;
+  const selectCard = (card: Match['playerHand'][number], playableSomewhere: boolean) => {
+    if (!interactive) return;
+    const decision_time = decisionTimeBucket(decisionStartedAt);
+    if (selectedInstanceId) {
+      trackEvent('battle_card_selection_backed_out', {
+        round: m.round,
+        action: selectedInstanceId === card.instanceId ? 'deselect' : 'replace',
+        had_district: selectedLane !== null,
+        squabble_armed: squabble,
+        decision_time,
+      });
+    }
+    if (!playableSomewhere) {
+      trackEvent('battle_unavailable_card_selected', {
+        round: m.round,
+        hype: m.playerHype,
+        locked_districts: lockedLanes.length,
+        reason: lockedLanes.length === districts.length ? 'all_districts_locked' : 'insufficient_hype',
+        decision_time,
+      });
+    }
+    setSelectedInstanceId(selectedInstanceId === card.instanceId ? null : card.instanceId);
+    setSelectedLane(null);
+    setSquabble(false);
+  };
+  const selectDistrict = (lane: number, legal: boolean) => {
+    if (!interactive || !legal) return;
+    trackEvent('battle_district_selected', {
+      round: m.round,
+      district: lane + 1,
+      changed: selectedLane !== null && selectedLane !== lane,
+      decision_time: decisionTimeBucket(decisionStartedAt),
+    });
+    setSelectedLane(lane);
+  };
+  const toggleSquabble = () => {
+    if (m.squabbleUsed || !interactive || !selectedCard) return;
+    trackEvent('battle_squabble_toggled', {
+      round: m.round,
+      action: squabble ? 'cancel' : 'arm',
+      decision_time: decisionTimeBucket(decisionStartedAt),
+    });
+    setSquabble(!squabble);
+  };
   const decisionPrompt = !interactive
     ? 'Watch the highlighted card and district. Tap Fast Forward to finish the sequence.'
     : !selectedCard
@@ -140,7 +185,7 @@ export function Battle({
           </div>
         )}
         {modifierSummaries.length > 0 && <div className="relative"><button type="button" onClick={() => setShowModifiers(v => !v)} aria-expanded={showModifiers} className="battle-utility">Mods</button>{showModifiers && <div className="battle-popover"><div className="mb-2 flex justify-between font-mono text-[8px] uppercase text-accent"><span>Active rules</span><button type="button" onClick={() => setShowModifiers(false)}>Close</button></div><ul className="space-y-2">{modifierSummaries.map((mod: string) => <li key={mod} className="border-l border-accent/50 pl-2 text-[9px] text-rose-100">{mod}</li>)}</ul></div>}</div>}
-        <div className="relative"><button type="button" data-testid="button-battle-history" aria-label="Recent action history" onClick={() => setShowHistory(v => !v)} aria-expanded={showHistory} className="battle-utility"><span className="utility-long">History</span><span className="utility-short">Log</span></button>{showHistory && <div data-testid="battle-history" className="battle-popover w-72"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Recent action</div>{recentActions.length ? <ol className="space-y-2">{recentActions.map(event => <li key={event.sequence} className="border-l-2 border-white/20 pl-2"><div className="text-[8px] font-mono uppercase text-white/40">Round {event.round} · {event.owner === 'player' ? 'You' : 'Rival'} · {event.type}</div><div className="text-[11px] leading-snug text-white/80"><b className="text-white">{cardName(event.source?.cardInstanceId ?? event.cardInstanceId, event.cardId)}</b> — {event.note}</div></li>)}</ol> : <p className="text-xs text-white/45">No actions yet.</p>}</div>}</div>
+        <div className="relative"><button type="button" data-testid="button-battle-history" aria-label="Recent action history" onClick={() => { if (!showHistory) trackEvent('battle_history_opened', { round: m.round, entries: recentActions.length, decision_time: decisionTimeBucket(decisionStartedAt) }); setShowHistory(v => !v); }} aria-expanded={showHistory} className="battle-utility"><span className="utility-long">History</span><span className="utility-short">Log</span></button>{showHistory && <div data-testid="battle-history" className="battle-popover w-72"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Recent action</div>{recentActions.length ? <ol className="space-y-2">{recentActions.map(event => <li key={event.sequence} className="border-l-2 border-white/20 pl-2"><div className="text-[8px] font-mono uppercase text-white/40">Round {event.round} · {event.owner === 'player' ? 'You' : 'Rival'} · {event.type}</div><div className="text-[11px] leading-snug text-white/80"><b className="text-white">{cardName(event.source?.cardInstanceId ?? event.cardInstanceId, event.cardId)}</b> — {event.note}</div></li>)}</ol> : <p className="text-xs text-white/45">No actions yet.</p>}</div>}</div>
         <div className="relative"><button type="button" data-testid="button-status-key" aria-label="Persistent status explanations" onClick={() => setShowStatuses(v => !v)} aria-expanded={showStatuses} className="battle-utility"><span className="utility-long">Status</span><span className="utility-short">FX</span></button>{showStatuses && <div data-testid="battle-status-key" className="battle-popover w-64"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Persistent status key</div><dl className="space-y-2 text-[11px]"><div><dt className="font-bold text-blue-300">Frozen</dt><dd className="text-white/60">Adds 0 Power until cleansed.</dd></div><div><dt className="font-bold text-zinc-300">Silenced</dt><dd className="text-white/60">Keeps Power; ability cannot fire.</dd></div><div><dt className="font-bold text-yellow-300">Protected</dt><dd className="text-white/60">Blocks one targeted effect this round.</dd></div><div><dt className="font-bold text-rose-300">Blocked</dt><dd className="text-white/60">Protection has been spent this round.</dd></div><div><dt className="font-bold text-purple-300">Moved</dt><dd className="text-white/60">An ability changed this card’s district.</dd></div></dl></div>}</div>
         {activePhase && <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right"><div className="text-[8px] font-mono text-accent uppercase tracking-widest">Boss Phase</div><div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div></div>}
         <button data-testid="button-rules-battle" aria-label="Battle rules" onClick={onShowRules} className="battle-utility"><span className="utility-long">Rules</span><span className="utility-short">?</span></button>
@@ -168,13 +213,13 @@ export function Battle({
       return <div key={i} data-testid={`lane-container-${i}`} className={`district-lane district-lane-${i} min-w-0 relative group ${impactLane === i ? 'district-impact' : ''} ${phase === 'round-result' || phase === 'match-finish' ? `district-verdict verdict-${winner}` : ''} ${selected ? 'is-selected' : ''} ${selectedCard && interactive ? legal ? 'is-legal' : 'is-illegal' : ''} ${activeEffectLane === i ? 'is-effect-lane' : ''} ${lockedLane ? 'is-locked' : ''}`}>
         {activeEffectLane === i && <div className="effect-connection" aria-hidden="true"><span /></div>}
         <div data-testid={`lane-${i}-cpu-zone`} className="battle-side battle-side-rival"><span className="side-mark side-mark-rival">Rival</span><div className="battle-card-stack"><AnimatePresence>{stagedRivalHere && <motion.div key={`back-${stagedRival.instanceId}`} layoutId={stagedRival.instanceId} data-instance-id={stagedRival.instanceId} data-presentation-copy="staged" initial={{ y: -90, rotate: 12, scale: .7, opacity: 0 }} animate={{ y: 0, rotate: -4, scale: 1, opacity: 1 }} className="card-back battle-board-card"><span>S</span></motion.div>}{cpuCards.map((c, j) => <CardView key={c.instanceId} card={c} isBoard isEnemy disableLayout testId={`card-board-rival-${i}-${c.cardId}-${j}`} onClick={(e) => { e.stopPropagation(); setInspect(c); }} effectivePower={getEffectiveCardPower(c)} {...effectProps(c)} />)}</AnimatePresence></div></div>
-        <button type="button" data-testid={`lane-${i}`} onClick={() => { if (interactive && legal) setSelectedLane(i); }} aria-disabled={!interactive || !selectedCard || !legal} tabIndex={interactive && selectedCard ? 0 : -1} aria-label={selectedCard ? `${legal ? 'Deploy' : lockedLane ? 'Cannot deploy, district locked' : `Cannot deploy, need ${laneCost} Hype`} ${selectedCard.name} to ${d.name}` : `${d.name} district`} title={lockedLane ? 'This district is locked this round.' : selectedCard && !affordable ? `Need ${laneCost} Hype; you have ${m.playerHype}.` : undefined} className="district-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><div className="district-marker"><div className="district-score-row"><motion.span key={`cpu-${cScore}`} initial={{ scale: 1.45 }} animate={{ scale: 1 }} data-testid={`score-cpu-${i}`} className={cScore > pScore ? 'text-accent' : 'text-white/55'}>{cScore}</motion.span><span className="score-divider">:</span><motion.span key={`player-${pScore}`} initial={{ scale: 1.45 }} animate={{ scale: 1 }} data-testid={`score-player-${i}`} className={pScore > cScore ? 'text-primary' : 'text-white/55'}>{pScore}</motion.span></div><div className="district-kicker">0{i + 1} · {pScore > cScore ? 'You lead' : cScore > pScore ? 'Rival leads' : 'Tied'}</div><h3>{d.name}</h3><p>{d.rule}</p>{lockedLane ? <span className="district-prompt is-blocked">Locked this round</span> : selectedCard && interactive && <span className={`district-prompt ${selected ? 'is-ready' : affordable ? '' : 'is-blocked'}`}>{selected ? `Ready · ${laneCost} Hype` : affordable ? `Play · ${laneCost} Hype` : `Need ${laneCost} Hype`}</span>}</div></button>
+        <button type="button" data-testid={`lane-${i}`} onClick={() => selectDistrict(i, legal)} aria-disabled={!interactive || !selectedCard || !legal} tabIndex={interactive && selectedCard ? 0 : -1} aria-label={selectedCard ? `${legal ? 'Deploy' : lockedLane ? 'Cannot deploy, district locked' : `Cannot deploy, need ${laneCost} Hype`} ${selectedCard.name} to ${d.name}` : `${d.name} district`} title={lockedLane ? 'This district is locked this round.' : selectedCard && !affordable ? `Need ${laneCost} Hype; you have ${m.playerHype}.` : undefined} className="district-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><div className="district-marker"><div className="district-score-row"><motion.span key={`cpu-${cScore}`} initial={{ scale: 1.45 }} animate={{ scale: 1 }} data-testid={`score-cpu-${i}`} className={cScore > pScore ? 'text-accent' : 'text-white/55'}>{cScore}</motion.span><span className="score-divider">:</span><motion.span key={`player-${pScore}`} initial={{ scale: 1.45 }} animate={{ scale: 1 }} data-testid={`score-player-${i}`} className={pScore > cScore ? 'text-primary' : 'text-white/55'}>{pScore}</motion.span></div><div className="district-kicker">0{i + 1} · {pScore > cScore ? 'You lead' : cScore > pScore ? 'Rival leads' : 'Tied'}</div><h3>{d.name}</h3><p>{d.rule}</p>{lockedLane ? <span className="district-prompt is-blocked">Locked this round</span> : selectedCard && interactive && <span className={`district-prompt ${selected ? 'is-ready' : affordable ? '' : 'is-blocked'}`}>{selected ? `Ready · ${laneCost} Hype` : affordable ? `Play · ${laneCost} Hype` : `Need ${laneCost} Hype`}</span>}</div></button>
         <div data-testid={`lane-${i}-player-zone`} className="battle-side battle-side-player"><span className="side-mark side-mark-player">You</span><div className="battle-card-stack"><AnimatePresence>{stagedPlayerHere && <motion.div key={`player-back-${stagedPlayer.instanceId}`} data-instance-id={stagedPlayer.instanceId} data-presentation-copy="staged" initial={{ y: 90, rotate: -10, scale: .72, opacity: 0 }} animate={{ y: 0, rotate: 3, scale: 1, opacity: 1 }} className="card-back battle-board-card"><span>S</span></motion.div>}{playerCards.map((c, j) => <CardView key={c.instanceId} card={c} isBoard disableLayout testId={`card-board-player-${i}-${c.cardId}-${j}`} onClick={(e) => { e.stopPropagation(); setInspect(c); }} effectivePower={getEffectiveCardPower(c)} {...effectProps(c)} />)}</AnimatePresence></div></div>
       </div>;
     })}</div>
-    <div inert={!interactive} className="battle-command-deck shrink-0 relative z-40"><div id="hand-tray" data-testid="hand-tray" className="battle-hand-tray"><div className="battle-hand-row"><AnimatePresence>{m.playerHand.filter(c => c.instanceId !== stagedPlayer?.instanceId).map(c => { const playableSomewhere = ([0, 1, 2] as Lane[]).some(lane => !lockedLanes.includes(lane) && getLegalCardCost(m, 'player', c, lane) <= m.playerHype); const reason = !playableSomewhere ? `Cannot play now. Need more Hype or an unlocked district.` : undefined; return <CardView key={c.instanceId} card={c} queued={selectedInstanceId === c.instanceId} squabble={squabble && selectedInstanceId === c.instanceId} cost={selectedLane !== null ? getLegalCardCost(m, 'player', c, selectedLane as Lane) : c.cost} unavailable={interactive && !playableSomewhere} disabledReason={reason} onClick={(e) => { e.stopPropagation(); if (interactive) { setSelectedInstanceId(selectedInstanceId === c.instanceId ? null : c.instanceId); setSelectedLane(null); setSquabble(false); } }} className="origin-bottom" />; })}</AnimatePresence></div></div>
+    <div inert={!interactive} className="battle-command-deck shrink-0 relative z-40"><div id="hand-tray" data-testid="hand-tray" className="battle-hand-tray"><div className="battle-hand-row"><AnimatePresence>{m.playerHand.filter(c => c.instanceId !== stagedPlayer?.instanceId).map(c => { const playableSomewhere = ([0, 1, 2] as Lane[]).some(lane => !lockedLanes.includes(lane) && getLegalCardCost(m, 'player', c, lane) <= m.playerHype); const reason = !playableSomewhere ? `Cannot play now. Need more Hype or an unlocked district.` : undefined; return <CardView key={c.instanceId} card={c} queued={selectedInstanceId === c.instanceId} squabble={squabble && selectedInstanceId === c.instanceId} cost={selectedLane !== null ? getLegalCardCost(m, 'player', c, selectedLane as Lane) : c.cost} unavailable={interactive && !playableSomewhere} disabledReason={reason} onClick={(e) => { e.stopPropagation(); selectCard(c, playableSomewhere); }} className="origin-bottom" />; })}</AnimatePresence></div></div>
       {selectedCard && selectedLane !== null && interactive && <div className={`target-trajectory target-lane-${selectedLane}`} aria-hidden="true"><span /></div>}
-      <div className="battle-actions"><div className="battle-hype"><div>Hype</div><strong data-testid="hype-player">{m.playerHype}</strong></div><button data-testid="button-squabble" title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Power once per match.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => !m.squabbleUsed && interactive && setSquabble(!squabble)} disabled={m.squabbleUsed || !interactive || !selectedCard}>{m.squabbleUsed ? 'Squabble spent' : squabble ? 'Squabble armed' : 'Arm Squabble'}</button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}>{action.label}</button></div>
+      <div className="battle-actions"><div className="battle-hype"><div>Hype</div><strong data-testid="hype-player">{m.playerHype}</strong></div><button data-testid="button-squabble" title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Power once per match.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={toggleSquabble} disabled={m.squabbleUsed || !interactive || !selectedCard}>{m.squabbleUsed ? 'Squabble spent' : squabble ? 'Squabble armed' : 'Arm Squabble'}</button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}>{action.label}</button></div>
     </div>
   </div>;
 }
