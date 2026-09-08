@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { PresentationTimeline, type TimerHandle } from './presentationTimeline';
+import { broadcastDelay, changedDistrictControl, isReducedMotionRequested } from './broadcastPresentation';
 
 function fakeTimers() {
   let now = 0;
@@ -87,4 +88,24 @@ test('a staged rival beat preserves travel, reveal, and slam ordering', async ()
   assert.deepEqual(phases, ['rival-thinking', 'rival-travel', 'rival-reveal']);
   clock.advance(350); await sequence;
   assert.deepEqual(phases, ['rival-thinking', 'rival-travel', 'rival-reveal', 'rival-slam']);
+});
+
+test('district broadcast only fires when control changes to a player', () => {
+  assert.deepEqual(changedDistrictControl(['draw', 'player', 'cpu'], ['player', 'player', 'cpu']), [0]);
+  assert.deepEqual(changedDistrictControl(['player', 'cpu', 'draw'], ['player', 'cpu', 'draw']), []);
+  assert.deepEqual(changedDistrictControl(['player', 'cpu', 'draw'], ['draw', 'cpu', 'draw']), []);
+  assert.deepEqual(changedDistrictControl(['player', 'cpu', 'draw'], ['cpu', 'player', 'draw']), [0, 1]);
+});
+
+test('broadcast delays collapse for fast-forward and stay brief for reduced motion', () => {
+  assert.equal(broadcastDelay(650, 90, false), 650);
+  assert.equal(broadcastDelay(650, 90, true), 90);
+  assert.equal(broadcastDelay(650, 90, false, true), 0);
+  assert.equal(broadcastDelay(650, 90, true, true), 0);
+});
+
+test('the saved in-app preference enables reduced broadcast motion without an OS preference', () => {
+  assert.equal(isReducedMotionRequested(false, true), true);
+  assert.equal(isReducedMotionRequested(true, false), true);
+  assert.equal(isReducedMotionRequested(false, false), false);
 });

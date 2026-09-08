@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { cards, districts, getAssetUrl, getCardImage } from '../data';
 import { CardView } from './CardView';
 import { getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type Lane } from '../gameEngine';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
 import type { FeedbackPreferences } from '../battleFeedback';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 export function Battle({
   match, deck, rivalDeck,
@@ -21,11 +21,23 @@ export function Battle({
   const playerClaims = districtResults.filter(result => result.winner === 'player').length;
   const cpuClaims = districtResults.filter(result => result.winner === 'cpu').length;
   const phase = presentationPhase as PresentationPhase;
+  const reducedMotion = useReducedMotion()
+    || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const presentedEffect = activeEffect as PresentationEffect | null;
   const feedback = feedbackPreferences as FeedbackPreferences | undefined;
   const interactive = phase === 'player-ready' && m.phase === 'player';
   const canSkip = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result'].includes(phase);
-  const showCinematic = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result', 'match-finish'].includes(phase);
+  const showCinematic = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'lock-in', 'player-reveal', 'rival-reveal', 'district-flipped', 'round-result', 'match-finish'].includes(phase);
+  const blocksFastForward = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result', 'match-finish'].includes(phase);
+  const broadcastArtwork = phase === 'round-intro' && m.round === 1
+    ? 'round-01'
+    : phase === 'lock-in'
+      ? 'lock-in'
+      : phase === 'player-reveal' || phase === 'rival-reveal'
+        ? 'reveal'
+        : phase === 'district-flipped'
+          ? 'district-flipped'
+          : null;
   const lockedLanes = m.storyEncounter ? getStoryLockedLanes(m, 'player') : [];
   const modifierSummaries = m.storyEncounter ? getStoryModifierSummaries(m) : [];
   const activePhase = getActiveStoryPhase(m);
@@ -117,7 +129,7 @@ export function Battle({
       )}
     </AnimatePresence>
 
-    <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-40 grid place-items-center bg-black/20"><span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span></motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-40 grid place-items-center bg-black/20 pointer-events-none"><span className="cinematic-callout text-white">{phaseMessage}</span></motion.div>)}</AnimatePresence>
+    <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.16 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20">{broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(`assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span>}</motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.16 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20 pointer-events-none">{broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(`assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className="cinematic-callout text-white">{phaseMessage}</span>}</motion.div>)}</AnimatePresence>
     <div className="battle-header relative z-30 shrink-0">
       <div className="battle-rival"><div className="battle-rival-portrait"><img src={rivalPortrait} alt="" aria-hidden="true" className="absolute -top-2 left-1/2 -translate-x-1/2 w-[150%] h-[120%] object-cover object-top hue-rotate-180 brightness-75" /></div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {rivalDeck.archetype}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div></div></div>
       <div className="battle-match-meta">
@@ -145,7 +157,7 @@ export function Battle({
         {presentedEffect && <div data-testid="effect-causality" className="battle-causality"><b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
       </div>
       <span data-testid="claims-live" className="battle-claims">Claims <b className="text-primary">{playerClaims}</b>–<b className="text-accent">{cpuClaims}</b></span>
-      {!interactive && !showCinematic && <button type="button" data-testid="button-fast-forward" onClick={skipSequence} className="battle-fast-forward">Fast forward</button>}
+      {!interactive && !blocksFastForward && <button type="button" data-testid="button-fast-forward" onClick={skipSequence} className="battle-fast-forward">Fast forward</button>}
     </div>
     <div className="battlefield-grid flex-1 min-h-0 relative z-20">{districts.map((d: any, i: number) => {
       const cpuCards = m.boards[i].filter(c => c.owner === 'cpu'); const playerCards = m.boards[i].filter(c => c.owner === 'player');

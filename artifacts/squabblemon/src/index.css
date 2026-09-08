@@ -432,6 +432,19 @@
 .battle-arena.phase-deal #hand-tray button:nth-child(3) { animation-delay:.12s; }
 .battle-arena.phase-deal #hand-tray button:nth-child(4) { animation-delay:.18s; }
 .battle-arena.phase-deal #hand-tray button:nth-child(5) { animation-delay:.24s; }
+.broadcast-overlay {
+  padding: max(4.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(8rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+.broadcast-overlay img {
+  width: min(72vw, 760px);
+  max-height: min(38vh, 430px);
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.9));
+}
+.phase-player-reveal .broadcast-overlay,
+.phase-rival-reveal .broadcast-overlay { align-items: start; background: transparent; }
+.phase-player-reveal .broadcast-overlay img,
+.phase-rival-reveal .broadcast-overlay img { width: min(42vw, 440px); max-height: 22vh; }
 .district-impact { animation: district-hit .42s cubic-bezier(.2,.8,.2,1); }
 .district-verdict { animation: verdict-pulse .7s ease-in-out 2; }
 .district-verdict.verdict-player { box-shadow:inset 0 0 28px rgba(250,204,21,.35); }
@@ -526,6 +539,9 @@
 }
 
 @media (max-width: 520px) {
+  .broadcast-overlay img { width: min(92vw, 620px); max-height: 30vh; }
+  .phase-player-reveal .broadcast-overlay img,
+  .phase-rival-reveal .broadcast-overlay img { width: min(62vw, 360px); max-height: 16vh; }
   .battle-header { gap: .25rem; padding: .35rem .4rem; }
   .battle-rival { flex: 0 0 2.15rem; }
   .battle-rival-portrait { width: 2.15rem; height: 2.15rem; }
@@ -569,6 +585,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .broadcast-overlay { animation: none !important; }
+  .broadcast-overlay img { filter: drop-shadow(0 8px 18px rgba(0,0,0,.8)); }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .cinematic-callout { transform: none; }
   .brand-loader__meter span { width: 100%; opacity: .65; }
@@ -576,25 +594,27 @@
   .effect-target { outline: 3px solid var(--effect-color, var(--color-primary)); }
 }
 
-:root[data-reduced-motion='true'] *,
-:root[data-reduced-motion='true'] *::before,
-:root[data-reduced-motion='true'] *::after {
+:root[data-reduce-motion='true'] *,
+:root[data-reduce-motion='true'] *::before,
+:root[data-reduce-motion='true'] *::after {
   animation-duration: .01ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: .01ms !important;
   scroll-behavior: auto !important;
 }
 
-:root[data-reduced-motion='true'] .brand-loader__meter span {
+:root[data-reduce-motion='true'] .brand-loader__meter span {
   width: 100%;
   opacity: .65;
 }
-
-:root[data-reduced-motion='true'] .effect-source,
-:root[data-reduced-motion='true'] .effect-target {
+:root[data-reduce-motion='true'] .broadcast-overlay img {
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.8));
+}
+:root[data-reduce-motion='true'] .cinematic-callout { transform: none; }
+:root[data-reduce-motion='true'] .effect-source,
+:root[data-reduce-motion='true'] .effect-target {
   outline: 3px solid var(--effect-color, var(--color-primary));
 }
-
-:root[data-reduced-motion='true'] .target-trajectory span {
+:root[data-reduce-motion='true'] .target-trajectory span {
   opacity: .8;
 }

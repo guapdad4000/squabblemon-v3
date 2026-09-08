@@ -104,6 +104,11 @@ function renderEffect(match: Match, effect: EffectLogEntry) {
   );
 }
 
+function renderOverlay(match: Match, phase: any) {
+  const card = match.playerHand[0];
+  return renderBattle(match, phase, card);
+}
+
 const occurrences = (html: string, instanceId: string) =>
   html.match(new RegExp(`data-instance-id="${instanceId}"`, 'g'))?.length ?? 0;
 
@@ -164,4 +169,20 @@ test('resolution text connects the acting card, affected district, and score cha
   assert.match(html, /data-testid="button-fast-forward"/);
   assert.match(html, /data-testid="button-battle-history"/);
   assert.match(html, /data-testid="button-status-key"/);
+});
+
+test('broadcast artwork is assigned to first round, lock, reveal, and district flip beats', () => {
+  const match = createMatch('block', 'combo');
+  assert.match(renderOverlay(match, 'round-intro'), /broadcast-round-01/);
+  assert.match(renderOverlay(match, 'lock-in'), /broadcast-lock-in/);
+  assert.match(renderOverlay(match, 'player-reveal'), /broadcast-reveal/);
+  assert.match(renderOverlay(match, 'rival-reveal'), /broadcast-reveal/);
+  assert.match(renderOverlay(match, 'district-flipped'), /broadcast-district-flipped/);
+});
+
+test('later round intros retain the dynamic round indicator', () => {
+  const match = { ...createMatch('block', 'combo'), round: 2 };
+  const html = renderOverlay(match, 'round-intro');
+  assert.doesNotMatch(html, /broadcast-round-01/);
+  assert.match(html, /Card presentation/);
 });
