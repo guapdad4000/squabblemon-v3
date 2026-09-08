@@ -79,6 +79,7 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       hideLobby={true}
       turnTimerEnabled={false}
       customPlayerDeck={deckData || undefined}
+      equippedVariants={bootstrap.profile.equippedVariants}
     />
   );
 }

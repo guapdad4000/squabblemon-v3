@@ -2,20 +2,22 @@ import { motion } from 'framer-motion';
 import { CardView } from './CardView';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
-import { PlayerBootstrap, useCraftPlayerVariant } from '@workspace/api-client-react';
+import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { catalogCardById } from '../data';
 
-export function CardInspector({ card, onClose, bootstrap }: any) {
+export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
   const catalogCard = bootstrap ? catalogCardById[card.catalogId || card.id] : null;
 
   const craftVariant = useCraftPlayerVariant();
+  const equipVariant = useEquipPlayerVariant();
   const queryClient = useQueryClient();
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
+  const equippedVariant = catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : variantId;
 
   const handleCraft = async (variantId: string) => {
     if (!bootstrap || !catalogCard || !isCardOwned) return;
@@ -24,6 +26,18 @@ export function CardInspector({ card, onClose, bootstrap }: any) {
         data: { cardId: catalogCard.catalogId, variantId }
       });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res.bootstrap);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleEquip = async (variantId: string | null) => {
+    if (!bootstrap || !catalogCard || !isCardOwned) return;
+    try {
+      const res = await equipVariant.mutateAsync({
+        data: { cardId: catalogCard.catalogId, variantId },
+      });
+      queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
     } catch (e) {
       console.error(e);
     }
@@ -40,6 +54,7 @@ export function CardInspector({ card, onClose, bootstrap }: any) {
       >
         <CardView
           card={card}
+          variantId={equippedVariant}
           testId="card-inspector"
           className={`w-[180px] h-[252px] md:w-[280px] md:h-[392px] shadow-2xl shadow-primary/20 pointer-events-none ${!isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
         />
@@ -131,7 +146,7 @@ export function CardInspector({ card, onClose, bootstrap }: any) {
                         <div className="flex justify-between items-start mb-1">
                           <div className="font-display font-black italic uppercase text-sm">{slot.name}</div>
                           {isOwned ? (
-                            <span className="text-[10px] text-primary font-mono uppercase tracking-widest">Unlocked</span>
+                            <span className="text-[10px] text-primary font-mono uppercase tracking-widest">{equippedVariant === slot.id ? 'Equipped' : 'Unlocked'}</span>
                           ) : (
                             <span className="text-[10px] text-accent font-mono uppercase tracking-widest">{slot.shardCost} Shards</span>
                           )}
@@ -144,6 +159,15 @@ export function CardInspector({ card, onClose, bootstrap }: any) {
                             className="w-full bg-white/10 hover:bg-white/20 disabled:opacity-50 text-[10px] font-mono uppercase py-1 border border-white/20 transition-colors"
                           >
                             {!isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting...' : canAfford ? 'Craft Variant' : 'Not Enough Shards'}
+                          </button>
+                        )}
+                        {isOwned && (
+                          <button
+                            onClick={() => handleEquip(equippedVariant === slot.id ? null : slot.id)}
+                            disabled={equipVariant.isPending}
+                            className={`w-full text-[10px] font-mono uppercase py-1 border transition-colors disabled:opacity-50 ${equippedVariant === slot.id ? 'border-primary bg-primary text-black' : 'border-white/20 bg-white/10 hover:bg-white/20'}`}
+                          >
+                            {equipVariant.isPending ? 'Saving...' : equippedVariant === slot.id ? 'Equipped · Tap to remove' : `Equip ${slot.name}`}
                           </button>
                         )}
                       </div>

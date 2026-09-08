@@ -56,6 +56,8 @@ export const PlayerProfileOnboardingStep = {
   complete: 'complete',
 } as const;
 
+export type PlayerProfileEquippedVariants = {[key: string]: string};
+
 export type PlayerProfileStoryProgress = { [key: string]: unknown };
 
 export type PlayerProfileInboxItem = { [key: string]: unknown };
@@ -132,6 +134,7 @@ export interface PlayerProfile {
   ownedCardIds: string[];
   discoveredCardIds: string[];
   ownedVariants: string[];
+  equippedVariants: PlayerProfileEquippedVariants;
   unlockedCosmeticIds: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
@@ -307,6 +310,16 @@ export interface PlayerProfileUpdate {
   avatarKey?: string;
   reducedMotion?: boolean;
   turnTimerEnabled?: boolean;
+}
+
+export interface EquipVariantInput {
+  /** @maxLength 64 */
+  cardId: string;
+  /**
+     * @maxLength 96
+     * @nullable
+     */
+  variantId: string | null;
 }
 
 export type OnboardingProgressInputAction = typeof OnboardingProgressInputAction[keyof typeof OnboardingProgressInputAction];

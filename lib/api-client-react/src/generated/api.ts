@@ -23,6 +23,7 @@ import type {
   CollectionRoadClaimResult,
   CraftVariantInput,
   CraftVariantResult,
+  EquipVariantInput,
   HealthStatus,
   MatchCompleteInput,
   MatchCompletion,
@@ -1082,6 +1083,77 @@ export const useCraftPlayerVariant = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getCraftPlayerVariantMutationOptions(options));
+    }
+
+export const getEquipPlayerVariantUrl = () => {
+
+
+
+
+  return `/api/player/collection/equip`
+}
+
+/**
+ * @summary Equip or remove one owned visual variant for a gameplay card
+ */
+export const equipPlayerVariant = async (equipVariantInput: EquipVariantInput, options?: RequestInit): Promise<PlayerBootstrap> => {
+
+  return customFetch<PlayerBootstrap>(getEquipPlayerVariantUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(equipVariantInput)
+  }
+);}
+
+
+
+
+
+export const getEquipPlayerVariantMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof equipPlayerVariant>>, TError,{data: BodyType<EquipVariantInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof equipPlayerVariant>>, TError,{data: BodyType<EquipVariantInput>}, TContext> => {
+
+const mutationKey = ['equipPlayerVariant'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof equipPlayerVariant>>, {data: BodyType<EquipVariantInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  equipPlayerVariant(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EquipPlayerVariantMutationResult = NonNullable<Awaited<ReturnType<typeof equipPlayerVariant>>>
+    export type EquipPlayerVariantMutationBody = BodyType<EquipVariantInput>
+    export type EquipPlayerVariantMutationError = ErrorType<void>
+
+    /**
+ * @summary Equip or remove one owned visual variant for a gameplay card
+ */
+export const useEquipPlayerVariant = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof equipPlayerVariant>>, TError,{data: BodyType<EquipVariantInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof equipPlayerVariant>>,
+        TError,
+        {data: BodyType<EquipVariantInput>},
+        TContext
+      > => {
+      return useMutation(getEquipPlayerVariantMutationOptions(options));
     }
 
 export const getClaimCollectionRoadMilestoneUrl = (milestoneId: string,) => {

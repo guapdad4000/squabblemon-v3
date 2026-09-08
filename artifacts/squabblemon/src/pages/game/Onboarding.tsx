@@ -51,6 +51,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return withStatus(
       <TutorialStep
         turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
+        equippedVariants={bootstrap.profile.equippedVariants}
       />,
     );
   }
@@ -118,11 +119,11 @@ function ProfileStep({ onComplete }: { onComplete: (data: any) => void }) {
   );
 }
 
-function TutorialStep({ turnTimerEnabled }: { turnTimerEnabled: boolean }) {
+function TutorialStep({ turnTimerEnabled, equippedVariants }: { turnTimerEnabled: boolean; equippedVariants: Record<string, string> }) {
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
-    return <PlayLoop mode="tutorial" onExit={() => setPlaying(false)} hideLobby initialDeckId="vibes" initialRivalId="combo" turnTimerEnabled={turnTimerEnabled} />;
+    return <PlayLoop mode="tutorial" onExit={() => setPlaying(false)} hideLobby initialDeckId="vibes" initialRivalId="combo" turnTimerEnabled={turnTimerEnabled} equippedVariants={equippedVariants} />;
   }
 
   return (

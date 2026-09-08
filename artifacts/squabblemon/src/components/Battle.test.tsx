@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { decks } from '../data';
+import { decks, districts } from '../data';
 import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
 import { Battle } from './Battle';
+import { ResultScreen } from './ResultScreen';
 
 const noop = () => {};
 
@@ -40,7 +41,7 @@ function renderBattle(match: Match, phase: 'player-travel' | 'player-reveal', st
   );
 }
 
-function renderDecision(match: Match, selectedInstanceId: string | null, selectedLane: number | null) {
+function renderDecision(match: Match, selectedInstanceId: string | null, selectedLane: number | null, equippedVariants?: Record<string, string>) {
   return renderToStaticMarkup(
     <Battle
       match={match}
@@ -68,10 +69,10 @@ function renderDecision(match: Match, selectedInstanceId: string | null, selecte
       setInspect={noop}
       archiveMatch={noop}
       onShowRules={noop}
+      equippedVariants={equippedVariants}
     />,
   );
 }
-
 function renderEffect(match: Match, effect: EffectLogEntry) {
   return renderToStaticMarkup(
     <Battle
@@ -114,7 +115,7 @@ const occurrences = (html: string, instanceId: string) =>
 
 test('a player card has one visual instance through travel and reveal', () => {
   let match = createMatch('block', 'combo');
-  const card = match.playerHand[0];
+  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
 
   const travel = renderBattle(match, 'player-travel', card);
   assert.equal(occurrences(travel, card.instanceId), 1);
@@ -127,7 +128,7 @@ test('a player card has one visual instance through travel and reveal', () => {
 });
 
 test('the player decision flow exposes legal targets, costs, and a committed-play summary', () => {
-  const match = createMatch('block', 'combo');
+  const match = { ...createMatch('block', 'combo'), round: 2 };
   const affordable = match.playerHand.find(card => card.cost <= match.playerHype)!;
 
   const chooseDistrict = renderDecision(match, affordable.instanceId, null);
@@ -142,7 +143,7 @@ test('the player decision flow exposes legal targets, costs, and a committed-pla
 });
 
 test('unaffordable cards and districts explain why they cannot be played', () => {
-  const match = createMatch('block', 'combo');
+  const match = { ...createMatch('block', 'combo'), round: 2 };
   const expensive = match.playerHand.find(card => card.cost > match.playerHype)!;
   const html = renderDecision(match, expensive.instanceId, null);
 
@@ -185,4 +186,30 @@ test('later round intros retain the dynamic round indicator', () => {
   const html = renderOverlay(match, 'round-intro');
   assert.doesNotMatch(html, /broadcast-round-01/);
   assert.match(html, /Card presentation/);
+});
+
+test('saved-deck gameplay carries equipped treatments into cards, hero art, and results', () => {
+  const match = createMatch('block', 'combo');
+  const equippedVariants = {
+    rastamon: 'rastamon:chrome',
+    'officer-oink': 'officer-oink:chrome',
+  };
+  const battle = renderDecision(match, null, null, equippedVariants);
+
+  assert.match(battle, /data-card-variant="chrome"/);
+  assert.match(battle, /variant-portrait-chrome/);
+
+  const results = renderToStaticMarkup(
+    <ResultScreen
+      match={match}
+      districts={districts}
+      equippedVariants={equippedVariants}
+      onRestart={noop}
+      onChangeDeck={noop}
+      onGoHome={noop}
+      onRetryReward={noop}
+      isGuest
+    />,
+  );
+  assert.match(results, /variant-portrait-chrome/);
 });

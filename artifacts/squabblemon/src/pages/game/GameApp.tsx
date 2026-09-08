@@ -93,6 +93,7 @@ function GameRoutes() {
           onExit={() => setLocation('/game')}
           turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
           availableDeckIds={availableDeckIds}
+          equippedVariants={bootstrap.profile.equippedVariants}
         />
       </Route>
       <Route path="/game/story/play/:nodeId">
@@ -105,6 +106,7 @@ function GameRoutes() {
             availableDeckIds={availableDeckIds}
             initialDeckId={bootstrap.profile.starterDeckId || availableDeckIds[0]}
             hideLobby
+            equippedVariants={bootstrap.profile.equippedVariants}
           />
         )}
       </Route>

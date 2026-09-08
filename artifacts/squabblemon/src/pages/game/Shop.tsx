@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { getCardImage } from '../../data';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 
 export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -194,7 +195,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       key={revealIndex}
                       initial={{ scale: 0.5, opacity: 0, y: 50 }}
                       animate={{ scale: 1, opacity: 1, y: 0 }}
-                      className="relative w-64 aspect-[3/4] bg-zinc-900 border-2 border-primary overflow-hidden mb-8"
+                      className={`relative w-64 aspect-[3/4] bg-zinc-900 border-2 border-primary overflow-hidden mb-8 ${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)) ? `card-variant card-variant-${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined))}` : ''}`}
                     >
                       {(rewards[revealIndex].kind === 'card' || rewards[revealIndex].kind === 'variant') && rewards[revealIndex].cardId ? (
                         <>
@@ -222,6 +223,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           DUPE
                         </div>
                       )}
+                       <CardVariantTreatment variantId={rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)} />
                     </motion.div>
                     <p className="font-mono text-xs text-white/50 uppercase tracking-widest mb-8">Tap to continue</p>
                     <button onClick={(e) => { e.stopPropagation(); skipReveal(); }} className="border border-white/20 px-6 py-2 font-mono text-[10px] uppercase hover:bg-white/10">Skip All</button>
@@ -231,7 +233,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     <h2 className="font-display font-black italic text-3xl uppercase mb-8">Pack Summary</h2>
                     <div className="flex flex-wrap justify-center gap-4 mb-8">
                       {rewards.map((r, i) => (
-                        <div key={i} className="w-32 aspect-[3/4] relative bg-zinc-900 border border-white/20">
+                        <div key={i} className={`w-32 aspect-[3/4] relative bg-zinc-900 border border-white/20 overflow-hidden ${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)) ? `card-variant card-variant-${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined))}` : ''}`}>
                           {(r.kind === 'card' || r.kind === 'variant') && r.cardId ? (
                             <>
                               <img src={getCardImage(r.cardId)} alt="" className="w-full h-full object-cover object-top opacity-80" />
@@ -254,6 +256,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           <div className="absolute bottom-0 inset-x-0 bg-black/80 p-2 text-center border-t border-white/10">
                             <div className="font-display font-black uppercase text-[10px] truncate text-white">{r.name || r.kind}</div>
                           </div>
+                           <CardVariantTreatment variantId={r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)} />
                         </div>
                       ))}
                     </div>

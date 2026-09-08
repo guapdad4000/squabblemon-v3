@@ -163,6 +163,17 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
         recipeId: inferredRecipeId,
       };
     });
+    const equippedVariants = Object.fromEntries(
+      Object.entries(current.equippedVariants ?? {}).filter(([cardId, variantId]) => {
+        const card = catalogCardById[cardId];
+        return Boolean(
+          card &&
+          normalizedOwned.includes(cardId) &&
+          current.ownedVariants.includes(variantId) &&
+          card.variantSlots.some((slot) => slot.id === variantId),
+        );
+      }),
+    );
 
     await tx
       .update(playerProfilesTable)
@@ -172,6 +183,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
         discoveredCardIds: [...discovered],
         collectionProgress: normalizedOwned.length,
         savedDecks: normalizedDecks,
+        equippedVariants,
       })
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   });
@@ -237,6 +249,7 @@ function serializeProfile(
     ownedCardIds: profile.ownedCardIds,
     discoveredCardIds: profile.discoveredCardIds,
     ownedVariants: profile.ownedVariants,
+    equippedVariants: profile.equippedVariants,
     unlockedCosmeticIds: profile.unlockedCosmeticIds,
     savedDecks: profile.savedDecks.map((deck) => {
       const heroCardId = deck.heroCardId ?? deck.cardIds[0] ?? "";

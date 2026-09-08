@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { cardCatalog, getCardImage } from '../../data';
 import { CardInspector } from '../../components/CardInspector';
+import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -126,12 +127,14 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   const isOwned = owned.has(c.catalogId);
                   const isDiscovered = discovered.has(c.catalogId);
                   const show = isOwned || isDiscovered;
+                   const variantId = bootstrap.profile.equippedVariants[c.catalogId];
+                   const variantKind = getVariantKind(variantId);
 
                   return (
                     <button
                       key={c.catalogId}
                       onClick={() => { if (show) setInspectId(c.catalogId); }}
-                      className="relative text-left aspect-[3/4] bg-zinc-950 border border-white/10 overflow-hidden group hover:border-primary/50 transition-colors shadow-lg"
+                      className={`relative text-left aspect-[3/4] bg-zinc-950 border border-white/10 overflow-hidden group hover:border-primary/50 transition-colors shadow-lg ${variantKind ? `card-variant card-variant-${variantKind}` : ''}`}
                     >
                       {show ? (
                         <>
@@ -150,6 +153,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                               <span className="font-display font-black italic uppercase text-white/50 text-xs tracking-widest border border-white/20 bg-black/60 px-2 py-1 backdrop-blur-sm -rotate-12">Locked</span>
                             </div>
                           )}
+                           {isOwned && <CardVariantTreatment variantId={variantId} />}
                         </>
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center p-2 opacity-20">

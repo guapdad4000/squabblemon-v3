@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { starterRecipes, getCardImage, validateSavedDeck } from '../../data';
 import { useState } from 'react';
+import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [, setLocation] = useLocation();
@@ -73,7 +74,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <button
                   key={deck.id}
                   onClick={() => setLocation(`/game/decks/${deck.id}`)}
-                  className="relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-primary/50 transition-colors shadow-lg"
+                  className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-primary/50 transition-colors shadow-lg ${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId])}` : ''}`}
                 >
                   <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
                   <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
@@ -92,6 +93,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       <span className="text-white/60">{deck.cardIds.length}/7 Cards</span>
                     </div>
                   </div>
+                  <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[deck.heroCardId]} />
                 </button>
               );
             })}
@@ -108,7 +110,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <button
                 key={recipe.id}
                 onClick={() => setLocation(`/game/decks/${recipe.id}`)}
-                className="relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-white/30 transition-colors shadow-lg"
+                className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-white/30 transition-colors shadow-lg ${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero])}` : ''}`}
               >
                 <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
                 <div className="absolute inset-0 opacity-20">
@@ -124,6 +126,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   </div>
                   <h3 className="font-display font-black italic text-xl uppercase leading-none text-white">{recipe.name}</h3>
                 </div>
+                <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[recipe.hero]} />
               </button>
             );
           })}

@@ -6,6 +6,8 @@ import {
   ClaimCollectionRoadMilestoneResponse,
   CraftPlayerVariantBody,
   CraftPlayerVariantResponse,
+  EquipPlayerVariantBody,
+  EquipPlayerVariantResponse,
   DeletePlayerDeckParams,
   DeletePlayerDeckResponse,
   OpenPlayerPackBody,
@@ -38,6 +40,7 @@ import {
   getPlayerBootstrap,
   serializePackOpening,
 } from "../lib/playerState";
+import { validateVariantEquip } from "../lib/variantEquip";
 
 const router: IRouter = Router();
 
@@ -281,6 +284,56 @@ router.post("/player/collection/craft", async (req, res): Promise<void> => {
         bootstrap: await getPlayerBootstrap(userId),
         alreadyOwned: result.alreadyOwned,
       }),
+    );
+  } catch (error) {
+    sendError(res, error);
+  }
+});
+
+router.put("/player/collection/equip", async (req, res): Promise<void> => {
+  const userId = authenticatedUserId(req, res);
+  if (!userId) return;
+  const body = EquipPlayerVariantBody.safeParse(req.body);
+  if (!body.success) {
+    res.status(400).json({ error: body.error.message });
+    return;
+  }
+
+  try {
+    await getPlayerBootstrap(userId);
+    await db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
+      );
+      const [profile] = await tx
+        .select()
+        .from(playerProfilesTable)
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      if (!profile) throw new RouteError(404, "Player profile not found");
+
+      const validationError = validateVariantEquip(
+        body.data.cardId,
+        body.data.variantId,
+        profile.ownedCardIds,
+        profile.ownedVariants,
+      );
+      if (validationError) throw new RouteError(400, validationError);
+      const card = catalogCardById[body.data.cardId];
+
+      const equippedVariants = { ...profile.equippedVariants };
+      if (body.data.variantId === null) {
+        delete equippedVariants[card.catalogId];
+      } else {
+        equippedVariants[card.catalogId] = body.data.variantId;
+      }
+
+      await tx
+        .update(playerProfilesTable)
+        .set({ equippedVariants })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+    });
+    res.json(
+      EquipPlayerVariantResponse.parse(await getPlayerBootstrap(userId)),
     );
   } catch (error) {
     sendError(res, error);

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { PackOpening } from './packOpening';
+import type { PlayerProfileEquippedVariants } from './playerProfileEquippedVariants';
 import type { PlayerProfileInboxItem } from './playerProfileInboxItem';
 import type { PlayerProfileOnboardingStep } from './playerProfileOnboardingStep';
 import type { PlayerProfileStoryProgress } from './playerProfileStoryProgress';
@@ -41,6 +42,7 @@ export interface PlayerProfile {
   ownedCardIds: string[];
   discoveredCardIds: string[];
   ownedVariants: string[];
+  equippedVariants: PlayerProfileEquippedVariants;
   unlockedCosmeticIds: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;

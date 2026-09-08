@@ -22,6 +22,8 @@ export type SavedDeck = {
   recipeId?: string | null;
 };
 
+export type EquippedVariants = Record<string, string>;
+
 export const playerProfilesTable = pgTable("player_profiles", {
   clerkUserId: text("clerk_user_id").primaryKey(),
   displayName: text("display_name").notNull().default("New Challenger"),
@@ -62,6 +64,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  equippedVariants: jsonb("equipped_variants")
+    .$type<EquippedVariants>()
+    .notNull()
+    .default({}),
   unlockedCosmeticIds: jsonb("unlocked_cosmetic_ids")
     .$type<string[]>()
     .notNull()

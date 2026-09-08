@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cards, decks, getAssetUrl, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { StoryCinematic } from './StoryCinematic';
+import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 
-export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata }: any) {
+export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
@@ -65,7 +66,7 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
         src={getCardImage(playerDeck.hero)}
         alt=""
         aria-hidden="true"
-        className="fixed -left-[8%] md:left-[1%] bottom-[-8%] h-[70%] md:h-[88%] w-[48%] object-contain object-left-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] pointer-events-none z-0"
+        className={`fixed -left-[8%] md:left-[1%] bottom-[-8%] h-[70%] md:h-[88%] w-[48%] object-contain object-left-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)] pointer-events-none z-0 variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, playerDeck.hero)) ?? 'base'}`}
       />
       <motion.img
         initial={{ opacity: 0, x: 80 }}

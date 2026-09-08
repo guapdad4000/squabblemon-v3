@@ -4,6 +4,7 @@ import { PlayerBootstrap, useSavePlayerDeck, useDeletePlayerDeck } from '@worksp
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { catalogCardById, starterRecipes, validateSavedDeck, getCardImage } from '../../data';
+import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const params = useParams();
@@ -237,7 +238,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {deckCards.map(c => (
-                <div key={c.catalogId} className="relative group aspect-[3/4] bg-zinc-900 border border-white/10 overflow-hidden cursor-pointer" onClick={() => !isRecipe && toggleCard(c.catalogId)}>
+                <div key={c.catalogId} className={`relative group aspect-[3/4] bg-zinc-900 border border-white/10 overflow-hidden cursor-pointer ${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId])}` : ''}`} onClick={() => !isRecipe && toggleCard(c.catalogId)}>
                   <img src={getCardImage(c.catalogId)} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 pt-6">
                     <div className="font-display font-black italic uppercase text-[10px] leading-none mb-1 truncate">{c.name}</div>
@@ -262,6 +263,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       <span className="bg-rose-500 text-white font-display font-black uppercase text-xs px-2 italic shadow-lg">Remove</span>
                     </div>
                   )}
+                  <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
                 </div>
               ))}
             </div>
@@ -289,7 +291,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               {filteredCards.map(c => {
                 const inDeck = cards.includes(c.catalogId);
                 return (
-                  <div key={c.catalogId} className={`relative group aspect-[3/4] bg-zinc-900 border ${inDeck ? 'border-primary/50 opacity-50' : 'border-white/10'} overflow-hidden cursor-pointer`} onClick={() => toggleCard(c.catalogId)}>
+                  <div key={c.catalogId} className={`relative group aspect-[3/4] bg-zinc-900 border ${inDeck ? 'border-primary/50 opacity-50' : 'border-white/10'} overflow-hidden cursor-pointer ${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId])}` : ''}`} onClick={() => toggleCard(c.catalogId)}>
                     <img src={getCardImage(c.catalogId)} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 pt-6">
                       <div className="font-display font-black italic uppercase text-[10px] leading-none mb-1 truncate">{c.name}</div>
@@ -307,6 +309,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                         <span className="bg-primary text-black font-display font-black uppercase text-xs px-2 italic shadow-lg">Add</span>
                       </div>
                     )}
+                    <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
                   </div>
                 );
               })}

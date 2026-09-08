@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, getAssetUrl, getCardImage } from '../data';
 import { CardInstance } from '../gameEngine';
 import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
+import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
 
 const CARD_CLIP_STYLE = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
 
@@ -23,9 +24,10 @@ interface CardViewProps {
   disableLayout?: boolean;
   unavailable?: boolean;
   disabledReason?: string;
+  variantId?: string;
 }
 
-function CardViewComponent({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason }: CardViewProps) {
+function CardViewComponent({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason, variantId }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -38,6 +40,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
   const isBlocked = instance?.statuses?.blocked;
   const isMoved = instance?.moved;
   const powerModifier = instance?.powerModifier ?? 0;
+  const variantKind = getVariantKind(variantId);
 
   return (
     <motion.button
@@ -50,6 +53,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
       data-card-cost={displayCost}
       data-card-power={displayPower}
       data-card-zone={isBoard ? 'board' : 'hand'}
+      data-card-variant={variantKind ?? 'base'}
       aria-label={disabledReason ? `${card.name}. ${disabledReason}` : card.name}
       title={disabledReason}
       onClick={onClick}
@@ -63,6 +67,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
         ${highlighted || effectRole === 'source' ? 'effect-source' : ''}
         ${effectRole === 'target' ? 'effect-target' : ''}
         ${effectKind ? `effect-kind-${effectKind}` : ''}
+        ${variantKind ? `card-variant card-variant-${variantKind}` : ''}
         ${className}
       `}
     >
@@ -131,6 +136,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
            {isMoved && <div className="card-status bg-purple-500 text-white" title="Moved by an effect" aria-label="Moved by an effect"><Wind size={9} /></div>}
         </div>
       )}
+      <CardVariantTreatment variantId={variantId} />
 
     </motion.button>
   );
@@ -151,7 +157,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.effectKind === next.effectKind
     && previous.disableLayout === next.disableLayout
     && previous.unavailable === next.unavailable
-    && previous.disabledReason === next.disabledReason;
+    && previous.disabledReason === next.disabledReason
+    && previous.variantId === next.variantId;
 }
 
 export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);

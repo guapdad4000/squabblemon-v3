@@ -331,6 +331,28 @@ paths:
           description: Unknown, locked, or unaffordable variant
         "401":
           description: Authentication required
+  /player/collection/equip:
+    put:
+      operationId: equipPlayerVariant
+      tags: [player]
+      summary: Equip or remove one owned visual variant for a gameplay card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipVariantInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Unknown, mismatched, or unowned card variant
+        "401":
+          description: Authentication required
   /player/collection-road/{milestoneId}/claim:
     post:
       operationId: claimCollectionRoadMilestone
@@ -502,6 +524,10 @@ components:
           type: array
           items:
             type: string
+        equippedVariants:
+          type: object
+          additionalProperties:
+            type: string
         unlockedCosmeticIds:
           type: array
           items:
@@ -551,6 +577,7 @@ components:
         - ownedCardIds
         - discoveredCardIds
         - ownedVariants
+        - equippedVariants
         - unlockedCosmeticIds
         - savedDecks
         - storyProgress
@@ -804,6 +831,17 @@ components:
           type: boolean
         turnTimerEnabled:
           type: boolean
+      additionalProperties: false
+    EquipVariantInput:
+      type: object
+      properties:
+        cardId:
+          type: string
+          maxLength: 64
+        variantId:
+          type: [string, "null"]
+          maxLength: 96
+      required: [cardId, variantId]
       additionalProperties: false
     OnboardingProgressInput:
       type: object
