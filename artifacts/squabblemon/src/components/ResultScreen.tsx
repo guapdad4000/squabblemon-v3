@@ -9,7 +9,7 @@ import { CardUpgrades } from './CardUpgrades';
 import { unlockedAbilityUpgrades } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { getCardRarity, getRarityClass } from './CardRarityTreatment';
 
-export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
+export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onTutorialComplete, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
@@ -249,6 +249,10 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                 Continue Chapter
               </button>
             </>
+          ) : onTutorialComplete ? (
+            <button data-testid="button-complete-tutorial" onClick={onTutorialComplete} disabled={rewardPending} className="bg-primary text-black px-7 md:px-12 py-4 font-display font-black italic text-lg md:text-2xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none disabled:opacity-50">
+              {rewardPending ? 'Saving Tutorial' : 'Tutorial Complete · Choose Your Crew'}
+            </button>
           ) : (
             <>
               <button data-testid="button-restart-match" onClick={onRestart} className="bg-primary text-black px-5 md:px-9 py-3.5 md:py-4 font-display font-black italic text-sm md:text-xl uppercase hover:bg-yellow-400 transition-transform active:translate-y-1 shadow-[0_5px_0_#854d0e] active:shadow-none">

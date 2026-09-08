@@ -57,6 +57,33 @@ test('a real practice turn presents travel, reveal, impact, and SQUABBLE in orde
     .not.toBe(phaseBeforeSkip);
 });
 
+test('a player can choose a district before a card and keep both selections', async ({ page }) => {
+  await enterPractice(page);
+  await expect(page.getByTestId('motion-player')).toBeVisible();
+  await expect(page.getByTestId('motion-rival')).toBeVisible();
+  await page.getByRole('button', { name: /^Select .* district first$/ }).first().click();
+  const selectedLane = page.locator('[data-testid^="lane-container-"].is-selected');
+  await expect(selectedLane).toHaveCount(1);
+  const playableCard = page.getByTestId('hand-tray').locator('[data-card-zone="hand"]:not([title])').first();
+  await playableCard.click();
+  await expect(selectedLane).toHaveCount(1);
+  await expect(page.getByTestId('button-lock')).toBeEnabled();
+  await expect(page.getByTestId('battle-guidance')).toContainText('then Lock In');
+});
+
+test('iPad portrait and landscape keep battle controls visible and tappable', async ({ page }) => {
+  for (const viewport of [{ width: 768, height: 1024 }, { width: 1024, height: 768 }]) {
+    await page.setViewportSize(viewport);
+    await enterPractice(page);
+    const district = page.getByRole('button', { name: /^Select .* district first$/ }).first();
+    await expectInsideViewport(district, page);
+    await expectInsideViewport(page.getByTestId('hand-tray'), page);
+    await expectInsideViewport(page.getByTestId('button-next-round'), page);
+    await district.click();
+    await expect(page.locator('[data-testid^="lane-container-"].is-selected')).toHaveCount(1);
+  }
+});
+
 test('timer exposes paused, calm, warning, and urgent states and battle controls stay readable', async ({ page }) => {
   await page.goto('/squabblemon/play/guest');
   await page.getByTestId('button-start').click();

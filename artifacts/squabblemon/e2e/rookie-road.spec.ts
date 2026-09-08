@@ -1,7 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
 import type { MatchCompletion, PlayerBootstrap } from '@workspace/api-client-react';
+import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
+import { decks } from '@workspace/squabblemon-engine/data';
 
 type Step = 'profile' | 'tutorial' | 'crew' | 'reward' | 'complete';
+const tutorialUpgradeSnapshot = createAbilityUpgradeSnapshot(
+  decks.find((deck) => deck.id === 'vibes')!.cards,
+  decks.find((deck) => deck.id === 'combo')!.cards,
+);
 
 function bootstrap(step: Step, claimed = false): PlayerBootstrap {
   const complete = step === 'complete';
@@ -87,7 +93,18 @@ async function installAccountApi(page: Page) {
       return route.fulfill({ json: bootstrap(step, missionClaimed) });
     }
     if (request.method() === 'POST' && url.pathname.endsWith('/matches')) {
-      return route.fulfill({ json: { id: 'e2e-match' } });
+      return route.fulfill({ json: {
+        id: 'e2e-match',
+        mode: 'tutorial',
+        playerDeckId: 'vibes',
+        rivalDeckId: 'combo',
+        storyNodeId: null,
+        contentVersion: null,
+        encounterSnapshot: null,
+        abilityUpgradeSnapshot: tutorialUpgradeSnapshot,
+        status: 'active',
+        createdAt: new Date(0).toISOString(),
+      } });
     }
     if (request.method() === 'POST' && url.pathname.endsWith('/matches/e2e-match/complete')) {
       step = 'crew';
@@ -145,6 +162,8 @@ test('Rookie Road survives refreshes, claims once, and clears account cache on s
 
   await page.getByRole('button', { name: 'Start Tutorial' }).click();
   await page.getByRole('button', { name: 'Complete guided test match' }).click();
+  await expect(page.getByRole('button', { name: 'Tutorial Complete · Choose Your Crew' })).toBeVisible();
+  await page.getByRole('button', { name: 'Tutorial Complete · Choose Your Crew' }).click();
   await expect(page.getByText('Pick Your Crew')).toBeVisible();
   await page.reload();
   await expect(page.getByText('Pick Your Crew')).toBeVisible();

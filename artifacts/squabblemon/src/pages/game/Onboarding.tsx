@@ -53,6 +53,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <TutorialStep
         turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
         equippedVariants={bootstrap.profile.equippedVariants}
+        onComplete={() => void handleAdvance({ action: 'complete-tutorial' })}
       />,
     );
   }
@@ -120,11 +121,11 @@ function ProfileStep({ onComplete }: { onComplete: (data: any) => void }) {
   );
 }
 
-function TutorialStep({ turnTimerEnabled, equippedVariants }: { turnTimerEnabled: boolean; equippedVariants: Record<string, string> }) {
+function TutorialStep({ turnTimerEnabled, equippedVariants, onComplete }: { turnTimerEnabled: boolean; equippedVariants: Record<string, string>; onComplete: () => void }) {
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
-    return <PlayLoop mode="tutorial" onExit={() => setPlaying(false)} hideLobby initialDeckId="vibes" initialRivalId="combo" turnTimerEnabled={turnTimerEnabled} equippedVariants={equippedVariants} />;
+    return <PlayLoop mode="tutorial" onExit={() => setPlaying(false)} onTutorialComplete={onComplete} hideLobby initialDeckId="vibes" initialRivalId="combo" turnTimerEnabled={turnTimerEnabled} equippedVariants={equippedVariants} />;
   }
 
   return (

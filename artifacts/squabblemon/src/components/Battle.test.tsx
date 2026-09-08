@@ -145,6 +145,36 @@ test('guidance, treatments, and broadcast signals remain available', () => {
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
 });
 
+test('district-first selection stays selected when a card is chosen', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
+  const state: { card: string | null; lane: number | null; squabble: boolean } = { card: null, lane: null, squabble: false };
+  const handlers = () => createBattleDecisionHandlers({
+    match, interactive: true, selectedInstanceId: state.card, selectedLane: state.lane,
+    squabble: state.squabble, lockedDistricts: 0,
+    setSelectedInstanceId: value => { state.card = value; },
+    setSelectedLane: value => { state.lane = value; },
+    setSquabble: value => { state.squabble = value; },
+  });
+  handlers().selectDistrict(1, true);
+  handlers().selectCard(card, true);
+  assert.equal(state.lane, 1);
+  assert.equal(state.card, card.instanceId);
+  const html = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: 1 });
+  assert.match(html, /aria-pressed="true"/);
+  assert.match(html, /Lock In ·/);
+  assert.match(html, /Your Motion/);
+  assert.match(html, /Rival Motion/);
+});
+
+test('unavailable cards explain the exact Motion shortfall', () => {
+  const match = createMatch('block', 'combo');
+  const unavailable = match.playerHand.find(card => card.cost > match.playerMotion)!;
+  const html = renderBattle(match, { selectedLane: 0 });
+  assert.match(html, new RegExp(`costs ${unavailable.cost} Motion in`));
+  assert.match(html, new RegExp(`${unavailable.cost - match.playerMotion} short`));
+});
+
 test('decision handlers and commits remain privacy-safe and functional', () => {
   const match = createMatch('block', 'combo');
   const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
