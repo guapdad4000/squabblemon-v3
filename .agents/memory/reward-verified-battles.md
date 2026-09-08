@@ -11,4 +11,4 @@ For data-driven matches, snapshot every mutable content input that affects compl
 
 **Why:** A content deployment between match start and completion can otherwise verify one issued encounter but grant rewards or progression from a newer definition.
 
-**How to apply:** Keep gameplay rule changes in the shared engine. Any new move, random seed, card behavior, or match mode that can grant account rewards must remain replayable and validated server-side before profile currency or mission progress changes. Treat missing legacy snapshots as stale sessions that must restart rather than silently falling back to current content.
+**How to apply:** Keep gameplay rule changes in the shared engine. Return the exact server-issued match snapshot to the browser and initialize the local engine from it; persisting it only for server verification creates client/server drift. Any new move, random seed, card behavior, or match mode that can grant account rewards must remain replayable and validated server-side before profile currency or mission progress changes. Treat missing legacy snapshots as stale sessions that must restart rather than silently falling back to current content.

@@ -5,6 +5,7 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { AbilityUpgradeSnapshot } from './abilityUpgradeSnapshot';
 import type { PlayerMatchEncounterSnapshot } from './playerMatchEncounterSnapshot';
 import type { PlayerMatchStatus } from './playerMatchStatus';
 
@@ -22,4 +23,5 @@ export interface PlayerMatch {
   contentVersion: number | null;
   /** @nullable */
   encounterSnapshot: PlayerMatchEncounterSnapshot;
+  abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 }

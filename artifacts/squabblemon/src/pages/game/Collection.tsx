@@ -7,6 +7,7 @@ import { CardInspector } from '../../components/CardInspector';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 import { CardProgress } from '../../components/CardProgress';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
+import { CardUpgradeCue } from '../../components/CardUpgrades';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -168,11 +169,10 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                            <CardRarityTreatment rarity={c.rarity} compact />
                            {isOwned && <CardVariantTreatment variantId={variantId} />}
                            {isOwned && (
-                             <CardProgress
-                               progress={bootstrap.profile.cardProgression[c.catalogId]}
-                               compact
-                               className="absolute inset-x-2 top-2 z-20 bg-black/70 p-1"
-                             />
+                              <div className="absolute inset-x-2 top-2 z-20 bg-black/70 p-1">
+                                <CardUpgradeCue card={c as any} progress={bootstrap.profile.cardProgression[c.catalogId] as any} className="text-[6px]" />
+                                <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
+                              </div>
                            )}
                         </>
                       ) : (

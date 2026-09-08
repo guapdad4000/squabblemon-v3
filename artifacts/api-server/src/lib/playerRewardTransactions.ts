@@ -13,6 +13,7 @@ import {
   applyCardXp,
   createCardProgressionSnapshot,
   participatingCatalogCardIds,
+  type CardProgressionSnapshot,
   type CardXpReward,
 } from "./cardProgression";
 
@@ -197,8 +198,14 @@ export async function completeStandardMatchReward(input: {
         ),
       );
     if (!storedMatch) throw new PlayerRewardError("Match not found", 404);
-    let progressionSnapshot = storedMatch.snapshot ?? [];
-    if (!storedMatch.snapshot && participantCardIds.length > 0) {
+    // Pre-upgrade snapshots were an array. They remain reward-safe by
+    // rebuilding only from the server-owned recipe and current profile; never
+    // access `.cards` on the legacy JSON shape.
+    let progressionSnapshot =
+      storedMatch.snapshot && !Array.isArray(storedMatch.snapshot)
+        ? storedMatch.snapshot as CardProgressionSnapshot
+        : null;
+    if (!progressionSnapshot && participantCardIds.length > 0) {
       const canonicalRoster = starterRecipes.find(
         (recipe) => recipe.id === storedMatch.playerDeckId,
       )?.cards;
@@ -209,6 +216,14 @@ export async function completeStandardMatchReward(input: {
         canonicalRoster,
         profile.ownedCardIds,
         profile.cardProgression,
+      );
+    }
+    if (!progressionSnapshot) {
+      progressionSnapshot = createCardProgressionSnapshot(
+        starterRecipes.find((recipe) => recipe.id === storedMatch.playerDeckId)?.cards ?? [],
+        profile.ownedCardIds,
+        profile.cardProgression,
+        true,
       );
     }
     const cardXp = applyCardXp(

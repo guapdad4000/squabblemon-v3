@@ -7,6 +7,7 @@ import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
 import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
 import { CardRarityTreatment, getCardRarity, getRarityClass } from './CardRarityTreatment';
+import { CardUpgradeCue } from './CardUpgrades';
 
 const CARD_CLIP_STYLE = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
 
@@ -136,7 +137,10 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
       <CardRarityTreatment rarity={rarity} compact={Boolean(isBoard)} />
       <CardVariantTreatment variantId={variantId} />
       {!isBoard && progress && (
-        <CardProgress progress={progress} compact className="absolute inset-x-2 bottom-1 z-20" />
+        <div className="absolute inset-x-2 bottom-1 z-20">
+          <CardUpgradeCue card={card as any} progress={progress as any} className="mb-0.5 text-[6px]" />
+          <CardProgress progress={progress} compact />
+        </div>
       )}
 
     </motion.button>

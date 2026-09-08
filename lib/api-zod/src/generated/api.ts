@@ -977,6 +977,8 @@ export const StartPlayerMatchBody = zod.object({
 export const startPlayerMatchResponseIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
 
 
+
+
 export const StartPlayerMatchResponse = zod.object({
   "id": zod.string().regex(startPlayerMatchResponseIdRegExp),
   "mode": zod.string(),
@@ -986,7 +988,20 @@ export const StartPlayerMatchResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "storyNodeId": zod.string().nullable(),
   "contentVersion": zod.number().nullable(),
-  "encounterSnapshot": zod.record(zod.string(), zod.unknown()).nullable()
+  "encounterSnapshot": zod.record(zod.string(), zod.unknown()).nullable(),
+  "abilityUpgradeSnapshot": zod.object({
+  "version": zod.literal(1),
+  "player": zod.array(zod.object({
+  "cardId": zod.string(),
+  "level": zod.number().min(1),
+  "upgradeIds": zod.array(zod.string())
+})),
+  "cpu": zod.array(zod.object({
+  "cardId": zod.string(),
+  "level": zod.number().min(1),
+  "upgradeIds": zod.array(zod.string())
+}))
+})
 })
 
 

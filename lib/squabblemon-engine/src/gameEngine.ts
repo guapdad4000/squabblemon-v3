@@ -1,4 +1,14 @@
 import { cards, catalogIdsToEngineIds, decks, type Card, type Deck } from './data';
+import {
+  createAbilityUpgradeSnapshot, snapshotUpgradesForCard, validateAbilityUpgradeSnapshot,
+  type AbilityUpgradeSnapshot,
+} from "./abilityUpgrades";
+import type { CardProgressionMap } from "./cardProgression";
+export {
+  createAbilityUpgradeSnapshot, snapshotUpgradesForCard, unlockedAbilityUpgrades,
+  validateAbilityUpgradeSnapshot, ABILITY_UPGRADE_SNAPSHOT_VERSION,
+} from "./abilityUpgrades";
+export type { AbilityUpgradeSnapshot, CardAbilityUpgradeSnapshot } from "./abilityUpgrades";
 
 export type Owner = 'player' | 'cpu';
 export type Phase = 'player' | 'cpu-reveal' | 'resolved' | 'complete';
@@ -71,11 +81,17 @@ export type EffectLogEntry = {
   replay: { before: ReplayState; after: ReplayState };
   // Kept as presentation fields so existing battle UI can consume the authoritative event stream.
   cardInstanceId: string; cardId: string; owner: Owner; lane: Lane; kind: EffectKind; note: string;
+  /** Present only for a card-growth upgrade resolution, never client supplied. */
+  abilityMetadata?: {
+    readonly upgradeId: string; readonly upgradeName: string; readonly sourceCardId: string;
+    readonly sourceInstanceId: string; readonly targetInstanceIds: readonly string[];
+    readonly result: "applied";
+  };
 };
 export type ReplayState = Pick<Match,
   'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerMotion' | 'cpuMotion' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
-  'cheapBuffsUsed' | 'timedEffects' | 'storyRuntime'
+  'cheapBuffsUsed' | 'timedEffects' | 'storyRuntime' | 'abilityUpgradeSnapshot'
 >;
 
 export type TimedEffect = {
@@ -89,6 +105,7 @@ export type Match = {
   playerDrawIndex: number; cpuDrawIndex: number; squabbleUsed: boolean; plugDiscountLane: Record<Owner, Lane | null>;
   cheapBuffsUsed: Record<Owner, number>; effectLog: EffectLogEntry[]; nextEventSequence: number; timedEffects: TimedEffect[];
   storyEncounter?: StoryEncounterSnapshot; storyRuntime?: StoryRuntime;
+  abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
 const lane = (n: number): Lane => n as Lane;
 const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false });
@@ -103,9 +120,14 @@ const deckById = (id: string): Deck => {
   return deck;
 };
 
-export function createMatch(playerDeck: string, cpuDeck: string): Match {
+export function createMatch(
+  playerDeck: string,
+  cpuDeck: string,
+  progression?: { readonly player?: CardProgressionMap; readonly cpu?: CardProgressionMap },
+  suppliedAbilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
+): Match {
   const p = deckById(playerDeck), c = deckById(cpuDeck);
-  return createMatchFromEngineCards(p.id, p.cards, c.id, c.cards);
+  return createMatchFromEngineCards(p.id, p.cards, c.id, c.cards, undefined, progression, suppliedAbilityUpgradeSnapshot);
 }
 
 export function createMatchFromEngineCards(
@@ -114,6 +136,8 @@ export function createMatchFromEngineCards(
   cpuDeck: string,
   cpuCardIds: string[],
   storyEncounter?: StoryEncounterSnapshot,
+  progression?: { readonly player?: CardProgressionMap; readonly cpu?: CardProgressionMap },
+  suppliedAbilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
 ): Match {
   if (playerCardIds.length !== 7 || new Set(playerCardIds).size !== 7) {
     throw new Error("Player deck must contain seven unique cards");
@@ -123,6 +147,9 @@ export function createMatchFromEngineCards(
   }
   const playerHandSize = storyEncounter?.modifiers?.handSize?.player ?? 5;
   const cpuHandSize = storyEncounter?.modifiers?.handSize?.cpu ?? 5;
+  const abilityUpgradeSnapshot = suppliedAbilityUpgradeSnapshot
+    ? validateAbilityUpgradeSnapshot(suppliedAbilityUpgradeSnapshot, playerCardIds, cpuCardIds)
+    : createAbilityUpgradeSnapshot(playerCardIds, cpuCardIds, progression);
   let match: Match = {
     round: 1, phase: "player", playerDeck, cpuDeck,
     playerHand: playerCardIds.slice(0, playerHandSize).map((id, i) => createCardInstance(id, "player", playerDeck, i)),
@@ -134,6 +161,7 @@ export function createMatchFromEngineCards(
     playerDrawIndex: playerHandSize, cpuDrawIndex: cpuHandSize,
     squabbleUsed: false, plugDiscountLane: { player: null, cpu: null }, cheapBuffsUsed: { player: 0, cpu: 0 },
     effectLog: [], nextEventSequence: 1, timedEffects: [],
+    abilityUpgradeSnapshot,
     ...(storyEncounter ? {
       storyEncounter,
       storyRuntime: { activePhaseIndex: -1, appliedEffectIds: [], lanePowerBonuses: [], laneLocks: [] },
@@ -147,6 +175,7 @@ export function createMatchFromCatalog(
   playerDeck: string,
   playerCatalogCardIds: string[],
   cpuDeck: string,
+  progression?: { readonly player?: CardProgressionMap; readonly cpu?: CardProgressionMap },
 ): Match {
   const cpu = deckById(cpuDeck);
   return createMatchFromEngineCards(
@@ -154,6 +183,8 @@ export function createMatchFromCatalog(
     catalogIdsToEngineIds(playerCatalogCardIds),
     cpu.id,
     cpu.cards,
+    undefined,
+    progression,
   );
 }
 
@@ -361,6 +392,48 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     m = { ...m, timedEffects: [...m.timedEffects.filter((effect) => effect.sourceInstanceId !== source.instanceId), { id: `wifey:${source.instanceId}:${m.round}`, kind: 'wifey-protection', sourceInstanceId: source.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: m.round + 1, expiration: 'round-start' }] };
     note('Side Eye will block one targeted effect this round.', 'timed', duration);
   }
+  const changedTargetIds = [...targetIds].filter((id) =>
+    JSON.stringify(cardState(findCard(before, id))) !== JSON.stringify(cardState(findCard(m, id))),
+  );
+  const baseSucceeded = source.cardId === "plug" || source.cardId === "streamer" || source.cardId === "gamer"
+    ? true
+    : JSON.stringify(cardState(findCard(before, source.instanceId))) !== JSON.stringify(cardState(findCard(m, source.instanceId)))
+      || changedTargetIds.length > 0;
+  // Fixed upgrades resolve after the printed ability in authored unlock order.  Their
+  // small bounded effect budget prevents progression from changing base-card identity.
+  if (!source.statuses.silenced && !source.statuses.frozen && baseSucceeded) {
+    for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, source.owner, source.cardId)) {
+      const beforeUpgrade = m;
+      const effect = upgrade.effect;
+      const target = effect.kind === "self-power"
+        ? findCard(m, source.instanceId)
+        : changedTargetIds
+          .map((id) => findCard(m, id))
+          .find((card): card is CardInstance => !!card && card.owner === (effect.target === "friendly" ? source.owner : enemy));
+      if (!target) continue;
+      m = modify(m, target.instanceId, (card) => ({
+        ...card,
+        powerModifier: card.powerModifier + upgrade.effect.amount,
+        lastEffectNote: `${upgrade.name}: ${upgrade.effect.amount >= 0 ? "+" : ""}${upgrade.effect.amount} Power.`,
+      }));
+      m = addEvent(beforeUpgrade, m, {
+        type: "ability",
+        sourceId: source.instanceId,
+        owner: source.owner,
+        targetIds: [target.instanceId],
+        kind,
+        note: `${upgrade.name} upgraded ${target.name}: ${upgrade.effect.amount >= 0 ? "+" : ""}${upgrade.effect.amount} Power.`,
+        abilityMetadata: {
+          upgradeId: upgrade.id,
+          upgradeName: upgrade.name,
+          sourceCardId: source.cardId,
+          sourceInstanceId: source.instanceId,
+          targetInstanceIds: [target.instanceId],
+          result: "applied",
+        },
+      });
+    }
+  }
   return m;
 }
 
@@ -509,9 +582,10 @@ export function verifyMatchTranscript(
   playerDeck: string,
   cpuDeck: string,
   moves: Array<{ cardInstanceId: string | null; lane: number | null; squabble: boolean }>,
+  abilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
 ): Match {
   if (moves.length !== 6) throw new Error('A match transcript needs six moves');
-  let match = createMatch(playerDeck, cpuDeck);
+  let match = createMatch(playerDeck, cpuDeck, undefined, abilityUpgradeSnapshot);
   for (const move of moves) {
     if (move.cardInstanceId === null) {
       if (move.lane !== null || move.squabble) throw new Error('Invalid pass');
@@ -533,6 +607,7 @@ export function createStoryMatch(
   snapshot: StoryEncounterSnapshot,
   playerDeck: string | readonly string[],
   playerCardsOrId: readonly string[] | string = "story-player",
+  abilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
 ): Match {
   if (snapshot.enemy.cardIds.length !== 7 || new Set(snapshot.enemy.cardIds).size !== 7) {
     throw new Error("Story enemy deck must contain seven unique cards");
@@ -548,6 +623,8 @@ export function createStoryMatch(
     snapshot.enemy.deckId,
     [...snapshot.enemy.cardIds],
     snapshot,
+    undefined,
+    abilityUpgradeSnapshot,
   );
 }
 
@@ -556,6 +633,7 @@ export function verifyStoryMatchTranscript(
   playerDeck: string | readonly string[],
   playerCardsOrMoves: readonly string[] | Array<{ cardInstanceId: string | null; lane: number | null; squabble: boolean }>,
   movesOrDeckId?: Array<{ cardInstanceId: string | null; lane: number | null; squabble: boolean }> | string,
+  abilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
 ): Match {
   const suppliedCards = playerCardsOrMoves.length > 0 && typeof playerCardsOrMoves[0] === "string";
   const moves = (suppliedCards ? movesOrDeckId : playerCardsOrMoves) as Array<{ cardInstanceId: string | null; lane: number | null; squabble: boolean }>;
@@ -564,7 +642,7 @@ export function verifyStoryMatchTranscript(
   const matchCardsOrId = suppliedCards
     ? playerCardsOrMoves as readonly string[]
     : typeof movesOrDeckId === "string" ? movesOrDeckId : "story-player";
-  let match = createStoryMatch(snapshot, playerDeck, matchCardsOrId);
+  let match = createStoryMatch(snapshot, playerDeck, matchCardsOrId, abilityUpgradeSnapshot);
   for (const move of moves) {
     if (move.cardInstanceId === null) {
       if (move.lane !== null || move.squabble) throw new Error("Invalid pass");
@@ -619,6 +697,7 @@ const cardState = (card: CardInstance | undefined): CardEventState | null => car
 type EventInput = {
   type: EventType; sourceId?: string; owner: Owner; targetIds?: string[]; note: string;
   kind?: EffectKind; timing?: 'instant' | 'timed'; duration?: EventDuration | null; lane?: Lane;
+  abilityMetadata?: EffectLogEntry["abilityMetadata"];
 };
 
 export type ResourceState = { playerMotion: number; cpuMotion: number };
@@ -640,6 +719,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   cheapBuffsUsed: m.cheapBuffsUsed,
   timedEffects: m.timedEffects,
   storyRuntime: m.storyRuntime,
+  abilityUpgradeSnapshot: m.abilityUpgradeSnapshot,
 })) as ReplayState;
 
 export type ScoreState = { lane: Lane; player: number; cpu: number };
@@ -666,6 +746,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     lane: sourceCard?.lane ?? input.lane ?? 0,
     kind: input.kind ?? 'ability',
     note: input.note,
+    ...(input.abilityMetadata ? { abilityMetadata: input.abilityMetadata } : {}),
   };
   return { ...after, nextEventSequence: after.nextEventSequence + 1, effectLog: [...after.effectLog, event] };
 };

@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   canAffordSelection, chooseCpuPlay, createCardInstance, createMatch, createMatchFromCatalog, getEffectiveCardPower,
-  getLaneScore, getLegalCardCost, getMatchWinner, nextRound, pass, playCard, revealCpu, type Match,
+  getLaneScore, getLegalCardCost, getMatchWinner, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
+  createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot, type Match,
 } from './gameEngine';
-import { starterRecipes } from './data';
+import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades } from './data';
 
 const custom = (id: string, owner: 'player' | 'cpu', index: number) => createCardInstance(id, owner, 'test', index);
 const playOne = (id: string, setup?: (m: Match) => Match) => {
@@ -52,6 +53,93 @@ test('printed abilities resolve with an effect note, including fire and water ma
   }
   assert.equal(playOne('snow').effectLog.at(-1)?.kind, 'water');
   assert.equal(playOne('hooper').effectLog.at(-1)?.kind, 'fire');
+});
+
+test('every gameplay card has the fixed, valid three-upgrade path', () => {
+  assert.equal(validateCardAbilityUpgrades(), cards);
+  for (const [cardId, card] of Object.entries(cards)) {
+    assert.equal(card.abilityUpgrades.length, 3, cardId);
+    assert.deepEqual(card.abilityUpgrades.map((upgrade) => upgrade.unlockLevel), ABILITY_UPGRADE_UNLOCK_LEVELS, cardId);
+    assert.equal(new Set(card.abilityUpgrades.map((upgrade) => upgrade.id)).size, 3, cardId);
+  }
+});
+
+test('match-start upgrade snapshots are immutable, tiered, ordered, and reject forgery', () => {
+  const player = ['cornball', 'hooper', 'plug', 'snow', 'wifey', 'baby', 'bikelife'];
+  const cpu = ['rastamon', 'roaster', 'nerd', 'streamer', 'gamer', 'techbro', 'vibe'];
+  for (const [level, unlocked] of [[1, 0], [2, 1], [5, 2], [8, 3], [10, 3]] as const) {
+    const snapshot = createAbilityUpgradeSnapshot(player, cpu, { player: { cornball: { xp: 50 * level * (level - 1), level } } });
+    assert.equal(snapshot.player[0].upgradeIds.length, unlocked);
+    assert(Object.isFrozen(snapshot));
+  }
+  const snapshot = createAbilityUpgradeSnapshot(player, cpu, { player: { cornball: { xp: 2800, level: 8 } } });
+  const forged = { ...snapshot, player: snapshot.player.map((entry) => ({ ...entry, upgradeIds: [...entry.upgradeIds] })) };
+  forged.player[0].upgradeIds.push('cornball:upgrade:99');
+  assert.throws(() => validateAbilityUpgradeSnapshot(forged, player, cpu), /Forged/);
+  assert.throws(() => validateAbilityUpgradeSnapshot({ ...snapshot, version: 0 } as any, player, cpu), /version/);
+});
+
+test('upgrades use the captured snapshot, resolve in order, and replay identically', () => {
+  const snapshot = createAbilityUpgradeSnapshot(
+    ['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby'],
+    ['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper'],
+    { player: { cornball: { xp: 2800, level: 10 } } },
+  );
+  // A later live level cannot change this level-two match snapshot.
+  const stale = createAbilityUpgradeSnapshot(snapshot.player.map((entry) => entry.cardId), snapshot.cpu.map((entry) => entry.cardId), { player: { cornball: { xp: 100, level: 2 } } });
+  let match = createMatch('block', 'receipts', undefined, stale);
+  const enemies = [0, 1, 2].map((index) => ({ ...custom('snow', 'cpu', 100 + index), lane: 0 as const }));
+  match = { ...match, playerMotion: 20, playerHand: [custom('cornball', 'player', 0)], boards: [enemies, [], []] };
+  const resolved = playCard(match, 'player', match.playerHand[0].instanceId, 0);
+  const upgrades = resolved.effectLog.filter((event) => event.abilityMetadata);
+  assert.equal(upgrades.length, 1);
+  assert.equal(upgrades[0].abilityMetadata?.upgradeId, 'cornball:upgrade:1');
+  assert.equal(resolved.boards[0].find((card) => card.cardId === 'cornball')?.powerModifier, 1);
+  const passes = Array.from({ length: 6 }, () => ({ cardInstanceId: null, lane: null, squabble: false }));
+  assert.deepEqual(
+    verifyMatchTranscript('block', 'receipts', passes, stale),
+    verifyMatchTranscript('block', 'receipts', passes, stale),
+  );
+});
+
+test('conditional upgrade families affect authored targets only after a successful base ability', () => {
+  const player = ['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby'];
+  const cpu = ['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper'];
+  const full = createAbilityUpgradeSnapshot(player, cpu, { player: { roaster: { xp: 4500, level: 10 } } });
+  let match = createMatch('block', 'receipts', undefined, full);
+  const enemy = { ...custom('hooper', 'cpu', 120), lane: 0 as const, playedRound: 1 };
+  match = { ...match, playerMotion: 20, playerHand: [custom('roaster', 'player', 0)], boards: [[enemy], [], []] };
+  const resolved = playCard(match, 'player', match.playerHand[0].instanceId, 0);
+  const events = resolved.effectLog.filter((event) => event.abilityMetadata);
+  assert.deepEqual(events.map((event) => event.abilityMetadata?.upgradeId), [
+    'roaster:upgrade:1', 'roaster:upgrade:2', 'roaster:upgrade:3',
+  ]);
+  assert.equal(resolved.boards[0].find((card) => card.instanceId === enemy.instanceId)?.powerModifier, -5);
+  assert.equal(resolved.boards[0].find((card) => card.cardId === 'roaster')?.powerModifier, 1);
+  const failed = playOne('roaster', (base) => ({
+    ...base,
+    abilityUpgradeSnapshot: full,
+  }));
+  assert.equal(failed.effectLog.filter((event) => event.abilityMetadata).length, 0);
+  const protector = {
+    ...custom('wifey', 'cpu', 121),
+    lane: 0 as const,
+    statuses: { frozen: false, silenced: false, protected: true, blocked: false },
+  };
+  const protectedEnemy = { ...custom('hooper', 'cpu', 122), lane: 0 as const, playedRound: 1 };
+  const protectedMatch = createMatch('block', 'receipts', undefined, full);
+  const protectedSource = custom('roaster', 'player', 0);
+  const protectedResult = playCard({
+    ...protectedMatch,
+    playerMotion: 20,
+    playerHand: [protectedSource],
+    boards: [[protector, protectedEnemy], [], []],
+  }, 'player', protectedSource.instanceId, 0);
+  assert.equal(protectedResult.boards[0].find((card) => card.instanceId === protectedEnemy.instanceId)?.powerModifier, 0);
+  assert.equal(protectedResult.effectLog.filter((event) => event.abilityMetadata).length, 0);
+  assert.equal(protectedResult.boards[0].find((card) => card.instanceId === protector.instanceId)?.statuses.blocked, true);
+  const effects = Object.values(cards).flatMap((card) => card.abilityUpgrades.map((upgrade) => upgrade.effect.kind));
+  assert(effects.includes('self-power') && effects.includes('target-power'));
 });
 
 test('Wifey blocks one targeted effect and movement cards visibly move', () => {

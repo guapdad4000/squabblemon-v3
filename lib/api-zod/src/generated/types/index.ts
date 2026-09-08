@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.2.0
  */
 
+export * from './abilityUpgradeSnapshot';
+export * from './abilityUpgradeSnapshotVersion';
+export * from './cardAbilityUpgradeSnapshot';
 export * from './cardProgress';
 export * from './cardXpReward';
 export * from './collectionRoadClaimResult';

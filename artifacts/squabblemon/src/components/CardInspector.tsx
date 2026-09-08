@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { CardView } from './CardView';
 import { X } from 'lucide-react';
@@ -8,11 +9,13 @@ import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { CardProgress } from './CardProgress';
 import { catalogCardByEngineId, catalogCardById } from '../data';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
+import { CardUpgrades } from './CardUpgrades';
+import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
 
-export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
+export function CardInspector({ card, onClose, bootstrap, variantId, match }: any) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
-  const catalogCard = catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.id];
+  const catalogCard = catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.cardId || card.id] ?? null;
 
   const craftVariant = useCraftPlayerVariant();
   const equipVariant = useEquipPlayerVariant();
@@ -21,6 +24,9 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : variantId;
   const progression = catalogCard ? bootstrap?.profile.cardProgression[catalogCard.catalogId] : undefined;
+  const matchUpgradeIds = instance && match?.abilityUpgradeSnapshot
+    ? snapshotUpgradesForCard(match.abilityUpgradeSnapshot, instance.owner, instance.cardId).map((upgrade: { id: string }) => upgrade.id)
+    : undefined;
 
   const handleCraft = async (variantId: string) => {
     if (!bootstrap || !catalogCard || !isCardOwned) return;
@@ -98,6 +104,11 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
             <div className="font-display font-black italic uppercase text-lg md:text-2xl text-primary">{card.ability}</div>
             <p className="text-white/65 font-sans mt-3 text-xs md:text-sm leading-relaxed max-w-lg">{card.effect}</p>
           </div>
+          {catalogCard && (
+            <div className="mb-6 border border-white/10 bg-black/40 p-3">
+              <CardUpgrades card={catalogCard} progress={progression} activeUpgradeIds={matchUpgradeIds} />
+            </div>
+          )}
 
           {instance && (
             <div className="grid grid-cols-2 gap-4 mt-6 border-t border-white/10 pt-6">

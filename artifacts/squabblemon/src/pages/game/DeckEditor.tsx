@@ -7,6 +7,7 @@ import { catalogCardById, starterRecipes, validateSavedDeck, getCardImage } from
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 import { CardProgress } from '../../components/CardProgress';
+import { CardUpgradeCue } from '../../components/CardUpgrades';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const params = useParams();
@@ -271,7 +272,10 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   )}
                   <CardRarityTreatment rarity={c.rarity} compact />
                   <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
-                  <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1" />
+                  <div className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1">
+                    <CardUpgradeCue card={c} progress={bootstrap.profile.cardProgression[c.catalogId]} className="text-[6px]" />
+                    <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
+                  </div>
                 </div>
               ))}
             </div>
@@ -319,7 +323,10 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     )}
                      <CardRarityTreatment rarity={c.rarity} compact />
                      <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
-                     <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1" />
+                      <div className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1">
+                        <CardUpgradeCue card={c} progress={bootstrap.profile.cardProgression[c.catalogId]} className="text-[6px]" />
+                        <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
+                      </div>
                    </button>
                 );
               })}

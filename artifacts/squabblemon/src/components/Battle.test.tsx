@@ -2,17 +2,81 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { decks, districts } from '../data';
+import { cards, decks, districts } from '../data';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
+import { CardUpgrades } from './CardUpgrades';
+import { CardInspector } from './CardInspector';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
+import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
 import { createMatch, playCard, type Match } from '../gameEngine';
+import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 
 const noop = () => {};
 const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
+
+test('battle presentation names an authoritative triggered upgrade', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
+  const event = {
+    sequence: 99,
+    kind: 'normal' as const,
+    cardInstanceId: card.instanceId,
+    cardId: card.cardId,
+    owner: 'player' as const,
+    lane: 0 as const,
+    targetIds: [],
+    abilityMetadata: {
+      upgradeId: 'cornball:upgrade:1',
+      upgradeName: 'Pressure Point',
+      sourceCardId: card.cardId,
+      sourceInstanceId: card.instanceId,
+      targetInstanceIds: [card.instanceId],
+      result: 'applied' as const,
+    },
+    note: 'Upgrade applied',
+    source: null,
+    scores: { before: [], after: [] },
+  };
+  const html = renderBattle(match, { presentationPhase: 'effects', activeEffect: event, authoritativeHistory: [event] });
+  assert.match(html, /data-testid="effect-upgrade-trigger"/);
+  assert.match(html, /Upgrade · Pressure Point/);
+});
+
+test('upgrade card detail uses the shared unlock helper for locked and active states', () => {
+  const html = renderToStaticMarkup(<CardUpgrades card={cards.cornball} progress={{ level: 2 }} />);
+  assert.match(html, /Awkward Energy/);
+  assert.match(html, />Active</);
+  assert.match(html, /LV 5/);
+});
+
+test('authenticated initialization retains the server-issued leveled snapshot', () => {
+  const snapshot = createAbilityUpgradeSnapshot(
+    decks.find(deck => deck.id === 'block')!.cards,
+    decks.find(deck => deck.id === 'combo')!.cards,
+    { player: { cornball: { xp: 100, level: 2 } } },
+  );
+  const match = createCanonicalMatch('practice', 'block', 'combo', snapshot);
+  assert.deepEqual(match.abilityUpgradeSnapshot, snapshot);
+  assert.deepEqual(match.abilityUpgradeSnapshot.player.find(entry => entry.cardId === 'cornball')?.upgradeIds, ['cornball:upgrade:1']);
+});
+
+test('battle inspector shows all authored upgrades without collection bootstrap', () => {
+  const match = createMatch('block', 'combo');
+  const card = match.playerHand[0]!;
+  const client = new QueryClient();
+  const html = renderToStaticMarkup(
+    <QueryClientProvider client={client}>
+      <CardInspector card={card} match={match} onClose={noop} />
+    </QueryClientProvider>,
+  );
+  assert.match(html, /Ability upgrades/);
+  assert.equal((html.match(/data-testid="card-upgrade-/g) ?? []).length, 3);
+});
 
 test('player cards have one visual instance during travel and reveal', () => {
   let match = createMatch('block', 'combo');

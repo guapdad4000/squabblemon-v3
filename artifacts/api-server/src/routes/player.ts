@@ -59,7 +59,11 @@ import {
   parseStoryMatchProgressionSnapshot,
   type StoryMatchProgressionSnapshot,
 } from "../lib/storyMatchSnapshot";
-import { createCardProgressionSnapshot } from "../lib/cardProgression";
+import {
+  createCardProgressionSnapshot,
+  parseCardProgressionSnapshot,
+  type CardProgressionSnapshot,
+} from "../lib/cardProgression";
 import { selectTrainingRival } from "@workspace/squabblemon-engine/training";
 
 const router: IRouter = Router();
@@ -347,18 +351,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Unknown player crew" });
     return;
   }
-  let playerCardProgressionSnapshot;
-  try {
-    playerCardProgressionSnapshot = createCardProgressionSnapshot(
-      rosterCardIds,
-      state.profile.ownedCardIds,
-      state.profile.cardProgression,
-      parsed.data.mode === "tutorial",
-    );
-  } catch {
-    res.status(403).json({ error: "Match roster contains an unowned card" });
-    return;
-  }
+  let playerCardProgressionSnapshot: CardProgressionSnapshot;
   let rivalDeckId =
     parsed.data.mode === "practice"
       ? selectTrainingRival(
@@ -415,6 +408,25 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       throw error;
     }
   }
+  const rivalRosterCardIds =
+    storyEncounterSnapshot?.enemy.cardIds ??
+    starterRecipes.find((item) => item.id === rivalDeckId)?.cards;
+  if (!rivalRosterCardIds) {
+    res.status(400).json({ error: "Unknown rival crew" });
+    return;
+  }
+  try {
+    playerCardProgressionSnapshot = createCardProgressionSnapshot(
+      playerEngineCardIds ?? rosterCardIds,
+      state.profile.ownedCardIds,
+      state.profile.cardProgression,
+      parsed.data.mode === "tutorial",
+      [...rivalRosterCardIds],
+    );
+  } catch {
+    res.status(403).json({ error: "Match roster contains an unowned or invalid card" });
+    return;
+  }
   const [match] = await db
     .insert(playerMatchesTable)
     .values({
@@ -441,6 +453,8 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       storyNodeId: match.storyNodeId,
       contentVersion: match.storyContentVersion,
       encounterSnapshot: match.storyEncounterSnapshot,
+      abilityUpgradeSnapshot:
+        playerCardProgressionSnapshot.abilityUpgradeSnapshot,
       status: "active",
       createdAt: match.createdAt.toISOString(),
     }),
@@ -502,6 +516,20 @@ router.post(
 
     if (!alreadyCompleted) {
       try {
+        const playerRoster =
+          match.playerEngineCardIds ??
+          starterRecipes.find((item) => item.id === match.playerDeckId)?.cards ??
+          [];
+        const rivalRoster =
+          match.mode === "story"
+            ? (match.storyEncounterSnapshot as StoryEncounterSnapshot).enemy.cardIds
+            : starterRecipes.find((item) => item.id === match.rivalDeckId)?.cards ??
+              [];
+        const progressionSnapshot = parseCardProgressionSnapshot(
+          match.playerCardProgressionSnapshot,
+          playerRoster,
+          rivalRoster,
+        );
         verifiedMatch =
           match.mode === "story"
             ? verifyStoryMatchTranscript(
@@ -509,11 +537,13 @@ router.post(
                 match.playerEngineCardIds ?? [],
                 parsed.data.moves,
                 match.playerDeckId,
+                progressionSnapshot.abilityUpgradeSnapshot,
               )
             : verifyMatchTranscript(
                 match.playerDeckId,
                 match.rivalDeckId,
                 parsed.data.moves,
+                progressionSnapshot.abilityUpgradeSnapshot,
               );
         const winner = getMatchWinner(verifiedMatch);
         verifiedOutcome =
@@ -523,6 +553,10 @@ router.post(
         ).length;
       } catch (error) {
         req.log.warn({ error }, "Rejected invalid match transcript");
+        if (error instanceof Error && error.message.includes("snapshot is missing")) {
+          res.status(409).json({ error: "This match is outdated. Start a new match to continue." });
+          return;
+        }
         res.status(400).json({ error: "Match transcript could not be verified" });
         return;
       }

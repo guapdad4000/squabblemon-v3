@@ -29,7 +29,15 @@ export const playerMatchesTable = pgTable("player_matches", {
     .$type<Record<string, unknown>>(),
   playerEngineCardIds: jsonb("player_engine_card_ids").$type<string[]>(),
   playerCardProgressionSnapshot: jsonb("player_card_progression_snapshot")
-    .$type<Array<{ cardId: string; xp: number; level: number }>>(),
+    .$type<{
+      version: number;
+      cards: Array<{ cardId: string; xp: number; level: number }>;
+      abilityUpgradeSnapshot: {
+        version: number;
+        player: Array<{ cardId: string; level: number; upgradeIds: string[] }>;
+        cpu: Array<{ cardId: string; level: number; upgradeIds: string[] }>;
+      };
+    }>(),
   cardXpRewards: jsonb("card_xp_rewards")
     .$type<Array<{
       cardId: string;

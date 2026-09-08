@@ -909,7 +909,39 @@ components:
         encounterSnapshot:
           type: [object, "null"]
           additionalProperties: true
-      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot]
+        abilityUpgradeSnapshot:
+          $ref: "#/components/schemas/AbilityUpgradeSnapshot"
+      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot, abilityUpgradeSnapshot]
+    AbilityUpgradeSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: integer
+          enum: [1]
+        player:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardAbilityUpgradeSnapshot"
+        cpu:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardAbilityUpgradeSnapshot"
+      required: [version, player, cpu]
+    CardAbilityUpgradeSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        cardId:
+          type: string
+        level:
+          type: integer
+          minimum: 1
+        upgradeIds:
+          type: array
+          items:
+            type: string
+      required: [cardId, level, upgradeIds]
     MatchCompleteInput:
       type: object
       properties:

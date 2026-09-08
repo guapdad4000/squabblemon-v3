@@ -5,6 +5,8 @@ import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { StoryCinematic } from './StoryCinematic';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
+import { CardUpgrades } from './CardUpgrades';
+import { unlockedAbilityUpgrades } from '@workspace/squabblemon-engine/abilityUpgrades';
 
 export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
   const m = match as Match;
@@ -188,6 +190,11 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                     {reward.cardXp.map((entry: any) => {
                       const card = cards[entry.cardId];
                        const progress = cardProgressDetails({ xp: entry.xp, level: entry.level });
+                       const newlyUnlockedIds = entry.newlyUnlockedUpgradeIds
+                         ?? entry.newlyUnlockedUpgrades?.map((upgrade: any) => typeof upgrade === 'string' ? upgrade : upgrade.id)
+                         ?? unlockedAbilityUpgrades(entry.cardId, entry.level)
+                           .filter((upgrade: { id: string }) => !unlockedAbilityUpgrades(entry.cardId, entry.previousLevel).some((previous: { id: string }) => previous.id === upgrade.id))
+                           .map((upgrade: { id: string }) => upgrade.id);
                       return (
                         <div key={entry.cardId} className="flex items-center gap-2 bg-white/5 p-2 text-left">
                           <img src={getCardImage(entry.cardId)} alt="" className="h-10 w-8 object-cover object-top" />
@@ -199,6 +206,12 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                             </div>
                             <div className="mt-0.5 font-mono text-[6px] uppercase text-white/40">{progress.isMaxLevel ? 'Max level' : `${progress.xpIntoLevel} / ${progress.xpForNextLevel} to next level`}</div>
                             {entry.level > entry.previousLevel && <div className="font-mono text-[7px] uppercase text-white">Level up!</div>}
+                             {newlyUnlockedIds.length > 0 && (
+                               <div className="mt-1">
+                                 <div data-testid={`upgrade-unlocked-${entry.cardId}`} className="font-mono text-[7px] uppercase text-yellow-200">New upgrade unlocked!</div>
+                                 <CardUpgrades card={card} progress={entry} activeUpgradeIds={entry.unlockedUpgradeIds} newlyUnlockedIds={newlyUnlockedIds} compact />
+                               </div>
+                             )}
                           </div>
                         </div>
                       );

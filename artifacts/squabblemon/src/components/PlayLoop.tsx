@@ -12,7 +12,7 @@ import { StoryCinematic } from './StoryCinematic';
 import { PresentationTimeline } from '../presentationTimeline';
 import { broadcastDelay, changedDistrictControl, isReducedMotionRequested, type DistrictOwner } from '../broadcastPresentation';
 import { BattleFeedback, loadFeedbackPreferences, saveFeedbackPreferences, type FeedbackPreferences } from '../battleFeedback';
-import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
+import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type AbilityUpgradeSnapshot, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatment';
 import { settleHiddenBattlePresentation } from '../battleVisibility';
@@ -60,6 +60,22 @@ export const buildReplayFrame = (live: Match, selected: EffectLogEntry, key: 'be
   ...live,
   ...JSON.parse(JSON.stringify(selected.replay[key])),
 });
+
+/** Authenticated games must use the immutable, server-issued upgrade snapshot. */
+export function createCanonicalMatch(
+  mode: 'practice' | 'tutorial' | 'story',
+  playerDeckId: string,
+  rivalDeckId: string,
+  abilityUpgradeSnapshot: AbilityUpgradeSnapshot,
+  encounterSnapshot?: StoryEncounterSnapshot | null,
+) {
+  if (mode === 'story') {
+    if (!encounterSnapshot) throw new Error('The server did not issue a story encounter.');
+    return createStoryMatch(encounterSnapshot, playerDeckId, 'story-player', abilityUpgradeSnapshot);
+  }
+  return createMatch(playerDeckId, rivalDeckId, undefined, abilityUpgradeSnapshot);
+}
+
 export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, equippedVariants, cardProgression = {} }: { mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [deckId, setDeckId] = useState(availableDeckIds?.includes(initialDeckId) ? initialDeckId : availableDeckIds?.[0] ?? initialDeckId);
@@ -161,12 +177,15 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
     if (mode !== 'guest' && !customPlayerDeck) try {
       const res = await startPlayerMatch.mutateAsync({ data: { mode: mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice', playerDeckId: deckId, rivalDeckId: rival, storyNodeId } });
       setServerMatchId(res.id);
-      if (mode === 'practice') {
-        setRival(res.rivalDeckId);
-        startLocalMatch(res.rivalDeckId);
-        return;
-      }
-      if (mode === 'story') { if (!res.encounterSnapshot) throw new Error('The server did not issue a story encounter.'); beginMatch(createStoryMatch(res.encounterSnapshot as unknown as StoryEncounterSnapshot, deckId)); return; }
+      setRival(res.rivalDeckId);
+      beginMatch(createCanonicalMatch(
+        mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice',
+        deckId,
+        res.rivalDeckId,
+        res.abilityUpgradeSnapshot,
+        res.encounterSnapshot as unknown as StoryEncounterSnapshot | null,
+      ));
+      return;
     } catch (error) {
       if (mode === 'story') { setServerMatchId(null); setStartError(error instanceof Error ? error.message : 'The encounter could not be started.'); return; }
       if (!window.confirm('Failed to reach server. Play local Training with no saved rewards?')) return;

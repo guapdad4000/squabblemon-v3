@@ -390,6 +390,26 @@ export const PlayerMatchStatus = {
  */
 export type PlayerMatchEncounterSnapshot = { [key: string]: unknown } | null;
 
+export type AbilityUpgradeSnapshotVersion = typeof AbilityUpgradeSnapshotVersion[keyof typeof AbilityUpgradeSnapshotVersion];
+
+
+export const AbilityUpgradeSnapshotVersion = {
+  NUMBER_1: 1,
+} as const;
+
+export interface CardAbilityUpgradeSnapshot {
+  cardId: string;
+  /** @minimum 1 */
+  level: number;
+  upgradeIds: string[];
+}
+
+export interface AbilityUpgradeSnapshot {
+  version: AbilityUpgradeSnapshotVersion;
+  player: CardAbilityUpgradeSnapshot[];
+  cpu: CardAbilityUpgradeSnapshot[];
+}
+
 export interface PlayerMatch {
   /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
   id: string;
@@ -404,6 +424,7 @@ export interface PlayerMatch {
   contentVersion: number | null;
   /** @nullable */
   encounterSnapshot: PlayerMatchEncounterSnapshot;
+  abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 }
 
 export interface MatchMove {
