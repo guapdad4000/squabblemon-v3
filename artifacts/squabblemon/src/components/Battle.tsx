@@ -19,12 +19,14 @@ type BattleDecisionContext = {
   setSelectedInstanceId: (value: string | null) => void;
   setSelectedLane: (value: number | null) => void;
   setSquabble: (value: boolean) => void;
+  beginSquabbleTransition?: () => boolean;
 };
 
 export function createBattleDecisionHandlers(context: BattleDecisionContext) {
   const {
     match, interactive, selectedInstanceId, selectedLane, squabble,
     lockedDistricts, decisionStartedAt, setSelectedInstanceId, setSelectedLane, setSquabble,
+    beginSquabbleTransition,
   } = context;
   const decisionTime = () => decisionTimeBucket(decisionStartedAt ?? Date.now());
 
@@ -65,6 +67,7 @@ export function createBattleDecisionHandlers(context: BattleDecisionContext) {
     },
     toggleSquabble(selectedCard: Match['playerHand'][number] | null) {
       if (match.squabbleUsed || !interactive || !selectedCard) return;
+      if (beginSquabbleTransition && !beginSquabbleTransition()) return;
       trackEvent('battle_squabble_toggled', {
         round: match.round,
         action: squabble ? 'cancel' : 'arm',
@@ -140,6 +143,10 @@ export function Battle({
   const [showModifiers, setShowModifiers] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showStatuses, setShowStatuses] = useState(false);
+  const squabbleTransitionRef = React.useRef(false);
+  const historyTransitionRef = React.useRef(false);
+  React.useEffect(() => { squabbleTransitionRef.current = false; }, [squabble]);
+  React.useEffect(() => { historyTransitionRef.current = false; }, [showHistory]);
   const rivalPortrait = m.storyEncounter ? getAssetUrl(m.storyEncounter.enemy.portraitAssetId) : getCardImage(rivalDeck.hero);
   const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? 'assets/e71f5189-861e-418d-8237-fa20713b9122.png');
   const passive = m.storyEncounter?.passive;
@@ -156,6 +163,7 @@ export function Battle({
     match: m, interactive, selectedInstanceId, selectedLane, squabble,
     lockedDistricts: lockedLanes.length, decisionStartedAt,
     setSelectedInstanceId, setSelectedLane, setSquabble,
+    beginSquabbleTransition: () => tryLockInteraction(squabbleTransitionRef),
   });
   const decisionPrompt = !interactive
     ? 'Watch the highlighted card and district. Tap Fast Forward to finish the sequence.'
@@ -221,7 +229,7 @@ export function Battle({
           </div>
         )}
         {modifierSummaries.length > 0 && <div className="relative"><button type="button" onClick={() => setShowModifiers(v => !v)} aria-expanded={showModifiers} className="battle-utility">Mods</button>{showModifiers && <div className="battle-popover"><div className="mb-2 flex justify-between font-mono text-[8px] uppercase text-accent"><span>Active rules</span><button type="button" onClick={() => setShowModifiers(false)}>Close</button></div><ul className="space-y-2">{modifierSummaries.map((mod: string) => <li key={mod} className="border-l border-accent/50 pl-2 text-[9px] text-rose-100">{mod}</li>)}</ul></div>}</div>}
-        <div className="relative"><button type="button" data-testid="button-battle-history" aria-label="Recent action history" onClick={() => { if (!showHistory) decisionHandlers.openHistory(recentActions.length); setShowHistory(v => !v); }} aria-expanded={showHistory} className="battle-utility"><span className="utility-long">History</span><span className="utility-short">Log</span></button>{showHistory && <div data-testid="battle-history" className="battle-popover w-72"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Recent action</div>{recentActions.length ? <ol className="space-y-2">{recentActions.map(event => <li key={event.sequence} className="border-l-2 border-white/20 pl-2"><div className="text-[8px] font-mono uppercase text-white/40">Round {event.round} · {event.owner === 'player' ? 'You' : 'Rival'} · {event.type}</div><div className="text-[11px] leading-snug text-white/80"><b className="text-white">{cardName(event.source?.cardInstanceId ?? event.cardInstanceId, event.cardId)}</b> — {event.note}</div></li>)}</ol> : <p className="text-xs text-white/45">No actions yet.</p>}</div>}</div>
+        <div className="relative"><button type="button" data-testid="button-battle-history" aria-label="Recent action history" onClick={() => { if (!tryLockInteraction(historyTransitionRef)) return; if (!showHistory) decisionHandlers.openHistory(recentActions.length); setShowHistory(v => !v); }} aria-expanded={showHistory} className="battle-utility"><span className="utility-long">History</span><span className="utility-short">Log</span></button>{showHistory && <div data-testid="battle-history" className="battle-popover w-72"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Recent action</div>{recentActions.length ? <ol className="space-y-2">{recentActions.map(event => <li key={event.sequence} className="border-l-2 border-white/20 pl-2"><div className="text-[8px] font-mono uppercase text-white/40">Round {event.round} · {event.owner === 'player' ? 'You' : 'Rival'} · {event.type}</div><div className="text-[11px] leading-snug text-white/80"><b className="text-white">{cardName(event.source?.cardInstanceId ?? event.cardInstanceId, event.cardId)}</b> — {event.note}</div></li>)}</ol> : <p className="text-xs text-white/45">No actions yet.</p>}</div>}</div>
         <div className="relative"><button type="button" data-testid="button-status-key" aria-label="Persistent status explanations" onClick={() => setShowStatuses(v => !v)} aria-expanded={showStatuses} className="battle-utility"><span className="utility-long">Status</span><span className="utility-short">FX</span></button>{showStatuses && <div data-testid="battle-status-key" className="battle-popover w-64"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Persistent status key</div><dl className="space-y-2 text-[11px]"><div><dt className="font-bold text-blue-300">Frozen</dt><dd className="text-white/60">Adds 0 Power until cleansed.</dd></div><div><dt className="font-bold text-zinc-300">Silenced</dt><dd className="text-white/60">Keeps Power; ability cannot fire.</dd></div><div><dt className="font-bold text-yellow-300">Protected</dt><dd className="text-white/60">Blocks one targeted effect this round.</dd></div><div><dt className="font-bold text-rose-300">Blocked</dt><dd className="text-white/60">Protection has been spent this round.</dd></div><div><dt className="font-bold text-purple-300">Moved</dt><dd className="text-white/60">An ability changed this card’s district.</dd></div></dl></div>}</div>
         {activePhase && <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right"><div className="text-[8px] font-mono text-accent uppercase tracking-widest">Boss Phase</div><div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div></div>}
         <button data-testid="button-rules-battle" aria-label="Battle rules" onClick={onShowRules} className="battle-utility"><span className="utility-long">Rules</span><span className="utility-short">?</span></button>
@@ -258,4 +266,10 @@ export function Battle({
       <div className="battle-actions"><div className="battle-hype"><div>Hype</div><strong data-testid="hype-player">{m.playerHype}</strong></div><button data-testid="button-squabble" title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Power once per match.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard}>{m.squabbleUsed ? 'Squabble spent' : squabble ? 'Squabble armed' : 'Arm Squabble'}</button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}>{action.label}</button></div>
     </div>
   </div>;
+}
+
+export function tryLockInteraction(lock: { current: boolean }): boolean {
+  if (lock.current) return false;
+  lock.current = true;
+  return true;
 }

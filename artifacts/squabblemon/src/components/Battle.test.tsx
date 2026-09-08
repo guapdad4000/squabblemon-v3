@@ -4,7 +4,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { decks, districts } from '../data';
 import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
-import { Battle, createBattleDecisionHandlers } from './Battle';
+import { Battle, createBattleDecisionHandlers, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
@@ -311,6 +311,77 @@ test('tracker failures cannot interrupt battle decision state changes', () => {
     assert.equal(state.lane, 2);
     assert.doesNotThrow(() => makeHandlers().toggleSquabble(available));
     assert.equal(state.squabble, true);
+  } finally {
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
+  }
+});
+
+test('rapid repeated battle interactions report once per state transition and reset later', () => {
+  const originalWindow = globalThis.window;
+  const calls: string[] = [];
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: { umami: { track: (name: string) => calls.push(name) } },
+  });
+  const match = createMatch('block', 'combo');
+  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+
+  try {
+    const commitLock = { current: false };
+    const commit = (action: 'lock_in' | 'pass') => {
+      if (!tryLockInteraction(commitLock)) return;
+      trackBattleTurnCommitted(match, action, false, false, Date.now(), action === 'lock_in' ? 0 : null);
+    };
+    commit('lock_in');
+    commit('lock_in');
+    commitLock.current = false;
+    commit('pass');
+    commit('pass');
+
+    const squabbleLock = { current: false };
+    const state = { squabble: false };
+    const handlers = () => createBattleDecisionHandlers({
+      match, interactive: true, selectedInstanceId: available.instanceId, selectedLane: 0,
+      squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
+      setSelectedInstanceId: noop, setSelectedLane: noop,
+      setSquabble: value => { state.squabble = value; },
+      beginSquabbleTransition: () => tryLockInteraction(squabbleLock),
+    });
+    handlers().toggleSquabble(available);
+    handlers().toggleSquabble(available);
+    squabbleLock.current = false;
+    handlers().toggleSquabble(available);
+
+    const historyLock = { current: false };
+    const openHistory = () => {
+      if (!tryLockInteraction(historyLock)) return;
+      handlers().openHistory(0);
+    };
+    openHistory();
+    openHistory();
+    historyLock.current = false;
+    openHistory();
+
+    const fastForwardLock = { current: false };
+    const fastForward = () => {
+      if (!tryLockInteraction(fastForwardLock)) return;
+      trackBattleFastForwarded(match, 'effects');
+    };
+    fastForward();
+    fastForward();
+    fastForwardLock.current = false;
+    fastForward();
+
+    assert.deepEqual(calls, [
+      'battle_turn_committed',
+      'battle_turn_committed',
+      'battle_squabble_toggled',
+      'battle_squabble_toggled',
+      'battle_history_opened',
+      'battle_history_opened',
+      'battle_fast_forwarded',
+      'battle_fast_forwarded',
+    ]);
   } finally {
     Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
   }

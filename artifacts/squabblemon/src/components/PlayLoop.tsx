@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { LayoutGroup, AnimatePresence } from 'framer-motion';
 import { cards, decks, districts, Card, Deck } from '../data';
 import { Lobby } from './Lobby';
-import { Battle } from './Battle';
+import { Battle, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
@@ -64,7 +64,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null), [startError, setStartError] = useState<string | null>(null);
   const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), queryClient = useQueryClient();
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null), [selectedLane, setSelectedLane] = useState<number | null>(null), [squabble, setSquabble] = useState(false);
-  const timeline = useRef(new PresentationTimeline()), autoStartRef = useRef(false), playerMovesRef = useRef<MatchMove[]>([]), locked = useRef(false), fastForwardRef = useRef(false);
+  const timeline = useRef(new PresentationTimeline()), autoStartRef = useRef(false), playerMovesRef = useRef<MatchMove[]>([]), locked = useRef(false), fastForwardRef = useRef(false), skipTransitionRef = useRef(false);
   const decisionStartedAtRef = useRef(Date.now());
   const districtOwnersRef = useRef<DistrictOwner[]>(['draw', 'draw', 'draw']);
   const [presentationPhase, setPresentationPhase] = useState<PresentationPhase>('versus'), [phaseMessage, setPhaseMessage] = useState('');
@@ -105,6 +105,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
     feedback.current.setPreferences(feedbackPreferences);
     saveFeedbackPreferences(feedbackPreferences);
   }, [feedbackPreferences]);
+  useEffect(() => { skipTransitionRef.current = false; }, [presentationPhase]);
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round}`); if (!immediate && !await waitForBeat(650, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); setTimerSeconds(20); locked.current = false; fastForwardRef.current = false; }, [waitForBeat]);
   const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 850], ['countdown-3', '3', 550], ['countdown-2', '2', 550], ['countdown-1', '1', 550], ['squabble', 'SQUABBLE!', 700], ['deal', 'CREW UP', 650]]; for (const [phase, message, duration] of beats) { setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
@@ -202,6 +203,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   useEffect(() => { if (timerSeconds === 0 && presentationPhase === 'player-ready' && match) void commit(!(selectedInstanceId !== null && selectedLane !== null && canAffordSelection(match, 'player', selectedInstanceId, selectedLane as Lane))); }, [commit, match, presentationPhase, selectedInstanceId, selectedLane, timerSeconds]);
   const skipSequence = () => {
     if (!match) return;
+    if (!tryLockInteraction(skipTransitionRef)) return;
     if (['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro'].includes(presentationPhase)) {
       trackBattleFastForwarded(match, presentationPhase);
       cancelTimers(); void enterPlayerTurn(match.round, true);
@@ -212,6 +214,8 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       trackBattleFastForwarded(match, presentationPhase);
       fastForwardRef.current = true;
       timeline.current.completeAll();
+    } else {
+      skipTransitionRef.current = false;
     }
   };
   const handleRestart = () => { autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
