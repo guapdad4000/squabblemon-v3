@@ -17,10 +17,36 @@ import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
 import { createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
+import { BATTLE_VENUES, resolveBattleVenue } from '../battleVenues';
 
 const noop = () => {};
 const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
 const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
+
+test('battle venues map deterministically for training, story, and replay frames', () => {
+  const trainingAssignments = {
+    block: 'corner-store',
+    slide: 'harbor-skyline',
+    crashout: 'red-fence-night',
+    receipts: 'red-fence-night',
+    combo: 'civic-hill',
+    vibes: 'crown-rooftop',
+    compound: 'crown-rooftop',
+  } as const;
+  for (const [rival, venue] of Object.entries(trainingAssignments)) {
+    const player = rival === 'block' ? 'slide' : 'block';
+    const training = createMatch(player, rival);
+    assert.equal(resolveBattleVenue(training).id, venue);
+    assert.equal(resolveBattleVenue({ ...training }).id, venue);
+  }
+  const story = createStoryMatch(getStoryBattle('cracked-head-takes-the-block')!.encounter, 'block');
+  assert.equal(resolveBattleVenue(story).id, 'crown-rooftop');
+  assert.equal(resolveBattleVenue({ ...story }).id, resolveBattleVenue(story).id);
+  const training = createMatch('block', 'slide');
+  const html = renderBattle(training);
+  assert.match(html, /data-venue="harbor-skyline"/);
+  assert.match(html, /assets\/venues\/harbor-skyline-court\.webp/);
+});
 
 test('battle presentation names an authoritative triggered upgrade', () => {
   const match = createMatch('block', 'combo');

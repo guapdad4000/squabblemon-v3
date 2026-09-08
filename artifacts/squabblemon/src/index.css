@@ -362,6 +362,21 @@
   transform: rotate(-3deg);
 }
 
+.battle-venue__art {
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: .86;
+  filter: saturate(.82) brightness(.7) contrast(1.05);
+  transform: scale(1.01);
+}
+.battle-venue__contrast {
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 78%) 0, rgb(0 0 0 / 24%) 18%, rgb(0 0 0 / 15%) 72%, rgb(0 0 0 / 88%) 100%),
+    radial-gradient(ellipse at center, transparent 24%, rgb(0 0 0 / 48%) 100%);
+}
+.battle-arena[data-venue-tone="hostile"] .battle-venue__art { filter: saturate(.7) brightness(.62) contrast(1.08); }
+.battle-arena[data-venue-tone="championship"] .battle-venue__art { filter: saturate(.68) brightness(.64) contrast(1.08); }
+
 .battle-arena::after {
   content: "";
   position: absolute;
@@ -421,14 +436,13 @@
   isolation: isolate;
   contain: layout paint style;
   background:
-    linear-gradient(180deg, rgba(14,77,110,.18), transparent 34%),
-    linear-gradient(0deg, rgba(180,83,9,.16), transparent 34%),
-    #171611;
+    linear-gradient(180deg, rgb(10 40 58 / 48%), rgb(8 8 7 / 34%) 34% 66%, rgb(73 39 9 / 44%)),
+    rgb(10 10 9 / 42%);
   border: 2px solid #4b463b;
   border-radius: 2px;
   transition: all .2s cubic-bezier(0.2, 0.8, 0.2, 1);
   box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1.5px) brightness(.82);
 }
 .district-lane::before {
   content: "";
@@ -525,7 +539,7 @@
   place-items: center;
   width: 100%;
   padding: 1rem .5rem;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.68);
   border-top: 1px solid rgba(255,255,255,0.05);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
@@ -652,6 +666,23 @@
   background: #000;
   border-top: 2px solid #222;
   box-shadow: 0 -8px 32px rgba(0,0,0,0.8);
+}
+
+@media (orientation: landscape) {
+  .battle-venue__art {
+    background-size: max(100vw, 78rem) auto;
+    background-position: 50% 50% !important;
+  }
+  .battle-venue__contrast {
+    background:
+      linear-gradient(180deg, rgb(0 0 0 / 85%), rgb(0 0 0 / 22%) 24% 68%, rgb(0 0 0 / 90%)),
+      linear-gradient(90deg, rgb(0 0 0 / 52%), transparent 20% 80%, rgb(0 0 0 / 52%));
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1024px) and (orientation: portrait) {
+  .battle-venue__art { background-size: cover; }
+  .battlefield-grid { padding-inline: clamp(.55rem, 2.2vw, 1.25rem); }
 }
 .battle-hand-tray {
   position: relative;

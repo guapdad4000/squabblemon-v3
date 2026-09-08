@@ -9,6 +9,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { getTurnTimerProgress, getTurnTimerState } from '../turnTimer';
 import { getAuthoredCardUpgrades } from './CardUpgrades';
+import { resolveBattleVenue } from '../battleVenues';
 
 type BattleDecisionContext = {
   match: Match;
@@ -161,7 +162,8 @@ export function Battle({
   const historyTransitionRef = React.useRef(false);
   React.useEffect(() => { squabbleTransitionRef.current = false; }, [squabble]);
   React.useEffect(() => { historyTransitionRef.current = false; }, [showHistory]);
-  const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? 'assets/e71f5189-861e-418d-8237-fa20713b9122.png');
+  const venue = resolveBattleVenue(m);
+  const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? venue.assetId);
   const passive = m.storyEncounter?.passive;
   const allVisibleCards = [...m.playerHand, ...m.cpuHand, ...m.boards.flat()];
   const isCovered = (instanceId: string) => m.timedEffects.some(effect => effect.kind === 'church-protection' && effect.targetInstanceId === instanceId);
@@ -243,10 +245,10 @@ export function Battle({
     effectKind: presentedEffect && (activeEffectId === card.instanceId || presentedEffect.targetIds.includes(card.instanceId)) ? presentedEffect.kind : undefined,
   });
 
-  return <div data-testid="battle-arena" data-presentation-phase={phase} data-reduced-motion={reducedMotion ? 'true' : 'false'} className={`battle-arena phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
-    <div className="absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url("${battlefield}")` }} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(103,72,25,0.08),rgba(0,0,0,0.72)_74%)]" />
+  return <div data-testid="battle-arena" data-presentation-phase={phase} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
+    <div className="battle-venue absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
+      <div className="battle-venue__art absolute inset-0" style={{ backgroundImage: `url("${battlefield}")`, backgroundPosition: venue.position }} />
+      <div className="battle-venue__contrast absolute inset-0" />
     </div>
 
     <AnimatePresence>
@@ -376,7 +378,8 @@ export function Battle({
   const [showHistory, setShowHistory] = useState(false);
   const [showStatuses, setShowStatuses] = useState(false);
   const rivalPortrait = m.storyEncounter ? getAssetUrl(m.storyEncounter.enemy.portraitAssetId) : getCardImage(rivalDeck.hero);
-  const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? 'assets/e71f5189-861e-418d-8237-fa20713b9122.png');
+  const venue = resolveBattleVenue(m);
+  const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? venue.assetId);
   const passive = m.storyEncounter?.passive;
   const allVisibleCards = [...m.playerHand, ...m.cpuHand, ...m.boards.flat()];
   const recentActions = (authoritativeHistory ?? m.effectLog).slice(-6).reverse();
@@ -438,10 +441,10 @@ export function Battle({
     effectKind: presentedEffect && (activeEffectId === card.instanceId || presentedEffect.targetIds.includes(card.instanceId)) ? presentedEffect.kind : undefined,
   });
 
-  return <div className={`battle-arena phase-${phase} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-live="polite" aria-label={`Battle phase: ${phaseMessage}`}>
-    <div className="absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url("${battlefield}")` }} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(103,72,25,0.08),rgba(0,0,0,0.72)_74%)]" />
+  return <div data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena phase-${phase} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-live="polite" aria-label={`Battle phase: ${phaseMessage}`}>
+    <div className="battle-venue absolute inset-0 z-0 pointer-events-none perspective-1000 overflow-hidden">
+      <div className="battle-venue__art absolute inset-0" style={{ backgroundImage: `url("${battlefield}")`, backgroundPosition: venue.position }} />
+      <div className="battle-venue__contrast absolute inset-0" />
       <motion.img key={`rival-stage-${rivalDeck.hero}`} initial={{ opacity: 0, x: 24 }} animate={{ opacity: .24, x: 0 }} src={rivalPortrait} alt="" aria-hidden="true" className="absolute right-[2%] top-[5%] h-[42%] w-[30%] object-contain object-right-top grayscale brightness-75 drop-shadow-[0_18px_24px_rgba(0,0,0,0.9)]" />
       <motion.img key={`player-stage-${deck.hero}`} initial={{ opacity: 0, x: -24 }} animate={{ opacity: .22, x: 0 }} src={getCardImage(deck.hero)} alt="" aria-hidden="true" className={`absolute left-[2%] bottom-[12%] h-[42%] w-[30%] object-contain object-left-bottom brightness-75 drop-shadow-[0_18px_24px_rgba(0,0,0,0.9)] variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, deck.hero)) ?? 'base'}`} />
     </div>
