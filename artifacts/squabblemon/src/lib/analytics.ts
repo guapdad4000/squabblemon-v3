@@ -20,9 +20,9 @@ const battleEventSchemas = {
   },
   battle_unavailable_card_selected: {
     round: isFiniteNumber,
-    hype: isFiniteNumber,
+    motion: isFiniteNumber,
     locked_districts: isFiniteNumber,
-    reason: oneOf('all_districts_locked', 'insufficient_hype'),
+    reason: oneOf('all_districts_locked', 'insufficient_motion'),
     decision_time: decisionTime,
   },
   battle_district_selected: {

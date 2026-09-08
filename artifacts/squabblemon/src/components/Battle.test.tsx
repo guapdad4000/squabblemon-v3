@@ -16,7 +16,7 @@ const renderBattle = (match: Match, props: Record<string, unknown> = {}) => rend
 
 test('player cards have one visual instance during travel and reveal', () => {
   let match = createMatch('block', 'combo');
-  const card = match.playerHand.find(c => c.cost <= match.playerHype)!;
+  const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
   const travel = renderBattle(match, { presentationPhase: 'player-travel', impactLane: 0, stagedPlayer: card });
   assert.equal(travel.match(new RegExp(`data-instance-id="${card.instanceId}"`, 'g'))?.length, 1);
   match = playCard(match, 'player', card.instanceId, 0);
@@ -24,7 +24,7 @@ test('player cards have one visual instance during travel and reveal', () => {
 });
 test('guidance, treatments, and broadcast signals remain available', () => {
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(c => c.cost <= match.playerHype)!;
+  const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
   const html = renderBattle(match, { selectedInstanceId: card.instanceId, equippedVariants: { [card.id]: `${card.id}:chrome` } });
   assert.match(html, /2\. Choose a lit district/); assert.match(html, /is-legal/); assert.match(html, /card-variant-chrome/);
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
@@ -32,7 +32,7 @@ test('guidance, treatments, and broadcast signals remain available', () => {
 
 test('decision handlers and commits remain privacy-safe and functional', () => {
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(c => c.cost <= match.playerHype)!;
+  const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
   const squabbleLock = { current: false };
   const state: { card: string | null; lane: number | null; squabble: boolean } = { card: card.instanceId, lane: 0, squabble: false };
   const handlers = createBattleDecisionHandlers({
@@ -47,7 +47,7 @@ test('decision handlers and commits remain privacy-safe and functional', () => {
 });
 
 test('authoritative history helper ignores a rewound visual log', () => {
-  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerHype)!;
+  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerMotion)!;
 
   const authoritative = playCard(initial, 'player', card.instanceId, 0);
   const resolved = playCard(initial, 'player', card.instanceId, 0), event = resolved.effectLog[0];
@@ -58,8 +58,8 @@ test('authoritative history helper ignores a rewound visual log', () => {
 });
 
 test('replay frames do not mutate live match and rewind later actions', () => {
-  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerHype)!;
-  const afterPlayer = playCard(initial, 'player', card.instanceId, 0), cpu = afterPlayer.cpuHand.find(c => c.cost <= afterPlayer.cpuHype)!;
+  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerMotion)!;
+  const afterPlayer = playCard(initial, 'player', card.instanceId, 0), cpu = afterPlayer.cpuHand.find(c => c.cost <= afterPlayer.cpuMotion)!;
   const live = playCard(afterPlayer, 'cpu', cpu.instanceId, 1), event = afterPlayer.effectLog[0];
   assert.ok(applyEventState(live, live, event, 'before').playerHand.some(c => c.instanceId === card.instanceId));
   assert.ok(!buildReplayFrame(live, event, 'after').boards.flat().some(c => c.instanceId === cpu.instanceId));
@@ -78,7 +78,7 @@ test('story replay snapshots retain reinforcements and lane rules', () => {
 
 test('district impact and SQUABBLE wait until the impact beat', () => {
   const initial = createMatch('block', 'combo');
-  const card = initial.playerHand.find(c => c.cost <= initial.playerHype)!;
+  const card = initial.playerHand.find(c => c.cost <= initial.playerMotion)!;
   const resolved = playCard(initial, 'player', card.instanceId, 0, true);
   const effect = { ...resolved.effectLog[0], targetIds: [] };
   const shared = { impactLane: 0, activeEffectLane: 0, activeEffectId: card.instanceId, activeEffect: effect };
@@ -102,8 +102,8 @@ test('battle decision interactions emit only approved coarse analytics fields', 
     value: { umami: { track: (name: string, data?: Record<string, unknown>) => calls.push({ name, data }) } },
   });
   const match = createMatch('block', 'combo');
-  const unavailable = match.playerHand.find(card => card.cost > match.playerHype)!;
-  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+  const unavailable = match.playerHand.find(card => card.cost > match.playerMotion)!;
+  const available = match.playerHand.find(card => card.cost <= match.playerMotion)!;
   const state: { selected: string | null; lane: number | null; squabble: boolean } = { selected: null, lane: null, squabble: false };
   const makeHandlers = () => createBattleDecisionHandlers({
     match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
@@ -146,7 +146,7 @@ test('battle decision interactions emit only approved coarse analytics fields', 
     assert.equal(calls[6].data?.district, 2);
 
     const approvedKeys: Record<string, string[]> = {
-      battle_unavailable_card_selected: ['round', 'hype', 'locked_districts', 'reason', 'decision_time'],
+      battle_unavailable_card_selected: ['round', 'motion', 'locked_districts', 'reason', 'decision_time'],
       battle_district_selected: ['round', 'district', 'changed', 'decision_time'],
       battle_squabble_toggled: ['round', 'action', 'decision_time'],
       battle_history_opened: ['round', 'entries', 'decision_time'],
@@ -171,7 +171,7 @@ test('tracker failures cannot interrupt battle decision state changes', () => {
     value: { umami: { track: () => { throw new Error('tracker unavailable'); } } },
   });
   const match = createMatch('block', 'combo');
-  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+  const available = match.playerHand.find(card => card.cost <= match.playerMotion)!;
   const state: { selected: string | null; lane: number | null; squabble: boolean } = { selected: null, lane: null, squabble: false };
   const makeHandlers = () => createBattleDecisionHandlers({
     match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
@@ -201,7 +201,7 @@ test('rapid repeated battle interactions report once per state transition and re
     value: { umami: { track: (name: string) => calls.push(name) } },
   });
   const match = createMatch('block', 'combo');
-  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+  const available = match.playerHand.find(card => card.cost <= match.playerMotion)!;
 
   try {
     const commitLock = { current: false };

@@ -5,7 +5,7 @@ import { createMatch, playCard } from './gameEngine';
 
 test('structured play and reveal events map to distinct cues', () => {
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   const resolved = playCard(match, 'player', card.instanceId, 0);
   assert.equal(cueForBattleEvent(resolved.effectLog[0]), 'play');
   assert.equal(cueForBattleEvent(resolved.effectLog[1]), 'reveal');
@@ -19,7 +19,7 @@ test('a timeline generation emits each event at most once', () => {
     pattern => { vibrations.push(pattern); return true; },
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   const event = playCard(match, 'player', card.instanceId, 0).effectLog[0];
   feedback.emit(event, 4, false, false);
   feedback.emit(event, 4, false, false);
@@ -36,7 +36,7 @@ test('reduced motion suppresses haptics and hidden presentation suppresses all c
     () => { vibrations += 1; return true; },
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   const event = playCard(match, 'player', card.instanceId, 0).effectLog[0];
   feedback.emit(event, 1, true, false);
   feedback.emit(event, 2, false, true);
@@ -50,7 +50,7 @@ test('muted feedback does not create an audio context when unlocked or emitted',
     () => class { constructor() { contexts += 1; } } as unknown as typeof AudioContext,
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   feedback.unlockAudio();
   feedback.emit(playCard(match, 'player', card.instanceId, 0).effectLog[0], 1, false, false);
   assert.equal(contexts, 0);
@@ -71,7 +71,7 @@ test('a delayed audio resume cannot produce a late cue after reset', async () =>
     () => class { constructor() { return context; } } as unknown as typeof AudioContext,
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   feedback.emit(playCard(match, 'player', card.instanceId, 0).effectLog[0], 1, false, false);
   feedback.reset();
   resolveResume();
@@ -86,7 +86,7 @@ test('unsupported vibration implementations fail quietly', () => {
     () => { throw new Error('unsupported'); },
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   assert.doesNotThrow(() => feedback.emit(playCard(match, 'player', card.instanceId, 0).effectLog[0], 1, false, false));
 });
 
@@ -123,7 +123,7 @@ test('reset stops and disconnects an active audio cue and cancels vibration', ()
     pattern => { vibrations.push(pattern); return true; },
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
 
   feedback.emit(playCard(match, 'player', card.instanceId, 0).effectLog[0], 1, false, false);
   assert.equal(stops, 1, 'the cue schedules its normal end');

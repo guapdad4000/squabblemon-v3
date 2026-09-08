@@ -9,7 +9,7 @@ import { starterRecipes } from './data';
 const custom = (id: string, owner: 'player' | 'cpu', index: number) => createCardInstance(id, owner, 'test', index);
 const playOne = (id: string, setup?: (m: Match) => Match) => {
   let match = createMatch('vibes', 'vibes');
-  match = { ...match, playerHype: 20, playerHand: [custom(id, 'player', 0)] };
+  match = { ...match, playerMotion: 20, playerHand: [custom(id, 'player', 0)] };
   return playCard(setup ? setup(match) : match, 'player', match.playerHand[0].instanceId, 0);
 };
 
@@ -30,17 +30,17 @@ test('a legal saved catalog deck can enter the same local CPU engine', () => {
   assert.equal(match.cpuHand.length, 5);
 });
 
-test('exact instance is removed and both owners spend their actual Hype', () => {
+test('exact instance is removed and both owners spend their actual Motion', () => {
   let match = createMatch('vibes', 'combo');
   const selected = match.playerHand[0];
-  match = { ...match, playerHype: 10, cpuHype: 10 };
+  match = { ...match, playerMotion: 10, cpuMotion: 10 };
   match = playCard(match, 'player', selected.instanceId, 0);
   assert(!match.playerHand.some((c) => c.instanceId === selected.instanceId));
-  assert.equal(match.playerHype, 10 - selected.cost);
+  assert.equal(match.playerMotion, 10 - selected.cost);
   assert.equal(match.effectLog.at(-1)?.state.after.phase, 'cpu-reveal');
   const cpu = match.cpuHand[0];
   match = playCard(match, 'cpu', cpu.instanceId, 1);
-  assert.equal(match.cpuHype, 10 - cpu.cost);
+  assert.equal(match.cpuMotion, 10 - cpu.cost);
   assert.equal(match.effectLog.at(-1)?.state.after.phase, 'resolved');
 });
 
@@ -77,10 +77,10 @@ test('freeze, silence and power modifiers affect scoring; Plug discounts its nex
   assert.equal(getLaneScore([boosted], 0), 3);
   let match = playOne('plug');
   const cheap = custom('snow', 'player', 3);
-  match = { ...match, phase: 'player', playerHype: 1, playerHand: [cheap] };
+  match = { ...match, phase: 'player', playerMotion: 1, playerHand: [cheap] };
   assert(canAffordSelection(match, 'player', cheap.instanceId, 1));
   match = playCard(match, 'player', cheap.instanceId, 1);
-  assert.equal(match.playerHype, 0);
+  assert.equal(match.playerMotion, 0);
 });
 
 test('hostile abilities change real enemy cards and scoring', () => {
@@ -130,32 +130,32 @@ test('movement and engine cards keep their persistent board changes', () => {
 
   const streamer = { ...custom('streamer', 'player', 50), lane: 0 as const };
   let frenzy = createMatch('combo', 'vibes');
-  frenzy = { ...frenzy, playerHype: 10, playerHand: [custom('cornball', 'player', 51)], boards: [[streamer], [], []] };
+  frenzy = { ...frenzy, playerMotion: 10, playerHand: [custom('cornball', 'player', 51)], boards: [[streamer], [], []] };
   frenzy = playCard(frenzy, 'player', frenzy.playerHand[0].instanceId, 0);
   assert.equal(frenzy.boards[0].find(c => c.cardId === 'cornball')?.powerModifier, 1);
 
   const gamer = { ...custom('gamer', 'player', 52), lane: 0 as const };
   let combo = createMatch('combo', 'vibes');
-  combo = { ...combo, playerHype: 10, playerHand: [custom('plug', 'player', 53)], boards: [[gamer], [], []] };
+  combo = { ...combo, playerMotion: 10, playerHand: [custom('plug', 'player', 53)], boards: [[gamer], [], []] };
   combo = playCard(combo, 'player', combo.playerHand[0].instanceId, 0);
   assert.equal(combo.boards[0].find(c => c.instanceId === gamer.instanceId)?.powerModifier, 1);
   assert.equal(combo.boards[0].find(c => c.cardId === 'plug')?.powerModifier, 1);
 
-  const flexed = playOne('techbro', m => ({ ...m, playerHype: 6 }));
-  assert.equal(flexed.playerHype, 1);
+  const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6 }));
+  assert.equal(flexed.playerMotion, 1);
   assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 2);
 });
 
 test('Plug discount waits for a different district and is then consumed', () => {
   let match = playOne('plug');
   const sameLane = custom('snow', 'player', 60);
-  match = { ...match, phase: 'player', playerHype: 10, playerHand: [sameLane] };
+  match = { ...match, phase: 'player', playerMotion: 10, playerHand: [sameLane] };
   assert.equal(getLegalCardCost(match, 'player', sameLane, 0), 2);
   match = playCard(match, 'player', sameLane.instanceId, 0);
   assert.equal(match.plugDiscountLane.player, 0);
 
   const otherLane = custom('vibe', 'player', 61);
-  match = { ...match, phase: 'player', playerHype: 10, playerHand: [otherLane] };
+  match = { ...match, phase: 'player', playerMotion: 10, playerHand: [otherLane] };
   assert.equal(getLegalCardCost(match, 'player', otherLane, 1), 1);
   match = playCard(match, 'player', otherLane.instanceId, 1);
   assert.equal(match.plugDiscountLane.player, null);
@@ -164,7 +164,7 @@ test('Plug discount waits for a different district and is then consumed', () => 
 test('SQUABBLE is a once-per-match card modifier', () => {
   let match = createMatch('vibes', 'combo');
   const card = match.playerHand[0];
-  match = { ...match, playerHype: 20 };
+  match = { ...match, playerMotion: 20 };
   match = playCard(match, 'player', card.instanceId, 0, true);
   const played = match.boards.flat().find((c) => c.instanceId === card.instanceId)!;
   assert.equal(played.powerModifier, card.basePower);
@@ -175,8 +175,8 @@ test('SQUABBLE is a once-per-match card modifier', () => {
   assert.equal(play.source?.after?.lane, 0);
   assert.equal(play.source?.before?.power, card.basePower);
   assert.equal(play.source?.after?.power, card.basePower * 2);
-  assert.equal(play.resources.before.playerHype, 20);
-  assert.equal(play.resources.after.playerHype, 20 - card.cost);
+  assert.equal(play.resources.before.playerMotion, 20);
+  assert.equal(play.resources.after.playerMotion, 20 - card.cost);
   assert.throws(() => playCard({ ...match, phase: 'player' }, 'player', match.playerHand[0].instanceId, 1, true));
 });
 
@@ -195,9 +195,9 @@ test('a complete six-round pass match resolves deterministically', () => {
 
 test('CPU selects only an affordable exact hand card; rounds draw unused cards and final result is 2-of-3 or draw', () => {
   let match = createMatch('vibes', 'combo');
-  match = { ...pass(match, 'player'), cpuHype: 0 };
+  match = { ...pass(match, 'player'), cpuMotion: 0 };
   assert.equal(chooseCpuPlay(match), null);
-  match = { ...match, cpuHype: 20 };
+  match = { ...match, cpuMotion: 20 };
   const choice = chooseCpuPlay(match)!;
   assert(match.cpuHand.some((c) => c.instanceId === choice.instanceId));
   match = revealCpu(match);

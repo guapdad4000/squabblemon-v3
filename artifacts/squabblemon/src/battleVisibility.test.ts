@@ -22,7 +22,7 @@ test('backgrounding during an effect delay silently completes the active present
     pattern => { vibrations.push(pattern); return true; },
   );
   const match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
   const events = playCard(match, 'player', card.instanceId, 0).effectLog;
   let fastForward = false;
   let reachedValidState = false;

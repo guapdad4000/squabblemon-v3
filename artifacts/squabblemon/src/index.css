@@ -382,7 +382,7 @@
   margin-inline: auto;
   padding: .35rem .5rem 0;
 }
-.battle-hype {
+.battle-motion {
   display: grid;
   min-width: 4.25rem;
   place-items: center;
@@ -393,7 +393,7 @@
   font: 800 .55rem/1 var(--font-mono);
   text-transform: uppercase;
 }
-.battle-hype strong { color: white; font: 900 1.8rem/.9 var(--font-display); }
+.battle-motion strong { color: white; font: 900 1.8rem/.9 var(--font-display); }
 .battle-squabble {
   flex: 1;
   min-height: 3.25rem;
@@ -602,7 +602,7 @@
   .battle-guidance { gap: .35rem; }
   .battle-fast-forward { padding-inline: .4rem; }
   .battle-actions { flex-wrap: wrap; }
-  .battle-hype { min-width: 3.6rem; }
+  .battle-motion { min-width: 3.6rem; }
   .battle-squabble { flex: 1; }
   .battle-primary-action { flex-basis: 100%; order: 3; min-height: 2.8rem; }
 }

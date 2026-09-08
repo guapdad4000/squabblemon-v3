@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 export function RulesModal({ onClose }: any) {
   const rules = [
     "Choose one affordable card, tap a district, then Lock In. You may Pass when saving a card is smarter.",
-    "Both crews get Hype equal to the round number and pay the real card cost. Plug can discount your next card in another district.",
+    "Both crews get Motion equal to the round number and pay the real card cost. Plug can discount your next card in another district.",
     "Your exact card travels from the hand to Your Zone. The Rival then pays for and reveals one card into the Rival Zone.",
     "Abilities resolve immediately. Power changes, movement, freeze, silence, protection, and blocked effects stay visible on the affected cards.",
     "Frozen cards add 0 Power until Rastamon cleanses them. Silenced cards keep their Power but cannot fire their ability.",

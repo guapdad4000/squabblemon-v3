@@ -50,7 +50,7 @@ export const applyEventState = (visual: Match, authoritative: Match, event: Effe
     const card = { ...template, lane: state.lane, basePower: state.basePower, powerModifier: state.powerModifier, moved: state.moved, statuses: state.statuses, lastEffectNote: state.lastEffectNote };
     if (state.lane === null) (state.owner === 'player' ? playerHand : cpuHand).push(card); else boards[state.lane].push(card);
   }
-  return { ...visual, playerHand, cpuHand, boards, playerHype: event.resources[key].playerHype, cpuHype: event.resources[key].cpuHype, round: event.state[key].round, phase: event.state[key].phase, playerDrawIndex: event.state[key].playerDrawIndex, cpuDrawIndex: event.state[key].cpuDrawIndex, squabbleUsed: event.state[key].squabbleUsed, plugDiscountLane: event.state[key].plugDiscountLane, cheapBuffsUsed: event.state[key].cheapBuffsUsed };
+  return { ...visual, playerHand, cpuHand, boards, playerMotion: event.resources[key].playerMotion, cpuMotion: event.resources[key].cpuMotion, round: event.state[key].round, phase: event.state[key].phase, playerDrawIndex: event.state[key].playerDrawIndex, cpuDrawIndex: event.state[key].cpuDrawIndex, squabbleUsed: event.state[key].squabbleUsed, plugDiscountLane: event.state[key].plugDiscountLane, cheapBuffsUsed: event.state[key].cheapBuffsUsed };
 };
 
 /** Apply the engine-captured complete visual state for one historical step. */

@@ -159,8 +159,8 @@ test("story lane locks reject players and are excluded from CPU choices", () => 
   };
   let match = createStoryMatch(snapshot, "block");
   assert.deepEqual(getStoryLockedLanes(match), [0, 1]);
-  assert.throws(() => playCard({ ...match, playerHype: 20 }, "player", match.playerHand[0].instanceId, 0), /locked/);
-  match = { ...pass(match, "player"), cpuHype: 20 };
+  assert.throws(() => playCard({ ...match, playerMotion: 20 }, "player", match.playerHand[0].instanceId, 0), /locked/);
+  match = { ...pass(match, "player"), cpuMotion: 20 };
   assert.equal(chooseCpuPlay(match)?.lane, 2);
 });
 
@@ -170,15 +170,15 @@ test("phase on-enter effects and logs are applied exactly once", () => {
     ...base,
     phases: [{
       id: "opening", name: "Opening", trigger: { kind: "round", atLeast: 1 },
-      onEnter: [{ kind: "hype", owner: "cpu", amount: 3 }],
+      onEnter: [{ kind: "motion", owner: "cpu", amount: 3 }],
     }],
   };
   let match = createStoryMatch(snapshot, "block");
   assert.equal(getActiveStoryPhase(match)?.id, "opening");
-  assert.equal(match.cpuHype, 4);
+  assert.equal(match.cpuMotion, 4);
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
   match = revealCpu(pass(match, "player"));
-  assert.equal(match.cpuHype, 4 - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
+  assert.equal(match.cpuMotion, 4 - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
 });
 

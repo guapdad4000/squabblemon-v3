@@ -8,7 +8,7 @@ export type StoryTrigger =
   | { readonly kind: "total-power"; readonly owner: Owner; readonly atLeast: number }
   | { readonly kind: "districts-held"; readonly owner: Owner; readonly atLeast: number };
 export type StoryEffect =
-  | { readonly kind: "hype"; readonly owner: Owner; readonly amount: number }
+  | { readonly kind: "motion"; readonly owner: Owner; readonly amount: number }
   | { readonly kind: "reinforcement"; readonly owner: Owner; readonly cardId: string }
   | { readonly kind: "lane-power"; readonly owner: Owner | "both"; readonly lane: Lane; readonly amount: number }
   | { readonly kind: "lane-lock"; readonly owner: Owner | "both"; readonly lanes: readonly Lane[] };
@@ -34,10 +34,10 @@ export type StoryEncounterSnapshot = {
   };
   readonly soundHooks: Readonly<Record<string, string>>;
   readonly modifiers?: {
-    readonly startingHype?: Partial<Readonly<Record<Owner, number>>>;
+    readonly startingMotion?: Partial<Readonly<Record<Owner, number>>>;
     readonly handSize?: Partial<Readonly<Record<Owner, number>>>;
     readonly laneLocks?: readonly { readonly round: number; readonly owner: Owner | "both"; readonly lanes: readonly Lane[] }[];
-    readonly roundHypeDeltas?: readonly { readonly round: number; readonly owner: Owner; readonly amount: number }[];
+    readonly roundMotionDeltas?: readonly { readonly round: number; readonly owner: Owner; readonly amount: number }[];
     readonly lanePowerBonuses?: readonly { readonly owner: Owner | "both"; readonly lane: Lane; readonly amount: number }[];
     readonly reinforcements?: readonly { readonly round: number; readonly owner: Owner; readonly cardId: string }[];
   };
@@ -73,7 +73,7 @@ export type EffectLogEntry = {
   cardInstanceId: string; cardId: string; owner: Owner; lane: Lane; kind: EffectKind; note: string;
 };
 export type ReplayState = Pick<Match,
-  'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerHype' | 'cpuHype' |
+  'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerMotion' | 'cpuMotion' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'storyRuntime'
 >;
@@ -85,7 +85,7 @@ export type TimedEffect = {
 export type Match = {
   round: number; phase: Phase; playerDeck: string; cpuDeck: string; playerHand: CardInstance[]; cpuHand: CardInstance[];
   playerCardIds: string[]; cpuCardIds: string[];
-  boards: [CardInstance[], CardInstance[], CardInstance[]]; playerHype: number; cpuHype: number;
+  boards: [CardInstance[], CardInstance[], CardInstance[]]; playerMotion: number; cpuMotion: number;
   playerDrawIndex: number; cpuDrawIndex: number; squabbleUsed: boolean; plugDiscountLane: Record<Owner, Lane | null>;
   cheapBuffsUsed: Record<Owner, number>; effectLog: EffectLogEntry[]; nextEventSequence: number; timedEffects: TimedEffect[];
   storyEncounter?: StoryEncounterSnapshot; storyRuntime?: StoryRuntime;
@@ -129,8 +129,8 @@ export function createMatchFromEngineCards(
     cpuHand: cpuCardIds.slice(0, cpuHandSize).map((id, i) => createCardInstance(id, "cpu", cpuDeck, i)),
     playerCardIds: [...playerCardIds], cpuCardIds: [...cpuCardIds],
     boards: [[], [], []],
-    playerHype: storyEncounter?.modifiers?.startingHype?.player ?? 1,
-    cpuHype: storyEncounter?.modifiers?.startingHype?.cpu ?? 1,
+    playerMotion: storyEncounter?.modifiers?.startingMotion?.player ?? 1,
+    cpuMotion: storyEncounter?.modifiers?.startingMotion?.cpu ?? 1,
     playerDrawIndex: playerHandSize, cpuDrawIndex: cpuHandSize,
     squabbleUsed: false, plugDiscountLane: { player: null, cpu: null }, cheapBuffsUsed: { player: 0, cpu: 0 },
     effectLog: [], nextEventSequence: 1, timedEffects: [],
@@ -200,7 +200,7 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
 export const getDiscountedCardCost = getLegalCardCost;
 export function canAffordSelection(match: Match, owner: Owner, instanceId: string, targetLane: Lane): boolean {
   const card = (owner === "player" ? match.playerHand : match.cpuHand).find((c) => c.instanceId === instanceId);
-  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane) && getLegalCardCost(match, owner, card, targetLane) <= (owner === "player" ? match.playerHype : match.cpuHype);
+  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane) && getLegalCardCost(match, owner, card, targetLane) <= (owner === "player" ? match.playerMotion : match.cpuMotion);
 }
 
 const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance): Match => ({ ...m, boards: m.boards.map((cardsInLane) => cardsInLane.map((c) => c.instanceId === id ? change(c) : c)) as Match['boards'] });
@@ -257,8 +257,8 @@ const applyStoryEffect = (match: Match, effect: StoryEffect, effectId: string): 
       appliedEffectIds: [...match.storyRuntime.appliedEffectIds, effectId],
     },
   };
-  if (effect.kind === "hype") {
-    const key = effect.owner === "player" ? "playerHype" : "cpuHype";
+  if (effect.kind === "motion") {
+    const key = effect.owner === "player" ? "playerMotion" : "cpuMotion";
     m = { ...m, [key]: Math.max(0, m[key] + effect.amount) };
   } else if (effect.kind === "reinforcement") {
     const key = effect.owner === "player" ? "playerHand" : "cpuHand";
@@ -269,14 +269,14 @@ const applyStoryEffect = (match: Match, effect: StoryEffect, effectId: string): 
   } else {
     m = { ...m, storyRuntime: { ...m.storyRuntime!, laneLocks: [...m.storyRuntime!.laneLocks, { owner: effect.owner, lanes: [...effect.lanes] }] } };
   }
-  return storyLog(before, m, effectId, effect.kind === "hype" || effect.kind === "reinforcement" ? effect.owner : "cpu", `Story effect ${effectId}: ${effect.kind}.`);
+  return storyLog(before, m, effectId, effect.kind === "motion" || effect.kind === "reinforcement" ? effect.owner : "cpu", `Story effect ${effectId}: ${effect.kind}.`);
 };
 function applyStoryEffects(match: Match): Match {
   if (!match.storyEncounter || !match.storyRuntime) return match;
   let m = match;
   const snapshot = match.storyEncounter;
-  for (const [index, item] of (snapshot.modifiers?.roundHypeDeltas ?? []).entries()) {
-    if (item.round === m.round) m = applyStoryEffect(m, { kind: "hype", owner: item.owner, amount: item.amount }, `round-hype:${index}:${item.round}`);
+  for (const [index, item] of (snapshot.modifiers?.roundMotionDeltas ?? []).entries()) {
+    if (item.round === m.round) m = applyStoryEffect(m, { kind: "motion", owner: item.owner, amount: item.amount }, `round-motion:${index}:${item.round}`);
   }
   for (const [index, item] of (snapshot.modifiers?.reinforcements ?? []).entries()) {
     if (item.round === m.round) m = applyStoryEffect(m, { kind: "reinforcement", owner: item.owner, cardId: item.cardId }, `reinforcement:${index}:${item.round}`);
@@ -317,10 +317,10 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
   if (!snapshot) return [];
   const modifiers = snapshot.modifiers;
   const summaries: string[] = [];
-  if (modifiers?.startingHype) summaries.push(`Starting Hype: player ${modifiers.startingHype.player ?? 1}, CPU ${modifiers.startingHype.cpu ?? 1}`);
+  if (modifiers?.startingMotion) summaries.push(`Starting Motion: player ${modifiers.startingMotion.player ?? 1}, CPU ${modifiers.startingMotion.cpu ?? 1}`);
   if (modifiers?.handSize) summaries.push(`Opening hand: player ${modifiers.handSize.player ?? 5}, CPU ${modifiers.handSize.cpu ?? 5}`);
   for (const lock of modifiers?.laneLocks ?? []) summaries.push(`Round ${lock.round}: ${lock.owner} cannot play lane${lock.lanes.length === 1 ? "" : "s"} ${lock.lanes.join(", ")}`);
-  for (const delta of modifiers?.roundHypeDeltas ?? []) summaries.push(`Round ${delta.round}: ${delta.owner} Hype ${delta.amount >= 0 ? "+" : ""}${delta.amount}`);
+  for (const delta of modifiers?.roundMotionDeltas ?? []) summaries.push(`Round ${delta.round}: ${delta.owner} Motion ${delta.amount >= 0 ? "+" : ""}${delta.amount}`);
   for (const bonus of modifiers?.lanePowerBonuses ?? []) summaries.push(`${bonus.owner} lane ${bonus.lane} Power ${bonus.amount >= 0 ? "+" : ""}${bonus.amount}`);
   for (const reinforcement of modifiers?.reinforcements ?? []) summaries.push(`Round ${reinforcement.round}: ${reinforcement.owner} reinforces with ${reinforcement.cardId}`);
   for (const phase of snapshot.phases ?? []) summaries.push(`Phase ${phase.name}: ${phase.trigger.kind}`);
@@ -348,7 +348,7 @@ function resolveAbility(match: Match, source: CardInstance): Match {
   else if (source.cardId === 'plug') { m = { ...m, plugDiscountLane: { ...m.plugDiscountLane, [source.owner]: l } }; note('Connections: next card in another district costs 1 less.'); }
   else if (source.cardId === 'streamer') note('Follower Frenzy is live for the next two cheap plays.');
   else if (source.cardId === 'gamer') note('Tryhard Trigger watches cheap plays here.');
-  else if (source.cardId === 'techbro') { const hype = source.owner === 'player' ? m.playerHype : m.cpuHype; if (hype) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'VC Funded Flex: +2 Power.' })); m = { ...m, ...(source.owner === 'player' ? { playerHype: hype - 1 } : { cpuHype: hype - 1 }) }; note('VC Funded Flex spent 1 Hype for +2.'); } else note('VC Funded Flex had no Hype left.'); }
+  else if (source.cardId === 'techbro') { const motion = source.owner === 'player' ? m.playerMotion : m.cpuMotion; if (motion) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'VC Funded Flex: +2 Power.' })); m = { ...m, ...(source.owner === 'player' ? { playerMotion: motion - 1 } : { cpuMotion: motion - 1 }) }; note('VC Funded Flex spent 1 Motion for +2.'); } else note('VC Funded Flex had no Motion left.'); }
   else if (source.cardId === 'bikelife') { const to = lowestFriendlyLane(m, source.owner, l); m = move(m, source, to, 'Ride Out moved here, +1 Power.'); m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Ride Out moved here, +1 Power.' })); note('Ride Out moved Bikelife and gave +1.'); }
   else if (source.cardId === 'vibe') { const t = lowest(m.boards.flat().filter((c) => c.owner === source.owner && c.instanceId !== source.instanceId && c.lane !== l)); if (t) { targetIds.add(t.instanceId); m = move(m, t, l, 'Wave Check pulled this card here, +1 Power.'); m = modify(m, t.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check pulled this card here, +1 Power.' })); m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check: +1 Power.' })); note('Wave Check pulled the lowest ally here; both gained +1.'); } else note('Wave Check needs an ally in another district.'); }
   else if (source.cardId === 'hooper') { if (getLaneScore(inLane(m, source.owner, l), l) < getLaneScore(inLane(m, enemy, l), l)) { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, powerModifier: c.powerModifier - 2, lastEffectNote: 'Ankle Breaker: -2 Power.' })); } m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Ankle Breaker: +2 Power.' })); note('Ankle Breaker flipped the pressure.'); } else note('Ankle Breaker only triggers while losing.'); }
@@ -367,25 +367,25 @@ function resolveAbility(match: Match, source: CardInstance): Match {
 export function playCard(match: Match, owner: Owner, instanceId: string, targetLane: Lane, squabble = false): Match {
   if ((owner === 'player' && match.phase !== 'player') || (owner === 'cpu' && match.phase !== 'cpu-reveal')) throw new Error('Owner cannot play in this phase');
   if (getStoryLockedLanes(match, owner).includes(targetLane)) throw new Error('Lane is locked');
-  const handKey = owner === 'player' ? 'playerHand' : 'cpuHand', hypeKey = owner === 'player' ? 'playerHype' : 'cpuHype', card = match[handKey].find((c) => c.instanceId === instanceId);
+  const handKey = owner === 'player' ? 'playerHand' : 'cpuHand', motionKey = owner === 'player' ? 'playerMotion' : 'cpuMotion', card = match[handKey].find((c) => c.instanceId === instanceId);
   if (!card) throw new Error('Card is not in this hand');
   if (squabble && (owner !== 'player' || match.squabbleUsed)) throw new Error('SQUABBLE is unavailable');
   const cost = getLegalCardCost(match, owner, card, targetLane);
-  if (match[hypeKey] < cost) throw new Error('Not enough Hype');
+  if (match[motionKey] < cost) throw new Error('Not enough Motion');
   const discountLane = match.plugDiscountLane[owner];
   const usedPlugDiscount = discountLane !== null && discountLane !== targetLane;
   let m: Match = {
     ...match,
     [handKey]: match[handKey].filter((c) => c.instanceId !== instanceId),
-    [hypeKey]: match[hypeKey] - cost,
+    [motionKey]: match[motionKey] - cost,
     plugDiscountLane: { ...match.plugDiscountLane, [owner]: usedPlugDiscount ? null : discountLane },
     squabbleUsed: match.squabbleUsed || squabble,
   };
-  let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, powerModifier: card.powerModifier + (squabble ? card.basePower : 0), lastEffectNote: squabble ? 'SQUABBLE doubled base Power.' : `Played for ${cost} Hype.` };
+  let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, powerModifier: card.powerModifier + (squabble ? card.basePower : 0), lastEffectNote: squabble ? 'SQUABBLE doubled base Power.' : `Played for ${cost} Motion.` };
   m = { ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] };
   m = addEvent(match, m, {
     type: 'play', sourceId: instanceId, owner, lane: targetLane,
-    note: `${card.name} was played in district ${targetLane + 1} for ${cost} Hype.${squabble ? ' SQUABBLE doubled its base Power.' : ''}`,
+    note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${squabble ? ' SQUABBLE doubled its base Power.' : ''}`,
   });
   m = addEvent(m, m, {
     type: 'reveal', sourceId: instanceId, owner, lane: targetLane,
@@ -448,8 +448,8 @@ export function nextRound(match: Match): Match {
     ...match,
     round: next,
     phase: 'player',
-    playerHype: next,
-    cpuHype: next,
+    playerMotion: next,
+    cpuMotion: next,
     boards: match.boards.map((items) => items.map((card) => ({
       ...card,
       statuses: { ...card.statuses, blocked: false },
@@ -621,9 +621,9 @@ type EventInput = {
   kind?: EffectKind; timing?: 'instant' | 'timed'; duration?: EventDuration | null; lane?: Lane;
 };
 
-export type ResourceState = { playerHype: number; cpuHype: number };
+export type ResourceState = { playerMotion: number; cpuMotion: number };
 
-const resources = (m: Match): ResourceState => ({ playerHype: m.playerHype, cpuHype: m.cpuHype });
+const resources = (m: Match): ResourceState => ({ playerMotion: m.playerMotion, cpuMotion: m.cpuMotion });
 
 const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   round: m.round,
@@ -631,8 +631,8 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   playerHand: m.playerHand,
   cpuHand: m.cpuHand,
   boards: m.boards,
-  playerHype: m.playerHype,
-  cpuHype: m.cpuHype,
+  playerMotion: m.playerMotion,
+  cpuMotion: m.cpuMotion,
   playerDrawIndex: m.playerDrawIndex,
   cpuDrawIndex: m.cpuDrawIndex,
   squabbleUsed: m.squabbleUsed,
