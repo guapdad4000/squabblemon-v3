@@ -7,6 +7,7 @@ import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameE
 import { Battle, createBattleDecisionHandlers } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
+import { trackEvent } from '../lib/analytics';
 
 const noop = () => {};
 
@@ -246,12 +247,19 @@ test('battle decision interactions emit only approved coarse analytics fields', 
     trackBattleTurnCommitted(match, 'pass', false, false, Date.now(), null);
     trackBattleTurnCommitted(match, 'lock_in', false, true, Date.now(), 1);
     trackBattleFastForwarded(match, 'effects');
+    trackEvent('battle_history_opened', {
+      round: match.round,
+      entries: 1,
+      decision_time: 'under_3s',
+      card_instance_id: available.instanceId,
+      account_id: 'private-account',
+    } as Record<string, string | number | boolean>);
 
     assert.deepEqual(calls.map(call => call.name), [
       'battle_unavailable_card_selected', 'battle_district_selected',
       'battle_squabble_toggled', 'battle_squabble_toggled',
       'battle_history_opened', 'battle_turn_committed',
-      'battle_turn_committed', 'battle_fast_forwarded',
+      'battle_turn_committed', 'battle_fast_forwarded', 'battle_history_opened',
     ]);
     assert.equal(calls[2].data?.action, 'arm');
     assert.equal(calls[3].data?.action, 'cancel');
@@ -272,6 +280,7 @@ test('battle decision interactions emit only approved coarse analytics fields', 
       assert.equal(JSON.stringify(call.data).includes(available.instanceId), false);
       assert.equal(JSON.stringify(call.data).includes(unavailable.instanceId), false);
       assert.equal(JSON.stringify(call.data).match(/account|email|user_id|card_instance/), null);
+      assert.equal(JSON.stringify(call.data).includes('private-account'), false);
     }
   } finally {
     Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });

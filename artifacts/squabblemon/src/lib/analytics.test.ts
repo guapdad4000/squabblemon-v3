@@ -32,6 +32,55 @@ test('analytics reaches the Replit-injected tracker when present', () => {
   }
 });
 
+test('battle analytics drops unexpected private fields and invalid values before tracking', () => {
+  const originalWindow = globalThis.window;
+  const calls: Array<{ name: string, data?: Record<string, string | number | boolean> }> = [];
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: { umami: { track: (name: string, data?: Record<string, string | number | boolean>) => calls.push({ name, data }) } },
+  });
+
+  try {
+    trackEvent('battle_turn_committed', {
+      round: 3,
+      action: 'lock_in',
+      automatic: false,
+      squabble: true,
+      decision_time: '3_to_8s',
+      district: 2,
+      card_instance_id: 'card-instance-private',
+      account_id: 'account-private',
+      email: 'player@example.com',
+    } as Record<string, string | number | boolean>);
+    trackEvent('battle_squabble_toggled', {
+      round: 3,
+      action: 'private-card-instance',
+      decision_time: 'exactly_4.283_seconds',
+    });
+
+    assert.deepEqual(calls, [
+      {
+        name: 'battle_turn_committed',
+        data: {
+          round: 3,
+          action: 'lock_in',
+          automatic: false,
+          squabble: true,
+          decision_time: '3_to_8s',
+          district: 2,
+        },
+      },
+      {
+        name: 'battle_squabble_toggled',
+        data: { round: 3 },
+      },
+    ]);
+    assert.doesNotMatch(JSON.stringify(calls), /card-instance-private|account-private|player@example\.com/);
+  } finally {
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
+  }
+});
+
 test('analytics failures never escape into gameplay', () => {
   const originalWindow = globalThis.window;
   Object.defineProperty(globalThis, 'window', {
