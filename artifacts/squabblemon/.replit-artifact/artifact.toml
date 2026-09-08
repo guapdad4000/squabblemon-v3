@@ -15,7 +15,7 @@ localPort = 23293
 run = "pnpm --filter @workspace/squabblemon run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/squabblemon", "run", "build" ]
+build = [ "sh", "-c", "pnpm --filter @workspace/squabblemon run validate:brand && pnpm --filter @workspace/squabblemon run build" ]
 serve = "static"
 publicDir = "artifacts/squabblemon/dist/public"
 
