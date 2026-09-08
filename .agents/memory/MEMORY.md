@@ -5,3 +5,4 @@
 - [Profile economy lock](profile-economy-lock.md) — Inventory normalization and mutation must share the profile row lock or concurrent reads can erase rewards.
 - [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full presentation lifecycles in an optimized profiling build, not synthetic snapshots or animation startup.
 - [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
+- [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.

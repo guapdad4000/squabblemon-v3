@@ -20,9 +20,10 @@ import {
   type StoryNode,
   type StoryReward,
 } from '@workspace/squabblemon-engine/story';
-import { cards, getAssetUrl, getCardImage } from '../../data';
+import { cards, catalogCardByEngineId, getAssetUrl, getCardImage } from '../../data';
 import { getStoryModifierSummaries } from '../../gameEngine';
 import { StoryCinematic } from '../../components/StoryCinematic';
+import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 
 type SceneEntry = {
   token: string;
@@ -614,12 +615,14 @@ function BattleBriefing({
             {battle.teaching.focusCards.length ? 'Focus Cards' : 'Recommended crew cards'}
           </h3>
           <div className="mt-3 flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
-            {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => (
-              <div key={cardId} className="flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2">
+            {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => {
+              const rarity = catalogCardByEngineId[cardId].rarity;
+              return <div key={cardId} aria-label={`${cards[cardId].name}. ${rarity} rarity`} className={`relative flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2 overflow-hidden ${getRarityClass(rarity)}`}>
                 <img src={getCardImage(cards[cardId].id)} alt="" className="h-12 w-9 object-cover" />
                 <span className="font-display text-xs font-bold uppercase">{cards[cardId].name}</span>
+                <CardRarityTreatment rarity={rarity} compact />
               </div>
-            ))}
+            })}
           </div>
         </section>
 

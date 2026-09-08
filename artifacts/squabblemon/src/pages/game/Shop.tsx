@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { PlayerBootstrap, useOpenPlayerPack, PackReward } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { getCardImage } from '../../data';
+import { catalogCardById, getCardImage } from '../../data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
+import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 
 export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -195,14 +196,14 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       key={revealIndex}
                       initial={{ scale: 0.5, opacity: 0, y: 50 }}
                       animate={{ scale: 1, opacity: 1, y: 0 }}
-                      className={`relative w-64 aspect-[3/4] bg-zinc-900 border-2 border-primary overflow-hidden mb-8 ${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)) ? `card-variant card-variant-${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined))}` : ''}`}
+                       className={`relative w-64 aspect-[3/4] bg-zinc-900 border-2 border-primary overflow-hidden mb-8 ${rewards[revealIndex].cardId && catalogCardById[rewards[revealIndex].cardId!] ? getRarityClass(catalogCardById[rewards[revealIndex].cardId!].rarity) : ''} ${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)) ? `card-variant card-variant-${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined))}` : ''}`}
                     >
                       {(rewards[revealIndex].kind === 'card' || rewards[revealIndex].kind === 'variant') && rewards[revealIndex].cardId ? (
                         <>
                           <img src={getCardImage(rewards[revealIndex].cardId!)} alt="" className="w-full h-full object-cover object-top" />
                           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 p-4">
                             <div className="font-display font-black italic uppercase text-2xl mb-1 text-white">{rewards[revealIndex].name}</div>
-                            <div className="font-mono text-xs text-primary uppercase">{rewards[revealIndex].kind === 'variant' ? 'Variant' : rewards[revealIndex].rarity}</div>
+                             <div className="font-mono text-xs text-white uppercase">{rewards[revealIndex].rarity} rarity{rewards[revealIndex].kind === 'variant' ? ' · Variant' : ''}</div>
                           </div>
                         </>
                       ) : (
@@ -223,6 +224,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           DUPE
                         </div>
                       )}
+                       {rewards[revealIndex].cardId && catalogCardById[rewards[revealIndex].cardId!] && <CardRarityTreatment rarity={catalogCardById[rewards[revealIndex].cardId!].rarity} />}
                        <CardVariantTreatment variantId={rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)} />
                     </motion.div>
                     <p className="font-mono text-xs text-white/50 uppercase tracking-widest mb-8">Tap to continue</p>
@@ -233,7 +235,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     <h2 className="font-display font-black italic text-3xl uppercase mb-8">Pack Summary</h2>
                     <div className="flex flex-wrap justify-center gap-4 mb-8">
                       {rewards.map((r, i) => (
-                        <div key={i} className={`w-32 aspect-[3/4] relative bg-zinc-900 border border-white/20 overflow-hidden ${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)) ? `card-variant card-variant-${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined))}` : ''}`}>
+                         <div key={i} className={`w-32 aspect-[3/4] relative bg-zinc-900 border border-white/20 overflow-hidden ${r.cardId && catalogCardById[r.cardId] ? getRarityClass(catalogCardById[r.cardId].rarity) : ''} ${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)) ? `card-variant card-variant-${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined))}` : ''}`}>
                           {(r.kind === 'card' || r.kind === 'variant') && r.cardId ? (
                             <>
                               <img src={getCardImage(r.cardId)} alt="" className="w-full h-full object-cover object-top opacity-80" />
@@ -256,6 +258,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           <div className="absolute bottom-0 inset-x-0 bg-black/80 p-2 text-center border-t border-white/10">
                             <div className="font-display font-black uppercase text-[10px] truncate text-white">{r.name || r.kind}</div>
                           </div>
+                           {r.cardId && catalogCardById[r.cardId] && <CardRarityTreatment rarity={catalogCardById[r.cardId].rarity} compact />}
                            <CardVariantTreatment variantId={r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)} />
                         </div>
                       ))}

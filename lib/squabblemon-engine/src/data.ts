@@ -21,7 +21,23 @@ export type Deck = {
   hero: string;
 };
 
-export type CardRarity = "Common" | "Uncommon" | "Rare" | "Epic";
+export const CARD_RARITIES = ["Common", "Uncommon", "Rare", "Epic"] as const;
+export type CardRarity = (typeof CARD_RARITIES)[number];
+
+export type CardRarityDefinition = {
+  name: CardRarity;
+  order: number;
+  color: string;
+  cue: string;
+  accessibilityLabel: string;
+};
+
+export const CARD_RARITY_DEFINITIONS: Record<CardRarity, CardRarityDefinition> = {
+  Common: { name: "Common", order: 0, color: "#38bdf8", cue: "◆", accessibilityLabel: "Common rarity, one diamond" },
+  Uncommon: { name: "Uncommon", order: 1, color: "#2563eb", cue: "◆◆", accessibilityLabel: "Uncommon rarity, two diamonds" },
+  Rare: { name: "Rare", order: 2, color: "#7c3aed", cue: "◆◆◆", accessibilityLabel: "Rare rarity, three diamonds" },
+  Epic: { name: "Epic", order: 3, color: "#f97316", cue: "◆◆◆◆", accessibilityLabel: "Epic rarity, four diamonds" },
+};
 
 export type CardVariantSlot = {
   id: string;
@@ -76,7 +92,7 @@ export const decks: Deck[] = [
   { id: "compound", name: "COMPOUND INTEREST", archetype: "Growth / Scaling", accent: "GROW", plan: "Invest early in engines and convert repeated buffs into late value.", cards: ["cornball", "plug", "streamer", "rastamon", "gamer", "techbro", "wifey"], hero: "gamer" },
 ];
 
-const rarityByEngineId: Record<string, CardRarity> = {
+export const rarityByEngineId = {
   cornball: "Common",
   hooper: "Common",
   plug: "Common",
@@ -92,7 +108,25 @@ const rarityByEngineId: Record<string, CardRarity> = {
   streamer: "Rare",
   oink: "Epic",
   techbro: "Epic",
-};
+} as const satisfies Record<keyof typeof cards, CardRarity>;
+
+export function validateCardCatalogRarities(
+  cardEntries: Record<string, Card> = cards,
+  assignments: Record<string, unknown> = rarityByEngineId,
+): void {
+  const supported = new Set<string>(CARD_RARITIES);
+  for (const engineId of Object.keys(cardEntries)) {
+    const rarity = assignments[engineId];
+    if (typeof rarity !== "string" || !supported.has(rarity)) {
+      throw new Error(`Card ${engineId} has missing or unsupported rarity: ${String(rarity)}`);
+    }
+  }
+  for (const engineId of Object.keys(assignments)) {
+    if (!cardEntries[engineId]) {
+      throw new Error(`Rarity assignment references unknown card ${engineId}`);
+    }
+  }
+}
 
 const factionByEngineId: Record<string, string> = {
   rastamon: "Good Vibes",
@@ -130,13 +164,15 @@ const sourceByEngineId: Record<string, string[]> = {
   nerd: ["Starter crews", "Chapter One boss"],
 };
 
+validateCardCatalogRarities();
+
 export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
   ([engineId, card]) => ({
     ...card,
     catalogId: card.id,
     engineId,
     artworkId: card.id,
-    rarity: rarityByEngineId[engineId] ?? "Common",
+    rarity: rarityByEngineId[engineId as keyof typeof rarityByEngineId],
     faction: factionByEngineId[engineId] ?? "Independent",
     crewTags: decks
       .filter((deck) => deck.cards.includes(engineId))

@@ -6,6 +6,7 @@ import { cardCatalog, getCardImage } from '../../data';
 import { CardInspector } from '../../components/CardInspector';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 import { CardProgress } from '../../components/CardProgress';
+import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -16,6 +17,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [filterCrew, setFilterCrew] = useState<string | null>(null);
   const [filterCost, setFilterCost] = useState<number | null>(null);
   const [filterPower, setFilterPower] = useState<number | null>(null);
+  const [filterRarity, setFilterRarity] = useState<string | null>(null);
   const [filterSearch, setFilterSearch] = useState<string>('');
 
   const [inspectId, setInspectId] = useState<string | null>(null);
@@ -28,6 +30,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     if (filterCrew && !c.crewTags.includes(filterCrew) && c.faction !== filterCrew) return false;
     if (filterCost !== null && c.cost !== filterCost) return false;
     if (filterPower !== null && c.power !== filterPower) return false;
+    if (filterRarity && c.rarity !== filterRarity) return false;
     if (filterSearch && !c.ability.toLowerCase().includes(filterSearch.toLowerCase()) && !c.effect.toLowerCase().includes(filterSearch.toLowerCase()) && !c.name.toLowerCase().includes(filterSearch.toLowerCase())) return false;
     return true;
   });
@@ -72,6 +75,13 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <>
             <div className="flex flex-col gap-3 mb-6">
               <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                {['Common', 'Uncommon', 'Rare', 'Epic'].map(rarity => (
+                  <button key={rarity} onClick={() => setFilterRarity(filterRarity === rarity ? null : rarity)} className={`flex-none font-mono text-[9px] uppercase px-3 py-1 border ${filterRarity === rarity ? 'border-white text-white bg-white/15' : 'border-white/20 text-white/60 bg-black'}`}>
+                    {rarity}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
                 {['Normal', 'Fire', 'Water', 'Electric', 'Plant', 'Air', 'Dark'].map(t => (
                   <button
                     key={t}
@@ -111,8 +121,8 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     <button key={power} onClick={() => setFilterPower(filterPower === power ? null : power)} className={`font-mono text-[9px] px-2 py-1 border ${filterPower === power ? 'border-accent text-accent' : 'border-white/20 text-white/50'}`}>{power}P</button>
                   ))}
                 </div>
-                {(filterType || filterCrew || filterCost !== null || filterPower !== null || filterSearch) && (
-                  <button onClick={() => { setFilterType(null); setFilterCrew(null); setFilterCost(null); setFilterPower(null); setFilterSearch(''); }} className="font-mono text-[9px] uppercase tracking-widest text-rose-400 border border-rose-500/30 px-3 py-1 ml-auto hover:bg-rose-500/10">Clear</button>
+                {(filterType || filterCrew || filterRarity || filterCost !== null || filterPower !== null || filterSearch) && (
+                  <button onClick={() => { setFilterType(null); setFilterCrew(null); setFilterRarity(null); setFilterCost(null); setFilterPower(null); setFilterSearch(''); }} className="font-mono text-[9px] uppercase tracking-widest text-rose-400 border border-rose-500/30 px-3 py-1 ml-auto hover:bg-rose-500/10">Clear</button>
                 )}
               </div>
             </div>
@@ -135,7 +145,8 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     <button
                       key={c.catalogId}
                       onClick={() => { if (show) setInspectId(c.catalogId); }}
-                      className={`relative text-left aspect-[3/4] bg-zinc-950 border border-white/10 overflow-hidden group hover:border-primary/50 transition-colors shadow-lg ${variantKind ? `card-variant card-variant-${variantKind}` : ''}`}
+                      className={`relative text-left aspect-[3/4] bg-zinc-950 border border-white/10 overflow-hidden group transition-colors shadow-lg ${getRarityClass(c.rarity)} ${variantKind ? `card-variant card-variant-${variantKind}` : ''}`}
+                      aria-label={`${c.name}. ${c.rarity} rarity`}
                     >
                       {show ? (
                         <>
@@ -154,6 +165,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                               <span className="font-display font-black italic uppercase text-white/50 text-xs tracking-widest border border-white/20 bg-black/60 px-2 py-1 backdrop-blur-sm -rotate-12">Locked</span>
                             </div>
                           )}
+                           <CardRarityTreatment rarity={c.rarity} compact />
                            {isOwned && <CardVariantTreatment variantId={variantId} />}
                            {isOwned && (
                              <CardProgress

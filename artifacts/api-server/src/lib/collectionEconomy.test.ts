@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardCatalog } from "@workspace/squabblemon-engine/data";
+import {
+  CARD_RARITIES,
+  cardCatalog,
+  catalogCardById,
+  validateCardCatalogRarities,
+} from "@workspace/squabblemon-engine/data";
 import {
   STREET_PACK_CONFIG,
+  STREET_PACK_RARITY_WEIGHTS,
   generateStreetPack,
 } from "./collectionEconomy";
 
@@ -40,8 +46,34 @@ test("duplicate gameplay pulls convert into Style Shards", () => {
 
   assert.equal(result.rewards[0].kind, "styleShards");
   assert.equal(result.rewards[0].amount, 25);
+  assert.equal(
+    result.rewards[0].rarity,
+    catalogCardById[result.rewards[0].cardId!].rarity,
+  );
   assert.equal(result.ownedCardIds.length, cardCatalog.length);
   assert.equal(result.styleShardsGained >= 25, true);
+});
+
+test("every catalog card has one supported authoritative rarity", () => {
+  assert.doesNotThrow(() => validateCardCatalogRarities());
+  assert.equal(cardCatalog.length > 0, true);
+  for (const card of cardCatalog) {
+    assert.equal(CARD_RARITIES.includes(card.rarity), true);
+  }
+});
+
+test("catalog validation rejects missing and unsupported rarity assignments", () => {
+  assert.throws(
+    () => validateCardCatalogRarities({ example: cardCatalog[0] }, {}),
+    /missing or unsupported rarity/,
+  );
+  assert.throws(
+    () => validateCardCatalogRarities(
+      { example: cardCatalog[0] },
+      { example: "Legendary" },
+    ),
+    /missing or unsupported rarity/,
+  );
 });
 
 test("the tenth eligible pack forces an unowned featured variant", () => {
@@ -102,4 +134,17 @@ test("the published odds disclose the exhausted style-pool fallback", () => {
     publishedStyleOdds?.detail ?? "",
     /5%.*50 Style Shards/,
   );
+});
+
+test("published rarity odds are generated from the roll weights", () => {
+  const published = STREET_PACK_CONFIG.odds.find(
+    (odd) => odd.label === "Slot 2 · Crew card",
+  )?.detail ?? "";
+  assert.equal(
+    Object.values(STREET_PACK_RARITY_WEIGHTS).reduce((sum, weight) => sum + weight, 0),
+    100,
+  );
+  for (const [rarity, weight] of Object.entries(STREET_PACK_RARITY_WEIGHTS)) {
+    assert.match(published, new RegExp(`${rarity} ${weight}%`));
+  }
 });

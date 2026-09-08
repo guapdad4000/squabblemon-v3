@@ -2,9 +2,10 @@ import { useLocation } from 'wouter';
 import { PlayerBootstrap, useSavePlayerDeck } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { starterRecipes, getCardImage, validateSavedDeck } from '../../data';
+import { catalogCardById, starterRecipes, getCardImage, validateSavedDeck } from '../../data';
 import { useState } from 'react';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
+import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [, setLocation] = useLocation();
@@ -70,11 +71,13 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {bootstrap.profile.savedDecks.map(deck => {
               const legality = validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId);
+              const heroCard = catalogCardById[deck.heroCardId];
               return (
                 <button
                   key={deck.id}
                   onClick={() => setLocation(`/game/decks/${deck.id}`)}
-                  className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-primary/50 transition-colors shadow-lg ${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId])}` : ''}`}
+                  aria-label={`${deck.name}${heroCard ? `. Hero card is ${heroCard.rarity} rarity` : ''}`}
+                  className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-primary/50 transition-colors shadow-lg ${heroCard ? getRarityClass(heroCard.rarity) : ''} ${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId])}` : ''}`}
                 >
                   <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
                   <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
@@ -93,6 +96,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       <span className="text-white/60">{deck.cardIds.length}/7 Cards</span>
                     </div>
                   </div>
+                  {heroCard && <CardRarityTreatment rarity={heroCard.rarity} />}
                   <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[deck.heroCardId]} />
                 </button>
               );
@@ -106,11 +110,13 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {starterRecipes.map(recipe => {
             const legality = validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero);
+            const heroCard = catalogCardById[recipe.hero];
             return (
               <button
                 key={recipe.id}
                 onClick={() => setLocation(`/game/decks/${recipe.id}`)}
-                className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-white/30 transition-colors shadow-lg ${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero])}` : ''}`}
+                aria-label={`${recipe.name}. Hero card is ${heroCard.rarity} rarity`}
+                className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-white/30 transition-colors shadow-lg ${getRarityClass(heroCard.rarity)} ${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero])}` : ''}`}
               >
                 <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
                 <div className="absolute inset-0 opacity-20">
@@ -126,6 +132,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   </div>
                   <h3 className="font-display font-black italic text-xl uppercase leading-none text-white">{recipe.name}</h3>
                 </div>
+                <CardRarityTreatment rarity={heroCard.rarity} />
                 <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[recipe.hero]} />
               </button>
             );

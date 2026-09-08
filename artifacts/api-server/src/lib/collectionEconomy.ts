@@ -5,6 +5,17 @@ import {
   type CardRarity,
 } from "@workspace/squabblemon-engine/data";
 
+export const STREET_PACK_RARITY_WEIGHTS: Record<CardRarity, number> = {
+  Common: 60,
+  Uncommon: 25,
+  Rare: 12,
+  Epic: 3,
+};
+
+const publishedRarityOdds = Object.entries(STREET_PACK_RARITY_WEIGHTS)
+  .map(([rarity, chance]) => `${rarity} ${chance}%`)
+  .join(", ");
+
 export const STREET_PACK_CONFIG = {
   id: "street-pack",
   name: "Street Pack",
@@ -23,7 +34,7 @@ export const STREET_PACK_CONFIG = {
     {
       label: "Slot 2 · Crew card",
       chance: 45,
-      detail: "Base card rarity odds: Common 60%, Uncommon 25%, Rare 12%, Epic 3%.",
+      detail: `Base card rarity odds: ${publishedRarityOdds}.`,
     },
     {
       label: "Slot 2 · Style Shards",
@@ -59,7 +70,7 @@ export type ApiPackReward = {
   cardId: string | null;
   variantId: string | null;
   name: string | null;
-  rarity: string | null;
+  rarity: CardRarity | null;
   isNew: boolean;
   amount: number;
 };
@@ -76,12 +87,14 @@ export type GeneratedStreetPack = {
 
 type RandomInt = (maxExclusive: number) => number;
 
-const rarityThresholds: Array<[CardRarity, number]> = [
-  ["Common", 6000],
-  ["Uncommon", 8500],
-  ["Rare", 9700],
-  ["Epic", 10000],
-];
+const rarityThresholds = Object.entries(STREET_PACK_RARITY_WEIGHTS).reduce(
+  (thresholds, [rarity, weight]) => {
+    const previous = thresholds.at(-1)?.[1] ?? 0;
+    thresholds.push([rarity as CardRarity, previous + weight * 100]);
+    return thresholds;
+  },
+  [] as Array<[CardRarity, number]>,
+);
 
 function choose<T>(items: T[], rng: RandomInt): T {
   if (!items.length) throw new Error("Cannot choose from an empty pool");
@@ -120,7 +133,7 @@ const shardReward = (
   cardId: sourceCardId,
   variantId: null,
   name: sourceCardId ? "Duplicate converted" : "Style Shards",
-  rarity: null,
+  rarity: sourceCardId ? catalogCardById[sourceCardId]?.rarity ?? null : null,
   isNew: false,
   amount,
 });

@@ -5,6 +5,7 @@ import { useAdvancePlayerOnboarding } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { decks, getCardImage } from '../../data';
+import { CardRarityTreatment, getCardRarity, getRarityClass } from '../../components/CardRarityTreatment';
 import { PlayLoop } from '../../components/PlayLoop';
 import { Link, useLocation } from 'wouter';
 
@@ -156,11 +157,13 @@ function CrewStep({ onComplete }: { onComplete: (id: string) => void }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {decks.map(d => (
-            <button
+          {decks.map(d => {
+            const rarity = getCardRarity(d.hero);
+            return <button
               key={d.id}
               onClick={() => setSelected(d.id)}
-              className={`relative overflow-hidden border transition-all ${selected === d.id ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-white/10 bg-white/5 hover:border-white/30'}`}
+              aria-label={`${d.name}. Hero card is ${rarity} rarity`}
+              className={`relative overflow-hidden border transition-all ${getRarityClass(rarity)} ${selected === d.id ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-white/10 bg-white/5 hover:border-white/30'}`}
               style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', aspectRatio: '3/4' }}
             >
               <img src={getCardImage(d.hero)} alt="" className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity ${selected === d.id ? 'opacity-100' : 'opacity-40 grayscale'}`} />
@@ -168,8 +171,9 @@ function CrewStep({ onComplete }: { onComplete: (id: string) => void }) {
                 <div className={`font-mono text-[7px] uppercase tracking-wider ${selected === d.id ? 'text-primary' : 'text-white/50'}`}>{d.archetype}</div>
                 <div className="font-display font-black text-sm uppercase leading-tight">{d.name}</div>
               </div>
+              <CardRarityTreatment rarity={rarity} compact />
             </button>
-          ))}
+          })}
         </div>
 
         <div className="bg-black/50 border border-white/10 p-5 relative">

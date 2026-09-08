@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { cards, decks, getCardImage } from '../data';
+import { cards, catalogCardByEngineId, decks, getCardImage } from '../data';
 import { CardVariantTreatment, getEquippedVariant, getVariantKind } from './CardVariantTreatment';
+import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 
 export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds, equippedVariants }: any) {
   const selectedDeck = decks.find(d => d.id === deckId)!;
@@ -61,6 +62,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         <div className="flex min-w-0 w-full md:grid md:grid-cols-2 gap-2 overflow-x-auto md:overflow-y-auto hide-scrollbar snap-x snap-mandatory pb-1 md:pb-2">
           {availableDecks.map(d => {
             const isSelected = d.id === deckId;
+            const heroRarity = catalogCardByEngineId[d.cards.find(id => cards[id].id === d.hero) ?? d.cards[0]].rarity;
             return (
               <button
                 key={d.id}
@@ -72,7 +74,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                     setRival(decks.find(candidate => candidate.id !== d.id)!.id);
                   }
                 }}
-                className={`relative shrink-0 snap-start w-[92px] h-[102px] md:w-auto md:h-[92px] overflow-hidden border text-left transition-all active:scale-95 ${getVariantKind(getEquippedVariant(equippedVariants, d.hero)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, d.hero))}` : ''} ${
+                className={`relative shrink-0 snap-start w-[92px] h-[102px] md:w-auto md:h-[92px] overflow-hidden border text-left transition-all active:scale-95 ${getRarityClass(heroRarity)} ${getVariantKind(getEquippedVariant(equippedVariants, d.hero)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, d.hero))}` : ''} ${
                   isSelected
                     ? 'border-primary bg-primary/15 shadow-[0_0_20px_rgba(250,204,21,0.2)]'
                     : 'border-white/15 bg-white/5 hover:border-white/35'
@@ -80,6 +82,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                 style={{ clipPath: 'polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px))' }}
               >
                 <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain object-top opacity-70" />
+                <CardRarityTreatment rarity={heroRarity} compact />
                 <CardVariantTreatment variantId={getEquippedVariant(equippedVariants, d.hero)} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-2">
@@ -105,14 +108,15 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
           >
             {selectedDeck.cards.map((cardId, index) => {
               const card = cards[cardId];
+              const rarity = catalogCardByEngineId[cardId].rarity;
               return (
                 <button
                   type="button"
                   key={`${selectedDeck.id}-${cardId}`}
                   data-testid={`button-inspect-lineup-${cardId}`}
                   onClick={() => onInspect(card)}
-                  aria-label={`Inspect ${card.name}`}
-                  className={`group relative min-w-0 h-[78px] md:h-[106px] overflow-hidden border border-white/15 bg-zinc-950 text-left hover:border-primary focus-visible:border-primary focus-visible:outline-none active:scale-95 transition ${getVariantKind(getEquippedVariant(equippedVariants, card.id)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, card.id))}` : ''}`}
+                  aria-label={`Inspect ${card.name}. ${rarity} rarity`}
+                  className={`group relative min-w-0 h-[78px] md:h-[106px] overflow-hidden border border-white/15 bg-zinc-950 text-left hover:border-primary focus-visible:border-primary focus-visible:outline-none active:scale-95 transition ${getRarityClass(rarity)} ${getVariantKind(getEquippedVariant(equippedVariants, card.id)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, card.id))}` : ''}`}
                   style={{ clipPath: 'polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px))' }}
                 >
                   <img
@@ -121,6 +125,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                     aria-hidden="true"
                     className="absolute inset-0 h-full w-full object-cover object-top opacity-85 transition-transform duration-200 group-hover:scale-105"
                   />
+                  <CardRarityTreatment rarity={rarity} compact />
                   <CardVariantTreatment variantId={getEquippedVariant(equippedVariants, card.id)} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
                   <span className="absolute left-1 top-1 font-mono text-[6px] text-primary/70">0{index + 1}</span>

@@ -6,6 +6,7 @@ import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
 import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
 import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
+import { CardRarityTreatment, getCardRarity, getRarityClass } from './CardRarityTreatment';
 
 const CARD_CLIP_STYLE = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
 
@@ -44,6 +45,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
   const isMoved = instance?.moved;
   const powerModifier = instance?.powerModifier ?? 0;
   const variantKind = getVariantKind(variantId);
+  const rarity = getCardRarity(card.id);
 
   return (
     <motion.button
@@ -57,7 +59,8 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
       data-card-power={displayPower}
       data-card-zone={isBoard ? 'board' : 'hand'}
       data-card-variant={variantKind ?? 'base'}
-      aria-label={disabledReason ? `${card.name}. ${disabledReason}` : card.name}
+      data-card-rarity={rarity}
+      aria-label={`${card.name}. ${rarity} rarity.${disabledReason ? ` ${disabledReason}` : ''}`}
       title={disabledReason}
       onClick={onClick}
       whileHover={!isBoard ? { y: -12, scale: 1.05, zIndex: 50 } : { scale: 1.05 }}
@@ -72,6 +75,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
         ${effectRole === 'target' ? 'effect-target' : ''}
         ${effectKind ? `effect-kind-${effectKind}` : ''}
         ${variantKind ? `card-variant card-variant-${variantKind}` : ''}
+        ${getRarityClass(rarity)}
         ${className}
       `}
     >
@@ -129,6 +133,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
            {isMoved && <div className="card-status bg-purple-500 text-white" title="Moved by an effect" aria-label="Moved by an effect"><Wind size={9} /></div>}
         </div>
       )}
+      <CardRarityTreatment rarity={rarity} compact={Boolean(isBoard)} />
       <CardVariantTreatment variantId={variantId} />
       {!isBoard && progress && (
         <CardProgress progress={progress} compact className="absolute inset-x-2 bottom-1 z-20" />

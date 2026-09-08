@@ -5,13 +5,14 @@ import { CardInstance, getEffectiveCardPower } from '../gameEngine';
 import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { catalogCardById } from '../data';
 import { CardProgress } from './CardProgress';
+import { catalogCardByEngineId, catalogCardById } from '../data';
+import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 
 export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
-  const catalogCard = bootstrap ? catalogCardById[card.catalogId || card.id] : null;
+  const catalogCard = catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.id];
 
   const craftVariant = useCraftPlayerVariant();
   const equipVariant = useEquipPlayerVariant();
@@ -63,7 +64,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
         />
 
         <div
-          className="relative w-full bg-[#111]/95 border border-primary/30 p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar"
+          className={`relative w-full bg-[#111]/95 border p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar ${catalogCard ? getRarityClass(catalogCard.rarity) : 'border-primary/30'}`}
           style={{ clipPath: 'polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px))' }}
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-white to-primary" />
@@ -79,7 +80,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
 
           {catalogCard && (
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-primary border border-primary/30 px-2 py-1 bg-primary/10">{catalogCard.rarity}</span>
+               <span className="font-mono text-[9px] uppercase tracking-widest text-white border px-2 py-1 bg-black" style={{ borderColor: 'var(--rarity-color)' }}>{catalogCard.rarity} rarity</span>
               <span className="font-mono text-[9px] uppercase tracking-widest text-white/70 border border-white/20 px-2 py-1 bg-white/5">{catalogCard.faction} Faction</span>
               {catalogCard.crewTags.map((tag: string) => (
                 <span key={tag} className="font-mono text-[9px] uppercase tracking-widest text-white/50 border border-white/10 px-2 py-1 bg-black">{tag}</span>
@@ -185,6 +186,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
               </div>
             </div>
           )}
+          {catalogCard && <CardRarityTreatment rarity={catalogCard.rarity} />}
         </div>
       </motion.div>
     </div>
