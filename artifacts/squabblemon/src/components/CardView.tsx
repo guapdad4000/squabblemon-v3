@@ -74,8 +74,8 @@ function CardViewComponent({
       aria-label={`${card.name}. ${rarity} rarity.${disabledReason ? ` ${disabledReason}` : ''}`}
       title={disabledReason}
       onClick={presentationOnly ? undefined : onClick}
-      whileHover={!isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {}}
-      whileTap={!isInspector ? { scale: 0.95 } : {}}
+      whileHover={presentationOnly ? undefined : !isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {}}
+      whileTap={presentationOnly ? undefined : !isInspector ? { scale: 0.95 } : {}}
       className={`
         relative shrink-0 flex flex-col justify-end text-left group
         ${fillContainer ? 'w-full aspect-[63/88]' : isBoard ? 'battle-board-card w-[64px] sm:w-[78px] lg:w-[96px] aspect-[63/88]' : isInspector ? className : 'battle-hand-card w-[100px] md:w-[136px] aspect-[63/88] shadow-xl shadow-black/80'}

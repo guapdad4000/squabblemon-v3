@@ -74,6 +74,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               return (
                 <button
                   key={deck.id}
+                  data-testid="deck-archive-control"
                   onClick={() => setLocation(`/game/decks/${deck.id}`)}
                   aria-label={`${deck.name}${heroCard ? `. Hero card is ${heroCard.rarity} rarity` : ''}`}
                   className="relative group text-left border-2 border-white/10 bg-zinc-950 overflow-hidden flex flex-row items-center p-3 hover:border-primary/50 transition-colors shadow-lg card-bevel"
@@ -114,6 +115,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             return (
               <button
                 key={recipe.id}
+                data-testid="deck-archive-control"
                 onClick={() => setLocation(`/game/decks/${recipe.id}`)}
                 aria-label={`${recipe.name}. Hero card is ${heroCard.rarity} rarity`}
                 className="relative group text-left border-2 border-white/10 bg-zinc-950 overflow-hidden flex flex-row items-center p-3 hover:border-white/30 transition-colors shadow-lg card-bevel"

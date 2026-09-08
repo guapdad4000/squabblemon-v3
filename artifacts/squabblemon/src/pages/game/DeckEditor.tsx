@@ -237,7 +237,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           {deckCards.length === 0 ? (
             <div className="text-center py-8 text-white/30 font-mono text-xs uppercase border border-white/5 border-dashed">Empty Roster</div>
           ) : (
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            <div data-testid="deck-roster-grid" className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {deckCards.map(c => (
                 <div key={c.catalogId} className="relative group">
                   <CardView
@@ -289,11 +289,11 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            <div data-testid="deck-collection-grid" className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {filteredCards.map(c => {
                 const inDeck = cards.includes(c.catalogId);
                 return (
-                   <button type="button" key={c.catalogId} aria-label={`${inDeck ? 'Remove' : 'Add'} ${c.name}, ${c.rarity} rarity`} className={`relative group block w-full text-left card-bevel cursor-pointer transition-transform active:scale-95 ${inDeck ? 'opacity-50 grayscale' : 'hover:scale-[1.02]'}`} onClick={() => toggleCard(c.catalogId)}>
+                   <button type="button" key={c.catalogId} data-testid="deck-card-control" aria-label={`${inDeck ? 'Remove' : 'Add'} ${c.name}, ${c.rarity} rarity`} className={`relative group block w-full text-left card-bevel cursor-pointer transition-transform active:scale-95 ${inDeck ? 'opacity-50 grayscale' : 'hover:scale-[1.02]'}`} onClick={() => toggleCard(c.catalogId)}>
                      <CardView
                        card={c}
                        variantId={bootstrap.profile.equippedVariants[c.catalogId]}

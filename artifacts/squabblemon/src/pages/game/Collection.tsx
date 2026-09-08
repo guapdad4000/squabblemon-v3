@@ -132,7 +132,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <div className="font-mono text-[10px] uppercase text-white/50">Try clearing some filters</div>
               </div>
             ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 md:gap-4">
+              <div data-testid="collection-card-grid" className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 md:gap-4">
                 {filteredCatalog.map(c => {
                   const isOwned = owned.has(c.catalogId);
                   const isDiscovered = discovered.has(c.catalogId);
@@ -142,6 +142,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   return (
                     <button
                       key={c.catalogId}
+                       data-testid="collection-card-control"
                       onClick={() => { if (show) setInspectId(c.catalogId); }}
                       className={`relative text-left card-bevel group transition-transform ${show ? 'hover:scale-105 active:scale-95' : 'opacity-20 cursor-default'}`}
                       aria-label={`${c.name}. ${c.rarity} rarity`}
