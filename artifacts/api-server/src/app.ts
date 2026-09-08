@@ -11,10 +11,22 @@ import {
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
 
-const app: Express = express();
+function productionAuthMiddleware(): RequestHandler {
+  return clerkMiddleware((req) => ({
+    publishableKey: publishableKeyFromHost(
+      getClerkProxyHost(req) ?? "",
+      process.env.CLERK_PUBLISHABLE_KEY,
+    ),
+  }));
+}
 
-app.use(
-  pinoHttp({
+export function createApp(
+  authMiddleware: RequestHandler = productionAuthMiddleware(),
+): Express {
+  const app: Express = express();
+
+  app.use(
+    pinoHttp({
     logger,
     serializers: {
       req(req) {
@@ -30,11 +42,11 @@ app.use(
         };
       },
     },
-  }),
-);
-app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
-app.use(
-  cors((req, callback) => {
+    }),
+  );
+  app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+  app.use(
+    cors((req, callback) => {
     const origin = req.header("origin");
     let allowed = !origin;
     if (origin) {
@@ -48,40 +60,36 @@ app.use(
       credentials: true,
       origin: allowed && origin ? origin : false,
     });
-  }),
-);
-const requireSameOrigin: RequestHandler = (req, res, next) => {
-  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
-    next();
-    return;
-  }
-  const origin = req.header("origin");
-  if (!origin) {
-    next();
-    return;
-  }
-  try {
-    if (new URL(origin).host === getClerkProxyHost(req)) {
+    }),
+  );
+  const requireSameOrigin: RequestHandler = (req, res, next) => {
+    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
       next();
       return;
     }
-  } catch {
-    // Invalid origins are rejected below.
-  }
-  res.status(403).json({ error: "Cross-origin mutation rejected" });
-};
-app.use(requireSameOrigin);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  clerkMiddleware((req) => ({
-    publishableKey: publishableKeyFromHost(
-      getClerkProxyHost(req) ?? "",
-      process.env.CLERK_PUBLISHABLE_KEY,
-    ),
-  })),
-);
+    const origin = req.header("origin");
+    if (!origin) {
+      next();
+      return;
+    }
+    try {
+      if (new URL(origin).host === getClerkProxyHost(req)) {
+        next();
+        return;
+      }
+    } catch {
+      // Invalid origins are rejected below.
+    }
+    res.status(403).json({ error: "Cross-origin mutation rejected" });
+  };
+  app.use(requireSameOrigin);
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(authMiddleware);
 
-app.use("/api", router);
+  app.use("/api", router);
+  return app;
+}
 
+const app = createApp();
 export default app;
