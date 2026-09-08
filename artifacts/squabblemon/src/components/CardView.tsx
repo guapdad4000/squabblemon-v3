@@ -19,9 +19,11 @@ interface CardViewProps {
   effectRole?: 'source' | 'target';
   effectKind?: 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
   disableLayout?: boolean;
+  unavailable?: boolean;
+  disabledReason?: string;
 }
 
-export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout }: CardViewProps) {
+export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -48,13 +50,16 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
       data-card-cost={displayCost}
       data-card-power={displayPower}
       data-card-zone={isBoard ? 'board' : 'hand'}
+      aria-label={disabledReason ? `${card.name}. ${disabledReason}` : card.name}
+      title={disabledReason}
       onClick={onClick}
       whileHover={!isBoard ? { y: -12, scale: 1.05, zIndex: 50 } : { scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       className={`
         relative shrink-0 flex flex-col justify-end text-left group
-        ${isBoard ? 'battle-board-card w-[54px] h-[76px] sm:w-[68px] sm:h-[96px] lg:w-[86px] lg:h-[120px]' : 'w-[86px] h-[120px] md:w-[128px] md:h-[178px] shadow-xl shadow-black/80'}
+        ${isBoard ? 'battle-board-card w-[64px] h-[90px] sm:w-[78px] sm:h-[109px] lg:w-[96px] lg:h-[134px]' : 'battle-hand-card w-[100px] h-[140px] md:w-[136px] md:h-[190px] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary' : 'z-10'}
+        ${unavailable ? 'opacity-45 grayscale' : ''}
         ${highlighted || effectRole === 'source' ? 'effect-source' : ''}
         ${effectRole === 'target' ? 'effect-target' : ''}
         ${effectKind ? `effect-kind-${effectKind}` : ''}

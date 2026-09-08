@@ -55,6 +55,19 @@ test('cancelling invalidates and settles every stale callback', async () => {
   assert.equal(await fresh, true);
 });
 
+test('completing pending waits fast-forwards without invalidating the sequence', async () => {
+  const clock = fakeTimers();
+  const timeline = new PresentationTimeline(clock.schedule, clock.cancel);
+  const generation = timeline.id;
+  const first = timeline.wait(500);
+  const second = timeline.wait(1200);
+  timeline.completeAll();
+  assert.equal(await first, true);
+  assert.equal(await second, true);
+  assert.equal(timeline.id, generation);
+  assert.equal(clock.pending, 0);
+});
+
 test('a staged rival beat preserves travel, reveal, and slam ordering', async () => {
   const clock = fakeTimers();
   const timeline = new PresentationTimeline(clock.schedule, clock.cancel);

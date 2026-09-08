@@ -38,4 +38,12 @@ export class PresentationTimeline {
     this.pending.clear();
     return this.generation;
   }
+
+  completeAll() {
+    for (const [handle, resolve] of this.pending) {
+      this.cancel(handle);
+      resolve(true);
+    }
+    this.pending.clear();
+  }
 }
