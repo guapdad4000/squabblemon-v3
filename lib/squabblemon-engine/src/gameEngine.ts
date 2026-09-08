@@ -68,9 +68,15 @@ export type EffectLogEntry = {
   scores: { before: ScoreState[]; after: ScoreState[] };
   resources: { before: ResourceState; after: ResourceState };
   state: { before: RoundState; after: RoundState };
+  replay: { before: ReplayState; after: ReplayState };
   // Kept as presentation fields so existing battle UI can consume the authoritative event stream.
   cardInstanceId: string; cardId: string; owner: Owner; lane: Lane; kind: EffectKind; note: string;
 };
+export type ReplayState = Pick<Match,
+  'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerHype' | 'cpuHype' |
+  'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
+  'cheapBuffsUsed' | 'timedEffects' | 'storyRuntime'
+>;
 
 export type TimedEffect = {
   id: string; kind: 'wifey-protection'; sourceInstanceId: string; owner: Owner; lane: Lane;
@@ -619,6 +625,23 @@ export type ResourceState = { playerHype: number; cpuHype: number };
 
 const resources = (m: Match): ResourceState => ({ playerHype: m.playerHype, cpuHype: m.cpuHype });
 
+const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
+  round: m.round,
+  phase: m.phase,
+  playerHand: m.playerHand,
+  cpuHand: m.cpuHand,
+  boards: m.boards,
+  playerHype: m.playerHype,
+  cpuHype: m.cpuHype,
+  playerDrawIndex: m.playerDrawIndex,
+  cpuDrawIndex: m.cpuDrawIndex,
+  squabbleUsed: m.squabbleUsed,
+  plugDiscountLane: m.plugDiscountLane,
+  cheapBuffsUsed: m.cheapBuffsUsed,
+  timedEffects: m.timedEffects,
+  storyRuntime: m.storyRuntime,
+})) as ReplayState;
+
 export type ScoreState = { lane: Lane; player: number; cpu: number };
 
 const addEvent = (before: Match, after: Match, input: EventInput): Match => {
@@ -636,6 +659,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     scores: { before: scores(before), after: scores(after) },
     resources: { before: resources(before), after: resources(after) },
     state: { before: roundState(before), after: roundState(after) },
+    replay: { before: replayState(before), after: replayState(after) },
     cardInstanceId: sourceCard?.instanceId ?? input.type,
     cardId: sourceCard?.cardId ?? input.type,
     owner: sourceCard?.owner ?? input.owner,

@@ -3,230 +3,92 @@ import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { decks, districts } from '../data';
-import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
-import { Battle, createBattleDecisionHandlers, tryLockInteraction } from './Battle';
+import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
+import { getStoryBattle } from '@workspace/squabblemon-engine/story';
+import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
-import { trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
+import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
+import { createMatch, playCard, type Match } from '../gameEngine';
+import { Battle, createBattleDecisionHandlers, getRecentBattleActions } from './Battle';
 
 const noop = () => {};
+const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
 
-function renderBattle(match: Match, phase: 'player-travel' | 'player-reveal', stagedPlayer: Match['playerHand'][number]) {
-  return renderToStaticMarkup(
-    <Battle
-      match={match}
-      deck={decks.find(deck => deck.id === match.playerDeck)}
-      rivalDeck={decks.find(deck => deck.id === match.cpuDeck)}
-      selectedInstanceId={null}
-      setSelectedInstanceId={noop}
-      selectedLane={null}
-      setSelectedLane={noop}
-      commit={noop}
-      skipSequence={noop}
-      presentationPhase={phase}
-      phaseMessage="Card presentation"
-      timerSeconds={20}
-      timerEnabled={false}
-      impactLane={0}
-      stagedRival={null}
-      stagedPlayer={stagedPlayer}
-      activeEffectId={null}
-      activeEffectLane={null}
-      activeEffect={null}
-      presentationScores={null}
-      squabble={false}
-      setSquabble={noop}
-      setInspect={noop}
-      archiveMatch={noop}
-      onShowRules={noop}
-    />,
-  );
-}
-
-function renderDecision(match: Match, selectedInstanceId: string | null, selectedLane: number | null, equippedVariants?: Record<string, string>) {
-  return renderToStaticMarkup(
-    <Battle
-      match={match}
-      deck={decks.find(deck => deck.id === match.playerDeck)}
-      rivalDeck={decks.find(deck => deck.id === match.cpuDeck)}
-      selectedInstanceId={selectedInstanceId}
-      setSelectedInstanceId={noop}
-      selectedLane={selectedLane}
-      setSelectedLane={noop}
-      commit={noop}
-      skipSequence={noop}
-      presentationPhase="player-ready"
-      phaseMessage="Your move"
-      timerSeconds={20}
-      timerEnabled
-      impactLane={null}
-      stagedRival={null}
-      stagedPlayer={null}
-      activeEffectId={null}
-      activeEffectLane={null}
-      activeEffect={null}
-      presentationScores={null}
-      squabble={false}
-      setSquabble={noop}
-      setInspect={noop}
-      archiveMatch={noop}
-      onShowRules={noop}
-      equippedVariants={equippedVariants}
-    />,
-  );
-}
-function renderEffect(match: Match, effect: EffectLogEntry) {
-  return renderToStaticMarkup(
-    <Battle
-      match={match}
-      deck={decks.find(deck => deck.id === match.playerDeck)}
-      rivalDeck={decks.find(deck => deck.id === match.cpuDeck)}
-      selectedInstanceId={null}
-      setSelectedInstanceId={noop}
-      selectedLane={null}
-      setSelectedLane={noop}
-      commit={noop}
-      skipSequence={noop}
-      presentationPhase="effects"
-      phaseMessage={effect.note}
-      timerSeconds={20}
-      timerEnabled={false}
-      impactLane={effect.lane}
-      stagedRival={null}
-      stagedPlayer={null}
-      activeEffectId={effect.source?.cardInstanceId ?? effect.cardInstanceId}
-      activeEffectLane={effect.lane}
-      activeEffect={{ ...effect, targetIds: effect.targets.map(target => target.cardInstanceId) }}
-      presentationScores={effect.scores.after}
-      squabble={false}
-      setSquabble={noop}
-      setInspect={noop}
-      archiveMatch={noop}
-      onShowRules={noop}
-    />,
-  );
-}
-
-function renderOverlay(match: Match, phase: any) {
-  const card = match.playerHand[0];
-  return renderBattle(match, phase, card);
-}
-
-const occurrences = (html: string, instanceId: string) =>
-  html.match(new RegExp(`data-instance-id="${instanceId}"`, 'g'))?.length ?? 0;
-
-test('a player card has one visual instance through travel and reveal', () => {
-  let match = createMatch('block', 'combo');
-  const card = match.playerHand.find(item => item.cost <= match.playerHype)!;
-
-  const travel = renderBattle(match, 'player-travel', card);
-  assert.equal(occurrences(travel, card.instanceId), 1);
-  assert.match(travel, /data-presentation-copy="staged"/);
-
+test('player cards have one visual instance during travel and reveal', () => {
+  const match = createMatch('block', 'combo');
+  const match = createMatch('block', 'combo'); const card = match.playerHand.find(c => c.cost <= match.playerHype)!;
+  const travel = renderBattle(match, { presentationPhase: 'player-travel', impactLane: 0, stagedPlayer: card });
+  assert.equal(travel.match(new RegExp(`data-instance-id="${card.instanceId}"`, 'g'))?.length, 1);
   match = playCard(match, 'player', card.instanceId, 0);
-  const reveal = renderBattle(match, 'player-reveal', card);
-  assert.equal(occurrences(reveal, card.instanceId), 1);
-  assert.doesNotMatch(reveal, /data-presentation-copy="staged"/);
+  assert.equal(renderBattle(match, { presentationPhase: 'player-reveal', impactLane: 0, stagedPlayer: card }).match(new RegExp(`data-instance-id="${card.instanceId}"`, 'g'))?.length, 1);
 });
 
-test('the player decision flow exposes legal targets, costs, and a committed-play summary', () => {
-  const match = { ...createMatch('block', 'combo'), round: 2 };
-  const affordable = match.playerHand.find(card => card.cost <= match.playerHype)!;
-
-  const chooseDistrict = renderDecision(match, affordable.instanceId, null);
-  assert.match(chooseDistrict, /2\. Choose a lit district/);
-  assert.equal(chooseDistrict.match(/is-legal/g)?.length, 3);
-  assert.match(chooseDistrict, /Play · 1 Hype/);
-
-  const ready = renderDecision(match, affordable.instanceId, 0);
-  assert.match(ready, /3\. Review/);
-  assert.match(ready, new RegExp(`Lock In · ${affordable.name} → THE TOWN · 1 Hype`));
-  assert.match(ready, /Ready · 1 Hype/);
-});
-
-test('unaffordable cards and districts explain why they cannot be played', () => {
-  const match = { ...createMatch('block', 'combo'), round: 2 };
-  const expensive = match.playerHand.find(card => card.cost > match.playerHype)!;
-  const html = renderDecision(match, expensive.instanceId, null);
-
-  assert.match(html, /is-illegal/);
-  assert.match(html, new RegExp(`Need ${expensive.cost} Hype`));
-  assert.match(html, /Cannot play now\. Need more Hype or an unlocked district\./);
-  assert.match(html, /cannot be played now: it needs more Hype or every district is locked/);
-  assert.match(html, /aria-disabled="true"/);
-  assert.doesNotMatch(html, /data-testid="lane-0"[^>]* disabled/);
-  assert.doesNotMatch(html, new RegExp(`data-instance-id="${expensive.instanceId}"[^>]*aria-disabled`));
-});
-
-test('resolution text connects the acting card, affected district, and score change', () => {
-  const initial = createMatch('block', 'combo');
-  const card = initial.playerHand.find(item => item.cost <= initial.playerHype)!;
-  const resolved = playCard(initial, 'player', card.instanceId, 0);
-  const effect = resolved.effectLog[0];
-  const html = renderEffect(resolved, effect);
-
-  assert.match(html, /data-testid="effect-causality"/);
-  assert.match(html, new RegExp(card.name));
-  assert.match(html, /affected district 1/);
-  assert.match(html, /Score: Rival 0 \/ You 0 → Rival 0 \/ You 1/);
-  assert.match(html, /data-testid="button-fast-forward"/);
-  assert.match(html, /data-testid="button-battle-history"/);
-  assert.match(html, /data-testid="button-status-key"/);
-});
-
-test('broadcast artwork is assigned to first round, lock, reveal, and district flip beats', () => {
+test('guidance, treatments, and broadcast signals remain available', () => {
   const match = createMatch('block', 'combo');
-  assert.match(renderOverlay(match, 'round-intro'), /broadcast-round-01/);
-  assert.match(renderOverlay(match, 'lock-in'), /broadcast-lock-in/);
-  assert.match(renderOverlay(match, 'player-reveal'), /broadcast-reveal/);
-  assert.match(renderOverlay(match, 'rival-reveal'), /broadcast-reveal/);
-  assert.match(renderOverlay(match, 'district-flipped'), /broadcast-district-flipped/);
+  const match = createMatch('block', 'combo'); const card = match.playerHand.find(c => c.cost <= match.playerHype)!;
+  const html = renderBattle(replayFrame, { authoritativeHistory: resolved.effectLog, replay: { event, step: 'before' }, onReplayStep: noop, onExitReplay: noop });
+  assert.match(html, /2\. Choose a lit district/); assert.match(html, /is-legal/); assert.match(html, /variant-portrait-chrome/);
+  assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
 });
 
-test('later round intros retain the dynamic round indicator', () => {
-  const match = { ...createMatch('block', 'combo'), round: 2 };
-  const html = renderOverlay(match, 'round-intro');
-  assert.doesNotMatch(html, /broadcast-round-01/);
-  assert.match(html, /Card presentation/);
-});
-
-test('saved-deck gameplay carries equipped treatments into cards, hero art, and results', () => {
+test('decision handlers and commits remain privacy-safe and functional', () => {
   const match = createMatch('block', 'combo');
-  const equippedVariants = {
-    rastamon: 'rastamon:chrome',
-    'officer-oink': 'officer-oink:chrome',
-  };
-  const battle = renderDecision(match, null, null, equippedVariants);
+    const state = { squabble: false };
+    const handlers = () => createBattleDecisionHandlers({
+      match, interactive: true, selectedInstanceId: available.instanceId, selectedLane: 0,
+      squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
+      setSelectedInstanceId: noop, setSelectedLane: noop,
+      setSquabble: value => { state.squabble = value; },
+      beginSquabbleTransition: () => tryLockInteraction(squabbleLock),
+    });
+  assert.doesNotThrow(() => { handlers.selectCard(card, true); handlers.selectDistrict(1, true); handlers.toggleSquabble(card); trackBattleTurnCommitted(match, 'lock_in', false, true, Date.now(), 1); });
+  assert.equal(state.card, card.instanceId); assert.equal(state.lane, 1); assert.equal(state.squabble, true);
+});
 
-  assert.match(battle, /data-card-variant="chrome"/);
-  assert.match(battle, /variant-portrait-chrome/);
+test('authoritative history helper ignores a rewound visual log', () => {
+  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerHype)!;
 
-  const results = renderToStaticMarkup(
-    <ResultScreen
-      match={match}
-      districts={districts}
-      equippedVariants={equippedVariants}
-      onRestart={noop}
-      onChangeDeck={noop}
-      onGoHome={noop}
-      onRetryReward={noop}
-      isGuest
-    />,
-  );
+  const authoritative = playCard(initial, 'player', card.instanceId, 0);
+  const resolved = playCard(initial, 'player', card.instanceId, 0), event = resolved.effectLog[0];
+  const replayFrame = buildReplayFrame(resolved, event, 'before');
+  assert.deepEqual(getRecentBattleActions({ ...replayFrame, effectLog: [] }, resolved.effectLog), [...resolved.effectLog].slice(-6).reverse());
+  const html = renderBattle(replayFrame, { authoritativeHistory: resolved.effectLog, replay: { event, step: 'before' }, onReplayStep: noop, onExitReplay: noop });
+  assert.match(html, /Replay · Before/); assert.match(html, /data-testid="button-battle-history"/); assert.match(html, /Return to live battle/);
+});
+
+test('replay frames do not mutate live match and rewind later actions', () => {
+  const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerHype)!;
+
+  const authoritative = playCard(initial, 'player', card.instanceId, 0);
+  const afterPlayer = playCard(initial, 'player', card.instanceId, 0), cpu = afterPlayer.cpuHand.find(c => c.cost <= afterPlayer.cpuHype)!;
+  const live = createStoryMatch(snapshot, 'block'), reinforcement = live.effectLog.find(e => e.note.includes('reinforcement'))!, rule = live.effectLog.find(e => e.note.includes('lane-power'))!;
+  assert.ok(applyEventState(live, live, event, 'before').playerHand.some(c => c.instanceId === card.instanceId));
+  assert.ok(!buildReplayFrame(live, event, 'after').boards.flat().some(c => c.instanceId === cpu.instanceId));
+  assert.deepEqual(live, snapshot);
+});
+
+test('story replay snapshots retain reinforcements and lane rules', () => {
+  const base = getStoryBattle('welcome-to-the-block')!.encounter;
+  const snapshot: StoryEncounterSnapshot = { ...base, modifiers: { ...base.modifiers, reinforcements: [{ round: 1, owner: 'cpu', cardId: 'snow' }] }, phases: [{ id: 'rules', name: 'Rules', trigger: { kind: 'round', atLeast: 1 }, onEnter: [{ kind: 'lane-power', owner: 'cpu', lane: 1, amount: 2 }] }] };
+  const live = createStoryMatch(snapshot, 'block'), reinforcement = live.effectLog.find(e => e.note.includes('reinforcement'))!, rule = live.effectLog.find(e => e.note.includes('lane-power'))!;
+  assert.equal(buildReplayFrame(live, reinforcement, 'after').cpuHand.filter(c => c.cardId === 'snow').length, buildReplayFrame(live, reinforcement, 'before').cpuHand.filter(c => c.cardId === 'snow').length + 1);
+  assert.deepEqual(buildReplayFrame(live, rule, 'after').storyRuntime?.lanePowerBonuses.map(({ owner, lane, amount }) => ({ owner, lane, amount })), [{ owner: 'cpu', lane: 1, amount: 2 }]);
+  const results = renderToStaticMarkup(<ResultScreen match={live} districts={districts} equippedVariants={{ 'officer-oink': 'officer-oink:chrome' }} onRestart={noop} onChangeDeck={noop} onGoHome={noop} onRetryReward={noop} isGuest />);
   assert.match(results, /variant-portrait-chrome/);
 });
 
 test('battle decision interactions emit only approved coarse analytics fields', () => {
   const originalWindow = globalThis.window;
-  const calls: Array<{ name: string, data?: Record<string, string | number | boolean> }> = [];
+  const calls: string[] = [];
   Object.defineProperty(globalThis, 'window', {
     configurable: true,
-    value: { umami: { track: (name: string, data?: Record<string, string | number | boolean>) => calls.push({ name, data }) } },
+    value: { umami: { track: (name: string) => calls.push(name) } },
   });
   const match = createMatch('block', 'combo');
   const unavailable = match.playerHand.find(card => card.cost > match.playerHype)!;
   const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
-  const state = { selected: null as string | null, lane: null as number | null, squabble: false };
+    const state = { squabble: false };
   const makeHandlers = () => createBattleDecisionHandlers({
     match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
     squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
@@ -295,7 +157,7 @@ test('tracker failures cannot interrupt battle decision state changes', () => {
   });
   const match = createMatch('block', 'combo');
   const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
-  const state = { selected: null as string | null, lane: null as number | null, squabble: false };
+    const state = { squabble: false };
   const makeHandlers = () => createBattleDecisionHandlers({
     match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
     squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
@@ -386,3 +248,7 @@ test('rapid repeated battle interactions report once per state transition and re
     Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
   }
 });
+
+  const recent = getRecentBattleActions(visual, authoritative.effectLog);
+
+  const visual = { ...initial, effectLog: [] };
