@@ -46,7 +46,7 @@ function progressionKeys(rows: PlayerStoryNodeRecord[]): Set<string> {
   for (const chapter of storyContent.chapters) {
     if (
       chapter.nodes.length > 0 &&
-      chapter.nodes.every((node) => keys.has(node.id))
+      chapter.nodes.filter((node) => !node.optional).every((node) => keys.has(node.id))
     ) {
       keys.add(chapter.id);
     }
@@ -79,6 +79,7 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
         nodeId: node.id,
         title: node.title,
         kind: node.kind,
+        optional: node.optional,
         status: nodeStatus(node, row, cleared),
         mapPosition: node.mapPosition,
         prerequisites: [...node.prerequisites],
@@ -103,7 +104,9 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
     const bossNode = boss
       ? chapterNodes.find((node) => node.nodeId === boss.id)
       : undefined;
+    const requiredNodes = chapterNodes.filter((node) => !chapter.nodes.find((item) => item.id === node.nodeId)?.optional);
     const completedNodes = chapterNodes.filter((node) => node.cleared).length;
+    const completedRequiredNodes = requiredNodes.filter((node) => node.cleared).length;
     const chapterAvailable = chapter.prerequisites.every((id) =>
       cleared.has(id),
     );
@@ -115,13 +118,15 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
       order: chapter.order,
       mapAssetId: chapter.mapAssetId,
       status:
-        completedNodes === chapterNodes.length
+        completedRequiredNodes === requiredNodes.length
           ? ("cleared" as const)
           : chapterAvailable
             ? ("available" as const)
             : ("locked" as const),
       completedNodes,
       totalNodes: chapterNodes.length,
+      completedRequiredNodes,
+      totalRequiredNodes: requiredNodes.length,
       stars: chapterNodes.reduce((sum, node) => sum + node.stars, 0),
       bossStatus: bossNode
         ? bossNode.cleared
@@ -147,6 +152,8 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
     chapters,
     nodes,
     recommendedNodeId:
+      nodes.find((node) => node.status === "available" && !node.cleared && !node.optional)
+        ?.nodeId ??
       nodes.find((node) => node.status === "available" && !node.cleared)
         ?.nodeId ?? null,
     totalStars: nodes.reduce((sum, node) => sum + node.stars, 0),

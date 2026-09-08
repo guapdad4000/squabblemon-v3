@@ -3,6 +3,7 @@ import { and, eq, sql } from "drizzle-orm";
 import {
   db,
   playerProfilesTable,
+  playerMatchesTable,
   playerStoryActionsTable,
   playerStoryNodesTable,
   playerStoryRewardClaimsTable,
@@ -11,7 +12,7 @@ import {
 } from "@workspace/db";
 import { catalogCardByEngineId, catalogCardById } from "@workspace/squabblemon-engine/data";
 import type { StoryReward } from "@workspace/squabblemon-engine/story";
-import { getStoryNode } from "@workspace/squabblemon-engine/story";
+import { getStoryNode, isStoryCosmeticId, storyContent } from "@workspace/squabblemon-engine/story";
 import { getPlayerBootstrap } from "./playerState";
 import {
   getPlayerStoryCampaign,
@@ -29,6 +30,9 @@ export type GrantedStoryReward = PlayerStoryReward & {
 };
 
 type StoryActionKind = "complete" | "dialogue";
+export const isDevelopmentStoryResetEnabled = (
+  environment: string | undefined = process.env.NODE_ENV,
+) => environment === "development";
 
 function canonicalActionPayload(dialogueSeen: string[]) {
   return { dialogueSeen: [...new Set(dialogueSeen)] };
@@ -105,6 +109,10 @@ function describeClaim(
       : `${card?.name ?? reward.id} unlocked`;
   } else if (reward.kind === "chapter-key") {
     description = "Chapter key unlocked";
+  } else if (reward.kind === "pack-ticket") {
+    description = `+${reward.amount} Street Pack Ticket${reward.amount === 1 ? "" : "s"}`;
+  } else if (reward.kind === "cosmetic") {
+    description = `${reward.id} unlocked`;
   }
   return { ...reward, rewardKey, duplicateShards, description };
 }
@@ -137,6 +145,12 @@ export async function grantStoryRewards(
 ): Promise<GrantedStoryReward[]> {
   const granted: GrantedStoryReward[] = [];
   for (const [index, configured] of rewards.entries()) {
+    if (
+      (configured.kind === "cosmetic" && !isStoryCosmeticId(configured.id)) ||
+      (configured.kind === "chapter-key" && !configured.id.startsWith("story-key:"))
+    ) {
+      throw new StoryRequestError(500, "Story reward is invalid");
+    }
     const rewardKey = `${nodeId}:${index}:${configured.kind}:${configured.id}`;
     let duplicateShards = 0;
     let rewardCard:
@@ -200,8 +214,31 @@ export async function grantStoryRewards(
       description = duplicateShards
         ? `${card.name} duplicate converted to 25 Style Shards`
         : `${card.name} unlocked`;
-    } else if (configured.kind === "chapter-key") {
-      description = "Chapter key unlocked";
+    } else if (configured.kind === "pack-ticket") {
+      await tx
+        .update(playerProfilesTable)
+        .set({ packTickets: sql`${playerProfilesTable.packTickets} + ${configured.amount}` })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      description = `+${configured.amount} Street Pack Ticket${configured.amount === 1 ? "" : "s"}`;
+    } else if (
+      configured.kind === "cosmetic" ||
+      configured.kind === "chapter-key"
+    ) {
+      const [profile] = await tx
+        .select()
+        .from(playerProfilesTable)
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      if (!profile) throw new StoryRequestError(404, "Player profile not found");
+      const unlocked = new Set(profile.unlockedCosmeticIds);
+      unlocked.add(configured.id);
+      await tx
+        .update(playerProfilesTable)
+        .set({ unlockedCosmeticIds: [...unlocked] })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      description =
+        configured.kind === "chapter-key"
+          ? "Chapter key unlocked"
+          : `${configured.id} unlocked`;
     } else {
       throw new StoryRequestError(500, "Unsupported story reward");
     }
@@ -282,7 +319,7 @@ export async function completeNonBattleStoryNode(
       node.id,
       node.rewards,
     );
-    const chapterNumber = chapter.order + 1;
+    const chapterNumber = Math.max(1, chapter.order);
     const nodeNumber = chapter.nodes.findIndex((item) => item.id === node.id) + 1;
     await tx
       .update(playerProfilesTable)
@@ -377,4 +414,45 @@ export async function saveStoryDialogue(
     bootstrap: await getPlayerBootstrap(userId),
     node,
   };
+}
+
+/** Development-only caller must gate this function before use.  It never grants rewards. */
+export async function resetStoryDevelopment(userId: string, selectNodeId: string | null) {
+  const selected = selectNodeId ? getStoryNode(selectNodeId) : undefined;
+  if (selectNodeId && !selected) throw new StoryRequestError(404, "Story node not found");
+  await db.transaction(async (tx) => {
+    await tx.execute(sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`);
+    await tx.delete(playerStoryActionsTable).where(eq(playerStoryActionsTable.clerkUserId, userId));
+    await tx.delete(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId, userId));
+    await tx.delete(playerStoryNodesTable).where(eq(playerStoryNodesTable.clerkUserId, userId));
+    await tx.delete(playerMatchesTable).where(and(eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.mode, "story")));
+    if (selected) {
+      const needed = new Set<string>();
+      const addPrerequisites = (nodeId: string) => {
+        const node = getStoryNode(nodeId);
+        if (!node) return;
+        for (const prerequisite of node.prerequisites) {
+          const prerequisiteNode = getStoryNode(prerequisite);
+          if (prerequisiteNode && !prerequisiteNode.optional && !needed.has(prerequisite)) {
+            needed.add(prerequisite);
+            addPrerequisites(prerequisite);
+          }
+        }
+      };
+      addPrerequisites(selected.id);
+      for (const nodeId of needed) {
+        const chapter = storyContent.chapters.find((item) => item.nodes.some((node) => node.id === nodeId));
+        if (chapter) await tx.insert(playerStoryNodesTable).values({ clerkUserId: userId, chapterId: chapter.id, nodeId, cleared: true, stars: 0, attempts: 0, wins: 0, lastOutcome: "development-selected", firstClearedAt: new Date(), lastPlayedAt: new Date() });
+      }
+    }
+    const selectedChapter = selected
+      ? storyContent.chapters.find((chapter) => chapter.nodes.some((node) => node.id === selected.id))
+      : undefined;
+    await tx.update(playerProfilesTable).set({
+      storyChapter: selectedChapter ? Math.max(1, selectedChapter.order) : 1,
+      storyNode: selectedChapter ? selectedChapter.nodes.findIndex((node) => node.id === selected!.id) : 0,
+      storyProgress: {},
+    }).where(eq(playerProfilesTable.clerkUserId, userId));
+  });
+  return getPlayerStoryCampaign(userId);
 }

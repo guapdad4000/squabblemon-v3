@@ -41,6 +41,7 @@ export interface PlayerProfile {
   ownedCardIds: string[];
   discoveredCardIds: string[];
   ownedVariants: string[];
+  unlockedCosmeticIds: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
   inbox: PlayerProfileInboxItem[];

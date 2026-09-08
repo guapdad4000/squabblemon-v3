@@ -700,7 +700,7 @@ router.post(
               storyGrantedRewards: grantedStoryRewards,
             })
             .where(eq(playerMatchesTable.id, match.id));
-          const chapterNumber = storyProgression.chapterOrder + 1;
+          const chapterNumber = Math.max(1, storyProgression.chapterOrder);
           const nodeNumber = storyProgression.nodeOrder + 1;
           await tx
             .update(playerProfilesTable)

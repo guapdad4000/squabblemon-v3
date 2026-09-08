@@ -8,6 +8,8 @@ import {
   SavePlayerStoryDialogueBody,
   SavePlayerStoryDialogueParams,
   SavePlayerStoryDialogueResponse,
+  ResetPlayerStoryDevelopmentBody,
+  ResetPlayerStoryDevelopmentResponse,
 } from "@workspace/api-zod";
 import { ensurePlayer } from "../lib/playerState";
 import {
@@ -17,6 +19,8 @@ import {
 import {
   completeNonBattleStoryNode,
   saveStoryDialogue,
+  resetStoryDevelopment,
+  isDevelopmentStoryResetEnabled,
 } from "../lib/storyTransactions";
 
 const router: IRouter = Router();
@@ -34,6 +38,30 @@ router.get("/player/story", async (req, res): Promise<void> => {
   const id = userId(req, res);
   if (!id) return;
   res.json(GetPlayerStoryResponse.parse(await getPlayerStoryCampaign(id)));
+});
+
+router.post("/player/story/development/reset", async (req, res): Promise<void> => {
+  if (!isDevelopmentStoryResetEnabled()) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const id = userId(req, res);
+  if (!id) return;
+  const body = ResetPlayerStoryDevelopmentBody.safeParse(req.body);
+  if (!body.success) {
+    res.status(400).json({ error: "Invalid story reset" });
+    return;
+  }
+  try {
+    await ensurePlayer(id);
+    res.json(ResetPlayerStoryDevelopmentResponse.parse(await resetStoryDevelopment(id, body.data.selectNodeId)));
+  } catch (error) {
+    if (error instanceof StoryRequestError) {
+      res.status(error.status).json({ error: error.message });
+      return;
+    }
+    throw error;
+  }
 });
 
 router.post(

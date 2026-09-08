@@ -39,7 +39,7 @@ export function parseStoryMatchProgressionSnapshot(
     if (!reward || typeof reward !== "object") return false;
     const item = reward as Partial<StoryReward>;
     return (
-      ["currency", "card", "chapter-key"].includes(item.kind ?? "") &&
+      ["currency", "card", "chapter-key", "pack-ticket", "cosmetic"].includes(item.kind ?? "") &&
       typeof item.id === "string" &&
       item.id.length > 0 &&
       Number.isInteger(item.amount) &&

@@ -132,6 +132,7 @@ export interface PlayerProfile {
   ownedCardIds: string[];
   discoveredCardIds: string[];
   ownedVariants: string[];
+  unlockedCosmeticIds: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
   inbox: PlayerProfileInboxItem[];
@@ -406,6 +407,8 @@ export const StoryGrantedRewardKind = {
   currency: 'currency',
   card: 'card',
   'chapter-key': 'chapter-key',
+  'pack-ticket': 'pack-ticket',
+  cosmetic: 'cosmetic',
 } as const;
 
 export interface StoryGrantedReward {
@@ -457,6 +460,8 @@ export interface StoryChapterProgress {
   status: StoryChapterProgressStatus;
   completedNodes: number;
   totalNodes: number;
+  completedRequiredNodes: number;
+  totalRequiredNodes: number;
   stars: number;
   bossStatus: StoryChapterProgressBossStatus;
 }
@@ -491,6 +496,8 @@ export const StoryRewardKind = {
   currency: 'currency',
   card: 'card',
   'chapter-key': 'chapter-key',
+  'pack-ticket': 'pack-ticket',
+  cosmetic: 'cosmetic',
 } as const;
 
 export interface StoryReward {
@@ -504,6 +511,7 @@ export interface StoryNodeProgress {
   nodeId: string;
   title: string;
   kind: StoryNodeProgressKind;
+  optional: boolean;
   status: StoryNodeProgressStatus;
   mapPosition: StoryMapPosition;
   prerequisites: string[];
@@ -581,6 +589,14 @@ export interface StoryNodeCompleteInput {
      * @items.maxLength 120
      */
   dialogueSeen: string[];
+}
+
+export interface StoryDevelopmentResetInput {
+  /**
+     * @maxLength 80
+     * @nullable
+     */
+  selectNodeId: string | null;
 }
 
 export type StoryDialogueProgressInput = StoryNodeCompleteInput;

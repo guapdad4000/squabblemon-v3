@@ -27,6 +27,7 @@ import {
 } from "./storyMatchSnapshot";
 import {
   completeNonBattleStoryNode,
+  isDevelopmentStoryResetEnabled,
   saveStoryDialogue,
 } from "./storyTransactions";
 
@@ -43,18 +44,32 @@ async function storyPlayer(t: test.TestContext, prefix: string) {
   });
   return clerkUserId;
 }
+const requiredBeforeCrown = [
+  "welcome-to-the-block",
+  "blue-side-pressure",
+  "receipts-on-camera",
+  "red-side-retaliation",
+  "snitch-at-the-corner",
+  "cracked-head-takes-the-block",
+];
+async function unlockCrown(userId: string) {
+  await db.insert(playerStoryNodesTable).values(requiredBeforeCrown.map((nodeId) => ({
+    clerkUserId: userId, chapterId: "block-party", nodeId, cleared: true,
+  })));
+}
 
 test("story nodes persist normalized progress and merged dialogue", async (t) => {
   const userId = await storyPlayer(t, "story-dialogue");
+  await unlockCrown(userId);
   const first = await completeNonBattleStoryNode(
     userId,
-    "prologue-welcome",
+    "block-crowned",
     randomUUID(),
     ["line-1"],
   );
   const retry = await completeNonBattleStoryNode(
     userId,
-    "prologue-welcome",
+    "block-crowned",
     randomUUID(),
     ["line-1", "line-2"],
   );
@@ -64,12 +79,12 @@ test("story nodes persist normalized progress and merged dialogue", async (t) =>
   const [row] = await db
     .select()
     .from(playerStoryNodesTable)
-    .where(eq(playerStoryNodesTable.clerkUserId, userId));
+    .where(and(eq(playerStoryNodesTable.clerkUserId, userId), eq(playerStoryNodesTable.nodeId, "block-crowned")));
   assert.equal(row.cleared, true);
   assert.equal(row.attempts, 1);
   assert.deepEqual(row.dialogueSeen, ["line-1", "line-2"]);
   const campaign = await getPlayerStoryCampaign(userId);
-  assert.equal(campaign.recommendedNodeId, "prologue-first-hand");
+  assert.equal(campaign.recommendedNodeId, "side-alley-challenge");
 });
 
 test("server registry prerequisites reject out-of-order completion", async (t) => {
@@ -78,7 +93,7 @@ test("server registry prerequisites reject out-of-order completion", async (t) =
     () =>
       completeNonBattleStoryNode(
         userId,
-        "prologue-starter-drop",
+        "block-crowned",
         randomUUID(),
         ["scene"],
       ),
@@ -89,35 +104,41 @@ test("server registry prerequisites reject out-of-order completion", async (t) =
   );
 });
 
+test("optional Side Alley never gates required completion or recommendation", async (t) => {
+  const userId = await storyPlayer(t, "story-optional");
+  await db.insert(playerStoryNodesTable).values([
+    { clerkUserId: userId, chapterId: "block-party", nodeId: "welcome-to-the-block", cleared: true },
+    { clerkUserId: userId, chapterId: "block-party", nodeId: "blue-side-pressure", cleared: true },
+  ]);
+  const campaign = await getPlayerStoryCampaign(userId);
+  const receipts = campaign.nodes.find((node) => node.nodeId === "receipts-on-camera");
+  const alley = campaign.nodes.find((node) => node.nodeId === "side-alley-challenge");
+  assert.equal(receipts?.status, "available");
+  assert.equal(alley?.status, "available");
+  assert.equal(campaign.recommendedNodeId, "receipts-on-camera");
+  assert.equal(campaign.chapters[0].completedRequiredNodes, 2);
+  assert.equal(campaign.chapters[0].totalRequiredNodes, 7);
+});
+
+test("development story reset guard is disabled outside development", () => {
+  assert.equal(isDevelopmentStoryResetEnabled("production"), false);
+  assert.equal(isDevelopmentStoryResetEnabled("test"), false);
+  assert.equal(isDevelopmentStoryResetEnabled("development"), true);
+});
+
 test("concurrent story reward completion grants immutable rewards once", async (t) => {
   const userId = await storyPlayer(t, "story-reward");
-  await db.insert(playerStoryNodesTable).values([
-    {
-      clerkUserId: userId,
-      chapterId: "prologue-street-rules",
-      nodeId: "prologue-welcome",
-      cleared: true,
-    },
-    {
-      clerkUserId: userId,
-      chapterId: "prologue-street-rules",
-      nodeId: "prologue-first-hand",
-      cleared: true,
-      stars: 1,
-      attempts: 1,
-      wins: 1,
-    },
-  ]);
+  await unlockCrown(userId);
   const results = await Promise.all([
     completeNonBattleStoryNode(
       userId,
-      "prologue-starter-drop",
+      "block-crowned",
       "same-action-key",
       ["drop"],
     ),
     completeNonBattleStoryNode(
       userId,
-      "prologue-starter-drop",
+      "block-crowned",
       "same-action-key",
       ["drop"],
     ),
@@ -134,9 +155,10 @@ test("concurrent story reward completion grants immutable rewards once", async (
     .select()
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, userId));
-  assert.equal(claims.value, 2);
-  assert.equal(profile.xp, 75);
-  assert.equal(profile.ownedCardIds.includes("plug"), true);
+  assert.equal(claims.value, 4);
+  assert.equal(profile.packTickets, 1);
+  assert.equal(profile.ownedCardIds.includes("closet-nerd"), true);
+  assert.deepEqual(profile.unlockedCosmeticIds.sort(), ["block-party-crowned", "story-key:chapter-two"]);
   const [actions] = await db
     .select({ value: count() })
     .from(playerStoryActionsTable)
@@ -146,9 +168,10 @@ test("concurrent story reward completion grants immutable rewards once", async (
 
 test("story action keys reject cross-node, action, and payload reuse", async (t) => {
   const userId = await storyPlayer(t, "story-action-conflict");
+  await unlockCrown(userId);
   await completeNonBattleStoryNode(
     userId,
-    "prologue-welcome",
+    "block-crowned",
     "immutable-story-action",
     ["one"],
   );
@@ -156,7 +179,7 @@ test("story action keys reject cross-node, action, and payload reuse", async (t)
     () =>
       saveStoryDialogue(
         userId,
-        "prologue-welcome",
+        "block-crowned",
         "immutable-story-action",
         ["one"],
       ),
@@ -166,7 +189,7 @@ test("story action keys reject cross-node, action, and payload reuse", async (t)
     () =>
       completeNonBattleStoryNode(
         userId,
-        "prologue-welcome",
+        "block-crowned",
         "immutable-story-action",
         ["different"],
       ),
@@ -176,21 +199,15 @@ test("story action keys reject cross-node, action, and payload reuse", async (t)
 
 test("dialogue actions persist on unlocked battle nodes without clearing", async (t) => {
   const userId = await storyPlayer(t, "story-battle-dialogue");
-  await completeNonBattleStoryNode(
-    userId,
-    "prologue-welcome",
-    randomUUID(),
-    ["welcome"],
-  );
   const first = await saveStoryDialogue(
     userId,
-    "prologue-first-hand",
+    "welcome-to-the-block",
     "battle-dialogue-key",
     ["pre:0", "skip:pre"],
   );
   const retry = await saveStoryDialogue(
     userId,
-    "prologue-first-hand",
+    "welcome-to-the-block",
     "battle-dialogue-key",
     ["pre:0", "skip:pre"],
   );
@@ -202,7 +219,7 @@ test("dialogue actions persist on unlocked battle nodes without clearing", async
     .where(
       and(
         eq(playerStoryNodesTable.clerkUserId, userId),
-        eq(playerStoryNodesTable.nodeId, "prologue-first-hand"),
+        eq(playerStoryNodesTable.nodeId, "welcome-to-the-block"),
       ),
     );
   assert.equal(row.cleared, false);
@@ -211,7 +228,7 @@ test("dialogue actions persist on unlocked battle nodes without clearing", async
 });
 
 test("story transcript verification uses explicit immutable snapshot and cards", () => {
-  const battle = getStoryBattle("prologue-first-hand");
+  const battle = getStoryBattle("welcome-to-the-block");
   const recipe = starterRecipes[0];
   assert.ok(battle);
   const initial = createStoryMatch(battle.encounter, recipe.cards, recipe.id);
@@ -233,7 +250,7 @@ test("story transcript verification uses explicit immutable snapshot and cards",
 
 test("story match progression snapshot survives a later content revision", () => {
   const chapter = storyContent.chapters[0];
-  const node = getStoryBattle("prologue-first-hand");
+  const node = getStoryBattle("welcome-to-the-block");
   assert.ok(chapter);
   assert.ok(node);
   const issued = createStoryMatchProgressionSnapshot(
@@ -260,7 +277,7 @@ test("story match progression snapshot survives a later content revision", () =>
 test("stored story match result reconstructs byte-equivalent retry metadata", async (t) => {
   const userId = await storyPlayer(t, "story-match-retry");
   const reward = {
-    rewardKey: "prologue-first-hand:0:currency:street-xp",
+    rewardKey: "welcome-to-the-block:0:currency:street-xp",
     kind: "currency" as const,
     id: "street-xp",
     amount: 50,
@@ -273,8 +290,8 @@ test("stored story match result reconstructs byte-equivalent retry metadata", as
       clerkUserId: userId,
       mode: "story",
       playerDeckId: "block",
-      rivalDeckId: "prologue-blue",
-      storyNodeId: "prologue-first-hand",
+      rivalDeckId: "welcome-to-the-block-deck",
+      storyNodeId: "welcome-to-the-block",
       outcome: "win",
       rounds: 6,
       districtsWon: 3,

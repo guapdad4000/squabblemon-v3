@@ -15,6 +15,7 @@ export interface StoryNodeProgress {
   nodeId: string;
   title: string;
   kind: StoryNodeProgressKind;
+  optional: boolean;
   status: StoryNodeProgressStatus;
   mapPosition: StoryMapPosition;
   prerequisites: string[];

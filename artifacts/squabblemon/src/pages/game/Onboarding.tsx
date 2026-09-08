@@ -6,12 +6,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { decks, getCardImage } from '../../data';
 import { PlayLoop } from '../../components/PlayLoop';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 
 export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const step = bootstrap.profile.onboardingStep;
   const advance = useAdvancePlayerOnboarding();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 
   const handleAdvance = async (payload: OnboardingProgressInput) => {
@@ -19,6 +20,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await advance.mutateAsync({ data: payload });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
+      if (payload.action === 'claim-reward') setLocation('/game/story');
     } catch (e) {
       console.error(e);
       setError('The block could not save that step. Check your connection and try again.');
@@ -63,7 +65,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <div className="flex h-screen items-center justify-center bg-black text-white">
-      <Link href="/game" className="bg-primary text-black px-6 py-3 font-display font-black italic uppercase">Go to Hub</Link>
+      <Link href="/game/story" className="bg-primary text-black px-6 py-3 font-display font-black italic uppercase">Enter Chapter One</Link>
     </div>
   );
 }

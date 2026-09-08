@@ -23,6 +23,15 @@ export type StoryEncounterSnapshot = {
     readonly behaviorProfile: string;
   };
   readonly battlefieldAssetId: string;
+  readonly cinematic?: {
+    readonly videoAssetId: string;
+    readonly posterAssetId: string;
+    readonly environmentAssetId: string;
+  };
+  readonly passive?: {
+    readonly name: string;
+    readonly description: string;
+  };
   readonly soundHooks: Readonly<Record<string, string>>;
   readonly modifiers?: {
     readonly startingHype?: Partial<Readonly<Record<Owner, number>>>;
@@ -35,6 +44,7 @@ export type StoryEncounterSnapshot = {
   readonly phases?: readonly {
     readonly id: string;
     readonly name: string;
+    readonly description?: string;
     readonly trigger: StoryTrigger;
     readonly onEnter?: readonly StoryEffect[];
   }[];

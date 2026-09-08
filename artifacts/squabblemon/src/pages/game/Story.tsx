@@ -22,6 +22,7 @@ import {
 } from '@workspace/squabblemon-engine/story';
 import { cards, getAssetUrl, getCardImage } from '../../data';
 import { getStoryModifierSummaries } from '../../gameEngine';
+import { StoryCinematic } from '../../components/StoryCinematic';
 
 type SceneEntry = {
   token: string;
@@ -54,6 +55,8 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
 function rewardLabel(reward: StoryReward | StoryGrantedReward) {
   if (reward.kind === 'card') return `${cards[reward.id]?.name ?? reward.id} card`;
   if (reward.kind === 'chapter-key') return 'Next chapter key';
+  if (reward.kind === 'pack-ticket') return `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
+  if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
   return `+${reward.amount} Street XP`;
 }
 
@@ -63,6 +66,7 @@ export function Story() {
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
+  const [introCinematicVisible, setIntroCinematicVisible] = useState(false);
 
   const campaign = storyQuery.data;
   useEffect(() => {
@@ -77,6 +81,21 @@ export function Story() {
     const recommended = campaign.nodes.find((node) => node.nodeId === campaign.recommendedNodeId);
     setActiveChapterId((current) => current ?? recommended?.chapterId ?? campaign.chapters[0]?.id ?? null);
   }, [campaign, location]);
+
+  const currentChapter = campaign?.chapters.find((chapter) => chapter.id === activeChapterId) ??
+    campaign?.chapters.find((chapter) => chapter.status !== 'locked') ??
+    campaign?.chapters[0];
+
+  useEffect(() => {
+    if (campaign && currentChapter) {
+      const key = `chapter_intro_${currentChapter.id}_${campaign.contentVersion}`;
+      if (!sessionStorage.getItem(key) && currentChapter.status !== 'cleared') {
+        setIntroCinematicVisible(true);
+        sessionStorage.setItem(key, 'true');
+        sessionStorage.setItem('block_party_opening_seen', 'true');
+      }
+    }
+  }, [campaign, currentChapter]);
 
   if (storyQuery.error) {
     return (
@@ -107,19 +126,28 @@ export function Story() {
     return <div className="h-full grid place-items-center bg-black text-sm text-white/55">No chapters are active.</div>;
   }
 
-  const currentChapter =
-    campaign.chapters.find((chapter) => chapter.id === activeChapterId) ??
-    campaign.chapters.find((chapter) => chapter.status !== 'locked') ??
-    campaign.chapters[0];
-  const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter.id);
-  const chapterContent = getStoryChapter(currentChapter.id);
+  if (introCinematicVisible && currentChapter) {
+    return (
+      <StoryCinematic
+        source="assets/story/chapter-one/media/chapter-opening.mp4"
+        poster="assets/story/chapter-one/media/chapter-opening.webp"
+        title={currentChapter.title}
+        eyebrow={currentChapter.subtitle}
+        onComplete={() => setIntroCinematicVisible(false)}
+        onSkip={() => setIntroCinematicVisible(false)}
+      />
+    );
+  }
+
+  const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
+  const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const maxStars = (chapterContent?.nodes.filter((node) => node.kind === 'battle').length ?? 0) * 3;
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-black text-white">
       <div
         className="relative flex-1 touch-pan-x touch-pan-y overflow-auto border-b border-white/10 bg-cover bg-center hide-scrollbar"
-        style={{ backgroundImage: `url("${getAssetUrl(currentChapter.mapAssetId)}")` }}
+        style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}
       >
         <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px]" />
         <div className="relative mx-auto h-full min-h-[600px] w-full min-w-[800px] p-12">
@@ -148,6 +176,7 @@ export function Story() {
             const locked = node.status === 'locked';
             const cleared = node.status === 'cleared';
             const recommended = node.nodeId === campaign.recommendedNodeId;
+            const isOptionalNode = node.optional;
             return (
               <motion.button
                 key={node.nodeId}
@@ -161,8 +190,8 @@ export function Story() {
                   locked
                     ? 'cursor-not-allowed border-zinc-800 bg-zinc-950 text-white/30'
                     : cleared
-                      ? 'border-primary bg-black text-primary'
-                      : 'border-black bg-primary text-black shadow-[0_0_25px_rgba(250,204,21,.5)]'
+                      ? (isOptionalNode ? 'border-accent bg-black text-accent' : 'border-primary bg-black text-primary')
+                      : (isOptionalNode ? 'border-black bg-accent text-black shadow-[0_0_25px_rgba(225,29,72,.5)]' : 'border-black bg-primary text-black shadow-[0_0_25px_rgba(250,204,21,.5)]')
                 }`}
                 style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
               >
@@ -170,16 +199,16 @@ export function Story() {
                   {locked ? '?' : node.kind === 'battle' ? '!' : '·'}
                 </span>
                 <span className="absolute left-1/2 top-[120%] flex -translate-x-1/2 -rotate-45 flex-col items-center whitespace-nowrap">
-                  <span className={`border border-white/10 bg-black/80 px-2 py-1 font-display text-sm font-black italic uppercase ${recommended ? 'text-primary' : 'text-white/75'}`}>
+                  <span className={`border border-white/10 bg-black/80 px-2 py-1 font-display text-sm font-black italic uppercase ${recommended ? (isOptionalNode ? 'text-accent' : 'text-primary') : 'text-white/75'}`}>
                     {node.title}
                   </span>
-                  {recommended && <span className="mt-1 bg-primary px-2 py-0.5 font-mono text-[7px] uppercase tracking-widest text-black">Up next</span>}
+                  {recommended && <span className={`mt-1 px-2 py-0.5 font-mono text-[7px] uppercase tracking-widest text-black ${isOptionalNode ? 'bg-accent' : 'bg-primary'}`}>Up next</span>}
                   {node.kind === 'battle' && (
                     <span className="mt-1 flex gap-1 border border-white/10 bg-black/80 px-1.5 py-1">
                       {[1, 2, 3].map((star) => (
                         <span
                           key={star}
-                          className={`h-2.5 w-2.5 ${star <= node.stars ? 'bg-primary' : 'bg-white/20'}`}
+                          className={`h-2.5 w-2.5 ${star <= node.stars ? (isOptionalNode ? 'bg-accent' : 'bg-primary') : 'bg-white/20'}`}
                           style={{ clipPath: 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)' }}
                         />
                       ))}
@@ -203,31 +232,31 @@ export function Story() {
                   disabled={chapter.status === 'locked'}
                   onClick={() => setActiveChapterId(chapter.id)}
                   className={`border px-2 py-1 font-mono text-[8px] uppercase tracking-widest ${
-                    chapter.id === currentChapter.id
+                    chapter.id === currentChapter?.id
                       ? 'border-primary bg-primary text-black'
                       : chapter.status === 'locked'
                         ? 'border-white/10 text-white/25'
                         : 'border-white/20 bg-black/60 text-white/65'
                   }`}
                 >
-                  {chapter.order === 0 ? 'Prologue' : `Chapter ${chapter.order}`}
+                  Chapter {chapter.order || 1}
                 </button>
               ))}
             </div>
             <h1 className="max-w-[70vw] font-display text-3xl font-black italic uppercase leading-none drop-shadow-md md:text-5xl">
-              {currentChapter.title}
+              {currentChapter?.title}
             </h1>
             <p className="mt-1 max-w-[70vw] font-mono text-[9px] uppercase tracking-widest text-primary md:text-xs">
-              {currentChapter.subtitle}
+              {currentChapter?.subtitle}
             </p>
           </div>
           <div className="border border-white/10 bg-black/75 px-3 py-2 text-right">
-            <div className="font-mono text-[8px] uppercase tracking-widest text-white/50">Stars</div>
+            <div className="font-mono text-[8px] uppercase tracking-widest text-white/50">Progression</div>
             <div className="font-display text-2xl font-black leading-none text-primary">
-              {currentChapter.stars}<span className="text-base text-white/30">/{maxStars}</span>
+              {currentChapter?.completedRequiredNodes ?? 0}<span className="text-base text-white/30">/{currentChapter?.totalRequiredNodes ?? 0}</span>
             </div>
             <div className="mt-1 font-mono text-[7px] uppercase text-white/35">
-              Boss {currentChapter.bossStatus}
+              Boss {currentChapter?.bossStatus}
             </div>
           </div>
         </div>
@@ -510,18 +539,41 @@ function BattleBriefing({
   onStart: () => void;
 }) {
   const modifiers = getStoryModifierSummaries(battle.encounter);
+  const isBoss = battle.encounter.phases && battle.encounter.phases.length > 0;
+
   return (
     <div className="h-full overflow-y-auto p-4 pb-[max(2rem,env(safe-area-inset-bottom))] md:p-8">
       <div className="mx-auto max-w-4xl">
-        <div className="grid min-h-56 overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_20%_30%,rgba(250,204,21,.15),transparent_45%),#090909] md:grid-cols-[260px_1fr]">
+        <div className={`grid min-h-56 overflow-hidden border border-white/10 ${isBoss ? 'bg-[radial-gradient(circle_at_20%_30%,rgba(225,29,72,.15),transparent_45%),#090909]' : 'bg-[radial-gradient(circle_at_20%_30%,rgba(250,204,21,.15),transparent_45%),#090909]'} md:grid-cols-[260px_1fr]`}>
           <img src={getAssetUrl(battle.encounter.enemy.portraitAssetId)} alt={battle.encounter.enemy.name} className="h-56 w-full object-contain object-bottom md:h-full" />
           <div className="p-5 md:p-8">
-            <div className="font-mono text-[9px] uppercase tracking-[.22em] text-primary">{cleared ? 'Mastery replay' : battle.battleType}</div>
-            <h2 className="mt-2 font-display text-4xl font-black italic uppercase leading-none md:text-6xl">{battle.encounter.enemy.name}</h2>
+            {battle.optional && <div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent mb-2 border border-accent/30 bg-accent/10 inline-block px-2 py-0.5">Mastery Node</div>}
+            <div className={`font-mono text-[9px] uppercase tracking-[.22em] ${isBoss ? 'text-accent' : 'text-primary'}`}>{cleared ? 'Mastery replay' : battle.battleType}</div>
+            <h2 className={`mt-2 font-display text-4xl font-black italic uppercase leading-none md:text-6xl ${isBoss ? 'text-white drop-shadow-[0_2px_12px_rgba(225,29,72,0.8)]' : ''}`}>{battle.encounter.enemy.name}</h2>
             <p className="mt-3 text-sm text-white/55">{battle.encounter.enemy.behaviorProfile} rival · six rounds · first to two districts</p>
             <div className="mt-5 flex gap-2">{historyButton}</div>
           </div>
         </div>
+
+        {battle.teaching && (
+          <section className="border border-primary/20 bg-primary/5 p-4 mt-4">
+            <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Intel</h3>
+            <ul className="mt-3 space-y-2 text-xs text-white/80 list-disc pl-4">
+              {battle.teaching.tips.map(tip => <li key={tip}>{tip}</li>)}
+            </ul>
+            {battle.teaching.focusMechanics.length > 0 && (
+              <div className="mt-3 text-[10px] text-white/50 font-mono uppercase tracking-wider border-t border-primary/20 pt-2">Focus: {battle.teaching.focusMechanics.join(', ')}</div>
+            )}
+          </section>
+        )}
+
+        {battle.encounter.passive && (
+          <section className="border border-purple-500/30 bg-purple-500/10 p-4 mt-4">
+            <h3 className="font-mono text-[8px] uppercase tracking-widest text-purple-400">Enemy Passive</h3>
+            <div className="mt-2 font-bold text-sm text-purple-200">{battle.encounter.passive.name}</div>
+            <p className="mt-1 text-xs text-white/70">{battle.encounter.passive.description}</p>
+          </section>
+        )}
 
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           <section className="border border-white/10 bg-white/5 p-4">
@@ -529,6 +581,14 @@ function BattleBriefing({
             <div className="mt-3 space-y-2 text-xs text-white/70">
               {modifiers.length ? modifiers.map((modifier) => <p key={modifier}>{modifier}</p>) : <p>Standard district rules apply.</p>}
             </div>
+            {battle.encounter.phases && battle.encounter.phases.length > 0 && (
+              <div className="mt-4 pt-3 border-t border-white/10">
+                <h4 className="font-mono text-[8px] uppercase text-accent mb-2">Boss Phases</h4>
+                <ul className="space-y-2 text-[10px] text-white/60">
+                  {battle.encounter.phases.map((phase, index) => <li key={phase.id}><span className="text-white">Phase {index + 1}:</span> {phase.description}</li>)}
+                </ul>
+              </div>
+            )}
           </section>
           <section className="border border-white/10 bg-white/5 p-4">
             <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Star objectives</h3>
@@ -550,9 +610,11 @@ function BattleBriefing({
         </div>
 
         <section className="mt-3 border border-white/10 bg-black p-4">
-          <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Recommended crew cards</h3>
+          <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">
+            {battle.teaching.focusCards.length ? 'Focus Cards' : 'Recommended crew cards'}
+          </h3>
           <div className="mt-3 flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
-            {battle.recommendedCollection.map((cardId) => (
+            {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => (
               <div key={cardId} className="flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2">
                 <img src={getCardImage(cards[cardId].id)} alt="" className="h-12 w-9 object-cover" />
                 <span className="font-display text-xs font-bold uppercase">{cards[cardId].name}</span>
@@ -562,8 +624,8 @@ function BattleBriefing({
         </section>
 
         <div className="mt-5 flex gap-3">
-          <button type="button" onClick={onClose} className="flex-1 border border-white/20 bg-black py-4 font-display font-black italic uppercase">Fall Back</button>
-          <button type="button" onClick={onStart} className="flex-[2] bg-primary py-4 font-display font-black italic uppercase text-black shadow-[0_4px_0_#854d0e]">
+          <button type="button" onClick={onClose} className="flex-1 border border-white/20 bg-black py-4 font-display font-black italic uppercase hover:bg-white/5 transition-colors">Fall Back</button>
+          <button type="button" onClick={onStart} className={`flex-[2] py-4 font-display font-black italic uppercase text-black transition-transform active:translate-y-1 ${isBoss ? 'bg-accent shadow-[0_4px_0_#9f1239]' : 'bg-primary shadow-[0_4px_0_#854d0e]'}`}>
             {cleared ? 'Replay Encounter' : 'Engage Target'}
           </button>
         </div>

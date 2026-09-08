@@ -53,6 +53,28 @@ paths:
                 $ref: "#/components/schemas/StoryCampaign"
         "401":
           description: Authentication required
+  /player/story/development/reset:
+    post:
+      operationId: resetPlayerStoryDevelopment
+      tags: [player]
+      summary: Development-only reset and optional story-node selector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryDevelopmentResetInput"
+      responses:
+        "200":
+          description: Reset canonical story campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryCampaign"
+        "401":
+          description: Authentication required
+        "404":
+          description: Not available outside development
   /player/story/nodes/{nodeId}/complete:
     post:
       operationId: completePlayerStoryNode
@@ -480,6 +502,10 @@ components:
           type: array
           items:
             type: string
+        unlockedCosmeticIds:
+          type: array
+          items:
+            type: string
         savedDecks:
           type: array
           items:
@@ -525,6 +551,7 @@ components:
         - ownedCardIds
         - discoveredCardIds
         - ownedVariants
+        - unlockedCosmeticIds
         - savedDecks
         - storyProgress
         - inbox
@@ -917,7 +944,7 @@ components:
       properties:
         kind:
           type: string
-          enum: [currency, card, chapter-key]
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic]
         id:
           type: string
         amount:
@@ -930,7 +957,7 @@ components:
           type: string
         kind:
           type: string
-          enum: [currency, card, chapter-key]
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic]
         id:
           type: string
         amount:
@@ -960,6 +987,8 @@ components:
         kind:
           type: string
           enum: [dialogue, reward, battle]
+        optional:
+          type: boolean
         status:
           type: string
           enum: [locked, available, cleared]
@@ -995,7 +1024,7 @@ components:
         lastPlayedAt:
           type: [string, "null"]
           format: date-time
-      required: [chapterId, nodeId, title, kind, status, mapPosition, prerequisites, rewards, cleared, stars, attempts, wins, lastOutcome, dialogueSeen, bossHighestPhase, firstClearedAt, lastPlayedAt]
+      required: [chapterId, nodeId, title, kind, optional, status, mapPosition, prerequisites, rewards, cleared, stars, attempts, wins, lastOutcome, dialogueSeen, bossHighestPhase, firstClearedAt, lastPlayedAt]
     StoryChapterProgress:
       type: object
       properties:
@@ -1018,12 +1047,16 @@ components:
           type: integer
         totalNodes:
           type: integer
+        completedRequiredNodes:
+          type: integer
+        totalRequiredNodes:
+          type: integer
         stars:
           type: integer
         bossStatus:
           type: string
           enum: [locked, available, in-progress, cleared]
-      required: [id, title, subtitle, description, order, mapAssetId, status, completedNodes, totalNodes, stars, bossStatus]
+      required: [id, title, subtitle, description, order, mapAssetId, status, completedNodes, totalNodes, completedRequiredNodes, totalRequiredNodes, stars, bossStatus]
     StoryCampaign:
       type: object
       properties:
@@ -1061,6 +1094,14 @@ components:
             type: string
             maxLength: 120
       required: [idempotencyKey, dialogueSeen]
+      additionalProperties: false
+    StoryDevelopmentResetInput:
+      type: object
+      properties:
+        selectNodeId:
+          type: [string, "null"]
+          maxLength: 80
+      required: [selectNodeId]
       additionalProperties: false
     StoryDialogueProgressInput:
       $ref: "#/components/schemas/StoryNodeCompleteInput"

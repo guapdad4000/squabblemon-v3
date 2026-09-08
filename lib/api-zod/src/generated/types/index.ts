@@ -53,6 +53,7 @@ export * from './storyCampaignBossStatus';
 export * from './storyChapterProgress';
 export * from './storyChapterProgressBossStatus';
 export * from './storyChapterProgressStatus';
+export * from './storyDevelopmentResetInput';
 export * from './storyDialogueProgressInput';
 export * from './storyDialogueProgressResponse';
 export * from './storyGrantedReward';

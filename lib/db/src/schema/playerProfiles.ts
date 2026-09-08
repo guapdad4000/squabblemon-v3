@@ -62,6 +62,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  unlockedCosmeticIds: jsonb("unlocked_cosmetic_ids")
+    .$type<string[]>()
+    .notNull()
+    .default([]),
   savedDecks: jsonb("saved_decks")
     .$type<SavedDeck[]>()
     .notNull()

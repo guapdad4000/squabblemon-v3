@@ -26,9 +26,30 @@ export function Battle({
   const lockedLanes = m.storyEncounter ? getStoryLockedLanes(m, 'player') : [];
   const modifierSummaries = m.storyEncounter ? getStoryModifierSummaries(m) : [];
   const activePhase = getActiveStoryPhase(m);
+  const activePhaseIndex = m.storyRuntime?.activePhaseIndex ?? -1;
+  const prevPhaseIndexRef = React.useRef(-1);
+  const [phaseBanner, setPhaseBanner] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    let timer: number | undefined;
+    if (activePhaseIndex > prevPhaseIndexRef.current) {
+      const phase = getActiveStoryPhase(m);
+      if (phase) {
+        setPhaseBanner(`Phase ${activePhaseIndex + 1}: ${phase.name}`);
+        timer = window.setTimeout(() => setPhaseBanner(null), 3000);
+        prevPhaseIndexRef.current = activePhaseIndex;
+      }
+      prevPhaseIndexRef.current = activePhaseIndex;
+    }
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, [activePhaseIndex, m]);
+
   const [showModifiers, setShowModifiers] = useState(false);
   const rivalPortrait = m.storyEncounter ? getAssetUrl(m.storyEncounter.enemy.portraitAssetId) : getCardImage(rivalDeck.hero);
   const battlefield = getAssetUrl(m.storyEncounter?.battlefieldAssetId ?? 'assets/e71f5189-861e-418d-8237-fa20713b9122.png');
+  const passive = m.storyEncounter?.passive;
 
   const getActionState = () => {
     if (!interactive) return { label: canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
@@ -58,13 +79,32 @@ export function Battle({
       <motion.img key={`rival-stage-${rivalDeck.hero}`} initial={{ opacity: 0, x: 24 }} animate={{ opacity: .24, x: 0 }} src={rivalPortrait} alt="" aria-hidden="true" className="absolute right-[2%] top-[5%] h-[42%] w-[30%] object-contain object-right-top grayscale brightness-75 drop-shadow-[0_18px_24px_rgba(0,0,0,0.9)]" />
       <motion.img key={`player-stage-${deck.hero}`} initial={{ opacity: 0, x: -24 }} animate={{ opacity: .22, x: 0 }} src={getCardImage(deck.hero)} alt="" aria-hidden="true" className="absolute left-[2%] bottom-[12%] h-[42%] w-[30%] object-contain object-left-bottom brightness-75 drop-shadow-[0_18px_24px_rgba(0,0,0,0.9)]" />
     </div>
-    <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 grid place-items-center bg-black/20"><span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span></motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 grid place-items-center bg-black/20 pointer-events-none"><span className="cinematic-callout text-white">{phaseMessage}</span></motion.div>)}</AnimatePresence>
+
+    <AnimatePresence>
+      {phaseBanner && (
+        <motion.div initial={{ opacity: 0, scale: 0.9, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 1.1 }} className="absolute inset-0 z-50 pointer-events-none grid place-items-center bg-black/70 backdrop-blur-md border-y-2 border-accent">
+          <div className="text-center p-8 bg-black/50 border border-accent/20 w-full max-w-2xl mx-auto shadow-[0_0_80px_rgba(225,29,72,0.3)]">
+            <div className="font-mono text-accent text-[12px] uppercase tracking-[0.4em] mb-2 font-bold">{phaseBanner.split(':')[0]}</div>
+            <div className="font-display font-black italic text-5xl md:text-7xl uppercase text-white drop-shadow-[0_4px_24px_rgba(225,29,72,0.8)]">{phaseBanner.split(':')[1]}</div>
+            {activePhase?.description && <div className="mt-4 mx-auto max-w-lg text-rose-200 text-sm md:text-base border-t border-accent/30 pt-4">{activePhase.description}</div>}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-40 grid place-items-center bg-black/20"><span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span></motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: 1.25 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-40 grid place-items-center bg-black/20 pointer-events-none"><span className="cinematic-callout text-white">{phaseMessage}</span></motion.div>)}</AnimatePresence>
     <div inert={!interactive} className="relative z-30 shrink-0 bg-gradient-to-b from-black via-black/85 to-transparent px-3 py-2 flex justify-between items-center border-b border-white/5">
       <div className="flex items-center gap-2 min-w-0"><div className="relative w-10 h-10 md:w-16 md:h-16 bg-zinc-900 border-2 border-accent/50 overflow-hidden"><img src={rivalPortrait} alt="" aria-hidden="true" className="absolute -top-2 left-1/2 -translate-x-1/2 w-[150%] h-[120%] object-cover object-top hue-rotate-180 brightness-75" /></div><div className="min-w-0"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {rivalDeck.archetype}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div></div></div>
       <div className="flex items-center gap-2 md:gap-4">
-        {modifierSummaries.length > 0 && <div className="relative"><button type="button" onClick={() => setShowModifiers(v => !v)} aria-expanded={showModifiers} className="min-h-10 px-2 border border-accent/30 bg-accent/10 font-mono text-[8px] uppercase text-rose-200">Mods</button>{showModifiers && <div className="absolute top-full right-0 mt-2 w-56 bg-black border border-accent p-3 z-50 text-left shadow-2xl"><div className="mb-2 flex justify-between font-mono text-[8px] uppercase text-accent"><span>Active rules</span><button type="button" onClick={() => setShowModifiers(false)}>Close</button></div><ul className="space-y-2">{modifierSummaries.map((mod: string) => <li key={mod} className="border-l border-accent/50 pl-2 text-[9px] text-rose-100">{mod}</li>)}</ul></div>}</div>}
-        {activePhase && <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right"><div className="text-[8px] font-mono text-accent uppercase">Boss Phase</div><div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div></div>}
-        <button data-testid="button-rules-battle" onClick={onShowRules} className="min-h-10 px-2 border border-white/15 bg-black/60 font-mono text-[8px] uppercase text-white/60">Rules</button>
+        {passive && (
+          <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
+            <div className="text-[8px] font-mono text-purple-400 uppercase tracking-widest">Passive: {passive.name}</div>
+            <div className="text-[9px] text-purple-200/70 truncate">{passive.description}</div>
+          </div>
+        )}
+        {modifierSummaries.length > 0 && <div className="relative"><button type="button" onClick={() => setShowModifiers(v => !v)} aria-expanded={showModifiers} className="min-h-10 px-2 border border-accent/30 bg-accent/10 font-mono text-[8px] uppercase text-rose-200 hover:bg-accent/20">Mods</button>{showModifiers && <div className="absolute top-full right-0 mt-2 w-56 bg-black border border-accent p-3 z-50 text-left shadow-2xl"><div className="mb-2 flex justify-between font-mono text-[8px] uppercase text-accent"><span>Active rules</span><button type="button" onClick={() => setShowModifiers(false)}>Close</button></div><ul className="space-y-2">{modifierSummaries.map((mod: string) => <li key={mod} className="border-l border-accent/50 pl-2 text-[9px] text-rose-100">{mod}</li>)}</ul></div>}</div>}
+        {activePhase && <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right"><div className="text-[8px] font-mono text-accent uppercase tracking-widest">Boss Phase</div><div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div></div>}
+        <button data-testid="button-rules-battle" onClick={onShowRules} className="min-h-10 px-2 border border-white/15 bg-black/60 font-mono text-[8px] uppercase text-white/60 hover:bg-white/10">Rules</button>
         <div className="hidden sm:block text-right"><div className="text-[8px] font-mono text-white/40 uppercase">Claims</div><div className="font-display font-black text-sm"><span className="text-primary">{playerClaims}</span>–<span className="text-accent">{cpuClaims}</span></div></div><div className="text-right"><div className="text-[9px] font-mono text-accent uppercase">Hype</div><div className="font-display font-black text-xl">{m.cpuHype}</div></div><div className="border border-white/15 bg-black/60 px-3 py-1 text-right"><div className="font-mono text-[9px] text-white/40 uppercase">Round</div><div className="font-display font-black text-base">{m.round}<span className="text-white/30">/6</span></div></div>
         {timerEnabled && <div data-testid="turn-timer" aria-label={interactive ? `${timerSeconds} seconds remaining` : 'Decision timer paused'} className="w-12 text-center border px-1 py-1"><div className="font-mono text-[7px] uppercase">Time</div><div className="font-display font-black text-lg">{interactive ? timerSeconds : '—'}</div></div>}
       </div>

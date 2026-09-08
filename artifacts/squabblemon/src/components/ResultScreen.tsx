@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cards, decks, getAssetUrl, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
+import { StoryCinematic } from './StoryCinematic';
 
 export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata }: any) {
   const m = match as Match;
@@ -11,6 +13,11 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
   const isDraw = winner === 'draw';
 
   const isStory = !!m.storyEncounter;
+  const isBoss = m.storyEncounter?.id === 'cracked-head-takes-the-block';
+
+  const [victoryCinematicFinished, setVictoryCinematicFinished] = useState(false);
+  const showVictoryCinematic = isStory && isBoss && isVictory && !victoryCinematicFinished;
+
   const playerDeck = customPlayerDeck || decks.find(deck => deck.id === m.playerDeck) || decks[0];
   const cpuDeck = decks.find(deck => deck.id === m.cpuDeck) ?? {
     ...decks[0],
@@ -25,9 +32,30 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
     ? 1 + (results.every((result) => result.winner === 'player') ? 1 : 0) + (m.squabbleUsed ? 0 : 1)
     : 0;
 
+  if (showVictoryCinematic) {
+    return (
+      <StoryCinematic
+        source="assets/story/chapter-one/media/cracked-head-finale.mp4"
+        poster="assets/story/chapter-one/media/cracked-head-finale.webp"
+        title="Area Secured"
+        eyebrow="Victory"
+        onComplete={() => setVictoryCinematicFinished(true)}
+        onSkip={() => setVictoryCinematicFinished(true)}
+        duration={6200}
+      />
+    );
+  }
+
+  const environmentBg = isStory && m.storyEncounter?.cinematic?.environmentAssetId
+    ? getAssetUrl(m.storyEncounter.cinematic.environmentAssetId)
+    : null;
+
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-5 md:p-8 text-center overflow-x-hidden overflow-y-auto hide-scrollbar">
       <div className={`absolute inset-0 ${isVictory ? 'bg-[radial-gradient(circle_at_center,rgba(250,204,21,0.28),rgba(0,0,0,0.93)_72%)]' : isDraw ? 'bg-[radial-gradient(circle_at_center,rgba(113,113,122,0.24),rgba(0,0,0,0.94)_72%)]' : 'bg-[radial-gradient(circle_at_center,rgba(225,29,72,0.24),rgba(0,0,0,0.94)_72%)]'}`} />
+      {environmentBg && (
+        <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style={{ backgroundImage: `url("${environmentBg}")` }} />
+      )}
       <div className="absolute inset-x-[-20%] top-1/2 h-24 -rotate-6 bg-gradient-to-r from-transparent via-primary/15 to-transparent blur-xl pointer-events-none" />
 
       <motion.img

@@ -49,6 +49,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -141,6 +142,8 @@ export const GetPlayerStoryResponse = zod.object({
   "status": zod.enum(['locked', 'available', 'cleared']),
   "completedNodes": zod.number(),
   "totalNodes": zod.number(),
+  "completedRequiredNodes": zod.number(),
+  "totalRequiredNodes": zod.number(),
   "stars": zod.number(),
   "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
 })),
@@ -149,6 +152,7 @@ export const GetPlayerStoryResponse = zod.object({
   "nodeId": zod.string(),
   "title": zod.string(),
   "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
   "status": zod.enum(['locked', 'available', 'cleared']),
   "mapPosition": zod.object({
   "x": zod.number(),
@@ -156,7 +160,69 @@ export const GetPlayerStoryResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "id": zod.string(),
+  "amount": zod.number()
+})),
+  "cleared": zod.boolean(),
+  "stars": zod.number(),
+  "attempts": zod.number(),
+  "wins": zod.number(),
+  "lastOutcome": zod.string().nullable(),
+  "dialogueSeen": zod.array(zod.string()),
+  "bossHighestPhase": zod.number(),
+  "firstClearedAt": zod.coerce.date().nullable(),
+  "lastPlayedAt": zod.coerce.date().nullable()
+})),
+  "recommendedNodeId": zod.string().nullable(),
+  "totalStars": zod.number(),
+  "completedNodes": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})
+
+
+/**
+ * @summary Development-only reset and optional story-node selector
+ */
+export const resetPlayerStoryDevelopmentBodySelectNodeIdMax = 80;
+
+
+
+export const ResetPlayerStoryDevelopmentBody = zod.object({
+  "selectNodeId": zod.string().max(resetPlayerStoryDevelopmentBodySelectNodeIdMax).nullable()
+})
+
+export const ResetPlayerStoryDevelopmentResponse = zod.object({
+  "contentVersion": zod.number(),
+  "chapters": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string(),
+  "description": zod.string(),
+  "order": zod.number(),
+  "mapAssetId": zod.string(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "completedNodes": zod.number(),
+  "totalNodes": zod.number(),
+  "completedRequiredNodes": zod.number(),
+  "totalRequiredNodes": zod.number(),
+  "stars": zod.number(),
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+})),
+  "nodes": zod.array(zod.object({
+  "chapterId": zod.string(),
+  "nodeId": zod.string(),
+  "title": zod.string(),
+  "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
+  "status": zod.enum(['locked', 'available', 'cleared']),
+  "mapPosition": zod.object({
+  "x": zod.number(),
+  "y": zod.number()
+}),
+  "prerequisites": zod.array(zod.string()),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -216,6 +282,8 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "status": zod.enum(['locked', 'available', 'cleared']),
   "completedNodes": zod.number(),
   "totalNodes": zod.number(),
+  "completedRequiredNodes": zod.number(),
+  "totalRequiredNodes": zod.number(),
   "stars": zod.number(),
   "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
 })),
@@ -224,6 +292,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "nodeId": zod.string(),
   "title": zod.string(),
   "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
   "status": zod.enum(['locked', 'available', 'cleared']),
   "mapPosition": zod.object({
   "x": zod.number(),
@@ -231,7 +300,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -280,6 +349,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -357,7 +427,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
 }),
   "rewards": zod.array(zod.object({
   "rewardKey": zod.string(),
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number(),
   "duplicateShards": zod.number(),
@@ -406,6 +476,8 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "status": zod.enum(['locked', 'available', 'cleared']),
   "completedNodes": zod.number(),
   "totalNodes": zod.number(),
+  "completedRequiredNodes": zod.number(),
+  "totalRequiredNodes": zod.number(),
   "stars": zod.number(),
   "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
 })),
@@ -414,6 +486,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "nodeId": zod.string(),
   "title": zod.string(),
   "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
   "status": zod.enum(['locked', 'available', 'cleared']),
   "mapPosition": zod.object({
   "x": zod.number(),
@@ -421,7 +494,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -470,6 +543,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -550,6 +624,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "nodeId": zod.string(),
   "title": zod.string(),
   "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
   "status": zod.enum(['locked', 'available', 'cleared']),
   "mapPosition": zod.object({
   "x": zod.number(),
@@ -557,7 +632,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -622,6 +697,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -747,6 +823,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -914,6 +991,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -975,7 +1053,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "descriptions": zod.array(zod.string()),
   "storyRewards": zod.array(zod.object({
   "rewardKey": zod.string(),
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number(),
   "duplicateShards": zod.number(),
@@ -995,6 +1073,8 @@ export const CompletePlayerMatchResponse = zod.object({
   "status": zod.enum(['locked', 'available', 'cleared']),
   "completedNodes": zod.number(),
   "totalNodes": zod.number(),
+  "completedRequiredNodes": zod.number(),
+  "totalRequiredNodes": zod.number(),
   "stars": zod.number(),
   "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
 })),
@@ -1003,6 +1083,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "nodeId": zod.string(),
   "title": zod.string(),
   "kind": zod.enum(['dialogue', 'reward', 'battle']),
+  "optional": zod.boolean(),
   "status": zod.enum(['locked', 'available', 'cleared']),
   "mapPosition": zod.object({
   "x": zod.number(),
@@ -1010,7 +1091,7 @@ export const CompletePlayerMatchResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -1101,6 +1182,7 @@ export const SavePlayerDeckResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1220,6 +1302,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1341,6 +1424,7 @@ export const OpenPlayerPackResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1483,6 +1567,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1605,6 +1690,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1728,6 +1814,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "ownedCardIds": zod.array(zod.string()),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),

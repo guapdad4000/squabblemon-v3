@@ -17,7 +17,7 @@ export type PlayerStoryBossProgress = {
 };
 
 export type PlayerStoryReward = {
-  kind: "currency" | "card" | "chapter-key";
+  kind: "currency" | "card" | "chapter-key" | "pack-ticket" | "cosmetic";
   id: string;
   amount: number;
   duplicateShards?: number;

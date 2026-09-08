@@ -261,6 +261,7 @@ function serializeProfile(
     ownedCardIds: profile.ownedCardIds,
     discoveredCardIds: profile.discoveredCardIds,
     ownedVariants: profile.ownedVariants,
+    unlockedCosmeticIds: profile.unlockedCosmeticIds,
     savedDecks: profile.savedDecks.map((deck) => {
       const heroCardId = deck.heroCardId ?? deck.cardIds[0] ?? "";
       const legality = validateSavedDeck(

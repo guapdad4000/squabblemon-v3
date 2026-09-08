@@ -8,6 +8,7 @@ import { Battle } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
+import { StoryCinematic } from './StoryCinematic';
 import { PresentationTimeline } from '../presentationTimeline';
 import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, Match, playCard, pass, nextRound, CardInstance, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 
@@ -51,6 +52,8 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const [stagedRival, setStagedRival] = useState<CardInstance | null>(null), [stagedPlayer, setStagedPlayer] = useState<CardInstance | null>(null);
   const [activeEffectId, setActiveEffectId] = useState<string | null>(null), [activeEffectLane, setActiveEffectLane] = useState<Lane | null>(null), [activeEffect, setActiveEffect] = useState<PresentationEffect | null>(null);
   const [showRules, setShowRules] = useState(false), [inspect, setInspect] = useState<CardInstance | Card | null>(null);
+  const [encounterCinematic, setEncounterCinematic] = useState<{ source: string, poster: string, title: string, eyebrow: string } | null>(null);
+
   const deck = customPlayerDeck || decks.find(d => d.id === deckId) || decks[0];
   const rivalDeck: Deck = match?.storyEncounter ? { id: match.storyEncounter.enemy.deckId, name: match.storyEncounter.enemy.name, archetype: match.storyEncounter.enemy.behaviorProfile, accent: 'STORY', plan: 'A server-issued story encounter.', cards: [...match.storyEncounter.enemy.cardIds], hero: cards[match.storyEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero } : decks.find(d => d.id === rival) || decks[0];
   const cancelTimers = useCallback(() => timeline.current.cancelAll(), []);
@@ -66,7 +69,32 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round}`); if (!immediate && !await wait(650, id)) return; setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); setTimerSeconds(20); locked.current = false; }, [wait]);
   const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 850], ['countdown-3', '3', 550], ['countdown-2', '2', 550], ['countdown-1', '1', 550], ['squabble', 'SQUABBLE!', 700], ['deal', 'CREW UP', 650]]; for (const [phase, message, duration] of beats) { setPresentationPhase(phase); setPhaseMessage(message); if (!await wait(duration, id)) return; } void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, wait]);
-  const beginMatch = useCallback((initial: Match) => { cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); playerMovesRef.current = []; setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true; void runIntro(); }, [cancelTimers, resetPresentation, runIntro, setVisualFrame]);
+  const beginMatch = useCallback((initial: Match) => {
+    cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); playerMovesRef.current = []; setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
+    if (initial.storyEncounter?.cinematic) {
+      const skipRepeatedOpening =
+        initial.storyEncounter.id === 'welcome-to-the-block' &&
+        sessionStorage.getItem('block_party_opening_seen') === 'true';
+      if (skipRepeatedOpening) {
+        void runIntro();
+        return;
+      }
+      setEncounterCinematic({
+        source: initial.storyEncounter.cinematic.videoAssetId,
+        poster: initial.storyEncounter.cinematic.posterAssetId,
+        title: initial.storyEncounter.enemy.name,
+        eyebrow: "Target",
+      });
+    } else {
+      void runIntro();
+    }
+  }, [cancelTimers, resetPresentation, runIntro, setVisualFrame]);
+
+  const handleCinematicDone = useCallback(() => {
+    setEncounterCinematic(null);
+    void runIntro();
+  }, [runIntro]);
+
   const startLocalMatch = useCallback(() => beginMatch(customPlayerDeck ? createMatchFromCatalog(customPlayerDeck.id, customPlayerDeck.cards, rival) : createMatch(deckId, rival)), [beginMatch, customPlayerDeck, deckId, rival]);
   const start = useCallback(async () => {
     setServerMatchId(null); setStartError(null);
@@ -119,8 +147,19 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const skipSequence = () => { if (!match) return; if (['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro'].includes(presentationPhase)) { cancelTimers(); void enterPlayerTurn(match.round, true); } else if (presentationPhase === 'round-result') { cancelTimers(); void advanceRoundBoundary(match, timeline.current.id, true); } };
   const handleRestart = () => { autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
-    {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
+    {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
     {screen === 'lobby' && !hideLobby && <Lobby onStart={start} deckId={deckId} setDeckId={setDeckId} rival={rival} setRival={setRival} availableDeckIds={availableDeckIds} onShowRules={() => setShowRules(true)} isLoading={startPlayerMatch.isPending} onExit={onExit} />}
+    {encounterCinematic && (
+      <StoryCinematic
+        source={encounterCinematic.source}
+        poster={encounterCinematic.poster}
+        title={encounterCinematic.title}
+        eyebrow={encounterCinematic.eyebrow}
+        onComplete={handleCinematicDone}
+        onSkip={handleCinematicDone}
+        duration={5200}
+      />
+    )}
     {screen === 'battle' && visualMatch && <LayoutGroup><Battle match={visualMatch} deck={deck} rivalDeck={rivalDeck} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={turnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} /></LayoutGroup>}
     <AnimatePresence>{inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} match={match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && match && <ResultScreen onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={mode === 'guest' || !!customPlayerDeck} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} />}</AnimatePresence>
   </div>;

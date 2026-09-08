@@ -18,6 +18,8 @@ export interface StoryChapterProgress {
   status: StoryChapterProgressStatus;
   completedNodes: number;
   totalNodes: number;
+  completedRequiredNodes: number;
+  totalRequiredNodes: number;
   stars: number;
   bossStatus: StoryChapterProgressBossStatus;
 }

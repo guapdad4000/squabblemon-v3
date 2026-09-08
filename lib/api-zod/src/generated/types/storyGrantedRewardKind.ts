@@ -13,4 +13,6 @@ export const StoryGrantedRewardKind = {
   currency: 'currency',
   card: 'card',
   'chapter-key': 'chapter-key',
+  'pack-ticket': 'pack-ticket',
+  cosmetic: 'cosmetic',
 } as const;

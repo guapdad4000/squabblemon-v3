@@ -35,6 +35,7 @@ import type {
   PlayerProfileUpdate,
   SaveDeckInput,
   StoryCampaign,
+  StoryDevelopmentResetInput,
   StoryDialogueProgressResponse,
   StoryNodeCompleteInput,
   StoryNodeCompletion
@@ -297,6 +298,77 @@ export function useGetPlayerStory<TData = Awaited<ReturnType<typeof getPlayerSto
 
 
 
+
+export const getResetPlayerStoryDevelopmentUrl = () => {
+
+
+
+
+  return `/api/player/story/development/reset`
+}
+
+/**
+ * @summary Development-only reset and optional story-node selector
+ */
+export const resetPlayerStoryDevelopment = async (storyDevelopmentResetInput: StoryDevelopmentResetInput, options?: RequestInit): Promise<StoryCampaign> => {
+
+  return customFetch<StoryCampaign>(getResetPlayerStoryDevelopmentUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(storyDevelopmentResetInput)
+  }
+);}
+
+
+
+
+
+export const getResetPlayerStoryDevelopmentMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>, TError,{data: BodyType<StoryDevelopmentResetInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>, TError,{data: BodyType<StoryDevelopmentResetInput>}, TContext> => {
+
+const mutationKey = ['resetPlayerStoryDevelopment'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>, {data: BodyType<StoryDevelopmentResetInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  resetPlayerStoryDevelopment(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetPlayerStoryDevelopmentMutationResult = NonNullable<Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>>
+    export type ResetPlayerStoryDevelopmentMutationBody = BodyType<StoryDevelopmentResetInput>
+    export type ResetPlayerStoryDevelopmentMutationError = ErrorType<void>
+
+    /**
+ * @summary Development-only reset and optional story-node selector
+ */
+export const useResetPlayerStoryDevelopment = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>, TError,{data: BodyType<StoryDevelopmentResetInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetPlayerStoryDevelopment>>,
+        TError,
+        {data: BodyType<StoryDevelopmentResetInput>},
+        TContext
+      > => {
+      return useMutation(getResetPlayerStoryDevelopmentMutationOptions(options));
+    }
 
 export const getCompletePlayerStoryNodeUrl = (nodeId: string,) => {
 
