@@ -145,6 +145,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
 
 function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
   return previous.card === next.card
+    && previous.onClick === next.onClick
     && previous.queued === next.queued
     && previous.squabble === next.squabble
     && previous.testId === next.testId

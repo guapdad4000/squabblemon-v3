@@ -424,6 +424,10 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
         ));
       }
       if (!await waitForBeat(190, 70, id, fast)) return false;
+      if (isPlay) {
+        setPresentationPhase(effect.owner === 'player' ? 'player-reveal' : 'rival-reveal');
+        if (!await waitForBeat(160, 40, id, fast)) return false;
+      }
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
       if (!await waitForBeat(380, 90, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
