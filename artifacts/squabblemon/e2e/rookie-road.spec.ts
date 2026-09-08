@@ -157,7 +157,7 @@ test('Rookie Road survives refreshes, claims once, and clears account cache on s
   expect(api.rewardClaims()).toBe(1);
   await page.goto('/squabblemon/game');
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Hub' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Corner' })).toBeVisible();
   expect(api.rewardClaims()).toBe(1);
 
   await page.goto('/squabblemon/game/missions');

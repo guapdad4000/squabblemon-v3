@@ -3,6 +3,18 @@ import {
   getGetPlayerBootstrapQueryKey,
   useGetPlayerBootstrap,
 } from '@workspace/api-client-react';
+import type { PlayerBootstrap } from '@workspace/api-client-react';
+import {
+  Crown,
+  House,
+  Images,
+  MapPinned,
+  Shield,
+  ShoppingBag,
+  Swords,
+  Ticket,
+  UsersRound,
+} from 'lucide-react';
 import { useEffect } from 'react';
 import { Redirect, Route, Switch, useLocation } from 'wouter';
 
@@ -36,34 +48,82 @@ function LoadingScreen() {
   );
 }
 
-function BottomNav() {
+type NavBadge = {
+  label: string;
+  tone: 'new' | 'reward' | 'notice';
+};
+
+type NavLink = {
+  path: string;
+  label: string;
+  icon: typeof House;
+  badge?: NavBadge;
+};
+
+function FightNightNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
-  const links = [
-    { path: '/game', label: 'Hub' },
-    { path: '/game/collection', label: 'Cards' },
-    { path: '/game/decks', label: 'Decks' },
-    { path: '/game/missions', label: 'Missions' },
-    { path: '/game/shop', label: 'Shop' },
+  const rewardCount = bootstrap.missions.filter((mission) => mission.status === 'claimable').length;
+  const collectionRewardCount = bootstrap.collectionRoad.filter((milestone) => milestone.status === 'claimable').length;
+  const links: NavLink[] = [
+    { path: '/game', label: 'Corner', icon: House },
+    { path: '/game/story', label: 'Streets', icon: MapPinned, badge: bootstrap.nextAction.destination === 'story' ? { label: 'New', tone: 'new' } : undefined },
+    { path: '/game/play', label: 'Fight', icon: Swords },
+    { path: '/game/collection', label: 'Cards', icon: Images, badge: collectionRewardCount ? { label: String(collectionRewardCount), tone: 'reward' } : undefined },
+    { path: '/game/decks', label: 'Crew', icon: UsersRound },
+    { path: '/game/missions', label: 'Bounties', icon: Crown, badge: rewardCount ? { label: String(rewardCount), tone: 'reward' } : undefined },
+    { path: '/game/shop', label: 'Tickets', icon: Ticket, badge: bootstrap.profile.packTickets ? { label: String(bootstrap.profile.packTickets), tone: 'notice' } : undefined },
+    { path: '/game/settings', label: 'Profile', icon: Shield },
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 h-16 bg-black/90 backdrop-blur-md border-t border-white/10 flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom)] z-50">
-      {links.map((link) => (
-        <button
-          key={link.path}
-          onClick={() => setLocation(link.path)}
-          className={`flex-1 flex flex-col items-center justify-center font-mono text-[9px] uppercase tracking-widest ${location === link.path ? 'text-primary' : 'text-white/40 hover:text-white/80'}`}
-        >
-          {link.label}
-        </button>
-      ))}
+    <nav className="fight-nav" aria-label="Fight night navigation">
+      <div className="fight-nav__brand" aria-hidden="true">
+        <img
+          src={`${import.meta.env.BASE_URL}brand/squabblemon-wordmark.webp`}
+          alt=""
+          className="fight-nav__wordmark"
+        />
+        <div className="fight-nav__brand-rule">
+          <span>Corner controls</span>
+          <span>SB // 04</span>
+        </div>
+      </div>
+
+      <div className="fight-nav__links">
+        {links.map((link) => {
+          const Icon = link.icon;
+          const isActive = location === link.path || (link.path !== '/game' && location.startsWith(link.path));
+
+          return (
+            <button
+              key={link.path}
+              type="button"
+              onClick={() => setLocation(link.path)}
+              className={`fight-nav__button ${isActive ? 'is-active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
+              aria-label={`${link.label}${link.badge ? `, ${link.badge.label}` : ''}`}
+            >
+              <span className="fight-nav__icon-wrap" aria-hidden="true">
+                <Icon className="fight-nav__icon" strokeWidth={isActive ? 2.5 : 2} />
+                {link.badge && (
+                  <span className={`fight-nav__badge is-${link.badge.tone}`}>
+                    {link.badge.label}
+                  </span>
+                )}
+              </span>
+              <span className="fight-nav__label">{link.label}</span>
+              <span className="fight-nav__active-mark" aria-hidden="true" />
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }
 
 function GameRoutes() {
   const { data: bootstrap } = useGetPlayerBootstrap();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     if (!bootstrap) return;
@@ -111,23 +171,25 @@ function GameRoutes() {
         )}
       </Route>
       <Route path="/game" nest>
-        <div className="flex flex-col h-[100dvh] bg-[#070707] text-white">
+        <div className="game-shell h-[100dvh] bg-[#070707] text-white">
           <div className="noise-overlay" />
-          <div className="flex-1 min-h-0 relative z-10">
-            <Switch>
-              <Route path="/"><Home bootstrap={bootstrap} /></Route>
-              <Route path="/collection"><Collection bootstrap={bootstrap} /></Route>
-              <Route path="/decks"><Decks bootstrap={bootstrap} /></Route>
-              <Route path="/decks/:deckId"><DeckEditor bootstrap={bootstrap} /></Route>
-              <Route path="/decks/:deckId/test"><DeckTest bootstrap={bootstrap} /></Route>
-              <Route path="/missions"><Missions bootstrap={bootstrap} /></Route>
-              <Route path="/shop"><Shop bootstrap={bootstrap} /></Route>
-              <Route path="/settings"><Settings bootstrap={bootstrap} /></Route>
-              <Route path="/story"><Story /></Route>
-              <Route component={() => <Redirect to="/game" />} />
-            </Switch>
+          <FightNightNav bootstrap={bootstrap} />
+          <div className="game-shell__content">
+            <div className="game-route-stage" key={location}>
+              <Switch>
+                <Route path="/"><Home bootstrap={bootstrap} /></Route>
+                <Route path="/collection"><Collection bootstrap={bootstrap} /></Route>
+                <Route path="/decks"><Decks bootstrap={bootstrap} /></Route>
+                <Route path="/decks/:deckId"><DeckEditor bootstrap={bootstrap} /></Route>
+                <Route path="/decks/:deckId/test"><DeckTest bootstrap={bootstrap} /></Route>
+                <Route path="/missions"><Missions bootstrap={bootstrap} /></Route>
+                <Route path="/shop"><Shop bootstrap={bootstrap} /></Route>
+                <Route path="/settings"><Settings bootstrap={bootstrap} /></Route>
+                <Route path="/story"><Story /></Route>
+                <Route component={() => <Redirect to="/game" />} />
+              </Switch>
+            </div>
           </div>
-          <BottomNav />
         </div>
       </Route>
     </Switch>
