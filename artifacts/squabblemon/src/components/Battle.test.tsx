@@ -145,6 +145,19 @@ test('guidance, treatments, and broadcast signals remain available', () => {
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
 });
 
+test('every authored round intro uses its matching fight-night asset', () => {
+  const match = createMatch('block', 'combo');
+  for (let round = 1; round <= 6; round += 1) {
+    const html = renderBattle({ ...match, round } as Match, {
+      presentationPhase: 'round-intro',
+      phaseMessage: `ROUND ${round}`,
+    });
+    const productionName = `round-${String(round).padStart(2, '0')}`;
+    assert.match(html, new RegExp(`broadcast-${productionName}`));
+    assert.match(html, new RegExp(`assets/fight-night/${productionName}\\.webp`));
+  }
+});
+
 test('district-first selection stays selected when a card is chosen', () => {
   const match = createMatch('block', 'combo');
   const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;

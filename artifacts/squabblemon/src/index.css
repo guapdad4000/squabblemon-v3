@@ -149,6 +149,7 @@
     repeating-linear-gradient(125deg, transparent 0 16px, rgb(255 255 255 / 2%) 17px 18px);
   border-top: 3px solid #8d6b35;
   box-shadow: 0 -2px 0 #080604, 0 -18px 45px rgb(0 0 0 / 82%);
+  isolation: isolate;
 }
 .fight-nav::before,
 .fight-nav::after {
@@ -289,6 +290,66 @@
   .fight-nav__active-mark { right: .25rem; bottom: auto; width: 2px; height: 1rem; }
   .fight-nav__button.is-active .fight-nav__active-mark { width: 2px; height: 1.65rem; }
   .fight-nav__badge { top: -.55rem; }
+}
+
+@media (min-width: 700px) and (max-width: 1366px) and (orientation: landscape) {
+  .game-shell { flex-direction: column; }
+  .game-shell__content {
+    margin-left: 0;
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  }
+  .fight-nav {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    min-height: calc(5.8rem + env(safe-area-inset-bottom));
+    padding: .65rem max(2.75rem, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(2.75rem, env(safe-area-inset-left));
+    background: linear-gradient(180deg, rgb(3 3 3 / 20%), rgb(3 3 3 / 94%));
+    border: 0;
+    box-shadow: 0 -18px 38px rgb(0 0 0 / 55%);
+  }
+  .fight-nav::before {
+    z-index: -1;
+    inset: -1.15rem .35rem -.15rem;
+    width: auto;
+    height: auto;
+    background: url("/assets/fight-night/landscape-nav-frame.webp") center / 100% 100% no-repeat;
+    border: 0;
+    transform: none;
+    filter: saturate(.82) brightness(.78);
+  }
+  .fight-nav::after { display: none; }
+  .fight-nav__brand { display: none; }
+  .fight-nav__links {
+    display: grid;
+    height: 4.65rem;
+    grid-template-columns: .85fr .85fr 1.35fr .95fr .95fr .85fr .85fr .85fr;
+    gap: .12rem;
+  }
+  .fight-nav__button {
+    min-height: 3.75rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: .25rem;
+    padding: .4rem .15rem;
+  }
+  .fight-nav__button::before { inset: .1rem; }
+  .fight-nav__button:nth-child(3) { color: rgb(255 255 255 / 78%); }
+  .fight-nav__button:nth-child(3)::before { opacity: .55; border-color: #d4a84d; }
+  .fight-nav__active-mark { right: auto; bottom: .25rem; width: 1rem; height: 2px; }
+  .fight-nav__button.is-active .fight-nav__active-mark { width: 1.6rem; height: 2px; }
+}
+
+@media (min-width: 700px) and (max-width: 1024px) and (orientation: portrait) {
+  .fight-nav {
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgb(12 9 5 / 96%), rgb(53 40 23 / 90%), rgb(12 9 5 / 96%)),
+      url("/assets/fight-night/portrait-panel-frame.webp") center 43% / 130% auto no-repeat;
+    border-top-color: #b68b43;
+  }
 }
 
 .cinematic-callout {
@@ -728,6 +789,13 @@
   max-height: min(38vh, 430px);
   object-fit: contain;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,.9));
+}
+.phase-round-intro .broadcast-overlay {
+  background: radial-gradient(circle, rgb(0 0 0 / 52%), rgb(0 0 0 / 12%) 62%, transparent 78%);
+}
+.phase-round-intro .broadcast-overlay img {
+  width: min(68vw, 700px);
+  max-height: min(34vh, 360px);
 }
 .phase-player-reveal .broadcast-overlay,
 .phase-rival-reveal .broadcast-overlay { align-items: start; background: transparent; }
