@@ -776,13 +776,68 @@
 .district-lane-2 { --impact-color: #22d3ee; }
 .phase-match-finish .district-verdict.verdict-player { animation: final-player .9s cubic-bezier(.2,.8,.2,1) both; }
 .phase-match-finish .district-verdict.verdict-cpu { animation: final-cpu .9s cubic-bezier(.2,.8,.2,1) both; }
-.card-back {
-  display: grid; place-items: center; position: relative; z-index: 20;
-  color: #000; background: repeating-linear-gradient(135deg, #facc15 0 8px, #111 8px 16px);
-  border: 3px solid #fff; box-shadow: 0 12px 24px #000;
-  clip-path: polygon(10% 0,100% 0,100% 90%,90% 100%,0 100%,0 10%);
+.card-bevel {
+  clip-path: polygon(
+    min(10px, 8%) 0,
+    100% 0,
+    100% calc(100% - min(10px, 8%)),
+    calc(100% - min(10px, 8%)) 100%,
+    0 100%,
+    0 min(10px, 8%)
+  );
 }
-.card-back span { display:grid; place-items:center; width:55%; aspect-ratio:1; background:#000; color:#facc15; font:900 italic 2rem var(--font-display); }
+
+.card-bevel-inner {
+  clip-path: polygon(
+    min(8px, 6%) 0,
+    100% 0,
+    100% calc(100% - min(8px, 6%)),
+    calc(100% - min(8px, 6%)) 100%,
+    0 100%,
+    0 min(8px, 6%)
+  );
+}
+
+.card-back {
+  position: relative; z-index: 20;
+  background: #18181b;
+  border: 2px solid #3f3f46;
+  box-shadow: inset 0 0 40px #000, 0 12px 24px rgba(0,0,0,0.9);
+  clip-path: polygon(
+    min(10px, 8%) 0,
+    100% 0,
+    100% calc(100% - min(10px, 8%)),
+    calc(100% - min(10px, 8%)) 100%,
+    0 100%,
+    0 min(10px, 8%)
+  );
+}
+.card-back::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 6px);
+  border: 1px solid #52525b;
+  clip-path: inherit;
+  pointer-events: none;
+}
+.card-back::after {
+  content: "SM";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 55%; aspect-ratio: 1;
+  background: linear-gradient(135deg, #facc15, #854d0e);
+  color: #000;
+  font: 900 italic clamp(1rem, 15vw, 2.5rem) var(--font-display);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  box-shadow: 0 10px 20px #000;
+  border: 1px solid #fef08a;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  pointer-events: none;
+}
 .card-rarity {
   --rarity-color: #38bdf8;
   --rarity-pattern: repeating-linear-gradient(135deg, transparent 0 13px, rgba(255,255,255,.13) 14px 15px, transparent 16px 26px);
@@ -811,7 +866,14 @@
   inset: 0;
   z-index: 16;
   pointer-events: none;
-  clip-path: polygon(10% 0,100% 0,100% 90%,90% 100%,0 100%,0 10%);
+  clip-path: polygon(
+    min(10px, 8%) 0,
+    100% 0,
+    100% calc(100% - min(10px, 8%)),
+    calc(100% - min(10px, 8%)) 100%,
+    0 100%,
+    0 min(10px, 8%)
+  );
 }
 .card-variant-tagged::after {
   border: 3px solid #ef2a69;
@@ -828,7 +890,7 @@
 .card-variant-sheen { position:absolute; inset:0; z-index:15; pointer-events:none; mix-blend-mode:screen; }
 .card-variant-tagged .card-variant-sheen { background:radial-gradient(circle at 18% 20%,rgba(250,204,21,.35),transparent 24%); }
 .card-variant-chrome .card-variant-sheen { background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 42%,rgba(103,232,249,.18)); }
-.card-variant-label { position:absolute; left:3px; bottom:3px; z-index:25; padding:2px 4px; background:#050505; border:1px solid currentColor; color:#fff; font:900 .42rem/1 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; pointer-events:none; }
+.card-variant-label { position:absolute; right:3px; bottom:-12px; z-index:25; padding:2px 4px; background:#050505; border:1px solid currentColor; color:#fff; font:900 .42rem/1 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; pointer-events:none; opacity: 0; }
 .card-variant-tagged .card-variant-label { color:#fb7185; transform:rotate(-3deg); }
 .card-variant-chrome .card-variant-label { color:#a5f3fc; }
 @keyframes chrome-sweep { from { background-position:180% 0; } to { background-position:-80% 0; } }
@@ -934,7 +996,7 @@
   .district-marker p { display: none; }
   .battle-side { padding-block: .35rem; }
   #hand-tray { height: 136px; padding-top: 10px; }
-  .battle-hand-card { width: 86px !important; height: 120px !important; }
+  .battle-hand-card { width: 86px !important; height: auto !important; }
   .battle-guidance { min-height: 2.85rem; padding-block: .3rem; }
   .battle-causality { overflow: hidden; font-size: .5rem; text-overflow: ellipsis; white-space: nowrap; }
   .battle-actions { padding-top: .2rem; }

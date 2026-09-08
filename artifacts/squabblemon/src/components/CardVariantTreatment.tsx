@@ -26,11 +26,6 @@ export function CardVariantTreatment({ variantId }: { variantId?: string | null 
   const kind = getVariantKind(variantId);
   if (!kind) return null;
   return (
-    <>
-      <span className="card-variant-sheen" aria-hidden="true" />
-      <span className="card-variant-label" aria-label={`${kind} variant equipped`}>
-        {kind}
-      </span>
-    </>
+    <span className="card-variant-sheen" aria-hidden="true" />
   );
 }

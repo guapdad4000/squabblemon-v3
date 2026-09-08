@@ -17,17 +17,7 @@ export function getRarityClass(rarity: CardRarity): string {
 }
 
 export function CardRarityTreatment({ rarity, compact = false }: { rarity: CardRarity; compact?: boolean }) {
-  const definition = CARD_RARITY_DEFINITIONS[rarity];
   return (
-    <>
-      <div className="card-rarity-glow" aria-hidden="true" />
-      <span
-        className={`card-rarity-label ${compact ? 'card-rarity-label-compact' : ''}`}
-        aria-label={definition.accessibilityLabel}
-        title={definition.accessibilityLabel}
-      >
-        <span aria-hidden="true">{definition.cue}</span> {definition.name}
-      </span>
-    </>
+    <div className="card-rarity-glow" aria-hidden="true" />
   );
 }

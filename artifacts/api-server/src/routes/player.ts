@@ -525,11 +525,37 @@ router.post(
             ? (match.storyEncounterSnapshot as StoryEncounterSnapshot).enemy.cardIds
             : starterRecipes.find((item) => item.id === match.rivalDeckId)?.cards ??
               [];
-        const progressionSnapshot = parseCardProgressionSnapshot(
-          match.playerCardProgressionSnapshot,
-          playerRoster,
-          rivalRoster,
-        );
+        let progressionSnapshot: CardProgressionSnapshot;
+        try {
+          progressionSnapshot = parseCardProgressionSnapshot(
+            match.playerCardProgressionSnapshot,
+            playerRoster,
+            rivalRoster,
+          );
+        } catch (error) {
+          const isLegacyStandardMatch =
+            match.mode !== "story" &&
+            error instanceof Error &&
+            error.message.includes("snapshot is missing");
+          if (!isLegacyStandardMatch) throw error;
+
+          const [profile] = await db
+            .select({
+              ownedCardIds: playerProfilesTable.ownedCardIds,
+              cardProgression: playerProfilesTable.cardProgression,
+            })
+            .from(playerProfilesTable)
+            .where(eq(playerProfilesTable.clerkUserId, userId));
+          if (!profile) throw new Error("Player profile not found");
+
+          progressionSnapshot = createCardProgressionSnapshot(
+            [...playerRoster],
+            profile.ownedCardIds,
+            profile.cardProgression,
+            match.playerEngineCardIds === null,
+            [...rivalRoster],
+          );
+        }
         verifiedMatch =
           match.mode === "story"
             ? verifyStoryMatchTranscript(

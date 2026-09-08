@@ -6,6 +6,7 @@ import { catalogCardById, getCardImage } from '../../data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
+import { CardView } from '@/components/CardView';
 
 export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -196,36 +197,35 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       key={revealIndex}
                       initial={{ scale: 0.5, opacity: 0, y: 50 }}
                       animate={{ scale: 1, opacity: 1, y: 0 }}
-                       className={`relative w-64 aspect-[3/4] bg-zinc-900 border-2 border-primary overflow-hidden mb-8 ${rewards[revealIndex].cardId && catalogCardById[rewards[revealIndex].cardId!] ? getRarityClass(catalogCardById[rewards[revealIndex].cardId!].rarity) : ''} ${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)) ? `card-variant card-variant-${getVariantKind(rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined))}` : ''}`}
+                      className="mb-8"
                     >
                       {(rewards[revealIndex].kind === 'card' || rewards[revealIndex].kind === 'variant') && rewards[revealIndex].cardId ? (
-                        <>
-                          <img src={getCardImage(rewards[revealIndex].cardId!)} alt="" className="w-full h-full object-cover object-top" />
-                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 p-4">
-                            <div className="font-display font-black italic uppercase text-2xl mb-1 text-white">{rewards[revealIndex].name}</div>
-                             <div className="font-mono text-xs text-white uppercase">{rewards[revealIndex].rarity} rarity{rewards[revealIndex].kind === 'variant' ? ' · Variant' : ''}</div>
-                          </div>
-                        </>
+                        <div className="relative">
+                          <CardView
+                            card={catalogCardById[rewards[revealIndex].cardId!]}
+                            variantId={rewards[revealIndex].variantId ?? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!]}
+                            isInspector
+                            className="w-64 aspect-[63/88] shadow-2xl shadow-primary/30 pointer-events-none"
+                          />
+                          {rewards[revealIndex].isNew && (
+                            <div className="absolute -top-3 -right-3 z-50 bg-accent text-white font-display font-black italic uppercase px-3 py-1.5 rotate-12 shadow-xl border border-white/30 text-xl">
+                              NEW
+                            </div>
+                          )}
+                          {!rewards[revealIndex].isNew && rewards[revealIndex].kind === 'card' && (
+                            <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center backdrop-blur-sm z-50 card-bevel pointer-events-none">
+                              <span className="font-mono text-xs text-white/70 uppercase mb-2">Duplicate</span>
+                              <span className="font-display font-black italic text-accent text-4xl">+Shards</span>
+                            </div>
+                          )}
+                        </div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center h-full p-4">
-                          <div className="font-display font-black text-5xl mb-4 text-accent">{rewards[revealIndex].kind === 'styleShards' ? 'S' : 'C'}</div>
-                          <div className="font-display font-black italic uppercase text-3xl mb-2 text-white">+{rewards[revealIndex].amount}</div>
+                        <div className="w-64 aspect-[63/88] bg-zinc-900 border-2 border-primary flex flex-col items-center justify-center p-4 card-bevel shadow-2xl shadow-primary/30">
+                          <div className="font-display font-black text-6xl mb-4 text-accent">{rewards[revealIndex].kind === 'styleShards' ? 'S' : 'C'}</div>
+                          <div className="font-display font-black italic uppercase text-4xl mb-2 text-white">+{rewards[revealIndex].amount}</div>
                           <div className="font-mono text-sm text-primary uppercase">{rewards[revealIndex].kind}</div>
                         </div>
                       )}
-
-                      {rewards[revealIndex].isNew && (
-                        <div className="absolute top-4 right-4 bg-accent text-white font-display font-black italic uppercase px-2 py-1 rotate-12 shadow-lg">
-                          NEW
-                        </div>
-                      )}
-                      {!rewards[revealIndex].isNew && rewards[revealIndex].kind === 'card' && (
-                        <div className="absolute top-4 right-4 bg-zinc-700 text-white font-display font-black italic uppercase px-2 py-1 rotate-12 shadow-lg">
-                          DUPE
-                        </div>
-                      )}
-                       {rewards[revealIndex].cardId && catalogCardById[rewards[revealIndex].cardId!] && <CardRarityTreatment rarity={catalogCardById[rewards[revealIndex].cardId!].rarity} />}
-                       <CardVariantTreatment variantId={rewards[revealIndex].variantId ?? (rewards[revealIndex].cardId ? bootstrap.profile.equippedVariants[rewards[revealIndex].cardId!] : undefined)} />
                     </motion.div>
                     <p className="font-mono text-xs text-white/50 uppercase tracking-widest mb-8">Tap to continue</p>
                     <button onClick={(e) => { e.stopPropagation(); skipReveal(); }} className="border border-white/20 px-6 py-2 font-mono text-[10px] uppercase hover:bg-white/10">Skip All</button>
@@ -235,31 +235,34 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     <h2 className="font-display font-black italic text-3xl uppercase mb-8">Pack Summary</h2>
                     <div className="flex flex-wrap justify-center gap-4 mb-8">
                       {rewards.map((r, i) => (
-                         <div key={i} className={`w-32 aspect-[3/4] relative bg-zinc-900 border border-white/20 overflow-hidden ${r.cardId && catalogCardById[r.cardId] ? getRarityClass(catalogCardById[r.cardId].rarity) : ''} ${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)) ? `card-variant card-variant-${getVariantKind(r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined))}` : ''}`}>
+                        <div key={i} className="relative w-28 md:w-32 aspect-[63/88]">
                           {(r.kind === 'card' || r.kind === 'variant') && r.cardId ? (
                             <>
-                              <img src={getCardImage(r.cardId)} alt="" className="w-full h-full object-cover object-top opacity-80" />
+                              <CardView
+                                card={catalogCardById[r.cardId]}
+                                variantId={r.variantId ?? bootstrap.profile.equippedVariants[r.cardId]}
+                                className="w-full"
+                                isBoard
+                              />
                               {!r.isNew && r.kind === 'card' && (
-                                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center backdrop-blur-sm">
+                                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center backdrop-blur-sm z-50 card-bevel pointer-events-none">
                                   <span className="font-mono text-[8px] text-white/70 uppercase">Duplicate</span>
                                   <span className="font-display font-black italic text-accent">+Shards</span>
                                 </div>
                               )}
                               {r.kind === 'variant' && (
-                                <div className="absolute top-1 right-1 bg-accent/80 text-white text-[8px] font-mono px-1">Variant</div>
+                                <div className="absolute top-1 right-1 bg-accent/90 text-white text-[8px] font-mono px-1 z-50 card-bevel shadow-md">Variant</div>
                               )}
                             </>
                           ) : (
-                            <div className="flex flex-col items-center justify-center h-full">
-                              <span className="font-display font-black text-xl text-accent">{r.kind === 'styleShards' ? 'S' : 'C'}</span>
-                              <span className="font-display font-black text-xl">+{r.amount}</span>
+                            <div className="w-full h-full relative bg-zinc-900 border border-white/20 flex flex-col items-center justify-center card-bevel">
+                              <span className="font-display font-black text-3xl text-accent">{r.kind === 'styleShards' ? 'S' : 'C'}</span>
+                              <span className="font-display font-black text-xl text-white">+{r.amount}</span>
+                              <div className="absolute bottom-0 inset-x-0 bg-black/80 p-2 text-center border-t border-white/10">
+                                <div className="font-display font-black uppercase text-[10px] truncate text-white">{r.name || r.kind}</div>
+                              </div>
                             </div>
                           )}
-                          <div className="absolute bottom-0 inset-x-0 bg-black/80 p-2 text-center border-t border-white/10">
-                            <div className="font-display font-black uppercase text-[10px] truncate text-white">{r.name || r.kind}</div>
-                          </div>
-                           {r.cardId && catalogCardById[r.cardId] && <CardRarityTreatment rarity={catalogCardById[r.cardId].rarity} compact />}
-                           <CardVariantTreatment variantId={r.variantId ?? (r.cardId ? bootstrap.profile.equippedVariants[r.cardId] : undefined)} />
                         </div>
                       ))}
                     </div>

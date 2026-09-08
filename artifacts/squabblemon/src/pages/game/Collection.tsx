@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { PlayerBootstrap, useClaimCollectionRoadMilestone } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { cardCatalog, getCardImage } from '../../data';
 import { CardInspector } from '../../components/CardInspector';
-import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
-import { CardProgress } from '../../components/CardProgress';
-import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 import { CardUpgradeCue } from '../../components/CardUpgrades';
+import { cardCatalog } from '../../data';
+import { CardView } from '../../components/CardView';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -139,48 +137,38 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   const isOwned = owned.has(c.catalogId);
                   const isDiscovered = discovered.has(c.catalogId);
                   const show = isOwned || isDiscovered;
-                   const variantId = bootstrap.profile.equippedVariants[c.catalogId];
-                   const variantKind = getVariantKind(variantId);
+                  const variantId = bootstrap.profile.equippedVariants[c.catalogId];
 
                   return (
                     <button
                       key={c.catalogId}
                       onClick={() => { if (show) setInspectId(c.catalogId); }}
-                      className={`relative text-left aspect-[3/4] bg-zinc-950 border border-white/10 overflow-hidden group transition-colors shadow-lg ${getRarityClass(c.rarity)} ${variantKind ? `card-variant card-variant-${variantKind}` : ''}`}
+                      className={`relative text-left card-bevel group transition-transform ${show ? 'hover:scale-105 active:scale-95' : 'opacity-20 cursor-default'}`}
                       aria-label={`${c.name}. ${c.rarity} rarity`}
                     >
                       {show ? (
-                        <>
-                          <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none z-10" />
-                          <img src={getCardImage(c.catalogId)} alt="" className={`absolute inset-0 w-full h-full object-cover object-top transition-all ${isOwned ? '' : 'grayscale opacity-40'}`} />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-                          <div className="absolute inset-x-0 bottom-0 p-2">
-                            <div className="font-display font-black italic uppercase text-[10px] leading-tight text-white mb-1">{c.name}</div>
-                            <div className="flex justify-between font-mono text-[8px] uppercase">
-                              <span className={isOwned ? "text-primary" : "text-white/40"}>{c.cost}H</span>
-                              <span className={isOwned ? "text-accent" : "text-white/40"}>{c.power}P</span>
-                            </div>
-                          </div>
+                        <div className="relative">
+                           <CardView
+                             card={c}
+                             variantId={variantId}
+                             progress={bootstrap.profile.cardProgression[c.catalogId]}
+                             unavailable={!isOwned}
+                             isBoard
+                             fillContainer
+                             presentationOnly
+                           />
                           {!isOwned && (
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              <span className="font-display font-black italic uppercase text-white/50 text-xs tracking-widest border border-white/20 bg-black/60 px-2 py-1 backdrop-blur-sm -rotate-12">Locked</span>
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+                              <span className="font-display font-black italic uppercase text-white/80 text-xs tracking-widest border border-white/30 bg-black/80 px-2 py-1 backdrop-blur-sm -rotate-12 card-bevel shadow-xl">Locked</span>
                             </div>
                           )}
-                           <CardRarityTreatment rarity={c.rarity} compact />
-                           {isOwned && <CardVariantTreatment variantId={variantId} />}
-                           {isOwned && (
-                              <div className="absolute inset-x-2 top-2 z-20 bg-black/70 p-1">
-                                <CardUpgradeCue card={c as any} progress={bootstrap.profile.cardProgression[c.catalogId] as any} className="text-[6px]" />
-                                <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
-                              </div>
-                           )}
-                        </>
+                        </div>
                       ) : (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center p-2 opacity-20">
-                          <div className="w-12 h-12 border-2 border-white/50 rounded-full flex items-center justify-center mb-2">
-                            <span className="font-display font-black text-xl">?</span>
+                        <div className="aspect-[63/88] bg-zinc-950 border-2 border-white/5 flex flex-col items-center justify-center p-2 card-bevel">
+                          <div className="w-8 h-8 md:w-12 md:h-12 border-2 border-white/20 flex items-center justify-center mb-2 card-bevel opacity-50">
+                            <span className="font-display font-black text-xl text-white/50">?</span>
                           </div>
-                          <div className="font-mono text-[8px] uppercase text-center tracking-widest">Undiscovered</div>
+                          <div className="font-mono text-[6px] md:text-[8px] uppercase text-center tracking-widest text-white/30">Undiscovered</div>
                         </div>
                       )}
                     </button>

@@ -3,11 +3,9 @@ import { useLocation, useParams } from 'wouter';
 import { PlayerBootstrap, useSavePlayerDeck, useDeletePlayerDeck } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { catalogCardById, starterRecipes, validateSavedDeck, getCardImage } from '../../data';
-import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
-import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
-import { CardProgress } from '../../components/CardProgress';
 import { CardUpgradeCue } from '../../components/CardUpgrades';
+import { catalogCardById, starterRecipes, validateSavedDeck } from '../../data';
+import { CardView } from '../../components/CardView';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const params = useParams();
@@ -241,41 +239,33 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {deckCards.map(c => (
-                <div key={c.catalogId} className={`relative group aspect-[3/4] bg-zinc-900 border border-white/10 overflow-hidden ${getRarityClass(c.rarity)} ${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId])}` : ''}`}>
-                  <img src={getCardImage(c.catalogId)} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 pt-6">
-                    <div className="font-display font-black italic uppercase text-[10px] leading-none mb-1 truncate">{c.name}</div>
-                    <div className="flex justify-between items-center font-mono text-[7px]">
-                      <span className="text-primary">{c.cost}H</span>
-                      <span className="text-accent">{c.power}P</span>
-                    </div>
-                  </div>
+                <div key={c.catalogId} className="relative group">
+                  <CardView
+                    card={c}
+                    variantId={bootstrap.profile.equippedVariants[c.catalogId]}
+                    progress={bootstrap.profile.cardProgression[c.catalogId]}
+                    isBoard
+                     fillContainer
+                     presentationOnly
+                  />
                   {hero === c.catalogId && (
-                    <div className="absolute top-1 right-1 z-30 bg-primary text-black font-display font-black italic text-[9px] px-1.5 uppercase shadow-md">HERO</div>
+                    <div className="absolute top-0 right-0 z-30 bg-primary text-black font-display font-black italic text-[9px] px-1.5 py-0.5 uppercase shadow-md card-bevel border border-black/20">HERO</div>
                   )}
                   {!isRecipe && hero !== c.catalogId && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setHero(c.catalogId); }}
-                      className="absolute top-1 left-1 z-30 bg-black/60 border border-white/20 text-white font-mono text-[8px] px-1.5 uppercase hover:bg-primary hover:text-black transition-colors"
+                      className="absolute top-0 left-0 z-30 bg-black/80 border border-white/20 text-white font-mono text-[8px] px-1.5 py-0.5 uppercase hover:bg-primary hover:text-black transition-colors card-bevel shadow-md"
                     >
                       Make Hero
                     </button>
                   )}
                   {!isRecipe && (
-                    <>
-                      <button type="button" aria-label={`Remove ${c.name}, ${c.rarity} rarity, from crew`} onClick={() => toggleCard(c.catalogId)} className="absolute inset-0 z-20 cursor-pointer">
-                        <span className="absolute inset-0 bg-rose-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-                          <span className="bg-rose-500 text-white font-display font-black uppercase text-xs px-2 italic shadow-lg">Remove</span>
-                        </span>
-                      </button>
-                    </>
+                    <button type="button" aria-label={`Remove ${c.name}, ${c.rarity} rarity, from crew`} onClick={() => toggleCard(c.catalogId)} className="absolute inset-0 z-20 cursor-pointer card-bevel outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                      <span className="absolute inset-0 bg-rose-500/30 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity backdrop-blur-[1px]">
+                        <span className="bg-rose-500 text-white font-display font-black uppercase text-xs px-2 py-0.5 italic shadow-xl border border-rose-400">Remove</span>
+                      </span>
+                    </button>
                   )}
-                  <CardRarityTreatment rarity={c.rarity} compact />
-                  <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
-                  <div className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1">
-                    <CardUpgradeCue card={c} progress={bootstrap.profile.cardProgression[c.catalogId]} className="text-[6px]" />
-                    <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
-                  </div>
                 </div>
               ))}
             </div>
@@ -303,30 +293,24 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               {filteredCards.map(c => {
                 const inDeck = cards.includes(c.catalogId);
                 return (
-                   <button type="button" key={c.catalogId} aria-label={`${inDeck ? 'Remove' : 'Add'} ${c.name}, ${c.rarity} rarity`} className={`relative group aspect-[3/4] bg-zinc-900 border ${inDeck ? 'border-primary/50 opacity-50' : 'border-white/10'} overflow-hidden cursor-pointer ${getRarityClass(c.rarity)} ${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[c.catalogId])}` : ''}`} onClick={() => toggleCard(c.catalogId)}>
-                    <img src={getCardImage(c.catalogId)} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 pt-6">
-                      <div className="font-display font-black italic uppercase text-[10px] leading-none mb-1 truncate">{c.name}</div>
-                      <div className="flex justify-between items-center font-mono text-[7px]">
-                        <span className="text-primary">{c.cost}H</span>
-                        <span className="text-accent">{c.power}P</span>
-                       </div>
-                    </div>
+                   <button type="button" key={c.catalogId} aria-label={`${inDeck ? 'Remove' : 'Add'} ${c.name}, ${c.rarity} rarity`} className={`relative group block w-full text-left card-bevel cursor-pointer transition-transform active:scale-95 ${inDeck ? 'opacity-50 grayscale' : 'hover:scale-[1.02]'}`} onClick={() => toggleCard(c.catalogId)}>
+                     <CardView
+                       card={c}
+                       variantId={bootstrap.profile.equippedVariants[c.catalogId]}
+                       progress={bootstrap.profile.cardProgression[c.catalogId]}
+                       isBoard
+                       fillContainer
+                       presentationOnly
+                     />
                     {inDeck ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
-                        <span className="bg-primary text-black font-display font-black uppercase text-xs px-2 italic shadow-lg">In Deck</span>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
+                        <span className="bg-primary text-black font-display font-black uppercase text-xs px-2 py-0.5 italic shadow-xl border border-primary/50">In Deck</span>
                       </div>
                     ) : (
-                      <div className="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <span className="bg-primary text-black font-display font-black uppercase text-xs px-2 italic shadow-lg">Add</span>
+                      <div className="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none backdrop-blur-[1px]">
+                        <span className="bg-primary text-black font-display font-black uppercase text-xs px-2 py-0.5 italic shadow-xl border border-primary/50">Add</span>
                       </div>
                     )}
-                     <CardRarityTreatment rarity={c.rarity} compact />
-                     <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
-                      <div className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1">
-                        <CardUpgradeCue card={c} progress={bootstrap.profile.cardProgression[c.catalogId]} className="text-[6px]" />
-                        <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact />
-                      </div>
                    </button>
                 );
               })}

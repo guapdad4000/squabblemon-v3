@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { cards, decks, districts } from '../data';
+import { cards, catalogCardById, decks, districts } from '../data';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
 import { ResultScreen } from './ResultScreen';
 import { CardUpgrades } from './CardUpgrades';
+import { CardView } from './CardView';
 import { CardInspector } from './CardInspector';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
@@ -52,6 +53,56 @@ test('upgrade card detail uses the shared unlock helper for locked and active st
   assert.match(html, /Awkward Energy/);
   assert.match(html, />Active</);
   assert.match(html, /LV 5/);
+});
+
+test('upgrade card detail resolves catalog ids to canonical engine ids', () => {
+  const html = renderToStaticMarkup(<CardUpgrades card={catalogCardById['snow-bunny']} progress={{ level: 2 }} />);
+  assert.match(html, /Frostbite/);
+  assert.match(html, />Active</);
+});
+
+test('collection and deck card shells render progression for catalog ids', () => {
+  const html = renderToStaticMarkup(
+    <CardView
+      card={catalogCardById['all-jokes-roaster']}
+      progress={{ xp: 120, level: 2 }}
+      fillContainer
+      presentationOnly
+    />,
+  );
+  assert.match(html, /All Jokes Roaster/);
+  assert.match(html, /1\/3 active/);
+  assert.doesNotMatch(html, /<button/);
+});
+
+test('reward growth resolves catalog card ids and newly unlocked upgrades', () => {
+  const match = createMatch('block', 'combo');
+  const html = renderToStaticMarkup(
+    <ResultScreen
+      match={match}
+      districts={districts}
+      equippedVariants={{}}
+      onRestart={noop}
+      onChangeDeck={noop}
+      onGoHome={noop}
+      onRetryReward={noop}
+      reward={{
+        streetRep: 0,
+        softCurrency: 0,
+        cardXp: [{
+          cardId: 'snow-bunny',
+          xpGained: 120,
+          previousXp: 0,
+          previousLevel: 1,
+          xp: 120,
+          level: 2,
+        }],
+      }}
+    />,
+  );
+  assert.match(html, /Snow Bunny/);
+  assert.match(html, /New upgrade unlocked!/);
+  assert.match(html, /Frostbite/);
 });
 
 test('authenticated initialization retains the server-issued leveled snapshot', () => {

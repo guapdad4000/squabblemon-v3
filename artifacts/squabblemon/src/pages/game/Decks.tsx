@@ -2,10 +2,9 @@ import { useLocation } from 'wouter';
 import { PlayerBootstrap, useSavePlayerDeck } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
-import { catalogCardById, starterRecipes, getCardImage, validateSavedDeck } from '../../data';
+import { catalogCardById, starterRecipes, validateSavedDeck } from '../../data';
 import { useState } from 'react';
-import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
-import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
+import { CardView } from '../../components/CardView';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [, setLocation] = useLocation();
@@ -77,17 +76,20 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   key={deck.id}
                   onClick={() => setLocation(`/game/decks/${deck.id}`)}
                   aria-label={`${deck.name}${heroCard ? `. Hero card is ${heroCard.rarity} rarity` : ''}`}
-                  className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-primary/50 transition-colors shadow-lg ${heroCard ? getRarityClass(heroCard.rarity) : ''} ${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[deck.heroCardId])}` : ''}`}
+                  className="relative group text-left border-2 border-white/10 bg-zinc-950 overflow-hidden flex flex-row items-center p-3 hover:border-primary/50 transition-colors shadow-lg card-bevel"
                 >
-                  <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
-                  <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity">
-                    {deck.heroCardId && (
-                      <img src={getCardImage(deck.heroCardId)} alt="" className="w-full h-full object-cover object-top opacity-50 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all" />
-                    )}
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-                  <div className="relative z-10 p-4 flex-1 flex flex-col justify-end">
-                    <h3 className="font-display font-black italic text-xl uppercase leading-none text-white group-hover:text-primary transition-colors">{deck.name}</h3>
+                  {heroCard ? (
+                    <div className="w-16 flex-none mr-4">
+                      <CardView card={heroCard} variantId={bootstrap.profile.equippedVariants[deck.heroCardId]} isBoard fillContainer presentationOnly disableLayout />
+                    </div>
+                  ) : (
+                    <div className="w-16 flex-none mr-4 aspect-[63/88] bg-white/5 border border-white/10 card-bevel flex items-center justify-center">
+                       <span className="font-mono text-[8px] text-white/30 uppercase">No Hero</span>
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display font-black italic text-xl uppercase leading-none text-white group-hover:text-primary transition-colors truncate">{deck.name}</h3>
                     <div className="font-mono text-[9px] uppercase tracking-widest flex items-center gap-2 mt-2">
                       <span className={legality.valid ? "text-green-400" : "text-rose-500"}>
                         {legality.valid ? 'Valid' : 'Invalid'}
@@ -96,8 +98,6 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       <span className="text-white/60">{deck.cardIds.length}/7 Cards</span>
                     </div>
                   </div>
-                  {heroCard && <CardRarityTreatment rarity={heroCard.rarity} />}
-                  <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[deck.heroCardId]} />
                 </button>
               );
             })}
@@ -116,24 +116,21 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 key={recipe.id}
                 onClick={() => setLocation(`/game/decks/${recipe.id}`)}
                 aria-label={`${recipe.name}. Hero card is ${heroCard.rarity} rarity`}
-                className={`relative group text-left border border-white/10 bg-zinc-950 overflow-hidden flex flex-col h-32 hover:border-white/30 transition-colors shadow-lg ${getRarityClass(heroCard.rarity)} ${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero]) ? `card-variant card-variant-${getVariantKind(bootstrap.profile.equippedVariants[recipe.hero])}` : ''}`}
+                className="relative group text-left border-2 border-white/10 bg-zinc-950 overflow-hidden flex flex-row items-center p-3 hover:border-white/30 transition-colors shadow-lg card-bevel"
               >
-                <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] pointer-events-none" />
-                <div className="absolute inset-0 opacity-20">
-                  <img src={getCardImage(recipe.hero)} alt="" className="w-full h-full object-cover object-top opacity-50 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all" />
+                <div className="w-16 flex-none mr-4">
+                  <CardView card={heroCard} variantId={bootstrap.profile.equippedVariants[recipe.hero]} isBoard fillContainer presentationOnly disableLayout />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-                <div className="relative z-10 p-4 flex-1 flex flex-col justify-end">
-                  <div className="flex justify-between items-start">
-                    <div className="font-mono text-[8px] text-white/40 uppercase mb-1">{recipe.archetype}</div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="font-mono text-[8px] text-white/40 uppercase truncate mr-2">{recipe.archetype}</div>
                     {!legality.valid && (
-                      <div className="font-mono text-[8px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-1 py-0.5 uppercase">Missing Cards</div>
+                      <div className="font-mono text-[8px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-1 py-0.5 uppercase whitespace-nowrap">Missing Cards</div>
                     )}
                   </div>
-                  <h3 className="font-display font-black italic text-xl uppercase leading-none text-white">{recipe.name}</h3>
+                  <h3 className="font-display font-black italic text-xl uppercase leading-none text-white truncate group-hover:text-primary transition-colors">{recipe.name}</h3>
                 </div>
-                <CardRarityTreatment rarity={heroCard.rarity} />
-                <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[recipe.hero]} />
               </button>
             );
           })}

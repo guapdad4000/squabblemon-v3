@@ -1,6 +1,7 @@
 import React from 'react';
 import { LockKeyhole, Sparkles, Zap } from 'lucide-react';
 import { unlockedAbilityUpgrades } from '@workspace/squabblemon-engine/abilityUpgrades';
+import { catalogCardById } from '@workspace/squabblemon-engine/data';
 
 type AuthoredUpgrade = {
   id?: string;
@@ -13,6 +14,9 @@ type AuthoredUpgrade = {
 };
 
 type UpgradeCarrier = {
+  id?: string;
+  cardId?: string;
+  engineId?: string;
   upgrades?: readonly AuthoredUpgrade[];
   abilityUpgrades?: readonly AuthoredUpgrade[];
 };
@@ -27,11 +31,16 @@ export function getAuthoredCardUpgrades(card: UpgradeCarrier | null | undefined)
   return card?.abilityUpgrades ?? card?.upgrades ?? [];
 }
 
-function upgradeState(card: UpgradeCarrier & { id?: string }, upgrade: AuthoredUpgrade, progress?: UpgradeProgress, activeUpgradeIds?: string[]) {
+function engineCardId(card: UpgradeCarrier): string | undefined {
+  return card.engineId ?? card.cardId ?? (card.id ? catalogCardById[card.id]?.engineId ?? card.id : undefined);
+}
+
+function upgradeState(card: UpgradeCarrier, upgrade: AuthoredUpgrade, progress?: UpgradeProgress, activeUpgradeIds?: string[]) {
+  const cardId = engineCardId(card);
   const ids = activeUpgradeIds
     ?? progress?.activeUpgradeIds
     ?? progress?.unlockedUpgradeIds
-    ?? (card.id && progress?.level !== undefined ? unlockedAbilityUpgrades(card.id, progress.level).map((item: { id: string }) => item.id) : []);
+    ?? (cardId && progress?.level !== undefined ? unlockedAbilityUpgrades(cardId, progress.level).map((item: { id: string }) => item.id) : []);
   const identified = upgrade.id ? ids.includes(upgrade.id) : false;
   return { active: identified, newlyUnlocked: false };
 }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { cards, decks, getAssetUrl, getCardImage } from '../data';
+import { cards, catalogCardByEngineId, catalogCardById, decks, getAssetUrl, getCardImage } from '../data';
 import { Match, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { StoryCinematic } from './StoryCinematic';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
 import { CardUpgrades } from './CardUpgrades';
 import { unlockedAbilityUpgrades } from '@workspace/squabblemon-engine/abilityUpgrades';
+import { getCardRarity, getRarityClass } from './CardRarityTreatment';
 
 export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward, match, districts, reward, rewardError, rewardPending, isGuest, customPlayerDeck, storyMetadata, equippedVariants }: any) {
   const m = match as Match;
@@ -188,16 +189,21 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                 {reward.cardXp?.length > 0 && (
                   <div className="mt-4 grid grid-cols-2 gap-2 border-t border-white/10 pt-4 sm:grid-cols-3">
                     {reward.cardXp.map((entry: any) => {
-                      const card = cards[entry.cardId];
+                       const card = catalogCardById[entry.cardId] ?? catalogCardByEngineId[entry.cardId];
+                       const engineCardId = card?.engineId;
                        const progress = cardProgressDetails({ xp: entry.xp, level: entry.level });
                        const newlyUnlockedIds = entry.newlyUnlockedUpgradeIds
                          ?? entry.newlyUnlockedUpgrades?.map((upgrade: any) => typeof upgrade === 'string' ? upgrade : upgrade.id)
-                         ?? unlockedAbilityUpgrades(entry.cardId, entry.level)
-                           .filter((upgrade: { id: string }) => !unlockedAbilityUpgrades(entry.cardId, entry.previousLevel).some((previous: { id: string }) => previous.id === upgrade.id))
+                          ?? (engineCardId ? unlockedAbilityUpgrades(engineCardId, entry.level)
+                            .filter((upgrade: { id: string }) => !unlockedAbilityUpgrades(engineCardId, entry.previousLevel).some((previous: { id: string }) => previous.id === upgrade.id))
+                            : [])
                            .map((upgrade: { id: string }) => upgrade.id);
                       return (
                         <div key={entry.cardId} className="flex items-center gap-2 bg-white/5 p-2 text-left">
-                          <img src={getCardImage(entry.cardId)} alt="" className="h-10 w-8 object-cover object-top" />
+                          <div className={`h-14 w-10 relative card-bevel border border-white/20 bg-zinc-900 flex-shrink-0 ${getRarityClass(getCardRarity(card?.id ?? ''))}`}>
+                            <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20" />
+                            <img src={getCardImage(entry.cardId)} alt="" className="absolute inset-x-0 bottom-0 w-full h-[90%] object-contain object-bottom" />
+                          </div>
                           <div className="min-w-0">
                             <div className="truncate font-display text-[10px] font-black uppercase">{card?.name ?? entry.cardId}</div>
                             <div className="font-mono text-[8px] uppercase text-primary">+{entry.xpGained} Card XP · LV {entry.level}</div>

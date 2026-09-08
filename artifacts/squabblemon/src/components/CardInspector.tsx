@@ -66,15 +66,16 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match }: an
           variantId={equippedVariant}
           progress={progression}
           testId="card-inspector"
-          className={`w-[180px] h-[252px] md:w-[280px] md:h-[392px] shadow-2xl shadow-primary/20 pointer-events-none ${!isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
+          isInspector
+          className={`w-[180px] md:w-[280px] aspect-[63/88] shadow-2xl shadow-primary/20 pointer-events-none ${!isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
         />
 
         <div
-          className={`relative w-full bg-[#111]/95 border p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar ${catalogCard ? getRarityClass(catalogCard.rarity) : 'border-primary/30'}`}
-          style={{ clipPath: 'polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px))' }}
+          className={`relative w-full bg-zinc-950/95 border-2 p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar flex flex-col card-bevel ${catalogCard ? getRarityClass(catalogCard.rarity) : 'border-primary/30'}`}
         >
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-white to-primary" />
-          <div className="flex justify-between items-center mb-5">
+          <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-5 pointer-events-none mix-blend-screen" />
+          <div className="absolute inset-x-0 top-0 h-1.5 bg-[var(--rarity-color,theme(colors.primary.DEFAULT))] shadow-[0_0_15px_var(--rarity-color,theme(colors.primary.DEFAULT))]" />
+          <div className="flex justify-between items-center mb-5 relative z-10">
             <span className="font-mono text-[10px] md:text-xs text-primary uppercase tracking-[0.22em]">{card.type} class // {card.cost} Motion</span>
             <button data-testid="button-close-inspector" onClick={onClose} className="w-9 h-9 border border-white/20 flex items-center justify-center text-white/50 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0">
               <X size={16} />
