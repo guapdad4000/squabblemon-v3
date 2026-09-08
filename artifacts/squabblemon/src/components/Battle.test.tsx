@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { cards, catalogCardById, decks, districts } from '../data';
@@ -14,10 +15,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
-import { createMatch, playCard, type Match } from '../gameEngine';
+import { createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 
 const noop = () => {};
+const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
 const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
 
 test('battle presentation names an authoritative triggered upgrade', () => {
@@ -143,6 +145,19 @@ test('guidance, treatments, and broadcast signals remain available', () => {
   const html = renderBattle(match, { selectedInstanceId: card.instanceId, equippedVariants: { [card.id]: `${card.id}:chrome` } });
   assert.match(html, /2\. Choose a lit district/); assert.match(html, /is-legal/); assert.match(html, /card-variant-chrome/);
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
+});
+
+test("status help distinguishes Church Auntie's durable Covered shield from Wifey's round guard", () => {
+  assert.match(source, /Church Auntie blocks this card’s next targeted hostile ability, even in a later round/);
+  assert.match(source, /Wifey blocks one targeted effect in her district this round/);
+  let match = createMatch('vibes', 'vibes');
+  const church = createCardInstance('church', 'player', 'covered-ui', 0);
+  const ally = createCardInstance('cornball', 'player', 'covered-ui', 1);
+  match = { ...match, playerMotion: 20, playerHand: [church], boards: [[ally], [], []] };
+  match = playCard(match, 'player', church.instanceId, 0);
+  const markup = renderBattle(match);
+  assert.match(markup, /data-card-status="covered"/);
+  assert.doesNotMatch(markup, /data-instance-id="[^"]*cornball[^"]*"[^>]*aria-label="[^"]*Protected this round/);
 });
 
 test('every authored round intro uses its matching fight-night asset', () => {

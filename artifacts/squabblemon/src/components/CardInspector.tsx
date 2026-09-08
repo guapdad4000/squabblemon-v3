@@ -15,6 +15,7 @@ import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUp
 export function CardInspector({ card, onClose, bootstrap, variantId, match }: any) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
+  const isCovered = Boolean(instance && match?.timedEffects?.some((effect: any) => effect.kind === 'church-protection' && effect.targetInstanceId === instance.instanceId));
   const catalogCard = catalogCardById[card.catalogId || card.id] ?? catalogCardByEngineId[card.cardId || card.id] ?? null;
 
   const craftVariant = useCraftPlayerVariant();
@@ -63,6 +64,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match }: an
       >
         <CardView
           card={card}
+          covered={isCovered}
           variantId={equippedVariant}
           progress={progression}
           testId="card-inspector"
@@ -118,7 +120,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match }: an
                 <div className="flex flex-wrap gap-2">
                   {instance.statuses.frozen && <span className="bg-blue-500/20 text-blue-300 border border-blue-500/50 px-2 py-1 text-[10px] font-mono uppercase">Frozen</span>}
                   {instance.statuses.silenced && <span className="bg-zinc-500/20 text-zinc-300 border border-zinc-500/50 px-2 py-1 text-[10px] font-mono uppercase">Silenced</span>}
-                  {instance.statuses.protected && <span className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/50 px-2 py-1 text-[10px] font-mono uppercase">Protected</span>}
+                  {isCovered && <span className="bg-amber-200/20 text-amber-200 border border-amber-300/50 px-2 py-1 text-[10px] font-mono uppercase" title="Blocks this card’s next targeted hostile ability, even in a later round">Covered</span>}
+                  {instance.statuses.protected && !isCovered && <span className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/50 px-2 py-1 text-[10px] font-mono uppercase">Protected this round</span>}
                   {instance.statuses.blocked && <span className="bg-red-500/20 text-red-300 border border-red-500/50 px-2 py-1 text-[10px] font-mono uppercase">Blocked</span>}
                   {!instance.statuses.frozen && !instance.statuses.silenced && !instance.statuses.protected && !instance.statuses.blocked && <span className="text-white/30 text-[10px] font-mono uppercase">Normal</span>}
                 </div>

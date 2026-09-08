@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   canAffordSelection, chooseCpuPlay, createCardInstance, createMatch, createMatchFromCatalog, getEffectiveCardPower,
-  getDistrictCardBonus, getLaneScore, getLegalCardCost, getMatchWinner, getRivalIntent, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
+  getCardCostExplanation, getDistrictCardBonus, getLaneScore, getLegalCardCost, getMatchWinner, getRivalIntent, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
   createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot, type Match,
 } from './gameEngine';
 import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades } from './data';
@@ -13,6 +13,96 @@ const playOne = (id: string, setup?: (m: Match) => Match) => {
   match = { ...match, playerMotion: 20, playerHand: [custom(id, 'player', 0)] };
   return playCard(setup ? setup(match) : match, 'player', match.playerHand[0].instanceId, 0);
 };
+
+test("City Never Sleeps cards use deterministic reveal, protection, movement, and cost rules", () => {
+  let m = createMatch("vibes", "vibes");
+  const barber = custom("barber", "player", 1), ally = custom("delivery", "player", 2), enemy = custom("cornball", "cpu", 3);
+  m = { ...m, playerMotion: 20, playerHand: [barber], boards: [[ally, enemy], [], []] };
+  m = playCard(m, "player", barber.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === enemy.instanceId)?.powerModifier, -1);
+
+  const bottle = custom("bottle", "player", 4);
+  m = { ...m, phase: "player", playerMotion: 5, playerHand: [bottle] };
+  m = playCard(m, "player", bottle.instanceId, 1);
+  assert(m.discountTokens.some(token => token.eligibility === "printed-two-cost"));
+
+  const church = custom("church", "player", 5), protectedAlly = custom("cornball", "player", 6), roaster = custom("roaster", "cpu", 7);
+  m = { ...m, phase: "player", playerMotion: 20, playerHand: [church], boards: [[protectedAlly], [], []] };
+  m = playCard(m, "player", church.instanceId, 0);
+  m = { ...m, phase: "cpu-reveal", cpuMotion: 20, cpuHand: [roaster], boards: m.boards.map(items => items.map(card => card.instanceId === church.instanceId ? { ...card, statuses: { ...card.statuses, frozen: true } } : card)) as Match["boards"] };
+  m = playCard(m, "cpu", roaster.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.powerModifier, 0);
+  assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
+
+  const carMeet = custom("carmeet", "player", 8), delivery = custom("delivery", "player", 9);
+  delivery.statuses.frozen = true;
+  m = { ...m, phase: "player", playerMotion: 20, playerHand: [carMeet], boards: [[], [delivery], []] };
+  m = playCard(m, "player", carMeet.instanceId, 0);
+  assert.equal(m.boards.flat().find(card => card.instanceId === carMeet.instanceId)?.lane, 1);
+  assert.equal(m.boards.flat().find(card => card.instanceId === delivery.instanceId)?.powerModifier, 1);
+
+  const demon = custom("delivery", "player", 11), carried = custom("cornball", "player", 12);
+  m = { ...m, phase: "player", playerMotion: 20, playerHand: [demon], boards: [[carried], [], []] };
+  m = playCard(m, "player", demon.instanceId, 0);
+  assert.equal(m.boards.flat().find(card => card.instanceId === carried.instanceId)?.lane, 1);
+});
+
+test("Church Auntie's Covered shield survives rounds until it blocks one hostile target", () => {
+  let m = createMatch("vibes", "vibes");
+  const church = custom("church", "player", 80);
+  const ally = custom("cornball", "player", 81);
+  const roaster = custom("roaster", "cpu", 82);
+  m = { ...m, playerMotion: 20, playerHand: [church], boards: [[ally], [], []] };
+  m = playCard(m, "player", church.instanceId, 0);
+  assert(m.timedEffects.some(effect => effect.kind === "church-protection" && effect.targetInstanceId === ally.instanceId));
+  m = pass(m, "cpu");
+  m = nextRound(m);
+  assert(m.timedEffects.some(effect => effect.kind === "church-protection" && effect.targetInstanceId === ally.instanceId));
+  m = {
+    ...m,
+    phase: "cpu-reveal",
+    cpuMotion: 20,
+    cpuHand: [roaster],
+    boards: m.boards.map(items => items.map(card => card.instanceId === church.instanceId
+      ? { ...card, statuses: { ...card.statuses, frozen: true } }
+      : card)) as Match["boards"],
+  };
+  m = playCard(m, "cpu", roaster.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 0);
+  assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
+});
+
+test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle are deterministic", () => {
+  let m = createMatch("vibes", "vibes");
+  const landlord = custom("landlord", "cpu", 20), twoCost = custom("cornball", "player", 21);
+  m = { ...m, boards: [[landlord], [], []], playerHand: [twoCost], playerMotion: 2 };
+  assert.equal(getLegalCardCost(m, "player", twoCost, 0), 2);
+  m = { ...m, discountTokens: [{ id: "old", owner: "player", sourceInstanceId: "x", eligibility: "any", sourceLane: null, createdOrder: 1 }] };
+  assert.equal(getLegalCardCost(m, "player", twoCost, 0), 1);
+  assert.match(getCardCostExplanation(m, "player", twoCost, 0), /1 base · −1 discount · \+1 Rent Due tax/);
+  m = playCard(m, "player", twoCost.instanceId, 0);
+  assert.equal(m.landlordTaxUsed.player[0], true);
+
+  const reseller = custom("sneaker", "player", 22), og = custom("og", "cpu", 23);
+  m = { ...m, phase: "cpu-reveal", cpuHand: [og], cpuMotion: 20, boards: [[reseller], [], []] };
+  m = playCard(m, "cpu", og.instanceId, 0);
+  assert(m.sneakerTriggered.player && m.discountTokens.some(token => token.owner === "player"));
+
+  const promoter = custom("promoter", "player", 24), handHigh = custom("og", "cpu", 25), handLow = custom("cornball", "cpu", 26);
+  m = { ...m, phase: "player", playerHand: [promoter], cpuHand: [handHigh, handLow], playerMotion: 20 };
+  m = playCard(m, "player", promoter.instanceId, 0);
+  assert.match(m.effectLog.at(-1)?.note ?? "", /Guest List/);
+  assert.match(m.effectLog.at(-1)?.note ?? "", /OG Uncle \(4 Motion\)/);
+  assert(m.discountTokens.some(token => token.sourceInstanceId === promoter.instanceId));
+
+  const nail = custom("nail", "player", 27), target = custom("cornball", "player", 28), oink = custom("oink", "cpu", 29);
+  m = { ...m, phase: "player", playerHand: [nail], playerMotion: 20, boards: [[target], [], []] };
+  m = playCard(m, "player", nail.instanceId, 0);
+  m = { ...m, phase: "cpu-reveal", cpuHand: [oink], cpuMotion: 20 };
+  m = playCard(m, "cpu", oink.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 2);
+});
 
 test('initial hands are stable, owner-specific instances', () => {
   const match = createMatch('block', 'combo');

@@ -31,6 +31,7 @@ interface CardViewProps {
   isInspector?: boolean;
   fillContainer?: boolean;
   presentationOnly?: boolean;
+  covered?: boolean;
 }
 
 function CardViewComponent({
@@ -38,7 +39,7 @@ function CardViewComponent({
   isBoard, isEnemy, effectivePower, cost, highlighted,
   effectRole, effectKind, disableLayout, unavailable,
   disabledReason, variantId, progress, isInspector,
-  fillContainer, presentationOnly,
+  fillContainer, presentationOnly, covered = false,
 }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
@@ -48,7 +49,7 @@ function CardViewComponent({
 
   const isFrozen = instance?.statuses?.frozen;
   const isSilenced = instance?.statuses?.silenced;
-  const isProtected = instance?.statuses?.protected;
+  const isProtected = instance?.statuses?.protected && !covered;
   const isBlocked = instance?.statuses?.blocked;
   const isMoved = instance?.moved;
   const powerModifier = instance?.powerModifier ?? 0;
@@ -71,7 +72,7 @@ function CardViewComponent({
       data-card-zone={isBoard ? 'board' : 'hand'}
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
-      aria-label={`${card.name}. ${rarity} rarity.${disabledReason ? ` ${disabledReason}` : ''}`}
+      aria-label={`${card.name}. ${rarity} rarity.${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
       title={disabledReason}
       onClick={presentationOnly ? undefined : onClick}
       whileHover={presentationOnly ? undefined : !isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {}}
@@ -131,7 +132,8 @@ function CardViewComponent({
 
           {isBoard && (
             <div className="absolute top-[28px] right-1 flex flex-col gap-0.5 z-20 pointer-events-none">
-              {isProtected && <div className="card-status bg-yellow-400 text-black"><Shield size={8} strokeWidth={3} /></div>}
+              {covered && <div data-card-status="covered" title="Covered" className="card-status bg-amber-200 text-black ring-1 ring-amber-500"><Shield size={8} strokeWidth={3} /></div>}
+              {isProtected && <div data-card-status="protected" title="Protected this round" className="card-status bg-yellow-400 text-black"><Shield size={8} strokeWidth={3} /></div>}
               {isBlocked && <div className="card-status bg-accent text-white"><Ban size={8} strokeWidth={3} /></div>}
               {isSilenced && <div className="card-status bg-zinc-600 text-white"><VolumeX size={8} strokeWidth={3} /></div>}
               {isFrozen && <div className="card-status bg-blue-400 text-black"><Snowflake size={8} strokeWidth={3} /></div>}
@@ -202,7 +204,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.progress === next.progress
     && previous.isInspector === next.isInspector
     && previous.fillContainer === next.fillContainer
-    && previous.presentationOnly === next.presentationOnly;
+    && previous.presentationOnly === next.presentationOnly
+    && previous.covered === next.covered;
 }
 
 export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);

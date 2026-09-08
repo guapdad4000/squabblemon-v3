@@ -9,3 +9,4 @@
 - [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
 - [Battle Motion curve](battle-motion-curve.md) — Six-round pacing starts at 2 Motion, carries at most 1 unspent Motion, and caps at 6 to preserve tempo without automatic late turns.
 - [Authenticated journey fidelity](authenticated-match-fixtures.md) — Auth journey mocks must preserve request/response invariants or fallback branches can invalidate route assertions.
+- [City Never Sleeps rules](city-never-sleeps-rules.md) — Expansion effects use explicit replay-safe state; movement is deterministic until the transcript records choices.

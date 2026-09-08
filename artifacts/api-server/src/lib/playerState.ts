@@ -30,6 +30,16 @@ import {
   type CardProgressionMap,
 } from "@workspace/squabblemon-engine/cardProgression";
 
+/** A one-time, idempotent catalog grant: this expansion is playable on release. */
+export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
+  "barber", "bottle", "sneaker", "church", "landlord",
+  "carmeet", "promoter", "nail", "og", "delivery",
+].map((engineId) => {
+  const card = catalogCardByEngineId[engineId];
+  if (!card) throw new Error(`Missing City Never Sleeps catalog card: ${engineId}`);
+  return card.catalogId;
+});
+
 const missionTemplates = [
   {
     missionKey: "rookie-road",
@@ -125,7 +135,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
       null;
     const normalizedOwned = [
       ...new Set(
-        current.ownedCardIds
+        [...current.ownedCardIds, ...CITY_NEVER_SLEEPS_CATALOG_IDS]
           .map(normalizeCardId)
           .filter((id): id is string => Boolean(id)),
       ),

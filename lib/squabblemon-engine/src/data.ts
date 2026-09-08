@@ -43,6 +43,16 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   oink: [{ kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }],
   snow: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
   wifey: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  barber: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }],
+  bottle: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  sneaker: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  church: [{ kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }],
+  landlord: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  carmeet: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  promoter: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  nail: [{ kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }],
+  og: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
+  delivery: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
 };
 
 const upgrade = (cardId: string, index: 0 | 1 | 2, name: string, description: string): AbilityUpgrade => {
@@ -73,7 +83,7 @@ export type Deck = {
   hero: string;
 };
 
-export const CARD_RARITIES = ["Common", "Uncommon", "Rare", "Epic"] as const;
+export const CARD_RARITIES = ["Common", "Uncommon", "Rare", "Epic", "Legendary"] as const;
 export type CardRarity = (typeof CARD_RARITIES)[number];
 
 export type CardRarityDefinition = {
@@ -89,6 +99,7 @@ export const CARD_RARITY_DEFINITIONS: Record<CardRarity, CardRarityDefinition> =
   Uncommon: { name: "Uncommon", order: 1, color: "#2563eb", cue: "◆◆", accessibilityLabel: "Uncommon rarity, two diamonds" },
   Rare: { name: "Rare", order: 2, color: "#7c3aed", cue: "◆◆◆", accessibilityLabel: "Rare rarity, three diamonds" },
   Epic: { name: "Epic", order: 3, color: "#f97316", cue: "◆◆◆◆", accessibilityLabel: "Epic rarity, four diamonds" },
+  Legendary: { name: "Legendary", order: 4, color: "#eab308", cue: "◆◆◆◆◆", accessibilityLabel: "Legendary rarity, five diamonds" },
 };
 
 export type CardVariantSlot = {
@@ -132,6 +143,16 @@ export const cards: Record<string, Card> = {
   oink: { id: "officer-oink", name: "Officer Oink", type: "Normal", cost: 5, power: 6, ability: "Civic Pressure", effect: "Every enemy card here loses 1 Power.", roles: ["Disruption"], abilityUpgrades: upgrades("oink", [["Patrol", "Civic Pressure grants +1 Power to Officer Oink.", "Crackdown", "Civic Pressure grants +1 Power to Officer Oink.", "Lockdown", "Civic Pressure grants +1 Power to Officer Oink."]]) },
   snow: { id: "snow-bunny", name: "Snow Bunny", type: "Water", cost: 2, power: 2, ability: "Cold Shoulder", effect: "Freeze the highest enemy card here. Frozen cards add 0 Power until cleansed.", roles: ["Disruption"], abilityUpgrades: upgrades("snow", [["Frostbite", "Cold Shoulder grants +1 Power to Snow Bunny.", "Ice Cold", "Cold Shoulder grants +1 Power to Snow Bunny.", "Whiteout", "Cold Shoulder grants +1 Power to Snow Bunny."]]) },
   wifey: { id: "wifey", name: "Wifey", type: "Normal", cost: 3, power: 4, ability: "Side Eye", effect: "Block the first targeted enemy effect here each round.", abilityUpgrades: upgrades("wifey", [["Sharp Look", "Side Eye grants +1 Power to Wifey.", "Read the Room", "Side Eye grants +1 Power to Wifey.", "Unbothered", "Side Eye grants +1 Power to Wifey."]]) },
+  barber: { id: "barber-bro", name: "Barber Bro", type: "Normal", cost: 3, power: 4, ability: "Line Up", effect: "On Reveal: Give your lowest-Power other card here +2 Power. Give the highest-Power enemy here -1 Power.", roles: ["Disruption"], abilityUpgrades: upgrades("barber", [["Fresh Fade", "Line Up grants +1 Power to Barber Bro.", "Detail Work", "Line Up grants +1 Power to its friendly target.", "Clean Finish", "Line Up makes its enemy target lose 1 more Power."]]) },
+  bottle: { id: "bottle-girl", name: "Bottle Girl", type: "Poison", cost: 2, power: 2, ability: "Last Call", effect: "On Reveal: If played on Round 4 or later, gain +2 Power. If you have unspent Motion, your next 2-Cost card costs 1 less Motion.", abilityUpgrades: upgrades("bottle", [["After Hours", "Last Call grants +1 Power to Bottle Girl.", "VIP Section", "Last Call grants +1 Power to Bottle Girl.", "Closing Time", "Last Call grants +1 Power to Bottle Girl."]]) },
+  sneaker: { id: "sneaker-reseller", name: "Sneaker Reseller", type: "Normal", cost: 2, power: 3, ability: "Flip Season", effect: "The first time your opponent plays a card costing 4 or more, your next card costs 1 less Motion.", abilityUpgrades: upgrades("sneaker", [["Authenticated", "Flip Season grants +1 Power to Sneaker Reseller.", "Markup", "Flip Season grants +1 Power to Sneaker Reseller.", "Sold Out", "Flip Season grants +1 Power to Sneaker Reseller."]]) },
+  church: { id: "church-auntie", name: "Church Auntie", type: "Light", cost: 3, power: 3, ability: "Covered", effect: "On Reveal: Protect your lowest-Power other friendly card here. If it already has Protect, give it +2 Power instead.", abilityUpgrades: upgrades("church", [["Prayer Circle", "Covered grants +1 Power to its friendly target.", "Sunday Best", "Covered grants +1 Power to Church Auntie.", "Amen Corner", "Covered grants +1 Power to its friendly target."]]) },
+  landlord: { id: "landlord", name: "Landlord", type: "Rock", cost: 4, power: 5, ability: "Rent Due", effect: "Ongoing: The first enemy card played at this district each round costs 1 additional Motion.", roles: ["Disruption"], abilityUpgrades: upgrades("landlord", [["Late Fee", "Rent Due grants +1 Power to Landlord.", "Lease Renewal", "Rent Due grants +1 Power to Landlord.", "Keyholder", "Rent Due grants +1 Power to Landlord."]]) },
+  carmeet: { id: "car-meet-kid", name: "Car Meet Kid", type: "Electric", cost: 2, power: 3, ability: "Sideshow", effect: "On Reveal: Move Car Meet Kid to your weakest other district. Then give its lowest-Power other friendly card +1 Power.", roles: ["Movement"], abilityUpgrades: upgrades("carmeet", [["Clean Slide", "Sideshow grants +1 Power to Car Meet Kid.", "Rev Limit", "Sideshow grants +1 Power to Car Meet Kid.", "Burnout", "Sideshow grants +1 Power to Car Meet Kid."]]) },
+  promoter: { id: "promoter", name: "Promoter", type: "Air", cost: 3, power: 3, ability: "Guest List", effect: "On Reveal: Reveal one deterministic card in your opponent's hand. If it costs 4 or more, your next card in another district costs 1 less Motion.", abilityUpgrades: upgrades("promoter", [["Plus One", "Guest List grants +1 Power to Promoter.", "Wristband", "Guest List grants +1 Power to Promoter.", "Headliner", "Guest List grants +1 Power to Promoter."]]) },
+  nail: { id: "nail-tech", name: "Nail Tech", type: "Poison", cost: 2, power: 2, ability: "Fresh Set", effect: "On Reveal: Give another friendly card here +2 Power. The next time that card is hit by an enemy Power reduction, reduce that loss by 1.", abilityUpgrades: upgrades("nail", [["Chrome Finish", "Fresh Set grants +1 Power to its friendly target.", "Gem Detail", "Fresh Set grants +1 Power to Nail Tech.", "Top Coat", "Fresh Set grants +1 Power to its friendly target."]]) },
+  og: { id: "og-uncle", name: "OG Uncle", type: "Fire", cost: 4, power: 6, ability: "Back In My Day", effect: "On Reveal: If your opponent has more total cards on the board than you, gain +3 Power. If they have at least 3 more, also give their lowest-Power card here -1 Power.", roles: ["Disruption"], abilityUpgrades: upgrades("og", [["Real History", "Back In My Day grants +1 Power to OG Uncle.", "Outside Check", "Back In My Day makes its enemy target lose 1 more Power.", "Old School", "Back In My Day grants +1 Power to OG Uncle."]]) },
+  delivery: { id: "delivery-demon", name: "Delivery Demon", type: "Air", cost: 1, power: 1, ability: "Drop Off", effect: "On Reveal: Move the lowest-Power other friendly 1- or 2-Cost card here to your weakest other district.", roles: ["Movement"], abilityUpgrades: upgrades("delivery", [["Express Route", "Drop Off grants +1 Power to Delivery Demon.", "Priority Order", "Drop Off grants +1 Power to Delivery Demon.", "Doorstep", "Drop Off grants +1 Power to Delivery Demon."]]) },
 };
 
 /** Throws at content-build time rather than allowing an incomplete ability path to ship. */
@@ -173,6 +194,16 @@ export const rarityByEngineId = {
   streamer: "Rare",
   oink: "Epic",
   techbro: "Epic",
+  barber: "Common",
+  bottle: "Uncommon",
+  sneaker: "Uncommon",
+  church: "Rare",
+  landlord: "Epic",
+  carmeet: "Uncommon",
+  promoter: "Rare",
+  nail: "Common",
+  og: "Legendary",
+  delivery: "Common",
 } as const satisfies Record<keyof typeof cards, CardRarity>;
 
 export function validateCardCatalogRarities(
@@ -209,6 +240,16 @@ const factionByEngineId: Record<string, string> = {
   oink: "The Block",
   snow: "The Block",
   wifey: "Good Vibes",
+  barber: "City Never Sleeps",
+  bottle: "The Function",
+  sneaker: "City Never Sleeps",
+  church: "Old Heads Know",
+  landlord: "Rent's Due",
+  carmeet: "Side Show",
+  promoter: "The Function",
+  nail: "City Never Sleeps",
+  og: "Old Heads Know",
+  delivery: "Side Show",
 };
 
 const sourceByEngineId: Record<string, string[]> = {
@@ -242,7 +283,7 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
     crewTags: decks
       .filter((deck) => deck.cards.includes(engineId))
       .map((deck) => deck.id),
-    acquisitionSources: sourceByEngineId[engineId] ?? ["Street Packs"],
+    acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),
     variantSlots: [
       {
         id: `${card.id}:tagged`,
