@@ -4,8 +4,9 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { decks, districts } from '../data';
 import { createMatch, playCard, type EffectLogEntry, type Match } from '../gameEngine';
-import { Battle } from './Battle';
+import { Battle, createBattleDecisionHandlers } from './Battle';
 import { ResultScreen } from './ResultScreen';
+import { trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 
 const noop = () => {};
 
@@ -212,4 +213,96 @@ test('saved-deck gameplay carries equipped treatments into cards, hero art, and 
     />,
   );
   assert.match(results, /variant-portrait-chrome/);
+});
+
+test('battle decision interactions emit only approved coarse analytics fields', () => {
+  const originalWindow = globalThis.window;
+  const calls: Array<{ name: string, data?: Record<string, string | number | boolean> }> = [];
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: { umami: { track: (name: string, data?: Record<string, string | number | boolean>) => calls.push({ name, data }) } },
+  });
+  const match = createMatch('block', 'combo');
+  const unavailable = match.playerHand.find(card => card.cost > match.playerHype)!;
+  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+  const state = { selected: null as string | null, lane: null as number | null, squabble: false };
+  const makeHandlers = () => createBattleDecisionHandlers({
+    match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
+    squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
+    setSelectedInstanceId: value => { state.selected = value; },
+    setSelectedLane: value => { state.lane = value; },
+    setSquabble: value => { state.squabble = value; },
+  });
+
+  try {
+    makeHandlers().selectCard(unavailable, false);
+    state.selected = available.instanceId;
+    state.lane = 0;
+    makeHandlers().selectDistrict(1, true);
+    makeHandlers().toggleSquabble(available);
+    state.squabble = true;
+    makeHandlers().toggleSquabble(available);
+    makeHandlers().openHistory(match.effectLog.length);
+    trackBattleTurnCommitted(match, 'pass', false, false, Date.now(), null);
+    trackBattleTurnCommitted(match, 'lock_in', false, true, Date.now(), 1);
+    trackBattleFastForwarded(match, 'effects');
+
+    assert.deepEqual(calls.map(call => call.name), [
+      'battle_unavailable_card_selected', 'battle_district_selected',
+      'battle_squabble_toggled', 'battle_squabble_toggled',
+      'battle_history_opened', 'battle_turn_committed',
+      'battle_turn_committed', 'battle_fast_forwarded',
+    ]);
+    assert.equal(calls[2].data?.action, 'arm');
+    assert.equal(calls[3].data?.action, 'cancel');
+    assert.equal(calls[5].data?.action, 'pass');
+    assert.equal(calls[6].data?.action, 'lock_in');
+    assert.equal(calls[6].data?.district, 2);
+
+    const approvedKeys: Record<string, string[]> = {
+      battle_unavailable_card_selected: ['round', 'hype', 'locked_districts', 'reason', 'decision_time'],
+      battle_district_selected: ['round', 'district', 'changed', 'decision_time'],
+      battle_squabble_toggled: ['round', 'action', 'decision_time'],
+      battle_history_opened: ['round', 'entries', 'decision_time'],
+      battle_turn_committed: ['round', 'action', 'automatic', 'squabble', 'decision_time', 'district'],
+      battle_fast_forwarded: ['round', 'phase'],
+    };
+    for (const call of calls) {
+      assert.deepEqual(Object.keys(call.data ?? {}).sort(), approvedKeys[call.name].filter(key => key in (call.data ?? {})).sort());
+      assert.equal(JSON.stringify(call.data).includes(available.instanceId), false);
+      assert.equal(JSON.stringify(call.data).includes(unavailable.instanceId), false);
+      assert.equal(JSON.stringify(call.data).match(/account|email|user_id|card_instance/), null);
+    }
+  } finally {
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
+  }
+});
+
+test('tracker failures cannot interrupt battle decision state changes', () => {
+  const originalWindow = globalThis.window;
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: { umami: { track: () => { throw new Error('tracker unavailable'); } } },
+  });
+  const match = createMatch('block', 'combo');
+  const available = match.playerHand.find(card => card.cost <= match.playerHype)!;
+  const state = { selected: null as string | null, lane: null as number | null, squabble: false };
+  const makeHandlers = () => createBattleDecisionHandlers({
+    match, interactive: true, selectedInstanceId: state.selected, selectedLane: state.lane,
+    squabble: state.squabble, lockedDistricts: 0, decisionStartedAt: Date.now(),
+    setSelectedInstanceId: value => { state.selected = value; },
+    setSelectedLane: value => { state.lane = value; },
+    setSquabble: value => { state.squabble = value; },
+  });
+
+  try {
+    assert.doesNotThrow(() => makeHandlers().selectCard(available, true));
+    assert.equal(state.selected, available.instanceId);
+    assert.doesNotThrow(() => makeHandlers().selectDistrict(2, true));
+    assert.equal(state.lane, 2);
+    assert.doesNotThrow(() => makeHandlers().toggleSquabble(available));
+    assert.equal(state.squabble, true);
+  } finally {
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
+  }
 });

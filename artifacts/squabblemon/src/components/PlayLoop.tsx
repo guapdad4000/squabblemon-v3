@@ -19,6 +19,13 @@ import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatm
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
 export type PresentationEffect = EffectLogEntry & { targetIds: string[]; durationLabel?: string };
 
+export function trackBattleTurnCommitted(match: Match, action: 'lock_in' | 'pass', automatic: boolean, squabble: boolean, decisionStartedAt: number, lane: Lane | null) {
+  trackEvent('battle_turn_committed', {
+    round: match.round, action, automatic, squabble,
+    decision_time: decisionTimeBucket(decisionStartedAt),
+    ...(action === 'lock_in' && lane !== null ? { district: lane + 1 } : {}),
+  });
+}
 const allCards = (match: Match) => [...match.playerHand, ...match.cpuHand, ...match.boards.flat()];
 const cardById = (match: Match, id: string) => allCards(match).find(card => card.instanceId === id);
 /** Rebuild only participants from the authoritative before/after event snapshots. */
@@ -174,19 +181,19 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
     if (await waitForBeat(changedLanes.length > 0 ? 750 : 1200, 120, id)) await advanceRoundBoundary(resolved, id, fastForwardRef.current);
   }, [advanceRoundBoundary, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => { setPresentationPhase('rival-thinking'); setPhaseMessage('RIVAL THINKING'); if (!await waitForBeat(700, 90, id)) return; const choice = chooseCpuPlay(afterPlayer); const resolved = choice ? playCard(afterPlayer, 'cpu', choice.instanceId, choice.lane) : pass(afterPlayer, 'cpu'); setMatch(resolved); if (await presentEvents(resolved, afterPlayer.nextEventSequence, id, fastForwardRef.current)) await finishRound(resolved, id); }, [finishRound, presentEvents, waitForBeat]);
-  const commit = useCallback(async (autoPass = false) => { if (!match || match.phase !== 'player' || presentationPhase !== 'player-ready' || locked.current || (!autoPass && selectedInstanceId && selectedLane === null)) return; locked.current = true; cancelTimers(); const id = timeline.current.id; let next: Match; try { const isLockIn = !!selectedInstanceId && !autoPass; next = isLockIn ? playCard(match, 'player', selectedInstanceId, selectedLane as Lane, squabble) : pass(match, 'player'); playerMovesRef.current.push(isLockIn ? { cardInstanceId: selectedInstanceId, lane: selectedLane as Lane, squabble } : { cardInstanceId: null, lane: null, squabble: false }); trackEvent('battle_turn_committed', { round: match.round, action: isLockIn ? 'lock_in' : 'pass', automatic: autoPass, squabble: isLockIn && squabble, decision_time: decisionTimeBucket(decisionStartedAtRef.current), ...(isLockIn ? { district: (selectedLane as Lane) + 1 } : {}) }); setMatch(next); if (isLockIn) { setPresentationPhase('lock-in'); setPhaseMessage('LOCK IN'); if (!await waitForBeat(260, 70, id)) return; } if (!await presentEvents(next, match.nextEventSequence, id)) return; } catch { setStagedPlayer(null); setImpactLane(null); locked.current = false; return; } setSquabble(false); setSelectedInstanceId(null); setSelectedLane(null); await runRival(next, id); }, [cancelTimers, match, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, squabble, waitForBeat]);
+  const commit = useCallback(async (autoPass = false) => { if (!match || match.phase !== 'player' || presentationPhase !== 'player-ready' || locked.current || (!autoPass && selectedInstanceId && selectedLane === null)) return; locked.current = true; cancelTimers(); const id = timeline.current.id; let next: Match; try { const isLockIn = !!selectedInstanceId && !autoPass; next = isLockIn ? playCard(match, 'player', selectedInstanceId, selectedLane as Lane, squabble) : pass(match, 'player'); playerMovesRef.current.push(isLockIn ? { cardInstanceId: selectedInstanceId, lane: selectedLane as Lane, squabble } : { cardInstanceId: null, lane: null, squabble: false }); trackBattleTurnCommitted(match, isLockIn ? 'lock_in' : 'pass', autoPass, isLockIn && squabble, decisionStartedAtRef.current, isLockIn ? selectedLane as Lane : null); setMatch(next); if (isLockIn) { setPresentationPhase('lock-in'); setPhaseMessage('LOCK IN'); if (!await waitForBeat(260, 70, id)) return; } if (!await presentEvents(next, match.nextEventSequence, id)) return; } catch { setStagedPlayer(null); setImpactLane(null); locked.current = false; return; } setSquabble(false); setSelectedInstanceId(null); setSelectedLane(null); await runRival(next, id); }, [cancelTimers, match, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, squabble, waitForBeat]);
   useEffect(() => { if (!turnTimerEnabled || screen !== 'battle' || presentationPhase !== 'player-ready' || showRules || inspect || tabHidden) return; const interval = setInterval(() => setTimerSeconds(v => Math.max(0, v - 1)), 1000); return () => clearInterval(interval); }, [inspect, presentationPhase, screen, showRules, tabHidden, turnTimerEnabled]);
   useEffect(() => { if (timerSeconds === 0 && presentationPhase === 'player-ready' && match) void commit(!(selectedInstanceId !== null && selectedLane !== null && canAffordSelection(match, 'player', selectedInstanceId, selectedLane as Lane))); }, [commit, match, presentationPhase, selectedInstanceId, selectedLane, timerSeconds]);
   const skipSequence = () => {
     if (!match) return;
     if (['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro'].includes(presentationPhase)) {
-      trackEvent('battle_fast_forwarded', { round: match.round, phase: presentationPhase });
+      trackBattleFastForwarded(match, presentationPhase);
       cancelTimers(); void enterPlayerTurn(match.round, true);
     } else if (presentationPhase === 'round-result') {
-      trackEvent('battle_fast_forwarded', { round: match.round, phase: presentationPhase });
+      trackBattleFastForwarded(match, presentationPhase);
       cancelTimers(); void advanceRoundBoundary(match, timeline.current.id, true);
     } else if (presentationPhase !== 'player-ready' && presentationPhase !== 'match-finish') {
-      trackEvent('battle_fast_forwarded', { round: match.round, phase: presentationPhase });
+      trackBattleFastForwarded(match, presentationPhase);
       fastForwardRef.current = true;
       timeline.current.completeAll();
     }
@@ -209,4 +216,8 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
     {screen === 'battle' && visualMatch && <LayoutGroup><Battle match={visualMatch} deck={deck} rivalDeck={rivalDeck} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={turnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} equippedVariants={equippedVariants} /></LayoutGroup>}
     <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && match && <ResultScreen onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={mode === 'guest' || !!customPlayerDeck} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
   </div>;
+}
+
+export function trackBattleFastForwarded(match: Match, phase: PresentationPhase) {
+  trackEvent('battle_fast_forwarded', { round: match.round, phase });
 }
