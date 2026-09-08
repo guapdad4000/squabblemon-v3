@@ -4,6 +4,8 @@ import { Card, getAssetUrl, getCardImage } from '../data';
 import { CardInstance } from '../gameEngine';
 import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
 
+const CARD_CLIP_STYLE = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
+
 interface CardViewProps {
   card: Card | CardInstance;
   queued?: boolean;
@@ -23,7 +25,7 @@ interface CardViewProps {
   disabledReason?: string;
 }
 
-export function CardView({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason }: CardViewProps) {
+function CardViewComponent({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -37,8 +39,6 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
   const isMoved = instance?.moved;
   const powerModifier = instance?.powerModifier ?? 0;
 
-  const clipStyle = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
-  
   return (
     <motion.button
       layoutId={disableLayout ? undefined : instance?.instanceId}
@@ -73,10 +73,10 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
           ${isEnemy && !queued ? 'bg-accent/40 group-hover:bg-accent/70' : ''}
           ${isFrozen ? 'border border-blue-400 ring-2 ring-blue-500/50' : ''}
         `}
-        style={clipStyle}
+         style={CARD_CLIP_STYLE}
       >
         {/* Inner Content */}
-        <div className="relative w-full h-full bg-zinc-950 overflow-hidden" style={clipStyle}>
+         <div className="relative w-full h-full bg-zinc-950 overflow-hidden" style={CARD_CLIP_STYLE}>
            <div className={`absolute inset-0 bg-gradient-to-b from-zinc-800 to-black ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''}`}>
               <img src={getCardImage(card.id)} alt={card.name} className={`absolute inset-x-0 top-0 w-full h-[84%] object-contain object-top opacity-95 ${isSilenced ? 'grayscale' : ''}`} />
            </div>
@@ -135,3 +135,23 @@ export function CardView({ card, queued, squabble, onClick, testId, className = 
     </motion.button>
   );
 }
+
+function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
+  return previous.card === next.card
+    && previous.queued === next.queued
+    && previous.squabble === next.squabble
+    && previous.testId === next.testId
+    && previous.className === next.className
+    && previous.isBoard === next.isBoard
+    && previous.isEnemy === next.isEnemy
+    && previous.effectivePower === next.effectivePower
+    && previous.cost === next.cost
+    && previous.highlighted === next.highlighted
+    && previous.effectRole === next.effectRole
+    && previous.effectKind === next.effectKind
+    && previous.disableLayout === next.disableLayout
+    && previous.unavailable === next.unavailable
+    && previous.disabledReason === next.disabledReason;
+}
+
+export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);

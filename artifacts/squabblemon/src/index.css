@@ -169,6 +169,7 @@
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
   isolation: isolate;
+  contain: layout paint style;
   border-inline: 1px solid rgba(250, 204, 21, .14);
   transition: filter .2s ease, border-color .2s ease;
 }
@@ -207,6 +208,7 @@
   justify-content: center;
   align-items: center;
   overflow: visible;
+  contain: layout style;
 }
 .battle-card-stack > * { transition: margin .18s ease, transform .18s ease; }
 .battle-card-stack > * + * { margin-left: -38px; }
@@ -541,6 +543,25 @@
   .battle-primary-action { flex-basis: 100%; order: 3; min-height: 2.8rem; }
 }
 
+@media (max-width: 640px) and (pointer: coarse) {
+  .battle-board-card {
+    will-change: auto;
+  }
+  .district-impact,
+  .district-verdict,
+  .effect-source,
+  .effect-target {
+    will-change: transform, opacity;
+  }
+  .district-marker {
+    backdrop-filter: none;
+    background: rgba(5,5,5,.88);
+  }
+  .noise-overlay {
+    display: none;
+  }
+}
+
 @media (max-width: 340px) {
   .battle-header { padding-inline: .25rem; }
   .battle-rival { display: none; }
@@ -567,4 +588,13 @@
 :root[data-reduced-motion='true'] .brand-loader__meter span {
   width: 100%;
   opacity: .65;
+}
+
+:root[data-reduced-motion='true'] .effect-source,
+:root[data-reduced-motion='true'] .effect-target {
+  outline: 3px solid var(--effect-color, var(--color-primary));
+}
+
+:root[data-reduced-motion='true'] .target-trajectory span {
+  opacity: .8;
 }
