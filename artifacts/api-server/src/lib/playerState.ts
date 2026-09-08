@@ -4,7 +4,6 @@ import {
   desc,
   eq,
   isNotNull,
-  lte,
   sql,
 } from "drizzle-orm";
 import {
@@ -25,6 +24,7 @@ import {
   validateSavedDeck,
 } from "@workspace/squabblemon-engine/data";
 import { COLLECTION_ROAD, STREET_PACK_CONFIG } from "./collectionEconomy";
+import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
 
 const missionTemplates = [
   {
@@ -103,31 +103,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
   }
 
   const now = new Date();
-  const expired = await db
-    .select()
-    .from(playerMissionsTable)
-    .where(
-      and(
-        eq(playerMissionsTable.clerkUserId, clerkUserId),
-        lte(playerMissionsTable.resetAt, now),
-      ),
-    );
-
-  for (const mission of expired) {
-    await db
-      .update(playerMissionsTable)
-      .set({
-        progress: 0,
-        claimedAt: null,
-        resetAt: resetForCadence(mission.cadence),
-      })
-      .where(
-        and(
-          eq(playerMissionsTable.id, mission.id),
-          lte(playerMissionsTable.resetAt, now),
-        ),
-      );
-  }
+  await resetExpiredPlayerMissions(clerkUserId, now);
 
   await db.transaction(async (tx) => {
     await tx.execute(

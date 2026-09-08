@@ -49,6 +49,12 @@ import {
 } from "../lib/storyTransactions";
 import { getStoredStoryMatchResult } from "../lib/storyMatchResult";
 import {
+  claimMissionReward,
+  claimStarterReward,
+  completeStandardMatchReward,
+  PlayerRewardError,
+} from "../lib/playerRewardTransactions";
+import {
   createStoryMatchProgressionSnapshot,
   parseStoryMatchProgressionSnapshot,
   type StoryMatchProgressionSnapshot,
@@ -283,34 +289,7 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
     }
   } else if (parsed.data.action === "claim-reward") {
     if (profile.onboardingStep === "reward") {
-      await db.transaction(async (tx) => {
-        await tx
-          .update(playerProfilesTable)
-          .set({
-            starterRewardClaimed: true,
-            onboardingStep: "complete",
-            softCurrency: sql`${playerProfilesTable.softCurrency} + 250`,
-            packTickets: sql`${playerProfilesTable.packTickets} + 1`,
-            xp: sql`${playerProfilesTable.xp} + 100`,
-            streetRep: sql`${playerProfilesTable.streetRep} + 5`,
-          })
-          .where(
-            and(
-              eq(playerProfilesTable.clerkUserId, userId),
-              eq(playerProfilesTable.starterRewardClaimed, false),
-              eq(playerProfilesTable.onboardingStep, "reward"),
-            ),
-          );
-        await tx
-          .update(playerMissionsTable)
-          .set({ progress: 1 })
-          .where(
-            and(
-              eq(playerMissionsTable.clerkUserId, userId),
-              eq(playerMissionsTable.missionKey, "rookie-road"),
-            ),
-          );
-      });
+      await claimStarterReward(userId);
     }
   }
 
@@ -547,7 +526,15 @@ router.post(
     let grantedStoryRewards =
       (match.storyGrantedRewards as GrantedStoryReward[] | null) ?? [];
     let firstStoryClear = match.storyFirstClear ?? false;
-    if (!alreadyCompleted) {
+    if (!alreadyCompleted && match.mode !== "story" && match.mode !== "tutorial") {
+      const result = await completeStandardMatchReward({
+        clerkUserId: userId,
+        matchId: match.id,
+        outcome: verifiedOutcome,
+        districtsWon,
+      });
+      alreadyCompleted = !result.completed;
+    } else if (!alreadyCompleted) {
       const completed = await db.transaction(async (tx) => {
         if (match.mode === "story") {
           await tx.execute(
@@ -776,55 +763,15 @@ router.post(
       return;
     }
     await getPlayerBootstrap(userId);
-    const [mission] = await db
-      .select()
-      .from(playerMissionsTable)
-      .where(
-        and(
-          eq(playerMissionsTable.clerkUserId, userId),
-          eq(playerMissionsTable.missionKey, params.data.missionId),
-        ),
-      );
-    if (!mission) {
-      res.status(404).json({ error: "Mission not found" });
-      return;
+    try {
+      await claimMissionReward(userId, params.data.missionId);
+    } catch (error) {
+      if (error instanceof PlayerRewardError) {
+        res.status(error.status).json({ error: error.message });
+        return;
+      }
+      throw error;
     }
-    if (mission.claimedAt) {
-      res.json(
-        ClaimPlayerMissionResponse.parse(await getPlayerBootstrap(userId)),
-      );
-      return;
-    }
-    if (mission.progress < mission.goal) {
-      res.status(400).json({ error: "Mission is not complete" });
-      return;
-    }
-
-    await db.transaction(async (tx) => {
-      const [claimed] = await tx
-        .update(playerMissionsTable)
-        .set({ claimedAt: new Date() })
-        .where(
-          and(
-            eq(playerMissionsTable.id, mission.id),
-            isNull(playerMissionsTable.claimedAt),
-          ),
-        )
-        .returning();
-      if (!claimed) return;
-      await tx
-        .update(playerProfilesTable)
-        .set(
-          mission.rewardCurrency === "packTickets"
-            ? {
-                packTickets: sql`${playerProfilesTable.packTickets} + ${mission.rewardAmount}`,
-              }
-            : {
-                softCurrency: sql`${playerProfilesTable.softCurrency} + ${mission.rewardAmount}`,
-              },
-        )
-        .where(eq(playerProfilesTable.clerkUserId, userId));
-    });
 
     res.json(
       ClaimPlayerMissionResponse.parse(await getPlayerBootstrap(userId)),
