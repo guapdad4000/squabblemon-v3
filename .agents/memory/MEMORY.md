@@ -1,4 +1,5 @@
 - [Squabblemon visual bar](squabblemon-visual-bar.md) — Screens must be illustration-led and world-driven; typography-first dark layouts read as demo software.
 - [Browser presentation timers](browser-presentation-timers.md) — Wrap native browser timer functions before injecting them into cancellable timelines.
+- [Battle feedback lifecycle](battle-feedback-lifecycle.md) — Sound and haptic cues share presentation generation IDs; skips and cancellation must never run an independent cue clock.
 - [Reward-verified battles](reward-verified-battles.md) — Rewarded matches replay exact player moves with the shared deterministic engine; never trust client-reported outcomes.
 - [Profile economy lock](profile-economy-lock.md) — Inventory normalization and mutation must share the profile row lock or concurrent reads can erase rewards.

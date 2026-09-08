@@ -4,13 +4,15 @@ import { cards, districts, getAssetUrl, getCardImage } from '../data';
 import { CardView } from './CardView';
 import { getDistrictResults, getEffectiveCardPower, getLaneScoreForMatch, getLegalCardCost, Match, getStoryLockedLanes, getStoryModifierSummaries, getActiveStoryPhase, type Lane } from '../gameEngine';
 import type { PresentationEffect, PresentationPhase } from './PlayLoop';
+import type { FeedbackPreferences } from '../battleFeedback';
 
 export function Battle({
   match, deck, rivalDeck,
   selectedInstanceId, setSelectedInstanceId, selectedLane, setSelectedLane,
   commit, skipSequence, presentationPhase, phaseMessage, timerSeconds, timerEnabled, impactLane,
   stagedRival, stagedPlayer, activeEffectId, activeEffectLane, activeEffect,
-  squabble, setSquabble, setInspect, archiveMatch, onShowRules, presentationScores
+  squabble, setSquabble, setInspect, archiveMatch, onShowRules, presentationScores,
+  feedbackPreferences, setFeedbackPreferences,
 }: any) {
   const m = match as Match;
   const selectedCard = selectedInstanceId ? m.playerHand.find(c => c.instanceId === selectedInstanceId) : null;
@@ -20,6 +22,7 @@ export function Battle({
   const cpuClaims = districtResults.filter(result => result.winner === 'cpu').length;
   const phase = presentationPhase as PresentationPhase;
   const presentedEffect = activeEffect as PresentationEffect | null;
+  const feedback = feedbackPreferences as FeedbackPreferences | undefined;
   const interactive = phase === 'player-ready' && m.phase === 'player';
   const canSkip = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result'].includes(phase);
   const showCinematic = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result', 'match-finish'].includes(phase);
@@ -129,6 +132,8 @@ export function Battle({
         <div className="relative"><button type="button" data-testid="button-status-key" aria-label="Persistent status explanations" onClick={() => setShowStatuses(v => !v)} aria-expanded={showStatuses} className="battle-utility"><span className="utility-long">Status</span><span className="utility-short">FX</span></button>{showStatuses && <div data-testid="battle-status-key" className="battle-popover w-64"><div className="mb-2 font-mono text-[9px] uppercase text-primary">Persistent status key</div><dl className="space-y-2 text-[11px]"><div><dt className="font-bold text-blue-300">Frozen</dt><dd className="text-white/60">Adds 0 Power until cleansed.</dd></div><div><dt className="font-bold text-zinc-300">Silenced</dt><dd className="text-white/60">Keeps Power; ability cannot fire.</dd></div><div><dt className="font-bold text-yellow-300">Protected</dt><dd className="text-white/60">Blocks one targeted effect this round.</dd></div><div><dt className="font-bold text-rose-300">Blocked</dt><dd className="text-white/60">Protection has been spent this round.</dd></div><div><dt className="font-bold text-purple-300">Moved</dt><dd className="text-white/60">An ability changed this card’s district.</dd></div></dl></div>}</div>
         {activePhase && <div className="hidden sm:block border border-accent/50 bg-accent/10 px-2 py-1 text-right"><div className="text-[8px] font-mono text-accent uppercase tracking-widest">Boss Phase</div><div className="font-display font-black text-sm text-rose-200 uppercase">{activePhase.name}</div></div>}
         <button data-testid="button-rules-battle" aria-label="Battle rules" onClick={onShowRules} className="battle-utility"><span className="utility-long">Rules</span><span className="utility-short">?</span></button>
+        {feedback && <button type="button" data-testid="button-audio-toggle" aria-pressed={!feedback.audioEnabled} aria-label={feedback.audioEnabled ? 'Mute battle audio' : 'Unmute battle audio'} onClick={() => setFeedbackPreferences((value: FeedbackPreferences) => ({ ...value, audioEnabled: !value.audioEnabled }))} className="battle-utility"><span className="utility-long">{feedback.audioEnabled ? 'Sound' : 'Muted'}</span><span className="utility-short">{feedback.audioEnabled ? '♪' : '×'}</span></button>}
+        {feedback && typeof navigator !== 'undefined' && 'vibrate' in navigator && <button type="button" data-testid="button-haptics-toggle" aria-pressed={!feedback.hapticsEnabled} aria-label={feedback.hapticsEnabled ? 'Disable battle haptics' : 'Enable battle haptics'} onClick={() => setFeedbackPreferences((value: FeedbackPreferences) => ({ ...value, hapticsEnabled: !value.hapticsEnabled }))} className="battle-utility"><span className="utility-long">{feedback.hapticsEnabled ? 'Haptics' : 'No buzz'}</span><span className="utility-short">≈</span></button>}
         <div className="hidden sm:block text-right"><div className="text-[8px] font-mono text-white/40 uppercase">Claims</div><div className="font-display font-black text-sm"><span className="text-primary">{playerClaims}</span>–<span className="text-accent">{cpuClaims}</span></div></div><div className="text-right"><div className="text-[9px] font-mono text-accent uppercase">Hype</div><div className="font-display font-black text-xl">{m.cpuHype}</div></div><div className="border border-white/15 bg-black/60 px-3 py-1 text-right"><div className="font-mono text-[9px] text-white/40 uppercase">Round</div><div className="font-display font-black text-base">{m.round}<span className="text-white/30">/6</span></div></div>
         {timerEnabled && <div data-testid="turn-timer" aria-label={interactive ? `${timerSeconds} seconds remaining` : 'Decision timer paused'} className="w-12 text-center border px-1 py-1"><div className="font-mono text-[7px] uppercase">Time</div><div className="font-display font-black text-lg">{interactive ? timerSeconds : '—'}</div></div>}
       </div>

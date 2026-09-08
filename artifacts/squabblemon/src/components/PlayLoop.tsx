@@ -10,6 +10,7 @@ import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { StoryCinematic } from './StoryCinematic';
 import { PresentationTimeline } from '../presentationTimeline';
+import { BattleFeedback, loadFeedbackPreferences, saveFeedbackPreferences, type FeedbackPreferences } from '../battleFeedback';
 import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, Match, playCard, pass, nextRound, CardInstance, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'round-result' | 'match-finish';
@@ -53,10 +54,12 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   const [activeEffectId, setActiveEffectId] = useState<string | null>(null), [activeEffectLane, setActiveEffectLane] = useState<Lane | null>(null), [activeEffect, setActiveEffect] = useState<PresentationEffect | null>(null);
   const [showRules, setShowRules] = useState(false), [inspect, setInspect] = useState<CardInstance | Card | null>(null);
   const [encounterCinematic, setEncounterCinematic] = useState<{ source: string, poster: string, title: string, eyebrow: string } | null>(null);
+  const [feedbackPreferences, setFeedbackPreferences] = useState<FeedbackPreferences>(loadFeedbackPreferences);
+  const feedback = useRef(new BattleFeedback(feedbackPreferences));
 
   const deck = customPlayerDeck || decks.find(d => d.id === deckId) || decks[0];
   const rivalDeck: Deck = match?.storyEncounter ? { id: match.storyEncounter.enemy.deckId, name: match.storyEncounter.enemy.name, archetype: match.storyEncounter.enemy.behaviorProfile, accent: 'STORY', plan: 'A server-issued story encounter.', cards: [...match.storyEncounter.enemy.cardIds], hero: cards[match.storyEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero } : decks.find(d => d.id === rival) || decks[0];
-  const cancelTimers = useCallback(() => timeline.current.cancelAll(), []);
+  const cancelTimers = useCallback(() => { feedback.current.reset(); timeline.current.cancelAll(); }, []);
   const wait = useCallback((ms: number, id: number) => timeline.current.wait(ms, id), []);
   const setVisualFrame = useCallback((next: Match | null) => { visualMatchRef.current = next; setVisualMatch(next); }, []);
   const resetPresentation = useCallback(() => { setSelectedInstanceId(null); setSelectedLane(null); setSquabble(false); setShowRules(false); setInspect(null); setStagedRival(null); setStagedPlayer(null); setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setPresentationScores(null); }, []);
@@ -66,6 +69,10 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
     };
   }, [cancelTimers]);
   useEffect(() => { const onVisibility = () => setTabHidden(document.hidden); document.addEventListener('visibilitychange', onVisibility); return () => document.removeEventListener('visibilitychange', onVisibility); }, []);
+  useEffect(() => {
+    feedback.current.setPreferences(feedbackPreferences);
+    saveFeedbackPreferences(feedbackPreferences);
+  }, [feedbackPreferences]);
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round}`); if (!immediate && !fastForwardRef.current && !await wait(650, id)) return; setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); setTimerSeconds(20); locked.current = false; fastForwardRef.current = false; }, [wait]);
   const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 850], ['countdown-3', '3', 550], ['countdown-2', '2', 550], ['countdown-1', '1', 550], ['squabble', 'SQUABBLE!', 700], ['deal', 'CREW UP', 650]]; for (const [phase, message, duration] of beats) { setPresentationPhase(phase); setPhaseMessage(message); if (!await wait(duration, id)) return; } void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, wait]);
@@ -131,6 +138,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       if (effect.owner === 'player') setStagedPlayer(staged); else setStagedRival(staged);
       frame = applyEventState(frame, resolved, effect, 'before'); setVisualFrame(frame); setPresentationScores(effect.scores.before); setPresentationPhase(phase); setActiveEffectId(effect.source ? sourceId : null); setActiveEffectLane(lane); setImpactLane(lane); setActiveEffect({ ...effect, cardInstanceId: sourceId, lane, targetIds, durationLabel: effect.duration ? `Through round ${effect.duration.expiresAtRound - 1}` : undefined }); setPhaseMessage(effect.note);
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!fast && !fastForwardRef.current) feedback.current.emit(effect, id, reduced || document.documentElement.dataset.reduceMotion === 'true');
       if (!await wait(fast || fastForwardRef.current ? 0 : reduced ? 70 : 190, id)) return false;
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
       if (!await wait(fast || fastForwardRef.current ? 0 : reduced ? 90 : 380, id)) return false;
@@ -170,7 +178,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
         duration={5200}
       />
     )}
-    {screen === 'battle' && visualMatch && <LayoutGroup><Battle match={visualMatch} deck={deck} rivalDeck={rivalDeck} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={turnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} /></LayoutGroup>}
+    {screen === 'battle' && visualMatch && <LayoutGroup><Battle match={visualMatch} deck={deck} rivalDeck={rivalDeck} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={turnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} /></LayoutGroup>}
     <AnimatePresence>{inspect && <CardInspector card={inspect} onClose={() => setInspect(null)} match={match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && match && <ResultScreen onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={mode === 'guest' || !!customPlayerDeck} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} />}</AnimatePresence>
   </div>;
 }
