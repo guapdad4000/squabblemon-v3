@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+.bw-root {
+  --paper: #eee6d2;
+  --paper-deep: #d8c9ad;
+  --ink: #27221c;
+  --muted: #736957;
+  --line: #9b8c73;
+  --gold: #b28738;
+  --red: #a94032;
+  --blue: #3c6870;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.bw-root * { box-sizing: border-box; }
+.bw-mono { font-family: 'DM Mono', monospace; }
+.bw-root button, .bw-root input { font: inherit; }
+.bw-root button { cursor: pointer; }
+.bw-grid-paper {
+  background-image: linear-gradient(rgba(66,50,27,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(66,50,27,.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.bw-venue {
+  position: relative; min-height: 520px; overflow: hidden; border: 1px solid var(--ink);
+  background: #5f5d54; box-shadow: 8px 8px 0 rgba(39,34,28,.1);
+}
+.bw-venue img { width: 100%; height: 100%; position:absolute; inset:0; object-fit: cover; object-position: center 55%; filter: sepia(.2) saturate(.75) contrast(.95); }
+.bw-venue:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(31,27,21,.28),rgba(31,27,21,.06) 52%,rgba(31,27,21,.4)); pointer-events:none; }
+.bw-wire { position:absolute; z-index:2; border:2px solid #f3d68c; background:rgba(25,22,18,.17); color:#fff4d0; box-shadow:0 0 0 1px rgba(39,34,28,.5); }
+.bw-wire span { position:absolute; top:-12px; left:-2px; background:var(--red); color:#fff; border:1px solid #f4d58a; padding:3px 6px; font:500 10px 'DM Mono'; letter-spacing:.08em; }
+.bw-wire.hud { inset:5% 3% auto; height:11%; }
+.bw-wire.rival { left:7%; top:21%; width:26%; height:20%; }
+.bw-wire.lane { top:18%; bottom:31%; width:25%; }
+.bw-wire.lane.one { left:5%; }.bw-wire.lane.two { left:37.5%; }.bw-wire.lane.three { right:5%; }
+.bw-wire.score { top:48%; left:10%; right:10%; height:16%; border-color:#f5c15e; }
+.bw-wire.hand { left:4%; right:4%; bottom:8%; height:19%; border-color:#f5c15e; }
+.bw-wire.action { left:4%; right:4%; bottom:1.5%; height:5%; border-color:#f5c15e; }
+.bw-wire.fx { left:31%; top:38%; width:37%; height:22%; border-style:dashed; border-color:#ef9178; }
+.bw-wire.broadcast { top:30%; left:26%; width:48%; height:32%; border:2px dashed #fff0bb; opacity:.7; }
+.bw-venue-label { position:absolute; z-index:3; right:12px; bottom:10px; color:#fff1c8; font:10px 'DM Mono'; letter-spacing:.09em; }
+.bw-ui { position:absolute; z-index:4; color:#fff7de; font-family:'DM Mono',monospace; pointer-events:none; }
+.bw-ui-hud { top:6%; left:5%; right:5%; display:flex; align-items:center; justify-content:space-between; font-size:11px; }
+.bw-ui-chip { padding:6px 9px; background:rgba(25,22,18,.76); border:1px solid rgba(243,214,140,.9); }
+.bw-ui-cards { top:24%; left:7%; right:7%; display:grid; grid-template-columns:repeat(3,1fr); gap:8%; }
+.bw-ui-card { height:78px; padding:7px; background:rgba(30,28,22,.7); border:1px solid #f3d68c; font-size:10px; line-height:1.35; }
+.bw-ui-card b { display:block; margin-bottom:5px; color:#fff4d0; font:600 12px 'Space Grotesk',sans-serif; }
+.bw-ui-scores { top:50%; left:9%; right:9%; display:grid; grid-template-columns:repeat(3,1fr); gap:5%; text-align:center; }
+.bw-ui-score { padding:4px; background:rgba(23,21,17,.78); border:1px solid #f5c15e; }
+.bw-ui-score b { display:block; font:600 15px 'Space Grotesk',sans-serif; }.bw-ui-score small { color:#f5d992; font-size:9px; }
+.bw-ui-hand { left:7%; right:7%; bottom:10%; display:flex; justify-content:center; gap:12px; }
+.bw-ui-hand .bw-ui-card { width:105px; height:70px; }
+.bw-ui-actions { bottom:2%; left:7%; right:7%; display:flex; justify-content:space-between; align-items:center; font-size:10px; }
+.bw-ui-lock { padding:8px 18px; color:#271f17; background:#e1bd69; border:1px solid #fff0ba; font-weight:700; }
+.bw-note {
+  border:1px solid var(--line); background:rgba(255,250,235,.72); padding:13px;
+  box-shadow:3px 3px 0 rgba(39,34,28,.08);
+}
+.bw-note strong { color:var(--red); font-size:12px; letter-spacing:.05em; }
+.bw-tag { display:inline-block; padding:4px 7px; border:1px solid currentColor; font:10px 'DM Mono'; text-transform:uppercase; letter-spacing:.06em; }
+.bw-region-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.bw-region { text-align:left; border:1px solid var(--line); background:rgba(247,240,222,.75); padding:10px; transition:transform .15s, background .15s; }
+.bw-region:hover, .bw-region.active { background:#fff7e2; transform:translateY(-2px); }
+.bw-region b { display:inline-grid; place-items:center; width:23px; height:23px; background:var(--red); color:#fff; margin-right:7px; font:11px 'DM Mono'; }
+.bw-region small { display:block; padding:6px 0 0 30px; color:var(--muted); line-height:1.35; }
+.bw-demo-card { border:1px solid var(--ink); background:#f8efd9; padding:12px; position:relative; min-height:112px; }
+.bw-demo-card.selected { outline:3px solid var(--red); transform:translateY(-4px); }
+.bw-lane-demo { min-height:112px; border:1px dashed var(--gold); background:rgba(255,249,226,.5); padding:12px; text-align:center; }
+.bw-lane-demo.selected { background:#e7d4a9; border:2px solid var(--red); }
+.bw-btn { min-height:42px; border:1px solid var(--ink); background:var(--ink); color:#fff4d0; padding:9px 15px; text-transform:uppercase; font:500 11px 'DM Mono'; letter-spacing:.05em; }
+.bw-btn.alt { background:transparent; color:var(--ink); }.bw-btn.red { background:var(--red); border-color:var(--red); }
+.bw-flow { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+.bw-flow-step { padding:9px 12px; border:1px solid var(--line); background:#f9f0db; font:11px 'DM Mono'; }
+.bw-arrow { color:var(--red); font-weight:700; }
+@media (max-width: 760px) {
+  .bw-region-list { grid-template-columns:1fr; }
+  .bw-venue { min-height:420px; }
+  .bw-wire.rival { width:31%; }.bw-wire.lane { width:27%; }.bw-wire.lane.one { left:3%; }.bw-wire.lane.two { left:36.5%; }.bw-wire.lane.three { right:3%; }
+  .bw-wire.hand { bottom:8%; height:17%; }
+}
