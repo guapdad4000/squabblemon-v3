@@ -128,12 +128,15 @@ export default defineConfig({
         '..',
         'attached_assets',
       ),
+      ...(process.env.VITE_BATTLE_PERF === '1'
+        ? { 'react-dom/client': 'react-dom/profiling' }
+        : {}),
     },
     dedupe: ['react', 'react-dom'],
   },
   root: path.resolve(import.meta.dirname),
   build: {
-    outDir: path.resolve(import.meta.dirname, 'dist/public'),
+    outDir: path.resolve(import.meta.dirname, process.env.VITE_BATTLE_PERF === '1' ? 'dist/performance' : 'dist/public'),
     emptyOutDir: true,
   },
   server: {

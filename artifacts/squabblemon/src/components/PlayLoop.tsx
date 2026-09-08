@@ -20,6 +20,11 @@ import { e2eAuthEnabled } from '../lib/auth';
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
 export type PresentationEffect = EffectLogEntry & { targetIds: string[]; durationLabel?: string };
 
+export const EFFECT_PRESENTATION_TIMING = {
+  standard: { beforeMs: 190, afterMs: 380 },
+  reduced: { beforeMs: 70, afterMs: 90 },
+} as const;
+
 export function trackBattleTurnCommitted(match: Match, action: 'lock_in' | 'pass', automatic: boolean, squabble: boolean, decisionStartedAt: number, lane: Lane | null) {
   trackEvent('battle_turn_committed', {
     round: match.round, action, automatic, squabble,
@@ -30,7 +35,7 @@ export function trackBattleTurnCommitted(match: Match, action: 'lock_in' | 'pass
 const allCards = (match: Match) => [...match.playerHand, ...match.cpuHand, ...match.boards.flat()];
 const cardById = (match: Match, id: string) => allCards(match).find(card => card.instanceId === id);
 /** Rebuild only participants from the authoritative before/after event snapshots. */
-const applyEventState = (visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match => {
+export const applyEventState = (visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match => {
   let playerHand = [...visual.playerHand], cpuHand = [...visual.cpuHand];
   const boards = visual.boards.map(lane => [...lane]) as Match['boards'];
   for (const participant of [event.source, ...event.targets]) {
@@ -161,9 +166,9 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
           document.documentElement.dataset.reduceMotion === 'true',
         ));
       }
-      if (!await waitForBeat(190, 70, id, fast)) return false;
+      if (!await waitForBeat(EFFECT_PRESENTATION_TIMING.standard.beforeMs, EFFECT_PRESENTATION_TIMING.reduced.beforeMs, id, fast)) return false;
       frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
-      if (!await waitForBeat(380, 90, id, fast)) return false;
+      if (!await waitForBeat(EFFECT_PRESENTATION_TIMING.standard.afterMs, EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;

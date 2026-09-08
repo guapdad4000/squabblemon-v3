@@ -11,6 +11,7 @@
     "pretest:e2e": "playwright install chromium",
     "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:performance": "node scripts/battle-performance.mjs",
     "validate:brand": "node scripts/validate-brand-metadata.mjs",
     "validate:bundle": "node scripts/check-entry-bundle.mjs"
   },

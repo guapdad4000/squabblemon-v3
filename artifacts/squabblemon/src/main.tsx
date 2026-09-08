@@ -1,17 +1,24 @@
 import { createRoot } from 'react-dom/client';
 
-import App from './App';
 import { ErrorBoundary } from '@/components/error-boundary';
 
 import './index.css';
 
-createRoot(document.getElementById('root')!, {
+const root = createRoot(document.getElementById('root')!, {
   // Keeps caught errors off reportError(), which would raise the dev overlay.
   onCaughtError: (error, errorInfo) => {
     console.error(error, errorInfo.componentStack);
   },
-}).render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>,
-);
+});
+
+if (import.meta.env.VITE_BATTLE_PERF === '1' && new URLSearchParams(window.location.search).has('__battle_perf')) {
+  const { BattlePerfHarness } = await import('./components/BattlePerfHarness');
+  root.render(<BattlePerfHarness />);
+} else {
+  const { default: App } = await import('./App');
+  root.render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>,
+  );
+}
