@@ -152,7 +152,11 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                </div>
             )}
           </div>
-        ) : !isGuest && (
+        ) : isGuest ? (
+          <div className="mb-8 border border-primary/30 bg-black/60 p-4 font-mono text-[10px] uppercase tracking-widest text-primary">
+            Practice result only — rewards are unsaved.
+          </div>
+        ) : (
           <div className="mb-8 border border-white/10 bg-black/60 p-4">
             <h3 className="font-mono text-[9px] uppercase tracking-widest text-white/50 mb-3">Post-Match Rewards</h3>
             {rewardError ? (

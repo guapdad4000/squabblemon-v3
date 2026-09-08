@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useClerk } from '@clerk/react';
+import { useAppClerk } from '../../lib/auth';
 import { PlayerBootstrap, useUpdatePlayerProfile, getGetPlayerBootstrapQueryKey, useResetPlayerStoryDevelopment, getGetPlayerStoryQueryKey } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { storyContent } from '@workspace/squabblemon-engine/story';
 import { basePath } from '../../lib/routing';
 
 export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const { signOut } = useClerk();
+  const { signOut } = useAppClerk();
   const updateProfile = useUpdatePlayerProfile();
   const queryClient = useQueryClient();
   

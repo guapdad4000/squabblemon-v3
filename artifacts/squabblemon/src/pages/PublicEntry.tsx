@@ -1,10 +1,10 @@
 import { Link } from 'wouter';
-import { useAuth } from '@clerk/react';
 import { motion } from 'framer-motion';
 import { getAssetUrl, getCardImage } from '../lib/assets';
+import { useAppAuth } from '../lib/auth';
 
 export function PublicEntry() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useAppAuth();
 
   return (
     <div className="min-h-[100dvh] bg-[#070707] flex flex-col relative overflow-hidden text-white font-sans">

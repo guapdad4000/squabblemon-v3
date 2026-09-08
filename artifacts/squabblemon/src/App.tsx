@@ -1,5 +1,4 @@
 import { Switch, Route, Redirect, useLocation, Router as WouterRouter } from 'wouter';
-import { ClerkProvider, useAuth, useClerk } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { dark } from '@clerk/themes';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
@@ -8,6 +7,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 
 import { PublicEntry } from './pages/PublicEntry';
 import { basePath, stripBase } from './lib/routing';
+import { AppAuthProvider, useAppAuth, useAppClerk } from './lib/auth';
 
 const SignInPage = lazy(() =>
   import('./pages/auth/SignIn').then((module) => ({ default: module.SignInPage })),
@@ -99,7 +99,7 @@ function LoadingScreen() {
 const queryClient = new QueryClient();
 
 function ClerkQueryClientCacheInvalidator() {
-  const { addListener } = useClerk();
+  const { addListener } = useAppClerk();
   const queryClient = useQueryClient();
   const prevUserIdRef = useRef<string | null | undefined>(undefined);
 
@@ -121,7 +121,7 @@ function ClerkQueryClientCacheInvalidator() {
 }
 
 function PublicRedirect() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAppAuth();
   if (!isLoaded) return <LoadingScreen />;
   if (isSignedIn) return <Redirect to="/game" />;
   return <PublicEntry />;
@@ -131,7 +131,7 @@ function ClerkProviderWithRoutes() {
   const [, setLocation] = useLocation();
 
   return (
-    <ClerkProvider
+    <AppAuthProvider
       publishableKey={clerkPubKey}
       proxyUrl={clerkProxyUrl}
       appearance={clerkAppearance}
@@ -169,7 +169,7 @@ function ClerkProviderWithRoutes() {
           </Suspense>
         </MotionConfig>
       </QueryClientProvider>
-    </ClerkProvider>
+    </AppAuthProvider>
   );
 }
 

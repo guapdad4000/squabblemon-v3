@@ -1,8 +1,10 @@
 import { SignUp } from '@clerk/react';
+import { e2eAuthEnabled, TestAccountEntry } from '../../lib/auth';
 import { basePath } from '../../lib/routing';
 import { getCardImage } from '../../data';
 
 export function SignUpPage() {
+  if (e2eAuthEnabled) return <TestAccountEntry kind="sign-up" />;
   return (
     <div className="min-h-[100dvh] bg-[#070707] flex flex-col items-center justify-center p-4 relative">
       <div className="noise-overlay" />

@@ -8,6 +8,8 @@
     "build": "vite build --config vite.config.ts && pnpm run validate:bundle",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "test": "tsx --test src/characterAssets.test.ts src/gameEngine.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/lib/analytics.test.ts src/components/Battle.test.tsx && node --test scripts/check-entry-bundle.test.mjs",
+    "pretest:e2e": "playwright install chromium",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "validate:brand": "node scripts/validate-brand-metadata.mjs",
     "validate:bundle": "node scripts/check-entry-bundle.mjs"
@@ -15,6 +17,7 @@
   "devDependencies": {
     "@clerk/react": "^6.15.1",
     "@clerk/themes": "^2.4.57",
+    "@playwright/test": "^1.55.0",
     "@workspace/squabblemon-engine": "workspace:*",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.4",

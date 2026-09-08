@@ -1,4 +1,4 @@
-import { useAuth } from '@clerk/react';
+import { useAppAuth } from '../../lib/auth';
 import {
   getGetPlayerBootstrapQueryKey,
   useGetPlayerBootstrap,
@@ -135,7 +135,7 @@ function GameRoutes() {
 }
 
 export default function GameApp() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
   const { data: bootstrap, isLoading, error } = useGetPlayerBootstrap({
     query: {

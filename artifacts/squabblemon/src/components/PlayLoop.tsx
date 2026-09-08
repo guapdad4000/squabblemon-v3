@@ -15,6 +15,7 @@ import { BattleFeedback, loadFeedbackPreferences, saveFeedbackPreferences, type 
 import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatment';
+import { e2eAuthEnabled } from '../lib/auth';
 
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
 export type PresentationEffect = EffectLogEntry & { targetIds: string[]; durationLabel?: string };
@@ -200,6 +201,20 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   };
   const handleRestart = () => { autoStartRef.current = false; setStartError(null); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
+    {e2eAuthEnabled && mode === 'tutorial' && match && (
+      <button
+        type="button"
+        className="absolute right-2 top-2 z-[80] border border-primary bg-black px-3 py-2 font-mono text-[9px] uppercase text-primary"
+        onClick={() => void finishMatchSession(match)}
+      >
+        Complete guided test match
+      </button>
+    )}
+    {mode === 'guest' && (
+      <div className="absolute left-1/2 top-2 z-[70] -translate-x-1/2 border border-primary/40 bg-black/90 px-3 py-2 text-center font-mono text-[9px] uppercase tracking-widest text-primary">
+        Offline practice — rewards are unsaved
+      </div>
+    )}
     {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the story battle</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
     {screen === 'lobby' && !hideLobby && <Lobby onStart={start} deckId={deckId} setDeckId={setDeckId} rival={rival} setRival={setRival} availableDeckIds={availableDeckIds} onShowRules={() => setShowRules(true)} onInspect={setInspect} isLoading={startPlayerMatch.isPending} onExit={onExit} equippedVariants={equippedVariants} />}
     {encounterCinematic && (
