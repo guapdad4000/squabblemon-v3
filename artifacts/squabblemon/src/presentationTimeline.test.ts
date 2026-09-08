@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { PresentationTimeline, type TimerHandle } from './presentationTimeline';
 import { broadcastDelay, changedDistrictControl, isReducedMotionRequested } from './broadcastPresentation';
+import { getTurnTimerProgress, getTurnTimerState } from './turnTimer';
 
 function fakeTimers() {
   let now = 0;
@@ -108,4 +109,14 @@ test('the saved in-app preference enables reduced broadcast motion without an OS
   assert.equal(isReducedMotionRequested(false, true), true);
   assert.equal(isReducedMotionRequested(true, false), true);
   assert.equal(isReducedMotionRequested(false, false), false);
+});
+
+test('turn timer progress and warning states stay readable at every threshold', () => {
+  assert.equal(getTurnTimerState(20, true), 'calm');
+  assert.equal(getTurnTimerState(10, true), 'warning');
+  assert.equal(getTurnTimerState(5, true), 'urgent');
+  assert.equal(getTurnTimerState(0, false), 'paused');
+  assert.equal(getTurnTimerProgress(20), 1);
+  assert.equal(getTurnTimerProgress(10), .5);
+  assert.equal(getTurnTimerProgress(-1), 0);
 });

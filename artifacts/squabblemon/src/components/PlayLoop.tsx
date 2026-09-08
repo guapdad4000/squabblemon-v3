@@ -16,6 +16,7 @@ import { canAffordSelection, chooseCpuPlay, createMatch, createMatchFromCatalog,
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatment';
 import { settleHiddenBattlePresentation } from '../battleVisibility';
+import { TURN_SECONDS } from '../turnTimer';
 
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
 export type PresentationEffect = EffectLogEntry & { targetIds: string[]; durationLabel?: string };
@@ -114,7 +115,7 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
   }, [feedbackPreferences]);
   useEffect(() => { skipTransitionRef.current = false; }, [presentationPhase]);
 
-  const enterPlayerTurn = useCallback(async (round: number, immediate = false) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round}`); if (!immediate && !await waitForBeat(650, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); setTimerSeconds(20); locked.current = false; fastForwardRef.current = false; }, [waitForBeat]);
+  const enterPlayerTurn = useCallback(async (round: number, immediate = false) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round} · DECISION IN 1`); if (!immediate && !await waitForBeat(650, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); setTimerSeconds(TURN_SECONDS); locked.current = false; fastForwardRef.current = false; }, [waitForBeat]);
   const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 850], ['countdown-3', '3', 550], ['countdown-2', '2', 550], ['countdown-1', '1', 550], ['squabble', 'SQUABBLE!', 700], ['deal', 'CREW UP', 650]]; for (const [phase, message, duration] of beats) { setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
   const beginMatch = useCallback((initial: Match) => {
     cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); playerMovesRef.current = []; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
@@ -184,8 +185,17 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
           document.documentElement.dataset.reduceMotion === 'true',
         ));
       }
-      if (!await waitForBeat(EFFECT_PRESENTATION_TIMING.standard.beforeMs, EFFECT_PRESENTATION_TIMING.reduced.beforeMs, id, fast)) return false;
-      frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after); setPresentationPhase(isPlay ? effect.owner === 'player' ? 'player-impact' : 'rival-impact' : phase);
+      if (!await waitForBeat(isPlay ? 240 : EFFECT_PRESENTATION_TIMING.standard.beforeMs, isPlay ? 55 : EFFECT_PRESENTATION_TIMING.reduced.beforeMs, id, fast)) return false;
+      frame = applyEventState(frame, resolved, effect, 'after'); setVisualFrame(frame); setPresentationScores(effect.scores.after);
+      if (isPlay) {
+        setPresentationPhase(effect.owner === 'player' ? 'player-reveal' : 'rival-reveal');
+        setPhaseMessage(`${cardById(resolved, sourceId)?.name ?? 'CARD'} REVEALED`);
+        if (!await waitForBeat(210, 60, id, fast)) return false;
+        setPresentationPhase(effect.owner === 'player' ? 'player-impact' : 'rival-impact');
+        setPhaseMessage(effect.note.includes('SQUABBLE') ? `SQUABBLE · DISTRICT ${lane + 1}` : `LANDED · DISTRICT ${lane + 1}`);
+      } else {
+        setPresentationPhase(phase);
+      }
       if (!await waitForBeat(EFFECT_PRESENTATION_TIMING.standard.afterMs, EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast)) return false;
       setStagedPlayer(null); setStagedRival(null);
     }
@@ -201,11 +211,11 @@ export function PlayLoop({ mode = 'practice', onExit, initialDeckId = 'block', i
       setPhaseMessage(`${changedLanes.length === 1 ? districts[changedLanes[0]].name : `${changedLanes.length} DISTRICTS`} FLIPPED`);
       if (!await waitForBeat(450, 80, id)) return;
     }
-    setPresentationPhase('round-result'); setPhaseMessage(`ROUND ${resolved.round} COMPLETE`);
+    setPresentationPhase('round-result'); setPhaseMessage(`ROUND ${resolved.round} COMPLETE · NEXT DECISION IN 1`);
     if (await waitForBeat(changedLanes.length > 0 ? 750 : 1200, 120, id)) await advanceRoundBoundary(resolved, id, fastForwardRef.current);
   }, [advanceRoundBoundary, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => { setPresentationPhase('rival-thinking'); setPhaseMessage('RIVAL THINKING'); if (!await waitForBeat(700, 90, id)) return; const choice = chooseCpuPlay(afterPlayer); const resolved = choice ? playCard(afterPlayer, 'cpu', choice.instanceId, choice.lane) : pass(afterPlayer, 'cpu'); setMatch(resolved); if (await presentEvents(resolved, afterPlayer.nextEventSequence, id, fastForwardRef.current)) await finishRound(resolved, id); }, [finishRound, presentEvents, waitForBeat]);
-  const commit = useCallback(async (autoPass = false) => { if (!match || match.phase !== 'player' || presentationPhase !== 'player-ready' || locked.current || (!autoPass && selectedInstanceId && selectedLane === null)) return; feedback.current.unlockAudio(); locked.current = true; cancelTimers(); const id = timeline.current.id; let next: Match; try { const isLockIn = !!selectedInstanceId && !autoPass; next = isLockIn ? playCard(match, 'player', selectedInstanceId, selectedLane as Lane, squabble) : pass(match, 'player'); playerMovesRef.current.push(isLockIn ? { cardInstanceId: selectedInstanceId, lane: selectedLane as Lane, squabble } : { cardInstanceId: null, lane: null, squabble: false }); trackBattleTurnCommitted(match, isLockIn ? 'lock_in' : 'pass', autoPass, isLockIn && squabble, decisionStartedAtRef.current, isLockIn ? selectedLane as Lane : null); setMatch(next); if (isLockIn) { setPresentationPhase('lock-in'); setPhaseMessage('LOCK IN'); if (!await waitForBeat(260, 70, id)) return; } if (!await presentEvents(next, match.nextEventSequence, id)) return; } catch { setStagedPlayer(null); setImpactLane(null); locked.current = false; return; } setSquabble(false); setSelectedInstanceId(null); setSelectedLane(null); await runRival(next, id); }, [cancelTimers, match, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, squabble, waitForBeat]);
+  const commit = useCallback(async (autoPass = false) => { if (!match || match.phase !== 'player' || presentationPhase !== 'player-ready' || locked.current || (!autoPass && selectedInstanceId && selectedLane === null)) return; feedback.current.unlockAudio(); locked.current = true; cancelTimers(); const id = timeline.current.id; let next: Match; try { const isLockIn = !!selectedInstanceId && !autoPass; next = isLockIn ? playCard(match, 'player', selectedInstanceId, selectedLane as Lane, squabble) : pass(match, 'player'); playerMovesRef.current.push(isLockIn ? { cardInstanceId: selectedInstanceId, lane: selectedLane as Lane, squabble } : { cardInstanceId: null, lane: null, squabble: false }); trackBattleTurnCommitted(match, isLockIn ? 'lock_in' : 'pass', autoPass, isLockIn && squabble, decisionStartedAtRef.current, isLockIn ? selectedLane as Lane : null); setMatch(next); if (isLockIn) { setPresentationPhase('lock-in'); setPhaseMessage(`${cardById(match, selectedInstanceId)?.name ?? 'CARD'} LOCKED · ${districts[selectedLane as Lane].name}`); if (!await waitForBeat(260, 70, id)) return; } if (!await presentEvents(next, match.nextEventSequence, id)) return; } catch { setStagedPlayer(null); setImpactLane(null); locked.current = false; return; } setSquabble(false); setSelectedInstanceId(null); setSelectedLane(null); await runRival(next, id); }, [cancelTimers, match, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, squabble, waitForBeat]);
   const showReplayFrame = useCallback((event: EffectLogEntry, step: 'before' | 'after') => {
     if (!match || presentationPhase !== 'player-ready') return;
     if (!replayLiveFrame.current) { replayLiveFrame.current = visualMatchRef.current; replayLiveTimer.current = timerSeconds; }

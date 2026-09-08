@@ -63,6 +63,7 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
         relative shrink-0 flex flex-col justify-end text-left group
         ${isBoard ? 'battle-board-card w-[64px] h-[90px] sm:w-[78px] sm:h-[109px] lg:w-[96px] lg:h-[134px]' : 'battle-hand-card w-[100px] h-[140px] md:w-[136px] md:h-[190px] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary' : 'z-10'}
+        ${squabble ? 'card-squabble-armed' : ''}
         ${unavailable ? 'opacity-45 grayscale' : ''}
         ${highlighted || effectRole === 'source' ? 'effect-source' : ''}
         ${effectRole === 'target' ? 'effect-target' : ''}
@@ -85,17 +86,6 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
            <div className={`absolute inset-0 bg-gradient-to-b from-zinc-800 to-black ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''}`}>
               <img src={getCardImage(card.id)} alt={card.name} className={`absolute inset-x-0 top-0 w-full h-[84%] object-contain object-top opacity-95 ${isSilenced ? 'grayscale' : ''}`} />
            </div>
-
-           {card.type === 'Fire' && (
-              <div className="absolute inset-0 z-[5] pointer-events-none mix-blend-screen opacity-45 motion-reduce:hidden">
-                <img src={getAssetUrl('assets/guapdad4k_AN_ORB_OF_FIRE_PLAIN_WHITE_BACKGROUND_FIHGTING_GAME_070bfd20-91c4-4f46-8cec-dc40b553d84b_0.gif')} className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
-              </div>
-           )}
-           {card.type === 'Water' && (
-              <div className="absolute inset-0 z-[5] pointer-events-none mix-blend-screen opacity-45 motion-reduce:hidden hue-rotate-30">
-                <img src={getAssetUrl('assets/guapdad4k_AN_ORB_OF_YELLOW_LIQUD_PLAIN_WHITE_BACKGROUND_FIHGT_fdce4b3c-ed84-4761-853f-a87581f4b64e_0.gif')} className="w-full h-[78%] object-cover" alt="" aria-hidden="true" />
-              </div>
-           )}
 
            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/90 to-transparent flex flex-col justify-end p-1.5 z-10">
              <div className={`uppercase tracking-widest text-primary font-mono opacity-90 ${isBoard ? 'text-[5px] mb-0' : 'text-[7px] mb-0.5'}`}>
