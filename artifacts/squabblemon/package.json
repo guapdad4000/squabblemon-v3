@@ -8,7 +8,8 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "test": "tsx --test src/characterAssets.test.ts src/gameEngine.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/components/Battle.test.tsx",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate:brand": "node scripts/validate-brand-metadata.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",
