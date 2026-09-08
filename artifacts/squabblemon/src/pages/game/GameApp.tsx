@@ -1,4 +1,4 @@
-import { useAppAuth } from '../../lib/auth';
+import { clearAfterSignIn, useAppAuth } from '../../lib/auth';
 import {
   getGetPlayerBootstrapQueryKey,
   useGetPlayerBootstrap,
@@ -15,7 +15,7 @@ import {
   Ticket,
   UsersRound,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Redirect, Route, Switch, useLocation } from 'wouter';
 
 import { PlayLoop } from '../../components/PlayLoop';
@@ -121,17 +121,55 @@ function FightNightNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
 }
 
-function GameRoutes() {
-  const { data: bootstrap } = useGetPlayerBootstrap();
+function BootstrapError({
+  onRetry,
+  onPractice,
+  isRetrying,
+}: {
+  onRetry: () => void;
+  onPractice: () => void;
+  isRetrying: boolean;
+}) {
+  return (
+    <div className="min-h-[100dvh] bg-[#070707] text-white p-6 flex flex-col items-center justify-center text-center">
+      <img
+        src={`${import.meta.env.BASE_URL}brand/squabblemon-crest.webp`}
+        alt=""
+        className="h-28 w-28 object-contain mb-5 opacity-90"
+      />
+      <div className="font-display font-black text-accent text-3xl italic uppercase mb-3">Block Offline</div>
+      <p className="font-mono text-xs text-white/55 max-w-sm mb-7">
+        Your corner could not be loaded. Retry the connection or keep your hands warm in offline practice.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          type="button"
+          onClick={onRetry}
+          disabled={isRetrying}
+          className="bg-primary text-black px-6 py-3 font-display font-black italic uppercase text-sm disabled:opacity-50"
+        >
+          {isRetrying ? 'Retrying…' : 'Retry Connection'}
+        </button>
+        <button
+          type="button"
+          onClick={onPractice}
+          className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20"
+        >
+          Play Offline Practice
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    if (!bootstrap) return;
     document.documentElement.dataset.reduceMotion =
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap]);
 
-  if (!bootstrap) return null;
   const availableDeckIds = starterRecipes
     .filter((recipe) =>
       validateSavedDeck(
@@ -171,36 +209,64 @@ function GameRoutes() {
           />
         )}
       </Route>
-      <Route path="/game" nest>
+      <Route path="/game/collection">
+        <GameShell bootstrap={bootstrap} location={location}><Collection bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/decks/:deckId/test">
+        <GameShell bootstrap={bootstrap} location={location}><DeckTest bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/decks/:deckId">
+        <GameShell bootstrap={bootstrap} location={location}><DeckEditor bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/decks">
+        <GameShell bootstrap={bootstrap} location={location}><Decks bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/missions">
+        <GameShell bootstrap={bootstrap} location={location}><Missions bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/shop">
+        <GameShell bootstrap={bootstrap} location={location}><Shop bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/settings">
+        <GameShell bootstrap={bootstrap} location={location}><Settings bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game/story">
+        <GameShell bootstrap={bootstrap} location={location}><Story bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route path="/game">
+        <GameShell bootstrap={bootstrap} location={location}><Home bootstrap={bootstrap} /></GameShell>
+      </Route>
+      <Route component={() => <Redirect to="/game" />} />
+    </Switch>
+  );
+}
+
+function GameShell({
+  bootstrap,
+  location,
+  children,
+}: {
+  bootstrap: PlayerBootstrap;
+  location: string;
+  children: ReactNode;
+}) {
+  return (
         <div className="game-shell h-[100dvh] bg-[#070707] text-white">
           <div className="noise-overlay" />
           <FightNightNav bootstrap={bootstrap} />
           <div className="game-shell__content">
             <div className="game-route-stage" key={location}>
-              <Switch>
-                <Route path="/"><Home bootstrap={bootstrap} /></Route>
-                <Route path="/collection"><Collection bootstrap={bootstrap} /></Route>
-                <Route path="/decks"><Decks bootstrap={bootstrap} /></Route>
-                <Route path="/decks/:deckId"><DeckEditor bootstrap={bootstrap} /></Route>
-                <Route path="/decks/:deckId/test"><DeckTest bootstrap={bootstrap} /></Route>
-                <Route path="/missions"><Missions bootstrap={bootstrap} /></Route>
-                <Route path="/shop"><Shop bootstrap={bootstrap} /></Route>
-                <Route path="/settings"><Settings bootstrap={bootstrap} /></Route>
-                <Route path="/story"><Story /></Route>
-                <Route component={() => <Redirect to="/game" />} />
-              </Switch>
+              {children}
             </div>
           </div>
         </div>
-      </Route>
-    </Switch>
   );
 }
 
 export default function GameApp() {
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
-  const { data: bootstrap, isLoading, error } = useGetPlayerBootstrap({
+  const { data: bootstrap, isLoading, isFetching, error, refetch } = useGetPlayerBootstrap({
     query: {
       queryKey: getGetPlayerBootstrapQueryKey(),
       enabled: isLoaded && isSignedIn,
@@ -208,23 +274,29 @@ export default function GameApp() {
   });
 
   useEffect(() => {
-    if (isLoaded && !isSignedIn) setLocation('/sign-in');
-  }, [isLoaded, isSignedIn, setLocation]);
+    if (isLoaded && !isSignedIn) {
+      if (location.startsWith('/game')) sessionStorage.setItem('squabblemon_after_sign_in', location);
+      setLocation('/sign-in');
+    } else if (isLoaded && isSignedIn) {
+      clearAfterSignIn();
+    }
+  }, [isLoaded, isSignedIn, location, setLocation]);
 
   if (!isLoaded || !isSignedIn || isLoading) return <LoadingScreen />;
   if (error || !bootstrap) {
     return (
-      <div className="min-h-[100dvh] bg-black text-white p-6 flex flex-col items-center justify-center text-center">
-        <div className="font-display font-black text-accent text-3xl italic uppercase mb-4">Offline</div>
-        <p className="font-mono text-xs text-white/50 mb-8">Could not connect to the server.</p>
-        <button onClick={() => setLocation('/play/guest')} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20">Play Offline Training</button>
-      </div>
+      <BootstrapError
+        onRetry={() => void refetch()}
+        onPractice={() => setLocation('/play/guest')}
+        isRetrying={isFetching}
+      />
     );
   }
 
   const isComplete = bootstrap.profile.onboardingStep === 'complete';
-  const isOnboardingRoute = location === '/game/onboarding';
+  const normalizedLocation = location.length > 1 ? location.replace(/\/+$/, '') : location;
+  const isOnboardingRoute = normalizedLocation === '/game/onboarding';
   if (!isComplete && !isOnboardingRoute) return <Redirect to="/game/onboarding" />;
   if (isComplete && isOnboardingRoute) return <Redirect to="/game" />;
-  return <GameRoutes />;
+  return <GameRoutes bootstrap={bootstrap} />;
 }

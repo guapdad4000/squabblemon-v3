@@ -1,10 +1,11 @@
 import { SignUp } from '@clerk/react';
-import { e2eAuthEnabled, TestAccountEntry } from '../../lib/auth';
+import { e2eAuthEnabled, getAfterSignIn, TestAccountEntry } from '../../lib/auth';
 import { basePath } from '../../lib/routing';
 import { getCardImage } from '../../data';
 
 export function SignUpPage() {
   if (e2eAuthEnabled) return <TestAccountEntry kind="sign-up" />;
+  const redirectUrl = `${basePath}${getAfterSignIn()}`;
   return (
     <div className="min-h-[100dvh] bg-[#070707] flex flex-col items-center justify-center p-4 relative">
       <div className="noise-overlay" />
@@ -14,7 +15,7 @@ export function SignUpPage() {
           path={`${basePath}/sign-up`}
           routing="path"
           signInUrl={`${basePath}/sign-in`}
-          fallbackRedirectUrl={`${basePath}/game`}
+          fallbackRedirectUrl={redirectUrl}
         />
       </div>
     </div>

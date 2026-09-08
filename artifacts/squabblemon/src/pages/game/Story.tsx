@@ -5,10 +5,10 @@ import { useLocation } from 'wouter';
 import {
   getGetPlayerBootstrapQueryKey,
   getGetPlayerStoryQueryKey,
+  type PlayerBootstrap,
   type StoryCampaign,
   type StoryGrantedReward,
   useCompletePlayerStoryNode,
-  useGetPlayerBootstrap,
   useGetPlayerStory,
   useSavePlayerStoryDialogue,
 } from '@workspace/api-client-react';
@@ -61,9 +61,8 @@ function rewardLabel(reward: StoryReward | StoryGrantedReward) {
   return `+${reward.amount} Street XP`;
 }
 
-export function Story() {
+export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const storyQuery = useGetPlayerStory();
-  const { data: bootstrap } = useGetPlayerBootstrap();
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
@@ -321,7 +320,24 @@ function NodeOverlay({
     else setScreen(isBattle ? 'briefing' : 'completed');
   }, [isBattle, nodeId, pendingEntries.length]);
 
-  if (!storyNode || !nodeProgress) return null;
+  if (!storyNode || !nodeProgress) {
+    return (
+      <div className="fixed inset-0 z-50 grid place-items-center bg-black/95 p-6 text-center">
+        <div className="max-w-sm border border-white/15 bg-zinc-950 p-7">
+          <div className="font-mono text-[10px] uppercase tracking-[.25em] text-accent">Street file missing</div>
+          <h2 className="mt-2 font-display text-3xl font-black italic uppercase">Fight could not be opened</h2>
+          <p className="mt-3 text-sm text-white/55">Return to the map and choose another available stop.</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-6 bg-primary px-7 py-3 font-display font-black italic uppercase text-black"
+          >
+            Back to Map
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const applyCampaign = (nextCampaign: StoryCampaign, bootstrap?: unknown) => {
     queryClient.setQueryData(getGetPlayerStoryQueryKey(), nextCampaign);

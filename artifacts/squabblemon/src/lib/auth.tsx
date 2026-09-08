@@ -9,6 +9,22 @@ import { useLocation } from 'wouter';
 
 const e2eAuthEnabled = import.meta.env.DEV && import.meta.env.VITE_E2E_AUTH === 'true';
 const storageKey = 'squabblemon_e2e_user';
+const afterSignInKey = 'squabblemon_after_sign_in';
+
+function getAfterSignIn(): string {
+  const intended = sessionStorage.getItem(afterSignInKey);
+  return intended?.startsWith('/game') ? intended : '/game';
+}
+
+function consumeAfterSignIn(): string {
+  const intended = getAfterSignIn();
+  clearAfterSignIn();
+  return intended;
+}
+
+function clearAfterSignIn() {
+  sessionStorage.removeItem(afterSignInKey);
+}
 
 type AuthSnapshot = { isLoaded: boolean; isSignedIn: boolean };
 type Listener = (snapshot: { user: { id: string } | null }) => void;
@@ -71,7 +87,7 @@ export function TestAccountEntry({ kind }: { kind: 'sign-in' | 'sign-up' }) {
         className="bg-primary px-6 py-4 font-display font-black uppercase text-black"
         onClick={() => {
           auth.signIn();
-          setLocation('/game');
+          setLocation(consumeAfterSignIn());
         }}
       >
         {kind === 'sign-up' ? 'Create disposable test account' : 'Sign in test account'}
@@ -81,3 +97,4 @@ export function TestAccountEntry({ kind }: { kind: 'sign-in' | 'sign-up' }) {
 }
 
 export { e2eAuthEnabled };
+export { clearAfterSignIn, consumeAfterSignIn, getAfterSignIn };

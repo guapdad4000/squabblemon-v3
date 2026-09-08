@@ -39,6 +39,7 @@ function bootstrap(step: Step, claimed = false): PlayerBootstrap {
       discoveredCardIds: [],
       ownedVariants: [],
       equippedVariants: {},
+      cardProgression: {},
       unlockedCosmeticIds: [],
       savedDecks: [],
       storyProgress: {},
@@ -74,16 +75,21 @@ function bootstrap(step: Step, claimed = false): PlayerBootstrap {
   };
 }
 
-async function installAccountApi(page: Page) {
-  let step: Step = 'profile';
+async function installAccountApi(page: Page, initialStep: Step = 'profile') {
+  let step: Step = initialStep;
   let missionClaimed = false;
   let rewardClaims = 0;
+  let bootstrapRequests = 0;
 
   await page.route('**/api/player/**', async (route) => {
     const request = route.request();
     const url = new URL(request.url());
     if (request.method() === 'GET' && url.pathname.endsWith('/bootstrap')) {
+      bootstrapRequests += 1;
       return route.fulfill({ json: bootstrap(step, missionClaimed) });
+    }
+    if (request.method() === 'GET' && url.pathname.endsWith('/story')) {
+      return route.fulfill({ status: 503, json: { message: 'Map unavailable in journey fixture' } });
     }
     if (request.method() === 'POST' && url.pathname.endsWith('/onboarding')) {
       const action = request.postDataJSON().action;
@@ -93,15 +99,22 @@ async function installAccountApi(page: Page) {
       return route.fulfill({ json: bootstrap(step, missionClaimed) });
     }
     if (request.method() === 'POST' && url.pathname.endsWith('/matches')) {
+      const requestedMatch = request.postDataJSON() as {
+        mode: 'practice' | 'tutorial' | 'story';
+        playerDeckId: string;
+        rivalDeckId: string;
+      };
+      const playerDeck = decks.find((deck) => deck.id === requestedMatch.playerDeckId) ?? decks[0];
+      const rivalDeck = decks.find((deck) => deck.id === requestedMatch.rivalDeckId) ?? decks[1];
       return route.fulfill({ json: {
         id: 'e2e-match',
-        mode: 'tutorial',
-        playerDeckId: 'vibes',
-        rivalDeckId: 'combo',
+        mode: requestedMatch.mode,
+        playerDeckId: playerDeck.id,
+        rivalDeckId: rivalDeck.id,
         storyNodeId: null,
         contentVersion: null,
         encounterSnapshot: null,
-        abilityUpgradeSnapshot: tutorialUpgradeSnapshot,
+        abilityUpgradeSnapshot: createAbilityUpgradeSnapshot(playerDeck.cards, rivalDeck.cards),
         status: 'active',
         createdAt: new Date(0).toISOString(),
       } });
@@ -141,6 +154,7 @@ async function installAccountApi(page: Page) {
   return {
     resetAccount: () => { step = 'profile'; missionClaimed = false; },
     rewardClaims: () => rewardClaims,
+    bootstrapRequests: () => bootstrapRequests,
   };
 }
 
@@ -177,6 +191,19 @@ test('Rookie Road survives refreshes, claims once, and clears account cache on s
   await page.goto('/squabblemon/game');
   await page.reload();
   await expect(page.getByRole('button', { name: 'Corner' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ROOKIE' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Street Story' })).toBeVisible();
+  const requestsBeforeFight = api.bootstrapRequests();
+  await page.getByRole('button', { name: 'Fight' }).click();
+  await expect(page).toHaveURL(/\/squabblemon\/game\/play/);
+  await expect(page.getByRole('heading', { name: 'THE BLOCK IS HOT' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start Training' })).toBeVisible();
+  expect(api.bootstrapRequests()).toBe(requestsBeforeFight);
+  await page.getByRole('button', { name: 'Start Training' }).click();
+  await expect(page.getByTestId('motion-player')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId('hand-tray')).toBeVisible();
+  await expect(page.getByTestId('button-next-round')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'THE TOWN' })).toBeVisible();
   expect(api.rewardClaims()).toBe(1);
 
   await page.goto('/squabblemon/game/missions');
@@ -198,9 +225,45 @@ test('account API outage offers guest practice and labels rewards as unsaved', a
   await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
   await page.route('**/api/player/bootstrap', (route) => route.abort('failed'));
   await page.goto('/squabblemon/game');
-  await expect(page.getByText('Offline', { exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText('Block Offline', { exact: true })).toBeVisible({ timeout: 20_000 });
   await page.getByRole('button', { name: 'Play Offline Practice' }).click();
   await expect(page).toHaveURL(/\/squabblemon\/play\/guest/);
-  await expect(page.getByRole('button', { name: 'Enter the streets' })).toBeVisible();
-  await expect(page.getByText('Offline practice — rewards are unsaved')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start Training' })).toBeVisible();
+  await expect(page.getByText('Offline training — rewards are unsaved')).toBeVisible();
+});
+
+test('direct game links render and sign-in returns players to their intended destination', async ({ page }) => {
+  await installAccountApi(page, 'complete');
+
+  await page.goto('/squabblemon/game/play');
+  await expect(page).toHaveURL(/\/squabblemon\/sign-in/);
+  await page.goto('/squabblemon/sign-up');
+  await page.getByRole('button', { name: 'Create disposable test account' }).click();
+  await expect(page).toHaveURL(/\/squabblemon\/game\/play/);
+  await expect(page.getByRole('button', { name: 'Start Training' })).toBeVisible();
+
+  await page.goto('/squabblemon/game/onboarding/');
+  await expect(page).toHaveURL(/\/squabblemon\/game\/?$/);
+  await expect(page.getByRole('heading', { name: 'ROOKIE' })).toBeVisible();
+
+  await page.goto('/squabblemon/game');
+  await expect(page.getByRole('heading', { name: 'ROOKIE' })).toBeVisible();
+
+  const destinations = [
+    ['/squabblemon/game/collection', 'Collection'],
+    ['/squabblemon/game/decks', 'Decks'],
+    ['/squabblemon/game/missions', 'Missions'],
+    ['/squabblemon/game/shop', 'Street Shop'],
+    ['/squabblemon/game/settings', 'Settings'],
+  ] as const;
+
+  for (const [path, heading] of destinations) {
+    await page.goto(path);
+    await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+  }
+
+  await page.goto('/squabblemon/game/story');
+  await expect(page.getByText('Mapping territory...')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Could not load the street' })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByRole('button', { name: 'Retry Map' })).toBeVisible();
 });
