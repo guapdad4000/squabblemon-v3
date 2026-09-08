@@ -1,0 +1,49 @@
+export const CARD_LEVEL_CAP = 10;
+
+export type CardProgress = {
+  xp: number;
+  level: number;
+};
+
+export type CardProgressionMap = Record<string, CardProgress>;
+
+export function totalXpForCardLevel(level: number): number {
+  const boundedLevel = Math.max(1, Math.min(CARD_LEVEL_CAP, Math.floor(level)));
+  return 50 * boundedLevel * (boundedLevel - 1);
+}
+
+export const CARD_XP_CAP = totalXpForCardLevel(CARD_LEVEL_CAP);
+
+export function cardLevelFromXp(xp: number): number {
+  const safeXp = Math.max(0, Math.min(CARD_XP_CAP, Math.floor(xp)));
+  for (let level = CARD_LEVEL_CAP; level >= 1; level -= 1) {
+    if (safeXp >= totalXpForCardLevel(level)) return level;
+  }
+  return 1;
+}
+
+export function normalizeCardProgress(progress?: Partial<CardProgress> | null): CardProgress {
+  const xp = Math.max(0, Math.min(CARD_XP_CAP, Math.floor(progress?.xp ?? 0)));
+  return { xp, level: cardLevelFromXp(xp) };
+}
+
+export function cardProgressDetails(progress?: Partial<CardProgress> | null) {
+  const normalized = normalizeCardProgress(progress);
+  const levelStartXp = totalXpForCardLevel(normalized.level);
+  const nextLevelXp =
+    normalized.level >= CARD_LEVEL_CAP
+      ? CARD_XP_CAP
+      : totalXpForCardLevel(normalized.level + 1);
+  return {
+    ...normalized,
+    levelStartXp,
+    nextLevelXp,
+    xpIntoLevel: normalized.xp - levelStartXp,
+    xpForNextLevel: Math.max(0, nextLevelXp - levelStartXp),
+    progressPercent:
+      normalized.level >= CARD_LEVEL_CAP
+        ? 100
+        : ((normalized.xp - levelStartXp) / (nextLevelXp - levelStartXp)) * 100,
+    isMaxLevel: normalized.level >= CARD_LEVEL_CAP,
+  };
+}

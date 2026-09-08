@@ -19,6 +19,12 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary Load or provision the authenticated player
  */
+export const getPlayerBootstrapResponseProfileCardProgressionXpMin = 0;
+
+export const getPlayerBootstrapResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const GetPlayerBootstrapResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -47,6 +53,10 @@ export const GetPlayerBootstrapResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(getPlayerBootstrapResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(getPlayerBootstrapResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -270,6 +280,12 @@ export const CompletePlayerStoryNodeBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryNodeBodyDialogueSeenItemMax)).max(completePlayerStoryNodeBodyDialogueSeenMax)
 })
 
+export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const CompletePlayerStoryNodeResponse = zod.object({
   "campaign": zod.object({
   "contentVersion": zod.number(),
@@ -348,6 +364,10 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -465,6 +485,12 @@ export const SavePlayerStoryDialogueBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(savePlayerStoryDialogueBodyDialogueSeenItemMax)).max(savePlayerStoryDialogueBodyDialogueSeenMax)
 })
 
+export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const SavePlayerStoryDialogueResponse = zod.object({
   "campaign": zod.object({
   "contentVersion": zod.number(),
@@ -543,6 +569,10 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -670,6 +700,12 @@ export const UpdatePlayerProfileBody = zod.object({
   "turnTimerEnabled": zod.boolean().optional()
 })
 
+export const updatePlayerProfileResponseProfileCardProgressionXpMin = 0;
+
+export const updatePlayerProfileResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const UpdatePlayerProfileResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -698,6 +734,10 @@ export const UpdatePlayerProfileResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(updatePlayerProfileResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(updatePlayerProfileResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -797,6 +837,12 @@ export const AdvancePlayerOnboardingBody = zod.object({
   "starterDeckId": zod.string().max(advancePlayerOnboardingBodyStarterDeckIdMax).optional()
 })
 
+export const advancePlayerOnboardingResponseProfileCardProgressionXpMin = 0;
+
+export const advancePlayerOnboardingResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const AdvancePlayerOnboardingResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -825,6 +871,10 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(advancePlayerOnboardingResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(advancePlayerOnboardingResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -966,6 +1016,12 @@ export const CompletePlayerMatchBody = zod.object({
 })).min(completePlayerMatchBodyMovesMin).max(completePlayerMatchBodyMovesMax)
 })
 
+export const completePlayerMatchResponseProfileCardProgressionXpMin = 0;
+
+export const completePlayerMatchResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const CompletePlayerMatchResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -994,6 +1050,10 @@ export const CompletePlayerMatchResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(completePlayerMatchResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(completePlayerMatchResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1064,6 +1124,14 @@ export const CompletePlayerMatchResponse = zod.object({
   "amount": zod.number(),
   "duplicateShards": zod.number(),
   "description": zod.string()
+})),
+  "cardXp": zod.array(zod.object({
+  "cardId": zod.string(),
+  "xpGained": zod.number(),
+  "previousXp": zod.number(),
+  "previousLevel": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number()
 }))
 }),
   "alreadyCompleted": zod.boolean(),
@@ -1158,6 +1226,12 @@ export const SavePlayerDeckBody = zod.object({
   "recipeId": zod.string().max(savePlayerDeckBodyRecipeIdMax).nullable()
 })
 
+export const savePlayerDeckResponseProfileCardProgressionXpMin = 0;
+
+export const savePlayerDeckResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const SavePlayerDeckResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -1186,6 +1260,10 @@ export const SavePlayerDeckResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(savePlayerDeckResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(savePlayerDeckResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1279,6 +1357,12 @@ export const DeletePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(deletePlayerDeckPathDeckIdMin).max(deletePlayerDeckPathDeckIdMax)
 })
 
+export const deletePlayerDeckResponseProfileCardProgressionXpMin = 0;
+
+export const deletePlayerDeckResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const DeletePlayerDeckResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -1307,6 +1391,10 @@ export const DeletePlayerDeckResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(deletePlayerDeckResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(deletePlayerDeckResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1401,6 +1489,12 @@ export const OpenPlayerPackBody = zod.object({
   "paymentMethod": zod.enum(['ticket', 'softCurrency'])
 })
 
+export const openPlayerPackResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const openPlayerPackResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const OpenPlayerPackResponse = zod.object({
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -1430,6 +1524,10 @@ export const OpenPlayerPackResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(openPlayerPackResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(openPlayerPackResponseBootstrapProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1545,6 +1643,12 @@ export const CraftPlayerVariantBody = zod.object({
   "variantId": zod.string().max(craftPlayerVariantBodyVariantIdMax)
 })
 
+export const craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const CraftPlayerVariantResponse = zod.object({
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -1574,6 +1678,10 @@ export const CraftPlayerVariantResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1671,6 +1779,12 @@ export const EquipPlayerVariantBody = zod.object({
   "variantId": zod.string().max(equipPlayerVariantBodyVariantIdMax).nullable()
 })
 
+export const equipPlayerVariantResponseProfileCardProgressionXpMin = 0;
+
+export const equipPlayerVariantResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const EquipPlayerVariantResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -1699,6 +1813,10 @@ export const EquipPlayerVariantResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(equipPlayerVariantResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(equipPlayerVariantResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1792,6 +1910,12 @@ export const ClaimCollectionRoadMilestoneParams = zod.object({
   "milestoneId": zod.coerce.string().min(claimCollectionRoadMilestonePathMilestoneIdMin).max(claimCollectionRoadMilestonePathMilestoneIdMax)
 })
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -1821,6 +1945,10 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
@@ -1918,6 +2046,12 @@ export const ClaimPlayerMissionParams = zod.object({
   "missionId": zod.coerce.string()
 })
 
+export const claimPlayerMissionResponseProfileCardProgressionXpMin = 0;
+
+export const claimPlayerMissionResponseProfileCardProgressionLevelMax = 10;
+
+
+
 export const ClaimPlayerMissionResponse = zod.object({
   "profile": zod.object({
   "id": zod.string(),
@@ -1946,6 +2080,10 @@ export const ClaimPlayerMissionResponse = zod.object({
   "turnTimerEnabled": zod.boolean()
 }),
   "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "xp": zod.number().min(claimPlayerMissionResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(claimPlayerMissionResponseProfileCardProgressionLevelMax)
+})),
   "discoveredCardIds": zod.array(zod.string()),
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),

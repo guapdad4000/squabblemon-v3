@@ -28,6 +28,17 @@ export const playerMatchesTable = pgTable("player_matches", {
   storyProgressionSnapshot: jsonb("story_progression_snapshot")
     .$type<Record<string, unknown>>(),
   playerEngineCardIds: jsonb("player_engine_card_ids").$type<string[]>(),
+  playerCardProgressionSnapshot: jsonb("player_card_progression_snapshot")
+    .$type<Array<{ cardId: string; xp: number; level: number }>>(),
+  cardXpRewards: jsonb("card_xp_rewards")
+    .$type<Array<{
+      cardId: string;
+      xpGained: number;
+      previousXp: number;
+      previousLevel: number;
+      xp: number;
+      level: number;
+    }>>(),
   storyFirstClear: boolean("story_first_clear"),
   storyStars: integer("story_stars"),
   storyBossHighestPhase: integer("story_boss_highest_phase"),

@@ -167,7 +167,8 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                  </button>
                </div>
             ) : reward ? (
-               <div className="flex justify-center gap-4">
+               <div>
+                <div className="flex justify-center gap-4">
                  <div className="text-center">
                    <div className="font-display font-black text-2xl text-primary">+{reward.xp}</div>
                    <div className="font-mono text-[8px] uppercase">XP</div>
@@ -184,6 +185,24 @@ export function ResultScreen({ onRestart, onChangeDeck, onGoHome, onRetryReward,
                      <div className="font-mono text-[8px] uppercase">Soft</div>
                    </div>
                  )}
+               </div>
+                {reward.cardXp?.length > 0 && (
+                  <div className="mt-4 grid grid-cols-2 gap-2 border-t border-white/10 pt-4 sm:grid-cols-3">
+                    {reward.cardXp.map((entry: any) => {
+                      const card = cards[entry.cardId];
+                      return (
+                        <div key={entry.cardId} className="flex items-center gap-2 bg-white/5 p-2 text-left">
+                          <img src={getCardImage(entry.cardId)} alt="" className="h-10 w-8 object-cover object-top" />
+                          <div className="min-w-0">
+                            <div className="truncate font-display text-[10px] font-black uppercase">{card?.name ?? entry.cardId}</div>
+                            <div className="font-mono text-[8px] uppercase text-primary">+{entry.xpGained} Card XP · LV {entry.level}</div>
+                            {entry.level > entry.previousLevel && <div className="font-mono text-[7px] uppercase text-white">Level up!</div>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                </div>
             ) : (
                <div className="text-white/50 text-sm animate-pulse">Syncing with server...</div>

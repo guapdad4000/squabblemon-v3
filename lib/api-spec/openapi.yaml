@@ -516,6 +516,10 @@ components:
           type: array
           items:
             type: string
+        cardProgression:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/CardProgress"
         discoveredCardIds:
           type: array
           items:
@@ -575,6 +579,7 @@ components:
         - termsAcceptedAt
         - settings
         - ownedCardIds
+        - cardProgression
         - discoveredCardIds
         - ownedVariants
         - equippedVariants
@@ -952,7 +957,38 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/StoryGrantedReward"
-      required: [id, label, xp, streetRep, softCurrency, packTickets, descriptions, storyRewards]
+        cardXp:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardXpReward"
+      required: [id, label, xp, streetRep, softCurrency, packTickets, descriptions, storyRewards, cardXp]
+    CardProgress:
+      type: object
+      properties:
+        xp:
+          type: integer
+          minimum: 0
+        level:
+          type: integer
+          minimum: 1
+          maximum: 10
+      required: [xp, level]
+    CardXpReward:
+      type: object
+      properties:
+        cardId:
+          type: string
+        xpGained:
+          type: integer
+        previousXp:
+          type: integer
+        previousLevel:
+          type: integer
+        xp:
+          type: integer
+        level:
+          type: integer
+      required: [cardId, xpGained, previousXp, previousLevel, xp, level]
     MatchCompletion:
       type: object
       properties:

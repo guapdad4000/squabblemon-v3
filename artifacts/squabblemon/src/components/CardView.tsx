@@ -4,6 +4,8 @@ import { Card, getAssetUrl, getCardImage } from '../data';
 import { CardInstance } from '../gameEngine';
 import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
 import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
+import { CardProgress } from './CardProgress';
+import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
 
 const CARD_CLIP_STYLE = { clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' };
 
@@ -25,9 +27,10 @@ interface CardViewProps {
   unavailable?: boolean;
   disabledReason?: string;
   variantId?: string;
+  progress?: CardProgressValue;
 }
 
-function CardViewComponent({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason, variantId }: CardViewProps) {
+function CardViewComponent({ card, queued, squabble, onClick, testId, className = '', isBoard, isEnemy, effectivePower, cost, highlighted, effectRole, effectKind, disableLayout, unavailable, disabledReason, variantId, progress }: CardViewProps) {
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -127,6 +130,9 @@ function CardViewComponent({ card, queued, squabble, onClick, testId, className 
         </div>
       )}
       <CardVariantTreatment variantId={variantId} />
+      {!isBoard && progress && (
+        <CardProgress progress={progress} compact className="absolute inset-x-2 bottom-1 z-20" />
+      )}
 
     </motion.button>
   );
@@ -148,7 +154,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.disableLayout === next.disableLayout
     && previous.unavailable === next.unavailable
     && previous.disabledReason === next.disabledReason
-    && previous.variantId === next.variantId;
+    && previous.variantId === next.variantId
+    && previous.progress === next.progress;
 }
 
 export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);

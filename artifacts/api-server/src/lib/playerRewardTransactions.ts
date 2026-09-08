@@ -7,6 +7,14 @@ import {
   type PlayerMatchRecord,
   type PlayerMissionRecord,
 } from "@workspace/db";
+import type { Match } from "@workspace/squabblemon-engine/gameEngine";
+import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import {
+  applyCardXp,
+  createCardProgressionSnapshot,
+  participatingCatalogCardIds,
+  type CardXpReward,
+} from "./cardProgression";
 
 type RewardOutcome = "win" | "loss" | "draw";
 
@@ -164,7 +172,8 @@ export async function completeStandardMatchReward(input: {
   matchId: string;
   outcome: RewardOutcome;
   districtsWon: number;
-}): Promise<{ completed: boolean; match: PlayerMatchRecord }> {
+  verifiedMatch: Match;
+}): Promise<{ completed: boolean; match: PlayerMatchRecord; cardXpRewards: CardXpReward[] }> {
   const amounts =
     input.outcome === "win"
       ? { xp: 75, streetRep: 2, softCurrency: 90, packTickets: 0 }
@@ -174,6 +183,45 @@ export async function completeStandardMatchReward(input: {
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, input.clerkUserId);
     await resetExpiredMissionsInTransaction(tx, input.clerkUserId, new Date());
+    const [profile] = await tx
+      .select()
+      .from(playerProfilesTable)
+      .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
+    if (!profile) throw new PlayerRewardError("Player profile not found", 404);
+    const participantCardIds = participatingCatalogCardIds(input.verifiedMatch);
+    const [storedMatch] = await tx
+      .select({
+        playerDeckId: playerMatchesTable.playerDeckId,
+        snapshot: playerMatchesTable.playerCardProgressionSnapshot,
+      })
+      .from(playerMatchesTable)
+      .where(
+        and(
+          eq(playerMatchesTable.id, input.matchId),
+          eq(playerMatchesTable.clerkUserId, input.clerkUserId),
+        ),
+      );
+    if (!storedMatch) throw new PlayerRewardError("Match not found", 404);
+    let progressionSnapshot = storedMatch.snapshot ?? [];
+    if (!storedMatch.snapshot && participantCardIds.length > 0) {
+      const canonicalRoster = starterRecipes.find(
+        (recipe) => recipe.id === storedMatch.playerDeckId,
+      )?.cards;
+      if (!canonicalRoster) {
+        throw new PlayerRewardError("Legacy match roster is unavailable", 409);
+      }
+      progressionSnapshot = createCardProgressionSnapshot(
+        canonicalRoster,
+        profile.ownedCardIds,
+        profile.cardProgression,
+      );
+    }
+    const cardXp = applyCardXp(
+      profile.cardProgression,
+      progressionSnapshot,
+      participantCardIds,
+      input.outcome,
+    );
     const [updated] = await tx
       .update(playerMatchesTable)
       .set({
@@ -184,6 +232,7 @@ export async function completeStandardMatchReward(input: {
         rewardStreetRep: amounts.streetRep,
         rewardSoftCurrency: amounts.softCurrency,
         rewardPackTickets: amounts.packTickets,
+        cardXpRewards: cardXp.rewards,
         completedAt: new Date(),
       })
       .where(
@@ -203,6 +252,7 @@ export async function completeStandardMatchReward(input: {
           streetRep: sql`${playerProfilesTable.streetRep} + ${amounts.streetRep}`,
           softCurrency: sql`${playerProfilesTable.softCurrency} + ${amounts.softCurrency}`,
           packTickets: sql`${playerProfilesTable.packTickets} + ${amounts.packTickets}`,
+          cardProgression: cardXp.progression,
         })
         .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
       const progressKeys = [
@@ -237,7 +287,11 @@ export async function completeStandardMatchReward(input: {
     if (!persisted?.completedAt || !persisted.outcome) {
       throw new PlayerRewardError("Match completion did not persist", 409);
     }
-    return { completed: Boolean(updated), match: persisted };
+    return {
+      completed: Boolean(updated),
+      match: persisted,
+      cardXpRewards: (persisted.cardXpRewards ?? []) as CardXpReward[],
+    };
   });
 }
 

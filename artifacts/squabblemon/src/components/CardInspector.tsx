@@ -6,6 +6,7 @@ import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { catalogCardById } from '../data';
+import { CardProgress } from './CardProgress';
 
 export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
   const isInstance = 'instanceId' in card;
@@ -18,6 +19,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : variantId;
+  const progression = catalogCard ? bootstrap?.profile.cardProgression[catalogCard.catalogId] : undefined;
 
   const handleCraft = async (variantId: string) => {
     if (!bootstrap || !catalogCard || !isCardOwned) return;
@@ -55,6 +57,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
         <CardView
           card={card}
           variantId={equippedVariant}
+          progress={progression}
           testId="card-inspector"
           className={`w-[180px] h-[252px] md:w-[280px] md:h-[392px] shadow-2xl shadow-primary/20 pointer-events-none ${!isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
         />
@@ -81,6 +84,11 @@ export function CardInspector({ card, onClose, bootstrap, variantId }: any) {
               {catalogCard.crewTags.map((tag: string) => (
                 <span key={tag} className="font-mono text-[9px] uppercase tracking-widest text-white/50 border border-white/10 px-2 py-1 bg-black">{tag}</span>
               ))}
+            </div>
+          )}
+          {isCardOwned && progression && (
+            <div className="mb-6 border border-primary/20 bg-primary/5 p-3">
+              <CardProgress progress={progression} />
             </div>
           )}
 

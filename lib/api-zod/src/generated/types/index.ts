@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.2.0
  */
 
+export * from './cardProgress';
+export * from './cardXpReward';
 export * from './collectionRoadClaimResult';
 export * from './collectionRoadMilestone';
 export * from './collectionRoadMilestoneStatus';
@@ -42,6 +44,7 @@ export * from './playerMissionCadence';
 export * from './playerMissionRewardCurrency';
 export * from './playerMissionStatus';
 export * from './playerProfile';
+export * from './playerProfileCardProgression';
 export * from './playerProfileEquippedVariants';
 export * from './playerProfileInboxItem';
 export * from './playerProfileOnboardingStep';

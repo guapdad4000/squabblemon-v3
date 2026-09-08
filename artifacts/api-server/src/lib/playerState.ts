@@ -25,6 +25,10 @@ import {
 } from "@workspace/squabblemon-engine/data";
 import { COLLECTION_ROAD, STREET_PACK_CONFIG } from "./collectionEconomy";
 import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
+import {
+  normalizeCardProgress,
+  type CardProgressionMap,
+} from "@workspace/squabblemon-engine/cardProgression";
 
 const missionTemplates = [
   {
@@ -174,12 +178,19 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
         );
       }),
     );
+    const cardProgression: CardProgressionMap = Object.fromEntries(
+      normalizedOwned.map((cardId) => [
+        cardId,
+        normalizeCardProgress(current.cardProgression?.[cardId]),
+      ]),
+    );
 
     await tx
       .update(playerProfilesTable)
       .set({
         lastActiveAt: now,
         ownedCardIds: normalizedOwned,
+        cardProgression,
         discoveredCardIds: [...discovered],
         collectionProgress: normalizedOwned.length,
         savedDecks: normalizedDecks,
@@ -247,6 +258,7 @@ function serializeProfile(
     termsAcceptedAt: profile.termsAcceptedAt?.toISOString() ?? null,
     settings: profile.settings,
     ownedCardIds: profile.ownedCardIds,
+    cardProgression: profile.cardProgression,
     discoveredCardIds: profile.discoveredCardIds,
     ownedVariants: profile.ownedVariants,
     equippedVariants: profile.equippedVariants,

@@ -23,6 +23,7 @@ export type SavedDeck = {
 };
 
 export type EquippedVariants = Record<string, string>;
+export type CardProgression = Record<string, { xp: number; level: number }>;
 
 export const playerProfilesTable = pgTable("player_profiles", {
   clerkUserId: text("clerk_user_id").primaryKey(),
@@ -56,6 +57,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  cardProgression: jsonb("card_progression")
+    .$type<CardProgression>()
+    .notNull()
+    .default({}),
   discoveredCardIds: jsonb("discovered_card_ids")
     .$type<string[]>()
     .notNull()

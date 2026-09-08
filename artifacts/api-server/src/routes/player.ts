@@ -59,6 +59,7 @@ import {
   parseStoryMatchProgressionSnapshot,
   type StoryMatchProgressionSnapshot,
 } from "../lib/storyMatchSnapshot";
+import { createCardProgressionSnapshot } from "../lib/cardProgression";
 
 const router: IRouter = Router();
 
@@ -339,6 +340,24 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
   let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
   let playerEngineCardIds: string[] | null = null;
+  const recipe = starterRecipes.find((item) => item.id === parsed.data.playerDeckId);
+  const rosterCardIds = recipe?.cards ?? deckCards[parsed.data.playerDeckId];
+  if (!rosterCardIds) {
+    res.status(400).json({ error: "Unknown player crew" });
+    return;
+  }
+  let playerCardProgressionSnapshot;
+  try {
+    playerCardProgressionSnapshot = createCardProgressionSnapshot(
+      rosterCardIds,
+      state.profile.ownedCardIds,
+      state.profile.cardProgression,
+      parsed.data.mode === "tutorial",
+    );
+  } catch {
+    res.status(403).json({ error: "Match roster contains an unowned card" });
+    return;
+  }
   let rivalDeckId = parsed.data.rivalDeckId;
   if (parsed.data.mode === "story") {
     if (!parsed.data.storyNodeId) {
@@ -358,10 +377,10 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         res.status(400).json({ error: "Story node is not a battle" });
         return;
       }
-      const recipe = starterRecipes.find(
+      const storyRecipe = starterRecipes.find(
         (item) => item.id === parsed.data.playerDeckId,
       );
-      if (!recipe) {
+      if (!storyRecipe) {
         res.status(400).json({ error: "Unknown player crew" });
         return;
       }
@@ -373,7 +392,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         chapter,
         node,
       );
-      playerEngineCardIds = [...recipe.cards];
+      playerEngineCardIds = [...storyRecipe.cards];
       rivalDeckId = node.encounter.enemy.deckId;
       createStoryMatch(
         storyEncounterSnapshot,
@@ -402,6 +421,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         : null,
       storyProgressionSnapshot,
       playerEngineCardIds,
+      playerCardProgressionSnapshot,
     })
     .returning();
   res.status(201).json(
@@ -532,6 +552,7 @@ router.post(
         matchId: match.id,
         outcome: verifiedOutcome,
         districtsWon,
+        verifiedMatch: verifiedMatch!,
       });
       alreadyCompleted = !result.completed;
     } else if (!alreadyCompleted) {
@@ -743,6 +764,7 @@ router.post(
           ...persistedReward,
           descriptions: storedStoryResult.descriptions,
           storyRewards: grantedStoryRewards,
+          cardXp: persistedMatch.cardXpRewards ?? [],
         },
         alreadyCompleted,
         campaign,

@@ -5,6 +5,7 @@ import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { cardCatalog, getCardImage } from '../../data';
 import { CardInspector } from '../../components/CardInspector';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
+import { CardProgress } from '../../components/CardProgress';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
@@ -154,6 +155,13 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                             </div>
                           )}
                            {isOwned && <CardVariantTreatment variantId={variantId} />}
+                           {isOwned && (
+                             <CardProgress
+                               progress={bootstrap.profile.cardProgression[c.catalogId]}
+                               compact
+                               className="absolute inset-x-2 top-2 z-20 bg-black/70 p-1"
+                             />
+                           )}
                         </>
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center p-2 opacity-20">

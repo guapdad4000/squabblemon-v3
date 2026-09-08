@@ -56,6 +56,18 @@ export const PlayerProfileOnboardingStep = {
   complete: 'complete',
 } as const;
 
+export interface CardProgress {
+  /** @minimum 0 */
+  xp: number;
+  /**
+     * @minimum 1
+     * @maximum 10
+     */
+  level: number;
+}
+
+export type PlayerProfileCardProgression = {[key: string]: CardProgress};
+
 export type PlayerProfileEquippedVariants = {[key: string]: string};
 
 export type PlayerProfileStoryProgress = { [key: string]: unknown };
@@ -132,6 +144,7 @@ export interface PlayerProfile {
   termsAcceptedAt: string | null;
   settings: PlayerSettings;
   ownedCardIds: string[];
+  cardProgression: PlayerProfileCardProgression;
   discoveredCardIds: string[];
   ownedVariants: string[];
   equippedVariants: PlayerProfileEquippedVariants;
@@ -433,6 +446,15 @@ export interface StoryGrantedReward {
   description: string;
 }
 
+export interface CardXpReward {
+  cardId: string;
+  xpGained: number;
+  previousXp: number;
+  previousLevel: number;
+  xp: number;
+  level: number;
+}
+
 export interface MatchReward {
   id: string;
   label: string;
@@ -442,6 +464,7 @@ export interface MatchReward {
   packTickets: number;
   descriptions: string[];
   storyRewards: StoryGrantedReward[];
+  cardXp: CardXpReward[];
 }
 
 export type StoryChapterProgressStatus = typeof StoryChapterProgressStatus[keyof typeof StoryChapterProgressStatus];

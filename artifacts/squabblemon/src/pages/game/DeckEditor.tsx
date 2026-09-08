@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { catalogCardById, starterRecipes, validateSavedDeck, getCardImage } from '../../data';
 import { CardVariantTreatment, getVariantKind } from '../../components/CardVariantTreatment';
+import { CardProgress } from '../../components/CardProgress';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const params = useParams();
@@ -264,6 +265,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     </div>
                   )}
                   <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
+                   <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1" />
                 </div>
               ))}
             </div>
@@ -310,6 +312,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       </div>
                     )}
                     <CardVariantTreatment variantId={bootstrap.profile.equippedVariants[c.catalogId]} />
+                     <CardProgress progress={bootstrap.profile.cardProgression[c.catalogId]} compact className="absolute inset-x-2 top-2 z-10 bg-black/70 p-1" />
                   </div>
                 );
               })}

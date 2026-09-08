@@ -15,6 +15,18 @@ import {
   PlayerRewardError,
   resetExpiredPlayerMissions,
 } from "./playerRewardTransactions";
+import {
+  createMatch,
+  playCard,
+  type Match,
+} from "@workspace/squabblemon-engine/gameEngine";
+import { createCardProgressionSnapshot } from "./cardProgression";
+
+function matchWithPlayedPlayerCard(): Match {
+  const initial = createMatch("block", "slide");
+  const card = initial.playerHand[0]!;
+  return playCard(initial, "player", card.instanceId, 0);
+}
 
 async function profileFor(clerkUserId: string) {
   const [profile] = await db
@@ -105,12 +117,14 @@ test("simultaneous match completions return one persisted reward and credit it o
       matchId: match.id,
       outcome: "win",
       districtsWon: 3,
+      verifiedMatch: createMatch("block", "slide"),
     }),
     completeStandardMatchReward({
       clerkUserId,
       matchId: match.id,
       outcome: "loss",
       districtsWon: 0,
+      verifiedMatch: createMatch("block", "slide"),
     }),
   ]);
   assert.equal(results.filter((result) => result.completed).length, 1);
@@ -131,6 +145,103 @@ test("simultaneous match completions return one persisted reward and credit it o
   assert.equal(profile.softCurrency, results[0].match.rewardSoftCurrency);
   assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
   assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 1);
+});
+
+test("simultaneous completions grant participating card XP once and persist the retry result", async (t) => {
+  const clerkUserId = `card-xp-retry-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const verifiedMatch = matchWithPlayedPlayerCard();
+  const playedCardId = verifiedMatch.boards.flat().find((card) => card.owner === "player")!.cardId;
+  const ownedCardIds = ["cornball", "snow-bunny", "all-jokes-roaster", "rastamon", "wifey", "officer-oink", "baby-momma"];
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    onboardingStep: "complete",
+    ownedCardIds,
+    cardProgression: { [playedCardId]: { xp: 90, level: 1 } },
+  });
+  const [match] = await db
+    .insert(playerMatchesTable)
+    .values({
+      clerkUserId,
+      mode: "practice",
+      playerDeckId: "block",
+      rivalDeckId: "slide",
+      playerCardProgressionSnapshot: createCardProgressionSnapshot(
+        ownedCardIds,
+        ownedCardIds,
+        { [playedCardId]: { xp: 90, level: 1 } },
+      ),
+    })
+    .returning();
+
+  const results = await Promise.all([
+    completeStandardMatchReward({
+      clerkUserId,
+      matchId: match.id,
+      outcome: "win",
+      districtsWon: 1,
+      verifiedMatch,
+    }),
+    completeStandardMatchReward({
+      clerkUserId,
+      matchId: match.id,
+      outcome: "win",
+      districtsWon: 1,
+      verifiedMatch,
+    }),
+  ]);
+
+  assert.equal(results.filter((result) => result.completed).length, 1);
+  assert.deepEqual(results[0]!.cardXpRewards, results[1]!.cardXpRewards);
+  assert.deepEqual(results[0]!.cardXpRewards, [{
+    cardId: playedCardId,
+    xpGained: 30,
+    previousXp: 90,
+    previousLevel: 1,
+    xp: 120,
+    level: 2,
+  }]);
+  const profile = await profileFor(clerkUserId);
+  assert.deepEqual(profile.cardProgression[playedCardId], { xp: 120, level: 2 });
+});
+
+test("a legacy active match rebuilds its snapshot from the server-owned roster", async (t) => {
+  const clerkUserId = `card-xp-legacy-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const verifiedMatch = matchWithPlayedPlayerCard();
+  const playedCardId = verifiedMatch.boards.flat().find((card) => card.owner === "player")!.cardId;
+  const ownedCardIds = ["cornball", "snow-bunny", "all-jokes-roaster", "rastamon", "wifey", "officer-oink", "baby-momma"];
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    onboardingStep: "complete",
+    ownedCardIds,
+  });
+  const [match] = await db
+    .insert(playerMatchesTable)
+    .values({
+      clerkUserId,
+      mode: "practice",
+      playerDeckId: "block",
+      rivalDeckId: "slide",
+      playerCardProgressionSnapshot: null,
+    })
+    .returning();
+
+  const result = await completeStandardMatchReward({
+    clerkUserId,
+    matchId: match.id,
+    outcome: "loss",
+    districtsWon: 0,
+    verifiedMatch,
+  });
+  assert.deepEqual(result.cardXpRewards, [{
+    cardId: playedCardId,
+    xpGained: 20,
+    previousXp: 0,
+    previousLevel: 1,
+    xp: 20,
+    level: 1,
+  }]);
 });
 
 test("starter and mission retries each apply one profile credit", async (t) => {
@@ -244,6 +355,7 @@ test("a cadence reset racing match completion preserves current-period progress"
       matchId: match.id,
       outcome: "loss",
       districtsWon: 0,
+      verifiedMatch: createMatch("block", "slide"),
     }),
   ]);
   assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);

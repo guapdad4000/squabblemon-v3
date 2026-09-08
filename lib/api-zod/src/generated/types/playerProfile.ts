@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { PackOpening } from './packOpening';
+import type { PlayerProfileCardProgression } from './playerProfileCardProgression';
 import type { PlayerProfileEquippedVariants } from './playerProfileEquippedVariants';
 import type { PlayerProfileInboxItem } from './playerProfileInboxItem';
 import type { PlayerProfileOnboardingStep } from './playerProfileOnboardingStep';
@@ -40,6 +41,7 @@ export interface PlayerProfile {
   termsAcceptedAt: Date | null;
   settings: PlayerSettings;
   ownedCardIds: string[];
+  cardProgression: PlayerProfileCardProgression;
   discoveredCardIds: string[];
   ownedVariants: string[];
   equippedVariants: PlayerProfileEquippedVariants;
