@@ -1,7 +1,7 @@
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 const rawPort = process.env.PORT;
 
@@ -65,6 +65,32 @@ const publicImageUrl = new URL(
   `${publicOrigin}/`,
 ).href;
 
+function bundleBudgetReport(): Plugin {
+  return {
+    name: 'squabblemon-bundle-budget-report',
+    apply: 'build',
+    generateBundle(_, bundle) {
+      const chunks = Object.values(bundle)
+        .filter((output) => output.type === 'chunk')
+        .map((chunk) => ({
+          fileName: chunk.fileName,
+          facadeModuleId: chunk.facadeModuleId,
+          isEntry: chunk.isEntry,
+          imports: chunk.imports,
+          dynamicImports: chunk.dynamicImports,
+          modules: Object.keys(chunk.modules),
+          bytes: Buffer.byteLength(chunk.code),
+        }));
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'bundle-budget-report.json',
+        source: JSON.stringify({ chunks }, null, 2),
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
@@ -76,6 +102,7 @@ export default defineConfig({
           .replaceAll('__SQUABBLEMON_PUBLIC_IMAGE_URL__', publicImageUrl);
       },
     },
+    bundleBudgetReport(),
     react(),
     tailwindcss({ optimize: false }),
     ...(process.env.NODE_ENV !== 'production' &&

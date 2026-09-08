@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
-    "build": "vite build --config vite.config.ts",
+    "build": "vite build --config vite.config.ts && pnpm run validate:bundle",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
-    "test": "tsx --test src/characterAssets.test.ts src/gameEngine.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/lib/analytics.test.ts src/components/Battle.test.tsx",
+    "test": "tsx --test src/characterAssets.test.ts src/gameEngine.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/lib/analytics.test.ts src/components/Battle.test.tsx && node --test scripts/check-entry-bundle.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "validate:brand": "node scripts/validate-brand-metadata.mjs"
+    "validate:brand": "node scripts/validate-brand-metadata.mjs",
+    "validate:bundle": "node scripts/check-entry-bundle.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",
