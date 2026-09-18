@@ -155,6 +155,27 @@
 }
 
 /* Soft projector-style eyebrow line. */
+.story-atlas__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 6px 10px 6px 6px;
+  font: 700 10px/1 var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cinema-paper);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--cinema-line);
+  border-radius: 999px;
+  min-height: 32px;
+  transition: color 0.18s, border-color 0.18s;
+}
+.story-atlas__back:hover,
+.story-atlas__back:focus-visible {
+  color: var(--cinema-amber-bright);
+  border-color: var(--cinema-amber);
+}
 .story-atlas__header .studio-eyebrow {
   display: flex;
   align-items: center;

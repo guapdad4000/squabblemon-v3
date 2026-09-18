@@ -1,5 +1,13 @@
 /* Transparent objects emerge from a shared offscreen origin, without a dock panel. */
 .game-shell--fan { --fan-clearance: 170px; overflow-x: clip; }
+/* Full-bleed pages (story map, dialogue, battles, onboarding, online) opt out
+   of the fan-nav entirely via the `cinema-nav-suppressed` class set in
+   GameApp.tsx, so the bottom bar can't overlap their own controls (e.g. the
+   story dialogue's "Continue" button). */
+.cinema-nav-suppressed .fan-nav { display: none; }
+.cinema-nav-suppressed .game-route-stage::after { display: none; }
+.cinema-nav-suppressed .safehouse__bottom { bottom: 26px; }
+.game-shell--fan.cinema-nav-suppressed { --fan-clearance: 0; overflow-x: hidden; }
 .game-shell--fan .game-shell__content { margin-left: 0; padding-bottom: 0; }
 .game-shell--fan .game-route-stage { scroll-padding-bottom: var(--fan-clearance); }
 .game-shell--fan .game-route-stage::after { content: ''; display: block; height: var(--fan-clearance); pointer-events: none; }
