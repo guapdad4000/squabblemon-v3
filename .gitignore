@@ -18,6 +18,7 @@ node_modules
 /screenshots/
 /attached_assets/
 /node_modules.bak*/
+/squabblemon-v3.zip
 
 # IDEs and editors
 /.idea
