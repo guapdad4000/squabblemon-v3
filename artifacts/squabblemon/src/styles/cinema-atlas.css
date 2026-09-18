@@ -74,13 +74,19 @@
   border-bottom: 1px solid var(--cinema-line);
   flex: none;
 }
+.story-atlas__header > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
 
-/* The chapter tabs read like a 35mm film strip with sprocket holes. */
+/* The chapter tabs read like a restrained 35mm control strip. */
 .story-atlas__header .studio-tabs {
   display: flex;
   flex-wrap: nowrap;
   margin: 0 0 10px;
-  max-width: 65vw;
+  width: 100%;
+  max-width: min(100%, 760px);
   gap: 4px;
   padding: 7px 12px;
   overflow-x: auto;
@@ -99,21 +105,6 @@
   position: relative;
 }
 .story-atlas__header .studio-tabs::-webkit-scrollbar { display: none; }
-.story-atlas__header .studio-tabs::before,
-.story-atlas__header .studio-tabs::after {
-  content: '';
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  width: 14px;
-  background-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.7) 0 3px, transparent 4px);
-  background-size: 8px 12px;
-  background-repeat: repeat-y;
-  pointer-events: none;
-  opacity: 0.55;
-}
-.story-atlas__header .studio-tabs::before { left: 2px; }
-.story-atlas__header .studio-tabs::after  { right: 2px; transform: scaleX(-1); }
 
 .story-atlas__header .studio-tabs button {
   display: flex;
@@ -205,7 +196,10 @@
   background: linear-gradient(135deg, rgba(8, 6, 4, 0.85), rgba(15, 12, 8, 0.65));
   border: 1px solid var(--cinema-line);
   border-radius: 6px;
-  min-width: 180px;
+  flex: 0 1 260px;
+  min-width: 0;
+  max-width: 260px;
+  overflow: hidden;
 }
 .story-atlas__header__plate::before {
   content: '';
@@ -238,6 +232,8 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--cinema-paper);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Progress ring column. */
@@ -651,10 +647,14 @@
 /* ───── Responsive ───── */
 @media (max-width: 920px) {
   .story-atlas__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     padding: 12px 18px 14px;
-    flex-wrap: wrap;
     gap: 12px;
   }
+  .story-atlas__header > div:first-child { grid-column: 1 / -1; }
+  .story-atlas__header__plate { grid-column: 1; }
+  .story-atlas__progress { grid-column: 2; }
   .story-atlas__header .studio-tabs {
     max-width: 100%;
     margin-bottom: 8px;
@@ -676,6 +676,11 @@
 }
 
 @media (max-width: 680px) {
+  .story-atlas__header { padding-inline: 12px; }
+  .story-atlas__header .studio-tabs button { min-height: 40px; padding-inline: 10px; letter-spacing: .12em; }
+  .story-atlas__header__plate { max-width: min(260px, calc(100vw - 94px)); }
+  .story-atlas__header__plate img { display: none; }
+  .story-atlas__progress > span { display: none; }
   .story-atlas__footer {
     padding: 14px 18px calc(env(safe-area-inset-bottom) + 16px);
     display: grid;
