@@ -1,17 +1,22 @@
 /* Transparent objects emerge from a shared offscreen origin, without a dock panel. */
 .game-shell--fan { --fan-clearance: 170px; overflow-x: clip; }
-/* Full-bleed pages (story map, dialogue, battles, onboarding, online) opt out
-   of the fan-nav entirely via the `cinema-nav-suppressed` class set in
-   GameApp.tsx, so the bottom bar can't overlap their own controls (e.g. the
-   story dialogue's "Continue" button). */
+/* Full-bleed pages (onboarding, online play) opt out of the fan-nav
+   entirely via the `cinema-nav-suppressed` class set in GameApp.tsx, so the
+   bottom bar can't overlap their own controls. */
 .cinema-nav-suppressed .fan-nav { display: none; }
 .cinema-nav-suppressed .game-route-stage::after { display: none; }
 .cinema-nav-suppressed .safehouse__bottom { bottom: 26px; }
 .game-shell--fan.cinema-nav-suppressed { --fan-clearance: 0; overflow-x: hidden; }
+/* The Story map keeps the fan-nav visible while browsing chapters, but the
+   node dialogue/briefing overlay (.story-node-overlay) covers the full
+   screen and has its own "Continue"/"Next" controls near the bottom edge —
+   hide the fan-nav for as long as that overlay is open so it can't overlap
+   or intercept clicks on those controls. */
+.game-shell:has(.story-node-overlay) .fan-nav { display: none; }
 .game-shell--fan .game-shell__content { margin-left: 0; padding-bottom: 0; }
 .game-shell--fan .game-route-stage { scroll-padding-bottom: var(--fan-clearance); }
 .game-shell--fan .game-route-stage::after { content: ''; display: block; height: var(--fan-clearance); pointer-events: none; }
-.game-shell--fan .game-route-stage:has(> .safehouse, .overflow-y-auto, .overflow-auto)::after { display: none; }
+.game-shell--fan .game-route-stage:has(> .safehouse, > .story-atlas, .overflow-y-auto, .overflow-auto)::after { display: none; }
 .game-shell--fan .game-route-stage :is(.overflow-y-auto, .overflow-auto) { padding-bottom: var(--fan-clearance); scroll-padding-bottom: var(--fan-clearance); }
 .game-shell--fan .safehouse__bottom { bottom: var(--fan-clearance); }
 .game-shell--fan .safehouse { min-height: 730px; }

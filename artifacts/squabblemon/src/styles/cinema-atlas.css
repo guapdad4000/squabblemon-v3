@@ -73,11 +73,59 @@
     linear-gradient(180deg, rgba(8, 6, 4, 0.88) 0%, rgba(8, 6, 4, 0.6) 70%, transparent 100%);
   border-bottom: 1px solid var(--cinema-line);
   flex: none;
+  transition: padding 0.22s ease, grid-template-rows 0.22s ease;
 }
 .story-atlas__header > div:first-child {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
+}
+
+/* Collapsed state: the chapter strip, title, "now showing" plate and
+   progress ring tuck away to a slim bar, freeing vertical space for the
+   map itself. Toggled by .story-atlas__collapse. */
+.story-atlas.is-header-collapsed .story-atlas__header {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  gap: 10px;
+}
+.story-atlas.is-header-collapsed .story-atlas__header .studio-tabs,
+.story-atlas.is-header-collapsed .story-atlas__header h1,
+.story-atlas.is-header-collapsed .story-atlas__header .studio-eyebrow,
+.story-atlas.is-header-collapsed .story-atlas__header__plate,
+.story-atlas.is-header-collapsed .story-atlas__progress > span {
+  display: none;
+}
+.story-atlas.is-header-collapsed .story-atlas__back {
+  margin-bottom: 0;
+}
+.story-atlas.is-header-collapsed .story-atlas__progress {
+  padding-top: 0;
+}
+
+/* Collapse toggle chevron, sits at the header's top-right. */
+.story-atlas__collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  align-self: flex-start;
+  margin-left: 8px;
+  color: var(--cinema-paper);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--cinema-line);
+  border-radius: 999px;
+  transition: color 0.18s, border-color 0.18s, transform 0.22s;
+}
+.story-atlas__collapse:hover,
+.story-atlas__collapse:focus-visible {
+  color: var(--cinema-amber-bright);
+  border-color: var(--cinema-amber);
+}
+.story-atlas.is-header-collapsed .story-atlas__collapse {
+  transform: rotate(180deg);
 }
 
 /* The chapter tabs read like a restrained 35mm control strip. */
@@ -531,16 +579,11 @@
   flex: none;
   background:
     linear-gradient(0deg, rgba(8, 6, 4, 0.92) 0%, rgba(8, 6, 4, 0.55) 70%, transparent 100%);
-  border-top: 1px solid var(--cinema-line);
 }
-.story-atlas__footer::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cinema-amber-glow), transparent);
+/* The fan-nav floats fixed over the bottom of the screen; reserve room
+   below the footer so "Roll camera" and the ticket chip never sit under it. */
+.game-shell--fan .story-atlas__footer {
+  padding-bottom: calc(var(--fan-clearance) + 24px);
 }
 .story-atlas__footer > div:first-child {
   flex: 1;
@@ -708,6 +751,9 @@
     grid-template-columns: 1fr 52px;
     gap: 12px;
   }
+  .game-shell--fan .story-atlas__footer {
+    padding-bottom: calc(var(--fan-clearance) + env(safe-area-inset-bottom) + 16px);
+  }
   .story-atlas__footer > div:first-child { grid-column: 1; }
   .story-atlas__footer > .studio-action { grid-column: 1; justify-self: start; }
   .story-atlas__footer strong { font-size: 14px; }
@@ -720,6 +766,7 @@
   .story-atlas__header h1 { font-size: 28px; margin-top: 4px; }
   .story-atlas__header .studio-tabs { margin-bottom: 4px; }
   .story-atlas__footer { padding: 10px 24px 18px; }
+  .game-shell--fan .story-atlas__footer { padding-bottom: calc(var(--fan-clearance) + 18px); }
   .story-atlas__viewport { min-height: 180px; }
   .story-atlas__terrain { min-height: 380px; }
 }
