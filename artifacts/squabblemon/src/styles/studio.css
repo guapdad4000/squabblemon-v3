@@ -147,6 +147,66 @@ html[data-reduce-motion='true'] :is(.studio-page, .studio-results) * {
   animation: none !important;
   transition: none !important;
 }
+
+/* Story preview shell: compact production controls that never steal the scene. */
+.story-studio-shell {
+  height: 100dvh;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  color: #f7eee0;
+  background: #101218;
+}
+.story-studio-controls {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(150px, 220px) minmax(220px, 360px);
+  align-items: center;
+  gap: 10px 16px;
+  min-height: 58px;
+  padding: max(8px, env(safe-area-inset-top)) clamp(14px, 2.5vw, 30px) 8px;
+  border-bottom: 1px solid #efd29925;
+  background: linear-gradient(90deg, #090c12f7, #171920f2);
+  box-shadow: 0 12px 35px #0008;
+  font: 700 10px/1.3 var(--font-sans);
+  letter-spacing: .06em;
+}
+.story-studio-controls__campaign { color: #efd299; white-space: nowrap; }
+.story-studio-controls__note { min-width: 0; color: #ffffff70; }
+.story-studio-controls select {
+  width: 100%; min-width: 0; height: 40px; padding: 0 34px 0 12px;
+  border: 1px solid #ffffff24; border-radius: 3px; color: #f7eee0;
+  background: #25272c; font: 600 11px var(--font-sans); text-overflow: ellipsis;
+}
+.story-studio-stage { position: relative; min-height: 0; overflow: hidden; }
+.story-studio-dialog { overscroll-behavior: contain; }
+
+@media (max-width: 760px) {
+  .story-studio-controls {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding-inline: 12px;
+  }
+  .story-studio-controls__note { text-align: right; font-size: 8px; }
+  .story-studio-controls select:first-of-type { grid-column: 1; }
+  .story-studio-controls select:last-of-type { grid-column: 2; }
+}
+@media (max-width: 480px) {
+  .story-studio-controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 7px; }
+  .story-studio-controls__campaign { font-size: 9px; }
+  .story-studio-controls__note { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .story-studio-controls select { height: 42px; font-size: 10px; padding-left: 9px; }
+  .story-studio-dialog { padding: 20px 16px !important; }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .story-studio-controls {
+    grid-template-columns: auto minmax(110px, 180px) minmax(180px, 300px);
+    min-height: 46px; padding: 4px 58px 4px 12px; gap: 8px;
+  }
+  .story-studio-controls__note { display: none; }
+  .story-studio-controls select { height: 36px; font-size: 9px; }
+}
 /* Respect the artwork navigation's shared safe area on every destination. */
 .game-shell--fan .game-route-stage:has(.studio-page)::after {
   display: none;

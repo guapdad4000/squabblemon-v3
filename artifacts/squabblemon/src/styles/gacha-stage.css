@@ -565,6 +565,15 @@
     scale: 1;
   }
 }
+/* Pack openings are an immersive transaction surface. The transparent Director
+   control remains available, but the fan navigation must not cover purchase or
+   reveal controls at any viewport. */
+.game-shell--fan:has(.gacha-stage) { --fan-clearance: 0; }
+.game-shell:has(.gacha-stage) .fan-nav { display: none; }
+.game-shell:has(.gacha-stage) .game-route-stage::after { display: none; }
+.game-shell:has(.gacha-stage) .cinema-nav-toggle {
+  bottom: max(12px, env(safe-area-inset-bottom));
+}
 @media (max-width: 1050px) and (min-width: 701px) {
   .gym.gacha-stage {
     grid-template-columns: 330px minmax(0, 1fr);
@@ -602,7 +611,7 @@
     gap: 0;
     height: auto;
     min-height: 0;
-    padding: 23px 20px calc(var(--fan-clearance, 130px) + 25px);
+    padding: 20px 18px max(30px, env(safe-area-inset-bottom));
   }
   .gacha-stage__heading {
     order: 0;
@@ -700,14 +709,14 @@
     font-size: 9px;
     margin-top: 4px;
   }
-  .gacha-stage[data-phase='punching'] .gacha-stage__ringside {
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__ringside {
     order: 1;
     position: relative;
     inset: auto;
     margin-top: 180px;
     width: 100%;
   }
-  .gacha-stage[data-phase='punching'] .gym__offer {
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gym__offer {
     margin-top: 24px;
   }
   .gacha-stage__punch-actions {
@@ -768,44 +777,77 @@
   }
 }
 @media (max-height: 550px) and (orientation: landscape) {
-  .game-shell:has(.gacha-stage) .venue-hud {
-    display: none;
+  .game-shell:has(.gacha-stage) .venue-hud { display: none; }
+  .trading-post .market-tabs {
+    position: relative;
+    z-index: 12;
+    min-height: 42px;
+    padding: 0 20px;
+    gap: 22px;
   }
+  .trading-post .market-tabs button { min-height: 42px; }
   .gym.gacha-stage {
-    min-height: 600px;
-    grid-template-columns: 310px minmax(0, 1fr);
-    padding-top: 20px;
+    height: calc(100dvh - 42px);
+    min-height: 0;
+    grid-template-columns: minmax(250px, 34%) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 8px 24px;
+    padding: 10px 18px max(10px, env(safe-area-inset-bottom));
+    overflow: hidden;
   }
   .gacha-stage__heading h1 {
-    font-size: 40px;
+    font-size: clamp(26px, 5.5vw, 36px);
+    margin: 6px 0;
   }
+  .gacha-stage__heading > p,
+  .gacha-stage__pack > .venue-prop,
+  .gacha-stage__preview,
+  .gacha-stage__duplicates,
+  .gacha-stage .gym__payment-note { display: none; }
+  .gacha-stage .gacha-stage__sound { top: 10px; right: 12px; }
   .gacha-stage .gym__arena {
-    position: sticky;
-    top: 0;
-    height: 350px;
-    grid-column: 2;
-    grid-row: 1 / 3;
-    margin-bottom: -350px;
-    margin-left: -40px;
-    width: calc(100% + 68px);
+    position: absolute;
+    inset: 0 0 0 34%;
+    width: 66%;
+    height: 100%;
+    margin: 0;
   }
-  .gacha-stage .venue-scene {
-    left: 0;
-  }
+  .gacha-stage .venue-scene { left: 0; }
   .gacha-stage .gym__vignette {
-    background: linear-gradient(90deg, #101513, transparent 30%), linear-gradient(0deg, #101513, transparent 30%);
+    background: linear-gradient(90deg, #101513 0%, #101513bb 12%, transparent 42%), linear-gradient(0deg, #101513 0%, transparent 38%);
   }
+  .gacha-stage .gym__offer {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 8px 8px 0;
+    scrollbar-width: thin;
+  }
+  .gacha-stage__pack { margin: 0 0 6px; }
+  .gacha-stage .gym__offer h2 { font-size: 19px; margin: 2px 0 4px; }
+  .gacha-stage__pack p { font-size: 9px; }
+  .gacha-stage__guarantee { margin: 6px 0 4px; }
+  .gacha-stage .gym__actions { margin-top: 8px; gap: 7px; }
+  .gacha-stage__payments { gap: 7px; }
+  .gacha-stage__payment { grid-template-columns: 1fr; gap: 3px; }
+  .gacha-stage__payment .studio-action { min-height: 40px; padding: 8px 12px; }
+  .gacha-stage__payment > small { min-width: 0; padding-left: 8px; }
+  .gacha-stage .gym__links { margin-top: 2px; gap: 18px; }
+  .gacha-stage .gym__links button { min-height: 32px; padding: 3px 0; }
   .gacha-stage__ringside {
+    grid-column: 2;
+    grid-row: 2;
     position: relative;
-    align-self: center;
-    margin-top: 180px;
+    align-self: end;
+    margin: 0 auto;
+    padding-bottom: 8px;
+    width: min(360px, 88%);
   }
-  .gacha-results .gym-results__grid {
-    margin: 30px auto 20px;
-  }
-  .gacha-results .gym-results__item {
-    width: 160px;
-  }
+  .gacha-stage__combo { margin-bottom: 8px; }
+  .gacha-stage__punch-actions .studio-action { min-height: 38px; padding: 8px 12px; }
+  .gacha-results .gym-results__grid { margin: 20px auto 14px; }
+  .gacha-results .gym-results__item { width: 140px; }
 }
 
 /* ----- Upgraded ten-pull presentation (data-pull-size="ten") ----- */
@@ -988,6 +1030,19 @@
   .gym-results__grid--ten {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+  }
+}
+@media (max-width: 480px) {
+  .gacha-stage__payment {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gacha-stage__payment > small {
+    min-width: 0;
+    padding-left: 10px;
+  }
+  .gym-results__grid--ten {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
   }
 }
 @media (max-height: 550px) and (orientation: landscape) {
