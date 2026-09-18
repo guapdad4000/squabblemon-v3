@@ -56,6 +56,11 @@ Thumbs.db
 .cache/
 .local/
 
+# Local Playwright browser/dep downloads and scratch UI audit output
+/.playwright-browsers/
+/.playwright-deps/
+/.tmp-ui-audit/
+
 # Browser verification output (generated locally, not application assets)
 **/test-results/
 /artifacts/squabblemon/screenshots/
