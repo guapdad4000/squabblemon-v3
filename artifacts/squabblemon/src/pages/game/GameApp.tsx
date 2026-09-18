@@ -136,8 +136,6 @@ function GameShell({
   const normalized = location.length > 1 ? location.replace(/\/+$/, '') : location;
   const isFullBleed =
     normalized === '/game' ||
-    normalized === '/game/story' ||
-    normalized.startsWith('/game/story/') ||
     normalized === '/game/online' ||
     normalized.startsWith('/game/online/') ||
     normalized === '/game/decks/test' ||

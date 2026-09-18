@@ -68,14 +68,6 @@ catalog:
 
 autoInstallPeers: false
 
-onlyBuiltDependencies:
-  - '@clerk/shared'
-  - '@swc/core'
-  - esbuild
-  - msw
-  - sharp
-  - unrs-resolver
-
 overrides:
   # replit uses linux-x64 only, we can exclude all other platforms
   "esbuild>@esbuild/darwin-arm64": "-"
@@ -156,4 +148,11 @@ overrides:
   # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
   "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
   esbuild: "0.27.3"
+  # express@5 pulls qs@6.15.3 via body-parser, which has two moderate DoS/bypass
+  # advisories (GHSA-x5fp-wj9c-mxmx, GHSA-4mjr-xmp4-gh2g). Force the patched release.
+  qs: "^6.16.0"
 
+allowBuilds:
+  '@clerk/shared': true
+  esbuild: true
+  sharp: true

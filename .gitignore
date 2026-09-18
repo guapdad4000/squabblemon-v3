@@ -18,6 +18,7 @@ node_modules
 /screenshots/
 /attached_assets/
 /node_modules.bak*/
+/squabblemon-v3.zip
 
 # IDEs and editors
 /.idea
@@ -55,6 +56,11 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Local Playwright browser/dep downloads and scratch UI audit output
+/.playwright-browsers/
+/.playwright-deps/
+/.tmp-ui-audit/
 
 # Browser verification output (generated locally, not application assets)
 **/test-results/

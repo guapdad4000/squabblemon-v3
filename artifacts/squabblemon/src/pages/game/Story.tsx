@@ -1,6 +1,6 @@
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronUp, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
 import { ProgressRing } from '../../components/venue/ProgressRing';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
@@ -84,6 +84,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
 
   const campaign = storyQuery.data;
   useEffect(() => {
@@ -174,8 +175,8 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
-  return <div className="studio-page story-atlas">
-    <header className="story-atlas__header"><div><nav className="studio-tabs" aria-label="Chapters">{campaign.chapters.map(chapter=><button key={chapter.id} disabled={chapter.status==='locked'} aria-pressed={chapter.id===currentChapter?.id} onClick={()=>setActiveChapterId(chapter.id)}>Chapter {chapter.order || 1}{chapter.status==='locked' && <LockKeyhole size={10}/>}</button>)}</nav><span className="studio-eyebrow">{currentChapter?.subtitle}</span><h1>{currentChapter?.title}</h1></div><aside className="story-atlas__header__plate" aria-label="Now showing"><img src={getAssetUrl('brand/story-cinematic/film-reel.jpg')} alt="" aria-hidden="true" /><span className="story-atlas__header__plate__copy"><small>Now showing</small><strong>Reel 0{(currentChapter?.order ?? 1).toString().padStart(2, '0')} · {currentChapter?.title}</strong></span></aside><div className="story-atlas__progress"><ProgressRing value={currentChapter?.completedRequiredNodes ?? 0} max={currentChapter?.totalRequiredNodes ?? 1} label="Chapter progress"/><span>Chapter progress<small>Boss {currentChapter?.bossStatus}</small></span></div></header>
+  return <div className={`studio-page story-atlas ${headerCollapsed ? 'is-header-collapsed' : ''}`}>
+    <header className="story-atlas__header"><div><Link href="/game" className="story-atlas__back" aria-label="Back to Safehouse"><ArrowLeft size={14}/> Safehouse</Link><nav className="studio-tabs" aria-label="Chapters">{campaign.chapters.map(chapter=><button key={chapter.id} disabled={chapter.status==='locked'} aria-pressed={chapter.id===currentChapter?.id} onClick={()=>setActiveChapterId(chapter.id)}>Chapter {chapter.order || 1}{chapter.status==='locked' && <LockKeyhole size={10}/>}</button>)}</nav><span className="studio-eyebrow">{currentChapter?.subtitle}</span><h1>{currentChapter?.title}</h1></div><aside className="story-atlas__header__plate" aria-label="Now showing"><img src={getAssetUrl('brand/story-cinematic/film-reel.jpg')} alt="" aria-hidden="true" /><span className="story-atlas__header__plate__copy"><small>Now showing</small><strong>Reel 0{(currentChapter?.order ?? 1).toString().padStart(2, '0')} · {currentChapter?.title}</strong></span></aside><div className="story-atlas__progress"><ProgressRing value={currentChapter?.completedRequiredNodes ?? 0} max={currentChapter?.totalRequiredNodes ?? 1} label="Chapter progress"/><span>Chapter progress<small>Boss {currentChapter?.bossStatus}</small></span></div><button type="button" className="story-atlas__collapse" aria-label={headerCollapsed ? 'Expand chapter header' : 'Collapse chapter header'} aria-expanded={!headerCollapsed} onClick={()=>setHeaderCollapsed(value=>!value)}><ChevronUp size={16}/></button></header>
     <div ref={mapViewport} className="story-atlas__viewport" aria-label="Campaign map. Scroll to explore the territory."><div className="story-atlas__terrain" style={{backgroundImage:`url("${getAssetUrl(currentChapter?.mapAssetId || '')}")`}}><div className="story-atlas__wash"/><img src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.35,mixBlendMode:'screen',pointerEvents:'none',zIndex:0}} />
       <svg className="story-atlas__routes" aria-hidden="true">{nodes.flatMap(node=>node.prerequisites.map(id=>{const parent=nodes.find(n=>n.nodeId===id);return parent ? <line key={`${id}-${node.nodeId}`} x1={`${parent.mapPosition.x}%`} y1={`${parent.mapPosition.y}%`} x2={`${node.mapPosition.x}%`} y2={`${node.mapPosition.y}%`} stroke={node.status==='locked' ? 'rgba(240,179,90,0.18)' : 'rgba(240,179,90,0.7)'} strokeWidth={node.status==='locked' ? 1 : 2} strokeDasharray={node.status==='locked' ? '3 7' : undefined}/> : null;}))}</svg>
       {nodes.map(node=>{const locked=node.status==='locked',cleared=node.status==='cleared',isNext=node.nodeId===campaign.recommendedNodeId;const content=getStoryNode(node.nodeId);const boss=content?.kind==='battle' && ['boss','mini-boss'].includes(content.battleType);return <button key={node.nodeId} type="button" aria-disabled={locked} aria-label={`${node.title}, ${node.status}`} onClick={()=>{if(!locked)setSelectedNodeId(node.nodeId);}} className={`story-atlas__node ${isNext?'is-next':''} ${boss?'is-boss':''} ${locked?'is-locked':''} ${cleared?'is-cleared':''} ${node.optional?'is-optional':''}`} style={{left:`${node.mapPosition.x}%`,top:`${node.mapPosition.y}%`}}>
@@ -312,7 +313,7 @@ export function NodeOverlay({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute inset-0 z-50 bg-black/95"
+      className="story-node-overlay absolute inset-0 z-50 bg-black/95"
     >
       {replayIndex !== null && replayEntries[replayIndex] ? (
         <DialogueView entry={replayEntries[replayIndex]}
