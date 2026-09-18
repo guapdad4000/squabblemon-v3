@@ -1,0 +1,102 @@
+{
+  "generator": "built-in image_gen",
+  "bodegaPrompt": "Use case: stylized-concept. Asset type: production location artwork for Squabblemon, an urban street-social card battler.\nCreate ONE landscape 3:2 illustration of BODEGA: a warm corner grocery storefront at dusk, weathered brick, green striped awning, warm amber doorway, crates of fruit, sidewalk milk crates, a small cat resting by the door, city fire escape overhead. No people.\nA compact recognizable street diorama, slightly elevated three-quarter perspective, sophisticated hand-painted anime/comic environment art, ink outlines, textured brushwork, dimensional realistic architecture, saturated warm amber and bottle green, rich dark shadows. Foreground and buildings form a naturally irregular silhouette; fragments of asphalt and brushy smoke dissolve at all outer edges into genuine transparent alpha. Entire landmark comfortably inside frame, generous clear margin, no cut off roof. Main landmark upper two thirds, dark low-detail pavement lower third where the game will overlay readable text. Wide composition with a distinct skyline. This must read clearly at 180px wide.\nNO square panel, card frame, border, badge, receipt, UI, typography, captions, text, logos, checkerboard pattern or watermark. Transparent background, one scene only.",
+  "basePrompt": "Use case: stylized-concept. Asset type: production transparent location artwork for Squabblemon, an urban street-social card battler. Create ONE landscape 3:2 illustration. SCENE\nA compact recognizable street diorama, slightly elevated three-quarter perspective, sophisticated hand-painted anime/comic environment art, ink outlines, textured brushwork, dimensional realistic architecture, rich dark shadows. Foreground and architecture form a naturally irregular silhouette; asphalt fragments and brushy smoke dissolve at all outer edges into genuine transparent alpha. Entire landmark comfortably inside frame with clear margins; do not crop the roof. Main landmark upper two thirds, dark low-detail ground lower third for text overlay. Distinct skyline; must read clearly at 180px wide.\nNO square panel, card frame, border, badge, receipt, UI, typography, captions, text, logos, checkerboard pattern or watermark. No people. Transparent background, one scene only.",
+  "locations": [
+    {
+      "id": "bodega",
+      "name": "BODEGA",
+      "scene": "A warm corner grocery storefront at dusk, weathered brick, green striped awning, amber doorway, fruit crates, sidewalk milk crates, cat by door and fire escape."
+    },
+    {
+      "id": "the-trap",
+      "name": "THE TRAP",
+      "scene": "A small weathered two-story brick trap-house porch and stoop, glowing red porch bulb, barred windows, chain-link gate, cable wires, tipped milk crate and scuffed steps, no weapons or drugs. Deep brick red and pink light."
+    },
+    {
+      "id": "waff-l-house",
+      "name": "WAFF-L HOUSE",
+      "scene": "A squat all-night roadside waffle diner with a yellow lightbox roofline, huge glass windows revealing chrome stools and amber booths, coffee cup and waffle plate glimpsed inside, rain-slick parking strip. Warm yellow and amber neon; no branded sign or words."
+    },
+    {
+      "id": "vip-section",
+      "name": "VIP SECTION",
+      "scene": "An upscale nightclub VIP booth, curved purple velvet sofa, brass stanchions and red velvet rope, low table with an ice bucket and glass bottles, hanging faceted lights. Violet and gold glow."
+    },
+    {
+      "id": "county-jail",
+      "name": "COUNTY JAIL",
+      "scene": "A compact county jail entrance, heavy institutional stone facade, steel barred windows, secured double doors, fence and single cold security floodlight, angular steps. Blue-gray and icy steel."
+    },
+    {
+      "id": "penthouse",
+      "name": "PENTHOUSE",
+      "scene": "A luxury city penthouse rooftop corner, tall glass walls, rooftop pool edge, sculptural chaise lounge, planter palms, distant geometric skyline. Mauve and champagne dusk, rich window reflections."
+    },
+    {
+      "id": "time-square",
+      "name": "TIME SQUARE",
+      "scene": "A dense urban intersection framed by tall stacked luminous advertising screens with abstract imagery and no letters, small taxi silhouettes, crosswalk and glowing street lamps. Cyan, electric blue and pink light."
+    },
+    {
+      "id": "magic-city",
+      "name": "MAGIC CITY",
+      "scene": "A glamorous late-night entertainment club entrance with curved magenta neon canopy, star shaped marquee lights, plush velvet doorway, chrome trim and dark glass, spotlights rising diagonally. Pink and plum, no people."
+    },
+    {
+      "id": "the-subway",
+      "name": "THE SUBWAY",
+      "scene": "A cutaway underground subway platform with one silver train emerging from an arched tunnel, blue tiled pillars, hanging round route symbols without letters, station steps, rail and warm headlamps. Cobalt and cyan."
+    },
+    {
+      "id": "o-block",
+      "name": "O-BLOCK",
+      "scene": "A recognizable Chicago-style brick apartment courtyard block, layered balconies, security gate, concrete court, basketball hoop, neighborhood trees and warm lit windows, no weapons. Brick red and orange evening."
+    },
+    {
+      "id": "hollywood-strip",
+      "name": "HOLLYWOOD STRIP",
+      "scene": "An ornate vintage cinema entrance on a palm-lined boulevard, star-inlaid sidewalk, glowing golden marquee with no writing, sweeping searchlight beams, art deco facade. Champagne gold and dusk violet."
+    },
+    {
+      "id": "dive-bar",
+      "name": "DIVE BAR",
+      "scene": "A scruffy intimate corner dive bar cutaway, low brick frontage, amber neon beer mug symbol, wooden bar stools, pool table and jukebox glowing inside, cracked sidewalk. Burnt orange, teal and warm tungsten."
+    },
+    {
+      "id": "acorn-projects",
+      "name": "ACORN PROJECTS",
+      "scene": "An Oakland-inspired apartment courtyard with connected low-rise apartment buildings, outdoor stairs, community picnic table, oak tree, bicycle and colorful mural of abstract leaves, proud lived-in neighborhood. Lime green accents, terracotta and sunset."
+    },
+    {
+      "id": "corrupt-church",
+      "name": "CORRUPT CHURCH",
+      "scene": "A lavish small city church with a steep steeple and gold cross, violet stained-glass windows, oversized gold donation box near the steps, ornate double doors and extravagant gold trim. Purple and antique gold, satirical architectural excess."
+    },
+    {
+      "id": "nail-salon",
+      "name": "NAIL SALON",
+      "scene": "A cozy neighborhood nail salon storefront cutaway, pink scalloped awning, glass display of colorful polish bottles, manicure desks and plush pedicure chairs inside, potted plant by the door. Blush pink and soft mint."
+    },
+    {
+      "id": "barbershop",
+      "name": "BARBERSHOP",
+      "scene": "A classic neighborhood barbershop corner storefront cutaway, striped red white blue barber pole, large window, vintage burgundy barber chair and wall mirrors, clippers and folded towels. Teal and warm cream light."
+    },
+    {
+      "id": "legacy-0",
+      "name": "THE TOWN",
+      "scene": "A lively town street corner condensed into a landmark, brick rowhouses with fire escapes, a small mural wall, corner basketball hoop, stoop and streetlamp. Warm rust and gold dusk."
+    },
+    {
+      "id": "legacy-1",
+      "name": "GROUP CHAT",
+      "scene": "A neighborhood stoop hangout reimagined with a floating cluster of luminous blank speech-bubble shapes above a shared park bench, phones resting on a milk crate, brick wall and string lights. Purple, pink and cyan glow."
+    },
+    {
+      "id": "legacy-2",
+      "name": "SERVER ROOM",
+      "scene": "An open cutaway urban server room, tall racks of network equipment with small electric blue and green status lights, bundled orange cables, metal grating and a cooling vent, small brick utility building exterior. Electric blue and graphite."
+    }
+  ]
+}

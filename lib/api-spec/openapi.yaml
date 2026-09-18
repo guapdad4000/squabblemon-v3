@@ -822,11 +822,13 @@ components:
           $ref: "#/components/schemas/NextAction"
         packConfig:
           $ref: "#/components/schemas/PackConfig"
+        tenPullConfig:
+          $ref: "#/components/schemas/TenPullConfig"
         collectionRoad:
           type: array
           items:
             $ref: "#/components/schemas/CollectionRoadMilestone"
-      required: [profile, missions, nextAction, packConfig, collectionRoad]
+      required: [profile, missions, nextAction, packConfig, collectionRoad, tenPullConfig]
     PackOddsEntry:
       type: object
       properties:
@@ -860,6 +862,27 @@ components:
             $ref: "#/components/schemas/PackOddsEntry"
       required:
         [id, name, oddsVersion, softCurrencyCost, ticketCost, rewardsPerPack, pityLimit, odds]
+    TenPullConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        oddsVersion:
+          type: string
+        pullCount:
+          type: integer
+        ticketCost:
+          type: integer
+        softCurrencyCost:
+          type: integer
+        rewardsPerPull:
+          type: integer
+        rarePityBonusPerPull:
+          type: integer
+      required:
+        [id, name, oddsVersion, pullCount, ticketCost, softCurrencyCost, rewardsPerPull, rarePityBonusPerPull]
     PackReward:
       type: object
       properties:
@@ -891,6 +914,8 @@ components:
           enum: [ticket, softCurrency]
         cost:
           type: integer
+        pullCount:
+          type: integer
         rewards:
           type: array
           items:
@@ -902,7 +927,7 @@ components:
         createdAt:
           type: string
           format: date-time
-      required: [id, oddsVersion, paymentMethod, cost, rewards, pityBefore, pityAfter, createdAt]
+      required: [id, oddsVersion, paymentMethod, cost, pullCount, rewards, pityBefore, pityAfter, createdAt]
     OpenPackInput:
       type: object
       properties:
@@ -913,6 +938,11 @@ components:
         paymentMethod:
           type: string
           enum: [ticket, softCurrency]
+        pullCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
       required: [idempotencyKey, paymentMethod]
       additionalProperties: false
     OpenPackResult:

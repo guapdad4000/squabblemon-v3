@@ -13,6 +13,7 @@ export interface PackOpening {
   oddsVersion: string;
   paymentMethod: PackOpeningPaymentMethod;
   cost: number;
+  pullCount: number;
   rewards: PackReward[];
   pityBefore: number;
   pityAfter: number;

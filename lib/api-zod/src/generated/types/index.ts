@@ -38,6 +38,7 @@ export * from './packConfig';
 export * from './packOddsEntry';
 export * from './packOpening';
 export * from './packOpeningPaymentMethod';
+export * from './tenPullConfig';
 export * from './packReward';
 export * from './packRewardKind';
 export * from './playerBootstrap';

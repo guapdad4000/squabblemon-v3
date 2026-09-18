@@ -29,11 +29,41 @@ import {
   type PendingPackRequest,
 } from '../../lib/packJournal';
 
-type Phase = 'idle' | 'requesting' | 'punching' | 'knockout' | 'reveal' | 'summary';
+type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | 'tenKnockout' | 'reveal' | 'summary';
 type Payment = 'softCurrency' | 'ticket';
+type PullSize = 1 | 10;
+
+// Pacing knobs. Single-pack: 12 hits to break the bag. Ten-pull: 30 hits,
+// three per click, so the puncher feels like they're dismantling the bag
+// in waves. The bag scene messages `hit` with a numeric count; we map that
+// to the combo progress in the ringside HUD.
+const HITS_PER_PULL: Record<PullSize, number> = { 1: 12, 10: 30 };
+const HITS_PER_CLICK: Record<PullSize, number> = { 1: 1, 10: 3 };
+// Stage messaging to the bag scene for what kind of beat just landed. The
+// scene file can choose its own response, but a strong ten-pull hit gets
+// labelled so the visual upgrade is unambiguous.
+type ScenePunchMessage = { type: 'punch'; intensity?: 'normal' | 'heavy' };
 
 const resourceName = (reward: PackReward) =>
   reward.kind === 'styleShards' ? 'Style shards' : reward.kind === 'softCurrency' ? 'Clout' : (reward.name ?? 'Card');
+
+// Find the index of the rarest reward (≥ Rare) in a haul. Used to badge the
+// "GUARANTEED RARE" reward on the ten-pull reveal. Returns -1 if none —
+// callers should still render the haul but skip the highlight.
+function indexOfRarestReward(rewards: readonly PackReward[]): number {
+  const rarityRank: Record<string, number> = { Rare: 1, Epic: 2, Legendary: 3, Mythical: 4 };
+  let bestIndex = -1;
+  let bestRank = 0;
+  for (let i = 0; i < rewards.length; i++) {
+    const rarity = rewards[i].rarity ?? '';
+    const rank = rarityRank[rarity] ?? 0;
+    if (rank > bestRank) {
+      bestRank = rank;
+      bestIndex = i;
+    }
+  }
+  return bestIndex;
+}
 
 function RewardCard({ reward, large = false }: { reward: PackReward; large?: boolean }) {
   const card = reward.cardId ? catalogCardById[reward.cardId] : undefined;
@@ -84,6 +114,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [phase, setPhase] = useState<Phase>(() =>
     loadPackOpening(sessionStorage, bootstrap.profile.id)?.rewards?.length ? 'summary' : 'idle',
   );
+  const [pullSize, setPullSize] = useState<PullSize>(1);
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
   const [sound, setSound] = useState(false);
@@ -96,6 +127,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
   const reduced = bootstrap.profile.settings.reducedMotion || systemReduced;
   const rewards = Array.isArray(opening?.rewards) ? opening.rewards : [];
+  const isTenPull = pullSize === 10;
+  const isPunching = phase === 'punching' || phase === 'tenPunching';
+  const hitCap = HITS_PER_PULL[pullSize];
+  const hitsPerClick = HITS_PER_CLICK[pullSize];
+  const rareHighlightIndex = isTenPull ? indexOfRarestReward(rewards) : -1;
 
   useEffect(() => {
     mounted.current = true;
@@ -115,18 +151,18 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     if (phase === 'reveal' || phase === 'summary') {
       if (!rewardDialog.current?.open) rewardDialog.current?.showModal();
     } else rewardDialog.current?.close();
-    if (phase !== 'punching') {
+    if (!isPunching) {
       if (rushTimer.current) clearInterval(rushTimer.current);
       rushTimer.current = null;
       setRush(false);
     }
-  }, [phase]);
+  }, [phase, isPunching]);
   useEffect(() => {
-    if (reduced && phase === 'punching') setPhase('summary');
-  }, [reduced, phase]);
+    if (reduced && isPunching) setPhase('summary');
+  }, [reduced, isPunching]);
   useEffect(() => {
-    if (phase !== 'knockout') return;
-    const timeout = window.setTimeout(() => setPhase(reduced ? 'summary' : 'reveal'), reduced ? 0 : 650);
+    if (phase !== 'knockout' && phase !== 'tenKnockout') return;
+    const timeout = window.setTimeout(() => setPhase(reduced ? 'summary' : 'reveal'), reduced ? 0 : 850);
     return () => clearTimeout(timeout);
   }, [phase, reduced]);
 
@@ -134,53 +170,59 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     sendScene(frame, { type: 'reset' });
     setPhase(reduced ? 'summary' : 'reveal');
   };
-  const handleOpen = async (method: Payment) => {
+  const handleOpen = async (method: Payment, size: PullSize = 1) => {
     if (busy.current || phase !== 'idle') return;
     const payment = pending?.paymentMethod ?? method;
-    const cost = payment === 'ticket' ? bootstrap.packConfig.ticketCost : bootstrap.packConfig.softCurrencyCost;
-    if (!pending && (payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency) < cost)
-      return;
+    const tier = size === 10 ? bootstrap.tenPullConfig : bootstrap.packConfig;
+    const cost = payment === 'ticket' ? tier.ticketCost : tier.softCurrencyCost;
+    const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
+    if (!pending && balance < cost) return;
     busy.current = true;
+    setPullSize(size);
     setPhase('requesting');
     setError(null);
     setHits(0);
     setRevealIndex(0);
     try {
       const request = reservePackRequest(sessionStorage, bootstrap.profile.id, payment, () => crypto.randomUUID());
-      setPending(request);
+      const nextRequest: PendingPackRequest = { ...request, pullCount: size };
+      setPending(nextRequest);
       let result: PackOpening;
       if (preview) {
         // Curated visual fixtures, never a substitute for the server's reward RNG or odds.
         const cards = ['bodega-cat', 'leroy', 'og-dominican', 'big-zoey', 'crossing-guard']
           .map(id => catalogCardById[id]);
+        const repeat = size === 10 ? Array.from({ length: 10 }) : [null];
+        const baseCards = repeat.flatMap(() =>
+          cards.map((card) => ({
+            kind: 'card' as const,
+            cardId: card.catalogId,
+            variantId: null,
+            name: card.name,
+            rarity: card.rarity,
+            isNew: true,
+            amount: 1,
+          })),
+        );
+        const bonusRewards = repeat.map(() => ({
+          kind: 'styleShards' as const,
+          cardId: null,
+          variantId: null,
+          name: 'Style shards',
+          rarity: null,
+          isNew: false,
+          amount: 25,
+        }));
         result = {
           id: request.idempotencyKey,
-          oddsVersion: 'preview',
+          oddsVersion: size === 10 ? 'street-pack-ten-v1' : 'preview',
           paymentMethod: payment,
           cost,
+          pullCount: size,
           pityBefore: 0,
           pityAfter: 0,
           createdAt: new Date().toISOString(),
-          rewards: [
-            ...cards.map((card) => ({
-              kind: 'card' as const,
-              cardId: card.catalogId,
-              variantId: null,
-              name: card.name,
-              rarity: card.rarity,
-              isNew: true,
-              amount: 1,
-            })),
-            {
-              kind: 'styleShards',
-              cardId: null,
-              variantId: null,
-              name: 'Style shards',
-              rarity: null,
-              isNew: false,
-              amount: 25,
-            },
-          ],
+          rewards: [...baseCards, ...bonusRewards],
         };
         queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), {
           ...bootstrap,
@@ -192,7 +234,9 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           },
         });
       } else {
-        const response = await openPack.mutateAsync({ data: request });
+        const response = await openPack.mutateAsync({
+          data: { ...nextRequest },
+        });
         if (!response?.opening?.rewards?.length || !response.bootstrap?.profile)
           throw new Error('Invalid pack response');
         result = response.opening;
@@ -206,7 +250,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       if (reduced || !sceneReady) setPhase('summary');
       else {
         sendScene(frame, { type: 'arm' });
-        setPhase('punching');
+        setPhase(size === 10 ? 'tenPunching' : 'punching');
         if (window.matchMedia('(max-width: 760px)').matches)
           arena.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
       }
@@ -226,6 +270,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     setOpening(null);
     setPhase('idle');
     setHits(0);
+    setPullSize(1);
     sendScene(frame, { type: 'reset' });
   }
   function toggleRush() {
@@ -236,8 +281,14 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       return;
     }
     setRush(true);
-    sendScene(frame, { type: 'punch' });
-    rushTimer.current = setInterval(() => sendScene(frame, { type: 'punch' }), 260);
+    sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage);
+    // The 10-pull's auto-rush tempo is faster than the single pack's. Three
+    // hits per tick keeps the bag "dismantling" feel rather than a slow
+    // metronome of single punches.
+    rushTimer.current = setInterval(
+      () => sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage),
+      isTenPull ? 180 : 260,
+    );
   }
   const showInfo = (tab: 'odds' | 'history') => {
     setInfo(tab);
@@ -245,7 +296,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
 
   return (
-    <div className="gym venue-page studio-page gacha-stage" data-phase={phase} data-reduced-motion={reduced}>
+    <div
+      className="gym venue-page studio-page gacha-stage"
+      data-phase={phase}
+      data-pull-size={pullSize}
+      data-reduced-motion={reduced}
+    >
       <div className="gym__arena" ref={arena}>
         <SceneFrame
           kind="gym"
@@ -256,7 +312,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           }}
           onMessage={(message) => {
             if (message.type === 'hit') setHits(message.hits ?? 0);
-            if (message.type === 'complete' && phase === 'punching') setPhase('knockout');
+            if (message.type === 'complete' && isPunching)
+              setPhase(pullSize === 10 ? 'tenKnockout' : 'knockout');
             if (message.type === 'error') setSceneReady(false);
           }}
         />
@@ -267,14 +324,34 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <GameGlyph name="pack" /> The pack gym · Street edition
         </span>
         <h1>
-          Your next
-          <br />
-          <em>heavy hitter.</em>
+          {isPunching && isTenPull ? (
+            <>
+              Ten on the
+              <br />
+              <em>bag.</em>
+            </>
+          ) : (
+            <>
+              Your next
+              <br />
+              <em>heavy hitter.</em>
+            </>
+          )}
         </h1>
         <p>
-          Step up. Break the bag.
-          <br />
-          Meet your next crew member.
+          {isPunching && isTenPull ? (
+            <>
+              Combo the bag.
+              <br />
+              Sixty cards in one KO.
+            </>
+          ) : (
+            <>
+              Step up. Break the bag.
+              <br />
+              Meet your next crew member.
+            </>
+          )}
         </p>
       </header>
       <button
@@ -290,9 +367,23 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <div className="gacha-stage__pack">
           <PropArt id="foil-pack" />
           <div>
-            <span className="studio-eyebrow">The drop</span>
-            <h2>{preview ? 'Street pack' : bootstrap.packConfig.name}</h2>
-            <p>{bootstrap.packConfig.rewardsPerPack === 6 ? "5 card pulls + 1 bonus. Same street price." : `${bootstrap.packConfig.rewardsPerPack} rewards. One knockout.`}</p>
+            <span className="studio-eyebrow">{isTenPull ? 'The upgraded drop' : 'The drop'}</span>
+            <h2>
+              {preview
+                ? isTenPull
+                  ? 'Street pack · 10x'
+                  : 'Street pack'
+                : isTenPull
+                  ? bootstrap.tenPullConfig.name
+                  : bootstrap.packConfig.name}
+            </h2>
+            <p>
+              {isTenPull
+                ? `${bootstrap.tenPullConfig.rewardsPerPull} rewards. One KO. Rare+ guaranteed.`
+                : bootstrap.packConfig.rewardsPerPack === 6
+                  ? '5 card pulls + 1 bonus. Same street price.'
+                  : `${bootstrap.packConfig.rewardsPerPack} rewards. One knockout.`}
+            </p>
           </div>
         </div>
         {preview ? (
@@ -305,10 +396,14 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               label="Pack guarantee progress"
             />
             <div>
-              <strong>Guarantee tracker</strong>
+              <strong>{isTenPull ? '10-Pull guarantee · Rare+' : 'Guarantee tracker'}</strong>
               <span>
-                {bootstrap.profile.packPity} of {bootstrap.packConfig.pityLimit} ·{' '}
-                <button onClick={() => showInfo('odds')}>View drop rates</button>
+                {isTenPull
+                  ? 'At least one Rare+ in every ten-pull haul.'
+                  : `${bootstrap.profile.packPity} of ${bootstrap.packConfig.pityLimit} · `}
+                {!isTenPull && (
+                  <button onClick={() => showInfo('odds')}>View drop rates</button>
+                )}
               </span>
             </div>
           </div>
@@ -317,50 +412,88 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <GameGlyph name="shards" /> Duplicates become Style Shards.
         </p>
         <div className="gym__actions">
-          {phase === 'punching' ? (
+          {isPunching ? (
             <div className="gacha-stage__secured">
               <Check size={16} />
               <span>
                 {preview ? 'Preview loaded.' : 'Your rewards are secured.'}
-                <small>Head to the bag to reveal them.</small>
+                <small>{isTenPull ? 'Sixty cards. Head to the bag to reveal them.' : 'Head to the bag to reveal them.'}</small>
               </span>
             </div>
           ) : (
             <>
               <span className="studio-eyebrow">{pending ? 'Recover your opening' : 'Choose your opening'}</span>
-              {(['ticket', 'softCurrency'] as const).map((method) => {
-                const ticket = method === 'ticket';
-                const cost = ticket ? bootstrap.packConfig.ticketCost : bootstrap.packConfig.softCurrencyCost;
-                const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
-                const affordable = balance >= cost;
-                if (pending && pending.paymentMethod !== method) return null;
-                return (
-                  <div className="gacha-stage__payment" key={method}>
-                    <button
-                      className={`studio-action ${ticket ? 'studio-action--gold' : ''}`}
-                      disabled={phase !== 'idle' || (!affordable && !pending)}
-                      onClick={() => void handleOpen(method)}
-                    >
-                      <GameGlyph name={ticket ? 'ticket' : 'clout'} />
-                      <span>
-                        {phase === 'requesting'
-                          ? 'Securing your drop…'
-                          : pending
-                            ? 'Retry this opening'
-                            : `Open · ${cost} ${ticket ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout'}`}
-                      </span>
-                      <ArrowRight size={16} />
-                    </button>
-                    <small>
-                      {balance.toLocaleString()} {ticket ? 'tickets' : 'Clout'} available
-                    </small>
-                  </div>
-                );
-              })}
+              <div className="gacha-stage__payments">
+                {/* Single-pack CTA. Costs 1 ticket (or 200 Clout). */}
+                {(['ticket', 'softCurrency'] as const).map((method) => {
+                  const ticket = method === 'ticket';
+                  const cost = ticket ? bootstrap.packConfig.ticketCost : bootstrap.packConfig.softCurrencyCost;
+                  const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
+                  const affordable = balance >= cost;
+                  if (pending && pending.paymentMethod !== method) return null;
+                  return (
+                    <div className="gacha-stage__payment" key={method} data-pull="single">
+                      <button
+                        className={`studio-action ${ticket ? 'studio-action--gold' : ''}`}
+                        disabled={phase !== 'idle' || (!affordable && !pending)}
+                        onClick={() => void handleOpen(method, 1)}
+                      >
+                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
+                        <span>
+                          {phase === 'requesting'
+                            ? 'Securing your drop…'
+                            : pending
+                              ? 'Retry this opening'
+                              : `Open · ${cost} ${ticket ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout'}`}
+                        </span>
+                        <ArrowRight size={16} />
+                      </button>
+                      <small>
+                        {balance.toLocaleString()} {ticket ? 'tickets' : 'Clout'} available
+                      </small>
+                    </div>
+                  );
+                })}
+                {/* Ten-pull CTA. Costs 10 tickets (or 1,800 Clout) and unlocks the
+                    upgraded punching-bag animation + the 6×10 reveal grid with the
+                    guaranteed Rare+ highlight. */}
+                {(['ticket', 'softCurrency'] as const).map((method) => {
+                  const ticket = method === 'ticket';
+                  const tier = bootstrap.tenPullConfig;
+                  const cost = ticket ? tier.ticketCost : tier.softCurrencyCost;
+                  const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
+                  const affordable = balance >= cost;
+                  if (pending && pending.paymentMethod !== method) return null;
+                  return (
+                    <div className="gacha-stage__payment gacha-stage__payment--ten" key={`ten-${method}`} data-pull="ten">
+                      <button
+                        className={`studio-action studio-action--ten ${ticket ? 'studio-action--gold' : ''}`}
+                        disabled={phase !== 'idle' || (!affordable && !pending)}
+                        onClick={() => void handleOpen(method, 10)}
+                      >
+                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
+                        <span>
+                          {phase === 'requesting'
+                            ? 'Securing your 10…'
+                              : pending
+                                ? 'Retry this 10-pull'
+                                : `Open 10× · ${cost} ${ticket ? 'tickets' : 'Clout'}`}
+                        </span>
+                        <ArrowRight size={16} />
+                      </button>
+                      <small>
+                        <span className="gacha-stage__payment-tag">UPGRADED · RARE+ GUARANTEED</span>
+                        {' · '}
+                        {balance.toLocaleString()} {ticket ? 'tickets' : 'Clout'} available
+                      </small>
+                    </div>
+                  );
+                })}
+              </div>
               <small className="gym__payment-note">
                 {preview
                   ? 'Uses preview balances only.'
-                  : 'Each button opens one pack. Punching never changes the odds.'}
+                  : 'Punching never changes the odds. Ten-pull guarantees at least one Rare+.'}
               </small>
             </>
           )}
@@ -380,32 +513,48 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       </aside>
       <div className="gacha-stage__ringside">
-        {phase === 'punching' ? (
+        {isPunching ? (
           <>
             <div className="gacha-stage__combo" aria-live="polite">
-              <ProgressRing value={hits} max={12} label="Hits to reveal">
+              <ProgressRing value={hits} max={hitCap} label="Hits to reveal">
                 <strong>{String(hits).padStart(2, '0')}</strong>
               </ProgressRing>
               <div>
-                <strong>{hits >= 9 ? 'Finish it.' : hits >= 5 ? 'Keep that energy.' : 'Make some noise.'}</strong>
-                <span>{hits} of 12 hits · The drop is yours</span>
+                <strong>
+                  {isTenPull
+                    ? hits >= Math.floor(hitCap * 0.75)
+                      ? 'Finish it.'
+                      : hits >= Math.floor(hitCap * 0.4)
+                        ? 'Keep that energy.'
+                        : 'Triple combo, keep it rolling.'
+                    : hits >= 9
+                      ? 'Finish it.'
+                      : hits >= 5
+                        ? 'Keep that energy.'
+                        : 'Make some noise.'}
+                </strong>
+                <span>
+                  {hits} of {hitCap} hits ·{' '}
+                  {isTenPull ? 'Triple combo lands three at once' : 'The drop is yours'}
+                </span>
               </div>
             </div>
             <div className="gacha-stage__punch-actions">
               <button
                 className="studio-action studio-action--gold"
                 disabled={!sceneReady}
-                onClick={() => sendScene(frame, { type: 'punch' })}
+                onClick={() => sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage)}
               >
                 <GameGlyph name="fight" />
-                Punch the bag
+                {isTenPull ? 'Triple-combo punch' : 'Punch the bag'}
+                <small>+{hitsPerClick}</small>
               </button>
               <button className="studio-action" disabled={!sceneReady} aria-pressed={rush} onClick={toggleRush}>
                 {rush ? 'Pause rush' : 'Auto rush'}
               </button>
             </div>
             <button className="studio-text-action" onClick={reveal}>
-              Skip animation & reveal <ArrowRight size={14} />
+              {isTenPull ? 'Skip to 10× reveal' : 'Skip animation & reveal'} <ArrowRight size={14} />
             </button>
           </>
         ) : (
@@ -413,23 +562,27 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <div className="gacha-stage__ready">
               <GameGlyph name="fight" />
               <span>
-                One pack. Twelve hits.<small>Open a pack to step into the ring.</small>
+                {isTenPull
+                  ? `Ten packs. ${hitCap} hits. Triple-combo each click.`
+                  : `One pack. ${hitCap} hits.`}
+                <small>Open a pack to step into the ring.</small>
               </span>
             </div>
           )
         )}
       </div>
-      {phase === 'knockout' && (
-        <div className="gacha-stage__knockout" role="status">
+      {(phase === 'knockout' || phase === 'tenKnockout') && (
+        <div className="gacha-stage__knockout" data-pull-size={pullSize} role="status">
           <CombatSprite asset="fight-start-burst" />
-          <span>Pack unleashed</span>
-          <strong>K.O.</strong>
-          <small>The block felt that.</small>
+          <span>{isTenPull ? 'Ten-pack unleashed' : 'Pack unleashed'}</span>
+          <strong>{isTenPull ? 'K.O. ×10' : 'K.O.'}</strong>
+          <small>{isTenPull ? 'The whole block felt that.' : 'The block felt that.'}</small>
         </div>
       )}
       <dialog
         ref={rewardDialog}
         className="gym-results studio-results gacha-results"
+        data-pull-size={pullSize}
         aria-labelledby="gym-results-title"
         onCancel={(e) => {
           e.preventDefault();
@@ -437,32 +590,56 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         }}
       >
         <div className="gym-results__header">
-          <span className="studio-eyebrow">{preview ? 'Preview drop · Not saved' : 'The bag delivered'}</span>
+          <span className="studio-eyebrow">
+            {isTenPull
+              ? preview
+                ? 'Preview 10× · Not saved'
+                : 'The 10-bag delivered'
+              : preview
+                ? 'Preview drop · Not saved'
+                : 'The bag delivered'}
+          </span>
           <button className="studio-icon" aria-label="Close rewards" onClick={finish}>
             <X size={20} />
           </button>
         </div>
         <GameGlyph name="pack" className="gacha-results__emblem" />
-        <h2 id="gym-results-title">{phase === 'reveal' ? 'Look who showed up.' : 'Meet the haul.'}</h2>
+        <h2 id="gym-results-title">
+          {phase === 'reveal' ? 'Look who showed up.' : isTenPull ? 'Meet the 10× haul.' : 'Meet the haul.'}
+        </h2>
         <p>
           {phase === 'reveal'
             ? `Reward ${revealIndex + 1} of ${rewards.length}`
             : preview
               ? 'A taste of the drop. Your real collection is unchanged.'
-              : 'Added to your collection. Now put them to work.'}
+              : isTenPull
+                ? 'Ten packs. Sixty rewards. One guaranteed Rare+ — find it highlighted.'
+                : 'Added to your collection. Now put them to work.'}
         </p>
         {phase === 'reveal' && rewards[revealIndex] ? (
           <div className="gym-results__single">
-            <RewardCard key={revealIndex} reward={rewards[revealIndex]} large />
+            <RewardCard
+              key={revealIndex}
+              reward={rewards[revealIndex]}
+              large
+            />
             <h3>{rewards[revealIndex].name ?? resourceName(rewards[revealIndex])}</h3>
-            <span className="studio-eyebrow">{CARD_RARITY_DEFINITIONS[rewards[revealIndex].rarity as CardRarity]?.label ?? 'Currency'}</span>
+            <span className="studio-eyebrow">
+              {CARD_RARITY_DEFINITIONS[rewards[revealIndex].rarity as CardRarity]?.label ?? 'Currency'}
+              {isTenPull && revealIndex === rareHighlightIndex && (
+                <span className="gacha-results__badge"> · GUARANTEED RARE+</span>
+              )}
+            </span>
           </div>
         ) : (
-          <div className="gym-results__grid">
+          <div
+            className={`gym-results__grid${isTenPull ? ' gym-results__grid--ten' : ''}`}
+            data-pull-size={pullSize}
+          >
             {rewards.map((reward, i) => (
               <button
                 key={i}
-                className="gym-results__item"
+                className={`gym-results__item${isTenPull && i === rareHighlightIndex ? ' gym-results__item--rare' : ''}`}
                 aria-label={`Inspect ${reward.name ?? resourceName(reward)}`}
                 onClick={() => {
                   setRevealIndex(i);
@@ -471,7 +648,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               >
                 <RewardCard reward={reward} />
                 <strong>{reward.name ?? resourceName(reward)}</strong>
-                <small>{CARD_RARITY_DEFINITIONS[reward.rarity as CardRarity]?.label ?? `+${reward.amount}`}</small>
+                <small>
+                  {CARD_RARITY_DEFINITIONS[reward.rarity as CardRarity]?.label ?? `+${reward.amount}`}
+                  {isTenPull && i === rareHighlightIndex && (
+                    <span className="gacha-results__badge"> · GUARANTEED</span>
+                  )}
+                </small>
               </button>
             ))}
           </div>
@@ -495,7 +677,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </>
           ) : (
             <button className="studio-action studio-action--gold" onClick={finish}>
-              Back to gacha
+              {isTenPull ? 'Back to gacha · 10× earned' : 'Back to gacha'}
               <ArrowRight size={18} />
             </button>
           )}

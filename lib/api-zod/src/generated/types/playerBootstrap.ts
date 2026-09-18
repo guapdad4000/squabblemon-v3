@@ -10,11 +10,13 @@ import type { NextAction } from './nextAction';
 import type { PackConfig } from './packConfig';
 import type { PlayerMission } from './playerMission';
 import type { PlayerProfile } from './playerProfile';
+import type { TenPullConfig } from './tenPullConfig';
 
 export interface PlayerBootstrap {
   profile: PlayerProfile;
   missions: PlayerMission[];
   nextAction: NextAction;
   packConfig: PackConfig;
+  tenPullConfig: TenPullConfig;
   collectionRoad: CollectionRoadMilestone[];
 }

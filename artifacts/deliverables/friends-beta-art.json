@@ -1,0 +1,138 @@
+{
+  "style": "Create ONE original production-ready character cutout for the Squabblemon street-social card game. Reference is STYLE REFERENCE ONLY; create a different subject. Hand-inked urban anime/comic illustration matching the reference's strong black ink outlines, angular cel shading, detailed cloth and stylish mature game art. ",
+  "constraints": " Full body including head, all feet and props inside the frame with generous space around the silhouette. Centered tall portrait canvas, dynamic three-quarter pose, readable on a small collectible card. Genuinely transparent background with alpha; at least 25% transparent margins. No scenery, no backdrop, no fake checkerboard, no title, no text, no card frame, no watermark, no recognizable logos.",
+  "assets": [
+    {
+      "id": "bodega-cat",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-68d02008-cfc6-4d26-93ac-c3cc2d3c4fc3.png",
+      "prompt": "Bodega Cat, orange street cat with green utility vest and crate.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\bodega-cat.webp"
+    },
+    {
+      "id": "crossing-guard",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-1afcf171-6b4b-495a-a2cf-012a2bc024a5.png",
+      "prompt": "Crossing Guard, a sturdy older Black woman with cropped gray curls, reflective orange vest over navy streetwear, holding a small unlettered red octagonal stop paddle and extending her other hand, practical sneakers, confident protective pose.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\crossing-guard.webp"
+    },
+    {
+      "id": "laundromat-regular",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-a916dba4-3e8a-4055-b844-c32b97e5d49e.png",
+      "prompt": "Laundromat Regular, a young East Asian man with a messy undercut, oversized lavender hoodie and rolled jeans, balancing a teal laundry basket with a folded yellow quilt, amused expression and loose relaxed stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\laundromat-regular.webp"
+    },
+    {
+      "id": "corner-busker",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-418348d5-e75d-4a38-bd2f-c953b5596c12.png",
+      "prompt": "Corner Busker, a young brown-skinned woman with short curly hair, mustard beanie, cropped denim jacket and burgundy cargo pants, playing a weathered acoustic guitar with no logos, one boot tapping a compact pedal.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\corner-busker.webp"
+    },
+    {
+      "id": "corner-coach",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-aafccd04-514d-4997-815a-7bcbbee0b2db.png",
+      "prompt": "Corner Coach, an athletic middle-aged Latino man with salt-and-pepper beard, green tracksuit, whistle and clipboard with no readable writing, leaning forward pointing a play, worn high-top sneakers.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\corner-coach.webp"
+    },
+    {
+      "id": "night-cashier",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-de61171f-3e77-47df-969d-bf9092bee24d.png",
+      "prompt": "Night Cashier, a tired but sharp young South Asian woman with a long braid, burgundy apron over black hoodie, scanner held like a wand and receipt roll in her other hand, keys on belt and comfortable sneakers.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\night-cashier.webp"
+    },
+    {
+      "id": "dog-walker",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-f40aa414-4965-4cd9-8808-71cbfc0fff88.png",
+      "prompt": "Dog Walker, a cheerful white woman with copper curls and blue windbreaker, purple cross-body treat bag, jogging beside one small expressive terrier on a bright leash, chunky sneakers and playful energetic pose.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\dog-walker.webp"
+    },
+    {
+      "id": "mural-apprentice",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-0323d597-b969-4321-a604-156e0825c550.png",
+      "prompt": "Mural Apprentice, a young Black man with short twists, paint-spattered cream overalls over teal shirt, holding a fat roller and a small paint bucket, abstract paint marks only, sly determined grin, full body stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\mural-apprentice.webp"
+    },
+    {
+      "id": "chess-regular",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-99d72462-38fe-4a94-bf01-f9bf96b31ba5.png",
+      "prompt": "Chess Regular, an elderly East Asian woman in a plum cardigan, bucket hat and classic trainers, holding an oversized black knight chess piece at chest height, free hand behind her back, amused knowing smile.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\chess-regular.webp"
+    },
+    {
+      "id": "rooftop-gardener",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-ed753b98-b45c-47d2-ac91-234be72ec690.png",
+      "prompt": "Rooftop Gardener, a young nonbinary brown-skinned adult with round glasses and short curly hair, olive workwear and rolled sleeves, holding a blue watering can and small healthy tomato plant in a terracotta pot, relaxed hopeful stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\rooftop-gardener.webp"
+    },
+    {
+      "id": "pirate-radio-dj",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-b391dce4-af14-4d30-9e49-23363e008ee6.png",
+      "prompt": "Pirate Radio DJ, a charismatic Black woman with silver undercut and amber visor glasses, purple-and-orange oversized bomber jacket, headphones around neck, holding a portable sampler with coiled cable and tiny floating violet sound sparks, dynamic confident stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\pirate-radio-dj.webp"
+    },
+    {
+      "id": "dance-circle-captain",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-fb7145e5-41a4-4cc7-87dd-e3893e2cea3f.png",
+      "prompt": "Dance Circle Captain, an athletic young Latino man with tightly tied long hair, cobalt varsity jacket and red wide-leg track pants, frozen in a dynamic upright breakdance footwork pose, silver necklace, expressive joyful face, strong silhouette.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\dance-circle-captain.webp"
+    },
+    {
+      "id": "night-shift-medic",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-026ddc64-71e3-416f-ae32-d408509e7f21.png",
+      "prompt": "Night Shift Medic, a tall Black man with close-cropped hair, teal paramedic jacket over charcoal streetwear, bright white bandage kit and one hand glowing softly mint green, calm focused face, sturdy boots, heroic protective stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\night-shift-medic.webp"
+    },
+    {
+      "id": "subway-magician",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-ccf026ec-c092-40ae-81f0-41fffdd46a8f.png",
+      "prompt": "Subway Magician, a slim white woman with short black bob, burgundy velvet jacket over streetwear, black trousers and silver boots, fan of unmarked playing cards floating just above one hand, sly stage smile, violet ribbon flourish.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\subway-magician.webp"
+    },
+    {
+      "id": "og-dominican",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-3d400aa6-f262-4856-b719-41ab42238e86.png",
+      "prompt": "Create a single complete full-body character portrait for Squabblemon, inked urban anime collectible-card art. Match only the bold outline/cel-shaded finish of the attached style reference, make a completely distinct character. Tall portrait, full head and shoes visible with generous margins, isolated actual transparent alpha background, at least 25% clear canvas. No frame, typography, letters, logos, scenery or opaque background. OG DOMINICAN: original older Dominican neighborhood elder, warm medium-brown complexion, close-cropped salt-and-pepper hair and neatly trimmed mustache and goatee, confident friendly expression. Crisp cream short-sleeved guayabera shirt, dark slim trousers, tan leather loafers, simple gold chain, small red-white-blue wristband. Panama-style straw fedora with dark band. One hand casually presents a pair of domino tiles, other rests at hip. Real charismatic neighborhood OG, grounded contemporary clothing, natural proportions, not fantasy armor.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\og-dominican.webp"
+    },
+    {
+      "id": "last-train-conductor",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-2a6793f4-2fc4-4b12-8e31-74449d137ff2.png",
+      "prompt": "Last Train Conductor, an original mythical urban spirit: tall ghostly man in midnight-blue vintage transit uniform and long coat with silver trim, luminous cyan eyes, holding an antique brass lantern containing a tiny teal spectral train spiral, boots grounded, dramatic silhouette and restrained supernatural aura.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\last-train-conductor.webp"
+    },
+    {
+      "id": "midnight-mayor",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-4f4bdb1b-17e7-48a4-be85-50507c591576.png",
+      "prompt": "Midnight Mayor, an original mythical city guardian: distinguished dark-skinned older man in a monumental charcoal tailored overcoat lined in gold, fedora shaped like an abstract skyline, golden streetlamp cane, gold glowing eyes and a few floating brass keys, composed commanding full-body stance.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\midnight-mayor.webp"
+    },
+    {
+      "id": "big-zoey",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-c267ebcb-323a-4448-8b66-cfcc12aa8fad.png",
+      "prompt": "Create a single complete full-body character portrait for Squabblemon, inked urban anime collectible-card art. Match only the bold outline/cel-shaded finish of the attached style reference, make a completely distinct character. Tall portrait, full head and shoes visible with generous margins, isolated actual transparent alpha background, at least 25% clear canvas. No frame, typography, letters, logos, scenery or opaque background. BIG ZOEY: original adult Haitian man with deep brown skin, tall broad heavyset powerful build, neat long locs pulled back, tidy beard, warm self-assured expression. Royal-blue and vivid-red color-block short-sleeve button-up worn open over clean white tank, relaxed dark jeans, fresh red-and-blue sneakers, tasteful gold chain. Small Haitian flag patch (blue over red, tiny white central panel) on upper shirt pocket, natural relaxed strong stance, one hand giving an easy greeting and the other at his side. Human neighborhood personality, charming and imposing, no weapons, no fantasy costumes or mystical stereotypes.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\big-zoey.webp"
+    },
+    {
+      "id": "leroy",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-14f74087-9dfa-4df6-9624-ae51c775448b.png",
+      "prompt": "Create a single complete full-body character portrait for Squabblemon, inked urban anime collectible-card art. Match only the bold outline/cel-shaded finish of the attached style reference, make a completely distinct character. Tall portrait, full head and shoes visible with generous margins, isolated actual transparent alpha background, at least 25% clear canvas. No frame, typography, letters, logos, scenery or opaque background. LEROY: adult Black martial artist, lean athletic build, short rounded natural afro, calm focused expression, yellow kung-fu tracksuit with black side stripes and black martial arts shoes. A respectful cinematic nod to Bruce Leroy and classic 1970s/1980s kung-fu heroes. Powerful low grounded kung-fu stance, open palms with a warm golden inner-energy glow wrapped tightly around his hands, striking but restrained. Human neighborhood hero, no actual dragon, no armor, no huge weapons.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\leroy.webp"
+    },
+    {
+      "id": "block-party-titan",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-5ec8b47b-0477-4fa3-8128-5bd793fa9da2.png",
+      "prompt": "Block Party Titan, an original mythical urban guardian: enormous friendly stone-skinned humanoid with warm brown skin texture and glowing amber eyes, orange-and-cream puffer vest made of massive speaker cabinets, chunky gold chains with blank medallion, huge high-top sneakers, holding a boombox in one hand, confident grounded full-body silhouette, colorful tiny confetti accents.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\block-party-titan.webp"
+    },
+    {
+      "id": "promoter",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-200350bf-fe92-4012-a0c9-f42428abf4b5.png",
+      "prompt": "Edit the provided character portrait for Squabblemon. Keep the same adult Black character identity, skin tone and face, strong inked cel-shaded urban anime collectible-game style. Complete full body from head to shoes centered on tall transparent-alpha canvas, generous clear margins at all sides. No text, letters, logos, card frame, scenery or opaque backdrop. PROMOTER must look like a stylish real nightclub promoter: remove the giant coat, scarf, crossbody bag and two phones. Wear a silky burgundy shirt substantially unbuttoned at top with tasteful gold chains visible, sleeves rolled, gold aviator sunglasses, sharply fitted black skinny pants and sleek loafers. Smiling charismatic guest-list energy. One hand holds a clipboard with abstract unlettered marks; other hand carries two premium-looking unbranded champagne bottles by the neck. All requested props clear, natural anatomy, two arms, crisp cutout silhouette. Preserve short locs.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\promoter.webp"
+    },
+    {
+      "id": "wifey",
+      "path": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0aef6-214d-7042-98a3-a86af041c229\\exec-1d467b28-7fc1-403e-9fda-316e603b34a1.png",
+      "prompt": "Edit the provided character portrait for Squabblemon. Keep the same adult Black character identity, skin tone and face, strong inked cel-shaded urban anime collectible-game style. Complete full body from head to shoes centered on tall transparent-alpha canvas, generous clear margins at all sides. No text, letters, logos, card frame, scenery or opaque backdrop. WIFEY must look like a fashionable Southern belle in a sundress: replace all tactical coat/cargo pants/armor/large cases with a flowing flattering yellow floral sundress with cinched waist and calf-length airy skirt, strappy sandals, small woven handbag, gold hoop earrings. Keep beautiful long braids gathered partly up. Warm confident expression with a little side-eye attitude, one hand resting at her hip. Summer Sunday cookout elegance. Absolutely no tactical gear, no large coat, no cargo pants. Full body and sandals visible.",
+      "finalPath": "artifacts\\squabblemon\\public\\assets\\characters\\wifey.webp"
+    }
+  ]
+}

@@ -1,0 +1,409 @@
+[
+  {
+    "shot_id": "ch01_s01_pre_sh01",
+    "clip_id": "ch01_s01_pre",
+    "camera": "Wide push-in",
+    "action": "Reveal dead karaoke mic and vending-machine press conference.",
+    "line_tokens": [
+      "welcome-to-the-block:pre:0"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s01_pre_sh02",
+    "clip_id": "ch01_s01_pre",
+    "camera": "Blue/Cornball two-shot",
+    "action": "Blue inspects the newcomer; Cornball indicts the covered OPEN sign.",
+    "line_tokens": [
+      "welcome-to-the-block:pre:1",
+      "welcome-to-the-block:pre:2",
+      "welcome-to-the-block:pre:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s01_pre_sh03",
+    "clip_id": "ch01_s01_pre",
+    "camera": "Alternating medium and reaction",
+    "action": "Challenge terms, district rule, bass-in-the-car roast. Finish on deck/table handoff.",
+    "line_tokens": [
+      "welcome-to-the-block:pre:4",
+      "welcome-to-the-block:pre:5",
+      "welcome-to-the-block:pre:6",
+      "welcome-to-the-block:pre:7"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s01_post_sh04",
+    "clip_id": "ch01_s01_post",
+    "camera": "Medium reaction, then prop insert",
+    "action": "Blue swallows the loss; jacket yanks off sign; drink drops halfway and stops.",
+    "line_tokens": [
+      "welcome-to-the-block:post:0",
+      "welcome-to-the-block:post:1",
+      "welcome-to-the-block:post:2",
+      "welcome-to-the-block:post:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s02_pre_sh01",
+    "clip_id": "ch01_s02_pre",
+    "camera": "Wide throne reveal into Wifey close-up",
+    "action": "Wifey dismantles folding-chair royalty and exposes bathroom electricity.",
+    "line_tokens": [
+      "blue-side-pressure:pre:0",
+      "blue-side-pressure:pre:1",
+      "blue-side-pressure:pre:2",
+      "blue-side-pressure:pre:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s02_pre_sh02",
+    "clip_id": "ch01_s02_pre",
+    "camera": "Low Blue angle interrupted by Wifey",
+    "action": "Crown is scheduling authority, not ownership; hold the puncture of his grandeur.",
+    "line_tokens": [
+      "blue-side-pressure:pre:4",
+      "blue-side-pressure:pre:5",
+      "blue-side-pressure:pre:6"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s02_post_sh03",
+    "clip_id": "ch01_s02_post",
+    "camera": "Shared medium with board insert",
+    "action": "Wifey writes the result in ink; Blue redirects embarrassment toward Red.",
+    "line_tokens": [
+      "blue-side-pressure:post:0",
+      "blue-side-pressure:post:1",
+      "blue-side-pressure:post:2",
+      "blue-side-pressure:post:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s02_post_sh04",
+    "clip_id": "ch01_s02_post",
+    "camera": "Silent button shot",
+    "action": "Chair creaks; Blue carries cables; hair dryer flickers the lights.",
+    "line_tokens": [],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s03_pre_sh01",
+    "clip_id": "ch01_s03_pre",
+    "camera": "Wide fake courtroom into phone insert",
+    "action": "Thumb joke; ring-light adjustment; Red demands both sides in frame.",
+    "line_tokens": [
+      "receipts-on-camera:pre:0",
+      "receipts-on-camera:pre:1",
+      "receipts-on-camera:pre:2"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s03_pre_sh02",
+    "clip_id": "ch01_s03_pre",
+    "camera": "Barrier insert and alternating close-ups",
+    "action": "State actual middle-district round-two rule, then courtroom roast and challenge.",
+    "line_tokens": [
+      "receipts-on-camera:pre:3",
+      "receipts-on-camera:pre:4",
+      "receipts-on-camera:pre:5",
+      "receipts-on-camera:pre:6"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s03_post_sh03",
+    "clip_id": "ch01_s03_post",
+    "camera": "Phone close-up, then Red reaction",
+    "action": "Snitch pitches humiliating title; Red insists on keeping the whole match.",
+    "line_tokens": [
+      "receipts-on-camera:post:0",
+      "receipts-on-camera:post:1",
+      "receipts-on-camera:post:2",
+      "receipts-on-camera:post:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s03_post_sh04",
+    "clip_id": "ch01_s03_post",
+    "camera": "Silent payoff",
+    "action": "Ring light rotates back to table; kitchen timer rings, no food.",
+    "line_tokens": [],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s04_pre_sh01",
+    "clip_id": "ch01_s04_pre",
+    "camera": "Two-shot with untouched paper plate",
+    "action": "Auntie cookout ban and Blue community-outreach roast.",
+    "line_tokens": [
+      "red-side-retaliation:pre:0",
+      "red-side-retaliation:pre:1",
+      "red-side-retaliation:pre:2"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s04_pre_sh02",
+    "clip_id": "ch01_s04_pre",
+    "camera": "Notebook insert and held Blue reaction",
+    "action": "Memorial program appears; keep Cracked Head portrait consistent with supplied art. Comedy gives way to hurt.",
+    "line_tokens": [
+      "red-side-retaliation:pre:3",
+      "red-side-retaliation:pre:4",
+      "red-side-retaliation:pre:5",
+      "red-side-retaliation:pre:6"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s04_pre_sh03",
+    "clip_id": "ch01_s04_pre",
+    "camera": "Red returns to the table",
+    "action": "One more match and late pressure. Cut to real gameplay.",
+    "line_tokens": [
+      "red-side-retaliation:pre:7"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s04_post_sh04",
+    "clip_id": "ch01_s04_post",
+    "camera": "Medium exchange into paper insert",
+    "action": "Signed entry, memorial boundary, Blue leaves; Red conceals recording sleeve without comic sting.",
+    "line_tokens": [
+      "red-side-retaliation:post:0",
+      "red-side-retaliation:post:1",
+      "red-side-retaliation:post:2",
+      "red-side-retaliation:post:3",
+      "red-side-retaliation:post:4"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s05_pre_sh01",
+    "clip_id": "ch01_s05_pre",
+    "camera": "Wide alley with prop inserts",
+    "action": "Courier table and full vending-machine investigation; display window versus retrieval flap.",
+    "line_tokens": [
+      "side-alley-challenge:pre:0",
+      "side-alley-challenge:pre:1",
+      "side-alley-challenge:pre:2",
+      "side-alley-challenge:pre:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s05_pre_sh02",
+    "clip_id": "ch01_s05_pre",
+    "camera": "Runner medium",
+    "action": "Optional match; cosmetic reward; no main-route promise.",
+    "line_tokens": [
+      "side-alley-challenge:pre:4",
+      "side-alley-challenge:pre:5"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s05_post_sh03",
+    "clip_id": "ch01_s05_post",
+    "camera": "Shared medium and dry reactions",
+    "action": "Tag earned; lukewarm revenge; Snitch warning; birthday-post joke.",
+    "line_tokens": [
+      "side-alley-challenge:post:0",
+      "side-alley-challenge:post:1",
+      "side-alley-challenge:post:2",
+      "side-alley-challenge:post:3",
+      "side-alley-challenge:post:4"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s05_post_sh04",
+    "clip_id": "ch01_s05_post",
+    "camera": "Silent product-label reaction",
+    "action": "Unsweetened sparkling-water revelation; sugar packet offered and pocketed.",
+    "line_tokens": [],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s06_pre_sh01",
+    "clip_id": "ch01_s06_pre",
+    "camera": "Low media-desk reveal",
+    "action": "Reveal Snitch sitting on unopened air-fryer box; Red demands sheet and source.",
+    "line_tokens": [
+      "snitch-at-the-corner:pre:0",
+      "snitch-at-the-corner:pre:1",
+      "snitch-at-the-corner:pre:2",
+      "snitch-at-the-corner:pre:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s06_pre_sh02",
+    "clip_id": "ch01_s06_pre",
+    "camera": "Phone insert, then two-shot",
+    "action": "Returning-customer evasion and exact round-four +2 Motion warning.",
+    "line_tokens": [
+      "snitch-at-the-corner:pre:4",
+      "snitch-at-the-corner:pre:5",
+      "snitch-at-the-corner:pre:6",
+      "snitch-at-the-corner:pre:7"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s06_post_sh03",
+    "clip_id": "ch01_s06_post",
+    "camera": "Tight dialogue coverage",
+    "action": "Slot posted; other finalist identity withheld; voice-note/deposit contract gag.",
+    "line_tokens": [
+      "snitch-at-the-corner:post:0",
+      "snitch-at-the-corner:post:1",
+      "snitch-at-the-corner:post:2",
+      "snitch-at-the-corner:post:3",
+      "snitch-at-the-corner:post:4"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s06_post_sh04",
+    "clip_id": "ch01_s06_post",
+    "camera": "Hold on stair landing, no entrant face",
+    "action": "Broken organ flourish and footsteps; Red stills; Snitch grabs phones. Reveal belongs in Scene 7.",
+    "line_tokens": [],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s07_pre_sh01",
+    "clip_id": "ch01_s07_pre",
+    "camera": "Grand entrance wide, then held Blue close-up",
+    "action": "Gift-wrap carpet, fish-fry smoke, organ/BATTERY LOW; Blue recognizes brother and erupts over memorial shirts.",
+    "line_tokens": [
+      "cracked-head-takes-the-block:pre:0",
+      "cracked-head-takes-the-block:pre:1",
+      "cracked-head-takes-the-block:pre:2",
+      "cracked-head-takes-the-block:pre:3",
+      "cracked-head-takes-the-block:pre:4"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s07_pre_sh02",
+    "clip_id": "ch01_s07_pre",
+    "camera": "Triangular coverage",
+    "action": "Red demands camera down; Snitch has two phones; Blue names four-year absence.",
+    "line_tokens": [
+      "cracked-head-takes-the-block:pre:5",
+      "cracked-head-takes-the-block:pre:6",
+      "cracked-head-takes-the-block:pre:7",
+      "cracked-head-takes-the-block:pre:8"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s07_pre_sh03",
+    "clip_id": "ch01_s07_pre",
+    "camera": "Rival medium into empty finalist chair",
+    "action": "Cracked claims block; Red upholds player-earned chair; challenge into gameplay.",
+    "line_tokens": [
+      "cracked-head-takes-the-block:pre:9",
+      "cracked-head-takes-the-block:pre:10",
+      "cracked-head-takes-the-block:pre:11"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s07_post_sh04",
+    "clip_id": "ch01_s07_post",
+    "camera": "Winner-space wide, then brothers close-up",
+    "action": "Cracked honors defeat; church-calendar roast; let four-year wound land.",
+    "line_tokens": [
+      "cracked-head-takes-the-block:post:0",
+      "cracked-head-takes-the-block:post:1",
+      "cracked-head-takes-the-block:post:2",
+      "cracked-head-takes-the-block:post:3"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s07_post_sh05",
+    "clip_id": "ch01_s07_post",
+    "camera": "Red arbitrates, then silent button",
+    "action": "Result stands, future challenge under common rules; rejected handshake, accidental applause unplugged.",
+    "line_tokens": [
+      "cracked-head-takes-the-block:post:4",
+      "cracked-head-takes-the-block:post:5",
+      "cracked-head-takes-the-block:post:6"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s08_main_sh01",
+    "clip_id": "ch01_s08_main",
+    "camera": "Ceremony wide and comic prop inserts",
+    "action": "Plastic Crown on neck pillow; shared schedule; Blue offers lights; Snitch stages group shot.",
+    "line_tokens": [
+      "block-crowned:main:0",
+      "block-crowned:main:1",
+      "block-crowned:main:2",
+      "block-crowned:main:3",
+      "block-crowned:main:4"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s08_main_sh02",
+    "clip_id": "ch01_s08_main",
+    "camera": "Entrance insert into Baby Momma medium",
+    "action": "Ring light disconnected; camera boundary; dead-man-in-VIP line; Cracked starts excuse.",
+    "line_tokens": [
+      "block-crowned:main:5",
+      "block-crowned:main:6",
+      "block-crowned:main:7",
+      "block-crowned:main:8"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s08_main_sh03",
+    "clip_id": "ch01_s08_main",
+    "camera": "Keep Baby Momma commanding the frame",
+    "action": "Address/pizza-man roast and smoke/church-organ takedown. Do not reveal child.",
+    "line_tokens": [
+      "block-crowned:main:9",
+      "block-crowned:main:10",
+      "block-crowned:main:11"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s08_main_sh04",
+    "clip_id": "ch01_s08_main",
+    "camera": "Recording envelope insert, then reaction triangle",
+    "action": "Red admits four-year recording. Baby Momma makes them put the chairs back.",
+    "line_tokens": [
+      "block-crowned:main:12",
+      "block-crowned:main:13",
+      "block-crowned:main:14",
+      "block-crowned:main:15"
+    ],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  },
+  {
+    "shot_id": "ch01_s08_main_sh05",
+    "clip_id": "ch01_s08_main",
+    "camera": "Held final tableau",
+    "action": "Chair redirected to Red, Wifey sets water, phone face down. Cut before recording plays; Crown remains with player.",
+    "line_tokens": [],
+    "duration": "performance-led; split into smaller generations if needed; silent beat typically 2–4 s"
+  }
+]

@@ -1,7 +1,17 @@
 import { cards, completeEngineCrew } from './data';
 import type { StoryEncounterSnapshot } from './gameEngine';
 import chapterTwoDraft from './storyChapters/chapterTwo.json';
+import { TICKETS_PER_MAJOR_STORY_NODE } from './economy';
 import type { StoryChapter, StoryDialogueLine, StoryNode, StoryReward } from './story';
+
+// Each chapter finale grants a ten-pull worth of tickets. Centralised so the
+// runtime reward augmentation (chapter 2) and the authored finale rewards
+// (chapters 1 + 8) all read from the same knob.
+const majorNodeTickets = (): StoryReward => ({
+  kind: 'pack-ticket',
+  id: 'street-pack-ticket',
+  amount: TICKETS_PER_MAJOR_STORY_NODE,
+});
 
 // Chapter One's playable continuity is the source of truth. The September 17
 // screenplay supplies locations, opponents and comic situations for 3–7; its
@@ -107,7 +117,7 @@ const chapterTwoNodes = chapterTwoBase.nodes.map((node): StoryNode => {
     ? 'crown-rooftop-court' : 'red-fence-night-court';
   const next = { ...node, cinematic: cinematic(venue) };
   if (next.kind !== 'battle') return next.kind === 'reward'
-    ? { ...next, rewards: [...next.rewards, { kind: 'pack-ticket', id: 'street-pack-ticket', amount: 1 }] }
+    ? { ...next, rewards: [...next.rewards, majorNodeTickets()] }
     : next;
   return { ...next, encounter: { ...next.encounter, enemy: { ...next.encounter.enemy, cardIds: completeEngineCrew(next.encounter.enemy.cardIds) }, battlefieldAssetId: cinematic(venue).environmentAssetId, cinematic: cinematic(venue) } };
 });
@@ -136,7 +146,7 @@ const plans: ChapterPlan[] = [
       { id: 'open-slots', title: 'Open Slots', opponent: 'Cornball', deck: deckReceipts, battleType: 'rule-twist', modifiers: { laneLocks: [{ round: 3, owner: 'both', lanes: [1] }] },
         before: [['Cornball', "Blue canceled the middle table for a dramatic pause. I uncanceled it, but the timer is still broken."], ['Wifey', "Win two districts. Keep the open slots posted where he can see them."]],
         after: [['Cornball', "The list is up. The machine gave me water I did not order. A historic day."], ['Wifey', "Blue is at his father's door. Come on."]] },
-      { id: 'og-uncles-visit', title: "OG Uncle's Visit", kind: 'reward', rewards: [key(4)],
+      { id: 'og-uncles-visit', title: "OG Uncle's Visit", kind: 'reward', rewards: [key(4), majorNodeTickets()],
         before: [['OG Uncle', "Blue. Sit. I have been sick longer than I let you know."], ['Ganger Blue', "You let me hold a memorial for a brother who walked onto our roof."], ['OG Uncle', "I let you believe he died. That was my choice, and I was wrong."], ['Ganger Blue', "Why?"], ['OG Uncle', "I owe you the rest. First tell me why Snitch knew the warehouse address."], ['Wifey', "Blue, stay in the chair. We are not leaving this conversation halfway through."]] },
     ] },
   { id: 'side-show', order: 4, title: 'Chapter Four: Side Show', subtitle: 'A clip is shorter than the truth.',
@@ -162,7 +172,7 @@ const plans: ChapterPlan[] = [
       { id: 'snitchs-verdict', title: "Snitch's Verdict", opponent: 'Snitch', deck: deckMedia, battleType: 'boss', phases: [phase('show', 1, 1), phase('read', 3, 1), phase('verdict', 5, 1)],
         before: [['Snitch', "Red asked for the whole cut. That includes what I did with the address."], ['Ganger Red', "The match decides who speaks first. The file decides what they say."], ['Snitch', "Fine. Camera stays on."]],
         after: [['Snitch', "Blue gave me the warehouse address. I passed it on. I kept the first part off the feed."], ['Ganger Red', "Publish the continuous file and credit where it came from."]] },
-      { id: 'the-real-receipts', title: 'The Full Cut', kind: 'reward', rewards: [key(5)],
+      { id: 'the-real-receipts', title: 'The Full Cut', kind: 'reward', rewards: [key(5), majorNodeTickets()],
         before: [['Ganger Red', "Here is the full recording, including the part that makes me look bad."], ['Snitch', "Blue was the source. I sold his tip onward. That is on me."], ['Ganger Blue', "I wanted my brother embarrassed and out of my way. I did not know what would happen next."], ['Church Auntie', "You can finish that sentence to your father in person."], ['Wifey', "I am going with him. I have something to own too."]] },
     ] },
   { id: 'old-heads-know', order: 5, title: 'Chapter Five: Old Heads Know', subtitle: 'Every secret had a cost.',
@@ -191,7 +201,7 @@ const plans: ChapterPlan[] = [
       { id: 'og-uncles-verdict', title: "OG Uncle's Account", opponent: 'OG Uncle', deck: deckFamily, battleType: 'boss', phases: [phase('old-history', 2, 1), phase('last-word', 5, 1)],
         before: [['OG Uncle', "I warned the authorities because the warehouse handoff put my son in danger. He survived. I let you believe he died."], ['Ganger Blue', "I gave Snitch the address because I wanted him gone from the block. I did not mean for him to die."], ['Cracked Head', "You both made a story without asking me. I am here for the whole account."], ['OG Uncle', "Play this table. Then we finish talking."]],
         after: [['OG Uncle', "I chose the false memorial. Blue chose the leak. Red chose silence. None of us gets to swap blame."], ['Ganger Blue', "I will tell my brother what I did, to his face."], ['Cracked Head', "Then do it where the block can hear."]] },
-      { id: 'the-family-blessed', title: 'No Easy Blessing', kind: 'reward', rewards: [key(6)],
+      { id: 'the-family-blessed', title: 'No Easy Blessing', kind: 'reward', rewards: [key(6), majorNodeTickets()],
         before: [['Church Auntie', "Everyone got a plate. Nobody got absolution."], ['Baby Momma', "I will decide what parenting looks like for our child. No bracket decides it for me."], ['Cracked Head', "Blue, I want a public challenge. I also want you to hear me afterward."], ['Wifey', "The fundraiser is tomorrow. Help carry chairs before you carry a crown."], ['Cornball', "Finally. A job with measurable qualifications."]] },
     ] },
   { id: 'the-function', order: 6, title: 'Chapter Six: The Function', subtitle: 'The room is bigger than the rivalry.',
@@ -205,7 +215,7 @@ const plans: ChapterPlan[] = [
       { id: 'the-booking', title: 'The Booking', opponent: 'Promoter', deck: deckMedia, battleType: 'mini-boss', phases: [phase('booking-pressure', 4, 1)],
         before: [['Promoter', "I can book a Blue and Cracked Head exhibition. I cannot book an inherited title."], ['Ganger Blue', "Equal access. Put it in writing."], ['Promoter', "Win my table and I will print the terms."]],
         after: [['Promoter', "Terms signed. Every contender gets the same route."], ['Wifey', "I will keep a copy where the camera can see it."]] },
-      { id: 'function-after-hours', title: 'After the Function', kind: 'reward', rewards: [key(7)],
+      { id: 'function-after-hours', title: 'After the Function', kind: 'reward', rewards: [key(7), majorNodeTickets()],
         before: [['Live Streamer', "The fundraiser is over. The lights are finally ours."], ['Cracked Head', "I came for the challenge. I can help stack chairs too."], ['Baby Momma', "Try being that ordinary tomorrow morning."], ['Wifey', "The contender list changed after everyone left. Cracked Head's name is crossed out."], ['Ganger Blue', "Give me the paper. I did that."], ['Promoter', "Then tomorrow you explain it in public."]] },
     ] },
   { id: 'return-of-the-block', order: 7, title: 'Chapter Seven: Return of the Block', subtitle: 'The list belongs to everyone.',
@@ -234,7 +244,7 @@ const plans: ChapterPlan[] = [
       { id: 'the-lie-exposed', title: 'Published Exhibition', opponent: 'Cracked Head', deck: deckFinal, battleType: 'boss', phases: [phase('opening-claim', 1, 1), phase('brothers-pressure', 3, 1), phase('last-call', 5, 1)],
         before: [['Promoter', "Published exhibition. It sets the order for the final Open; no contender is eliminated here."], ['Cracked Head', "I want to see what the player who won my old Crown can do again."], ['Ganger Blue', "I will keep score. Fairly, for once."], ['Cracked Head', "Then shuffle."]],
         after: [['Cracked Head', "You earned the final table. I will meet you there on equal terms."], ['Ganger Blue', "I can live with a score I did not write myself."]] },
-      { id: 'the-block-changes-hands', title: 'The Rooftop Notice', kind: 'reward', rewards: [key(8)],
+      { id: 'the-block-changes-hands', title: 'The Rooftop Notice', kind: 'reward', rewards: [key(8), majorNodeTickets()],
         before: [['Delivery Demon', "Package for the rooftop owner. Inspection notice, signed and dated."], ['Promoter', "The owner invited a buyer. That is not a change to tonight's bracket."], ['Cracked Head', "A Crown never bought the building. I should have said that years ago."], ['Ganger Blue', "The Open stays open. Whoever owns the roof will hear that from all of us."], ['Baby Momma', "Tomorrow you can argue about property. Tonight you can carry these chairs."]] },
     ] },
   { id: 'the-crown', order: 8, title: 'Chapter Eight: The Crown', subtitle: 'The Open belongs to the people who play it.',
@@ -266,7 +276,7 @@ const plans: ChapterPlan[] = [
       { id: 'crown-final-rival', title: 'The Crown Final', opponent: 'Cracked Head', deck: deckFinal, battleType: 'boss', phases: [phase('old-claim', 1, 1), phase('family-pressure', 3, 1), phase('open-future', 5, 1)],
         before: [['Promoter', "Final table. The newcomer earned the Crown, and Cracked Head earned this challenge. Three phases. One published result."], ['Cracked Head', "I came back wanting the block to remember my name. You made it remember the rules."], ['Ganger Blue', "Scoreboard is clear. No edits."], ['Cracked Head', "Then let us play for the future, not the past."]],
         after: [['Cracked Head', "You won. I accept the result. Shared scheduling stays, and the Open stays open."], ['Ganger Blue', "I can help run it without owning it."], ['Promoter', "That is the final score."]] },
-      { id: 'crown-community-meal', title: 'The Community Meal', kind: 'reward', rewards: [xp(300), { kind: 'pack-ticket', id: 'street-pack-ticket', amount: 1 }, { kind: 'character-unlock', id: 'cracked-head', amount: 1 }],
+      { id: 'crown-community-meal', title: 'The Community Meal', kind: 'reward', rewards: [xp(300), majorNodeTickets(), { kind: 'character-unlock', id: 'cracked-head', amount: 1 }],
         before: [['Church Auntie', "Plates first. Speeches after. That is the only bracket in my house."], ['Baby Momma', "Tomorrow morning, you can bring breakfast and help with school drop-off. One morning. We build from there."], ['Cracked Head', "I will be there before the doors open."], ['OG Uncle', "Both my sons are here. That is enough for me tonight."], ['Delivery Demon', "Message from the rooftop owner. Sale agreement signed with Techbro Rich."], ['Promoter', "The Crown protects the Open's rules. It never owned the building."], ['Ganger Blue', "Then we defend the place together, by showing up."], ['Cornball', "I have two signs. OPEN and STILL OPEN. Turns out I was prepared."], ['Church Auntie', "Good. Now everybody eat while the food is hot."]] },
     ] },
 ];

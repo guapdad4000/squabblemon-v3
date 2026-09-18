@@ -59,6 +59,37 @@ export const STREET_PACK_CONFIG = {
   ],
 } as const;
 
+// Ten-pull bundle: 10 Street Pack tickets grant one upgraded ten-pull with
+// 60 rewards (10 packs × 6 rewards each) and a guaranteed Rare+ in the haul.
+// Pity already forces a featured variant when packPity ≥ pityLimit - 1, so a
+// 10-pull will always fire pity for at least one of the inner packs. We add a
+// belt-and-suspenders guarantee on top: if no Rare+ drops naturally across
+// the 10 inner packs, force-roll one Rare card into the result. Cost is a flat
+// 10× the single-pack ticket cost — no bulk discount by default; tweak
+// `ticketCost` here to introduce one.
+export const STREET_PACK_TEN_PULL_CONFIG = {
+  id: "street-pack-ten",
+  name: "Street Pack Ten-Pull",
+  oddsVersion: "street-pack-ten-v1",
+  pullCount: 10,
+  ticketCost: 10,
+  softCurrencyCost: 1800,
+  rewardsPerPull: 60,
+  rarePityBonusPerPull: 1,
+} as const;
+
+export type StreetPackTier = (typeof STREET_PACK_CONFIG) | typeof STREET_PACK_TEN_PULL_CONFIG;
+
+export const ALLOWED_PULL_COUNTS = [1, 10] as const;
+export type PullCount = (typeof ALLOWED_PULL_COUNTS)[number];
+
+export const isPullCount = (value: unknown): value is PullCount =>
+  typeof value === "number" && (ALLOWED_PULL_COUNTS as readonly number[]).includes(value);
+
+export function tierForPullCount(pullCount: PullCount): StreetPackTier {
+  return pullCount === 10 ? STREET_PACK_TEN_PULL_CONFIG : STREET_PACK_CONFIG;
+}
+
 export type ApiPackReward = {
   kind: "card" | "styleShards" | "softCurrency" | "variant";
   cardId: string | null;
@@ -150,6 +181,34 @@ function availableVariants(ownedVariants: Set<string>) {
   );
 }
 
+// Rarities that count toward the ten-pull "guaranteed Rare+" highlight.
+// Mythical > Legendary > Epic > Rare.
+const RARE_OR_BETTER: CardRarity[] = ["Rare", "Epic", "Legendary", "Mythical"];
+
+function rewardRarity(reward: ApiPackReward): CardRarity | null {
+  if (reward.rarity && (RARE_OR_BETTER as readonly string[]).includes(reward.rarity)) {
+    return reward.rarity;
+  }
+  return null;
+}
+
+function pickRareOrBetterCard(
+  ownedCards: Set<string>,
+  rng: RandomInt,
+): (typeof cardCatalog)[number] {
+  // Walk rarities from top to bottom so a Mythical wins ties. Falls back to
+  // the rarest rarity that still has unowned cards, then to any owned card
+  // of that rarity, then to any card in the catalog. This is only invoked
+  // once per ten-pull, so a single reroll is fine.
+  for (const rarity of ["Mythical", "Legendary", "Epic", "Rare"] as const) {
+    const pool = cardCatalog.filter((card) => card.rarity === rarity);
+    if (!pool.length) continue;
+    const unowned = pool.filter((card) => !ownedCards.has(card.catalogId));
+    return unowned.length ? choose(unowned, rng) : choose(pool, rng);
+  }
+  return choose(cardCatalog, rng);
+}
+
 export function generateStreetPack(
   current: {
     ownedCardIds: string[];
@@ -234,6 +293,93 @@ export function generateStreetPack(
             STREET_PACK_CONFIG.pityLimit - 1,
             current.pity + 1,
           ),
+  };
+}
+
+export type GeneratedStreetTenPull = {
+  rewards: ApiPackReward[];
+  ownedCardIds: string[];
+  discoveredCardIds: string[];
+  ownedVariants: string[];
+  styleShardsGained: number;
+  softCurrencyGained: number;
+  pityAfter: number;
+  guaranteedRareIndex: number | null;
+};
+
+/**
+ * Ten-pull: 10 single-pack rolls chained together, with a guaranteed Rare+
+ * highlight appended at the end if no Rare+ already dropped naturally.
+ * Reuses `generateStreetPack` so the inner rolls obey the same published odds
+ * (including pity firing at pityLimit - 1, which means a 10-pull will
+ * trigger pity for at least one of its inner packs and yield a featured
+ * variant or fall back to a 50-shard bonus).
+ */
+export function generateStreetTenPull(
+  current: {
+    ownedCardIds: string[];
+    discoveredCardIds: string[];
+    ownedVariants: string[];
+    pity: number;
+  },
+  rng: RandomInt = randomInt,
+): GeneratedStreetTenPull {
+  let ownedCards = new Set(current.ownedCardIds.filter((id) => catalogCardById[id]));
+  let discoveredCards = new Set(
+    current.discoveredCardIds.filter((id) => catalogCardById[id]),
+  );
+  let ownedVariants = new Set(current.ownedVariants);
+  const rewards: ApiPackReward[] = [];
+  let styleShardsGained = 0;
+  let softCurrencyGained = 0;
+  let pity = current.pity;
+  let rareHitIndex: number | null = null;
+
+  for (let pull = 0; pull < STREET_PACK_TEN_PULL_CONFIG.pullCount; pull++) {
+    const result = generateStreetPack(
+      {
+        ownedCardIds: [...ownedCards],
+        discoveredCardIds: [...discoveredCards],
+        ownedVariants: [...ownedVariants],
+        pity,
+      },
+      rng,
+    );
+    rewards.push(...result.rewards);
+    ownedCards = new Set(result.ownedCardIds);
+    discoveredCards = new Set(result.discoveredCardIds);
+    ownedVariants = new Set(result.ownedVariants);
+    styleShardsGained += result.styleShardsGained;
+    softCurrencyGained += result.softCurrencyGained;
+    pity = result.pityAfter;
+    if (rareHitIndex === null) {
+      const hitIndex = result.rewards.findIndex((reward) => rewardRarity(reward) !== null);
+      if (hitIndex >= 0) rareHitIndex = rewards.length - result.rewards.length + hitIndex;
+    }
+  }
+
+  // Belt-and-suspenders: if the 10 rolls didn't naturally yield a Rare+, swap
+  // the last reward (a bonus slot from the final pack) for a forced Rare
+  // card. This protects the "GUARANTEED RARE" promise on the upgraded
+  // ten-pull experience even in low-rarity streaks.
+  if (rareHitIndex === null) {
+    const rareCard = pickRareOrBetterCard(ownedCards, rng);
+    ownedCards.add(rareCard.catalogId);
+    discoveredCards.add(rareCard.catalogId);
+    const replacement = cardReward(rareCard);
+    rewards[rewards.length - 1] = replacement;
+    rareHitIndex = rewards.length - 1;
+  }
+
+  return {
+    rewards,
+    ownedCardIds: [...ownedCards],
+    discoveredCardIds: [...discoveredCards],
+    ownedVariants: [...ownedVariants],
+    styleShardsGained,
+    softCurrencyGained,
+    pityAfter: pity,
+    guaranteedRareIndex: rareHitIndex,
   };
 }
 

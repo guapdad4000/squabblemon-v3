@@ -1,21 +1,36 @@
 import { MusicControls } from '../MusicControls';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Crown, Ticket, X, Coins } from 'lucide-react';
+import { Crown, Ticket, X, Coins, Menu, Compass, Map, Layers, ShoppingBag, Users, Wallet, ScrollText } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../lib/assets';
 import './fan-navigation.css';
+import './cinema-nav.css';
 
 const routes = [
-  { path: '/game', label: 'Safehouse', detail: 'Home court', art: 'safehouse', primary: true },
-  { path: '/game/story', label: 'The streets', detail: 'Story mode', art: 'streets', primary: true },
-  { path: '/game/collection', label: 'Collection', detail: 'Your arsenal', art: 'collection', primary: false },
-  { path: '/game/online', label: 'Fight', detail: 'Challenge a friend', art: 'fight', primary: true },
-  { path: '/game/decks', label: 'Your crew', detail: 'Build a lineup', art: 'crew', primary: false },
-  { path: '/game/missions', label: 'Bounties', detail: 'Work the city', art: 'bounties', primary: false },
-  { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true },
-  { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false },
+  { path: '/game', label: 'Safehouse', detail: 'Home court', art: 'safehouse', primary: true, glyph: 'compass' },
+  { path: '/game/story', label: 'The streets', detail: 'Story mode', art: 'streets', primary: true, glyph: 'map' },
+  { path: '/game/collection', label: 'Collection', detail: 'Your arsenal', art: 'collection', primary: false, glyph: 'layers' },
+  { path: '/game/online', label: 'Fight', detail: 'Challenge a friend', art: 'fight', primary: true, glyph: 'crossed' },
+  { path: '/game/decks', label: 'Your crew', detail: 'Build a lineup', art: 'crew', primary: false, glyph: 'users' },
+  { path: '/game/missions', label: 'Bounties', detail: 'Work the city', art: 'bounties', primary: false, glyph: 'scroll' },
+  { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
+  { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false, glyph: 'wallet' },
 ] as const;
+
+const Glyph = ({ name }: { name: string }): ReactNode => {
+  const map: Record<string, ReactNode> = {
+    compass: <Compass size={16} />,
+    map: <Map size={16} />,
+    layers: <Layers size={16} />,
+    crossed: <Crown size={16} />,
+    users: <Users size={16} />,
+    scroll: <ScrollText size={16} />,
+    bag: <ShoppingBag size={16} />,
+    wallet: <Wallet size={16} />,
+  };
+  return map[name] ?? <Menu size={16} />;
+};
 
 function fanPosition(index: number, count: number): CSSProperties {
   const offset = index - (count - 1) / 2;
@@ -73,6 +88,7 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </button>
       </div>
     </nav>
+    <CinemaNavSheet bootstrap={bootstrap} location={location} navigate={navigate} rewards={rewards} />
     <dialog id="fan-territory-menu" className="fan-menu" ref={menu} aria-labelledby="fan-menu-title"
       onClose={() => setMenuOpen(false)} onClick={event => { if (event.target === menu.current) menu.current.close(); }}>
       <header className="fan-menu__header"><div><span className="venue-kicker">KNOW YOUR CITY</span><h2 id="fan-menu-title">Your territory</h2></div>
@@ -87,6 +103,93 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </dialog>
   </>;
 }
+
+/**
+ * Slim, transparent "director's menu" toggle that replaces the chunky
+ * fan-nav on immersive pages. Always present as a floating dot, only
+ * opens a sheet on demand.
+ */
+export function CinemaNavSheet({
+  bootstrap,
+  location,
+  navigate,
+  rewards,
+}: {
+  bootstrap: PlayerBootstrap;
+  location: string;
+  navigate: (path: string) => void;
+  rewards: number;
+}) {
+  const sheetRef = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState(false);
+  const active = (path: string) => location === path || (path !== '/game' && location.startsWith(`${path}/`));
+  const visibleRewards = rewards;
+  useEffect(() => { sheetRef.current?.close(); setOpen(false); }, [location]);
+  function toggle() {
+    if (!sheetRef.current) return;
+    if (open) sheetRef.current.close();
+    else sheetRef.current.showModal();
+  }
+  return <>
+    <button
+      type="button"
+      className="cinema-nav-toggle"
+      aria-label="Open director menu"
+      aria-expanded={open}
+      aria-controls="cinema-nav-sheet"
+      onClick={toggle}
+    >
+      <span className="cinema-nav-toggle__dot" aria-hidden="true" />
+      <span>Director</span>
+    </button>
+    <dialog
+      id="cinema-nav-sheet"
+      ref={sheetRef}
+      className="cinema-nav-sheet"
+      aria-label="Director menu"
+      onClose={() => setOpen(false)}
+      onClick={(event) => { if (event.target === sheetRef.current) sheetRef.current?.close(); }}
+    >
+      <header className="cinema-nav-sheet__header">
+        <div>
+          <small>Reverse 1991 · Director's Cut</small>
+          <h2>Pick your scene</h2>
+        </div>
+        <button type="button" className="cinema-nav-sheet__close" aria-label="Close menu" onClick={() => sheetRef.current?.close()}>
+          <X size={18} />
+        </button>
+      </header>
+      <div className="cinema-nav-sheet__grid">
+        {routes.map((route) => {
+          const selected = active(route.path);
+          return (
+            <button
+              key={route.path}
+              type="button"
+              className={`cinema-nav-sheet__choice ${selected ? 'is-active' : ''}`}
+              aria-current={selected ? 'page' : undefined}
+              onClick={() => navigate(route.path)}
+            >
+              <span className="cinema-nav-sheet__choice__glyph"><Glyph name={route.glyph} /></span>
+              <span className="cinema-nav-sheet__choice__copy">
+                <strong>{route.label}</strong>
+                <small>{route.detail}</small>
+              </span>
+              {route.art === 'bounties' && visibleRewards > 0 && (
+                <span className="cinema-nav-sheet__badge" aria-label={`${visibleRewards} rewards ready`}>{visibleRewards}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      <footer className="cinema-nav-sheet__footer">
+        <span>Squabblemon · 1991</span>
+        <div className="music-controls-row"><MusicControls compact /></div>
+      </footer>
+    </dialog>
+  </>;
+}
+
 export function GameHud({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { profile } = bootstrap;
   return <header className="venue-hud">
@@ -100,4 +203,3 @@ export function GameHud({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     {profile.id === 'e2e-player' && <span className="venue-hud__preview">LOCAL PREVIEW</span>}
   </header>;
 }
-

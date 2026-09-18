@@ -2,7 +2,7 @@ import { CombatSprite, DefeatCross } from './BattleArt';
 import { BattleBurst } from './BattleEffects';
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { SpecialMove } from './SpecialMove';
-import { readMoveOverrides, specialMoveForEvent } from '../specialMoves';
+import { readMoveOverrides, specialMoveForEvent, gateSpecialMoveReplay } from '../specialMoves';
 import { cards, cardEntryAccent, getCardImage, type Card } from '../data';
 import { battleChanges, eventIntensity } from '../battleChoreography';
 import { getCardWallpaper } from '../lib/cardFinish';
@@ -12,12 +12,16 @@ type Point = { x: number; y: number; width: number; height: number };
 type Geometry = { source?: Point; current: Map<string, Point>; before: Map<string, Point> };
 
 /** Anchor choreography to board cards, including effects that cross district boundaries. */
-export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean }) {
+export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false, playedSpecialMoves = null }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean; playedSpecialMoves?: Set<string> | null }) {
   const root = useRef<HTMLDivElement>(null);
   const original = useRef(new Map<string, Point>());
   const [geometry, setGeometry] = useState<Geometry>({ current: new Map(), before: new Map() });
   const sourceId = effect.source?.cardInstanceId ?? effect.cardInstanceId;
-  const move = useMemo(() => specialMoveForEvent(effect, readMoveOverrides()), [effect.cardId, effect.type, effect.kind]);
+  const move = useMemo(() => {
+    const clip = specialMoveForEvent(effect, readMoveOverrides());
+    if (!clip) return null;
+    return gateSpecialMoveReplay(clip, { owner: effect.owner, sourceInstanceId: sourceId, moveId: clip.id }, playedSpecialMoves);
+  }, [effect.cardId, effect.type, effect.kind, effect.owner, sourceId, playedSpecialMoves]);
   useLayoutEffect(() => {
     const arena = root.current?.parentElement;
     if (!arena) return;

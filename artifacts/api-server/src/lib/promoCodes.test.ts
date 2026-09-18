@@ -15,12 +15,12 @@ test('promo lookup accepts casing and surrounding whitespace, rejects unknown an
   for (const code of ['', ' ', 'DEV TEST', 'NOTREAL', '__proto__', 'constructor', 'toString']) assert.equal(findPromoCode(code), null);
 });
 
-test('City Legends grant covers all seven Mythicals through max level and three coached moves', () => {
+test('City Legends grant covers all seven fighters through max level and three coached moves', () => {
   const reward = findPromoCode('CITYLEGENDS')!;
   const ids = reward.cardIds!;
   assert.equal(ids.length, 7);
   assert.equal(new Set(ids).size, ids.length);
-  for (const id of ids) assert.equal(catalogCardById[id]?.rarity, 'Mythical', id);
+  for (const id of ids) assert.equal(catalogCardById[id]?.faction, 'City Legends', id);
   let wallet: ShopWallet = { softCurrency: reward.softCurrency, packTickets: 0, styleShards: 0, deckSlots: 1,
     ownedCardIds: [...ids], discoveredCardIds: [...ids], ownedVariants: [], cardProgression: {}, collectionProgress: ids.length };
   for (const id of ids) {

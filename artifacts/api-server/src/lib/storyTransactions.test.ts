@@ -208,7 +208,7 @@ test("concurrent story reward completion grants immutable rewards once", async (
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, userId));
   assert.equal(claims.value, 4);
-  assert.equal(profile.packTickets, 1);
+  assert.equal(profile.packTickets, 10);
   assert.equal(profile.ownedCardIds.includes("closet-nerd"), true);
   assert.deepEqual(profile.unlockedCosmeticIds.sort(), ["block-party-crowned", "story-key:chapter-two"]);
   const [actions] = await db

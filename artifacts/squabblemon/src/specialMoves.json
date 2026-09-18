@@ -1022,6 +1022,72 @@
       "durationMs": 6500,
       "playbackRate": 1,
       "revision": "08a53931e7c4acab"
+    },
+    "char94": {
+      "file": "char94_chroma.mp4",
+      "label": "John Henry",
+      "move": "Steel Drivin' Man",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "cccca0d048d18ded"
+    },
+    "char95": {
+      "file": "char95_chroma.mp4",
+      "label": "Yasuke",
+      "move": "Twin Oni Slash",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "c03646972558fa6e"
+    },
+    "char96": {
+      "file": "char96_chroma.mp4",
+      "label": "Dragonfly Jones",
+      "move": "DRAGONFLY KICK!",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "251bf1ddaf35e6ff"
+    },
+    "char97": {
+      "file": "char97_chroma.mp4",
+      "label": "TRON",
+      "move": "Lucky Roll",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "3fac34b55f9cd02d"
+    },
+    "char98": {
+      "file": "char98_chroma.mp4",
+      "label": "Mansa Musa",
+      "move": "Mansa's Gold",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "c2b66cdedf8ec5de"
+    },
+    "char99": {
+      "file": "char99_chroma.mp4",
+      "label": "Sho'Nuff",
+      "move": "Sho'nuff",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "989cadecef4107c6"
     }
   },
   "assignments": {
@@ -1118,11 +1184,11 @@
     "redpill": null,
     "simmy": "char93",
     "foodz": "char92",
-    "dragonflyjones": null,
-    "shonuff": null,
-    "yasuke": null,
-    "mansamusa": null,
-    "tron": null,
-    "johnhenry": null
+    "dragonflyjones": "char96",
+    "shonuff": "char99",
+    "yasuke": "char95",
+    "mansamusa": "char98",
+    "tron": "char97",
+    "johnhenry": "char94"
   }
 }

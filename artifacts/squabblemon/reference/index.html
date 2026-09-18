@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <title>Squabblemon // Patch 0.3 Playtest</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="concrete">
+  <main class="shell">
+    <section class="phone" id="phone">
+      <div class="noise"></div>
+
+      <section class="screen lobby active" id="lobbyScreen">
+        <header class="brand-head">
+          <div class="eyebrow">SBL // HUMAN PLAYTEST 0.3</div>
+          <h1>SQUABBLE<span>MON</span></h1>
+          <p>Three districts. Six rounds. Pick a starter, test the patch, file the receipts.</p>
+        </header>
+
+        <section class="setup-card">
+          <div class="setup-row">
+            <label>PLAYTEST BUILD</label>
+            <select id="buildSelect"></select>
+          </div>
+          <div class="experiment-note" id="buildNote"></div>
+          <div class="setup-row split">
+            <div>
+              <label>CARD THEME</label>
+              <div class="segmented" id="themeToggle">
+                <button data-theme="concrete" class="active">OG CONCRETE</button>
+                <button data-theme="gold">GOLD FOIL</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="deck-select-section">
+          <div class="section-head"><span>YOUR STARTER</span><small>7 ARCHETYPES</small></div>
+          <div class="deck-grid" id="deckGrid"></div>
+        </section>
+
+        <section class="rival-row">
+          <div>
+            <label>RIVAL DECK</label>
+            <select id="rivalSelect"></select>
+          </div>
+          <button class="ghost-btn" id="viewDeckBtn">VIEW 12</button>
+        </section>
+
+        <div class="lobby-footer">
+          <button class="primary" id="startBtn"><span>START PLAYTEST</span><small id="startMeta">PATCH 0.2 CONTROL</small></button>
+          <button class="text-btn" id="exportBtn">EXPORT PLAYTEST LOG</button>
+        </div>
+      </section>
+
+      <section class="screen battle" id="battleScreen">
+        <div class="battle-atmosphere"></div>
+        <header class="battle-hud">
+          <div class="hud-side">
+            <small id="cpuDeckShort">RIVAL</small>
+            <strong id="cpuDeckName">RANDOM</strong>
+          </div>
+          <div class="round-core">
+            <small>ROUND</small>
+            <b id="roundLabel">1 / 6</b>
+            <span id="seedLabel">#000000</span>
+          </div>
+          <div class="hud-side right">
+            <small>CLOUT</small>
+            <strong id="cloutLabel">×1</strong>
+          </div>
+        </header>
+
+        <div class="patch-ribbon" id="patchRibbon">PATCH 0.2 CONTROL</div>
+        <section class="lanes" id="lanes"></section>
+        <div class="event-toast" id="eventToast"></div>
+
+        <section class="turn-controls">
+          <div class="hype-orb"><img src="../assets/transparent/guapdad4k_AN_ORB_OF_YELLOW_LIQUD_PLAIN_WHITE_BACKGROUND_FIHGT_fdce4b3c-ed84-4761-853f-a87581f4b64e_0.gif" alt="" aria-hidden="true"><b id="hypeNow">1</b><span>HYPE</span></div>
+          <button class="squabble" id="squabbleBtn"><img src="../assets/transparent/guapdad4k_AN_ORB_OF_FIRE_PLAIN_WHITE_BACKGROUND_FIHGTING_GAME_070bfd20-91c4-4f46-8cec-dc40b553d84b_0.gif" alt="" aria-hidden="true"><span>SQUABBLE</span><small>DOUBLE CLOUT</small></button>
+          <button class="lock" id="lockBtn"><span>LOCK IN</span><small id="lockSub">END ROUND</small></button>
+        </section>
+
+        <section class="hand-panel">
+          <div class="hand-head">
+            <span>YOUR HAND</span>
+            <span id="playerDeckName">STARTER</span>
+            <span id="deckLeft">8 LEFT</span>
+          </div>
+          <div class="hand" id="hand"></div>
+        </section>
+        <div class="interaction-hint" id="hint">SELECT A CARD, THEN TAP A DISTRICT</div>
+      </section>
+
+      <section class="overlay" id="deckOverlay">
+        <div class="sheet deck-sheet">
+          <button class="x" data-close="deckOverlay">×</button>
+          <div class="sheet-eyebrow">STARTER LOADOUT</div>
+          <h2 id="deckOverlayTitle">DECK</h2>
+          <p id="deckOverlayPlan"></p>
+          <div class="full-deck" id="fullDeck"></div>
+        </div>
+      </section>
+
+      <section class="overlay" id="inspectOverlay">
+        <div class="sheet inspect-sheet" id="inspectSheet"></div>
+      </section>
+
+      <section class="overlay result-overlay" id="resultOverlay">
+        <div class="result-card">
+          <div class="sheet-eyebrow">MATCH ARCHIVE // COMPLETE</div>
+          <div class="result-mark" id="resultMark">W</div>
+          <h2 id="resultTitle">YOU WON THE ROOM</h2>
+          <p id="resultSummary"></p>
+          <div class="result-scores" id="resultScores"></div>
+          <div class="feedback-title">HOW DID THIS MATCH FEEL?</div>
+          <div class="feedback-grid" id="feedbackGrid">
+            <button data-feedback="fair">FAIR</button>
+            <button data-feedback="my-weak">MY DECK WEAK</button>
+            <button data-feedback="opp-weak">RIVAL TOO WEAK</button>
+            <button data-feedback="swingy">TOO SWINGY</button>
+          </div>
+          <button class="primary" id="rematchBtn"><span>RUN IT BACK</span><small>SAME BUILD // NEW SEED</small></button>
+          <button class="text-btn" id="lobbyBtn">CHANGE DECK / PATCH</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="squabblemon-data.js"></script>
+  <script src="data.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
