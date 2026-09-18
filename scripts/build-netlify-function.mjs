@@ -1,0 +1,25 @@
+import { build } from 'esbuild';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// Ship one JavaScript module: Netlify's Windows TypeScript tracing otherwise
+// emits multiple source modules under the same archive path.
+await build({
+  absWorkingDir: root,
+  entryPoints: ['artifacts/api-server/src/netlify/functions/api.mts'],
+  outfile: 'artifacts/api-server/dist/netlify-functions/api.mjs',
+  bundle: true,
+  platform: 'node',
+  target: 'node24',
+  format: 'esm',
+  external: ['pg-native'],
+  define: { 'process.env.NODE_ENV': '"production"' },
+  banner: { js: "import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" },
+  alias: {
+    '@workspace/db': path.join(root, 'lib/db/src/index.ts'),
+    '@workspace/api-zod': path.join(root, 'lib/api-zod/src/index.ts'),
+    '@workspace/squabblemon-engine': path.join(root, 'lib/squabblemon-engine/src'),
+  },
+  logLevel: 'info',
+});

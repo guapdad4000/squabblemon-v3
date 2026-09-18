@@ -1,0 +1,18 @@
+/* Full silhouettes, with live labels kept outside the illustration. */
+.venue-prop{object-fit:contain;pointer-events:none;user-select:none;filter:drop-shadow(0 10px 12px #0008)}
+.venue-page-heading--illustrated{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:150px}
+.venue-page-heading--illustrated>div{min-width:0}
+.venue-page-heading__art{width:clamp(100px,17vw,190px);height:150px;flex-shrink:0}
+.station-tile__prop{position:absolute;z-index:-2;right:-3%;top:0;width:60%;height:100%;opacity:.9;transition:transform .25s ease}
+.station-tile:is(:hover,.is-active) .station-tile__prop{transform:translateY(-4px) rotate(-3deg)}
+.gym__pack-mark.gym__pack-mark--illustrated{background:none;border:0;box-shadow:none;transform:none;clip-path:none;width:160px;height:180px}
+.gym__pack-mark--illustrated .venue-prop{width:100%;height:100%}
+.gym__sound.gym__sound--illustrated{width:100px;height:104px;display:flex;flex-direction:column;gap:0;background:#080808b8;border:1px solid #d6af6140;border-radius:8px;padding:5px}
+.gym__sound--illustrated .venue-prop{width:82px;height:70px}
+.gym__sound--illustrated span{display:flex;gap:5px;align-items:center;font:700 9px var(--font-mono);color:#fff}
+.gym__sound--illustrated[aria-pressed=true]{border-color:var(--venue-gold);background:#302510d9}
+.gym__sound--illustrated:focus-visible{outline:2px solid var(--venue-gold);outline-offset:3px}
+@media(max-width:760px){.gym__pack-mark.gym__pack-mark--illustrated{width:90px;height:120px;right:18px;top:65px}.gym__sound.gym__sound--illustrated{right:14px;top:16px;width:78px;height:88px}.gym__sound--illustrated .venue-prop{width:66px;height:57px}}
+@media(max-width:600px){.venue-page-heading--illustrated{gap:10px;min-height:110px}.venue-page-heading__art{width:90px;height:105px}.station-tile__prop{width:58%;right:-5%}}
+@media(prefers-reduced-motion:reduce){.station-tile__prop{transition:none}.station-tile:is(:hover,.is-active) .station-tile__prop{transform:none}}
+html[data-reduce-motion=true] .station-tile__prop{transition:none;transform:none}

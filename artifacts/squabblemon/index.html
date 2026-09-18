@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Squabblemon — Street-Social Card Battles</title>
+    <meta name="description" content="Build your crew, claim the districts, and own the room in Squabblemon, an illustrated street-social card battler." />
+    <meta name="theme-color" content="#070707" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Squabblemon — Street-Social Card Battles" />
+    <meta property="og:description" content="Build your crew, claim the districts, and own the room in an illustrated street-social card battler." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Squabblemon" />
+    <meta property="og:url" content="__SQUABBLEMON_PUBLIC_PAGE_URL__" />
+    <meta property="og:image" content="__SQUABBLEMON_PUBLIC_IMAGE_URL__" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The gold Squabblemon crest and wordmark on black" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Squabblemon — Street-Social Card Battles" />
+    <meta name="twitter:description" content="Build your crew, claim the districts, and own the room in an illustrated street-social card battler." />
+    <meta name="twitter:image" content="__SQUABBLEMON_PUBLIC_IMAGE_URL__" />
+    <meta name="twitter:image:alt" content="The gold Squabblemon crest and wordmark on black" />
+    <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%BASE_URL%icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%icons/apple-touch-icon.png" />
+    <link rel="manifest" href="%BASE_URL%site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root">
+      <div class="first-paint-loader" role="status" aria-label="Loading Squabblemon">
+        <img class="first-paint-loader__backdrop" src="%BASE_URL%brand/loading-scenes.webp" alt="" aria-hidden="true" />
+        <div class="first-paint-loader__glow" aria-hidden="true"></div>
+        <img
+          class="first-paint-loader__mark"
+          src="%BASE_URL%brand/squabblemon-wordmark.webp"
+          width="720"
+          height="478"
+          alt=""
+        />
+        <div class="first-paint-loader__rule" aria-hidden="true"><span></span></div>
+        <p>Loading the block</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+    <style>
+      html, body, #root { min-height: 100%; margin: 0; background: #070707; }
+      .first-paint-loader {
+        position: fixed; inset: 0; display: grid; place-content: center; justify-items: center;
+        gap: 14px; overflow: hidden; color: rgba(255,255,255,.62); background:
+          radial-gradient(circle at 50% 42%, #241b08 0, #0d0c08 34%, #070707 68%);
+        font: 700 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: .28em; text-transform: uppercase;
+      }
+      .first-paint-loader > * { position: relative; z-index: 1; }
+      .first-paint-loader .first-paint-loader__backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; opacity: .3; z-index: 0; }
+      .first-paint-loader__glow {
+        position: absolute; width: min(88vw, 580px); aspect-ratio: 1; border: 1px solid rgba(218,166,56,.12);
+        left: 50%; top: 50%; transform: translate(-50%, -50%);
+        border-radius: 50%; box-shadow: 0 0 80px rgba(218,166,56,.08), inset 0 0 80px rgba(0,0,0,.7);
+      }
+      .first-paint-loader__mark {
+        position: relative; width: min(76vw, 430px); height: auto; max-height: 54vh;
+        object-fit: contain; filter: drop-shadow(0 18px 26px rgba(0,0,0,.75));
+        animation: loader-breathe 1.8s ease-in-out infinite;
+      }
+      .first-paint-loader__rule { width: min(44vw, 190px); height: 2px; overflow: hidden; background: rgba(218,166,56,.16); }
+      .first-paint-loader__rule span { display: block; width: 45%; height: 100%; background: #d9aa4b; animation: loader-scan 1.25s ease-in-out infinite; }
+      .first-paint-loader p { margin: 0; }
+      @keyframes loader-breathe { 50% { transform: translateY(-3px); filter: drop-shadow(0 18px 32px rgba(218,166,56,.16)); } }
+      @keyframes loader-scan { from { transform: translateX(-110%); } to { transform: translateX(330%); } }
+      @media (max-width: 520px) { .first-paint-loader__mark { width: min(86vw, 360px); max-height: 48vh; } }
+      @media (prefers-reduced-motion: reduce) {
+        .first-paint-loader__mark, .first-paint-loader__rule span { animation: none; }
+        .first-paint-loader__rule span { width: 100%; opacity: .65; }
+      }
+    </style>
+  </body>
+</html>

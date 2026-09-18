@@ -1,0 +1,1 @@
+*{box-sizing:border-box}html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden;background:#090909}canvas{display:block;touch-action:none;outline-offset:-4px}header,footer,.caption,.stations,aside,#punch,dialog,.sr-only{display:none!important}#loading{position:absolute;inset:0;display:grid;place-items:center;color:#ffcc1a;background:#090909;font:700 14px monospace}

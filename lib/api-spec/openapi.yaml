@@ -1,0 +1,1448 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.2.0
+  description: Squabblemon player and game-loop API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: player
+    description: Authenticated player progression
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /player/bootstrap:
+    get:
+      operationId: getPlayerBootstrap
+      tags: [player]
+      summary: Load or provision the authenticated player
+      responses:
+        "200":
+          description: Player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "401":
+          description: Authentication required
+  /player/story:
+    get:
+      operationId: getPlayerStory
+      tags: [player]
+      summary: Load canonical chapter and node progression
+      responses:
+        "200":
+          description: Canonical story campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryCampaign"
+        "401":
+          description: Authentication required
+  /player/story/development/reset:
+    post:
+      operationId: resetPlayerStoryDevelopment
+      tags: [player]
+      summary: Development-only reset and optional story-node selector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryDevelopmentResetInput"
+      responses:
+        "200":
+          description: Reset canonical story campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryCampaign"
+        "401":
+          description: Authentication required
+        "404":
+          description: Not available outside development
+  /player/story/nodes/{nodeId}/complete:
+    post:
+      operationId: completePlayerStoryNode
+      tags: [player]
+      summary: Complete an available non-battle story node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryNodeCompleteInput"
+      responses:
+        "200":
+          description: Updated story and player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryNodeCompletion"
+        "400":
+          description: Unknown, locked, or battle node
+        "401":
+          description: Authentication required
+  /player/story/nodes/{nodeId}/dialogue:
+    post:
+      operationId: savePlayerStoryDialogue
+      tags: [player]
+      summary: Persist dialogue history for an unlocked story node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryDialogueProgressInput"
+      responses:
+        "200":
+          description: Updated dialogue history and canonical story state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryDialogueProgressResponse"
+        "400":
+          description: Invalid dialogue progress
+        "401":
+          description: Authentication required
+        "409":
+          description: Locked node or conflicting idempotency key
+  /player/profile:
+    patch:
+      operationId: updatePlayerProfile
+      tags: [player]
+      summary: Update player-facing profile and settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayerProfileUpdate"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid profile update
+        "401":
+          description: Authentication required
+  /player/onboarding:
+    post:
+      operationId: advancePlayerOnboarding
+      tags: [player]
+      summary: Advance one idempotent onboarding step
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingProgressInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid or out-of-order onboarding step
+        "401":
+          description: Authentication required
+  /player/experiments/card:
+    post:
+      operationId: claimExperimentCard
+      summary: Spend one earned experiment choice on an unowned Common
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cardId]
+              additionalProperties: false
+              properties:
+                cardId:
+                  type: string
+                  maxLength: 64
+      responses:
+        "200":
+          description: Updated collection and remaining experiment choices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "409":
+          description: No earned choice is available or the card is already owned
+  /player/matches:
+    post:
+      operationId: startPlayerMatch
+      tags: [player]
+      summary: Issue a server match session before local play starts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchStartInput"
+      responses:
+        "201":
+          description: Match session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerMatch"
+        "400":
+          description: Invalid match setup
+        "401":
+          description: Authentication required
+  /player/matches/{matchId}/complete:
+    post:
+      operationId: completePlayerMatch
+      tags: [player]
+      summary: Complete a match once and receive server-computed rewards
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchCompleteInput"
+      responses:
+        "200":
+          description: Match rewards and updated progression
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchCompletion"
+        "400":
+          description: Invalid completion
+        "401":
+          description: Authentication required
+        "404":
+          description: Match not found
+  /player/decks/{deckId}:
+    put:
+      operationId: savePlayerDeck
+      tags: [player]
+      summary: Save a named deck draft with server-side legality checks
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 80
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveDeckInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Invalid deck draft
+        "401":
+          description: Authentication required
+    delete:
+      operationId: deletePlayerDeck
+      tags: [player]
+      summary: Delete a saved deck
+      parameters:
+        - name: deckId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 80
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: The last legal deck cannot be deleted
+        "401":
+          description: Authentication required
+  /player/packs/open:
+    post:
+      operationId: openPlayerPack
+      tags: [player]
+      summary: Open one Street Pack exactly once with published odds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpenPackInput"
+      responses:
+        "200":
+          description: Persisted pack result and updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenPackResult"
+        "400":
+          description: Invalid payment or insufficient balance
+        "401":
+          description: Authentication required
+  /player/collection/craft:
+    post:
+      operationId: craftPlayerVariant
+      tags: [player]
+      summary: Craft one visual card variant with Style Shards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CraftVariantInput"
+      responses:
+        "200":
+          description: Updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CraftVariantResult"
+        "400":
+          description: Unknown, locked, or unaffordable variant
+        "401":
+          description: Authentication required
+  /player/collection/equip:
+    put:
+      operationId: equipPlayerVariant
+      tags: [player]
+      summary: Equip or remove one owned visual variant for a gameplay card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipVariantInput"
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Unknown, mismatched, or unowned card variant
+        "401":
+          description: Authentication required
+  /player/collection-road/{milestoneId}/claim:
+    post:
+      operationId: claimCollectionRoadMilestone
+      tags: [player]
+      summary: Claim a deterministic collection milestone exactly once
+      parameters:
+        - name: milestoneId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 48
+      responses:
+        "200":
+          description: Persisted milestone reward and updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionRoadClaimResult"
+        "400":
+          description: Milestone is not claimable
+        "401":
+          description: Authentication required
+        "404":
+          description: Milestone not found
+  /player/missions/{missionId}/claim:
+    post:
+      operationId: claimPlayerMission
+      tags: [player]
+      summary: Claim a completed mission exactly once
+      parameters:
+        - name: missionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "400":
+          description: Mission is not claimable
+        "401":
+          description: Authentication required
+        "404":
+          description: Mission not found
+  /player/shop:
+    get:
+      operationId: getPlayerShop
+      summary: List earned-currency shop offers
+      responses:
+        '200':
+          description: Versioned shop catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /player/shop/purchases:
+    post:
+      operationId: purchasePlayerShopItem
+      summary: Purchase training, move coaching, recruits, tickets, slots, or styles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShopPurchaseInput'
+      responses:
+        '200':
+          description: Persisted receipt and refreshed player state, also returned on an identical retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopPurchaseResult'
+        '400':
+          description: Invalid purchase, insufficient currency, unowned character, or maximum upgrade
+        '401':
+          description: Authentication required
+        '409':
+          description: Request key reused with different input, or onboarding incomplete
+  /player/promo-codes/redeem:
+    post:
+      operationId: redeemPlayerPromoCode
+      summary: Redeem a promo code once per signed-in account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromoCodeInput'
+      responses:
+        '200':
+          description: Saved reward receipt and refreshed balances; retries never grant rewards twice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoCodeResult'
+        '400':
+          description: Invalid or unavailable promo code
+        '401':
+          description: Authentication required
+        '409':
+          description: Finish Rookie Road before redeeming
+components:
+  schemas:
+    PromoCodeInput:
+      type: object
+      additionalProperties: false
+      required: [code]
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 64
+    PromoCodeReceipt:
+      type: object
+      required: [code, packTickets, softCurrency, styleShards]
+      properties:
+        code:
+          type: string
+        packTickets:
+          type: integer
+          minimum: 0
+        softCurrency:
+          type: integer
+          minimum: 0
+        styleShards:
+          type: integer
+          minimum: 0
+        cardIds:
+          type: array
+          items:
+            type: string
+    PromoCodeResult:
+      type: object
+      required: [receipt, alreadyRedeemed, bootstrap]
+      properties:
+        receipt:
+          $ref: '#/components/schemas/PromoCodeReceipt'
+        alreadyRedeemed:
+          type: boolean
+        bootstrap:
+          $ref: '#/components/schemas/PlayerBootstrap'
+    ShopPurchaseInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey, itemId]
+      properties:
+        idempotencyKey:
+          type: string
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        itemId:
+          type: string
+          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style]
+        cardId:
+          type: string
+          minLength: 1
+          maxLength: 100
+    ShopPurchaseResult:
+      type: object
+      required: [receipt, alreadyPurchased, bootstrap]
+      properties:
+        receipt:
+          type: object
+          required: [itemId, cardId, cost, currency, summary]
+          properties:
+            itemId:
+              type: string
+            cardId:
+              type: string
+              nullable: true
+            cost:
+              type: integer
+            currency:
+              type: string
+              enum: [softCurrency, styleShards]
+            summary:
+              type: string
+        alreadyPurchased:
+          type: boolean
+        bootstrap:
+          $ref: '#/components/schemas/PlayerBootstrap'
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+    PlayerSettings:
+      type: object
+      properties:
+        reducedMotion:
+          type: boolean
+        turnTimerEnabled:
+          type: boolean
+      required: [reducedMotion, turnTimerEnabled]
+    SavedDeck:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        cardIds:
+          type: array
+          items:
+            type: string
+        heroCardId:
+          type: string
+        recipeId:
+          type: [string, "null"]
+        valid:
+          type: boolean
+        issues:
+          type: array
+          items:
+            type: string
+      required: [id, name, cardIds, heroCardId, recipeId, valid, issues]
+    SaveDeckInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 32
+        cardIds:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 64
+        heroCardId:
+          type: string
+          maxLength: 64
+        recipeId:
+          type: [string, "null"]
+          maxLength: 32
+      required: [name, cardIds, heroCardId, recipeId]
+      additionalProperties: false
+    PlayerProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        avatarKey:
+          type: string
+        onboardingStep:
+          type: string
+          enum: [profile, tutorial, crew, reward, complete]
+        starterDeckId:
+          type: [string, "null"]
+        streetRep:
+          type: integer
+        xp:
+          type: integer
+        level:
+          type: integer
+        softCurrency:
+          type: integer
+        packTickets:
+          type: integer
+        styleShards:
+          type: integer
+        packPity:
+          type: integer
+        deckSlots:
+          type: integer
+        cosmeticCurrency:
+          type: integer
+        collectionProgress:
+          type: integer
+        storyChapter:
+          type: integer
+        storyNode:
+          type: integer
+        tutorialCompleted:
+          type: boolean
+        starterRewardClaimed:
+          type: boolean
+        ageConfirmedAt:
+          type: [string, "null"]
+          format: date-time
+        termsAcceptedAt:
+          type: [string, "null"]
+          format: date-time
+        settings:
+          $ref: "#/components/schemas/PlayerSettings"
+        ownedCardIds:
+          type: array
+          items:
+            type: string
+        cardProgression:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/CardProgress"
+        discoveredCardIds:
+          type: array
+          items:
+            type: string
+        ownedVariants:
+          type: array
+          items:
+            type: string
+        equippedVariants:
+          type: object
+          additionalProperties:
+            type: string
+        unlockedCosmeticIds:
+          type: array
+          items:
+            type: string
+        unlockedCharacterIds:
+          type: array
+          items:
+            type: string
+        savedDecks:
+          type: array
+          items:
+            $ref: "#/components/schemas/SavedDeck"
+        storyProgress:
+          type: object
+          additionalProperties: true
+        inbox:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        packHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackOpening"
+        lastActiveAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - displayName
+        - avatarKey
+        - onboardingStep
+        - starterDeckId
+        - streetRep
+        - xp
+        - level
+        - softCurrency
+        - packTickets
+        - styleShards
+        - packPity
+        - deckSlots
+        - cosmeticCurrency
+        - collectionProgress
+        - storyChapter
+        - storyNode
+        - tutorialCompleted
+        - starterRewardClaimed
+        - ageConfirmedAt
+        - termsAcceptedAt
+        - settings
+        - ownedCardIds
+        - cardProgression
+        - discoveredCardIds
+        - ownedVariants
+        - equippedVariants
+        - unlockedCosmeticIds
+        - unlockedCharacterIds
+        - savedDecks
+        - storyProgress
+        - inbox
+        - packHistory
+        - lastActiveAt
+    PlayerMission:
+      type: object
+      properties:
+        id:
+          type: string
+        cadence:
+          type: string
+          enum: [onboarding, daily, weekly]
+        title:
+          type: string
+        description:
+          type: string
+        progress:
+          type: integer
+        goal:
+          type: integer
+        rewardCurrency:
+          type: string
+          enum: [softCurrency, packTickets]
+        rewardAmount:
+          type: integer
+        status:
+          type: string
+          enum: [active, claimable, claimed]
+        resetAt:
+          type: [string, "null"]
+          format: date-time
+      required:
+        - id
+        - cadence
+        - title
+        - description
+        - progress
+        - goal
+        - rewardCurrency
+        - rewardAmount
+        - status
+        - resetAt
+    NextAction:
+      type: object
+      properties:
+        id:
+          type: string
+        eyebrow:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+          enum: [onboarding, play, story, collection, missions, shop]
+        rewardLabel:
+          type: [string, "null"]
+      required: [id, eyebrow, title, description, destination, rewardLabel]
+    PlayerBootstrap:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/PlayerProfile"
+        missions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlayerMission"
+        nextAction:
+          $ref: "#/components/schemas/NextAction"
+        packConfig:
+          $ref: "#/components/schemas/PackConfig"
+        collectionRoad:
+          type: array
+          items:
+            $ref: "#/components/schemas/CollectionRoadMilestone"
+      required: [profile, missions, nextAction, packConfig, collectionRoad]
+    PackOddsEntry:
+      type: object
+      properties:
+        label:
+          type: string
+        chance:
+          type: number
+        detail:
+          type: string
+      required: [label, chance, detail]
+    PackConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        oddsVersion:
+          type: string
+        softCurrencyCost:
+          type: integer
+        ticketCost:
+          type: integer
+        rewardsPerPack:
+          type: integer
+        pityLimit:
+          type: integer
+        odds:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackOddsEntry"
+      required:
+        [id, name, oddsVersion, softCurrencyCost, ticketCost, rewardsPerPack, pityLimit, odds]
+    PackReward:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [card, styleShards, softCurrency, variant]
+        cardId:
+          type: [string, "null"]
+        variantId:
+          type: [string, "null"]
+        name:
+          type: [string, "null"]
+        rarity:
+          type: [string, "null"]
+        isNew:
+          type: boolean
+        amount:
+          type: integer
+      required: [kind, cardId, variantId, name, rarity, isNew, amount]
+    PackOpening:
+      type: object
+      properties:
+        id:
+          type: string
+        oddsVersion:
+          type: string
+        paymentMethod:
+          type: string
+          enum: [ticket, softCurrency]
+        cost:
+          type: integer
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/PackReward"
+        pityBefore:
+          type: integer
+        pityAfter:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, oddsVersion, paymentMethod, cost, rewards, pityBefore, pityAfter, createdAt]
+    OpenPackInput:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 80
+        paymentMethod:
+          type: string
+          enum: [ticket, softCurrency]
+      required: [idempotencyKey, paymentMethod]
+      additionalProperties: false
+    OpenPackResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        opening:
+          $ref: "#/components/schemas/PackOpening"
+        alreadyOpened:
+          type: boolean
+      required: [bootstrap, opening, alreadyOpened]
+    CraftVariantInput:
+      type: object
+      properties:
+        cardId:
+          type: string
+          maxLength: 64
+        variantId:
+          type: string
+          maxLength: 96
+      required: [cardId, variantId]
+      additionalProperties: false
+    CraftVariantResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        alreadyOwned:
+          type: boolean
+      required: [bootstrap, alreadyOwned]
+    CollectionRoadReward:
+      type: object
+      properties:
+        cardId:
+          type: [string, "null"]
+        softCurrency:
+          type: integer
+        styleShards:
+          type: integer
+        deckSlots:
+          type: integer
+        duplicateShards:
+          type: integer
+      required: [cardId, softCurrency, styleShards, deckSlots, duplicateShards]
+    CollectionRoadMilestone:
+      type: object
+      properties:
+        id:
+          type: string
+        threshold:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        rewardLabel:
+          type: string
+        cardId:
+          type: [string, "null"]
+        status:
+          type: string
+          enum: [locked, claimable, claimed]
+      required: [id, threshold, title, description, rewardLabel, cardId, status]
+    CollectionRoadClaimResult:
+      type: object
+      properties:
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        reward:
+          $ref: "#/components/schemas/CollectionRoadReward"
+        alreadyClaimed:
+          type: boolean
+      required: [bootstrap, reward, alreadyClaimed]
+    PlayerProfileUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 24
+        avatarKey:
+          type: string
+          maxLength: 64
+        reducedMotion:
+          type: boolean
+        turnTimerEnabled:
+          type: boolean
+      additionalProperties: false
+    EquipVariantInput:
+      type: object
+      properties:
+        cardId:
+          type: string
+          maxLength: 64
+        variantId:
+          type: [string, "null"]
+          maxLength: 96
+      required: [cardId, variantId]
+      additionalProperties: false
+    OnboardingProgressInput:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [accept-terms, complete-tutorial, choose-starter, claim-reward]
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 24
+        ageConfirmed:
+          type: boolean
+        termsAccepted:
+          type: boolean
+        starterDeckId:
+          type: string
+          maxLength: 32
+      required: [action]
+      additionalProperties: false
+    MatchStartInput:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [practice, tutorial, story]
+        playerDeckId:
+          type: string
+          # Match the saved-deck ID limit, including UUIDs from the crew builder.
+          maxLength: 80
+        rivalDeckId:
+          type: string
+          maxLength: 32
+        storyNodeId:
+          type: string
+          maxLength: 80
+        activity:
+          type: string
+          maxLength: 24
+        draftWeek:
+          type: string
+          maxLength: 10
+        draftPicks:
+          type: array
+          minItems: 10
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 64
+      required: [mode, playerDeckId, rivalDeckId]
+      additionalProperties: false
+    PlayerMatch:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        mode:
+          type: string
+        playerDeckId:
+          type: string
+        rivalDeckId:
+          type: string
+        status:
+          type: string
+          enum: [active, complete]
+        createdAt:
+          type: string
+          format: date-time
+        storyNodeId:
+          type: [string, "null"]
+        contentVersion:
+          type: [integer, "null"]
+        encounterSnapshot:
+          type: [object, "null"]
+          additionalProperties: true
+        districtSnapshot:
+          type: object
+          additionalProperties: true
+          description: Immutable server-issued district definitions for this match.
+        abilityUpgradeSnapshot:
+          $ref: "#/components/schemas/AbilityUpgradeSnapshot"
+      required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot, abilityUpgradeSnapshot]
+    AbilityUpgradeSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        version:
+          type: integer
+          enum: [1]
+        player:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardAbilityUpgradeSnapshot"
+        cpu:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardAbilityUpgradeSnapshot"
+      required: [version, player, cpu]
+    CardAbilityUpgradeSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        moveTier:
+          type: integer
+          minimum: 0
+          maximum: 3
+        cardId:
+          type: string
+        level:
+          type: integer
+          minimum: 1
+        upgradeIds:
+          type: array
+          items:
+            type: string
+      required: [cardId, level, upgradeIds]
+    MatchCompleteInput:
+      type: object
+      properties:
+        moves:
+          type: array
+          minItems: 6
+          maxItems: 64
+          items:
+            $ref: "#/components/schemas/MatchMove"
+      required: [moves]
+      additionalProperties: false
+    MatchMove:
+      type: object
+      properties:
+        cardInstanceId:
+          type: [string, "null"]
+        lane:
+          type: [integer, "null"]
+          minimum: 0
+          maximum: 2
+        squabble:
+          type: boolean
+        endTurn:
+          type: boolean
+          description: False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.
+      required: [cardInstanceId, lane, squabble]
+      additionalProperties: false
+    MatchReward:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        xp:
+          type: integer
+        streetRep:
+          type: integer
+        softCurrency:
+          type: integer
+        packTickets:
+          type: integer
+        descriptions:
+          type: array
+          items:
+            type: string
+        storyRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGrantedReward"
+        cardXp:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardXpReward"
+      required: [id, label, xp, streetRep, softCurrency, packTickets, descriptions, storyRewards, cardXp]
+    CardProgress:
+      type: object
+      properties:
+        moveTier:
+          type: integer
+          minimum: 0
+          maximum: 3
+        xp:
+          type: integer
+          minimum: 0
+        level:
+          type: integer
+          minimum: 1
+          maximum: 10
+      required: [xp, level]
+    CardXpReward:
+      type: object
+      properties:
+        cardId:
+          type: string
+        xpGained:
+          type: integer
+        previousXp:
+          type: integer
+        previousLevel:
+          type: integer
+        xp:
+          type: integer
+        level:
+          type: integer
+      required: [cardId, xpGained, previousXp, previousLevel, xp, level]
+    MatchCompletion:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/PlayerProfile"
+        missions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlayerMission"
+        nextAction:
+          $ref: "#/components/schemas/NextAction"
+        reward:
+          $ref: "#/components/schemas/MatchReward"
+        alreadyCompleted:
+          type: boolean
+        campaign:
+          oneOf:
+            - $ref: "#/components/schemas/StoryCampaign"
+            - type: "null"
+        story:
+          oneOf:
+            - $ref: "#/components/schemas/StoryMatchMetadata"
+            - type: "null"
+      required: [profile, missions, nextAction, reward, alreadyCompleted, campaign, story]
+    StoryReward:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic, character-unlock]
+        id:
+          type: string
+        amount:
+          type: integer
+      required: [kind, id, amount]
+    StoryGrantedReward:
+      type: object
+      properties:
+        rewardKey:
+          type: string
+        kind:
+          type: string
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic, character-unlock]
+        id:
+          type: string
+        amount:
+          type: integer
+        duplicateShards:
+          type: integer
+        description:
+          type: string
+      required: [rewardKey, kind, id, amount, duplicateShards, description]
+    StoryMapPosition:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+      required: [x, y]
+    StoryNodeProgress:
+      type: object
+      properties:
+        chapterId:
+          type: string
+        nodeId:
+          type: string
+        title:
+          type: string
+        kind:
+          type: string
+          enum: [dialogue, reward, battle]
+        optional:
+          type: boolean
+        status:
+          type: string
+          enum: [locked, available, cleared]
+        mapPosition:
+          $ref: "#/components/schemas/StoryMapPosition"
+        prerequisites:
+          type: array
+          items:
+            type: string
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryReward"
+        cleared:
+          type: boolean
+        stars:
+          type: integer
+        attempts:
+          type: integer
+        wins:
+          type: integer
+        lastOutcome:
+          type: [string, "null"]
+        dialogueSeen:
+          type: array
+          items:
+            type: string
+        bossHighestPhase:
+          type: integer
+        firstClearedAt:
+          type: [string, "null"]
+          format: date-time
+        lastPlayedAt:
+          type: [string, "null"]
+          format: date-time
+      required: [chapterId, nodeId, title, kind, optional, status, mapPosition, prerequisites, rewards, cleared, stars, attempts, wins, lastOutcome, dialogueSeen, bossHighestPhase, firstClearedAt, lastPlayedAt]
+    StoryChapterProgress:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        description:
+          type: string
+        order:
+          type: integer
+        mapAssetId:
+          type: string
+        status:
+          type: string
+          enum: [locked, available, cleared]
+        completedNodes:
+          type: integer
+        totalNodes:
+          type: integer
+        completedRequiredNodes:
+          type: integer
+        totalRequiredNodes:
+          type: integer
+        stars:
+          type: integer
+        bossStatus:
+          type: string
+          enum: [locked, available, in-progress, cleared]
+      required: [id, title, subtitle, description, order, mapAssetId, status, completedNodes, totalNodes, completedRequiredNodes, totalRequiredNodes, stars, bossStatus]
+    StoryCampaign:
+      type: object
+      properties:
+        contentVersion:
+          type: integer
+        chapters:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryChapterProgress"
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryNodeProgress"
+        recommendedNodeId:
+          type: [string, "null"]
+        totalStars:
+          type: integer
+        completedNodes:
+          type: integer
+        bossStatus:
+          type: string
+          enum: [locked, available, in-progress, cleared]
+      required: [contentVersion, chapters, nodes, recommendedNodeId, totalStars, completedNodes, bossStatus]
+    StoryNodeCompleteInput:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 80
+        dialogueSeen:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 120
+      required: [idempotencyKey, dialogueSeen]
+      additionalProperties: false
+    StoryDevelopmentResetInput:
+      type: object
+      properties:
+        selectNodeId:
+          type: [string, "null"]
+          maxLength: 80
+      required: [selectNodeId]
+      additionalProperties: false
+    StoryDialogueProgressInput:
+      $ref: "#/components/schemas/StoryNodeCompleteInput"
+    StoryNodeCompletion:
+      type: object
+      properties:
+        campaign:
+          $ref: "#/components/schemas/StoryCampaign"
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGrantedReward"
+        alreadyCompleted:
+          type: boolean
+      required: [campaign, bootstrap, rewards, alreadyCompleted]
+    StoryDialogueProgressResponse:
+      type: object
+      properties:
+        campaign:
+          $ref: "#/components/schemas/StoryCampaign"
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        node:
+          $ref: "#/components/schemas/StoryNodeProgress"
+        alreadyApplied:
+          type: boolean
+      required: [campaign, bootstrap, node, alreadyApplied]
+    StoryMatchMetadata:
+      type: object
+      properties:
+        nodeId:
+          type: string
+        stars:
+          type: integer
+        firstClear:
+          type: boolean
+        outcome:
+          type: string
+          enum: [win, loss, draw]
+        bossHighestPhase:
+          type: integer
+      required: [nodeId, stars, firstClear, outcome, bossHighestPhase]

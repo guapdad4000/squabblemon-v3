@@ -1,0 +1,31 @@
+.battle-workshop {
+  --paper: #e9e0d0;
+  --paper-deep: #d3c6b2;
+  --ink: #292622;
+  --muted: #756d61;
+  --line: #968975;
+  --gold: #a9782f;
+  --red: #983d35;
+  --red-dark: #612a27;
+  --sage: #52635a;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 5%, rgba(255,255,255,.32), transparent 30rem),
+    repeating-linear-gradient(0deg, rgba(52,43,31,.035) 0 1px, transparent 1px 4px),
+    var(--paper);
+  font-family: "DM Sans", ui-sans-serif, sans-serif;
+}
+.battle-workshop * { box-sizing: border-box; }
+.battle-workshop h1,.battle-workshop h2,.battle-workshop h3,.battle-workshop .display {
+  font-family: "Bricolage Grotesque", "DM Sans", sans-serif;
+}
+.battle-workshop .mono { font-family: "Space Mono", monospace; }
+.battle-workshop .grain { position: fixed; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E"); }
+.battle-workshop .rule { border-color: var(--line); }
+.battle-workshop .blueprint { background: rgba(238,230,215,.63); border: 1px solid var(--line); box-shadow: 4px 4px 0 rgba(69,55,39,.08); }
+.battle-workshop .eyebrow { font: 700 10px/1 "Space Mono",monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--red); }
+.battle-workshop .tag { display:inline-flex; align-items:center; border:1px solid currentColor; padding:4px 7px; font:700 9px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+.battle-workshop button { cursor:pointer; font:inherit; }
+.battle-workshop .pulse { animation: workshop-pulse 1.2s ease-in-out infinite; }
+@keyframes workshop-pulse { 50% { opacity:.52; transform:scaleX(.96); } }
+@media (prefers-reduced-motion: reduce) { .battle-workshop *, .battle-workshop .pulse { animation:none!important; transition:none!important; } }

@@ -1,0 +1,143 @@
+{
+  "environments": [
+    {
+      "name": "violet-stage",
+      "source": "openart-02178881811804681fbe8801b4cfc8e3454077f6383f7cfa38ebb_1788818184165_9290d118.png"
+    },
+    {
+      "name": "sunset-block",
+      "source": "openart-0217888182572493c1f91f892e9aff2a902d86b047fe242ecd35d_1788818311188_d7cdae7b.png"
+    },
+    {
+      "name": "gold-vault",
+      "source": "openart-02178881826816547fde1ce057a4e39ca4c3f804f8e42e092a897_1788818320805_c756df26.png"
+    },
+    {
+      "name": "crown-court",
+      "source": "openart-021788818321533f2dfc9d17a425ad03ee233374d263661182f0c_1788818389013_7fc26450.png"
+    },
+    {
+      "name": "gold-alley",
+      "source": "openart-021788818553964c2670fe791a5f29d61bdea8e0ada6c5d43fb7c_1788818635282_725549fc.png"
+    },
+    {
+      "name": "moon-rooftop",
+      "source": "openart-021788818565066a491eea4a025beb52fc51c9506f8c2b2bb87c7_1788818638291_442a3ecf.png"
+    },
+    {
+      "name": "training-hall",
+      "source": "openart-02178881857918899b13dab45b2d10982c2cf34f4d4639d81a838_1788818662730_6811a525.png"
+    },
+    {
+      "name": "green-underpass",
+      "source": "openart-021788818758440a491eea4a025beb52fc51c9506f8c2b28b2133_1788818838991_08825291.png"
+    },
+    {
+      "name": "locked-street",
+      "source": "openart-021788818783713fd2e0ebdb3eb064cbe39fbfe58bf7263387d63_1788818856652_d5d75bb0.png"
+    },
+    {
+      "name": "garden-court",
+      "source": "openart-0217888197332084b0734cede0d35a658963f07bc220d4bd903b9_1788819802870_61f26831.png"
+    },
+    {
+      "name": "civic-summit",
+      "source": "openart-021788820957499d5288a603f9a5ec332174783e04745d2d44798_1788821037749_35ecf94e.png"
+    },
+    {
+      "name": "motion-court",
+      "source": "openart-0217888211287588fef509893d762bd38fa7b39384b54678ab4be_1788821218525_4ea18ecf.png"
+    },
+    {
+      "name": "ice-alley",
+      "source": "openart-021788821147902c41b39946b92a3163d51611244fc4a0d790367_1788821211598_5f969443.png"
+    },
+    {
+      "name": "tidal-street",
+      "source": "openart-021788821163012337dd80e214c02e2e5c4590cd6b9313cb6cf3f_1788821240218_4878d04a.png"
+    },
+    {
+      "name": "sunlit-hall",
+      "source": "openart-0217888211786909cf4adffd4482a40b9bfd1b5a653f23495d2d0_1788821255103_331d6e01.png"
+    },
+    {
+      "name": "red-court",
+      "source": "openart-021788821205295dc50f194675e1cbc6bc0c2210aaea0b0282342_1788821277304_b357e54e.png"
+    },
+    {
+      "name": "gold-plaza",
+      "source": "openart-021788821229077124404eabe9b927fceaa7c0eaca8bf7a282ef3_1788821290059_fcd5b4a7.png"
+    },
+    {
+      "name": "old-town",
+      "source": "openart-02178882125382612014becacfaf8a37949eaec3c813975974f17_1788821341466_78283a88.png"
+    },
+    {
+      "name": "red-alley",
+      "source": "openart-021788821270248d82d61e1341a38f1d55b18f5893f198be5f1ba_1788821342493_37855e0e.png"
+    },
+    {
+      "name": "green-street",
+      "source": "openart-021788821307779e40cd0a5f20110aac1f60c7d99b54634ac5aa4_1788821384637_da8fbcc2.png"
+    },
+    {
+      "name": "shadow-stairs",
+      "source": "openart-0217888213232438cdbdac5f420e20fe0e1829640806a225db682_1788821391573_ce6dcdc7.png"
+    },
+    {
+      "name": "blue-arcade",
+      "source": "openart-0217888213564448cdbdac5f420e20fe0e1829640806a2225362f_1788821414311_c2a448ed.png"
+    },
+    {
+      "name": "festival-street",
+      "source": "openart-02178882145925377dd13f2098096eba9569e39b59e750cc80b2c_1788821531707_c0296703.png"
+    },
+    {
+      "name": "sound-stage",
+      "source": "openart-02178882147694335b29c922ac7ba22cc26b6e12169d213795366_1788821548704_ac35a7c6.png"
+    },
+    {
+      "name": "corner-store",
+      "source": "openart-02178882191724899a3f43520201fc0164769d66e52699fad56fc_1788821990245_7f417eb3.png"
+    },
+    {
+      "name": "morning-block",
+      "source": "openart-021788822339352c44e9ddcb918cdd41b22b05ed1b7304ac0a976_1788822423423_48c4319e.png"
+    }
+  ],
+  "components": {
+    "source": "a38f82bc-235c-4cda-9592-c27eba64f5b9.png",
+    "crops": {
+      "button-obsidian": [
+        40,
+        151,
+        368,
+        100
+      ],
+      "button-stone": [
+        439,
+        151,
+        361,
+        100
+      ],
+      "card-rim": [
+        42,
+        677,
+        173,
+        281
+      ],
+      "motion-medallion": [
+        928,
+        38,
+        83,
+        83
+      ],
+      "squabble-crest": [
+        1076,
+        272,
+        134,
+        137
+      ]
+    }
+  }
+}

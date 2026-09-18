@@ -1,0 +1,68 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# compiled output
+dist
+tmp
+out-tsc
+*.tsbuildinfo
+.expo
+.expo-shared
+
+# dependencies
+node_modules
+
+# local credentials and generated media
+**/.env
+**/.env.*
+!**/.env.example
+/screenshots/
+/attached_assets/
+/node_modules.bak*/
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# Replit
+.cache/
+.local/
+
+# Browser verification output (generated locally, not application assets)
+**/test-results/
+/artifacts/squabblemon/screenshots/
+
+.netlify/
+
+# Disposable online verification bundles
+/artifacts/gameplay-test-db/online-check-*.mjs
+/artifacts/gameplay-test-db/online-engine-check.mjs
+/artifacts/gameplay-test-db/online-browser-host.mjs

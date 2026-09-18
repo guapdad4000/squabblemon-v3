@@ -1,0 +1,26 @@
+body { margin: 0; background: #080c10; color: #f3eadb; }
+.location-art-gallery { max-width: 1440px; margin: auto; padding: 50px 4vw; }
+.location-art-gallery > header > span { font-size: 10px; letter-spacing: .24em; color: #d9b67a; }
+.location-art-gallery h1 { font: 800 clamp(32px, 5vw, 64px)/1.1 var(--font-display); margin: 15px 0; }
+.location-art-gallery p { color: #bcbdbd; font-size: 13px; line-height: 1.6; }
+.location-art-gallery nav { display: flex; gap: 20px; margin: 24px 0; }
+.location-art-gallery nav button { border: 0; border-bottom: 1px solid transparent; padding: 8px 0; font-size: 12px; background: transparent; }
+.location-art-gallery nav button[aria-pressed='true'] { color: #e3bd76; border-color: #e3bd76; }
+.location-three-preview { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 90px 2vw 50px; margin: 25px 0 70px; }
+.gallery-node { position: relative; text-align: center; padding: 80px 20px 0; }
+.gallery-node .location-node { inset: -70px -7% -20px; }
+.gallery-node h2,.gallery-node b,.gallery-node p { position: relative; z-index: 1; text-shadow: 0 2px 5px #000, 0 0 20px #000; }
+.gallery-node h2 { color: #edcc96; font: 800 clamp(12px, 1.4vw, 21px)/1.2 var(--font-display); }
+.gallery-node b { display: block; font-size: 34px; color: #f3e1b9; }
+.gallery-node b small { color: #8ca4b5; font-size: 20px; }
+.location-art-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 22px; }
+.location-art-grid article { min-width: 0; }
+.location-art-grid article img { width: 100%; height: auto; mask-image: radial-gradient(ellipse, #000 32%, transparent 72%); }
+.location-art-grid article > span { color: #907e63; font-size: 9px; letter-spacing: .18em; }
+.location-art-grid article h2 { font: 700 15px/1.3 var(--font-display); margin: 9px 0; }
+.location-art-grid article p { font-size: 11px; }
+.wallpaper-preview { position: relative; }
+.wallpaper-preview img { width: 100%; max-height: 70vh; object-fit: contain; }
+.wallpaper-preview h2 { position: absolute; left: 5%; bottom: 12%; font: 800 40px var(--font-display); text-shadow: 0 3px 14px #000; }
+.wallpaper-preview select { display: block; margin: 20px auto; background: #1a232c; padding: 10px; }
+@media(max-width:600px) { .location-art-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .location-three-preview { padding: 60px 0 15px; margin-bottom: 40px; } .gallery-node { padding: 45px 5px 0; } .gallery-node p { font-size: 9px; } .gallery-node b { font-size: 25px; } .gallery-node .location-node { inset: -40px -5% 0; } }

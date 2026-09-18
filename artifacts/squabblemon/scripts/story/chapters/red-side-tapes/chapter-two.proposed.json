@@ -1,0 +1,1644 @@
+{
+  "id": "red-side-tapes",
+  "order": 2,
+  "title": "Chapter Two: Red Side Tapes",
+  "subtitle": "Everybody kept something. Nobody kept quiet enough.",
+  "description": "A private recording blows up the family while you fight through the Red Side Gauntlet.",
+  "mapAssetId": "assets/story/chapter-two/environments/map.webp",
+  "prerequisites": [
+    "block-party"
+  ],
+  "nodes": [
+    {
+      "id": "red-tapes-open-the-envelope",
+      "title": "Put the Chairs Back",
+      "kind": "dialogue",
+      "mapPosition": {
+        "x": 6,
+        "y": 86
+      },
+      "prerequisites": [],
+      "optional": false,
+      "rewards": [],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-open-the-envelope.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-open-the-envelope.webp",
+        "environmentAssetId": "assets/venues/crown-rooftop-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Follow the conversation at your own pace."
+        ],
+        "focusMechanics": [
+          "story progression"
+        ],
+        "focusCards": [
+          "baby"
+        ]
+      },
+      "scenes": [
+        {
+          "speaker": "Baby Momma",
+          "text": "Everybody who came up here for a picture, go downstairs. Everybody who came back from the dead, remain available.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "I can leave one phone as a courtesy—",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "You can leave a shoe if you don't move.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Original recorder. Original message. I kept it.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You also kept your mouth shut. Press play before I start grading the collection.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "Red. You said the baby's here. Tell her I heard you. Tell her I'm alive. Tell her I'll call when I can.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "That is your voice. Three weeks after the memorial. Our baby was nine days old.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "I know what it sounds like.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "It sounds like a man who knew he was a father. Which part needs remixing?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "Red. You had this while we were checking on her?",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Yes.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You watched me say thank you. Over and over. Like you was a damn guardian angel with a rewards program.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "The groceries came from him. Some of the money did too.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "I told him to tell you.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "And when my number didn't call you back, did you assume I was busy for FOUR YEARS?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "She asked you a question.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "No. I should have found another way.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Good. A full sentence with a responsible adult in it.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "There's more to why I kept it.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Then tomorrow you can explain the rest. I'm going home to the person who actually waited up for me.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ]
+    },
+    {
+      "id": "red-tapes-red-side-open",
+      "title": "Red Side Is Still Open",
+      "kind": "battle",
+      "battleType": "rule-twist",
+      "mapPosition": {
+        "x": 16,
+        "y": 75
+      },
+      "prerequisites": [
+        "red-tapes-open-the-envelope"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 100
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-red-side-open.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-red-side-open.webp",
+        "environmentAssetId": "assets/venues/red-fence-night-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "The middle district locks in round three for both players.",
+          "Plan your early placement around the posted closure."
+        ],
+        "focusMechanics": [
+          "lane locks",
+          "planning"
+        ],
+        "focusCards": [
+          "nerd",
+          "snow",
+          "roaster"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-red-side-open",
+        "enemy": {
+          "id": "red-tapes-red-side-open:enemy",
+          "name": "Ganger Red",
+          "portraitAssetId": "assets/characters/ganger-red.webp",
+          "deckId": "red-tapes-red-side-open-deck",
+          "cardIds": [
+            "cornball",
+            "roaster",
+            "nerd",
+            "snow",
+            "plug",
+            "baby",
+            "hooper"
+          ],
+          "behaviorProfile": "aggressive"
+        },
+        "battlefieldAssetId": "assets/venues/red-fence-night-court.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-red-side-open.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-red-side-open.webp",
+          "environmentAssetId": "assets/venues/red-fence-night-court.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {
+          "laneLocks": [
+            {
+              "round": 3,
+              "owner": "both",
+              "lanes": [
+                1
+              ]
+            }
+          ]
+        },
+        "phases": [],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "Ganger Blue",
+          "text": "NO FAMILY QUESTIONS? What is this, a tournament or a witness stand with chicken?",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "The event was booked before last night.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "And I already bought six gallons of cheese. Whatever happens, we need attendance.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Six tables. Clear the Gauntlet, you host the next neighborhood showcase. Open entry stays open.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "Look at you announcing rules like you ain't been hiding a whole season in your notebook.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Blue. Go find a task. You circling this table like accountability only got one address.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I'm first. Middle district closes in round three, both sides. The canopy crew needs the space.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "They said they needed the space from eight this morning. Red said wait till he looks difficult.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Put your deck down. Somebody here is still going to finish what they started.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "Ganger Red",
+          "text": "First table cleared. Your Crown was not a fluke.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "Write that on the banner. Use the expensive marker.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "After the next two tables, you're coming to the back room. No phones.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I'll be there.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You been a lot of places you should've been talking. Try doing both.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Next table's mine. Keep your wristband. The cheese has terms.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "nerd",
+        "snow",
+        "roaster"
+      ]
+    },
+    {
+      "id": "red-tapes-cheese-has-terms",
+      "title": "The Cheese Has Terms",
+      "kind": "battle",
+      "battleType": "standard",
+      "mapPosition": {
+        "x": 28,
+        "y": 66
+      },
+      "prerequisites": [
+        "red-tapes-red-side-open"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 125
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-cheese-has-terms.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-cheese-has-terms.webp",
+        "environmentAssetId": "assets/venues/corner-store-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Movement effects can change which districts you hold after reveal.",
+          "Leave room to respond instead of committing every card to one lane."
+        ],
+        "focusMechanics": [
+          "movement",
+          "lane commitment"
+        ],
+        "focusCards": [
+          "bikelife",
+          "vibe",
+          "cornball"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-cheese-has-terms",
+        "enemy": {
+          "id": "red-tapes-cheese-has-terms:enemy",
+          "name": "Cornball",
+          "portraitAssetId": "assets/characters/cornball.webp",
+          "deckId": "red-tapes-cheese-has-terms-deck",
+          "cardIds": [
+            "cornball",
+            "bikelife",
+            "vibe",
+            "plug",
+            "snow",
+            "rastamon",
+            "hooper"
+          ],
+          "behaviorProfile": "movement"
+        },
+        "battlefieldAssetId": "assets/venues/corner-store-court.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-cheese-has-terms.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-cheese-has-terms.webp",
+          "environmentAssetId": "assets/venues/corner-store-court.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {},
+        "phases": [],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "Cornball",
+          "text": "Welcome to Cornball's Liquid Gold. Basic gets chips. Premium gets eye contact.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Why does your cheese have a cancellation policy?",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Recurring revenue. Snitch said think bigger.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "You put a subscription on a dairy product.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Don't reduce my company to its ingredients.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "I'm not paying nine dollars to unlock a ladle.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "The ladle is infrastructure. The vision is free.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "The card match is free too. Before you try to bundle it.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Table two. I move cards around. Pay attention. Unlike the people who ignored my sauce survey.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "Cornball",
+          "text": "Okay. I lost the match. The company remains confident.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Your company has formed a skin.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "That's the protective layer. Premium customers get underneath it.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "Why the hell is the dispenser breathing?",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Because the cheese is alive with opportunity.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Unplug it. Stamp their card. In that order.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Second table cleared. Don't put my loss on the business page.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "bikelife",
+        "vibe",
+        "cornball"
+      ]
+    },
+    {
+      "id": "red-tapes-pay-per-view",
+      "title": "Pay-Per-View Family Business",
+      "kind": "battle",
+      "battleType": "standard",
+      "mapPosition": {
+        "x": 41,
+        "y": 55
+      },
+      "prerequisites": [
+        "red-tapes-cheese-has-terms"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 150
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-pay-per-view.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-pay-per-view.webp",
+        "environmentAssetId": "assets/venues/civic-hill-climb.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Snitch gets one extra Motion in round three and one in round five.",
+          "Save an answer for each boost rather than spending everything early."
+        ],
+        "focusMechanics": [
+          "round modifiers",
+          "tempo"
+        ],
+        "focusCards": [
+          "plug",
+          "snow",
+          "roaster"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-pay-per-view",
+        "enemy": {
+          "id": "red-tapes-pay-per-view:enemy",
+          "name": "Snitch",
+          "portraitAssetId": "assets/characters/snitch.webp",
+          "deckId": "red-tapes-pay-per-view-deck",
+          "cardIds": [
+            "cornball",
+            "streamer",
+            "plug",
+            "gamer",
+            "nerd",
+            "snow",
+            "roaster"
+          ],
+          "behaviorProfile": "reactive"
+        },
+        "battlefieldAssetId": "assets/venues/civic-hill-climb.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-pay-per-view.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-pay-per-view.webp",
+          "environmentAssetId": "assets/venues/civic-hill-climb.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {
+          "roundMotionDeltas": [
+            {
+              "round": 3,
+              "owner": "cpu",
+              "amount": 1
+            },
+            {
+              "round": 5,
+              "owner": "cpu",
+              "amount": 1
+            }
+          ]
+        },
+        "phases": [],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "Snitch",
+          "text": "Welcome back. Last night a dead man made the finals. Today we're asking the difficult questions.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "First question. Why are you selling seats facing a closed door?",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "Anticipation package. Premium gets to hear a chair scrape.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You heard what I said about my business being an entrance.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "I ain't even got the recording. I'm covering the cultural impact.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Cover that sign before I turn your cultural impact into a folding-table situation.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "Fine. Sports. We are doing sports.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "Table three. Little boost in round three, another in five. Growth strategy.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "One extra Motion each time. Two boosts. Zero mystique.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "Snitch",
+          "text": "Third table cleared. This footage may require some color correction.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "The color is you losing.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Stop pointing a camera at that door. I knew he was alive. She didn't. That's all you're getting from me out here.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Snitch",
+          "text": "Red. Say that first bit again, facing the light.",
+          "portraitAssetId": "assets/characters/snitch.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "No. Keep the sentence together.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Come on, Red. You got a room full of consequences waiting.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "plug",
+        "snow",
+        "roaster"
+      ]
+    },
+    {
+      "id": "red-tapes-the-wrong-person",
+      "title": "Thanking the Wrong Person",
+      "kind": "dialogue",
+      "mapPosition": {
+        "x": 49,
+        "y": 44
+      },
+      "prerequisites": [
+        "red-tapes-pay-per-view"
+      ],
+      "optional": false,
+      "rewards": [],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-the-wrong-person.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-the-wrong-person.webp",
+        "environmentAssetId": "assets/venues/corner-store-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Follow the conversation at your own pace."
+        ],
+        "focusMechanics": [
+          "story progression"
+        ],
+        "focusCards": [
+          "baby"
+        ]
+      },
+      "scenes": [
+        {
+          "speaker": "Church Auntie",
+          "text": "Sit down. I brought plates because this family cannot digest a fact on an empty stomach.",
+          "portraitAssetId": "assets/characters/church-auntie.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Red, you sweating through the apology already. We ain't even opened the lid.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "That's my little brother. Same mama. Unfortunately, unlimited commentary.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "I'm here for emotional support and whatever happens to his confidence.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I paid the rent one month. Groceries when I could. I thought keeping things steady was helping.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You let me think the whole block remembered him better than I did.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I didn't know how to tell you.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You open your mouth. You used it to ask what size diapers. It worked then.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Express shipping on the wipes. Four-year delay on the truth. Nasty warehouse operation.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I was told leaving it alone was safer.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "By who?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Someone I should have questioned. I need to speak to him first.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You already gave him four years of first.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Church Auntie",
+          "text": "Answer her, son. You can't cover a lie with a serving tray.",
+          "portraitAssetId": "assets/characters/church-auntie.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "Let me tell him I'm bringing you. He is going to hear this with you in the room.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "If you're promising that, don't make her collect it.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "After the final. We go together. The recorder stays with me.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "It stays with you. I should have brought it the first day.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You should have brought it before there was a second.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ]
+    },
+    {
+      "id": "red-tapes-roast-with-a-receipt",
+      "title": "Roast with a Receipt",
+      "kind": "battle",
+      "battleType": "standard",
+      "mapPosition": {
+        "x": 60,
+        "y": 37
+      },
+      "prerequisites": [
+        "red-tapes-the-wrong-person"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 175
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-roast-with-a-receipt.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-roast-with-a-receipt.webp",
+        "environmentAssetId": "assets/venues/red-fence-night-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Roaster starts with one extra Motion and favors disruption.",
+          "Protect a key district and avoid putting your entire plan on one target."
+        ],
+        "focusMechanics": [
+          "targeted disruption",
+          "protection"
+        ],
+        "focusCards": [
+          "wifey",
+          "roaster",
+          "nerd"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-roast-with-a-receipt",
+        "enemy": {
+          "id": "red-tapes-roast-with-a-receipt:enemy",
+          "name": "All Jokes Roaster",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp",
+          "deckId": "red-tapes-roast-with-a-receipt-deck",
+          "cardIds": [
+            "roaster",
+            "cornball",
+            "nerd",
+            "snow",
+            "hooper",
+            "plug",
+            "bikelife"
+          ],
+          "behaviorProfile": "aggressive"
+        },
+        "battlefieldAssetId": "assets/venues/red-fence-night-court.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-roast-with-a-receipt.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-roast-with-a-receipt.webp",
+          "environmentAssetId": "assets/venues/red-fence-night-court.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {
+          "startingMotion": {
+            "cpu": 1
+          }
+        },
+        "phases": [],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Table four. I was supposed to roast the champion. Then my sister's past walked in wearing a haunted junk drawer.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "Keep my brother out of—",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Keep him? Y'all couldn't FIND him.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You are not using my life as your comedy special.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "I'm defending you.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You printed tickets.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "For the community to witness the defense.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Play the match.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Fine. No mic. My deck still got something to say. Don't stack your whole ego in one district.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Fourth table cleared. You won a card game. Do not let Snitch caption it like you raised me.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "You need a quiet place to process that? There's an empty VIP section by the door.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You two done making a timeshare out of the last word?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "I'm done. You need anything carried?",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "The covered plates. To the volunteers. That's help.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "All Jokes Roaster",
+          "text": "Say less.",
+          "portraitAssetId": "assets/characters/all-jokes-roaster.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "That's what I've been trying to get you to do.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "wifey",
+        "roaster",
+        "nerd"
+      ]
+    },
+    {
+      "id": "red-tapes-side-eye-security",
+      "title": "Side-Eye Security",
+      "kind": "battle",
+      "battleType": "mini-boss",
+      "mapPosition": {
+        "x": 72,
+        "y": 29
+      },
+      "prerequisites": [
+        "red-tapes-roast-with-a-receipt"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 200
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-side-eye-security.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-side-eye-security.webp",
+        "environmentAssetId": "assets/venues/harbor-skyline-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Wifey's opponent hand starts at four cards.",
+          "Existing protection can block targeted effects; choose your timing carefully."
+        ],
+        "focusMechanics": [
+          "protection",
+          "resource patience"
+        ],
+        "focusCards": [
+          "wifey",
+          "snow",
+          "rastamon"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-side-eye-security",
+        "enemy": {
+          "id": "red-tapes-side-eye-security:enemy",
+          "name": "Wifey",
+          "portraitAssetId": "assets/characters/wifey.webp",
+          "deckId": "red-tapes-side-eye-security-deck",
+          "cardIds": [
+            "wifey",
+            "rastamon",
+            "snow",
+            "cornball",
+            "plug",
+            "baby",
+            "hooper"
+          ],
+          "behaviorProfile": "balanced"
+        },
+        "battlefieldAssetId": "assets/venues/harbor-skyline-court.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-side-eye-security.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-side-eye-security.webp",
+          "environmentAssetId": "assets/venues/harbor-skyline-court.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {
+          "handSize": {
+            "cpu": 4
+          }
+        },
+        "phases": [],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "Ganger Blue",
+          "text": "My wife don't play around.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Your wife would like to play at all. Move the cooler.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "I got check-in. Sit down before somebody asks you to alphabetize the weather.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Thank you. Table five. My name was on this list before Blue discovered electricity.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "I was trying to compliment you.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Then tell them my name without putting MY in front of it.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Get her a chair with a back. That one requires an explanation.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "I've got one extra card in my opening hand. You'll see it in the briefing.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "And protection in this deck. Don't throw your biggest effect at the first thing that annoys you.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "That's good life advice too.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "So is 'move the cooler.' We're all learning.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "Wifey",
+          "text": "Fifth table cleared. You kept your head. That's rarer than everybody's card collection.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You played good. You should get to do that more.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "I should.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You ever get tired of being the one everybody trusts to hold things together?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Yeah.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Then don't let them make you carry what's theirs.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "I'll try.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "I moved the cooler.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "Good. Now take the applause you were expecting and use it to move the other one.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "wifey",
+        "snow",
+        "rastamon"
+      ]
+    },
+    {
+      "id": "red-tapes-mama-has-the-floor",
+      "title": "Mama Has the Floor",
+      "kind": "battle",
+      "battleType": "boss",
+      "mapPosition": {
+        "x": 84,
+        "y": 17
+      },
+      "prerequisites": [
+        "red-tapes-side-eye-security"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "currency",
+          "id": "street-xp",
+          "amount": 250
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-mama-has-the-floor.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-mama-has-the-floor.webp",
+        "environmentAssetId": "assets/venues/crown-rooftop-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "One extra CPU Motion arrives in round three.",
+          "A Wifey card reinforces the CPU side in round five. Plan for its protection."
+        ],
+        "focusMechanics": [
+          "boss timing",
+          "reinforcements"
+        ],
+        "focusCards": [
+          "baby",
+          "wifey",
+          "hooper"
+        ]
+      },
+      "encounter": {
+        "id": "red-tapes-mama-has-the-floor",
+        "enemy": {
+          "id": "red-tapes-mama-has-the-floor:enemy",
+          "name": "Baby Momma",
+          "portraitAssetId": "assets/characters/baby-momma.webp",
+          "deckId": "red-tapes-mama-has-the-floor-deck",
+          "cardIds": [
+            "baby",
+            "wifey",
+            "rastamon",
+            "snow",
+            "cornball",
+            "plug",
+            "hooper"
+          ],
+          "behaviorProfile": "combo-boss"
+        },
+        "battlefieldAssetId": "assets/venues/crown-rooftop-court.webp",
+        "cinematic": {
+          "videoAssetId": "assets/story/chapter-two/media/red-tapes-mama-has-the-floor.mp4",
+          "posterAssetId": "assets/story/chapter-two/media/red-tapes-mama-has-the-floor.webp",
+          "environmentAssetId": "assets/venues/crown-rooftop-court.webp"
+        },
+        "soundHooks": {
+          "intro": "story.encounter.intro",
+          "play": "story.card.play",
+          "phase": "story.boss.phase",
+          "victory": "story.victory",
+          "defeat": "story.defeat"
+        },
+        "modifiers": {},
+        "phases": [
+          {
+            "id": "red-tapes-dont-rush-me",
+            "name": "Don't Rush Me",
+            "description": "At round three, Baby Momma gains one extra Motion once.",
+            "trigger": {
+              "kind": "round",
+              "atLeast": 3
+            },
+            "onEnter": [
+              {
+                "kind": "motion",
+                "owner": "cpu",
+                "amount": 1
+              }
+            ]
+          },
+          {
+            "id": "red-tapes-she-brought-backup",
+            "name": "She Brought Backup",
+            "description": "At round five, add one Wifey reinforcement to the CPU side once.",
+            "trigger": {
+              "kind": "round",
+              "atLeast": 5
+            },
+            "onEnter": [
+              {
+                "kind": "reinforcement",
+                "owner": "cpu",
+                "cardId": "wifey"
+              }
+            ]
+          }
+        ],
+        "starObjectives": [
+          {
+            "id": "win",
+            "description": "Win the encounter."
+          },
+          {
+            "id": "districts",
+            "description": "Finish holding all three districts."
+          },
+          {
+            "id": "squabble",
+            "description": "Win without using SQUABBLE."
+          }
+        ]
+      },
+      "preDialogue": [
+        {
+          "speaker": "Cracked Head",
+          "text": "I brought a chair.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Good. Put it with the others.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "You don't have to talk to me like I'm staff.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Staff clock in.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Church Auntie",
+          "text": "Leave that man a little air. He got stairs to go back down.",
+          "portraitAssetId": "assets/characters/church-auntie.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "I'm playing to run that showcase. Families get seats. Volunteers eat before the photographers.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Blue",
+          "text": "That last rule feels personal.",
+          "portraitAssetId": "assets/characters/ganger-blue.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "If the plate fits.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "You made it through five tables. Respect. Don't show up at mine expecting the same conversation.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Round three, I pick up one extra Motion. Round five, Wifey joins my side as a reinforcement card.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Wifey",
+          "text": "My card. Actual me is sitting down.",
+          "portraitAssetId": "assets/characters/wifey.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Two phases. One match. Winner hosts. My family business stays mine either way.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ],
+      "postDialogue": [
+        {
+          "speaker": "Baby Momma",
+          "text": "You won. Host the showcase. Keep the door open like you said.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Can Liquid Gold submit a vendor application?",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "The cheese is not getting a redemption arc.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Church Auntie",
+          "text": "Give the winner a minute before y'all start asking for permits.",
+          "portraitAssetId": "assets/characters/church-auntie.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "You played like—",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Like me. I've been here the whole time.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cracked Head",
+          "text": "Yeah. You have.",
+          "portraitAssetId": "assets/characters/cracked-head.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Red. You make that call?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "He knows we're coming.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Then let's go. No more messages carried by men who keep the envelope.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ],
+      "starObjectives": [
+        {
+          "id": "win",
+          "description": "Win the encounter."
+        },
+        {
+          "id": "districts",
+          "description": "Finish holding all three districts."
+        },
+        {
+          "id": "squabble",
+          "description": "Win without using SQUABBLE."
+        }
+      ],
+      "recommendedCollection": [
+        "baby",
+        "wifey",
+        "hooper"
+      ]
+    },
+    {
+      "id": "red-tapes-let-her-grieve",
+      "title": "Who Told You That?",
+      "kind": "reward",
+      "mapPosition": {
+        "x": 94,
+        "y": 6
+      },
+      "prerequisites": [
+        "red-tapes-mama-has-the-floor"
+      ],
+      "optional": false,
+      "rewards": [
+        {
+          "kind": "card",
+          "id": "baby",
+          "amount": 1
+        },
+        {
+          "kind": "chapter-key",
+          "id": "story-key:chapter-three",
+          "amount": 1
+        }
+      ],
+      "cinematic": {
+        "videoAssetId": "assets/story/chapter-two/media/red-tapes-let-her-grieve.mp4",
+        "posterAssetId": "assets/story/chapter-two/media/red-tapes-let-her-grieve.webp",
+        "environmentAssetId": "assets/venues/corner-store-court.webp"
+      },
+      "teaching": {
+        "tips": [
+          "Follow the conversation at your own pace."
+        ],
+        "focusMechanics": [
+          "story progression"
+        ],
+        "focusCards": [
+          "baby"
+        ]
+      },
+      "scenes": [
+        {
+          "speaker": "Ganger Red",
+          "text": "Showcase host confirmed. You kept the event standing while the rest of us tried to turn it into a group argument.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Next one, the kids eat first. Put that somewhere Snitch can't crop.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "Cornball",
+          "text": "Liquid Gold respects the decision of the community.",
+          "portraitAssetId": "assets/characters/cornball.webp"
+        },
+        {
+          "speaker": "Church Auntie",
+          "text": "Then let the community bury that dispenser.",
+          "portraitAssetId": "assets/characters/church-auntie.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Come with us. You've heard what was said. I'd like somebody there who isn't adding their own version.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "OG Uncle",
+          "text": "Red. I said call before you came.",
+          "portraitAssetId": "assets/characters/og-uncle.webp"
+        },
+        {
+          "speaker": "Ganger Red",
+          "text": "I did.",
+          "portraitAssetId": "assets/characters/ganger-red.webp"
+        },
+        {
+          "speaker": "OG Uncle",
+          "text": "You said company. This is a reckoning with a handbag.",
+          "portraitAssetId": "assets/characters/og-uncle.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "I brought something you've had four years to explain.",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "OG Uncle",
+          "text": "Sit down.",
+          "portraitAssetId": "assets/characters/og-uncle.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "I'll sit when you answer. Did you tell Red not to give me this message?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "OG Uncle",
+          "text": "I told him to let you grieve.",
+          "portraitAssetId": "assets/characters/og-uncle.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Over a man you knew was alive?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        },
+        {
+          "speaker": "OG Uncle",
+          "text": "Yes.",
+          "portraitAssetId": "assets/characters/og-uncle.webp"
+        },
+        {
+          "speaker": "Baby Momma",
+          "text": "Then who exactly were you protecting?",
+          "portraitAssetId": "assets/characters/baby-momma.webp"
+        }
+      ]
+    }
+  ]
+}

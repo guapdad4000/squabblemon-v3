@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
+    "types": ["node", "vite/client"],
+    "paths": {
+      "@workspace/squabblemon-engine/multiplayer": ["../../lib/squabblemon-engine/src/multiplayer.ts"],
+      "@workspace/squabblemon-engine/story": ["../../lib/squabblemon-engine/src/story.ts"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../../lib/squabblemon-engine"
+    },
+    {
+      "path": "../../lib/api-client-react"
+    }
+  ]
+}

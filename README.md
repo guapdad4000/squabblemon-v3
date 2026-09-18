@@ -1,56 +1,27 @@
-# SQUABBLEMON
+# Squabblemon
 
-A three-district competitive card battler prototype built around the Squabblemon roster.
+This is the source repository for the current Squabblemon card game. The older prototype handoff is preserved in [`handoff/`](handoff/); the current playable app is in [`artifacts/squabblemon/`](artifacts/squabblemon/) and its API is in [`artifacts/api-server/`](artifacts/api-server/).
 
-This repository is the active GitHub home for the current prototype and handoff materials.
+## Season One story
 
-## Current handoff status
+The local campaign contains eight playable chapters, 62 story nodes and 52 card battles. Chapter Two uses the revised screenplay. Chapters Three through Seven adapt the MiniMax September 17 drafts to the established Chapter One canon. Chapter Eight completes the Crown story. The original MiniMax scripts are preserved under [`artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/`](artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/). Read the [story index](artifacts/squabblemon/scripts/story/README.md) and [story bible](artifacts/squabblemon/scripts/story/STORY_BIBLE.md) before changing the campaign.
 
-- 36-character playable roster
-- 7 starter archetype decks
-- Patch 0.2 balance pass completed
-- Patch 0.3 focused human-test variants included
-- OG Concrete and Gold Foil UI themes
-- 20 / 36 characters wired to the new unified transparent production-art style
-- Yellow Liquid Orb wired to Hype
-- Flame Orb wired to SQUABBLE
-- lane-local Battle FX popups now wired for impact, heal/cleanse, money/economy, poison, copy/scam, report/silence/control, movement, type clash, and SQUABBLE moments
-- balance-lab history, telemetry notes, and implementation docs preserved in the final handoff archive
+The story engine is [`lib/squabblemon-engine/src/story.ts`](lib/squabblemon-engine/src/story.ts) plus [`seasonChapters.ts`](lib/squabblemon-engine/src/seasonChapters.ts). The game route is `/game/story`; `/story-studio` previews dialogue without saving progress or starting battles.
 
-## Start here
+## Repository and deployment
 
-- `HANDOFF.md` — current project state and transfer notes
-- `handoff/SQUABBLEMON_DEV_SOURCE.zip` — modular prototype source bundle already stored in the repo
+- GitHub source: [`guapdad4000/squabblemon-v3`](https://github.com/guapdad4000/squabblemon-v3), branch `main`.
+- Netlify project: [`squabblemon-triple-lane`](https://app.netlify.com/projects/squabblemon-triple-lane), project ID `572e48d3-6f4d-427f-9a9b-df5e195ea47c`.
+- Live site: [`squabble.today`](https://squabble.today).
 
-The complete binary art library is delivered in the final project handoff ZIP because the master transparent art package is too large for the chat GitHub connector to push as normal repository contents.
+The current Netlify production release was uploaded with the Netlify CLI. Its deploy record has `deploy_source: cli` and no Git commit reference. **A GitHub push does not currently update the live site.** To make pushes deploy automatically, connect this GitHub repository to the existing Netlify project and select `main` as the production branch. Verify the build and production environment before enabling automatic publishing.
 
-## Seven starter decks
+For the existing manual release flow, work from this repository root, use the linked Netlify project, run the checked build in [`netlify.toml`](netlify.toml), and publish the resulting site and function through Netlify CLI. The build command is `node scripts/build-netlify.mjs`. It typechecks the app and API, builds the Netlify API function, then builds the Vite site into `artifacts/squabblemon/dist/public`. `netlify.toml` supplies the publish and functions directories. The function serves `/api/*`; the SPA fallback serves the game routes.
 
-1. THE BLOCK IS HOT — turf / lane control
-2. SLIDE THRU — movement
-3. WHO YOU KNOW — combo / resource generation
-4. RECEIPTS — disruption / information
-5. CRASHOUT SEASON — comeback
-6. GOOD VIBES ONLY — sustain / protection
-7. COMPOUND INTEREST — growth / scaling
+Production build variables, Clerk keys and database credentials belong in Netlify environment settings, not this repository. The build requires a real `VITE_CLERK_PUBLISHABLE_KEY` and an HTTPS `PUBLIC_ORIGIN`; it forces test authentication off. The local disposable test account and in-memory database are not part of a release.
 
-## Balance targets
+## Local development
 
-- starter overall win rate: 45–55%
-- preferred matchup ceiling: 57/43
-- hard investigation threshold: 60/40
-- mirrors: 48–52%
-- reveal-priority advantage: under 3 percentage points
-- opening playability: above 90%
+Use Node 24 and pnpm. Install from the repository root, then start the app and API with the required local environment. The API needs a PostgreSQL `DATABASE_URL` and Clerk configuration for normal signed-in play. See [`artifacts/squabblemon/PUBLISHING.md`](artifacts/squabblemon/PUBLISHING.md) for the public-origin requirement.
 
-## Art production
-
-The remaining 16 unified character-art briefs are locked in the final handoff under `docs/REMAINING_CHARACTER_BRIEFS.md`. The prototype automatically uses legacy sprite fallbacks until each new local illustration is dropped into the sprite map.
-
-## Next production steps
-
-1. finish the remaining 16 unified production character illustrations
-2. promote the prototype FX popup router into trimmed runtime atlases / frame sequences
-3. run Patch 0.3 RC validation at 10K per pairing
-4. move game-state logic into testable production reducers
-5. persist telemetry server-side instead of localStorage
+The historical prototype notes remain in [`HANDOFF.md`](HANDOFF.md) and [`handoff/PROTOTYPE_README_2026-09-07.md`](handoff/PROTOTYPE_README_2026-09-07.md). The separate [`guapdad4000/SquabbleMon`](https://github.com/guapdad4000/SquabbleMon) repository contains an earlier overworld game, not this deployable card-game monorepo.

@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Squabblemon - Ticket Gacha (Two-Stage)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js (r128) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Tone.js for procedural punch impacts and gacha fanfares -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <!-- Google Fonts for Fighting Game Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Rajdhani:wght@600;700;800&family=Teko:wght@600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100%;
+      overflow: hidden;
+      background: #06070a;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    .font-anime { font-family: 'Teko', sans-serif; letter-spacing: 0.04em; line-height: 0.85; }
+    .font-comic { font-family: 'Bangers', cursive; letter-spacing: 0.06em; }
+
+    .gym-vignette {
+      background: radial-gradient(circle at 50% 45%, transparent 28%, rgba(3,4,6,0.95) 100%);
+      pointer-events: none;
+    }
+    .impact-frame-active { filter: invert(1) contrast(300%) brightness(1.2); }
+    .crimson-frame-active { filter: sepia(1) saturate(500%) hue-rotate(310deg) contrast(200%); }
+    .gold-frame-active { filter: sepia(1) saturate(400%) hue-rotate(20deg) contrast(180%) brightness(1.1); }
+
+    @keyframes pulseOverdrive {
+      0%, 100% { filter: drop-shadow(0 0 12px #f59e0b) drop-shadow(0 0 30px #dc2626); }
+      50% { filter: drop-shadow(0 0 25px #eab308) drop-shadow(0 0 60px #ef4444); }
+    }
+    .overdrive-glow { animation: pulseOverdrive 0.28s infinite; }
+
+    @keyframes slashEnter {
+      0% { transform: translateY(-50%) scale(0.2) rotate(-12deg); opacity: 0; }
+      50% { transform: translateY(-50%) scale(1.15) rotate(-4deg); opacity: 1; }
+      100% { transform: translateY(-50%) scale(1.0) rotate(-6deg); opacity: 1; }
+    }
+    .animate-slash { animation: slashEnter 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+
+    /* Stage indicator (punch / rip) */
+    .stage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      border: 2px solid #000;
+      box-shadow: 0 3px 0 #000;
+      font-family: 'Teko', sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .stage-pill.is-punch { background: #b91c1c; color: #fff; }
+    .stage-pill.is-rip   { background: #f59e0b; color: #000; }
+    .stage-pill.is-done  { background: #22c55e; color: #000; }
+
+    /* Boot loader — covers any blank-grey window between HTML parse and 3D init */
+    #bootLoader {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #06070a; color: #fef08a;
+      font-family: 'Teko', sans-serif; font-weight: 900;
+      transition: opacity 0.35s ease;
+    }
+    #bootLoader.hidden-boot { opacity: 0; pointer-events: none; }
+    #bootLoader .boot-title {
+      font-size: 3rem; letter-spacing: 0.08em; line-height: 1;
+      text-shadow: 0 4px 0 #000;
+      margin-bottom: 1.25rem;
+    }
+    #bootLoader .boot-step {
+      font-size: 1rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #fbbf24; opacity: 0.85;
+    }
+    #bootLoader .boot-bar {
+      width: 240px; height: 4px; background: #18181b; border: 2px solid #000;
+      margin-top: 1.5rem; overflow: hidden;
+    }
+    #bootLoader .boot-bar-fill {
+      width: 0%; height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      transition: width 0.3s ease;
+    }
+    #bootError {
+      position: fixed; inset: 0; z-index: 10000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      background: #1c1917; color: #fef08a; padding: 2rem; text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    #bootError.is-visible { display: flex; }
+    #bootError h2 {
+      font-family: 'Teko', sans-serif; font-size: 2.5rem; color: #ef4444;
+      letter-spacing: 0.06em; margin: 0 0 1rem;
+    }
+    #bootError pre {
+      max-width: 600px; padding: 1rem; background: #000; color: #fde68a;
+      font-size: 0.85rem; text-align: left; white-space: pre-wrap; word-break: break-word;
+      border: 2px solid #b91c1c;
+    }
+  </style>
+</head>
+<body class="relative w-full h-full flex flex-col items-center justify-between text-white overflow-hidden">
+
+  <!-- Boot loader: covers the page while CDN deps + 3D init complete -->
+  <div id="bootLoader">
+    <div class="boot-title">SQUABBLEMON</div>
+    <div class="boot-step" id="bootStep">LOADING UNDERGROUND GYM…</div>
+    <div class="boot-bar"><div class="boot-bar-fill" id="bootBarFill"></div></div>
+  </div>
+  <!-- Error fallback: only shown if init fails -->
+  <div id="bootError">
+    <h2>⚠ GYM OFFLINE</h2>
+    <p id="bootErrorMsg">The 3D scene could not boot. Check console for details.</p>
+    <pre id="bootErrorTrace"></pre>
+  </div>
+
+  <canvas id="speedline-canvas" class="absolute inset-0 z-10 pointer-events-none w-full h-full"></canvas>
+  <canvas id="impact-frame-canvas" class="absolute inset-0 z-20 pointer-events-none w-full h-full"></canvas>
+  <div class="absolute inset-0 gym-vignette pointer-events-none" style="z-index: 15;"></div>
+
+  <!-- Slash Banner for the punch-KO finale -->
+  <div id="finaleBanner" class="hidden absolute top-1/2 left-0 right-0 z-40 pointer-events-none flex flex-col items-center justify-center -translate-y-1/2">
+    <div class="animate-slash bg-gradient-to-r from-red-700 via-amber-500 to-red-700 border-y-8 border-black py-3 px-12 shadow-[0_10px_35px_rgba(0,0,0,0.9)] w-full text-center transform -rotate-6">
+      <div class="font-anime text-8xl md:text-9xl font-black text-white tracking-widest drop-shadow-[0_6px_0_#000] italic leading-none">
+        K.O. FINISH!
+      </div>
+      <div class="font-comic text-2xl md:text-3xl text-black font-black tracking-widest uppercase -mt-2">
+        ★ TICKET TORN OPEN ★
+      </div>
+    </div>
+  </div>
+
+  <!-- Top HUD -->
+  <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4 max-w-xl mx-auto w-full pointer-events-none">
+    <div class="flex items-center space-x-3 pointer-events-auto">
+      <div class="w-10 h-10 rounded-lg bg-amber-500 border-2 border-black flex items-center justify-center shadow-[0_3px_0_#000]">
+        <span class="font-anime text-2xl text-black font-black">SM</span>
+      </div>
+      <div>
+        <div class="font-anime text-3xl font-black text-amber-400 drop-shadow-[0_2px_0_#000] tracking-wider leading-none">
+          UNDERGROUND GYM
+        </div>
+        <div class="text-[10px] font-bold text-amber-200 tracking-widest uppercase -mt-0.5">
+          PUNCH • RIP • REVEAL • SQUABBLEMON TCG
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-2 pointer-events-auto">
+      <span id="stagePill" class="stage-pill is-punch">STAGE 1 / 2 — PUNCH</span>
+      <button id="soundToggleBtn" class="w-10 h-10 rounded-full bg-zinc-900/90 border-2 border-zinc-700 hover:border-amber-400 flex items-center justify-center text-sm shadow-[0_3px_0_#000] active:scale-95 transition">
+        <span id="soundIcon">🔊</span>
+      </button>
+      <button id="trainAgainBtn" class="hidden px-5 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-black font-anime text-2xl font-black border-2 border-black shadow-[0_4px_0_#000] active:translate-y-0.5 transition">
+        REMATCH
+      </button>
+    </div>
+  </header>
+
+  <!-- Combo / Heat -->
+  <div id="comboHud" class="absolute top-16 left-0 right-0 z-30 flex flex-col items-center pointer-events-none transition-all duration-300">
+    <div class="flex items-baseline space-x-2">
+      <span id="comboCounter" class="font-anime text-6xl font-black text-amber-400 drop-shadow-[0_4px_0_#000] tracking-tighter leading-none">0</span>
+      <span id="comboLabel" class="font-anime text-2xl font-black text-zinc-300 drop-shadow-[0_2px_0_#000]">HITS</span>
+    </div>
+    <div class="w-64 h-3 bg-zinc-900/90 rounded-full border-2 border-black overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1 relative">
+      <div id="heatMeterFill" class="h-full w-0 bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 transition-all duration-75"></div>
+    </div>
+    <div id="heatStatusText" class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mt-1 drop-shadow">
+      TAP OR MASH THE BAG TO PUNCH
+    </div>
+  </div>
+
+  <!-- 3D Container -->
+  <main id="webgl-container" class="relative w-full h-full flex-1 min-h-0 touch-none cursor-pointer flex items-center justify-center"></main>
+
+  <!-- Bottom Controls -->
+  <footer class="absolute bottom-6 left-0 right-0 z-30 flex flex-col items-center px-4 pointer-events-none max-w-sm mx-auto w-full">
+    <div id="punchControlPanel" class="w-full flex flex-col items-center pointer-events-auto transition-all duration-300">
+      <div class="w-full grid grid-cols-2 gap-3">
+        <button id="tapPunchBtn" class="py-3 px-4 rounded-xl bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-anime text-2xl font-black border-2 border-black shadow-[0_4px_0_#000] active:translate-y-1 active:shadow-[0_1px_0_#000] transition-all flex items-center justify-center space-x-2">
+          <span>🥊</span>
+          <span>PUNCH BAG</span>
+        </button>
+        <button id="flurryBtn" class="py-3 px-4 rounded-xl bg-gradient-to-b from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-anime text-2xl font-black border-2 border-black shadow-[0_4px_0_#000] active:translate-y-1 active:shadow-[0_1px_0_#000] transition-all flex items-center justify-center space-x-2">
+          <span>⚡</span>
+          <span>AUTO RUSH</span>
+        </button>
+      </div>
+      <p class="text-[11px] text-zinc-400 font-bold uppercase tracking-widest mt-2 text-center drop-shadow-md">
+        Stage 1: 28 hits to K.O. &nbsp;•&nbsp; Stage 2: tap the ticket to rip
+      </p>
+    </div>
+
+    <div id="ripControlPanel" class="hidden w-full flex flex-col items-center pointer-events-auto transition-all duration-300">
+      <button id="ripBtn" class="w-full py-3 px-4 rounded-xl bg-gradient-to-b from-yellow-300 to-amber-500 hover:from-yellow-200 hover:to-amber-400 text-black font-anime text-2xl font-black border-2 border-black shadow-[0_4px_0_#000] active:translate-y-1 active:shadow-[0_1px_0_#000] transition-all flex items-center justify-center space-x-2">
+        <span>🎟️</span>
+        <span>RIP TICKET</span>
+      </button>
+      <p class="text-[11px] text-zinc-400 font-bold uppercase tracking-widest mt-2 text-center drop-shadow-md">
+        Tap the floating ticket (or the button) to tear it open
+      </p>
+    </div>
+
+    <div id="cardInspectNotice" class="hidden text-center pointer-events-none animate-bounce">
+      <p class="font-anime text-3xl text-amber-300 drop-shadow-[0_2px_0_#000] tracking-wider">
+        TORN! TAP CARDS TO 3D INSPECT
+      </p>
+    </div>
+  </footer>
+
+  <!-- 3D Card Inspector Modal -->
+  <div id="cardInspectModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative max-w-xs w-full flex flex-col items-center">
+      <button id="closeModalBtn" class="absolute -top-4 -right-2 z-20 w-10 h-10 bg-red-600 hover:bg-red-500 border-2 border-black rounded-full flex items-center justify-center font-black text-white shadow-[0_4px_0_#000] text-lg active:scale-95 transition">✕</button>
+      <div id="cardTiltFrame" class="w-64 h-96 rounded-2xl border-4 border-black shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden bg-zinc-950 transition-transform duration-100 ease-out cursor-pointer relative">
+        <canvas id="inspectCanvas" width="800" height="1150" class="w-full h-full object-cover"></canvas>
+        <div id="holoSheenOverlay" class="absolute inset-0 pointer-events-none opacity-0 mix-blend-color-dodge transition-opacity duration-300"></div>
+      </div>
+      <div class="mt-4 w-full text-center">
+        <h2 id="inspectName" class="font-anime text-3xl font-black text-amber-400 drop-shadow-[0_2px_0_#000] tracking-wide"></h2>
+        <p id="inspectRarity" class="text-xs font-bold uppercase tracking-widest text-zinc-400 -mt-1"></p>
+        <button id="flipCardBtn" class="mt-3 w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-anime text-xl font-bold tracking-wider border-2 border-black rounded-xl shadow-[0_3px_0_#000] active:translate-y-0.5 transition">
+          FLIP CARD BACK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       AUDIO ENGINE (TONE.JS)
+       ========================================================= */
+    const AudioEngine = {
+      enabled: true,
+      ready: false,
+      lastScheduledTime: 0,
+
+      init() {
+        if (this.ready) return;
+        if (typeof Tone === "undefined") { console.warn("Tone.js missing"); return; }
+        try {
+          Tone.start();
+
+          this.leatherBass = new Tone.MembraneSynth({
+            pitchDecay: 0.04, octaves: 5, oscillator: { type: "sine" },
+            envelope: { attack: 0.001, decay: 0.18, sustain: 0, release: 0.1 }
+          }).toDestination();
+          this.leatherBass.volume.value = -1;
+
+          this.snapNoise = new Tone.NoiseSynth({
+            noise: { type: "white" },
+            envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.04 }
+          }).toDestination();
+          this.snapNoise.volume.value = -6;
+
+          this.koNoise = new Tone.NoiseSynth({
+            noise: { type: "brown" },
+            envelope: { attack: 0.002, decay: 0.6, sustain: 0.05, release: 0.4 }
+          }).toDestination();
+          this.koNoise.volume.value = 2;
+
+          this.swish = new Tone.Filter({ frequency: 2200, type: "bandpass", Q: 2.5 }).toDestination();
+          this.swishNoise = new Tone.NoiseSynth({
+            noise: { type: "pink" },
+            envelope: { attack: 0.01, decay: 0.09, sustain: 0, release: 0.04 }
+          }).connect(this.swish);
+          this.swishNoise.volume.value = -10;
+
+          this.fanfare = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "triangle8" },
+            envelope: { attack: 0.01, decay: 1.2, sustain: 0.15, release: 1.0 }
+          }).toDestination();
+          this.fanfare.volume.value = -4;
+
+          this.koBoom = new Tone.MembraneSynth({
+            pitchDecay: 0.25, octaves: 7, oscillator: { type: "triangle" },
+            envelope: { attack: 0.001, decay: 1.1, sustain: 0.08, release: 0.8 }
+          }).toDestination();
+          this.koBoom.volume.value = 4;
+
+          // Paper-tear for stage 2
+          this.tearNoise = new Tone.NoiseSynth({
+            noise: { type: "pink" },
+            envelope: { attack: 0.001, decay: 0.22, sustain: 0, release: 0.08 }
+          }).toDestination();
+          this.tearNoise.volume.value = -4;
+
+          this.ticketBass = new Tone.MembraneSynth({
+            pitchDecay: 0.05, octaves: 5, oscillator: { type: "sine" },
+            envelope: { attack: 0.001, decay: 0.18, sustain: 0, release: 0.1 }
+          }).toDestination();
+          this.ticketBass.volume.value = 0;
+
+          this.ready = true;
+        } catch (e) { console.warn("Audio init failed", e); }
+      },
+
+      getSafeTime(advance = 0.005) {
+        if (typeof Tone === "undefined") return 0;
+        const now = Tone.now();
+        const safe = Math.max(now + advance, this.lastScheduledTime + 0.005);
+        this.lastScheduledTime = safe;
+        return safe;
+      },
+
+      playPunch(speedFactor = 1) {
+        if (!this.enabled || typeof Tone === "undefined") return;
+        this.init(); if (!this.ready) return;
+        try {
+          const time = this.getSafeTime(0.002);
+          const baseNote = speedFactor > 2.6 ? "G2" : (speedFactor > 1.6 ? "F2" : "D2");
+          this.leatherBass.triggerAttackRelease(baseNote, "16n", time);
+          this.snapNoise.triggerAttackRelease("32n", time + 0.004);
+        } catch (e) {}
+      },
+
+      playKO() {
+        if (!this.enabled || typeof Tone === "undefined") return;
+        this.init(); if (!this.ready) return;
+        try {
+          const time = this.getSafeTime(0.005);
+          this.koBoom.triggerAttackRelease("B0", "2n", time);
+          this.koNoise.triggerAttackRelease("4n", time + 0.01);
+          setTimeout(() => {
+            const fTime = this.getSafeTime(0.01);
+            this.fanfare.triggerAttackRelease(["E5", "G#5", "B5", "E6", "G#6"], "1n", fTime);
+          }, 450);
+        } catch (e) {}
+      },
+
+      playTear() {
+        if (!this.enabled || typeof Tone === "undefined") return;
+        this.init(); if (!this.ready) return;
+        try {
+          const time = this.getSafeTime(0.005);
+          this.tearNoise.triggerAttackRelease("8n", time);
+          this.ticketBass.triggerAttackRelease("A1", "16n", time + 0.005);
+          this.snapNoise.triggerAttackRelease("32n", time + 0.012);
+          setTimeout(() => {
+            const fTime = this.getSafeTime(0.01);
+            this.fanfare.triggerAttackRelease(["E5", "G#5", "B5", "E6", "G#6"], "1n", fTime);
+          }, 380);
+        } catch (e) {}
+      }
+    };
+
+    /* =========================================================
+       CARDS DATA
+       ========================================================= */
+    const CARD_COLLECTION = [
+      { id: "c1", name: "KAI 'SPIKE' MERCER", title: "STREET PRODIGY", rarity: "COMMON BRAWLER", atk: "750", def: "620", color: "#22c55e", theme: "spike", desc: "Lightning step brawler from the back alleys. Dodges contracts and strikes with leaping roundhouses." },
+      { id: "c2", name: "VANCE 'THE BROKER'", title: "SYNDICATE HEAVY", rarity: "UNCOMMON ENFORCER", atk: "880", def: "960", color: "#0ea5e9", theme: "broker", desc: "Iron-bodied corporate enforcer in bespoke suit and red suspenders. Collects fight debts with heavy fists." },
+      { id: "c3", name: "DEATHLINE CREDIT CARD", title: "ILLEGAL BLACK ASSET", rarity: "UNCOMMON TRAP", atk: "---", def: "+500", color: "#ef4444", theme: "card", desc: "Blood-stained skull black card. Overdrafts vital stamina in exchange for an unblockable vengeance strike." },
+      { id: "c4", name: "DIRTY BOUNTY SNAPSHOT", title: "UNDERGROUND EVIDENCE", rarity: "RARE ASSET", atk: "+450", def: "+250", color: "#f59e0b", theme: "cash", desc: "Banded stacks of marked hundreds bundled with candid camera film. Doubles round payout upon knockout." },
+      { id: "c5", name: "CROWN GAUNTLETS 'SM'", title: "APEX CHAMPION RELIC", rarity: "ULTRA RARE SECRET FOIL", atk: "1450", def: "1380", color: "#eab308", isFoil: true, theme: "gloves", desc: "Worn tan leather boxing gloves stamped with the pure gold SM crown. Worn by the undisputed King of the Streets." }
+    ];
+
+    /* =========================================================
+       PROCEDURAL TEXTURES (UNCHANGED FROM HEAVY BAG)
+       ========================================================= */
+    function drawEmblem(ctx, cx, cy, scale = 1, showGloves = true) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      if (showGloves) {
+        ctx.save(); ctx.translate(-195, -15); ctx.rotate(-0.35); drawMiniGlove(ctx); ctx.restore();
+        ctx.save(); ctx.translate(195, -15); ctx.scale(-1, 1); ctx.rotate(-0.35); drawMiniGlove(ctx); ctx.restore();
+      }
+      ctx.beginPath();
+      ctx.moveTo(-115, -70); ctx.lineTo(-145, -155); ctx.lineTo(-65, -120); ctx.lineTo(0, -180);
+      ctx.lineTo(65, -120); ctx.lineTo(145, -155); ctx.lineTo(115, -70); ctx.closePath();
+      const crownGrad = ctx.createLinearGradient(0, -180, 0, -70);
+      crownGrad.addColorStop(0, "#fef08a"); crownGrad.addColorStop(0.3, "#eab308");
+      crownGrad.addColorStop(0.7, "#a16207"); crownGrad.addColorStop(1, "#451a03");
+      ctx.fillStyle = crownGrad; ctx.lineWidth = 18; ctx.strokeStyle = "#000000";
+      ctx.stroke(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0, -75); ctx.lineTo(140, -35); ctx.lineTo(140, 85); ctx.lineTo(0, 180);
+      ctx.lineTo(-140, 85); ctx.lineTo(-140, -35); ctx.closePath();
+      const shieldGrad = ctx.createLinearGradient(-140, -75, 140, 180);
+      shieldGrad.addColorStop(0, "#fde047"); shieldGrad.addColorStop(0.3, "#ca8a04");
+      shieldGrad.addColorStop(0.7, "#854d0e"); shieldGrad.addColorStop(1, "#361a03");
+      ctx.fillStyle = shieldGrad; ctx.lineWidth = 20; ctx.strokeStyle = "#000000";
+      ctx.stroke(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0, -56); ctx.lineTo(118, -22); ctx.lineTo(118, 70); ctx.lineTo(0, 155);
+      ctx.lineTo(-118, 70); ctx.lineTo(-118, -22); ctx.closePath();
+      ctx.fillStyle = "#1c2e22"; ctx.lineWidth = 10; ctx.strokeStyle = "#000000";
+      ctx.stroke(); ctx.fill();
+      ctx.font = "900 120px 'Teko', sans-serif";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.lineWidth = 20; ctx.strokeStyle = "#000000";
+      ctx.strokeText("SM", 0, 36);
+      const smGrad = ctx.createLinearGradient(0, -20, 0, 90);
+      smGrad.addColorStop(0, "#ffffff"); smGrad.addColorStop(0.3, "#fef08a");
+      smGrad.addColorStop(0.7, "#d97706"); smGrad.addColorStop(1, "#78350f");
+      ctx.fillStyle = smGrad; ctx.fillText("SM", 0, 36);
+      ctx.restore();
+    }
+
+    function drawMiniGlove(ctx) {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 95, 120, 0.2, 0, Math.PI * 2);
+      const gloveGrad = ctx.createLinearGradient(-60, -60, 60, 60);
+      gloveGrad.addColorStop(0, "#d97706"); gloveGrad.addColorStop(0.5, "#b45309"); gloveGrad.addColorStop(1, "#451a03");
+      ctx.fillStyle = gloveGrad; ctx.lineWidth = 16; ctx.strokeStyle = "#000000";
+      ctx.stroke(); ctx.fill();
+      ctx.fillStyle = "#18181b"; ctx.fillRect(-85, 95, 145, 60);
+      ctx.lineWidth = 12; ctx.strokeRect(-85, 95, 145, 60);
+    }
+
+    function createPunchingBagTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 2048; canvas.height = 2048;
+      const ctx = canvas.getContext("2d");
+      const leatherGrad = ctx.createLinearGradient(0, 0, 2048, 0);
+      leatherGrad.addColorStop(0, "#78350f"); leatherGrad.addColorStop(0.15, "#a16207");
+      leatherGrad.addColorStop(0.28, "#d97706"); leatherGrad.addColorStop(0.5, "#b45309");
+      leatherGrad.addColorStop(0.72, "#d97706"); leatherGrad.addColorStop(0.85, "#a16207"); leatherGrad.addColorStop(1, "#78350f");
+      ctx.fillStyle = leatherGrad; ctx.fillRect(0, 0, 2048, 2048);
+      for (let i = 0; i < 9000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255, 237, 213, 0.03)" : "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(Math.random() * 2048, Math.random() * 2048, 3, 3);
+      }
+      for (let x = 0; x <= 2048; x += 512) {
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.75)"; ctx.lineWidth = 16;
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 2048); ctx.stroke();
+        ctx.strokeStyle = "rgba(254, 243, 199, 0.55)"; ctx.lineWidth = 5; ctx.setLineDash([14, 14]);
+        ctx.beginPath(); ctx.moveTo(x - 14, 0); ctx.lineTo(x - 14, 2048);
+        ctx.moveTo(x + 14, 0); ctx.lineTo(x + 14, 2048); ctx.stroke(); ctx.setLineDash([]);
+      }
+      ctx.fillStyle = "#121215"; ctx.fillRect(0, 1620, 2048, 428);
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 20; ctx.strokeRect(0, 1620, 2048, 428);
+      ctx.fillStyle = "#121215"; ctx.fillRect(0, 0, 2048, 260); ctx.strokeRect(0, 0, 2048, 260);
+      for (let x = 256; x < 2048; x += 512) {
+        ctx.fillStyle = "#27272a"; ctx.fillRect(x - 55, 170, 110, 150);
+        ctx.strokeStyle = "#000"; ctx.lineWidth = 8; ctx.strokeRect(x - 55, 170, 110, 150);
+        ctx.fillStyle = "#f4f4f5"; ctx.beginPath(); ctx.arc(x, 245, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      }
+      drawEmblem(ctx, 512, 920, 2.15, true);
+      drawEmblem(ctx, 1536, 920, 2.15, true);
+      ctx.save();
+      ctx.font = "900 135px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.lineWidth = 24; ctx.strokeStyle = "#000000";
+      ctx.strokeText("SQUABBLEMON", 512, 1390);
+      ctx.fillStyle = "#fef08a"; ctx.fillText("SQUABBLEMON", 512, 1390);
+      ctx.strokeText("SQUABBLEMON", 1536, 1390);
+      ctx.fillText("SQUABBLEMON", 1536, 1390);
+      ctx.restore();
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.anisotropy = 8;
+      return texture;
+    }
+
+    function createGlovePatchTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512; canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 512, 256);
+      ctx.lineWidth = 24; ctx.strokeStyle = "#000000"; ctx.strokeRect(12, 12, 488, 232);
+      ctx.font = "900 180px 'Teko', sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "#000000"; ctx.fillText("SM", 256, 135);
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function createGymFloorTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024; canvas.height = 1024;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#0f1016"; ctx.fillRect(0, 0, 1024, 1024);
+      for (let i = 0; i < 5000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.3)";
+        ctx.fillRect(Math.random() * 1024, Math.random() * 1024, 4, 4);
+      }
+      ctx.strokeStyle = "rgba(234, 179, 8, 0.3)"; ctx.lineWidth = 10;
+      ctx.beginPath(); ctx.arc(512, 512, 400, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.18)"; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(512, 512, 290, 0, Math.PI * 2); ctx.stroke();
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createCardFrontTexture(card) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 800; canvas.height = 1150;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#09090b"; ctx.fillRect(0, 0, 800, 1150);
+      ctx.strokeStyle = card.color; ctx.lineWidth = 18; ctx.strokeRect(20, 20, 760, 1110);
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 8; ctx.strokeRect(30, 30, 740, 1090);
+      ctx.fillStyle = "#18181b"; ctx.fillRect(40, 40, 720, 95);
+      ctx.lineWidth = 6; ctx.strokeStyle = "#000"; ctx.strokeRect(40, 40, 720, 95);
+      ctx.fillStyle = "#ffffff"; ctx.font = "900 56px 'Teko', sans-serif"; ctx.textAlign = "left";
+      ctx.fillText(card.name, 65, 108);
+      const ix = 50, iy = 155, iw = 700, ih = 580;
+      const bgGrad = ctx.createLinearGradient(ix, iy, ix + iw, iy + ih);
+      bgGrad.addColorStop(0, "#1f2937"); bgGrad.addColorStop(0.7, card.color); bgGrad.addColorStop(1, "#030712");
+      ctx.fillStyle = bgGrad; ctx.fillRect(ix, iy, iw, ih);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.lineWidth = 4;
+      const cx = ix + iw / 2, cy = iy + ih / 2;
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 10) {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * 460, cy + Math.sin(a) * 460);
+        ctx.stroke();
+      }
+      if (card.theme === "spike") {
+        ctx.fillStyle = "#09090b"; ctx.beginPath();
+        for (let i = 0; i < 18; i++) {
+          const r = i % 2 === 0 ? 110 : 55;
+          const th = (i * Math.PI) / 9;
+          ctx.lineTo(cx + Math.cos(th) * r, cy - 40 + Math.sin(th) * r);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.lineWidth = 8; ctx.strokeStyle = "#22c55e"; ctx.stroke();
+        ctx.fillStyle = "#18181b"; ctx.fillRect(cx - 50, cy + 20, 100, 150);
+        ctx.fillStyle = "#22c55e";
+        ctx.beginPath(); ctx.arc(cx - 75, cy + 60, 35, 0, Math.PI * 2); ctx.arc(cx + 75, cy + 60, 35, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = 6; ctx.strokeStyle = "#000"; ctx.stroke();
+        ctx.fillStyle = "#facc15";
+        ctx.fillRect(cx - 24, cy - 45, 14, 8);
+        ctx.fillRect(cx + 10, cy - 45, 14, 8);
+      } else if (card.theme === "broker") {
+        ctx.fillStyle = "#18181b";
+        ctx.beginPath(); ctx.ellipse(cx, cy + 60, 140, 110, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = 8; ctx.strokeStyle = "#0ea5e9"; ctx.stroke();
+        ctx.fillStyle = "#22c55e"; ctx.fillRect(cx - 15, cy - 10, 30, 160);
+        ctx.fillStyle = "#ef4444"; ctx.fillRect(cx - 80, cy + 10, 20, 150); ctx.fillRect(cx + 60, cy + 10, 20, 150);
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 5;
+        ctx.strokeRect(cx - 40, cy - 60, 32, 22); ctx.strokeRect(cx + 8, cy - 60, 32, 22);
+      } else if (card.theme === "card") {
+        ctx.save(); ctx.translate(cx, cy); ctx.rotate(-0.15);
+        ctx.fillStyle = "#15803d"; ctx.fillRect(-140, -90, 280, 180);
+        ctx.lineWidth = 8; ctx.strokeStyle = "#000000"; ctx.strokeRect(-140, -90, 280, 180);
+        ctx.fillStyle = "#eab308"; ctx.fillRect(-115, -45, 50, 40);
+        ctx.fillStyle = "#f3f4f6"; ctx.beginPath(); ctx.arc(35, -5, 45, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(20, -10, 12, 0, Math.PI * 2); ctx.arc(50, -10, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#dc2626"; ctx.font = "900 38px 'Permanent Marker', cursive";
+        ctx.fillText("CREDIT CARD", -120, -50); ctx.restore();
+      } else if (card.theme === "cash") {
+        ctx.save(); ctx.translate(cx, cy);
+        ctx.fillStyle = "#86efac"; ctx.fillRect(-120, -20, 240, 110);
+        ctx.lineWidth = 8; ctx.strokeStyle = "#166534"; ctx.strokeRect(-120, -20, 240, 110);
+        ctx.fillStyle = "#f97316"; ctx.fillRect(-30, -20, 60, 110);
+        ctx.fillStyle = "#166534"; ctx.font = "900 65px 'Teko', sans-serif"; ctx.fillText("$10,000", -90, 50);
+        ctx.beginPath(); ctx.arc(0, -60, 50, 0, Math.PI * 2); ctx.fillStyle = "#334155"; ctx.fill();
+        ctx.lineWidth = 8; ctx.strokeStyle = "#000"; ctx.stroke(); ctx.restore();
+      } else if (card.theme === "gloves") {
+        ctx.save(); ctx.translate(cx, cy); drawMiniGlove(ctx); drawEmblem(ctx, 0, -50, 1.3, false); ctx.restore();
+      }
+      ctx.lineWidth = 10; ctx.strokeStyle = "#000000"; ctx.strokeRect(ix, iy, iw, ih);
+      ctx.fillStyle = "#18181b"; ctx.fillRect(50, 755, 700, 60);
+      ctx.lineWidth = 4; ctx.strokeStyle = "#000"; ctx.strokeRect(50, 755, 700, 60);
+      ctx.fillStyle = "#fde047"; ctx.font = "800 38px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(`${card.title}  •  ${card.rarity}`, 400, 800);
+      ctx.fillStyle = "#09090b"; ctx.fillRect(50, 835, 700, 120);
+      ctx.lineWidth = 6; ctx.strokeStyle = "#27272a"; ctx.strokeRect(50, 835, 700, 120);
+      ctx.fillStyle = "#ef4444"; ctx.font = "800 30px 'Rajdhani', sans-serif"; ctx.fillText("ATTACK", 210, 875);
+      ctx.fillStyle = "#ffffff"; ctx.font = "900 62px 'Teko', sans-serif"; ctx.fillText(card.atk, 210, 935);
+      ctx.fillStyle = "#38bdf8"; ctx.font = "800 30px 'Rajdhani', sans-serif"; ctx.fillText("DEFENSE", 590, 875);
+      ctx.fillStyle = "#ffffff"; ctx.font = "900 62px 'Teko', sans-serif"; ctx.fillText(card.def, 590, 935);
+      ctx.fillStyle = "#a1a1aa"; ctx.font = "600 24px 'Rajdhani', sans-serif";
+      ctx.fillText(`"${card.desc}"`, 400, 1010);
+      ctx.fillStyle = "#52525b"; ctx.font = "700 18px monospace";
+      ctx.fillText("SM-EN001 • 1ST EDITION • ARENA TCG", 400, 1075);
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function createCardBackTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 800; canvas.height = 1150;
+      const ctx = canvas.getContext("2d");
+      const bg = ctx.createRadialGradient(400, 575, 80, 400, 575, 580);
+      bg.addColorStop(0, "#1e293b"); bg.addColorStop(1, "#020617");
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, 800, 1150);
+      ctx.strokeStyle = "#ca8a04"; ctx.lineWidth = 18; ctx.strokeRect(20, 20, 760, 1110);
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 8; ctx.strokeRect(30, 30, 740, 1090);
+      drawEmblem(ctx, 400, 575, 2.6, true);
+      ctx.fillStyle = "#fef08a"; ctx.font = "900 95px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.lineWidth = 10; ctx.strokeStyle = "#000";
+      ctx.strokeText("SQUABBLEMON", 400, 200); ctx.fillText("SQUABBLEMON", 400, 200);
+      ctx.font = "900 68px 'Teko', sans-serif";
+      ctx.strokeText("TRADING CARD GAME", 400, 990); ctx.fillText("TRADING CARD GAME", 400, 990);
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    // === TICKET TEXTURE (used in stage 2) ===
+    function createTicketFrontTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024; canvas.height = 600;
+      const ctx = canvas.getContext("2d");
+      const goldGrad = ctx.createLinearGradient(0, 0, 1024, 600);
+      goldGrad.addColorStop(0, "#fef3c7"); goldGrad.addColorStop(0.3, "#fde047");
+      goldGrad.addColorStop(0.6, "#facc15"); goldGrad.addColorStop(1, "#a16207");
+      ctx.fillStyle = goldGrad; ctx.fillRect(0, 0, 1024, 600);
+      for (let i = 0; i < 4000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.05)" : "rgba(120,53,15,0.08)";
+        ctx.fillRect(Math.random() * 1024, Math.random() * 600, 3, 3);
+      }
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 14; ctx.strokeRect(20, 20, 984, 560);
+      ctx.fillStyle = "#7c2d12"; ctx.fillRect(20, 20, 984, 90);
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 8; ctx.strokeRect(20, 20, 984, 90);
+      ctx.fillStyle = "#fef08a"; ctx.font = "900 64px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.lineWidth = 10; ctx.strokeStyle = "#000000";
+      ctx.strokeText("★ ADMIT ONE • UNDERGROUND GYM ★", 512, 80);
+      ctx.fillText("★ ADMIT ONE • UNDERGROUND GYM ★", 512, 80);
+      drawEmblem(ctx, 260, 330, 1.1, true);
+      ctx.fillStyle = "#7c2d12"; ctx.font = "900 110px 'Teko', sans-serif"; ctx.textAlign = "left";
+      ctx.lineWidth = 12; ctx.strokeStyle = "#000000";
+      ctx.strokeText("SQUABBLE-", 460, 300); ctx.fillText("SQUABBLE-", 460, 300);
+      ctx.strokeText("MON", 460, 400); ctx.fillText("MON", 460, 400);
+      ctx.fillStyle = "#1c1917"; ctx.font = "800 26px 'Rajdhani', sans-serif";
+      ctx.fillText("No. SM-0726", 60, 540);
+      ctx.fillText("GACHA TICKET", 60, 510);
+      // Tear seam
+      ctx.save();
+      ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineWidth = 6; ctx.setLineDash([18, 18]);
+      ctx.beginPath(); ctx.moveTo(1018, 30); ctx.lineTo(1018, 570); ctx.stroke(); ctx.setLineDash([]);
+      ctx.restore();
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      for (let y = 50; y < 560; y += 40) {
+        ctx.beginPath(); ctx.arc(1018, y, 5, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = "#27272a";
+      for (const [x, y] of [[60, 60], [964, 60], [60, 540], [964, 540]]) {
+        ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#000"; ctx.lineWidth = 4; ctx.stroke();
+        ctx.fillStyle = "#f4f4f5";
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#27272a";
+      }
+      ctx.save(); ctx.translate(840, 320); ctx.rotate(-0.25);
+      ctx.strokeStyle = "rgba(124,45,18,0.45)"; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(0, 0, 70, 0, Math.PI * 2); ctx.stroke();
+      ctx.font = "900 22px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "rgba(124,45,18,0.55)";
+      ctx.fillText("VALID", 0, -5); ctx.fillText("ONLY", 0, 20);
+      ctx.restore();
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    function createTicketBackTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024; canvas.height = 600;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fef3c7"; ctx.fillRect(0, 0, 1024, 600);
+      for (let i = 0; i < 4000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.05)" : "rgba(120,53,15,0.08)";
+        ctx.fillRect(Math.random() * 1024, Math.random() * 600, 3, 3);
+      }
+      ctx.strokeStyle = "#000000"; ctx.lineWidth = 14; ctx.strokeRect(20, 20, 984, 560);
+      ctx.fillStyle = "#7c2d12"; ctx.font = "900 86px 'Teko', sans-serif"; ctx.textAlign = "center";
+      ctx.lineWidth = 12; ctx.strokeStyle = "#000000";
+      ctx.strokeText("TEAR HERE →", 460, 280); ctx.fillText("TEAR HERE →", 460, 280);
+      ctx.font = "800 30px 'Rajdhani', sans-serif"; ctx.fillStyle = "#1c1917";
+      ctx.fillText("FOLD ALONG DASHED SEAM", 460, 330);
+      ctx.fillText("REDEEM AT ANY SM TCG BOOTH", 460, 370);
+      ctx.save();
+      ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineWidth = 6; ctx.setLineDash([18, 18]);
+      ctx.beginPath(); ctx.moveTo(1018, 30); ctx.lineTo(1018, 570); ctx.stroke(); ctx.setLineDash([]);
+      ctx.restore();
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      for (let y = 50; y < 560; y += 40) {
+        ctx.beginPath(); ctx.arc(1018, y, 5, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = "#27272a";
+      for (const [x, y] of [[60, 60], [964, 60], [60, 540], [964, 540]]) {
+        ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#000"; ctx.lineWidth = 4; ctx.stroke();
+        ctx.fillStyle = "#f4f4f5";
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#27272a";
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    /* =========================================================
+       STAGE STATE — PUNCH / TICKET / REVEAL
+       ========================================================= */
+    const STAGE = { PUNCH: "punch", TICKET: "ticket", REVEAL: "reveal" };
+    let currentStage = STAGE.PUNCH;
+
+    /* =========================================================
+       THREE.JS SCENE
+       ========================================================= */
+    let scene, camera, renderer;
+    let gymGroup, bagAssembly, heavyBagMesh;
+    let bagOriginalPositions, bagVertexDents;
+    let leftGloveMesh, rightGloveMesh;
+    let gloveGhosts = [];
+    let cardMeshStack = [];
+    let sharedCardBackTexture;
+
+    // Stage 2 objects
+    let ticketGroup, ticketLeftHalf, ticketRightHalf, ticketBackdrop;
+    let ticketState = "idle"; // idle | torn | revealing
+
+    function createAnimeOutline(geometry, thickness = 0.05) {
+      const outlineGeo = geometry.clone();
+      const pos = outlineGeo.attributes.position;
+      const norm = outlineGeo.attributes.normal;
+      if (norm) {
+        for (let i = 0; i < pos.count; i++) {
+          pos.setXYZ(i,
+            pos.getX(i) + norm.getX(i) * thickness,
+            pos.getY(i) + norm.getY(i) * thickness,
+            pos.getZ(i) + norm.getZ(i) * thickness
+          );
+        }
+        outlineGeo.computeVertexNormals();
+      }
+      const outlineMat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
+      return new THREE.Mesh(outlineGeo, outlineMat);
+    }
+
+    function getContainerSize() {
+      const container = document.getElementById("webgl-container");
+      const w = container && container.clientWidth > 0 ? container.clientWidth : window.innerWidth;
+      const h = container && container.clientHeight > 0 ? container.clientHeight : window.innerHeight;
+      return { w: Math.max(w, 320), h: Math.max(h, 480) };
+    }
+
+    function init3DExperience() {
+      const container = document.getElementById("webgl-container");
+      if (!container) return;
+      const size = getContainerSize();
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, size.w / size.h, 0.1, 100);
+      camera.position.set(0, 0.35, 8.2);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(size.w, size.h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.3;
+      while (container.firstChild) container.removeChild(container.firstChild);
+      container.appendChild(renderer.domElement);
+
+      const ambient = new THREE.AmbientLight(0x18181b, 0.85);
+      scene.add(ambient);
+
+      const spotLight = new THREE.SpotLight(0xfffbeb, 4.8, 22, Math.PI * 0.3, 0.4);
+      spotLight.position.set(0, 8.0, 1.4);
+      spotLight.target.position.set(0, -0.5, 0);
+      scene.add(spotLight); scene.add(spotLight.target);
+
+      const rimCyan = new THREE.DirectionalLight(0x38bdf8, 2.2);
+      rimCyan.position.set(-6, 2.5, -4);
+      scene.add(rimCyan);
+
+      const rimGold = new THREE.DirectionalLight(0xf59e0b, 2.4);
+      rimGold.position.set(6, -0.5, -3);
+      scene.add(rimGold);
+
+      // Stage 2 spotlight — warmer for the ticket
+      const ticketSpot = new THREE.SpotLight(0xfef3c7, 0.0, 18, Math.PI * 0.32, 0.5);
+      ticketSpot.position.set(0, 6.0, 1.4);
+      ticketSpot.target.position.set(0, 0, 0);
+      ticketSpot.name = "ticketSpot";
+      scene.add(ticketSpot); scene.add(ticketSpot.target);
+
+      sharedCardBackTexture = createCardBackTexture();
+
+      buildGymEnvironment();
+      buildHeavyBag();
+      buildGloves();
+      buildCards();
+      buildTicket(); // built but hidden until stage 2
+
+      setupSpeedLines();
+      setupImpactFrames();
+      bindInteractions();
+
+      window.addEventListener("resize", onWindowResize);
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => onWindowResize());
+        ro.observe(container);
+      }
+      requestAnimationFrame(() => onWindowResize());
+
+      animateLoop();
+    }
+
+    function buildGymEnvironment() {
+      gymGroup = new THREE.Group();
+      scene.add(gymGroup);
+
+      const floor = new THREE.Mesh(
+        new THREE.CircleGeometry(10, 32),
+        new THREE.MeshStandardMaterial({ map: createGymFloorTexture(), roughness: 0.85, metalness: 0.1 })
+      );
+      floor.rotation.x = -Math.PI * 0.5;
+      floor.position.y = -3.4;
+      gymGroup.add(floor);
+
+      const mount = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.42, 0.55, 0.35, 16),
+        new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.85, roughness: 0.25 })
+      );
+      mount.position.set(0, 4.3, 0);
+      gymGroup.add(mount);
+    }
+
+    function buildHeavyBag() {
+      bagAssembly = new THREE.Group();
+      bagAssembly.position.set(0, 3.8, 0);
+      scene.add(bagAssembly);
+
+      buildInterlockingChains(bagAssembly);
+
+      const bagRadius = 1.18;
+      const bagHeight = 4.1;
+      const bagGeo = new THREE.CylinderGeometry(bagRadius, bagRadius, bagHeight, 48, 48);
+
+      const pos = bagGeo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const y = pos.getY(i);
+        const bulge = Math.sin(((y + bagHeight * 0.5) / bagHeight) * Math.PI) * 0.14;
+        pos.setX(i, pos.getX(i) * (1 + bulge));
+        pos.setZ(i, pos.getZ(i) * (1 + bulge));
+      }
+      bagGeo.computeVertexNormals();
+
+      bagOriginalPositions = new Float32Array(pos.array);
+      bagVertexDents = new Float32Array(pos.count * 3);
+
+      const bagMat = new THREE.MeshStandardMaterial({
+        map: createPunchingBagTexture(), roughness: 0.38, metalness: 0.22
+      });
+      heavyBagMesh = new THREE.Mesh(bagGeo, bagMat);
+      heavyBagMesh.position.set(0, -3.2, 0);
+      heavyBagMesh.add(createAnimeOutline(bagGeo, 0.065));
+      bagAssembly.add(heavyBagMesh);
+    }
+
+    function buildInterlockingChains(parent) {
+      const chainMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, metalness: 0.95, roughness: 0.18 });
+      for (let c = 0; c < 4; c++) {
+        const ang = (c * Math.PI) / 2;
+        const radius = 0.92;
+        const targetX = Math.cos(ang) * radius;
+        const targetZ = Math.sin(ang) * radius;
+
+        const linksCount = 7;
+        const start = new THREE.Vector3(0, 0, 0);
+        const end = new THREE.Vector3(targetX, -1.25, targetZ);
+
+        for (let l = 0; l < linksCount; l++) {
+          const t = (l + 0.5) / linksCount;
+          const linkPos = new THREE.Vector3().lerpVectors(start, end, t);
+
+          const linkMesh = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.024, 8, 14), chainMat);
+          linkMesh.position.copy(linkPos);
+          linkMesh.lookAt(end);
+          if (l % 2 === 0) linkMesh.rotateZ(Math.PI * 0.5);
+          parent.add(linkMesh);
+        }
+      }
+    }
+
+    function buildGloves() {
+      const patchTex = createGlovePatchTexture();
+      function createGloveMesh(isLeft) {
+        const group = new THREE.Group();
+        const fistGeo = new THREE.SphereGeometry(0.52, 22, 18);
+        fistGeo.scale(1.15, 1.25, 1.45);
+        const leatherMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.32, metalness: 0.28 });
+        const fist = new THREE.Mesh(fistGeo, leatherMat);
+        fist.add(createAnimeOutline(fistGeo, 0.045));
+        group.add(fist);
+        const ridgeGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.22, 16);
+        ridgeGeo.scale(1.1, 1.0, 1.3);
+        const ridge = new THREE.Mesh(ridgeGeo, leatherMat);
+        ridge.rotation.z = Math.PI * 0.5;
+        ridge.position.set(0, 0.1, 0.15);
+        group.add(ridge);
+        const thumbGeo = new THREE.SphereGeometry(0.24, 16, 12);
+        thumbGeo.scale(0.85, 1.35, 0.9);
+        const thumb = new THREE.Mesh(thumbGeo, leatherMat);
+        thumb.position.set(isLeft ? 0.38 : -0.38, -0.05, 0.18);
+        thumb.rotation.z = isLeft ? -0.42 : 0.42;
+        thumb.add(createAnimeOutline(thumbGeo, 0.038));
+        group.add(thumb);
+        const cuffGeo = new THREE.CylinderGeometry(0.42, 0.46, 0.5, 20);
+        const cuff = new THREE.Mesh(cuffGeo, new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.55 }));
+        cuff.position.set(0, -0.5, -0.38);
+        cuff.rotation.x = 0.52;
+        cuff.add(createAnimeOutline(cuffGeo, 0.04));
+        group.add(cuff);
+        const patch = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.42, 0.22),
+          new THREE.MeshBasicMaterial({ map: patchTex, side: THREE.DoubleSide })
+        );
+        patch.position.set(0, -0.48, -0.15);
+        patch.rotation.x = 0.52;
+        group.add(patch);
+        return group;
+      }
+      leftGloveMesh = createGloveMesh(true);
+      leftGloveMesh.position.set(-1.35, -1.25, 5.8);
+      scene.add(leftGloveMesh);
+      rightGloveMesh = createGloveMesh(false);
+      rightGloveMesh.position.set(1.35, -1.25, 5.8);
+      scene.add(rightGloveMesh);
+    }
+
+    function buildCards() {
+      const cardW = 2.4, cardH = 3.45, cardD = 0.02;
+      cardMeshStack = [];
+      CARD_COLLECTION.forEach((card, idx) => {
+        const frontMat = new THREE.MeshStandardMaterial({ map: createCardFrontTexture(card), roughness: card.isFoil ? 0.12 : 0.38, metalness: card.isFoil ? 0.85 : 0.15 });
+        const backMat = new THREE.MeshStandardMaterial({ map: sharedCardBackTexture, roughness: 0.32, metalness: 0.22 });
+        const edgeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const materials = [edgeMat, edgeMat, edgeMat, edgeMat, frontMat, backMat];
+        const geo = new THREE.BoxGeometry(cardW, cardH, cardD);
+        const cardMesh = new THREE.Mesh(geo, materials);
+        cardMesh.add(createAnimeOutline(geo, 0.04));
+        const offset = idx - 2;
+        cardMesh.userData = {
+          data: card, index: idx,
+          fanPos: new THREE.Vector3(offset * 1.62, 0.55 - Math.abs(offset) * 0.32, 3.3 + Math.abs(offset) * 0.16),
+          fanRot: new THREE.Vector3(-0.06, offset * -0.18, offset * -0.09)
+        };
+        cardMesh.position.set(0, 0, 0);
+        cardMesh.visible = false;
+        scene.add(cardMesh);
+        cardMeshStack.push(cardMesh);
+      });
+    }
+
+    function buildTicket() {
+      ticketGroup = new THREE.Group();
+      // Position high above the floor; will swoop down to the center on stage 2 entry
+      ticketGroup.position.set(0, 0.5, 0);
+      ticketGroup.rotation.x = -0.15;
+      ticketGroup.rotation.y = 0.04;
+      ticketGroup.visible = false;
+      scene.add(ticketGroup);
+
+      const halfW = 1.05, halfH = 0.65, halfD = 0.04;
+      const ticketFrontTex = createTicketFrontTexture();
+      const ticketBackTex = createTicketBackTexture();
+
+      // Backdrop — soft glowing disk behind the ticket
+      ticketBackdrop = new THREE.Mesh(
+        new THREE.CircleGeometry(1.7, 48),
+        new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.35, side: THREE.DoubleSide })
+      );
+      ticketBackdrop.position.set(0, 0, -0.4);
+      ticketGroup.add(ticketBackdrop);
+
+      // Left half
+      const leftGeo = new THREE.BoxGeometry(halfW, halfH, halfD);
+      const leftFrontMat = new THREE.MeshStandardMaterial({ map: ticketFrontTex, roughness: 0.55, metalness: 0.18 });
+      const leftBackMat = new THREE.MeshStandardMaterial({ map: ticketBackTex, roughness: 0.6, metalness: 0.1 });
+      const leftEdgeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+      ticketLeftHalf = new THREE.Mesh(leftGeo, [leftEdgeMat, leftEdgeMat, leftEdgeMat, leftEdgeMat, leftFrontMat, leftBackMat]);
+      ticketLeftHalf.position.set(-halfW * 0.5, 0, 0);
+      ticketLeftHalf.userData = { torn: false, vel: new THREE.Vector3(), angVel: new THREE.Vector3() };
+      ticketLeftHalf.add(createAnimeOutline(leftGeo, 0.022));
+      ticketGroup.add(ticketLeftHalf);
+
+      // Right half — mirror so the seam reads correctly
+      const rightGeo = new THREE.BoxGeometry(halfW, halfH, halfD);
+      const rightFrontMat = new THREE.MeshStandardMaterial({ map: ticketFrontTex, roughness: 0.55, metalness: 0.18 });
+      const rightBackMat = new THREE.MeshStandardMaterial({ map: ticketBackTex, roughness: 0.6, metalness: 0.1 });
+      const rightEdgeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+      ticketRightHalf = new THREE.Mesh(rightGeo, [rightEdgeMat, rightEdgeMat, rightEdgeMat, rightEdgeMat, rightFrontMat, rightBackMat]);
+      ticketRightHalf.position.set(halfW * 0.5, 0, 0);
+      ticketRightHalf.scale.x = -1;
+      ticketRightHalf.userData = { torn: false, vel: new THREE.Vector3(), angVel: new THREE.Vector3() };
+      ticketRightHalf.add(createAnimeOutline(rightGeo, 0.022));
+      ticketGroup.add(ticketRightHalf);
+
+      // Paper clip on the right corner
+      const clip = new THREE.Mesh(
+        new THREE.TorusGeometry(0.05, 0.012, 8, 14),
+        new THREE.MeshStandardMaterial({ color: 0xa1a1aa, metalness: 0.9, roughness: 0.3 })
+      );
+      clip.position.set(0.95, 0.3, halfD * 0.5 + 0.005);
+      ticketGroup.add(clip);
+    }
+
+    /* =========================================================
+       SPEEDLINES & IMPACT FRAME OVERLAYS
+       ========================================================= */
+    let speedlineCanvas, speedlineCtx, impactCanvas, impactCtx;
+    let speedlineIntensity = 0;
+    let activeImpactFrameTimer = 0;
+    let hitStopRemaining = 0;
+
+    function setupSpeedLines() {
+      speedlineCanvas = document.getElementById("speedline-canvas");
+      if (speedlineCanvas) {
+        speedlineCtx = speedlineCanvas.getContext("2d");
+        resizeSpeedlines();
+      }
+    }
+    function setupImpactFrames() {
+      impactCanvas = document.getElementById("impact-frame-canvas");
+      if (impactCanvas) {
+        impactCtx = impactCanvas.getContext("2d");
+        resizeImpactCanvas();
+      }
+    }
+    function resizeSpeedlines() {
+      if (!speedlineCanvas) return;
+      speedlineCanvas.width = window.innerWidth;
+      speedlineCanvas.height = window.innerHeight;
+    }
+    function resizeImpactCanvas() {
+      if (!impactCanvas) return;
+      impactCanvas.width = window.innerWidth;
+      impactCanvas.height = window.innerHeight;
+    }
+    function triggerImpactFrame(type = "mono", durationFrames = 2) {
+      activeImpactFrameTimer = durationFrames;
+      const body = document.body;
+      body.classList.remove("impact-frame-active", "crimson-frame-active", "gold-frame-active");
+      if (type === "mono") body.classList.add("impact-frame-active");
+      else if (type === "crimson") body.classList.add("crimson-frame-active");
+      else if (type === "gold") body.classList.add("gold-frame-active");
+    }
+    function clearImpactFrame() {
+      document.body.classList.remove("impact-frame-active", "crimson-frame-active", "gold-frame-active");
+    }
+    function renderImpactFrameCanvas() {
+      if (!impactCtx) return;
+      impactCtx.clearRect(0, 0, impactCanvas.width, impactCanvas.height);
+      if (activeImpactFrameTimer > 0) {
+        activeImpactFrameTimer--;
+        if (activeImpactFrameTimer <= 0) clearImpactFrame();
+        const w = impactCanvas.width, h = impactCanvas.height;
+        const cx = w * 0.5, cy = h * 0.45;
+        impactCtx.save();
+        impactCtx.strokeStyle = "#ffffff"; impactCtx.lineWidth = 6;
+        for (let i = 0; i < 24; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const len = Math.random() * Math.max(w, h);
+          impactCtx.beginPath();
+          impactCtx.moveTo(cx, cy);
+          impactCtx.lineTo(cx + Math.cos(ang) * len, cy + Math.sin(ang) * len);
+          impactCtx.stroke();
+        }
+        impactCtx.restore();
+      }
+    }
+    function renderSpeedLines() {
+      if (!speedlineCtx) return;
+      speedlineCtx.clearRect(0, 0, speedlineCanvas.width, speedlineCanvas.height);
+      if (speedlineIntensity <= 0.02) return;
+      const cx = speedlineCanvas.width * 0.5, cy = speedlineCanvas.height * 0.5;
+      const linesCount = Math.floor(speedlineIntensity * 52);
+      speedlineCtx.save();
+      speedlineCtx.strokeStyle = `rgba(255, 255, 255, ${speedlineIntensity * 0.5})`;
+      speedlineCtx.lineWidth = 3 + speedlineIntensity * 5;
+      for (let i = 0; i < linesCount; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const outerR = Math.max(cx, cy) * 1.25;
+        const innerR = (1 - speedlineIntensity * 0.55) * 220 + Math.random() * 80;
+        speedlineCtx.beginPath();
+        speedlineCtx.moveTo(cx + Math.cos(ang) * innerR, cy + Math.sin(ang) * innerR);
+        speedlineCtx.lineTo(cx + Math.cos(ang) * outerR, cy + Math.sin(ang) * outerR);
+        speedlineCtx.stroke();
+      }
+      speedlineCtx.restore();
+    }
+
+    /* =========================================================
+       SFX / SHOCKWAVES / SPARKS / CONFETTI / COMIC WORDS
+       ========================================================= */
+    const activeSparks = [], activeShockwaves = [], activeComicSFX = [], activeConfetti = [];
+    const COMIC_WORDS_PUNCH = ["BAM!", "CRACK!", "POW!", "SMACK!", "ORA!", "WHAM!"];
+    const COMIC_WORDS_TEAR  = ["RIP!", "TORN!", "OPEN!", "PAPER!", "SPLIT!", "YANK!"];
+
+    function createComicSFXTexture(word) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512; canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+      ctx.save(); ctx.translate(256, 128);
+      ctx.beginPath();
+      const points = 16;
+      for (let i = 0; i < points; i++) {
+        const rad = i % 2 === 0 ? 115 : 65;
+        const th = (i * Math.PI) / (points / 2);
+        ctx.lineTo(Math.cos(th) * rad, Math.sin(th) * rad);
+      }
+      ctx.closePath();
+      ctx.fillStyle = "#ef4444"; ctx.lineWidth = 14; ctx.strokeStyle = "#000000";
+      ctx.stroke(); ctx.fill();
+      ctx.font = "900 115px 'Bangers', cursive";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.lineWidth = 22; ctx.strokeStyle = "#000000"; ctx.strokeText(word, 0, 4);
+      ctx.fillStyle = "#fde047"; ctx.fillText(word, 0, 4);
+      ctx.restore();
+      return new THREE.CanvasTexture(canvas);
+    }
+    function spawnComicSFX(x, y, z, words) {
+      const word = words[Math.floor(Math.random() * words.length)];
+      const tex = createComicSFXTexture(word);
+      const mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.6, 0.8),
+        new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+      );
+      mesh.position.set(x + (Math.random() - 0.5) * 0.4, y + (Math.random() - 0.5) * 0.4, z + 0.3);
+      mesh.rotation.z = (Math.random() - 0.5) * 0.35;
+      mesh.userData = { life: 0.4, maxLife: 0.4 };
+      scene.add(mesh);
+      activeComicSFX.push(mesh);
+    }
+    function spawnShockwave(x, y, z, scaleMultiplier = 1.0) {
+      const ring = new THREE.Mesh(
+        new THREE.RingGeometry(0.15, 0.35, 32),
+        new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false })
+      );
+      ring.position.set(x, y, z);
+      ring.userData = { life: 0.32, maxLife: 0.32, growth: 9.5 * scaleMultiplier };
+      scene.add(ring);
+      activeShockwaves.push(ring);
+    }
+    function spawnHitSpark(x, y, z, isBig = false) {
+      const sparkCount = isBig ? 24 : 10;
+      const geo = new THREE.PlaneGeometry(0.35, 0.35);
+      const colors = [0xfacc15, 0xffffff, 0xef4444, 0xf97316];
+      for (let i = 0; i < sparkCount; i++) {
+        const mat = new THREE.MeshBasicMaterial({ color: colors[i % colors.length], side: THREE.DoubleSide });
+        const spark = new THREE.Mesh(geo, mat);
+        spark.position.set(x + (Math.random() - 0.5) * 0.6, y + (Math.random() - 0.5) * 0.8, z + (Math.random() - 0.5) * 0.4);
+        spark.userData = {
+          velocity: new THREE.Vector3((Math.random() - 0.5) * (isBig ? 14 : 8), (Math.random() - 0.5) * (isBig ? 14 : 8), Math.random() * (isBig ? 8 : 4) + 2),
+          life: isBig ? 0.6 : 0.35
+        };
+        scene.add(spark);
+        activeSparks.push(spark);
+      }
+    }
+    function spawnConfetti(count = 60) {
+      const palette = [0xfacc15, 0xef4444, 0x38bdf8, 0x22c55e, 0xa855f7, 0xffffff];
+      for (let i = 0; i < count; i++) {
+        const piece = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.16, 0.24),
+          new THREE.MeshBasicMaterial({ color: palette[i % palette.length], side: THREE.DoubleSide, transparent: true })
+        );
+        piece.position.set((Math.random() - 0.5) * 1.2, -0.3, (Math.random() - 0.5) * 0.4);
+        piece.userData = {
+          velocity: new THREE.Vector3((Math.random() - 0.5) * 3.2, Math.random() * 4.5 + 2.0, (Math.random() - 0.5) * 1.2),
+          angVel: new THREE.Vector3((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 6),
+          life: 1.6
+        };
+        scene.add(piece);
+        activeConfetti.push(piece);
+      }
+    }
+    function dentHeavyBag(hitY, intensity = 0.25) {
+      if (!heavyBagMesh) return;
+      const pos = heavyBagMesh.geometry.attributes.position;
+      const count = pos.count;
+      for (let i = 0; i < count; i++) {
+        const y = pos.getY(i);
+        const z = pos.getZ(i);
+        if (z > 0.4 && Math.abs(y - hitY) < 1.1) {
+          const dist = Math.abs(y - hitY);
+          const factor = Math.max(0, 1 - dist / 1.1);
+          bagVertexDents[i * 3 + 2] = -intensity * factor;
+        }
+      }
+    }
+
+    /* =========================================================
+       PUNCH / KO / TICKET / REVEAL — STAGE LOGIC
+       ========================================================= */
+    let punchHits = 0;
+    const TARGET_KO_HITS = 28;
+    let isGachaTriggered = false;
+    let autoRushInterval = null;
+    let bagAngle = { x: 0, z: 0 };
+    let bagVelocity = { x: 0, z: 0 };
+    let screenShake = 0;
+    let currentHand = "left";
+
+    // Stage 2 swoop-in
+    let ticketEntryStart = 0;
+    let ticketEntryActive = false;
+    const TICKET_ENTRY_DURATION = 700;
+
+    function setStagePill(label, klass) {
+      const pill = document.getElementById("stagePill");
+      if (!pill) return;
+      pill.innerText = label;
+      pill.className = `stage-pill is-${klass}`;
+    }
+
+    function deliverPunch() {
+      if (currentStage !== STAGE.PUNCH || isGachaTriggered) return;
+      punchHits++;
+      AudioEngine.init();
+      const heatRatio = Math.min(punchHits / TARGET_KO_HITS, 1.0);
+      const speedFactor = 1.0 + heatRatio * 2.8;
+      AudioEngine.playPunch(speedFactor);
+      screenShake = Math.min(0.35, 0.05 + heatRatio * 0.28);
+      hitStopRemaining = heatRatio > 0.8 ? 3 : (heatRatio > 0.4 ? 2 : 1);
+      if (punchHits % 5 === 0 || heatRatio >= 0.85) triggerImpactFrame("mono", 2);
+      const pushX = (currentHand === "left" ? 0.38 : -0.38) * (0.8 + heatRatio * 0.8);
+      const pushZ = -0.75 * (1.0 + heatRatio * 1.0);
+      bagVelocity.z += pushZ;
+      bagVelocity.x += pushX;
+      dentHeavyBag(0.1, 0.22 + heatRatio * 0.25);
+      animateGloveJab(currentHand, speedFactor);
+      currentHand = currentHand === "left" ? "right" : "left";
+      const contactZ = 0.9;
+      spawnHitSpark(pushX * 0.5, 0.2, contactZ);
+      spawnShockwave(pushX * 0.3, 0.2, contactZ, 0.8 + heatRatio * 0.8);
+      if (punchHits % 2 === 0 || heatRatio > 0.7) spawnComicSFX(pushX * 0.4, 0.4, contactZ, COMIC_WORDS_PUNCH);
+      speedlineIntensity = Math.min(1.0, speedlineIntensity + 0.22);
+      updateComboHud(heatRatio);
+      if (punchHits >= TARGET_KO_HITS) triggerGachaKnockout();
+    }
+
+    function animateGloveJab(hand, speed) {
+      const glove = hand === "left" ? leftGloveMesh : rightGloveMesh;
+      if (!glove) return;
+      const restPos = hand === "left" ? new THREE.Vector3(-1.35, -1.25, 5.8) : new THREE.Vector3(1.35, -1.25, 5.8);
+      const targetPos = new THREE.Vector3((hand === "left" ? -0.35 : 0.35), 0.2, 2.1);
+      const startTime = performance.now();
+      const duration = Math.max(85, 210 / speed);
+      if (speed > 1.8) spawnGloveGhost(glove);
+      function stepJab(now) {
+        const p = (now - startTime) / duration;
+        if (p < 0.38) glove.position.lerpVectors(restPos, targetPos, p / 0.38);
+        else if (p < 1.0) glove.position.lerpVectors(targetPos, restPos, (p - 0.38) / 0.62);
+        else { glove.position.copy(restPos); return; }
+        requestAnimationFrame(stepJab);
+      }
+      requestAnimationFrame(stepJab);
+    }
+
+    function spawnGloveGhost(originalGlove) {
+      const ghostMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending });
+      const ghost = originalGlove.clone();
+      ghost.traverse((child) => { if (child.isMesh) child.material = ghostMat; });
+      ghost.position.copy(originalGlove.position);
+      ghost.userData = { life: 0.12, maxLife: 0.12 };
+      scene.add(ghost);
+      gloveGhosts.push(ghost);
+    }
+
+    function updateComboHud(heatRatio) {
+      const comboCounter = document.getElementById("comboCounter");
+      const heatMeterFill = document.getElementById("heatMeterFill");
+      const heatStatusText = document.getElementById("heatStatusText");
+      const comboLabel = document.getElementById("comboLabel");
+      if (comboCounter) comboCounter.innerText = punchHits;
+      if (heatMeterFill) heatMeterFill.style.width = `${heatRatio * 100}%`;
+      if (comboLabel) comboLabel.innerText = "HITS";
+      if (heatStatusText && comboCounter) {
+        if (heatRatio < 0.3) {
+          heatStatusText.innerText = "WARMING UP • KEEP PUNCHING!";
+          comboCounter.className = "font-anime text-6xl font-black text-amber-400 drop-shadow-[0_4px_0_#000]";
+        } else if (heatRatio < 0.7) {
+          heatStatusText.innerText = "🔥 RAPID FLURRY • COMBO ACCELERATING!";
+          comboCounter.className = "font-anime text-7xl font-black text-orange-400 drop-shadow-[0_4px_0_#000]";
+        } else {
+          heatStatusText.innerText = "⚡ MAXIMUM OVERDRIVE • KNOCKOUT READY!";
+          comboCounter.className = "font-anime text-8xl font-black text-red-500 drop-shadow-[0_4px_0_#000] overdrive-glow";
+        }
+      }
+    }
+
+    /* === K.O. FINALE === */
+    function triggerGachaKnockout() {
+      if (isGachaTriggered) return;
+      isGachaTriggered = true;
+      clearInterval(autoRushInterval);
+      autoRushInterval = null;
+
+      triggerImpactFrame("mono", 6);
+      setTimeout(() => triggerImpactFrame("crimson", 4), 120);
+
+      AudioEngine.playKO();
+      screenShake = 0.65;
+      speedlineIntensity = 1.0;
+
+      spawnShockwave(0, 0, 1.2, 3.2);
+      spawnHitSpark(0, 0, 1.0, true);
+      spawnComicSFX(0, 0.6, 1.0, COMIC_WORDS_PUNCH);
+
+      const panel = document.getElementById("punchControlPanel");
+      if (panel) panel.classList.add("opacity-0", "pointer-events-none");
+      const status = document.getElementById("heatStatusText");
+      if (status) status.innerText = "💥 CRITICAL KNOCKOUT! TICKET INCOMING!";
+      const banner = document.getElementById("finaleBanner");
+      if (banner) banner.classList.remove("hidden");
+
+      bagVelocity.z = -5.2;
+      bagVelocity.x = 2.4;
+
+      // After the banner, hand off to STAGE 2: TICKET
+      setTimeout(() => {
+        if (banner) banner.classList.add("hidden");
+        enterTicketStage();
+      }, 900);
+    }
+
+    /* === STAGE 2: TICKET ENTRY === */
+    function enterTicketStage() {
+      currentStage = STAGE.TICKET;
+      ticketState = "idle";
+      setStagePill("STAGE 2 / 2 — RIP", "rip");
+
+      // Hide the bag — it had its moment. Let the ticket own the stage.
+      if (bagAssembly) {
+        bagAssembly.visible = false;
+      }
+      if (leftGloveMesh) leftGloveMesh.visible = false;
+      if (rightGloveMesh) rightGloveMesh.visible = false;
+
+      // Reset counter HUD for "taps to rip"
+      const comboCounter = document.getElementById("comboCounter");
+      const heatMeterFill = document.getElementById("heatMeterFill");
+      const heatStatusText = document.getElementById("heatStatusText");
+      const comboLabel = document.getElementById("comboLabel");
+      if (comboCounter) {
+        comboCounter.innerText = "1";
+        comboCounter.className = "font-anime text-6xl font-black text-amber-400 drop-shadow-[0_4px_0_#000]";
+      }
+      if (heatMeterFill) heatMeterFill.style.width = "0%";
+      if (comboLabel) comboLabel.innerText = "RIP";
+      if (heatStatusText) heatStatusText.innerText = "TAP THE TICKET TO RIP IT OPEN";
+
+      // Show rip controls
+      const ripPanel = document.getElementById("ripControlPanel");
+      if (ripPanel) ripPanel.classList.remove("hidden");
+
+      // Brighten the stage 2 spotlight
+      const ticketSpot = scene.getObjectByName("ticketSpot");
+      if (ticketSpot) ticketSpot.intensity = 4.5;
+
+      // Make the ticket visible and prepare its entry animation
+      if (ticketGroup) {
+        ticketGroup.visible = true;
+        ticketGroup.position.set(0, 6.0, 0.2);
+        ticketGroup.rotation.set(-0.5, 0, 0);
+        ticketGroup.scale.set(0.4, 0.4, 0.4);
+        // Reset halves
+        if (ticketLeftHalf && ticketRightHalf) {
+          ticketLeftHalf.userData.torn = false; ticketRightHalf.userData.torn = false;
+          ticketLeftHalf.position.set(-0.525, 0, 0); ticketRightHalf.position.set(0.525, 0, 0);
+          ticketLeftHalf.rotation.set(0, 0, 0); ticketRightHalf.rotation.set(0, 0, 0);
+          ticketLeftHalf.userData.vel.set(0, 0, 0); ticketRightHalf.userData.vel.set(0, 0, 0);
+          ticketLeftHalf.userData.angVel.set(0, 0, 0); ticketRightHalf.userData.angVel.set(0, 0, 0);
+        }
+        ticketEntryStart = performance.now();
+        ticketEntryActive = true;
+      }
+    }
+
+    function updateTicketEntry(now) {
+      if (!ticketEntryActive) return;
+      const elapsed = now - ticketEntryStart;
+      const p = Math.min(elapsed / TICKET_ENTRY_DURATION, 1.0);
+      const ease = 1 - Math.pow(1 - p, 3);
+      ticketGroup.position.y = THREE.MathUtils.lerp(6.0, 0.5, ease);
+      ticketGroup.rotation.x = THREE.MathUtils.lerp(-0.5, -0.15, ease);
+      const s = THREE.MathUtils.lerp(0.4, 1.0, ease);
+      ticketGroup.scale.set(s, s, s);
+      if (p >= 1.0) ticketEntryActive = false;
+    }
+
+    function ripTicket() {
+      if (currentStage !== STAGE.TICKET || ticketState !== "idle" || isGachaTriggered) return;
+      ticketState = "torn";
+
+      AudioEngine.playTear();
+      triggerImpactFrame("gold", 5);
+      setTimeout(() => triggerImpactFrame("crimson", 3), 110);
+
+      screenShake = 0.55;
+      speedlineIntensity = 1.0;
+
+      spawnShockwave(0, 0, 0.4, 2.6);
+      spawnHitSpark(0, 0, 0.4, true);
+      spawnComicSFX(0, 0.6, 0.4, COMIC_WORDS_TEAR);
+      spawnConfetti(50);
+
+      // Launch halves outward
+      ticketLeftHalf.userData.torn = true; ticketRightHalf.userData.torn = true;
+      ticketLeftHalf.userData.vel.set(-3.4 - Math.random() * 0.8, 1.2, -1.2 - Math.random() * 0.4);
+      ticketRightHalf.userData.vel.set(3.4 + Math.random() * 0.8, 1.2, -1.2 - Math.random() * 0.4);
+      ticketLeftHalf.userData.angVel.set((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 6, -2.0 - Math.random() * 3);
+      ticketRightHalf.userData.angVel.set((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 6, 2.0 + Math.random() * 3);
+
+      // Hide paper clip & backdrop
+      if (ticketBackdrop) ticketBackdrop.visible = false;
+      ticketGroup.children.forEach((c) => {
+        if (c.geometry && c.geometry.type === "TorusGeometry") c.visible = false;
+      });
+
+      const status = document.getElementById("heatStatusText");
+      if (status) status.innerText = "💥 TICKET TORN! CARDS UNLEASHED!";
+      const counter = document.getElementById("comboCounter");
+      if (counter) {
+        counter.innerText = "✓";
+        counter.className = "font-anime text-7xl font-black text-amber-300 drop-shadow-[0_4px_0_#000]";
+      }
+
+      const ripPanel = document.getElementById("ripControlPanel");
+      if (ripPanel) ripPanel.classList.add("opacity-0", "pointer-events-none");
+
+      // Small delay then reveal
+      setTimeout(() => {
+        triggerCardReveal();
+      }, 450);
+    }
+
+    function triggerCardReveal() {
+      isGachaTriggered = true;
+      currentStage = STAGE.REVEAL;
+      setStagePill("REVEAL", "done");
+      const duration = 1800;
+      const startTime = performance.now();
+      cardMeshStack.forEach((card) => {
+        card.visible = true;
+        card.position.set(0, 0, 0);
+        card.scale.set(0.01, 0.01, 0.01);
+      });
+      function animateCards(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1.0);
+        cardMeshStack.forEach((card, idx) => {
+          const delay = idx * 0.09;
+          const cardProg = Math.max(0, Math.min((progress - delay) / (1 - delay), 1.0));
+          const cardEase = 1 - Math.pow(1 - cardProg, 3);
+          card.position.lerpVectors(new THREE.Vector3(0, -0.4, 0), card.userData.fanPos, cardEase);
+          card.rotation.x = THREE.MathUtils.lerp(0.8, card.userData.fanRot.x, cardEase);
+          card.rotation.y = THREE.MathUtils.lerp(Math.PI, card.userData.fanRot.y, cardEase);
+          card.rotation.z = THREE.MathUtils.lerp(0, card.userData.fanRot.z, cardEase);
+          const s = Math.min(1.0, cardEase * 1.0);
+          card.scale.set(s, s, s);
+        });
+        if (progress < 1.0) requestAnimationFrame(animateCards);
+        else {
+          const rematchBtn = document.getElementById("trainAgainBtn");
+          if (rematchBtn) rematchBtn.classList.remove("hidden");
+          const notice = document.getElementById("cardInspectNotice");
+          if (notice) notice.classList.remove("hidden");
+        }
+      }
+      requestAnimationFrame(animateCards);
+    }
+
+    /* =========================================================
+       INTERACTION BINDINGS
+       ========================================================= */
+    const raycaster = new THREE.Raycaster();
+    const mouseVector = new THREE.Vector2();
+
+    function bindInteractions() {
+      const container = document.getElementById("webgl-container");
+      if (!container) return;
+
+      container.addEventListener("pointerdown", (e) => {
+        const rect = container.getBoundingClientRect();
+        mouseVector.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+        mouseVector.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+        raycaster.setFromCamera(mouseVector, camera);
+
+        if (currentStage === STAGE.PUNCH && !isGachaTriggered) {
+          deliverPunch();
+        } else if (currentStage === STAGE.TICKET) {
+          // Tap on the ticket itself OR anywhere acts as a rip
+          if (ticketGroup && ticketGroup.visible) {
+            const hits = raycaster.intersectObjects([ticketLeftHalf, ticketRightHalf, ticketGroup], true);
+            if (hits.length > 0) {
+              ripTicket();
+              return;
+            }
+          }
+          // Tap on the backdrop also rips
+          ripTicket();
+        } else if (currentStage === STAGE.REVEAL) {
+          const cardHits = raycaster.intersectObjects(cardMeshStack, true);
+          if (cardHits.length > 0) {
+            let root = cardHits[0].object;
+            while (root.parent && root.parent !== scene) root = root.parent;
+            if (root.userData && root.userData.data) openCardModal(root.userData.data);
+          }
+        }
+      });
+
+      const tapBtn = document.getElementById("tapPunchBtn");
+      if (tapBtn) tapBtn.addEventListener("click", deliverPunch);
+
+      const flurryBtn = document.getElementById("flurryBtn");
+      if (flurryBtn) {
+        flurryBtn.addEventListener("click", () => {
+          if (autoRushInterval) {
+            clearTimeout(autoRushInterval);
+            autoRushInterval = null;
+            return;
+          }
+          let speedMs = 280;
+          function run() {
+            if (isGachaTriggered) return;
+            deliverPunch();
+            speedMs = Math.max(65, speedMs * 0.88);
+            autoRushInterval = setTimeout(run, speedMs);
+          }
+          run();
+        });
+      }
+
+      const ripBtn = document.getElementById("ripBtn");
+      if (ripBtn) ripBtn.addEventListener("click", ripTicket);
+
+      const soundBtn = document.getElementById("soundToggleBtn");
+      if (soundBtn) {
+        soundBtn.addEventListener("click", () => {
+          AudioEngine.enabled = !AudioEngine.enabled;
+          const icon = document.getElementById("soundIcon");
+          if (icon) icon.innerText = AudioEngine.enabled ? "🔊" : "🔇";
+        });
+      }
+
+      const rematchBtn = document.getElementById("trainAgainBtn");
+      if (rematchBtn) rematchBtn.addEventListener("click", resetGym);
+
+      const closeBtn = document.getElementById("closeModalBtn");
+      if (closeBtn) closeBtn.addEventListener("click", closeCardModal);
+      const modal = document.getElementById("cardInspectModal");
+      if (modal) modal.addEventListener("click", (e) => { if (e.target.id === "cardInspectModal") closeCardModal(); });
+      const flipBtn = document.getElementById("flipCardBtn");
+      if (flipBtn) flipBtn.addEventListener("click", flipModalCard);
+
+      const tiltFrame = document.getElementById("cardTiltFrame");
+      const holoOverlay = document.getElementById("holoSheenOverlay");
+      if (tiltFrame) {
+        tiltFrame.addEventListener("mousemove", (e) => {
+          const rect = tiltFrame.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          tiltFrame.style.transform = `perspective(800px) rotateY(${x * 24}deg) rotateX(${-y * 24}deg) scale3d(1.05, 1.05, 1.05)`;
+          if (holoOverlay && activeCardModalData && activeCardModalData.isFoil) {
+            holoOverlay.style.opacity = "0.75";
+            holoOverlay.style.background = `linear-gradient(${x * 120 + 90}deg, rgba(255,0,128,0.4), rgba(0,255,255,0.4), rgba(255,255,0,0.4))`;
+          }
+        });
+        tiltFrame.addEventListener("mouseleave", () => {
+          tiltFrame.style.transform = `perspective(800px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
+          if (holoOverlay) holoOverlay.style.opacity = "0";
+        });
+      }
+    }
+
+    let activeCardModalData = null;
+    let isModalBackShown = false;
+
+    function openCardModal(cardData) {
+      activeCardModalData = cardData;
+      isModalBackShown = false;
+      const nameEl = document.getElementById("inspectName");
+      if (nameEl) { nameEl.innerText = cardData.name; nameEl.style.color = cardData.color; }
+      const rarityEl = document.getElementById("inspectRarity");
+      if (rarityEl) rarityEl.innerText = `${cardData.rarity} • ATK ${cardData.atk} / DEF ${cardData.def}`;
+      renderCardToCanvas();
+      const modal = document.getElementById("cardInspectModal");
+      if (modal) modal.classList.remove("hidden");
+    }
+    function closeCardModal() {
+      const modal = document.getElementById("cardInspectModal");
+      if (modal) modal.classList.add("hidden");
+    }
+    function flipModalCard() {
+      isModalBackShown = !isModalBackShown;
+      renderCardToCanvas();
+    }
+    function renderCardToCanvas() {
+      const canvas = document.getElementById("inspectCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!isModalBackShown) {
+        const tex = createCardFrontTexture(activeCardModalData);
+        ctx.drawImage(tex.image, 0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.drawImage(sharedCardBackTexture.image, 0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function resetGym() {
+      punchHits = 0;
+      isGachaTriggered = false;
+      ticketState = "idle";
+      ticketEntryActive = false;
+      currentStage = STAGE.PUNCH;
+      speedlineIntensity = 0;
+      activeImpactFrameTimer = 0;
+      clearImpactFrame();
+      bagAngle = { x: 0, z: 0 };
+      bagVelocity = { x: 0, z: 0 };
+      if (bagAssembly) {
+        bagAssembly.rotation.set(0, 0, 0);
+        bagAssembly.visible = true;
+      }
+      if (leftGloveMesh) leftGloveMesh.visible = true;
+      if (rightGloveMesh) rightGloveMesh.visible = true;
+      if (heavyBagMesh && bagOriginalPositions) {
+        const pos = heavyBagMesh.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) pos.setZ(i, bagOriginalPositions[i * 3 + 2]);
+        pos.needsUpdate = true;
+        heavyBagMesh.geometry.computeVertexNormals();
+        bagVertexDents.fill(0);
+      }
+
+      // Reset ticket
+      if (ticketGroup) {
+        ticketGroup.visible = false;
+        ticketGroup.position.set(0, 0.5, 0);
+        ticketGroup.scale.set(1, 1, 1);
+        ticketGroup.rotation.set(-0.15, 0.04, 0);
+        if (ticketBackdrop) ticketBackdrop.visible = true;
+      }
+      if (ticketLeftHalf && ticketRightHalf) {
+        ticketLeftHalf.userData.torn = false; ticketRightHalf.userData.torn = false;
+        ticketLeftHalf.position.set(-0.525, 0, 0); ticketRightHalf.position.set(0.525, 0, 0);
+        ticketLeftHalf.rotation.set(0, 0, 0); ticketRightHalf.rotation.set(0, 0, 0);
+        ticketGroup.children.forEach((c) => { if (c.geometry && c.geometry.type === "TorusGeometry") c.visible = true; });
+      }
+
+      // Reset card stack
+      cardMeshStack.forEach((card) => { card.visible = false; card.scale.set(0.01, 0.01, 0.01); });
+
+      // Reset HUD
+      const comboCounter = document.getElementById("comboCounter");
+      if (comboCounter) {
+        comboCounter.innerText = "0";
+        comboCounter.className = "font-anime text-6xl font-black text-amber-400 drop-shadow-[0_4px_0_#000]";
+      }
+      const heatFill = document.getElementById("heatMeterFill");
+      if (heatFill) heatFill.style.width = "0%";
+      const status = document.getElementById("heatStatusText");
+      if (status) status.innerText = "TAP OR MASH THE BAG TO PUNCH";
+      const comboLabel = document.getElementById("comboLabel");
+      if (comboLabel) comboLabel.innerText = "HITS";
+      const punchPanel = document.getElementById("punchControlPanel");
+      if (punchPanel) punchPanel.classList.remove("opacity-0", "pointer-events-none");
+      const ripPanel = document.getElementById("ripControlPanel");
+      if (ripPanel) { ripPanel.classList.add("hidden"); ripPanel.classList.remove("opacity-0", "pointer-events-none"); }
+      const rematchBtn = document.getElementById("trainAgainBtn");
+      if (rematchBtn) rematchBtn.classList.add("hidden");
+      const notice = document.getElementById("cardInspectNotice");
+      if (notice) notice.classList.add("hidden");
+      const banner = document.getElementById("finaleBanner");
+      if (banner) banner.classList.add("hidden");
+      setStagePill("STAGE 1 / 2 — PUNCH", "punch");
+
+      // Reset stage 2 spotlight
+      const ticketSpot = scene.getObjectByName("ticketSpot");
+      if (ticketSpot) ticketSpot.intensity = 0.0;
+    }
+
+    function onWindowResize() {
+      if (!renderer || !camera) return;
+      const size = getContainerSize();
+      camera.aspect = size.w / size.h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(size.w, size.h);
+      resizeSpeedlines();
+      resizeImpactCanvas();
+    }
+
+    /* =========================================================
+       MAIN RENDER LOOP
+       ========================================================= */
+    const clock = new THREE.Clock();
+
+    function animateLoop() {
+      requestAnimationFrame(animateLoop);
+      if (hitStopRemaining > 0) {
+        hitStopRemaining--;
+        renderImpactFrameCanvas();
+        renderSpeedLines();
+        if (renderer && scene && camera) renderer.render(scene, camera);
+        return;
+      }
+      const delta = clock.getDelta();
+      const time = clock.getElapsedTime();
+      const now = performance.now();
+
+      // Stage 1 — heavy bag pendulum
+      if (bagAssembly && (currentStage === STAGE.PUNCH || currentStage === STAGE.TICKET)) {
+        const springK = 14.5;
+        const damping = 0.93;
+        bagVelocity.x += -springK * bagAngle.x * delta;
+        bagVelocity.z += -springK * bagAngle.z * delta;
+        bagVelocity.x *= damping;
+        bagVelocity.z *= damping;
+        bagAngle.x += bagVelocity.x * delta;
+        bagAngle.z += bagVelocity.z * delta;
+        bagAssembly.rotation.x = bagAngle.z;
+        bagAssembly.rotation.z = -bagAngle.x;
+        bagAssembly.rotation.y = Math.sin(time * 0.8) * 0.04;
+      }
+
+      // Bag vertex rebound
+      if (heavyBagMesh && bagOriginalPositions && currentStage === STAGE.PUNCH) {
+        const pos = heavyBagMesh.geometry.attributes.position;
+        let needsUpdate = false;
+        const reboundSpeed = 4.5;
+        for (let i = 0; i < pos.count; i++) {
+          const dentZ = bagVertexDents[i * 3 + 2];
+          if (Math.abs(dentZ) > 0.001) {
+            bagVertexDents[i * 3 + 2] *= Math.max(0, 1 - reboundSpeed * delta);
+            pos.setZ(i, bagOriginalPositions[i * 3 + 2] + bagVertexDents[i * 3 + 2]);
+            needsUpdate = true;
+          }
+        }
+        if (needsUpdate) {
+          pos.needsUpdate = true;
+          heavyBagMesh.geometry.computeVertexNormals();
+        }
+      }
+
+      // Stage 2 — ticket entry + idle hover
+      if (currentStage === STAGE.TICKET && ticketGroup) {
+        if (ticketEntryActive) {
+          updateTicketEntry(now);
+        } else if (ticketState === "idle") {
+          ticketGroup.position.y = 0.5 + Math.sin(time * 1.6) * 0.06;
+          ticketGroup.rotation.z = Math.sin(time * 0.9) * 0.05;
+        }
+      }
+
+      // Torn ticket halves — ballistic
+      if (ticketLeftHalf && ticketLeftHalf.userData.torn) {
+        ticketLeftHalf.userData.vel.y += -9.8 * delta * 0.55;
+        ticketRightHalf.userData.vel.y += -9.8 * delta * 0.55;
+        ticketLeftHalf.position.addScaledVector(ticketLeftHalf.userData.vel, delta);
+        ticketRightHalf.position.addScaledVector(ticketRightHalf.userData.vel, delta);
+        ticketLeftHalf.rotation.x += ticketLeftHalf.userData.angVel.x * delta;
+        ticketLeftHalf.rotation.y += ticketLeftHalf.userData.angVel.y * delta;
+        ticketLeftHalf.rotation.z += ticketLeftHalf.userData.angVel.z * delta;
+        ticketRightHalf.rotation.x += ticketRightHalf.userData.angVel.x * delta;
+        ticketRightHalf.rotation.y += ticketRightHalf.userData.angVel.y * delta;
+        ticketRightHalf.rotation.z += ticketRightHalf.userData.angVel.z * delta;
+      }
+
+      // Camera shake
+      if (screenShake > 0.001) {
+        camera.position.x = (Math.random() - 0.5) * screenShake;
+        camera.position.y = 0.35 + (Math.random() - 0.5) * screenShake;
+        screenShake *= 0.86;
+      } else {
+        camera.position.x = 0;
+        camera.position.y = 0.35;
+      }
+
+      // Card float during reveal
+      if (currentStage === STAGE.REVEAL) {
+        cardMeshStack.forEach((card, i) => {
+          card.position.y = card.userData.fanPos.y + Math.sin(time * 2.2 + i * 0.7) * 0.08;
+          if (card.userData.data.isFoil) card.rotation.y = card.userData.fanRot.y + Math.sin(time * 3.0) * 0.08;
+        });
+      }
+
+      // Lifecycle ticks
+      for (let i = gloveGhosts.length - 1; i >= 0; i--) {
+        const g = gloveGhosts[i];
+        g.userData.life -= delta;
+        if (g.userData.life <= 0) { scene.remove(g); gloveGhosts.splice(i, 1); }
+      }
+      for (let i = activeComicSFX.length - 1; i >= 0; i--) {
+        const sfx = activeComicSFX[i];
+        sfx.userData.life -= delta;
+        const prog = 1 - (sfx.userData.life / sfx.userData.maxLife);
+        sfx.scale.setScalar(1.0 + prog * 0.6);
+        sfx.position.y += delta * 0.8;
+        sfx.material.opacity = Math.max(0, sfx.userData.life / sfx.userData.maxLife);
+        if (sfx.userData.life <= 0) { scene.remove(sfx); activeComicSFX.splice(i, 1); }
+      }
+      for (let i = activeShockwaves.length - 1; i >= 0; i--) {
+        const sw = activeShockwaves[i];
+        sw.userData.life -= delta;
+        const prog = 1 - (sw.userData.life / sw.userData.maxLife);
+        sw.scale.setScalar(1.0 + prog * sw.userData.growth);
+        sw.material.opacity = Math.max(0, (sw.userData.life / sw.userData.maxLife) * 0.9);
+        if (sw.userData.life <= 0) { scene.remove(sw); activeShockwaves.splice(i, 1); }
+      }
+      for (let i = activeSparks.length - 1; i >= 0; i--) {
+        const sp = activeSparks[i];
+        sp.position.addScaledVector(sp.userData.velocity, delta);
+        sp.userData.life -= delta;
+        sp.scale.setScalar(Math.max(0.001, sp.userData.life * 3.0));
+        if (sp.userData.life <= 0) { scene.remove(sp); activeSparks.splice(i, 1); }
+      }
+      for (let i = activeConfetti.length - 1; i >= 0; i--) {
+        const p = activeConfetti[i];
+        p.userData.velocity.y += -9.8 * delta * 0.4;
+        p.position.addScaledVector(p.userData.velocity, delta);
+        p.rotation.x += p.userData.angVel.x * delta;
+        p.rotation.y += p.userData.angVel.y * delta;
+        p.rotation.z += p.userData.angVel.z * delta;
+        p.userData.life -= delta;
+        p.material.opacity = Math.max(0, Math.min(1, p.userData.life / 1.6));
+        if (p.userData.life <= 0) { scene.remove(p); activeConfetti.splice(i, 1); }
+      }
+
+      if (currentStage !== STAGE.REVEAL) speedlineIntensity = Math.max(0, speedlineIntensity - delta * 0.45);
+      renderSpeedLines();
+      renderImpactFrameCanvas();
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    /* Boot loader helpers — gives the user feedback during the brief blank window
+       between HTML parse and 3D init, and surfaces errors that would otherwise be silent. */
+    const BootUI = {
+      el: () => document.getElementById("bootLoader"),
+      bar: () => document.getElementById("bootBarFill"),
+      step: () => document.getElementById("bootStep"),
+      errEl: () => document.getElementById("bootError"),
+      errMsg: () => document.getElementById("bootErrorMsg"),
+      errTrace: () => document.getElementById("bootErrorTrace"),
+      setStep(text) { const s = this.step(); if (s) s.innerText = text; },
+      setProgress(p) { const b = this.bar(); if (b) b.style.width = `${Math.max(0, Math.min(100, p * 100))}%`; },
+      hide() {
+        const el = this.el();
+        if (!el) return;
+        // Hard-hide: drop from layout immediately. No transition, no chance of override.
+        el.style.display = "none";
+        el.remove && el.remove();
+      },
+      showError(msg, trace) {
+        const e = this.errEl(); if (!e) return;
+        e.classList.add("is-visible");
+        if (this.errMsg()) this.errMsg().innerText = msg;
+        if (this.errTrace()) this.errTrace().innerText = trace || "(no stack)";
+        const boot = this.el(); if (boot) boot.style.display = "none";
+      }
+    };
+
+    // Surface any uncaught error from the inline script.
+    window.addEventListener("error", (ev) => {
+      BootUI.showError(
+        "JavaScript error — the gym couldn't boot.",
+        (ev.error && ev.error.stack) ? ev.error.stack : `${ev.message} @ ${ev.filename}:${ev.lineno}`
+      );
+    });
+    window.addEventListener("unhandledrejection", (ev) => {
+      BootUI.showError(
+        "Promise rejection — the gym couldn't boot.",
+        ev.reason && ev.reason.stack ? ev.reason.stack : String(ev.reason || "unknown")
+      );
+    });
+
+    function startApp() {
+      // Stage 1: wait for THREE
+      if (typeof THREE === "undefined") {
+        BootUI.setStep("LOADING THREE.JS…");
+        setTimeout(startApp, 60);
+        return;
+      }
+      BootUI.setProgress(0.25);
+      BootUI.setStep("LOADING TONE.JS…");
+
+      // Stage 2: wait for Tone (audio is non-critical but nice to gate on)
+      if (typeof Tone === "undefined") {
+        setTimeout(startApp, 60);
+        return;
+      }
+      BootUI.setProgress(0.45);
+      BootUI.setStep("BUILDING GYM ENVIRONMENT…");
+
+      // Stage 3: kick off the heavy init. Defer one frame so the loader paints.
+      requestAnimationFrame(() => {
+        try {
+          init3DExperience();
+          BootUI.setProgress(1.0);
+          BootUI.setStep("READY — TAP TO PUNCH");
+          setTimeout(() => BootUI.hide(), 250);
+        } catch (err) {
+          BootUI.showError(
+            "3D init failed — the gym couldn't boot.",
+            (err && err.stack) ? err.stack : String(err)
+          );
+        }
+      });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startApp);
+    else startApp();
+  </script>
+</body>
+</html>

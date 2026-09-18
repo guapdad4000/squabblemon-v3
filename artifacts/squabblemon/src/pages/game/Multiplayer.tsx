@@ -1,0 +1,445 @@
+import { MusicControls } from '../../components/MusicControls';
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
+import { ArrowLeft, Check, Copy, Swords, Users } from "lucide-react";
+import {
+  getAssetUrl,
+  getCardImage,
+  starterRecipes,
+  validateSavedDeck,
+} from "../../data";
+import { basePath } from "../../lib/routing";
+import {
+  createFriendMatch,
+  joinFriendMatch,
+  listFriendMatches,
+  onlineErrorMessage,
+  useFriendMatch,
+} from "../../lib/multiplayer";
+import { MultiplayerBattle } from "../../components/MultiplayerBattle";
+import { InstallGame } from "../../components/InstallGame";
+import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
+import "../../styles/multiplayer.css";
+
+export function Multiplayer({
+  bootstrap,
+  code,
+}: {
+  bootstrap: PlayerBootstrap;
+  code?: string;
+}) {
+  const [, navigate] = useLocation();
+  const { profile } = bootstrap;
+  const saved = profile.savedDecks.filter(
+    (deck) =>
+      validateSavedDeck(deck.cardIds, profile.ownedCardIds, deck.heroCardId)
+        .valid,
+  );
+  const recipes = starterRecipes.filter(
+    (deck) =>
+      validateSavedDeck(deck.catalogCardIds, profile.ownedCardIds, deck.hero)
+        .valid,
+  );
+  const crews = [
+    ...saved.map((deck) => ({
+      id: deck.id,
+      name: deck.name,
+      hero: deck.heroCardId!,
+      cardIds: deck.cardIds,
+    })),
+    ...recipes
+      .filter((deck) => !saved.some((s) => s.id === deck.id))
+      .map((deck) => ({
+        id: deck.id,
+        name: deck.name,
+        hero: deck.hero,
+        cardIds: deck.catalogCardIds,
+      })),
+  ];
+  const [crewId, setCrewId] = useState(crews[0]?.id ?? "");
+  const chosen = crews.find((crew) => crew.id === crewId) ?? crews[0];
+  const [enteredCode, setEnteredCode] = useState(code ?? "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const operationLock = useRef(false);
+  const createKey = useRef<{ deckId: string; id: string } | null>(null);
+  const { query, mutation, accept } = useFriendMatch(code);
+  const rooms = useQuery({
+    queryKey: ["friend-rooms"],
+    queryFn: listFriendMatches,
+    enabled: !code,
+    refetchInterval: 10000,
+    retry: 1,
+  });
+  const room = query.data;
+  const joinable =
+    !!code && query.error instanceof ApiError && query.error.status === 404;
+  useEffect(() => {
+    if (code)
+      sessionStorage.setItem(
+        "squabblemon_friend_invite",
+        `/game/online/${code}`,
+      );
+  }, [code]);
+  function leave() {
+    sessionStorage.removeItem("squabblemon_friend_invite");
+    navigate("/game/online");
+  }
+  async function openRoom(join = false) {
+    if (operationLock.current || !chosen) return;
+    operationLock.current = true;
+    setBusy(true);
+    setError(null);
+    try {
+      const target = (code ?? enteredCode).replace(/\s/g, "").toUpperCase();
+      if (join && !/^[A-F0-9]{12}$/.test(target)) {
+        setError("Enter the 12-character code your friend shared.");
+        return;
+      }
+      if (!createKey.current || createKey.current.deckId !== chosen.id)
+        createKey.current = { deckId: chosen.id, id: crypto.randomUUID() };
+      const next = join
+        ? await joinFriendMatch(target, chosen.id)
+        : await createFriendMatch(chosen.id, createKey.current.id);
+      accept(next);
+      createKey.current = null;
+      navigate(`/game/online/${next.code}`);
+    } catch (reason) {
+      setError(onlineErrorMessage(reason));
+    } finally {
+      operationLock.current = false;
+      setBusy(false);
+    }
+  }
+  async function send(command: OnlineCommand) {
+    if (!room || operationLock.current || mutation.isPending) return;
+    operationLock.current = true;
+    setError(null);
+    try {
+      await mutation.mutateAsync({
+        requestId: crypto.randomUUID(),
+        expectedRevision: room.revision,
+        command,
+      });
+    } catch (reason) {
+      setError(onlineErrorMessage(reason));
+    } finally {
+      operationLock.current = false;
+    }
+  }
+  async function copyInvite() {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}${basePath}/game/online/${room!.code}`,
+      );
+      setCopied(true);
+    } catch {
+      setError("Copy the room code shown below and send it to your friend.");
+    }
+  }
+  const working = busy || mutation.isPending;
+  const errorBanner =
+    error ||
+    (room && query.isError
+      ? "Connection interrupted. Reconnecting to your match…"
+      : null);
+  if (room?.status === "active" || room?.status === "complete")
+    return (
+      <>
+        {errorBanner && (
+          <div className="online-connection" role="alert">
+            {errorBanner}
+            <button
+              onClick={() => {
+                setError(null);
+                void query.refetch();
+              }}
+            >
+              Refresh match
+            </button>
+          </div>
+        )}
+        <MultiplayerBattle
+          key={`${room.code}:${room.gameNumber}`}
+          room={room}
+          busy={working}
+          connected={!query.isError}
+          reducedMotion={profile.settings.reducedMotion}
+          send={(command) => void send(command)}
+          onLeave={leave}
+        />
+      </>
+    );
+  return (
+    <main className="online-lobby">
+      <img
+        className="online-lobby__venue"
+        src={getAssetUrl("assets/venues/red-fence-night-court.webp")}
+        alt=""
+      />
+      <header className="online-lobby__nav">
+        <Link to="/game" className="online-icon" aria-label="Back to safehouse">
+          <ArrowLeft size={20} />
+        </Link>
+        <span>FRIEND MATCHES · LIVE 1V1</span>
+        <Link to="/game/play">Solo training</Link>
+      </header>
+      <div className="online-lobby__content">
+        <div className="flex items-center justify-end gap-2 pt-3"><MusicControls /><InstallGame /></div>
+        <section className="online-lobby__hero">
+          <div>
+            <span className="online-eyebrow">
+              <Users size={16} /> BRING SOMEONE WHO TALKS BACK
+            </span>
+            <h1>
+              Your crew.
+              <br />
+              Their problem.
+            </h1>
+            <p>Six rounds. Three districts. One rival who knows your name.</p>
+          </div>
+          <div className="online-lobby__fighters" aria-hidden="true">
+            <img src={getCardImage(chosen?.hero ?? "ganger-red")} alt="" />
+            <img src={getCardImage("ganger-blue")} alt="" />
+            <Swords />
+          </div>
+        </section>
+        {errorBanner && (
+          <p className="online-notice" role="alert">
+            {errorBanner}
+          </p>
+        )}
+        {code && !room && !joinable ? (
+          <section className="online-room-panel">
+            <h2>
+              {query.isPending
+                ? "Finding your room…"
+                : "Could not connect to this room."}
+            </h2>
+            {query.error && (
+              <>
+                <p>{onlineErrorMessage(query.error)}</p>
+                <button
+                  className="online-primary"
+                  onClick={() => void query.refetch()}
+                >
+                  Retry connection
+                </button>
+              </>
+            )}
+            <button className="online-secondary" onClick={leave}>
+              Back to rooms
+            </button>
+          </section>
+        ) : room?.status === "closed" ? (
+          <section className="online-room-panel">
+            <h2>This room has closed.</h2>
+            <p>Create a fresh challenge to play again.</p>
+            <button className="online-primary" onClick={leave}>
+              Back to rooms
+            </button>
+          </section>
+        ) : room ? (
+          <section className="online-room-panel" data-testid="online-room">
+            <div className="online-room-title">
+              <div>
+                <span className="online-eyebrow">YOUR PRIVATE ROOM</span>
+                <h2>
+                  {room.members.cpu
+                    ? "The rivalry is ready."
+                    : "Call your rival."}
+                </h2>
+              </div>
+              <button
+                className="online-secondary"
+                onClick={() => void copyInvite()}
+              >
+                {copied ? <Check size={17} /> : <Copy size={17} />}
+                {copied ? "Link copied" : "Copy invite link"}
+              </button>
+            </div>
+            <div className="online-room-code">
+              <span>ROOM CODE</span>
+              <strong data-testid="online-room-code">{room.code}</strong>
+            </div>
+            <div className="online-room-members">
+              {(["player", "cpu"] as const).map((seat) => (
+                <div key={seat}>
+                  <img
+                    src={getCardImage(
+                      room.members[seat]?.hero ?? "ganger-blue",
+                    )}
+                    alt=""
+                  />
+                  <strong>
+                    {room.members[seat]?.name ?? "Waiting for your friend"}
+                  </strong>
+                  <span>
+                    {room.members[seat]?.ready
+                      ? "READY"
+                      : room.members[seat]
+                        ? seat === room.seat
+                          ? "YOU"
+                          : "JOINED"
+                        : "Share the code to invite them"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p>
+              Your crew: <strong>{room.ownDeck.name}</strong>.{" "}
+              {room.members[room.firstThisRound]?.name ?? "Your rival"} starts
+              round one; the starting player switches each round.
+            </p>
+            <button
+              className="online-primary"
+              data-testid="online-ready"
+              disabled={
+                working || !room.members.cpu || room.members[room.seat]!.ready
+              }
+              onClick={() => void send({ type: "ready" })}
+            >
+              {room.members[room.seat]!.ready
+                ? "Ready. Waiting for your rival…"
+                : "Ready to squabble"}
+            </button>
+            <button
+              className="online-secondary"
+              disabled={working}
+              onClick={() => void send({ type: "surrender" })}
+            >
+              Close room
+            </button>
+          </section>
+        ) : (
+          <section className="online-room-panel">
+            <span className="online-eyebrow">
+              {joinable ? `JOIN ROOM ${code}` : "CHOOSE YOUR CREW"}
+            </span>
+            {crews.length ? (
+              <>
+                <label className="online-crew-label" htmlFor="online-crew">
+                  Who are you bringing?
+                </label>
+                <select
+                  id="online-crew"
+                  value={chosen?.id ?? ""}
+                  onChange={(event) => setCrewId(event.target.value)}
+                  disabled={working}
+                >
+                  {crews.map((crew) => (
+                    <option key={crew.id} value={crew.id}>
+                      {crew.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="online-lineup">
+                  {chosen?.cardIds.map((id) => (
+                    <img key={id} src={getCardImage(id)} alt="" />
+                  ))}
+                </div>
+                {joinable ? (
+                  <button
+                    className="online-primary"
+                    disabled={working}
+                    onClick={() => void openRoom(true)}
+                  >
+                    {working ? "Joining…" : "Join your friend"}
+                  </button>
+                ) : (
+                  <div className="online-room-options">
+                    <button
+                      className="online-primary"
+                      disabled={working}
+                      onClick={() => void openRoom()}
+                    >
+                      <Swords size={18} />
+                      {working ? "Connecting…" : "Create friend match"}
+                    </button>
+                    <form
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        void openRoom(true);
+                      }}
+                    >
+                      <label htmlFor="online-code">Have a room code?</label>
+                      <div>
+                        <input
+                          id="online-code"
+                          autoComplete="off"
+                          spellCheck={false}
+                          maxLength={12}
+                          placeholder="12-character code"
+                          value={enteredCode}
+                          onChange={(event) =>
+                            setEnteredCode(event.target.value.toUpperCase())
+                          }
+                        />
+                        <button
+                          className="online-secondary"
+                          disabled={working || !enteredCode}
+                        >
+                          Join room
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <h2>Bring a complete crew.</h2>
+                <p>Save ten unique cards you own to enter a friend match.</p>
+                <Link className="online-primary" to="/game/decks">
+                  Build your crew
+                </Link>
+              </>
+            )}
+          </section>
+        )}
+        <div className="online-rules">
+          <span>BASE CARD STRENGTH</span>
+          <span>ONE SQUABBLE EACH</span>
+          <span>75 SECONDS PER TURN</span>
+          <p>
+            Play cards openly during your turn. Unplayed cards stay private. A
+            missed turn deadline forfeits the match. Friendly matches award no
+            currency or rank.
+          </p>
+        </div>
+        {!code && (
+          <section className="online-recent">
+            <h2>Your rooms</h2>
+            {rooms.isError ? (
+              <p>
+                Could not load your rooms.{" "}
+                <button onClick={() => void rooms.refetch()}>Retry</button>
+              </p>
+            ) : rooms.isPending ? (
+              <p>Loading rooms…</p>
+            ) : !rooms.data?.rooms.length ? (
+              <p>Your next rivalry starts here.</p>
+            ) : (
+              rooms.data.rooms.map((item) => (
+                <Link key={item.code} to={`/game/online/${item.code}`}>
+                  <strong>{item.rival}</strong>
+                  <span>
+                    {item.status === "active"
+                      ? "Resume battle"
+                      : item.status === "waiting"
+                        ? "Enter room"
+                        : "View result"}{" "}
+                    · {item.code}
+                  </span>
+                </Link>
+              ))
+            )}
+          </section>
+        )}
+      </div>
+    </main>
+  );
+}

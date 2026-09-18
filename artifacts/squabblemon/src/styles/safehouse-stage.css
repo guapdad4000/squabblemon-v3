@@ -1,0 +1,280 @@
+.safehouse.safehouse-stage {
+  height: 100%;
+  min-height: 520px;
+}
+.safehouse-stage .safehouse__shade {
+  background: linear-gradient(90deg, #090d0cb0, transparent 48%), linear-gradient(0deg, #0b100eed, transparent 35%);
+}
+.safehouse-stage .safehouse__heading {
+  top: 32px;
+  left: 34px;
+}
+.safehouse-stage .safehouse__heading h1 {
+  font-size: clamp(43px, 5.1vw, 72px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-shadow: 0 3px 20px #0009;
+  margin: 12px 0 17px;
+}
+.safehouse-stage .safehouse__heading h1 em {
+  color: #ebcb87;
+}
+.safehouse-stage .safehouse__heading p {
+  font-size: 12px;
+  color: #d0d5c7;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.safehouse-stage .safehouse__heading > a {
+  pointer-events: auto;
+}
+.safehouse-stage .safehouse__tools {
+  top: 24px;
+  right: 25px;
+  z-index: 4;
+}
+.safehouse-stage__landmarks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.safehouse-stage__landmarks[hidden] {
+  display: none;
+}
+.safehouse-stage__landmarks button {
+  position: absolute;
+  visibility: hidden;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #f7e9bb77;
+  background: #101b18a6;
+  backdrop-filter: blur(5px);
+  color: #f3d49a;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 5px #101b1822,
+    0 5px 15px #0005;
+}
+.safehouse-stage__landmarks button:hover {
+  background: #151f16ee;
+  border-color: var(--station-color);
+}
+.safehouse-stage__landmarks button:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  height: 16px;
+  width: 1px;
+  background: linear-gradient(#f7e9bb77, transparent);
+}
+.safehouse-stage__landmarks button > span {
+  position: absolute;
+  white-space: nowrap;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(100% + 10px);
+  font-size: 10px;
+  color: #fff7df;
+  text-shadow: 0 1px 6px #000;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+.safehouse-stage__landmarks button:is(:hover, :focus-visible) > span {
+  opacity: 1;
+}
+.safehouse-stage__bottom {
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  bottom: 38px;
+  z-index: 4;
+}
+.safehouse-stage__hint {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 10px;
+  color: #bec9b5;
+  min-height: 40px;
+  text-shadow: 0 2px 4px #000;
+}
+.safehouse-stage__hint > a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #efd698;
+}
+.safehouse-stage__stations {
+  display: flex;
+  gap: 30px;
+  padding-top: 10px;
+  max-width: 580px;
+}
+.safehouse-stage__stations > button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+  min-height: 44px;
+  color: #b9c7b1;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.safehouse-stage__stations > button[aria-pressed='true'] {
+  color: var(--station-color);
+}
+.safehouse-stage__stations > button > i:not(.game-glyph) {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.safehouse-stage__stations > button[aria-pressed='true'] > i:not(.game-glyph) {
+  background: linear-gradient(90deg, var(--station-color), transparent);
+}
+.safehouse-stage__detail {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 700px;
+  padding: 12px 0 22px;
+  text-shadow: 0 2px 8px #000;
+}
+.safehouse-stage__detail .studio-eyebrow {
+  color: var(--station-color);
+}
+.safehouse-stage__detail h2 {
+  font: 800 36px/1 var(--font-display, Impact, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  margin: 8px 0;
+}
+.safehouse-stage__detail p {
+  font-size: 11px;
+  color: #b6c1ae;
+}
+.safehouse-stage__detail a {
+  text-shadow: none;
+}
+.safehouse-stage:not([data-view='room']) .safehouse__heading h1 {
+  font-size: 25px;
+}
+.safehouse-stage:not([data-view='room']) .safehouse__heading h1 br,
+.safehouse-stage:not([data-view='room']) .safehouse__heading p,
+.safehouse-stage:not([data-view='room']) .safehouse__heading > a {
+  display: none;
+}
+.safehouse-stage .venue-scene__status {
+  z-index: 3;
+}
+@media (max-width: 680px) {
+  .safehouse.safehouse-stage {
+    min-height: 530px;
+  }
+  .safehouse-stage .safehouse__heading {
+    top: 25px;
+    left: 20px;
+    max-width: calc(100% - 75px);
+  }
+  .safehouse-stage .safehouse__heading h1 {
+    font-size: 41px;
+  }
+  .safehouse-stage .safehouse__heading p {
+    font-size: 10px;
+  }
+  .safehouse-stage .safehouse__heading > .studio-action {
+    font-size: 10px;
+    min-height: 40px;
+    padding: 11px 16px;
+  }
+  .safehouse-stage .safehouse__tools {
+    right: 15px;
+    top: 23px;
+    gap: 9px;
+  }
+  .safehouse-stage .safehouse__tools .studio-icon {
+    height: 38px;
+    width: 38px;
+  }
+  .safehouse-stage__bottom {
+    left: 20px;
+    right: 20px;
+    bottom: 64px;
+  }
+  .safehouse-stage__stations {
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .safehouse-stage__stations > button {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 55px;
+    font-size: 9px;
+    flex: 1;
+  }
+  .safehouse-stage__hint {
+    font-size: 8px;
+    display: block;
+    min-height: 44px;
+  }
+  .safehouse-stage__hint > a {
+    margin-top: 7px;
+    font-size: 9px;
+  }
+  .safehouse-stage__detail {
+    padding-bottom: 18px;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  .safehouse-stage__detail h2 {
+    font-size: 25px;
+  }
+  .safehouse-stage__detail p {
+    font-size: 9px;
+    max-width: 140px;
+    line-height: 1.5;
+  }
+  .safehouse-stage__detail .studio-action {
+    font-size: 10px;
+    max-width: 49%;
+    min-height: 42px;
+    padding: 10px 14px;
+    gap: 7px;
+  }
+  .safehouse-stage__detail .studio-eyebrow {
+    font-size: 7px;
+  }
+  .safehouse-stage__landmarks button {
+    height: 36px;
+    width: 36px;
+  }
+  .safehouse-stage__landmarks button > span {
+    display: none;
+  }
+  .safehouse-stage .safehouse__shade {
+    background: linear-gradient(0deg, #0b100efa, transparent 40%), linear-gradient(180deg, #0a1118a3, transparent 45%);
+  }
+}
+@media(max-height:550px) and (orientation:landscape){
+ .game-shell:has(.safehouse-stage) .venue-hud{display:none}
+ .game-shell--fan .safehouse.safehouse-stage{min-height:360px;height:100%}
+ .game-shell--fan .safehouse-stage .safehouse__heading h1{font-size:34px;margin:8px 0 14px}
+ .game-shell--fan .safehouse-stage .safehouse__heading p{display:none}
+ .safehouse-stage .safehouse__heading>.studio-action{min-height:36px;padding:8px 15px;font-size:10px}
+ .safehouse-stage__hint{min-height:28px;font-size:9px}
+ .safehouse-stage__detail{padding:5px 0 10px}.safehouse-stage__detail h2{font-size:26px}
+ .safehouse-stage__stations{gap:24px;padding-top:0}
+}

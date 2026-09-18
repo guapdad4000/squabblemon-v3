@@ -1,0 +1,83 @@
+.battle-status-material,.battle-fx-burst { position:absolute; inset:0; pointer-events:none; border-radius:inherit; }
+.battle-status-material { z-index:24; }
+.fx-ice-shell { position:absolute;inset:-6%;animation:fx-freeze-in .5s ease-out both; }
+.fx-ice-shell > .combat-sprite { width:100%;height:100%;object-fit:fill;filter:drop-shadow(0 0 3px #a5e5ff66); }
+.fx-restraints { position:absolute;inset:0;display:grid;place-items:center; }
+.fx-chain { position:absolute;width:137%;height:13%;transform:rotate(35deg);filter:drop-shadow(0 2px 2px #0009);animation:fx-chain-lock .38s cubic-bezier(.2,.8,.2,1) both; }
+.fx-chain:nth-child(2) { transform:rotate(-35deg);animation-delay:70ms; }
+.fx-chain > .combat-sprite { width:100%;height:100%;object-fit:fill; }
+.is-iced .fx-chain { filter:grayscale(.75) sepia(.2) hue-rotate(140deg) drop-shadow(0 0 2px #b3eeff88); }
+.fx-padlock { width:30%;height:32%;z-index:1;filter:drop-shadow(0 3px 3px #000b);animation:fx-lock-close 240ms 130ms ease-out both; }
+.fx-padlock > .combat-sprite { width:100%;height:100%; }
+.is-iced .fx-padlock { filter:grayscale(.5) drop-shadow(0 0 3px #b3eeff99); }
+@keyframes fx-lock-close { from { opacity:0;scale:1.5;translate:0 -12px; } 75% { opacity:1;scale:.94;translate:0 1px; } to { opacity:1;scale:1;translate:0 0; } }
+.fx-guard-shell { position:absolute; inset:0; border:2px solid #fde68a; background:linear-gradient(120deg,#fcd34d33,transparent 40%,#fcd34d22); box-shadow:inset 0 0 12px #fbbf2477; clip-path:polygon(0 0,100% 0,100% 78%,50% 100%,0 78%); animation:fx-freeze-in .4s ease-out; }
+.battle-fx-burst { --fx-color:#fbbf24; overflow:visible; z-index:2; }
+.battle-fx-burst i { position:absolute; left:50%; top:50%; width:5px; height:12px; background:var(--fx-color); box-shadow:0 0 6px var(--fx-color); animation:fx-fragment .8s cubic-bezier(.1,.6,.3,1) var(--fx-delay) both; }
+.fx-freeze { --fx-color:#b3eeff; }
+.fx-freeze i { clip-path:polygon(50% 0,100% 70%,0 100%); }
+.fx-charge { --fx-color:#d9f99d; }
+.fx-charge i { border-radius:50%; width:4px; height:4px; animation-name:fx-charge-particle; }
+.fx-burn { --fx-color:#fb923c; }
+.fx-burn i { animation-name:fx-ember; width:4px; height:7px; }
+.fx-shockwave { position:absolute; inset:5%; border:3px solid var(--fx-color); border-radius:50%; animation:fx-wave .65s ease-out both; }
+.fx-slash { position:absolute; top:42%; left:-15%; width:130%; height:7%; background:#fff7ed; box-shadow:0 0 8px #fb923c,0 0 18px #ef4444; clip-path:polygon(0 50%,100% 0,86% 65%,0 100%); transform:rotate(-35deg); animation:fx-slash .34s ease-out both; }
+.fx-slash-second { top:62%; left:-8%; animation-delay:.08s; }
+.fx-scorch { position:absolute; inset:0; border:4px solid #ff6a18; box-shadow:inset 0 0 24px #ea580c,0 0 10px #f97316; background:linear-gradient(0deg,#431407bb,transparent 65%); clip-path:polygon(0 0,10% 6%,24% 0,42% 5%,64% 0,83% 7%,100% 0,95% 33%,100% 60%,94% 83%,100% 100%,69% 95%,35% 100%,0 94%,6% 65%,0 40%); animation:fx-scorch .85s ease-out both; }
+.fx-lightning { position:absolute; left:50%; top:50%; color:#ecfccb; font-size:48px; font-weight:900; text-shadow:0 0 12px #a3e635; animation:fx-bolt .65s ease-out both; }
+.attack-material { position:absolute; transform:translate(-50%,-50%); pointer-events:none; }
+.district-lock-material { position:absolute; inset:0; z-index:25; pointer-events:none; overflow:hidden; opacity:.65; }
+.district-snap { --fx-color:var(--color-primary,#bef264); position:absolute; inset:0; pointer-events:none; z-index:26; overflow:hidden; }
+.fx-owner-cpu { --fx-color:var(--color-accent,#fb7185); }
+.district-snap .battle-fx-burst { --fx-color:inherit; }
+.district-snap-half { position:absolute; inset:0; border:3px solid var(--fx-color); background:linear-gradient(145deg,transparent 25%,color-mix(in srgb,var(--fx-color) 35%,transparent)); clip-path:polygon(0 0,100% 0,100% 45%,64% 51%,43% 44%,0 56%); animation:fx-territory-top .9s cubic-bezier(.16,1,.3,1) both; }
+.district-snap-half:nth-child(2) { clip-path:polygon(0 56%,43% 44%,64% 51%,100% 45%,100% 100%,0 100%); animation-name:fx-territory-bottom; }
+.district-snap strong { position:absolute; top:48%; left:0; width:100%; text-align:center; font-family:var(--font-display, sans-serif); font-size:clamp(10px,1.5vw,22px); font-weight:1000; font-style:italic; color:#111; background:var(--fx-color); padding:6px 0; letter-spacing:-.03em; transform:rotate(-5deg); animation:fx-takeover-stamp 1s both; }
+.motion-energy { display:inline-block; position:relative; }
+.motion-energy-gain { position:absolute; inset:0; pointer-events:none; color:#d9f99d; z-index:40; }
+.motion-energy-gain>b { position:absolute; left:100%; top:0; font-size:14px; white-space:nowrap; animation:fx-energy-number 1s both; }
+@keyframes fx-freeze-in { from { opacity:0; transform:scale(1.15); } to { opacity:1; transform:scale(1); } }
+@keyframes fx-chain-lock { from { opacity:0; scale:1.6; } 75% { scale:.94; } to { opacity:1; scale:1; } }
+@keyframes fx-fragment { from { opacity:1; transform:rotate(var(--fx-angle)) translateY(0) scale(1.2); } to { opacity:0; transform:rotate(var(--fx-angle)) translateY(var(--fx-distance)) rotate(95deg) scale(.2); } }
+@keyframes fx-charge-particle { from { opacity:0; transform:rotate(var(--fx-angle)) translateY(var(--fx-distance)) scale(.5); } 25% { opacity:1; } to { opacity:0; transform:rotate(var(--fx-angle)) translateY(0) scale(1.5); } }
+@keyframes fx-ember { from { opacity:1; transform:rotate(var(--fx-angle)) translateY(10px); } to { opacity:0; transform:translateY(-65px) rotate(var(--fx-angle)) translateX(var(--fx-distance)) scale(.2); } }
+@keyframes fx-wave { from { opacity:.9; transform:scale(.3); } to { opacity:0; transform:scale(1.9); } }
+@keyframes fx-slash { from { opacity:0; scale:.1 1; } 30% { opacity:1; scale:1 1; } to { opacity:0; scale:1.15 .2; } }
+@keyframes fx-scorch { 0% { opacity:0; } 20% { opacity:1; } 100% { opacity:0; } }
+@keyframes fx-bolt { 0% { opacity:0; transform:translate(-50%,-20%) scale(.3); } 40% { opacity:1; } 100% { opacity:0; transform:translate(-50%,-80%) scale(1.3); } }
+@keyframes fx-territory-top { 0% { opacity:0; transform:translate(-18%,-12%) rotate(-8deg); } 28%,55% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(-3%); } }
+@keyframes fx-territory-bottom { 0% { opacity:0; transform:translate(18%,12%) rotate(8deg); } 28%,55% { opacity:1; transform:none; } 100% { opacity:0; transform:translateY(3%); } }
+@keyframes fx-takeover-stamp { 0% { opacity:0; scale:1.8; } 20%,70% { opacity:1; scale:1; } 100% { opacity:0; scale:1.05; } }
+@keyframes fx-energy-number { 0% { opacity:0; transform:translateY(8px); } 25%,65% { opacity:1; } 100% { opacity:0; transform:translateY(-22px); } }
+@media(prefers-reduced-motion:reduce) { .battle-fx-burst,.district-snap-half { display:none; } .battle-status-material *,.district-snap strong,.motion-energy-gain>b { animation:none!important; } }
+.battle-arena[data-reduced-motion='true'] :is(.battle-fx-burst,.district-snap-half),.is-replay .battle-fx-burst { display:none; }
+.battle-arena[data-reduced-motion='true'] :is(.battle-status-material *,.district-snap strong,.motion-energy-gain>b) { animation:none!important; }
+
+.attack-destroyed-card { position:absolute; transform:translate(-50%,-50%); overflow:hidden; animation:card-burn-away .85s ease-in both; background:#431407; border:2px solid #fb923c; }
+.attack-destroyed-card img { width:100%; height:100%; object-fit:contain; filter:sepia(.7); }
+.attack-destroyed-card span { position:absolute; inset:0; box-shadow:inset 0 -18px 22px #ff6a00; background:linear-gradient(0deg,#ffb00099,transparent 60%); }
+@keyframes card-burn-away { 0% { opacity:1; clip-path:polygon(0 0,100% 0,100% 100%,0 100%); } 35% { opacity:1; filter:brightness(1.7); clip-path:polygon(0 0,100% 0,100% 75%,75% 90%,50% 68%,25% 84%,0 70%); } 100% { opacity:0; translate:0 -15px; clip-path:polygon(0 0,100% 0,100% 0,75% 4%,50% 0,25% 8%,0 0); } }
+.decision-clock { color:#bef264; padding:6px 12px 0; background:#101610; border-top:1px solid currentColor; }
+.decision-clock>div:first-child { display:flex; gap:10px; align-items:center; }
+.decision-clock span { font:900 11px/1 var(--font-display); letter-spacing:.1em; }
+.decision-clock strong { font:900 28px/1 var(--font-display); font-variant-numeric:tabular-nums; }
+.decision-clock small { margin-left:auto; font-size:10px; color:#e4e4e7; }
+.decision-clock-track { height:6px; background:#ffffff18; margin-top:5px; overflow:hidden; }
+.decision-clock-track i { display:block; height:100%; background:currentColor; transform-origin:left; transition:transform 1s linear; }
+.decision-clock[data-state='warning'] { color:#fbbf24; background:#21190a; }
+.decision-clock[data-state='urgent'] { color:#fb7185; background:#301018; box-shadow:0 -4px 24px #f43f5e44; }
+.decision-clock[data-state='urgent'] strong { animation:decision-clock-pulse 1s ease-out infinite; }
+.decision-clock[data-state='paused'] { color:#a1a1aa; background:#151518; }
+@keyframes decision-clock-pulse { 0% { transform:scale(1.2); } 40%,100% { transform:scale(1); } }
+.battle-arena .battle-card-stack[data-crowded='true'] { height:100%; max-height:100%; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; align-content:start; grid-template-rows:none; grid-auto-rows:max-content; gap:8px 5px; padding:3px 0 6px; scrollbar-width:thin; scrollbar-color:#d4a82e #131720; }
+.battle-arena .battle-card-stack[data-crowded='true'] > .battle-board-card { width:min(100px,calc((100cqw - 20px) / 3)); min-width:0; }
+.battle-arena .formation-expand { font-size:9px; background:#111b28; border:1px solid #ffffff30; color:#f8fafc; padding:5px 7px; }
+@media(max-width:600px) { .battle-arena .battle-card-stack[data-crowded='true'] > .battle-board-card { width:calc((100cqw - 16px) / 2); } .decision-clock small { font-size:9px; } }
+@media(prefers-reduced-motion:reduce) { .attack-destroyed-card { display:none; } .decision-clock[data-state='urgent'] strong { animation:none; } .decision-clock-track i { transition:none; } }
+.battle-arena[data-reduced-motion='true'] .attack-destroyed-card,.is-replay .attack-destroyed-card { display:none; }
+.battle-arena[data-reduced-motion='true'] .decision-clock strong { animation:none; }
+.battle-arena[data-reduced-motion='true'] .decision-clock-track i { transition:none; }
+
+/* GUAP keeps golden procedural feedback alongside his FINNAM! video. */
+.battle-choreography[data-character="guap"] .battle-fx-burst { --fx-color:#f5c542; }
+.battle-choreography[data-character="guap"] .fx-lightning { color:#fff5b1; text-shadow:0 0 12px #f5c542; }

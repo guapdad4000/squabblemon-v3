@@ -1,0 +1,21 @@
+{
+  "name": "@workspace/squabblemon-engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./multiplayer": "./src/multiplayer.ts",
+    "./economy": "./src/economy.ts",
+    ".": "./src/gameEngine.ts",
+    "./data": "./src/data.ts",
+    "./gameEngine": "./src/gameEngine.ts",
+    "./cardProgression": "./src/cardProgression.ts",
+    "./abilityUpgrades": "./src/abilityUpgrades.ts",
+    "./activities": "./src/activities.ts",
+    "./career": "./src/career.ts",
+    "./insights": "./src/insights.ts",
+    "./training": "./src/training.ts",
+    "./story": "./src/story.ts",
+    "./districts": "./src/districts.ts"
+  }
+}

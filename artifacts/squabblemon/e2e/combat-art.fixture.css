@@ -1,0 +1,25 @@
+html,body,#root { min-height:100%;height:auto;overflow:auto; }
+.combat-art-demo { min-height:100dvh;background:radial-gradient(ellipse at 50% 30%,#392c1c55,transparent 60%),#0b100e;color:#eee8d9;padding:38px clamp(20px,5vw,80px);font-family:var(--font-sans); }
+.combat-art-demo header { text-align:center; }
+.combat-art-demo header>span { color:#dfc186;font-size:10px;letter-spacing:.2em; }
+.combat-art-demo h1 { font:900 clamp(28px,4vw,50px)/1 var(--font-display);text-transform:uppercase;margin:15px 0; }
+.combat-art-demo p { font-size:12px;color:#adb7aa;line-height:1.5; }
+.combat-art-demo button { border:1px solid #dec48c55;border-radius:30px;background:#121713;color:#ebd5a6;padding:11px 20px;font-size:11px;margin-top:14px;cursor:pointer; }
+.combat-art-demo button:hover { background:#403522; }
+.combat-art-demo button:focus-visible { outline:2px solid #efd196;outline-offset:4px; }
+.combat-art-demo .demo-opening { height:330px;min-height:0;width:100%;position:relative;background:none;box-shadow:none;border:0;overflow:visible;margin:10px 0 20px; }
+.combat-art-demo .demo-opening .broadcast-overlay { position:absolute;inset:0;display:grid;place-items:center;background:none;padding:0; }
+.combat-art-demo .demo-opening .battle-start-art { height:100%;width:min(760px,95vw); }
+.combat-art-demo .demo-opening .battle-start-art strong { font-size:clamp(40px,7vw,90px); }
+.demo-effects { display:flex;justify-content:center;gap:clamp(24px,7vw,110px);padding:20px 0; }
+.demo-effects article { flex:1;max-width:220px;min-width:0;text-align:center; }
+.demo-effects h2 { font-weight:750;font-size:19px;margin:18px 0 5px; }
+.demo-card { position:relative;width:150px;height:210px;margin:0 auto;isolation:isolate; }
+.demo-portrait { width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 15px #000); }
+.demo-card .demo-release { left:50%;top:50%;width:100%;height:100%; }
+.demo-defeat .attack-destroyed-card { left:50%;top:50%;width:100%;height:100%;animation-delay:450ms; }
+.demo-defeat .defeat-cross .combat-sprite { animation-delay:450ms; }
+.demo-defeat .defeat-cross > span:nth-child(2) .combat-sprite { animation-delay:550ms; }
+.combat-art-demo footer { text-align:center;margin:35px auto 0;font-size:10px;color:#909b8e;max-width:450px;line-height:1.6; }
+@media(max-width:600px) { .combat-art-demo { padding:28px 20px; }.combat-art-demo .demo-opening { height:220px;margin:15px 0; }.demo-effects { flex-direction:column;gap:38px;align-items:center; }.demo-effects article { width:100%; }.demo-card { width:140px;height:195px; }.combat-art-demo .demo-opening .battle-start-art__emblem { width:52px;height:52px; } }
+@media(prefers-reduced-motion:reduce) { .combat-art-demo .battle-start-art *,.combat-art-demo .battle-status-material * { animation:none!important; }.demo-defeat .attack-destroyed-card:has(.defeat-cross) { display:block;animation:none; }.demo-defeat .defeat-cross .combat-sprite { animation:none; } }
