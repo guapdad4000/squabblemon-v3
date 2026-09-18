@@ -168,7 +168,7 @@ function CardViewComponent({
           <img
             src={getCardImage(card.id)}
             alt=""
-            className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'scale-[1.05]' : ''}`}
+            className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
           />
 
           <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
@@ -201,7 +201,7 @@ function CardViewComponent({
             </div>
           )}
 
-          <div className="absolute bottom-0 inset-x-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none">
+          <div className={`collector-card-copy absolute inset-x-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none ${isInspector ? 'collector-card-copy--inspector' : 'bottom-0'}`}>
             <div className="flex flex-wrap items-center gap-1 mb-1">
               <span className={`font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-white border border-[var(--rarity-color)] leading-none shadow-sm`}>
                 <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{CARD_RARITY_DEFINITIONS[rarity].label}
@@ -221,7 +221,7 @@ function CardViewComponent({
             </h4>
 
             {isInspector && (
-               <div className="mt-1.5 border-t border-white/20 pt-1.5">
+               <div className="collector-card-ability mt-1.5 border-t border-white/20 pt-1.5">
                  <div className="text-[7px] md:text-[8px] font-mono tracking-widest text-primary mb-0.5 uppercase">{card.ability}</div>
                  <div className="text-[8px] md:text-[10px] text-white/70 leading-tight font-sans line-clamp-3">{card.effect}</div>
                </div>

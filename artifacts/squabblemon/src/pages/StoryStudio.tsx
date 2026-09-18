@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import { storyContent, type StoryNode, type StoryDialogueLine } from '@workspace/squabblemon-engine/story';
 import { StoryStage } from '../components/story/StoryStage';
+import '../styles/studio.css';
 
 type PreviewScene = { node: StoryNode; section: 'pre' | 'post' | 'main'; lines: readonly StoryDialogueLine[] };
 const scenesByChapter = Object.fromEntries(storyContent.chapters.map((chapter) => [chapter.id,
@@ -22,21 +23,21 @@ export default function StoryStudio() {
   const select = (index: number) => { setSceneIndex(index); setLineIndex(0); setIntermission(false); setHistory(false); };
   const selectChapter = (id: string) => { setChapterId(id); select(0); };
   const finish = () => setIntermission(true);
-  return <main style={{ height: '100dvh', background: '#101218', color: '#f7eee0', display: 'flex', flexDirection: 'column' }}>
-    <nav aria-label="Chapter preview controls" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 16px', font: '11px Arial', flexWrap: 'wrap' }}>
-      <Link href="/game/story">Play campaign ↗</Link><span style={{ opacity: .6 }}>Scene preview · no progress or rewards</span>
-      <select aria-label="Select chapter" value={chapterId} onChange={(event) => selectChapter(event.target.value)} style={{ marginLeft: 'auto', maxWidth: '100%', background: '#25272c', color: '#f7eee0', padding: 8 }}>
+  return <main className="story-studio-shell">
+    <nav className="story-studio-controls" aria-label="Chapter preview controls">
+      <Link className="story-studio-controls__campaign" href="/game/story">Play campaign ↗</Link><span className="story-studio-controls__note">Scene preview · no progress or rewards</span>
+      <select aria-label="Select chapter" value={chapterId} onChange={(event) => selectChapter(event.target.value)}>
         {storyContent.chapters.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
       </select>
-      <select aria-label="Select scene" value={sceneIndex} onChange={(event) => select(Number(event.target.value))} style={{ maxWidth: '100%', background: '#25272c', color: '#f7eee0', padding: 8 }}>
+      <select aria-label="Select scene" value={sceneIndex} onChange={(event) => select(Number(event.target.value))}>
         {scenes.map((item, index) => <option key={`${item.node.id}:${item.section}`} value={index}>{item.node.title} · {item.section === 'pre' ? 'Before fight' : item.section === 'post' ? 'After victory' : 'Scene'}</option>)}
       </select>
     </nav>
-    <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+    <div className="story-studio-stage">
       <StoryStage key={`${scene.node.id}:${scene.section}`} nodeId={scene.node.id} section={scene.section} line={scene.lines[lineIndex]} position={lineIndex + 1} total={scene.lines.length}
         onNext={() => lineIndex + 1 < scene.lines.length ? setLineIndex(lineIndex + 1) : finish()}
         onSkip={finish} onClose={() => select(0)} onHistory={() => setHistory(true)} />
-      {(intermission || history) && <div role="dialog" aria-modal="true" aria-label={history ? 'Scene transcript' : 'Scene complete'} style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#101218f5', display: 'grid', placeItems: 'center', padding: 28, overflow: 'auto' }}>
+      {(intermission || history) && <div className="story-studio-dialog" role="dialog" aria-modal="true" aria-label={history ? 'Scene transcript' : 'Scene complete'} style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#101218f5', display: 'grid', placeItems: 'center', padding: 28, overflow: 'auto' }}>
         <div style={{ maxWidth: 640, width: '100%' }}>
           {history ? <><h2>Scene transcript</h2>{scene.lines.slice(0, lineIndex + 1).map((line, index) => <p key={index} style={{ margin: '16px 0' }}><strong style={{ color: '#e8d0a2' }}>{line.speaker}</strong><br />{line.text}</p>)}<button onClick={() => setHistory(false)} style={button}>Close transcript</button></> : <>
             <p style={{ color: '#e8d0a2', letterSpacing: '.2em', fontSize: 11 }}>{chapter.title.toUpperCase()} / {scene.section === 'pre' ? 'FIGHT BREAK' : 'SCENE COMPLETE'}</p>

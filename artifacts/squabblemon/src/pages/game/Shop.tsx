@@ -128,6 +128,18 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
   const reduced = bootstrap.profile.settings.reducedMotion || systemReduced;
+  // Older production bootstrap payloads predate tenPullConfig. Keep the shop
+  // usable during rolling deploys instead of dereferencing an absent config.
+  const tenPullConfig = bootstrap.tenPullConfig ?? {
+    id: `${bootstrap.packConfig.id}-ten`,
+    name: `${bootstrap.packConfig.name} · 10×`,
+    oddsVersion: bootstrap.packConfig.oddsVersion,
+    pullCount: 10,
+    ticketCost: Math.max(1, bootstrap.packConfig.ticketCost * 9),
+    softCurrencyCost: Math.max(1, bootstrap.packConfig.softCurrencyCost * 9),
+    rewardsPerPull: bootstrap.packConfig.rewardsPerPack,
+    rarePityBonusPerPull: 1,
+  };
   const rewards = Array.isArray(opening?.rewards) ? opening.rewards : [];
   const isTenPull = pullSize === 10;
   const isPunching = phase === 'punching' || phase === 'tenPunching';
@@ -176,7 +188,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     if (busy.current || phase !== 'idle') return;
     const payment = pending?.paymentMethod ?? method;
     const requestedSize = pending?.pullCount ?? size;
-    const tier = requestedSize === 10 ? bootstrap.tenPullConfig : bootstrap.packConfig;
+    const tier = requestedSize === 10 ? tenPullConfig : bootstrap.packConfig;
     const cost = payment === 'ticket' ? tier.ticketCost : tier.softCurrencyCost;
     const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
     if (!pending && balance < cost) return;
@@ -386,12 +398,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   ? 'Street pack · 10x'
                   : 'Street pack'
                 : isTenPull
-                  ? bootstrap.tenPullConfig.name
+                  ? tenPullConfig.name
                   : bootstrap.packConfig.name}
             </h2>
             <p>
               {isTenPull
-                ? `${bootstrap.tenPullConfig.rewardsPerPull} rewards. One KO. Rare+ guaranteed.`
+                ? `${tenPullConfig.rewardsPerPull} rewards. One KO. Rare+ guaranteed.`
                 : bootstrap.packConfig.rewardsPerPack === 6
                   ? '5 card pulls + 1 bonus. Same street price.'
                   : `${bootstrap.packConfig.rewardsPerPack} rewards. One knockout.`}
@@ -471,7 +483,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     guaranteed Rare+ highlight. */}
                 {(['ticket', 'softCurrency'] as const).map((method) => {
                   const ticket = method === 'ticket';
-                  const tier = bootstrap.tenPullConfig;
+                  const tier = tenPullConfig;
                   const cost = ticket ? tier.ticketCost : tier.softCurrencyCost;
                   const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
                   const affordable = balance >= cost;

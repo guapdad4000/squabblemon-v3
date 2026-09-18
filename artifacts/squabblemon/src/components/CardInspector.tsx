@@ -99,7 +99,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const variantSlots = catalogCard?.variantSlots ?? [];
 
   return (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-start md:items-center justify-center p-4 md:p-8 overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
+    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
         const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
@@ -114,7 +114,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: reduceMotion ? 0 : -20 }}
-        className="relative my-auto w-full max-w-5xl flex flex-col md:flex-row items-start gap-6 md:gap-10"
+        className="card-inspector-layout relative my-auto w-full max-w-5xl flex items-start"
         onClick={e => e.stopPropagation()}
       >
         {/* ============================================================
