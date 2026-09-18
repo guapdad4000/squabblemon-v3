@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#181712">
+<meta name="description" content="Explore the Squabblemon safehouse: story mode on the CRT, a heavy bag, gold-edged cards and a phone waiting on the block.">
+<title>Squabblemon • The Safehouse</title><link rel="stylesheet" href="style.css">
+</head>
+<body data-view="room">
+<main id="stage" aria-label="Interactive 3D trap house"><div id="loading">ENTERING THE BLOCK…</div></main>
+<header><a class="brand" href="./">SQUABBLEMON<span>THE WORLD / INTERIORS</span></a><button id="reference">Concept ↗</button></header>
+<div class="caption"><span class="eyebrow">OAKLAND, CA &nbsp; / &nbsp; 001</span><h1>The Safehouse<span>Home court advantage.</span></h1></div>
+<nav class="stations" aria-label="Explore room objects">
+<button data-view="story" aria-pressed="false"><span class="station-icon">▣</span><span>Story mode<small>THE TELEVISION</small></span></button>
+<button data-view="training" aria-pressed="false"><span class="station-icon">✦</span><span>Heavy bag<small>PUT IN WORK</small></span></button>
+<button data-view="cards" aria-pressed="false"><span class="station-icon">♠</span><span>The deck<small>GOLD EDITION</small></span></button>
+<button data-view="phone" aria-pressed="false"><span class="station-icon">▯</span><span>Cellphone<small>THE BLOCK IS CALLING</small></span></button>
+</nav>
+<aside id="story-panel" hidden aria-labelledby="story-title"><div class="panel-top"><span id="save-kind">DEMO SAVE</span><button id="close-story" aria-label="Close story progress">✕</button></div><p class="eyebrow" id="chapter-label"></p><h2 id="story-title"></h2><p id="objective"></p><div class="progress-heading"><strong id="story-percent"></strong><span>CAMPAIGN COMPLETE</span></div><progress id="story-progress" max="100" value="0" aria-label="Campaign completion"></progress><p id="chapters-cleared"></p><div class="wins" id="block-wins"></div></aside>
+<button id="punch" hidden>Hit the bag &nbsp; ✦</button><span id="action-status" class="sr-only" aria-live="polite"></span>
+<footer><div class="presets" aria-label="Camera views"><button class="active" data-view="room" aria-pressed="true">The room</button><button data-view="table" aria-pressed="false">Domino table</button><button data-view="lounge" aria-pressed="false">The lounge</button></div><div class="tools"><button id="light" aria-pressed="false">☀ Golden hour</button><button id="reset" aria-label="Reset camera">↺</button></div><p>Tap an object to explore <span>·</span> Drag to look <span>·</span> Pinch to zoom</p></footer>
+<dialog id="concept"><button id="close" aria-label="Close concept">✕</button><img src="concept.png" alt="Original vertical Squabblemon trap house concept"><p>ORIGINAL CONCEPT</p></dialog>
+<script type="module" src="scene.js"></script>
+</body></html>

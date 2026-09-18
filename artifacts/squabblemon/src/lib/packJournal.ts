@@ -2,15 +2,23 @@ import type { PackOpening } from '@workspace/api-client-react';
 
 type StoragePort = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 export type PackPayment = 'softCurrency' | 'ticket';
-export type PendingPackRequest = { idempotencyKey: string; paymentMethod: PackPayment };
+export type PendingPackRequest = {
+  idempotencyKey: string;
+  paymentMethod: PackPayment;
+  // Persist the original pull size so a refresh mid-punch sends the same
+  // intent (1 or 10) when the user taps "Retry this opening".
+  pullCount?: 1 | 10;
+};
 const key = (player: string, kind: 'request' | 'reveal') => `squabblemon:pack-${kind}:${player}`;
 function read(storage: StoragePort, name: string): unknown {
   try { return JSON.parse(storage.getItem(name) ?? 'null'); } catch { return null; }
 }
 export function loadPackRequest(storage: StoragePort, player: string): PendingPackRequest | null {
   const value = read(storage, key(player, 'request')) as Partial<PendingPackRequest> | null;
-  return value && typeof value.idempotencyKey === 'string' && value.idempotencyKey.length > 0
-    && (value.paymentMethod === 'ticket' || value.paymentMethod === 'softCurrency') ? value as PendingPackRequest : null;
+  if (!value || typeof value.idempotencyKey !== 'string' || value.idempotencyKey.length === 0) return null;
+  if (value.paymentMethod !== 'ticket' && value.paymentMethod !== 'softCurrency') return null;
+  if (value.pullCount !== undefined && value.pullCount !== 1 && value.pullCount !== 10) return null;
+  return value as PendingPackRequest;
 }
 /** Retry an uncertain payment with its original method and idempotency key. */
 export function reservePackRequest(storage: StoragePort, player: string, paymentMethod: PackPayment, createId: () => string): PendingPackRequest {

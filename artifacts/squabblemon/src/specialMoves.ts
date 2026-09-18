@@ -41,6 +41,40 @@ export function specialMoveForEvent(event: Pick<EffectLogEntry, 'type' | 'kind' 
     ? resolveSpecialMove(event.cardId, overrides) : null;
 }
 
+/**
+ * Stable key used to gate "play once per match" for special moves. A fighter's
+ * leveling up can emit multiple ability events; the gate suppresses repeat
+ * video playback and the long beat that comes with it.
+ */
+export type MovePlayKeyParams = { owner: 'player' | 'cpu' | null; sourceInstanceId: string | null | undefined; moveId: string };
+export function getMovePlayKey({ owner, sourceInstanceId, moveId }: MovePlayKeyParams) {
+  return `${owner ?? '?'}:${sourceInstanceId ?? '?'}:${moveId}`;
+}
+
+/** Pure: returns null when this fighter+move pair already played this match. */
+export function gateSpecialMoveReplay(clip: MoveClip & { id: string } | null, params: MovePlayKeyParams, playedSet: Set<string> | null) {
+  if (!clip || !playedSet) return clip;
+  return playedSet.has(getMovePlayKey(params)) ? null : clip;
+}
+
+/** Plan the per-event beat: full move duration the first time, standard afterMs on every replay. */
+export function planSpecialMoveBeat(
+  clip: MoveClip & { id: string } | null,
+  params: MovePlayKeyParams,
+  playedSet: Set<string> | null,
+  fallbackMs: number,
+): { durationMs: number; playKey: string | null } {
+  if (!clip) return { durationMs: fallbackMs, playKey: null };
+  const playKey = getMovePlayKey(params);
+  const alreadyPlayed = playedSet?.has(playKey) ?? false;
+  return { durationMs: alreadyPlayed ? fallbackMs : clip.durationMs, playKey };
+}
+
+export function markSpecialMovePlayed(playedSet: Set<string> | null, params: MovePlayKeyParams) {
+  if (!playedSet) return;
+  playedSet.add(getMovePlayKey(params));
+}
+
 /** Feather the backing color, retaining white highlights and dark outlines. */
 export function keyChromaPixels(data: Uint8ClampedArray, chroma: MoveClip['chroma']) {
   if (chroma === 'none') return;

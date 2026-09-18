@@ -1,0 +1,698 @@
+/* =========================================================================
+   fighter-resume.css
+   Card-Inspector dossier upgraded from a flat dark report into a pinned-up
+   "fighter resume": manga speed-line backdrop, polaroid portrait, washi tape,
+   paper strips, ink stamps, and a handwritten scout-notes column.
+   ========================================================================= */
+
+:root {
+  --resume-paper: #f1e4c2;
+  --resume-paper-deep: #d6c08a;
+  --resume-ink: #1a1611;
+  --resume-ink-soft: #4a3f2d;
+  --resume-red: #c0392b;
+  --resume-shadow: 0 14px 30px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .35);
+  --resume-tape-warm: rgba(241, 196, 64, .78);
+  --resume-tape-cool: rgba(63, 132, 196, .65);
+}
+
+/* ------------------------------------------------------------------ */
+/* Stage / backdrop                                                    */
+/* ------------------------------------------------------------------ */
+.collection-inspector.fighter-resume {
+  background:
+    radial-gradient(circle at 50% 38%, #221a0a 0%, #0d0a05 38%, #070603 75%),
+    #050403;
+  position: relative;
+  isolation: isolate;
+}
+.collection-inspector.fighter-resume::before {
+  /* manga speed-line backdrop, slightly tinted with rarity accent */
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/assets/inspector/speed-lines.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: .22;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.collection-inspector.fighter-resume::after {
+  /* subtle paper grain so the dark stage doesn't feel flat */
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  opacity: .07;
+  pointer-events: none;
+}
+.collection-inspector.fighter-resume > .relative { z-index: 1; }
+
+/* ------------------------------------------------------------------ */
+/* Top dossier banner                                                  */
+/* ------------------------------------------------------------------ */
+.dossier-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.dossier-banner__tape {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 22px 8px;
+  font: 900 italic clamp(.72rem, 1.5vw, 1rem)/1 var(--font-marker);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #1b1306;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,0,0,.07) 0 3px,
+      transparent 3px 14px),
+    var(--resume-tape-warm);
+  border-top: 1px solid rgba(0,0,0,.18);
+  border-bottom: 1px solid rgba(0,0,0,.18);
+  box-shadow: 0 4px 10px rgba(0,0,0,.45);
+  transform: rotate(-1.6deg);
+  clip-path: polygon(2% 0, 100% 0, 98% 100%, 0 100%);
+}
+.dossier-banner__tape::before,
+.dossier-banner__tape::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/inspector/washi-tape.jpg");
+  background-size: 220px 220px;
+  background-repeat: repeat;
+  opacity: .25;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.dossier-banner__tape > * { position: relative; }
+.dossier-banner__stamp {
+  width: 96px;
+  height: 96px;
+  background-image: url("/assets/inspector/classified-stamp.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: rotate(8deg);
+  filter: contrast(1.05);
+}
+.dossier-banner__meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+}
+
+/* ------------------------------------------------------------------ */
+/* Polaroid portrait frame                                             */
+/* ------------------------------------------------------------------ */
+.polaroid {
+  position: relative;
+  display: inline-block;
+  padding: 18px 18px 64px;
+  background:
+    linear-gradient(135deg, #fffefb 0%, #f4ead0 100%);
+  box-shadow: var(--resume-shadow);
+  transform: rotate(-2.2deg);
+  --rot: -2deg;
+}
+.polaroid > * { display: block; }
+.polaroid__photo {
+  position: relative;
+  width: clamp(220px, 24vw, 320px);
+  aspect-ratio: 63 / 88;
+  overflow: hidden;
+  background: #111;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+}
+.polaroid__photo img,
+.polaroid__photo [data-card] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.polaroid__caption {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 14px;
+  font-family: var(--font-hand);
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1;
+  color: #2b2114;
+  text-align: center;
+}
+.polaroid__caption em {
+  font-style: normal;
+  font-family: var(--font-marker);
+  font-size: .55em;
+  letter-spacing: .15em;
+  color: #8a7a5b;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 4px;
+}
+.polaroid__tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 86px;
+  height: 28px;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,0,0,.07) 0 3px,
+      transparent 3px 12px),
+    var(--resume-tape-cool);
+  box-shadow: 0 6px 12px rgba(0,0,0,.45);
+  z-index: 2;
+}
+.polaroid__tape::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/inspector/washi-tape.jpg");
+  background-size: 220px 220px;
+  opacity: .35;
+  mix-blend-mode: multiply;
+}
+.polaroid--alt { transform: rotate(2deg); --rot: 2deg; }
+
+/* ------------------------------------------------------------------ */
+/* Paper dossier body (the right-side resume)                          */
+/* ------------------------------------------------------------------ */
+.dossier-paper {
+  position: relative;
+  background:
+    url("/assets/inspector/paper-grain.jpg") center/cover no-repeat,
+    var(--resume-paper);
+  color: var(--resume-ink);
+  padding: clamp(22px, 3vw, 38px) clamp(20px, 3vw, 44px);
+  border-radius: 4px;
+  box-shadow: var(--resume-shadow);
+  isolation: isolate;
+}
+.dossier-paper::before {
+  /* red margin rule like notebook paper */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(36px, 4vw, 56px);
+  width: 1.5px;
+  background: rgba(192, 57, 43, .55);
+  z-index: 0;
+}
+.dossier-paper::after {
+  /* ruled horizontal lines, repeating */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 30px,
+    rgba(74, 63, 45, .12) 30px 31px
+  );
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+.dossier-paper > * { position: relative; z-index: 1; }
+
+/* the rarity accent ribbon along the top edge of the paper */
+.dossier-paper .dossier-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: var(--rarity-color, var(--color-primary));
+  box-shadow: 0 0 22px var(--rarity-color, var(--color-primary));
+  z-index: 2;
+}
+
+/* ------------------------------------------------------------------ */
+/* Title plate inside the dossier                                       */
+/* ------------------------------------------------------------------ */
+.dossier-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--resume-ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dossier-eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--resume-ink-soft);
+}
+.dossier-name {
+  font: 900 italic clamp(2.4rem, 5.4vw, 4.2rem)/.92 var(--font-display);
+  text-transform: uppercase;
+  color: var(--resume-ink);
+  letter-spacing: -.01em;
+  margin: 4px 0 4px;
+  text-shadow: 0 2px 0 rgba(255,255,255,.4);
+}
+.dossier-handle {
+  font-family: var(--font-hand);
+  font-size: clamp(18px, 1.6vw, 22px);
+  color: var(--resume-red);
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Stat strip (cost / power / class / faction)                         */
+/* ------------------------------------------------------------------ */
+.dossier-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+.dossier-stat {
+  position: relative;
+  padding: 10px 12px 12px;
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid rgba(74, 63, 45, .25);
+  box-shadow: 1px 1px 0 rgba(0,0,0,.18);
+  transform: rotate(var(--stat-rot, 0deg));
+}
+.dossier-stat:nth-child(1) { --stat-rot: -.7deg; }
+.dossier-stat:nth-child(2) { --stat-rot: .5deg; }
+.dossier-stat:nth-child(3) { --stat-rot: -.4deg; }
+.dossier-stat:nth-child(4) { --stat-rot: .8deg; }
+.dossier-stat__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--resume-ink-soft);
+}
+.dossier-stat__value {
+  font: 900 italic clamp(1.4rem, 2.4vw, 1.9rem)/1 var(--font-display);
+  color: var(--resume-ink);
+  margin-top: 2px;
+}
+.dossier-stat__sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--resume-ink-soft);
+  margin-top: 2px;
+}
+.dossier-stat__pin {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff6b6b 0%, #c0392b 60%, #6c1b15 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,.4), inset -1px -1px 2px rgba(0,0,0,.4);
+}
+.dossier-stat__pin::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 60%);
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sticky-note ability box                                             */
+/* ------------------------------------------------------------------ */
+.dossier-sticky {
+  position: relative;
+  margin: 18px 0 14px;
+  padding: 22px 22px 20px;
+  background: #ffe98a;
+  color: #2b2114;
+  box-shadow:
+    2px 4px 0 rgba(0,0,0,.18),
+    0 14px 30px rgba(0,0,0,.18);
+  transform: rotate(.8deg);
+  font-family: var(--font-hand);
+}
+.dossier-sticky::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 90px;
+  height: 22px;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(0,0,0,.07) 0 3px,
+      transparent 3px 12px),
+    rgba(241, 196, 64, .8);
+  box-shadow: 0 4px 8px rgba(0,0,0,.3);
+}
+.dossier-sticky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/inspector/washi-tape.jpg");
+  background-size: 220px 220px;
+  opacity: .18;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.dossier-sticky > * { position: relative; }
+.dossier-sticky__label {
+  font: 700 .85rem/1 var(--font-mono);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: #5a4521;
+}
+.dossier-sticky__title {
+  font: 700 clamp(1.6rem, 2.4vw, 2.2rem)/1 var(--font-display);
+  font-style: italic;
+  color: #c0392b;
+  text-transform: uppercase;
+  margin: 6px 0 8px;
+  text-shadow: 1px 1px 0 rgba(255,255,255,.55);
+}
+.dossier-sticky__copy {
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.45;
+  color: #2b2114;
+}
+
+/* ------------------------------------------------------------------ */
+/* Fight record (upgrade list as torn index cards)                     */
+/* ------------------------------------------------------------------ */
+.dossier-section {
+  margin: 22px 0 16px;
+}
+.dossier-section__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.dossier-section__head h4 {
+  margin: 0;
+  font: 900 italic clamp(1rem, 1.6vw, 1.2rem)/1 var(--font-display);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--resume-ink);
+}
+.dossier-section__head::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(90deg,
+    var(--resume-ink) 0 6px,
+    transparent 6px 12px);
+}
+.dossier-section__head em {
+  font: 400 .9rem/1 var(--font-hand);
+  color: var(--resume-ink-soft);
+  font-style: normal;
+  text-transform: none;
+}
+
+.dossier-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.dossier-cards li {
+  position: relative;
+  padding: 12px 14px 12px 38px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,.15) 100%);
+  border: 1px solid rgba(74, 63, 45, .25);
+  box-shadow: 1px 1px 0 rgba(0,0,0,.18);
+  font-family: var(--font-sans);
+  color: var(--resume-ink);
+}
+.dossier-cards li:nth-child(odd)  { transform: rotate(-.35deg); }
+.dossier-cards li:nth-child(even) { transform: rotate(.4deg); }
+.dossier-cards li::before {
+  content: "•";
+  position: absolute;
+  left: 14px;
+  top: 8px;
+  font: 700 1.4rem/1 var(--font-display);
+  color: var(--resume-red);
+}
+.dossier-cards li.is-locked { opacity: .55; }
+.dossier-cards li.is-active {
+  border-color: var(--rarity-color, var(--color-primary));
+  background: color-mix(in srgb, var(--rarity-color, var(--color-primary)) 14%, rgba(255,255,255,.55));
+}
+.dossier-cards li > b {
+  font: 700 .85rem/1.2 var(--font-display);
+  font-style: italic;
+  text-transform: uppercase;
+  color: var(--resume-ink);
+  margin-right: 6px;
+}
+.dossier-cards li > small {
+  display: inline-block;
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--resume-ink-soft);
+}
+.dossier-cards__belt {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  font: 700 .7rem/1 var(--font-mono);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: 4px 6px;
+  border: 1.5px solid currentColor;
+  color: var(--resume-red);
+  transform: rotate(2deg);
+  background: rgba(255,255,255,.6);
+}
+
+/* ------------------------------------------------------------------ */
+/* Variants polaroids                                                   */
+/* ------------------------------------------------------------------ */
+.dossier-variants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+.dossier-variant {
+  position: relative;
+  padding: 14px 14px 16px;
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(74, 63, 45, .25);
+  box-shadow: 2px 2px 0 rgba(0,0,0,.18);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dossier-variant:nth-child(odd)  { transform: rotate(-1deg); }
+.dossier-variant:nth-child(even) { transform: rotate(.7deg); }
+.dossier-variant h5 {
+  margin: 0;
+  font: 900 italic 1rem/1 var(--font-display);
+  text-transform: uppercase;
+  color: var(--resume-ink);
+}
+.dossier-variant p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--resume-ink-soft);
+  line-height: 1.35;
+}
+.dossier-variant__cost {
+  font: 700 .8rem/1 var(--font-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--resume-red);
+}
+.dossier-variant button {
+  margin-top: auto;
+  width: 100%;
+  padding: 8px 10px;
+  font: 700 .72rem/1 var(--font-mono);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  background: #1b1212;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  transition: background .15s;
+}
+.dossier-variant button:hover:not(:disabled) { background: var(--resume-red); }
+.dossier-variant button:disabled { opacity: .5; cursor: not-allowed; }
+.dossier-variant button.is-equipped { background: var(--rarity-color, var(--color-primary)); color: #1a1410; }
+
+/* ------------------------------------------------------------------ */
+/* Fight record table (acquisition + decks)                            */
+/* ------------------------------------------------------------------ */
+.dossier-table {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  font-family: var(--font-sans);
+  color: var(--resume-ink);
+}
+.dossier-table__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,.45);
+  border: 1px solid rgba(74, 63, 45, .2);
+}
+.dossier-table__row b {
+  font: 700 .82rem/1.2 var(--font-display);
+  font-style: italic;
+  text-transform: uppercase;
+}
+.dossier-table__row small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--resume-ink-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scout's Notes (handwritten annotation)                              */
+/* ------------------------------------------------------------------ */
+.dossier-notes {
+  position: relative;
+  margin: 14px 0 18px;
+  padding: 14px 18px 18px 56px;
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0 26px,
+      rgba(74, 63, 45, .13) 26px 27px),
+    rgba(255, 253, 240, .75);
+  border-left: 4px solid var(--resume-red);
+  font-family: var(--font-hand);
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.5;
+  color: #2b2114;
+  box-shadow: 2px 3px 0 rgba(0,0,0,.15);
+  transform: rotate(-.4deg);
+}
+.dossier-notes::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background-image: url("/assets/inspector/scout-stamp.jpg");
+  background-size: 110px 110px;
+  background-repeat: no-repeat;
+  background-position: right -8px top -10px;
+  opacity: .85;
+  pointer-events: none;
+  transform: rotate(6deg);
+}
+.dossier-notes__head {
+  font: 700 .8rem/1 var(--font-mono);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--resume-red);
+  margin-bottom: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Battle vitals strip (instance mode)                                  */
+/* ------------------------------------------------------------------ */
+.dossier-vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+.dossier-vital {
+  position: relative;
+  padding: 10px 12px;
+  background: #111;
+  color: var(--rarity-color, var(--color-primary));
+  border: 1px solid currentColor;
+  box-shadow: 0 0 12px color-mix(in srgb, currentColor 30%, transparent);
+  font-family: var(--font-mono);
+}
+.dossier-vital__label {
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+}
+.dossier-vital__value {
+  font: 900 italic 1.4rem/1 var(--font-display);
+  margin-top: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Big ink stamp watermark in corner                                    */
+/* ------------------------------------------------------------------ */
+.dossier-mark {
+  position: absolute;
+  right: -10px;
+  bottom: -16px;
+  width: 140px;
+  height: 140px;
+  background-image: url("/assets/inspector/classified-stamp.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: .55;
+  transform: rotate(-8deg);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                            */
+/* ------------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .dossier-paper { padding: 18px 16px 22px; }
+  .dossier-paper::before { left: 26px; }
+  .dossier-banner__stamp { width: 76px; height: 76px; }
+}
+@media (max-width: 640px) {
+  .dossier-banner__tape { font-size: .8rem; padding: 5px 16px 7px; }
+  .dossier-banner__stamp { width: 64px; height: 64px; }
+  .dossier-stats { grid-template-columns: repeat(2, 1fr); }
+  .dossier-name { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .polaroid { transform: rotate(-1deg); padding: 12px 12px 50px; }
+  .polaroid__photo { width: 78vw; max-width: 320px; }
+  .polaroid__caption { font-size: 20px; bottom: 8px; }
+  .dossier-mark { width: 96px; height: 96px; right: -6px; bottom: -10px; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion                                                       */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .dossier-stats *, .dossier-cards li, .dossier-variant,
+  .polaroid, .dossier-sticky, .dossier-notes {
+    transform: none !important;
+  }
+}

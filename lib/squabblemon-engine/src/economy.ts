@@ -2,6 +2,7 @@ import { catalogCardById } from './data';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
 
 export const ECONOMY_VERSION = 'block-economy-v1';
+export const TICKETS_PER_MAJOR_STORY_NODE = 10;
 export const MOVE_TRAINING_COSTS = [150, 400, 900] as const;
 export const MAX_DECK_SLOTS = 12;
 export const SHOP_OFFERS = [

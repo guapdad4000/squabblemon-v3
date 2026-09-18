@@ -9,13 +9,33 @@ import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { CardProgress } from './CardProgress';
-import { catalogCardByEngineId, catalogCardById, getCardImage, getAssetUrl, CARD_RARITY_DEFINITIONS } from '../data';
+import { catalogCardByEngineId, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
-import { cards as engineCards } from '@workspace/squabblemon-engine/data';
 import { CARD_FINISH, getCardWallpaper } from '../lib/cardFinish';
 import '../styles/collection-inspector.css';
+import '../styles/fighter-resume.css';
+
+/**
+ * A short handwritten scout-note line for the card, derived from its ability.
+ * We keep it in-world ("Squad rules of the block") and flavor-aware based on
+ * the card's type so each class feels distinct.
+ */
+function scoutNote(card: any): string {
+  const type = String(card.type ?? '').toLowerCase();
+  const ability = String(card.ability ?? '').toUpperCase();
+  if (type === 'fire') return `${ability} hits like a thrown bottle at 2am. Don't blink.`;
+  if (type === 'ice') return `${ability} — slow your roll, then end it. Patience pays.`;
+  if (type === 'electric') return `${ability} runs the whole block's grid. Stay conductive.`;
+  if (type === 'water') return `${ability} flows around corners. Watch the tide.`;
+  if (type === 'plant') return `${ability} roots in deep. Cut it before it spreads.`;
+  if (type === 'psychic') return `${ability} reads the room before the room reads you.`;
+  if (type === 'dark') return `${ability} — they'll owe you before they know it.`;
+  if (type === 'fighting') return `${ability} brawls back. Bring a mouthpiece.`;
+  if (type === 'air') return `${ability} moves the whole district in one breath.`;
+  return `${ability} — note for the next squad run.`;
+}
 
 export function CardInspector({ card, onClose, bootstrap, variantId, match, useCachedProfile = false }: any) {
   const reduceMotion = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
@@ -67,8 +87,19 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
     }
   };
 
+  const effectivePower = instance ? getEffectiveCardPower(instance) : card.power;
+  const rarityLabel = catalogCard ? CARD_RARITY_DEFINITIONS[catalogCard.rarity].label : 'Standard';
+  const finishLabel = catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition';
+  const faction = catalogCard?.faction ?? 'Independent';
+  const crewTags = catalogCard?.crewTags ?? [];
+  const usedDecks = catalogCard
+    ? bootstrap?.profile?.savedDecks?.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)) ?? []
+    : [];
+  const isBattleMode = Boolean(match);
+  const variantSlots = catalogCard?.variantSlots ?? [];
+
   return (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-start md:items-center justify-center p-4 md:p-8 overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector')} onClick={onClose} onKeyDown={event => {
+    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-start md:items-center justify-center p-4 md:p-8 overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
         const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
@@ -83,176 +114,276 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: reduceMotion ? 0 : -20 }}
-        className="relative my-auto w-full max-w-4xl flex flex-col md:flex-row items-center gap-5 md:gap-10"
+        className="relative my-auto w-full max-w-5xl flex flex-col md:flex-row items-start gap-6 md:gap-10"
         onClick={e => e.stopPropagation()}
       >
-        <div className="collector-display">
-        <CardView
-          card={card}
-          covered={isCovered}
-          variantId={equippedVariant}
-          progress={progression}
-          testId="card-inspector"
-          inspectionLayout={instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined}
-          effectivePower={instance ? getEffectiveCardPower(instance) : undefined}
-          isInspector
-          presentationOnly
-          className={`w-[200px] md:w-[300px] aspect-[63/88] shadow-2xl shadow-primary/20 ${!match && bootstrap && !isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
-        />
-        <div className="collector-display-caption">
-          <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
-          <small>Move across the card to catch the light</small>
-        </div>
+        {/* ============================================================
+            LEFT — Polaroid portrait
+            ============================================================ */}
+        <div className="polaroid mx-auto md:mx-0">
+          <div className="polaroid__tape" aria-hidden="true" />
+          <div className="polaroid__photo">
+            <CardView
+              card={card}
+              covered={isCovered}
+              variantId={equippedVariant}
+              progress={progression}
+              testId="card-inspector"
+              inspectionLayout={instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined}
+              effectivePower={instance ? getEffectiveCardPower(instance) : undefined}
+              isInspector
+              presentationOnly
+              className={`w-full h-full ${!match && bootstrap && !isCardOwned && catalogCard ? 'grayscale opacity-75' : ''}`}
+            />
+          </div>
+          <div className="polaroid__caption">
+            {card.name}
+            <em>{finishLabel} · {rarityLabel}</em>
+          </div>
+          <div className="collector-display-caption sr-only">
+            <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
+            <small>Move across the card to catch the light</small>
+          </div>
         </div>
 
-        <div
-          className={`collector-dossier relative w-full bg-zinc-950/95 border-2 p-6 md:p-10 shadow-2xl overflow-hidden max-h-[80vh] overflow-y-auto hide-scrollbar flex flex-col card-bevel ${catalogCard ? getRarityClass(catalogCard.rarity) : 'border-primary/30'}`}
-        >
-          <div className="collection-inspector__ornament absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-5 pointer-events-none mix-blend-screen" />
-          <div className="collection-inspector__ornament absolute inset-x-0 top-0 h-1.5 bg-[var(--rarity-color,theme(colors.primary.DEFAULT))] shadow-[0_0_15px_var(--rarity-color,theme(colors.primary.DEFAULT))]" />
-          <div className="flex justify-between items-center mb-5 relative z-10">
-            <span className="font-mono text-[10px] md:text-xs text-primary uppercase tracking-[0.22em]">{card.type} class // {card.cost} Motion</span>
-            {match && <button data-testid="button-close-inspector" aria-label="Close card details" onClick={onClose} className="w-9 h-9 border border-white/20 flex items-center justify-center text-white/50 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0">
-              <X size={16} />
-            </button>}
+        {/* ============================================================
+            RIGHT — Paper dossier (the resume)
+            ============================================================ */}
+        <div className={`dossier-paper relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''} max-h-[80vh] overflow-y-auto hide-scrollbar`}>
+          <span className="dossier-stripe" aria-hidden="true" />
+          <span className="dossier-mark" aria-hidden="true" />
+
+          {/* Top dossier banner */}
+          <header className="dossier-banner">
+            <span className="dossier-banner__tape">
+              <span>Fighter Resume</span>
+              <span>·</span>
+              <span>File #{String(card.id || '').padEnd(4, '0').slice(0, 4)}</span>
+            </span>
+            <span className="dossier-banner__stamp" aria-hidden="true" />
+            <span className="dossier-banner__meta">
+              {card.type} class · {card.cost} motion · {rarityLabel}
+            </span>
+            {match && (
+              <button
+                data-testid="button-close-inspector"
+                aria-label="Close card details"
+                onClick={onClose}
+                className="ml-auto w-9 h-9 border border-white/30 flex items-center justify-center text-white/70 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0 bg-black/60"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </header>
+
+          {/* Title plate */}
+          <div>
+            <div className="dossier-eyebrow">
+              {isBattleMode ? 'Combat dossier' : 'Fighter dossier'} · {faction} faction
+            </div>
+            <h3 className="dossier-name">{card.name}</h3>
+            <div className="dossier-handle">"#{String(card.id || '').slice(0, 6)} — filed by Dr. Fade's scout team"</div>
           </div>
 
-          <div className="font-mono text-[9px] text-white/30 tracking-[0.25em] uppercase mb-2">Combat dossier</div>
-          <h3 className="font-display font-black italic text-4xl md:text-6xl uppercase leading-[0.9] mb-3">{card.name}</h3>
+          {/* Battle vitals (instance mode only) */}
+          {isBattleMode && instance && (
+            <div className="dossier-vitals" style={{ '--rarity-color': 'var(--color-accent, #f43f5e)' } as React.CSSProperties}>
+              <div className="dossier-vital">
+                <div className="dossier-vital__label">Base</div>
+                <div className="dossier-vital__value">{instance.basePower}</div>
+              </div>
+              <div className="dossier-vital">
+                <div className="dossier-vital__label">Modifier</div>
+                <div className="dossier-vital__value">{instance.powerModifier > 0 ? `+${instance.powerModifier}` : instance.powerModifier}</div>
+              </div>
+              <div className="dossier-vital">
+                <div className="dossier-vital__label">Effective</div>
+                <div className="dossier-vital__value">{effectivePower}</div>
+              </div>
+              <div className="dossier-vital">
+                <div className="dossier-vital__label">Status</div>
+                <div className="dossier-vital__value">
+                  {instance.statuses.frozen ? 'FZN'
+                    : instance.statuses.silenced ? 'SIL'
+                    : isCovered ? 'COV'
+                    : instance.statuses.protected ? 'PRT'
+                    : instance.statuses.blocked ? 'BLK'
+                    : 'OK'}
+                </div>
+              </div>
+            </div>
+          )}
           {instance && match && <BattlePowerBreakdown card={instance} match={match} />}
 
+          {/* Stat strip */}
+          <div className="dossier-stats" role="list" aria-label="Fighter stats">
+            <div className="dossier-stat" role="listitem">
+              <span className="dossier-stat__pin" aria-hidden="true" />
+              <div className="dossier-stat__label">Class</div>
+              <div className="dossier-stat__value">{card.type}</div>
+              <div className="dossier-stat__sub">Energy type</div>
+            </div>
+            <div className="dossier-stat" role="listitem">
+              <span className="dossier-stat__pin" aria-hidden="true" />
+              <div className="dossier-stat__label">Motion</div>
+              <div className="dossier-stat__value">{card.cost}</div>
+              <div className="dossier-stat__sub">Cost to play</div>
+            </div>
+            <div className="dossier-stat" role="listitem">
+              <span className="dossier-stat__pin" aria-hidden="true" />
+              <div className="dossier-stat__label">Hands</div>
+              <div className="dossier-stat__value">{card.power}</div>
+              <div className="dossier-stat__sub">Base power</div>
+            </div>
+            <div className="dossier-stat" role="listitem">
+              <span className="dossier-stat__pin" aria-hidden="true" />
+              <div className="dossier-stat__label">Rarity</div>
+              <div className="dossier-stat__value" style={{ color: 'var(--rarity-color)' }}>{rarityLabel}</div>
+              <div className="dossier-stat__sub">{finishLabel}</div>
+            </div>
+          </div>
+
+          {/* Tags row */}
           {catalogCard && (
-            <div className="collection-inspector__tags flex flex-wrap gap-2 mb-6">
-              {catalogCard.kind === 'support' && <span className="font-mono text-[9px] uppercase tracking-widest text-white border border-white/30 px-2 py-1 bg-black">Support card</span>}
-               <span className="font-mono text-[9px] uppercase tracking-widest text-white border px-2 py-1 bg-black" style={{ borderColor: 'var(--rarity-color)' }}>{CARD_RARITY_DEFINITIONS[catalogCard.rarity].label} rarity</span>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-white/70 border border-white/20 px-2 py-1 bg-white/5">{catalogCard.faction} Faction</span>
-              {catalogCard.crewTags.map((tag: string) => (
-                <span key={tag} className="font-mono text-[9px] uppercase tracking-widest text-white/50 border border-white/10 px-2 py-1 bg-black">{tag}</span>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {catalogCard.kind === 'support' && (
+                <span className="font-mono text-[9px] uppercase tracking-widest border px-2 py-1 bg-white/70" style={{ borderColor: 'var(--resume-ink-soft)', color: 'var(--resume-ink)' }}>
+                  Support card
+                </span>
+              )}
+              {crewTags.map((tag: string) => (
+                <span
+                  key={tag}
+                  className="font-mono text-[9px] uppercase tracking-widest border px-2 py-1 bg-white/55"
+                  style={{ borderColor: 'var(--resume-ink-soft)', color: 'var(--resume-ink-soft)' }}
+                >
+                  {tag}
+                </span>
               ))}
             </div>
           )}
-          {isCardOwned && progression && (
-            <div className="collection-inspector__progress mb-6 border border-primary/20 bg-primary/5 p-3">
+
+          {/* XP progress (collection only) */}
+          {isCardOwned && progression && !isBattleMode && (
+            <div className="mb-5 border border-black/15 bg-white/55 p-3">
               <CardProgress progress={progression} />
             </div>
           )}
 
-          {(engineCards[card.id]?.immersiveAssetId) && (
-            <div className="mb-6">
-              <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-2">Immersive preview · tap and hold</div>
-              <div className="immersive-scene" data-testid="immersive-scene">
-                <div className="immersive-scene__bg" style={{ backgroundImage: `url("${engineCards[card.id]?.immersiveAssetId?.backgroundAssetId ? getAssetUrl(engineCards[card.id]!.immersiveAssetId!.backgroundAssetId) : getCardImage(card.id)}")` }} />
-                {engineCards[card.id]?.immersiveAssetId?.midgroundAssetId && (
-                  <div className="immersive-scene__mid" style={{ backgroundImage: `url("${getAssetUrl(engineCards[card.id]!.immersiveAssetId!.midgroundAssetId!)}")` }} />
-                )}
-                <div className="immersive-scene__particles" />
-                <div className="immersive-scene__fg" style={{ backgroundImage: `url("${engineCards[card.id]?.immersiveAssetId?.foregroundAssetId ? getAssetUrl(engineCards[card.id]!.immersiveAssetId!.foregroundAssetId) : getCardImage(card.id)}")` }} />
-                <div className="immersive-scene__badge">Signature scene</div>
-              </div>
-            </div>
-          )}
-
-          <div className="collection-inspector__ability relative bg-black/70 border-l-4 border-primary p-4 md:p-5 mb-6">
-            <div className="text-[9px] md:text-[10px] font-mono tracking-widest text-white/40 mb-1">SIGNATURE ABILITY</div>
-            <div className="font-display font-black italic uppercase text-lg md:text-2xl text-primary">{card.ability}</div>
-            <p className="text-white/65 font-sans mt-3 text-xs md:text-sm leading-relaxed max-w-lg">{card.effect}</p>
+          {/* Sticky-note signature ability */}
+          <div className="dossier-sticky">
+            <div className="dossier-sticky__label">Signature Ability</div>
+            <div className="dossier-sticky__title">{card.ability}</div>
+            <p className="dossier-sticky__copy">{card.effect}</p>
           </div>
+
+          {/* Scout's notes */}
+          <div className="dossier-notes">
+            <div className="dossier-notes__head">Scout's Notes</div>
+            {scoutNote(card)}
+          </div>
+
+          {/* Ability Upgrades as a "Fight record" */}
           {catalogCard && (
-            <div className="collection-inspector__upgrades mb-6 border border-white/10 bg-black/40 p-3">
-              <CardUpgrades card={catalogCard} progress={progression} activeUpgradeIds={matchUpgradeIds} />
-              {isCardOwned && !match && <Link href={`/game/shop?card=${catalogCard.catalogId}`} onClick={onClose} className="mt-3 block text-xs font-bold text-primary">Train XP & learn moves at Dr. Fade’s →</Link>}
-            </div>
+            <section className="dossier-section">
+              <div className="dossier-section__head">
+                <h4>Ability Upgrades</h4>
+                <em>learned moves from Dr. Fade's gym</em>
+              </div>
+              <div className="border border-black/15 bg-white/45 p-2">
+                <CardUpgrades card={catalogCard} progress={progression} activeUpgradeIds={matchUpgradeIds} />
+              </div>
+              {isCardOwned && !match && (
+                <Link
+                  href={`/game/shop?card=${catalogCard.catalogId}`}
+                  onClick={onClose}
+                  className="mt-3 inline-block font-marker text-sm uppercase tracking-wider"
+                  style={{ color: 'var(--resume-red)' }}
+                >
+                  Train XP & learn moves at Dr. Fade's →
+                </Link>
+              )}
+            </section>
           )}
 
-
-          {instance && (
-            <div className="grid grid-cols-2 gap-4 mt-6 border-t border-white/10 pt-6">
-              <div>
-                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-1">Status</div>
-                <div className="flex flex-wrap gap-2">
-                  {instance.statuses.frozen && <span className="bg-blue-500/20 text-blue-300 border border-blue-500/50 px-2 py-1 text-[10px] font-mono uppercase">Frozen</span>}
-                  {instance.statuses.silenced && <span className="bg-zinc-500/20 text-zinc-300 border border-zinc-500/50 px-2 py-1 text-[10px] font-mono uppercase">Silenced</span>}
-                  {isCovered && <span className="bg-amber-200/20 text-amber-200 border border-amber-300/50 px-2 py-1 text-[10px] font-mono uppercase" title="Blocks this card’s next targeted hostile ability, even in a later round">Covered</span>}
-                  {instance.statuses.protected && !isCovered && <span className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/50 px-2 py-1 text-[10px] font-mono uppercase">Protected this round</span>}
-                  {instance.statuses.blocked && <span className="bg-red-500/20 text-red-300 border border-red-500/50 px-2 py-1 text-[10px] font-mono uppercase">Blocked</span>}
-                  {!instance.statuses.frozen && !instance.statuses.silenced && !instance.statuses.protected && !instance.statuses.blocked && <span className="text-white/30 text-[10px] font-mono uppercase">Normal</span>}
-                </div>
-              </div>
-              <div>
-                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-1">Modifiers</div>
-                <div className="text-sm font-mono text-white">
-                  Base Hands: {instance.basePower} <br/>
-                  Modifier: {instance.powerModifier > 0 ? `+${instance.powerModifier}` : instance.powerModifier} <br/>
-                  Effective Hands: {getEffectiveCardPower(instance)} <br/>
-                  {instance.moved && <span className="text-purple-300">Moved districts<br/></span>}
-                  <span className="text-primary/70 text-[9px] mt-1 block">{instance.lastEffectNote}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
+          {/* Acquisition + Used-in-decks */}
           {bootstrap && catalogCard && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 border-t border-white/10 pt-6">
-              <div>
-                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-2">Acquisition Sources</div>
-                <ul className="list-disc list-inside text-xs text-white/80 space-y-1 ml-2">
-                  {catalogCard.acquisitionSources.map((source: string, i: number) => <li key={i}>{source}</li>)}
-                </ul>
-
-                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mt-4 mb-2">Used In Decks</div>
-                {bootstrap.profile.savedDecks.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)).length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {bootstrap.profile.savedDecks.filter((d: any) => d.cardIds.includes(catalogCard.catalogId)).map((deck: any) => (
-                      <span key={deck.id} className="border border-white/20 px-2 py-1 text-[10px] font-mono uppercase bg-white/5">{deck.name}</span>
-                    ))}
+            <section className="dossier-section">
+              <div className="dossier-section__head">
+                <h4>Fight Record</h4>
+                <em>where to find them & where they fight</em>
+              </div>
+              <div className="dossier-table">
+                {(catalogCard.acquisitionSources ?? []).map((source: string, i: number) => (
+                  <div key={`src-${i}`} className="dossier-table__row">
+                    <div>
+                      <b>{source}</b>
+                    </div>
+                    <small>Scouted</small>
                   </div>
+                ))}
+                {usedDecks.length > 0 ? (
+                  usedDecks.map((deck: any) => (
+                    <div key={`deck-${deck.id}`} className="dossier-table__row">
+                      <div>
+                        <b>{deck.name}</b>
+                        <small style={{ marginLeft: 8 }}>active deck</small>
+                      </div>
+                      <small>In rotation</small>
+                    </div>
+                  ))
                 ) : (
-                  <div className="text-xs text-white/30 italic">Not used in any saved decks.</div>
+                  <div className="dossier-table__row" style={{ gridTemplateColumns: '1fr' }}>
+                    <small style={{ color: 'var(--resume-ink-soft)' }}>Not on any saved decks yet — pull 'em into a crew.</small>
+                  </div>
                 )}
               </div>
+            </section>
+          )}
 
-              <div>
-                <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase mb-2">Variants & Crafting</div>
-                <div className="space-y-3">
-                  {catalogCard.variantSlots.map((slot: any) => {
-                    const isOwned = bootstrap.profile.ownedVariants.includes(slot.id);
-                    const canAfford = bootstrap.profile.styleShards >= slot.shardCost;
-                    return (
-                      <div key={slot.id} className="collection-inspector__variant border border-white/10 p-3 bg-black/40">
-                        <div className="flex justify-between items-start mb-1">
-                          <div className="font-display font-black italic uppercase text-sm">{slot.name}</div>
-                          {isOwned ? (
-                            <span className="text-[10px] text-primary font-mono uppercase tracking-widest">{equippedVariant === slot.id ? 'Equipped' : 'Unlocked'}</span>
-                          ) : (
-                            <span className="text-[10px] text-accent font-mono uppercase tracking-widest">{slot.shardCost} Shards</span>
-                          )}
-                        </div>
-                        <p className="text-[10px] text-white/60 mb-2">{slot.description}</p>
-                        {!isOwned && (
-                          <button
-                            onClick={() => handleCraft(slot.id)}
-                            disabled={!canAfford || craftVariant.isPending || !isCardOwned}
-                            className="w-full bg-white/10 hover:bg-white/20 disabled:opacity-50 text-[10px] font-mono uppercase py-1 border border-white/20 transition-colors"
-                          >
-                            {!isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting...' : canAfford ? 'Craft Variant' : 'Not Enough Shards'}
-                          </button>
-                        )}
-                        {isOwned && (
+          {/* Variants */}
+          {variantSlots.length > 0 && (
+            <section className="dossier-section">
+              <div className="dossier-section__head">
+                <h4>Variants & Crafting</h4>
+                <em>alt coats unlocked with Style Shards</em>
+              </div>
+              <div className="dossier-variants">
+                {variantSlots.map((slot: any) => {
+                  const isOwned = bootstrap?.profile?.ownedVariants?.includes(slot.id);
+                  const canAfford = (bootstrap?.profile?.styleShards ?? 0) >= slot.shardCost;
+                  return (
+                    <article key={slot.id} className="dossier-variant">
+                      <div className="dossier-variant__cost">
+                        {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : `${slot.shardCost} Shards`}
+                      </div>
+                      <h5>{slot.name}</h5>
+                      <p>{slot.description}</p>
+                      {bootstrap && catalogCard && (
+                        isOwned ? (
                           <button
                             onClick={() => handleEquip(equippedVariant === slot.id ? null : slot.id)}
                             disabled={equipVariant.isPending}
-                            className={`w-full text-[10px] font-mono uppercase py-1 border transition-colors disabled:opacity-50 ${equippedVariant === slot.id ? 'border-primary bg-primary text-black' : 'border-white/20 bg-white/10 hover:bg-white/20'}`}
+                            className={equippedVariant === slot.id ? 'is-equipped' : ''}
                           >
-                            {equipVariant.isPending ? 'Saving...' : equippedVariant === slot.id ? 'Equipped · Tap to remove' : `Equip ${slot.name}`}
+                            {equipVariant.isPending ? 'Saving…' : equippedVariant === slot.id ? 'Equipped · Tap to remove' : `Equip ${slot.name}`}
                           </button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                        ) : (
+                          <button
+                            onClick={() => handleCraft(slot.id)}
+                            disabled={!canAfford || craftVariant.isPending || !isCardOwned}
+                          >
+                            {!isCardOwned ? 'Unlock card first' : craftVariant.isPending ? 'Crafting…' : canAfford ? 'Craft Variant' : 'Not enough shards'}
+                          </button>
+                        )
+                      )}
+                    </article>
+                  );
+                })}
               </div>
-            </div>
+            </section>
           )}
+
           {catalogCard && <CardRarityTreatment rarity={catalogCard.rarity} />}
         </div>
       </motion.div>

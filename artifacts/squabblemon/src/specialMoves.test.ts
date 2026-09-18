@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { cardCatalog, cards } from './data';
-import { getMoveClipUrl, keyChromaPixels, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
+import { getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
 
 test('media URLs carry a revision matching the actual bytes, so replacements bypass cached videos', () => {
   for (const clip of Object.values(moveClips)) {
@@ -118,4 +118,61 @@ test('Wave 5 covers all twenty expansion characters with their printed moves and
     rarities[rarity] = (rarities[rarity] ?? 0) + 1;
   }
   assert.deepEqual(rarities, { Common: 10, Rare: 5, Mythical: 5 });
+});
+
+test('Wave 6 covers the six creator Mythicals with their printed moves and refreshed rarity split', () => {
+  const wave: Record<string, { clipId: string; rarity: string }> = {
+    johnhenry: { clipId: 'char94', rarity: 'Rare' },
+    yasuke: { clipId: 'char95', rarity: 'Rare' },
+    dragonflyjones: { clipId: 'char96', rarity: 'Common' },
+    tron: { clipId: 'char97', rarity: 'Uncommon' },
+    mansamusa: { clipId: 'char98', rarity: 'Legendary' },
+    shonuff: { clipId: 'char99', rarity: 'Rare' },
+  };
+  const rarities: Record<string, number> = {};
+  for (const [id, expected] of Object.entries(wave)) {
+    const clip = resolveSpecialMove(id);
+    assert.equal(clip?.id, expected.clipId);
+    assert.equal(clip?.label, cards[id].name);
+    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, expected.clipId);
+    assert.equal(resolveSpecialMove(cards[id].id)?.id, expected.clipId);
+    assert.equal(resolveSpecialMove(id, { [id]: null }), null, 'manual disable remains available');
+    const rarity = cardCatalog.find(card => card.engineId === id)!.rarity;
+    assert.equal(rarity, expected.rarity, `${id} rarity should be ${expected.rarity}`);
+    rarities[rarity] = (rarities[rarity] ?? 0) + 1;
+  }
+  assert.deepEqual(rarities, { Common: 1, Uncommon: 1, Rare: 3, Legendary: 1 });
+});
+
+test('play-once gate suppresses repeated chroma playback per fighter while keeping the procedural effect', () => {
+  const clip = resolveSpecialMove('johnhenry');
+  assert.ok(clip, 'johnhenry must resolve to a clip');
+  const key = { owner: 'player' as const, sourceInstanceId: 'inst-1', moveId: clip!.id };
+  const played = new Set<string>();
+
+  // First trigger: full move duration, video renders.
+  const firstPlan = planSpecialMoveBeat(clip, key, played, 650);
+  assert.equal(firstPlan.durationMs, clip!.durationMs);
+  assert.equal(firstPlan.playKey, getMovePlayKey(key));
+  assert.equal(gateSpecialMoveReplay(clip, key, played)?.id, clip!.id);
+  markSpecialMovePlayed(played, key);
+
+  // Second trigger from the same fighter: standard beat, no video render.
+  const secondPlan = planSpecialMoveBeat(clip, key, played, 650);
+  assert.equal(secondPlan.durationMs, 650, 'replay should fall back to standard beat');
+  assert.equal(gateSpecialMoveReplay(clip, key, played), null);
+
+  // Different fighter, same move id: still gets the full duration.
+  const otherKey = { owner: 'cpu' as const, sourceInstanceId: 'inst-2', moveId: clip!.id };
+  assert.equal(gateSpecialMoveReplay(clip, otherKey, played)?.id, clip!.id);
+  const otherPlan = planSpecialMoveBeat(clip, otherKey, played, 650);
+  assert.equal(otherPlan.durationMs, clip!.durationMs);
+
+  // No played set: gate stays open and the move always uses its own duration.
+  assert.equal(gateSpecialMoveReplay(clip, key, null)?.id, clip!.id);
+  assert.equal(planSpecialMoveBeat(clip, key, null, 650).durationMs, clip!.durationMs);
+
+  // beginMatch equivalent: clearing the set reopens playback for the next match.
+  played.clear();
+  assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, clip!.durationMs);
 });

@@ -37,6 +37,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   return (
     <section className={`story-stage ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`}>
       <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(backdrop)}")` }} />
+      <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
       <div className="story-stage__light" />
       <div className="story-stage__dust" aria-hidden="true" />
       <header className="story-stage__header">

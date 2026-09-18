@@ -1,0 +1,20 @@
+✔ real activity routes validate drafts, normalize combat, replay events and credit once (2913.8145ms)
+✔ card levels change at every XP threshold and stop at level 10 (1.5963ms)
+✔ earning XP reaches move eligibility without purchasing the next move tier (0.9934ms)
+✔ all outcomes award the expected XP and cap rewards at the remaining XP (1.3265ms)
+✔ card progression snapshots reject forged or unowned card ids (0.5879ms)
+✔ card XP only changes unique participants present in the match snapshot (0.3758ms)
+✔ a match progression snapshot stays unchanged after live progression advances (0.311ms)
+✔ match upgrade snapshots reject forged, stale, and malformed upgrades (0.793ms)
+✔ stored JSONB key order does not invalidate a genuine progression snapshot (18.3767ms)
+✔ experiment claims, match retries, and bootstrap normalization preserve one reward (1590.8353ms)
+✔ rewarded practice accepts only crews whose seven cards are owned (1.4278ms)
+✔ custom matches require a legal owned saved roster, including mixed crews (4.1982ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3259.3163

@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Squabblemon"
+description = "A polished, playable three-district competitive card battler featuring seven starter decks, six-round matches, CPU play, SQUABBLE risk mechanics, and the supplied production character artwork."
+version = "1.0.0"
+id = "artifacts/squabblemon"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23293
+
+[services.development]
+run = "pnpm --filter @workspace/squabblemon run dev"
+
+[services.production]
+build = [ "sh", "-c", "pnpm --filter @workspace/squabblemon run validate:brand && pnpm --filter @workspace/squabblemon run build" ]
+serve = "static"
+publicDir = "artifacts/squabblemon/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23293"
+BASE_PATH = "/"

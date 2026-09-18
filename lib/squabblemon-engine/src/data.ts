@@ -255,6 +255,12 @@ export const decks: Deck[] = [
 export const rarityByEngineId = {
   ...streetWaveRarities,
   ...mythicLegendRarities,
+  johnhenry: "Rare",
+  yasuke: "Rare",
+  dragonflyjones: "Common",
+  tron: "Uncommon",
+  mansamusa: "Legendary",
+  shonuff: "Rare",
   ...supportRarities,
   guap: "Mythical",
   ...expansionRarities,

@@ -1,0 +1,440 @@
+Yeah, I’d make the next 10 feel like a **real expansion wave**, not random extras. Call it:
+
+# SQUABBLEMON: CITY NEVER SLEEPS
+
+**10 new characters, 10 new silhouettes, 10 new gameplay angles**
+
+These should push into mechanics we barely have right now: **taxing, bouncing, hand info, summoning, card rescue, lane swapping, and economy pressure.**
+
+| #  | Character            | Cost / Power | Type     | Role                |
+| -- | -------------------- | -----------: | -------- | ------------------- |
+| 37 | **Barber Bro**       |        3 / 4 | Normal   | Control / Buff      |
+| 38 | **Bottle Girl**      |        2 / 2 | Poison   | Combo / Economy     |
+| 39 | **Sneaker Reseller** |        2 / 3 | Normal   | Economy / Tempo     |
+| 40 | **Church Auntie**    |        3 / 3 | Light    | Sustain / Protect   |
+| 41 | **Landlord**         |        4 / 5 | Rock     | Tax / Lane Control  |
+| 42 | **Car Meet Kid**     |        2 / 3 | Electric | Movement            |
+| 43 | **Promoter**         |        3 / 3 | Air      | Information / Combo |
+| 44 | **Nail Tech**        |        2 / 2 | Poison   | Debuff / Support    |
+| 45 | **OG Uncle**         |        4 / 6 | Fire     | Comeback / Control  |
+| 46 | **Delivery Demon**   |        1 / 1 | Air      | Movement / Utility  |
+
+---
+
+# 37. BARBER BRO
+
+### “Everybody need a lineup.”
+
+**Gameplay**
+**3 Cost / 4 Power**
+
+**LINE UP**
+On Reveal: Give your lowest-Power other card here **+2 Power**. Give the highest-Power enemy here **-1 Power**.
+
+Very simple, very readable, always useful.
+
+**Visual design**
+
+* tall lean Black barber
+* crisp white tee under black leather barber apron
+* immaculate pants with stacked hem
+* gold chain, barber pole pendant
+* cordless clippers in one hand
+* straight razor case clipped at waist
+* folding barber cape draped over one shoulder
+* chrome tool case
+* fresh low-top sneakers
+
+**Pose**
+One hand holding clippers toward camera, other brushing imaginary hairline.
+
+**Palette**
+black / cream / chrome / barber-pole red accent
+
+**Silhouette hook**
+giant cape + clippers
+
+---
+
+# 38. BOTTLE GIRL
+
+### “Section secured.”
+
+**Gameplay**
+**2 Cost / 2 Power**
+
+**LAST CALL**
+On Reveal: If played on Round 4 or later, gain **+2 Power**. If you have unspent Hype, your next 2-Cost card costs **1 less**.
+
+She gives Combo a later-game cheap piece instead of another early engine.
+
+**Visual design**
+
+* glamorous nightlife woman
+* cropped black bomber
+* metallic mini skirt over tactical tights
+* giant platform boots
+* illuminated bottle-service tray
+* clear acrylic purse
+* wrist full of club bands
+* tiny earpiece radio
+* gold hoop earrings
+
+**Pose**
+Tray balanced one-handed over shoulder while checking phone.
+
+**Palette**
+black / champagne gold / bottle green / hot pink detail
+
+**Silhouette hook**
+wide glowing bottle tray
+
+---
+
+# 39. SNEAKER RESELLER
+
+### “These ain't retail.”
+
+**Gameplay**
+**2 Cost / 3 Power**
+
+**FLIP SEASON**
+The first time your opponent plays a card costing 4 or more, your next card costs **1 less Hype**.
+
+One trigger per match.
+
+**Visual design**
+
+* young hustler carrying ridiculous stack of shoe boxes
+* oversized vintage varsity
+* cargo shorts over leggings
+* mismatched rare sneakers
+* shoulder calculator / phone scanner
+* receipts hanging out of bag
+* multiple authentication tags
+
+**Pose**
+Leaning back under giant tower of sneaker boxes.
+
+**Palette**
+cream / forest green / orange / gum sole
+
+**Silhouette hook**
+absurd vertical stack of shoe boxes
+
+---
+
+# 40. CHURCH AUNTIE
+
+### “Baby, I already prayed about it.”
+
+**Gameplay**
+**3 Cost / 3 Power**
+
+**COVERED**
+On Reveal: **Protect** your lowest-Power friendly card here. If it already has Protect, give it **+2 Power** instead.
+
+**Visual design**
+This one needs to be hard, not parody cosplay.
+
+* older Black woman
+* extravagant sculptural church hat
+* luxury skirt suit mixed with street-fashion proportions
+* huge structured purse
+* folding church fan
+* pearls layered with gold
+* sensible but expensive sneakers
+* reading glasses on chain
+
+**Pose**
+Fan open in one hand, purse gripped like a weapon in the other.
+
+**Palette**
+ivory / burgundy / gold
+
+**Silhouette hook**
+massive church hat
+
+---
+
+# 41. LANDLORD
+
+### “Rent due.”
+
+**Gameplay**
+**4 Cost / 5 Power**
+
+**RENT DUE**
+Ongoing: The first enemy card played at this district each round costs **1 additional Hype**.
+
+If they cannot afford the surcharge, they cannot play it here.
+
+This gives us real **Hype taxation**.
+
+**Visual design**
+
+* heavy older property-owner archetype
+* oversized camel coat
+* dress shirt with rolled sleeves
+* massive key ring
+* clipboard stuffed with notices
+* calculator
+* tape measure
+* phone on belt
+* chunky loafers / work shoes
+
+**Pose**
+Holding a giant ring of keys toward camera.
+
+**Palette**
+camel / dark brown / brass / faded green
+
+**Silhouette hook**
+huge keys + paperwork
+
+---
+
+# 42. CAR MEET KID
+
+### “We sliding?”
+
+**Gameplay**
+**2 Cost / 3 Power**
+
+**SIDESHOW**
+Once per match before Lock In, you may **Move** Car Meet Kid. After moving, give another friendly card at the destination **+1 Power**.
+
+Movement support without becoming another Bikelife clone.
+
+**Visual design**
+
+* mechanic/racer street-fashion hybrid
+* reflective racing jacket
+* wide mechanic pants
+* gloves hanging from belt
+* giant key ring
+* racing helmet under one arm
+* tire-pressure gauge
+* mini fire extinguisher strapped to backpack
+
+**Pose**
+Helmet tucked under arm, keys spinning around finger.
+
+**Palette**
+black / silver / safety orange / electric blue
+
+**Silhouette hook**
+helmet + long keychain
+
+---
+
+# 43. PROMOTER
+
+### “You on the list?”
+
+**Gameplay**
+**3 Cost / 3 Power**
+
+**GUEST LIST**
+On Reveal: Reveal one random card in your opponent's hand. If it costs 4 or more, your next card played in another district costs **1 less**.
+
+Information + economy in one package.
+
+**Visual design**
+
+* slick nightlife promoter
+* long black coat
+* designer scarf
+* multiple phones
+* wristband roll clipped to belt
+* tiny guest-list tablet
+* laminated passes
+* crossbody bag stuffed with flyers
+* sunglasses at night, obviously
+
+**Pose**
+One phone to ear, second phone held toward camera.
+
+**Palette**
+black / deep red / antique gold
+
+**Silhouette hook**
+phones + credential swarm
+
+---
+
+# 44. NAIL TECH
+
+### “Hold still.”
+
+**Gameplay**
+**2 Cost / 2 Power**
+
+**FRESH SET**
+On Reveal: Give another friendly card here **+2 Power**. The next time that card is hit by an enemy Power reduction, reduce that loss by **1**.
+
+It's basically a small reinforcement layer.
+
+**Visual design**
+
+* stylish woman with elaborate sculptural nails
+* work apron over extremely fashion-forward fit
+* UV nail lamp bag
+* drill pen / brushes hanging like tools
+* charms, gems, chrome details
+* transparent organizer full of nail colors
+* gigantic platform sneakers
+
+**Pose**
+One hand spread toward camera showing impossible nails, drill in other.
+
+**Palette**
+black / chrome / lavender / translucent pink
+
+**Silhouette hook**
+extreme nails
+
+---
+
+# 45. OG UNCLE
+
+### “Y'all wasn't outside.”
+
+**Gameplay**
+**4 Cost / 6 Power**
+
+**BACK IN MY DAY**
+On Reveal: If your opponent has more total cards on the board than you, gain **+3 Power**.
+
+If they have at least 3 more cards than you, also give their lowest-Power card here **-1 Power**.
+
+This gives Crashout another answer to swarm decks.
+
+**Visual design**
+
+* older Oakland OG energy
+* vintage leather car coat
+* knit polo
+* gold framed glasses
+* old newspaper folded under arm
+* ancient flip phone
+* toothpick
+* heavy gold watch
+* old-school walking cane
+* immaculate classic sneakers
+
+**Pose**
+Leaning slightly on cane while looking thoroughly unimpressed.
+
+**Palette**
+dark brown / burgundy / cream / gold
+
+**Silhouette hook**
+cane + long coat
+
+---
+
+# 46. DELIVERY DEMON
+
+### “I'm outside.”
+
+**Gameplay**
+**1 Cost / 1 Power**
+
+**DROP OFF**
+On Reveal: You may **Move** another friendly 1- or 2-Cost card from this district to another district with space.
+
+Cheap utility piece.
+
+This card makes movement decks WAY more expressive without directly adding Power.
+
+**Visual design**
+
+* fast courier / gig-worker archetype
+* huge insulated delivery backpack
+* cycling helmet clipped to bag
+* phone mounted on forearm
+* reflective jacket
+* cargo pants
+* portable battery packs everywhere
+* scooter key
+* food bag stickers
+
+**Pose**
+Mid-stride looking at navigation screen.
+
+**Palette**
+black / reflective silver / acid yellow / red accents
+
+**Silhouette hook**
+giant square delivery backpack
+
+---
+
+# How I’d split rarity
+
+Not every new character should have the same perceived importance.
+
+**Common**
+
+* Delivery Demon
+* Barber Bro
+* Nail Tech
+
+**Uncommon**
+
+* Bottle Girl
+* Car Meet Kid
+* Sneaker Reseller
+
+**Rare**
+
+* Promoter
+* Church Auntie
+
+**Epic**
+
+* Landlord
+
+**Legendary**
+
+* OG Uncle
+
+OG Uncle's Legendary animation should be hilarious too.
+
+Card reveals.
+
+Screen briefly desaturates.
+
+Old-school car bass rattles the frame.
+
+Then:
+
+**“Y'ALL WASN'T OUTSIDE.”**
+
+💀
+
+# New gameplay packages these unlock
+
+These ten create four little mini-decks immediately:
+
+**THE FUNCTION**
+Bottle Girl + Promoter + Plug + Boss Babe + Live Streamer
+
+**RENT'S DUE**
+Landlord + Officer Oink + Ganger Blue + Snitch
+
+**SIDE SHOW**
+Car Meet Kid + Delivery Demon + Bikelife + E Girl + Cool Vibe
+
+**OLD HEADS KNOW**
+OG Uncle + 9-5 Homie + Church Auntie + Wifey + Rastamon
+
+And visually these fill gaps in the roster too. More ages, more professions, stronger feminine silhouettes, huge props, and immediately recognizable social archetypes.
+
+Next I’d generate these in **one 10-image production batch**, same transparent full-body treatment as the final 16.
+
+Create the next character visuals
+
+* Generate all 10 characters
+* Generate the first 5 characters

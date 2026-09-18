@@ -103,6 +103,7 @@ export interface PackOpening {
   oddsVersion: string;
   paymentMethod: PackOpeningPaymentMethod;
   cost: number;
+  pullCount: number;
   rewards: PackReward[];
   pityBefore: number;
   pityAfter: number;
@@ -236,6 +237,17 @@ export interface PackConfig {
   odds: PackOddsEntry[];
 }
 
+export interface TenPullConfig {
+  id: string;
+  name: string;
+  oddsVersion: string;
+  pullCount: number;
+  ticketCost: number;
+  softCurrencyCost: number;
+  rewardsPerPull: number;
+  rarePityBonusPerPull: number;
+}
+
 export type CollectionRoadMilestoneStatus = typeof CollectionRoadMilestoneStatus[keyof typeof CollectionRoadMilestoneStatus];
 
 
@@ -261,6 +273,7 @@ export interface PlayerBootstrap {
   missions: PlayerMission[];
   nextAction: NextAction;
   packConfig: PackConfig;
+  tenPullConfig: TenPullConfig;
   collectionRoad: CollectionRoadMilestone[];
 }
 
@@ -356,6 +369,8 @@ export interface OpenPackInput {
      */
   idempotencyKey: string;
   paymentMethod: OpenPackInputPaymentMethod;
+  /** Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience. */
+  pullCount?: number;
 }
 
 export interface OpenPackResult {

@@ -1,0 +1,12 @@
+- [Squabblemon visual bar](squabblemon-visual-bar.md) — Screens must be illustration-led and world-driven; typography-first dark layouts read as demo software.
+- [Browser presentation timers](browser-presentation-timers.md) — Wrap native browser timer functions before injecting them into cancellable timelines.
+- [Battle feedback lifecycle](battle-feedback-lifecycle.md) — Sound and haptic cues share presentation generation IDs; skips and cancellation must never run an independent cue clock.
+- [Reward-verified battles](reward-verified-battles.md) — Rewarded matches replay exact player moves with the shared deterministic engine; never trust client-reported outcomes.
+- [Profile economy lock](profile-economy-lock.md) — Inventory normalization and mutation must share the profile row lock or concurrent reads can erase rewards.
+- [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full presentation lifecycles in an optimized profiling build, not synthetic snapshots or animation startup.
+- [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
+- [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.
+- [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
+- [Battle Motion curve](battle-motion-curve.md) — Six-round pacing starts at 2 Motion, carries at most 1 unspent Motion, and caps at 6 to preserve tempo without automatic late turns.
+- [Authenticated journey fidelity](authenticated-match-fixtures.md) — Auth journey mocks must preserve request/response invariants or fallback branches can invalidate route assertions.
+- [City Never Sleeps rules](city-never-sleeps-rules.md) — Expansion effects use explicit replay-safe state; movement is deterministic until the transcript records choices.

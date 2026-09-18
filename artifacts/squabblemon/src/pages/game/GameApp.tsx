@@ -115,6 +115,15 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
 }
 
+// Routes that benefit from hiding the chunky fan-nav strip. The slim
+// CinemaNavSheet toggle still floats over the scene for escape.
+const FULL_BLEED_ROUTES = new Set([
+  '/game/onboarding',
+  '/game/play',
+  '/game/online',
+  '/game/decks/test',
+]);
+
 function GameShell({
   bootstrap,
   location,
@@ -124,8 +133,17 @@ function GameShell({
   location: string;
   children: ReactNode;
 }) {
+  const normalized = location.length > 1 ? location.replace(/\/+$/, '') : location;
+  const isFullBleed =
+    normalized === '/game/story' ||
+    normalized.startsWith('/game/story/') ||
+    normalized === '/game/online' ||
+    normalized.startsWith('/game/online/') ||
+    normalized === '/game/decks/test' ||
+    normalized.startsWith('/game/decks/') && normalized.endsWith('/test') ||
+    FULL_BLEED_ROUTES.has(normalized);
   return (
-        <div className="game-shell game-shell--fan h-[100dvh] bg-[#070707] text-white">
+        <div className={`game-shell game-shell--fan h-[100dvh] bg-[#070707] text-white ${isFullBleed ? 'cinema-nav-suppressed' : ''}`}>
           <div className="noise-overlay" />
           <GameNav bootstrap={bootstrap} />
           <div className="game-shell__content">
@@ -206,6 +224,16 @@ function getE2EBootstrap(): PlayerBootstrap {
       rewardsPerPack: 6,
       pityLimit: 10,
       odds: [],
+    },
+    tenPullConfig: {
+      id: 'e2e-ten-pull',
+      name: 'Practice Ten Pull',
+      oddsVersion: 'e2e',
+      pullCount: 10,
+      ticketCost: 9,
+      softCurrencyCost: 1800,
+      rewardsPerPull: 6,
+      rarePityBonusPerPull: 1,
     },
     collectionRoad: [],
   };

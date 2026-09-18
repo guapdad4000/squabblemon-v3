@@ -13,9 +13,9 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(mythicals.length, 15);
+  assert.equal(mythicals.length, 9);
   const costs = mythicals.map(card => card.cost);
-  assert(costs.filter(cost => cost <= 3).length >= 4, 'early-round Mythicals need more than one cost option');
+  assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
   assert(costs.filter(cost => cost === 6).length >= 2, 'late finishers should still require six Motion');
   for (const card of mythicals) {
     assert(card.cost >= 2 && card.cost <= 6, `${card.name} Motion is outside the intended range`);

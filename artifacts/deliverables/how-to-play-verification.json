@@ -1,0 +1,26 @@
+[
+  {
+    "viewport": "desktop",
+    "width": 1440,
+    "height": 1000,
+    "pageHeight": 10204,
+    "checks": "chapter links, six character selections, XP milestones, keyboard slider, disclosures, all images, no overflow, no runtime errors"
+  },
+  {
+    "viewport": "phone",
+    "width": 390,
+    "height": 844,
+    "pageHeight": 16572,
+    "checks": "chapter links, six character selections, XP milestones, keyboard slider, disclosures, all images, no overflow, no runtime errors"
+  },
+  {
+    "viewport": "small-phone",
+    "width": 320,
+    "height": 740,
+    "pageHeight": 17718,
+    "checks": "chapter links, six character selections, XP milestones, keyboard slider, disclosures, all images, no overflow, no runtime errors"
+  },
+  {
+    "navigation": "public entry → guide → guest practice passed"
+  }
+]

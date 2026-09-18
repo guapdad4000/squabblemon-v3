@@ -24,7 +24,7 @@ import {
   validateSavedDeck, DECK_SIZE, upgradeLegacySavedDeck,
   ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID,
 } from "@workspace/squabblemon-engine/data";
-import { COLLECTION_ROAD, STREET_PACK_CONFIG } from "./collectionEconomy";
+import { COLLECTION_ROAD, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
 import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
 import {
   normalizeCardProgress,
@@ -234,11 +234,16 @@ export async function hasVerifiedTutorialMatch(
 }
 
 export function serializePackOpening(opening: PlayerPackOpeningRecord) {
+  // Derive pullCount from the persisted odds version so the UI can render the
+  // upgraded ten-pull presentation for ten-pull openings without a schema
+  // migration. Single-pack openings keep pullCount=1.
+  const pullCount = opening.oddsVersion === "street-pack-ten-v1" ? 10 : 1;
   return {
     id: opening.id,
     oddsVersion: opening.oddsVersion,
     paymentMethod: opening.paymentMethod,
     cost: opening.cost,
+    pullCount,
     rewards: opening.rewards,
     pityBefore: opening.pityBefore,
     pityAfter: opening.pityAfter,
@@ -425,6 +430,7 @@ export async function getPlayerBootstrap(clerkUserId: string) {
     missions: missions.map(serializeMission),
     nextAction,
     packConfig: STREET_PACK_CONFIG,
+    tenPullConfig: STREET_PACK_TEN_PULL_CONFIG,
     collectionRoad: COLLECTION_ROAD.map((milestone) => ({
       id: milestone.id,
       threshold: milestone.threshold,

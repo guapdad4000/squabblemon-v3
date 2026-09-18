@@ -33,11 +33,19 @@ const onBoard = (m: Match, card: CardInstance) => m.boards.flat().find(c => c.in
 test('six new City Legends have art identities, pack access and bounded training paths', () => {
   assert.equal(MYTHIC_LEGENDS.length, 6);
   validateCardAbilityUpgrades();
+  const rarityByFighter: Record<string, string> = {
+    dragonflyjones: 'Common',
+    shonuff: 'Rare',
+    yasuke: 'Rare',
+    mansamusa: 'Legendary',
+    tron: 'Uncommon',
+    johnhenry: 'Rare',
+  };
   for (const [id, artworkId, name] of MYTHIC_LEGENDS) {
     const card = cardCatalog.find(c => c.engineId === id)!;
     assert.equal(card.name, name);
     assert.equal(card.artworkId, artworkId);
-    assert.equal(card.rarity, 'Mythical');
+    assert.equal(card.rarity, rarityByFighter[id], `${id} should be ${rarityByFighter[id]}`);
     assert.equal(card.faction, 'City Legends');
     assert.equal(card.abilityUpgrades.length, 3);
     const owned = cardCatalog.filter(c => c.engineId !== id).map(c => c.catalogId);
