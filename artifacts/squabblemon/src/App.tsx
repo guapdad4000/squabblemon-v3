@@ -6,6 +6,7 @@ import { MotionConfig } from 'framer-motion';
 import { lazy, Suspense, useEffect, useRef } from 'react';
 
 import { PublicEntry } from './pages/PublicEntry';
+import { LoadingScreen } from './components/LoadingScreen';
 import { basePath, stripBase } from './lib/routing';
 import { AppAuthProvider, useAppAuth, useAppClerk } from './lib/auth';
 
@@ -16,6 +17,10 @@ const SignUpPage = lazy(() =>
   import('./pages/auth/SignUp').then((module) => ({ default: module.SignUpPage })),
 );
 const GameApp = lazy(() => import('./pages/game/GameApp'));
+const GameSoundtrack = lazy(() => import('./components/GameSoundtrack'));
+const MoveStudio = lazy(() => import('./pages/MoveStudio'));
+const StoryStudio = lazy(() => import('./pages/StoryStudio'));
+const HowToPlay = lazy(() => import('./pages/HowToPlay'));
 const GuestPlayLoop = lazy(() =>
   import('./components/PlayLoop').then((module) => ({
     default: function GuestPlayRoute() {
@@ -75,26 +80,6 @@ const clerkAppearance = {
   },
 };
 
-function LoadingScreen() {
-  return (
-    <div
-      className="brand-loader"
-      role="status"
-      aria-label="Loading Squabblemon"
-    >
-      <div className="brand-loader__halo" aria-hidden="true" />
-      <img
-        src={`${basePath}/brand/squabblemon-crest.webp`}
-        alt=""
-        width="374"
-        height="384"
-        className="brand-loader__crest"
-      />
-      <div className="brand-loader__meter" aria-hidden="true"><span /></div>
-      <span className="brand-loader__label">Loading the block</span>
-    </div>
-  );
-}
 
 const queryClient = new QueryClient();
 
@@ -128,7 +113,8 @@ function PublicRedirect() {
 }
 
 function ClerkProviderWithRoutes() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const inGame = location === '/game' || location.startsWith('/game/') || location === '/play/guest';
 
   return (
     <AppAuthProvider
@@ -157,12 +143,16 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
         <MotionConfig reducedMotion="user">
+          {inGame && <Suspense fallback={null}><GameSoundtrack /></Suspense>}
           <Suspense fallback={<LoadingScreen />}>
             <Switch>
               <Route path="/" component={PublicRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
               <Route path="/play/guest" component={GuestPlayLoop} />
+              <Route path="/how-to-play" component={HowToPlay} />
+              <Route path="/moves" component={MoveStudio} />
+              <Route path="/story-studio" component={StoryStudio} />
               <Route path="/game/*?" component={GameApp} />
               <Route component={() => <div className="min-h-[100dvh] bg-black text-white p-6 font-display font-black uppercase">404 — Unknown Street</div>} />
             </Switch>

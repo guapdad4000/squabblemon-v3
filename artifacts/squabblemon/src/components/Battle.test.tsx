@@ -1,3 +1,4 @@
+import { Router } from 'wouter';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
@@ -15,8 +16,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
-import { createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
+import { DISTRICT_CATALOG, type DistrictSnapshot, createDistrictSnapshot, getMatchDistricts, playTurnCard, createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
+import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import { BATTLE_VENUES, resolveBattleVenue } from '../battleVenues';
 
 const noop = () => {};
@@ -45,7 +47,7 @@ test('battle venues map deterministically for training, story, and replay frames
   const training = createMatch('block', 'slide');
   const html = renderBattle(training);
   assert.match(html, /data-venue="harbor-skyline"/);
-  assert.match(html, /assets\/venues\/harbor-skyline-court\.webp/);
+  assert.ok(html.includes(BATTLE_VENUES['harbor-skyline'].assetId));
 });
 
 test('battle presentation names an authoritative triggered upgrade', () => {
@@ -103,10 +105,10 @@ test('collection and deck card shells render progression for catalog ids', () =>
   assert.doesNotMatch(html, /<button/);
 });
 
-test('reward growth resolves catalog card ids and newly unlocked upgrades', () => {
+test('reward growth resolves catalog card ids and links newly eligible move training', () => {
   const match = createMatch('block', 'combo');
   const html = renderToStaticMarkup(
-    <ResultScreen
+    <Router ssrPath="/"><ResultScreen
       match={match}
       districts={districts}
       equippedVariants={{}}
@@ -126,11 +128,11 @@ test('reward growth resolves catalog card ids and newly unlocked upgrades', () =
           level: 2,
         }],
       }}
-    />,
+    /></Router>,
   );
   assert.match(html, /Snow Bunny/);
-  assert.match(html, /New upgrade unlocked!/);
-  assert.match(html, /Frostbite/);
+  assert.match(html, /New move ready to train/);
+  assert.match(html, /card=snow-bunny/);
 });
 
 test('authenticated initialization retains the server-issued leveled snapshot', () => {
@@ -142,6 +144,17 @@ test('authenticated initialization retains the server-issued leveled snapshot', 
   const match = createCanonicalMatch('practice', 'block', 'combo', snapshot);
   assert.deepEqual(match.abilityUpgradeSnapshot, snapshot);
   assert.deepEqual(match.abilityUpgradeSnapshot.player.find(entry => entry.cardId === 'cornball')?.upgradeIds, ['cornball:upgrade:1']);
+});
+
+test('custom deck story initialization uses the issued cards, order, and cover identity', () => {
+  const encounter = getStoryBattle('welcome-to-the-block')!.encounter;
+  const roster = ['cornball', 'nail', 'plug', 'hooper', 'snow', 'delivery', 'rastamon', 'wifey', 'roaster', 'baby'];
+  const snapshot = createAbilityUpgradeSnapshot(roster, encounter.enemy.cardIds);
+  const match = createCanonicalMatch('story', 'personal-deck', encounter.enemy.deckId, snapshot, encounter);
+  assert.equal(match.playerDeck, 'personal-deck');
+  assert.deepEqual(match.playerCardIds, roster);
+  assert.equal(match.playerHand[1].id, 'nail-tech');
+  assert.deepEqual(match.abilityUpgradeSnapshot, snapshot);
 });
 
 test('battle inspector shows all authored upgrades without collection bootstrap', () => {
@@ -169,12 +182,12 @@ test('guidance, treatments, and broadcast signals remain available', () => {
   const match = createMatch('block', 'combo');
   const card = match.playerHand.find(c => c.cost <= match.playerMotion)!;
   const html = renderBattle(match, { selectedInstanceId: card.instanceId, equippedVariants: { [card.id]: `${card.id}:chrome` } });
-  assert.match(html, /2\. Choose a lit district/); assert.match(html, /is-legal/); assert.match(html, /card-variant-chrome/);
+  assert.match(html, /Choose a lit district/); assert.match(html, /is-legal/); assert.match(html, /card-variant-chrome/);
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
 });
 
-test("status help distinguishes Church Auntie's durable Covered shield from Wifey's round guard", () => {
-  assert.match(source, /Church Auntie blocks this card’s next targeted hostile ability, even in a later round/);
+test("status help distinguishes durable Church Auntie and Nail Salon shields from Wifey's round guard", () => {
+  assert.match(source, /Church Auntie or Nail Salon blocks this card’s next targeted hostile ability, even in a later round/);
   assert.match(source, /Wifey blocks one targeted effect in her district this round/);
   let match = createMatch('vibes', 'vibes');
   const church = createCardInstance('church', 'player', 'covered-ui', 0);
@@ -216,7 +229,7 @@ test('district-first selection stays selected when a card is chosen', () => {
   assert.equal(state.card, card.instanceId);
   const html = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: 1 });
   assert.match(html, /aria-pressed="true"/);
-  assert.match(html, /Lock In ·/);
+  assert.match(html, /Play card ·/);
   assert.match(html, /Your Motion/);
   assert.match(html, /Rival Motion/);
 });
@@ -461,4 +474,54 @@ test('rapid repeated battle interactions report once per state transition and re
   } finally {
     Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
   }
+});
+
+
+test('issued locations drive battle names, rules, canonical initialization and presentation state', () => {
+  const issued = createDistrictSnapshot('location-ui');
+  const base = createMatch('vibes', 'block');
+  const match = createCanonicalMatch('practice', 'vibes', 'block', base.abilityUpgradeSnapshot, null, issued);
+  const html = renderBattle(match);
+  for (const district of getMatchDistricts(match)) {
+    assert(html.includes(district.name));
+    assert(html.includes(`data-location="${district.id}"`));
+  }
+  assert(html.includes('district-rule'));
+  assert(!html.includes('THE TOWN'));
+  const entry = match.playerHand.find(c => c.cost <= match.playerMotion)!;
+  const after = playTurnCard(match, 'player', entry.instanceId, 0);
+  const event = after.effectLog.find(e => e.type === 'play')!;
+  const frame = applyEventState(match, after, event, 'after');
+  assert.equal(frame.districtRuntime!.plays.player[0], 1);
+  assert.equal(buildReplayFrame(after, event, 'before').districtRuntime!.plays.player[0], 0);
+  assert.deepEqual(frame.districtSnapshot, issued);
+});
+
+
+test('negative district effects display a clean sign and Subway replay presents the moved card', () => {
+  const issued: DistrictSnapshot = { version: 1, locations: ['dive-bar', 'the-subway', 'the-trap'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'] };
+  const match = createMatch('vibes', 'block', undefined, undefined, issued);
+  const card = { ...createCardInstance('hooper', 'player'), lane: 0 as const };
+  match.boards[0] = [card];
+  const html = renderToStaticMarkup(<BattlePowerBreakdown card={card} match={match} />);
+  assert.match(html, /District bonus \/ penalty<\/dt><dd>-2<\/dd>/);
+  assert(!html.includes('+-2'));
+  const rider = createCardInstance('cornball', 'player');
+  match.playerHand = [rider];
+  const after = playTurnCard(match, 'player', rider.instanceId, 1);
+  const event = after.effectLog.at(-1)!;
+  const frame = applyEventState(match, after, event, 'after');
+  assert(frame.boards[2].some(c => c.instanceId === rider.instanceId));
+  assert.equal(buildReplayFrame(after, event, 'before').boards[1].length, 1);
+});
+
+
+test('Nail Salon shows lasting Covered protection on the board and in power details', () => {
+  const issued: DistrictSnapshot = { version: 1, locations: ['nail-salon', 'the-subway', 'the-trap'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'] };
+  const entry = createCardInstance('cornball', 'player');
+  const base = createMatch('vibes', 'vibes', undefined, undefined, issued);
+  const match = playTurnCard({ ...base, playerHand: [entry] }, 'player', entry.instanceId, 0);
+  assert.match(renderBattle(match), /data-card-status="covered"/);
+  const html = renderToStaticMarkup(<BattlePowerBreakdown card={match.boards[0][0]} match={match} />);
+  assert.match(html, /NAIL SALON: blocks this card’s next targeted enemy ability/);
 });

@@ -84,7 +84,59 @@ test("story nodes persist normalized progress and merged dialogue", async (t) =>
   assert.equal(row.attempts, 1);
   assert.deepEqual(row.dialogueSeen, ["line-1", "line-2"]);
   const campaign = await getPlayerStoryCampaign(userId);
-  assert.equal(campaign.recommendedNodeId, "side-alley-challenge");
+  assert.equal(campaign.recommendedNodeId, "red-tapes-open-the-envelope");
+});
+
+test("Chapter Two opens after the Crown and hands off to Chapter Three", async (t) => {
+  const userId = await storyPlayer(t, "story-chapter-two");
+  await unlockCrown(userId);
+  await completeNonBattleStoryNode(userId, "block-crowned", randomUUID(), []);
+  const opening = await completeNonBattleStoryNode(
+    userId, "red-tapes-open-the-envelope", randomUUID(), [],
+  );
+  assert.equal(opening.alreadyCompleted, false);
+  const chapter = storyContent.chapters.find((item) => item.id === "red-side-tapes")!;
+  await db.insert(playerStoryNodesTable).values(chapter.nodes
+    .filter((node) => !node.optional && node.id !== "red-tapes-open-the-envelope" && node.id !== "red-tapes-let-her-grieve")
+    .map((node) => ({ clerkUserId: userId, chapterId: chapter.id, nodeId: node.id, cleared: true })));
+  const ending = await completeNonBattleStoryNode(userId, "red-tapes-let-her-grieve", randomUUID(), []);
+  assert.equal(ending.alreadyCompleted, false);
+  assert.deepEqual(ending.rewards.map((reward) => reward.id).sort(), ["baby", "story-key:chapter-three", "street-pack-ticket"]);
+  const campaign = await getPlayerStoryCampaign(userId);
+  assert.equal(campaign.chapters.find((item) => item.id === "blue-side-blues")?.status, "available");
+  assert.equal(campaign.recommendedNodeId, "blue-in-denial");
+  const retry = await completeNonBattleStoryNode(userId, "red-tapes-let-her-grieve", randomUUID(), []);
+  assert.equal(retry.alreadyCompleted, true);
+  assert.deepEqual(retry.rewards, []);
+});
+
+test("all eight chapters unlock in order and the final reward is claimed once", async (t) => {
+  const userId = await storyPlayer(t, "story-season-one");
+  assert.equal(storyContent.chapters.length, 8);
+  for (const [index, chapter] of storyContent.chapters.entries()) {
+    const openingCampaign = await getPlayerStoryCampaign(userId);
+    assert.equal(openingCampaign.chapters.find((item) => item.id === chapter.id)?.status, "available", chapter.id);
+    const ending = chapter.nodes.find((node) => node.kind === "reward" && !node.optional);
+    assert.ok(ending, `${chapter.id} needs a required finale`);
+    await db.insert(playerStoryNodesTable).values(chapter.nodes
+      .filter((node) => !node.optional && node.id !== ending.id)
+      .map((node) => ({ clerkUserId: userId, chapterId: chapter.id, nodeId: node.id, cleared: true })));
+    const result = await completeNonBattleStoryNode(userId, ending.id, randomUUID(), []);
+    assert.equal(result.alreadyCompleted, false, chapter.id);
+    const after = await getPlayerStoryCampaign(userId);
+    assert.equal(after.chapters.find((item) => item.id === chapter.id)?.status, "cleared", chapter.id);
+    if (index + 1 < storyContent.chapters.length) {
+      const next = storyContent.chapters[index + 1];
+      assert.equal(after.chapters.find((item) => item.id === next.id)?.status, "available", next.id);
+      assert.equal(after.recommendedNodeId, next.nodes.find((node) => !node.optional)?.id, next.id);
+    } else {
+      assert.ok(after.nodes.filter((node) => !node.optional).every((node) => node.status === "cleared"));
+      assert.deepEqual(result.rewards.map((reward) => reward.id).sort(), ["cracked-head", "street-pack-ticket", "street-xp"]);
+      const retry = await completeNonBattleStoryNode(userId, ending.id, randomUUID(), []);
+      assert.equal(retry.alreadyCompleted, true);
+      assert.deepEqual(retry.rewards, []);
+    }
+  }
 });
 
 test("server registry prerequisites reject out-of-order completion", async (t) => {
@@ -156,7 +208,7 @@ test("concurrent story reward completion grants immutable rewards once", async (
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, userId));
   assert.equal(claims.value, 4);
-  assert.equal(profile.packTickets, 1);
+  assert.equal(profile.packTickets, 10);
   assert.equal(profile.ownedCardIds.includes("closet-nerd"), true);
   assert.deepEqual(profile.unlockedCosmeticIds.sort(), ["block-party-crowned", "story-key:chapter-two"]);
   const [actions] = await db

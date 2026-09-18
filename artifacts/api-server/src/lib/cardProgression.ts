@@ -18,13 +18,14 @@ export const CARD_UPGRADE_SNAPSHOT_VERSION = ABILITY_UPGRADE_SNAPSHOT_VERSION;
 
 export type AbilityUpgradeSnapshot = {
   version: typeof CARD_UPGRADE_SNAPSHOT_VERSION;
-  player: Array<{ cardId: string; level: number; upgradeIds: string[] }>;
-  cpu: Array<{ cardId: string; level: number; upgradeIds: string[] }>;
+  player: Array<{ cardId: string; level: number; moveTier?: number; upgradeIds: string[] }>;
+  cpu: Array<{ cardId: string; level: number; moveTier?: number; upgradeIds: string[] }>;
 };
 export type CardProgressionSnapshotEntry = {
   cardId: string;
   xp: number;
   level: number;
+  moveTier?: number;
 };
 
 export type CardProgressionSnapshot = {
@@ -90,9 +91,10 @@ export function createCardProgressionSnapshot(
   const player = cardIds.map((engineId) => {
     const catalogId = normalizeCatalogCardId(engineId);
     if (!catalogId) throw new Error(`Unknown card ${engineId}`);
-    const level = cards.find((card) => card.cardId === catalogId)?.level;
+    const progress = cards.find((card) => card.cardId === catalogId);
+    const level = progress?.level;
     if (!level) throw new Error(`Missing progression for ${engineId}`);
-    return { cardId: engineId, level, upgradeIds: resolveUpgradeIds(engineId, level) };
+    return { cardId: engineId, level, moveTier: progress.moveTier, upgradeIds: resolveUpgradeIds(engineId, level).slice(0, progress.moveTier) };
   });
   const cpu = cpuCardIds.map((cardId) => ({
     cardId,
@@ -146,14 +148,15 @@ export function parseCardProgressionSnapshot(
     if (!canonicalId || canonicalId !== parsed.cardId) {
       throw new Error("Match upgrade snapshot has an unknown card");
     }
-    const normalized = normalizeCardProgress({ xp: parsed.xp, level: parsed.level });
-    if (normalized.xp !== parsed.xp || normalized.level !== parsed.level) {
+    const normalized = normalizeCardProgress(parsed);
+    if (normalized.xp !== parsed.xp || normalized.level !== parsed.level || (parsed.moveTier !== undefined && normalized.moveTier !== parsed.moveTier)) {
       throw new Error("Match upgrade snapshot has invalid progression");
     }
     return {
       cardId: parsed.cardId,
       xp: parsed.xp,
       level: parsed.level,
+      ...(parsed.moveTier !== undefined ? { moveTier: parsed.moveTier } : {}),
     };
   });
   if (new Set(entries.map((entry) => entry.cardId)).size !== entries.length) {
@@ -174,9 +177,11 @@ export function parseCardProgressionSnapshot(
     false,
     [...expectedCpuCards],
   );
+  // JSONB reorders object keys. Compare explicit fields, never serialized objects.
+  const canonicalUpgrades = (entries: AbilityUpgradeSnapshot['player']) => entries.map(entry => [entry.cardId, entry.level, entry.moveTier ?? entry.upgradeIds.length, entry.upgradeIds]);
   if (
-    JSON.stringify(snapshot.abilityUpgradeSnapshot) !==
-    JSON.stringify(expected.abilityUpgradeSnapshot)
+    JSON.stringify(canonicalUpgrades(snapshot.abilityUpgradeSnapshot.player)) !== JSON.stringify(canonicalUpgrades(expected.abilityUpgradeSnapshot.player)) ||
+    JSON.stringify(canonicalUpgrades(snapshot.abilityUpgradeSnapshot.cpu)) !== JSON.stringify(canonicalUpgrades(expected.abilityUpgradeSnapshot.cpu))
   ) {
     throw new Error("Match upgrade snapshot is stale or forged");
   }
@@ -188,10 +193,9 @@ export function parseCardProgressionSnapshot(
 }
 
 export function participatingCatalogCardIds(match: Match): string[] {
-  const played = match.boards
-    .flat()
-    .filter((card) => card.owner === "player" && card.playedRound !== null)
-    .map((card) => normalizeCatalogCardId(card.cardId))
+  // Participation survives destruction: use the authoritative summon events.
+  const played = match.effectLog.filter(event => event.type === 'play' && event.owner === 'player')
+    .map(event => normalizeCatalogCardId(event.cardId ?? ''))
     .filter((cardId): cardId is string => Boolean(cardId));
   return [...new Set(played)];
 }
@@ -213,14 +217,14 @@ export function applyCardXp(
     .map((cardId) => {
       const previous = normalizeCardProgress(next[cardId]);
       const xp = Math.min(CARD_XP_CAP, previous.xp + cardXpForOutcome(outcome));
-      const updated = { xp, level: cardLevelFromXp(xp) };
+      const updated = { xp, level: cardLevelFromXp(xp), moveTier: previous.moveTier };
       next[cardId] = updated;
       return {
         cardId,
         xpGained: xp - previous.xp,
         previousXp: previous.xp,
         previousLevel: previous.level,
-        ...updated,
+        xp: updated.xp, level: updated.level,
       };
     });
   return { progression: next, rewards };

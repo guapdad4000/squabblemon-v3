@@ -1,0 +1,29 @@
+[build]
+  command = "node scripts/build-netlify.mjs"
+  publish = "artifacts/squabblemon/dist/public"
+
+[build.environment]
+  NODE_VERSION = "24"
+  PORT = "5173"
+  BASE_PATH = "/"
+  NODE_ENV = "production"
+
+[functions]
+  directory = "artifacts/api-server/dist/netlify-functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

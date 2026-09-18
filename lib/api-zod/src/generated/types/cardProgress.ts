@@ -7,6 +7,11 @@
  */
 
 export interface CardProgress {
+  /**
+     * @minimum 0
+     * @maximum 3
+     */
+  moveTier?: number;
   /** @minimum 0 */
   xp: number;
   /**

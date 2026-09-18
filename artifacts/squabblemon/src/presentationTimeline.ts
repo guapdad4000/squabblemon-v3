@@ -20,13 +20,13 @@ export class PresentationTimeline {
   }
 
   wait(delay: number, id = this.generation): Promise<boolean> {
-    return new Promise(resolve => {
+    return new Promise<boolean>(resolve => {
       const handle = this.schedule(() => {
         this.pending.delete(handle);
         resolve(id === this.generation);
       }, delay);
       this.pending.set(handle, resolve);
-    });
+    }).then(completed => completed && id === this.generation);
   }
 
   cancelAll() {

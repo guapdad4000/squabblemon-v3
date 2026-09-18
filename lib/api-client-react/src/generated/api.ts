@@ -20,10 +20,12 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ClaimExperimentCardBody,
   CollectionRoadClaimResult,
   CraftVariantInput,
   CraftVariantResult,
   EquipVariantInput,
+  GetPlayerShop200,
   HealthStatus,
   MatchCompleteInput,
   MatchCompletion,
@@ -34,7 +36,11 @@ import type {
   PlayerBootstrap,
   PlayerMatch,
   PlayerProfileUpdate,
+  PromoCodeInput,
+  PromoCodeResult,
   SaveDeckInput,
+  ShopPurchaseInput,
+  ShopPurchaseResult,
   StoryCampaign,
   StoryDevelopmentResetInput,
   StoryDialogueProgressResponse,
@@ -655,6 +661,77 @@ export const useAdvancePlayerOnboarding = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getAdvancePlayerOnboardingMutationOptions(options));
+    }
+
+export const getClaimExperimentCardUrl = () => {
+
+
+
+
+  return `/api/player/experiments/card`
+}
+
+/**
+ * @summary Spend one earned experiment choice on an unowned Common
+ */
+export const claimExperimentCard = async (claimExperimentCardBody: ClaimExperimentCardBody, options?: RequestInit): Promise<PlayerBootstrap> => {
+
+  return customFetch<PlayerBootstrap>(getClaimExperimentCardUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(claimExperimentCardBody)
+  }
+);}
+
+
+
+
+
+export const getClaimExperimentCardMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimExperimentCard>>, TError,{data: BodyType<ClaimExperimentCardBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimExperimentCard>>, TError,{data: BodyType<ClaimExperimentCardBody>}, TContext> => {
+
+const mutationKey = ['claimExperimentCard'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimExperimentCard>>, {data: BodyType<ClaimExperimentCardBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  claimExperimentCard(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClaimExperimentCardMutationResult = NonNullable<Awaited<ReturnType<typeof claimExperimentCard>>>
+    export type ClaimExperimentCardMutationBody = BodyType<ClaimExperimentCardBody>
+    export type ClaimExperimentCardMutationError = ErrorType<void>
+
+    /**
+ * @summary Spend one earned experiment choice on an unowned Common
+ */
+export const useClaimExperimentCard = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimExperimentCard>>, TError,{data: BodyType<ClaimExperimentCardBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof claimExperimentCard>>,
+        TError,
+        {data: BodyType<ClaimExperimentCardBody>},
+        TContext
+      > => {
+      return useMutation(getClaimExperimentCardMutationOptions(options));
     }
 
 export const getStartPlayerMatchUrl = () => {
@@ -1296,5 +1373,224 @@ export const useClaimPlayerMission = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getClaimPlayerMissionMutationOptions(options));
+    }
+
+export const getGetPlayerShopUrl = () => {
+
+
+
+
+  return `/api/player/shop`
+}
+
+/**
+ * @summary List earned-currency shop offers
+ */
+export const getPlayerShop = async ( options?: RequestInit): Promise<GetPlayerShop200> => {
+
+  return customFetch<GetPlayerShop200>(getGetPlayerShopUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPlayerShopQueryKey = () => {
+    return [
+    `/api/player/shop`
+    ] as const;
+    }
+
+
+export const getGetPlayerShopQueryOptions = <TData = Awaited<ReturnType<typeof getPlayerShop>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlayerShop>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPlayerShopQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerShop>>> = ({ signal }) => getPlayerShop({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlayerShop>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPlayerShopQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerShop>>>
+export type GetPlayerShopQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List earned-currency shop offers
+ */
+
+export function useGetPlayerShop<TData = Awaited<ReturnType<typeof getPlayerShop>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPlayerShop>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPlayerShopQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getPurchasePlayerShopItemUrl = () => {
+
+
+
+
+  return `/api/player/shop/purchases`
+}
+
+/**
+ * @summary Purchase training, move coaching, recruits, tickets, slots, or styles
+ */
+export const purchasePlayerShopItem = async (shopPurchaseInput: ShopPurchaseInput, options?: RequestInit): Promise<ShopPurchaseResult> => {
+
+  return customFetch<ShopPurchaseResult>(getPurchasePlayerShopItemUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(shopPurchaseInput)
+  }
+);}
+
+
+
+
+
+export const getPurchasePlayerShopItemMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchasePlayerShopItem>>, TError,{data: BodyType<ShopPurchaseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchasePlayerShopItem>>, TError,{data: BodyType<ShopPurchaseInput>}, TContext> => {
+
+const mutationKey = ['purchasePlayerShopItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchasePlayerShopItem>>, {data: BodyType<ShopPurchaseInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  purchasePlayerShopItem(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchasePlayerShopItemMutationResult = NonNullable<Awaited<ReturnType<typeof purchasePlayerShopItem>>>
+    export type PurchasePlayerShopItemMutationBody = BodyType<ShopPurchaseInput>
+    export type PurchasePlayerShopItemMutationError = ErrorType<void>
+
+    /**
+ * @summary Purchase training, move coaching, recruits, tickets, slots, or styles
+ */
+export const usePurchasePlayerShopItem = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchasePlayerShopItem>>, TError,{data: BodyType<ShopPurchaseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof purchasePlayerShopItem>>,
+        TError,
+        {data: BodyType<ShopPurchaseInput>},
+        TContext
+      > => {
+      return useMutation(getPurchasePlayerShopItemMutationOptions(options));
+    }
+
+export const getRedeemPlayerPromoCodeUrl = () => {
+
+
+
+
+  return `/api/player/promo-codes/redeem`
+}
+
+/**
+ * @summary Redeem a promo code once per signed-in account
+ */
+export const redeemPlayerPromoCode = async (promoCodeInput: PromoCodeInput, options?: RequestInit): Promise<PromoCodeResult> => {
+
+  return customFetch<PromoCodeResult>(getRedeemPlayerPromoCodeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(promoCodeInput)
+  }
+);}
+
+
+
+
+
+export const getRedeemPlayerPromoCodeMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof redeemPlayerPromoCode>>, TError,{data: BodyType<PromoCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof redeemPlayerPromoCode>>, TError,{data: BodyType<PromoCodeInput>}, TContext> => {
+
+const mutationKey = ['redeemPlayerPromoCode'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof redeemPlayerPromoCode>>, {data: BodyType<PromoCodeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  redeemPlayerPromoCode(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RedeemPlayerPromoCodeMutationResult = NonNullable<Awaited<ReturnType<typeof redeemPlayerPromoCode>>>
+    export type RedeemPlayerPromoCodeMutationBody = BodyType<PromoCodeInput>
+    export type RedeemPlayerPromoCodeMutationError = ErrorType<void>
+
+    /**
+ * @summary Redeem a promo code once per signed-in account
+ */
+export const useRedeemPlayerPromoCode = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof redeemPlayerPromoCode>>, TError,{data: BodyType<PromoCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof redeemPlayerPromoCode>>,
+        TError,
+        {data: BodyType<PromoCodeInput>},
+        TContext
+      > => {
+      return useMutation(getRedeemPlayerPromoCodeMutationOptions(options));
     }
 

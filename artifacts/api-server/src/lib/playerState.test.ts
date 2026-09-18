@@ -49,9 +49,9 @@ test("only a completed tutorial match unlocks tutorial advancement", async (t) =
   assert.equal(await hasVerifiedTutorialMatch(clerkUserId), true);
 });
 
-test("existing profiles receive the idempotent City Never Sleeps grant during normalization", async (t) => {
+test("normalization preserves legacy ownership and earned moves without new catalog grants", async (t) => {
   const clerkUserId = `card-progress-baseline-${randomUUID()}`;
-  const ownedCardIds = ["cornball", "snow-bunny"];
+  const ownedCardIds = ["cornball", "snow-bunny", ...CITY_NEVER_SLEEPS_CATALOG_IDS];
   await db.insert(playerProfilesTable).values({
     clerkUserId,
     onboardingStep: "complete",
@@ -79,28 +79,28 @@ test("existing profiles receive the idempotent City Never Sleeps grant during no
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   assert.ok(profile);
-  assert.deepEqual(profile.ownedCardIds, [...ownedCardIds, ...CITY_NEVER_SLEEPS_CATALOG_IDS]);
+  assert.deepEqual(profile.ownedCardIds, ownedCardIds);
   assert.deepEqual(profile.cardProgression, {
-    cornball: { xp: 120, level: 2 },
-    "snow-bunny": { xp: 0, level: 1 },
-    ...Object.fromEntries(CITY_NEVER_SLEEPS_CATALOG_IDS.map((id) => [id, { xp: 0, level: 1 }])),
+    cornball: { xp: 120, level: 2, moveTier: 1 },
+    "snow-bunny": { xp: 0, level: 1, moveTier: 0 },
+    ...Object.fromEntries(CITY_NEVER_SLEEPS_CATALOG_IDS.map((id) => [id, { xp: 0, level: 1, moveTier: 0 }])),
   });
-  assert.deepEqual(profile.savedDecks[0]?.cardIds, ownedCardIds);
+  assert.deepEqual(profile.savedDecks[0]?.cardIds, ownedCardIds.slice(0, 10));
   await ensurePlayer(clerkUserId);
   const [again] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-  assert.deepEqual(again.ownedCardIds, [...ownedCardIds, ...CITY_NEVER_SLEEPS_CATALOG_IDS]);
+  assert.deepEqual(again.ownedCardIds, ownedCardIds);
   assert(validateSavedDeck(
-    ["barber-bro", "bottle-girl", "sneaker-reseller", "church-auntie", "landlord", "car-meet-kid", "promoter"],
+    ["barber-bro", "bottle-girl", "sneaker-reseller", "church-auntie", "landlord", "car-meet-kid", "promoter", "nail-tech", "og-uncle", "delivery-demon"],
     again.ownedCardIds,
     "barber-bro",
   ).valid);
 });
 
-test("new profiles receive and discover exactly the City Never Sleeps catalog grant", async (t) => {
+test("new profiles earn their starter foundation through onboarding without receiving the expansion catalog", async (t) => {
   const clerkUserId = `city-never-sleeps-new-${randomUUID()}`;
   t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
   await ensurePlayer(clerkUserId);
   const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-  assert.deepEqual(profile.ownedCardIds, CITY_NEVER_SLEEPS_CATALOG_IDS);
-  assert.deepEqual(profile.discoveredCardIds, CITY_NEVER_SLEEPS_CATALOG_IDS);
+  assert.deepEqual(profile.ownedCardIds, []);
+  assert.deepEqual(profile.discoveredCardIds, []);
 });

@@ -1,11 +1,48 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { cardLevelFromXp, cardProgressDetails, CARD_XP_CAP } from "@workspace/squabblemon-engine/cardProgression";
 import {
   applyCardXp,
   cardXpForOutcome,
   createCardProgressionSnapshot,
   parseCardProgressionSnapshot,
 } from "./cardProgression";
+
+test("card levels change at every XP threshold and stop at level 10", () => {
+  const thresholds = [0, 100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500];
+  thresholds.forEach((xp, index) => {
+    assert.equal(cardLevelFromXp(xp), index + 1);
+    if (index > 0) assert.equal(cardLevelFromXp(xp - 1), index);
+  });
+  assert.equal(cardLevelFromXp(-10), 1);
+  assert.equal(cardLevelFromXp(999999), 10);
+  assert.equal(CARD_XP_CAP, 4500);
+  assert.equal(cardProgressDetails({ xp: 100 }).progressPercent, 0);
+  assert.equal(cardProgressDetails({ xp: 4500 }).progressPercent, 100);
+});
+
+test("earning XP reaches move eligibility without purchasing the next move tier", () => {
+  for (const [threshold, count] of [[100, 1], [1000, 2], [2800, 3]]) {
+    const progression = { cornball: { xp: threshold - 20, level: 1 } };
+    const before = createCardProgressionSnapshot(["cornball"], ["cornball"], progression);
+    const earned = applyCardXp(progression, before, ["cornball"], "loss");
+    const after = createCardProgressionSnapshot(["cornball"], ["cornball"], earned.progression);
+    assert.equal(before.abilityUpgradeSnapshot.player[0]!.upgradeIds.length, count - 1);
+    assert.equal(after.abilityUpgradeSnapshot.player[0]!.upgradeIds.length, count - 1);
+    assert.equal(after.cards[0].xp, threshold);
+  }
+});
+
+test("all outcomes award the expected XP and cap rewards at the remaining XP", () => {
+  for (const [outcome, amount] of [["win", 30], ["draw", 25], ["loss", 20]] as const) {
+    const snapshot = createCardProgressionSnapshot(["cornball"], ["cornball"], {});
+    assert.equal(applyCardXp({}, snapshot, ["cornball"], outcome).rewards[0]!.xpGained, amount);
+    const result = applyCardXp({ cornball: { xp: 4490, level: 9 } }, snapshot, ["cornball"], outcome);
+    assert.equal(result.rewards[0]!.xpGained, 10);
+    assert.deepEqual(result.progression.cornball, { xp: 4500, level: 10, moveTier: 3 });
+    assert.equal(applyCardXp(result.progression, snapshot, ["cornball"], outcome).rewards[0]!.xpGained, 0);
+  }
+});
 
 test("card progression snapshots reject forged or unowned card ids", () => {
   assert.throws(
@@ -88,4 +125,11 @@ test("match upgrade snapshots reject forged, stale, and malformed upgrades", () 
     () => parseCardProgressionSnapshot([{ cardId: "cornball", xp: 0, level: 1 }], ["cornball"], []),
     /missing/,
   );
+});
+
+
+test('stored JSONB key order does not invalidate a genuine progression snapshot', () => {
+  const original = createCardProgressionSnapshot(['cornball'], ['cornball'], {}, false, ['snow']);
+  const reorder = (value: any): any => Array.isArray(value) ? value.map(reorder) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a],[b]) => a.localeCompare(b)).map(([key,item]) => [key,reorder(item)])) : value;
+  assert.deepEqual(parseCardProgressionSnapshot(reorder(original), ['cornball'], ['snow']), original);
 });

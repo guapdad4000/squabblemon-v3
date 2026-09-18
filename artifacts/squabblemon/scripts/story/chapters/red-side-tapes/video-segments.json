@@ -1,0 +1,295 @@
+[
+  {
+    "id": "ch02_s01_main",
+    "node_id": "red-tapes-open-the-envelope",
+    "section": "main",
+    "line_tokens": [
+      "red-tapes-open-the-envelope:main:0",
+      "red-tapes-open-the-envelope:main:1",
+      "red-tapes-open-the-envelope:main:2",
+      "red-tapes-open-the-envelope:main:3",
+      "red-tapes-open-the-envelope:main:4",
+      "red-tapes-open-the-envelope:main:5",
+      "red-tapes-open-the-envelope:main:6",
+      "red-tapes-open-the-envelope:main:7",
+      "red-tapes-open-the-envelope:main:8",
+      "red-tapes-open-the-envelope:main:9",
+      "red-tapes-open-the-envelope:main:10",
+      "red-tapes-open-the-envelope:main:11",
+      "red-tapes-open-the-envelope:main:12",
+      "red-tapes-open-the-envelope:main:13",
+      "red-tapes-open-the-envelope:main:14",
+      "red-tapes-open-the-envelope:main:15",
+      "red-tapes-open-the-envelope:main:16",
+      "red-tapes-open-the-envelope:main:17",
+      "red-tapes-open-the-envelope:main:18",
+      "red-tapes-open-the-envelope:main:19"
+    ],
+    "condition": "linear conversation / reward node",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s02_pre",
+    "node_id": "red-tapes-red-side-open",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-red-side-open:pre:0",
+      "red-tapes-red-side-open:pre:1",
+      "red-tapes-red-side-open:pre:2",
+      "red-tapes-red-side-open:pre:3",
+      "red-tapes-red-side-open:pre:4",
+      "red-tapes-red-side-open:pre:5",
+      "red-tapes-red-side-open:pre:6",
+      "red-tapes-red-side-open:pre:7",
+      "red-tapes-red-side-open:pre:8"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s02_post",
+    "node_id": "red-tapes-red-side-open",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-red-side-open:post:0",
+      "red-tapes-red-side-open:post:1",
+      "red-tapes-red-side-open:post:2",
+      "red-tapes-red-side-open:post:3",
+      "red-tapes-red-side-open:post:4",
+      "red-tapes-red-side-open:post:5"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s03_pre",
+    "node_id": "red-tapes-cheese-has-terms",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-cheese-has-terms:pre:0",
+      "red-tapes-cheese-has-terms:pre:1",
+      "red-tapes-cheese-has-terms:pre:2",
+      "red-tapes-cheese-has-terms:pre:3",
+      "red-tapes-cheese-has-terms:pre:4",
+      "red-tapes-cheese-has-terms:pre:5",
+      "red-tapes-cheese-has-terms:pre:6",
+      "red-tapes-cheese-has-terms:pre:7",
+      "red-tapes-cheese-has-terms:pre:8"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s03_post",
+    "node_id": "red-tapes-cheese-has-terms",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-cheese-has-terms:post:0",
+      "red-tapes-cheese-has-terms:post:1",
+      "red-tapes-cheese-has-terms:post:2",
+      "red-tapes-cheese-has-terms:post:3",
+      "red-tapes-cheese-has-terms:post:4",
+      "red-tapes-cheese-has-terms:post:5",
+      "red-tapes-cheese-has-terms:post:6"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s04_pre",
+    "node_id": "red-tapes-pay-per-view",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-pay-per-view:pre:0",
+      "red-tapes-pay-per-view:pre:1",
+      "red-tapes-pay-per-view:pre:2",
+      "red-tapes-pay-per-view:pre:3",
+      "red-tapes-pay-per-view:pre:4",
+      "red-tapes-pay-per-view:pre:5",
+      "red-tapes-pay-per-view:pre:6",
+      "red-tapes-pay-per-view:pre:7",
+      "red-tapes-pay-per-view:pre:8"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s04_post",
+    "node_id": "red-tapes-pay-per-view",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-pay-per-view:post:0",
+      "red-tapes-pay-per-view:post:1",
+      "red-tapes-pay-per-view:post:2",
+      "red-tapes-pay-per-view:post:3",
+      "red-tapes-pay-per-view:post:4",
+      "red-tapes-pay-per-view:post:5"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s05_main",
+    "node_id": "red-tapes-the-wrong-person",
+    "section": "main",
+    "line_tokens": [
+      "red-tapes-the-wrong-person:main:0",
+      "red-tapes-the-wrong-person:main:1",
+      "red-tapes-the-wrong-person:main:2",
+      "red-tapes-the-wrong-person:main:3",
+      "red-tapes-the-wrong-person:main:4",
+      "red-tapes-the-wrong-person:main:5",
+      "red-tapes-the-wrong-person:main:6",
+      "red-tapes-the-wrong-person:main:7",
+      "red-tapes-the-wrong-person:main:8",
+      "red-tapes-the-wrong-person:main:9",
+      "red-tapes-the-wrong-person:main:10",
+      "red-tapes-the-wrong-person:main:11",
+      "red-tapes-the-wrong-person:main:12",
+      "red-tapes-the-wrong-person:main:13",
+      "red-tapes-the-wrong-person:main:14",
+      "red-tapes-the-wrong-person:main:15",
+      "red-tapes-the-wrong-person:main:16",
+      "red-tapes-the-wrong-person:main:17",
+      "red-tapes-the-wrong-person:main:18"
+    ],
+    "condition": "linear conversation / reward node",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s06_pre",
+    "node_id": "red-tapes-roast-with-a-receipt",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-roast-with-a-receipt:pre:0",
+      "red-tapes-roast-with-a-receipt:pre:1",
+      "red-tapes-roast-with-a-receipt:pre:2",
+      "red-tapes-roast-with-a-receipt:pre:3",
+      "red-tapes-roast-with-a-receipt:pre:4",
+      "red-tapes-roast-with-a-receipt:pre:5",
+      "red-tapes-roast-with-a-receipt:pre:6",
+      "red-tapes-roast-with-a-receipt:pre:7",
+      "red-tapes-roast-with-a-receipt:pre:8"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s06_post",
+    "node_id": "red-tapes-roast-with-a-receipt",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-roast-with-a-receipt:post:0",
+      "red-tapes-roast-with-a-receipt:post:1",
+      "red-tapes-roast-with-a-receipt:post:2",
+      "red-tapes-roast-with-a-receipt:post:3",
+      "red-tapes-roast-with-a-receipt:post:4",
+      "red-tapes-roast-with-a-receipt:post:5",
+      "red-tapes-roast-with-a-receipt:post:6"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s07_pre",
+    "node_id": "red-tapes-side-eye-security",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-side-eye-security:pre:0",
+      "red-tapes-side-eye-security:pre:1",
+      "red-tapes-side-eye-security:pre:2",
+      "red-tapes-side-eye-security:pre:3",
+      "red-tapes-side-eye-security:pre:4",
+      "red-tapes-side-eye-security:pre:5",
+      "red-tapes-side-eye-security:pre:6",
+      "red-tapes-side-eye-security:pre:7",
+      "red-tapes-side-eye-security:pre:8",
+      "red-tapes-side-eye-security:pre:9",
+      "red-tapes-side-eye-security:pre:10"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s07_post",
+    "node_id": "red-tapes-side-eye-security",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-side-eye-security:post:0",
+      "red-tapes-side-eye-security:post:1",
+      "red-tapes-side-eye-security:post:2",
+      "red-tapes-side-eye-security:post:3",
+      "red-tapes-side-eye-security:post:4",
+      "red-tapes-side-eye-security:post:5",
+      "red-tapes-side-eye-security:post:6",
+      "red-tapes-side-eye-security:post:7",
+      "red-tapes-side-eye-security:post:8"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s08_pre",
+    "node_id": "red-tapes-mama-has-the-floor",
+    "section": "pre",
+    "line_tokens": [
+      "red-tapes-mama-has-the-floor:pre:0",
+      "red-tapes-mama-has-the-floor:pre:1",
+      "red-tapes-mama-has-the-floor:pre:2",
+      "red-tapes-mama-has-the-floor:pre:3",
+      "red-tapes-mama-has-the-floor:pre:4",
+      "red-tapes-mama-has-the-floor:pre:5",
+      "red-tapes-mama-has-the-floor:pre:6",
+      "red-tapes-mama-has-the-floor:pre:7",
+      "red-tapes-mama-has-the-floor:pre:8",
+      "red-tapes-mama-has-the-floor:pre:9",
+      "red-tapes-mama-has-the-floor:pre:10",
+      "red-tapes-mama-has-the-floor:pre:11"
+    ],
+    "condition": "before battle",
+    "next": "real card gameplay"
+  },
+  {
+    "id": "ch02_s08_post",
+    "node_id": "red-tapes-mama-has-the-floor",
+    "section": "post",
+    "line_tokens": [
+      "red-tapes-mama-has-the-floor:post:0",
+      "red-tapes-mama-has-the-floor:post:1",
+      "red-tapes-mama-has-the-floor:post:2",
+      "red-tapes-mama-has-the-floor:post:3",
+      "red-tapes-mama-has-the-floor:post:4",
+      "red-tapes-mama-has-the-floor:post:5",
+      "red-tapes-mama-has-the-floor:post:6",
+      "red-tapes-mama-has-the-floor:post:7",
+      "red-tapes-mama-has-the-floor:post:8",
+      "red-tapes-mama-has-the-floor:post:9"
+    ],
+    "condition": "verified player victory only",
+    "next": "game progression"
+  },
+  {
+    "id": "ch02_s09_main",
+    "node_id": "red-tapes-let-her-grieve",
+    "section": "main",
+    "line_tokens": [
+      "red-tapes-let-her-grieve:main:0",
+      "red-tapes-let-her-grieve:main:1",
+      "red-tapes-let-her-grieve:main:2",
+      "red-tapes-let-her-grieve:main:3",
+      "red-tapes-let-her-grieve:main:4",
+      "red-tapes-let-her-grieve:main:5",
+      "red-tapes-let-her-grieve:main:6",
+      "red-tapes-let-her-grieve:main:7",
+      "red-tapes-let-her-grieve:main:8",
+      "red-tapes-let-her-grieve:main:9",
+      "red-tapes-let-her-grieve:main:10",
+      "red-tapes-let-her-grieve:main:11",
+      "red-tapes-let-her-grieve:main:12",
+      "red-tapes-let-her-grieve:main:13",
+      "red-tapes-let-her-grieve:main:14"
+    ],
+    "condition": "linear conversation / reward node",
+    "next": "game progression"
+  }
+]

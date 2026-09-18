@@ -1,0 +1,22 @@
+.dr-fade-portrait{object-fit:contain;user-select:none;pointer-events:none}
+.dr-fade-intro{min-height:100dvh;display:grid;grid-template-columns:minmax(240px,1fr) minmax(300px,1fr);align-items:center;gap:clamp(20px,5vw,80px);padding:40px max(24px,8vw);color:#f9f4e8;background:radial-gradient(ellipse at 23% 55%,#77703840,transparent 50%),linear-gradient(125deg,#151916,#080909 70%)}
+.dr-fade-intro__figure{position:relative;display:flex;justify-content:center;align-self:stretch;min-height:480px}
+.dr-fade-intro__figure img{width:100%;height:min(78dvh,780px);align-self:center;filter:drop-shadow(0 18px 24px #0009)}
+.dr-fade-intro__figure>span{position:absolute;bottom:5%;left:0;right:0;text-align:center;font:900 italic clamp(35px,6vw,80px)/1 var(--font-display);letter-spacing:-.04em;color:#e5c778;text-shadow:0 4px 0 #101410}
+.dr-fade-intro__lesson{max-width:520px}
+.dr-fade-intro__byline{font:700 12px var(--font-mono);color:#b1be9e;margin:18px 0}
+.dr-fade-intro__lesson h1{font:900 italic clamp(32px,4vw,58px)/1.02 var(--font-display);text-transform:uppercase;margin:0 0 22px}
+.dr-fade-intro__lesson [aria-live] p{font:400 16px/1.75 var(--font-sans);color:#d3d1c8;min-height:130px}
+.dr-fade-intro__steps{display:flex;gap:10px;margin:24px 0}
+.dr-fade-intro__steps button{width:44px;height:44px;border:1px solid #c5a55850;background:#131810;color:#c5c6bd;font:700 14px var(--font-mono)}
+.dr-fade-intro__steps button[aria-current=step]{color:#10120d;background:#dfc477;border-color:#dfc477}
+.dr-fade-intro__actions{display:flex;gap:12px;margin-bottom:14px}
+.dr-fade-intro button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.battle-guidance--coached .dr-fade-coach{width:48px;height:58px;flex:none;object-fit:cover;object-position:50% 6%;border-bottom:2px solid #cbb975}
+.battle-guidance--coached>div{flex:1;min-width:0}
+.dr-fade-coach__name{color:#d5c58c}
+.battle-arena .battle-guidance.battle-guidance--coached>.dr-fade-coach-frame{position:relative;overflow:hidden;flex:0 0 44px;width:44px;max-width:44px;height:52px;border-bottom:2px solid #cbb975}
+.battle-guidance--coached .dr-fade-coach-frame .dr-fade-coach{position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:160px;height:214px;max-width:none;object-fit:contain;border:0}
+.battle-guidance--coached .battle-guidance-kicker{display:block;font-size:8px;line-height:1.2}
+@media(max-width:650px){.dr-fade-intro{display:flex;flex-direction:column;gap:10px;padding:20px 24px 36px}.dr-fade-intro__figure{width:100%;min-height:0;height:32dvh;max-height:290px}.dr-fade-intro__figure img{height:100%;width:100%}.dr-fade-intro__figure>span{font-size:32px;bottom:0}.dr-fade-intro__lesson{width:100%}.dr-fade-intro__lesson h1{font-size:30px;margin-bottom:12px}.dr-fade-intro__lesson [aria-live] p{font-size:14px;line-height:1.55;min-height:105px}.dr-fade-intro__byline{margin:12px 0}.dr-fade-intro__steps{margin:15px 0}.battle-guidance--coached .dr-fade-coach{width:34px;height:42px}}
+@media(max-height:500px) and (min-width:651px){.dr-fade-intro{padding:20px;gap:24px}.dr-fade-intro__figure{min-height:300px}.dr-fade-intro__lesson h1{font-size:30px}.dr-fade-intro__lesson [aria-live] p{font-size:14px;min-height:85px}.dr-fade-intro__steps{margin:12px 0}}

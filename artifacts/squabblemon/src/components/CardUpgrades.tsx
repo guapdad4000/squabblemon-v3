@@ -22,6 +22,7 @@ type UpgradeCarrier = {
 };
 
 type UpgradeProgress = {
+  moveTier?: number;
   level?: number;
   unlockedUpgradeIds?: string[];
   activeUpgradeIds?: string[];
@@ -40,7 +41,7 @@ function upgradeState(card: UpgradeCarrier, upgrade: AuthoredUpgrade, progress?:
   const ids = activeUpgradeIds
     ?? progress?.activeUpgradeIds
     ?? progress?.unlockedUpgradeIds
-    ?? (cardId && progress?.level !== undefined ? unlockedAbilityUpgrades(cardId, progress.level).map((item: { id: string }) => item.id) : []);
+    ?? (cardId && progress?.level !== undefined ? unlockedAbilityUpgrades(cardId, progress.level).slice(0, progress.moveTier).map((item: { id: string }) => item.id) : []);
   const identified = upgrade.id ? ids.includes(upgrade.id) : false;
   return { active: identified, newlyUnlocked: false };
 }
@@ -63,7 +64,7 @@ export function CardUpgradeCue({
   return (
     <div data-testid="card-upgrade-cue" className={`font-mono uppercase ${className}`}>
       <span className="text-primary">{active.length ? `${active.length}/3 active` : '3 upgrades'}</span>
-      {next && <span className="ml-1 text-white/55">· next LV {next.unlockLevel ?? next.level}</span>}
+      {next && <span className="ml-1 text-white/55">· {(progress?.level ?? 0) >= (next.unlockLevel ?? next.level ?? 2) ? 'ready to train' : `next LV ${next.unlockLevel ?? next.level}`}</span>}
     </div>
   );
 }
@@ -95,7 +96,7 @@ export function CardUpgrades({
             <div className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-wider">
               {state.active ? <Zap size={11} className="text-primary" /> : isNew || state.newlyUnlocked ? <Sparkles size={11} className="text-yellow-200" /> : <LockKeyhole size={10} className="text-white/45" />}
               <b className="text-white">{upgrade.name}</b>
-              <span className={`ml-auto ${state.active ? 'text-primary' : isNew || state.newlyUnlocked ? 'text-yellow-200' : 'text-white/45'}`}>{state.active ? 'Active' : isNew || state.newlyUnlocked ? 'New' : `LV ${level}`}</span>
+              <span className={`ml-auto ${state.active ? 'text-primary' : isNew || state.newlyUnlocked ? 'text-yellow-200' : 'text-white/45'}`}>{state.active ? 'Active' : isNew || state.newlyUnlocked ? 'New' : (progress?.level ?? 0) >= (level ?? 2) ? 'Train in shop' : `LV ${level}`}</span>
             </div>
             {!compact && <p className="mt-1 text-[11px] leading-snug text-white/65">{upgrade.description}</p>}
           </div>

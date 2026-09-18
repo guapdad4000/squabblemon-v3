@@ -1,6 +1,7 @@
 import { useLocation, useParams } from 'wouter';
 import { PlayerBootstrap } from '@workspace/api-client-react';
 import { PlayLoop } from '../../components/PlayLoop';
+import { e2eAuthEnabled } from '../../lib/auth';
 import {
   starterRecipes,
   validateSavedDeck,
@@ -73,7 +74,7 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <PlayLoop
-      mode="practice"
+      mode={e2eAuthEnabled && bootstrap.profile.id === 'e2e-player' ? 'guest' : 'practice'}
       initialDeckId={deckId}
       onExit={() => setLocation(`/game/decks/${deckId}`)}
       hideLobby={true}

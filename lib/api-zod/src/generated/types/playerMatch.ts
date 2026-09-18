@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { AbilityUpgradeSnapshot } from './abilityUpgradeSnapshot';
+import type { PlayerMatchDistrictSnapshot } from './playerMatchDistrictSnapshot';
 import type { PlayerMatchEncounterSnapshot } from './playerMatchEncounterSnapshot';
 import type { PlayerMatchStatus } from './playerMatchStatus';
 
@@ -23,5 +24,7 @@ export interface PlayerMatch {
   contentVersion: number | null;
   /** @nullable */
   encounterSnapshot: PlayerMatchEncounterSnapshot;
+  /** Immutable server-issued district definitions for this match. */
+  districtSnapshot?: PlayerMatchDistrictSnapshot;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 }

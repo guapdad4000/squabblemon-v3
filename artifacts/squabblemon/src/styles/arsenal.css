@@ -1,0 +1,98 @@
+/* Open stages share atmosphere and controls, while the cards keep their physical frames. */
+.arsenal-screen{--arsenal-gutter:clamp(18px,3vw,48px);color:#f3f0e6;background:radial-gradient(ellipse at 78% 0%,#76633b20,transparent 48%),radial-gradient(ellipse at 0% 80%,#36584c18,transparent 55%),#0d100f}
+.arsenal-screen button{cursor:pointer}
+.arsenal-screen button:disabled{opacity:.4;cursor:not-allowed}
+.arsenal-screen :is(button,input,select,summary):focus-visible,.deck-editor-nav button:focus-visible{outline:2px solid #efce87;outline-offset:4px}
+.arsenal-icon,.arsenal-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;border:0;background:transparent;color:#c8c4b5;transition:color .18s,background .18s}
+.arsenal-icon{width:40px;flex:none;border-radius:50%}
+.arsenal-link{padding:8px 2px;font-size:12px}
+.arsenal-icon:hover,.arsenal-link:hover{color:#f5d993}
+.arsenal-icon:hover{background:#e5cf9b0c}
+.arsenal-danger:hover{color:#ff9f8d}
+.arsenal-action{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:10px 24px;background:linear-gradient(120deg,#f1d795,#c9a55c);color:#171911;font:900 italic 14px var(--font-display);text-transform:uppercase;letter-spacing:.025em;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:filter .18s}
+.arsenal-action:hover{filter:brightness(1.12)}
+.arsenal-search{display:flex;align-items:center;gap:10px;min-width:0;flex:1;border-bottom:1px solid #d2c29745;color:#b7b7a6}
+.arsenal-search svg{flex:none;width:16px}
+.arsenal-search input{background:transparent;border:0;border-radius:0;color:#edece4;min-width:0;width:100%;height:40px;font-size:12px;outline:none}
+.arsenal-search:focus-within{border-color:#e4c880}
+.arsenal-search input::placeholder{color:#979d8e}
+.arsenal-heading-row{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.arsenal-heading-row .venue-page-heading{flex:1;margin:0}
+.arsenal-heading-row .venue-page-heading__art{height:115px;width:130px}
+.arsenal-heading-row .venue-page-heading h1{font-size:clamp(32px,4vw,54px)}
+.arsenal-heading-actions{display:flex;align-items:center;gap:12px;flex:none}
+.arsenal-section-label{display:flex;align-items:center;gap:16px;font:500 10px var(--font-mono);text-transform:uppercase;letter-spacing:.2em;color:#aea891}
+.arsenal-section-label:after{content:'';height:1px;background:linear-gradient(90deg,#d4bf8c35,transparent);flex:1}
+.arsenal-empty{display:grid;justify-items:center;align-content:center;gap:14px;min-height:220px;text-align:center;color:#a5ad9a}
+.arsenal-empty svg{color:#cbb47a}
+.arsenal-empty h2{color:#efe7d5;font:900 italic 28px var(--font-display)}
+.arsenal-empty p{max-width:340px;font-size:13px;line-height:1.7}
+.game-shell:has(.arsenal-screen) .venue-hud{background:#0d100f;border-bottom-color:#d7c39118}
+.game-shell:has(.arsenal-screen) .venue-hud__wallet>:is(a,span){border:0;background:transparent}
+.game-shell--fan .game-route-stage:has(.arsenal-screen)::after{display:none}
+.game-shell:has(.arsenal-screen--focused){--fan-clearance:0px}
+.game-shell:has(.arsenal-screen--focused) :is(.fan-nav,.venue-hud){display:none}
+.arsenal-archive{min-height:100%;padding:18px var(--arsenal-gutter) calc(var(--fan-clearance,0px) + 30px)}
+.arsenal-archive__section{margin-top:28px}
+.arsenal-archive__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 36px;margin-top:20px}
+.crew-portrait{position:relative;isolation:isolate;min-width:0;min-height:260px;display:flex;align-items:end;text-align:left;padding:24px 4px;border-bottom:1px solid #d0c08b40;background:radial-gradient(ellipse at 60% 90%,#aa895a1b,transparent 65%)}
+.crew-portrait:before{content:'';position:absolute;bottom:0;left:0;width:50px;height:2px;background:#ceaf6c;transition:width .25s}
+.crew-portrait:hover:before{width:100%}
+.crew-portrait__art{position:absolute;right:0;bottom:0;width:70%;height:100%;object-fit:contain;object-position:center bottom;z-index:-1;filter:drop-shadow(0 8px 14px #000a);transition:transform .25s}
+.crew-portrait:after{content:'';position:absolute;inset:30% 0 0;z-index:-1;background:linear-gradient(0deg,#0d100ff5,transparent 90%)}
+.crew-portrait:hover .crew-portrait__art{transform:translateY(-6px)}
+.crew-portrait__copy{max-width:90%}
+.crew-portrait__index{position:absolute;left:4px;top:18px;font:900 italic 45px var(--font-display);color:#d4bf8c15}
+.crew-portrait h3{font:900 italic clamp(23px,2.5vw,34px)/1.1 var(--font-display);text-transform:uppercase;color:#f3efdf;overflow-wrap:anywhere}
+.crew-portrait small{display:block;color:#c3af81;font:10px var(--font-mono);margin-bottom:7px}
+.crew-portrait__meta{display:flex;gap:12px;align-items:center;color:#b9bdad;font-size:11px;margin-top:12px}
+.crew-portrait__status{display:flex;align-items:center;gap:5px;color:#b9ce9a}
+.crew-portrait__status.is-incomplete{color:#dcb786}
+.crew-portrait__arrow{position:absolute;right:0;bottom:24px;color:#c7b073}
+.arsenal-archive__examples{margin-top:36px;border-top:1px solid #d4bf8c25;padding-top:12px}
+.arsenal-archive__examples summary{min-height:44px;cursor:pointer;font-size:12px;color:#b2b6a7;display:flex;align-items:center;gap:10px}
+.arsenal-archive__examples>p{font-size:12px;color:#a0a898;line-height:1.7}
+.arsenal-archive__examples .crew-portrait{min-height:220px}
+.arsenal-error{color:#ffb6a7;font-size:12px;margin-top:12px}
+.collection-stage{height:100%;display:flex;flex-direction:column;min-height:0;padding:18px var(--arsenal-gutter) var(--fan-clearance,0px)}
+.collection-stage__header{flex:none}
+.collection-tabs{display:flex;gap:28px;border-bottom:1px solid #d4bf8c25;margin-top:10px}
+.collection-tabs button{position:relative;background:transparent;min-height:48px;color:#9fa595;font:900 italic 16px var(--font-display);text-transform:uppercase}
+.collection-tabs button[aria-pressed=true]{color:#efd08a}
+.collection-tabs button[aria-pressed=true]:after{content:'';position:absolute;height:2px;bottom:-1px;left:0;right:0;background:#e6c780}
+.collection-stage__body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#a08a5555 transparent;padding-bottom:28px}
+.collection-toolbar{display:flex;align-items:center;gap:20px;padding:16px 0;flex-wrap:wrap}
+.collection-toolbar .arsenal-search{max-width:370px}
+.collection-toolbar__count{font:10px var(--font-mono);color:#9ea793;margin-left:auto}
+.collection-filters{padding:0 0 20px;border-bottom:1px solid #d4bf8c25;margin-bottom:20px}
+.collection-filter-row{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;margin:10px 0}
+.collection-filter-row>span{font:10px var(--font-mono);color:#a2a992;width:58px}
+.collection-filter-row button{display:inline-flex;align-items:center;gap:6px;min-height:36px;font-size:11px;color:#a8af9e;border-bottom:1px solid transparent;background:transparent}
+.collection-filter-row button[aria-pressed=true]{color:#f3d080;border-bottom-color:#f3d080}
+.collection-filter-row button small{font-size:9px;color:#a2a992}
+.collection-filter-row label{display:flex;gap:8px;align-items:center;color:#a2a992;font-size:11px}
+.collection-filter-row select{background:#161b17;border:0;border-bottom:1px solid #d4bf8c45;color:#eee8d7;min-height:40px;padding:4px 12px}
+.collection-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:24px 20px;padding:8px 4px}
+.collection-card-grid>button{position:relative;min-width:0;text-align:left;transition:transform .2s}
+.collection-card-grid>button:enabled:hover{transform:translateY(-5px)}
+.collection-card-grid>button:disabled{opacity:.35}
+.collection-card-grid__unknown{aspect-ratio:63/88;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:linear-gradient(160deg,#aeb39a0a,transparent);border-bottom:1px solid #d4bf8c30;color:#b2b8a5;font-size:10px}
+.collection-card-grid__lock{position:absolute;right:8px;bottom:8px;color:#f1e2bc;filter:drop-shadow(0 2px 3px #000)}
+.collection-road{max-width:760px;margin:30px auto}
+.collection-road__intro{margin-bottom:30px}
+.collection-road__intro h2{font:900 italic 32px var(--font-display)}
+.collection-road__intro p{font-size:12px;color:#aaa;margin:8px 0 16px}
+.collection-road__progress{height:2px;background:#d4bf8c25}
+.collection-road__progress span{display:block;height:100%;background:#e2c174}
+.collection-milestone{display:flex;align-items:center;gap:24px;padding:24px 0;border-bottom:1px solid #d4bf8c25}
+.collection-milestone__level{font:900 italic 34px var(--font-display);color:#8a927e;min-width:46px}
+.collection-milestone.is-claimable .collection-milestone__level{color:#eace88;text-shadow:0 0 25px #dfbc7244}
+.collection-milestone__copy{flex:1;min-width:0}
+.collection-milestone h3{font:900 italic 20px var(--font-display)}
+.collection-milestone p{font-size:12px;color:#a9b09f;line-height:1.6;margin-top:5px}
+.collection-milestone small{display:block;color:#e0c280;font-size:11px;margin-top:8px}
+.collection-milestone__state{font-size:11px;color:#919986;display:flex;gap:5px;align-items:center}
+@media(max-width:800px){.arsenal-archive__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arsenal-heading-row .venue-page-heading__art{width:90px;height:90px}.arsenal-heading-actions{gap:6px}.arsenal-action{padding:10px 16px;font-size:12px}}
+@media(max-width:540px){.arsenal-heading-row{gap:8px;flex-wrap:wrap}.arsenal-heading-row .venue-page-heading__art{display:none}.arsenal-heading-row .venue-page-heading h1{font-size:34px}.arsenal-heading-row .venue-page-heading p{font-size:11px}.arsenal-heading-actions{margin-left:auto}.arsenal-archive__grid{gap:24px 18px}.crew-portrait{min-height:215px;padding-bottom:20px}.crew-portrait__art{width:100%;height:88%}.crew-portrait h3{font-size:22px}.crew-portrait__meta{font-size:10px;gap:5px;flex-wrap:wrap}.crew-portrait__arrow{display:none}.collection-toolbar{gap:8px}.collection-toolbar .arsenal-search{flex-basis:65%}.collection-toolbar__count{margin-left:0;flex-basis:100%}.collection-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px;padding-inline:0}.collection-filter-row{gap:4px 14px}.collection-filter-row>span{width:100%}.collection-milestone{gap:12px}.collection-milestone h3{font-size:17px}.collection-tabs{gap:24px}.collection-tabs button{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.arsenal-screen *{transition:none!important;scroll-behavior:auto!important}}
+html[data-reduce-motion=true] .arsenal-screen *{transition:none!important;scroll-behavior:auto!important}

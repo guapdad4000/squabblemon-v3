@@ -1,0 +1,30 @@
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2307 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/public/index.html                              5.71 kB │ gzip:  1.85 kB
+dist/public/assets/button-obsidian-vRQFqbC2.webp    7.24 kB
+dist/public/assets/card-rim-BFK6kWLZ.webp           9.42 kB
+dist/public/assets/button-stone-CPXHtw6T.webp      15.95 kB
+dist/public/bundle-budget-report.json              61.04 kB │ gzip:  5.75 kB
+dist/public/assets/SpecialMove-4QFwYGYC.css         2.00 kB │ gzip:  0.86 kB
+dist/public/assets/App-W7SxMFum.css                 2.97 kB │ gzip:  0.96 kB
+dist/public/assets/StoryStage-Dw0t1vat.css          7.08 kB │ gzip:  2.18 kB
+dist/public/assets/GameApp-BsIv_ibV.css            16.91 kB │ gzip:  4.37 kB
+dist/public/assets/PlayLoop-Ckh-SHyT.css           18.44 kB │ gzip:  5.02 kB
+dist/public/assets/index-DnyUOPF0.css             289.41 kB │ gzip: 53.58 kB
+dist/public/assets/SignUp-R86h4eQb.js               0.72 kB │ gzip:  0.48 kB
+dist/public/assets/SignIn-BM-wVSMz.js               0.81 kB │ gzip:  0.52 kB
+dist/public/assets/index-B0ZrESqW.js                2.54 kB │ gzip:  1.23 kB
+dist/public/assets/MoveStudio-CUD7ugr2.js           3.01 kB │ gzip:  1.39 kB
+dist/public/assets/StoryStudio-CfBqOTFA.js          3.36 kB │ gzip:  1.58 kB
+dist/public/assets/StoryStage-BPKh3CG8.js           4.87 kB │ gzip:  1.90 kB
+dist/public/assets/SpecialMove-Dz5L1MDR.js         11.78 kB │ gzip:  3.81 kB
+dist/public/assets/data-BtADbFns.js                23.70 kB │ gzip:  6.81 kB
+dist/public/assets/story-DuMMClYo.js               30.74 kB │ gzip:  8.57 kB
+dist/public/assets/GameApp-BGX4_Vhu.js            114.65 kB │ gzip: 32.84 kB
+dist/public/assets/LoadingScreen-DwinD2El.js      189.49 kB │ gzip: 60.08 kB
+dist/public/assets/PlayLoop-BkC7EEFY.js           232.80 kB │ gzip: 72.61 kB
+dist/public/assets/App-CuPGKgzY.js                256.85 kB │ gzip: 76.22 kB
+✓ built in 6.43s

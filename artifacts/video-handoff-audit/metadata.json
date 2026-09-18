@@ -1,0 +1,271 @@
+[
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\ganger-blue.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\ganger-red.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\cracked-head.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\snitch.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\cornball.webp",
+    "width": 768,
+    "height": 1024,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\wifey.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\baby-momma.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\characters\\og-uncle.webp",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      254
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\blue-side.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\cracked-head-block.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\map.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\receipts.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\red-side.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\side-alley.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\snitch-corner.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\story\\chapter-one\\environments\\victory.webp",
+    "width": 540,
+    "height": 960,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\corner-store.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\moon-rooftop.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\red-court.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\civic-summit.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\crown-court.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\gold-alley.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\red-alley.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\sunset-block.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\layered\\festival-street.webp",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB",
+    "alphaExtrema": null
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\championship-chain.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\collection-box.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\deck-stack.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\foil-pack.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\neighborhood-map.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\portable-speaker.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "artifacts\\squabblemon\\public\\assets\\props\\sticker-phone.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alphaExtrema": [
+      0,
+      255
+    ]
+  }
+]

@@ -16,4 +16,6 @@ export interface MatchMove {
      */
   lane: number | null;
   squabble: boolean;
+  /** False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches. */
+  endTurn?: boolean;
 }

@@ -1,0 +1,1059 @@
+{
+  "chapterId": "red-side-tapes",
+  "status": "authored; not integrated",
+  "revision": "2026-09-08",
+  "scenes": [
+    {
+      "id": "red-tapes-open-the-envelope",
+      "title": "Put the Chairs Back",
+      "kind": "dialogue",
+      "venue": "crown-rooftop-court",
+      "time": "Immediately after Chapter One, same night",
+      "mood": "night",
+      "purpose": "Pay off the handed-over recording immediately. Establish the child, Red's concealment, and Baby Momma's control of the original; leave the rescue and Blue's leak for later chapters.",
+      "stage": "The exact Chapter One final tableau: Red in the chair Baby Momma chose, Cracked Head left standing, Wifey's two unopened water bottles on the table. The player waits by the crooked Crown. Snitch and Cornball are sent downstairs before playback. Baby Momma opens the sleeve: a tiny digital recorder with an OLD MESSAGE label. Red connects a power bank. Nobody hunts for a charger across an entire chapter.",
+      "main": [
+        [
+          "Baby Momma",
+          "Everybody who came up here for a picture, go downstairs. Everybody who came back from the dead, remain available."
+        ],
+        [
+          "Snitch",
+          "I can leave one phone as a courtesy—"
+        ],
+        [
+          "Wifey",
+          "You can leave a shoe if you don't move."
+        ],
+        [
+          "Ganger Red",
+          "Original recorder. Original message. I kept it."
+        ],
+        [
+          "Baby Momma",
+          "You also kept your mouth shut. Press play before I start grading the collection."
+        ],
+        [
+          "Cracked Head",
+          "Red. You said the baby's here. Tell her I heard you. Tell her I'm alive. Tell her I'll call when I can.",
+          "archival recording; same voice, narrow speaker sound"
+        ],
+        [
+          "Baby Momma",
+          "That is your voice. Three weeks after the memorial. Our baby was nine days old."
+        ],
+        [
+          "Cracked Head",
+          "I know what it sounds like."
+        ],
+        [
+          "Baby Momma",
+          "It sounds like a man who knew he was a father. Which part needs remixing?"
+        ],
+        [
+          "Ganger Blue",
+          "Red. You had this while we were checking on her?"
+        ],
+        [
+          "Ganger Red",
+          "Yes."
+        ],
+        [
+          "Baby Momma",
+          "You watched me say thank you. Over and over. Like you was a damn guardian angel with a rewards program."
+        ],
+        [
+          "Ganger Red",
+          "The groceries came from him. Some of the money did too."
+        ],
+        [
+          "Cracked Head",
+          "I told him to tell you."
+        ],
+        [
+          "Baby Momma",
+          "And when my number didn't call you back, did you assume I was busy for FOUR YEARS?"
+        ],
+        [
+          "Wifey",
+          "She asked you a question."
+        ],
+        [
+          "Cracked Head",
+          "No. I should have found another way."
+        ],
+        [
+          "Baby Momma",
+          "Good. A full sentence with a responsible adult in it."
+        ],
+        [
+          "Ganger Red",
+          "There's more to why I kept it."
+        ],
+        [
+          "Baby Momma",
+          "Then tomorrow you can explain the rest. I'm going home to the person who actually waited up for me."
+        ]
+      ],
+      "exit": "Baby Momma takes the recorder and sleeve. She leaves both men with their sealed water bottles. Cracked Head starts after her, stops when she holds up one finger without turning around, and lets her go. The player and Blue have heard the same message. Cut to next morning; no public copy of this private playback exists.",
+      "notes": "The four-year-old child's paternity is revealed here, never as a match reward. Child stays off-screen and unnamed. The message is dated three weeks after the memorial; the baby was nine days old then. Red and Cracked Head confirm authorship/context. No protective relocation explanation, illness diagnosis, or Blue-address confession occurs. Speakers downstairs cannot hear the private playback."
+    },
+    {
+      "id": "red-tapes-red-side-open",
+      "title": "Red Side Is Still Open",
+      "kind": "battle",
+      "battleType": "rule-twist",
+      "opponent": "Ganger Red",
+      "venue": "red-fence-night-court",
+      "time": "Next morning",
+      "mood": "block",
+      "purpose": "Launch the public six-match Red Side Gauntlet as a real scheduled event, not an errand to unlock private evidence. Red tries to control the room while avoiding the conversation he owes.",
+      "stage": "A cookout canopy has swallowed the Red Side court. A professionally printed RED SIDE GAUNTLET banner has a handwritten NO FAMILY QUESTIONS taped beneath it. The winner hosts the next neighborhood showcase; the player's Chapter One Crown and open-play schedule remain intact. Red, Cornball, Snitch, Roaster, Wifey and Baby Momma are the posted six-table lineup, not surprise gatekeepers invented after each win. Blue reads the handwritten addition with extraordinary disrespect.",
+      "pre": [
+        [
+          "Ganger Blue",
+          "NO FAMILY QUESTIONS? What is this, a tournament or a witness stand with chicken?"
+        ],
+        [
+          "Ganger Red",
+          "The event was booked before last night."
+        ],
+        [
+          "Cornball",
+          "And I already bought six gallons of cheese. Whatever happens, we need attendance."
+        ],
+        [
+          "Ganger Red",
+          "Six tables. Clear the Gauntlet, you host the next neighborhood showcase. Open entry stays open."
+        ],
+        [
+          "Ganger Blue",
+          "Look at you announcing rules like you ain't been hiding a whole season in your notebook."
+        ],
+        [
+          "Baby Momma",
+          "Blue. Go find a task. You circling this table like accountability only got one address."
+        ],
+        [
+          "Ganger Red",
+          "I'm first. Middle district closes in round three, both sides. The canopy crew needs the space."
+        ],
+        [
+          "Cornball",
+          "They said they needed the space from eight this morning. Red said wait till he looks difficult."
+        ],
+        [
+          "Ganger Red",
+          "Put your deck down. Somebody here is still going to finish what they started."
+        ]
+      ],
+      "post": [
+        [
+          "Ganger Red",
+          "First table cleared. Your Crown was not a fluke."
+        ],
+        [
+          "Ganger Blue",
+          "Write that on the banner. Use the expensive marker."
+        ],
+        [
+          "Baby Momma",
+          "After the next two tables, you're coming to the back room. No phones."
+        ],
+        [
+          "Ganger Red",
+          "I'll be there."
+        ],
+        [
+          "Baby Momma",
+          "You been a lot of places you should've been talking. Try doing both."
+        ],
+        [
+          "Cornball",
+          "Next table's mine. Keep your wristband. The cheese has terms."
+        ]
+      ],
+      "defeat": [
+        [
+          "Ganger Red",
+          "Round three. Middle district. I put it on a sign and everything."
+        ]
+      ],
+      "exit": "Red stamps the player's gauntlet card. Blue starts to photograph NO FAMILY QUESTIONS; Wifey takes the marker from him and replaces the sign with CHECK-IN. Baby Momma leaves with the recorder still in her bag. The tape never becomes a tournament prize.",
+      "notes": "These six matches were posted in advance. Hosting the showcase is a new event-specific position; losing here does not revoke the Chapter One Crown. The morning staging requires a daytime variant of the supplied night court.",
+      "deck": [
+        "cornball",
+        "roaster",
+        "nerd",
+        "snow",
+        "plug",
+        "baby",
+        "hooper"
+      ],
+      "profile": "aggressive",
+      "modifiers": {
+        "laneLocks": [
+          {
+            "round": 3,
+            "owner": "both",
+            "lanes": [
+              1
+            ]
+          }
+        ]
+      },
+      "phases": [],
+      "xp": 100,
+      "focus": [
+        "lane locks",
+        "planning"
+      ],
+      "focusCards": [
+        "nerd",
+        "snow",
+        "roaster"
+      ],
+      "tips": [
+        "The middle district locks in round three for both players.",
+        "Plan your early placement around the posted closure."
+      ]
+    },
+    {
+      "id": "red-tapes-cheese-has-terms",
+      "title": "The Cheese Has Terms",
+      "kind": "battle",
+      "battleType": "standard",
+      "opponent": "Cornball",
+      "venue": "corner-store-court",
+      "time": "Late morning",
+      "mood": "block",
+      "purpose": "Let Cornball be a genuine opponent with a ridiculous side hustle. Provide a comic release after the tape and give the player's gauntlet run physical, public momentum.",
+      "stage": "Cornball has established a snack counter behind the corner store. A laminated chart lists CHEESE TIERS. There is a red rope around one folding chair labeled FOUNDER. A huge dispenser makes alarming aquarium noises. The tournament table is clearly separate from food sales; no purchase is required to enter. Wifey studies the laminated chart as if it has personally disappointed her.",
+      "pre": [
+        [
+          "Cornball",
+          "Welcome to Cornball's Liquid Gold. Basic gets chips. Premium gets eye contact."
+        ],
+        [
+          "Wifey",
+          "Why does your cheese have a cancellation policy?"
+        ],
+        [
+          "Cornball",
+          "Recurring revenue. Snitch said think bigger."
+        ],
+        [
+          "Wifey",
+          "You put a subscription on a dairy product."
+        ],
+        [
+          "Cornball",
+          "Don't reduce my company to its ingredients."
+        ],
+        [
+          "Ganger Blue",
+          "I'm not paying nine dollars to unlock a ladle."
+        ],
+        [
+          "Cornball",
+          "The ladle is infrastructure. The vision is free."
+        ],
+        [
+          "Wifey",
+          "The card match is free too. Before you try to bundle it."
+        ],
+        [
+          "Cornball",
+          "Table two. I move cards around. Pay attention. Unlike the people who ignored my sauce survey."
+        ]
+      ],
+      "post": [
+        [
+          "Cornball",
+          "Okay. I lost the match. The company remains confident."
+        ],
+        [
+          "Wifey",
+          "Your company has formed a skin."
+        ],
+        [
+          "Cornball",
+          "That's the protective layer. Premium customers get underneath it."
+        ],
+        [
+          "Ganger Blue",
+          "Why the hell is the dispenser breathing?"
+        ],
+        [
+          "Cornball",
+          "Because the cheese is alive with opportunity."
+        ],
+        [
+          "Wifey",
+          "Unplug it. Stamp their card. In that order."
+        ],
+        [
+          "Cornball",
+          "Second table cleared. Don't put my loss on the business page."
+        ]
+      ],
+      "defeat": [
+        [
+          "Cornball",
+          "That's a loss. Rematch is free. Emotional recovery is on the deluxe menu."
+        ]
+      ],
+      "exit": "Cornball unplugs the dispenser. It exhales one enormous air bubble. Everybody steps back except Blue, who is already backing away with the founder chair. Wifey makes Cornball cover the food and stop serving; the joke does not become someone eating spoiled food.",
+      "notes": "Cornball's literal corn/clown appearance remains the identity reference. His seven-card movement deck must still be a credible but approachable fight. No paywall, subscription mechanic, consumable, or food reward is introduced.",
+      "deck": [
+        "cornball",
+        "bikelife",
+        "vibe",
+        "plug",
+        "snow",
+        "rastamon",
+        "hooper"
+      ],
+      "profile": "movement",
+      "modifiers": {},
+      "phases": [],
+      "xp": 125,
+      "focus": [
+        "movement",
+        "lane commitment"
+      ],
+      "focusCards": [
+        "bikelife",
+        "vibe",
+        "cornball"
+      ],
+      "tips": [
+        "Movement effects can change which districts you hold after reveal.",
+        "Leave room to respond instead of committing every card to one lane."
+      ]
+    },
+    {
+      "id": "red-tapes-pay-per-view",
+      "title": "Pay-Per-View Family Business",
+      "kind": "battle",
+      "battleType": "standard",
+      "opponent": "Snitch",
+      "venue": "civic-hill-climb",
+      "time": "Midday",
+      "mood": "block",
+      "purpose": "Show Snitch monetizing the public return without granting him impossible access to the private recording. Let the third gauntlet match build toward the back-room reckoning.",
+      "stage": "Snitch has upgraded the air-fryer desk with two clip-on microphones and a sign reading THE RETURN: THE DIRECTOR'S CUT. Wifey turns the sign face down before any recording starts. A second sign sells VIP reaction seats facing the back-room door. No one is inside that room yet. Snitch does not possess Baby Momma's recorder or its contents.",
+      "pre": [
+        [
+          "Snitch",
+          "Welcome back. Last night a dead man made the finals. Today we're asking the difficult questions."
+        ],
+        [
+          "Wifey",
+          "First question. Why are you selling seats facing a closed door?"
+        ],
+        [
+          "Snitch",
+          "Anticipation package. Premium gets to hear a chair scrape."
+        ],
+        [
+          "Baby Momma",
+          "You heard what I said about my business being an entrance."
+        ],
+        [
+          "Snitch",
+          "I ain't even got the recording. I'm covering the cultural impact."
+        ],
+        [
+          "Baby Momma",
+          "Cover that sign before I turn your cultural impact into a folding-table situation."
+        ],
+        [
+          "Snitch",
+          "Fine. Sports. We are doing sports."
+        ],
+        [
+          "Snitch",
+          "Table three. Little boost in round three, another in five. Growth strategy."
+        ],
+        [
+          "Wifey",
+          "One extra Motion each time. Two boosts. Zero mystique."
+        ]
+      ],
+      "post": [
+        [
+          "Snitch",
+          "Third table cleared. This footage may require some color correction."
+        ],
+        [
+          "Wifey",
+          "The color is you losing."
+        ],
+        [
+          "Ganger Red",
+          "Stop pointing a camera at that door. I knew he was alive. She didn't. That's all you're getting from me out here."
+        ],
+        [
+          "Snitch",
+          "Red. Say that first bit again, facing the light."
+        ],
+        [
+          "Ganger Red",
+          "No. Keep the sentence together."
+        ],
+        [
+          "Baby Momma",
+          "Come on, Red. You got a room full of consequences waiting."
+        ]
+      ],
+      "defeat": [
+        [
+          "Snitch",
+          "People are asking if you meant to do that. Come back and give me a different ending."
+        ]
+      ],
+      "exit": "Red follows Baby Momma toward the private room. Snitch looks at the public event footage waveform but does not edit it on-screen yet. The line he just captured can later be misused; it is not the old message and not the warehouse footage. A tournament volunteer turns the VIP chairs back toward the actual match table.",
+      "notes": "Snitch learned only that the family has a recording from public discussion; he expressly lacks its contents. Baby Momma has not consented to broadcast the private note. The chapter plants selective editing without completing Chapter Four's false-footage plot.",
+      "deck": [
+        "cornball",
+        "streamer",
+        "plug",
+        "gamer",
+        "nerd",
+        "snow",
+        "roaster"
+      ],
+      "profile": "reactive",
+      "modifiers": {
+        "roundMotionDeltas": [
+          {
+            "round": 3,
+            "owner": "cpu",
+            "amount": 1
+          },
+          {
+            "round": 5,
+            "owner": "cpu",
+            "amount": 1
+          }
+        ]
+      },
+      "phases": [],
+      "xp": 150,
+      "focus": [
+        "round modifiers",
+        "tempo"
+      ],
+      "focusCards": [
+        "plug",
+        "snow",
+        "roaster"
+      ],
+      "tips": [
+        "Snitch gets one extra Motion in round three and one in round five.",
+        "Save an answer for each boost rather than spending everything early."
+      ]
+    },
+    {
+      "id": "red-tapes-the-wrong-person",
+      "title": "Thanking the Wrong Person",
+      "kind": "dialogue",
+      "venue": "corner-store-court",
+      "time": "Midday break, private back room",
+      "mood": "block",
+      "purpose": "Give Red's concealment its full emotional cost and introduce Baby Momma's brother without hiding necessary information behind his coming match.",
+      "stage": "A borrowed back room off the corner store. Church Auntie has put out paper plates, napkins, and exactly one untouched place setting opposite Baby Momma. Roaster, her younger brother, sits sideways with the confidence of a man who rehearsed insults in the parking lot. The player is invited to remain as the neutral event host; Snitch is outside. Wifey stands by the door. Baby Momma sets the recorder on the table. She has retained it continuously.",
+      "main": [
+        [
+          "Church Auntie",
+          "Sit down. I brought plates because this family cannot digest a fact on an empty stomach."
+        ],
+        [
+          "All Jokes Roaster",
+          "Red, you sweating through the apology already. We ain't even opened the lid."
+        ],
+        [
+          "Baby Momma",
+          "That's my little brother. Same mama. Unfortunately, unlimited commentary."
+        ],
+        [
+          "All Jokes Roaster",
+          "I'm here for emotional support and whatever happens to his confidence."
+        ],
+        [
+          "Ganger Red",
+          "I paid the rent one month. Groceries when I could. I thought keeping things steady was helping."
+        ],
+        [
+          "Baby Momma",
+          "You let me think the whole block remembered him better than I did."
+        ],
+        [
+          "Ganger Red",
+          "I didn't know how to tell you."
+        ],
+        [
+          "Baby Momma",
+          "You open your mouth. You used it to ask what size diapers. It worked then."
+        ],
+        [
+          "All Jokes Roaster",
+          "Express shipping on the wipes. Four-year delay on the truth. Nasty warehouse operation."
+        ],
+        [
+          "Ganger Red",
+          "I was told leaving it alone was safer."
+        ],
+        [
+          "Baby Momma",
+          "By who?"
+        ],
+        [
+          "Ganger Red",
+          "Someone I should have questioned. I need to speak to him first."
+        ],
+        [
+          "Baby Momma",
+          "You already gave him four years of first."
+        ],
+        [
+          "Church Auntie",
+          "Answer her, son. You can't cover a lie with a serving tray."
+        ],
+        [
+          "Ganger Red",
+          "Let me tell him I'm bringing you. He is going to hear this with you in the room."
+        ],
+        [
+          "Wifey",
+          "If you're promising that, don't make her collect it."
+        ],
+        [
+          "Baby Momma",
+          "After the final. We go together. The recorder stays with me."
+        ],
+        [
+          "Ganger Red",
+          "It stays with you. I should have brought it the first day."
+        ],
+        [
+          "Baby Momma",
+          "You should have brought it before there was a second."
+        ]
+      ],
+      "exit": "Baby Momma slides the untouched plate toward the center, leaving the opposite chair empty. Church Auntie quietly covers the plate. Roaster drops the joke he was about to make. Wifey meets Baby Momma's eyes, then looks away: she has her own secret, but neither names it here. Red makes a call outside without an audible answer or visible contact name.",
+      "notes": "Red's unnamed adviser is OG Uncle, revealed in Scene 9. This is a short same-day promise to introduce her, not an evidence quest or unexplained disappearance. Do not let the player's result determine whether he goes. The empty place setting is the Season Eight parenting callback. Wifey does not confess her knowledge of Blue's address leak until Chapter Five."
+    },
+    {
+      "id": "red-tapes-roast-with-a-receipt",
+      "title": "Roast with a Receipt",
+      "kind": "battle",
+      "battleType": "standard",
+      "opponent": "All Jokes Roaster",
+      "venue": "red-fence-night-court",
+      "time": "Early afternoon",
+      "mood": "block",
+      "purpose": "Give Baby Momma family support with its own flaws. Roaster turns a public gauntlet match into a roast; his sister refuses to be used as his excuse.",
+      "stage": "The main court again. Roaster has mounted a fake CERTIFIED APOLOGY INSPECTOR badge on his jacket and is testing a microphone at conversation distance from Blue's face. Baby Momma takes the microphone, switches it off, and gives it back. Table four's sign was printed before the tournament; he is a scheduled opponent, not a brother who demands payment to permit the story.",
+      "pre": [
+        [
+          "All Jokes Roaster",
+          "Table four. I was supposed to roast the champion. Then my sister's past walked in wearing a haunted junk drawer."
+        ],
+        [
+          "Ganger Blue",
+          "Keep my brother out of—"
+        ],
+        [
+          "All Jokes Roaster",
+          "Keep him? Y'all couldn't FIND him."
+        ],
+        [
+          "Baby Momma",
+          "You are not using my life as your comedy special."
+        ],
+        [
+          "All Jokes Roaster",
+          "I'm defending you."
+        ],
+        [
+          "Baby Momma",
+          "You printed tickets."
+        ],
+        [
+          "All Jokes Roaster",
+          "For the community to witness the defense."
+        ],
+        [
+          "Baby Momma",
+          "Play the match."
+        ],
+        [
+          "All Jokes Roaster",
+          "Fine. No mic. My deck still got something to say. Don't stack your whole ego in one district."
+        ]
+      ],
+      "post": [
+        [
+          "All Jokes Roaster",
+          "Fourth table cleared. You won a card game. Do not let Snitch caption it like you raised me."
+        ],
+        [
+          "Ganger Blue",
+          "You need a quiet place to process that? There's an empty VIP section by the door."
+        ],
+        [
+          "Baby Momma",
+          "You two done making a timeshare out of the last word?"
+        ],
+        [
+          "All Jokes Roaster",
+          "I'm done. You need anything carried?"
+        ],
+        [
+          "Baby Momma",
+          "The covered plates. To the volunteers. That's help."
+        ],
+        [
+          "All Jokes Roaster",
+          "Say less."
+        ],
+        [
+          "Baby Momma",
+          "That's what I've been trying to get you to do."
+        ]
+      ],
+      "defeat": [
+        [
+          "All Jokes Roaster",
+          "You had a plan. I could tell by how upset you got when it left. Run it back."
+        ]
+      ],
+      "exit": "Roaster removes the fake badge and picks up the covered plates. He leaves the microphone behind. Blue starts to put it to his mouth; Wifey silently removes the batteries as she passes toward table five. The player's win changes the gauntlet standing, not Baby Momma's permission to act for herself.",
+      "notes": "Roaster's costume follows the existing all-jokes-roaster portrait. His family relationship is now explicit canon: Baby Momma's younger maternal brother, not a rival parent. Avoid implying the child is a card wager. Support becomes a task instead of another speech.",
+      "deck": [
+        "roaster",
+        "cornball",
+        "nerd",
+        "snow",
+        "hooper",
+        "plug",
+        "bikelife"
+      ],
+      "profile": "aggressive",
+      "modifiers": {
+        "startingMotion": {
+          "cpu": 1
+        }
+      },
+      "phases": [],
+      "xp": 175,
+      "focus": [
+        "targeted disruption",
+        "protection"
+      ],
+      "focusCards": [
+        "wifey",
+        "roaster",
+        "nerd"
+      ],
+      "tips": [
+        "Roaster starts with one extra Motion and favors disruption.",
+        "Protect a key district and avoid putting your entire plan on one target."
+      ]
+    },
+    {
+      "id": "red-tapes-side-eye-security",
+      "title": "Side-Eye Security",
+      "kind": "battle",
+      "battleType": "mini-boss",
+      "opponent": "Wifey",
+      "venue": "harbor-skyline-court",
+      "time": "Late afternoon",
+      "mood": "dusk",
+      "purpose": "Make Wifey a formidable contestant with a life beyond correcting Blue. Show the cost of promising protection while concealing a truth of her own.",
+      "stage": "Table five under a canopy by the harbor. Wifey lays down a neat deck beside a labeled roll of tape. Her VIP area consists of a chair with no one asking her to do anything. Blue wanders into it and gets pointed straight back out. An unopened lunch sits next to her score sheet. Baby Momma takes over check-in so Wifey can actually play.",
+      "pre": [
+        [
+          "Ganger Blue",
+          "My wife don't play around."
+        ],
+        [
+          "Wifey",
+          "Your wife would like to play at all. Move the cooler."
+        ],
+        [
+          "Baby Momma",
+          "I got check-in. Sit down before somebody asks you to alphabetize the weather."
+        ],
+        [
+          "Wifey",
+          "Thank you. Table five. My name was on this list before Blue discovered electricity."
+        ],
+        [
+          "Ganger Blue",
+          "I was trying to compliment you."
+        ],
+        [
+          "Wifey",
+          "Then tell them my name without putting MY in front of it."
+        ],
+        [
+          "Baby Momma",
+          "Get her a chair with a back. That one requires an explanation."
+        ],
+        [
+          "Wifey",
+          "I've got one extra card in my opening hand. You'll see it in the briefing."
+        ],
+        [
+          "Wifey",
+          "And protection in this deck. Don't throw your biggest effect at the first thing that annoys you."
+        ],
+        [
+          "Ganger Blue",
+          "That's good life advice too."
+        ],
+        [
+          "Wifey",
+          "So is 'move the cooler.' We're all learning."
+        ]
+      ],
+      "post": [
+        [
+          "Wifey",
+          "Fifth table cleared. You kept your head. That's rarer than everybody's card collection."
+        ],
+        [
+          "Baby Momma",
+          "You played good. You should get to do that more."
+        ],
+        [
+          "Wifey",
+          "I should."
+        ],
+        [
+          "Baby Momma",
+          "You ever get tired of being the one everybody trusts to hold things together?"
+        ],
+        [
+          "Wifey",
+          "Yeah."
+        ],
+        [
+          "Baby Momma",
+          "Then don't let them make you carry what's theirs."
+        ],
+        [
+          "Wifey",
+          "I'll try."
+        ],
+        [
+          "Ganger Blue",
+          "I moved the cooler."
+        ],
+        [
+          "Wifey",
+          "Good. Now take the applause you were expecting and use it to move the other one."
+        ]
+      ],
+      "defeat": [
+        [
+          "Wifey",
+          "You hit the protection and looked surprised it protected something. Take a breath."
+        ]
+      ],
+      "exit": "Baby Momma squeezes Wifey's shoulder and leaves for the final table. Wifey watches her go, then folds the unused event list into a smaller and smaller square. Blue notices and asks nothing. Let the guilt remain legible without flashing a confession, address, or future recording.",
+      "notes": "Wifey's current display nickname is retained. Her line about her name asks Blue to stop treating her as an accessory, not to reveal an unauthored legal name. CPU hand size is four; no new protection rule is added beyond the existing Wifey card ability. Her concealed knowledge still belongs to Chapter Five.",
+      "deck": [
+        "wifey",
+        "rastamon",
+        "snow",
+        "cornball",
+        "plug",
+        "baby",
+        "hooper"
+      ],
+      "profile": "balanced",
+      "modifiers": {
+        "handSize": {
+          "cpu": 4
+        }
+      },
+      "phases": [],
+      "xp": 200,
+      "focus": [
+        "protection",
+        "resource patience"
+      ],
+      "focusCards": [
+        "wifey",
+        "snow",
+        "rastamon"
+      ],
+      "tips": [
+        "Wifey's opponent hand starts at four cards.",
+        "Existing protection can block targeted effects; choose your timing carefully."
+      ]
+    },
+    {
+      "id": "red-tapes-mama-has-the-floor",
+      "title": "Mama Has the Floor",
+      "kind": "battle",
+      "battleType": "boss",
+      "opponent": "Baby Momma",
+      "venue": "crown-rooftop-court",
+      "time": "Sunset, final table",
+      "mood": "rooftop",
+      "purpose": "Give Baby Momma the chapter's biggest competitive moment on her own terms. The player wins event leadership, not a custody decision or access to the old message.",
+      "stage": "The rooftop has been stripped of Snitch's entrance carpet. Baby Momma arrives at the final table with a deck and the same bag holding the recorder. There is no stroller or visible child. Cracked Head brings two chairs up the stairs, trying hard to make it look casual. Church Auntie takes one. Baby Momma gestures for him to put the other with the volunteers. The banner reads GAUNTLET FINAL, with HOST THE SHOWCASE beneath it.",
+      "pre": [
+        [
+          "Cracked Head",
+          "I brought a chair."
+        ],
+        [
+          "Baby Momma",
+          "Good. Put it with the others."
+        ],
+        [
+          "Cracked Head",
+          "You don't have to talk to me like I'm staff."
+        ],
+        [
+          "Baby Momma",
+          "Staff clock in."
+        ],
+        [
+          "Church Auntie",
+          "Leave that man a little air. He got stairs to go back down."
+        ],
+        [
+          "Baby Momma",
+          "I'm playing to run that showcase. Families get seats. Volunteers eat before the photographers."
+        ],
+        [
+          "Ganger Blue",
+          "That last rule feels personal."
+        ],
+        [
+          "Baby Momma",
+          "If the plate fits."
+        ],
+        [
+          "Baby Momma",
+          "You made it through five tables. Respect. Don't show up at mine expecting the same conversation."
+        ],
+        [
+          "Baby Momma",
+          "Round three, I pick up one extra Motion. Round five, Wifey joins my side as a reinforcement card."
+        ],
+        [
+          "Wifey",
+          "My card. Actual me is sitting down."
+        ],
+        [
+          "Baby Momma",
+          "Two phases. One match. Winner hosts. My family business stays mine either way."
+        ]
+      ],
+      "post": [
+        [
+          "Baby Momma",
+          "You won. Host the showcase. Keep the door open like you said."
+        ],
+        [
+          "Cornball",
+          "Can Liquid Gold submit a vendor application?"
+        ],
+        [
+          "Baby Momma",
+          "The cheese is not getting a redemption arc."
+        ],
+        [
+          "Church Auntie",
+          "Give the winner a minute before y'all start asking for permits."
+        ],
+        [
+          "Cracked Head",
+          "You played like—"
+        ],
+        [
+          "Baby Momma",
+          "Like me. I've been here the whole time."
+        ],
+        [
+          "Cracked Head",
+          "Yeah. You have."
+        ],
+        [
+          "Baby Momma",
+          "Red. You make that call?"
+        ],
+        [
+          "Ganger Red",
+          "He knows we're coming."
+        ],
+        [
+          "Baby Momma",
+          "Then let's go. No more messages carried by men who keep the envelope."
+        ]
+      ],
+      "defeat": [
+        [
+          "Baby Momma",
+          "Take your time on the rematch. I don't need you panicking just because I got quiet."
+        ]
+      ],
+      "phase": [
+        [
+          "red-tapes-dont-rush-me",
+          "Baby Momma",
+          "You got somewhere to be? I'm just getting comfortable."
+        ],
+        [
+          "red-tapes-she-brought-backup",
+          "Baby Momma",
+          "Wifey. Clock in. The card, before anybody starts."
+        ]
+      ],
+      "exit": "Baby Momma signs the player's showcase host card and puts the pen away. Cracked Head stays with the chairs instead of trying to join the private visit uninvited. Wifey places the new host card next to the player's existing Crown marker: a second responsibility, not a replacement title. Red and Baby Momma head for the stairs.",
+      "notes": "The real Wifey does not enter the board or become controlled by the player. Her reinforcement is the existing card. Baby Momma's paternity, recorder ownership, and right to meet OG Uncle never depend on winning this match. All legal player victories receive the same post scene.",
+      "deck": [
+        "baby",
+        "wifey",
+        "rastamon",
+        "snow",
+        "cornball",
+        "plug",
+        "hooper"
+      ],
+      "profile": "combo-boss",
+      "modifiers": {},
+      "phases": [
+        {
+          "id": "red-tapes-dont-rush-me",
+          "name": "Don't Rush Me",
+          "description": "At round three, Baby Momma gains one extra Motion once.",
+          "trigger": {
+            "kind": "round",
+            "atLeast": 3
+          },
+          "onEnter": [
+            {
+              "kind": "motion",
+              "owner": "cpu",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "id": "red-tapes-she-brought-backup",
+          "name": "She Brought Backup",
+          "description": "At round five, add one Wifey reinforcement to the CPU side once.",
+          "trigger": {
+            "kind": "round",
+            "atLeast": 5
+          },
+          "onEnter": [
+            {
+              "kind": "reinforcement",
+              "owner": "cpu",
+              "cardId": "wifey"
+            }
+          ]
+        }
+      ],
+      "xp": 250,
+      "focus": [
+        "boss timing",
+        "reinforcements"
+      ],
+      "focusCards": [
+        "baby",
+        "wifey",
+        "hooper"
+      ],
+      "tips": [
+        "One extra CPU Motion arrives in round three.",
+        "A Wifey card reinforces the CPU side in round five. Plan for its protection."
+      ]
+    },
+    {
+      "id": "red-tapes-let-her-grieve",
+      "title": "Who Told You That?",
+      "kind": "reward",
+      "venue": "corner-store-court",
+      "time": "Evening, OG Uncle's porch",
+      "mood": "dusk",
+      "purpose": "Complete the host reward, name Red's adviser, and end on OG Uncle's responsibility without revealing the rescue or his diagnosis early.",
+      "stage": "First, a short event wrap: the player's showcase card gets the final stamp. Save the actual reward panel for after the porch cliffhanger. Then the player accompanies Baby Momma and Red by invitation as a neutral witness. OG Uncle sits on his porch, coat over his knees, newspaper open. No medical props, cough, oxygen, or diagnosis cue. One bulb lights three empty chairs. He folds the newspaper before they reach the steps, as though he has been reading the same sentence for hours.",
+      "main": [
+        [
+          "Ganger Red",
+          "Showcase host confirmed. You kept the event standing while the rest of us tried to turn it into a group argument."
+        ],
+        [
+          "Baby Momma",
+          "Next one, the kids eat first. Put that somewhere Snitch can't crop."
+        ],
+        [
+          "Cornball",
+          "Liquid Gold respects the decision of the community."
+        ],
+        [
+          "Church Auntie",
+          "Then let the community bury that dispenser."
+        ],
+        [
+          "Baby Momma",
+          "Come with us. You've heard what was said. I'd like somebody there who isn't adding their own version."
+        ],
+        [
+          "OG Uncle",
+          "Red. I said call before you came."
+        ],
+        [
+          "Ganger Red",
+          "I did."
+        ],
+        [
+          "OG Uncle",
+          "You said company. This is a reckoning with a handbag."
+        ],
+        [
+          "Baby Momma",
+          "I brought something you've had four years to explain."
+        ],
+        [
+          "OG Uncle",
+          "Sit down."
+        ],
+        [
+          "Baby Momma",
+          "I'll sit when you answer. Did you tell Red not to give me this message?"
+        ],
+        [
+          "OG Uncle",
+          "I told him to let you grieve."
+        ],
+        [
+          "Baby Momma",
+          "Over a man you knew was alive?"
+        ],
+        [
+          "OG Uncle",
+          "Yes."
+        ],
+        [
+          "Baby Momma",
+          "Then who exactly were you protecting?"
+        ]
+      ],
+      "exit": "OG Uncle closes the newspaper the rest of the way. Red takes the chair farthest from him. Baby Momma does not sit. Hold the empty chair between her and the old man. Cut to black before he answers. Chapter Three begins with this unanswered question and Blue refusing his father's calls; the actual rescue explanation waits for Chapter Five.",
+      "notes": "The key reveal is that OG Uncle directed silence, not why he rescued Cracked Head. His serious illness is Chapter Three information and receives no medical tease here. The event recognizes the host before the porch scene; the game's actual reward grant occurs on completion of this reward node after the final line. A match cannot compel a confession. Do not advertise Chapter Three as playable."
+    }
+  ]
+}
+

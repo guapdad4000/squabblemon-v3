@@ -11,6 +11,10 @@ const oneOf = <T extends AnalyticsValue>(...allowed: T[]): ValueValidator =>
 const decisionTime = oneOf('under_3s', '3_to_8s', '8_to_15s', '15s_or_more');
 
 const battleEventSchemas = {
+  deck_card_replaced: { lesson: isBoolean, slot: isFiniteNumber },
+  deck_saved: { lesson: isBoolean, cards: isFiniteNumber },
+  deck_test_started: { lesson: isBoolean, cards: isFiniteNumber },
+  rookie_test_completed: { rounds: isFiniteNumber },
   battle_card_selection_backed_out: {
     round: isFiniteNumber,
     action: oneOf('deselect', 'replace'),

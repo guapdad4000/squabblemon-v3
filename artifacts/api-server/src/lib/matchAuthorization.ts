@@ -17,3 +17,8 @@ export function canUseRewardedRecipe(
       ).valid,
   );
 }
+
+export function canUseRewardedDeck(deckId: string, savedDecks: Array<{ id: string; cardIds: string[]; heroCardId: string }>, ownedCardIds: string[]): boolean {
+  const saved = savedDecks.find(deck => deck.id === deckId);
+  return saved ? validateSavedDeck(saved.cardIds, ownedCardIds, saved.heroCardId).valid : canUseRewardedRecipe(deckId, ownedCardIds);
+}

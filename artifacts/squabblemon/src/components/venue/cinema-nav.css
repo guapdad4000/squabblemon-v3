@@ -1,0 +1,275 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Reverse-1991 navigation.
+   Replaces the chunky painted fan-nav with a slim, transparent, on-demand
+   "director's menu" that only takes space when summoned. Pages that need
+   full immersion (story, dialogue, gameplay, onboarding, online, decks/test)
+   hide it entirely; a small floating "DIRECTOR" toggle reopens it.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ───── The toggle (always visible on shell pages that opt in). ───── */
+.cinema-nav-toggle {
+  position: fixed;
+  z-index: 70;
+  right: 18px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 14px 0 12px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(240, 179, 90, 0.25), transparent 70%),
+    linear-gradient(160deg, #0d0a07, #050403);
+  color: var(--cinema-amber, #f0b35a);
+  border: 1px solid rgba(240, 179, 90, 0.45);
+  border-radius: 999px;
+  font: 700 10px/1 var(--font-mono);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(240, 179, 90, 0.18),
+    inset 0 1px 0 rgba(255, 220, 150, 0.1);
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.cinema-nav-toggle:hover,
+.cinema-nav-toggle:focus-visible {
+  border-color: rgba(240, 179, 90, 0.8);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(240, 179, 90, 0.35),
+    inset 0 1px 0 rgba(255, 220, 150, 0.18);
+  outline: none;
+}
+.cinema-nav-toggle:active {
+  transform: translateY(1px);
+}
+.cinema-nav-toggle__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cinema-amber, #f0b35a);
+  box-shadow: 0 0 8px rgba(240, 179, 90, 0.6);
+  animation: cinema-toggle-pulse 2.6s ease-in-out infinite;
+}
+.cinema-nav-toggle[aria-expanded="true"] .cinema-nav-toggle__dot {
+  background: #ffd58a;
+  box-shadow: 0 0 10px rgba(255, 213, 138, 0.8);
+}
+@keyframes cinema-toggle-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* When full-bleed pages are mounted, the toggle stays but feels weightless. */
+.cinema-nav-toggle--ghost {
+  background: rgba(0, 0, 0, 0.55);
+  border-color: rgba(240, 179, 90, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Compact icon-only variant for tight layouts. */
+.cinema-nav-toggle--icon {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+}
+.cinema-nav-toggle--icon .cinema-nav-toggle__dot { display: none; }
+.cinema-nav-toggle--icon svg { color: var(--cinema-amber, #f0b35a); }
+
+@media (max-width: 600px) {
+  .cinema-nav-toggle {
+    right: 12px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    padding: 0 11px 0 10px;
+    height: 36px;
+  }
+}
+
+/* ───── The menu sheet (dialog). ───── */
+.cinema-nav-sheet {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(520px, calc(100% - 24px));
+  max-height: calc(100dvh - 80px);
+  padding: 22px 18px 24px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(240, 179, 90, 0.12), transparent 65%),
+    linear-gradient(180deg, #0d0a07 0%, #050403 100%);
+  color: var(--cinema-paper, #f7eed8);
+  border: 1px solid rgba(240, 179, 90, 0.35);
+  border-radius: 12px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.85),
+    0 0 60px rgba(240, 179, 90, 0.18);
+}
+.cinema-nav-sheet::backdrop {
+  background: rgba(2, 4, 6, 0.78);
+  backdrop-filter: blur(6px);
+}
+.cinema-nav-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 6px 16px;
+  border-bottom: 1px solid rgba(240, 179, 90, 0.18);
+}
+.cinema-nav-sheet__header small {
+  display: block;
+  font: 700 9px/1 var(--font-mono);
+  letter-spacing: 0.3em;
+  color: var(--cinema-amber, #f0b35a);
+  text-transform: uppercase;
+}
+.cinema-nav-sheet__header h2 {
+  font: 900 italic 22px/1.1 var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 6px 0 0;
+}
+.cinema-nav-sheet__close {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--cinema-amber, #f0b35a);
+  border: 1px solid rgba(240, 179, 90, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.cinema-nav-sheet__close:hover {
+  background: rgba(20, 12, 6, 0.8);
+  border-color: var(--cinema-amber, #f0b35a);
+}
+.cinema-nav-sheet__close:focus-visible { outline: 2px solid var(--cinema-amber, #f0b35a); outline-offset: 3px; }
+
+.cinema-nav-sheet__grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 600px) {
+  .cinema-nav-sheet { width: min(640px, calc(100% - 40px)); }
+  .cinema-nav-sheet__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.cinema-nav-sheet__choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(240, 179, 90, 0.15);
+  border-radius: 8px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+}
+.cinema-nav-sheet__choice:hover {
+  background: rgba(20, 14, 8, 0.75);
+  border-color: rgba(240, 179, 90, 0.45);
+  transform: translateY(-1px);
+}
+.cinema-nav-sheet__choice:focus-visible {
+  outline: 2px solid var(--cinema-amber, #f0b35a);
+  outline-offset: 2px;
+}
+.cinema-nav-sheet__choice.is-active {
+  background: linear-gradient(120deg, rgba(240, 179, 90, 0.16), rgba(240, 179, 90, 0.04));
+  border-color: rgba(240, 179, 90, 0.6);
+  box-shadow: inset 0 0 24px rgba(240, 179, 90, 0.12);
+}
+.cinema-nav-sheet__choice__glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--cinema-amber, #f0b35a);
+  border: 1px solid rgba(240, 179, 90, 0.35);
+}
+.cinema-nav-sheet__choice__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.cinema-nav-sheet__choice__copy strong {
+  font: 900 italic 13px/1.1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.cinema-nav-sheet__choice__copy small {
+  font: 500 9px/1.2 var(--font-sans);
+  color: rgba(247, 238, 216, 0.6);
+  text-transform: none;
+}
+.cinema-nav-sheet__choice.is-active strong {
+  color: var(--cinema-amber-bright, #ffd58a);
+}
+.cinema-nav-sheet__badge {
+  margin-left: auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: var(--cinema-amber, #f0b35a);
+  color: #1c1206;
+  border-radius: 11px;
+  font: 900 10px/1 var(--font-mono);
+}
+
+.cinema-nav-sheet__footer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(240, 179, 90, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font: 500 9px/1 var(--font-mono);
+  letter-spacing: 0.22em;
+  color: rgba(247, 238, 216, 0.55);
+  text-transform: uppercase;
+}
+.cinema-nav-sheet__footer .music-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ───── Persistence: page-scoped visibility ───── */
+/* Pages can opt out of the always-visible nav block by adding the
+   `cinema-nav-suppressed` class on the shell. The toggle still floats. */
+.cinema-nav-suppressed .fan-nav { display: none; }
+.cinema-nav-suppressed .game-route-stage::after { display: none; }
+.cinema-nav-suppressed .safehouse__bottom { bottom: 26px; }
+.cinema-nav-suppressed .game-shell--fan { --fan-clearance: 0; overflow-x: hidden; }
+
+/* When the sheet is open we don't want any other fixed element to fight it. */
+.cinema-nav-sheet[open] ~ .fan-nav { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-nav-toggle,
+  .cinema-nav-sheet,
+  .cinema-nav-sheet__choice,
+  .cinema-nav-toggle__dot {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,273 @@
+[
+  {
+    "clip_id": "ch01_s01_pre",
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "section": "pre",
+    "line_tokens": [
+      "welcome-to-the-block:pre:0",
+      "welcome-to-the-block:pre:1",
+      "welcome-to-the-block:pre:2",
+      "welcome-to-the-block:pre:3",
+      "welcome-to-the-block:pre:4",
+      "welcome-to-the-block:pre:5",
+      "welcome-to-the-block:pre:6",
+      "welcome-to-the-block:pre:7"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s01_post",
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "section": "post",
+    "line_tokens": [
+      "welcome-to-the-block:post:0",
+      "welcome-to-the-block:post:1",
+      "welcome-to-the-block:post:2",
+      "welcome-to-the-block:post:3"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s02_pre",
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "section": "pre",
+    "line_tokens": [
+      "blue-side-pressure:pre:0",
+      "blue-side-pressure:pre:1",
+      "blue-side-pressure:pre:2",
+      "blue-side-pressure:pre:3",
+      "blue-side-pressure:pre:4",
+      "blue-side-pressure:pre:5",
+      "blue-side-pressure:pre:6"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s02_post",
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "section": "post",
+    "line_tokens": [
+      "blue-side-pressure:post:0",
+      "blue-side-pressure:post:1",
+      "blue-side-pressure:post:2",
+      "blue-side-pressure:post:3"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s03_pre",
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "section": "pre",
+    "line_tokens": [
+      "receipts-on-camera:pre:0",
+      "receipts-on-camera:pre:1",
+      "receipts-on-camera:pre:2",
+      "receipts-on-camera:pre:3",
+      "receipts-on-camera:pre:4",
+      "receipts-on-camera:pre:5",
+      "receipts-on-camera:pre:6"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s03_post",
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "section": "post",
+    "line_tokens": [
+      "receipts-on-camera:post:0",
+      "receipts-on-camera:post:1",
+      "receipts-on-camera:post:2",
+      "receipts-on-camera:post:3"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s04_pre",
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "section": "pre",
+    "line_tokens": [
+      "red-side-retaliation:pre:0",
+      "red-side-retaliation:pre:1",
+      "red-side-retaliation:pre:2",
+      "red-side-retaliation:pre:3",
+      "red-side-retaliation:pre:4",
+      "red-side-retaliation:pre:5",
+      "red-side-retaliation:pre:6",
+      "red-side-retaliation:pre:7"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s04_post",
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "section": "post",
+    "line_tokens": [
+      "red-side-retaliation:post:0",
+      "red-side-retaliation:post:1",
+      "red-side-retaliation:post:2",
+      "red-side-retaliation:post:3",
+      "red-side-retaliation:post:4"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s05_pre",
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "section": "pre",
+    "line_tokens": [
+      "side-alley-challenge:pre:0",
+      "side-alley-challenge:pre:1",
+      "side-alley-challenge:pre:2",
+      "side-alley-challenge:pre:3",
+      "side-alley-challenge:pre:4",
+      "side-alley-challenge:pre:5"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s05_post",
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "section": "post",
+    "line_tokens": [
+      "side-alley-challenge:post:0",
+      "side-alley-challenge:post:1",
+      "side-alley-challenge:post:2",
+      "side-alley-challenge:post:3",
+      "side-alley-challenge:post:4"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s06_pre",
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "section": "pre",
+    "line_tokens": [
+      "snitch-at-the-corner:pre:0",
+      "snitch-at-the-corner:pre:1",
+      "snitch-at-the-corner:pre:2",
+      "snitch-at-the-corner:pre:3",
+      "snitch-at-the-corner:pre:4",
+      "snitch-at-the-corner:pre:5",
+      "snitch-at-the-corner:pre:6",
+      "snitch-at-the-corner:pre:7"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s06_post",
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "section": "post",
+    "line_tokens": [
+      "snitch-at-the-corner:post:0",
+      "snitch-at-the-corner:post:1",
+      "snitch-at-the-corner:post:2",
+      "snitch-at-the-corner:post:3",
+      "snitch-at-the-corner:post:4"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s07_pre",
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "section": "pre",
+    "line_tokens": [
+      "cracked-head-takes-the-block:pre:0",
+      "cracked-head-takes-the-block:pre:1",
+      "cracked-head-takes-the-block:pre:2",
+      "cracked-head-takes-the-block:pre:3",
+      "cracked-head-takes-the-block:pre:4",
+      "cracked-head-takes-the-block:pre:5",
+      "cracked-head-takes-the-block:pre:6",
+      "cracked-head-takes-the-block:pre:7",
+      "cracked-head-takes-the-block:pre:8",
+      "cracked-head-takes-the-block:pre:9",
+      "cracked-head-takes-the-block:pre:10",
+      "cracked-head-takes-the-block:pre:11"
+    ],
+    "play_condition": "before player starts battle",
+    "next_action": "RETURN CONTROL TO GAME FOR REAL CARD FIGHT",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s07_post",
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "section": "post",
+    "line_tokens": [
+      "cracked-head-takes-the-block:post:0",
+      "cracked-head-takes-the-block:post:1",
+      "cracked-head-takes-the-block:post:2",
+      "cracked-head-takes-the-block:post:3",
+      "cracked-head-takes-the-block:post:4",
+      "cracked-head-takes-the-block:post:5",
+      "cracked-head-takes-the-block:post:6"
+    ],
+    "play_condition": "only after verified victory",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  },
+  {
+    "clip_id": "ch01_s08_main",
+    "scene": 8,
+    "node_id": "block-crowned",
+    "section": "main",
+    "line_tokens": [
+      "block-crowned:main:0",
+      "block-crowned:main:1",
+      "block-crowned:main:2",
+      "block-crowned:main:3",
+      "block-crowned:main:4",
+      "block-crowned:main:5",
+      "block-crowned:main:6",
+      "block-crowned:main:7",
+      "block-crowned:main:8",
+      "block-crowned:main:9",
+      "block-crowned:main:10",
+      "block-crowned:main:11",
+      "block-crowned:main:12",
+      "block-crowned:main:13",
+      "block-crowned:main:14",
+      "block-crowned:main:15"
+    ],
+    "play_condition": "after final boss victory; ceremony",
+    "next_action": "return to game reward/progression flow",
+    "duration": "derive from recorded performance; do not force full dialogue into 6.4 seconds"
+  }
+]

@@ -11,8 +11,16 @@ import {
   type PlayerStoryReward,
 } from "@workspace/db";
 import { catalogCardByEngineId, catalogCardById } from "@workspace/squabblemon-engine/data";
-import type { StoryReward } from "@workspace/squabblemon-engine/story";
-import { getStoryNode, isStoryCosmeticId, storyContent } from "@workspace/squabblemon-engine/story";
+import {
+  MAX_STARS_PER_BATTLE,
+  TICKETS_PER_PERFECT_BATTLE,
+  getStoryNode,
+  isStoryCharacterId,
+  isStoryCosmeticId,
+  storyContent,
+  ticketsForStars,
+  type StoryReward,
+} from "@workspace/squabblemon-engine/story";
 import { getPlayerBootstrap } from "./playerState";
 import {
   getPlayerStoryCampaign,
@@ -113,6 +121,8 @@ function describeClaim(
     description = `+${reward.amount} Street Pack Ticket${reward.amount === 1 ? "" : "s"}`;
   } else if (reward.kind === "cosmetic") {
     description = `${reward.id} unlocked`;
+  } else if (reward.kind === "character-unlock") {
+    description = `Character unlocked: ${reward.id}`;
   }
   return { ...reward, rewardKey, duplicateShards, description };
 }
@@ -147,7 +157,8 @@ export async function grantStoryRewards(
   for (const [index, configured] of rewards.entries()) {
     if (
       (configured.kind === "cosmetic" && !isStoryCosmeticId(configured.id)) ||
-      (configured.kind === "chapter-key" && !configured.id.startsWith("story-key:"))
+      (configured.kind === "chapter-key" && !configured.id.startsWith("story-key:")) ||
+      (configured.kind === "character-unlock" && !isStoryCharacterId(configured.id))
     ) {
       throw new StoryRequestError(500, "Story reward is invalid");
     }
@@ -239,6 +250,19 @@ export async function grantStoryRewards(
         configured.kind === "chapter-key"
           ? "Chapter key unlocked"
           : `${configured.id} unlocked`;
+    } else if (configured.kind === "character-unlock") {
+      const [profile] = await tx
+        .select()
+        .from(playerProfilesTable)
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      if (!profile) throw new StoryRequestError(404, "Player profile not found");
+      const unlocked = new Set(profile.unlockedCharacterIds ?? []);
+      unlocked.add(configured.id);
+      await tx
+        .update(playerProfilesTable)
+        .set({ unlockedCharacterIds: [...unlocked] })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      description = `Character unlocked: ${configured.id}`;
     } else {
       throw new StoryRequestError(500, "Unsupported story reward");
     }
@@ -246,6 +270,47 @@ export async function grantStoryRewards(
   }
   return granted;
 }
+
+/**
+ * `grantStoryTicketAward` — the 3-stars-to-ticket auto-grant. Called the
+ * first time a story battle returns 3 stars. Idempotent: we only insert a
+ * `pack-ticket` reward claim when no prior claim exists for this node, and we
+ * bump the player's pack-ticket balance by `ticketsForStars(stars)` exactly
+ * once per 3-star clear. This is the single source of truth for the "3
+ * battles → 3 stars → 1 ticket" loop.
+ */
+export async function grantStoryTicketAward(
+  tx: StoryTx,
+  userId: string,
+  chapterId: string,
+  nodeId: string,
+  stars: number,
+): Promise<GrantedStoryReward | null> {
+  if (stars < MAX_STARS_PER_BATTLE) return null;
+  const amount = ticketsForStars(stars);
+  if (amount <= 0) return null;
+  const rewardKey = `${nodeId}:stars:${MAX_STARS_PER_BATTLE}:auto-ticket:v1`;
+  const base: PlayerStoryReward = { kind: "pack-ticket", id: "street-pack-ticket", amount };
+  const [claim] = await tx
+    .insert(playerStoryRewardClaimsTable)
+    .values({ clerkUserId: userId, chapterId, nodeId, rewardKey, reward: base })
+    .onConflictDoNothing()
+    .returning();
+  if (!claim) return null;
+  await tx
+    .update(playerProfilesTable)
+    .set({
+      packTickets: sql`${playerProfilesTable.packTickets} + ${amount}`,
+    })
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  const description = `+${amount} Street Pack Ticket${amount === 1 ? "" : "s"} (3-star clean sweep)`;
+  return { ...base, rewardKey, duplicateShards: 0, description };
+}
+
+export const STORY_TICKET_REWARDS = {
+  TICKETS_PER_PERFECT_BATTLE,
+  MAX_STARS_PER_BATTLE,
+} as const;
 
 export async function completeNonBattleStoryNode(
   userId: string,

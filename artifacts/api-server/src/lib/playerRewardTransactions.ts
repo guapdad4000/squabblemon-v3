@@ -1,4 +1,7 @@
-import { and, eq, isNull, lte, sql } from "drizzle-orm";
+import { advanceCareer, availableCareerChoices, readCareer } from "@workspace/squabblemon-engine/career";
+import { battleAchievements } from "@workspace/squabblemon-engine/insights";
+import { cardCatalog } from "@workspace/squabblemon-engine/data";
+import { and, eq, isNull, isNotNull, lte, sql } from "drizzle-orm";
 import {
   db,
   playerMatchesTable,
@@ -8,7 +11,8 @@ import {
   type PlayerMissionRecord,
 } from "@workspace/db";
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
-import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import { battleEarnings } from '@workspace/squabblemon-engine/economy';
+import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_CORE_IDS, ROOKIE_DECK_ID } from "@workspace/squabblemon-engine/data";
 import {
   applyCardXp,
   createCardProgressionSnapshot,
@@ -83,11 +87,36 @@ async function resetExpiredMissionsInTransaction(
   }
 }
 
+export async function grantFirstCollection(clerkUserId: string): Promise<void> {
+  await db.transaction(async tx => {
+    await lockPlayerProfile(tx, clerkUserId);
+    const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    if (!profile || profile.onboardingStep !== "crew") return;
+    const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
+    const savedDecks = [...profile.savedDecks];
+    if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Crew", cardIds: [...ROOKIE_CORE_IDS], heroCardId: "hooper", recipeId: null });
+    await tx.update(playerProfilesTable).set({
+      starterDeckId: ROOKIE_FOUNDATION_ID, ownedCardIds,
+      discoveredCardIds: [...new Set([...profile.discoveredCardIds, ...ownedCardIds])],
+      savedDecks, deckSlots: Math.max(profile.deckSlots, savedDecks.length),
+      collectionProgress: ownedCardIds.length, onboardingStep: "reward",
+    }).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  });
+}
+
 export async function claimStarterReward(
   clerkUserId: string,
 ): Promise<boolean> {
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, clerkUserId);
+    const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    if (profile?.starterDeckId === ROOKIE_FOUNDATION_ID && profile.onboardingStep === "reward") {
+      const [tested] = await tx.select({ id: playerMatchesTable.id }).from(playerMatchesTable).where(and(
+        eq(playerMatchesTable.clerkUserId, clerkUserId), eq(playerMatchesTable.mode, "practice"),
+        eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
+      )).limit(1);
+      if (!tested) throw new PlayerRewardError("Finish a practice match with your crew before claiming the welcome reward", 409);
+    }
     const [claimed] = await tx
       .update(playerProfilesTable)
       .set({
@@ -96,6 +125,7 @@ export async function claimStarterReward(
         softCurrency: sql`${playerProfilesTable.softCurrency} + 250`,
         packTickets: sql`${playerProfilesTable.packTickets} + 1`,
         xp: sql`${playerProfilesTable.xp} + 100`,
+        level: sql`1 + floor((${playerProfilesTable.xp} + 100) / 250)`,
         streetRep: sql`${playerProfilesTable.streetRep} + 5`,
       })
       .where(
@@ -175,7 +205,7 @@ export async function completeStandardMatchReward(input: {
   districtsWon: number;
   verifiedMatch: Match;
 }): Promise<{ completed: boolean; match: PlayerMatchRecord; cardXpRewards: CardXpReward[] }> {
-  const amounts = { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 };
+  const amounts = battleEarnings(input.outcome);
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, input.clerkUserId);
     await resetExpiredMissionsInTransaction(tx, input.clerkUserId, new Date());
@@ -184,7 +214,7 @@ export async function completeStandardMatchReward(input: {
       .from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
     if (!profile) throw new PlayerRewardError("Player profile not found", 404);
-    const participantCardIds = participatingCatalogCardIds(input.verifiedMatch);
+    const participantCardIds = participatingCatalogCardIds(input.verifiedMatch).filter(id => profile.ownedCardIds.includes(id));
     const [storedMatch] = await tx
       .select({
         playerDeckId: playerMatchesTable.playerDeckId,
@@ -254,6 +284,13 @@ export async function completeStandardMatchReward(input: {
       )
       .returning();
     if (updated) {
+      await advanceBattleMissions(tx, input.clerkUserId, input.outcome);
+      const facts = battleAchievements(input.verifiedMatch);
+      for (const key of [facts.cleansed && 'weekly-cleanse', facts.movementWin && 'weekly-movement', facts.changedCrew && input.verifiedMatch.storyEncounter?.activity?.kind !== 'draft' && 'weekly-experiment'].filter(Boolean)) {
+        await tx.update(playerMissionsTable).set({ progress: sql`least(${playerMissionsTable.goal}, ${playerMissionsTable.progress} + 1)` })
+          .where(and(eq(playerMissionsTable.clerkUserId, input.clerkUserId), eq(playerMissionsTable.missionKey, key as string), isNull(playerMissionsTable.claimedAt)));
+      }
+      const career = advanceCareer(profile.storyProgress.gameplay, input.verifiedMatch, profile.ownedCardIds, profile.unlockedCosmeticIds);
       await tx
         .update(playerProfilesTable)
         .set({
@@ -263,6 +300,8 @@ export async function completeStandardMatchReward(input: {
           softCurrency: sql`${playerProfilesTable.softCurrency} + ${amounts.softCurrency}`,
           packTickets: sql`${playerProfilesTable.packTickets} + ${amounts.packTickets}`,
           cardProgression: cardXp.progression,
+          storyProgress: { ...profile.storyProgress, gameplay: career.progress },
+          unlockedCosmeticIds: career.cosmetics,
         })
         .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
     }
@@ -286,6 +325,15 @@ export async function completeStandardMatchReward(input: {
   });
 }
 
+/** Caller holds the player row lock and invokes this only for a newly completed match. */
+export async function advanceBattleMissions(tx: Parameters<Parameters<typeof db.transaction>[0]>[0], userId: string, outcome: RewardOutcome) {
+  await resetExpiredMissionsInTransaction(tx, userId, new Date());
+  for (const key of ['daily-show-up', 'weekly-main-character', ...(outcome === 'win' ? ['daily-take-room'] : [])]) {
+    await tx.update(playerMissionsTable).set({ progress: sql`least(${playerMissionsTable.goal}, ${playerMissionsTable.progress} + 1)` })
+      .where(and(eq(playerMissionsTable.clerkUserId, userId), eq(playerMissionsTable.missionKey, key), isNull(playerMissionsTable.claimedAt)));
+  }
+}
+
 export async function resetExpiredPlayerMissions(
   clerkUserId: string,
   now: Date,
@@ -293,5 +341,23 @@ export async function resetExpiredPlayerMissions(
   await db.transaction(async (tx) => {
     await lockPlayerProfile(tx, clerkUserId);
     await resetExpiredMissionsInTransaction(tx, clerkUserId, now);
+  });
+}
+
+/** A permanent experiment milestone buys one chosen Common; profile lock makes retries safe. */
+export async function claimExperimentCard(userId: string, cardId: string) {
+  if (!cardCatalog.some(c => c.catalogId === cardId && c.rarity === 'Common')) throw new PlayerRewardError('Choose a Common card', 400);
+  return db.transaction(async tx => {
+    await lockPlayerProfile(tx, userId);
+    const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+    if (!profile) throw new PlayerRewardError('Player not found', 404);
+    const progress = readCareer(profile.storyProgress.gameplay);
+    if (progress.choices.includes(cardId)) return false;
+    if (!availableCareerChoices(progress)) throw new PlayerRewardError('Complete an experiment milestone first', 409);
+    if (profile.ownedCardIds.includes(cardId)) throw new PlayerRewardError('You already own this card', 409);
+    const owned = [...profile.ownedCardIds, cardId];
+    await tx.update(playerProfilesTable).set({ ownedCardIds: owned, discoveredCardIds: [...new Set([...profile.discoveredCardIds, cardId])], collectionProgress: owned.length,
+      storyProgress: { ...profile.storyProgress, gameplay: { ...progress, choices: [...progress.choices, cardId] } } }).where(eq(playerProfilesTable.clerkUserId, userId));
+    return true;
   });
 }

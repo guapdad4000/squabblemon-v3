@@ -1,108 +1,252 @@
+import { GameGlyph } from '../../components/venue/GameGlyph';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'wouter';
-import { PlayerBootstrap } from '@workspace/api-client-react';
-import { getCardImage } from '../../data';
+import { getGetPlayerStoryQueryKey, useGetPlayerStory, type PlayerBootstrap } from '@workspace/api-client-react';
+import { ArrowRight, Layers, Moon, RotateCcw, Smartphone, Sun, Tv, Zap } from 'lucide-react';
+import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
+import { storyContent } from '@workspace/squabblemon-engine/story';
+import '../../styles/studio.css';
+import '../../styles/safehouse-stage.css';
+import type { SceneMessage } from '../../components/venue/SceneFrame';
+
+const stations = [
+  {
+    id: 'story',
+    icon: Tv,
+    glyph: 'story',
+    number: '01',
+    title: 'The streets',
+    subtitle: 'Your story. Your territory.',
+    action: 'Continue story',
+    href: '/game/story',
+    art: 'neighborhood-map',
+    portrait: 'rastamon',
+    color: '#ffcc1a',
+  },
+  {
+    id: 'training',
+    icon: Zap,
+    glyph: 'fight',
+    number: '02',
+    title: 'Heavy hitters',
+    subtitle: 'Your crew. Their problem.',
+    action: 'Challenge a friend',
+    href: '/game/online',
+    portrait: 'ganger-red',
+    color: '#fb4265',
+  },
+  {
+    id: 'cards',
+    icon: Layers,
+    glyph: 'crew',
+    number: '03',
+    title: 'The lineup',
+    subtitle: 'Every legend starts with a crew.',
+    action: 'Manage decks',
+    href: '/game/decks',
+    art: 'deck-stack',
+    portrait: 'og-uncle',
+    color: '#bd83ff',
+  },
+  {
+    id: 'phone',
+    icon: Smartphone,
+    glyph: 'bounty',
+    number: '04',
+    title: 'The hustle',
+    subtitle: 'Check in. Cash out.',
+    action: 'View bounties',
+    href: '/game/missions',
+    art: 'sticker-phone',
+    portrait: 'techbro-rich',
+    color: '#69b5ff',
+  },
+] as const;
 
 export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const { profile, missions, nextAction } = bootstrap;
+  const frame = useRef<HTMLIFrameElement>(null);
+  const landmarks = useRef<HTMLDivElement>(null);
+  const [sceneReady, setSceneReady] = useState(false);
+  const [selected, setSelected] = useState('room');
+  const [night, setNight] = useState(false);
+  const preview = bootstrap.profile.id === 'e2e-player';
+  const storyQuery = useGetPlayerStory({
+    query: { queryKey: getGetPlayerStoryQueryKey(), enabled: !preview },
+  });
+  const campaign = storyQuery.data;
+  const validCampaign = campaign && typeof campaign === 'object' && Array.isArray(campaign.chapters);
+  const chapter = validCampaign
+    ? (campaign.chapters.find((c) => c.status !== 'locked' && c.status !== 'cleared') ?? campaign.chapters.at(-1))
+    : undefined;
+  const activeStation = stations.find((station) => station.id === selected);
+  const claimed = bootstrap.missions.filter((mission) => mission.status === 'claimable').length;
 
+  const syncRoom = () => {
+    sendScene(frame, {
+      type: 'settings',
+      reducedMotion: bootstrap.profile.settings.reducedMotion,
+    });
+    const recommended = validCampaign
+      ? campaign.nodes.find((node) => node.nodeId === campaign.recommendedNodeId)
+      : undefined;
+    const battles = validCampaign
+      ? campaign.nodes.filter((node) => node.chapterId === chapter?.id && node.kind === 'battle')
+      : [];
+    sendScene(frame, {
+      type: 'story',
+      progress: {
+        demo: !validCampaign,
+        chapter: chapter?.order ?? 1,
+        totalChapters: validCampaign ? campaign.chapters.length : storyContent.chapters.length,
+        title: chapter?.title ?? storyContent.chapters[0]?.title ?? 'The block awaits',
+        completedChapters: validCampaign ? campaign.chapters.filter((c) => c.status === 'cleared').length : 0,
+        objective:
+          recommended?.title ??
+          (preview ? 'Preview save · explore your safehouse' : 'Connect to load campaign progress'),
+        wins: battles.filter((node) => node.status === 'cleared').length,
+        targetWins: battles.length || 1,
+      },
+    });
+  };
+  useEffect(syncRoom, [campaign, bootstrap.profile.settings.reducedMotion, preview]);
+  function focus(view: string) {
+    setSelected(view);
+    sendScene(frame, { type: 'view', view });
+  }
+
+  function receive(message: SceneMessage) {
+    if (message.type === 'view' && message.view) setSelected(message.view);
+    if (message.type === 'error') setSceneReady(false);
+    if (message.type === 'anchors' && Array.isArray(message.anchors)) {
+      for (const anchor of message.anchors) {
+        if (
+          !stations.some((station) => station.id === anchor.id) ||
+          !Number.isFinite(anchor.x) ||
+          !Number.isFinite(anchor.y)
+        )
+          continue;
+        const marker = landmarks.current?.querySelector<HTMLElement>(`[data-station="${anchor.id}"]`);
+        if (marker) {
+          marker.style.left = `${anchor.x}%`;
+          marker.style.top = `${anchor.y}%`;
+          marker.style.visibility = anchor.visible ? 'visible' : 'hidden';
+        }
+      }
+    }
+  }
   return (
-    <div className="p-4 md:p-6 pb-24 space-y-5 h-full overflow-y-auto hide-scrollbar">
-      <header className="flex justify-between items-end">
-        <div>
-          <div className="font-mono text-[10px] text-white/50 uppercase tracking-widest mb-1">Level {profile.level}</div>
-          <h1 className="font-display font-black italic text-3xl uppercase leading-none">{profile.displayName}</h1>
-        </div>
-        <div className="text-right">
-          <div className="font-mono text-[9px] text-primary uppercase tracking-widest mb-1">Street Rep</div>
-          <div className="font-display font-black text-2xl leading-none">{profile.streetRep}</div>
-        </div>
-      </header>
-
-      <div className="flex gap-2 font-mono text-[10px] tracking-wider">
-        <div className="bg-white/5 border border-white/10 px-3 py-2 flex-1 flex justify-between uppercase">
-          <span className="text-white/50">Soft</span>
-          <span className="text-white">{profile.softCurrency}</span>
-        </div>
-        <div className="bg-white/5 border border-white/10 px-3 py-2 flex-1 flex justify-between uppercase">
-          <span className="text-white/50">Tickets</span>
-          <span className="text-white">{profile.packTickets}</span>
-        </div>
-      </div>
-
-      <section className="relative min-h-52 md:min-h-64 border border-white/10 overflow-hidden bg-[radial-gradient(circle_at_78%_30%,rgba(250,204,21,.2),transparent_45%),linear-gradient(135deg,#211b06,#090909_58%)]">
-        <img
-          src={getCardImage(profile.avatarKey)}
-          alt=""
-          aria-hidden="true"
-          className="absolute right-[-8%] md:right-[4%] bottom-[-12%] h-[118%] w-[62%] object-contain object-bottom drop-shadow-[0_20px_25px_rgba(0,0,0,.8)]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/35 to-transparent" />
-        <div className="relative z-10 p-5 flex flex-col items-start justify-end min-h-52 md:min-h-64 max-w-sm">
-          <div className="font-mono text-[9px] text-primary uppercase tracking-[.2em] mb-2">Rookie Road</div>
-          <h2 className="font-display font-black italic text-3xl md:text-5xl uppercase leading-none mb-3">Street Story</h2>
-          <p className="text-xs md:text-sm text-white/65 mb-5">Move through the neighborhood conflicts and make a name for yourself.</p>
-          <div className="flex gap-3 w-full">
-            <Link href="/game/story" className="flex-1 text-center bg-primary text-black px-4 py-3 font-display font-black italic uppercase shadow-[0_4px_0_#854d0e] active:translate-y-1 active:shadow-none">
-              Enter Story
-            </Link>
-            <Link href="/game/play" className="flex-1 text-center bg-black/50 border border-white/20 text-white px-4 py-3 font-display font-black italic uppercase hover:bg-white/10 active:translate-y-1">
-              XP Training
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="font-mono text-[10px] text-white/40 uppercase tracking-widest mb-3">Up Next</div>
-        <Link href={`/game/${nextAction.destination === 'play' ? 'play' : nextAction.destination}`} className="block relative bg-primary/10 border border-primary p-5 hover:bg-primary/20 transition-all active:scale-[0.98]" style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
-          <div className="absolute top-0 right-0 p-3 opacity-20 pointer-events-none">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-          <div className="font-mono text-[9px] text-primary uppercase tracking-widest mb-1">{nextAction.eyebrow}</div>
-          <h2 className="font-display font-black italic text-2xl uppercase mb-2">{nextAction.title}</h2>
-          <p className="text-sm text-white/70">{nextAction.description}</p>
-          {nextAction.rewardLabel && (
-            <div className="mt-4 inline-block px-2 py-1 bg-primary text-black font-mono text-[9px] uppercase font-bold">
-              Reward: {nextAction.rewardLabel}
-            </div>
-          )}
+    <div
+      className="safehouse venue-page studio-page safehouse-stage"
+      data-view={selected}
+      data-scene-ready={sceneReady}
+    >
+      <SceneFrame
+        kind="safehouse"
+        frameRef={frame}
+        poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
+        onReady={() => {
+          setSceneReady(true);
+          syncRoom();
+        }}
+        onMessage={receive}
+      />
+      <div className="safehouse__shade" />
+      <div className="safehouse__heading">
+        <span className="studio-eyebrow">Your home court</span>
+        <h1>
+          THE
+          <br />
+          <em>SAFEHOUSE</em>
+        </h1>
+        <p>
+          Out there, earn your name.
+          <br />
+          In here, build your legacy.
+        </p>
+        <Link href="/game/play" className="studio-action studio-action--gold">
+          Run the block
+          <ArrowRight size={16} />
         </Link>
-      </section>
-
-      <section className="grid grid-cols-2 md:grid-cols-5 gap-2">
-        {[
-          ['/game/play', 'Training', 'Card XP vs CPU'],
-          ['/game/story', 'Story', `Chapter ${profile.storyChapter || 1}`],
-          ['/game/collection', 'Collection', `${profile.ownedCardIds.length} cards`],
-          ['/game/missions', 'Missions', `${missions.filter((mission) => mission.status === 'claimable').length} ready`],
-          ['/game/shop', 'Street Shop', `${profile.packTickets} tickets`],
-        ].map(([href, title, detail]) => (
-          <Link key={href} href={href} className="min-h-24 bg-white/5 border border-white/10 p-3 flex flex-col justify-end hover:border-primary/60 hover:bg-primary/5 transition-colors">
-            <div className="font-display font-black italic uppercase text-lg leading-none">{title}</div>
-            <div className="font-mono text-[8px] text-primary uppercase tracking-widest mt-2">{detail}</div>
-          </Link>
+      </div>
+      <div className="safehouse__tools">
+        <button
+          className="studio-icon"
+          aria-label={night ? 'Switch to golden hour' : 'Switch to late night'}
+          title={night ? 'Golden hour' : 'Late night'}
+          onClick={() => {
+            setNight(!night);
+            sendScene(frame, { type: 'light', night: !night });
+          }}
+        >
+          {night ? <Moon size={17} /> : <Sun size={17} />}
+        </button>
+        <button
+          className="studio-icon"
+          aria-label="Reset room camera"
+          title="Reset camera"
+          onClick={() => focus('room')}
+        >
+          <RotateCcw size={17} />
+        </button>
+      </div>
+      <div
+        ref={landmarks}
+        className="safehouse-stage__landmarks"
+        aria-label="Room landmarks"
+        hidden={selected !== 'room' || !sceneReady}
+      >
+        {stations.map((station) => (
+          <button
+            key={station.id}
+            data-station={station.id}
+            style={{ '--station-color': station.color } as CSSProperties}
+            aria-label={`Inspect ${station.title}`}
+            onClick={() => focus(station.id)}
+          >
+            <station.icon size={17} />
+            <span>{station.title}</span>
+          </button>
         ))}
-      </section>
-
-      <section>
-         <div className="flex justify-between items-end mb-3">
-           <div className="font-mono text-[10px] text-white/40 uppercase tracking-widest">Active Missions</div>
-           <Link href="/game/missions" className="font-mono text-[9px] text-primary uppercase tracking-widest hover:underline">View All</Link>
-         </div>
-         <div className="space-y-2">
-           {missions.slice(0, 3).map(m => (
-             <div key={m.id} className="bg-black border border-white/10 p-3 flex justify-between items-center">
-                <div>
-                  <div className="font-display font-bold uppercase text-sm">{m.title}</div>
-                  <div className="font-mono text-[9px] text-white/40 uppercase mt-0.5">{m.progress} / {m.goal}</div>
-                </div>
-                {m.status === 'claimable' && (
-                  <Link href="/game/missions" className="px-3 py-1.5 bg-accent text-white font-mono text-[9px] uppercase tracking-widest">Claim</Link>
-                )}
-             </div>
-           ))}
-         </div>
-      </section>
+      </div>
+      <div className="safehouse-stage__bottom">
+        {activeStation ? (
+          <div className="safehouse-stage__detail" style={{ '--station-color': activeStation.color } as CSSProperties}>
+            <div>
+              <span className="studio-eyebrow">Station {activeStation.number}</span>
+              <h2>{activeStation.title}</h2>
+              <p>{activeStation.subtitle}</p>
+            </div>
+            <Link href={activeStation.href} className="studio-action studio-action--gold">
+              {activeStation.action}
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+        ) : (
+          <div className="safehouse-stage__hint">
+            <span>Drag to explore. Choose a station.</span>
+            {claimed > 0 && (
+              <Link href="/game/missions">
+                {claimed} bounties ready
+                <ArrowRight size={12} />
+              </Link>
+            )}
+          </div>
+        )}
+        <nav className="safehouse-stage__stations" aria-label="Safehouse stations">
+          {stations.map((station) => (
+            <button
+              key={station.id}
+              aria-pressed={selected === station.id}
+              style={{ '--station-color': station.color } as CSSProperties}
+              onClick={() => focus(station.id)}
+            >
+              <GameGlyph name={station.glyph} />
+              <span>{station.title}</span>
+              <i />
+            </button>
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,475 @@
+[
+  {
+    "path": "01_SCRIPT/INTEGRATION_HANDOFF.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/INTEGRATION_HANDOFF.md"
+  },
+  {
+    "path": "01_SCRIPT/README.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/README.md"
+  },
+  {
+    "path": "01_SCRIPT/STORY_BIBLE.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/STORY_BIBLE.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/alley-runner.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/alley-runner.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/baby-momma.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/baby-momma.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/cornball.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/cornball.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/cracked-head.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/cracked-head.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/ganger-blue.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/ganger-blue.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/ganger-red.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/ganger-red.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/og-uncle.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/og-uncle.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/snitch.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/snitch.md"
+  },
+  {
+    "path": "01_SCRIPT/character-bible/wifey.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/character-bible/wifey.md"
+  },
+  {
+    "path": "01_SCRIPT/season-1/season-arc.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/season-1/season-arc.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/chapter-1-block-party.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/chapter-1-block-party.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/CHAPTER_ONE_READTHROUGH.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/CHAPTER_ONE_READTHROUGH.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/01-welcome-to-the-block.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/01-welcome-to-the-block.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/02-blue-side-pressure.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/02-blue-side-pressure.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/03-receipts-on-camera.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/03-receipts-on-camera.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/04-red-side-retaliation.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/04-red-side-retaliation.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/05-side-alley-challenge.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/05-side-alley-challenge.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/06-snitch-at-the-corner.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/06-snitch-at-the-corner.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/07-cracked-head-takes-the-block.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/07-cracked-head-takes-the-block.md"
+  },
+  {
+    "path": "01_SCRIPT/chapters/block-party/scenes/08-block-crowned.md",
+    "role": "revised screenplay / continuity",
+    "notes": "",
+    "source": "artifacts/squabblemon/scripts/story/chapters/block-party/scenes/08-block-crowned.md"
+  },
+  {
+    "path": "02_CHARACTER_ART/ganger-blue.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/ganger-blue.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/ganger-red.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/ganger-red.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/cracked-head.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/cracked-head.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/snitch.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/snitch.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/cornball.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/cornball.webp",
+    "width": 768,
+    "height": 1024,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/wifey.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/wifey.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/baby-momma.webp",
+    "role": "current game character reference",
+    "notes": "Existing identity reference; new animation poses are not included.",
+    "source": "artifacts/squabblemon/public/assets/characters/baby-momma.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "02_CHARACTER_ART/og-uncle.webp",
+    "role": "current game character reference",
+    "notes": "Future-season continuity only; no Chapter One speaking scene.",
+    "source": "artifacts/squabblemon/public/assets/characters/og-uncle.webp",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      254
+    ]
+  },
+  {
+    "path": "03_BACKGROUNDS/ACTUAL_STORY_BATTLE/corner-store-court.webp",
+    "role": "actual story battle background",
+    "notes": "Exact current storyEncounter battlefield reference. Tall gameplay composition; not an eye-level cinematic plate.",
+    "source": "artifacts/squabblemon/public/assets/venues/corner-store-court.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/ACTUAL_STORY_BATTLE/harbor-skyline-court.webp",
+    "role": "actual story battle background",
+    "notes": "Exact current storyEncounter battlefield reference. Tall gameplay composition; not an eye-level cinematic plate.",
+    "source": "artifacts/squabblemon/public/assets/venues/harbor-skyline-court.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/ACTUAL_STORY_BATTLE/red-fence-night-court.webp",
+    "role": "actual story battle background",
+    "notes": "Exact current storyEncounter battlefield reference. Tall gameplay composition; not an eye-level cinematic plate.",
+    "source": "artifacts/squabblemon/public/assets/venues/red-fence-night-court.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/ACTUAL_STORY_BATTLE/civic-hill-climb.webp",
+    "role": "actual story battle background",
+    "notes": "Exact current storyEncounter battlefield reference. Tall gameplay composition; not an eye-level cinematic plate.",
+    "source": "artifacts/squabblemon/public/assets/venues/civic-hill-climb.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/ACTUAL_STORY_BATTLE/crown-rooftop-court.webp",
+    "role": "actual story battle background",
+    "notes": "Exact current storyEncounter battlefield reference. Tall gameplay composition; not an eye-level cinematic plate.",
+    "source": "artifacts/squabblemon/public/assets/venues/crown-rooftop-court.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/corner-store.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-02178882191724899a3f43520201fc0164769d66e52699fad56fc_1788821990245_7f417eb3.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/moon-rooftop.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788818565066a491eea4a025beb52fc51c9506f8c2b2bb87c7_1788818638291_442a3ecf.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/red-court.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788821205295dc50f194675e1cbc6bc0c2210aaea0b0282342_1788821277304_b357e54e.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/civic-summit.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788820957499d5288a603f9a5ec332174783e04745d2d44798_1788821037749_35ecf94e.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/crown-court.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788818321533f2dfc9d17a425ad03ee233374d263661182f0c_1788818389013_7fc26450.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/gold-alley.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788818553964c2670fe791a5f29d61bdea8e0ada6c5d43fb7c_1788818635282_725549fc.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/red-alley.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-021788821270248d82d61e1341a38f1d55b18f5893f198be5f1ba_1788821342493_37855e0e.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/sunset-block.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-0217888182572493c1f91f892e9aff2a902d86b047fe242ecd35d_1788818311188_d7cdae7b.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "03_BACKGROUNDS/LANDSCAPE_WALLPAPERS/festival-street.png",
+    "role": "original landscape wallpaper / cinematic look reference",
+    "notes": "Original supplied PNG; not upscaled. Composition differs from the actual story battle plate. Relight/restage for the shot brief; do not treat as an exact matching reverse angle.",
+    "source": "openart-02178882145925377dd13f2098096eba9569e39b59e750cc80b2c_1788821531707_c0296703.png",
+    "width": 1424,
+    "height": 800,
+    "mode": "RGB"
+  },
+  {
+    "path": "04_PROP_REFERENCES/deck-stack.webp",
+    "role": "existing prop design reference",
+    "notes": "",
+    "source": "artifacts/squabblemon/public/assets/props/deck-stack.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "04_PROP_REFERENCES/portable-speaker.webp",
+    "role": "existing prop design reference",
+    "notes": "The chain is not the scripted plastic Crown; speaker is not an air fryer. Preserve distinction.",
+    "source": "artifacts/squabblemon/public/assets/props/portable-speaker.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "04_PROP_REFERENCES/sticker-phone.webp",
+    "role": "existing prop design reference",
+    "notes": "",
+    "source": "artifacts/squabblemon/public/assets/props/sticker-phone.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "04_PROP_REFERENCES/championship-chain.webp",
+    "role": "existing prop design reference",
+    "notes": "The chain is not the scripted plastic Crown; speaker is not an air fryer. Preserve distinction.",
+    "source": "artifacts/squabblemon/public/assets/props/championship-chain.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "04_PROP_REFERENCES/foil-pack.webp",
+    "role": "existing prop design reference",
+    "notes": "",
+    "source": "artifacts/squabblemon/public/assets/props/foil-pack.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "04_PROP_REFERENCES/neighborhood-map.webp",
+    "role": "existing prop design reference",
+    "notes": "",
+    "source": "artifacts/squabblemon/public/assets/props/neighborhood-map.webp",
+    "width": 768,
+    "height": 768,
+    "mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "00_START_HERE/cast-contact-sheet.jpg",
+    "role": "labeled inspection thumbnails",
+    "notes": "Preview only. Animate from the full-resolution files. Props preview includes a collection-box reference not needed in this chapter.",
+    "source": "artifacts/video-handoff-audit/cast.jpg",
+    "width": 1280,
+    "height": 720,
+    "mode": "RGB"
+  },
+  {
+    "path": "00_START_HERE/landscape-backgrounds-contact-sheet.jpg",
+    "role": "labeled inspection thumbnails",
+    "notes": "Preview only. Animate from the full-resolution files. Props preview includes a collection-box reference not needed in this chapter.",
+    "source": "artifacts/video-handoff-audit/landscape-backgrounds.jpg",
+    "width": 1080,
+    "height": 735,
+    "mode": "RGB"
+  },
+  {
+    "path": "00_START_HERE/props-contact-sheet.jpg",
+    "role": "labeled inspection thumbnails",
+    "notes": "Preview only. Animate from the full-resolution files. Props preview includes a collection-box reference not needed in this chapter.",
+    "source": "artifacts/video-handoff-audit/props.jpg",
+    "width": 1080,
+    "height": 735,
+    "mode": "RGB"
+  }
+]

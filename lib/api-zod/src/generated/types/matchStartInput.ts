@@ -9,10 +9,20 @@ import type { MatchStartInputMode } from './matchStartInputMode';
 
 export interface MatchStartInput {
   mode: MatchStartInputMode;
-  /** @maxLength 32 */
+  /** @maxLength 80 */
   playerDeckId: string;
   /** @maxLength 32 */
   rivalDeckId: string;
   /** @maxLength 80 */
   storyNodeId?: string;
+  /** @maxLength 24 */
+  activity?: string;
+  /** @maxLength 10 */
+  draftWeek?: string;
+  /**
+     * @minItems 10
+     * @maxItems 10
+     * @items.maxLength 64
+     */
+  draftPicks?: string[];
 }

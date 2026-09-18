@@ -13,7 +13,7 @@ export interface SaveDeckInput {
      */
   name: string;
   /**
-     * @maxItems 7
+     * @maxItems 10
      * @items.maxLength 64
      */
   cardIds: string[];

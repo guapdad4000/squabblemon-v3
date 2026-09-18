@@ -19,6 +19,9 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary Load or provision the authenticated player
  */
+export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMin = 0;
+export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMax = 3;
+
 export const getPlayerBootstrapResponseProfileCardProgressionXpMin = 0;
 
 export const getPlayerBootstrapResponseProfileCardProgressionLevelMax = 10;
@@ -54,6 +57,7 @@ export const GetPlayerBootstrapResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(getPlayerBootstrapResponseProfileCardProgressionMoveTierMin).max(getPlayerBootstrapResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(getPlayerBootstrapResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(getPlayerBootstrapResponseProfileCardProgressionLevelMax)
 })),
@@ -61,6 +65,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -171,7 +176,7 @@ export const GetPlayerStoryResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -233,7 +238,7 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -280,6 +285,9 @@ export const CompletePlayerStoryNodeBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryNodeBodyDialogueSeenItemMax)).max(completePlayerStoryNodeBodyDialogueSeenMax)
 })
 
+export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax = 10;
@@ -317,7 +325,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -365,6 +373,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMin).max(completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax)
 })),
@@ -372,6 +381,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -449,7 +459,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
 }),
   "rewards": zod.array(zod.object({
   "rewardKey": zod.string(),
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number(),
   "duplicateShards": zod.number(),
@@ -484,6 +494,9 @@ export const SavePlayerStoryDialogueBody = zod.object({
   "idempotencyKey": zod.string().min(savePlayerStoryDialogueBodyIdempotencyKeyMin).max(savePlayerStoryDialogueBodyIdempotencyKeyMax),
   "dialogueSeen": zod.array(zod.string().max(savePlayerStoryDialogueBodyDialogueSeenItemMax)).max(savePlayerStoryDialogueBodyDialogueSeenMax)
 })
+
+export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin = 0;
 
@@ -522,7 +535,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -570,6 +583,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMin).max(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(savePlayerStoryDialogueResponseBootstrapProfileCardProgressionLevelMax)
 })),
@@ -577,6 +591,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -665,7 +680,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -699,6 +714,9 @@ export const UpdatePlayerProfileBody = zod.object({
   "reducedMotion": zod.boolean().optional(),
   "turnTimerEnabled": zod.boolean().optional()
 })
+
+export const updatePlayerProfileResponseProfileCardProgressionMoveTierMin = 0;
+export const updatePlayerProfileResponseProfileCardProgressionMoveTierMax = 3;
 
 export const updatePlayerProfileResponseProfileCardProgressionXpMin = 0;
 
@@ -735,6 +753,7 @@ export const UpdatePlayerProfileResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(updatePlayerProfileResponseProfileCardProgressionMoveTierMin).max(updatePlayerProfileResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(updatePlayerProfileResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(updatePlayerProfileResponseProfileCardProgressionLevelMax)
 })),
@@ -742,6 +761,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -837,6 +857,9 @@ export const AdvancePlayerOnboardingBody = zod.object({
   "starterDeckId": zod.string().max(advancePlayerOnboardingBodyStarterDeckIdMax).optional()
 })
 
+export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMin = 0;
+export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMax = 3;
+
 export const advancePlayerOnboardingResponseProfileCardProgressionXpMin = 0;
 
 export const advancePlayerOnboardingResponseProfileCardProgressionLevelMax = 10;
@@ -872,6 +895,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(advancePlayerOnboardingResponseProfileCardProgressionMoveTierMin).max(advancePlayerOnboardingResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(advancePlayerOnboardingResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(advancePlayerOnboardingResponseProfileCardProgressionLevelMax)
 })),
@@ -879,6 +903,142 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+
+
+/**
+ * @summary Spend one earned experiment choice on an unowned Common
+ */
+export const claimExperimentCardBodyCardIdMax = 64;
+
+
+
+export const ClaimExperimentCardBody = zod.object({
+  "cardId": zod.string().max(claimExperimentCardBodyCardIdMax)
+})
+
+export const claimExperimentCardResponseProfileCardProgressionMoveTierMin = 0;
+export const claimExperimentCardResponseProfileCardProgressionMoveTierMax = 3;
+
+export const claimExperimentCardResponseProfileCardProgressionXpMin = 0;
+
+export const claimExperimentCardResponseProfileCardProgressionLevelMax = 10;
+
+
+
+export const ClaimExperimentCardResponse = zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(claimExperimentCardResponseProfileCardProgressionMoveTierMin).max(claimExperimentCardResponseProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(claimExperimentCardResponseProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(claimExperimentCardResponseProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -959,11 +1119,20 @@ export const AdvancePlayerOnboardingResponse = zod.object({
 /**
  * @summary Issue a server match session before local play starts
  */
-export const startPlayerMatchBodyPlayerDeckIdMax = 32;
+export const startPlayerMatchBodyPlayerDeckIdMax = 80;
 
 export const startPlayerMatchBodyRivalDeckIdMax = 32;
 
 export const startPlayerMatchBodyStoryNodeIdMax = 80;
+
+export const startPlayerMatchBodyActivityMax = 24;
+
+export const startPlayerMatchBodyDraftWeekMax = 10;
+
+export const startPlayerMatchBodyDraftPicksItemMax = 64;
+
+export const startPlayerMatchBodyDraftPicksMin = 10;
+export const startPlayerMatchBodyDraftPicksMax = 10;
 
 
 
@@ -971,10 +1140,19 @@ export const StartPlayerMatchBody = zod.object({
   "mode": zod.enum(['practice', 'tutorial', 'story']),
   "playerDeckId": zod.string().max(startPlayerMatchBodyPlayerDeckIdMax),
   "rivalDeckId": zod.string().max(startPlayerMatchBodyRivalDeckIdMax),
-  "storyNodeId": zod.string().max(startPlayerMatchBodyStoryNodeIdMax).optional()
+  "storyNodeId": zod.string().max(startPlayerMatchBodyStoryNodeIdMax).optional(),
+  "activity": zod.string().max(startPlayerMatchBodyActivityMax).optional(),
+  "draftWeek": zod.string().max(startPlayerMatchBodyDraftWeekMax).optional(),
+  "draftPicks": zod.array(zod.string().max(startPlayerMatchBodyDraftPicksItemMax)).min(startPlayerMatchBodyDraftPicksMin).max(startPlayerMatchBodyDraftPicksMax).optional()
 })
 
 export const startPlayerMatchResponseIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMin = 0;
+export const startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMax = 3;
+
+
+export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMin = 0;
+export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMax = 3;
 
 
 
@@ -989,14 +1167,17 @@ export const StartPlayerMatchResponse = zod.object({
   "storyNodeId": zod.string().nullable(),
   "contentVersion": zod.number().nullable(),
   "encounterSnapshot": zod.record(zod.string(), zod.unknown()).nullable(),
+  "districtSnapshot": zod.record(zod.string(), zod.unknown()).optional().describe('Immutable server-issued district definitions for this match.'),
   "abilityUpgradeSnapshot": zod.object({
   "version": zod.literal(1),
   "player": zod.array(zod.object({
+  "moveTier": zod.number().min(startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMin).max(startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMax).optional(),
   "cardId": zod.string(),
   "level": zod.number().min(1),
   "upgradeIds": zod.array(zod.string())
 })),
   "cpu": zod.array(zod.object({
+  "moveTier": zod.number().min(startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMin).max(startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMax).optional(),
   "cardId": zod.string(),
   "level": zod.number().min(1),
   "upgradeIds": zod.array(zod.string())
@@ -1019,7 +1200,7 @@ export const completePlayerMatchBodyMovesItemLaneMin = 0;
 export const completePlayerMatchBodyMovesItemLaneMax = 2;
 
 export const completePlayerMatchBodyMovesMin = 6;
-export const completePlayerMatchBodyMovesMax = 6;
+export const completePlayerMatchBodyMovesMax = 64;
 
 
 
@@ -1027,9 +1208,13 @@ export const CompletePlayerMatchBody = zod.object({
   "moves": zod.array(zod.object({
   "cardInstanceId": zod.string().nullable(),
   "lane": zod.number().min(completePlayerMatchBodyMovesItemLaneMin).max(completePlayerMatchBodyMovesItemLaneMax).nullable(),
-  "squabble": zod.boolean()
+  "squabble": zod.boolean(),
+  "endTurn": zod.boolean().optional().describe('False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.')
 })).min(completePlayerMatchBodyMovesMin).max(completePlayerMatchBodyMovesMax)
 })
+
+export const completePlayerMatchResponseProfileCardProgressionMoveTierMin = 0;
+export const completePlayerMatchResponseProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerMatchResponseProfileCardProgressionXpMin = 0;
 
@@ -1066,6 +1251,7 @@ export const CompletePlayerMatchResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(completePlayerMatchResponseProfileCardProgressionMoveTierMin).max(completePlayerMatchResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(completePlayerMatchResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(completePlayerMatchResponseProfileCardProgressionLevelMax)
 })),
@@ -1073,6 +1259,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1134,7 +1321,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "descriptions": zod.array(zod.string()),
   "storyRewards": zod.array(zod.object({
   "rewardKey": zod.string(),
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number(),
   "duplicateShards": zod.number(),
@@ -1180,7 +1367,7 @@ export const CompletePlayerMatchResponse = zod.object({
 }),
   "prerequisites": zod.array(zod.string()),
   "rewards": zod.array(zod.object({
-  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic']),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
   "id": zod.string(),
   "amount": zod.number()
 })),
@@ -1226,7 +1413,7 @@ export const savePlayerDeckBodyNameMax = 32;
 
 export const savePlayerDeckBodyCardIdsItemMax = 64;
 
-export const savePlayerDeckBodyCardIdsMax = 7;
+export const savePlayerDeckBodyCardIdsMax = 10;
 
 export const savePlayerDeckBodyHeroCardIdMax = 64;
 
@@ -1240,6 +1427,9 @@ export const SavePlayerDeckBody = zod.object({
   "heroCardId": zod.string().max(savePlayerDeckBodyHeroCardIdMax),
   "recipeId": zod.string().max(savePlayerDeckBodyRecipeIdMax).nullable()
 })
+
+export const savePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
+export const savePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
@@ -1276,6 +1466,7 @@ export const SavePlayerDeckResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(savePlayerDeckResponseProfileCardProgressionMoveTierMin).max(savePlayerDeckResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(savePlayerDeckResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(savePlayerDeckResponseProfileCardProgressionLevelMax)
 })),
@@ -1283,6 +1474,7 @@ export const SavePlayerDeckResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1372,6 +1564,9 @@ export const DeletePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(deletePlayerDeckPathDeckIdMin).max(deletePlayerDeckPathDeckIdMax)
 })
 
+export const deletePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
+export const deletePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
+
 export const deletePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
 export const deletePlayerDeckResponseProfileCardProgressionLevelMax = 10;
@@ -1407,6 +1602,7 @@ export const DeletePlayerDeckResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(deletePlayerDeckResponseProfileCardProgressionMoveTierMin).max(deletePlayerDeckResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(deletePlayerDeckResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(deletePlayerDeckResponseProfileCardProgressionLevelMax)
 })),
@@ -1414,6 +1610,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1504,6 +1701,9 @@ export const OpenPlayerPackBody = zod.object({
   "paymentMethod": zod.enum(['ticket', 'softCurrency'])
 })
 
+export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
 export const openPlayerPackResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionLevelMax = 10;
@@ -1540,6 +1740,7 @@ export const OpenPlayerPackResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMin).max(openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(openPlayerPackResponseBootstrapProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(openPlayerPackResponseBootstrapProfileCardProgressionLevelMax)
 })),
@@ -1547,6 +1748,7 @@ export const OpenPlayerPackResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1658,6 +1860,9 @@ export const CraftPlayerVariantBody = zod.object({
   "variantId": zod.string().max(craftPlayerVariantBodyVariantIdMax)
 })
 
+export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax = 10;
@@ -1694,6 +1899,7 @@ export const CraftPlayerVariantResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMin).max(craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax)
 })),
@@ -1701,6 +1907,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1794,6 +2001,9 @@ export const EquipPlayerVariantBody = zod.object({
   "variantId": zod.string().max(equipPlayerVariantBodyVariantIdMax).nullable()
 })
 
+export const equipPlayerVariantResponseProfileCardProgressionMoveTierMin = 0;
+export const equipPlayerVariantResponseProfileCardProgressionMoveTierMax = 3;
+
 export const equipPlayerVariantResponseProfileCardProgressionXpMin = 0;
 
 export const equipPlayerVariantResponseProfileCardProgressionLevelMax = 10;
@@ -1829,6 +2039,7 @@ export const EquipPlayerVariantResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(equipPlayerVariantResponseProfileCardProgressionMoveTierMin).max(equipPlayerVariantResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(equipPlayerVariantResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(equipPlayerVariantResponseProfileCardProgressionLevelMax)
 })),
@@ -1836,6 +2047,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -1925,6 +2137,9 @@ export const ClaimCollectionRoadMilestoneParams = zod.object({
   "milestoneId": zod.coerce.string().min(claimCollectionRoadMilestonePathMilestoneIdMin).max(claimCollectionRoadMilestonePathMilestoneIdMax)
 })
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax = 10;
@@ -1961,6 +2176,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax)
 })),
@@ -1968,6 +2184,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -2061,6 +2278,9 @@ export const ClaimPlayerMissionParams = zod.object({
   "missionId": zod.coerce.string()
 })
 
+export const claimPlayerMissionResponseProfileCardProgressionMoveTierMin = 0;
+export const claimPlayerMissionResponseProfileCardProgressionMoveTierMax = 3;
+
 export const claimPlayerMissionResponseProfileCardProgressionXpMin = 0;
 
 export const claimPlayerMissionResponseProfileCardProgressionLevelMax = 10;
@@ -2096,6 +2316,7 @@ export const ClaimPlayerMissionResponse = zod.object({
 }),
   "ownedCardIds": zod.array(zod.string()),
   "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(claimPlayerMissionResponseProfileCardProgressionMoveTierMin).max(claimPlayerMissionResponseProfileCardProgressionMoveTierMax).optional(),
   "xp": zod.number().min(claimPlayerMissionResponseProfileCardProgressionXpMin),
   "level": zod.number().min(1).max(claimPlayerMissionResponseProfileCardProgressionLevelMax)
 })),
@@ -2103,6 +2324,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "ownedVariants": zod.array(zod.string()),
   "equippedVariants": zod.record(zod.string(), zod.string()),
   "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
   "savedDecks": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
@@ -2177,6 +2399,311 @@ export const ClaimPlayerMissionResponse = zod.object({
   "cardId": zod.string().nullable(),
   "status": zod.enum(['locked', 'claimable', 'claimed'])
 }))
+})
+
+
+/**
+ * @summary List earned-currency shop offers
+ */
+export const GetPlayerShopResponse = zod.record(zod.string(), zod.unknown())
+
+
+/**
+ * @summary Purchase training, move coaching, recruits, tickets, slots, or styles
+ */
+export const purchasePlayerShopItemBodyIdempotencyKeyRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
+export const purchasePlayerShopItemBodyCardIdMax = 100;
+
+
+
+export const PurchasePlayerShopItemBody = zod.object({
+  "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
+  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style']),
+  "cardId": zod.string().min(1).max(purchasePlayerShopItemBodyCardIdMax).optional()
+})
+
+export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
+export const PurchasePlayerShopItemResponse = zod.object({
+  "receipt": zod.object({
+  "itemId": zod.string(),
+  "cardId": zod.string().nullable(),
+  "cost": zod.number(),
+  "currency": zod.enum(['softCurrency', 'styleShards']),
+  "summary": zod.string()
+}),
+  "alreadyPurchased": zod.boolean(),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMin).max(purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(purchasePlayerShopItemResponseBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+})
+
+
+/**
+ * @summary Redeem a promo code once per signed-in account
+ */
+export const redeemPlayerPromoCodeBodyCodeMax = 64;
+
+
+
+export const RedeemPlayerPromoCodeBody = zod.object({
+  "code": zod.string().min(1).max(redeemPlayerPromoCodeBodyCodeMax)
+})
+
+export const redeemPlayerPromoCodeResponseReceiptPackTicketsMin = 0;
+
+export const redeemPlayerPromoCodeResponseReceiptSoftCurrencyMin = 0;
+
+export const redeemPlayerPromoCodeResponseReceiptStyleShardsMin = 0;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionXpMin = 0;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
+export const RedeemPlayerPromoCodeResponse = zod.object({
+  "receipt": zod.object({
+  "code": zod.string(),
+  "packTickets": zod.number().min(redeemPlayerPromoCodeResponseReceiptPackTicketsMin),
+  "softCurrency": zod.number().min(redeemPlayerPromoCodeResponseReceiptSoftCurrencyMin),
+  "styleShards": zod.number().min(redeemPlayerPromoCodeResponseReceiptStyleShardsMin),
+  "cardIds": zod.array(zod.string()).optional()
+}),
+  "alreadyRedeemed": zod.boolean(),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMin).max(redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
 })
 
 

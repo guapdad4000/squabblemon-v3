@@ -5,44 +5,23 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
-export interface HealthStatus {
-  status: string;
+export interface PromoCodeInput {
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  code: string;
 }
 
-export interface PlayerSettings {
-  reducedMotion: boolean;
-  turnTimerEnabled: boolean;
-}
-
-export interface SavedDeck {
-  id: string;
-  name: string;
-  cardIds: string[];
-  heroCardId: string;
-  /** @nullable */
-  recipeId: string | null;
-  valid: boolean;
-  issues: string[];
-}
-
-export interface SaveDeckInput {
-  /**
-     * @minLength 2
-     * @maxLength 32
-     */
-  name: string;
-  /**
-     * @maxItems 7
-     * @items.maxLength 64
-     */
-  cardIds: string[];
-  /** @maxLength 64 */
-  heroCardId: string;
-  /**
-     * @maxLength 32
-     * @nullable
-     */
-  recipeId: string | null;
+export interface PromoCodeReceipt {
+  code: string;
+  /** @minimum 0 */
+  packTickets: number;
+  /** @minimum 0 */
+  softCurrency: number;
+  /** @minimum 0 */
+  styleShards: number;
+  cardIds?: string[];
 }
 
 export type PlayerProfileOnboardingStep = typeof PlayerProfileOnboardingStep[keyof typeof PlayerProfileOnboardingStep];
@@ -56,7 +35,17 @@ export const PlayerProfileOnboardingStep = {
   complete: 'complete',
 } as const;
 
+export interface PlayerSettings {
+  reducedMotion: boolean;
+  turnTimerEnabled: boolean;
+}
+
 export interface CardProgress {
+  /**
+     * @minimum 0
+     * @maximum 3
+     */
+  moveTier?: number;
   /** @minimum 0 */
   xp: number;
   /**
@@ -66,13 +55,16 @@ export interface CardProgress {
   level: number;
 }
 
-export type PlayerProfileCardProgression = {[key: string]: CardProgress};
-
-export type PlayerProfileEquippedVariants = {[key: string]: string};
-
-export type PlayerProfileStoryProgress = { [key: string]: unknown };
-
-export type PlayerProfileInboxItem = { [key: string]: unknown };
+export interface SavedDeck {
+  id: string;
+  name: string;
+  cardIds: string[];
+  heroCardId: string;
+  /** @nullable */
+  recipeId: string | null;
+  valid: boolean;
+  issues: string[];
+}
 
 export type PackOpeningPaymentMethod = typeof PackOpeningPaymentMethod[keyof typeof PackOpeningPaymentMethod];
 
@@ -111,11 +103,20 @@ export interface PackOpening {
   oddsVersion: string;
   paymentMethod: PackOpeningPaymentMethod;
   cost: number;
+  pullCount: number;
   rewards: PackReward[];
   pityBefore: number;
   pityAfter: number;
   createdAt: string;
 }
+
+export type PlayerProfileCardProgression = {[key: string]: CardProgress};
+
+export type PlayerProfileEquippedVariants = {[key: string]: string};
+
+export type PlayerProfileStoryProgress = { [key: string]: unknown };
+
+export type PlayerProfileInboxItem = { [key: string]: unknown };
 
 export interface PlayerProfile {
   id: string;
@@ -149,6 +150,7 @@ export interface PlayerProfile {
   ownedVariants: string[];
   equippedVariants: PlayerProfileEquippedVariants;
   unlockedCosmeticIds: string[];
+  unlockedCharacterIds: string[];
   savedDecks: SavedDeck[];
   storyProgress: PlayerProfileStoryProgress;
   inbox: PlayerProfileInboxItem[];
@@ -235,6 +237,17 @@ export interface PackConfig {
   odds: PackOddsEntry[];
 }
 
+export interface TenPullConfig {
+  id: string;
+  name: string;
+  oddsVersion: string;
+  pullCount: number;
+  ticketCost: number;
+  softCurrencyCost: number;
+  rewardsPerPull: number;
+  rarePityBonusPerPull: number;
+}
+
 export type CollectionRoadMilestoneStatus = typeof CollectionRoadMilestoneStatus[keyof typeof CollectionRoadMilestoneStatus];
 
 
@@ -260,7 +273,85 @@ export interface PlayerBootstrap {
   missions: PlayerMission[];
   nextAction: NextAction;
   packConfig: PackConfig;
+  tenPullConfig: TenPullConfig;
   collectionRoad: CollectionRoadMilestone[];
+}
+
+export interface PromoCodeResult {
+  receipt: PromoCodeReceipt;
+  alreadyRedeemed: boolean;
+  bootstrap: PlayerBootstrap;
+}
+
+export type ShopPurchaseInputItemId = typeof ShopPurchaseInputItemId[keyof typeof ShopPurchaseInputItemId];
+
+
+export const ShopPurchaseInputItemId = {
+  training: 'training',
+  'training-intensive': 'training-intensive',
+  'move-training': 'move-training',
+  ticket: 'ticket',
+  'deck-slot': 'deck-slot',
+  'common-recruit': 'common-recruit',
+  'tagged-style': 'tagged-style',
+  'chrome-style': 'chrome-style',
+} as const;
+
+export interface ShopPurchaseInput {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ */
+  idempotencyKey: string;
+  itemId: ShopPurchaseInputItemId;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  cardId?: string;
+}
+
+export type ShopPurchaseResultReceiptCurrency = typeof ShopPurchaseResultReceiptCurrency[keyof typeof ShopPurchaseResultReceiptCurrency];
+
+
+export const ShopPurchaseResultReceiptCurrency = {
+  softCurrency: 'softCurrency',
+  styleShards: 'styleShards',
+} as const;
+
+export type ShopPurchaseResultReceipt = {
+  itemId: string;
+  cardId: string | null;
+  cost: number;
+  currency: ShopPurchaseResultReceiptCurrency;
+  summary: string;
+};
+
+export interface ShopPurchaseResult {
+  receipt: ShopPurchaseResultReceipt;
+  alreadyPurchased: boolean;
+  bootstrap: PlayerBootstrap;
+}
+
+export interface HealthStatus {
+  status: string;
+}
+
+export interface SaveDeckInput {
+  /**
+     * @minLength 2
+     * @maxLength 32
+     */
+  name: string;
+  /**
+     * @maxItems 10
+     * @items.maxLength 64
+     */
+  cardIds: string[];
+  /** @maxLength 64 */
+  heroCardId: string;
+  /**
+     * @maxLength 32
+     * @nullable
+     */
+  recipeId: string | null;
 }
 
 export type OpenPackInputPaymentMethod = typeof OpenPackInputPaymentMethod[keyof typeof OpenPackInputPaymentMethod];
@@ -278,6 +369,8 @@ export interface OpenPackInput {
      */
   idempotencyKey: string;
   paymentMethod: OpenPackInputPaymentMethod;
+  /** Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience. */
+  pullCount?: number;
 }
 
 export interface OpenPackResult {
@@ -369,12 +462,22 @@ export const MatchStartInputMode = {
 
 export interface MatchStartInput {
   mode: MatchStartInputMode;
-  /** @maxLength 32 */
+  /** @maxLength 80 */
   playerDeckId: string;
   /** @maxLength 32 */
   rivalDeckId: string;
   /** @maxLength 80 */
   storyNodeId?: string;
+  /** @maxLength 24 */
+  activity?: string;
+  /** @maxLength 10 */
+  draftWeek?: string;
+  /**
+     * @minItems 10
+     * @maxItems 10
+     * @items.maxLength 64
+     */
+  draftPicks?: string[];
 }
 
 export type PlayerMatchStatus = typeof PlayerMatchStatus[keyof typeof PlayerMatchStatus];
@@ -390,6 +493,11 @@ export const PlayerMatchStatus = {
  */
 export type PlayerMatchEncounterSnapshot = { [key: string]: unknown } | null;
 
+/**
+ * Immutable server-issued district definitions for this match.
+ */
+export type PlayerMatchDistrictSnapshot = { [key: string]: unknown };
+
 export type AbilityUpgradeSnapshotVersion = typeof AbilityUpgradeSnapshotVersion[keyof typeof AbilityUpgradeSnapshotVersion];
 
 
@@ -398,6 +506,11 @@ export const AbilityUpgradeSnapshotVersion = {
 } as const;
 
 export interface CardAbilityUpgradeSnapshot {
+  /**
+     * @minimum 0
+     * @maximum 3
+     */
+  moveTier?: number;
   cardId: string;
   /** @minimum 1 */
   level: number;
@@ -424,6 +537,8 @@ export interface PlayerMatch {
   contentVersion: number | null;
   /** @nullable */
   encounterSnapshot: PlayerMatchEncounterSnapshot;
+  /** Immutable server-issued district definitions for this match. */
+  districtSnapshot?: PlayerMatchDistrictSnapshot;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 }
 
@@ -437,12 +552,14 @@ export interface MatchMove {
      */
   lane: number | null;
   squabble: boolean;
+  /** False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches. */
+  endTurn?: boolean;
 }
 
 export interface MatchCompleteInput {
   /**
      * @minItems 6
-     * @maxItems 6
+     * @maxItems 64
      */
   moves: MatchMove[];
 }
@@ -456,6 +573,7 @@ export const StoryGrantedRewardKind = {
   'chapter-key': 'chapter-key',
   'pack-ticket': 'pack-ticket',
   cosmetic: 'cosmetic',
+  'character-unlock': 'character-unlock',
 } as const;
 
 export interface StoryGrantedReward {
@@ -555,6 +673,7 @@ export const StoryRewardKind = {
   'chapter-key': 'chapter-key',
   'pack-ticket': 'pack-ticket',
   cosmetic: 'cosmetic',
+  'character-unlock': 'character-unlock',
 } as const;
 
 export interface StoryReward {
@@ -671,4 +790,11 @@ export interface StoryDialogueProgressResponse {
   node: StoryNodeProgress;
   alreadyApplied: boolean;
 }
+
+export type ClaimExperimentCardBody = {
+  /** @maxLength 64 */
+  cardId: string;
+};
+
+export type GetPlayerShop200 = { [key: string]: unknown };
 

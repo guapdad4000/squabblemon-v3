@@ -26,7 +26,7 @@ import {
   type SavedDeck,
 } from "@workspace/db";
 import {
-  catalogCardById,
+  catalogCardById, DECK_SIZE,
   validateSavedDeck,
 } from "@workspace/squabblemon-engine/data";
 import { COLLECTION_ROAD } from "../lib/collectionEconomy";
@@ -150,6 +150,7 @@ router.put(
           name: body.data.name.trim(),
           cardIds: body.data.cardIds,
           heroCardId: body.data.heroCardId,
+          deckSize: DECK_SIZE,
           recipeId: body.data.recipeId,
         };
         const savedDecks = [...profile.savedDecks];

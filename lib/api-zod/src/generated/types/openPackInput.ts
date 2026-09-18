@@ -14,4 +14,6 @@ export interface OpenPackInput {
      */
   idempotencyKey: string;
   paymentMethod: OpenPackInputPaymentMethod;
+  /** Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience. */
+  pullCount?: number;
 }

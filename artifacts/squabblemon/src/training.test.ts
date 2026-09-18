@@ -1,3 +1,4 @@
+import { completeEngineCrew, cards } from '@workspace/squabblemon-engine/data';
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -8,7 +9,7 @@ import {
   TRAINING_REWARD_RULES,
 } from "@workspace/squabblemon-engine/training";
 
-const blockCards = ["cornball", "snow", "roaster", "rastamon", "wifey", "oink", "baby"];
+const blockCards = completeEngineCrew(["cornball", "snow", "roaster", "rastamon", "wifey", "oink", "baby"]);
 
 test("training bands keep developing crews out of advanced opposition", () => {
   assert.equal(trainingBandForLevel(1), 1);
@@ -20,21 +21,21 @@ test("training bands keep developing crews out of advanced opposition", () => {
 
 test("training crew level normalizes engine IDs to owned catalog progression", () => {
   const progression = Object.fromEntries(
-    ["cornball", "snow-bunny", "all-jokes-roaster", "rastamon", "wifey", "officer-oink", "baby-momma"]
+    blockCards.map(id => cards[id].id)
       .map((cardId) => [cardId, { xp: 1500, level: 6 }]),
   );
   assert.equal(trainingCrewLevel(blockCards, progression), 6);
   assert.equal(selectTrainingRival("block", blockCards, progression), "combo");
 });
 
-test("training rewards only participating card progression with no repeat limit", () => {
+test("verified training earns participating card XP and account rewards with no repeat limit", () => {
   assert.deepEqual(TRAINING_REWARD_RULES, {
     winCardXp: 30,
     drawCardXp: 25,
     lossCardXp: 20,
     dailyLimit: null,
     repeatLimit: null,
-    grantsProfileXp: false,
-    grantsCurrency: false,
+    grantsProfileXp: true,
+    grantsCurrency: true,
   });
 });

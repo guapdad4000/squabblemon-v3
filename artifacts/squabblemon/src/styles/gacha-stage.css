@@ -1,0 +1,998 @@
+/* The room is the backdrop; pack details and controls float in the foreground. */
+.trading-post .market-tabs {
+  align-items: center;
+  gap: 28px;
+  padding: 5px clamp(22px, 5vw, 80px) 0;
+  background: #101513;
+}
+.trading-post .market-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 51px;
+}
+.market-tabs .game-glyph {
+  --glyph-size: 29px;
+}
+.trading-post .market-tabs button[aria-pressed='false'] .game-glyph {
+  filter: saturate(0.45) brightness(0.72);
+}
+.gym.gacha-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: 25px 6%;
+  height: auto;
+  min-height: 780px;
+  overflow: visible;
+  background: #101513;
+  padding: 30px clamp(24px, 5vw, 80px) calc(var(--fan-clearance, 130px) + 28px);
+}
+.trading-post > .gym.gacha-stage {
+  flex: 1 0 auto;
+}
+.gacha-stage .gym__arena {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  min-height: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+.gacha-stage .venue-scene {
+  left: 27%;
+  background: transparent;
+}
+.gacha-stage .gym__vignette {
+  background:
+    linear-gradient(90deg, #101513 15%, #101513ee 29%, #10151380 44%, transparent 65%),
+    linear-gradient(0deg, #101513 1%, #101513bb 14%, transparent 36%, #10151333);
+}
+.gacha-stage__heading {
+  grid-column: 1;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+.gacha-stage__heading .game-glyph {
+  --glyph-size: 28px;
+}
+.gacha-stage__heading h1 {
+  font: 900 clamp(40px, 4.25vw, 62px)/0.95 var(--font-display);
+  letter-spacing: -0.02em;
+  word-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 15px 0;
+}
+.gacha-stage__heading h1 em {
+  color: #ebcf94;
+  font-style: normal;
+}
+.gacha-stage__heading > p {
+  color: #bec5b8;
+  font: 400 12px/1.7 var(--font-sans);
+}
+.gacha-stage .gacha-stage__sound {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  z-index: 2;
+}
+.gacha-stage .gym__offer {
+  grid-column: 1;
+  grid-row: 2;
+  position: relative;
+  display: block;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+  z-index: 1;
+}
+.gacha-stage__pack {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.gacha-stage__pack > .venue-prop {
+  width: 77px;
+  height: 94px;
+  filter: drop-shadow(0 8px 12px #0008);
+  transform: rotate(-7deg);
+}
+.gacha-stage .gym__offer h2 {
+  font: 800 29px/1.1 var(--font-display);
+  letter-spacing: -0.01em;
+  word-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 5px 0 7px;
+  max-width: none;
+}
+.gacha-stage__pack p {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #b6c0ad;
+}
+.gacha-stage__preview {
+  color: #a5afa0;
+  font: 400 9px/1.6 var(--font-sans);
+  max-width: 300px;
+}
+.gacha-stage__guarantee {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 8px;
+}
+.gacha-stage__guarantee .studio-progress {
+  width: 43px;
+  height: 43px;
+  font-size: 10px;
+}
+.gacha-stage__guarantee strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e6dfca;
+}
+.gacha-stage__guarantee > div > span {
+  display: block;
+  margin-top: 5px;
+  font-size: 9px;
+  color: #a7b29e;
+}
+.gacha-stage__guarantee button {
+  color: #dfc996;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gacha-stage__duplicates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 10px;
+  color: #adb9a5;
+}
+.gacha-stage__duplicates .game-glyph {
+  --glyph-size: 23px;
+}
+.gacha-stage .gym__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 17px 0 0;
+  padding: 0;
+}
+.gacha-stage .gym__actions > .studio-eyebrow {
+  font-size: 8px;
+  margin-bottom: 1px;
+}
+.gacha-stage__payment {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.gacha-stage__payment .studio-action {
+  justify-content: flex-start;
+  min-width: 0;
+  gap: 9px;
+  padding: 11px 19px;
+  font-size: 11px;
+}
+.gacha-stage__payment .studio-action > svg:last-child {
+  margin-left: auto;
+  flex: none;
+}
+.gacha-stage__payment .game-glyph {
+  --glyph-size: 25px;
+}
+.gacha-stage__payment > small {
+  color: #adb6a4;
+  font-size: 9px;
+  min-width: 82px;
+}
+.gacha-stage .gym__payment-note {
+  text-align: left;
+  color: #8f9a8c;
+  font-size: 8px;
+  line-height: 1.6;
+}
+.gacha-stage .gym__links {
+  margin: 9px 0 0;
+  padding: 0;
+  justify-content: flex-start;
+  gap: 25px;
+  border: 0;
+}
+.gacha-stage .gym__links button {
+  font: 500 10px/1.5 var(--font-sans);
+  color: #d6c498;
+  padding: 6px 0;
+  min-height: 40px;
+}
+.gacha-stage__secured {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: #ebd29a;
+  font-size: 12px;
+  min-height: 60px;
+}
+.gacha-stage__secured small {
+  display: block;
+  margin-top: 5px;
+  color: #afbca4;
+  font-size: 10px;
+}
+.gacha-stage__ringside {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  justify-self: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  width: min(390px, 100%);
+  padding-bottom: 18px;
+}
+.gacha-stage__ready {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  color: #e4d1a1;
+  text-shadow: 0 2px 4px #000;
+}
+.gacha-stage__ready .game-glyph {
+  --glyph-size: 40px;
+}
+.gacha-stage__ready > span {
+  font-size: 12px;
+  font-weight: 650;
+}
+.gacha-stage__ready small {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: #aeb7a8;
+  margin-top: 6px;
+}
+.gacha-stage__combo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: left;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 5px #000;
+}
+.gacha-stage__combo .studio-progress {
+  width: 58px;
+  height: 58px;
+  color: #f1d091;
+}
+.gacha-stage__combo .studio-progress strong {
+  font: 800 24px/1 var(--font-display);
+}
+.gacha-stage__combo > div > strong {
+  font: 800 23px/1 var(--font-display);
+  text-transform: uppercase;
+  word-spacing: 0.1em;
+}
+.gacha-stage__combo > div > span {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+  color: #b6c1b2;
+}
+.gacha-stage__punch-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.gacha-stage__punch-actions .studio-action {
+  font-size: 11px;
+  padding: 12px 19px;
+}
+.gacha-stage__ringside > .studio-text-action {
+  margin: 6px auto 0;
+  font-size: 10px;
+}
+.gacha-stage__knockout {
+  position: absolute;
+  inset: 15% 12% 25% 30%;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  isolation: isolate;
+  pointer-events: none;
+  animation: gacha-ko-land 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.gacha-stage__knockout > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: -1;
+}
+.gacha-stage__knockout strong {
+  font: 900 italic clamp(80px, 13vw, 170px)/0.95 var(--font-display);
+  color: #ffe0a0;
+  letter-spacing: -0.05em;
+  text-shadow: 4px 5px #24180e;
+}
+.gacha-stage__knockout > span,
+.gacha-stage__knockout > small {
+  font: 700 9px/2 var(--font-sans);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f6e4bf;
+}
+.gacha-stage .venue-scene__status {
+  border: 0;
+  box-shadow: none;
+  background: #101513b0;
+  border-radius: 0;
+}
+
+/* Rewards occupy a stage, without a dialog frame or nested resource boxes. */
+.gym-results.gacha-results {
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 28px clamp(20px, 6vw, 90px) 36px;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  background: radial-gradient(ellipse at 50% 40%, #77612c22, transparent 55%), #0b100e;
+  color: #f4efdf;
+  overflow: auto;
+}
+.gacha-results .gym-results__header {
+  max-width: 1100px;
+  margin: auto;
+}
+.gacha-results__emblem.game-glyph {
+  --glyph-size: 60px;
+  display: grid;
+  margin: 15px auto 12px;
+}
+.gacha-results h2 {
+  font: 900 clamp(32px, 4.5vw, 60px)/1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  word-spacing: 0.12em;
+  margin: 10px 0 14px;
+}
+.gacha-results > p {
+  color: #aeb8a5;
+  font: 400 12px/1.6 var(--font-sans);
+}
+.gacha-results .gym-results__grid {
+  gap: clamp(24px, 5vw, 75px);
+  margin: 40px auto 32px;
+  max-width: 1040px;
+  align-items: center;
+}
+.gacha-results .gym-results__item {
+  width: clamp(155px, 19vw, 225px);
+  background: none;
+  padding: 0;
+  flex: none;
+}
+.gacha-results .gym-results__item > strong {
+  font: 650 14px/1.4 var(--font-sans);
+  margin-top: 18px;
+}
+.gacha-results .gym-results__item > small {
+  font: 500 9px/1.5 var(--font-sans);
+  letter-spacing: 0.1em;
+}
+.gacha-results .gym-reward {
+  filter: drop-shadow(0 14px 22px #0008);
+  animation: gacha-reward-arrive 480ms ease-out both;
+}
+.gacha-results .gym-results__item:nth-child(2) .gym-reward {
+  animation-delay: 90ms;
+}
+.gacha-results .gym-results__item:nth-child(3) .gym-reward {
+  animation-delay: 180ms;
+}
+.gacha-results .gym-reward__resource {
+  background: none;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  padding: 10px;
+  gap: 10px;
+}
+.gacha-results .gym-reward__resource .game-glyph {
+  --glyph-size: 80px;
+}
+.gacha-results .gym-reward__resource strong {
+  font: 800 46px/1 var(--font-display);
+  color: #dfcdf7;
+}
+.gacha-results .gym-reward__resource > span {
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  color: #c4b0dd;
+}
+.gacha-results .gym-reward__resource small {
+  font-size: 9px;
+  color: #abb59e;
+  line-height: 1.5;
+}
+.gacha-results .gym-reward__new {
+  top: -20px;
+  right: 0;
+  left: 0;
+  transform: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-align: center;
+  font: 700 8px/1.5 var(--font-sans);
+  letter-spacing: 0.18em;
+  color: #f4d394;
+}
+.gacha-results .gym-results__single {
+  gap: 7px;
+  margin: 35px auto 22px;
+}
+.gacha-results .gym-reward--large {
+  width: clamp(200px, 20vw, 245px);
+}
+.gacha-results .gym-results__single > .studio-eyebrow {
+  justify-content: center;
+}
+.gacha-results .gym-results__single h3 {
+  font: 700 21px/1.3 var(--font-sans);
+  margin-top: 12px;
+}
+.gacha-results .gym-results__actions {
+  gap: 22px;
+  margin-top: 22px;
+}
+.gacha-results .gym-results__actions .studio-action {
+  min-width: 170px;
+}
+.venue-info.gacha-info {
+  width: min(600px, calc(100% - 32px));
+  padding: 30px;
+  border: 0;
+  box-shadow: 0 25px 90px #0008;
+  background: #101612;
+  border-radius: 0;
+}
+.gacha-info header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.gacha-info h2 {
+  font: 900 40px/1 var(--font-display);
+  text-transform: uppercase;
+  margin: 12px 0 24px;
+}
+.gacha-info > p,
+.gacha-info__empty p {
+  font-size: 12px;
+  color: #b2bea7;
+  line-height: 1.7;
+}
+.gacha-info .gym-odds {
+  gap: 0;
+  margin: 18px 0;
+}
+.gacha-info .gym-odds > div {
+  border: 0;
+  border-bottom: 1px solid #d7dbc31b;
+  background: none;
+  padding: 18px 0;
+}
+.gacha-info .gym-odds strong {
+  font: 650 14px/1.5 var(--font-sans);
+}
+.gacha-info .gym-odds small {
+  color: #99a78e;
+  font-size: 10px;
+}
+.gacha-info .gym-odds b {
+  color: #e8cb91;
+  font: 700 24px/1 var(--font-display);
+}
+.gacha-info .gacha-info__version {
+  font-size: 9px;
+  color: #92a184;
+}
+.gacha-info__empty {
+  text-align: center;
+  padding: 28px 0;
+}
+.gacha-info__empty .game-glyph {
+  --glyph-size: 70px;
+  margin: auto;
+}
+.gacha-info__empty h3 {
+  margin: 20px 0 8px;
+  font-weight: 700;
+}
+.gacha-info .gym-history article {
+  border-color: #d7dbc31b;
+}
+.gacha-info .gym-history strong {
+  font: 650 14px/1.4 var(--font-sans);
+  color: #e8ce9c;
+}
+@keyframes gacha-ko-land {
+  from {
+    opacity: 0;
+    scale: 1.4;
+    rotate: -5deg;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+@keyframes gacha-reward-arrive {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@media (max-width: 1050px) and (min-width: 701px) {
+  .gym.gacha-stage {
+    grid-template-columns: 330px minmax(0, 1fr);
+    gap: 22px 25px;
+    padding-inline: 28px;
+  }
+  .gacha-stage__payment {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .gacha-stage__payment > small {
+    padding-left: 16px;
+  }
+  .gacha-stage__heading h1 {
+    font-size: 47px;
+  }
+  .gacha-stage__punch-actions {
+    flex-wrap: wrap;
+  }
+  .gacha-stage__combo {
+    gap: 8px;
+  }
+  .gacha-stage__combo > div > strong {
+    font-size: 18px;
+  }
+}
+@media (max-width: 700px) {
+  .trading-post .market-tabs {
+    padding-inline: 20px;
+    gap: 27px;
+  }
+  .gym.gacha-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+    min-height: 0;
+    padding: 23px 20px calc(var(--fan-clearance, 130px) + 25px);
+  }
+  .gacha-stage__heading {
+    order: 0;
+    max-width: calc(100% - 28px);
+  }
+  .gacha-stage__heading .studio-eyebrow {
+    font-size: 8px;
+    gap: 6px;
+  }
+  .gacha-stage__heading .game-glyph {
+    --glyph-size: 25px;
+  }
+  .gacha-stage__heading h1 {
+    font-size: clamp(35px, 9.5vw, 50px);
+    margin: 14px 0 11px;
+  }
+  .gacha-stage__heading > p {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .gacha-stage .gacha-stage__sound {
+    right: 16px;
+    top: 25px;
+    width: 37px;
+    height: 37px;
+  }
+  .gacha-stage .gym__arena {
+    inset: 100px 0 auto;
+    height: 330px;
+    width: 100%;
+    border: 0;
+  }
+  .gacha-stage .venue-scene {
+    left: 0;
+  }
+  .gacha-stage .gym__vignette {
+    background: linear-gradient(0deg, #101513, transparent 28%, transparent 60%, #101513 100%);
+  }
+  .gacha-stage .gym__offer {
+    order: 2;
+    margin-top: 190px;
+    padding: 0;
+    overflow: visible;
+  }
+  .gacha-stage__pack {
+    gap: 15px;
+    margin-bottom: 12px;
+  }
+  .gacha-stage__pack > .venue-prop {
+    width: 65px;
+    height: 82px;
+  }
+  .gacha-stage .gym__offer h2 {
+    font-size: 26px;
+  }
+  .gacha-stage__payment {
+    grid-template-columns: 1fr auto;
+    gap: 9px;
+  }
+  .gacha-stage__payment > small {
+    font-size: 8px;
+    min-width: 72px;
+  }
+  .gacha-stage__payment .studio-action {
+    font-size: 10px;
+    gap: 7px;
+    padding: 11px 15px;
+    min-height: 48px;
+  }
+  .gacha-stage__payment .game-glyph {
+    --glyph-size: 22px;
+  }
+  .gacha-stage .gym__payment-note {
+    font-size: 8px;
+  }
+  .gacha-stage__ringside {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 335px;
+    width: auto;
+    padding: 0;
+  }
+  .gacha-stage__ready {
+    justify-content: flex-start;
+    gap: 9px;
+  }
+  .gacha-stage__ready .game-glyph {
+    --glyph-size: 33px;
+  }
+  .gacha-stage__ready > span {
+    font-size: 11px;
+  }
+  .gacha-stage__ready small {
+    font-size: 9px;
+    margin-top: 4px;
+  }
+  .gacha-stage[data-phase='punching'] .gacha-stage__ringside {
+    order: 1;
+    position: relative;
+    inset: auto;
+    margin-top: 180px;
+    width: 100%;
+  }
+  .gacha-stage[data-phase='punching'] .gym__offer {
+    margin-top: 24px;
+  }
+  .gacha-stage__punch-actions {
+    gap: 8px;
+  }
+  .gacha-stage__punch-actions .studio-action {
+    padding: 12px 17px;
+    font-size: 10px;
+  }
+  .gacha-stage__knockout {
+    inset: 130px 8px auto;
+    height: 290px;
+  }
+  .gym-results.gacha-results {
+    padding: 22px 20px 30px;
+  }
+  .gacha-results__emblem.game-glyph {
+    --glyph-size: 48px;
+    margin: 12px auto;
+  }
+  .gacha-results h2 {
+    font-size: 34px;
+  }
+  .gacha-results > p {
+    font-size: 11px;
+    max-width: 330px;
+    margin: auto;
+  }
+  .gacha-results .gym-results__grid {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 22px;
+    padding: 24px 20px 20px;
+    margin: 14px -20px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 20px;
+  }
+  .gacha-results .gym-results__item {
+    width: 180px;
+    scroll-snap-align: center;
+  }
+  .gacha-results .gym-results__item > strong {
+    font-size: 12px;
+  }
+  .gacha-results .gym-results__actions {
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .gacha-results .gym-reward--large {
+    width: 205px;
+  }
+  .gacha-results .gym-results__single {
+    margin-top: 33px;
+  }
+  .venue-info.gacha-info {
+    padding: 25px 22px;
+  }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  .game-shell:has(.gacha-stage) .venue-hud {
+    display: none;
+  }
+  .gym.gacha-stage {
+    min-height: 600px;
+    grid-template-columns: 310px minmax(0, 1fr);
+    padding-top: 20px;
+  }
+  .gacha-stage__heading h1 {
+    font-size: 40px;
+  }
+  .gacha-stage .gym__arena {
+    position: sticky;
+    top: 0;
+    height: 350px;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    margin-bottom: -350px;
+    margin-left: -40px;
+    width: calc(100% + 68px);
+  }
+  .gacha-stage .venue-scene {
+    left: 0;
+  }
+  .gacha-stage .gym__vignette {
+    background: linear-gradient(90deg, #101513, transparent 30%), linear-gradient(0deg, #101513, transparent 30%);
+  }
+  .gacha-stage__ringside {
+    position: relative;
+    align-self: center;
+    margin-top: 180px;
+  }
+  .gacha-results .gym-results__grid {
+    margin: 30px auto 20px;
+  }
+  .gacha-results .gym-results__item {
+    width: 160px;
+  }
+}
+
+/* ----- Upgraded ten-pull presentation (data-pull-size="ten") ----- */
+
+/* Sidebar payments stack: single pack on top, ten-pull directly underneath
+   with a gold-edged double outline so the player reads it as "the upgraded
+   one" at a glance. */
+.gacha-stage__payments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gacha-stage__payment--ten {
+  margin-top: 4px;
+}
+.gacha-stage__payment-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid #d8b672;
+  background: #2b1f0a;
+  color: #ffe2a8;
+  font: 700 8px/1.5 var(--font-sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.studio-action--ten {
+  position: relative;
+  padding: 12px 19px;
+  background: linear-gradient(180deg, #2c210d, #1a140a);
+  border: 1px solid #d8b672;
+  box-shadow: 0 0 0 1px #0008 inset, 0 6px 18px #d8b67224;
+}
+.studio-action--ten:hover:not(:disabled) {
+  background: linear-gradient(180deg, #3a2c12, #1a140a);
+}
+.studio-action--ten small {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 5px;
+  border: 1px solid #d8b672;
+  font: 700 8px/1.6 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffe2a8;
+  background: #1f1606;
+}
+
+/* While a ten-pull is in the punching phase, the ringside HUD upgrades:
+   bigger ring, brighter colors, and a triple-combo banner that pulses on
+   every successful hit. */
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gym__vignette {
+  background:
+    linear-gradient(135deg, #101513 0%, #10151380 38%, transparent 60%),
+    linear-gradient(0deg, #101513 1%, #101513bb 14%, transparent 36%, #10151333);
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__combo .studio-progress {
+  width: 78px;
+  height: 78px;
+  color: #ffd47a;
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__combo .studio-progress strong {
+  font: 800 32px/1 var(--font-display);
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__combo > div > strong {
+  font: 900 28px/1 var(--font-display);
+  background: linear-gradient(90deg, #ffe2a8, #d8b672);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__combo > div > span {
+  color: #d8b672;
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__punch-actions .studio-action--gold {
+  background: linear-gradient(180deg, #3a2c12, #1a140a);
+  border: 1px solid #d8b672;
+}
+
+/* Triple-combo impact frames animate on each punch click. The bar uses a
+   keyframe pulse so every successful punch lands with a brief grow + golden
+   flash, regardless of whether the scene file opts into its own animation. */
+@keyframes gacha-ten-pulse {
+  0% { scale: 1; filter: drop-shadow(0 0 0 #d8b67200); }
+  35% { scale: 1.06; filter: drop-shadow(0 0 18px #d8b672aa); }
+  100% { scale: 1; filter: drop-shadow(0 0 0 #d8b67200); }
+}
+.gacha-stage[data-pull-size='10'][data-phase='tenPunching'] .gacha-stage__combo {
+  animation: gacha-ten-pulse 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Ten-pull K.O. overlay: takes more of the screen and stacks the headline
+   line so "K.O. ×10" reads as the win condition for the upgraded drop. */
+.gacha-stage__knockout[data-pull-size='10'] {
+  inset: 10% 6% 18% 24%;
+  animation: gacha-ko-land 980ms cubic-bezier(0.18, 0.85, 0.2, 1) both;
+}
+.gacha-stage__knockout[data-pull-size='10'] strong {
+  font-size: clamp(120px, 16vw, 220px);
+  background: linear-gradient(90deg, #ffe2a8 0%, #ffd47a 50%, #d8b672 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 4px 5px #24180e;
+}
+.gacha-stage__knockout[data-pull-size='10'] > span {
+  font-size: 11px;
+}
+.gacha-stage__knockout[data-pull-size='10'] > small {
+  font-size: 10px;
+  color: #ffe2a8;
+}
+
+/* Ten-pull reveal grid: 6×10 layout, denser tiles, with the GUARANTEED
+   RARE+ reward framed in a gold outline and a small badge under the
+   rarity line so it pops at first scan. */
+.gacha-results[data-pull-size='10'] {
+  padding-top: 22px;
+}
+.gym-results__grid--ten {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1180px;
+  margin: 26px auto 28px;
+  padding: 0 12px;
+}
+.gym-results__grid--ten .gym-results__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.gym-results__grid--ten .gym-results__item > strong {
+  font: 650 11px/1.3 var(--font-sans);
+  margin-top: 6px;
+}
+.gym-results__grid--ten .gym-results__item > small {
+  font: 500 8px/1.4 var(--font-sans);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+.gym-results__grid--ten .gym-reward {
+  filter: drop-shadow(0 8px 14px #0008);
+  animation: gacha-reward-arrive 380ms ease-out both;
+}
+.gym-results__item--rare {
+  position: relative;
+  outline: 2px solid #ffd47a;
+  outline-offset: 4px;
+  background: radial-gradient(ellipse at center, #d8b67218, transparent 70%);
+}
+.gym-results__item--rare::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed #ffd47a;
+  pointer-events: none;
+}
+.gacha-results__badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border: 1px solid #ffd47a;
+  background: #2b1f0a;
+  color: #ffe2a8;
+  font: 700 8px/1.5 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1050px) and (min-width: 701px) {
+  .gym-results__grid--ten {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .gym-results__grid--ten {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  .gym-results__grid--ten {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px 10px;
+  }
+}

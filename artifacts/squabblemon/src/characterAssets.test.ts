@@ -6,6 +6,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { cardCatalog, decks, getCardImage } from "./data";
+import characterRevisions from './characterRevisions.json';
 
 const CHARACTER_DIRECTORY = fileURLToPath(
   new URL("../public/assets/characters/", import.meta.url),
@@ -131,15 +132,19 @@ test("every catalog card and deck hero has one valid local character image", asy
     const expectedFile = `${artworkId}.webp`;
     assert.equal(
       getCardImage(artworkId),
-      `/assets/characters/${expectedFile}`,
+      `/assets/characters/${expectedFile}?v=${(characterRevisions as Record<string, string>)[artworkId]}`,
       `${artworkId} must use the shared local artwork mapping`,
     );
     assert(rosterFiles.has(expectedFile), `missing character artwork: ${expectedFile}`);
 
     const bytes = await readFile(join(CHARACTER_DIRECTORY, expectedFile));
     const metadata = readWebpMetadata(bytes);
-    assert(metadata.hasAlpha, `${expectedFile} must retain transparency`);
-    assertUsefulCutout(expectedFile, await readAlphaChannel(bytes));
+    // Foodz retains the supplied portrait; Simmy's rose aura is a transparent cutout.
+    const suppliedPortrait = cardCatalog.find(card => card.artworkId === artworkId)?.artworkLayout === 'portrait';
+    if (!suppliedPortrait || artworkId === 'simmy') {
+      assert(metadata.hasAlpha, `${expectedFile} must retain transparency`);
+      assertUsefulCutout(expectedFile, await readAlphaChannel(bytes));
+    }
     assert(
       metadata.width >= MIN_CHARACTER_WIDTH &&
         metadata.height >= MIN_CHARACTER_HEIGHT,
@@ -147,6 +152,7 @@ test("every catalog card and deck hero has one valid local character image", asy
     );
 
     const digest = createHash("sha256").update(bytes).digest("hex");
+    assert.equal((characterRevisions as Record<string, string>)[artworkId], digest.slice(0, 16), `${expectedFile}: run scripts/sync-character-revisions.cjs after replacing artwork`);
     const existingOwner = contentOwners.get(digest);
     assert.equal(
       existingOwner,
@@ -155,4 +161,22 @@ test("every catalog card and deck hero has one valid local character image", asy
     );
     contentOwners.set(digest, expectedFile);
   }
+});
+
+test('Simmy has no opaque black matte, while Foodz retains the supplied portrait', async () => {
+  const simmy = await sharp(join(CHARACTER_DIRECTORY, 'simmy.webp')).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const alphaAt = (x: number, y: number) => simmy.data[(y * simmy.info.width + x) * simmy.info.channels + 3];
+  assert.equal(alphaAt(0, 0), 0);
+  assert.equal(alphaAt(simmy.info.width - 1, 0), 0);
+  assert.equal(alphaAt(0, simmy.info.height - 1), 0);
+  assert.equal(alphaAt(simmy.info.width - 1, simmy.info.height - 1), 0);
+  assert(alphaAt(Math.floor(simmy.info.width / 2), Math.floor(simmy.info.height / 2)) >= VISIBLE_ALPHA_MIN);
+  const original = await sharp(join(CHARACTER_DIRECTORY, '../../../reference/street-wave/foodz-original.png')).ensureAlpha().raw().toBuffer();
+  const imported = await sharp(join(CHARACTER_DIRECTORY, 'foodz.webp')).ensureAlpha().raw().toBuffer();
+  // Lossless WebP omits invisible RGB values under fully transparent pixels.
+  for (let i = 0; i < original.length; i += 4) {
+    if (original[i + 3] === 0) { original.fill(0, i, i + 3); imported.fill(0, i, i + 3); }
+  }
+  assert(imported.equals(original), 'foodz: importing must preserve visible pixels and the full alpha channel');
+  assert.deepEqual(cardCatalog.filter(card => card.artworkLayout === 'portrait').map(card => card.artworkId), ['simmy']);
 });

@@ -134,3 +134,22 @@ test('reset stops and disconnects an active audio cue and cancels vibration', ()
   assert.equal(gainDisconnects, 1);
   assert.deepEqual(vibrations, [12, 0], 'reset cancels any active vibration pattern');
 });
+
+test('muting a layered claim stops every voice and prevents new interaction sounds', () => {
+  const voices: Array<{ stops: number; disconnected: boolean }> = [];
+  const context = {
+    state: 'running', currentTime: 0, destination: {},
+    createGain: () => ({ gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() { return this; }, disconnect() {} }),
+    createOscillator: () => {
+      const voice = { stops: 0, disconnected: false }; voices.push(voice);
+      return { type: 'sine', frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect(gain: unknown) { return gain; }, start() {}, stop() { voice.stops++; }, disconnect() { voice.disconnected = true; }, onended: null };
+    },
+  };
+  const feedback = new BattleFeedback({ audioEnabled: true, hapticsEnabled: false }, () => class { constructor() { return context; } } as unknown as typeof AudioContext);
+  feedback.cue('claim', false, false);
+  assert.equal(voices.length, 4, 'claim uses a hit plus three rising notes');
+  feedback.setPreferences({ audioEnabled: false, hapticsEnabled: false });
+  assert.ok(voices.every(voice => voice.stops === 2 && voice.disconnected), 'mute stops scheduled voices immediately');
+  feedback.cue('select', false, false);
+  assert.equal(voices.length, 4, 'muted interactions cannot create a new voice');
+});

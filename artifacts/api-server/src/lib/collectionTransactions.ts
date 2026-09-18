@@ -11,7 +11,11 @@ import { catalogCardById } from "@workspace/squabblemon-engine/data";
 import {
   type CollectionRoadDefinition,
   generateStreetPack,
+  generateStreetTenPull,
+  isPullCount,
   STREET_PACK_CONFIG,
+  STREET_PACK_TEN_PULL_CONFIG,
+  tierForPullCount,
 } from "./collectionEconomy";
 
 export class EconomyTransactionError extends Error {
@@ -28,6 +32,7 @@ export async function openStreetPackForPlayer(
   input: {
     idempotencyKey: string;
     paymentMethod: "ticket" | "softCurrency";
+    pullCount?: number;
   },
 ): Promise<{
   opening: PlayerPackOpeningRecord;
@@ -64,14 +69,18 @@ export async function openStreetPackForPlayer(
       throw new EconomyTransactionError(404, "Player profile not found");
     }
 
+    const pullCount = isPullCount(input.pullCount) ? input.pullCount : 1;
+    const tier = tierForPullCount(pullCount);
     const cost =
       input.paymentMethod === "ticket"
-        ? STREET_PACK_CONFIG.ticketCost
-        : STREET_PACK_CONFIG.softCurrencyCost;
+        ? tier.ticketCost
+        : tier.softCurrencyCost;
     if (input.paymentMethod === "ticket" && profile.packTickets < cost) {
       throw new EconomyTransactionError(
         400,
-        "You need a Street Pack ticket",
+        pullCount === 10
+          ? `You need ${STREET_PACK_TEN_PULL_CONFIG.ticketCost} Street Pack tickets for the ten-pull`
+          : "You need a Street Pack ticket",
       );
     }
     if (
@@ -80,16 +89,24 @@ export async function openStreetPackForPlayer(
     ) {
       throw new EconomyTransactionError(
         400,
-        `You need ${STREET_PACK_CONFIG.softCurrencyCost} Clout`,
+        `You need ${cost} Clout`,
       );
     }
 
-    const generated = generateStreetPack({
-      ownedCardIds: profile.ownedCardIds,
-      discoveredCardIds: profile.discoveredCardIds,
-      ownedVariants: profile.ownedVariants,
-      pity: profile.packPity,
-    });
+    const generated =
+      pullCount === 10
+        ? generateStreetTenPull({
+            ownedCardIds: profile.ownedCardIds,
+            discoveredCardIds: profile.discoveredCardIds,
+            ownedVariants: profile.ownedVariants,
+            pity: profile.packPity,
+          })
+        : generateStreetPack({
+            ownedCardIds: profile.ownedCardIds,
+            discoveredCardIds: profile.discoveredCardIds,
+            ownedVariants: profile.ownedVariants,
+            pity: profile.packPity,
+          });
     await tx
       .update(playerProfilesTable)
       .set({
@@ -115,7 +132,7 @@ export async function openStreetPackForPlayer(
       .values({
         clerkUserId: userId,
         idempotencyKey: input.idempotencyKey,
-        oddsVersion: STREET_PACK_CONFIG.oddsVersion,
+        oddsVersion: tier.oddsVersion,
         paymentMethod: input.paymentMethod,
         cost,
         rewards: generated.rewards,

@@ -1,0 +1,394 @@
+.story-atlas {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #111b19;
+  overflow: hidden;
+}
+.story-atlas__header {
+  position: relative;
+  z-index: 2;
+  padding: 10px 35px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  background: linear-gradient(0deg, #14201c, #101917);
+  flex: none;
+}
+.story-atlas__header .studio-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0 0 15px;
+  max-width: 65vw;
+  gap: 23px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.story-atlas__header .studio-tabs button {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+}
+.story-atlas__header .studio-tabs button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.story-atlas__header h1 {
+  font: 900 clamp(27px, 3.5vw, 47px)/1 var(--font-display, Impact, sans-serif);
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  margin-top: 7px;
+  max-width: 750px;
+}
+.story-atlas__header .studio-eyebrow {
+  font-size: 8px;
+  max-width: 650px;
+}
+.story-atlas__progress {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: none;
+  padding-top: 25px;
+}
+.story-atlas__progress > span {
+  font-size: 10px;
+  color: #e0d9c1;
+}
+.story-atlas__progress small {
+  display: block;
+  font-size: 9px;
+  margin-top: 5px;
+  color: #93a891;
+}
+.story-atlas__viewport {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #dbc58b55 transparent;
+}
+.story-atlas__terrain {
+  position: relative;
+  isolation: isolate;
+  min-height: 450px;
+  height: 100%;
+  min-width: 760px;
+  background-size: cover;
+  background-position: center;
+}
+.story-atlas__wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, #101b1b88, #14201c1a 50%, #14201c77), #0d19194d;
+  z-index: -1;
+}
+.story-atlas__routes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px #0009);
+}
+.story-atlas__node {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  cursor: pointer;
+  overflow: visible;
+}
+.story-atlas__marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #14211beb;
+  border: 1px solid #e8d5a77a;
+  color: #e9d19a;
+  box-shadow: 0 4px 20px #0007;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+.story-atlas__marker:before {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid #d9c68f20;
+  content: '';
+}
+.story-atlas__node:hover .story-atlas__marker,
+.story-atlas__node:focus-visible .story-atlas__marker {
+  transform: scale(1.12);
+  border-color: #fff0c7;
+}
+.story-atlas__node.is-next .story-atlas__marker {
+  background: #ead09a;
+  color: #232b1d;
+  box-shadow: 0 0 30px #efcc6555;
+}
+.story-atlas__node.is-next .story-atlas__marker:before {
+  border-color: #ead09a77;
+  inset: -8px;
+}
+.story-atlas__node.is-locked {
+  cursor: not-allowed;
+}
+.story-atlas__node.is-locked .story-atlas__marker {
+  border-color: #babfaa55;
+  color: #a0b095;
+  background: #19251fe6;
+}
+.story-atlas__node.is-optional .story-atlas__marker {
+  border-style: dashed;
+}
+.story-atlas__node.is-boss {
+  width: 70px;
+  height: 70px;
+}
+.story-atlas__node.is-boss .story-atlas__marker {
+  width: 62px;
+  height: 62px;
+}
+.story-atlas__marker img {
+  width: 70px;
+  height: 85px;
+  object-fit: contain;
+  position: absolute;
+  bottom: 0;
+  max-width: none;
+  filter: drop-shadow(0 3px 4px #0008);
+}
+.story-atlas__node.is-locked img {
+  filter: grayscale(0.7) brightness(0.8);
+}
+.story-atlas__crown {
+  position: absolute;
+  right: -10px;
+  bottom: 0;
+  color: #f4d992;
+}
+.story-atlas__label {
+  position: absolute;
+  width: 150px;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  text-shadow:
+    0 2px 5px #000,
+    0 0 15px #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.story-atlas__label strong {
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 700;
+  display: block;
+}
+.story-atlas__label small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ead39e;
+  margin-top: 4px;
+}
+.story-atlas__node:is(:hover, :focus-visible, .is-next, .is-boss) .story-atlas__label {
+  opacity: 1;
+}
+.story-atlas__node:is(:hover, :focus-visible) {
+  z-index: 3;
+}
+.story-atlas__stars {
+  position: absolute;
+  top: calc(100% + 3px);
+  display: flex;
+  gap: 3px;
+  color: #ead39e;
+}
+.story-atlas__footer {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 35px 40px;
+  position: relative;
+  flex: none;
+  background: linear-gradient(0deg, #0f1817, #17251f);
+}
+.story-atlas__footer > div:first-child {
+  flex: 1;
+}
+.story-atlas__footer strong {
+  display: block;
+  font-size: 16px;
+  margin-top: 6px;
+}
+.story-atlas__hint {
+  display: block;
+  color: #91a38b;
+  font-size: 9px;
+  margin-top: 7px;
+}
+.story-atlas__tickets summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 7px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  color: #dbc793;
+  font-size: 9px;
+  list-style: none;
+}
+.story-atlas__tickets summary::-webkit-details-marker {
+  display: none;
+}
+.story-atlas__tickets > div {
+  position: absolute;
+  right: 25px;
+  bottom: 100%;
+  width: min(330px, calc(100vw - 40px));
+  max-height: 65dvh;
+  overflow: auto;
+  background: #101a16;
+  box-shadow: 0 10px 40px #0008;
+  border: 1px solid #d5c39833;
+  border-radius: 12px;
+  padding: 7px;
+  z-index: 10;
+}
+.story-atlas__tickets > div > div {
+  border: 0;
+  background: none;
+}
+.story-atlas__tickets[open] summary {
+  color: #fff1c9;
+}
+.story-atlas .studio-action {
+  white-space: nowrap;
+}
+@media (max-width: 680px) {
+  .story-atlas__header {
+    padding: 8px 20px 20px;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .story-atlas__header h1 {
+    font-size: 28px;
+  }
+  .story-atlas__header .studio-tabs {
+    max-width: calc(100vw - 40px);
+    gap: 18px;
+  }
+  .story-atlas__header .studio-eyebrow {
+    font-size: 7px;
+    max-width: 230px;
+  }
+  .story-atlas__progress {
+    padding: 0;
+  }
+  .story-atlas__progress > .studio-progress {
+    width: 40px;
+    height: 40px;
+    font-size: 9px;
+  }
+  .story-atlas__progress > span {
+    display: none;
+  }
+  .story-atlas__header > div:first-child {
+    min-width: 0;
+  }
+  .story-atlas__footer {
+    padding: 17px 20px 65px;
+    display: grid;
+    grid-template-columns: 1fr 48px;
+    gap: 12px;
+  }
+  .story-atlas__footer > div:first-child {
+    grid-column: 1;
+  }
+  .story-atlas__footer > .studio-action {
+    grid-column: 1;
+    justify-self: start;
+    min-height: 42px;
+    font-size: 10px;
+    padding: 10px 17px;
+  }
+  .story-atlas__footer strong {
+    font-size: 14px;
+  }
+  .story-atlas__tickets {
+    grid-column: 2;
+    grid-row: 1/3;
+    align-self: center;
+  }
+  .story-atlas__terrain {
+    min-height: 430px;
+    min-width: 700px;
+  }
+  .story-atlas__viewport {
+    min-height: 230px;
+  }
+  .story-atlas__tickets > div {
+    right: 15px;
+  }
+}
+@media (max-height: 650px) and (min-width: 681px) {
+  .story-atlas__header {
+    padding-bottom: 12px;
+  }
+  .story-atlas__header h1 {
+    font-size: 28px;
+  }
+  .story-atlas__header .studio-tabs {
+    margin-bottom: 5px;
+  }
+  .story-atlas__footer {
+    padding: 12px 25px 30px;
+  }
+  .story-atlas__viewport {
+    min-height: 180px;
+  }
+  .story-atlas__terrain {
+    min-height: 370px;
+  }
+}
+@media (max-width: 680px) {
+  .story-atlas__progress > .studio-progress {
+    display: grid;
+  }
+}
+@media(max-height:550px) and (orientation:landscape){
+ .game-shell:has(.story-atlas) .venue-hud{display:none}
+ .story-atlas__header{padding:6px 24px 9px;align-items:center}
+ .story-atlas__header .studio-tabs{margin:0;gap:16px}
+ .story-atlas__header .studio-tabs button{min-height:25px;padding:3px 0;font-size:8px}
+ .story-atlas__header .studio-eyebrow{display:none}
+ .story-atlas__header h1{font-size:23px;margin-top:4px}
+ .story-atlas__progress{padding:0}.story-atlas__progress>.studio-progress{width:38px;height:38px}
+ .story-atlas__viewport{min-height:100px}.story-atlas__terrain{min-height:340px}
+ .game-shell--fan .story-atlas__footer{padding:8px 24px calc(var(--fan-clearance) + 10px);gap:18px}
+ .story-atlas__footer strong{font-size:13px;margin-top:3px}
+ .story-atlas__footer .studio-eyebrow{font-size:7px}.story-atlas__hint{display:none}
+ .story-atlas__footer>.studio-action{min-height:36px;padding:8px 15px;font-size:10px}
+ .story-atlas__tickets summary{padding:3px;min-height:36px}
+}

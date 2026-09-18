@@ -1,0 +1,40 @@
+{
+  "requests": [
+    {
+      "aspect_ratio": "3:4",
+      "resolution": "1K",
+      "prompt": "A seamless aged-kraft paper texture, warm cream color with subtle fiber grain and faint horizontal notebook ruling lines, soft vignette, isolated on transparent corners, studio flat-lay photography style, no text, no logos",
+      "output_file": "paper-grain.png"
+    },
+    {
+      "aspect_ratio": "16:9",
+      "resolution": "1K",
+      "prompt": "A seamless manga speed-lines background pattern, bold black radial speed lines converging from off-canvas on a near-black slate background, anime impact frame aesthetic, print-style halftone texture, no text",
+      "output_file": "speed-lines.png"
+    },
+    {
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "prompt": "A single piece of washi tape strip, semi-transparent, classic diagonal stripe pattern in mustard yellow with thin black pinstripes, slightly torn edges, laid flat on a transparent background, no text",
+      "output_file": "washi-tape.png"
+    },
+    {
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "prompt": "A weathered circular rubber ink stamp of the word CLASSIFIED in bold distressed black caps on a transparent background, gritty grunge texture, slightly off-center ink coverage, isolated",
+      "output_file": "classified-stamp.png"
+    },
+    {
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "prompt": "A weathered square red ink rubber stamp of the words SCOUT NOTE in bold distressed caps on a transparent background, gritty grunge texture, isolated",
+      "output_file": "scout-stamp.png"
+    },
+    {
+      "aspect_ratio": "21:9",
+      "resolution": "1K",
+      "prompt": "A torn strip of lined notebook paper, cream colored with horizontal ruled lines, a single vertical red margin line on the left, irregular hand-torn edges on the right, flat-lay photography, no text no writing, isolated on transparent background",
+      "output_file": "torn-paper-strip.png"
+    }
+  ]
+}

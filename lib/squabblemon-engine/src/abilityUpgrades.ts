@@ -6,6 +6,7 @@ export const ABILITY_UPGRADE_SNAPSHOT_VERSION = 1 as const;
 export type CardAbilityUpgradeSnapshot = {
   readonly cardId: string;
   readonly level: number;
+  readonly moveTier?: number;
   readonly upgradeIds: readonly string[];
 };
 
@@ -34,8 +35,8 @@ export function unlockedAbilityUpgrades(cardId: string, level: number): readonly
 function snapshotCards(cardIds: readonly string[], progress: CardProgressionMap = {}): readonly CardAbilityUpgradeSnapshot[] {
   return cardIds.map((cardId) => {
     if (!cards[cardId]) throw new Error(`Unknown card ${cardId}`);
-    const level = normalizeCardProgress(progress[cardId]).level;
-    return { cardId, level, upgradeIds: unlockedAbilityUpgrades(cardId, level).map((upgrade) => upgrade.id) };
+    const { level, moveTier } = normalizeCardProgress(progress[cardId]);
+    return { cardId, level, moveTier, upgradeIds: unlockedAbilityUpgrades(cardId, level).slice(0, moveTier).map((upgrade) => upgrade.id) };
   });
 }
 
@@ -63,7 +64,9 @@ export function validateAbilityUpgradeSnapshot(
     entries.forEach((entry, index) => {
       const card = cards[expected[index]];
       if (!card || entry.cardId !== expected[index] || !Number.isInteger(entry.level) || entry.level < 1 || entry.level > CARD_LEVEL_CAP) throw new Error(`Invalid ${side} ability upgrade snapshot`);
-      const expectedIds = unlockedAbilityUpgrades(entry.cardId, entry.level).map((upgrade) => upgrade.id);
+      const eligible = unlockedAbilityUpgrades(entry.cardId, entry.level);
+      if (entry.moveTier !== undefined && (!Number.isInteger(entry.moveTier) || entry.moveTier < 0 || entry.moveTier > eligible.length)) throw new Error(`Forged ${side} move tier`);
+      const expectedIds = eligible.slice(0, entry.moveTier ?? eligible.length).map((upgrade) => upgrade.id);
       const upgradeIds = entry.upgradeIds as readonly string[];
       if (!Array.isArray(upgradeIds) || upgradeIds.length !== expectedIds.length || upgradeIds.some((id: string, i: number) => id !== expectedIds[i])) throw new Error(`Forged ${side} ability upgrade snapshot`);
     });
@@ -72,8 +75,8 @@ export function validateAbilityUpgradeSnapshot(
   validateSide(snapshot.cpu, cpuCardIds, "cpu");
   return freeze({
     version: ABILITY_UPGRADE_SNAPSHOT_VERSION,
-    player: snapshot.player.map((entry) => ({ cardId: entry.cardId, level: entry.level, upgradeIds: [...entry.upgradeIds] })),
-    cpu: snapshot.cpu.map((entry) => ({ cardId: entry.cardId, level: entry.level, upgradeIds: [...entry.upgradeIds] })),
+    player: snapshot.player.map((entry) => ({ ...entry, upgradeIds: [...entry.upgradeIds] })),
+    cpu: snapshot.cpu.map((entry) => ({ ...entry, upgradeIds: [...entry.upgradeIds] })),
   });
 }
 

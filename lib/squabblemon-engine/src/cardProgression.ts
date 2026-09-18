@@ -3,6 +3,8 @@ export const CARD_LEVEL_CAP = 10;
 export type CardProgress = {
   xp: number;
   level: number;
+  /** Missing on legacy saves: previously earned move tiers are preserved. */
+  moveTier?: number;
 };
 
 export type CardProgressionMap = Record<string, CardProgress>;
@@ -23,8 +25,13 @@ export function cardLevelFromXp(xp: number): number {
 }
 
 export function normalizeCardProgress(progress?: Partial<CardProgress> | null): CardProgress {
-  const xp = Math.max(0, Math.min(CARD_XP_CAP, Math.floor(progress?.xp ?? 0)));
-  return { xp, level: cardLevelFromXp(xp) };
+  const rawXp = Number.isFinite(progress?.xp) ? progress!.xp! : 0;
+  const xp = Math.max(0, Math.min(CARD_XP_CAP, Math.floor(rawXp)));
+  const level = cardLevelFromXp(xp);
+  const eligible = [2, 5, 8].filter(required => level >= required).length;
+  const legacyTier = progress ? eligible : 0;
+  const rawTier = progress?.moveTier === undefined ? legacyTier : Number.isFinite(progress.moveTier) ? progress.moveTier : 0;
+  return { xp, level, moveTier: Math.max(0, Math.min(eligible, Math.floor(rawTier))) };
 }
 
 export function cardProgressDetails(progress?: Partial<CardProgress> | null) {

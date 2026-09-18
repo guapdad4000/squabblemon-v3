@@ -1,0 +1,109 @@
+.collector-card {
+  --foil-x: 50%; --foil-y: 35%; --tilt-x: 0deg; --tilt-y: 0deg;
+  --foil-strength: .12;
+  perspective: 1000px;
+}
+.collector-card.card-rarity-common { --rarity-color: #a8ada9; }
+.collector-card.card-rarity-supercommon { --rarity-color: #cbb99c; --foil-strength: 0; }
+.collector-card.card-rarity-uncommon { --rarity-color: #4ade80; --foil-strength: .2; }
+.collector-card.card-rarity-rare { --rarity-color: #3b82f6; --foil-strength: .3; }
+.collector-card.card-rarity-epic { --rarity-color: #a855f7; --foil-strength: .24; }
+.collector-card.card-rarity-mythical { --rarity-color: #ef4444; --foil-strength: .38; }
+.card-rarity-mythical .collector-foil { background: conic-gradient(from 35deg, transparent, #ef4444, #fb923c, transparent, #ef4444, transparent); }
+.collector-card.card-rarity-legendary { --rarity-color: #f5d77c; --foil-strength: .32; }
+.collector-card .collector-frame {
+  background: linear-gradient(135deg, #fff5, var(--rarity-color) 14%, #16191e 34%, var(--rarity-color) 67%, #fff8 83%, #181b25);
+  box-shadow: 0 15px 35px #0008;
+  transition: transform .28s ease-out, filter .28s ease-out;
+}
+.collector-card--tactile:hover .collector-frame {
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--rarity-color) 25%, transparent));
+}
+.collector-card:focus-visible { outline: 2px solid var(--rarity-color); outline-offset: 5px; }
+.collector-card .collector-wallpaper {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: .85; transform: scale(1.07); pointer-events: none;
+}
+.collector-atmosphere {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 30%, transparent 20%, #0508109c 80%), linear-gradient(0deg, #08090f 1%, transparent 65%);
+}
+.collector-card .collector-portrait { filter: drop-shadow(0 5px 8px #0009); }
+.collector-card .card-rarity-glow {
+  background: none; border: 1px solid color-mix(in srgb, var(--rarity-color) 65%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--rarity-color) 20%, transparent);
+}
+.collector-foil, .collector-glare, .collector-webgl {
+  position: absolute; inset: 0; z-index: 16; pointer-events: none;
+  mask-image: linear-gradient(#000 0 60%, transparent 87%);
+}
+.collector-foil {
+  opacity: var(--foil-strength); mix-blend-mode: color-dodge;
+  background: repeating-linear-gradient(115deg, #a8eaff 0%, #edbaff 16%, #a5ffe2 32%, #ffd69e 48%, #a8eaff 64%);
+  background-size: 300% 300%; background-position: var(--foil-x) var(--foil-y);
+}
+.card-rarity-common .collector-foil { background: linear-gradient(115deg, transparent 20%, #c6e5f0 45%, transparent 60%); }
+.card-rarity-uncommon .collector-foil {
+  background-image: repeating-linear-gradient(125deg, transparent 0 7px, #95ffe8 8px, transparent 9px 15px), linear-gradient(115deg, #2f9788, #dfecff, #52b4b0);
+}
+.card-rarity-epic .collector-foil {
+  background-image: repeating-conic-gradient(from 20deg at var(--foil-x) var(--foil-y), #ffe2b4 0deg, #cf86ff 30deg, #6ee7ff 60deg, #ffe2b4 90deg);
+}
+.card-rarity-legendary .collector-foil {
+  background-image: repeating-linear-gradient(125deg, #ffd578 0%, #fcf2c5 12%, #a586e6 25%, #78dbd0 38%, #ffd578 50%);
+}
+.collector-glare {
+  background: radial-gradient(ellipse at var(--foil-x) var(--foil-y), #fff8, #fff1 24%, transparent 58%);
+  mix-blend-mode: soft-light; opacity: .45;
+}
+.collector-card--tactile:hover .collector-glare { opacity: .85; }
+.collector-tier-cue { color: var(--rarity-color); letter-spacing: -.14em; }
+.collector-webgl canvas { display: block; width: 100%; height: 100%; }
+.collector-card--inspector .collector-frame { padding: 5px; }
+.collector-card--inspector .collector-portrait { bottom: 17%; height: 79%; }
+.collector-card--inspector h4 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.collector-card--long-name h4 { overflow-wrap: anywhere; }
+.collector-card--inspector.collector-card--long-name h4 { font-size: clamp(0.95rem, 2vw, 1.35rem); }
+.collector-card--inspector .collector-tier-cue { font-size: 8px; }
+.collector-inspector-backdrop {
+  position: fixed; inset: 0; background-size: cover; background-position: center;
+  opacity: .18; filter: blur(8px); pointer-events: none;
+}
+.collector-display { position: relative; flex-shrink: 0; padding: 12px 0 0; }
+.collector-dossier .card-rarity-glow { background: none; box-shadow: inset 0 0 18px color-mix(in srgb, var(--rarity-color) 12%, transparent); }
+.collector-display::before {
+  content: ''; position: absolute; inset: 15% -12% 8%; pointer-events: none;
+  background: radial-gradient(ellipse, #ad88ff29, transparent 65%); filter: blur(22px);
+}
+.collector-display-caption { margin-top: 22px; text-align: center; font: 10px var(--font-mono); text-transform: uppercase; letter-spacing: .18em; color: #e4d8bc; }
+.collector-display-caption small { display: block; font-size: 8px; margin-top: 8px; letter-spacing: .05em; color: #ffffff60; }
+/* Keep variant ink attached to the tilted card and preserve its distinct finish. */
+.collector-card.card-variant::after { display: none; }
+.collector-card.card-variant-chrome .collector-foil { --foil-strength: .5; }
+.collector-tier-list { display: flex; gap: 8px; overflow-x: auto; padding: 3px 0 8px; }
+.collector-tier-option {
+  position: relative; flex: 1 0 126px; min-width: 0; text-align: left;
+  padding: 12px; border: 1px solid #ffffff20; border-top: 2px solid var(--rarity-color);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--rarity-color) 9%, #090b10), #090b10);
+  transition: border-color .2s;
+}
+.collector-tier-option:hover, .collector-tier-option[aria-pressed='true'] { border-color: var(--rarity-color); background: color-mix(in srgb, var(--rarity-color) 15%, #090b10); }
+.collector-tier-option__cue { display: block; color: var(--rarity-color); font-size: 9px; letter-spacing: 2px; margin-bottom: 8px; }
+.collector-tier-option strong { display: block; font: 900 italic 15px var(--font-display); text-transform: uppercase; color: #f4f4f5; }
+.collector-tier-option small { display: block; margin-top: 4px; color: #a1a1aa; font: 8px var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
+.collector-tier-option__count { position: absolute; right: 10px; top: 10px; color: #ffffff60; font: 8px var(--font-mono); }
+.collector-card.card-variant-tagged .card-variant-sheen { border: 3px solid #ef2a69; }
+:root[data-reduced-motion='true'] .collector-card .collector-frame { transform: none; transition: none; }
+:root[data-reduced-motion='true'] .collector-webgl,
+:root[data-reduced-motion='true'] .collector-display-caption small { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .collector-card .collector-frame { transform: none !important; transition: none; }
+  .collector-webgl, .collector-display-caption small { display: none; }
+}
+@media (hover: none) { .collector-display-caption small { display: none; } }
+@media (max-width: 767px) { .collector-dossier { max-height: none; flex-shrink: 0; } }
+[data-card-inspectable="true"] { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+[data-card-inspectable="true"] img { -webkit-user-drag: none; }
+[data-inspect-holding="true"] { outline: 2px solid #edc96788; outline-offset: 3px; }
+.card-details-loading { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #080a0dec; color: #f7e6bb; }

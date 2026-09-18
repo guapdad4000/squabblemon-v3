@@ -26,14 +26,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="%BASE_URL%icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%icons/apple-touch-icon.png" />
     <link rel="manifest" href="%BASE_URL%site.webmanifest" />
-    <link rel="preload" as="image" type="image/webp" href="%BASE_URL%brand/squabblemon-wordmark.webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="root">
       <div class="first-paint-loader" role="status" aria-label="Loading Squabblemon">
+        <img class="first-paint-loader__backdrop" src="%BASE_URL%brand/loading-scenes.webp" alt="" aria-hidden="true" />
         <div class="first-paint-loader__glow" aria-hidden="true"></div>
         <img
           class="first-paint-loader__mark"
@@ -56,8 +56,11 @@
         font: 700 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
         letter-spacing: .28em; text-transform: uppercase;
       }
+      .first-paint-loader > * { position: relative; z-index: 1; }
+      .first-paint-loader .first-paint-loader__backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; opacity: .3; z-index: 0; }
       .first-paint-loader__glow {
         position: absolute; width: min(88vw, 580px); aspect-ratio: 1; border: 1px solid rgba(218,166,56,.12);
+        left: 50%; top: 50%; transform: translate(-50%, -50%);
         border-radius: 50%; box-shadow: 0 0 80px rgba(218,166,56,.08), inset 0 0 80px rgba(0,0,0,.7);
       }
       .first-paint-loader__mark {

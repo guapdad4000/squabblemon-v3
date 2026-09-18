@@ -1,0 +1,62 @@
+[
+  {
+    "id": "wax-killa-breaks",
+    "title": "Wax Killa Breaks",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 143.13,
+    "ogg": "audio/treblo/wax-killa-breaks.ogg",
+    "aac": "audio/treblo/wax-killa-breaks.m4a",
+    "sourceSha256": "13d590cd03d9d40bdf5fb8cd97e4c9c3013777aeee76d647c2704b08071dd515"
+  },
+  {
+    "id": "grime-of-the-temple",
+    "title": "Grime of the Temple",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 64.19,
+    "ogg": "audio/treblo/grime-of-the-temple.ogg",
+    "aac": "audio/treblo/grime-of-the-temple.m4a",
+    "sourceSha256": "b56111422c79002933c1304d37318b54bc040c36c915684b46dcf85cabffef2e"
+  },
+  {
+    "id": "chop-block",
+    "title": "Chop Block",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 113.83,
+    "ogg": "audio/treblo/chop-block.ogg",
+    "aac": "audio/treblo/chop-block.m4a",
+    "sourceSha256": "24cf41a286919e8353f4b675b4c5f636aad00e1b60d2f71b96f465b52ec07ea8"
+  },
+  {
+    "id": "shaolin-scratches",
+    "title": "Shaolin Scratches",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 158.83,
+    "ogg": "audio/treblo/shaolin-scratches.ogg",
+    "aac": "audio/treblo/shaolin-scratches.m4a",
+    "sourceSha256": "4f5865d3646a3e27ac4882eed951142537a205f265923d9a0035d3dc650ce98d"
+  },
+  {
+    "id": "saber-chop",
+    "title": "Saber Chop",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 94.23,
+    "ogg": "audio/treblo/saber-chop.ogg",
+    "aac": "audio/treblo/saber-chop.m4a",
+    "sourceSha256": "aedf578a6e640372c5734592962bba618099a21f77d0832f7b374f992e49ed8c"
+  },
+  {
+    "id": "shaolin-static",
+    "title": "Shaolin Static",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 41.8,
+    "ogg": "audio/treblo/shaolin-static.ogg",
+    "aac": "audio/treblo/shaolin-static.m4a",
+    "sourceSha256": "859cfe43a8dfc7bd85f4a0a378eeb5f43d50e01eec3fc3067d29473ce85426b6"
+  }
+]

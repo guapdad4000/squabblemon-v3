@@ -1,125 +1,29 @@
-import { clearAfterSignIn, useAppAuth } from '../../lib/auth';
+import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
+import { LoadingScreen } from '../../components/LoadingScreen';
+import { readPreviewDecks } from '../../lib/previewDecks';
 import {
   getGetPlayerBootstrapQueryKey,
   useGetPlayerBootstrap,
 } from '@workspace/api-client-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
-import {
-  Crown,
-  House,
-  Images,
-  MapPinned,
-  Shield,
-  ShoppingBag,
-  Swords,
-  Ticket,
-  UsersRound,
-} from 'lucide-react';
+import { GameNav, GameHud } from '../../components/venue/GameNav';
 import { useEffect, type ReactNode } from 'react';
 import { Redirect, Route, Switch, useLocation } from 'wouter';
 
-import { PlayLoop } from '../../components/PlayLoop';
-import { starterRecipes, validateSavedDeck } from '../../data';
+import { cardCatalog, starterRecipes } from '../../data';
 import { Collection } from './Collection';
 import { DeckEditor } from './DeckEditor';
 import { Decks } from './Decks';
 import { DeckTest } from './DeckTest';
+import { PlayerDeckPlay } from './PlayerDeckPlay';
 import { Home } from './Home';
 import { Missions } from './Missions';
 import { Onboarding } from './Onboarding';
 import { Settings } from './Settings';
 import { Shop } from './Shop';
 import { Story } from './Story';
+import { Multiplayer } from './Multiplayer';
 
-function LoadingScreen() {
-  return (
-    <div className="brand-loader" role="status" aria-label="Loading Squabblemon">
-      <div className="brand-loader__halo" aria-hidden="true" />
-      <img
-        src={`${import.meta.env.BASE_URL}brand/squabblemon-crest.webp`}
-        alt=""
-        width="374"
-        height="384"
-        className="brand-loader__crest"
-      />
-      <div className="brand-loader__meter" aria-hidden="true"><span /></div>
-      <span className="brand-loader__label">Loading the block</span>
-    </div>
-  );
-}
-
-type NavBadge = {
-  label: string;
-  tone: 'new' | 'reward' | 'notice';
-};
-
-type NavLink = {
-  path: string;
-  label: string;
-  icon: typeof House;
-  badge?: NavBadge;
-};
-
-function FightNightNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const [location, setLocation] = useLocation();
-  const rewardCount = bootstrap.missions.filter((mission) => mission.status === 'claimable').length;
-  const collectionRewardCount = bootstrap.collectionRoad.filter((milestone) => milestone.status === 'claimable').length;
-  const links: NavLink[] = [
-    { path: '/game', label: 'Corner', icon: House },
-    { path: '/game/story', label: 'Streets', icon: MapPinned, badge: bootstrap.nextAction.destination === 'story' ? { label: 'New', tone: 'new' } : undefined },
-    { path: '/game/play', label: 'Fight', icon: Swords },
-    { path: '/game/collection', label: 'Cards', icon: Images, badge: collectionRewardCount ? { label: String(collectionRewardCount), tone: 'reward' } : undefined },
-    { path: '/game/decks', label: 'Crew', icon: UsersRound },
-    { path: '/game/missions', label: 'Bounties', icon: Crown, badge: rewardCount ? { label: String(rewardCount), tone: 'reward' } : undefined },
-    { path: '/game/shop', label: 'Tickets', icon: Ticket, badge: bootstrap.profile.packTickets ? { label: String(bootstrap.profile.packTickets), tone: 'notice' } : undefined },
-    { path: '/game/settings', label: 'Profile', icon: Shield },
-  ];
-
-  return (
-    <nav className="fight-nav" aria-label="Fight night navigation">
-      <div className="fight-nav__brand" aria-hidden="true">
-        <img
-          src={`${import.meta.env.BASE_URL}brand/squabblemon-wordmark.webp`}
-          alt=""
-          className="fight-nav__wordmark"
-        />
-        <div className="fight-nav__brand-rule">
-          <span>Corner controls</span>
-          <span>SB // 04</span>
-        </div>
-      </div>
-
-      <div className="fight-nav__links">
-        {links.map((link) => {
-          const Icon = link.icon;
-          const isActive = location === link.path || (link.path !== '/game' && location.startsWith(link.path));
-
-          return (
-            <button
-              key={link.path}
-              type="button"
-              onClick={() => setLocation(link.path)}
-              className={`fight-nav__button ${isActive ? 'is-active' : ''}`}
-              aria-current={isActive ? 'page' : undefined}
-              aria-label={`${link.label}${link.badge ? `, ${link.badge.label}` : ''}`}
-            >
-              <span className="fight-nav__icon-wrap" aria-hidden="true">
-                <Icon className="fight-nav__icon" strokeWidth={isActive ? 2.5 : 2} />
-                {link.badge && (
-                  <span className={`fight-nav__badge is-${link.badge.tone}`}>
-                    {link.badge.label}
-                  </span>
-                )}
-              </span>
-              <span className="fight-nav__label">{link.label}</span>
-              <span className="fight-nav__active-mark" aria-hidden="true" />
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
 
 function BootstrapError({
   onRetry,
@@ -170,50 +74,20 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap]);
 
-  const availableDeckIds = starterRecipes
-    .filter((recipe) =>
-      validateSavedDeck(
-        recipe.catalogCardIds,
-        bootstrap.profile.ownedCardIds,
-        recipe.hero,
-      ).valid,
-    )
-    .map((recipe) => recipe.id);
-
   return (
     <Switch>
       <Route path="/game/onboarding">
         <Onboarding bootstrap={bootstrap} />
       </Route>
-      <Route path="/game/play">
-        <PlayLoop
-          mode="practice"
-          onExit={() => setLocation('/game')}
-          turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
-          availableDeckIds={availableDeckIds}
-          equippedVariants={bootstrap.profile.equippedVariants}
-          cardProgression={bootstrap.profile.cardProgression}
-        />
-      </Route>
-      <Route path="/game/story/play/:nodeId">
-        {(params) => (
-          <PlayLoop
-            mode="story"
-            storyNodeId={params.nodeId}
-            onExit={() => setLocation(`/game/story?node=${params.nodeId}`)}
-            turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
-            availableDeckIds={availableDeckIds}
-            initialDeckId={bootstrap.profile.starterDeckId || availableDeckIds[0]}
-            hideLobby
-            equippedVariants={bootstrap.profile.equippedVariants}
-          />
-        )}
-      </Route>
+      <Route path="/game/play"><PlayerDeckPlay bootstrap={bootstrap} /></Route>
+      <Route path="/game/online/:code">{params => <Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} />}</Route>
+      <Route path="/game/online"><Multiplayer bootstrap={bootstrap} /></Route>
+      <Route path="/game/story/play/:nodeId">{params => <PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} />}</Route>
       <Route path="/game/collection">
         <GameShell bootstrap={bootstrap} location={location}><Collection bootstrap={bootstrap} /></GameShell>
       </Route>
       <Route path="/game/decks/:deckId/test">
-        <GameShell bootstrap={bootstrap} location={location}><DeckTest bootstrap={bootstrap} /></GameShell>
+        <DeckTest bootstrap={bootstrap} />
       </Route>
       <Route path="/game/decks/:deckId">
         <GameShell bootstrap={bootstrap} location={location}><DeckEditor bootstrap={bootstrap} /></GameShell>
@@ -241,6 +115,15 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
 }
 
+// Routes that benefit from hiding the chunky fan-nav strip. The slim
+// CinemaNavSheet toggle still floats over the scene for escape.
+const FULL_BLEED_ROUTES = new Set([
+  '/game/onboarding',
+  '/game/play',
+  '/game/online',
+  '/game/decks/test',
+]);
+
 function GameShell({
   bootstrap,
   location,
@@ -250,11 +133,21 @@ function GameShell({
   location: string;
   children: ReactNode;
 }) {
+  const normalized = location.length > 1 ? location.replace(/\/+$/, '') : location;
+  const isFullBleed =
+    normalized === '/game/story' ||
+    normalized.startsWith('/game/story/') ||
+    normalized === '/game/online' ||
+    normalized.startsWith('/game/online/') ||
+    normalized === '/game/decks/test' ||
+    normalized.startsWith('/game/decks/') && normalized.endsWith('/test') ||
+    FULL_BLEED_ROUTES.has(normalized);
   return (
-        <div className="game-shell h-[100dvh] bg-[#070707] text-white">
+        <div className={`game-shell game-shell--fan h-[100dvh] bg-[#070707] text-white ${isFullBleed ? 'cinema-nav-suppressed' : ''}`}>
           <div className="noise-overlay" />
-          <FightNightNav bootstrap={bootstrap} />
+          <GameNav bootstrap={bootstrap} />
           <div className="game-shell__content">
+            <GameHud bootstrap={bootstrap} />
             <div className="game-route-stage" key={location}>
               {children}
             </div>
@@ -263,10 +156,93 @@ function GameShell({
   );
 }
 
+// Offline fallback bootstrap used when VITE_E2E_AUTH=true and the API server
+// isn't running. Lets the entire /game shell render so QA can exercise every
+// route without a live Postgres + Clerk stack. The shape mirrors the API
+// contract in @workspace/api-client-react so the typed components stay happy.
+function getE2EBootstrap(): PlayerBootstrap {
+  // The local preview must allow testing expansion cards as well as starter crews.
+  const allCardIds = cardCatalog.map(card => card.catalogId);
+  const equippedVariants: Record<string, string> = {};
+  const cardProgression: Record<string, { xp: number; level: number }> = {};
+  for (const cardId of allCardIds) {
+    cardProgression[cardId] = { xp: 0, level: 1 };
+  }
+  const now = new Date().toISOString();
+  return {
+    profile: {
+      id: 'e2e-player',
+      displayName: 'Test Player',
+      avatarKey: 'cornball',
+      onboardingStep: 'complete',
+      starterDeckId: starterRecipes[0]?.id ?? null,
+      streetRep: 0,
+      xp: 0,
+      level: 1,
+      softCurrency: 500,
+      packTickets: 3,
+      styleShards: 0,
+      packPity: 0,
+      deckSlots: 4,
+      cosmeticCurrency: 0,
+      collectionProgress: 0,
+      storyChapter: 0,
+      storyNode: 0,
+      tutorialCompleted: true,
+      starterRewardClaimed: true,
+      ageConfirmedAt: now,
+      termsAcceptedAt: now,
+      settings: { reducedMotion: false, turnTimerEnabled: true },
+      ownedCardIds: allCardIds,
+      cardProgression,
+      discoveredCardIds: allCardIds,
+      ownedVariants: [],
+      equippedVariants,
+      unlockedCosmeticIds: [],
+      unlockedCharacterIds: [],
+      savedDecks: readPreviewDecks(),
+      storyProgress: {},
+      inbox: [],
+      packHistory: [],
+      lastActiveAt: now,
+    },
+    missions: [],
+    nextAction: {
+      id: 'e2e-next',
+      eyebrow: 'Tonight',
+      title: 'Run the block',
+      description: 'Take two of three districts in an offline practice match.',
+      destination: 'play',
+      rewardLabel: null,
+    },
+    packConfig: {
+      id: 'e2e-pack',
+      name: 'Practice Pack',
+      oddsVersion: 'e2e',
+      softCurrencyCost: 200,
+      ticketCost: 1,
+      rewardsPerPack: 6,
+      pityLimit: 10,
+      odds: [],
+    },
+    tenPullConfig: {
+      id: 'e2e-ten-pull',
+      name: 'Practice Ten Pull',
+      oddsVersion: 'e2e',
+      pullCount: 10,
+      ticketCost: 9,
+      softCurrencyCost: 1800,
+      rewardsPerPull: 6,
+      rarePityBonusPerPull: 1,
+    },
+    collectionRoad: [],
+  };
+}
+
 export default function GameApp() {
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
-  const { data: bootstrap, isLoading, isFetching, error, refetch } = useGetPlayerBootstrap({
+  const { data: apiBootstrap, isLoading, isFetching, error, refetch } = useGetPlayerBootstrap({
     query: {
       queryKey: getGetPlayerBootstrapQueryKey(),
       enabled: isLoaded && isSignedIn,
@@ -275,6 +251,7 @@ export default function GameApp() {
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
+      if (/^\/game\/online\/[a-f0-9]{12}$/i.test(location)) sessionStorage.setItem('squabblemon_friend_invite', location);
       if (location.startsWith('/game')) sessionStorage.setItem('squabblemon_after_sign_in', location);
       setLocation('/sign-in');
     } else if (isLoaded && isSignedIn) {
@@ -283,7 +260,25 @@ export default function GameApp() {
   }, [isLoaded, isSignedIn, location, setLocation]);
 
   if (!isLoaded || !isSignedIn || isLoading) return <LoadingScreen />;
-  if (error || !bootstrap) {
+
+  // The API may return 200 OK with the Vite SPA fallback (HTML) when the
+  // server isn't running, so customFetch hands us a string instead of a
+  // parsed object. Only treat the response as a real bootstrap when it has
+  // the expected shape; in e2e mode fall back to a synthetic payload so
+  // the rest of /game stays navigable for QA.
+  const apiBootstrapValid =
+    !!apiBootstrap &&
+    typeof apiBootstrap === 'object' &&
+    'profile' in apiBootstrap &&
+    !!apiBootstrap.profile &&
+    'onboardingStep' in apiBootstrap.profile;
+  const bootstrap: PlayerBootstrap | undefined = e2eAuthEnabled
+    ? apiBootstrapValid
+      ? (apiBootstrap as PlayerBootstrap)
+      : getE2EBootstrap()
+    : (apiBootstrap as PlayerBootstrap | undefined);
+
+  if ((!e2eAuthEnabled && error) || !bootstrap) {
     return (
       <BootstrapError
         onRetry={() => void refetch()}
@@ -296,7 +291,13 @@ export default function GameApp() {
   const isComplete = bootstrap.profile.onboardingStep === 'complete';
   const normalizedLocation = location.length > 1 ? location.replace(/\/+$/, '') : location;
   const isOnboardingRoute = normalizedLocation === '/game/onboarding';
-  if (!isComplete && !isOnboardingRoute) return <Redirect to="/game/onboarding" />;
-  if (isComplete && isOnboardingRoute) return <Redirect to="/game" />;
+  if (!isComplete && !isOnboardingRoute) {
+    if (/^\/game\/online\/[a-f0-9]{12}$/i.test(location)) sessionStorage.setItem('squabblemon_friend_invite', location);
+    return <Redirect to="/game/onboarding" />;
+  }
+  if (isComplete && isOnboardingRoute) {
+    const invite = sessionStorage.getItem('squabblemon_friend_invite');
+    return <Redirect to={invite && /^\/game\/online\/[a-f0-9]{12}$/i.test(invite) ? invite : '/game'} />;
+  }
   return <GameRoutes bootstrap={bootstrap} />;
 }

@@ -1,0 +1,47 @@
+{
+  "generator": "Built-in imagegen",
+  "assets": [
+    {
+      "id": "shiesty-yn",
+      "file": "public/assets/characters/shiesty-yn.webp",
+      "prompt": "Use case: stylized-concept. Asset type: transparent cutout illustration for the Squabblemon collectible card game. Style: polished hand-inked urban anime / graphic novel, crisp dark linework, angular cel shading, richly textured clothing, grounded proportions, lively readable silhouette. Portrait canvas; entire subject visible with generous transparent margin all around. Actual transparent RGBA background, no scenery, no floor, no gradient, no card frame, no writing, no watermark. Deliver one finished asset. Subject: Shiesty YN, a skinny, menacing brown-skinned young adult man, narrow focused eyes above a black face mask, a low-profile black bottle-cap-style cap, a charcoal and black paneled technical fleece tracksuit resembling Nike Tech, and all-black Air Force style sneakers. Full body three-quarter pose, shoulders slightly hunched, hands in pockets, readable lean silhouette. Keep fashion and expression as the focus.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-6c547bac-aaed-4318-9286-9d91b05ac2bb.png"
+    },
+    {
+      "id": "torta",
+      "file": "public/assets/characters/torta.webp",
+      "prompt": "Use case: stylized-concept. Asset type: transparent cutout illustration for the Squabblemon collectible card game. Style: polished hand-inked urban anime / graphic novel, crisp dark linework, angular cel shading, richly textured clothing, grounded proportions, lively readable silhouette. Portrait canvas; entire subject visible with generous transparent margin all around. Actual transparent RGBA background, no scenery, no floor, no gradient, no card frame, no writing, no watermark. Deliver one finished asset. Subject: Torta, a confident adult Mexican woman with a very round, plus-size torso and distinctly skinny legs. Warm brown skin, long dark wavy hair, hoop earrings, a colorful casual fitted T-shirt and denim shorts with sneakers, fully clothed. Full body, hand on hip, assured friendly smirk. Portray her as a charismatic individual, with appealing urban anime character design.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-95639d83-234f-40d8-8b26-50f6a7c05207.png"
+    },
+    {
+      "id": "water-boy",
+      "file": "public/assets/characters/water-boy.webp",
+      "prompt": "Use case: stylized-concept. Asset type: transparent cutout illustration for the Squabblemon collectible card game. Style: polished hand-inked urban anime / graphic novel, crisp dark linework, angular cel shading, richly textured clothing, grounded proportions, lively readable silhouette. Portrait canvas; entire subject visible with generous transparent margin all around. Actual transparent RGBA background, no scenery, no floor, no gradient, no card frame, no writing, no watermark. Deliver one finished asset. Subject: Water Boy, a close group of three small African American children with varied brown skin tones, in shaggy oversized everyday T-shirts, worn loose shorts and sneakers. Cheerful entrepreneurial neighborhood water sellers. They hold many sealed clear bottles of water with blue caps; a small cooler full of additional water bottles at their feet, folded cash visibly tucked in their pockets. Full bodies all visible in one compact group, distinct faces, one proudly offering a water bottle forward. No adult, no alcohol.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-b4520b64-486d-4c45-ae89-360dfe392e18.png"
+    },
+    {
+      "id": "bus-pass",
+      "file": "public/assets/characters/bus-pass.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one support item illustration for Squabblemon urban anime collectible card game. Style: crisp dark graphic-novel ink outlines, angular cel shading, hand-drawn textured highlights, polished game illustration, readable at thumbnail size. Centered isolated object, entire object visible on a portrait canvas with generous clear margins. MUST have a truly transparent alpha background: no backdrop, no opaque pixels outside the subject, no shadow, no glow, no vignette, no floor, no card frame, no watermark. Deliver one finished asset. Subject: a slightly worn plastic city bus pass, seen at a dynamic three-quarter angle, teal and cream with orange route stripe, a simple recognizable bus icon and the words BUS PASS in large readable letters; a punched slot with a short blue fabric lanyard curling upward. Make the pass large and legible, no person.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-d951bd17-03d3-4944-bb06-ff4686bd2d92.png"
+    },
+    {
+      "id": "cognac-bottle",
+      "file": "public/assets/characters/cognac-bottle.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one support item illustration for Squabblemon urban anime collectible card game. Style: crisp dark graphic-novel ink outlines, angular cel shading, hand-drawn textured highlights, polished game illustration, readable at thumbnail size. Centered isolated object, entire object visible on a portrait canvas with generous clear margins. MUST have a truly transparent alpha background: no backdrop, no opaque pixels outside the subject, no shadow, no glow, no vignette, no floor, no card frame, no watermark. Deliver one finished asset. Subject: a squat, rounded glass bottle of amber cognac with a long elegant neck, sealed dark stopper, simple cream label reading COGNAC, decorative gold trim. Rich translucent amber glass and warm hand-drawn reflections. Full bottle with broad readable silhouette, no glass or person.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-75b96a2c-7794-46ec-8eaf-25cc45457bd2.png"
+    },
+    {
+      "id": "bust-down-watch",
+      "file": "public/assets/characters/bust-down-watch.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one support item illustration for Squabblemon urban anime collectible card game. Style: crisp dark graphic-novel ink outlines, angular cel shading, hand-drawn textured highlights, polished game illustration, readable at thumbnail size. Centered isolated object, entire object visible on a portrait canvas with generous clear margins. MUST have a truly transparent alpha background: no backdrop, no opaque pixels outside the subject, no shadow, no glow, no vignette, no floor, no card frame, no watermark. Deliver one finished asset. Subject: a bust-down wristwatch encrusted with sparkling diamonds, silver-tone wide bracelet and large round analog face, bracelet curled into a three-quarter presentation. Precise black hands, no visible brand. Strong readable jewelry silhouette and tiny graphic glints attached to diamond surfaces, no person.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-28bf5dfc-f526-424d-9eb0-e2ed8031b101.png"
+    },
+    {
+      "id": "soul-food",
+      "file": "public/assets/characters/soul-food.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one support item illustration for Squabblemon urban anime collectible card game. Style: crisp dark graphic-novel ink outlines, angular cel shading, hand-drawn textured highlights, polished game illustration, readable at thumbnail size. Centered isolated object, entire object visible on a portrait canvas with generous clear margins. MUST have a truly transparent alpha background: no backdrop, no opaque pixels outside the subject, no shadow, no glow, no vignette, no floor, no card frame, no watermark. Deliver one finished asset. Subject: a generously filled white plate of soul food seen from an appetizing three-quarter angle: crispy fried chicken, baked macaroni and cheese, collard greens, golden cornbread and candied sweet potatoes. Food visibly separated into recognizable portions, rich savory colors, plate fully visible, no table, no hands or people.",
+      "source": "C:\\Users\\Vicky\\.codex\\generated_images\\01a0ad9e-6525-7fe0-a875-063e3cd1c8fe\\exec-957ce2be-bccd-4660-bffa-a5196808fe76.png"
+    }
+  ]
+}

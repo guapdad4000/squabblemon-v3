@@ -1,0 +1,32 @@
+/* Rules stay visible on touch screens; the lane target remains one button. */
+.battle-arena.battle-hud .district-marker .district-rule {
+  display: block;
+  max-width: 290px;
+  margin: 0;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  color: #f1e9d9;
+  font: 500 11px/1.35 var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.battle-arena.battle-hud .district-rule-status {
+  display: block;
+  color: var(--district-accent, #fbbf24);
+  font: 600 9px/1.3 var(--font-sans);
+  text-transform: none;
+}
+.battle-arena.battle-hud .district-lane[data-location]:not([data-location^='legacy']) .district-marker h3 {
+  color: var(--district-accent);
+  letter-spacing: .045em;
+}
+.online-district__status { margin: 4px 8px 8px; text-align: center; color: #f8d888; font-size: 11px; }
+@media (max-width: 600px) {
+  .battle-arena.battle-hud .district-marker .district-rule { font-size: 10px; line-height: 1.3; }
+  .battle-arena.battle-hud .district-rule-status { font-size: 9px; }
+  .battle-arena.battle-hud .district-marker { gap: 4px; }
+}
+@media (max-height: 540px) and (min-width: 601px) {
+  .battle-arena.battle-hud .district-marker .district-rule { grid-column: 1 / -1; grid-row: 4; font-size: 9px; max-width: none; }
+  .battle-arena.battle-hud .district-rule-status { grid-column: 1 / -1; grid-row: 5; font-size: 8px; }
+}

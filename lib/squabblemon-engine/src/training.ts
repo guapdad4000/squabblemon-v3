@@ -1,4 +1,5 @@
 import { catalogCardByEngineId, catalogCardById, decks } from "./data";
+import { stableHash } from "./activities";
 import { normalizeCardProgress, type CardProgressionMap } from "./cardProgression";
 
 export type TrainingDifficulty = "Rookie" | "Even Match" | "Advanced";
@@ -19,8 +20,8 @@ export const TRAINING_REWARD_RULES = {
   lossCardXp: 20,
   dailyLimit: null,
   repeatLimit: null,
-  grantsProfileXp: false,
-  grantsCurrency: false,
+  grantsProfileXp: true,
+  grantsCurrency: true,
 } as const;
 
 export function trainingCrewLevel(
@@ -48,15 +49,22 @@ export function selectTrainingRival(
   playerDeckId: string,
   catalogCardIds: string[],
   progression: CardProgressionMap,
+  seed = "",
+  previousRival?: string,
 ): string {
   const targetTier = trainingBandForLevel(trainingCrewLevel(catalogCardIds, progression));
-  return [...decks]
+  const candidates = [...decks]
     .filter((deck) => deck.id !== playerDeckId)
     .sort((a, b) =>
       Math.abs((deckTier[a.id] ?? 2) - targetTier) -
         Math.abs((deckTier[b.id] ?? 2) - targetTier) ||
       a.id.localeCompare(b.id),
-    )[0]!.id;
+    );
+  const distance = Math.abs((deckTier[candidates[0].id] ?? 2) - targetTier);
+  const suitable = candidates.filter(d => Math.abs((deckTier[d.id] ?? 2) - targetTier) === distance);
+  const fresh = suitable.filter(d => d.id !== previousRival);
+  const pool = fresh.length ? fresh : suitable;
+  return pool[seed ? stableHash(seed) % pool.length : 0].id;
 }
 
 export function trainingDifficulty(

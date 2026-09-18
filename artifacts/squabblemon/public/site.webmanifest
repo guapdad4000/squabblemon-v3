@@ -1,12 +1,18 @@
 {
   "name": "Squabblemon",
   "short_name": "Squabblemon",
+  "id": "./",
   "description": "Build your crew, claim the districts, and own the room in an illustrated street-social card battler.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#070707",
   "theme_color": "#070707",
+  "categories": ["games"],
+  "shortcuts": [
+    { "name": "Challenge a friend", "url": "game/online" },
+    { "name": "How to play", "url": "how-to-play" }
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",

@@ -1,0 +1,17 @@
+{
+  "extends": "../artifacts/squabblemon/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "../artifacts/squabblemon/src/*"
+      ],
+      "@workspace/squabblemon-engine": [
+        "../lib/squabblemon-engine/src/gameEngine.ts"
+      ],
+      "@workspace/squabblemon-engine/*": [
+        "../lib/squabblemon-engine/src/*"
+      ]
+    }
+  }
+}

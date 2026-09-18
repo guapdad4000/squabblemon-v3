@@ -1,0 +1,37 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+(async()=>{const b=await chromium.launch({channel:'msedge',headless:true});try{
+const p=await b.newPage({viewport:{width:1280,height:800},reducedMotion:'reduce'});
+await p.route('**/api/player/bootstrap',r=>r.fulfill({status:200,contentType:'application/json',body:'null'}));
+await p.addInitScript(()=>localStorage.setItem('squabblemon_e2e_user','signed-in'));
+await p.goto('http://localhost:4179/squabblemon/game/decks/block');
+const roster=()=>p.getByTestId('deck-roster-grid').locator('button[aria-label^="Replace "]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('aria-label')));
+await p.getByRole('button',{name:'Replace Cornball',exact:true}).waitFor();
+const original=await roster();
+await p.getByRole('button',{name:'Replace Cornball',exact:true}).click();
+await p.getByLabel('Browse your collection',{exact:true}).fill('Bad Lil');
+await p.getByRole('button',{name:/^Add Bad Lil/}).click();
+assert.match((await roster())[0],/Bad Lil/);
+await p.getByRole('button',{name:'Undo last change'}).click();assert.deepEqual(await roster(),original);
+await p.getByRole('button',{name:'Replace Cornball',exact:true}).click();
+await p.getByRole('button',{name:'Move later',exact:true}).click();assert.equal((await roster())[1],'Replace Cornball');
+await p.getByRole('button',{name:'Undo last change'}).click();assert.deepEqual(await roster(),original);
+await p.getByRole('button',{name:'Set Cornball as cover',exact:true}).click();assert.equal(await p.getByRole('button',{name:'Set Cornball as cover',exact:true}).getAttribute('aria-pressed'),'true');
+await p.getByRole('button',{name:'Undo last change'}).click();
+await p.getByRole('button',{name:'Replace Cornball',exact:true}).click();await p.getByRole('button',{name:'Remove card',exact:true}).click();
+assert.equal((await roster()).length,6);assert.equal(await p.getByRole('button',{name:'Save & test crew',exact:true}).isDisabled(),true);
+await p.getByRole('button',{name:'Undo last change'}).click();assert.deepEqual(await roster(),original);
+await p.locator('.deck-workbench__tactics summary').click();
+await p.getByLabel('Browse your collection',{exact:true}).fill('Rastamon');
+await p.getByRole('button',{name:'Select Rastamon',exact:true}).click();
+assert.equal(await p.getByRole('button',{name:'Replace Rastamon',exact:true}).getAttribute('aria-pressed'),'true');
+await p.setViewportSize({width:844,height:390});
+await p.locator('.deck-workbench__tactics summary').click();
+await p.getByRole('button',{name:'Cancel replacement'}).click();
+await p.getByLabel('Browse your collection',{exact:true}).fill('');
+await p.locator('.deck-workbench__body').evaluate(e=>e.scrollTop=0);
+await p.screenshot({animations:'disabled',path:'screenshots/arsenal-builder-844.png'});
+await p.getByRole('button',{name:'Focus view',exact:true}).click();
+await p.screenshot({animations:'disabled',path:'screenshots/arsenal-focus-844.png'});
+console.log('Replacement, reordering, cover selection, removal, legality, undo, tactics, and landscape checks passed.');
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});
+

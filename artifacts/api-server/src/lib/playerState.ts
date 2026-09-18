@@ -21,16 +21,17 @@ import {
   catalogCardByEngineId,
   catalogCardById,
   starterRecipes,
-  validateSavedDeck,
+  validateSavedDeck, DECK_SIZE, upgradeLegacySavedDeck,
+  ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID,
 } from "@workspace/squabblemon-engine/data";
-import { COLLECTION_ROAD, STREET_PACK_CONFIG } from "./collectionEconomy";
+import { COLLECTION_ROAD, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
 import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
 import {
   normalizeCardProgress,
   type CardProgressionMap,
 } from "@workspace/squabblemon-engine/cardProgression";
 
-/** A one-time, idempotent catalog grant: this expansion is playable on release. */
+/** Legacy launch roster IDs. Existing ownership is preserved; new accounts earn these. */
 export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
   "barber", "bottle", "sneaker", "church", "landlord",
   "carmeet", "promoter", "nail", "og", "delivery",
@@ -41,6 +42,9 @@ export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
 });
 
 const missionTemplates = [
+  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice match.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win practice with a moved ally in a district you hold.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested crew. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
   {
     missionKey: "rookie-road",
     cadence: "onboarding",
@@ -135,7 +139,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
       null;
     const normalizedOwned = [
       ...new Set(
-        [...current.ownedCardIds, ...CITY_NEVER_SLEEPS_CATALOG_IDS]
+        current.ownedCardIds
           .map(normalizeCardId)
           .filter((id): id is string => Boolean(id)),
       ),
@@ -161,11 +165,13 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
       const inferredRecipe = starterRecipes.find(
         (item) => item.id === inferredRecipeId,
       );
-      const cardIds = deck.cardIds
+      const normalizedCards = deck.cardIds
         .map(normalizeCardId)
         .filter((id): id is string => Boolean(id))
-        .slice(0, 7);
+        .slice(0, DECK_SIZE);
+      const cardIds = deck.deckSize === undefined ? upgradeLegacySavedDeck(normalizedCards, normalizedOwned) : normalizedCards;
       return {
+        deckSize: DECK_SIZE,
         id: deck.id,
         name: deck.name,
         cardIds,
@@ -228,11 +234,16 @@ export async function hasVerifiedTutorialMatch(
 }
 
 export function serializePackOpening(opening: PlayerPackOpeningRecord) {
+  // Derive pullCount from the persisted odds version so the UI can render the
+  // upgraded ten-pull presentation for ten-pull openings without a schema
+  // migration. Single-pack openings keep pullCount=1.
+  const pullCount = opening.oddsVersion === "street-pack-ten-v1" ? 10 : 1;
   return {
     id: opening.id,
     oddsVersion: opening.oddsVersion,
     paymentMethod: opening.paymentMethod,
     cost: opening.cost,
+    pullCount,
     rewards: opening.rewards,
     pityBefore: opening.pityBefore,
     pityAfter: opening.pityAfter,
@@ -273,6 +284,7 @@ function serializeProfile(
     ownedVariants: profile.ownedVariants,
     equippedVariants: profile.equippedVariants,
     unlockedCosmeticIds: profile.unlockedCosmeticIds,
+    unlockedCharacterIds: profile.unlockedCharacterIds ?? [],
     savedDecks: profile.savedDecks.map((deck) => {
       const heroCardId = deck.heroCardId ?? deck.cardIds[0] ?? "";
       const legality = validateSavedDeck(
@@ -325,8 +337,8 @@ function getNextAction(
     const messages: Record<string, [string, string]> = {
       profile: ["Create your fighter tag", "Confirm your profile to begin."],
       tutorial: ["Learn the streets", "Play the guided Rookie Road match."],
-      crew: ["Choose your first crew", "Pick a playstyle to unlock its cards."],
-      reward: ["Claim your starter drop", "Open your guaranteed first reward."],
+      crew: ["Make it your crew", "Open your collection and build around the cards you like."],
+      reward: ["Build and test your crew", "Choose a card, save your deck, and try it in practice."],
     };
     const [title, description] =
       messages[profile.onboardingStep] ?? messages.profile;
@@ -404,11 +416,21 @@ export async function getPlayerBootstrap(clerkUserId: string) {
     throw new Error("Player profile could not be provisioned");
   }
 
+  const nextAction = getNextAction(profile, missions);
+  if (profile.starterDeckId === ROOKIE_FOUNDATION_ID && profile.onboardingStep === "reward") {
+    const [tested] = await db.select({ id: playerMatchesTable.id }).from(playerMatchesTable).where(and(
+      eq(playerMatchesTable.clerkUserId, clerkUserId), eq(playerMatchesTable.mode, "practice"),
+      eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
+    )).limit(1);
+    if (tested) { nextAction.id = "rookie-tested"; nextAction.title = "Your crew is ready"; }
+  }
+
   return {
     profile: serializeProfile(profile, packHistory),
     missions: missions.map(serializeMission),
-    nextAction: getNextAction(profile, missions),
+    nextAction,
     packConfig: STREET_PACK_CONFIG,
+    tenPullConfig: STREET_PACK_TEN_PULL_CONFIG,
     collectionRoad: COLLECTION_ROAD.map((milestone) => ({
       id: milestone.id,
       threshold: milestone.threshold,

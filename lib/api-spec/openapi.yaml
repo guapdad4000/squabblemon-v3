@@ -181,6 +181,31 @@ paths:
           description: Invalid or out-of-order onboarding step
         "401":
           description: Authentication required
+  /player/experiments/card:
+    post:
+      operationId: claimExperimentCard
+      summary: Spend one earned experiment choice on an unowned Common
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cardId]
+              additionalProperties: false
+              properties:
+                cardId:
+                  type: string
+                  maxLength: 64
+      responses:
+        "200":
+          description: Updated collection and remaining experiment choices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerBootstrap"
+        "409":
+          description: No earned choice is available or the card is already owned
   /player/matches:
     post:
       operationId: startPlayerMatch
@@ -403,8 +428,143 @@ paths:
           description: Authentication required
         "404":
           description: Mission not found
+  /player/shop:
+    get:
+      operationId: getPlayerShop
+      summary: List earned-currency shop offers
+      responses:
+        '200':
+          description: Versioned shop catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /player/shop/purchases:
+    post:
+      operationId: purchasePlayerShopItem
+      summary: Purchase training, move coaching, recruits, tickets, slots, or styles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShopPurchaseInput'
+      responses:
+        '200':
+          description: Persisted receipt and refreshed player state, also returned on an identical retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopPurchaseResult'
+        '400':
+          description: Invalid purchase, insufficient currency, unowned character, or maximum upgrade
+        '401':
+          description: Authentication required
+        '409':
+          description: Request key reused with different input, or onboarding incomplete
+  /player/promo-codes/redeem:
+    post:
+      operationId: redeemPlayerPromoCode
+      summary: Redeem a promo code once per signed-in account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromoCodeInput'
+      responses:
+        '200':
+          description: Saved reward receipt and refreshed balances; retries never grant rewards twice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoCodeResult'
+        '400':
+          description: Invalid or unavailable promo code
+        '401':
+          description: Authentication required
+        '409':
+          description: Finish Rookie Road before redeeming
 components:
   schemas:
+    PromoCodeInput:
+      type: object
+      additionalProperties: false
+      required: [code]
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 64
+    PromoCodeReceipt:
+      type: object
+      required: [code, packTickets, softCurrency, styleShards]
+      properties:
+        code:
+          type: string
+        packTickets:
+          type: integer
+          minimum: 0
+        softCurrency:
+          type: integer
+          minimum: 0
+        styleShards:
+          type: integer
+          minimum: 0
+        cardIds:
+          type: array
+          items:
+            type: string
+    PromoCodeResult:
+      type: object
+      required: [receipt, alreadyRedeemed, bootstrap]
+      properties:
+        receipt:
+          $ref: '#/components/schemas/PromoCodeReceipt'
+        alreadyRedeemed:
+          type: boolean
+        bootstrap:
+          $ref: '#/components/schemas/PlayerBootstrap'
+    ShopPurchaseInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey, itemId]
+      properties:
+        idempotencyKey:
+          type: string
+          pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        itemId:
+          type: string
+          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style]
+        cardId:
+          type: string
+          minLength: 1
+          maxLength: 100
+    ShopPurchaseResult:
+      type: object
+      required: [receipt, alreadyPurchased, bootstrap]
+      properties:
+        receipt:
+          type: object
+          required: [itemId, cardId, cost, currency, summary]
+          properties:
+            itemId:
+              type: string
+            cardId:
+              type: string
+              nullable: true
+            cost:
+              type: integer
+            currency:
+              type: string
+              enum: [softCurrency, styleShards]
+            summary:
+              type: string
+        alreadyPurchased:
+          type: boolean
+        bootstrap:
+          $ref: '#/components/schemas/PlayerBootstrap'
     HealthStatus:
       type: object
       properties:
@@ -450,7 +610,7 @@ components:
           maxLength: 32
         cardIds:
           type: array
-          maxItems: 7
+          maxItems: 10
           items:
             type: string
             maxLength: 64
@@ -536,6 +696,10 @@ components:
           type: array
           items:
             type: string
+        unlockedCharacterIds:
+          type: array
+          items:
+            type: string
         savedDecks:
           type: array
           items:
@@ -584,6 +748,7 @@ components:
         - ownedVariants
         - equippedVariants
         - unlockedCosmeticIds
+        - unlockedCharacterIds
         - savedDecks
         - storyProgress
         - inbox
@@ -657,11 +822,13 @@ components:
           $ref: "#/components/schemas/NextAction"
         packConfig:
           $ref: "#/components/schemas/PackConfig"
+        tenPullConfig:
+          $ref: "#/components/schemas/TenPullConfig"
         collectionRoad:
           type: array
           items:
             $ref: "#/components/schemas/CollectionRoadMilestone"
-      required: [profile, missions, nextAction, packConfig, collectionRoad]
+      required: [profile, missions, nextAction, packConfig, collectionRoad, tenPullConfig]
     PackOddsEntry:
       type: object
       properties:
@@ -695,6 +862,27 @@ components:
             $ref: "#/components/schemas/PackOddsEntry"
       required:
         [id, name, oddsVersion, softCurrencyCost, ticketCost, rewardsPerPack, pityLimit, odds]
+    TenPullConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        oddsVersion:
+          type: string
+        pullCount:
+          type: integer
+        ticketCost:
+          type: integer
+        softCurrencyCost:
+          type: integer
+        rewardsPerPull:
+          type: integer
+        rarePityBonusPerPull:
+          type: integer
+      required:
+        [id, name, oddsVersion, pullCount, ticketCost, softCurrencyCost, rewardsPerPull, rarePityBonusPerPull]
     PackReward:
       type: object
       properties:
@@ -726,6 +914,8 @@ components:
           enum: [ticket, softCurrency]
         cost:
           type: integer
+        pullCount:
+          type: integer
         rewards:
           type: array
           items:
@@ -737,7 +927,7 @@ components:
         createdAt:
           type: string
           format: date-time
-      required: [id, oddsVersion, paymentMethod, cost, rewards, pityBefore, pityAfter, createdAt]
+      required: [id, oddsVersion, paymentMethod, cost, pullCount, rewards, pityBefore, pityAfter, createdAt]
     OpenPackInput:
       type: object
       properties:
@@ -748,6 +938,11 @@ components:
         paymentMethod:
           type: string
           enum: [ticket, softCurrency]
+        pullCount:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
       required: [idempotencyKey, paymentMethod]
       additionalProperties: false
     OpenPackResult:
@@ -875,13 +1070,27 @@ components:
           enum: [practice, tutorial, story]
         playerDeckId:
           type: string
-          maxLength: 32
+          # Match the saved-deck ID limit, including UUIDs from the crew builder.
+          maxLength: 80
         rivalDeckId:
           type: string
           maxLength: 32
         storyNodeId:
           type: string
           maxLength: 80
+        activity:
+          type: string
+          maxLength: 24
+        draftWeek:
+          type: string
+          maxLength: 10
+        draftPicks:
+          type: array
+          minItems: 10
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 64
       required: [mode, playerDeckId, rivalDeckId]
       additionalProperties: false
     PlayerMatch:
@@ -909,6 +1118,10 @@ components:
         encounterSnapshot:
           type: [object, "null"]
           additionalProperties: true
+        districtSnapshot:
+          type: object
+          additionalProperties: true
+          description: Immutable server-issued district definitions for this match.
         abilityUpgradeSnapshot:
           $ref: "#/components/schemas/AbilityUpgradeSnapshot"
       required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot, abilityUpgradeSnapshot]
@@ -932,6 +1145,10 @@ components:
       type: object
       additionalProperties: false
       properties:
+        moveTier:
+          type: integer
+          minimum: 0
+          maximum: 3
         cardId:
           type: string
         level:
@@ -948,7 +1165,7 @@ components:
         moves:
           type: array
           minItems: 6
-          maxItems: 6
+          maxItems: 64
           items:
             $ref: "#/components/schemas/MatchMove"
       required: [moves]
@@ -964,6 +1181,9 @@ components:
           maximum: 2
         squabble:
           type: boolean
+        endTurn:
+          type: boolean
+          description: False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.
       required: [cardInstanceId, lane, squabble]
       additionalProperties: false
     MatchReward:
@@ -997,6 +1217,10 @@ components:
     CardProgress:
       type: object
       properties:
+        moveTier:
+          type: integer
+          minimum: 0
+          maximum: 3
         xp:
           type: integer
           minimum: 0
@@ -1050,7 +1274,7 @@ components:
       properties:
         kind:
           type: string
-          enum: [currency, card, chapter-key, pack-ticket, cosmetic]
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic, character-unlock]
         id:
           type: string
         amount:
@@ -1063,7 +1287,7 @@ components:
           type: string
         kind:
           type: string
-          enum: [currency, card, chapter-key, pack-ticket, cosmetic]
+          enum: [currency, card, chapter-key, pack-ticket, cosmetic, character-unlock]
         id:
           type: string
         amount:

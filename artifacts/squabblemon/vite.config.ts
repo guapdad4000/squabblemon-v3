@@ -121,6 +121,17 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@workspace/squabblemon-engine/multiplayer': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/multiplayer.ts'),
+      '@workspace/squabblemon-engine/activities': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/activities.ts'),
+      '@workspace/squabblemon-engine/career': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/career.ts'),
+      '@workspace/squabblemon-engine/insights': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/insights.ts'),
+      '@workspace/squabblemon-engine/story': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/story.ts'),
+      '@workspace/squabblemon-engine/economy': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/economy.ts'),
+      '@workspace/squabblemon-engine/cardProgression': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/cardProgression.ts'),
+      '@workspace/squabblemon-engine/abilityUpgrades': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/abilityUpgrades.ts'),
+      '@workspace/api-client-react': path.resolve(import.meta.dirname, '../../lib/api-client-react/src/index.ts'),
+      '@workspace/squabblemon-engine/data': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/data.ts'),
+      '@workspace/squabblemon-engine/gameEngine': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/gameEngine.ts'),
       '@': path.resolve(import.meta.dirname, 'src'),
       '@assets': path.resolve(
         import.meta.dirname,

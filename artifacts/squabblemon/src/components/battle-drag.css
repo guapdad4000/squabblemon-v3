@@ -1,0 +1,13 @@
+/* Single-finger gestures belong to the hand; pinch zoom still belongs to the browser. */
+[data-battle-draggable="true"] { touch-action: pinch-zoom; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+[data-battle-draggable="true"] img { -webkit-user-drag: none; user-select: none; }
+[data-drag-lifted="true"] { opacity: .24 !important; filter: saturate(.4); cursor: grabbing; }
+[data-drop-state="available"] { outline: 1px dashed #e4c689; outline-offset: -4px; }
+[data-drop-state="unavailable"] { outline: 1px dashed #fb718566; outline-offset: -4px; }
+[data-drop-state="ready"] { outline: 3px solid #a3e635; outline-offset: -4px; background-color: #84cc161a !important; box-shadow: inset 0 0 28px #a3e63533; }
+[data-drop-state="blocked"] { outline: 3px solid #fb7185; outline-offset: -4px; background-color: #fb71851a !important; }
+.battle-drag-preview { position: fixed; top: 0; left: 0; z-index: 10000; pointer-events: none; will-change: transform; filter: drop-shadow(0 12px 16px #000b); }
+.battle-drag-preview > .collector-card { width: 100% !important; margin: 0; transform: rotate(-4deg) !important; }
+.battle-drag-label { display: block; position: relative; left: var(--drag-label-x, 50%); transform: translateX(-50%); width: max-content; max-width: min(220px, calc(100vw - 16px)); margin-top: 7px; padding: 7px 10px; border: 1px solid #ecd6a2; border-radius: 8px; background: #141820f5; color: #fff5df; text-align: center; font: 700 12px/1.3 sans-serif; }
+.battle-drag-preview[data-drop-valid="true"] .battle-drag-label { border-color: #a3e635; color: #d9f99d; }
+@media (prefers-reduced-motion: reduce) { .battle-drag-preview > .collector-card { transform: none !important; } }

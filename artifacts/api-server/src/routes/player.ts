@@ -1,5 +1,9 @@
+import { randomUUID } from "node:crypto";
+import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
+import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
 import { getAuth } from "@clerk/express";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { battleEarnings } from '@workspace/squabblemon-engine/economy';
+import { and, eq, isNull, isNotNull, desc, sql } from "drizzle-orm";
 import { Router, type IRouter, type Request, type Response } from "express";
 import {
   AdvancePlayerOnboardingBody,
@@ -30,14 +34,14 @@ import {
   verifyMatchTranscript,
   verifyStoryMatchTranscript,
 } from "@workspace/squabblemon-engine/gameEngine";
-import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import { starterRecipes, catalogIdsToEngineIds, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID } from "@workspace/squabblemon-engine/data";
 import { storyContent } from "@workspace/squabblemon-engine/story";
 import {
   ensurePlayer,
   getPlayerBootstrap,
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
-import { canUseRewardedRecipe } from "../lib/matchAuthorization";
+import { canUseRewardedDeck } from "../lib/matchAuthorization";
 import {
   getPlayerStoryCampaign,
   requireAvailableStoryNode,
@@ -45,13 +49,17 @@ import {
 } from "../lib/storyService";
 import {
   grantStoryRewards,
+  grantStoryTicketAward,
   type GrantedStoryReward,
 } from "../lib/storyTransactions";
 import { getStoredStoryMatchResult } from "../lib/storyMatchResult";
 import {
+  claimExperimentCard,
   claimMissionReward,
   claimStarterReward,
+  grantFirstCollection,
   completeStandardMatchReward,
+  advanceBattleMissions,
   PlayerRewardError,
 } from "../lib/playerRewardTransactions";
 import {
@@ -61,6 +69,7 @@ import {
 } from "../lib/storyMatchSnapshot";
 import {
   createCardProgressionSnapshot,
+  applyCardXp, participatingCatalogCardIds,
   parseCardProgressionSnapshot,
   type CardProgressionSnapshot,
 } from "../lib/cardProgression";
@@ -257,51 +266,74 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
     }
   } else if (parsed.data.action === "choose-starter") {
     const starterDeckId = parsed.data.starterDeckId;
-    if (!starterDeckId || !deckCards[starterDeckId]) {
+    if (starterDeckId === ROOKIE_FOUNDATION_ID) {
+      await grantFirstCollection(userId);
+    } else if (!starterDeckId || !deckCards[starterDeckId]) {
       res.status(400).json({ error: "Choose a valid starter crew" });
       return;
-    }
-    if (profile.onboardingStep === "crew") {
-      await db
-        .update(playerProfilesTable)
-        .set({
-          starterDeckId,
-          avatarKey: deckHeroes[starterDeckId],
-          ownedCardIds: deckCards[starterDeckId],
-          discoveredCardIds: [
-            ...new Set([
-              ...deckCards[starterDeckId],
-              ...Object.values(deckHeroes),
-            ]),
-          ],
-          savedDecks: [
-            {
-              id: `starter-${starterDeckId}`,
-              name: "Starter Crew",
-              cardIds: deckCards[starterDeckId],
-              heroCardId: deckHeroes[starterDeckId],
-              recipeId: starterDeckId,
-            },
-          ],
-          collectionProgress: deckCards[starterDeckId].length,
-          onboardingStep: "reward",
-        })
-        .where(
-          and(
-            eq(playerProfilesTable.clerkUserId, userId),
-            eq(playerProfilesTable.onboardingStep, "crew"),
-          ),
-        );
+    } else if (profile.onboardingStep === "crew") {
+      await db.transaction(async tx => {
+        await tx.execute(sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`);
+        const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+        if (!current || current.onboardingStep !== "crew") return;
+        const ownedCardIds = [...new Set([...current.ownedCardIds, ...deckCards[starterDeckId]])];
+        await tx
+          .update(playerProfilesTable)
+          .set({
+            starterDeckId,
+            avatarKey: deckHeroes[starterDeckId],
+            ownedCardIds,
+            discoveredCardIds: [
+              ...new Set([
+                ...current.discoveredCardIds,
+                ...ownedCardIds,
+                ...deckCards[starterDeckId],
+                ...Object.values(deckHeroes),
+              ]),
+            ],
+            savedDecks: [
+              ...current.savedDecks,
+              {
+                id: `starter-${starterDeckId}`,
+                name: "Starter Crew",
+                cardIds: deckCards[starterDeckId],
+                heroCardId: deckHeroes[starterDeckId],
+                recipeId: starterDeckId,
+              },
+            ],
+            collectionProgress: ownedCardIds.length,
+            onboardingStep: "reward",
+          })
+          .where(
+            and(
+              eq(playerProfilesTable.clerkUserId, userId),
+              eq(playerProfilesTable.onboardingStep, "crew"),
+            ),
+          );
+      });
     }
   } else if (parsed.data.action === "claim-reward") {
     if (profile.onboardingStep === "reward") {
-      await claimStarterReward(userId);
+      try { await claimStarterReward(userId); }
+      catch (error) {
+        if (error instanceof PlayerRewardError) { res.status(error.status).json({ error: error.message }); return; }
+        throw error;
+      }
     }
   }
 
   res.json(
     AdvancePlayerOnboardingResponse.parse(await getPlayerBootstrap(userId)),
   );
+});
+
+router.post('/player/experiments/card', async (req, res): Promise<void> => {
+  const userId = authenticatedUserId(req, res); if (!userId) return;
+  const cardId = req.body?.cardId;
+  if (typeof cardId !== 'string' || cardId.length > 64) { res.status(400).json({ error: 'Choose a card' }); return; }
+  try { await ensurePlayer(userId); await claimExperimentCard(userId, cardId); }
+  catch (error) { if (error instanceof PlayerRewardError) { res.status(error.status).json({ error: error.message }); return; } throw error; }
+  res.json(GetPlayerBootstrapResponse.parse(await getPlayerBootstrap(userId)));
 });
 
 router.post("/player/matches", async (req, res): Promise<void> => {
@@ -312,25 +344,39 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  if (!deckCards[parsed.data.playerDeckId] ||
-    (parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId])) {
+  if (parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId]) {
     res.status(400).json({ error: "Unknown crew" });
     return;
   }
+  const activity = parsed.data.activity ?? 'auto';
+  if (!isActivityId(activity) || (parsed.data.mode !== 'practice' && parsed.data.activity)) {
+    res.status(400).json({ error: 'Invalid activity' }); return;
+  }
+  const drafting = parsed.data.mode === 'practice' && activity === 'draft';
+  const week = eventWeek();
+  if (drafting && (parsed.data.draftWeek !== week || !validateDraft(week, parsed.data.draftPicks ?? []))) {
+    res.status(400).json({ error: 'Draft picks are invalid or this week has changed. Start the draft again.' }); return;
+  }
   const state = await getPlayerBootstrap(userId);
+  const savedDeck = state.profile.savedDecks.find(deck => deck.id === parsed.data.playerDeckId);
+  const recipe = starterRecipes.find(item => item.id === parsed.data.playerDeckId);
+  if (!recipe && !savedDeck && !drafting) { res.status(400).json({ error: "Unknown player deck" }); return; }
   const allowed =
     (parsed.data.mode === "tutorial" &&
       state.profile.onboardingStep === "tutorial") ||
     (parsed.data.mode !== "tutorial" &&
-      state.profile.onboardingStep === "complete");
+      state.profile.onboardingStep === "complete") ||
+    (parsed.data.mode === "practice" && state.profile.onboardingStep === "reward" &&
+      state.profile.starterDeckId === ROOKIE_FOUNDATION_ID && savedDeck?.id === ROOKIE_DECK_ID);
   if (!allowed) {
     res.status(400).json({ error: "Finish the current Rookie Road step first" });
     return;
   }
-  if (parsed.data.mode !== "tutorial") {
+  if (parsed.data.mode !== "tutorial" && !drafting) {
     if (
-      !canUseRewardedRecipe(
+      !canUseRewardedDeck(
         parsed.data.playerDeckId,
+        state.profile.savedDecks,
         state.profile.ownedCardIds,
       )
     ) {
@@ -344,20 +390,26 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   let storyContentVersion: number | null = null;
   let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
   let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
-  let playerEngineCardIds: string[] | null = null;
-  const recipe = starterRecipes.find((item) => item.id === parsed.data.playerDeckId);
-  const rosterCardIds = recipe?.cards ?? deckCards[parsed.data.playerDeckId];
+  if (parsed.data.mode === "tutorial" && !recipe) { res.status(400).json({ error: "Use the guided tutorial crew" }); return; }
+  const rosterCardIds = drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards;
   if (!rosterCardIds) {
     res.status(400).json({ error: "Unknown player crew" });
     return;
   }
+  let playerEngineCardIds: string[] = [...rosterCardIds];
   let playerCardProgressionSnapshot: CardProgressionSnapshot;
+  const [previous] = parsed.data.mode === 'practice' ? await db.select().from(playerMatchesTable)
+    .where(and(eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.mode, 'practice'), isNotNull(playerMatchesTable.completedAt)))
+    .orderBy(desc(playerMatchesTable.completedAt)).limit(1) : [];
+  const seed = randomUUID();
+  const districtSnapshot = createDistrictSnapshot(seed);
   let rivalDeckId =
     parsed.data.mode === "practice"
       ? selectTrainingRival(
           parsed.data.playerDeckId,
           rosterCardIds,
           state.profile.cardProgression,
+          seed, previous?.rivalDeckId,
         )
       : parsed.data.rivalDeckId;
   if (parsed.data.mode === "story") {
@@ -378,13 +430,6 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         res.status(400).json({ error: "Story node is not a battle" });
         return;
       }
-      const storyRecipe = starterRecipes.find(
-        (item) => item.id === parsed.data.playerDeckId,
-      );
-      if (!storyRecipe) {
-        res.status(400).json({ error: "Unknown player crew" });
-        return;
-      }
       storyNodeId = node.id;
       storyContentVersion = storyContent.version;
       storyEncounterSnapshot = structuredClone(node.encounter);
@@ -393,7 +438,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         chapter,
         node,
       );
-      playerEngineCardIds = [...storyRecipe.cards];
+      playerEngineCardIds = [...rosterCardIds];
       rivalDeckId = node.encounter.enemy.deckId;
       createStoryMatch(
         storyEncounterSnapshot,
@@ -408,6 +453,12 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       throw error;
     }
   }
+  if (parsed.data.mode === 'practice') {
+    storyEncounterSnapshot = makeActivityEncounter(activity, seed, rivalDeckId, week, previous?.playerEngineCardIds ?? undefined);
+    // Preserve the chosen training recipe id for repeat avoidance, even though
+    // challenge rosters are independently captured in the encounter snapshot.
+    storyEncounterSnapshot = { ...storyEncounterSnapshot, enemy: { ...storyEncounterSnapshot.enemy, deckId: rivalDeckId } };
+  }
   const rivalRosterCardIds =
     storyEncounterSnapshot?.enemy.cardIds ??
     starterRecipes.find((item) => item.id === rivalDeckId)?.cards;
@@ -419,8 +470,8 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     playerCardProgressionSnapshot = createCardProgressionSnapshot(
       playerEngineCardIds ?? rosterCardIds,
       state.profile.ownedCardIds,
-      state.profile.cardProgression,
-      parsed.data.mode === "tutorial",
+      storyEncounterSnapshot?.activity?.normalized ? {} : state.profile.cardProgression,
+      parsed.data.mode === "tutorial" || drafting,
       [...rivalRosterCardIds],
     );
   } catch {
@@ -441,7 +492,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
         : null,
       storyProgressionSnapshot,
       playerEngineCardIds,
-      playerCardProgressionSnapshot,
+      playerCardProgressionSnapshot: { ...playerCardProgressionSnapshot, turnRulesVersion: 2, districtSnapshot: { ...districtSnapshot } },
     })
     .returning();
   res.status(201).json(
@@ -455,6 +506,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       encounterSnapshot: match.storyEncounterSnapshot,
       abilityUpgradeSnapshot:
         playerCardProgressionSnapshot.abilityUpgradeSnapshot,
+      districtSnapshot,
       status: "active",
       createdAt: match.createdAt.toISOString(),
     }),
@@ -496,6 +548,7 @@ router.post(
       | ReturnType<typeof verifyStoryMatchTranscript>
       | null = null;
     let storyProgression: StoryMatchProgressionSnapshot | null = null;
+    let verifiedProgression: CardProgressionSnapshot | null = null;
 
     if (match.mode === "story") {
       try {
@@ -516,12 +569,13 @@ router.post(
 
     if (!alreadyCompleted) {
       try {
+        validateTurnRules(parsed.data.moves, match.playerCardProgressionSnapshot?.turnRulesVersion ?? 1);
         const playerRoster =
           match.playerEngineCardIds ??
           starterRecipes.find((item) => item.id === match.playerDeckId)?.cards ??
           [];
         const rivalRoster =
-          match.mode === "story"
+          match.storyEncounterSnapshot
             ? (match.storyEncounterSnapshot as StoryEncounterSnapshot).enemy.cardIds
             : starterRecipes.find((item) => item.id === match.rivalDeckId)?.cards ??
               [];
@@ -556,20 +610,26 @@ router.post(
             [...rivalRoster],
           );
         }
+        const districtSnapshot = match.playerCardProgressionSnapshot?.districtSnapshot
+          ? validateDistrictSnapshot(match.playerCardProgressionSnapshot.districtSnapshot) : undefined;
+        verifiedProgression = progressionSnapshot;
         verifiedMatch =
-          match.mode === "story"
+          !!match.storyEncounterSnapshot
             ? verifyStoryMatchTranscript(
                 match.storyEncounterSnapshot as StoryEncounterSnapshot,
                 match.playerEngineCardIds ?? [],
                 parsed.data.moves,
                 match.playerDeckId,
                 progressionSnapshot.abilityUpgradeSnapshot,
+                districtSnapshot,
               )
             : verifyMatchTranscript(
                 match.playerDeckId,
                 match.rivalDeckId,
                 parsed.data.moves,
                 progressionSnapshot.abilityUpgradeSnapshot,
+                playerRoster,
+                districtSnapshot,
               );
         const winner = getMatchWinner(verifiedMatch);
         verifiedOutcome =
@@ -593,7 +653,7 @@ router.post(
       return;
     }
 
-    const amounts = { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 };
+    const amounts = battleEarnings(verifiedOutcome);
     const computedReward =
       match.completedAt
         ? {
@@ -602,7 +662,7 @@ router.post(
             softCurrency: match.rewardSoftCurrency ?? 0,
             packTickets: match.rewardPackTickets ?? 0,
           }
-        : match.mode === "tutorial" || match.mode === "story"
+        : match.mode === "tutorial"
           ? { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 }
           : amounts;
 
@@ -645,6 +705,21 @@ router.post(
           )
           .returning();
         if (!updated) return false;
+
+        if (match.mode === 'story' && verifiedMatch && verifiedProgression) {
+          const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+          if (!profile) throw new Error('Player profile not found');
+          const earned = applyCardXp(profile.cardProgression, verifiedProgression, participatingCatalogCardIds(verifiedMatch), verifiedOutcome!);
+          await tx.update(playerProfilesTable).set({
+            softCurrency: sql`${playerProfilesTable.softCurrency} + ${computedReward.softCurrency}`,
+            xp: sql`${playerProfilesTable.xp} + ${computedReward.xp}`,
+            level: sql`1 + floor((${playerProfilesTable.xp} + ${computedReward.xp}) / 250)`,
+            streetRep: sql`${playerProfilesTable.streetRep} + ${computedReward.streetRep}`,
+            cardProgression: earned.progression,
+          }).where(eq(playerProfilesTable.clerkUserId, userId));
+          await tx.update(playerMatchesTable).set({ cardXpRewards: earned.rewards }).where(eq(playerMatchesTable.id, match.id));
+          await advanceBattleMissions(tx, userId, verifiedOutcome!);
+        }
 
         if (match.mode === "tutorial") {
           await tx
@@ -761,6 +836,19 @@ router.post(
               storyProgression.nodeId,
               storyProgression.rewards,
             );
+          }
+          // 3-stars-to-ticket auto-grant — runs every match so the idempotent
+          // claim inside `grantStoryTicketAward` will only mint one pack ticket
+          // per 3-star clear, even on replays that improve the star count.
+          const ticketReward = await grantStoryTicketAward(
+            tx,
+            userId,
+            storyProgression.chapterId,
+            storyProgression.nodeId,
+            stars,
+          );
+          if (ticketReward) {
+            grantedStoryRewards = [...(grantedStoryRewards ?? []), ticketReward];
           }
           await tx
             .update(playerMatchesTable)

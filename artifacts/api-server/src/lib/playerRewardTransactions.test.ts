@@ -141,10 +141,10 @@ test("simultaneous match completions return one persisted reward and credit it o
     }),
   );
   const profile = await profileFor(clerkUserId);
-  assert.equal(profile.xp, 0);
-  assert.equal(profile.softCurrency, 0);
-  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 0);
-  assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 0);
+  assert.equal(profile.xp, results[0].match.rewardXp);
+  assert.equal(profile.softCurrency, results[0].match.rewardSoftCurrency);
+  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
+  assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 1);
 });
 
 test("simultaneous completions grant participating card XP once and persist the retry result", async (t) => {
@@ -202,7 +202,7 @@ test("simultaneous completions grant participating card XP once and persist the 
     level: 2,
   }]);
   const profile = await profileFor(clerkUserId);
-  assert.deepEqual(profile.cardProgression[playedCardId], { xp: 120, level: 2 });
+  assert.deepEqual(profile.cardProgression[playedCardId], { xp: 120, level: 2, moveTier: 0 });
 });
 
 test("a legacy active match rebuilds its snapshot from the server-owned roster", async (t) => {
@@ -250,6 +250,8 @@ test("starter and mission retries each apply one profile credit", async (t) => {
   await db.insert(playerProfilesTable).values({
     clerkUserId,
     onboardingStep: "reward",
+    xp: 150,
+    level: 1,
   });
   await db.insert(playerMissionsTable).values({
     clerkUserId,
@@ -271,6 +273,8 @@ test("starter and mission retries each apply one profile credit", async (t) => {
   let profile = await profileFor(clerkUserId);
   assert.equal(profile.softCurrency, 250);
   assert.equal(profile.packTickets, 1);
+  assert.equal(profile.xp, 250);
+  assert.equal(profile.level, 2);
 
   const missionResults = await Promise.all([
     claimMissionReward(clerkUserId, "rookie-road"),
@@ -279,6 +283,8 @@ test("starter and mission retries each apply one profile credit", async (t) => {
   assert.equal(missionResults.filter((result) => result.claimed).length, 1);
   profile = await profileFor(clerkUserId);
   assert.equal(profile.packTickets, 2);
+  assert.equal(profile.xp, 250);
+  assert.equal(profile.level, 2);
   assert.ok((await missionFor(clerkUserId, "rookie-road")).claimedAt);
 });
 
@@ -358,6 +364,6 @@ test("a cadence reset racing match completion preserves current-period progress"
       verifiedMatch: createMatch("block", "slide"),
     }),
   ]);
-  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 0);
-  assert.equal((await profileFor(clerkUserId)).xp, 0);
+  assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
+  assert.equal((await profileFor(clerkUserId)).xp, 25);
 });

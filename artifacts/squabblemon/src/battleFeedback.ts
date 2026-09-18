@@ -1,18 +1,20 @@
+import { eventIntensity } from './battleChoreography';
 import type { EffectLogEntry } from './gameEngine';
 
-export type BattleCue = 'play' | 'reveal' | 'move' | 'status' | 'power-up' | 'power-down' | 'claim' | 'pass';
+export type BattleCue = 'play' | 'reveal' | 'move' | 'status' | 'power-up' | 'power-down' | 'claim' | 'pass' | 'select' | 'lock' | 'fire' | 'ice' | 'shield' | 'squabble';
 
 export type FeedbackPreferences = {
   audioEnabled: boolean;
   hapticsEnabled: boolean;
 };
 
-const STORAGE_KEY = 'squabblemon_battle_feedback';
+export const FEEDBACK_STORAGE_KEY = 'squabblemon_battle_feedback';
+export const FEEDBACK_CHANGE_EVENT = 'squabblemon:feedback-change';
 const defaults: FeedbackPreferences = { audioEnabled: true, hapticsEnabled: true };
 
 export function loadFeedbackPreferences(): FeedbackPreferences {
   try {
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as Partial<FeedbackPreferences>;
+    const stored = JSON.parse(localStorage.getItem(FEEDBACK_STORAGE_KEY) ?? '{}') as Partial<FeedbackPreferences>;
     return {
       audioEnabled: stored.audioEnabled ?? defaults.audioEnabled,
       hapticsEnabled: stored.hapticsEnabled ?? defaults.hapticsEnabled,
@@ -23,7 +25,10 @@ export function loadFeedbackPreferences(): FeedbackPreferences {
 }
 
 export function saveFeedbackPreferences(preferences: FeedbackPreferences) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+  try { localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(preferences)); } catch { /* Private browsing can disable storage. */ }
+  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function' && typeof CustomEvent !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(FEEDBACK_CHANGE_EVENT, { detail: preferences }));
+  }
 }
 
 const totalScore = (scores: EffectLogEntry['scores']['before']) =>
@@ -34,13 +39,16 @@ export function cueForBattleEvent(event: EffectLogEntry): BattleCue {
   if (event.type === 'reveal') return 'reveal';
   if (event.type === 'pass') return 'pass';
   if (event.type === 'match-complete') return 'claim';
+  if (event.kind === 'fire') return 'fire';
+  if (event.kind === 'water') return 'ice';
+  if (event.kind === 'blocked') return 'shield';
   if (event.kind === 'move') return 'move';
 
   const participants = [event.source, ...event.targets].filter(Boolean);
   const statusChanged = participants.some(participant =>
     JSON.stringify(participant?.before?.statuses ?? null) !== JSON.stringify(participant?.after?.statuses ?? null),
   );
-  if (statusChanged || event.kind === 'blocked') return 'status';
+  if (statusChanged) return 'status';
 
   const delta = totalScore(event.scores.after) - totalScore(event.scores.before);
   return delta < 0 ? 'power-down' : 'power-up';
@@ -62,6 +70,11 @@ export class BattleFeedback {
   ) {}
 
   setPreferences(preferences: FeedbackPreferences) {
+    if (this.preferences.audioEnabled && !preferences.audioEnabled) {
+      this.lifecycle += 1;
+      this.stopActiveAudio();
+    }
+    if (this.preferences.hapticsEnabled && !preferences.hapticsEnabled) this.safeVibrate(0);
     this.preferences = preferences;
   }
 
@@ -74,6 +87,11 @@ export class BattleFeedback {
   reset() {
     this.lifecycle += 1;
     this.played.clear();
+    this.stopActiveAudio();
+    this.safeVibrate(0);
+  }
+
+  private stopActiveAudio() {
     for (const active of this.activeAudio) {
       try {
         active.oscillator.stop();
@@ -84,15 +102,20 @@ export class BattleFeedback {
       active.gain.disconnect();
     }
     this.activeAudio.clear();
-    this.safeVibrate(0);
   }
 
   emit(event: EffectLogEntry, generation: number, reducedMotion: boolean, hidden = document.hidden) {
     const key = `${generation}:${event.sequence}`;
     if (hidden || this.played.has(key)) return;
     this.played.add(key);
-    const cue = cueForBattleEvent(event);
-    if (this.preferences.audioEnabled) void this.play(cue, this.lifecycle);
+    const intensity = eventIntensity(event);
+    this.cue(intensity === 'squabble' ? 'squabble' : cueForBattleEvent(event), reducedMotion, hidden);
+    if (intensity === 'takeover' && event.type !== 'match-complete') this.cue('claim', reducedMotion, hidden);
+  }
+
+  cue(cue: BattleCue, reducedMotion: boolean, hidden = document.hidden) {
+    if (hidden) return;
+    if (this.preferences.audioEnabled) void this.play(cue, this.lifecycle).catch(() => undefined);
     if (this.preferences.hapticsEnabled && !reducedMotion) this.haptic(cue);
   }
 
@@ -119,9 +142,13 @@ export class BattleFeedback {
     if (context.state !== 'running' || lifecycle !== this.lifecycle || !this.preferences.audioEnabled) return;
 
     const now = context.currentTime;
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
     const tones: Record<BattleCue, [OscillatorType, number, number, number]> = {
+      select: ['sine', 480, 620, .045],
+      lock: ['triangle', 220, 74, .12],
+      fire: ['sawtooth', 110, 38, .32],
+      ice: ['sine', 1400, 650, .28],
+      shield: ['triangle', 760, 380, .3],
+      squabble: ['triangle', 90, 28, .45],
       play: ['triangle', 105, 62, .11],
       reveal: ['square', 260, 520, .08],
       move: ['sine', 180, 340, .12],
@@ -132,22 +159,33 @@ export class BattleFeedback {
       pass: ['sine', 100, 76, .07],
     };
     const [type, start, end, duration] = tones[cue];
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(start, now);
-    oscillator.frequency.exponentialRampToValueAtTime(end, now + duration);
-    gain.gain.setValueAtTime(.0001, now);
-    gain.gain.exponentialRampToValueAtTime(cue === 'claim' ? .12 : .065, now + .008);
-    gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
-    oscillator.connect(gain).connect(context.destination);
-    const active = { oscillator, gain };
-    this.activeAudio.add(active);
-    oscillator.onended = () => {
-      this.activeAudio.delete(active);
-      oscillator.disconnect();
-      gain.disconnect();
-    };
-    oscillator.start(now);
-    oscillator.stop(now + duration + .01);
+    const layers: Array<[OscillatorType, number, number, number, number, number]> = [[type, start, end, duration, 0, cue === 'claim' ? .07 : .045]];
+    if (['fire', 'ice', 'shield', 'squabble', 'lock'].includes(cue)) layers.push(['sine', cue === 'ice' ? 2200 : 68, cue === 'ice' ? 1700 : 34, duration * .7, .025, .035]);
+    if (cue === 'claim') {
+      layers.push(['sine', 523, 523, .3, .09, .045], ['sine', 659, 659, .35, .18, .035], ['sine', 784, 784, .4, .27, .03]);
+    }
+    for (const [wave, from, to, length, delay, volume] of layers) {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const at = now + delay;
+      oscillator.type = wave;
+      oscillator.frequency.setValueAtTime(from, at);
+      oscillator.frequency.exponentialRampToValueAtTime(to, at + length);
+      gain.gain.setValueAtTime(.0001, now);
+      gain.gain.setValueAtTime(.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume, at + .008);
+      gain.gain.exponentialRampToValueAtTime(.0001, at + length);
+      oscillator.connect(gain).connect(context.destination);
+      const active = { oscillator, gain };
+      this.activeAudio.add(active);
+      oscillator.onended = () => {
+        this.activeAudio.delete(active);
+        oscillator.disconnect();
+        gain.disconnect();
+      };
+      oscillator.start(at);
+      oscillator.stop(at + length + .01);
+    }
   }
 
   private safeVibrate(pattern: number | number[]) {
@@ -160,6 +198,12 @@ export class BattleFeedback {
 
   private haptic(cue: BattleCue) {
     const pattern: Partial<Record<BattleCue, number | number[]>> = {
+      select: 5,
+      lock: 12,
+      fire: [12, 20, 16],
+      ice: [8, 15, 8],
+      shield: 14,
+      squabble: [24, 40, 35],
       play: 12,
       move: [10, 28, 10],
       status: 18,

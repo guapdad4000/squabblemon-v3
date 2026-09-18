@@ -15,4 +15,5 @@ export const StoryGrantedRewardKind = {
   'chapter-key': 'chapter-key',
   'pack-ticket': 'pack-ticket',
   cosmetic: 'cosmetic',
+  'character-unlock': 'character-unlock',
 } as const;

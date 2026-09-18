@@ -1,7 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { GameGlyph } from '../../components/venue/GameGlyph';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
+import { ProgressRing } from '../../components/venue/ProgressRing';
+import '../../styles/studio.css';
+import '../../styles/story-map.css';
+import '../../styles/cinema-atlas.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
+import { Link } from 'wouter';
 import {
   getGetPlayerBootstrapQueryKey,
   getGetPlayerStoryQueryKey,
@@ -13,6 +20,8 @@ import {
   useSavePlayerStoryDialogue,
 } from '@workspace/api-client-react';
 import {
+  storyDialogueToken,
+  STORY_CHARACTERS,
   getStoryChapter,
   getStoryNode,
   type StoryBattleNode,
@@ -20,9 +29,13 @@ import {
   type StoryNode,
   type StoryReward,
 } from '@workspace/squabblemon-engine/story';
-import { cards, catalogCardByEngineId, getAssetUrl, getCardImage } from '../../data';
+import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
 import { getStoryModifierSummaries } from '../../gameEngine';
-import { StoryCinematic } from '../../components/StoryCinematic';
+import { StoryStage } from '../../components/story/StoryStage';
+import {
+  ChapterTicketProgress,
+  ThreeStarResults,
+} from '../../components/story';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
 
 type SceneEntry = {
@@ -35,19 +48,19 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
   if (node.kind === 'battle') {
     return [
       ...node.preDialogue.map((line, index) => ({
-        token: `${node.id}:pre:${index}`,
+        token: storyDialogueToken(node.id, 'pre', index),
         section: 'pre' as const,
         line,
       })),
       ...node.postDialogue.map((line, index) => ({
-        token: `${node.id}:post:${index}`,
+        token: storyDialogueToken(node.id, 'post', index),
         section: 'post' as const,
         line,
       })),
     ];
   }
   return node.scenes.map((line, index) => ({
-    token: `${node.id}:main:${index}`,
+    token: storyDialogueToken(node.id, 'main', index),
     section: 'main' as const,
     line,
   }));
@@ -56,21 +69,25 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
 function rewardLabel(reward: StoryReward | StoryGrantedReward) {
   if (reward.kind === 'card') return `${cards[reward.id]?.name ?? reward.id} card`;
   if (reward.kind === 'chapter-key') return 'Next chapter key';
-  if (reward.kind === 'pack-ticket') return `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
+  if (reward.kind === 'pack-ticket')
+    return reward.amount === 10
+      ? '10× Street Pack Tickets · One upgraded ten-pull'
+      : `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
   if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
+  if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} unlocked`;
   return `+${reward.amount} Street XP`;
 }
 
 export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const storyQuery = useGetPlayerStory();
+  const mapViewport = useRef<HTMLDivElement>(null);
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
-  const [introCinematicVisible, setIntroCinematicVisible] = useState(false);
 
   const campaign = storyQuery.data;
   useEffect(() => {
-    if (!campaign) return;
+    if (!campaign || typeof campaign !== 'object' || !Array.isArray(campaign.nodes)) return;
     const requestedNode = new URLSearchParams(window.location.search).get('node');
     const requestedProgress = campaign.nodes.find((node) => node.nodeId === requestedNode);
     if (requestedProgress && requestedProgress.status !== 'locked') {
@@ -82,21 +99,28 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     setActiveChapterId((current) => current ?? recommended?.chapterId ?? campaign.chapters[0]?.id ?? null);
   }, [campaign, location]);
 
-  const currentChapter = campaign?.chapters.find((chapter) => chapter.id === activeChapterId) ??
-    campaign?.chapters.find((chapter) => chapter.status !== 'locked') ??
-    campaign?.chapters[0];
+  const currentChapter = (Array.isArray(campaign?.chapters)
+    ? campaign.chapters.find((chapter) => chapter.id === activeChapterId) ??
+      campaign.chapters.find((chapter) => chapter.status !== 'locked') ??
+      campaign.chapters[0]
+    : undefined) as StoryCampaign['chapters'][number] | undefined;
 
   useEffect(() => {
-    if (campaign && currentChapter) {
-      const key = `chapter_intro_${currentChapter.id}_${campaign.contentVersion}`;
-      if (!sessionStorage.getItem(key) && currentChapter.status !== 'cleared') {
-        setIntroCinematicVisible(true);
-        sessionStorage.setItem(key, 'true');
-        sessionStorage.setItem('block_party_opening_seen', 'true');
-      }
-    }
-  }, [campaign, currentChapter]);
-
+    const viewport = mapViewport.current;
+    if (!viewport || !Array.isArray(campaign?.nodes)) return;
+    const next = campaign.nodes.find(node => node.chapterId === currentChapter?.id && node.nodeId === campaign.recommendedNodeId)
+      ?? campaign.nodes.find(node => node.chapterId === currentChapter?.id && node.status === 'available');
+    if (!next) return;
+    const centerNext = () => viewport.scrollTo({
+      left: Math.max(0, viewport.scrollWidth * next.mapPosition.x / 100 - viewport.clientWidth / 2),
+      top: Math.max(0, viewport.scrollHeight * next.mapPosition.y / 100 - viewport.clientHeight / 2),
+      behavior: 'instant',
+    });
+    centerNext();
+    const observer = new ResizeObserver(centerNext);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, [currentChapter?.id, campaign?.recommendedNodeId, campaign?.nodes]);
   if (storyQuery.error) {
     return (
       <div className="h-full grid place-items-center bg-zinc-950 p-6 text-center">
@@ -122,164 +146,51 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </div>
     );
   }
+  // Vite SPA fallback returns 200 OK with the index HTML when the API server
+  // is offline; customFetch then hands us a string instead of a parsed
+  // StoryCampaign. Guard the shape so the rest of the page can short-circuit
+  // into the offline copy below.
+  if (typeof campaign !== 'object' || !Array.isArray(campaign.chapters) || !Array.isArray(campaign.nodes)) {
+    return (
+      <div className="h-full grid place-content-center bg-zinc-950 text-center px-6 gap-3">
+        <div className="font-mono text-[10px] text-white/45 uppercase tracking-[.2em]">Story</div>
+        <div className="font-display font-black italic text-2xl uppercase">The streets are out of reach.</div>
+        <p className="text-sm text-white/55 max-w-sm mx-auto">
+          Connect your account to continue your campaign. In the meantime, sharpen your crew in a practice fight.
+        </p>
+        <Link
+          href="/game/play"
+          className="mx-auto mt-2 bg-primary text-black px-5 py-3 font-display font-black italic uppercase text-sm"
+        >
+          Run a CPU Fight
+        </Link>
+      </div>
+    );
+  }
   if (!campaign.chapters.length) {
     return <div className="h-full grid place-items-center bg-black text-sm text-white/55">No chapters are active.</div>;
   }
 
-  if (introCinematicVisible && currentChapter) {
-    return (
-      <StoryCinematic
-        source="assets/story/chapter-one/media/chapter-opening.mp4"
-        poster="assets/story/chapter-one/media/chapter-opening.webp"
-        title={currentChapter.title}
-        eyebrow={currentChapter.subtitle}
-        onComplete={() => setIntroCinematicVisible(false)}
-        onSkip={() => setIntroCinematicVisible(false)}
-      />
-    );
-  }
-
   const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
-  const maxStars = (chapterContent?.nodes.filter((node) => node.kind === 'battle').length ?? 0) * 3;
-
-  return (
-    <div className="relative flex h-full flex-col overflow-hidden bg-black text-white">
-      <div
-        className="relative flex-1 touch-pan-x touch-pan-y overflow-auto border-b border-white/10 bg-cover bg-center hide-scrollbar"
-        style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}
-      >
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px]" />
-        <div className="relative mx-auto h-full min-h-[600px] w-full min-w-[800px] p-12">
-          <svg className="pointer-events-none absolute inset-0 z-0 h-full w-full" aria-hidden="true">
-            {nodes.flatMap((node) =>
-              node.prerequisites.map((prerequisiteId) => {
-                const prerequisite = nodes.find((item) => item.nodeId === prerequisiteId);
-                if (!prerequisite) return null;
-                return (
-                  <line
-                    key={`${prerequisiteId}-${node.nodeId}`}
-                    x1={`${prerequisite.mapPosition.x}%`}
-                    y1={`${prerequisite.mapPosition.y}%`}
-                    x2={`${node.mapPosition.x}%`}
-                    y2={`${node.mapPosition.y}%`}
-                    stroke={node.status === 'locked' ? 'rgba(255,255,255,.12)' : 'rgba(250,204,21,.58)'}
-                    strokeWidth="3"
-                    strokeDasharray={node.status === 'locked' ? '5 7' : undefined}
-                  />
-                );
-              }),
-            )}
-          </svg>
-
-          {nodes.map((node) => {
-            const locked = node.status === 'locked';
-            const cleared = node.status === 'cleared';
-            const recommended = node.nodeId === campaign.recommendedNodeId;
-            const isOptionalNode = node.optional;
-            return (
-              <motion.button
-                key={node.nodeId}
-                type="button"
-                whileHover={locked ? undefined : { scale: 1.12 }}
-                whileTap={locked ? undefined : { scale: 0.94 }}
-                onClick={() => !locked && setSelectedNodeId(node.nodeId)}
-                disabled={locked}
-                aria-label={`${node.title}, ${node.status}`}
-                className={`absolute z-10 -ml-7 -mt-7 grid h-14 w-14 rotate-45 place-items-center border-[3px] shadow-2xl ${
-                  locked
-                    ? 'cursor-not-allowed border-zinc-800 bg-zinc-950 text-white/30'
-                    : cleared
-                      ? (isOptionalNode ? 'border-accent bg-black text-accent' : 'border-primary bg-black text-primary')
-                      : (isOptionalNode ? 'border-black bg-accent text-black shadow-[0_0_25px_rgba(225,29,72,.5)]' : 'border-black bg-primary text-black shadow-[0_0_25px_rgba(250,204,21,.5)]')
-                }`}
-                style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
-              >
-                <span className="-rotate-45 font-display text-2xl font-black leading-none">
-                  {locked ? '?' : node.kind === 'battle' ? '!' : '·'}
-                </span>
-                <span className="absolute left-1/2 top-[120%] flex -translate-x-1/2 -rotate-45 flex-col items-center whitespace-nowrap">
-                  <span className={`border border-white/10 bg-black/80 px-2 py-1 font-display text-sm font-black italic uppercase ${recommended ? (isOptionalNode ? 'text-accent' : 'text-primary') : 'text-white/75'}`}>
-                    {node.title}
-                  </span>
-                  {recommended && <span className={`mt-1 px-2 py-0.5 font-mono text-[7px] uppercase tracking-widest text-black ${isOptionalNode ? 'bg-accent' : 'bg-primary'}`}>Up next</span>}
-                  {node.kind === 'battle' && (
-                    <span className="mt-1 flex gap-1 border border-white/10 bg-black/80 px-1.5 py-1">
-                      {[1, 2, 3].map((star) => (
-                        <span
-                          key={star}
-                          className={`h-2.5 w-2.5 ${star <= node.stars ? (isOptionalNode ? 'bg-accent' : 'bg-primary') : 'bg-white/20'}`}
-                          style={{ clipPath: 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)' }}
-                        />
-                      ))}
-                    </span>
-                  )}
-                </span>
-              </motion.button>
-            );
-          })}
-        </div>
-      </div>
-
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-black via-black/75 to-transparent p-4 pb-16 md:p-6 md:pb-20">
-        <div className="mx-auto flex max-w-5xl items-start justify-between gap-3">
-          <div>
-            <div className="pointer-events-auto mb-2 flex max-w-[70vw] gap-1 overflow-x-auto hide-scrollbar">
-              {campaign.chapters.map((chapter) => (
-                <button
-                  key={chapter.id}
-                  type="button"
-                  disabled={chapter.status === 'locked'}
-                  onClick={() => setActiveChapterId(chapter.id)}
-                  className={`border px-2 py-1 font-mono text-[8px] uppercase tracking-widest ${
-                    chapter.id === currentChapter?.id
-                      ? 'border-primary bg-primary text-black'
-                      : chapter.status === 'locked'
-                        ? 'border-white/10 text-white/25'
-                        : 'border-white/20 bg-black/60 text-white/65'
-                  }`}
-                >
-                  Chapter {chapter.order || 1}
-                </button>
-              ))}
-            </div>
-            <h1 className="max-w-[70vw] font-display text-3xl font-black italic uppercase leading-none drop-shadow-md md:text-5xl">
-              {currentChapter?.title}
-            </h1>
-            <p className="mt-1 max-w-[70vw] font-mono text-[9px] uppercase tracking-widest text-primary md:text-xs">
-              {currentChapter?.subtitle}
-            </p>
-          </div>
-          <div className="border border-white/10 bg-black/75 px-3 py-2 text-right">
-            <div className="font-mono text-[8px] uppercase tracking-widest text-white/50">Progression</div>
-            <div className="font-display text-2xl font-black leading-none text-primary">
-              {currentChapter?.completedRequiredNodes ?? 0}<span className="text-base text-white/30">/{currentChapter?.totalRequiredNodes ?? 0}</span>
-            </div>
-            <div className="mt-1 font-mono text-[7px] uppercase text-white/35">
-              Boss {currentChapter?.bossStatus}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <AnimatePresence>
-        {selectedNodeId && (
-          <NodeOverlay
-            nodeId={selectedNodeId}
-            campaign={campaign}
-            onClose={() => {
-              setSelectedNodeId(null);
-              if (window.location.search) setLocation('/game/story', { replace: true });
-            }}
-            onStartBattle={(nodeId) => setLocation(`/game/story/play/${nodeId}`)}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
+  const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
+  return <div className="studio-page story-atlas">
+    <header className="story-atlas__header"><div><nav className="studio-tabs" aria-label="Chapters">{campaign.chapters.map(chapter=><button key={chapter.id} disabled={chapter.status==='locked'} aria-pressed={chapter.id===currentChapter?.id} onClick={()=>setActiveChapterId(chapter.id)}>Chapter {chapter.order || 1}{chapter.status==='locked' && <LockKeyhole size={10}/>}</button>)}</nav><span className="studio-eyebrow">{currentChapter?.subtitle}</span><h1>{currentChapter?.title}</h1></div><aside className="story-atlas__header__plate" aria-label="Now showing"><img src={getAssetUrl('brand/story-cinematic/film-reel.jpg')} alt="" aria-hidden="true" /><span className="story-atlas__header__plate__copy"><small>Now showing</small><strong>Reel 0{(currentChapter?.order ?? 1).toString().padStart(2, '0')} · {currentChapter?.title}</strong></span></aside><div className="story-atlas__progress"><ProgressRing value={currentChapter?.completedRequiredNodes ?? 0} max={currentChapter?.totalRequiredNodes ?? 1} label="Chapter progress"/><span>Chapter progress<small>Boss {currentChapter?.bossStatus}</small></span></div></header>
+    <div ref={mapViewport} className="story-atlas__viewport" aria-label="Campaign map. Scroll to explore the territory."><div className="story-atlas__terrain" style={{backgroundImage:`url("${getAssetUrl(currentChapter?.mapAssetId || '')}")`}}><div className="story-atlas__wash"/><img src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.35,mixBlendMode:'screen',pointerEvents:'none',zIndex:0}} />
+      <svg className="story-atlas__routes" aria-hidden="true">{nodes.flatMap(node=>node.prerequisites.map(id=>{const parent=nodes.find(n=>n.nodeId===id);return parent ? <line key={`${id}-${node.nodeId}`} x1={`${parent.mapPosition.x}%`} y1={`${parent.mapPosition.y}%`} x2={`${node.mapPosition.x}%`} y2={`${node.mapPosition.y}%`} stroke={node.status==='locked' ? 'rgba(240,179,90,0.18)' : 'rgba(240,179,90,0.7)'} strokeWidth={node.status==='locked' ? 1 : 2} strokeDasharray={node.status==='locked' ? '3 7' : undefined}/> : null;}))}</svg>
+      {nodes.map(node=>{const locked=node.status==='locked',cleared=node.status==='cleared',isNext=node.nodeId===campaign.recommendedNodeId;const content=getStoryNode(node.nodeId);const boss=content?.kind==='battle' && ['boss','mini-boss'].includes(content.battleType);return <button key={node.nodeId} type="button" aria-disabled={locked} aria-label={`${node.title}, ${node.status}`} onClick={()=>{if(!locked)setSelectedNodeId(node.nodeId);}} className={`story-atlas__node ${isNext?'is-next':''} ${boss?'is-boss':''} ${locked?'is-locked':''} ${cleared?'is-cleared':''} ${node.optional?'is-optional':''}`} style={{left:`${node.mapPosition.x}%`,top:`${node.mapPosition.y}%`}}>
+        <span className="story-atlas__marker">{boss && content?.kind==='battle' ? <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt=""/> : locked ? <LockKeyhole size={15}/> : cleared ? <Check size={20}/> : node.kind==='battle' ? <GameGlyph name="fight"/> : <MessageCircle size={19}/>} {boss && <Crown className="story-atlas__crown" size={15}/>}</span>
+        <span className="story-atlas__label"><strong>{node.title}</strong><small>{locked ? 'Locked' : isNext ? 'Up next' : node.optional ? 'Side story' : cleared ? 'Cleared' : 'Available'}</small></span>
+        {node.kind==='battle' && <span className="story-atlas__stars" aria-label={`${node.stars} of 3 stars`}>{[1,2,3].map(n=><Star key={n} size={9} fill={n<=node.stars ? 'currentColor' : 'none'} style={{opacity:n<=node.stars ? 1 : .3}}/>)}</span>}
+      </button>;})}
+    </div></div>
+    <footer className="story-atlas__footer"><div><span className="studio-eyebrow">{recommended ? 'Next reel · up now' : 'Standing by · director cut'}</span><strong>{recommended?.title ?? 'Explore the block. Perfect your story.'}</strong><span className="story-atlas__hint">Select a marker to enter · Scroll to explore</span></div>{recommended && <button className="studio-action studio-action--gold" onClick={()=>setSelectedNodeId(recommended.nodeId)}>Roll camera<ArrowRight size={15}/></button>}
+      {currentChapter && chapterContent && <details className="story-atlas__tickets"><summary aria-label="Chapter ticket rewards"><Ticket size={18}/><span>Rewards</span></summary><div><ChapterTicketProgress chapter={chapterContent} nodeProgressById={Object.fromEntries(campaign.nodes.map(node=>[node.nodeId,{stars:node.stars,cleared:node.cleared}]))} onSelectBattle={nodeId=>{const progress=campaign.nodes.find(node=>node.nodeId===nodeId);if(progress?.status!=='locked')setSelectedNodeId(nodeId);}}/></div></details>}
+    </footer>
+    <AnimatePresence>{selectedNodeId && <NodeOverlay nodeId={selectedNodeId} campaign={campaign} onClose={()=>{setSelectedNodeId(null);if(window.location.search)setLocation('/game/story',{replace:true});}} onStartBattle={nodeId=>setLocation(`/game/story/play/${nodeId}`)}/>}</AnimatePresence>
+  </div>;
 }
-
-function NodeOverlay({
+export function NodeOverlay({
   nodeId,
   campaign,
   onClose,
@@ -295,11 +206,12 @@ function NodeOverlay({
   const saveDialogue = useSavePlayerStoryDialogue();
   const nodeProgress = campaign.nodes.find((node) => node.nodeId === nodeId);
   const storyNode = getStoryNode(nodeId);
-  const [sceneIndex, setSceneIndex] = useState(0);
+  const actionLock = useRef(false);
   const [screen, setScreen] = useState<'dialogue' | 'briefing' | 'completed'>('dialogue');
   const [showHistory, setShowHistory] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [grantedRewards, setGrantedRewards] = useState<StoryGrantedReward[]>([]);
+  const [replayIndex, setReplayIndex] = useState<number | null>(null);
 
   const entries = useMemo(() => (storyNode ? sceneEntries(storyNode) : []), [storyNode]);
   const seen = useMemo(() => new Set(nodeProgress?.dialogueSeen ?? []), [nodeProgress?.dialogueSeen]);
@@ -310,11 +222,11 @@ function NodeOverlay({
     return entries.filter((entry) => entry.section === targetSection && !seen.has(entry.token));
   }, [entries, nodeProgress?.cleared, seen, storyNode]);
   const history = entries.filter((entry) => seen.has(entry.token));
+  const replayEntries = entries.filter((entry) => entry.section !== 'post' || nodeProgress?.cleared);
   const isBattle = storyNode?.kind === 'battle';
   const pending = completeNode.isPending || saveDialogue.isPending;
 
   useEffect(() => {
-    setSceneIndex(0);
     setActionError(null);
     if (pendingEntries.length) setScreen('dialogue');
     else setScreen(isBattle ? 'briefing' : 'completed');
@@ -345,12 +257,14 @@ function NodeOverlay({
   };
 
   const advanceDialogue = async (skipRemaining: boolean) => {
-    const current = pendingEntries[sceneIndex];
+    if (actionLock.current) return;
+    const current = pendingEntries[0];
     if (!current) return;
-    const remaining = skipRemaining ? pendingEntries.slice(sceneIndex) : [current];
+    actionLock.current = true;
+    const remaining = skipRemaining ? pendingEntries : [current];
     setActionError(null);
     try {
-      if (!isBattle && sceneIndex === pendingEntries.length - 1 || !isBattle && skipRemaining) {
+      if (!isBattle && (pendingEntries.length === 1 || skipRemaining)) {
         const result = await completeNode.mutateAsync({
           nodeId,
           data: {
@@ -371,14 +285,16 @@ function NodeOverlay({
         },
       });
       applyCampaign(result.campaign, result.bootstrap);
-      if (skipRemaining || sceneIndex === pendingEntries.length - 1) setScreen('briefing');
-      else setSceneIndex((index) => index + 1);
+      if (skipRemaining || pendingEntries.length === 1) setScreen('briefing');
     } catch {
       setActionError('Progress could not be saved. Try again before continuing.');
+    } finally {
+      actionLock.current = false;
     }
   };
 
   const historyButton = (
+    <div className="flex flex-wrap gap-2">
     <button
       type="button"
       onClick={() => setShowHistory(true)}
@@ -387,6 +303,8 @@ function NodeOverlay({
     >
       Dialogue History
     </button>
+    <button type="button" onClick={() => setReplayIndex(0)} className="border border-white/15 px-3 py-2 font-mono text-[8px] uppercase tracking-widest text-white/55">Replay scenes</button>
+    </div>
   );
 
   return (
@@ -396,11 +314,17 @@ function NodeOverlay({
       exit={{ opacity: 0 }}
       className="absolute inset-0 z-50 bg-black/95"
     >
-      {screen === 'dialogue' && pendingEntries[sceneIndex] && (
+      {replayIndex !== null && replayEntries[replayIndex] ? (
+        <DialogueView entry={replayEntries[replayIndex]}
+          position={replayEntries.slice(0, replayIndex + 1).filter((entry) => entry.section === replayEntries[replayIndex].section).length}
+          total={replayEntries.filter((entry) => entry.section === replayEntries[replayIndex].section).length}
+          pending={false} error={null} onClose={() => setReplayIndex(null)} onHistory={() => setShowHistory(true)} historyDisabled={!history.length}
+          onNext={() => setReplayIndex(replayIndex + 1 < replayEntries.length ? replayIndex + 1 : null)} onSkip={() => setReplayIndex(null)} />
+      ) : screen === 'dialogue' && pendingEntries[0] && (
         <DialogueView
-          entry={pendingEntries[sceneIndex]}
-          position={sceneIndex + 1}
-          total={pendingEntries.length}
+          entry={pendingEntries[0]}
+          position={entries.filter((entry) => entry.section === pendingEntries[0].section).length - pendingEntries.length + 1}
+          total={entries.filter((entry) => entry.section === pendingEntries[0].section).length}
           pending={pending}
           error={actionError}
           onClose={onClose}
@@ -411,7 +335,7 @@ function NodeOverlay({
         />
       )}
 
-      {screen === 'briefing' && isBattle && (
+      {replayIndex === null && screen === 'briefing' && isBattle && (
         <BattleBriefing
           battle={storyNode as StoryBattleNode}
           stars={nodeProgress.stars}
@@ -422,7 +346,7 @@ function NodeOverlay({
         />
       )}
 
-      {screen === 'completed' && !isBattle && (
+      {replayIndex === null && screen === 'completed' && !isBattle && (
         <div className="grid h-full place-items-center overflow-y-auto p-6 text-center">
           <div className="max-w-md">
             <img
@@ -505,39 +429,9 @@ function DialogueView({
   onNext: () => void;
   onSkip: () => void;
 }) {
-  return (
-    <div className="flex h-full flex-col justify-end overflow-hidden">
-      <motion.img
-        key={entry.line.portraitAssetId}
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 0.82, x: 0 }}
-        src={getAssetUrl(entry.line.portraitAssetId)}
-        alt={entry.line.speaker}
-        className="absolute bottom-[28%] left-1/2 max-h-[70%] w-[130%] max-w-[680px] -translate-x-1/2 object-contain object-bottom drop-shadow-2xl"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/30" />
-      <div className="relative z-10 mx-auto w-full max-w-3xl px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
-        <div className="mb-3 flex justify-between">
-          <button type="button" onClick={onClose} className="font-mono text-[8px] uppercase tracking-widest text-white/50">Back to map</button>
-          <button type="button" onClick={onHistory} disabled={historyDisabled} className="font-mono text-[8px] uppercase tracking-widest text-white/50 disabled:opacity-30">History</button>
-        </div>
-        <div className="border-l-4 border-primary bg-zinc-950/90 p-5 backdrop-blur-md md:p-8">
-          <div className="flex items-center justify-between">
-            <div className="font-display text-xl font-black italic uppercase text-primary">{entry.line.speaker}</div>
-            <div className="font-mono text-[8px] text-white/35">{position}/{total}</div>
-          </div>
-          <p className="mt-3 text-lg leading-relaxed text-white md:text-2xl">{entry.line.text}</p>
-          {error && <p role="alert" className="mt-3 text-xs text-accent">{error}</p>}
-        </div>
-        <div className="mt-3 flex items-center justify-between">
-          <button type="button" onClick={onSkip} disabled={pending} className="px-2 py-3 font-mono text-[9px] uppercase tracking-widest text-white/45 disabled:opacity-40">Skip remaining</button>
-          <button type="button" onClick={onNext} disabled={pending} className="bg-white px-8 py-3 font-display font-black italic uppercase text-black disabled:opacity-50">
-            {pending ? 'Saving' : position < total ? 'Next' : 'Continue'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return <StoryStage nodeId={entry.token.split(':')[0]} section={entry.section} line={entry.line}
+    position={position} total={total} pending={pending} error={error} onClose={onClose}
+    onHistory={onHistory} historyDisabled={historyDisabled} onNext={onNext} onSkip={onSkip} />;
 }
 
 function BattleBriefing({
@@ -633,7 +527,7 @@ function BattleBriefing({
           <div className="mt-3 flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
             {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => {
               const rarity = catalogCardByEngineId[cardId].rarity;
-              return <div key={cardId} aria-label={`${cards[cardId].name}. ${rarity} rarity`} className={`relative flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2 overflow-hidden ${getRarityClass(rarity)}`}>
+              return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`relative flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2 overflow-hidden ${getRarityClass(rarity)}`}>
                 <img src={getCardImage(cards[cardId].id)} alt="" className="h-12 w-9 object-cover" />
                 <span className="font-display text-xs font-bold uppercase">{cards[cardId].name}</span>
                 <CardRarityTreatment rarity={rarity} compact />

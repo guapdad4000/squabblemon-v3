@@ -15,6 +15,8 @@ export type PlayerSettings = {
 };
 
 export type SavedDeck = {
+  /** Rules version used when the deck was last saved or migrated. */
+  deckSize?: number;
   id: string;
   name: string;
   cardIds: string[];
@@ -23,7 +25,7 @@ export type SavedDeck = {
 };
 
 export type EquippedVariants = Record<string, string>;
-export type CardProgression = Record<string, { xp: number; level: number }>;
+export type CardProgression = Record<string, { xp: number; level: number; moveTier?: number }>;
 
 export const playerProfilesTable = pgTable("player_profiles", {
   clerkUserId: text("clerk_user_id").primaryKey(),
@@ -74,6 +76,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
     .notNull()
     .default({}),
   unlockedCosmeticIds: jsonb("unlocked_cosmetic_ids")
+    .$type<string[]>()
+    .notNull()
+    .default([]),
+  unlockedCharacterIds: jsonb("unlocked_character_ids")
     .$type<string[]>()
     .notNull()
     .default([]),

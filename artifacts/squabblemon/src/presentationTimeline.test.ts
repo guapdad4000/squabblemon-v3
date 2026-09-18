@@ -37,6 +37,7 @@ test('presentation waits complete only after their configured fake time', async 
   const wait = timeline.wait(700).then(value => { completed = value; });
   clock.advance(699);
   await Promise.resolve();
+  await Promise.resolve();
   assert.equal(completed, undefined);
   clock.advance(1);
   await wait;
@@ -83,9 +84,9 @@ test('a staged rival beat preserves travel, reveal, and slam ordering', async ()
     if (!await timeline.wait(350)) return;
     phases.push('rival-slam');
   })();
-  clock.advance(700); await Promise.resolve();
+  clock.advance(700); await Promise.resolve(); await Promise.resolve();
   assert.deepEqual(phases, ['rival-thinking', 'rival-travel']);
-  clock.advance(350); await Promise.resolve();
+  clock.advance(350); await Promise.resolve(); await Promise.resolve();
   assert.deepEqual(phases, ['rival-thinking', 'rival-travel', 'rival-reveal']);
   clock.advance(350); await sequence;
   assert.deepEqual(phases, ['rival-thinking', 'rival-travel', 'rival-reveal', 'rival-slam']);
@@ -119,4 +120,13 @@ test('turn timer progress and warning states stay readable at every threshold', 
   assert.equal(getTurnTimerProgress(20), 1);
   assert.equal(getTurnTimerProgress(10), .5);
   assert.equal(getTurnTimerProgress(-1), 0);
+});
+
+test('a fast-forward completion cancelled before its continuation cannot revive an old sequence', async () => {
+  const clock = fakeTimers();
+  const timeline = new PresentationTimeline(clock.schedule, clock.cancel);
+  const pending = timeline.wait(300);
+  timeline.completeAll();
+  timeline.cancelAll();
+  assert.equal(await pending, false);
 });

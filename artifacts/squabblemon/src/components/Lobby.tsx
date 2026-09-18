@@ -1,5 +1,8 @@
+import { MusicControls } from './MusicControls';
 import { motion } from 'framer-motion';
-import { cards, catalogCardByEngineId, decks, getCardImage } from '../data';
+import { CardPressTarget } from './CardInspection';
+import { getCrewScenery } from '../lib/cardFinish';
+import { cards, catalogCardByEngineId, decks, getCardImage, CARD_RARITY_DEFINITIONS } from '../data';
 import { CardVariantTreatment, getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { selectTrainingRival, trainingDifficulty, TRAINING_REWARD_RULES } from '@workspace/squabblemon-engine/training';
@@ -15,13 +18,15 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
   
   return (
     <div className="flex-1 min-h-0 min-w-0 grid grid-cols-[minmax(0,1fr)] grid-rows-[minmax(210px,1fr)_auto_auto] md:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] md:grid-rows-[1fr_auto] w-full max-w-full overflow-hidden relative bg-[#070707]">
-      <div className="absolute top-4 left-4 z-50">
-        <button onClick={onExit} className="w-10 h-10 bg-black/50 border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full">
+      <div className="absolute top-4 left-4 right-4 z-50 flex items-center justify-between">
+        <button aria-label="Leave practice" onClick={onExit} className="w-10 h-10 bg-black/50 border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full">
            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
+        <MusicControls className="music-lobby" />
       </div>
 
       <div className="relative min-h-0 overflow-hidden md:row-span-2">
+        <img key={`scene-${selectedDeck.id}`} src={getCrewScenery(selectedDeck.id)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-70" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_35%,rgba(250,204,21,0.12),transparent_48%)]" />
         <motion.img
           key={selectedDeck.id}
@@ -85,7 +90,8 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                 }`}
                 style={{ clipPath: 'polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px))' }}
               >
-                <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain object-top opacity-70" />
+                <img src={getCrewScenery(d.id)} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain object-top opacity-90" />
                 <CardRarityTreatment rarity={heroRarity} compact />
                 <CardVariantTreatment variantId={getEquippedVariant(equippedVariants, d.hero)} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
@@ -100,26 +106,26 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
 
         <div className="mt-2.5 border-t border-white/10 pt-2.5 min-w-0">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-mono text-[8px] md:text-[10px] tracking-[0.18em] text-white/55 uppercase">Crew lineup // 7 members</span>
+            <span className="font-mono text-[8px] md:text-[10px] tracking-[0.18em] text-white/55 uppercase">Crew lineup // 10 members</span>
             <span className="font-mono text-[7px] md:text-[9px] text-primary/80 uppercase">Tap to inspect</span>
           </div>
           <motion.div
             key={`lineup-${selectedDeck.id}`}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-7 gap-1 md:gap-1.5"
+            className="grid grid-cols-5 gap-1 md:gap-1.5"
             data-testid={`lineup-${selectedDeck.id}`}
           >
             {selectedDeck.cards.map((cardId, index) => {
               const card = cards[cardId];
               const rarity = catalogCardByEngineId[cardId].rarity;
               return (
-                <button
-                  type="button"
+                <CardPressTarget
+                  card={card}
                   key={`${selectedDeck.id}-${cardId}`}
                   data-testid={`button-inspect-lineup-${cardId}`}
-                  onClick={() => onInspect(card)}
-                  aria-label={`Inspect ${card.name}. ${rarity} rarity`}
+                  onClick={() => onInspect(card)} onInspect={() => onInspect(card)}
+                  aria-label={`Inspect ${card.name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`}
                   className={`group relative min-w-0 h-[78px] md:h-[106px] overflow-hidden border border-white/15 bg-zinc-950 text-left hover:border-primary focus-visible:border-primary focus-visible:outline-none active:scale-95 transition ${getRarityClass(rarity)} ${getVariantKind(getEquippedVariant(equippedVariants, card.id)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, card.id))}` : ''}`}
                   style={{ clipPath: 'polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px))' }}
                 >
@@ -136,7 +142,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
                   <span className="absolute inset-x-0 bottom-0 p-1 font-display font-black text-[7px] md:text-[9px] leading-[0.9] uppercase text-white drop-shadow-[0_1px_2px_#000] break-words">
                     {card.name}
                   </span>
-                </button>
+                </CardPressTarget>
               );
             })}
           </motion.div>

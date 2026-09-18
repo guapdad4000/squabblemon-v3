@@ -1,0 +1,1132 @@
+[
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:0",
+    "section": "pre",
+    "speaker": "Cornball",
+    "text": "This machine stole my three dollars. I am outside its place of business demanding accountability.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:1",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Who you with? And don't say yourself. Everybody bringing themselves. That's the problem.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:2",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "No Blue. No Red. You just showed up unseasoned?",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:3",
+    "section": "pre",
+    "speaker": "Cornball",
+    "text": "The sign says OPEN, Blue. You can't put a jacket over a vowel and start a private school.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:4",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Beat me, you get a slot. Lose, get back in line. This ain't your cousin's mixtape release. Everybody don't get a turn.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:5",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Two districts wins it. Don't make me say it twice.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:6",
+    "section": "pre",
+    "speaker": "Cornball",
+    "text": "He said it eleven times in the car. We missed the exit because he wanted bass under it.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:pre:7",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Deck. Table. Now. Before I charge your commentator a vendor fee.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:post:0",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Okay. You got a slot. Don't be standing there looking like you just bought me.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:post:1",
+    "section": "post",
+    "speaker": "Cornball",
+    "text": "First day outside and already somebody's supervisor. That's nasty work.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:post:2",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Come through Blue Side if you want more than a name on this sheet.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:post:3",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "And don't write CHAMPION in the nickname box. I know how y'all get.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 1,
+    "node_id": "welcome-to-the-block",
+    "token": "welcome-to-the-block:defeat:0",
+    "section": "defeat",
+    "speaker": "Ganger Blue",
+    "text": "You spread that hand out like one paycheck across six bills. Pick two districts and come back.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:0",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Everybody want a seat at my table. Nobody ask who built the empire.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:1",
+    "section": "pre",
+    "speaker": "Wifey",
+    "text": "Your empire is plugged into Nail Tech's bathroom. Don't nobody use that hair dryer.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:2",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "I kept these lights on!",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:3",
+    "section": "pre",
+    "speaker": "Wifey",
+    "text": "WE kept them on. You brought a speaker and asked if we had ice.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:4",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Winner gets the Crown. Runs the next open-play schedule. That's real power.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:5",
+    "section": "pre",
+    "speaker": "Wifey",
+    "text": "You pick who plays at seven. You are not the mayor of Electricity.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:pre:6",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "You want slots for your little independent situation? Beat me right here. In front of my taxpayers.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:post:0",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Fine. Your crew gets in. No colors. I said what I said.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:post:1",
+    "section": "post",
+    "speaker": "Wifey",
+    "text": "And I wrote what you said. In ink. We know how your memory acts after a loss.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:post:2",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Red's over there filming everything. Go be somebody else's emergency.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:post:3",
+    "section": "post",
+    "speaker": "Wifey",
+    "text": "Take the big entrance. He been practicing his disappointed face since lunch.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 2,
+    "node_id": "blue-side-pressure",
+    "token": "blue-side-pressure:defeat:0",
+    "section": "defeat",
+    "speaker": "Ganger Blue",
+    "text": "You came for the Crown and left with a learning experience. Shuffle up.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:0",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "I watched your match. Then I watched Blue explain your match. That's two different genres.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:1",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "His explanation got more views. Facts need better lighting.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:2",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Film both sides of the table. Last time your thumb had more screen time than the winner.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:3",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Middle district closes in round two. Both of us. That orange barrier ain't an aesthetic.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:4",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "Damn. You doing the safety briefing before the beatdown?",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:5",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "I'm removing your excuses in alphabetical order.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:pre:6",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Win and your name goes forward. Whole match stays up. No cousins in the comments demanding a recount.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:post:0",
+    "section": "post",
+    "speaker": "Snitch",
+    "text": "I got the PERFECT title. LOCAL MAN HUMILIATED IN FRONT OF HIS OWN PHONE.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:post:1",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "Keep the beginning. They earned the win. You didn't discover it.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:post:2",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "Your name goes forward. One more Red Side test. Don't turn a good afternoon into a personality.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:post:3",
+    "section": "post",
+    "speaker": "Snitch",
+    "text": "Too late. Blue's already posted a paragraph with no punctuation.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 3,
+    "node_id": "receipts-on-camera",
+    "token": "receipts-on-camera:defeat:0",
+    "section": "defeat",
+    "speaker": "Ganger Red",
+    "text": "I explained the barrier. I pointed at the barrier. What part of orange betrayed you?",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:0",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "My auntie called. Said if I lose again, don't bring the Red Side banner to her cookout.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:1",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "That's family accountability. Beautiful to see.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:2",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "You lost twice and called it community outreach. Put that plate down.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:3",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Hold up. Why you got that program?",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:4",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "It was in the notebook.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:5",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "That's my brother, Red. Four years. You carrying his memorial next to a tournament bracket?",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:6",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Cracked Head taught us this table. I kept it. That's all I'm saying.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:pre:7",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "One more match. Win, I sign your final entry. Save some Motion. I'm not coming gentle in round four.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:post:0",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "You won. I'll sign. Somebody tell my auntie I'm still bringing the potato salad.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:post:1",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Don't put that program on the stream.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:post:2",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "I wasn't going to.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:post:3",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Yeah. You got a whole museum of shit you weren't going to.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:post:4",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "Snitch has the contender sheet up the hill. Get there before he puts your entry behind a subscription.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 4,
+    "node_id": "red-side-retaliation",
+    "token": "red-side-retaliation:defeat:0",
+    "section": "defeat",
+    "speaker": "Ganger Red",
+    "text": "You spent all your Motion getting comfortable. I told you I was coming back.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:0",
+    "section": "pre",
+    "speaker": "Alley Runner",
+    "text": "Main route's over there. This table's optional. I know. A choice. We don't get many of those around here.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:1",
+    "section": "pre",
+    "speaker": "Cornball",
+    "text": "I've opened a case against this machine. Three dollars missing. Suspect refuses to blink.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:2",
+    "section": "pre",
+    "speaker": "Alley Runner",
+    "text": "That's the display window. Your drink's behind the flap.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:3",
+    "section": "pre",
+    "speaker": "Cornball",
+    "text": "Then why they got it behind glass like a damn museum piece?",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:4",
+    "section": "pre",
+    "speaker": "Alley Runner",
+    "text": "Win here, you get a cardback tag. No crew tax. No uncle you gotta impress.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:pre:5",
+    "section": "pre",
+    "speaker": "Alley Runner",
+    "text": "Watch the whole table. I move around. Unlike your boy's investigation.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:post:0",
+    "section": "post",
+    "speaker": "Alley Runner",
+    "text": "Tag's yours. If anybody asks what side you're on, show 'em the back of the card.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:post:1",
+    "section": "post",
+    "speaker": "Cornball",
+    "text": "Got my drink. Room temperature. That's how they serve revenge.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:post:2",
+    "section": "post",
+    "speaker": "Alley Runner",
+    "text": "Watch Snitch. He waits till people run out of answers, then starts acting like he invented the question.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:post:3",
+    "section": "post",
+    "speaker": "Cornball",
+    "text": "He charged me to correct my own birthday post.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:post:4",
+    "section": "post",
+    "speaker": "Alley Runner",
+    "text": "Keep something for the late rounds. Let him interview the loss.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 5,
+    "node_id": "side-alley-challenge",
+    "token": "side-alley-challenge:defeat:0",
+    "section": "defeat",
+    "speaker": "Alley Runner",
+    "text": "Run it back. Only thing charging interest here is that man's grudge against a soda machine.",
+    "character_art": "",
+    "art_status": "DEDICATED ART MISSING; game borrows Blue portrait, not an approved distinct identity"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:0",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "Look who survived both sides. Independent crew, undefeated attitude. Your documentary just got a second episode.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:1",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Post the contender sheet. You are not the Department of Outside.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:2",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "One qualifier. Same as everybody. This is a professional operation.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:3",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "You're sitting on an air fryer. Who asked you for the footage?",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:4",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "A returning customer. Very emotional demographic.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:5",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "I watched your matches. Round four, I get active. That's when the subscription renews.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:6",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Two extra Motion. Keep some for it. The ring light doesn't make him mysterious.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:pre:7",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "Could you stop reading my damn business model out loud?",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:post:0",
+    "section": "post",
+    "speaker": "Snitch",
+    "text": "Your slot's up. Don't tag me in the celebration. I'm rebranding.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:post:1",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "Who is the other finalist?",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:post:2",
+    "section": "post",
+    "speaker": "Snitch",
+    "text": "They paid for an entrance. I'm contractually obligated to let this get messy.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:post:3",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "You made a contract?",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:post:4",
+    "section": "post",
+    "speaker": "Snitch",
+    "text": "Voice note and a deposit. That's a contract with feelings.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 6,
+    "node_id": "snitch-at-the-corner",
+    "token": "snitch-at-the-corner:defeat:0",
+    "section": "defeat",
+    "speaker": "Snitch",
+    "text": "That ending needs work. Lucky for you, humiliation comes with unlimited reshoots.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:0",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Oh, hell no. Not in the hoodie we buried on the flyer.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:1",
+    "section": "pre",
+    "speaker": "Cracked Head",
+    "text": "What's good, little brother?",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:2",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "WHAT'S GOOD? I put your face on shirts! I argued with the printer about your damn hairline!",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:3",
+    "section": "pre",
+    "speaker": "Cracked Head",
+    "text": "Blue. I'm standing right here.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:4",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "That's the problem! We had a memorial! There was a slideshow! You smiled in transition number SIX!",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:5",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "Snitch. Camera down. Right now.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:6",
+    "section": "pre",
+    "speaker": "Snitch",
+    "text": "I'm live on two phones. I don't even know which one to disappoint first.",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:7",
+    "section": "pre",
+    "speaker": "Cracked Head",
+    "text": "Let it run. Everybody got something to say about me. They can say it while I'm here.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:8",
+    "section": "pre",
+    "speaker": "Ganger Blue",
+    "text": "Four years, no call. But you found the championship? Your GPS don't work for family?",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:9",
+    "section": "pre",
+    "speaker": "Cracked Head",
+    "text": "I came back for what's mine.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:10",
+    "section": "pre",
+    "speaker": "Ganger Red",
+    "text": "That chair ain't yours. They earned it. You want the Crown, play the finalist.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:pre:11",
+    "section": "pre",
+    "speaker": "Cracked Head",
+    "text": "All right, new face. Pull up. Let's see if the block got better or just louder.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:0",
+    "section": "post",
+    "speaker": "Cracked Head",
+    "text": "You got me. Crown's yours. Don't make me regret saying it in front of all these phones.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:1",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "Look at that. He can acknowledge a stranger. Somebody get this miracle on the church calendar.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:2",
+    "section": "post",
+    "speaker": "Cracked Head",
+    "text": "Blue, give me a damn minute.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:3",
+    "section": "post",
+    "speaker": "Ganger Blue",
+    "text": "You had four years. That's a lot of damn minutes.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:4",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "The result stands. Family meeting is a different table.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:5",
+    "section": "post",
+    "speaker": "Cracked Head",
+    "text": "I'll be back at this one.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:post:6",
+    "section": "post",
+    "speaker": "Ganger Red",
+    "text": "Then sign up. The ghost discount expired.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 7,
+    "node_id": "cracked-head-takes-the-block",
+    "token": "cracked-head-takes-the-block:defeat:0",
+    "section": "defeat",
+    "speaker": "Cracked Head",
+    "text": "You chasing every district like somebody yelled FREE PLATES. Pick your ground.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:0",
+    "section": "main",
+    "speaker": "Ganger Red",
+    "text": "We got a winner. Crown, schedule, seat for your crew. Please don't start appointing cousins to positions.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:1",
+    "section": "main",
+    "speaker": "Wifey",
+    "text": "Open play means everybody. I'm laminating this. Y'all respect plastic more than a promise.",
+    "character_art": "02_CHARACTER_ART/wifey.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:2",
+    "section": "main",
+    "speaker": "Ganger Blue",
+    "text": "I'll bring the lights. Don't make a whole announcement about it.",
+    "character_art": "02_CHARACTER_ART/ganger-blue.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:3",
+    "section": "main",
+    "speaker": "Cornball",
+    "text": "I'll bring drinks. Bought from a human. With witnesses.",
+    "character_art": "02_CHARACTER_ART/cornball.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:4",
+    "section": "main",
+    "speaker": "Snitch",
+    "text": "Everybody squeeze in. Winner in the middle, resurrected gentleman slightly to the—",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:5",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "Unplug whatever is making you comfortable.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:6",
+    "section": "main",
+    "speaker": "Snitch",
+    "text": "We're just doing a little celebration—",
+    "character_art": "02_CHARACTER_ART/snitch.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:7",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "I see. Four years dead and his ass somehow found VIP.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:8",
+    "section": "main",
+    "speaker": "Cracked Head",
+    "text": "I was coming to see you.",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:9",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "When? After the press tour? My address ain't changed. Even the pizza man knows when I'm upset.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:10",
+    "section": "main",
+    "speaker": "Cracked Head",
+    "text": "Can we do this somewhere private?",
+    "character_art": "02_CHARACTER_ART/cracked-head.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:11",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "NOW you believe in privacy. Came through that door with smoke and a church organ like you got a season finale.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:12",
+    "section": "main",
+    "speaker": "Ganger Red",
+    "text": "Before y'all go. I got something she needs to hear.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:13",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "Red. That envelope better be an apology with direct deposit.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:14",
+    "section": "main",
+    "speaker": "Ganger Red",
+    "text": "It's a recording. From him. Four years ago.",
+    "character_art": "02_CHARACTER_ART/ganger-red.webp",
+    "art_status": "existing identity reference"
+  },
+  {
+    "scene": 8,
+    "node_id": "block-crowned",
+    "token": "block-crowned:main:15",
+    "section": "main",
+    "speaker": "Baby Momma",
+    "text": "Four years? Oh, put the chairs back. Apparently BOTH of y'all got a presentation.",
+    "character_art": "02_CHARACTER_ART/baby-momma.webp",
+    "art_status": "existing identity reference"
+  }
+]

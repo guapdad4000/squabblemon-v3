@@ -148,7 +148,7 @@ test("a story snapshot and six stored moves replay identically", () => {
   const first = verifyStoryMatchTranscript(snapshot, "block", moves);
   const second = verifyStoryMatchTranscript(snapshot, "block", moves);
   assert.deepEqual(first, second);
-  assert.throws(() => verifyStoryMatchTranscript(snapshot, "block", moves.slice(0, 5)), /six moves/);
+  assert.throws(() => verifyStoryMatchTranscript(snapshot, "block", moves.slice(0, 5)), /six round endings/);
 });
 
 test("story lane locks reject players and are excluded from CPU choices", () => {

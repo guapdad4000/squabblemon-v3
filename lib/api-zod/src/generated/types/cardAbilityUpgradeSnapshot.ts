@@ -7,6 +7,11 @@
  */
 
 export interface CardAbilityUpgradeSnapshot {
+  /**
+     * @minimum 0
+     * @maximum 3
+     */
+  moveTier?: number;
   cardId: string;
   /** @minimum 1 */
   level: number;

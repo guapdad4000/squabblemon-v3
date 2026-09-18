@@ -11,6 +11,8 @@
     "moduleResolution": "bundler",
     "types": ["node", "vite/client"],
     "paths": {
+      "@workspace/squabblemon-engine/multiplayer": ["../../lib/squabblemon-engine/src/multiplayer.ts"],
+      "@workspace/squabblemon-engine/story": ["../../lib/squabblemon-engine/src/story.ts"],
       "@/*": ["./src/*"]
     }
   },

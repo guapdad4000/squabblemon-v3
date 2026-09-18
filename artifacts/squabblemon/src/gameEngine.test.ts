@@ -1,3 +1,4 @@
+import { completeEngineCrew } from '@workspace/squabblemon-engine/data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
@@ -20,7 +21,7 @@ test("City Never Sleeps cards use deterministic reveal, protection, movement, an
   m = { ...m, playerMotion: 20, playerHand: [barber], boards: [[ally, enemy], [], []] };
   m = playCard(m, "player", barber.instanceId, 0);
   assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 2);
-  assert.equal(m.boards[0].find(card => card.instanceId === enemy.instanceId)?.powerModifier, -1);
+  assert.equal(m.boards[0].some(card => card.instanceId === enemy.instanceId), false, 'lethal Line Up destroys the enemy');
 
   const bottle = custom("bottle", "player", 4);
   m = { ...m, phase: "player", playerMotion: 5, playerHand: [bottle] };
@@ -147,7 +148,7 @@ test('a legal saved catalog deck can enter the same local CPU engine', () => {
   const recipe = starterRecipes[0];
   const match = createMatchFromCatalog('saved-test', recipe.catalogCardIds, 'combo');
   assert.equal(match.playerDeck, 'saved-test');
-  assert.equal(match.playerCardIds.length, 7);
+  assert.equal(match.playerCardIds.length, 10);
   assert.equal(match.playerHand.length, 5);
   assert.equal(match.cpuHand.length, 5);
 });
@@ -186,8 +187,8 @@ test('every gameplay card has the fixed, valid three-upgrade path', () => {
 });
 
 test('match-start upgrade snapshots are immutable, tiered, ordered, and reject forgery', () => {
-  const player = ['cornball', 'hooper', 'plug', 'snow', 'wifey', 'baby', 'bikelife'];
-  const cpu = ['rastamon', 'roaster', 'nerd', 'streamer', 'gamer', 'techbro', 'vibe'];
+  const player = completeEngineCrew(['cornball', 'hooper', 'plug', 'snow', 'wifey', 'baby', 'bikelife']);
+  const cpu = completeEngineCrew(['rastamon', 'roaster', 'nerd', 'streamer', 'gamer', 'techbro', 'vibe']);
   for (const [level, unlocked] of [[1, 0], [2, 1], [5, 2], [8, 3], [10, 3]] as const) {
     const snapshot = createAbilityUpgradeSnapshot(player, cpu, { player: { cornball: { xp: 50 * level * (level - 1), level } } });
     assert.equal(snapshot.player[0].upgradeIds.length, unlocked);
@@ -202,8 +203,8 @@ test('match-start upgrade snapshots are immutable, tiered, ordered, and reject f
 
 test('upgrades use the captured snapshot, resolve in order, and replay identically', () => {
   const snapshot = createAbilityUpgradeSnapshot(
-    ['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby'],
-    ['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper'],
+    completeEngineCrew(['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby']),
+    completeEngineCrew(['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper']),
     { player: { cornball: { xp: 2800, level: 10 } } },
   );
   // A later live level cannot change this level-two match snapshot.
@@ -224,11 +225,11 @@ test('upgrades use the captured snapshot, resolve in order, and replay identical
 });
 
 test('conditional upgrade families affect authored targets only after a successful base ability', () => {
-  const player = ['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby'];
-  const cpu = ['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper'];
+  const player = completeEngineCrew(['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby']);
+  const cpu = completeEngineCrew(['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'hooper']);
   const full = createAbilityUpgradeSnapshot(player, cpu, { player: { roaster: { xp: 4500, level: 10 } } });
   let match = createMatch('block', 'receipts', undefined, full);
-  const enemy = { ...custom('hooper', 'cpu', 120), lane: 0 as const, playedRound: 1 };
+  const enemy = { ...custom('hooper', 'cpu', 120), basePower: 8, lane: 0 as const, playedRound: 1 };
   match = { ...match, playerMotion: 20, playerHand: [custom('roaster', 'player', 0)], boards: [[enemy], [], []] };
   const resolved = playCard(match, 'player', match.playerHand[0].instanceId, 0);
   const events = resolved.effectLog.filter((event) => event.abilityMetadata);
@@ -265,8 +266,8 @@ test('conditional upgrade families affect authored targets only after a successf
 
 test('Wifey blocks one targeted effect and movement cards visibly move', () => {
   const wifey = { ...custom('wifey', 'cpu', 1), lane: 0 as const, statuses: { frozen: false, silenced: false, protected: true, blocked: false } };
-  const victim = { ...custom('snow', 'cpu', 2), lane: 0 as const };
-  const blocked = playOne('nerd', (m) => ({ ...m, boards: [[wifey, victim], [], []] }));
+  const victim = { ...custom('snow', 'cpu', 2), lane: 0 as const, powerModifier: 5 };
+  const blocked = playOne('redpill', (m) => ({ ...m, boards: [[wifey, victim], [], []] }));
   assert(blocked.boards[0].find((c) => c.instanceId === wifey.instanceId)?.statuses.blocked);
   assert(!blocked.boards[0].find((c) => c.instanceId === victim.instanceId)?.statuses.silenced);
   const bike = playOne('bikelife');
@@ -279,6 +280,22 @@ test('Wifey blocks one targeted effect and movement cards visibly move', () => {
   assert.equal(movedAlly?.powerModifier, 1);
 });
 
+test('Closet Nerd bypasses Side Eye, but a direct shield still absorbs its silence', () => {
+  const wifey = { ...custom('wifey', 'cpu', 10), lane: 0 as const, statuses: { frozen: false, silenced: false, protected: true, blocked: false } };
+  const victim = { ...custom('snow', 'cpu', 11), lane: 0 as const, powerModifier: 5 };
+  const pierced = playOne('nerd', m => ({ ...m, boards: [[wifey, victim], [], []] }));
+  assert.equal(pierced.boards[0].find(c => c.instanceId === victim.instanceId)?.statuses.silenced, true);
+  assert.equal(pierced.boards[0].find(c => c.instanceId === wifey.instanceId)?.statuses.blocked, false);
+  const shielded = playOne('nerd', m => ({
+    ...m,
+    boards: [[wifey, victim], [], []],
+    timedEffects: [{ id: 'cover', kind: 'church-protection', sourceInstanceId: 'church', targetInstanceId: victim.instanceId, owner: 'cpu', lane: 0, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' }],
+  }));
+  assert.equal(shielded.boards[0].find(c => c.instanceId === victim.instanceId)?.statuses.silenced, false);
+  assert.equal(shielded.boards[0].find(c => c.instanceId === wifey.instanceId)?.statuses.blocked, false);
+  assert.equal(shielded.timedEffects.some(effect => effect.id === 'cover'), false);
+});
+
 test('freeze, silence and power modifiers affect scoring; Plug discounts its next other-lane play', () => {
   const frozen = { ...custom('hooper', 'player', 1), statuses: { frozen: true, silenced: false, protected: false, blocked: false } };
   assert.equal(getEffectiveCardPower(frozen), 0);
@@ -286,7 +303,7 @@ test('freeze, silence and power modifiers affect scoring; Plug discounts its nex
   assert.equal(getLaneScore([boosted], 0), 3);
   let match = playOne('plug');
   const cheap = custom('snow', 'player', 3);
-  match = { ...match, phase: 'player', playerMotion: 1, playerHand: [cheap] };
+  match = { ...match, phase: 'player', playerMotion: cheap.cost - 1, playerHand: [cheap] };
   assert(canAffordSelection(match, 'player', cheap.instanceId, 1));
   match = playCard(match, 'player', cheap.instanceId, 1);
   assert.equal(match.playerMotion, 0);
@@ -309,7 +326,7 @@ test('hostile abilities change real enemy cards and scoring', () => {
   assert(pressured.boards[0].filter(c => c.owner === 'cpu').every(c => c.powerModifier === -1));
 });
 
-test('sustain and comeback abilities visibly cleanse and swing Power', () => {
+test('sustain and comeback abilities visibly cleanse and swing Hands', () => {
   const frozenAlly = {
     ...custom('snow', 'player', 30),
     lane: 0 as const,
@@ -350,8 +367,8 @@ test('movement and engine cards keep their persistent board changes', () => {
   assert.equal(combo.boards[0].find(c => c.instanceId === gamer.instanceId)?.powerModifier, 1);
   assert.equal(combo.boards[0].find(c => c.cardId === 'plug')?.powerModifier, 1);
 
-  const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6 }));
-  assert.equal(flexed.playerMotion, 1);
+  const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6, boards: [[streamer], [], []] }));
+  assert.equal(flexed.playerMotion, 2);
   assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 2);
 });
 
@@ -359,7 +376,7 @@ test('Plug discount waits for a different district and is then consumed', () => 
   let match = playOne('plug');
   const sameLane = custom('snow', 'player', 60);
   match = { ...match, phase: 'player', playerMotion: 10, playerHand: [sameLane] };
-  assert.equal(getLegalCardCost(match, 'player', sameLane, 0), 2);
+  assert.equal(getLegalCardCost(match, 'player', sameLane, 0), sameLane.cost);
   match = playCard(match, 'player', sameLane.instanceId, 0);
   assert.equal(match.plugDiscountLane.player, 0);
 
@@ -432,18 +449,18 @@ test('battle events identify play, reveal, ability source and ordered target sta
   assert.equal(ability.duration, null);
   assert.equal(ability.targets.length, 1);
   assert.equal(ability.targets[0].cardInstanceId, enemy.instanceId);
-  assert.equal(ability.targets[0].before?.power, 5);
-  assert.equal(ability.targets[0].after?.power, 2);
+  assert.equal(ability.targets[0].before?.power, enemy.basePower);
+  assert.equal(ability.targets[0].after?.power, enemy.basePower - 3);
   assert.deepEqual(ability.targets[0].before?.statuses, enemy.statuses);
-  assert.equal(ability.scores.before[0].cpu, 7);
-  assert.equal(ability.scores.after[0].cpu, 4);
+  assert.equal(ability.scores.before[0].cpu, enemy.basePower + 2);
+  assert.equal(ability.scores.after[0].cpu, enemy.basePower - 3 + 2);
   assert.equal(ability.scores.after[0].player, 3);
 });
 
 test('blocked targeted effects record both intended target and protecting Wifey', () => {
   const wifey = { ...custom('wifey', 'cpu', 71), lane: 0 as const, statuses: { frozen: false, silenced: false, protected: true, blocked: false } };
   const victim = { ...custom('snow', 'cpu', 72), lane: 0 as const, powerModifier: 5 };
-  const match = playOne('nerd', m => ({ ...m, boards: [[wifey, victim], [], []] }));
+  const match = playOne('redpill', m => ({ ...m, boards: [[wifey, victim], [], []] }));
   const ability = match.effectLog.at(-1)!;
   assert.equal(ability.type, 'ability');
   assert.deepEqual(new Set(ability.targets.map(target => target.cardInstanceId)), new Set([wifey.instanceId, victim.instanceId]));

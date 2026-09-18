@@ -2,6 +2,8 @@ import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import { useAppAuth } from '../lib/auth';
+import { AnimatedLogo } from '../components/AnimatedLogo';
+import { InstallGame } from '../components/InstallGame';
 
 export function PublicEntry() {
   const { isSignedIn } = useAppAuth();
@@ -31,13 +33,7 @@ export function PublicEntry() {
       />
       
       <div className="relative z-10 flex-1 flex flex-col items-start justify-center p-6 md:p-12 lg:p-20 text-left max-w-2xl">
-        <motion.img 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          src={getAssetUrl('brand/squabblemon-wordmark.webp')}
-          alt="Squabblemon" 
-          className="w-full max-w-[34rem] h-auto mb-7 drop-shadow-[0_0_18px_rgba(250,204,21,0.25)]"
-        />
+        <AnimatedLogo className="max-w-[34rem] mb-7" />
         
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
           <div className="font-mono text-[9px] md:text-[11px] text-primary uppercase tracking-[.28em] mb-3">The city is watching</div>
@@ -71,6 +67,10 @@ export function PublicEntry() {
           <Link href="/play/guest" className="w-full min-h-12 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest flex items-center justify-center hover:text-white hover:border-white/30 transition-all active:scale-95">
             Play Practice Match
           </Link>
+          <Link href="/how-to-play" className="py-3 text-primary text-center font-mono text-[10px] uppercase tracking-widest hover:text-yellow-200">
+            How to play · The field guide →
+          </Link>
+          <InstallGame className="w-full" />
         </motion.div>
       </div>
     </div>

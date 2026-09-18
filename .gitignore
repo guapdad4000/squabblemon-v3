@@ -11,6 +11,14 @@ out-tsc
 # dependencies
 node_modules
 
+# local credentials and generated media
+**/.env
+**/.env.*
+!**/.env.example
+/screenshots/
+/attached_assets/
+/node_modules.bak*/
+
 # IDEs and editors
 /.idea
 .project
@@ -51,3 +59,10 @@ Thumbs.db
 # Browser verification output (generated locally, not application assets)
 **/test-results/
 /artifacts/squabblemon/screenshots/
+
+.netlify/
+
+# Disposable online verification bundles
+/artifacts/gameplay-test-db/online-check-*.mjs
+/artifacts/gameplay-test-db/online-engine-check.mjs
+/artifacts/gameplay-test-db/online-browser-host.mjs
