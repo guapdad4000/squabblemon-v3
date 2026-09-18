@@ -196,15 +196,18 @@ function pickRareOrBetterCard(
   ownedCards: Set<string>,
   rng: RandomInt,
 ): (typeof cardCatalog)[number] {
-  // Walk rarities from top to bottom so a Mythical wins ties. Falls back to
-  // the rarest rarity that still has unowned cards, then to any owned card
-  // of that rarity, then to any card in the catalog. This is only invoked
-  // once per ten-pull, so a single reroll is fine.
-  for (const rarity of ["Mythical", "Legendary", "Epic", "Rare"] as const) {
+  const rarities = ["Mythical", "Legendary", "Epic", "Rare"] as const;
+  // Prefer the rarest tier that still has an unowned card. Only fall back to
+  // an owned Rare+ after every Rare+ card is already in the collection.
+  for (const rarity of rarities) {
+    const unowned = cardCatalog.filter(
+      (card) => card.rarity === rarity && !ownedCards.has(card.catalogId),
+    );
+    if (unowned.length) return choose(unowned, rng);
+  }
+  for (const rarity of rarities) {
     const pool = cardCatalog.filter((card) => card.rarity === rarity);
-    if (!pool.length) continue;
-    const unowned = pool.filter((card) => !ownedCards.has(card.catalogId));
-    return unowned.length ? choose(unowned, rng) : choose(pool, rng);
+    if (pool.length) return choose(pool, rng);
   }
   return choose(cardCatalog, rng);
 }
@@ -363,12 +366,20 @@ export function generateStreetTenPull(
   // card. This protects the "GUARANTEED RARE" promise on the upgraded
   // ten-pull experience even in low-rarity streaks.
   if (rareHitIndex === null) {
+    const replacementIndex = rewards.length - 1;
+    const removed = rewards[replacementIndex];
+    if (removed.kind === "styleShards") styleShardsGained -= removed.amount;
+    if (removed.kind === "softCurrency") softCurrencyGained -= removed.amount;
+
     const rareCard = pickRareOrBetterCard(ownedCards, rng);
-    ownedCards.add(rareCard.catalogId);
+    const isNew = !ownedCards.has(rareCard.catalogId);
     discoveredCards.add(rareCard.catalogId);
-    const replacement = cardReward(rareCard);
-    rewards[rewards.length - 1] = replacement;
-    rareHitIndex = rewards.length - 1;
+    if (isNew) ownedCards.add(rareCard.catalogId);
+    else styleShardsGained += 25;
+    rewards[replacementIndex] = isNew
+      ? cardReward(rareCard)
+      : shardReward(25, rareCard.catalogId);
+    rareHitIndex = replacementIndex;
   }
 
   return {

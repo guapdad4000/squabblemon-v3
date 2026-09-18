@@ -20,9 +20,18 @@ export function loadPackRequest(storage: StoragePort, player: string): PendingPa
   if (value.pullCount !== undefined && value.pullCount !== 1 && value.pullCount !== 10) return null;
   return value as PendingPackRequest;
 }
-/** Retry an uncertain payment with its original method and idempotency key. */
-export function reservePackRequest(storage: StoragePort, player: string, paymentMethod: PackPayment, createId: () => string): PendingPackRequest {
-  const request = loadPackRequest(storage, player) ?? { idempotencyKey: createId(), paymentMethod };
+/** Retry an uncertain payment with its original method, pull count, and idempotency key. */
+export function reservePackRequest(
+  storage: StoragePort,
+  player: string,
+  paymentMethod: PackPayment,
+  createId: () => string,
+  pullCount: 1 | 10 = 1,
+): PendingPackRequest {
+  const existing = loadPackRequest(storage, player);
+  const request = existing
+    ? { ...existing, pullCount: existing.pullCount ?? 1 }
+    : { idempotencyKey: createId(), paymentMethod, pullCount };
   storage.setItem(key(player, 'request'), JSON.stringify(request));
   return request;
 }

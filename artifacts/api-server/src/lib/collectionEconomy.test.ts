@@ -10,7 +10,9 @@ import {
 import {
   STREET_PACK_CONFIG,
   STREET_PACK_RARITY_WEIGHTS,
+  STREET_PACK_TEN_PULL_CONFIG,
   generateStreetPack,
+  generateStreetTenPull,
 } from "./collectionEconomy";
 
 const zero = () => 0;
@@ -161,6 +163,44 @@ test("the published odds disclose the exhausted style-pool fallback", () => {
     publishedStyleOdds?.detail ?? "",
     /5%.*50 Style Shards/,
   );
+});
+
+test("ten-pull guarantees Rare+ without hiding or over-crediting a replaced bonus", () => {
+  const allCards = cardCatalog.map((card) => card.catalogId);
+  const allVariants = cardCatalog.flatMap((card) => card.variantSlots.map((variant) => variant.id));
+  const result = generateStreetTenPull(
+    { ownedCardIds: allCards, discoveredCardIds: allCards, ownedVariants: allVariants, pity: 0 },
+    zero,
+  );
+  const creditedShards = result.rewards
+    .filter((reward) => reward.kind === "styleShards")
+    .reduce((sum, reward) => sum + reward.amount, 0);
+  const creditedClout = result.rewards
+    .filter((reward) => reward.kind === "softCurrency")
+    .reduce((sum, reward) => sum + reward.amount, 0);
+  const guaranteed = result.rewards[result.guaranteedRareIndex!];
+
+  assert.equal(result.rewards.length, STREET_PACK_TEN_PULL_CONFIG.rewardsPerPull);
+  assert.equal(result.styleShardsGained, creditedShards);
+  assert.equal(result.softCurrencyGained, creditedClout);
+  assert.ok(["Rare", "Epic", "Legendary", "Mythical"].includes(guaranteed.rarity!));
+  assert.equal(guaranteed.kind, "styleShards");
+  assert.equal(guaranteed.isNew, false);
+});
+
+test("ten-pull guarantee prefers an unowned Rare+ before an owned Mythical", () => {
+  const ownedMythicals = cardCatalog
+    .filter((card) => card.rarity === "Mythical")
+    .map((card) => card.catalogId);
+  const result = generateStreetTenPull(
+    { ownedCardIds: ownedMythicals, discoveredCardIds: ownedMythicals, ownedVariants: [], pity: 0 },
+    zero,
+  );
+  const guaranteed = result.rewards[result.guaranteedRareIndex!];
+
+  assert.equal(guaranteed.kind, "card");
+  assert.equal(guaranteed.isNew, true);
+  assert.ok(["Rare", "Epic", "Legendary"].includes(guaranteed.rarity!));
 });
 
 test("published rarity odds are generated from the roll weights", () => {

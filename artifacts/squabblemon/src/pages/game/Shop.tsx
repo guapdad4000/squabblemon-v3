@@ -114,7 +114,9 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [phase, setPhase] = useState<Phase>(() =>
     loadPackOpening(sessionStorage, bootstrap.profile.id)?.rewards?.length ? 'summary' : 'idle',
   );
-  const [pullSize, setPullSize] = useState<PullSize>(1);
+  const [pullSize, setPullSize] = useState<PullSize>(() =>
+    opening?.pullCount === 10 ? 10 : pending?.pullCount ?? 1,
+  );
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
   const [sound, setSound] = useState(false);
@@ -173,26 +175,32 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const handleOpen = async (method: Payment, size: PullSize = 1) => {
     if (busy.current || phase !== 'idle') return;
     const payment = pending?.paymentMethod ?? method;
-    const tier = size === 10 ? bootstrap.tenPullConfig : bootstrap.packConfig;
+    const requestedSize = pending?.pullCount ?? size;
+    const tier = requestedSize === 10 ? bootstrap.tenPullConfig : bootstrap.packConfig;
     const cost = payment === 'ticket' ? tier.ticketCost : tier.softCurrencyCost;
     const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
     if (!pending && balance < cost) return;
     busy.current = true;
-    setPullSize(size);
+    setPullSize(requestedSize);
     setPhase('requesting');
     setError(null);
     setHits(0);
     setRevealIndex(0);
     try {
-      const request = reservePackRequest(sessionStorage, bootstrap.profile.id, payment, () => crypto.randomUUID());
-      const nextRequest: PendingPackRequest = { ...request, pullCount: size };
+      const nextRequest = reservePackRequest(
+        sessionStorage,
+        bootstrap.profile.id,
+        payment,
+        () => crypto.randomUUID(),
+        requestedSize,
+      );
       setPending(nextRequest);
       let result: PackOpening;
       if (preview) {
         // Curated visual fixtures, never a substitute for the server's reward RNG or odds.
         const cards = ['bodega-cat', 'leroy', 'og-dominican', 'big-zoey', 'crossing-guard']
           .map(id => catalogCardById[id]);
-        const repeat = size === 10 ? Array.from({ length: 10 }) : [null];
+        const repeat = requestedSize === 10 ? Array.from({ length: 10 }) : [null];
         const baseCards = repeat.flatMap(() =>
           cards.map((card) => ({
             kind: 'card' as const,
@@ -214,11 +222,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           amount: 25,
         }));
         result = {
-          id: request.idempotencyKey,
-          oddsVersion: size === 10 ? 'street-pack-ten-v1' : 'preview',
+          id: nextRequest.idempotencyKey,
+          oddsVersion: requestedSize === 10 ? 'street-pack-ten-v1' : 'preview',
           paymentMethod: payment,
           cost,
-          pullCount: size,
+          pullCount: requestedSize,
           pityBefore: 0,
           pityAfter: 0,
           createdAt: new Date().toISOString(),
@@ -249,8 +257,12 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       setOpening(result);
       if (reduced || !sceneReady) setPhase('summary');
       else {
-        sendScene(frame, { type: 'arm' });
-        setPhase(size === 10 ? 'tenPunching' : 'punching');
+        sendScene(frame, {
+          type: 'arm',
+          targetHits: HITS_PER_PULL[requestedSize],
+          hitsPerPunch: HITS_PER_CLICK[requestedSize],
+        });
+        setPhase(requestedSize === 10 ? 'tenPunching' : 'punching');
         if (window.matchMedia('(max-width: 760px)').matches)
           arena.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
       }
@@ -430,7 +442,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   const cost = ticket ? bootstrap.packConfig.ticketCost : bootstrap.packConfig.softCurrencyCost;
                   const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
                   const affordable = balance >= cost;
-                  if (pending && pending.paymentMethod !== method) return null;
+                  if (pending && (pending.paymentMethod !== method || (pending.pullCount ?? 1) !== 1)) return null;
                   return (
                     <div className="gacha-stage__payment" key={method} data-pull="single">
                       <button
@@ -463,7 +475,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   const cost = ticket ? tier.ticketCost : tier.softCurrencyCost;
                   const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
                   const affordable = balance >= cost;
-                  if (pending && pending.paymentMethod !== method) return null;
+                  if (pending && (pending.paymentMethod !== method || pending.pullCount !== 10)) return null;
                   return (
                     <div className="gacha-stage__payment gacha-stage__payment--ten" key={`ten-${method}`} data-pull="ten">
                       <button

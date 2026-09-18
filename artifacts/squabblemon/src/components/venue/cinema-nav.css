@@ -259,7 +259,7 @@
 .cinema-nav-suppressed .fan-nav { display: none; }
 .cinema-nav-suppressed .game-route-stage::after { display: none; }
 .cinema-nav-suppressed .safehouse__bottom { bottom: 26px; }
-.cinema-nav-suppressed .game-shell--fan { --fan-clearance: 0; overflow-x: hidden; }
+.game-shell--fan.cinema-nav-suppressed { --fan-clearance: 0; overflow-x: hidden; }
 
 /* When the sheet is open we don't want any other fixed element to fight it. */
 .cinema-nav-sheet[open] ~ .fan-nav { display: none; }
