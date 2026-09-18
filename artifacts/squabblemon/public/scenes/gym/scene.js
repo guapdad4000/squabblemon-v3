@@ -757,7 +757,8 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
        PUNCH FLURRY LOGIC, HIT-STOP & FINALE CLIMAX
        ========================================================= */
     let punchHits = 0;
-    const TARGET_KO_HITS = 12;
+    let targetKoHits = 12;
+    let hitsPerPunch = 1;
     let isGachaTriggered = false;
     let autoRushInterval = null;
 
@@ -769,10 +770,10 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
     function deliverPunch() {
       if (isGachaTriggered || !armed) return;
 
-      punchHits++; emit({type:"hit",hits:punchHits});
+      punchHits = Math.min(targetKoHits, punchHits + hitsPerPunch); emit({type:"hit",hits:punchHits});
       AudioEngine.init();
 
-      const heatRatio = Math.min(punchHits / TARGET_KO_HITS, 1.0);
+      const heatRatio = Math.min(punchHits / targetKoHits, 1.0);
       const speedFactor = 1.0 + heatRatio * 2.8;
 
       AudioEngine.playPunch(speedFactor);
@@ -804,7 +805,7 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
       speedlineIntensity = reduced ? 0 : Math.min(0.35, speedlineIntensity + 0.10);
       updateComboHud(heatRatio);
 
-      if (punchHits >= TARGET_KO_HITS) {
+      if (punchHits >= targetKoHits) {
         triggerGachaKnockout();
       }
     }
@@ -865,9 +866,9 @@ addEventListener('message',e=>{
  if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='squabblemon-scene')return;
  const d=e.data;
  if(d.type==='settings'){reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;AudioEngine.enabled=Boolean(d.sound);}
- if(d.type==='arm'){punchHits=0;isGachaTriggered=false;armed=true;}
+ if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:12;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;armed=true;}
  if(d.type==='punch'&&!reduced)deliverPunch();
- if(d.type==='reset'){armed=false;punchHits=0;isGachaTriggered=false;bagVelocity={x:0,z:0};}
+ if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=12;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};}
 });
     function onWindowResize() {
       if (!renderer || !camera) return;
