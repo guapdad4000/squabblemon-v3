@@ -27,7 +27,7 @@ try{
   const back=page.getByRole('link',{name:'Back to safehouse',exact:true}),menu=page.getByRole('button',{name:'Open game navigation',exact:true});
   await visible(back,width,height);assert.equal(await menu.count(),1);await visible(menu,width,height);
   await page.locator('.game-route-stage').evaluate(e=>e.scrollTop=e.scrollHeight);await visible(back,width,height);
-  await menu.click();await page.getByRole('dialog',{name:'The City Line'}).waitFor();await visible(page.getByRole('button',{name:'Close game navigation'}),width,height);await shot('city-line');
+  await menu.click();await page.getByRole('dialog',{name:'Squabble Express'}).waitFor();await visible(page.getByRole('button',{name:'Close game navigation'}),width,height);await shot('city-line');
   await page.getByRole('button',{name:'Close game navigation'}).click();await page.getByRole('button',{name:'Training',exact:true}).click();await page.locator('.training-studio').waitFor();await visible(back,width,height);await visible(menu,width,height);await shot('training');
   await page.locator('.market').evaluate(e=>e.scrollTop=e.scrollHeight);await visible(back,width,height);await back.click();await page.locator('.safehouse-stage[data-scene-ready="true"]').waitFor();
   await page.goto(origin+'/game/story');await page.locator('.story-atlas__node').first().waitFor();const pan=page.locator('.story-atlas__pan'),backdrop=page.locator('.story-atlas__viewport');
