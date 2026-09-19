@@ -337,7 +337,7 @@ test('Corrupt Church charges and buffs first plays per side and round, after dis
   assert.equal(m.boards[0].at(-1)!.powerModifier, 2);
 });
 
-test('Nail Salon protects first arrivals once, follows movement, and blocks hostile displacement', () => {
+test('Nail Salon protects first arrivals once, follows movement, and blocks hostile effects', () => {
   let m = play(initial('nail-salon', 'bodega', 'the-trap'), 'hooper', 0);
   const target = m.boards[0][0].instanceId;
   m = play(m, 'snow', 0, 'cpu');
@@ -359,8 +359,9 @@ test('Nail Salon protects first arrivals once, follows movement, and blocks host
   shoved.boards[0].push(card('hooper', 'player', 90, 0), card('og', 'player', 91, 0));
   shoved = play(shoved, 'cornball', 0, 'cpu');
   assert(shoved.boards[0].some(c => c.instanceId === shielded));
+  assert.equal(shoved.boards[0].find(c => c.instanceId === shielded)!.statuses.burnStacks, 0);
   shoved = play(shoved, 'cornball', 0, 'cpu');
-  assert(shoved.boards[1].some(c => c.instanceId === shielded));
+  assert.equal(shoved.boards[0].find(c => c.instanceId === shielded)!.statuses.burnStacks, 1);
 });
 
 test('Barbershop cleans allies before reveal, preserves buffs and opponents, and resets each round', () => {
@@ -369,7 +370,7 @@ test('Barbershop cleans allies before reveal, preserves buffs and opponents, and
   const buffed = { ...card('og', 'player', 81, 0), powerModifier: 3 };
   const enemy = { ...card('hooper', 'cpu', 82, 0), powerModifier: -1, statuses: { ...hurt.statuses } };
   m.boards[0] = [hurt, buffed, enemy];
-  m = play(m, 'cornball', 0);
+  m = play(m, 'plug', 0);
   assert.equal(m.boards[0][0].powerModifier, 0);
   assert.equal(m.boards[0][0].statuses.frozen, false);
   assert.equal(m.boards[0][0].statuses.silenced, false);
@@ -380,9 +381,9 @@ test('Barbershop cleans allies before reveal, preserves buffs and opponents, and
   assert.equal(cleanup.replay.after.boards[0][0].statuses.frozen, false);
   assert(cleanup.sequence < m.effectLog.at(-1)!.sequence);
   m.boards[0][0] = hurt;
-  m = play(m, 'cornball', 0);
+  m = play(m, 'plug', 0);
   assert.equal(m.boards[0][0].statuses.frozen, true);
-  m = play(advance(m), 'cornball', 0);
+  m = play(advance(m), 'plug', 0);
   assert.equal(m.boards[0][0].statuses.frozen, false);
 });
 

@@ -66,6 +66,10 @@ function BootstrapError({
   );
 }
 
+function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
+  return <><GameNav bootstrap={bootstrap} />{children}</>;
+}
+
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
 
@@ -77,17 +81,17 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return (
     <Switch>
       <Route path="/game/onboarding">
-        <Onboarding bootstrap={bootstrap} />
+        <ImmersiveGameRoute bootstrap={bootstrap}><Onboarding bootstrap={bootstrap} /></ImmersiveGameRoute>
       </Route>
-      <Route path="/game/play"><PlayerDeckPlay bootstrap={bootstrap} /></Route>
-      <Route path="/game/online/:code">{params => <Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} />}</Route>
-      <Route path="/game/online"><Multiplayer bootstrap={bootstrap} /></Route>
-      <Route path="/game/story/play/:nodeId">{params => <PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} />}</Route>
+      <Route path="/game/play"><ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
+      <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>
+      <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
+      <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/collection">
         <GameShell bootstrap={bootstrap} location={location}><Collection bootstrap={bootstrap} /></GameShell>
       </Route>
       <Route path="/game/decks/:deckId/test">
-        <DeckTest bootstrap={bootstrap} />
+        <ImmersiveGameRoute bootstrap={bootstrap}><DeckTest bootstrap={bootstrap} /></ImmersiveGameRoute>
       </Route>
       <Route path="/game/decks/:deckId">
         <GameShell bootstrap={bootstrap} location={location}><DeckEditor bootstrap={bootstrap} /></GameShell>
@@ -115,14 +119,6 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
 }
 
-// Routes that benefit from hiding the chunky fan-nav strip. The slim
-// CinemaNavSheet toggle still floats over the scene for escape.
-const FULL_BLEED_ROUTES = new Set([
-  '/game/onboarding',
-  '/game/play',
-  '/game/online',
-  '/game/decks/test',
-]);
 
 function GameShell({
   bootstrap,
@@ -133,16 +129,11 @@ function GameShell({
   location: string;
   children: ReactNode;
 }) {
-  const normalized = location.length > 1 ? location.replace(/\/+$/, '') : location;
-  const isFullBleed =
-    normalized === '/game' ||
-    normalized === '/game/online' ||
-    normalized.startsWith('/game/online/') ||
-    normalized === '/game/decks/test' ||
-    normalized.startsWith('/game/decks/') && normalized.endsWith('/test') ||
-    FULL_BLEED_ROUTES.has(normalized);
+  const pathname = location.split(/[?#]/, 1)[0] || '/game';
+  const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  const navigationLayout = normalized === '/game' ? 'game-shell--fan' : 'game-shell--compact-nav';
   return (
-        <div className={`game-shell game-shell--fan h-[100dvh] bg-[#070707] text-white ${isFullBleed ? 'cinema-nav-suppressed' : ''}`}>
+        <div className={`game-shell ${navigationLayout} h-[100dvh] bg-[#070707] text-white`}>
           <div className="noise-overlay" />
           <GameNav bootstrap={bootstrap} />
           <div className="game-shell__content">

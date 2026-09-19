@@ -59,48 +59,51 @@ const upgraded = (id: string, boards: Match['boards']): Match => ({
   ...createMatch('block', 'block'), playerMotion: 6, playerHand: [card(id, 'player', 0)], boards,
   abilityUpgradeSnapshot: createAbilityUpgradeSnapshot([id], [], { player: { [id]: { xp: 2800, level: 8, moveTier: 3 } } }),
 });
-test('support tiers add bounded self Hands once, never multiply ally buffs or repeat next round', () => {
-  for (const [id, amount] of [['earthy', 1], ['abuela', 2], ['icecream', 1]] as const) {
-    let m = upgraded(id, [[card('edgar', 'player', 0)], [], []]);
-    m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
-    assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 3);
-    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, amount);
-    m = nextRound(pass(m, 'cpu'));
-    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, amount);
-  }
-});
-test('blocked or fully mitigated cheap disruption does not earn success upgrades', () => {
-  for (const id of ['tayaty', 'honestthot']) {
-    const target = card('edgar', 'cpu', 0);
-    let m = upgraded(id, [[target], [], []]);
-    m.timedEffects = [{ id: 'shield', kind: 'church-protection', sourceInstanceId: 'church', targetInstanceId: target.instanceId, owner: 'cpu', lane: 0, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' }];
+test('support tiers trigger once while hand-bond cards stay ongoing only', () => {
+  let m = upgraded('earthy', [[card('edgar', 'player', 0)], [], []]);
+  m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.powerModifier, 3);
+  assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 1);
+  m = nextRound(pass(m, 'cpu'));
+  assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 1);
+
+  for (const id of ['abuela', 'icecream'] as const) {
+    m = upgraded(id, [[card('edgar', 'player', 0)], [], []]);
     m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
     assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 0);
+    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
+    m = nextRound(pass(m, 'cpu'));
+    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
   }
+});
+test('blocked cheap Burn does not earn success upgrades', () => {
   const target = card('edgar', 'cpu', 0);
-  let m = upgraded('tayaty', [[target], [], []]);
-  m.timedEffects = [{ id: 'nail', kind: 'nail-mitigation', sourceInstanceId: 'nail', targetInstanceId: target.instanceId, owner: 'cpu', lane: 0, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' }];
+  target.statuses.protected = true;
+  let m = upgraded('cornball', [[target], [], []]);
+  m.timedEffects = [{ id: 'shield', kind: 'church-protection', sourceInstanceId: 'church', targetInstanceId: target.instanceId, owner: 'cpu', lane: 0, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' }];
   m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
-  assert.equal(m.boards[0].find(c => c.cardId === 'tayaty')?.powerModifier, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'cornball')?.powerModifier, 0);
+  assert.equal(m.boards[0].find(c => c.instanceId === target.instanceId)?.statuses.burnStacks, 0);
 });
 
-test('Common upgrades require real effects, including cleanse and lethal disruption', () => {
-  for (const id of ['earthy', 'abuela', 'icecream', 'pinaynurse', 'honestthot', 'tayaty', 'youngbull', 'edgar', 'nguyen', 'manman']) {
+test('Common upgrades require real effects, while Step Up and Act Up always succeed', () => {
+  for (const id of ['earthy', 'abuela', 'icecream', 'pinaynurse', 'honestthot', 'edgar', 'nguyen', 'manman']) {
     const m = upgraded(id, [[], [], []]);
     const result = playCard(m, 'player', m.playerHand[0].instanceId, 0);
     assert.equal(result.boards[0][0].powerModifier, 0, id);
   }
+  let m = upgraded('youngbull', [[], [], []]);
+  m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'youngbull')?.powerModifier, 4);
+  m = upgraded('tayaty', [[], [], []]);
+  m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'tayaty')?.powerModifier, 4);
   const patient = card('edgar', 'player', 0);
   patient.statuses.frozen = true;
   patient.statuses.silenced = true;
-  let m = upgraded('pinaynurse', [[patient], [], []]);
+  m = upgraded('pinaynurse', [[patient], [], []]);
   m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
   assert.equal(m.boards[0].find(c => c.cardId === 'pinaynurse')?.powerModifier, 3);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 1);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.statuses.frozen, false);
-  const victim = card('edgar', 'cpu', 0, 1);
-  m = upgraded('tayaty', [[victim], [], []]);
-  m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
-  assert(!m.boards[0].some(c => c.instanceId === victim.instanceId));
-  assert.equal(m.boards[0].find(c => c.cardId === 'tayaty')?.powerModifier, 3);
 });

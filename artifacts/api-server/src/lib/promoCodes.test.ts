@@ -4,15 +4,32 @@ import test from 'node:test';
 import { CARD_XP_CAP } from '@workspace/squabblemon-engine/cardProgression';
 import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
-import { findPromoCode } from './promoCodes';
+import { findPromoCode, isDevelopmentPromoCodeEnabled } from './promoCodes';
 
-test('promo lookup accepts casing and surrounding whitespace, rejects unknown and inherited keys', () => {
-  assert.deepEqual(findPromoCode('  devTest\n'), { code: 'DEVTEST', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 });
-  assert.deepEqual(findPromoCode(' devtest2 '), { code: 'DEVTEST2', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 });
-  assert.deepEqual(findPromoCode(' simmyfoodz '), { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] });
-  assert.deepEqual(findPromoCode(' citylegends '), { code: 'CITYLEGENDS', packTickets: 0, softCurrency: 40_000, styleShards: 0,
+test('public promo lookup accepts normalization and rejects unknown or inherited keys', () => {
+  assert.deepEqual(findPromoCode(' simmyfoodz ', 'production'), { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] });
+  assert.deepEqual(findPromoCode(' citylegends ', 'production'), { code: 'CITYLEGENDS', packTickets: 0, softCurrency: 40_000, styleShards: 0,
     cardIds: ['dragonfly-jones', 'sho-nuff', 'yasuke', 'mansa-musa', 'tron', 'john-henry', 'leroy'] });
-  for (const code of ['', ' ', 'DEV TEST', 'NOTREAL', '__proto__', 'constructor', 'toString']) assert.equal(findPromoCode(code), null);
+  for (const code of ['', ' ', 'DEV TEST', 'NOTREAL', '__proto__', 'constructor', 'toString']) assert.equal(findPromoCode(code, 'development'), null);
+});
+
+test('internal test promos are available only in development', () => {
+  const internalPromos = {
+    DEVTEST: { code: 'DEVTEST', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
+    DEVTEST2: { code: 'DEVTEST2', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
+    JETSETCABIN: { code: 'JETSETCABIN', packTickets: 25, softCurrency: 10_000, styleShards: 0,
+      cardIds: ['ashlee', 'captain-jigga'] },
+  } as const;
+  for (const [code, reward] of Object.entries(internalPromos)) {
+    assert.deepEqual(findPromoCode(' ' + code.toLowerCase() + '\n', 'development'), reward);
+    assert.equal(findPromoCode(code, 'production'), null);
+    assert.equal(findPromoCode(code, 'test'), null);
+    assert.equal(findPromoCode(code, ''), null);
+  }
+  assert.equal(isDevelopmentPromoCodeEnabled('development'), true);
+  assert.equal(isDevelopmentPromoCodeEnabled('production'), false);
+  assert.equal(isDevelopmentPromoCodeEnabled(''), false);
+  assert.equal(findPromoCode('CITYLEGENDS', 'production')?.code, 'CITYLEGENDS');
 });
 
 test('City Legends grant covers all seven fighters through max level and three coached moves', () => {
@@ -35,6 +52,12 @@ test('City Legends grant covers all seven fighters through max level and three c
 });
 
 test('promo redemption persists rewards once and works with the real economy', { skip: !process.env.DATABASE_URL }, async t => {
+  const originalNodeEnvironment = process.env.NODE_ENV;
+  process.env.NODE_ENV = 'development';
+  t.after(() => {
+    if (originalNodeEnvironment === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = originalNodeEnvironment;
+  });
   const { default: express } = await import('express');
   const { db, pool, playerProfilesTable, playerCollectionClaimsTable } = await import('@workspace/db');
   const { eq } = await import('drizzle-orm');

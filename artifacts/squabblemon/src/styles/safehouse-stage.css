@@ -2,36 +2,89 @@
   height: 100%;
   min-height: 520px;
 }
-.safehouse-stage .safehouse__shade {
-  background: linear-gradient(90deg, #090d0cb0, transparent 48%), linear-gradient(0deg, #0b100eed, transparent 35%);
+.safehouse-stage--hero {
+  display: grid;
+  grid-template-rows: 1fr;
 }
-.safehouse-stage .safehouse__heading {
-  top: 32px;
-  left: 34px;
+.safehouse-stage--hero .safehouse__heading {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  align-self: start;
+  max-width: 460px;
+  padding: clamp(40px, 6vh, 96px) clamp(28px, 5vw, 88px);
+  margin: 0;
+  inset: auto;
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+.safehouse-stage--hero .safehouse__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, #060a08e6 0%, #060a08b8 28%, transparent 58%), linear-gradient(0deg, #080b0cd8 0%, transparent 38%);
 }
 .safehouse-stage .safehouse__heading h1 {
-  font-size: clamp(43px, 5.1vw, 72px);
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  text-shadow: 0 3px 20px #0009;
-  margin: 12px 0 17px;
+  font-size: clamp(54px, 6.8vw, 104px);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-shadow: 0 4px 32px #000c, 0 0 1px #000;
+  margin: 8px 0 14px;
+  font-weight: 950;
 }
 .safehouse-stage .safehouse__heading h1 em {
   color: #ebcb87;
+  font-style: italic;
+  text-shadow: 0 0 24px #f7d57a66, 0 4px 18px #000a;
 }
 .safehouse-stage .safehouse__heading p {
-  font-size: 12px;
-  color: #d0d5c7;
-  line-height: 1.7;
-  margin-bottom: 20px;
+  font-size: 13px;
+  color: #d6dccd;
+  line-height: 1.65;
+  margin: 0 0 28px;
+  max-width: 36ch;
+  letter-spacing: 0.01em;
 }
-.safehouse-stage .safehouse__heading > a {
+.safehouse-stage .studio-eyebrow {
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  color: #cba875;
+  text-transform: uppercase;
+}
+.safehouse-stage .safehouse__heading-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
   pointer-events: auto;
 }
-.safehouse-stage .safehouse__tools {
-  top: 24px;
-  right: 25px;
-  z-index: 4;
+.safehouse-stage .safehouse__heading-actions .studio-action {
+  pointer-events: auto;
+  margin: 0;
+}
+.safehouse-stage .safehouse__heading-bounties {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #f3d49a55;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f3d49a18, #f3d49a08);
+  color: #f3d49a;
+  font: 800 11px/1 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: filter 160ms ease, transform 160ms ease;
+  pointer-events: auto;
+}
+.safehouse-stage .safehouse__heading-bounties:hover,
+.safehouse-stage .safehouse__heading-bounties:focus-visible {
+  filter: brightness(1.18);
+  transform: translateY(-1px);
+  outline: none;
 }
 .safehouse-stage__landmarks {
   position: absolute;

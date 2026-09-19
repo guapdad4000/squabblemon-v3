@@ -2,7 +2,7 @@ import { BattleStatus } from './BattleEffects';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CardInstance } from '../gameEngine';
-import { Shield, Ban, VolumeX, Snowflake, Wind } from 'lucide-react';
+import { Shield, Ban, VolumeX, Snowflake, Wind, Flame, TrendingDown, LockKeyhole, Sparkles } from 'lucide-react';
 import { CardVariantTreatment, getVariantKind } from './CardVariantTreatment';
 import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
@@ -70,10 +70,27 @@ function CardViewComponent({
   const isSilenced = instance?.statuses?.silenced;
   const isProtected = instance?.statuses?.protected && !covered;
   const isBlocked = instance?.statuses?.blocked;
+  const burnStacks = instance?.statuses?.burnStacks ?? 0;
+  const isWeakened = instance?.statuses?.weakened;
+  const isLocked = instance?.statuses?.locked;
+  const isBoosted = instance?.statuses?.boosted;
   const isMoved = instance?.moved;
+  const boardStatusLabel = [
+    covered ? 'Covered.' : isProtected ? 'Protected.' : '',
+    isBlocked ? 'Blocked.' : '',
+    isSilenced ? 'Silenced.' : '',
+    isFrozen ? 'Frozen.' : '',
+    burnStacks > 0 ? `Burning: ${burnStacks} burn stack${burnStacks === 1 ? '' : 's'}.` : '',
+    isWeakened ? 'Weakened.' : '',
+    isLocked ? 'Locked.' : '',
+    isBoosted ? 'Boosted.' : '',
+    isMoved ? 'Moved.' : '',
+  ].filter(Boolean).join(' ');
   const powerModifier = instance?.powerModifier ?? 0;
   const variantKind = getVariantKind(variantId);
-  const rarity = getCardRarity(card.id);
+  // Summons are real board cards but intentionally stay out of the collectible catalog.
+  // Render them with their summoner's Mythical treatment instead of throwing on an unknown catalog ID.
+  const rarity = card.kind === 'token' ? 'Mythical' : getCardRarity(card.id);
   const entryAccent = cardEntryAccent(card);
 
   const isLarge = isInspector || (!isBoard && !className.includes('w-[64px]'));
@@ -122,7 +139,7 @@ function CardViewComponent({
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
       onPointerCancel={resetFoil}
-      aria-label={`${card.name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity.${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
+      aria-label={`${card.name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity.${boardStatusLabel ? ` ${boardStatusLabel}` : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
       aria-pressed={!isBoard && !isInspector && !presentationOnly ? !!queued : undefined}
       title={disabledReason}
       onClick={presentationOnly ? undefined : onClick}
@@ -191,13 +208,17 @@ function CardViewComponent({
           </div>
 
           {isBoard && (
-            <div className="absolute top-[28px] right-1 flex flex-col gap-0.5 z-20 pointer-events-none">
+            <div className="card-status-stack absolute top-[28px] right-1 z-20 pointer-events-none" aria-hidden="true">
               {covered && <div data-card-status="covered" title="Covered" className="card-status bg-amber-200 text-black ring-1 ring-amber-500"><Shield size={8} strokeWidth={3} /></div>}
               {isProtected && <div data-card-status="protected" title="Protected this round" className="card-status bg-yellow-400 text-black"><Shield size={8} strokeWidth={3} /></div>}
-              {isBlocked && <div className="card-status bg-accent text-white"><Ban size={8} strokeWidth={3} /></div>}
-              {isSilenced && <div className="card-status bg-zinc-600 text-white"><VolumeX size={8} strokeWidth={3} /></div>}
-              {isFrozen && <div className="card-status bg-blue-400 text-black"><Snowflake size={8} strokeWidth={3} /></div>}
-              {isMoved && <div className="card-status bg-purple-500 text-white"><Wind size={8} strokeWidth={3} /></div>}
+              {isBlocked && <div data-card-status="blocked" title="Blocked" className="card-status bg-accent text-white"><Ban size={8} strokeWidth={3} /></div>}
+              {isSilenced && <div data-card-status="silenced" title="Silenced" className="card-status bg-zinc-600 text-white"><VolumeX size={8} strokeWidth={3} /></div>}
+              {isFrozen && <div data-card-status="frozen" title="Frozen" className="card-status bg-blue-400 text-black"><Snowflake size={8} strokeWidth={3} /></div>}
+              {burnStacks > 0 && <div data-card-status="burn" title={`Burning: ${burnStacks} burn stack${burnStacks === 1 ? '' : 's'}`} className="card-status bg-orange-500 text-black"><Flame size={8} strokeWidth={3} /><span>{burnStacks}</span></div>}
+              {isWeakened && <div data-card-status="weakened" title="Weakened" className="card-status bg-rose-400 text-black"><TrendingDown size={8} strokeWidth={3} /></div>}
+              {isLocked && <div data-card-status="locked" title="Locked" className="card-status bg-slate-200 text-black"><LockKeyhole size={8} strokeWidth={3} /></div>}
+              {isBoosted && <div data-card-status="boosted" title="Boosted" className="card-status bg-emerald-400 text-black"><Sparkles size={8} strokeWidth={3} /></div>}
+              {isMoved && <div data-card-status="moved" title="Moved" className="card-status bg-purple-500 text-white"><Wind size={8} strokeWidth={3} /></div>}
             </div>
           )}
 

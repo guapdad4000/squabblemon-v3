@@ -1,5 +1,6 @@
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
@@ -98,7 +99,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const isBattleMode = Boolean(match);
   const variantSlots = catalogCard?.variantSlots ?? [];
 
-  return (
+  const inspector = (
     <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
@@ -149,7 +150,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         {/* ============================================================
             RIGHT — Paper dossier (the resume)
             ============================================================ */}
-        <div className={`dossier-paper relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''} max-h-[80vh] overflow-y-auto hide-scrollbar`}>
+        <div className={`dossier-paper relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''}`}>
           <span className="dossier-stripe" aria-hidden="true" />
           <span className="dossier-mark" aria-hidden="true" />
 
@@ -185,6 +186,44 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <div className="dossier-handle">"#{String(card.id || '').slice(0, 6)} — filed by Dr. Fade's scout team"</div>
           </div>
 
+          {/* Signature ability + stats row (moved UP from below the XP) */}
+          <div className="dossier-ability-stats">
+            {/* Sticky-note signature ability — moved up so it's the first thing the eye lands on */}
+            <div className="dossier-sticky">
+              <div className="dossier-sticky__label">Signature Ability</div>
+              <div className="dossier-sticky__title">{card.ability}</div>
+              <p className="dossier-sticky__copy">{card.effect}</p>
+            </div>
+
+            {/* Stat strip */}
+            <div className="dossier-stats" role="list" aria-label="Fighter stats">
+              <div className="dossier-stat" role="listitem">
+                <span className="dossier-stat__pin" aria-hidden="true" />
+                <div className="dossier-stat__label">Class</div>
+                <div className="dossier-stat__value">{card.type}</div>
+                <div className="dossier-stat__sub">Energy type</div>
+              </div>
+              <div className="dossier-stat" role="listitem">
+                <span className="dossier-stat__pin" aria-hidden="true" />
+                <div className="dossier-stat__label">Motion</div>
+                <div className="dossier-stat__value">{card.cost}</div>
+                <div className="dossier-stat__sub">Cost to play</div>
+              </div>
+              <div className="dossier-stat" role="listitem">
+                <span className="dossier-stat__pin" aria-hidden="true" />
+                <div className="dossier-stat__label">Hands</div>
+                <div className="dossier-stat__value">{card.power}</div>
+                <div className="dossier-stat__sub">Base power</div>
+              </div>
+              <div className="dossier-stat" role="listitem">
+                <span className="dossier-stat__pin" aria-hidden="true" />
+                <div className="dossier-stat__label">Rarity</div>
+                <div className="dossier-stat__value" style={{ color: 'var(--rarity-color)' }}>{rarityLabel}</div>
+                <div className="dossier-stat__sub">{finishLabel}</div>
+              </div>
+            </div>
+          </div>
+
           {/* Battle vitals (instance mode only) */}
           {isBattleMode && instance && (
             <div className="dossier-vitals" style={{ '--rarity-color': 'var(--color-accent, #f43f5e)' } as React.CSSProperties}>
@@ -215,34 +254,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
           )}
           {instance && match && <BattlePowerBreakdown card={instance} match={match} />}
 
-          {/* Stat strip */}
-          <div className="dossier-stats" role="list" aria-label="Fighter stats">
-            <div className="dossier-stat" role="listitem">
-              <span className="dossier-stat__pin" aria-hidden="true" />
-              <div className="dossier-stat__label">Class</div>
-              <div className="dossier-stat__value">{card.type}</div>
-              <div className="dossier-stat__sub">Energy type</div>
-            </div>
-            <div className="dossier-stat" role="listitem">
-              <span className="dossier-stat__pin" aria-hidden="true" />
-              <div className="dossier-stat__label">Motion</div>
-              <div className="dossier-stat__value">{card.cost}</div>
-              <div className="dossier-stat__sub">Cost to play</div>
-            </div>
-            <div className="dossier-stat" role="listitem">
-              <span className="dossier-stat__pin" aria-hidden="true" />
-              <div className="dossier-stat__label">Hands</div>
-              <div className="dossier-stat__value">{card.power}</div>
-              <div className="dossier-stat__sub">Base power</div>
-            </div>
-            <div className="dossier-stat" role="listitem">
-              <span className="dossier-stat__pin" aria-hidden="true" />
-              <div className="dossier-stat__label">Rarity</div>
-              <div className="dossier-stat__value" style={{ color: 'var(--rarity-color)' }}>{rarityLabel}</div>
-              <div className="dossier-stat__sub">{finishLabel}</div>
-            </div>
-          </div>
-
           {/* Tags row */}
           {catalogCard && (
             <div className="flex flex-wrap gap-2 mb-3">
@@ -269,13 +280,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
               <CardProgress progress={progression} />
             </div>
           )}
-
-          {/* Sticky-note signature ability */}
-          <div className="dossier-sticky">
-            <div className="dossier-sticky__label">Signature Ability</div>
-            <div className="dossier-sticky__title">{card.ability}</div>
-            <p className="dossier-sticky__copy">{card.effect}</p>
-          </div>
 
           {/* Scout's notes */}
           <div className="dossier-notes">
@@ -389,4 +393,5 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
       </motion.div>
     </div>
   );
+  return typeof document === 'undefined' ? inspector : createPortal(inspector, document.body);
 }

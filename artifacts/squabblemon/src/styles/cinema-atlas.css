@@ -65,142 +65,177 @@
   position: relative;
   z-index: 8;
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 14px 32px 18px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 24px 12px;
   background:
-    linear-gradient(180deg, rgba(8, 6, 4, 0.88) 0%, rgba(8, 6, 4, 0.6) 70%, transparent 100%);
+    linear-gradient(180deg, rgba(8, 6, 4, 0.92) 0%, rgba(8, 6, 4, 0.6) 70%, transparent 100%);
   border-bottom: 1px solid var(--cinema-line);
   flex: none;
-  transition: padding 0.22s ease, grid-template-rows 0.22s ease;
-}
-.story-atlas__header > div:first-child {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
 }
 
-/* Collapsed state: the chapter strip, title, "now showing" plate and
-   progress ring tuck away to a slim bar, freeing vertical space for the
-   map itself. Toggled by .story-atlas__collapse. */
-.story-atlas.is-header-collapsed .story-atlas__header {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  gap: 10px;
-}
-.story-atlas.is-header-collapsed .story-atlas__header .studio-tabs,
-.story-atlas.is-header-collapsed .story-atlas__header h1,
-.story-atlas.is-header-collapsed .story-atlas__header .studio-eyebrow,
-.story-atlas.is-header-collapsed .story-atlas__header__plate,
-.story-atlas.is-header-collapsed .story-atlas__progress > span {
-  display: none;
-}
-.story-atlas.is-header-collapsed .story-atlas__back {
-  margin-bottom: 0;
-}
-.story-atlas.is-header-collapsed .story-atlas__progress {
-  padding-top: 0;
-}
-
-/* Collapse toggle chevron, sits at the header's top-right. */
-.story-atlas__collapse {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  flex: none;
-  align-self: flex-start;
-  margin-left: 8px;
-  color: var(--cinema-paper);
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid var(--cinema-line);
-  border-radius: 999px;
-  transition: color 0.18s, border-color 0.18s, transform 0.22s;
-}
-.story-atlas__collapse:hover,
-.story-atlas__collapse:focus-visible {
-  color: var(--cinema-amber-bright);
-  border-color: var(--cinema-amber);
-}
-.story-atlas.is-header-collapsed .story-atlas__collapse {
-  transform: rotate(180deg);
-}
-
-/* The chapter tabs read like a restrained 35mm control strip. */
-.story-atlas__header .studio-tabs {
+/* The chapter strip reads like a row of 35mm film-reel tickets. Each
+   ticket has its own sprocket-hole perforations on both edges. The body
+   shows the chapter number and the title only — no summary line. The
+   active ticket glows with amber light. */
+.story-atlas__header .story-reels {
   display: flex;
   flex-wrap: nowrap;
-  margin: 0 0 10px;
+  margin: 0;
   width: 100%;
-  max-width: min(100%, 760px);
+  max-width: 100%;
   gap: 4px;
-  padding: 7px 12px;
+  padding: 2px;
   overflow-x: auto;
   scrollbar-width: none;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 24px,
-      rgba(240, 179, 90, 0.06) 24px 25px,
-      transparent 25px 49px,
-      rgba(240, 179, 90, 0.06) 49px 50px
-    ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.25));
-  border: 1px solid var(--cinema-line);
-  border-radius: 4px;
-  position: relative;
+  align-items: stretch;
 }
-.story-atlas__header .studio-tabs::-webkit-scrollbar { display: none; }
+.story-atlas__header .story-reels::-webkit-scrollbar { display: none; }
 
-.story-atlas__header .studio-tabs button {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 7px;
-  font: 600 10px/1 var(--font-mono);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  padding: 6px 14px 6px 12px;
-  color: rgba(247, 238, 216, 0.55);
+.story-reel {
   position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
   border: 0;
   background: transparent;
-  transition: color 0.18s, transform 0.18s;
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 0.18s ease, filter 0.18s ease;
 }
-.story-atlas__header .studio-tabs button:not(:last-child)::after {
+.story-reel:hover { transform: translateY(-2px); }
+.story-reel.is-active { transform: translateY(-3px); }
+.story-reel.is-locked { opacity: 0.45; cursor: not-allowed; }
+.story-reel.is-locked:hover { transform: none; }
+
+/* Sprocket-hole ribbons on the left and right edges of each ticket. */
+.story-reel__sprockets {
+  flex: 0 0 14px;
+  position: relative;
+  background:
+    linear-gradient(180deg, #1a1208 0%, #261a0c 40%, #1a1208 100%);
+  border-top: 1px solid rgba(240, 179, 90, 0.25);
+  border-bottom: 1px solid rgba(240, 179, 90, 0.25);
+}
+.story-reel__sprockets::before {
   content: '';
   position: absolute;
-  right: -2px;
-  top: 25%;
-  bottom: 25%;
-  width: 1px;
-  background: var(--cinema-line);
+  inset: 8px 4px 8px 4px;
+  background-image:
+    radial-gradient(circle, transparent 0 3.5px, #050403 3.5px 5.5px, transparent 5.5px);
+  background-size: 8px 16px;
+  background-repeat: repeat-y;
+  background-position: center top;
 }
-.story-atlas__header .studio-tabs button:hover {
-  color: var(--cinema-amber-bright);
+.story-reel:first-child .story-reel__sprockets {
+  border-left: 1px solid rgba(240, 179, 90, 0.25);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
-.story-atlas__header .studio-tabs button[aria-pressed='true'] {
-  color: var(--cinema-amber);
+.story-reel:last-child .story-reel__sprockets {
+  border-right: 1px solid rgba(240, 179, 90, 0.25);
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
-.story-atlas__header .studio-tabs button[aria-pressed='true']::before {
+
+/* The body of the ticket: paper label with the chapter info. */
+.story-reel__label {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 16px 8px;
+  min-width: 80px;
+  text-align: left;
+  background:
+    linear-gradient(180deg, #f7eed8 0%, #e6d6ad 100%);
+  color: #2b1f10;
+  border-top: 1px solid rgba(240, 179, 90, 0.55);
+  border-bottom: 1px solid rgba(240, 179, 90, 0.55);
+  font-family: var(--font-display);
+  box-shadow: inset 0 0 0 1px rgba(43, 31, 16, 0.06);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.story-reel__label small {
+  font: 700 7px/1 var(--font-mono);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(43, 31, 16, 0.6);
+}
+.story-reel__label strong {
+  font: 900 italic 12px/1.05 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #1c130a;
+}
+.story-reel__label em {
+  display: none;
+}
+.story-reel:hover .story-reel__label {
+  background:
+    linear-gradient(180deg, #fff4d8 0%, #ecd9b0 100%);
+}
+.story-reel.is-active .story-reel__label {
+  background:
+    linear-gradient(180deg, #ffd58a 0%, #c9883a 100%);
+  color: #1c130a;
+  box-shadow:
+    inset 0 0 0 1px rgba(43, 31, 16, 0.18),
+    0 0 18px rgba(240, 179, 90, 0.45),
+    0 0 38px rgba(240, 179, 90, 0.25);
+}
+.story-reel.is-active .story-reel__label small,
+.story-reel.is-active .story-reel__label em {
+  color: rgba(28, 19, 10, 0.75);
+}
+.story-reel.is-active .story-reel__sprockets {
+  background:
+    linear-gradient(180deg, #3a2812 0%, #4a3520 50%, #2c1d0a 100%);
+  box-shadow:
+    inset 0 0 12px rgba(255, 213, 138, 0.4),
+    0 0 16px rgba(240, 179, 90, 0.3);
+}
+.story-reel__lock {
+  position: absolute;
+  top: 8px;
+  right: 22px;
+  color: rgba(43, 31, 16, 0.7);
+}
+
+/* The chapter title sits on its own line, italic uppercase, framed by
+   slim perforated sprocket ribbons above + below for the 35mm flavor. */
+.story-title {
+  position: relative;
+  display: inline-block;
+  margin: 4px 0 0;
+  padding: 4px 22px 8px;
+  font: 950 italic clamp(26px, 3.4vw, 50px)/0.92 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--cinema-paper);
+  text-shadow: 0 2px 16px #000d, 0 0 1px #000;
+}
+.story-title::before,
+.story-title::after {
   content: '';
   position: absolute;
-  left: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 5px;
-  height: 5px;
-  background: var(--cinema-amber);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--cinema-amber-glow), 0 0 18px var(--cinema-amber-glow);
-  animation: cinema-reel-led 2.4s ease-in-out infinite;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-left: 1px solid var(--cinema-line);
+  border-right: 1px solid var(--cinema-line);
+  background-image:
+    radial-gradient(circle, transparent 0 2.5px, rgba(240, 179, 90, 0.55) 2.5px 4px, transparent 4px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.4) 100%);
+  background-size: 14px 4px, 100% 100%;
+  background-repeat: repeat-x, no-repeat;
 }
-.story-atlas__header .studio-tabs button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.story-title::before { top: -5px; }
+.story-title::after { bottom: -5px; }
 
 /* Soft projector-style eyebrow line. */
 .story-atlas__back {
@@ -241,8 +276,8 @@
   background: linear-gradient(90deg, transparent, var(--cinema-amber), transparent);
 }
 
-/* Big brass-plate chapter title — replaces the chunky Impact title. */
-.story-atlas__header h1 {
+/* Big brass-plate chapter title — film-strip frame is set on .story-title. */
+.story-atlas__header h1:not(.story-title) {
   position: relative;
   font: 900 clamp(28px, 3.6vw, 52px)/1 var(--font-display);
   letter-spacing: -0.01em;
@@ -255,75 +290,117 @@
     0 0 28px rgba(240, 179, 90, 0.18);
 }
 
-/* Cinematic "now showing" plate to the right. */
-.story-atlas__header__plate {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
-  background: linear-gradient(135deg, rgba(8, 6, 4, 0.85), rgba(15, 12, 8, 0.65));
-  border: 1px solid var(--cinema-line);
-  border-radius: 6px;
-  flex: 0 1 260px;
-  min-width: 0;
-  max-width: 260px;
-  overflow: hidden;
-}
-.story-atlas__header__plate::before {
-  content: '';
+/* Floating rewards button — sits over the map at the bottom-right, fans above
+   the bottom nav on game-shell, hovers above the chapter title. */
+.story-atlas__rewards-fab {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(240, 179, 90, 0.25), transparent 70%);
-  pointer-events: none;
-  border-radius: inherit;
+  right: 22px;
+  bottom: 22px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px 11px 14px;
+  font: 800 10px/1 var(--font-mono);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #1c1206;
+  background: linear-gradient(120deg, #f0c97e, #b88a45 60%, #876621);
+  border: 1px solid #f6dca0;
+  border-radius: 999px;
+  box-shadow:
+    0 4px 0 #4a3618,
+    0 0 24px rgba(240, 179, 90, 0.4),
+    inset 0 1px 0 rgba(255, 240, 200, 0.5);
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4);
+  cursor: pointer;
+  transition: transform 0.16s, filter 0.16s;
 }
-.story-atlas__header__plate img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 14px rgba(240, 179, 90, 0.45)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
-}
-.story-atlas__header__plate__copy {
+.story-atlas__rewards-fab:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.story-atlas__rewards-fab:active { transform: translateY(0); }
+.story-atlas__rewards-fab:focus-visible { outline: 2px solid var(--cinema-amber-bright); outline-offset: 3px; }
+.game-shell--fan .story-atlas__rewards-fab { bottom: calc(var(--fan-clearance) + 22px); }
+
+/* Rewards panel — modal-style card that slides up from the bottom-right. */
+.story-atlas__rewards-panel {
+  position: fixed;
+  right: 22px;
+  bottom: calc(var(--fan-clearance, 0px) + 84px);
+  z-index: 50;
+  width: min(380px, calc(100vw - 32px));
+  max-height: min(70vh, 540px);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  background: linear-gradient(180deg, #0c0a07, #161210);
+  border: 1px solid var(--cinema-line);
+  border-radius: 12px;
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(240, 179, 90, 0.18);
+  overflow: hidden;
+}
+.story-atlas__rewards-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--cinema-line);
+  background: linear-gradient(180deg, rgba(240, 179, 90, 0.06), transparent);
+  flex: none;
+}
+.story-atlas__rewards-panel__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cinema-amber);
   min-width: 0;
 }
-.story-atlas__header__plate__copy small {
-  font: 700 8px/1 var(--font-mono);
-  letter-spacing: 0.32em;
-  color: var(--cinema-amber);
-  text-transform: uppercase;
-}
-.story-atlas__header__plate__copy strong {
-  font: 900 italic 16px/1.05 var(--font-display);
-  letter-spacing: 0.02em;
+.story-atlas__rewards-panel__title strong {
+  font: 800 11px/1 var(--font-display);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--cinema-paper);
+}
+.story-atlas__rewards-panel__title em {
+  font: 500 9px/1 var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cinema-muted);
+  font-style: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-/* Progress ring column. */
-.story-atlas__progress {
-  display: flex;
-  gap: 12px;
+.story-atlas__rewards-panel__close {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
   align-items: center;
-  flex: none;
-  padding-top: 6px;
-}
-.story-atlas__progress > span {
-  font: 600 10px/1.3 var(--font-sans);
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--cinema-line);
+  border-radius: 50%;
   color: var(--cinema-paper);
+  font: 700 16px/1 var(--font-sans);
+  cursor: pointer;
+  transition: color 0.16s, border-color 0.16s;
 }
-.story-atlas__progress small {
-  display: block;
-  font: 500 9px/1 var(--font-mono);
-  letter-spacing: 0.2em;
-  color: var(--cinema-amber);
-  margin-top: 4px;
-  text-transform: uppercase;
+.story-atlas__rewards-panel__close:hover,
+.story-atlas__rewards-panel__close:focus-visible {
+  color: var(--cinema-amber-bright);
+  border-color: var(--cinema-amber);
+}
+.story-atlas__rewards-panel__body {
+  padding: 14px;
+  overflow: auto;
+  flex: 1;
+}
+/* The ChapterTicketProgress card lives inside the panel; flatten its outer chrome
+   so it blends with the modal. */
+.story-atlas__rewards-panel__body > div {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 /* ───── Viewport: the cinema "screen" ───── */
@@ -568,121 +645,6 @@
   filter: drop-shadow(0 0 4px rgba(240, 179, 90, 0.4));
 }
 
-/* ───── Director's slate footer ───── */
-.story-atlas__footer {
-  position: relative;
-  z-index: 8;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 16px 32px 24px;
-  flex: none;
-  background:
-    linear-gradient(0deg, rgba(8, 6, 4, 0.92) 0%, rgba(8, 6, 4, 0.55) 70%, transparent 100%);
-}
-/* The fan-nav floats fixed over the bottom of the screen; reserve room
-   below the footer so "Roll camera" and the ticket chip never sit under it. */
-.game-shell--fan .story-atlas__footer {
-  padding-bottom: calc(var(--fan-clearance) + 24px);
-}
-.story-atlas__footer > div:first-child {
-  flex: 1;
-  min-width: 0;
-}
-.story-atlas__footer .studio-eyebrow {
-  font: 700 9px/1 var(--font-mono);
-  letter-spacing: 0.32em;
-  color: var(--cinema-amber);
-  text-transform: uppercase;
-}
-.story-atlas__footer strong {
-  display: block;
-  font: 900 italic 17px/1.2 var(--font-display);
-  margin-top: 6px;
-  color: var(--cinema-paper);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
-}
-.story-atlas__hint {
-  display: block;
-  color: var(--cinema-muted);
-  font: 500 9px/1.3 var(--font-mono);
-  letter-spacing: 0.12em;
-  margin-top: 6px;
-}
-
-/* The slate cta gets a brass treatment. */
-.story-atlas .studio-action--gold {
-  position: relative;
-  background: linear-gradient(120deg, #f0c97e, #b88a45 60%, #876621);
-  border: 1px solid #f6dca0;
-  color: #1c1206;
-  box-shadow:
-    0 4px 0 #4a3618,
-    0 0 24px rgba(240, 179, 90, 0.4),
-    inset 0 1px 0 rgba(255, 240, 200, 0.5);
-  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4);
-}
-.story-atlas .studio-action--gold::before {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  border-radius: inherit;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.15));
-  pointer-events: none;
-}
-.story-atlas .studio-action {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--cinema-line);
-  color: var(--cinema-paper);
-  border-radius: 4px;
-  font: 700 11px/1.3 var(--font-mono);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.story-atlas .studio-action:hover:enabled {
-  background: rgba(20, 16, 12, 0.8);
-  border-color: var(--cinema-amber);
-}
-
-/* Tickets summary chip on the clapperboard. */
-.story-atlas__tickets summary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 8px;
-  min-width: 48px;
-  min-height: 48px;
-  cursor: pointer;
-  color: var(--cinema-amber);
-  font: 700 9px/1 var(--font-mono);
-  letter-spacing: 0.18em;
-  list-style: none;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--cinema-line);
-  border-radius: 4px;
-}
-.story-atlas__tickets summary::-webkit-details-marker { display: none; }
-.story-atlas__tickets > div {
-  position: absolute;
-  right: 28px;
-  bottom: 100%;
-  width: min(340px, calc(100vw - 40px));
-  max-height: 65dvh;
-  overflow: auto;
-  background: linear-gradient(180deg, #0c0a07, #161210);
-  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(240, 179, 90, 0.15);
-  border: 1px solid var(--cinema-line);
-  border-radius: 8px;
-  padding: 10px;
-  z-index: 10;
-}
-.story-atlas__tickets > div > div { border: 0; background: none; }
-.story-atlas__tickets[open] summary {
-  color: var(--cinema-amber-bright);
-  border-color: var(--cinema-amber);
-}
-
 /* ───── Animations ───── */
 @keyframes cinema-reel-led {
   0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--cinema-amber-glow), 0 0 18px var(--cinema-amber-glow); }
@@ -710,77 +672,27 @@
 
 /* ───── Responsive ───── */
 @media (max-width: 920px) {
-  .story-atlas__header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    padding: 12px 18px 14px;
-    gap: 12px;
-  }
-  .story-atlas__header > div:first-child { grid-column: 1 / -1; }
-  .story-atlas__header__plate { grid-column: 1; }
-  .story-atlas__progress { grid-column: 2; }
-  .story-atlas__header .studio-tabs {
-    max-width: 100%;
-    margin-bottom: 8px;
-  }
-  .story-atlas__header h1 {
-    font-size: clamp(24px, 5.5vw, 36px);
-  }
-  .story-atlas__header__plate {
-    min-width: 0;
-    padding: 8px 12px;
-  }
-  .story-atlas__header__plate img {
-    width: 40px;
-    height: 40px;
-  }
-  .story-atlas__header__plate__copy strong {
-    font-size: 13px;
-  }
+  .story-atlas__header { padding: 8px 16px 10px; }
+  .story-atlas__rewards-fab { right: 14px; bottom: 14px; padding: 9px 14px 9px 12px; }
+  .story-atlas__rewards-panel { right: 14px; width: min(340px, calc(100vw - 28px)); }
 }
 
 @media (max-width: 680px) {
-  .story-atlas__header { padding-inline: 12px; }
-  .story-atlas__header .studio-tabs button { min-height: 40px; padding-inline: 10px; letter-spacing: .12em; }
-  .story-atlas__header__plate { max-width: min(260px, calc(100vw - 94px)); }
-  .story-atlas__header__plate img { display: none; }
-  .story-atlas__progress > span { display: none; }
-  .story-atlas__footer {
-    padding: 14px 18px calc(env(safe-area-inset-bottom) + 16px);
-    display: grid;
-    grid-template-columns: 1fr 52px;
-    gap: 12px;
-  }
-  .game-shell--fan .story-atlas__footer {
-    padding-bottom: calc(var(--fan-clearance) + env(safe-area-inset-bottom) + 16px);
-  }
-  .story-atlas__footer > div:first-child { grid-column: 1; }
-  .story-atlas__footer > .studio-action { grid-column: 1; justify-self: start; }
-  .story-atlas__footer strong { font-size: 14px; }
-  .story-atlas__tickets { grid-column: 2; grid-row: 1/3; align-self: center; }
-  .story-atlas__tickets summary { padding: 4px; min-height: 38px; }
+  .story-atlas__header { padding: 8px 12px 10px; }
+  .story-atlas__rewards-fab { right: 12px; bottom: 12px; padding: 8px 12px 8px 10px; }
+  .story-atlas__rewards-fab span { display: none; }
+  .story-atlas__rewards-panel { right: 12px; left: 12px; width: auto; }
 }
 
 @media (max-height: 650px) and (min-width: 681px) {
-  .story-atlas__header { padding-bottom: 10px; }
-  .story-atlas__header h1 { font-size: 28px; margin-top: 4px; }
-  .story-atlas__header .studio-tabs { margin-bottom: 4px; }
-  .story-atlas__footer { padding: 10px 24px 18px; }
-  .game-shell--fan .story-atlas__footer { padding-bottom: calc(var(--fan-clearance) + 18px); }
+  .story-atlas__header { padding-bottom: 8px; }
   .story-atlas__viewport { min-height: 180px; }
   .story-atlas__terrain { min-height: 380px; }
 }
 
 @media (max-height: 550px) and (orientation: landscape) {
   .game-shell--fan:has(.story-atlas) .venue-hud { display: none; }
-  .story-atlas__header { padding: 8px 22px 10px; align-items: center; }
-  .story-atlas__header h1 { font-size: 22px; }
+  .story-atlas__header { padding: 6px 18px 8px; }
   .story-atlas__viewport { min-height: 100px; }
   .story-atlas__terrain { min-height: 340px; }
-  .game-shell--fan .story-atlas__footer { padding: 8px 24px calc(var(--fan-clearance) + 10px); gap: 18px; }
-  .story-atlas__footer strong { font-size: 13px; margin-top: 3px; }
-  .story-atlas__footer .studio-eyebrow { font-size: 7px; }
-  .story-atlas__hint { display: none; }
-  .story-atlas__footer > .studio-action { min-height: 36px; padding: 8px 15px; font-size: 10px; }
-  .story-atlas__tickets summary { padding: 3px; min-height: 36px; }
 }

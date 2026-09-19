@@ -18,9 +18,9 @@ function setup(id: string, owner: Owner = 'player') {
   return {m, source, owner, enemy, low, other, foe};
 }
 
-test('the expansion adds exactly ten Commons, five Rares and five Mythicals with pack access and three training tiers', () => {
+test('the expansion uses the current six-tier rarity ladder with pack access and three training tiers', () => {
   assert.equal(BLOCK_EXPANSION.length, 20);
-  assert.deepEqual(['Common','Rare','Mythical'].map(r => BLOCK_EXPANSION.filter(c => c[3] === r).length), [10,5,5]);
+  assert.deepEqual(['Common','Uncommon','Epic','Rare','Legendary','Mythical'].map(r => BLOCK_EXPANSION.filter(c => c[3] === r).length), [8,2,1,4,1,4]);
   validateCardAbilityUpgrades();
   for (const [id, artworkId, name, rarity] of BLOCK_EXPANSION) {
     const card = cardCatalog.find(c => c.engineId === id)!;
@@ -45,9 +45,9 @@ for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities
     const after = playCard(m, owner, source.instanceId, 0);
     const get = (c: typeof source) => after.boards.flat().find(a => a.instanceId === c.instanceId)!;
     const self = get(source), ally = get(low), second = get(other), enemy = get(foe);
-    const selfBoosts: Record<string,number> = {bodegacat:1,dogwalker:2,gardener:1,dancecaptain:3,midnightmayor:3,leroy:1};
+    const selfBoosts: Record<string,number> = {bodegacat:1,dogwalker:2,dancecaptain:3,midnightmayor:3,leroy:1};
     if (id in selfBoosts) assert.equal(self.powerModifier, selfBoosts[id], id);
-    if (id === 'mural') { assert.equal(self.powerModifier, 0); assert.equal(enemy.powerModifier, -1); }
+    if (id === 'mural') { assert.equal(self.powerModifier, 0); assert.equal(enemy.statuses.locked, true); }
     if (id === 'crossingguard') { assert.equal(ally.statuses.protected,true); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, low.instanceId); }
     if (id === 'laundry' || id === 'nightmedic') {
       assert.equal(ally.statuses.frozen,false); assert.equal(ally.statuses.silenced,false);
@@ -57,20 +57,21 @@ for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities
     if (id === 'busker') { assert.equal(ally.powerModifier,1); assert.equal(second.powerModifier,0); }
     if (id === 'cornercoach' || id === 'bigzoey') assert.equal(ally.powerModifier,2);
     if (id === 'nightcashier') assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'],8);
-    if (id === 'chessregular' || id === 'bigzoey') assert.equal(enemy.powerModifier,-2);
+    if (id === 'chessregular') assert.equal(enemy.statuses.burnStacks, 2);
+    if (id === 'bigzoey') assert.equal(enemy.powerModifier,-2);
     if (id === 'leroy') assert.equal(enemy.powerModifier,-3);
     if (id === 'piratedj' || id === 'partytitan') {
       assert.equal(after.boards[1][0].powerModifier,1); assert.equal(after.boards[2][0].powerModifier,1);
       assert.equal(ally.powerModifier,id === 'partytitan' ? 1 : 0);
     }
-    if (id === 'subwaymagician') { assert.equal(enemy.statuses.silenced,true); assert.notEqual(self.lane,0); }
+    if (id === 'subwaymagician') { assert.equal(enemy.statuses.weakened,true); assert.notEqual(self.lane,0); }
     if (id === 'ogdominican') { assert.notEqual(self.lane,0); assert.equal(self.powerModifier,2); }
     if (id === 'conductor') { assert.notEqual(ally.lane,0); assert.equal(ally.powerModifier,3); assert.equal(self.lane,0); }
   }
 });
 
 test('conditional expansion abilities do not award free Hands when their condition is missed', () => {
-  for (const id of ['dogwalker','mural','gardener','dancecaptain','leroy','laundry','busker','cornercoach','piratedj','nightmedic','conductor','bigzoey','partytitan','chessregular']) {
+  for (const id of ['dogwalker','gardener','dancecaptain','leroy','laundry','busker','cornercoach','piratedj','nightmedic','conductor','bigzoey','partytitan','chessregular']) {
     const {m,source} = setup(id); m.boards = [[],[],[]];
     const after = playCard(m,'player',source.instanceId,0);
     assert.equal(after.boards.flat().find(c => c.instanceId === source.instanceId)?.powerModifier,0,id);
@@ -79,11 +80,13 @@ test('conditional expansion abilities do not award free Hands when their conditi
   assert.equal(playCard(m,'player',source.instanceId,0).playerMotion,7);
 });
 
-test('Mural Apprentice weakens a rival when supported, or gains Hands on an empty lane', () => {
+test('Mural Apprentice Locks when supported or gains a Hand when Lock cannot fire', () => {
   const { m, source, low } = setup('mural');
   const empty = { ...m, boards: [[low], [], []] } as Match;
   const revealed = playCard(empty, 'player', source.instanceId, 0);
   assert.equal(revealed.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier, 1);
+  const alone = { ...m, boards: [[], [], []] } as Match;
+  assert.equal(playCard(alone, 'player', source.instanceId, 0).boards[0][0].powerModifier, 1);
 });
 
 test('new roster crews replay identical complete matches through authoritative reward verification', () => {
@@ -133,5 +136,6 @@ test('County Jail blocks movement and its conditional Hands; hostile reveals res
     const after = playCard(m,'player',source.instanceId,0);
     const target = after.boards.flat().find(c => c.instanceId === guard.instanceId)!;
     assert.equal(target.powerModifier,0,id); assert.equal(target.statuses.silenced,false,id);
+    assert.equal(target.statuses.weakened,false,id); assert.equal(target.statuses.locked,false,id);
   }
 });

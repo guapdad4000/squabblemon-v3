@@ -4,7 +4,7 @@ import { MYTHIC_LEGENDS } from '../../../lib/squabblemon-engine/src/mythicLegend
 import { cardCatalog, cards, validateCardAbilityUpgrades } from './data';
 import {
   canAffordSelection, createCardInstance, createMatch, createMatchFromEngineCards, getLegalCardCost,
-  nextRound, pass, playCard, playTurnCard, revealCpuTurn, verifyMatchTranscript,
+  createAbilityUpgradeSnapshot, nextRound, pass, playCard, playTurnCard, revealCpuTurn, verifyMatchTranscript,
   type CardInstance, type Lane, type Match, type Owner, type PlayerMove,
 } from './gameEngine';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
@@ -30,16 +30,19 @@ function setup(id: string, owner: Owner = 'player') {
 }
 const onBoard = (m: Match, card: CardInstance) => m.boards.flat().find(c => c.instanceId === card.instanceId)!;
 
-test('six new City Legends have art identities, pack access and bounded training paths', () => {
-  assert.equal(MYTHIC_LEGENDS.length, 6);
+test('nine City Legends have art identities, pack access and bounded training paths', () => {
+  assert.equal(MYTHIC_LEGENDS.length, 9);
   validateCardAbilityUpgrades();
   const rarityByFighter: Record<string, string> = {
-    dragonflyjones: 'Common',
-    shonuff: 'Rare',
-    yasuke: 'Rare',
+    dragonflyjones: 'Legendary',
+    shonuff: 'Legendary',
+    yasuke: 'Mythical',
     mansamusa: 'Legendary',
-    tron: 'Uncommon',
-    johnhenry: 'Rare',
+    tron: 'Legendary',
+    johnhenry: 'Mythical',
+    ashlee: 'Mythical',
+    captainjigga: 'Mythical',
+    counter: 'Mythical',
   };
   for (const [id, artworkId, name] of MYTHIC_LEGENDS) {
     const card = cardCatalog.find(c => c.engineId === id)!;
@@ -54,14 +57,17 @@ test('six new City Legends have art identities, pack access and bounded training
   }
 });
 
-test('the four requested Motion prices and Dragonfly Jones Hands are printed on playable cards', () => {
+test('City Legend Motion prices and Dragonfly Jones Hands are printed on playable cards', () => {
   assert.deepEqual([cards.dragonflyjones.cost, cards.dragonflyjones.power], [2, 3]);
   assert.equal(cards.shonuff.cost, 3);
   assert.equal(cards.yasuke.cost, 2);
   assert.equal(cards.tron.cost, 3);
+  assert.equal(cards.ashlee.cost, 5);
+  assert.equal(cards.captainjigga.cost, 5);
+  assert.equal(cards.counter.cost, 4);
 });
 
-for (const owner of ['player', 'cpu'] as const) test(`all six Mythical reveals resolve for ${owner}`, () => {
+for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend reveals resolve for ${owner}`, () => {
   for (const [id] of MYTHIC_LEGENDS) {
     const { m, source, ally, second, third, foe, remoteA, remoteB } = setup(id, owner);
     const after = playCard(m, owner, source.instanceId, 0);
@@ -82,6 +88,43 @@ for (const owner of ['player', 'cpu'] as const) test(`all six Mythical reveals r
       assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.tron.cost + 1);
     }
     if (id === 'johnhenry') { assert.equal(self.powerModifier, 3); assert.equal(rival.powerModifier, 1); }
+    if (id === 'ashlee') {
+      for (const card of [ally, second, third]) assert.equal(onBoard(after, card).powerModifier, 1);
+      assert.equal(rival.powerModifier, 1);
+      const guyana = after.boards.flat().filter(card => card.cardId === 'guyana' && card.owner === owner);
+      assert.equal(guyana.length, 1);
+      assert.equal(guyana[0].basePower, 4);
+      assert.equal(guyana[0].statuses.uncounterable, true);
+      const event = after.effectLog.find(entry => entry.type === 'ability' && entry.cardId === 'ashlee' && !entry.abilityMetadata)!;
+      assert.equal(event.targets.find(target => target.cardInstanceId === foe.instanceId)?.after?.powerModifier, 1);
+    }
+    if (id === 'captainjigga') {
+      const stewards = after.boards.flat().filter(card => card.cardId === 'steward' && card.owner === owner);
+      assert.equal(stewards.length, 2);
+      assert.equal(new Set(stewards.map(card => card.instanceId)).size, 2, 'each summon must have a unique instance id');
+      assert(stewards.every(card => card.basePower === 2));
+      assert.equal(rival.powerModifier, 1, 'one enemy can only be targeted by one Steward');
+    }
+    if (id === 'counter') {
+      assert.equal(self.powerModifier, 4, 'Mirror is capped at +4 even against a 5-cost enemy');
+      assert.equal(self.statuses.protected, true);
+      assert(after.timedEffects.some(effect => effect.sourceInstanceId === source.instanceId && effect.targetInstanceId === source.instanceId));
+    }
+  }
+});
+
+test('trained Ashlee and Captain Jigga earn bounded upgrades from summon-only reveals', () => {
+  for (const id of ['ashlee', 'captainjigga'] as const) {
+    const { m, source } = setup(id);
+    m.boards = [[], [], []];
+    m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot([id], [], {
+      player: { [id]: { xp: 2800, level: 8, moveTier: 3 } },
+    });
+    const after = playCard(m, 'player', source.instanceId, 0);
+    assert.equal(onBoard(after, source).powerModifier, 2, `${id} applies its two self tiers`);
+    assert.equal(after.effectLog.filter(event => event.abilityMetadata?.sourceCardId === id).length, 2);
+    const tokenId = id === 'ashlee' ? 'guyana' : 'steward';
+    assert.equal(after.boards.flat().filter(card => card.cardId === tokenId).length, id === 'ashlee' ? 1 : 2);
   }
 });
 
@@ -107,7 +150,7 @@ test('new effects respect conditions, guard and direct protection', () => {
 
   const yasuke = setup('yasuke');
   let protectedBoard = playCard(yasuke.m, 'player', yasuke.source.instanceId, 0);
-  const attacker = createCardInstance('honestthot', 'cpu', 'legend', 9);
+  const attacker = createCardInstance('gothkid', 'cpu', 'legend', 9);
   protectedBoard = playCard({ ...protectedBoard, phase: 'cpu-reveal', cpuMotion: 9, cpuHand: [attacker] }, 'cpu', attacker.instanceId, 0);
   assert.equal(onBoard(protectedBoard, yasuke.ally).statuses.silenced, false);
   assert.equal(protectedBoard.timedEffects.some(e => e.targetInstanceId === yasuke.ally.instanceId && e.kind === 'church-protection'), false);
@@ -125,8 +168,8 @@ test('new effects respect conditions, guard and direct protection', () => {
   assert.equal(onBoard(smallCrew, john.foe).powerModifier, 2);
 });
 
-test('all six new Mythicals can play and replay in a complete match', () => {
-  const ids = [...MYTHIC_LEGENDS.map(([id]) => id), 'leroy', 'cornball', 'plug', 'wifey'];
+test('all nine City Legends can play and replay in a complete match', () => {
+  const ids = [...MYTHIC_LEGENDS.map(([id]) => id), 'leroy'];
   const rival = createMatch('vibes', 'vibes');
   let match = createMatchFromEngineCards('mythic-legends', ids, 'vibes', rival.cpuCardIds);
   const start = match;

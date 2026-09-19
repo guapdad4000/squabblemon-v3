@@ -84,44 +84,47 @@ test('Imposter copies capped base Hands and printed ability without firing an On
   assert.equal(play(start(), 'scammer').boards[0][0].copiedAbilityCardId, undefined);
 });
 
-test('copied Gamer and Boss Bae passives work on subsequent plays and respect silence', () => {
+test('copied Gamer On Reveal stays dormant while copied Boss Bae remains reactive', () => {
   let m = play({ ...start(), boards: [[boardCard('gamer')], [], []] }, 'scammer');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'gamer');
   m = play(m, 'cornball');
-  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.powerModifier, 1);
-  assert.equal(m.boards[0].find(c => c.cardId === 'cornball')?.powerModifier, 1);
-  m = { ...m, boards: m.boards.map(items => items.map(c => c.cardId === 'scammer' ? { ...c, statuses: { ...c.statuses, silenced: true } } : c)) as Match['boards'] };
-  m = play(m, 'cornball');
-  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.powerModifier, 1);
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.powerModifier, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'cornball')?.powerModifier, 0);
   m = play({ ...start(), boards: [[boardCard('bossbabe')], [], []] }, 'scammer');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'bossbabe');
   m = play(m, 'cornball', 1);
   m = play(m, 'cornball', 2);
   assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.networkBoosts, 2);
   assert.equal(m.discountTokens[0].eligibility, 'printed-four-plus');
 });
 
-test('copied Landlord, Sneaker Reseller, and Wifey passives remain active', () => {
+test('copied Landlord and Wifey remain ongoing while Sneaker On Reveal stays dormant', () => {
   let m = play({ ...start(), boards: [[boardCard('landlord')], [], []] }, 'scammer');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'landlord');
   assert.equal(getLegalCardCost(m, 'cpu', createCardInstance('cornball', 'cpu'), 0), 2);
   m = play({ ...start(), boards: [[boardCard('sneaker')], [], []] }, 'scammer');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'sneaker');
   const threat = createCardInstance('hooper', 'cpu', 'incoming');
   m = playCard({ ...m, phase: 'cpu-reveal', cpuHand: [threat] }, 'cpu', threat.instanceId, 1);
-  assert.equal(m.discountTokens.find(t => t.owner === 'player')?.eligibility, 'any');
+  assert.equal(m.discountTokens.find(t => t.owner === 'player'), undefined);
   m = play({ ...start(), boards: [[boardCard('wifey')], [], []] }, 'scammer');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'wifey');
   m = nextRound({ ...m, phase: 'resolved' });
   assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.protected, true);
-  const disruptor = createCardInstance('honestthot', 'cpu', 'hostile');
+  const disruptor = createCardInstance('snow', 'cpu', 'hostile');
   m = playCard({ ...m, phase: 'cpu-reveal', cpuHand: [disruptor], cpuMotion: 30 }, 'cpu', disruptor.instanceId, 0);
-  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.silenced, false);
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.frozen, false);
   assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.blocked, true);
 });
 
-test('copied Wifey protection prevents Cornball movement as well as direct disruption', () => {
+test('copied Wifey protection blocks the first Cornball Burn target', () => {
   let m = play({ ...start(), boards: [[boardCard('wifey')], [], []] }, 'scammer');
   m = { ...m, boards: [[...m.boards[0], boardCard('earthy', 'player'), boardCard('nguyen', 'player')], [], []] };
   m = nextRound({ ...m, phase: 'resolved' });
   const cornball = createCardInstance('cornball', 'cpu', 'hostile');
   m = playCard({ ...m, phase: 'cpu-reveal', cpuHand: [cornball], cpuMotion: 30 }, 'cpu', cornball.instanceId, 0);
-  assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.lane, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.burnStacks, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.statuses.burnStacks, 1);
   assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.statuses.blocked, true);
 });
 

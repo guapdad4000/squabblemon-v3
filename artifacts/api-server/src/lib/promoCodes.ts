@@ -7,16 +7,35 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN', PromoCodeReward> = {
   DEVTEST: { code: 'DEVTEST', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
   DEVTEST2: { code: 'DEVTEST2', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
   SIMMYFOODZ: { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] },
   CITYLEGENDS: { code: 'CITYLEGENDS', packTickets: 0, softCurrency: 40_000, styleShards: 0,
     cardIds: ['dragonfly-jones', 'sho-nuff', 'yasuke', 'mansa-musa', 'tron', 'john-henry', 'leroy'] },
+  // Wave 7 dev drop: grants Ashlee + Captain Jigga so internal testers can
+  // exercise Jet Set (Guyana summon) and Cabin Crew (Steward spawns) in live
+  // matches. Tokens are fabricated at runtime and never enter the catalog, so
+  // they're not part of this grant — they'll show up the moment the mythics
+  // resolve their abilities.
+  JETSETCABIN: { code: 'JETSETCABIN', packTickets: 25, softCurrency: 10_000, styleShards: 0,
+    cardIds: ['ashlee', 'captain-jigga'] },
 };
 
-export function findPromoCode(input: string) {
+type PromoCode = keyof typeof PROMO_CODES;
+const DEVELOPMENT_ONLY_PROMO_CODES: ReadonlySet<PromoCode> = new Set(['DEVTEST', 'DEVTEST2', 'JETSETCABIN']);
+
+export const isDevelopmentPromoCodeEnabled = (
+  environment: string | undefined = process.env.NODE_ENV,
+) => environment === 'development';
+
+export function findPromoCode(
+  input: string,
+  environment: string | undefined = process.env.NODE_ENV,
+) {
   const code = input.trim().toUpperCase();
   if (!Object.hasOwn(PROMO_CODES, code)) return null;
-  return PROMO_CODES[code as keyof typeof PROMO_CODES];
+  const promoCode = code as PromoCode;
+  if (DEVELOPMENT_ONLY_PROMO_CODES.has(promoCode) && !isDevelopmentPromoCodeEnabled(environment)) return null;
+  return PROMO_CODES[promoCode];
 }

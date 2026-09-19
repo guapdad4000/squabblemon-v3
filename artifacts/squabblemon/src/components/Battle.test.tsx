@@ -105,6 +105,37 @@ test('collection and deck card shells render progression for catalog ids', () =>
   assert.doesNotMatch(html, /<button/);
 });
 
+test('summoned token cards render with their own art instead of requiring a catalog rarity', () => {
+  const steward = {
+    id: 'steward', name: 'Steward', type: 'Air', cost: 0, power: 2,
+    ability: 'Cabin Service', effect: 'On Reveal: target an enemy for -1 Hand.',
+    kind: 'token' as const, abilityUpgrades: [],
+  };
+  const html = renderToStaticMarkup(<CardView card={steward} presentationOnly />);
+  assert.match(html, /data-card-kind="token"/);
+  assert.match(html, /data-card-rarity="Mythical"/);
+  assert.match(html, /assets\/characters\/steward\.webp/);
+});
+test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
+  const base = createMatch('block', 'combo').playerHand[0];
+  const card = {
+    ...base,
+    lane: 0 as const,
+    statuses: {
+      ...base.statuses,
+      burnStacks: 2,
+      weakened: true,
+      locked: true,
+      boosted: true,
+    },
+  };
+  const html = renderToStaticMarkup(<CardView card={card} isBoard presentationOnly />);
+  for (const status of ['burn', 'weakened', 'locked', 'boosted']) {
+    assert.match(html, new RegExp(`data-card-status="${status}"`));
+  }
+  assert.match(html, /aria-label="[^"]*Burning: 2 burn stacks\. Weakened\. Locked\. Boosted\./);
+});
+
 test('reward growth resolves catalog card ids and links newly eligible move training', () => {
   const match = createMatch('block', 'combo');
   const html = renderToStaticMarkup(

@@ -17,6 +17,7 @@ const TRANSPARENT_ALPHA_MAX = 16;
 const VISIBLE_ALPHA_MIN = 128;
 const MIN_TRANSPARENT_COVERAGE = 0.2;
 const MIN_VISIBLE_COVERAGE = 0.1;
+const SUMMON_ARTWORK_IDS = ['guyana', 'steward'] as const;
 
 type WebpMetadata = {
   width: number;
@@ -160,6 +161,25 @@ test("every catalog card and deck hero has one valid local character image", asy
       `${expectedFile} duplicates roster artwork from ${existingOwner}`,
     );
     contentOwners.set(digest, expectedFile);
+  }
+});
+
+test('summoned characters have cache-busted transparent artwork', async () => {
+  for (const artworkId of SUMMON_ARTWORK_IDS) {
+    const expectedFile = `${artworkId}.webp`;
+    const revision = (characterRevisions as Record<string, string>)[artworkId];
+    assert(revision, `${expectedFile} must have a cache revision`);
+    assert.equal(getCardImage(artworkId), `/assets/characters/${expectedFile}?v=${revision}`);
+
+    const bytes = await readFile(join(CHARACTER_DIRECTORY, expectedFile));
+    const metadata = readWebpMetadata(bytes);
+    assert(metadata.hasAlpha, `${expectedFile} must retain transparency`);
+    assertUsefulCutout(expectedFile, await readAlphaChannel(bytes));
+    assert(
+      metadata.width >= MIN_CHARACTER_WIDTH && metadata.height >= MIN_CHARACTER_HEIGHT,
+      `${expectedFile} is unexpectedly small (${metadata.width}x${metadata.height})`,
+    );
+    assert.equal(createHash('sha256').update(bytes).digest('hex').slice(0, 16), revision);
   }
 });
 

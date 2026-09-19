@@ -34,6 +34,7 @@ test("City Never Sleeps cards use deterministic reveal, protection, movement, an
   m = { ...m, phase: "cpu-reveal", cpuMotion: 20, cpuHand: [roaster], boards: m.boards.map(items => items.map(card => card.instanceId === church.instanceId ? { ...card, statuses: { ...card.statuses, frozen: true } } : card)) as Match["boards"] };
   m = playCard(m, "cpu", roaster.instanceId, 0);
   assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.powerModifier, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.statuses.burnStacks, 0);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 
   const carMeet = custom("carmeet", "player", 8), delivery = custom("delivery", "player", 9);
@@ -71,6 +72,7 @@ test("Church Auntie's Covered shield survives rounds until it blocks one hostile
   };
   m = playCard(m, "cpu", roaster.instanceId, 0);
   assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.statuses.burnStacks, 0);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 });
 
@@ -86,9 +88,10 @@ test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle 
   assert.equal(m.landlordTaxUsed.player[0], true);
 
   const reseller = custom("sneaker", "player", 22), og = custom("og", "cpu", 23);
-  m = { ...m, phase: "cpu-reveal", cpuHand: [og], cpuMotion: 20, boards: [[reseller], [], []] };
-  m = playCard(m, "cpu", og.instanceId, 0);
-  assert(m.sneakerTriggered.player && m.discountTokens.some(token => token.owner === "player"));
+  m = { ...m, phase: "player", playerHand: [reseller], playerMotion: 20, boards: [[og], [], []] };
+  m = playCard(m, "player", reseller.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === reseller.instanceId)?.powerModifier, og.basePower);
+  assert.equal(m.boards[0].find(card => card.instanceId === og.instanceId)?.statuses.weakened, true);
 
   const promoter = custom("promoter", "player", 24), handHigh = custom("og", "cpu", 25), handLow = custom("cornball", "cpu", 26);
   m = { ...m, phase: "player", playerHand: [promoter], cpuHand: [handHigh, handLow], playerMotion: 20 };
@@ -97,12 +100,14 @@ test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle 
   assert.match(m.effectLog.at(-1)?.note ?? "", /OG Uncle \(4 Motion\)/);
   assert(m.discountTokens.some(token => token.sourceInstanceId === promoter.instanceId));
 
-  const nail = custom("nail", "player", 27), target = custom("cornball", "player", 28), oink = custom("oink", "cpu", 29);
+  const nail = custom("nail", "player", 27), target = custom("hooper", "player", 28), roasterHit = custom("roaster", "cpu", 29);
   m = { ...m, phase: "player", playerHand: [nail], playerMotion: 20, boards: [[target], [], []] };
   m = playCard(m, "player", nail.instanceId, 0);
-  m = { ...m, phase: "cpu-reveal", cpuHand: [oink], cpuMotion: 20 };
-  m = playCard(m, "cpu", oink.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 2);
+  m = { ...m, phase: "cpu-reveal", cpuHand: [roasterHit], cpuMotion: 20 };
+  m = playCard(m, "cpu", roasterHit.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1);
+  assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.statuses.burnStacks, 2);
+  assert(!m.timedEffects.some(effect => effect.kind === "nail-mitigation"));
 });
 
 test('initial hands are stable, owner-specific instances', () => {
@@ -269,7 +274,7 @@ test('Wifey blocks one targeted effect and movement cards visibly move', () => {
   const victim = { ...custom('snow', 'cpu', 2), lane: 0 as const, powerModifier: 5 };
   const blocked = playOne('redpill', (m) => ({ ...m, boards: [[wifey, victim], [], []] }));
   assert(blocked.boards[0].find((c) => c.instanceId === wifey.instanceId)?.statuses.blocked);
-  assert(!blocked.boards[0].find((c) => c.instanceId === victim.instanceId)?.statuses.silenced);
+  assert.equal(blocked.boards[0].find((c) => c.instanceId === victim.instanceId)?.statuses.weakened, false);
   const bike = playOne('bikelife');
   const bikeOnBoard = bike.boards.flat().find((c) => c.cardId === 'bikelife')!;
   assert(bikeOnBoard.moved);
@@ -323,19 +328,29 @@ test('hostile abilities change real enemy cards and scoring', () => {
 
   const secondEnemy = { ...custom('plug', 'cpu', 21), lane: 0 as const };
   const pressured = playOne('oink', m => ({ ...m, boards: [[recentEnemy, secondEnemy], [], []] }));
-  assert(pressured.boards[0].filter(c => c.owner === 'cpu').every(c => c.powerModifier === -1));
+  assert(pressured.boards[0].filter(c => c.owner === 'cpu').every(c => c.statuses.weakened));
+  assert.equal(pressured.boards[0].find(c => c.cardId === 'oink')?.powerModifier, 2);
 });
 
 test('sustain and comeback abilities visibly cleanse and swing Hands', () => {
   const frozenAlly = {
     ...custom('snow', 'player', 30),
     lane: 0 as const,
-    statuses: { frozen: true, silenced: false, protected: false, blocked: false },
+    powerModifier: 3,
+    statuses: {
+      ...custom('snow', 'player', 30).statuses,
+      frozen: true, silenced: true, weakened: true, locked: true, boosted: true, burnStacks: 2,
+    },
   };
   const cured = playOne('rastamon', m => ({ ...m, boards: [[frozenAlly], [], []] }));
   const clean = cured.boards[0].find(c => c.instanceId === frozenAlly.instanceId)!;
-  assert(!clean.statuses.frozen);
-  assert.equal(clean.powerModifier, 2);
+  assert.equal(clean.statuses.frozen, false);
+  assert.equal(clean.statuses.silenced, false);
+  assert.equal(clean.statuses.weakened, false);
+  assert.equal(clean.statuses.locked, false);
+  assert.equal(clean.statuses.burnStacks, 0);
+  assert.equal(clean.statuses.boosted, true, 'cleanse preserves friendly buffs');
+  assert.equal(clean.powerModifier, 5, 'cleanse preserves existing Hands before Rastamon adds +2');
 
   const enemyA = { ...custom('wifey', 'cpu', 31), lane: 0 as const };
   const enemyB = { ...custom('baby', 'cpu', 32), lane: 0 as const };
@@ -351,8 +366,8 @@ test('sustain and comeback abilities visibly cleanse and swing Hands', () => {
 test('movement and engine cards keep their persistent board changes', () => {
   const enemies = [0, 1, 2].map(i => ({ ...custom(i === 0 ? 'plug' : i === 1 ? 'snow' : 'vibe', 'cpu', 40 + i), lane: 0 as const }));
   const scared = playOne('cornball', m => ({ ...m, boards: [[...enemies], [], []] }));
-  assert.equal(scared.boards[1].filter(c => c.owner === 'cpu').length, 1);
-  assert(scared.boards[1][0].moved);
+  assert.equal(scared.boards[0].filter(c => c.owner === 'cpu').length, 3);
+  assert(scared.boards[0].filter(c => c.owner === 'cpu').every(c => c.statuses.burnStacks === 1));
 
   const streamer = { ...custom('streamer', 'player', 50), lane: 0 as const };
   let frenzy = createMatch('combo', 'vibes');
@@ -360,12 +375,13 @@ test('movement and engine cards keep their persistent board changes', () => {
   frenzy = playCard(frenzy, 'player', frenzy.playerHand[0].instanceId, 0);
   assert.equal(frenzy.boards[0].find(c => c.cardId === 'cornball')?.powerModifier, 1);
 
-  const gamer = { ...custom('gamer', 'player', 52), lane: 0 as const };
+  const gamer = custom('gamer', 'player', 52);
+  const remotePlug = { ...custom('plug', 'player', 53), lane: 1 as const };
   let combo = createMatch('combo', 'vibes');
-  combo = { ...combo, playerMotion: 10, playerHand: [custom('plug', 'player', 53)], boards: [[gamer], [], []] };
-  combo = playCard(combo, 'player', combo.playerHand[0].instanceId, 0);
-  assert.equal(combo.boards[0].find(c => c.instanceId === gamer.instanceId)?.powerModifier, 1);
-  assert.equal(combo.boards[0].find(c => c.cardId === 'plug')?.powerModifier, 1);
+  combo = { ...combo, playerMotion: 10, playerHand: [gamer], boards: [[], [remotePlug], []] };
+  combo = playCard(combo, 'player', gamer.instanceId, 0);
+  assert.equal(combo.boards[0].find(c => c.instanceId === gamer.instanceId)?.powerModifier, 0);
+  assert.equal(combo.boards[1].find(c => c.instanceId === remotePlug.instanceId)?.powerModifier, 1);
 
   const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6, boards: [[streamer], [], []] }));
   assert.equal(flexed.playerMotion, 2);
@@ -464,10 +480,102 @@ test('blocked targeted effects record both intended target and protecting Wifey'
   const ability = match.effectLog.at(-1)!;
   assert.equal(ability.type, 'ability');
   assert.deepEqual(new Set(ability.targets.map(target => target.cardInstanceId)), new Set([wifey.instanceId, victim.instanceId]));
-  assert.equal(ability.targets.find(target => target.cardInstanceId === victim.instanceId)?.after?.statuses.silenced, false);
+  assert.equal(ability.targets.find(target => target.cardInstanceId === victim.instanceId)?.after?.statuses.weakened, false);
   assert.equal(ability.targets.find(target => target.cardInstanceId === wifey.instanceId)?.after?.statuses.blocked, true);
 });
 
+test('Burn, Weaken, and Lock consume direct shields and respect Side Eye', () => {
+  const cases = [
+    { sourceId: 'youngbull', status: 'burnStacks' },
+    { sourceId: 'redpill', status: 'weakened' },
+    { sourceId: 'mural', status: 'locked' },
+  ] as const;
+  const statusValue = (card: ReturnType<typeof custom>, status: typeof cases[number]['status']) =>
+    status === 'burnStacks' ? card.statuses.burnStacks : card.statuses[status];
+
+  for (const [index, effect] of cases.entries()) {
+    const source = custom(effect.sourceId, 'player', 200 + index * 10);
+    const victim = { ...custom('hooper', 'cpu', 201 + index * 10), lane: 0 as const, powerModifier: 5 };
+    const setupAlly = effect.sourceId === 'mural' ? { ...custom('cornball', 'player', 202 + index * 10), lane: 0 as const } : null;
+    victim.statuses.protected = true;
+    let direct: Match = {
+      ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [source],
+      boards: [[...(setupAlly ? [setupAlly] : []), victim], [], []],
+      timedEffects: [{ id: `cover:${index}`, kind: 'church-protection', sourceInstanceId: 'church', targetInstanceId: victim.instanceId, owner: 'cpu', lane: 0, startsAtRound: 1, expiresAtRound: 7, expiration: 'match-complete' }],
+    };
+    direct = playCard(direct, 'player', source.instanceId, 0);
+    const directlyShielded = direct.boards[0].find(card => card.instanceId === victim.instanceId)!;
+    assert.equal(statusValue(directlyShielded, effect.status), effect.status === 'burnStacks' ? 0 : false);
+    assert.equal(direct.timedEffects.some(item => item.id === `cover:${index}`), false);
+
+    const guardedSource = custom(effect.sourceId, 'player', 205 + index * 10);
+    const guardedVictim = { ...custom('hooper', 'cpu', 206 + index * 10), lane: 0 as const, powerModifier: 5 };
+    const guard = { ...custom('wifey', 'cpu', 207 + index * 10), lane: 0 as const };
+    guard.statuses.protected = true;
+    const guardedAlly = effect.sourceId === 'mural' ? { ...custom('cornball', 'player', 208 + index * 10), lane: 0 as const } : null;
+    const guarded = playCard({
+      ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [guardedSource],
+      boards: [[...(guardedAlly ? [guardedAlly] : []), guard, guardedVictim], [], []],
+    }, 'player', guardedSource.instanceId, 0);
+    const laneShielded = guarded.boards[0].find(card => card.instanceId === guardedVictim.instanceId)!;
+    assert.equal(statusValue(laneShielded, effect.status), effect.status === 'burnStacks' ? 0 : false);
+    assert.equal(guarded.boards[0].find(card => card.instanceId === guard.instanceId)?.statuses.blocked, true);
+  }
+});
+
+test('round-end statuses and hand bonds persist into the next round and final scoring', () => {
+  const resolvedAt = (round: number) => {
+    const burned = { ...custom('hooper', 'cpu', 300 + round), lane: 0 as const };
+    burned.statuses.burnStacks = 2;
+    const boosted = { ...custom('cornball', 'player', 310 + round), lane: 0 as const };
+    boosted.statuses.boosted = true;
+    const bonded = { ...custom('roaster', 'player', 320 + round), lane: 1 as const };
+    const bond = custom('honestthot', 'player', 330 + round);
+    const match: Match = {
+      ...createMatch('vibes', 'vibes'), round, phase: 'resolved', playerHand: [bond],
+      boards: [[burned, boosted], [bonded], []],
+    };
+    return { match, burned, boosted, bonded, bond };
+  };
+
+  for (const round of [5, 6]) {
+    const { match, burned, boosted, bonded, bond } = resolvedAt(round);
+    assert.equal(bond.elementalBond, 'Air');
+    const after = nextRound(match);
+    assert.equal(after.phase, round === 6 ? 'complete' : 'player');
+    assert.equal(after.boards.flat().find(card => card.instanceId === burned.instanceId)?.powerModifier, -2);
+    assert.equal(after.boards.flat().find(card => card.instanceId === burned.instanceId)?.statuses.burnStacks, 0);
+    assert.equal(after.boards.flat().find(card => card.instanceId === boosted.instanceId)?.powerModifier, 1);
+    assert.equal(after.boards.flat().find(card => card.instanceId === boosted.instanceId)?.statuses.boosted, true);
+    assert.equal(after.boards.flat().find(card => card.instanceId === bonded.instanceId)?.powerModifier, 1);
+  }
+});
+
+test('all pure hand bonds activate trained tiers zero through three on characters only', () => {
+  const bondCases = [
+    ['honestthot', 'roaster'], ['abuela', 'pinaynurse'], ['icecream', 'vibe'],
+    ['gardener', 'rastamon'], ['incel', 'gamer'], ['torta', 'manman'], ['concrete', 'landlord'],
+  ] as const;
+  for (const [caseIndex, [bondId, targetId]] of bondCases.entries()) {
+    assert(cards[bondId].effect.startsWith('Ongoing:'));
+    assert(cards[bondId].abilityUpgrades.every(upgrade => upgrade.description.includes('bonded ally')));
+    for (let tier = 0; tier <= 3; tier++) {
+      const bond = custom(bondId, 'player', 400 + caseIndex * 10 + tier);
+      const target = { ...custom(targetId, 'player', 500 + caseIndex * 10 + tier), lane: 0 as const };
+      const support = { ...custom('subwaymap', 'player', 600 + caseIndex * 10 + tier), lane: 0 as const };
+      const match: Match = {
+        ...createMatch('vibes', 'vibes'), round: 6, phase: 'resolved', playerHand: [bond],
+        boards: [[target, ...(bondId === 'honestthot' ? [support] : [])], [], []],
+        abilityUpgradeSnapshot: createAbilityUpgradeSnapshot([bondId], [], {
+          player: { [bondId]: { xp: 2800, level: 8, moveTier: tier } },
+        }),
+      };
+      const after = nextRound(match);
+      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1 + tier, `${bondId} tier ${tier}`);
+      if (bondId === 'honestthot') assert.equal(after.boards[0].find(card => card.instanceId === support.instanceId)?.powerModifier, 0);
+    }
+  }
+});
 test('movement abilities are move events with authoritative lane snapshots', () => {
   const bike = playOne('bikelife');
   const bikeMove = bike.effectLog.at(-1)!;
@@ -487,10 +595,10 @@ test('movement abilities are move events with authoritative lane snapshots', () 
 
   const enemies = [0, 1, 2].map(index => ({ ...custom('snow', 'cpu', 80 + index), lane: 0 as const }));
   const cornball = playOne('cornball', m => ({ ...m, boards: [[...enemies], [], []] }));
-  const cornballMove = cornball.effectLog.at(-1)!;
-  assert.equal(cornballMove.kind, 'move');
-  assert.equal(cornballMove.targets[0].before?.lane, 0);
-  assert.equal(cornballMove.targets[0].after?.lane, 1);
+  const cornballBurn = cornball.effectLog.at(-1)!;
+  assert.equal(cornballBurn.kind, 'ability');
+  assert.equal(cornballBurn.targets.length, 3);
+  assert(cornballBurn.targets.every(target => target.before?.lane === 0 && target.after?.statuses.burnStacks === 1));
 });
 
 test('Wifey protection has deterministic round duration, expiration, and renewal', () => {

@@ -102,7 +102,7 @@ test('chroma removal makes cyan transparent while preserving white, skin and bla
   keyChromaPixels(green, 'green'); assert.equal(green[3], 0);
 });
 
-test('Wave 5 covers all twenty expansion characters with their printed moves and original rarity split', () => {
+test('Wave 5 covers all twenty expansion characters with their current printed moves and rarity split', () => {
   const wave = { bodegacat: 'char71', crossingguard: 'char72', laundry: 'char73', busker: 'char74', cornercoach: 'char75', nightcashier: 'char76', dogwalker: 'char77', mural: 'char78', chessregular: 'char79', gardener: 'char80', piratedj: 'char81', dancecaptain: 'char82', nightmedic: 'char83', subwaymagician: 'char84', ogdominican: 'char85', conductor: 'char86', midnightmayor: 'char87', bigzoey: 'char88', leroy: 'char89', partytitan: 'char90' };
   const rarities: Record<string, number> = {};
   for (const [id, clipId] of Object.entries(wave)) {
@@ -117,17 +117,17 @@ test('Wave 5 covers all twenty expansion characters with their printed moves and
     const rarity = cardCatalog.find(card => card.engineId === id)!.rarity;
     rarities[rarity] = (rarities[rarity] ?? 0) + 1;
   }
-  assert.deepEqual(rarities, { Common: 10, Rare: 5, Mythical: 5 });
+  assert.deepEqual(rarities, { Common: 8, Uncommon: 2, Epic: 1, Rare: 4, Mythical: 4, Legendary: 1 });
 });
 
-test('Wave 6 covers the six creator Mythicals with their printed moves and refreshed rarity split', () => {
+test('Wave 6 covers the six original City Legends with their printed moves and current rarity', () => {
   const wave: Record<string, { clipId: string; rarity: string }> = {
-    johnhenry: { clipId: 'char94', rarity: 'Rare' },
-    yasuke: { clipId: 'char95', rarity: 'Rare' },
-    dragonflyjones: { clipId: 'char96', rarity: 'Common' },
-    tron: { clipId: 'char97', rarity: 'Uncommon' },
+    johnhenry: { clipId: 'char94', rarity: 'Mythical' },
+    yasuke: { clipId: 'char95', rarity: 'Mythical' },
+    dragonflyjones: { clipId: 'char96', rarity: 'Legendary' },
+    tron: { clipId: 'char97', rarity: 'Legendary' },
     mansamusa: { clipId: 'char98', rarity: 'Legendary' },
-    shonuff: { clipId: 'char99', rarity: 'Rare' },
+    shonuff: { clipId: 'char99', rarity: 'Legendary' },
   };
   const rarities: Record<string, number> = {};
   for (const [id, expected] of Object.entries(wave)) {
@@ -141,7 +141,21 @@ test('Wave 6 covers the six creator Mythicals with their printed moves and refre
     assert.equal(rarity, expected.rarity, `${id} rarity should be ${expected.rarity}`);
     rarities[rarity] = (rarities[rarity] ?? 0) + 1;
   }
-  assert.deepEqual(rarities, { Common: 1, Uncommon: 1, Rare: 3, Legendary: 1 });
+  assert.deepEqual(rarities, { Mythical: 2, Legendary: 4 });
+});
+
+test('Wave 7 maps Ashlee and Captain Jigga clips while Counter uses an explicit fallback', () => {
+  for (const [id, clipId] of [['ashlee', 'char100'], ['captainjigga', 'char101']] as const) {
+    const clip = resolveSpecialMove(id);
+    assert.equal(clip?.id, clipId);
+    assert.equal(clip?.label, cards[id].name);
+    assert.equal(clip?.move, cards[id].ability);
+    assert.equal(cardCatalog.find(card => card.engineId === id)?.rarity, 'Mythical');
+    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
+  }
+  assert.equal(moveAssignments.counter, null);
+  assert.equal(resolveSpecialMove('counter'), null);
+  assert.equal(cardCatalog.find(card => card.engineId === 'counter')?.rarity, 'Mythical');
 });
 
 test('play-once gate suppresses repeated chroma playback per fighter while keeping the procedural effect', () => {

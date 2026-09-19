@@ -8,6 +8,9 @@ export const MYTHIC_LEGENDS = [
   ['mansamusa', 'mansa-musa', 'Mansa Musa', 'Earth', 5, 5, 'Gold Road', 'Give your lowest-Hands other ally in each district +1 Hands. Your next card in another district costs 1 less Motion.', 'Support'],
   ['tron', 'tron', 'TRON', 'Electric', 3, 3, 'For the Hood', 'Give up to three lowest-Hands other friendly characters here +1 Hands each. If at least two gained Hands, restore 1 Motion.', 'Support'],
   ['johnhenry', 'john-henry', 'John Henry', 'Rock', 5, 5, 'Steel Driver', 'Gain +1 Hands for each other friendly character here, up to +3. If at least two are here, give the highest-Hands enemy -1 Hands.', 'Pressure'],
+  ['ashlee', 'ashlee', 'Ashlee', 'Air', 5, 4, 'Jet Set', 'Drop Guyana the gorilla (+4, uncounterable) into your weakest friendly district. Give every other friendly character in Ashlee\'s district +1 Hand. Give the highest-Hands enemy on the board -1 Hand.', 'Pressure'],
+  ['captainjigga', 'captain-jigga', 'Captain Jigga', 'Air', 5, 4, 'Cabin Crew', 'Send two 2-Hand Steward tokens. Each targets a different highest-Hands enemy for -1 Hand.', 'Disruption'],
+  ['counter', 'counter', 'Counter', 'Dark', 4, 3, 'Mirror', 'Gain +X Hands where X is the printed cost of the highest-cost enemy on the board (up to +4). Apply Protect to Counter for the match.', 'Disruption'],
 ] as const;
 
 export const mythicLegendRarities: Record<string, CardRarity> = Object.fromEntries(
@@ -15,15 +18,25 @@ export const mythicLegendRarities: Record<string, CardRarity> = Object.fromEntri
 );
 
 export const mythicLegendUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(
-  MYTHIC_LEGENDS.map(([id]) => [id, [0, 1, 2].map(() => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }))]),
+  MYTHIC_LEGENDS.map(([id]) => [id, id === 'ashlee'
+    ? [{ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }, { kind: 'target-power' as const, amount: 1 as const, target: 'friendly' as const, trigger: 'base-success' as const }, { kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }]
+    : id === 'captainjigga'
+      ? [{ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }, { kind: 'target-power' as const, amount: -1 as const, target: 'enemy' as const, trigger: 'base-success' as const }, { kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }]
+      : [0, 1, 2].map(() => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const }))]),
 );
 
 export const mythicLegendCards: Record<string, Card> = Object.fromEntries(MYTHIC_LEGENDS.map(
   ([engineId, id, name, type, cost, power, ability, effect, role]) => [engineId, {
-    id, name, type, cost, power, ability, effect: `On Reveal: ${effect}`, kind: 'character', roles: [role],
+    id, name, type, cost, power, ability,
+    effect: /^(On Reveal|Ongoing):/.test(effect) ? effect : `On Reveal: ${effect}`,
+    kind: 'character', roles: [role],
     abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({
       id: `${engineId}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
-      description: 'After the base ability succeeds, this card gains +1 Hands.',
+      description: mythicLegendUpgradeEffects[engineId][index].kind === 'target-power'
+        ? mythicLegendUpgradeEffects[engineId][index].target === 'friendly'
+          ? 'After the base ability succeeds, one affected ally gains +1 Hand.'
+          : 'After the base ability succeeds, one affected enemy loses 1 Hand.'
+        : 'After the base ability succeeds, this card gains +1 Hand.',
       unlockLevel, effect: mythicLegendUpgradeEffects[engineId][index],
     })),
   }],
