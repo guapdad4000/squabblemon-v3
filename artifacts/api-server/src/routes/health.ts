@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { GetDeploymentIdentityResponse, HealthCheckResponse } from "@workspace/api-zod";
-import { db } from "@workspace/db";
+import { db, resolvedDatabaseConnectionString } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import {
   deployedEnvironmentIdentity,
@@ -16,7 +16,11 @@ const databaseReadiness: ReadinessProbe = async () => {
 };
 
 const runtimeDeploymentIdentity: DeploymentIdentityProbe = () =>
-  deployedEnvironmentIdentity(process.env, currentDeploymentContext());
+  deployedEnvironmentIdentity(
+    process.env,
+    currentDeploymentContext(),
+    resolvedDatabaseConnectionString(),
+  );
 
 async function boundedProbe(
   probe: ReadinessProbe,

@@ -41,6 +41,7 @@ export function databaseIdentity(connectionString: string | undefined): string {
 export function deployedEnvironmentIdentity(
   environment: NodeJS.ProcessEnv = process.env,
   runtime?: RuntimeDeploymentContext,
+  resolvedDatabaseUrl = environment.DATABASE_URL,
 ): DeploymentIdentity {
   const context = runtime?.context ?? environment.CONTEXT;
   if (context !== "production" && !previewContexts.has(context ?? "")) {
@@ -99,7 +100,7 @@ export function deployedEnvironmentIdentity(
     context: context as DeploymentIdentity["context"],
     deployId,
     origin,
-    databaseFingerprint: databaseIdentity(environment.DATABASE_URL),
+    databaseFingerprint: databaseIdentity(resolvedDatabaseUrl),
     clerkEnvironment,
   };
 }

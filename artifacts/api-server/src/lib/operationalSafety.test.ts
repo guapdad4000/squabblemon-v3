@@ -124,6 +124,21 @@ test("deployment identity uses trusted runtime deploy values and request origin"
     databaseFingerprint: databaseIdentity(databaseUrl),
     clerkEnvironment: "test",
   });
+  assert.deepEqual(
+    deployedEnvironmentIdentity(
+      { ...environment, DATABASE_URL: undefined },
+      runtime,
+      databaseUrl,
+    ),
+    {
+      environment: "staging",
+      context: "deploy-preview",
+      deployId: "deploy-123",
+      origin: "https://deploy-123.example.netlify.app",
+      databaseFingerprint: databaseIdentity(databaseUrl),
+      clerkEnvironment: "test",
+    },
+  );
   assert.throws(
     () =>
       deployedEnvironmentIdentity(
