@@ -281,6 +281,16 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Ability + stats hero block (the first thing the eye lands on)       */
+/* ------------------------------------------------------------------ */
+.dossier-ability-stats {
+  margin: 14px 0 18px;
+}
+.dossier-ability-stats .dossier-stats {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
 /* Stat strip (cost / power / class / faction)                         */
 /* ------------------------------------------------------------------ */
 .dossier-stats {
@@ -345,7 +355,7 @@
 /* ------------------------------------------------------------------ */
 .dossier-sticky {
   position: relative;
-  margin: 18px 0 14px;
+  margin: 0 0 12px;
   padding: 22px 22px 20px;
   background: #ffe98a;
   color: #2b2114;
@@ -700,6 +710,12 @@
   padding: clamp(54px, 6vh, 74px) clamp(14px, 4vw, 48px) max(24px, env(safe-area-inset-bottom));
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
+  /* Tall viewports: keep things on-screen, no dialog scrolling */
+  align-items: center;
+}
+/* Short viewports fall back to scrolling inside the shell */
+@media (max-height: 760px) {
+  .card-inspector-shell { align-items: flex-start; overflow-y: auto; }
 }
 body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
   opacity: 0;

@@ -78,6 +78,8 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...supportUpgradeEffects,
   ...streetWaveUpgradeEffects,
   ...mythicLegendUpgradeEffects,
+  ashlee: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
+  captainjigga: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -261,6 +263,8 @@ export const rarityByEngineId = {
   tron: "Uncommon",
   mansamusa: "Legendary",
   shonuff: "Rare",
+  ashlee: "Mythical",
+  captainjigga: "Mythical",
   ...supportRarities,
   guap: "Mythical",
   ...expansionRarities,
@@ -349,6 +353,8 @@ const factionByEngineId: Record<string, string> = {
   nail: "City Never Sleeps",
   og: "Old Heads Know",
   delivery: "Side Show",
+  ashlee: "City Legends",
+  captainjigga: "City Legends",
 };
 
 const sourceByEngineId: Record<string, string[]> = {

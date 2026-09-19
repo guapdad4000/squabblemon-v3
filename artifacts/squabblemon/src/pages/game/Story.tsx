@@ -1,7 +1,6 @@
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, ChevronUp, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
-import { ProgressRing } from '../../components/venue/ProgressRing';
+import { ArrowLeft, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
@@ -84,7 +83,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
-  const [headerCollapsed, setHeaderCollapsed] = useState(false);
+  const [rewardsOpen, setRewardsOpen] = useState(false);
 
   const campaign = storyQuery.data;
   useEffect(() => {
@@ -175,21 +174,189 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
-  return <div className={`studio-page story-atlas ${headerCollapsed ? 'is-header-collapsed' : ''}`}>
-    <header className="story-atlas__header"><div><Link href="/game" className="story-atlas__back" aria-label="Back to Safehouse"><ArrowLeft size={14}/> Safehouse</Link><nav className="studio-tabs" aria-label="Chapters">{campaign.chapters.map(chapter=><button key={chapter.id} disabled={chapter.status==='locked'} aria-pressed={chapter.id===currentChapter?.id} onClick={()=>setActiveChapterId(chapter.id)}>Chapter {chapter.order || 1}{chapter.status==='locked' && <LockKeyhole size={10}/>}</button>)}</nav><span className="studio-eyebrow">{currentChapter?.subtitle}</span><h1>{currentChapter?.title}</h1></div><aside className="story-atlas__header__plate" aria-label="Now showing"><img src={getAssetUrl('brand/story-cinematic/film-reel.jpg')} alt="" aria-hidden="true" /><span className="story-atlas__header__plate__copy"><small>Now showing</small><strong>Reel 0{(currentChapter?.order ?? 1).toString().padStart(2, '0')} · {currentChapter?.title}</strong></span></aside><div className="story-atlas__progress"><ProgressRing value={currentChapter?.completedRequiredNodes ?? 0} max={currentChapter?.totalRequiredNodes ?? 1} label="Chapter progress"/><span>Chapter progress<small>Boss {currentChapter?.bossStatus}</small></span></div><button type="button" className="story-atlas__collapse" aria-label={headerCollapsed ? 'Expand chapter header' : 'Collapse chapter header'} aria-expanded={!headerCollapsed} onClick={()=>setHeaderCollapsed(value=>!value)}><ChevronUp size={16}/></button></header>
-    <div ref={mapViewport} className="story-atlas__viewport" aria-label="Campaign map. Scroll to explore the territory."><div className="story-atlas__terrain" style={{backgroundImage:`url("${getAssetUrl(currentChapter?.mapAssetId || '')}")`}}><div className="story-atlas__wash"/><img src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.35,mixBlendMode:'screen',pointerEvents:'none',zIndex:0}} />
-      <svg className="story-atlas__routes" aria-hidden="true">{nodes.flatMap(node=>node.prerequisites.map(id=>{const parent=nodes.find(n=>n.nodeId===id);return parent ? <line key={`${id}-${node.nodeId}`} x1={`${parent.mapPosition.x}%`} y1={`${parent.mapPosition.y}%`} x2={`${node.mapPosition.x}%`} y2={`${node.mapPosition.y}%`} stroke={node.status==='locked' ? 'rgba(240,179,90,0.18)' : 'rgba(240,179,90,0.7)'} strokeWidth={node.status==='locked' ? 1 : 2} strokeDasharray={node.status==='locked' ? '3 7' : undefined}/> : null;}))}</svg>
-      {nodes.map(node=>{const locked=node.status==='locked',cleared=node.status==='cleared',isNext=node.nodeId===campaign.recommendedNodeId;const content=getStoryNode(node.nodeId);const boss=content?.kind==='battle' && ['boss','mini-boss'].includes(content.battleType);return <button key={node.nodeId} type="button" aria-disabled={locked} aria-label={`${node.title}, ${node.status}`} onClick={()=>{if(!locked)setSelectedNodeId(node.nodeId);}} className={`story-atlas__node ${isNext?'is-next':''} ${boss?'is-boss':''} ${locked?'is-locked':''} ${cleared?'is-cleared':''} ${node.optional?'is-optional':''}`} style={{left:`${node.mapPosition.x}%`,top:`${node.mapPosition.y}%`}}>
-        <span className="story-atlas__marker">{boss && content?.kind==='battle' ? <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt=""/> : locked ? <LockKeyhole size={15}/> : cleared ? <Check size={20}/> : node.kind==='battle' ? <GameGlyph name="fight"/> : <MessageCircle size={19}/>} {boss && <Crown className="story-atlas__crown" size={15}/>}</span>
-        <span className="story-atlas__label"><strong>{node.title}</strong><small>{locked ? 'Locked' : isNext ? 'Up next' : node.optional ? 'Side story' : cleared ? 'Cleared' : 'Available'}</small></span>
-        {node.kind==='battle' && <span className="story-atlas__stars" aria-label={`${node.stars} of 3 stars`}>{[1,2,3].map(n=><Star key={n} size={9} fill={n<=node.stars ? 'currentColor' : 'none'} style={{opacity:n<=node.stars ? 1 : .3}}/>)}</span>}
-      </button>;})}
-    </div></div>
-    <footer className="story-atlas__footer"><div><span className="studio-eyebrow">{recommended ? 'Next reel · up now' : 'Standing by · director cut'}</span><strong>{recommended?.title ?? 'Explore the block. Perfect your story.'}</strong><span className="story-atlas__hint">Select a marker to enter · Scroll to explore</span></div>{recommended && <button className="studio-action studio-action--gold" onClick={()=>setSelectedNodeId(recommended.nodeId)}>Roll camera<ArrowRight size={15}/></button>}
-      {currentChapter && chapterContent && <details className="story-atlas__tickets"><summary aria-label="Chapter ticket rewards"><Ticket size={18}/><span>Rewards</span></summary><div><ChapterTicketProgress chapter={chapterContent} nodeProgressById={Object.fromEntries(campaign.nodes.map(node=>[node.nodeId,{stars:node.stars,cleared:node.cleared}]))} onSelectBattle={nodeId=>{const progress=campaign.nodes.find(node=>node.nodeId===nodeId);if(progress?.status!=='locked')setSelectedNodeId(nodeId);}}/></div></details>}
-    </footer>
-    <AnimatePresence>{selectedNodeId && <NodeOverlay nodeId={selectedNodeId} campaign={campaign} onClose={()=>{setSelectedNodeId(null);if(window.location.search)setLocation('/game/story',{replace:true});}} onStartBattle={nodeId=>setLocation(`/game/story/play/${nodeId}`)}/>}</AnimatePresence>
-  </div>;
+  return (
+    <div className="studio-page story-atlas">
+      <header className="story-atlas__header">
+        <Link href="/game" className="story-atlas__back" aria-label="Back to Safehouse">
+          <ArrowLeft size={14} /> Safehouse
+        </Link>
+        <nav className="story-reels" aria-label="Chapters">
+          {campaign.chapters.map((chapter) => {
+            const active = chapter.id === currentChapter?.id;
+            return (
+              <button
+                key={chapter.id}
+                type="button"
+                disabled={chapter.status === 'locked'}
+                aria-pressed={active}
+                aria-current={active ? 'true' : undefined}
+                onClick={() => setActiveChapterId(chapter.id)}
+                className={`story-reel ${active ? 'is-active' : ''} ${chapter.status === 'locked' ? 'is-locked' : ''}`}
+              >
+                <span className="story-reel__sprockets" aria-hidden="true" />
+                <span className="story-reel__label">
+                  <small>Chapter {String(chapter.order || 1).padStart(2, '0')}</small>
+                  <strong>{chapter.title}</strong>
+                </span>
+                {chapter.status === 'locked' && <LockKeyhole size={11} className="story-reel__lock" />}
+              </button>
+            );
+          })}
+        </nav>
+        <h1 className="story-title">{currentChapter?.title}</h1>
+      </header>
+
+      <div ref={mapViewport} className="story-atlas__viewport" aria-label="Campaign map. Scroll to explore the territory.">
+        <div className="story-atlas__terrain" style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}>
+          <div className="story-atlas__wash" />
+          <img
+            src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')}
+            alt=""
+            aria-hidden="true"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, mixBlendMode: 'screen', pointerEvents: 'none', zIndex: 0 }}
+          />
+          <svg className="story-atlas__routes" aria-hidden="true">
+            {nodes.flatMap((node) =>
+              node.prerequisites.map((id) => {
+                const parent = nodes.find((n) => n.nodeId === id);
+                return parent ? (
+                  <line
+                    key={`${id}-${node.nodeId}`}
+                    x1={`${parent.mapPosition.x}%`}
+                    y1={`${parent.mapPosition.y}%`}
+                    x2={`${node.mapPosition.x}%`}
+                    y2={`${node.mapPosition.y}%`}
+                    stroke={node.status === 'locked' ? 'rgba(240,179,90,0.18)' : 'rgba(240,179,90,0.7)'}
+                    strokeWidth={node.status === 'locked' ? 1 : 2}
+                    strokeDasharray={node.status === 'locked' ? '3 7' : undefined}
+                  />
+                ) : null;
+              }),
+            )}
+          </svg>
+          {nodes.map((node) => {
+            const locked = node.status === 'locked';
+            const cleared = node.status === 'cleared';
+            const isNext = node.nodeId === campaign.recommendedNodeId;
+            const content = getStoryNode(node.nodeId);
+            const boss = content?.kind === 'battle' && ['boss', 'mini-boss'].includes(content.battleType);
+            return (
+              <button
+                key={node.nodeId}
+                type="button"
+                aria-disabled={locked}
+                aria-label={`${node.title}, ${node.status}`}
+                onClick={() => {
+                  if (!locked) setSelectedNodeId(node.nodeId);
+                }}
+                className={`story-atlas__node ${isNext ? 'is-next' : ''} ${boss ? 'is-boss' : ''} ${locked ? 'is-locked' : ''} ${cleared ? 'is-cleared' : ''} ${node.optional ? 'is-optional' : ''}`}
+                style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
+              >
+                <span className="story-atlas__marker">
+                  {boss && content?.kind === 'battle' ? (
+                    <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
+                  ) : locked ? (
+                    <LockKeyhole size={15} />
+                  ) : cleared ? (
+                    <Check size={20} />
+                  ) : node.kind === 'battle' ? (
+                    <GameGlyph name="fight" />
+                  ) : (
+                    <MessageCircle size={19} />
+                  )}
+                  {boss && <Crown className="story-atlas__crown" size={15} />}
+                </span>
+                <span className="story-atlas__label">
+                  <strong>{node.title}</strong>
+                  <small>
+                    {locked ? 'Locked' : isNext ? 'Up next' : node.optional ? 'Side story' : cleared ? 'Cleared' : 'Available'}
+                  </small>
+                </span>
+                {node.kind === 'battle' && (
+                  <span className="story-atlas__stars" aria-label={`${node.stars} of 3 stars`}>
+                    {[1, 2, 3].map((n) => (
+                      <Star key={n} size={9} fill={n <= node.stars ? 'currentColor' : 'none'} style={{ opacity: n <= node.stars ? 1 : 0.3 }} />
+                    ))}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        {currentChapter && chapterContent && (
+          <button
+            type="button"
+            className="story-atlas__rewards-fab"
+            onClick={() => setRewardsOpen(true)}
+            aria-label="Open chapter ticket rewards"
+          >
+            <Ticket size={14} />
+            <span>Rewards</span>
+          </button>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {rewardsOpen && currentChapter && chapterContent && (
+          <motion.div
+            key="rewards"
+            className="story-atlas__rewards-panel"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            role="dialog"
+            aria-label="Chapter ticket rewards"
+          >
+            <div className="story-atlas__rewards-panel__head">
+              <span className="story-atlas__rewards-panel__title">
+                <Ticket size={14} />
+                <strong>Chapter rewards</strong>
+                <em>{currentChapter.title}</em>
+              </span>
+              <button
+                type="button"
+                className="story-atlas__rewards-panel__close"
+                onClick={() => setRewardsOpen(false)}
+                aria-label="Close rewards"
+              >
+                ×
+              </button>
+            </div>
+            <div className="story-atlas__rewards-panel__body">
+              <ChapterTicketProgress
+                chapter={chapterContent}
+                nodeProgressById={Object.fromEntries(
+                  campaign.nodes.map((node) => [node.nodeId, { stars: node.stars, cleared: node.cleared }]),
+                )}
+                onSelectBattle={(nodeId) => {
+                  const progress = campaign.nodes.find((node) => node.nodeId === nodeId);
+                  if (progress?.status !== 'locked') {
+                    setSelectedNodeId(nodeId);
+                    setRewardsOpen(false);
+                  }
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedNodeId && (
+          <NodeOverlay
+            nodeId={selectedNodeId}
+            campaign={campaign}
+            onClose={() => {
+              setSelectedNodeId(null);
+              if (window.location.search) setLocation('/game/story', { replace: true });
+            }}
+            onStartBattle={(nodeId) => setLocation(`/game/story/play/${nodeId}`)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
 export function NodeOverlay({
   nodeId,

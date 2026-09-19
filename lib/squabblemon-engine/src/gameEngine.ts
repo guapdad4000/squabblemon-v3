@@ -76,7 +76,7 @@ export type StoryRuntime = {
   lanePowerBonuses: { owner: Owner | "both"; lane: Lane; amount: number }[];
   laneLocks: { owner: Owner | "both"; lanes: Lane[] }[];
 };
-export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean };
+export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean; uncounterable: boolean };
 export type CardInstance = Card & {
   instanceId: string; cardId: string; owner: Owner; lane: Lane | null; playedRound: number | null;
   basePower: number; powerModifier: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
@@ -145,7 +145,7 @@ export type Match = {
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
 const lane = (n: number): Lane => n as Lane;
-const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false });
+const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false });
 const abilityCardId = (card: CardInstance) => card.copiedAbilityCardId ?? card.cardId;
 export const createCardInstance = (cardId: string, owner: Owner, deck = 'custom', index = 0): CardInstance => {
   const card = cards[cardId];
@@ -398,6 +398,65 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string): Ma
   return { ...m, boards: m.boards.map((items, i) => i === sourceLane ? items.filter((c) => c.instanceId !== card.instanceId) : i === destination ? [...items, updated] : items) as Match['boards'] };
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
+
+/**
+ * Token templates used by Ashlee (Guyana the gorilla) and Captain Jigga
+ * (Steward). These cards never enter a deck or hand — they're fabricated
+ * at ability-resolution time and dropped directly onto a board lane.
+ */
+const SUMMON_TEMPLATES = {
+  guyana: {
+    name: 'Guyana',
+    type: 'Earth',
+    cost: 0,
+    power: 5,
+    ability: 'Gorilla in the Room',
+    effect: 'Uncounterable: ignores all enemy Hands reductions.',
+    kind: 'token' as const,
+    abilityUpgrades: [],
+  },
+  steward: {
+    name: 'Steward',
+    type: 'Air',
+    cost: 0,
+    power: 2,
+    ability: 'Cabin Service',
+    effect: 'On Reveal: target an enemy for -2 Hands.',
+    kind: 'token' as const,
+    abilityUpgrades: [],
+  },
+} as const;
+
+const summonCard = (
+  m: Match,
+  owner: Owner,
+  lane: Lane,
+  template: (typeof SUMMON_TEMPLATES)[keyof typeof SUMMON_TEMPLATES],
+  tokenId: string,
+  source: CardInstance,
+  uncounterable = false,
+): Match => {
+  const instanceId = `summon:${owner}:${source.instanceId}:${m.round}:${tokenId}`;
+  const instance: CardInstance = {
+    ...template,
+    cardId: tokenId,
+    instanceId,
+    id: tokenId,
+    owner,
+    deck: `summon:${source.cardId}`,
+    lane,
+    playedRound: m.round,
+    basePower: template.power,
+    powerModifier: 0,
+    moved: false,
+    statuses: { ...emptyStatuses(), uncounterable },
+    lastEffectNote: `Summoned by ${source.name}.`,
+  };
+  return {
+    ...m,
+    boards: m.boards.map((items, i) => i === lane ? [...items, instance] : items) as Match['boards'],
+  };
+};
 const addDiscountToken = (m: Match, owner: Owner, source: CardInstance, eligibility: DiscountToken["eligibility"]): Match => {
   const order = m.nextDiscountOrder ?? 1;
   return { ...m, nextDiscountOrder: order + 1, discountTokens: [...(m.discountTokens ?? []), {
@@ -424,6 +483,10 @@ const removeDestroyedCard = (m: Match, id: string): Match => {
   return { ...m, boards: m.boards.map(items => items.filter(item => item.instanceId !== id)) as Match['boards'], timedEffects: m.timedEffects.filter(effect => effect.targetInstanceId !== id) };
 };
 const targetEnemyPowerReduction = (m: Match, source: CardInstance, target: CardInstance, amount: number, note: string): Match => {
+  if (target.statuses.uncounterable) {
+    // Uncounterable targets (e.g. Ashlee's Guyana summon) shrug off power reductions.
+    return modify(m, target.instanceId, (c) => ({ ...c, lastEffectNote: `${note} (no effect — uncounterable).` }));
+  }
   const mitigation = (m.timedEffects ?? []).find((effect) => effect.kind === "nail-mitigation" && effect.targetInstanceId === target.instanceId);
   const reducedAmount = Math.min(0, amount + (mitigation ? 1 : 0));
   const before = targetEnemy(m, source, target, (c) => ({ ...c, powerModifier: c.powerModifier + reducedAmount, lastEffectNote: note }));
@@ -907,6 +970,39 @@ function resolveAbility(match: Match, source: CardInstance): Match {
       if (amount && findCard(m, traveler.instanceId)?.lane === destination) m = modify(m, traveler.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: moved, +${amount} Hands.` }));
     }
     note(traveler ? `${source.ability} resolved.` : 'Last Stop needs another ally here.');
+  }
+  else if (source.cardId === 'ashlee') {
+    // +1 Hand to every other friendly card already in Ashlee's district.
+    const alliesHere = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && c.kind !== 'support');
+    for (const ally of alliesHere) {
+      targetIds.add(ally.instanceId);
+      m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Jet Set: +1 Hand.' }));
+    }
+    // Drop Guyana the gorilla into the weakest friendly district (uncounterable: shrugs off power reductions).
+    const destination = lowestFriendlyLane(m, source.owner, l);
+    m = summonCard(m, source.owner, destination, SUMMON_TEMPLATES.guyana, 'guyana', source, true);
+    note(`Jet Set summoned Guyana (+5, uncounterable) into district ${destination + 1} and gave +1 Hand to ${alliesHere.length} ally${alliesHere.length === 1 ? '' : 'ies'}.`);
+    // Pressure the highest-Hands enemy on the board.
+    const highestEnemy = highest(m.boards.flat().filter(c => c.owner === enemy && c.kind !== 'support'));
+    if (highestEnemy) {
+      targetIds.add(highestEnemy.instanceId);
+      m = targetEnemyPowerReduction(m, source, highestEnemy, -2, 'Jet Set: -2 Hands.');
+    }
+  }
+  else if (source.cardId === 'captainjigga') {
+    // Two Steward tokens — each picks a different highest-Hands enemy for -2.
+    const enemyPool = [...m.boards.flat().filter(c => c.owner === enemy && c.kind !== 'support')]
+      .sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a));
+    const picked: CardInstance[] = [];
+    for (const candidate of enemyPool) {
+      if (picked.length >= 2) break;
+      if (!picked.find(p => p.instanceId === candidate.instanceId)) picked.push(candidate);
+    }
+    for (const target of picked) {
+      targetIds.add(target.instanceId);
+      m = targetEnemyPowerReduction(m, source, target, -2, 'Cabin Crew: -2 Hands.');
+    }
+    note(picked.length ? `Cabin Crew dispatched ${picked.length} steward${picked.length === 1 ? '' : 's'} against the highest-Hands enemies.` : 'Cabin Crew found no enemies.');
   }
   else if (Object.hasOwn(streetWaveCards, source.cardId)) {
     const id = source.cardId;

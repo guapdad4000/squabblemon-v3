@@ -49,12 +49,26 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <ArsenalScreen className="arsenal-archive" label="Your crews">
     <div className="arsenal-heading-row">
       <PageHeading art="deck-stack" eyebrow="THE LINEUP / CREW BUILDER" title="Your crew.">{bootstrap.profile.savedDecks.length} / {bootstrap.profile.deckSlots} saved crews. Bring the right energy.</PageHeading>
-      <div className="arsenal-heading-actions"><FocusViewButton /><button type="button" onClick={handleCreateNew} disabled={creating || atCapacity} className="arsenal-action"><Plus size={17} aria-hidden="true" />{creating ? 'Building…' : 'New Deck'}</button></div>
+      <div className="arsenal-heading-actions">
+        <FocusViewButton />
+        <button
+          type="button"
+          onClick={handleCreateNew}
+          disabled={creating || atCapacity}
+          className="arsenal-action arsenal-action--lead"
+        >
+          <Plus size={17} aria-hidden="true" />
+          {creating ? 'Building…' : 'New Deck'}
+        </button>
+      </div>
     </div>
     {error && <p role="alert" className="arsenal-error">{error}</p>}
     {atCapacity && <p className="arsenal-error">All crew slots are in use. Edit a crew, or delete one to free a slot.</p>}
     <div className="arsenal-archive__section">
-      <h2 className="arsenal-section-label">Your crews</h2>
+      <h2 className="arsenal-section-label">
+        <span>Your crews</span>
+        <span className="arsenal-section-label__count">{bootstrap.profile.savedDecks.length} / {bootstrap.profile.deckSlots}</span>
+      </h2>
       {bootstrap.profile.savedDecks.length === 0 ? <div className="arsenal-empty"><Layers size={32} aria-hidden="true" /><h2>Every crew starts with you.</h2><p>Pick ten cards, find your chemistry, and make your mark on the block.</p><button type="button" className="arsenal-link" disabled={creating || atCapacity} onClick={handleCreateNew}><Plus size={16} />Build your first crew</button></div>
         : <div className="arsenal-archive__grid">{bootstrap.profile.savedDecks.map((deck, index) =>
           <CrewPortrait key={deck.id} name={deck.name} heroId={deck.heroCardId} count={deck.cardIds.length} index={index}

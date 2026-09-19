@@ -1088,6 +1088,28 @@
       "durationMs": 6500,
       "playbackRate": 1,
       "revision": "989cadecef4107c6"
+    },
+    "char100": {
+      "file": "char100_chroma.mp4",
+      "label": "Ashlee",
+      "move": "Jet Set",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "6aadeec8-char100-v2"
+    },
+    "char101": {
+      "file": "char101_chroma.mp4",
+      "label": "Captain Jigga",
+      "move": "Cabin Crew",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "6aadeec8-char101-v2"
     }
   },
   "assignments": {
@@ -1189,6 +1211,10 @@
     "yasuke": "char95",
     "mansamusa": "char98",
     "tron": "char97",
-    "johnhenry": "char94"
+    "johnhenry": "char94",
+    "ashlee": "char100",
+    "captainjigga": "char101",
+    "guyana": null,
+    "steward": null
   }
 }

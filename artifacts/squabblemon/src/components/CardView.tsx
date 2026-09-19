@@ -220,10 +220,10 @@ function CardViewComponent({
               {card.name}
             </h4>
 
-            {isInspector && (
-               <div className="collector-card-ability mt-1.5 border-t border-white/20 pt-1.5">
-                 <div className="text-[7px] md:text-[8px] font-mono tracking-widest text-primary mb-0.5 uppercase">{card.ability}</div>
-                 <div className="text-[8px] md:text-[10px] text-white/70 leading-tight font-sans line-clamp-3">{card.effect}</div>
+            {(isInspector || (!isBoard && !presentationOnly)) && (
+               <div className={`collector-card-ability mt-1 border-t border-white/15 pt-1 ${isInspector ? '' : 'opacity-90'}`}>
+                 <div className={`font-mono tracking-widest text-primary mb-0.5 uppercase ${isInspector ? 'text-[7px] md:text-[8px]' : 'text-[5px] md:text-[6px]'}`}>{card.ability}</div>
+                 <div className={`text-white/75 leading-tight font-sans line-clamp-2 ${isInspector ? 'text-[8px] md:text-[10px]' : 'text-[6px] md:text-[7px]'}`}>{card.effect}</div>
                </div>
             )}
 

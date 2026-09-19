@@ -8,6 +8,8 @@ export const MYTHIC_LEGENDS = [
   ['mansamusa', 'mansa-musa', 'Mansa Musa', 'Earth', 5, 5, 'Gold Road', 'Give your lowest-Hands other ally in each district +1 Hands. Your next card in another district costs 1 less Motion.', 'Support'],
   ['tron', 'tron', 'TRON', 'Electric', 3, 3, 'For the Hood', 'Give up to three lowest-Hands other friendly characters here +1 Hands each. If at least two gained Hands, restore 1 Motion.', 'Support'],
   ['johnhenry', 'john-henry', 'John Henry', 'Rock', 5, 5, 'Steel Driver', 'Gain +1 Hands for each other friendly character here, up to +3. If at least two are here, give the highest-Hands enemy -1 Hands.', 'Pressure'],
+  ['ashlee', 'ashlee', 'Ashlee', 'Air', 4, 4, 'Jet Set', 'Drop Guyana the gorilla (+5, uncounterable) into your weakest friendly district. Give every other friendly character in Ashlee\'s district +1 Hand. Give the highest-Hands enemy on the board -2 Hands.', 'Pressure'],
+  ['captainjigga', 'captain-jigga', 'Captain Jigga', 'Air', 4, 4, 'Cabin Crew', 'Send two Steward tokens. Each targets a different highest-Hands enemy for -2 Hands.', 'Disruption'],
 ] as const;
 
 export const mythicLegendRarities: Record<string, CardRarity> = Object.fromEntries(
