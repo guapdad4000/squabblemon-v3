@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
+import { PageDecor } from './venue/PageDecor';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
 import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@workspace/api-client-react';
@@ -43,10 +44,13 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   const isInstance = 'instanceId' in card;
   const panel = React.useRef<HTMLDivElement>(null);
+  // Escape transformed route containers while staying inside a native dialog's top layer.
+  const [portalHost] = React.useState(() => typeof document === 'undefined' ? null
+    : document.activeElement?.closest<HTMLDialogElement>('dialog[open]') ?? document.body);
   React.useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     panel.current?.querySelector<HTMLButtonElement>('[data-testid=button-close-inspector]')?.focus({ preventScroll: true });
-    return () => previous?.focus({ preventScroll: true });
+    return () => { if (previous?.isConnected) previous.focus({ preventScroll: true }); };
   }, []);
   const instance = isInstance ? card as CardInstance : null;
   const isCovered = Boolean(instance && match?.timedEffects?.some((effect: any) => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instance.instanceId));
@@ -100,17 +104,19 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const variantSlots = catalogCard?.variantSlots ?? [];
 
   const inspector = (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
-      if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
+    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
+      if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
-        const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
+        const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);
         const first = elements[0], last = elements[elements.length-1];
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }
     }}>
+      {!match && <PageDecor theme={catalogCard?.rarity === 'Mythical' ? 'mythic' : 'profile'} compact />}
       <div className="collector-inspector-backdrop" style={{ backgroundImage: `url("${getCardWallpaper(card.type)}")` }} aria-hidden="true" />
-      {!match && <button type="button" className="collection-inspector__close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} /><span>Close</span></button>}
+      <button type="button" className="card-inspector-close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} aria-hidden="true" /><span>{match ? 'Back to battle' : 'Close details'}</span></button>
+      <div className="card-inspector-scroll">
       <motion.div
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -165,16 +171,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <span className="dossier-banner__meta">
               {card.type} class · {card.cost} motion · {rarityLabel}
             </span>
-            {match && (
-              <button
-                data-testid="button-close-inspector"
-                aria-label="Close card details"
-                onClick={onClose}
-                className="ml-auto w-9 h-9 border border-white/30 flex items-center justify-center text-white/70 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0 bg-black/60"
-              >
-                <X size={16} />
-              </button>
-            )}
           </header>
 
           {/* Title plate */}
@@ -391,7 +387,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
           {catalogCard && <CardRarityTreatment rarity={catalogCard.rarity} />}
         </div>
       </motion.div>
+      </div>
     </div>
   );
-  return typeof document === 'undefined' ? inspector : createPortal(inspector, document.body);
+  return portalHost ? createPortal(inspector, portalHost) : inspector;
 }

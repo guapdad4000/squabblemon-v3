@@ -222,7 +222,7 @@ function CardViewComponent({
             </div>
           )}
 
-          <div className={`collector-card-copy absolute inset-x-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none ${isInspector ? 'collector-card-copy--inspector' : 'bottom-0'}`}>
+          <div className={`collector-card-copy absolute inset-x-0 bottom-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none ${isInspector ? 'collector-card-copy--inspector' : ''}`}>
             <div className="flex flex-wrap items-center gap-1 mb-1">
               <span className={`font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-white border border-[var(--rarity-color)] leading-none shadow-sm`}>
                 <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{CARD_RARITY_DEFINITIONS[rarity].label}

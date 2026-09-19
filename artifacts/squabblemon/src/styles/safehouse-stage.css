@@ -1,333 +1,49 @@
-.safehouse.safehouse-stage {
-  height: 100%;
-  min-height: 520px;
+/* The room is the home screen. Controls stay at its edges. */
+.game-shell--fan .safehouse.safehouse-stage{height:100%;min-height:0;isolation:isolate;overflow:hidden;background:#101914}
+.game-shell:has(.safehouse-stage) .venue-hud{display:none}
+.game-shell:has(.safehouse-stage) .game-route-stage{height:100dvh;overflow:hidden}
+.safehouse-stage .venue-scene{z-index:0}
+.safehouse-stage .safehouse__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#060d12b8,transparent 23%,transparent 51%,#070e0a96 73%,#070c0bef 100%)}
+.safehouse-stage .page-decor{pointer-events:none}
+.safehouse-room-header{position:absolute;z-index:3;top:28px;left:34px;right:34px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none}
+.safehouse-room-title>span{display:flex;align-items:center;gap:8px;font:700 8px var(--font-mono,monospace);letter-spacing:.16em;color:#d4c1a0}
+.safehouse-room-title>span i{width:5px;height:5px;border-radius:50%;background:#c1d5a0;box-shadow:0 0 9px #d3e7b155}
+.safehouse-room-title h1{font:900 italic clamp(26px,3.1vw,46px)/1.1 var(--font-display,sans-serif);letter-spacing:-.035em;margin:8px 0 5px;text-transform:uppercase;color:#f6eddb;text-shadow:0 2px 18px #0008}
+.safehouse-room-title__hand{display:inline-block;font:400 1.13em/1 var(--font-marker,cursive);color:#ef6553;letter-spacing:-.045em;transform:rotate(-7deg) skewX(-7deg);margin:0 .055em 0 .025em;text-shadow:1px 2px #581f1a,0 2px 18px #0008}.safehouse-room-title__period{color:#e9b963}.safehouse-room-title p{font-size:11px;color:#d1cbbc9c;margin:0}
+.safehouse-room-tools{display:flex;align-items:center;gap:7px;pointer-events:auto}
+.room-tool,.safehouse-room-tools .music-trigger{height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#0c1717c9;border:1px solid #bfad862e;border-radius:5px;color:#e6d3b0;padding:10px;font:600 10px var(--font-sans,sans-serif);cursor:pointer;backdrop-filter:blur(8px)}
+.room-tool:hover{background:#2e3625;border-color:#d1ad6680}
+.safehouse-room-markers{position:absolute;inset:140px 24px calc(var(--fan-clearance,170px) + 110px);z-index:2;pointer-events:none}.safehouse-room-markers[hidden]{display:none}
+.safehouse-room-markers button{position:absolute;visibility:hidden;transform:translate(-50%,-50%);min-height:44px;display:flex;align-items:center;gap:8px;padding:10px 14px;pointer-events:auto;cursor:pointer;color:#efd7a4;border:1px solid #e3c98d7d;border-radius:3px;background:#0d211cd6;box-shadow:0 3px 14px #0006;backdrop-filter:blur(3px);transition:background .2s,box-shadow .2s}
+.safehouse-room-markers button:hover,.safehouse-room-markers button:focus-visible{background:#bc9250;color:#121d16;box-shadow:0 0 0 4px #e1bb6d25}
+.safehouse-room-markers button span{white-space:nowrap;font:800 italic 11px var(--font-display,sans-serif);text-transform:uppercase;letter-spacing:.025em}
+.safehouse-room-bottom{position:absolute;z-index:3;bottom:calc(var(--fan-clearance,170px) + 10px);left:34px;right:34px;max-width:760px;margin:0 auto;color:#eee5d1;pointer-events:none}
+.safehouse-room-bottom button,.safehouse-room-bottom a{pointer-events:auto}
+.safehouse-room-welcome{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:16px;text-shadow:0 2px 15px #000}
+.room-eyebrow{font:600 8px var(--font-mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#cfb37c}
+.safehouse-room-welcome p{font-size:15px;font-weight:600;margin:5px 0 0}
+.room-action{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:15px;padding:13px 26px;min-height:44px;border:0;background:none;color:#1c2118;border-radius:0;font:900 italic 13px var(--font-display,sans-serif);text-transform:uppercase;text-decoration:none;text-shadow:none;white-space:nowrap}
+.room-action::before{content:'';position:absolute;inset:0;z-index:-1;transform:skewX(-12deg);border:1px solid #e2bd73;background:#caa45e;box-shadow:0 4px 0 #47381d,0 7px 18px #0005;transition:background .16s}
+.room-action:hover::before{background:#debc79}
+.safehouse-room-hint{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:9px;color:#b2bca782;font-size:8px}
+.safehouse-room-hint>span,.safehouse-room-hint>a{display:flex;align-items:center;gap:6px}.safehouse-room-hint i{width:2px;height:2px;background:currentColor;border-radius:50%;margin:0 2px}.safehouse-room-hint>a{color:#e5c082}
+.safehouse-room-detail{margin-bottom:15px;padding:16px 20px;background:linear-gradient(110deg,#0b1815eb,#0b1419cd);border-left:2px solid #dbba76;backdrop-filter:blur(12px);pointer-events:auto}
+.room-back{display:flex;align-items:center;gap:6px;min-height:36px;font-size:9px;color:#c8bc9f;cursor:pointer;margin:-9px 0 8px}
+.safehouse-room-detail__body{display:flex;justify-content:space-between;align-items:center;gap:20px}.safehouse-room-detail h2{font:900 italic 28px/1.05 var(--font-display,sans-serif);letter-spacing:-.025em;text-transform:uppercase;margin:6px 0 7px}.safehouse-room-detail p{font-size:11px;line-height:1.5;color:#b3b9aa;margin:0}
+.safehouse-room-actions{display:flex;flex-direction:column;align-items:stretch;gap:5px;flex-shrink:0}.room-punch{min-height:36px;color:#e8c38a;border:1px solid #c8ad6638;font-size:10px;cursor:pointer}
+.safehouse-stage :is(button,a):focus-visible{outline:2px solid #f1cd83;outline-offset:3px}
+@media(max-width:680px){
+ .safehouse-room-header{top:21px;left:18px;right:18px;gap:8px}.safehouse-room-title h1{font-size:26px;margin-top:9px}.safehouse-room-title>span{font-size:6px;letter-spacing:.1em}.safehouse-room-title p{font-size:9px}.safehouse-room-tools{gap:5px}.room-tool span{display:none}.room-tool--reset{display:none}
+ .safehouse-room-bottom{left:16px;right:16px;bottom:calc(var(--fan-clearance,130px) + 7px)}.safehouse-room-welcome{margin-bottom:12px;gap:12px}.safehouse-room-welcome .room-eyebrow{font-size:6px}.safehouse-room-welcome p{font-size:11px;line-height:1.4;max-width:165px}.room-action{font-size:10px;padding:11px 17px;gap:9px}
+ .safehouse-room-markers{left:14px;right:14px}.safehouse-room-markers button{padding:10px 11px;gap:6px}.safehouse-room-markers button span{font-size:10px}.safehouse-room-hint{font-size:7px;gap:7px}.safehouse-room-hint>span:last-child{display:none}
+ .safehouse-room-detail{padding:12px 14px;margin-bottom:10px}.safehouse-room-detail__body{align-items:flex-start;gap:10px}.safehouse-room-detail h2{font-size:21px}.safehouse-room-detail p{font-size:9px}.safehouse-room-detail .room-eyebrow{font-size:7px}.safehouse-room-detail .room-action{white-space:normal;max-width:114px;text-align:center;line-height:1.35}.safehouse-room-actions{max-width:115px;align-self:center}.room-back{margin-top:-4px;font-size:9px}
 }
-.safehouse-stage--hero {
-  display: grid;
-  grid-template-rows: 1fr;
-}
-.safehouse-stage--hero .safehouse__heading {
-  position: relative;
-  z-index: 3;
-  pointer-events: none;
-  align-self: start;
-  max-width: 460px;
-  padding: clamp(40px, 6vh, 96px) clamp(28px, 5vw, 88px);
-  margin: 0;
-  inset: auto;
-  display: grid;
-  gap: 6px;
-  justify-items: start;
-}
-.safehouse-stage--hero .safehouse__shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: linear-gradient(90deg, #060a08e6 0%, #060a08b8 28%, transparent 58%), linear-gradient(0deg, #080b0cd8 0%, transparent 38%);
-}
-.safehouse-stage .safehouse__heading h1 {
-  font-size: clamp(54px, 6.8vw, 104px);
-  line-height: 0.9;
-  letter-spacing: -0.045em;
-  text-shadow: 0 4px 32px #000c, 0 0 1px #000;
-  margin: 8px 0 14px;
-  font-weight: 950;
-}
-.safehouse-stage .safehouse__heading h1 em {
-  color: #ebcb87;
-  font-style: italic;
-  text-shadow: 0 0 24px #f7d57a66, 0 4px 18px #000a;
-}
-.safehouse-stage .safehouse__heading p {
-  font-size: 13px;
-  color: #d6dccd;
-  line-height: 1.65;
-  margin: 0 0 28px;
-  max-width: 36ch;
-  letter-spacing: 0.01em;
-}
-.safehouse-stage .studio-eyebrow {
-  letter-spacing: 0.18em;
-  font-size: 10px;
-  color: #cba875;
-  text-transform: uppercase;
-}
-.safehouse-stage .safehouse__heading-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  align-items: center;
-  pointer-events: auto;
-}
-.safehouse-stage .safehouse__heading-actions .studio-action {
-  pointer-events: auto;
-  margin: 0;
-}
-.safehouse-stage .safehouse__heading-bounties {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border: 1px solid #f3d49a55;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #f3d49a18, #f3d49a08);
-  color: #f3d49a;
-  font: 800 11px/1 var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  text-decoration: none;
-  transition: filter 160ms ease, transform 160ms ease;
-  pointer-events: auto;
-}
-.safehouse-stage .safehouse__heading-bounties:hover,
-.safehouse-stage .safehouse__heading-bounties:focus-visible {
-  filter: brightness(1.18);
-  transform: translateY(-1px);
-  outline: none;
-}
-.safehouse-stage__landmarks {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-}
-.safehouse-stage__landmarks[hidden] {
-  display: none;
-}
-.safehouse-stage__landmarks button {
-  position: absolute;
-  visibility: hidden;
-  transform: translate(-50%, -50%);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1px solid #f7e9bb77;
-  background: #101b18a6;
-  backdrop-filter: blur(5px);
-  color: #f3d49a;
-  display: grid;
-  place-items: center;
-  pointer-events: auto;
-  cursor: pointer;
-  box-shadow:
-    0 0 0 5px #101b1822,
-    0 5px 15px #0005;
-}
-.safehouse-stage__landmarks button:hover {
-  background: #151f16ee;
-  border-color: var(--station-color);
-}
-.safehouse-stage__landmarks button:after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  height: 16px;
-  width: 1px;
-  background: linear-gradient(#f7e9bb77, transparent);
-}
-.safehouse-stage__landmarks button > span {
-  position: absolute;
-  white-space: nowrap;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(100% + 10px);
-  font-size: 10px;
-  color: #fff7df;
-  text-shadow: 0 1px 6px #000;
-  opacity: 0;
-  transition: opacity 0.15s;
-  pointer-events: none;
-}
-.safehouse-stage__landmarks button:is(:hover, :focus-visible) > span {
-  opacity: 1;
-}
-.safehouse-stage__bottom {
-  position: absolute;
-  left: 34px;
-  right: 34px;
-  bottom: 38px;
-  z-index: 4;
-}
-.safehouse-stage__hint {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  font-size: 10px;
-  color: #bec9b5;
-  min-height: 40px;
-  text-shadow: 0 2px 4px #000;
-}
-.safehouse-stage__hint > a {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #efd698;
-}
-.safehouse-stage__stations {
-  display: flex;
-  gap: 30px;
-  padding-top: 10px;
-  max-width: 580px;
-}
-.safehouse-stage__stations > button {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  position: relative;
-  min-height: 44px;
-  color: #b9c7b1;
-  font-size: 11px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.safehouse-stage__stations > button[aria-pressed='true'] {
-  color: var(--station-color);
-}
-.safehouse-stage__stations > button > i:not(.game-glyph) {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-}
-.safehouse-stage__stations > button[aria-pressed='true'] > i:not(.game-glyph) {
-  background: linear-gradient(90deg, var(--station-color), transparent);
-}
-.safehouse-stage__detail {
-  display: flex;
-  gap: 25px;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 700px;
-  padding: 12px 0 22px;
-  text-shadow: 0 2px 8px #000;
-}
-.safehouse-stage__detail .studio-eyebrow {
-  color: var(--station-color);
-}
-.safehouse-stage__detail h2 {
-  font: 800 36px/1 var(--font-display, Impact, sans-serif);
-  text-transform: uppercase;
-  letter-spacing: -0.035em;
-  margin: 8px 0;
-}
-.safehouse-stage__detail p {
-  font-size: 11px;
-  color: #b6c1ae;
-}
-.safehouse-stage__detail a {
-  text-shadow: none;
-}
-.safehouse-stage:not([data-view='room']) .safehouse__heading h1 {
-  font-size: 25px;
-}
-.safehouse-stage:not([data-view='room']) .safehouse__heading h1 br,
-.safehouse-stage:not([data-view='room']) .safehouse__heading p,
-.safehouse-stage:not([data-view='room']) .safehouse__heading > a {
-  display: none;
-}
-.safehouse-stage .venue-scene__status {
-  z-index: 3;
-}
-@media (max-width: 680px) {
-  .safehouse.safehouse-stage {
-    min-height: 530px;
-  }
-  .safehouse-stage .safehouse__heading {
-    top: 25px;
-    left: 20px;
-    max-width: calc(100% - 75px);
-  }
-  .safehouse-stage .safehouse__heading h1 {
-    font-size: 41px;
-  }
-  .safehouse-stage .safehouse__heading p {
-    font-size: 10px;
-  }
-  .safehouse-stage .safehouse__heading > .studio-action {
-    font-size: 10px;
-    min-height: 40px;
-    padding: 11px 16px;
-  }
-  .safehouse-stage .safehouse__tools {
-    right: 15px;
-    top: 23px;
-    gap: 9px;
-  }
-  .safehouse-stage .safehouse__tools .studio-icon {
-    height: 38px;
-    width: 38px;
-  }
-  .safehouse-stage__bottom {
-    left: 20px;
-    right: 20px;
-    bottom: 64px;
-  }
-  .safehouse-stage__stations {
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .safehouse-stage__stations > button {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    min-height: 55px;
-    font-size: 9px;
-    flex: 1;
-  }
-  .safehouse-stage__hint {
-    font-size: 8px;
-    display: block;
-    min-height: 44px;
-  }
-  .safehouse-stage__hint > a {
-    margin-top: 7px;
-    font-size: 9px;
-  }
-  .safehouse-stage__detail {
-    padding-bottom: 18px;
-    gap: 12px;
-    align-items: flex-end;
-  }
-  .safehouse-stage__detail h2 {
-    font-size: 25px;
-  }
-  .safehouse-stage__detail p {
-    font-size: 9px;
-    max-width: 140px;
-    line-height: 1.5;
-  }
-  .safehouse-stage__detail .studio-action {
-    font-size: 10px;
-    max-width: 49%;
-    min-height: 42px;
-    padding: 10px 14px;
-    gap: 7px;
-  }
-  .safehouse-stage__detail .studio-eyebrow {
-    font-size: 7px;
-  }
-  .safehouse-stage__landmarks button {
-    height: 36px;
-    width: 36px;
-  }
-  .safehouse-stage__landmarks button > span {
-    display: none;
-  }
-  .safehouse-stage .safehouse__shade {
-    background: linear-gradient(0deg, #0b100efa, transparent 40%), linear-gradient(180deg, #0a1118a3, transparent 45%);
-  }
-}
-@media(max-height:550px) and (orientation:landscape){
- .game-shell:has(.safehouse-stage) .venue-hud{display:none}
- .game-shell--fan .safehouse.safehouse-stage{min-height:360px;height:100%}
- .game-shell--fan .safehouse-stage .safehouse__heading h1{font-size:34px;margin:8px 0 14px}
- .game-shell--fan .safehouse-stage .safehouse__heading p{display:none}
- .safehouse-stage .safehouse__heading>.studio-action{min-height:36px;padding:8px 15px;font-size:10px}
- .safehouse-stage__hint{min-height:28px;font-size:9px}
- .safehouse-stage__detail{padding:5px 0 10px}.safehouse-stage__detail h2{font-size:26px}
- .safehouse-stage__stations{gap:24px;padding-top:0}
-}
+@media(max-width:360px){.safehouse-room-header{left:14px;right:14px}.safehouse-room-title h1{font-size:22px}.safehouse-room-tools .music-trigger,.room-tool{width:40px;min-width:40px;padding:8px}.safehouse-room-welcome p{max-width:130px;font-size:10px}.safehouse-room-welcome .room-action{padding:10px 14px;gap:5px}.safehouse-room-detail__body{flex-wrap:wrap}.safehouse-room-detail h2{font-size:18px}.safehouse-room-actions{flex-direction:row;max-width:none;align-items:center}.safehouse-room-detail .room-action{max-width:none}.safehouse-room-detail p{max-width:220px}}
+@media(max-height:550px) and (orientation:landscape){.safehouse-room-header{top:14px;left:20px;right:20px}.safehouse-room-title h1{font-size:24px}.safehouse-room-title p{display:none}.safehouse-room-bottom{left:20px;right:20px;max-width:560px;bottom:calc(var(--fan-clearance,100px) + 4px)}.safehouse-room-welcome{display:none}.safehouse-room-markers{top:90px;bottom:calc(var(--fan-clearance,100px) + 30px)}.safehouse-room-hint{display:none}.safehouse-room-detail{padding:8px 13px;margin-bottom:6px}.safehouse-room-detail h2{font-size:20px;margin:3px 0}.safehouse-room-detail p{font-size:9px}.room-back{min-height:24px;margin:0 0 3px}.room-action{min-height:38px;padding:8px 12px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.safehouse-stage *{scroll-behavior:auto!important;transition:none!important}}
+
+.safehouse-stage .world-decor[data-decor="safehouse"] .world-decor__primary{width:min(26vw,340px);right:-2%;bottom:1%;opacity:.4;animation:none}
+.safehouse-stage:not([data-view="room"]) .world-decor{opacity:0}
+@media(max-width:680px){.safehouse-stage .world-decor[data-decor="safehouse"] .world-decor__primary{width:46vw;right:-9%;bottom:2%;opacity:.25}}
+
+@media(max-width:680px){.safehouse-room-tools .room-tool--reset{display:inline-flex;position:absolute;right:0;top:53px}}

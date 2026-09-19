@@ -1,0 +1,59 @@
+/* Physical page artifacts. Every layer is inert and keeps the center readable. */
+.world-decor-host { position: relative; isolation: isolate; }
+.world-decor { position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; user-select:none; }
+.hustle-stage.world-decor-host > :is(header, nav, section),
+.arsenal-screen.world-decor-host > :not(.world-decor),
+.deck-editor-screen.world-decor-host > :not(.world-decor),
+.market.world-decor-host > :not(.world-decor),
+.profile-stage.world-decor-host > :not(.world-decor) { position:relative; z-index:2; }
+.gacha-stage.world-decor-host > .gym__offer,
+.story-atlas.world-decor-host > :is(.story-atlas__header, .story-atlas__viewport, .story-atlas__rewards-panel),
+.safehouse-stage.world-decor-host > .safehouse__heading,
+.result-stage.world-decor-host > .result-stage__content { position:relative; z-index:3; }
+.gacha-stage.world-decor-host > .gym__arena { position:absolute; z-index:0; }
+.card-inspector-shell.world-decor-host > .card-inspector-scroll { z-index:3; }
+.world-decor img { position:absolute; max-width:none; height:auto; object-fit:contain; filter:drop-shadow(0 24px 30px rgb(0 0 0 / 58%)); transform:translate3d(0,0,0); }
+.world-decor__city { left:-4.5rem; bottom:calc(var(--fan-clearance, 0px) - 4rem); width:min(31vw,28rem); opacity:.2; }
+.world-decor__primary { animation:world-decor-settle 12s ease-in-out infinite alternate; }
+.world-decor[data-decor='bounties'] .world-decor__primary { right:-2.5rem; bottom:calc(var(--fan-clearance, 0px) - 1rem); width:min(72vw,68rem); opacity:.34; }
+.world-decor[data-decor='mastery'] .world-decor__primary { right:-2rem; top:8rem; width:min(33vw,30rem); opacity:.62; }
+.world-decor[data-decor='collection'] .world-decor__primary,
+.world-decor[data-decor='crew'] .world-decor__primary { right:-3rem; top:-2.5rem; width:min(56vw,54rem); opacity:.3; }
+.world-decor[data-decor='crew'] .world-decor__primary { top:1rem; opacity:.24; }
+.world-decor[data-decor='market'] .world-decor__primary { right:-2rem; bottom:calc(var(--fan-clearance, 0px) - 2rem); width:min(55vw,54rem); opacity:.42; }
+.world-decor[data-decor='battle'] .world-decor__primary { left:50%; bottom:-.75rem; width:min(104vw,95rem); opacity:.45; transform:translateX(-50%); }
+.world-decor[data-decor='profile'] .world-decor__primary { left:-3rem; bottom:-2rem; width:min(55vw,46rem); opacity:.34; }
+.world-decor[data-decor='safehouse'] .world-decor__primary { right:1.5rem; bottom:5%; width:min(54vw,52rem); opacity:.72; }
+.world-decor[data-decor='story'] .world-decor__primary { left:50%; bottom:calc(var(--fan-clearance, 0px) + .25rem); width:min(92vw,82rem); opacity:.66; transform:translateX(-50%); }
+.world-decor[data-decor='mythic'] .world-decor__primary { left:50%; bottom:-1rem; width:min(96vw,82rem); opacity:.36; transform:translateX(-50%); }
+.world-decor--compact[data-decor='profile'] .world-decor__primary { width:min(48vw,39rem); opacity:.24; }
+.world-decor--compact[data-decor='mythic'] .world-decor__primary { bottom:0; opacity:.28; }
+.world-decor-host .bounty-line { position:relative; padding-inline:clamp(12px,2vw,26px); background:linear-gradient(90deg,rgb(243 231 197 / 3%),transparent 72%); }
+.world-decor-host .bounty-line::before { content:''; position:absolute; left:0; top:18%; bottom:18%; width:2px; background:linear-gradient(#d8bb76,#71463c); opacity:.55; }
+.world-decor-host .bounty-line[data-status='claimed']::after { content:'CLAIMED'; position:absolute; right:1rem; top:.75rem; border:2px solid #9a493f; border-radius:3px; padding:.24rem .42rem; color:#c66c5e; font:900 .58rem/1 var(--font-mono); letter-spacing:.16em; transform:rotate(-6deg); opacity:.66; }
+.world-decor-host .collection-card-grid { border-radius:8px; background:linear-gradient(90deg,rgb(231 204 138 / 2%),transparent 18% 82%,rgb(231 204 138 / 2%)); box-shadow:inset 0 1px rgb(239 211 150 / 7%); }
+.world-decor-host .career-stage__experiments li,
+.world-decor-host .collection-milestone { background-image:linear-gradient(90deg,rgb(223 197 133 / 3%),transparent 65%); }
+@keyframes world-decor-settle { from { translate:0 0; } to { translate:0 -4px; } }
+@media (max-width:800px) {
+  .world-decor__city { width:43vw; opacity:.14; }
+  .world-decor[data-decor='bounties'] .world-decor__primary { width:105vw; right:-28vw; opacity:.23; }
+  .world-decor[data-decor='mastery'] .world-decor__primary { width:55vw; right:-16vw; top:11rem; opacity:.32; }
+  .world-decor[data-decor='collection'] .world-decor__primary,
+  .world-decor[data-decor='crew'] .world-decor__primary { width:92vw; right:-35vw; opacity:.2; }
+  .world-decor[data-decor='market'] .world-decor__primary { width:92vw; right:-28vw; opacity:.28; }
+  .world-decor[data-decor='profile'] .world-decor__primary { width:82vw; left:-35vw; opacity:.2; }
+  .world-decor[data-decor='safehouse'] .world-decor__primary { width:80vw; right:-20vw; opacity:.52; }
+  .world-decor[data-decor='story'] .world-decor__primary { width:125vw; opacity:.48; }
+  .world-decor[data-decor='battle'] .world-decor__primary { width:150vw; opacity:.32; }
+  .world-decor[data-decor='mythic'] .world-decor__primary { width:150vw; opacity:.22; }
+}
+@media (max-width:520px) {
+  .world-decor__city { display:none; }
+  .world-decor[data-decor='safehouse'] .world-decor__primary { width:112vw; right:-42vw; bottom:9%; opacity:.42; }
+  .world-decor[data-decor='story'] .world-decor__primary { width:175vw; bottom:var(--fan-clearance, 0px); opacity:.34; }
+  .world-decor[data-decor='battle'] .world-decor__primary { width:190vw; opacity:.25; }
+  .world-decor-host .bounty-line { padding-inline:10px; }
+}
+@media (prefers-reduced-motion:reduce) { .world-decor__primary { animation:none; } }
+html[data-reduce-motion='true'] .world-decor__primary { animation:none; }

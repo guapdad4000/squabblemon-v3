@@ -6,9 +6,6 @@
 .collection-inspector .collector-display>.collector-card{width:clamp(240px,27vw,380px)}
 .collection-inspector .collector-dossier{background:transparent;border:0;box-shadow:none;clip-path:none;padding:16px 8px;max-height:calc(100dvh - 140px);scrollbar-width:thin;scrollbar-color:#e1c88555 transparent}
 .collection-inspector .collection-inspector__ornament,.collection-inspector .collector-dossier>.card-rarity-glow{display:none}
-.collection-inspector__close{position:fixed;top:20px;right:clamp(20px,3vw,48px);z-index:2;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;color:#e9d39f;font-size:12px;border:0;background:transparent}
-.collection-inspector__close:hover{color:#fff}
-.collection-inspector__close:focus-visible{outline:2px solid #e9d39f;outline-offset:4px}
 .collection-inspector .collection-inspector__tags{gap:10px 18px}
 .collection-inspector .collection-inspector__tags>span{border:0;background:transparent;padding:0;font-size:10px;line-height:1.6}
 .collection-inspector .collection-inspector__tags>span:first-child{color:var(--rarity-color)}
@@ -19,5 +16,5 @@
 .collection-inspector .collection-inspector__variant{background:transparent;border:0;border-bottom:1px solid #dcc58d25;padding:12px 0}
 .collection-inspector .collection-inspector__variant button{background:transparent;border:0;text-align:left;color:#e9d39f;min-height:36px}
 .collection-inspector .collection-inspector__variant button:disabled{color:#909688}
-@media(max-width:767px){.collection-inspector>.relative{gap:32px}.collection-inspector .collector-dossier{max-height:none;overflow:visible}.collection-inspector .collector-display>.collector-card{width:230px}.collection-inspector__close{background:#0c110eee;border-radius:24px;padding:0 14px}.collection-inspector .collector-dossier h3{font-size:42px}}
+@media(max-width:767px){.collection-inspector>.relative{gap:32px}.collection-inspector .collector-dossier{max-height:none;overflow:visible}.collection-inspector .collector-display>.collector-card{width:230px}.collection-inspector .collector-dossier h3{font-size:42px}}
 @media(max-height:550px) and (min-width:768px){.collection-inspector .collector-display>.collector-card{width:180px}.collection-inspector{padding-block:48px}.collection-inspector .collector-display-caption{margin-top:8px}.collection-inspector .collector-dossier{max-height:calc(100dvh - 96px)}}
