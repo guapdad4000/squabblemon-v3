@@ -23,6 +23,11 @@ export type Card = {
   deck?: string;
   owner?: "player" | "cpu";
   abilityUpgrades: readonly AbilityUpgrade[];
+  /** When set, while this card is in its owner's hand every other friendly character of the
+   *  same type gains +1 Hand at round end. The elemental-bond system uses GUAP's hand effect
+   *  as the template; future bond cards (Water / Electric / Plant / Air) plug into the same
+   *  field. Engine reads this in applyOngoingRoundEndHandEffects. */
+  elementalBond?: string;
   /** Per-card entry vfx descriptor. The UI uses this to color/scale the staged card on play. */
   entryVfx?: {
     readonly accent: string;
@@ -185,27 +190,27 @@ export type DeckLegality = {
 };
 
 export const cards: Record<string, Card> = {
-  guap: { id: "guap", name: "GUAP", type: "Fire", cost: 6, power: 6, ability: "FINNAM!", effect: "On Reveal: Gain +2 Hands and give every enemy card here -1 Hands.", roles: ["Pressure", "Disruption"], abilityUpgrades: upgrades("guap", [["Golden Charge", "FINNAM! gathers golden energy.", "Falcon Ascendant", "FINNAM! spreads its burning wings.", "Phoenix Supernova", "FINNAM! erupts in a golden supernova."]]), entryVfx: { accent: "#f5c542" }, portraitAccent: "#f5c542" },
+  guap: { id: "guap", name: "GUAP", type: "Fire", cost: 6, power: 5, ability: "FINNAM!", effect: "On Reveal: Gain +1 Hands for each other friendly card here, up to +5. Give every enemy here -1 Hands. Ongoing: While GUAP is in your hand, your other Fire characters gain +1 Hands at round end.", roles: ["Pressure", "Disruption"], elementalBond: "Fire", abilityUpgrades: upgrades("guap", [["Golden Charge", "FINNAM! gathers golden energy.", "Falcon Ascendant", "FINNAM! spreads its burning wings.", "Phoenix Supernova", "FINNAM! erupts in a golden supernova."]]), entryVfx: { accent: "#f5c542" }, portraitAccent: "#f5c542" /* GUAP is the Fire bond in the elemental-bond system; Ice Cream Truck is Water, Rooftop Gardener is Plant, Pirate Radio DJ is Electric. */ },
   bossbabe: { id: "boss-babe", name: "Boss Bae", type: "Electric", cost: 3, power: 3, ability: "Network Boost", effect: "The first 2 times you play a card in another district, gain +1 Hands. After the second, your next card costing 4 or more costs 1 less Motion.", abilityUpgrades: upgrades("bossbabe", [["First Meeting", "Network Boost grants +1 Hands to Boss Bae.", "Closing Deals", "Network Boost grants +1 Hands to Boss Bae.", "Corner Office", "Network Boost grants +1 Hands to Boss Bae."]]) },
   scammer: { id: "scammer", name: "Scammer", type: "Dark", cost: 3, power: 3, ability: "Imposter", effect: "On Reveal: Copy the base Hands (up to 7) and printed ability of the highest-Hands enemy here. Copied On Reveal abilities do not trigger.", roles: ["Disruption", "Copy"], abilityUpgrades: upgrades("scammer", [["New Alias", "Imposter grants +1 Hands to Scammer.", "Fine Print", "Imposter grants +1 Hands to Scammer.", "Perfect Cover", "Imposter grants +1 Hands to Scammer."]]) },
   rastamon: { id: "rastamon", name: "Rastamon", type: "Plant", cost: 2, power: 2, ability: "Natural Cure", effect: "Cleanse a frozen or silenced ally here. If cleansed, give it +2 Hands.", abilityUpgrades: upgrades("rastamon", [["Rooted Remedy", "Natural Cure grants +1 Hands to Rastamon.", "Herbal Guard", "Natural Cure grants +1 Hands to Rastamon.", "Evergreen", "Natural Cure grants +1 Hands to Rastamon."]]), entryVfx: { accent: "#4ade80", keyframeId: "vine-burst" }, portraitAccent: "#4ade80", immersiveAssetId: { backgroundAssetId: "assets/cards/immersive/rastamon/bg.webp", foregroundAssetId: "assets/cards/immersive/rastamon/fg.webp" } },
-  roaster: { id: "all-jokes-roaster", name: "All Jokes Roaster", type: "Air", cost: 3, power: 3, ability: "Ratio'd Receipts", effect: "Give the highest enemy card here -2 Hands. -3 if they played here.", roles: ["Disruption"], abilityUpgrades: upgrades("roaster", [["Extra Receipts", "Ratio'd Receipts grants +1 Hands to Roaster.", "Pinned Reply", "Ratio'd Receipts grants +1 Hands to Roaster.", "Closing Argument", "Ratio'd Receipts grants +1 Hands to Roaster."]]), entryVfx: { accent: "#a78bfa" }, portraitAccent: "#a78bfa" },
+  roaster: { id: "all-jokes-roaster", name: "All Jokes Roaster", type: "Air", cost: 3, power: 3, ability: "Ratio'd Receipts", effect: "On Reveal: Apply 2 Burn to the highest enemy card here. -3 Hands if they played here.", roles: ["Disruption"], abilityUpgrades: upgrades("roaster", [["Extra Receipts", "Ratio'd Receipts grants +1 Hands to Roaster.", "Pinned Reply", "Ratio'd Receipts grants +1 Hands to Roaster.", "Closing Argument", "Ratio'd Receipts grants +1 Hands to Roaster."]]), entryVfx: { accent: "#a78bfa" }, portraitAccent: "#a78bfa" },
   nerd: { id: "closet-nerd", name: "Closet Nerd", type: "Dark", cost: 4, power: 3, ability: "Unaware", effect: "Silence the highest-Hands enemy here, bypassing Wifey's Side Eye. Protection on that enemy still blocks this.", roles: ["Disruption"], abilityUpgrades: upgrades("nerd", [["Deep Read", "Unaware grants +1 Hands to Nerd.", "Receipts Folder", "Unaware grants +1 Hands to Nerd.", "Final Draft", "Unaware grants +1 Hands to Nerd."]]) },
-  cornball: { id: "cornball", name: "Cornball", type: "Normal", cost: 1, power: 1, ability: "Scare the Hoes", effect: "Move the lowest enemy card if they have at least 3 here.", roles: ["Movement", "Disruption"], abilityUpgrades: upgrades("cornball", [["Awkward Energy", "Scare the Hoes grants +1 Hands to Cornball.", "No Chill", "Scare the Hoes grants +1 Hands to Cornball.", "Room Clearer", "Scare the Hoes grants +1 Hands to Cornball."]]) },
+  cornball: { id: "cornball", name: "Cornball", type: "Normal", cost: 1, power: 1, ability: "Scare the Hoes", effect: "On Reveal: Apply 1 Burn to every enemy here.", roles: ["Disruption"], abilityUpgrades: upgrades("cornball", [["Awkward Energy", "Scare the Hoes grants +1 Hands to Cornball.", "No Chill", "Scare the Hoes grants +1 Hands to Cornball.", "Room Clearer", "Scare the Hoes grants +1 Hands to Cornball."]]) },
   plug: { id: "plug", name: "Plug", type: "Electric", cost: 2, power: 2, ability: "Connections", effect: "Your next card in another district costs 1 less Motion.", abilityUpgrades: upgrades("plug", [["Open Line", "Connections grants +1 Hands to Plug.", "Direct Connect", "Connections grants +1 Hands to Plug.", "Network King", "Connections grants +1 Hands to Plug."]]), entryVfx: { accent: "#22d3ee" }, portraitAccent: "#22d3ee" },
-  streamer: { id: "live-streamer", name: "Live Streamer", type: "Electric", cost: 2, power: 1, ability: "Follower Frenzy", effect: "The first 2 cheap plays gain +1 Hands.", abilityUpgrades: upgrades("streamer", [["Chat Hype", "Follower Frenzy grants +1 Hands to Streamer.", "Trending", "Follower Frenzy grants +1 Hands to Streamer.", "Front Page", "Follower Frenzy grants +1 Hands to Streamer."]]) },
-  gamer: { id: "gamer", name: "Gamer", type: "Dark", cost: 3, power: 3, ability: "Tryhard Trigger", effect: "Cheap plays here give Gamer and that card +1 Hands.", abilityUpgrades: upgrades("gamer", [["Warmup", "Tryhard Trigger grants +1 Hands to Gamer.", "Ranked Focus", "Tryhard Trigger grants +1 Hands to Gamer.", "Clutch Mode", "Tryhard Trigger grants +1 Hands to Gamer."]]) },
+  streamer: { id: "live-streamer", name: "Live Streamer", type: "Electric", cost: 2, power: 1, ability: "Follower Frenzy", effect: "On Reveal: Reset your cheap-play trigger counter. The next 2 cards you play this turn with cost 2 or less gain +1 Hand each.", abilityUpgrades: upgrades("streamer", [["Chat Hype", "Follower Frenzy grants +1 Hands to Streamer.", "Trending", "Follower Frenzy grants +1 Hands to Streamer.", "Front Page", "Follower Frenzy grants +1 Hands to Streamer."]]) },
+  gamer: { id: "gamer", name: "Gamer", type: "Dark", cost: 3, power: 3, ability: "City Tour", effect: "On Reveal: For each other district, give the lowest-Hands friendly card there +1 Hand.", abilityUpgrades: upgrades("gamer", [["Warmup", "City Tour grants +1 Hands to Gamer.", "Ranked Focus", "City Tour grants +1 Hands to Gamer.", "Clutch Mode", "City Tour grants +1 Hands to Gamer."]]) },
   techbro: { id: "techbro-rich", name: "Techbro Rich", type: "Electric", cost: 4, power: 5, ability: "VC Funded Flex", effect: "On Reveal: If another friendly card is here, gain +2 Hands.", abilityUpgrades: upgrades("techbro", [["Seed Round", "VC Funded Flex grants +1 Hands to Techbro.", "Series A", "VC Funded Flex grants +1 Hands to Techbro.", "Unicorn", "VC Funded Flex grants +1 Hands to Techbro."]]) },
   bikelife: { id: "bikelife-yn", name: "Bikelife YN", type: "Electric", cost: 2, power: 2, ability: "Ride Out", effect: "After reveal, ride to your weakest other district and gain +1 Hands.", abilityUpgrades: upgrades("bikelife", [["Wheelie", "Ride Out grants +1 Hands to Bikelife.", "Night Ride", "Ride Out grants +1 Hands to Bikelife.", "City Loop", "Ride Out grants +1 Hands to Bikelife."]]) },
   vibe: { id: "cool-vibe-yn", name: "Cool Vibe YN", type: "Water", cost: 2, power: 2, ability: "Wave Check", effect: "Pull your lowest ally from another district here. Both gain +1 Hands.", abilityUpgrades: upgrades("vibe", [["Good Energy", "Wave Check grants +1 Hands to Vibe.", "Tidal Pull", "Wave Check grants +1 Hands to Vibe.", "High Tide", "Wave Check grants +1 Hands to Vibe."]]) },
   hooper: { id: "hooper", name: "Hooper", type: "Fire", cost: 5, power: 6, ability: "Ankle Breaker", effect: "If losing here, enemy highest gets -2 and Hooper gains +2.", abilityUpgrades: upgrades("hooper", [["First Step", "Ankle Breaker grants +1 Hands to Hooper.", "Hot Hand", "Ankle Breaker grants +1 Hands to Hooper.", "Game Winner", "Ankle Breaker grants +1 Hands to Hooper."]]) },
   baby: { id: "baby-momma", name: "Baby Momma", type: "Fire", cost: 4, power: 5, ability: "Mama Bear", effect: "If opponent has more cards here, gain +2 Hands.", abilityUpgrades: upgrades("baby", [["Watchful Eye", "Mama Bear grants +1 Hands to Baby Momma.", "Protective", "Mama Bear grants +1 Hands to Baby Momma.", "Mama Lion", "Mama Bear grants +1 Hands to Baby Momma."]]) },
-  oink: { id: "officer-oink", name: "Officer Oink", type: "Normal", cost: 5, power: 6, ability: "Civic Pressure", effect: "Every enemy card here loses 1 Hands.", roles: ["Disruption"], abilityUpgrades: upgrades("oink", [["Patrol", "Civic Pressure grants +1 Hands to Officer Oink.", "Crackdown", "Civic Pressure grants +1 Hands to Officer Oink.", "Lockdown", "Civic Pressure grants +1 Hands to Officer Oink."]]) },
+  oink: { id: "officer-oink", name: "Officer Oink", type: "Normal", cost: 5, power: 6, ability: "Civic Pressure", effect: "On Reveal: Apply Weaken to every enemy card here. Gain +1 Hands for each enemy Weakened.", roles: ["Disruption"], abilityUpgrades: upgrades("oink", [["Patrol", "Civic Pressure grants +1 Hands to Officer Oink.", "Crackdown", "Civic Pressure grants +1 Hands to Officer Oink.", "Lockdown", "Civic Pressure grants +1 Hands to Officer Oink."]]) },
   snow: { id: "snow-bunny", name: "Snow Bunny", type: "Water", cost: 3, power: 2, ability: "Cold Shoulder", effect: "Freeze the highest enemy card here. Frozen cards add 0 Hands until cleansed.", roles: ["Disruption"], abilityUpgrades: upgrades("snow", [["Frostbite", "Cold Shoulder grants +1 Hands to Snow Bunny.", "Ice Cold", "Cold Shoulder grants +1 Hands to Snow Bunny.", "Whiteout", "Cold Shoulder grants +1 Hands to Snow Bunny."]]), entryVfx: { accent: "#60a5fa" }, portraitAccent: "#60a5fa" },
   wifey: { id: "wifey", name: "Wifey", type: "Normal", cost: 4, power: 4, ability: "Side Eye", effect: "Block the first targeted enemy effect here each round.", abilityUpgrades: upgrades("wifey", [["Sharp Look", "Side Eye grants +1 Hands to Wifey.", "Read the Room", "Side Eye grants +1 Hands to Wifey.", "Unbothered", "Side Eye grants +1 Hands to Wifey."]]), entryVfx: { accent: "#fda4af" }, portraitAccent: "#fda4af", immersiveAssetId: { backgroundAssetId: "assets/cards/immersive/wifey/bg.webp", foregroundAssetId: "assets/cards/immersive/wifey/fg.webp" } },
   barber: { id: "barber-bro", name: "Barber Bro", type: "Normal", cost: 4, power: 4, ability: "Line Up", effect: "On Reveal: Give your lowest-Hands other card here +2 Hands. Give the highest-Hands enemy here -1 Hands.", roles: ["Disruption"], abilityUpgrades: upgrades("barber", [["Fresh Fade", "Line Up grants +1 Hands to Barber Bro.", "Detail Work", "Line Up grants +1 Hands to its friendly target.", "Clean Finish", "Line Up makes its enemy target lose 1 more Hands."]]) },
   bottle: { id: "bottle-girl", name: "Bottle Girl", type: "Poison", cost: 2, power: 2, ability: "Last Call", effect: "On Reveal: If played on Round 4 or later, gain +2 Hands. Your next 2-Cost card costs 1 less Motion.", abilityUpgrades: upgrades("bottle", [["After Hours", "Last Call grants +1 Hands to Bottle Girl.", "VIP Section", "Last Call grants +1 Hands to Bottle Girl.", "Closing Time", "Last Call grants +1 Hands to Bottle Girl."]]) },
-  sneaker: { id: "sneaker-reseller", name: "Sneaker Reseller", type: "Normal", cost: 3, power: 3, ability: "Flip Season", effect: "The first time your opponent plays a card costing 4 or more, your next card costs 1 less Motion.", abilityUpgrades: upgrades("sneaker", [["Authenticated", "Flip Season grants +1 Hands to Sneaker Reseller.", "Markup", "Flip Season grants +1 Hands to Sneaker Reseller.", "Sold Out", "Flip Season grants +1 Hands to Sneaker Reseller."]]) },
+  sneaker: { id: "sneaker-reseller", name: "Sneaker Reseller", type: "Normal", cost: 3, power: 3, ability: "Flip Season", effect: "On Reveal: Gain +X Hands where X is the printed Power of the highest-Hands enemy on the board, up to +7. Apply Weaken to that enemy.", abilityUpgrades: upgrades("sneaker", [["Authenticated", "Flip Season grants +1 Hands to Sneaker Reseller.", "Markup", "Flip Season grants +1 Hands to Sneaker Reseller.", "Sold Out", "Flip Season grants +1 Hands to Sneaker Reseller."]]) },
   church: { id: "church-auntie", name: "Church Auntie", type: "Light", cost: 3, power: 3, ability: "Covered", effect: "On Reveal: Protect your lowest-Hands other friendly card here. If it already has Protect, give it +2 Hands instead.", abilityUpgrades: upgrades("church", [["Prayer Circle", "Covered grants +1 Hands to its friendly target.", "Sunday Best", "Covered grants +1 Hands to Church Auntie.", "Amen Corner", "Covered grants +1 Hands to its friendly target."]]) },
   landlord: { id: "landlord", name: "Landlord", type: "Rock", cost: 4, power: 5, ability: "Rent Due", effect: "Ongoing: The first enemy card played at this district each round costs 1 additional Motion.", roles: ["Disruption"], abilityUpgrades: upgrades("landlord", [["Late Fee", "Rent Due grants +1 Hands to Landlord.", "Lease Renewal", "Rent Due grants +1 Hands to Landlord.", "Keyholder", "Rent Due grants +1 Hands to Landlord."]]), entryVfx: { accent: "#d4a373" }, portraitAccent: "#d4a373" },
   carmeet: { id: "car-meet-kid", name: "Car Meet Kid", type: "Electric", cost: 2, power: 2, ability: "Sideshow", effect: "On Reveal: Move Car Meet Kid to your weakest other district. Then give its lowest-Hands other friendly card +1 Hands.", roles: ["Movement"], abilityUpgrades: upgrades("carmeet", [["Clean Slide", "Sideshow grants +1 Hands to Car Meet Kid.", "Rev Limit", "Sideshow grants +1 Hands to Car Meet Kid.", "Burnout", "Sideshow grants +1 Hands to Car Meet Kid."]]) },
@@ -257,45 +262,54 @@ export const decks: Deck[] = [
 export const rarityByEngineId = {
   ...streetWaveRarities,
   ...mythicLegendRarities,
-  johnhenry: "Rare",
-  yasuke: "Rare",
-  dragonflyjones: "Common",
-  tron: "Uncommon",
+  // City Legends overrides — the Mythic ceiling is Ashlee/Captain Jigga/Simmy/Foodz/Partytitan/Leroy/Big Zoey level.
+  // These 5 don't hit that bar, so they read as solid Legendaries.
+  dragonflyjones: "Legendary",
+  tron: "Legendary",
   mansamusa: "Legendary",
-  shonuff: "Rare",
+  shonuff: "Legendary",
   ashlee: "Mythical",
   captainjigga: "Mythical",
+  // johnhenry + yasuke stay Mythical — no override needed (source already says Mythical).
   ...supportRarities,
   guap: "Mythical",
   ...expansionRarities,
+  // Street Wave + Expansion overrides — Wave 1 tier inflation cleanup.
+  bbldemon: "Legendary",
+  redpill: "Legendary",
+  sportsprodigy: "Legendary",
+  failedathlete: "Rare",
+  piratedj: "Epic",
+  cornercoach: "Uncommon",
+  mural: "Uncommon",
   shiesty: "SuperCommon", torta: "SuperCommon", waterboy: "SuperCommon", buspass: "SuperCommon",
-  cognac: "SuperCommon", bustdown: "SuperCommon", soulfood: "SuperCommon",
-  bossbabe: "Uncommon", scammer: "Rare",
+  cognac: "SuperCommon", bustdown: "SuperCommon", soulfood: "SuperCommon", concrete: "SuperCommon",
+  bossbabe: "Rare", scammer: "Rare",
   youngbull: "Common", transplant: "Common", tayaty: "Common", edgar: "Common", nguyen: "Common", manman: "Common",
   pinaynurse: "Common", honestthot: "Common", earthy: "Common", abuela: "Common", icecream: "Common",
   cornball: "Common",
-  hooper: "Common",
+  hooper: "Rare",
   plug: "Common",
   snow: "Common",
   wifey: "Common",
   baby: "Uncommon",
   bikelife: "Uncommon",
-  gamer: "Uncommon",
+  gamer: "Epic",
   rastamon: "Uncommon",
-  vibe: "Uncommon",
+  vibe: "Rare",
   nerd: "Rare",
   roaster: "Rare",
   streamer: "Rare",
-  oink: "Epic",
+  oink: "Legendary",
   techbro: "Legendary",
-  barber: "Common",
-  bottle: "Uncommon",
-  sneaker: "Uncommon",
+  barber: "Uncommon",
+  bottle: "Rare",
+  sneaker: "Legendary",
   church: "Rare",
-  landlord: "Epic",
+  landlord: "Legendary",
   carmeet: "Uncommon",
-  promoter: "Rare",
-  nail: "Common",
+  promoter: "Epic",
+  nail: "Uncommon",
   og: "Mythical",
   delivery: "Common",
 } as const satisfies Record<keyof typeof cards, CardRarity>;

@@ -76,7 +76,7 @@ export type StoryRuntime = {
   lanePowerBonuses: { owner: Owner | "both"; lane: Lane; amount: number }[];
   laneLocks: { owner: Owner | "both"; lanes: Lane[] }[];
 };
-export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean; uncounterable: boolean };
+export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean; uncounterable: boolean; weakened: boolean; locked: boolean; boosted: boolean; burnStacks: number };
 export type CardInstance = Card & {
   instanceId: string; cardId: string; owner: Owner; lane: Lane | null; playedRound: number | null;
   basePower: number; powerModifier: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
@@ -141,11 +141,13 @@ export type Match = {
   cheapBuffsUsed: Record<Owner, number>; effectLog: EffectLogEntry[]; nextEventSequence: number; timedEffects: TimedEffect[];
   discountTokens: DiscountToken[]; nextDiscountOrder: number; landlordTaxUsed: Record<Owner, Record<Lane, boolean>>;
   sneakerTriggered: Record<Owner, boolean>;
+  /** Engine-internal Echo primitive. Tracks the last card whose On Reveal resolved this round. */
+  lastRevealedCardId: string | null;
   storyEncounter?: StoryEncounterSnapshot; storyRuntime?: StoryRuntime;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
 const lane = (n: number): Lane => n as Lane;
-const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false });
+const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false, weakened: false, locked: false, boosted: false, burnStacks: 0 });
 const abilityCardId = (card: CardInstance) => card.copiedAbilityCardId ?? card.cardId;
 export const createCardInstance = (cardId: string, owner: Owner, deck = 'custom', index = 0): CardInstance => {
   const card = cards[cardId];
@@ -203,6 +205,7 @@ export function createMatchFromEngineCards(
     effectLog: [], nextEventSequence: 1, timedEffects: [], discountTokens: [], nextDiscountOrder: 1,
     landlordTaxUsed: { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } },
     sneakerTriggered: { player: false, cpu: false },
+    lastRevealedCardId: null,
     abilityUpgradeSnapshot,
     ...(districtSnapshot ? { districtSnapshot: validateDistrictSnapshot(districtSnapshot), districtRuntime: freshDistrictRuntime() } : {}),
     ...(storyEncounter ? {
@@ -391,6 +394,9 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string): Ma
   if (m.districtRuntime?.detainedCardIds.includes(card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'COUNTY JAIL blocked movement.' }));
   }
+  if (card.statuses.locked) {
+    return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'LOCKED: cannot be moved.' }));
+  }
   const effect = m.districtSnapshot?.locations[destination].effect;
   const trapBonus = effect?.kind === 'move-bonus' && !m.districtRuntime!.trappedCardIds.includes(card.instanceId) ? effect.amount : 0;
   const updated = { ...card, lane: destination, moved: true, powerModifier: card.powerModifier + trapBonus, lastEffectNote: note + (trapBonus ? ` THE TRAP: +${trapBonus} Hands.` : '') };
@@ -398,6 +404,128 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string): Ma
   return { ...m, boards: m.boards.map((items, i) => i === sourceLane ? items.filter((c) => c.instanceId !== card.instanceId) : i === destination ? [...items, updated] : items) as Match['boards'] };
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
+
+/** Ongoing effect primitives: Burn / Weaken / Lock / Boost. */
+/**
+ * Elemental hierarchy — the type-vs-type bonus table that makes matchups matter.
+ * Fire burns Plant, Water extinguishes Fire, Plant drinks Water, Electric conducts
+ * through Water, Air carries Electric, Earth grounds Electric, Light vs Dark.
+ * When an attacker of type X targets a defender of type Y and X beats Y, Burn and
+ * direct reductions get +1 stack. Stacking multiple bonuses caps at +1 per matchup.
+ */
+const ELEMENTAL_MATCHUP_BONUS: Record<string, Record<string, number>> = {
+  Fire: { Plant: 1 },
+  Plant: { Water: 1 },
+  Water: { Fire: 1 },
+  Electric: { Water: 1 },
+  Air: { Electric: 1 },
+  Earth: { Electric: 1 },
+  Rock: { Electric: 1 },
+  Light: { Dark: 1 },
+  Dark: { Light: 1 },
+};
+const elementalMatchupBonus = (attackerType: string, defenderType: string): number =>
+  ELEMENTAL_MATCHUP_BONUS[attackerType]?.[defenderType] ?? 0;
+
+const applyBurn = (m: Match, source: CardInstance, target: CardInstance, stacks: number, note: string): Match => {
+  const bonus = elementalMatchupBonus(source.type, target.type);
+  const total = stacks + bonus;
+  return modify(m, target.instanceId, c => ({
+    ...c,
+    statuses: { ...c.statuses, burnStacks: c.statuses.burnStacks + total },
+    lastEffectNote: bonus ? `${note} (+${bonus} ${source.type}→${target.type})` : note,
+  }));
+};
+const applyWeaken = (m: Match, card: CardInstance, note: string): Match =>
+  modify(m, card.instanceId, c => ({ ...c, statuses: { ...c.statuses, weakened: true }, lastEffectNote: note }));
+const applyLock = (m: Match, card: CardInstance, note: string): Match =>
+  modify(m, card.instanceId, c => ({ ...c, statuses: { ...c.statuses, locked: true }, lastEffectNote: note }));
+const applyBoost = (m: Match, card: CardInstance, note: string): Match =>
+  modify(m, card.instanceId, c => ({ ...c, statuses: { ...c.statuses, boosted: true }, lastEffectNote: note }));
+/** Single source of truth for "cleanse" — wipes every debuff/buff we model. */
+const cleanseStatuses = (statuses: Statuses): Statuses => ({
+  ...statuses, frozen: false, silenced: false, weakened: false, locked: false, boosted: false, burnStacks: 0,
+});
+
+/**
+ * Round-end effects that fire as a round transitions to the next.
+ * - Burn deals its stacked damage, then decays to 0.
+ * - Boost grants +1 Hands to each affected card (persistent until cleansed).
+ */
+const applyOngoingRoundEndEffects = (m: Match): Match => {
+  let result = m;
+  for (const card of result.boards.flat()) {
+    if (card.statuses.burnStacks > 0) {
+      const damage = card.statuses.burnStacks;
+      result = modify(result, card.instanceId, c => ({
+        ...c,
+        powerModifier: c.powerModifier - damage,
+        statuses: { ...c.statuses, burnStacks: 0 },
+        lastEffectNote: `BURN: -${damage} Hands at round end.`,
+      }));
+    }
+  }
+  for (const card of result.boards.flat()) {
+    if (card.statuses.boosted) {
+      result = modify(result, card.instanceId, c => ({
+        ...c,
+        powerModifier: c.powerModifier + 1,
+        lastEffectNote: 'BOOST: +1 Hands at round end.',
+      }));
+    }
+  }
+  // Alchy: round 4+ conditional round-end gain (+1, +2 if losing the district).
+  if (result.round >= 4) {
+    for (const card of result.boards.flat().filter(c => c.cardId === 'alchy' && !c.statuses.silenced && !c.statuses.frozen && !c.statuses.weakened && c.lane !== null)) {
+      const cardLane = card.lane as Lane;
+      const enemy = card.owner === 'player' ? 'cpu' : 'player';
+      const losing = getLaneScoreForMatch(result, inLane(result, card.owner, cardLane), cardLane, card.owner) < getLaneScoreForMatch(result, inLane(result, enemy, cardLane), cardLane, enemy);
+      const gain = losing ? 2 : 1;
+      result = modify(result, card.instanceId, c => ({
+        ...c,
+        powerModifier: c.powerModifier + gain,
+        lastEffectNote: `Last Round: +${gain} Hands${losing ? ' (losing)' : ''}.`,
+      }));
+    }
+  }
+  return result;
+};
+
+/**
+ * Hand-resident ongoing effects that fire at round end. GUAP set the template:
+ * while an elemental-bond card is in its owner's hand, every other friendly
+ * character of the same type gains +1 Hands. Each element has at least one
+ * bond card so the elemental hierarchy reads at every layer.
+ */
+const ELEMENTAL_BONDS_BY_CARD_ID: Record<string, string> = {
+  guap: 'Fire',
+  icecream: 'Water',
+  gardener: 'Plant',
+  piratedj: 'Electric',
+  honestthot: 'Air',
+  torta: 'Earth',
+  abuela: 'Light',
+  incel: 'Dark',
+  concrete: 'Rock',
+};
+const applyOngoingRoundEndHandEffects = (m: Match): Match => {
+  let result = m;
+  for (const hand of [result.playerHand, result.cpuHand] as const) {
+    for (const card of hand) {
+      const bond = ELEMENTAL_BONDS_BY_CARD_ID[card.cardId];
+      if (!bond) continue;
+      const allies = result.boards.flat().filter(c => c.owner === card.owner && c.type === bond && c.instanceId !== card.instanceId);
+      for (const ally of allies) {
+        result = modify(result, ally.instanceId, c => ({
+          ...c,
+          powerModifier: c.powerModifier + 1,
+          lastEffectNote: `${card.name}: ${bond} bond +1 Hands.`,
+        }));
+      }
+    }
+  }
+  return result;
+};
 
 /**
  * Token templates used by Ashlee (Guyana the gorilla) and Captain Jigga
@@ -627,12 +755,42 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     });
     m = addEvent(before, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
-  if (source.statuses.silenced || source.statuses.frozen) { note('Ability did not fire (silenced or frozen).'); return m; }
-  if (source.cardId === 'rastamon') { const t = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId && (c.statuses.frozen || c.statuses.silenced))); if (t) { targetIds.add(t.instanceId); m = modify(m, t.instanceId, (c) => ({ ...c, statuses: { ...c.statuses, frozen: false, silenced: false }, powerModifier: c.powerModifier + 2, lastEffectNote: 'Natural Cure: cleansed, +2 Hands.' })); note('Natural Cure cleansed an ally and gave it +2.'); } else note('Natural Cure found no status to cleanse.'); }
-  else if (source.cardId === 'roaster') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); const amount = t.playedRound === m.round ? -3 : -2; m = targetEnemyPowerReduction(m, source, t, amount, `Ratio'd Receipts: ${amount} Hands.`); note(`Ratio'd Receipts targeted ${t.name}.`); } else note("Ratio'd Receipts found no enemy."); }
+  if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  // Record this card as the most recent On Reveal so Echo / future abilities can read it.
+  m = { ...m, lastRevealedCardId: source.cardId };
+  if (source.cardId === 'rastamon') { const t = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId && (c.statuses.frozen || c.statuses.silenced))); if (t) { targetIds.add(t.instanceId); m = modify(m, t.instanceId, (c) => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + 2, lastEffectNote: 'Natural Cure: cleansed, +2 Hands.' })); note('Natural Cure cleansed an ally and gave it +2.'); } else note('Natural Cure found no status to cleanse.'); }
+  else if (source.cardId === 'roaster') {
+    const t = highest(inLane(m, enemy, l));
+    if (t) {
+      targetIds.add(t.instanceId);
+      m = applyBurn(m, source, t, 2, "Ratio'd Receipts: 2 Burn.");
+      const amount = t.playedRound === m.round ? -3 : -2;
+      m = targetEnemyPowerReduction(m, source, t, amount, `Ratio'd Receipts: ${amount} Hands.`);
+      note(`Ratio'd Receipts targeted ${t.name} (2 Burn + ${amount}).`);
+    } else note("Ratio'd Receipts found no enemy.");
+  }
   else if (source.cardId === 'nerd') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: 'Unaware: silenced.' }), true); note('Unaware targeted the highest enemy through Side Eye.'); } else note('Unaware found no enemy.'); }
-  else if (source.cardId === 'cornball') { const t = inLane(m, enemy, l).length >= 3 ? lowest(inLane(m, enemy, l)) : undefined; if (t) { targetIds.add(t.instanceId); const guarded = inLane(m, enemy, l).some((c) => abilityCardId(c) === 'wifey' && c.statuses.protected && !c.statuses.silenced && !c.statuses.blocked); m = targetEnemy(m, source, t, (c) => c); if (!guarded && !before.timedEffects.some(e => e.kind === 'salon-protection' && e.targetInstanceId === t.instanceId)) m = move(m, findCard(m, t.instanceId)!, lane((l + 1) % 3), 'Scare the Hoes moved this card.'); note('Scare the Hoes moved the lowest enemy.'); } else note('Scare the Hoes needs three enemies.'); }
+  else if (source.cardId === 'cornball') {
+    let burned = 0;
+    for (const t of inLane(m, enemy, l)) {
+      targetIds.add(t.instanceId);
+      m = applyBurn(m, source, t, 1, 'Scare the Hoes: 1 Burn.');
+      burned++;
+    }
+    note(burned ? `Scare the Hoes applied 1 Burn to ${burned} enemies.` : 'Scare the Hoes found no enemies.');
+  }
   else if (source.cardId === 'plug') { m = addDiscountToken(m, source.owner, source, 'another-district'); m = { ...m, plugDiscountLane: { ...m.plugDiscountLane, [source.owner]: l } }; note('Connections: next card in another district costs 1 less Motion.'); }
+  else if (source.cardId === 'sneaker') {
+    // Steal: copy the highest-Hands enemy's printed Power onto Sneaker (capped at +7) and apply Weaken.
+    const target = highest(m.boards.flat().filter(c => c.owner === enemy && c.kind !== 'support'));
+    if (target) {
+      targetIds.add(target.instanceId);
+      const bonus = Math.min(7, target.basePower);
+      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `Flip Season: +${bonus} Hands (stolen from ${target.name}).` }));
+      m = applyWeaken(m, target, 'Flip Season: Weakened.');
+      note(`Flip Season stole ${bonus} Hands from ${target.name}.`);
+    } else note('Flip Season found no enemy.');
+  }
   else if (source.cardId === 'bossbabe') note('Network Boost watches the first two plays in other districts.');
   else if (source.cardId === 'scammer') {
     const target = highest(inLane(m, enemy, l));
@@ -647,22 +805,52 @@ function resolveAbility(match: Match, source: CardInstance): Match {
       note(`Imposter copied ${target.name}'s base Hands and ${printed.ability}. On Reveal does not repeat.`);
     } else note('Imposter found no enemy to copy.');
   }
-  else if (source.cardId === 'streamer') note('Follower Frenzy is live for the next two cheap plays.');
-  else if (source.cardId === 'gamer') note('Tryhard Trigger watches cheap plays here.');
+  else if (source.cardId === 'streamer') {
+    // Reset the owner's cheap-play trigger counter to 0; the existing reactive logic in resolveCardPlay
+    // arms up to 2 fresh Follower Frenzy triggers. This converts Streamer from "while-on-board" reactive
+    // to "On Reveal trigger reset" without changing the reactive buff behavior.
+    m = { ...m, cheapBuffsUsed: { ...m.cheapBuffsUsed, [source.owner]: 0 } };
+    note('Follower Frenzy armed — the next 2 cheap plays gain +1 Hand.');
+  }
+  else if (source.cardId === 'gamer') {
+    // City Tour: visit the other two districts and buff each lane's lowest-Hands friendly card.
+    let buffed = 0;
+    for (const targetLane of [0, 1, 2] as Lane[]) {
+      if (targetLane === l) continue;
+      const target = lowest(inLane(m, source.owner, targetLane));
+      if (target) {
+        targetIds.add(target.instanceId);
+        m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'City Tour: +1 Hand.' }));
+        buffed++;
+      }
+    }
+    note(buffed ? `City Tour visited ${buffed} other districts.` : 'City Tour found no allies.');
+  }
   else if (source.cardId === 'techbro') { const supported = inLane(m, source.owner, l).some(c => c.instanceId !== source.instanceId); if (supported) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'VC Funded Flex: +2 Hands.' })); note('VC Funded Flex gained +2 Hands with an ally here.'); } else note('VC Funded Flex needs another friendly card here.'); }
   else if (source.cardId === 'bikelife') { const to = lowestFriendlyLane(m, source.owner, l); m = move(m, source, to, 'Ride Out moved here, +1 Hands.'); if (findCard(m, source.instanceId)?.lane === to) m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Ride Out moved here, +1 Hands.' })); note('Ride Out moved Bikelife and gave +1.'); }
   else if (source.cardId === 'vibe') { const t = lowest(m.boards.flat().filter((c) => c.owner === source.owner && c.instanceId !== source.instanceId && c.lane !== l)); if (t) { targetIds.add(t.instanceId); m = move(m, t, l, 'Wave Check pulled this card here, +1 Hands.'); if (findCard(m, t.instanceId)?.lane === l) { m = modify(m, t.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check pulled this card here, +1 Hands.' })); m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check: +1 Hands.' })); } note('Wave Check pulled the lowest ally here; both gained +1.'); } else note('Wave Check needs an ally in another district.'); }
   else if (source.cardId === 'hooper') { if (getLaneScoreForMatch(m, inLane(m, source.owner, l), l, source.owner) < getLaneScoreForMatch(m, inLane(m, enemy, l), l, enemy)) { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemyPowerReduction(m, source, t, -2, 'Ankle Breaker: -2 Hands.'); } m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Ankle Breaker: +2 Hands.' })); note('Ankle Breaker flipped the pressure.'); } else note('Ankle Breaker only triggers while losing.'); }
   else if (source.cardId === 'baby') { if (inLane(m, enemy, l).length > inLane(m, source.owner, l).length) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Mama Bear: +2 Hands.' })); note('Mama Bear gained +2.'); } else note('Mama Bear found no crowd disadvantage.'); }
   else if (source.cardId === 'guap') {
-    m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'FINNAM!: +2 Hands.' }));
+    const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
+    const bonus = Math.min(5, allies.length);
+    m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `FINNAM!: +${bonus} Hands.` }));
     for (const target of inLane(m, enemy, l)) {
       targetIds.add(target.instanceId);
       m = targetEnemyPowerReduction(m, source, target, -1, 'FINNAM!: -1 Hands.');
     }
-    note('FINNAM! GUAP erupted in a golden supernova.');
+    note(`FINNAM! GUAP erupted (+${bonus}, -1 AOE).`);
   }
-  else if (source.cardId === 'oink') { for (const t of inLane(m, enemy, l)) { targetIds.add(t.instanceId); m = targetEnemyPowerReduction(m, source, t, -1, 'Civic Pressure: -1 Hands.'); } note('Civic Pressure applied lane pressure.'); }
+  else if (source.cardId === 'oink') {
+    let weakenedCount = 0;
+    for (const t of inLane(m, enemy, l)) {
+      targetIds.add(t.instanceId);
+      m = applyWeaken(m, t, 'Civic Pressure: Weakened.');
+      weakenedCount++;
+    }
+    if (weakenedCount > 0) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + weakenedCount, lastEffectNote: `Civic Pressure: +${weakenedCount} Hands.` }));
+    note(`Civic Pressure weakened ${weakenedCount} enemies.`);
+  }
   else if (source.cardId === 'snow') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, frozen: true }, lastEffectNote: 'Cold Shoulder: frozen.' })); note('Cold Shoulder froze the highest enemy.'); } else note('Cold Shoulder found no enemy.'); }
   else if (source.cardId === 'barber') {
     const friendly = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId));
@@ -715,27 +903,39 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     if (!target) note("Drop Off needs another friendly 1- or 2-Cost card here.");
     else { targetIds.add(target.instanceId); const destination = lowestFriendlyLane(m, source.owner, l); m = move(m, target, destination, "Drop Off moved this card to the weakest other district."); note("Drop Off moved the lowest-Hands eligible ally."); }
   }
-  else if (['youngbull', 'transplant', 'edgar', 'nguyen', 'manman', 'shiesty', 'torta'].includes(source.cardId)) {
+  else if (['youngbull', 'transplant', 'edgar', 'nguyen', 'manman', 'shiesty'].includes(source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
-    const succeeds = source.cardId === 'youngbull' || source.cardId === 'shiesty' ? inLane(m, enemy, l).length > 0
+    const enemiesHere = inLane(m, enemy, l);
+    const succeeds = source.cardId === 'youngbull' || source.cardId === 'shiesty' ? enemiesHere.length > 0
       : source.cardId === 'torta' ? allies.length > 0
       : source.cardId === 'transplant' ? allies.length === 0
       : source.cardId === 'edgar' ? allies.some(c => c.cost <= 2)
       : source.cardId === 'nguyen' ? m.boards.flat().some(c => c.owner === source.owner && c.lane !== l)
       : allies.length >= 2;
     const amount = source.cardId === 'manman' ? 2 : 1;
-    if (succeeds) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
-    note(succeeds ? `${source.ability}: +${amount} Hands.` : `${source.ability}: condition not met.`);
-  }
-  else if (source.cardId === 'tayaty' || source.cardId === 'honestthot') {
-    const target = lowest(inLane(m, enemy, l));
-    if (target) {
-      targetIds.add(target.instanceId);
-      m = source.cardId === 'tayaty'
-        ? targetEnemyPowerReduction(m, source, target, -1, 'Act Up: -1 Hands.')
-        : targetEnemy(m, source, target, c => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: 'Real Talk: silenced.' }));
+    if (succeeds) {
+      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
+      if (source.cardId === 'youngbull') {
+        const burnTarget = highest(enemiesHere);
+        if (burnTarget) { targetIds.add(burnTarget.instanceId); m = applyBurn(m, source, burnTarget, 1, 'Step Up: 1 Burn.'); }
+      }
     }
-    note(target ? `${source.ability} targeted ${target.name}.` : `${source.ability} found no enemy.`);
+    note(succeeds ? `${source.ability}: +${amount} Hands${source.cardId === 'youngbull' && enemiesHere.length ? ' + 1 Burn' : ''}.` : `${source.ability}: condition not met.`);
+  }
+  else if (source.cardId === 'tayaty') {
+    // Echo: +1 Hand always, +bonus based on the last On Reveal's printed cost.
+    m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Act Up: +1 Hand.' }));
+    let echoed = false;
+    if (m.lastRevealedCardId && m.lastRevealedCardId !== 'tayaty') {
+      const lastCard = cards[m.lastRevealedCardId];
+      if (lastCard) {
+        const bonus = Math.min(5, lastCard.cost);
+        m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `Act Up: +${1 + bonus} Hands (echoed ${lastCard.name}).` }));
+        note(`Act Up echoed ${lastCard.name} for +${bonus}.`);
+        echoed = true;
+      }
+    }
+    if (!echoed) note('Act Up: +1 Hand.');
   }
   else if (source.cardId === 'waterboy') {
     const supported = inLane(m, source.owner, l).some(c => c.instanceId !== source.instanceId);
@@ -750,18 +950,24 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     note('All-Day Transfer: your next card costs 1 less Motion.');
   }
   else if (source.cardId === 'energydrink' || source.cardId === 'charger') {
-    const eligible = source.cardId === 'energydrink' || inLane(m, source.owner, l).some(c => c.kind !== 'support' && c.type === 'Electric');
+    const eligible = source.cardId === 'energydrink' || source.cardId === 'charger'
+      ? inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId).length
+      : 0;
     const key = source.owner === 'player' ? 'playerMotion' : 'cpuMotion';
-    const gain = eligible ? Math.min(MAX_MOTION - m[key], source.cardId === 'energydrink' ? 3 : 2) : 0;
+    const gain = source.cardId === 'energydrink'
+      ? Math.min(MAX_MOTION - m[key], 3)
+      : Math.min(MAX_MOTION - m[key], Math.min(3, eligible));
     m = { ...m, [key]: m[key] + gain };
-    note(!eligible ? 'Plug In needs a friendly Electric character here.' : `${source.ability} restored ${gain} Motion (maximum ${MAX_MOTION}).`);
+    note(source.cardId === 'energydrink'
+      ? `Second Wind restored ${gain} Motion (maximum ${MAX_MOTION}).`
+      : `Refund restored ${gain} Motion (${eligible} friendly characters here).`);
   }
   else if (source.cardId === 'firstaid' || source.cardId === 'boombox') {
     const targets = inLane(m, source.owner, l).filter(c => c.kind !== 'support' && (source.cardId === 'boombox' || c.statuses.frozen || c.statuses.silenced));
     for (const target of targets) {
       targetIds.add(target.instanceId);
       m = modify(m, target.instanceId, c => source.cardId === 'firstaid'
-        ? { ...c, statuses: { ...c.statuses, frozen: false, silenced: false }, lastEffectNote: 'Patch Up: cleansed.' }
+        ? { ...c, statuses: cleanseStatuses(c.statuses), lastEffectNote: 'Patch Up: cleansed.' }
         : { ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Turn It Up: +1 Hands.' });
     }
     note(targets.length ? `${source.ability} helped ${targets.length} friendly characters.` : `${source.ability} found no eligible friendly characters.`);
@@ -795,15 +1001,15 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     const target = lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'soulfood' || c.kind !== 'support')));
     if (target) {
       targetIds.add(target.instanceId);
-      m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, frozen: false, silenced: false }, powerModifier: c.powerModifier + 1, lastEffectNote: `${source.ability}: cleansed, +1 Hands.` }));
+      m = modify(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + 1, lastEffectNote: `${source.ability}: cleansed, +1 Hands.` }));
     }
     note(target ? `${source.ability} cleansed an ally and gave +1 Hands.` : `${source.ability} needs another friendly card here.`);
   }
-  else if (['earthy', 'abuela', 'icecream', 'cognac'].includes(source.cardId)) {
+  else if (['earthy', 'cognac'].includes(source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'cognac' || c.kind !== 'support'));
     const target = lowest(allies);
-    const targets = source.cardId === 'icecream' ? allies : target ? [target] : [];
-    const amount = source.cardId === 'abuela' || source.cardId === 'cognac' ? 2 : 1;
+    const targets = target ? [target] : [];
+    const amount = source.cardId === 'cognac' ? 2 : 1;
     for (const ally of targets) {
       targetIds.add(ally.instanceId);
       m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
@@ -815,17 +1021,16 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     const target = highest(inLane(m, enemy, l));
     if (diverse && target) {
       targetIds.add(target.instanceId);
-      m = targetEnemyPowerReduction(m, source, target, -1, 'Fresh Color: -1 Hands.');
+      m = applyLock(m, target, 'Fresh Color: Locked.');
     } else if (diverse) {
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Fresh Color: +1 Hands.' }));
     }
-    note(!diverse ? 'Fresh Color needs another friendly type.' : target ? 'Fresh Color pressured the highest enemy.' : 'Fresh Color gained +1 Hands with no enemy here.');
+    note(!diverse ? 'Fresh Color needs another friendly type.' : target ? 'Fresh Color Locked the highest enemy.' : 'Fresh Color gained +1 Hands with no enemy here.');
   }
-  else if (['bodegacat', 'dogwalker', 'gardener', 'dancecaptain', 'midnightmayor'].includes(source.cardId)) {
+  else if (['bodegacat', 'dogwalker', 'dancecaptain', 'midnightmayor'].includes(source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     const succeeds = source.cardId === 'bodegacat' ? allies.length === 0
       : source.cardId === 'dogwalker' ? allies.length >= 2
-      : source.cardId === 'gardener' ? m.boards.flat().some(c => c.owner === source.owner && c.lane !== l)
       : source.cardId === 'dancecaptain' ? m.boards.every(board => board.some(c => c.owner === source.owner)) : true;
     const amount = source.cardId === 'dogwalker' ? 2 : source.cardId === 'dancecaptain' ? 3
       : source.cardId === 'midnightmayor' ? Math.min(3, new Set(inLane(m, source.owner, l).map(c => c.type)).size) : 1;
@@ -847,7 +1052,7 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     const targets = source.cardId === 'nightmedic' ? eligible : target ? [target] : [];
     for (const ally of targets) {
       targetIds.add(ally.instanceId);
-      m = modify(m, ally.instanceId, c => ({ ...c, statuses: { ...c.statuses, frozen: false, silenced: false }, powerModifier: c.powerModifier + (source.cardId === 'laundry' ? 1 : 0), lastEffectNote: `${source.ability}: cleansed.` }));
+      m = modify(m, ally.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + (source.cardId === 'laundry' ? 1 : 0), lastEffectNote: `${source.ability}: cleansed.` }));
     }
     note(targets.length ? `${source.ability} cleansed ${targets.length} allies.` : `${source.ability} found no status to cleanse.`);
   }
@@ -871,8 +1076,13 @@ function resolveAbility(match: Match, source: CardInstance): Match {
   }
   else if (source.cardId === 'chessregular') {
     const enemies = inLane(m, enemy, l);
-    if (enemies.length === 1) { const target = enemies[0]; targetIds.add(target.instanceId); m = targetEnemyPowerReduction(m, source, target, -2, 'Quiet Fork: -2 Hands.'); }
-    note(enemies.length === 1 ? 'Quiet Fork targeted the lone enemy.' : 'Quiet Fork needs exactly one enemy here.');
+    if (enemies.length === 1) {
+      const target = enemies[0];
+      const stacks = getEffectiveCardPower(target) >= 3 ? 2 : 1;
+      targetIds.add(target.instanceId);
+      m = applyBurn(m, source, target, stacks, `Quiet Fork: ${stacks} Burn.`);
+      note(`Quiet Fork applied ${stacks} Burn to the lone enemy.`);
+    } else note('Quiet Fork needs exactly one enemy here.');
   }
   else if (source.cardId === 'bigzoey') {
     const ally = lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId));
@@ -959,7 +1169,7 @@ function resolveAbility(match: Match, source: CardInstance): Match {
   else if (['subwaymagician', 'ogdominican', 'conductor'].includes(source.cardId)) {
     if (source.cardId === 'subwaymagician') {
       const target = highest(inLane(m, enemy, l));
-      if (target) { targetIds.add(target.instanceId); m = targetEnemy(m, source, target, c => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: 'Now You See Me: silenced.' })); }
+      if (target) { targetIds.add(target.instanceId); m = applyWeaken(m, target, 'Now You See Me: Weakened.'); }
     }
     const traveler = source.cardId === 'conductor' ? lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId)) : source;
     if (traveler) {
@@ -990,7 +1200,12 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     }
   }
   else if (source.cardId === 'captainjigga') {
-    // Two Steward tokens — each picks a different highest-Hands enemy for -2.
+    // Two Steward tokens always spawn into Jigga's lane. Each one auto-targets
+    // a different highest-Hands enemy (up to 2); if no enemies are on the
+    // board yet, the stewards still appear but no -2 resolves.
+    const destination = l;
+    m = summonCard(m, source.owner, destination, SUMMON_TEMPLATES.steward, 'steward', source);
+    m = summonCard(m, source.owner, destination, SUMMON_TEMPLATES.steward, 'steward', source);
     const enemyPool = [...m.boards.flat().filter(c => c.owner === enemy && c.kind !== 'support')]
       .sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a));
     const picked: CardInstance[] = [];
@@ -1002,7 +1217,23 @@ function resolveAbility(match: Match, source: CardInstance): Match {
       targetIds.add(target.instanceId);
       m = targetEnemyPowerReduction(m, source, target, -2, 'Cabin Crew: -2 Hands.');
     }
-    note(picked.length ? `Cabin Crew dispatched ${picked.length} steward${picked.length === 1 ? '' : 's'} against the highest-Hands enemies.` : 'Cabin Crew found no enemies.');
+    note(`Cabin Crew dispatched 2 stewards${picked.length ? `, ${picked.length} hit${picked.length === 1 ? '' : 's'} enemy Hands` : ' (no enemies in range)'}.`);
+  }
+  else if (source.cardId === 'counter') {
+    // Mirror: gain +X Hands where X = printed cost of highest-cost enemy (up to +8), and apply Protect.
+    const target = highest(m.boards.flat().filter(c => c.owner === enemy && c.kind !== 'support'));
+    let bonus = 0;
+    if (target) {
+      targetIds.add(target.instanceId);
+      bonus = Math.min(8, target.cost);
+      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `Mirror: +${bonus} Hands (read ${target.name}).` }));
+    }
+    m = { ...m, timedEffects: [...m.timedEffects, {
+      id: `counter:${source.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId,
+      targetInstanceId: source.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7,
+      expiration: 'match-complete',
+    }] };
+    note(target ? `Mirror read ${target.name} for +${bonus} and gained Protect.` : 'Mirror gained Protect with no enemy to read.');
   }
   else if (Object.hasOwn(streetWaveCards, source.cardId)) {
     const id = source.cardId;
@@ -1021,10 +1252,10 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     const cleanse = (target: CardInstance, amount: number) => {
       if (!target.statuses.frozen && !target.statuses.silenced) return;
       targetIds.add(target.instanceId);
-      m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, frozen: false, silenced: false }, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed${amount ? `, +${amount} Hands` : ''}.` }));
+      m = modify(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed${amount ? `, +${amount} Hands` : ''}.` }));
     };
     const losing = () => getLaneScoreForMatch(m, inLane(m, source.owner, l), l, source.owner) < getLaneScoreForMatch(m, enemies, l, enemy);
-    if (['homelessyn', 'sportsprodigy', 'fein', 'alchy', 'divorceddad', 'failedathlete', 'incel'].includes(id)) {
+    if (['homelessyn', 'sportsprodigy', 'fein', 'alchy', 'divorceddad', 'failedathlete'].includes(id)) {
       const succeeds = id === 'homelessyn' ? enemies.length > inLane(m, source.owner, l).length - 1
         : id === 'sportsprodigy' ? losing()
         : id === 'fein' ? enemies.length > 0
@@ -1036,6 +1267,10 @@ function resolveAbility(match: Match, source: CardInstance): Match {
       if (succeeds) {
         buff(source, amount);
         if (id === 'sportsprodigy') reduce(highest(enemies), 1);
+        if (id === 'fein' && enemies.length >= 2) {
+          const burnTarget = highest(enemies);
+          if (burnTarget) { targetIds.add(burnTarget.instanceId); m = applyBurn(m, source, burnTarget, 1, 'One More: 1 Burn.'); }
+        }
       }
     } else if (id === 'stud') {
       const target = lowest(allies);
@@ -1047,8 +1282,11 @@ function resolveAbility(match: Match, source: CardInstance): Match {
     } else if (id === 'gothkid' || id === 'redpill') {
       const target = id === 'gothkid' ? lowest(enemies.filter(c => cards[c.cardId].cost <= 2)) : highest(enemies);
       if (target) {
-        if (id === 'redpill' && target.statuses.silenced) buff(source, 2);
-        else { targetIds.add(target.instanceId); m = targetEnemy(m, source, target, c => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: `${source.ability}: silenced.` })); }
+        if (id === 'redpill' && target.statuses.weakened) {
+          targetIds.add(target.instanceId);
+          m = targetEnemy(m, source, target, c => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: `${source.ability}: already Weakened, silenced.` }));
+          buff(source, 2);
+        } else { targetIds.add(target.instanceId); m = applyWeaken(m, target, `${source.ability}: Weakened.`); }
       }
     } else if (id === 'stonerjr' || id === 'stonersr') {
       const eligible = allies.filter(c => c.statuses.frozen || c.statuses.silenced);
@@ -1200,7 +1438,7 @@ function applyDistrictArrival(match: Match, owner: Owner, instanceId: string, ta
       && (c.statuses.frozen || c.statuses.silenced || c.powerModifier < 0)).map(c => c.instanceId);
     note = targetIds.length ? `${district.name}: cleared Freeze, Silence, and negative Hands from ${targetIds.length} allies.` : `${district.name}: no allies needed a cleanup.`;
     for (const id of targetIds) after = modify(after, id, card => ({ ...card,
-      powerModifier: Math.max(0, card.powerModifier), statuses: { ...card.statuses, frozen: false, silenced: false }, lastEffectNote: note,
+      powerModifier: Math.max(0, card.powerModifier), statuses: cleanseStatuses(card.statuses), lastEffectNote: note,
     }));
   }
   return note ? addEvent(match, after, { type: 'ability', owner, lane: targetLane, targetIds, kind: 'story', note }) : after;
@@ -1272,12 +1510,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     m = { ...m, cheapBuffsUsed: { ...m.cheapBuffsUsed, [owner]: m.cheapBuffsUsed[owner] + 1 } };
     m = addEvent(beforeTrigger, m, { type: 'ability', sourceId: streamer.instanceId, owner, targetIds: [placed.instanceId], note: 'Follower Frenzy gave the cheap play +1 Hands.' });
   }
-  if (cost <= 2) for (const gamer of inLane(m, owner, targetLane).filter((c) => abilityCardId(c) === 'gamer' && c.instanceId !== placed.instanceId && !c.statuses.silenced && !c.statuses.frozen)) {
-    const beforeTrigger = m;
-    m = modify(m, gamer.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1 }));
-    m = modify(m, placed.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Tryhard Trigger: +1 Hands.' }));
-    m = addEvent(beforeTrigger, m, { type: 'ability', sourceId: gamer.instanceId, owner, targetIds: [placed.instanceId], note: 'Tryhard Trigger gave Gamer and the cheap play +1 Hands.' });
-  }
+  // Gamer moved from reactive Tryhard Trigger (cheap-play watch) to proactive City Tour On Reveal.
+  // The reactive cheap-play hook was removed; resolveAbility now handles Gamer's branch directly.
   for (const boss of m.boards.flat().filter(c => c.owner === owner && abilityCardId(c) === 'bossbabe'
     && c.lane !== targetLane && !c.statuses.silenced && !c.statuses.frozen && (c.networkBoosts ?? 0) < 2)) {
     const beforeTrigger = m;
@@ -1294,15 +1528,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   m = resolveAbility(m, placed);
   m = applyDistrictDeparture(m, owner, instanceId, targetLane);
   const opponent = owner === "player" ? "cpu" : "player";
-  if (card.cost >= 4 && !m.sneakerTriggered?.[opponent]) {
-    const reseller = m.boards.flat().find((candidate) => candidate.owner === opponent && abilityCardId(candidate) === "sneaker" && !candidate.statuses.silenced && !candidate.statuses.frozen);
-    if (reseller) {
-      const beforeSneaker = m;
-      m = { ...m, sneakerTriggered: { ...(m.sneakerTriggered ?? { player: false, cpu: false }), [opponent]: true } };
-      m = addDiscountToken(m, opponent, reseller, "any");
-      m = addEvent(beforeSneaker, m, { type: "ability", sourceId: reseller.instanceId, owner: opponent, note: "Flip Season set aside a discount after a 4-Cost card was played." });
-    }
-  }
+  // Sneaker moved from reactive trigger (Flip Season on 4+ cost plays) to proactive On Reveal Steal.
+  // The reactive logic was removed; resolveAbility now handles Sneaker's branch directly.
   const finalized: Match = { ...m, phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
   const lastEventIndex = finalized.effectLog.length - 1;
   return applyStoryEffects({
@@ -1422,9 +1649,12 @@ export function nextRound(match: Match): Match {
   const p = draw('player', match.playerDeck, match.playerCardIds, match.playerDrawIndex);
   const c = draw('cpu', match.cpuDeck, match.cpuCardIds, match.cpuDrawIndex);
   const next = match.round + 1;
-  const expiring = match.timedEffects.filter((effect) => effect.expiresAtRound === next);
+  // Fire round-end ongoing effects on the just-resolved match state.
+  const roundEnded = applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(match));
+  const expiring = roundEnded.timedEffects.filter((effect) => effect.expiresAtRound === next);
   let m: Match = {
-    ...match,
+    ...roundEnded,
+    lastRevealedCardId: null,
     round: next,
     phase: 'player',
     // One unspent Motion carries forward. Passing can set up a stronger next
