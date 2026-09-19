@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, cardCatalog, completeEngineCrew } from './data';
-import { createCardInstance, createMatch, createMatchFromEngineCards, playTurnCard, pass, nextRound, revealCpuTurn, verifyMatchTranscript, type Match, type Owner, type PlayerMove } from './gameEngine';
+import { createAbilityUpgradeSnapshot, createCardInstance, createMatch, createMatchFromEngineCards, playTurnCard, pass, nextRound, revealCpuTurn, verifyMatchTranscript, type Match, type Owner, type PlayerMove } from './gameEngine';
 import { STREET_WAVE } from '../../../lib/squabblemon-engine/src/streetWave';
 import { moveAssignments, resolveSpecialMove } from './specialMoves';
 
@@ -25,11 +25,11 @@ for (const owner of ['player', 'cpu'] as const) test(`all 21 street fighters res
     if (['homelessyn', 'divorceddad', 'incel'].includes(id)) match.boards[0] = [enemy, bigEnemy];
     const after = playTurnCard(match, owner, source.instanceId, 0);
     const find = (key: string) => after.boards.flat().find(c => c.instanceId === key)!;
-    const selfBuff: Record<string, number> = { homelessyn: 2, sportsprodigy: 2, fein: 1, alchy: 1, divorceddad: 2, failedathlete: 3, incel: 1, krump: 1 };
+    const selfBuff: Record<string, number> = { homelessyn: 2, sportsprodigy: 2, fein: 1, divorceddad: 2, failedathlete: 3, krump: 1 };
     if (id in selfBuff) assert.equal(find(source.instanceId).powerModifier, selfBuff[id], id);
     if (id === 'stud') { assert.equal(find(ally.instanceId).powerModifier, 1); assert(find(ally.instanceId).statuses.protected); }
     if (id === 'gothkid') { assert(find(enemy.instanceId).statuses.silenced); assert(!find(bigEnemy.instanceId).statuses.silenced); }
-    if (id === 'redpill') { assert(find(bigEnemy.instanceId).statuses.silenced); assert(!find(enemy.instanceId).statuses.silenced); }
+    if (id === 'redpill') { assert(find(bigEnemy.instanceId).statuses.weakened); assert(!find(bigEnemy.instanceId).statuses.silenced); assert(!find(enemy.instanceId).statuses.weakened); }
     if (id === 'stonerjr' || id === 'stonersr') { assert(!find(ally.instanceId).statuses.frozen); assert.equal(find(ally.instanceId).powerModifier, 1); assert(find(remote.instanceId).statuses.silenced); }
     if (id === 'bblnice' || id === 'failedrapper') { assert.equal(find(ally.instanceId).powerModifier, 1); assert.equal(find(item.instanceId).powerModifier, 0); }
     if (id === 'bbldemon') { assert.equal(find(enemy.instanceId), undefined, 'a one-Hands enemy is destroyed'); assert.equal(find(bigEnemy.instanceId).powerModifier, 19); }
@@ -61,9 +61,11 @@ test('street fighters respect suppression, late-round conditions, and Motion cap
   assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 9);
 });
 
-test('Red Pill rewards an already silenced target; STUD protects one hostile ability', () => {
-  const red = setup('redpill', 'player'); red.bigEnemy.statuses.silenced = true;
-  assert.equal(playTurnCard(red.match, 'player', red.source.instanceId, 0).boards[0].find(c => c.cardId === 'redpill')?.powerModifier, 2);
+test('Red Pill rewards an already weakened target; STUD protects one hostile ability', () => {
+  const red = setup('redpill', 'player'); red.bigEnemy.statuses.weakened = true;
+  const afterRed = playTurnCard(red.match, 'player', red.source.instanceId, 0);
+  assert.equal(afterRed.boards[0].find(c => c.cardId === 'redpill')?.powerModifier, 2);
+  assert.equal(afterRed.boards[0].find(c => c.instanceId === red.bigEnemy.instanceId)?.statuses.silenced, true);
   const { source, ally, match } = setup('stud', 'player'); match.boards = [[ally], [], []];
   let m = playTurnCard(match, 'player', source.instanceId, 0);
   for (let n = 0; n < 2; n++) {
@@ -71,6 +73,36 @@ test('Red Pill rewards an already silenced target; STUD protects one hostile abi
     m = playTurnCard({ ...m, cpuHand: [hostile], cpuMotion: 9, phase: 'cpu-reveal' }, 'cpu', hostile.instanceId, 0);
     assert.equal(m.boards[0].find(c => c.instanceId === ally.instanceId)?.statuses.silenced, n === 1);
   }
+});
+
+test('Alchy trained tiers add one bounded round-end Hand each', () => {
+  const playedSetup = setup('alchy', 'player');
+  const played = playTurnCard(playedSetup.match, 'player', playedSetup.source.instanceId, 0);
+  assert.equal(played.boards[0].find(c => c.instanceId === playedSetup.source.instanceId)?.powerModifier, 0, 'Ongoing grants no play-time Hands');
+
+  for (const losing of [false, true]) {
+    for (let tier = 0; tier <= 3; tier++) {
+      const alchy = { ...unit('alchy', 'player', 30 + tier), lane: 0 as const };
+      const enemy = { ...unit('hooper', 'cpu', 40 + tier), lane: 0 as const };
+      const match: Match = {
+        ...createMatch('vibes', 'vibes'),
+        round: 4,
+        phase: 'resolved',
+        boards: [[alchy, ...(losing ? [enemy] : [])], [], []],
+        abilityUpgradeSnapshot: createAbilityUpgradeSnapshot(['alchy'], [], {
+          player: { alchy: { xp: 2800, level: 8, moveTier: tier } },
+        }),
+      };
+      const after = nextRound(match);
+      assert.equal(
+        after.boards[0].find(c => c.instanceId === alchy.instanceId)?.powerModifier,
+        (losing ? 2 : 1) + tier,
+        `${losing ? 'losing' : 'even'} tier ${tier}`,
+      );
+    }
+  }
+
+  assert(cards.alchy.abilityUpgrades.every(upgrade => upgrade.description.includes('round end')));
 });
 
 test('new fighters are collectible, trained and use replaceable special-move fallbacks', () => {

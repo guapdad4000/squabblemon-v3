@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { cardCatalog, validateCardAbilityUpgrades } from './data';
-import { createCardInstance, createMatch, playCard, type Match } from './gameEngine';
+import { cardCatalog, cards, validateCardAbilityUpgrades } from './data';
+import { createCardInstance, createMatch, nextRound, playCard, playTurnCard, type Match } from './gameEngine';
 import { neighborhoodCommonIds } from '../../../lib/squabblemon-engine/src/commonCards';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
@@ -40,49 +40,65 @@ test('Common self boosts honor their printed conditions', () => {
     const m = reveal(id, m => ({ ...m, boards: [[...allies, ...enemies], [], []] }));
     assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, amount, id);
   }
-  for (const id of ['youngbull', 'edgar', 'manman']) assert.equal(reveal(id).boards[0][0].powerModifier, 0);
+  assert.equal(reveal('youngbull').boards[0][0].powerModifier, 1);
+  for (const id of ['edgar', 'manman']) assert.equal(reveal(id).boards[0][0].powerModifier, 0);
   assert.equal(reveal('transplant', m => ({ ...m, boards: [[instance('cornball', 'player', 1)], [], []] })).boards[0].find(c => c.cardId === 'transplant')?.powerModifier, 0);
   assert.equal(reveal('nguyen').boards[0][0].powerModifier, 0);
   assert.equal(reveal('nguyen', m => ({ ...m, playerMotion: 2, boards: [[], [{ ...instance('cornball', 'player', 1), lane: 1 }], []] })).boards[0][0].powerModifier, 1);
 });
 
-test('supports buff allies without buffing enemies or themselves; nurse cleanses statuses', () => {
-  for (const [id, amount, both] of [['earthy', 1, false], ['abuela', 2, false], ['icecream', 1, true]] as const) {
-    const m = reveal(id, m => ({ ...m, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2), instance('cornball', 'cpu', 3)], [], []] }));
-    assert.equal(m.boards[0][0].powerModifier, amount);
-    assert.equal(m.boards[0][1].powerModifier, both ? amount : 0);
-    assert.equal(m.boards[0][2].powerModifier, 0);
-    assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 0);
+test('Grounded buffs one ally, pure bonds stay ongoing, and Nurse cleanses statuses', () => {
+  let m = reveal('earthy', m => ({ ...m, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2), instance('cornball', 'cpu', 3)], [], []] }));
+  assert.equal(m.boards[0][0].powerModifier, 1);
+  assert.equal(m.boards[0][1].powerModifier, 0);
+  assert.equal(m.boards[0][2].powerModifier, 0);
+  assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.powerModifier, 0);
+  for (const [id, bond] of [['abuela', 'Light'], ['icecream', 'Water']] as const) {
+    m = reveal(id, match => ({ ...match, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], []] }));
+    assert.equal(cards[id].elementalBond, bond);
+    assert(m.boards[0].every(card => card.powerModifier === 0));
   }
   const ally = instance('cornball', 'player', 1);
   ally.statuses = { ...ally.statuses, frozen: true, silenced: true };
-  const m = reveal('pinaynurse', m => ({ ...m, boards: [[ally], [], []] }));
+  m = reveal('pinaynurse', match => ({ ...match, boards: [[ally], [], []] }));
   assert.equal(m.boards[0][0].statuses.frozen, false);
   assert.equal(m.boards[0][0].statuses.silenced, false);
   assert.equal(m.boards[0][0].powerModifier, 1);
 });
 
-test('Tayaty and Honest Thot target only the lowest enemy', () => {
-  for (const id of ['tayaty', 'honestthot']) {
-    const m = reveal(id, m => ({ ...m, boards: [[{ ...instance('cornball', 'cpu', 1), basePower: 2 }, instance('hooper', 'cpu', 2)], [], []] }));
-    assert.equal(m.boards[0][0].powerModifier, id === 'tayaty' ? -1 : 0);
-    assert.equal(m.boards[0][0].statuses.silenced, id === 'honestthot');
-    assert.equal(m.boards[0][1].powerModifier, 0);
-    assert.equal(m.boards[0][1].statuses.silenced, false);
-  }
+test('Tayaty echoes the previous On Reveal while Honest Thot stays an Air hand bond', () => {
+  const youngBull = instance('youngbull', 'player', 10);
+  const tayaty = instance('tayaty', 'player', 11);
+  const ongoingBond = instance('honestthot', 'player', 13);
+  const enemy = { ...instance('hooper', 'cpu', 12), basePower: 6 };
+  let m: Match = { ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [youngBull, ongoingBond, tayaty], boards: [[enemy], [], []] };
+  m = playTurnCard(m, 'player', youngBull.instanceId, 0);
+  assert.equal(m.lastRevealedCardId, 'youngbull');
+  m = playTurnCard(m, 'player', ongoingBond.instanceId, 1);
+  assert.equal(m.lastRevealedCardId, 'youngbull', 'a pure Ongoing card must not replace the latest On Reveal');
+  m = playTurnCard(m, 'player', tayaty.instanceId, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === tayaty.instanceId)?.powerModifier, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === enemy.instanceId)?.statuses.burnStacks, 2);
+  assert.equal(m.lastRevealedCardId, 'tayaty');
+  assert.equal(nextRound({ ...m, phase: 'resolved' }).lastRevealedCardId, null);
+
+  const bond = reveal('honestthot', match => ({ ...match, boards: [[instance('hooper', 'cpu', 20)], [], []] }));
+  assert.equal(cards.honestthot.elementalBond, 'Air');
+  assert.equal(bond.boards[0][0].statuses.silenced, false);
 });
 
-test('new hostile abilities respect Wifey and silenced Commons cannot fire', () => {
-  for (const id of ['tayaty', 'honestthot']) {
-    const guard = instance('wifey', 'cpu', 1);
-    guard.statuses.protected = true;
-    const m = reveal(id, m => ({ ...m, boards: [[instance('cornball', 'cpu', 2), guard], [], []] }));
-    assert.equal(m.boards[0][0].powerModifier, 0);
-    assert.equal(m.boards[0][0].statuses.silenced, false);
-  }
-  const m = reveal('icecream', m => ({ ...m,
-    playerHand: m.playerHand.map(c => ({ ...c, statuses: { ...c.statuses, silenced: true } })),
-    boards: [[instance('cornball', 'player', 1)], [], []],
+test('Young Bull Burn respects Wifey and disabled Commons cannot fire', () => {
+  const guard = instance('wifey', 'cpu', 1);
+  guard.statuses.protected = true;
+  const victim = instance('hooper', 'cpu', 2);
+  let m = reveal('youngbull', match => ({ ...match, boards: [[guard, victim], [], []] }));
+  assert.equal(m.boards[0].find(card => card.instanceId === victim.instanceId)?.statuses.burnStacks, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === guard.instanceId)?.statuses.blocked, true);
+  assert.equal(m.boards[0].find(card => card.cardId === 'youngbull')?.powerModifier, 1);
+  m = reveal('youngbull', match => ({ ...match,
+    playerHand: match.playerHand.map(c => ({ ...c, statuses: { ...c.statuses, silenced: true } })),
+    boards: [[instance('hooper', 'cpu', 3)], [], []],
   }));
-  assert.equal(m.boards[0][0].powerModifier, 0);
+  assert.equal(m.boards[0].find(card => card.cardId === 'youngbull')?.powerModifier, 0);
+  assert.equal(m.boards[0][0].statuses.burnStacks, 0);
 });

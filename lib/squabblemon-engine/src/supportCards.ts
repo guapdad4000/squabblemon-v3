@@ -2,7 +2,7 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 const definitions = [
   ['energydrink', 'energy-drink', 'Energy Drink', 'Common', 'Fire', 1, 'Second Wind', 'Restore 3 Motion, up to the 9-Motion cap.', 'Tempo'],
-  ['charger', 'phone-charger', 'Phone Charger', 'Common', 'Electric', 1, 'Plug In', 'If a friendly Electric character is here, restore 2 Motion, up to the 9-Motion cap.', 'Tempo'],
+  ['charger', 'phone-charger', 'Phone Charger', 'Common', 'Electric', 1, 'Refund', 'On Reveal: Restore 1 Motion for each friendly character here, up to 3.', 'Tempo'],
   ['firstaid', 'first-aid-kit', 'First Aid Kit', 'Uncommon', 'Light', 2, 'Patch Up', 'Cleanse freeze and silence from every friendly character here.', 'Support'],
   ['boombox', 'boombox', 'Boombox', 'Uncommon', 'Air', 2, 'Turn It Up', 'Give every friendly character here +1 Hands.', 'Support'],
   ['subwaymap', 'subway-map', 'Subway Map', 'Common', 'Air', 1, 'Alternate Route', 'Move your lowest-Hands friendly character here to your weakest other district. If moved, give it +1 Hands.', 'Movement'],
@@ -17,7 +17,9 @@ export const supportUpgradeEffects: Record<string, readonly AbilityUpgradeEffect
     : { kind: 'target-power' as const, amount: 1 as const, target: 'friendly' as const, trigger: 'base-success' as const }),
 ]));
 export const supportCards: Record<string, Card> = Object.fromEntries(definitions.map(([engineId, id, name, , type, cost, ability, effect, role]) => [engineId, {
-  id, name, type, cost, power: 0, kind: 'support', ability, effect: `On Reveal: ${effect}`, roles: [role],
+  id, name, type, cost, power: 0, kind: 'support', ability,
+  effect: /^(On Reveal|Ongoing):/.test(effect) ? effect : `On Reveal: ${effect}`,
+  roles: [role],
   abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({
     id: `${engineId}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
     description: supportUpgradeEffects[engineId][index].kind === 'target-power'

@@ -630,7 +630,7 @@
     "char58": {
       "file": "char58_chroma.mp4",
       "label": "Honest Thot",
-      "move": "Real Talk",
+      "move": "Air Bond",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0.8,
@@ -652,7 +652,7 @@
     "char60": {
       "file": "char60_chroma.mp4",
       "label": "Abuela",
-      "move": "Eat Something",
+      "move": "Light Bond",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0.8,
@@ -663,7 +663,7 @@
     "char61": {
       "file": "char61_chroma.mp4",
       "label": "Ice Cream Truck",
-      "move": "Treat the Block",
+      "move": "Water Bond",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0.8,
@@ -707,7 +707,7 @@
     "char65": {
       "file": "char65_chroma.mp4",
       "label": "Torta",
-      "move": "Hold It Down",
+      "move": "Earth Bond",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0.8,
@@ -872,7 +872,7 @@
     "char80": {
       "file": "char80_chroma.mp4",
       "label": "Rooftop Gardener",
-      "move": "Neighborhood Roots",
+      "move": "Plant Bond",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0.8,
@@ -1098,7 +1098,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "6aadeec8-char100-v2"
+      "revision": "6ccc73e24836b0b4"
     },
     "char101": {
       "file": "char101_chroma.mp4",
@@ -1109,7 +1109,7 @@
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
-      "revision": "6aadeec8-char101-v2"
+      "revision": "c4fcbebe4470d678"
     }
   },
   "assignments": {
@@ -1214,7 +1214,7 @@
     "johnhenry": "char94",
     "ashlee": "char100",
     "captainjigga": "char101",
-    "guyana": null,
-    "steward": null
+    "concrete": null,
+    "counter": null
   }
 }

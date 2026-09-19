@@ -7,7 +7,7 @@ import { superCommonIds } from '../../../lib/squabblemon-engine/src/superCommonC
 import { generateStreetPack, STREET_PACK_RARITY_WEIGHTS } from '../../api-server/src/lib/collectionEconomy';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 
-const crew = completeEngineCrew(['shiesty', 'waterboy', 'buspass', 'torta', 'cognac', 'bustdown', 'soulfood']);
+const crew = completeEngineCrew(['shiesty', 'waterboy', 'buspass', 'torta', 'cognac', 'bustdown', 'soulfood', 'concrete']);
 const instance = (id: string, owner: Owner = 'player', index = 0) => ({ ...createCardInstance(id, owner, 'essentials', index), lane: 0 as const });
 const fresh = () => createMatchFromEngineCards('essentials', crew, 'block', completeEngineCrew(['cornball', 'snow', 'roaster', 'rastamon', 'wifey', 'oink', 'baby']));
 function reveal(id: string, setup?: (m: Match) => Match, owner: Owner = 'player') {
@@ -18,8 +18,8 @@ function reveal(id: string, setup?: (m: Match) => Match, owner: Owner = 'player'
 }
 const find = (m: Match, id: string) => m.boards.flat().find(c => c.cardId === id)!;
 
-test('seven illustrated Super Commons include four support items and have working pack acquisition', () => {
-  assert.equal(superCommonIds.length, 7);
+test('eight illustrated Super Commons include four support items and have working pack acquisition', () => {
+  assert.equal(superCommonIds.length, 8);
   assert.equal(superCommonIds.filter(id => cards[id].kind === 'support').length, 4);
   validateCardAbilityUpgrades();
   assert(CARD_RARITY_DEFINITIONS.SuperCommon.order < CARD_RARITY_DEFINITIONS.Common.order);
@@ -34,11 +34,12 @@ test('seven illustrated Super Commons include four support items and have workin
   }
 });
 
-test('Shiesty and Torta gain Hands only when their printed conditions are met', () => {
-  for (const id of ['shiesty', 'torta']) {
-    assert.equal(find(reveal(id), id).powerModifier, 0);
-    const owner = id === 'shiesty' ? 'cpu' : 'player';
-    assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', owner)], [], []] })), id).powerModifier, 1);
+test('Shiesty reacts to enemies while Torta and Concrete expose hand-bond metadata', () => {
+  assert.equal(find(reveal('shiesty'), 'shiesty').powerModifier, 0);
+  assert.equal(find(reveal('shiesty', m => ({ ...m, boards: [[instance('hooper', 'cpu')], [], []] })), 'shiesty').powerModifier, 1);
+  for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Rock']] as const) {
+    assert.equal(cards[id].elementalBond, element);
+    assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', 'player')], [], []] })), id).powerModifier, 0);
   }
 });
 

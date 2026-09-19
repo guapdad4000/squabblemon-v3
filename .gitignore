@@ -72,3 +72,13 @@ Thumbs.db
 /artifacts/gameplay-test-db/online-check-*.mjs
 /artifacts/gameplay-test-db/online-engine-check.mjs
 /artifacts/gameplay-test-db/online-browser-host.mjs
+
+# Local tool output and browser crash state
+*.log
+/.config/chromium/
+
+# Disposable visual-audit output and one-off local helpers
+/artifacts/visual-audit/
+/artifacts/squabblemon/.extract-special-move-frames.mjs
+/artifacts/squabblemon/.key-captain.mjs
+/artifacts/squabblemon/.visual-audit.mjs

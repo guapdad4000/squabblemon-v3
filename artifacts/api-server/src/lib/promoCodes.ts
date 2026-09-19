@@ -22,8 +22,20 @@ export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLE
     cardIds: ['ashlee', 'captain-jigga'] },
 };
 
-export function findPromoCode(input: string) {
+type PromoCode = keyof typeof PROMO_CODES;
+const DEVELOPMENT_ONLY_PROMO_CODES: ReadonlySet<PromoCode> = new Set(['DEVTEST', 'DEVTEST2', 'JETSETCABIN']);
+
+export const isDevelopmentPromoCodeEnabled = (
+  environment: string | undefined = process.env.NODE_ENV,
+) => environment === 'development';
+
+export function findPromoCode(
+  input: string,
+  environment: string | undefined = process.env.NODE_ENV,
+) {
   const code = input.trim().toUpperCase();
   if (!Object.hasOwn(PROMO_CODES, code)) return null;
-  return PROMO_CODES[code as keyof typeof PROMO_CODES];
+  const promoCode = code as PromoCode;
+  if (DEVELOPMENT_ONLY_PROMO_CODES.has(promoCode) && !isDevelopmentPromoCodeEnabled(environment)) return null;
+  return PROMO_CODES[promoCode];
 }

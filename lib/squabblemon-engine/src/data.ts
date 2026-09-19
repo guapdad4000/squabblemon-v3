@@ -83,8 +83,6 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...supportUpgradeEffects,
   ...streetWaveUpgradeEffects,
   ...mythicLegendUpgradeEffects,
-  ashlee: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
-  captainjigga: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -262,8 +260,7 @@ export const decks: Deck[] = [
 export const rarityByEngineId = {
   ...streetWaveRarities,
   ...mythicLegendRarities,
-  // City Legends overrides — the Mythic ceiling is Ashlee/Captain Jigga/Simmy/Foodz/Partytitan/Leroy/Big Zoey level.
-  // These 5 don't hit that bar, so they read as solid Legendaries.
+  // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
   tron: "Legendary",
   mansamusa: "Legendary",

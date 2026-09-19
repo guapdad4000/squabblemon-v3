@@ -87,6 +87,21 @@
     padding: 0 11px 0 10px;
     height: 36px;
   }
+  /* Keep the route menu clear of the full-width fight and pack actions. */
+  body:has(.activity-stage) .cinema-nav-toggle {
+    top: 12px;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  body:has(.activity-stage) .cinema-nav-toggle:active {
+    transform: translate(-50%, 1px);
+  }
+  body:has(.trading-post) .cinema-nav-toggle {
+    top: 76px;
+    bottom: auto;
+  }
 }
 
 /* ───── The menu sheet (dialog). ───── */
@@ -96,6 +111,8 @@
   margin: auto;
   width: min(520px, calc(100% - 24px));
   max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 22px 18px 24px;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(240, 179, 90, 0.12), transparent 65%),
@@ -160,6 +177,14 @@
 @media (min-width: 600px) {
   .cinema-nav-sheet { width: min(640px, calc(100% - 40px)); }
   .cinema-nav-sheet__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .cinema-nav-sheet {
+    width: calc(100% - 16px);
+    max-height: calc(100dvh - 24px);
+    padding: 18px 12px;
+  }
+  .cinema-nav-sheet__grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .cinema-nav-sheet__choice {
@@ -253,16 +278,21 @@
   gap: 8px;
 }
 
-/* ───── Persistence: page-scoped visibility ───── */
-/* Pages can opt out of the always-visible nav block by adding the
-   `cinema-nav-suppressed` class on the shell. The toggle still floats. */
-.cinema-nav-suppressed .fan-nav { display: none; }
-.cinema-nav-suppressed .game-route-stage::after { display: none; }
-.cinema-nav-suppressed .safehouse__bottom { bottom: 26px; }
-.game-shell--fan.cinema-nav-suppressed { --fan-clearance: 0; overflow-x: hidden; }
-
-/* When the sheet is open we don't want any other fixed element to fight it. */
-.cinema-nav-sheet[open] ~ .fan-nav { display: none; }
+/* Non-Safehouse sections do not reserve space for the painted fan. */
+.game-shell--compact-nav {
+  --fan-clearance: 0px;
+  overflow-x: hidden;
+}
+.game-shell--compact-nav .game-shell__content {
+  margin-left: 0;
+  padding-bottom: 0;
+}
+.game-shell--compact-nav:has(.arsenal-screen) {
+  --fan-clearance: 0px;
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  .game-shell--compact-nav:has(.story-atlas) .venue-hud { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cinema-nav-toggle,

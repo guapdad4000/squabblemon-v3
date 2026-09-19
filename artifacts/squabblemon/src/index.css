@@ -796,6 +796,11 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
 .effect-connection { position:absolute; inset:0; z-index:35; overflow:hidden; pointer-events:none; }
 .effect-connection::before { content:""; position:absolute; inset:7% 4%; border:2px solid rgba(255,255,255,.75); box-shadow:0 0 18px var(--color-primary); animation: effect-flash .82s ease-out; }
 .effect-connection span { position:absolute; top:10%; bottom:10%; left:50%; width:3px; background:linear-gradient(180deg,transparent,var(--color-accent),#fff,var(--color-primary),transparent); animation: effect-beam-vertical .82s ease-out; }
+.card-status-stack {
+  display: grid;
+  grid-template-columns: repeat(2, 1.15rem);
+  gap: 2px;
+}
 .card-status {
   display: flex;
   width: 1.15rem;

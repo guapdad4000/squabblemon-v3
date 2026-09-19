@@ -1,10 +1,11 @@
 import { MusicControls } from '../MusicControls';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Crown, Ticket, X, Coins } from 'lucide-react';
+import { Compass, Coins, Crown, Layers, Map, Menu, ScrollText, ShoppingBag, Swords, Ticket, Users, Wallet, X } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../lib/assets';
 import './fan-navigation.css';
+import './cinema-nav.css';
 
 const routes = [
   { path: '/game', label: 'Safehouse', detail: 'Home court', art: 'safehouse', primary: true, glyph: 'compass' },
@@ -16,6 +17,25 @@ const routes = [
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
   { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false, glyph: 'wallet' },
 ] as const;
+
+const Glyph = ({ name }: { name: typeof routes[number]['glyph'] }): ReactNode => {
+  const glyphs: Record<typeof routes[number]['glyph'], ReactNode> = {
+    compass: <Compass size={17} />,
+    map: <Map size={17} />,
+    layers: <Layers size={17} />,
+    crossed: <Swords size={17} />,
+    users: <Users size={17} />,
+    scroll: <ScrollText size={17} />,
+    bag: <ShoppingBag size={17} />,
+    wallet: <Wallet size={17} />,
+  };
+  return glyphs[name] ?? <Menu size={17} />;
+};
+
+function pathnameFor(location: string) {
+  const pathname = location.split(/[?#]/, 1)[0] || '/game';
+  return pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+}
 
 function fanPosition(index: number, count: number): CSSProperties {
   const offset = index - (count - 1) / 2;
@@ -33,20 +53,31 @@ function NavArt({ name }: { name: typeof routes[number]['art'] }) {
 
 export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
+  const pathname = pathnameFor(location);
   const menu = useRef<HTMLDialogElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [tap, setTap] = useState(0);
-  const active = (path: string) => location === path || (path !== '/game' && location.startsWith(`${path}/`));
+  const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
   const rewards = bootstrap.missions.filter(m => m.status === 'claimable').length;
   const secondaryActive = routes.find(route => !route.primary && active(route.path));
-  useEffect(() => { menu.current?.close(); setMenuOpen(false); }, [location]);
+
+  useEffect(() => {
+    menu.current?.close();
+    setMenuOpen(false);
+  }, [location]);
+
   function navigate(path: string) {
     menu.current?.close();
     setMenuOpen(false);
     setTap(value => value + 1);
     setLocation(path);
   }
-  function openMenu() { menu.current?.showModal(); setMenuOpen(true); }
+
+  function openMenu() {
+    menu.current?.showModal();
+    setMenuOpen(true);
+  }
+
   function renderRay(route: typeof routes[number], index: number, count: number) {
     const selected = active(route.path);
     return <button key={route.path} type="button"
@@ -59,6 +90,11 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       {route.art === 'bounties' && rewards > 0 && <span className="fan-nav__badge" aria-label={`${rewards} rewards ready`}>{rewards}</span>}
     </button>;
   }
+
+  if (pathname !== '/game') {
+    return <CinemaNavSheet location={location} navigate={navigate} rewards={rewards} />;
+  }
+
   return <>
     <nav className="fan-nav" aria-label="Game navigation">
       <div className="fan-nav__spread fan-nav__spread--desktop">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
@@ -84,6 +120,103 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <NavArt name={route.art} /><strong>{route.label}</strong><small>{route.detail}</small>
           {route.art === 'bounties' && rewards > 0 && <span className="fan-menu__reward">{rewards} ready to claim</span>}
         </button>)}</div>
+    </dialog>
+  </>;
+}
+
+/** A small route menu for every game section outside the Safehouse. */
+export function CinemaNavSheet({
+  location,
+  navigate,
+  rewards,
+}: {
+  location: string;
+  navigate: (path: string) => void;
+  rewards: number;
+}) {
+  const sheetRef = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState(false);
+  const pathname = pathnameFor(location);
+  const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
+
+  useEffect(() => {
+    sheetRef.current?.close();
+    setOpen(false);
+  }, [location]);
+
+  function toggle() {
+    const sheet = sheetRef.current;
+    if (!sheet) return;
+    if (sheet.open) sheet.close();
+    else {
+      sheet.showModal();
+      setOpen(true);
+    }
+  }
+
+  function choose(path: string) {
+    sheetRef.current?.close();
+    setOpen(false);
+    navigate(path);
+  }
+
+  return <>
+    <button
+      type="button"
+      className="cinema-nav-toggle"
+      aria-label="Open game navigation"
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      aria-controls="cinema-nav-sheet"
+      onClick={toggle}
+    >
+      <span className="cinema-nav-toggle__dot" aria-hidden="true" />
+      <span>Menu</span>
+    </button>
+    <dialog
+      id="cinema-nav-sheet"
+      ref={sheetRef}
+      className="cinema-nav-sheet"
+      aria-labelledby="cinema-nav-title"
+      onClose={() => setOpen(false)}
+      onClick={event => { if (event.target === sheetRef.current) sheetRef.current?.close(); }}
+    >
+      <header className="cinema-nav-sheet__header">
+        <div>
+          <small>Reverse 1991 · Director's Cut</small>
+          <h2 id="cinema-nav-title">Pick your scene</h2>
+        </div>
+        <button type="button" className="cinema-nav-sheet__close" aria-label="Close game navigation" onClick={() => sheetRef.current?.close()}>
+          <X size={18} aria-hidden="true" />
+        </button>
+      </header>
+      <nav className="cinema-nav-sheet__grid" aria-label="Game destinations">
+        {routes.map(route => {
+          const selected = active(route.path);
+          return (
+            <button
+              key={route.path}
+              type="button"
+              className={`cinema-nav-sheet__choice ${selected ? 'is-active' : ''}`}
+              aria-current={selected ? 'page' : undefined}
+              onClick={() => choose(route.path)}
+            >
+              <span className="cinema-nav-sheet__choice__glyph"><Glyph name={route.glyph} /></span>
+              <span className="cinema-nav-sheet__choice__copy">
+                <strong>{route.label}</strong>
+                <small>{route.detail}</small>
+              </span>
+              {route.art === 'bounties' && rewards > 0 && (
+                <span className="cinema-nav-sheet__badge" aria-label={`${rewards} rewards ready`}>{rewards}</span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
+      <footer className="cinema-nav-sheet__footer">
+        <span>Squabblemon · 1991</span>
+        <div className="music-controls-row"><MusicControls compact /></div>
+      </footer>
     </dialog>
   </>;
 }

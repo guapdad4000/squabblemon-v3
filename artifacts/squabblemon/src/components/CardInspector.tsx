@@ -1,5 +1,6 @@
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
@@ -98,8 +99,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const isBattleMode = Boolean(match);
   const variantSlots = catalogCard?.variantSlots ?? [];
 
-  return (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
+  const inspector = (
+    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center overflow-y-auto ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
         const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
@@ -392,4 +393,5 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
       </motion.div>
     </div>
   );
+  return typeof document === 'undefined' ? inspector : createPortal(inspector, document.body);
 }

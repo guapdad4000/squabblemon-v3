@@ -23,7 +23,9 @@
   background:
     radial-gradient(circle at 50% 38%, #221a0a 0%, #0d0a05 38%, #070603 75%),
     #050403;
-  position: relative;
+  position: fixed;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   isolation: isolate;
 }
 .collection-inspector.fighter-resume::before {
@@ -691,6 +693,11 @@
   .dossier-paper::before { left: 26px; }
   .dossier-banner__stamp { width: 76px; height: 76px; }
 }
+@media (max-width: 360px) {
+  .collection-inspector.fighter-resume .dossier-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 @media (max-width: 640px) {
   .dossier-banner__tape { font-size: .8rem; padding: 5px 16px 7px; }
   .dossier-banner__stamp { width: 64px; height: 64px; }
@@ -708,14 +715,9 @@
 .card-inspector-shell {
   z-index: 100;
   padding: clamp(54px, 6vh, 74px) clamp(14px, 4vw, 48px) max(24px, env(safe-area-inset-bottom));
+  overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  /* Tall viewports: keep things on-screen, no dialog scrolling */
-  align-items: center;
-}
-/* Short viewports fall back to scrolling inside the shell */
-@media (max-height: 760px) {
-  .card-inspector-shell { align-items: flex-start; overflow-y: auto; }
 }
 body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
   opacity: 0;
@@ -747,11 +749,8 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
 .collection-inspector.fighter-resume .dossier-paper {
   width: 100%;
   min-width: 0;
-  max-height: min(80dvh, 760px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--rarity-color, var(--resume-red)) 55%, transparent) transparent;
+  max-height: none;
+  overflow: visible;
 }
 .collection-inspector.fighter-resume .dossier-banner__meta {
   color: var(--resume-ink-soft);
