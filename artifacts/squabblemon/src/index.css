@@ -102,7 +102,8 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 1rem 1.5rem rgb(0 0 0 / 75%));
-  animation: brand-loader-breathe 1.8s ease-in-out infinite;
+  /* Keep the crest still while routes and fonts resolve. */
+  aspect-ratio: 374 / 384;
 }
 
 .brand-loader__meter {
@@ -118,11 +119,12 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
   width: 45%;
   height: 100%;
   background: #d9aa4b;
-  animation: brand-loader-scan 1.25s ease-in-out infinite;
+  animation: brand-loader-scan 2.4s linear infinite;
 }
 
 .brand-loader__label {
   position: relative;
+  line-height: 1.2;
   color: rgb(255 255 255 / 78%);
   font-family: var(--font-mono);
   font-size: 0.625rem;

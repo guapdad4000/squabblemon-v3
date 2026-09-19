@@ -8,7 +8,8 @@ import {
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameNav, GameHud } from '../../components/venue/GameNav';
 import { useEffect, type ReactNode } from 'react';
-import { Redirect, Route, Switch, useLocation } from 'wouter';
+import { Link, Redirect, Route, Switch, useLocation } from 'wouter';
+import { ArrowLeft } from 'lucide-react';
 
 import { cardCatalog, starterRecipes } from '../../data';
 import { Collection } from './Collection';
@@ -135,9 +136,14 @@ function GameShell({
   return (
         <div className={`game-shell ${navigationLayout} h-[100dvh] bg-[#070707] text-white`}>
           <div className="noise-overlay" />
-          <GameNav bootstrap={bootstrap} />
+          {normalized === '/game' && <GameNav bootstrap={bootstrap} />}
           <div className="game-shell__content">
             <GameHud bootstrap={bootstrap} />
+            {normalized !== '/game' && <div className="game-return-bar">
+              <Link href="/game" className="game-return" aria-label="Back to safehouse"><ArrowLeft size={17} /><span>Safehouse</span></Link>
+              <span>{normalized === '/game/shop' ? 'DR. FADE’S' : normalized === '/game/collection' ? 'YOUR COLLECTION' : normalized === '/game/story' ? 'THE STREETS' : 'YOUR TERRITORY'}</span>
+              <GameNav bootstrap={bootstrap} />
+            </div>}
             <div className="game-route-stage" key={location}>
               {children}
             </div>

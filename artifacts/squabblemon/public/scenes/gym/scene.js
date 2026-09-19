@@ -1,5 +1,5 @@
 import * as THREE from '../shared/three.module.js';
-let disposed=false;
+let disposed=false,sceneInitialized=false;
 let armed=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const emit=payload=>parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);
 const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try{this.context??=new AudioContext();this.context.resume();}catch{}},playPunch(){this.tone(95,.14)},playKO(){this.tone(52,.5)},tone(hz,duration){if(!this.enabled)return;this.init();const c=this.context;if(!c)return;const o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(hz,c.currentTime);o.frequency.exponentialRampToValueAtTime(28,c.currentTime+duration);g.gain.setValueAtTime(.16,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);o.onended=()=>{o.disconnect();g.disconnect()}}};
@@ -201,6 +201,10 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.anisotropy = 8; texture.colorSpace = THREE.SRGBColorSpace; texture.wrapS = THREE.RepeatWrapping; texture.offset.x = .25;
+      bagSurfaceCanvas = canvas;
+      bagSurfaceCtx = ctx;
+      bagSurfaceTexture = texture;
+      bagBasePixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
       return texture;
     }
 
@@ -265,6 +269,8 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
     let gloveGhosts = [];
     let cardMeshStack = [];
     let sharedCardBackTexture;
+    let spotLight, rimCyan, rimGold, gymFloorMaterial, heavyBagMaterial;
+    let bagSurfaceCanvas, bagSurfaceCtx, bagSurfaceTexture, bagBasePixels;
 
     function createAnimeOutline(geometry, thickness = 0.05) {
       const outlineGeo = geometry.clone();
@@ -324,17 +330,17 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
       const ambient = new THREE.HemisphereLight(0xfff1d2, 0x272016, 1.6);
       scene.add(ambient);
 
-      const spotLight = new THREE.SpotLight(0xfffbeb, 95, 22, Math.PI * 0.3, 0.4);
+      spotLight = new THREE.SpotLight(0xfffbeb, 95, 22, Math.PI * 0.3, 0.4);
       spotLight.position.set(0, 8.0, 1.4);
       spotLight.target.position.set(0, -0.5, 0);
       scene.add(spotLight);
       scene.add(spotLight.target);
 
-      const rimCyan = new THREE.DirectionalLight(0x38bdf8, 2.2);
+      rimCyan = new THREE.DirectionalLight(0x38bdf8, 2.2);
       rimCyan.position.set(-6, 2.5, -4);
       scene.add(rimCyan);
 
-      const rimGold = new THREE.DirectionalLight(0xf59e0b, 2.4);
+      rimGold = new THREE.DirectionalLight(0xf59e0b, 2.4);
       rimGold.position.set(6, -0.5, -3);
       scene.add(rimGold);
 
@@ -369,12 +375,14 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
 
       const floorGeo = new THREE.CircleGeometry(10, 32);
       const floorTex = createGymFloorTexture();
-      const floorMat = new THREE.MeshStandardMaterial({
+      gymFloorMaterial = new THREE.MeshStandardMaterial({
         map: floorTex,
         roughness: 0.85,
-        metalness: 0.1
+        metalness: 0.1,
+        emissive: 0x070604,
+        emissiveIntensity: 0.2
       });
-      const floor = new THREE.Mesh(floorGeo, floorMat);
+      const floor = new THREE.Mesh(floorGeo, gymFloorMaterial);
       floor.rotation.x = -Math.PI * 0.5;
       floor.position.y = -3.4;
       gymGroup.add(floor);
@@ -410,13 +418,15 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
       bagVertexDents = new Float32Array(pos.count * 3);
 
       const bagTex = createPunchingBagTexture();
-      const bagMat = new THREE.MeshStandardMaterial({
+      heavyBagMaterial = new THREE.MeshStandardMaterial({
         map: bagTex,
         roughness: 0.38,
-        metalness: 0.22
+        metalness: 0.22,
+        emissive: 0x140700,
+        emissiveIntensity: 0.08
       });
 
-      heavyBagMesh = new THREE.Mesh(bagGeo, bagMat);
+      heavyBagMesh = new THREE.Mesh(bagGeo, heavyBagMaterial);
       heavyBagMesh.position.set(0, -3.2, 0);
 
       const bagOutline = createAnimeOutline(bagGeo, 0.065);
@@ -554,7 +564,6 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
     }
 
     function triggerImpactFrame(type = "mono", durationFrames = 2) {
-      return;
       activeImpactFrameTimer = durationFrames;
       const body = document.body;
       if (type === "mono") {
@@ -753,6 +762,62 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
       }
     }
 
+    const OMEN_LIGHTS = {
+      SuperCommon: { key: 0xd7c7ab, left: 0x9c8b72, right: 0xd7c7ab, floor: 0x17120d },
+      Common: { key: 0xfff1d2, left: 0x8b9a93, right: 0xd6b778, floor: 0x15140f },
+      Uncommon: { key: 0xc9ffd7, left: 0x36d67d, right: 0xd6b778, floor: 0x07190e },
+      Rare: { key: 0xd8eaff, left: 0x3b82f6, right: 0x72d8ff, floor: 0x071225 },
+      Epic: { key: 0xf1dcff, left: 0xa855f7, right: 0xe85d9e, floor: 0x190722 },
+      Legendary: { key: 0xffedb0, left: 0xf5b829, right: 0xffe08a, floor: 0x231704 },
+      Mythical: { key: 0xffd6c7, left: 0xef3340, right: 0xffa62b, floor: 0x260408 }
+    };
+
+    function applyOmen(rarity = "Common") {
+      const colors = OMEN_LIGHTS[rarity] || OMEN_LIGHTS.Common;
+      spotLight?.color.setHex(colors.key);
+      rimCyan?.color.setHex(colors.left);
+      rimGold?.color.setHex(colors.right);
+      if (spotLight) spotLight.intensity = rarity === "Mythical" ? 125 : rarity === "Legendary" ? 112 : 95;
+      if (rimCyan) rimCyan.intensity = rarity === "Mythical" ? 4.8 : rarity === "Legendary" ? 3.7 : 2.6;
+      if (rimGold) rimGold.intensity = rarity === "Mythical" ? 4.1 : rarity === "Legendary" ? 4.4 : 2.8;
+      gymFloorMaterial?.emissive.setHex(colors.floor);
+      if (gymFloorMaterial) gymFloorMaterial.emissiveIntensity = rarity === "Mythical" ? 0.9 : 0.45;
+      heavyBagMaterial?.emissive.setHex(colors.floor);
+      if (heavyBagMaterial) heavyBagMaterial.emissiveIntensity = rarity === "Mythical" ? 0.38 : 0.16;
+    }
+
+    function paintBagDamage(stage = 0) {
+      if (!bagSurfaceCtx || !bagSurfaceTexture || !bagBasePixels) return;
+      bagSurfaceCtx.putImageData(bagBasePixels, 0, 0);
+      const tears = [
+        [[-145,-60],[-70,-20],[-115,25],[-20,62],[55,35],[128,82]],
+        [[-120,-72],[-40,-28],[-85,18],[15,58],[96,24],[145,70]],
+        [[-160,-35],[-92,12],[-125,57],[-24,84],[64,48],[148,98]]
+      ];
+      for (let level = 0; level < stage; level++) {
+        for (const centerX of [512, 1536]) {
+          const centerY = 780 + level * 205;
+          const points = tears[level];
+          bagSurfaceCtx.save();
+          bagSurfaceCtx.translate(centerX, centerY);
+          bagSurfaceCtx.beginPath();
+          points.forEach(([x,y], index) => index ? bagSurfaceCtx.lineTo(x,y) : bagSurfaceCtx.moveTo(x,y));
+          bagSurfaceCtx.lineCap = "round";
+          bagSurfaceCtx.lineJoin = "round";
+          bagSurfaceCtx.strokeStyle = "rgba(20,8,4,.92)";
+          bagSurfaceCtx.lineWidth = 34 - level * 5;
+          bagSurfaceCtx.stroke();
+          bagSurfaceCtx.strokeStyle = level === 2 ? "#f3d58d" : "#e7b45d";
+          bagSurfaceCtx.lineWidth = 7;
+          bagSurfaceCtx.setLineDash([20, 16]);
+          bagSurfaceCtx.stroke();
+          bagSurfaceCtx.setLineDash([]);
+          bagSurfaceCtx.restore();
+        }
+      }
+      bagSurfaceTexture.needsUpdate = true;
+    }
+
     /* =========================================================
        PUNCH FLURRY LOGIC, HIT-STOP & FINALE CLIMAX
        ========================================================= */
@@ -767,38 +832,46 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
     let screenShake = 0;
     let currentHand = "left";
 
-    function deliverPunch() {
+    function deliverPunch(requestedIntensity) {
       if (isGachaTriggered || !armed) return;
 
+      const nextRatio = Math.min((punchHits + hitsPerPunch) / targetKoHits, 1);
+      const automaticIntensity = nextRatio >= 1 ? "finisher" : nextRatio > 0.34 ? "heavy" : "normal";
+      const intensityRank = { normal: 0, heavy: 1, finisher: 2 };
+      const intensity = requestedIntensity && intensityRank[requestedIntensity] > intensityRank[automaticIntensity]
+        ? requestedIntensity
+        : automaticIntensity;
+      const impactBoost = intensity === "finisher" ? 1.85 : intensity === "heavy" ? 1.35 : 1;
       punchHits = Math.min(targetKoHits, punchHits + hitsPerPunch); emit({type:"hit",hits:punchHits});
       AudioEngine.init();
 
       const heatRatio = Math.min(punchHits / targetKoHits, 1.0);
-      const speedFactor = 1.0 + heatRatio * 2.8;
+      const speedFactor = (1.0 + heatRatio * 2.8) * impactBoost;
 
       AudioEngine.playPunch(speedFactor);
-      screenShake = reduced ? 0 : Math.min(0.10, 0.025 + heatRatio * 0.07);
+      screenShake = reduced ? 0 : Math.min(0.2, (0.025 + heatRatio * 0.07) * impactBoost);
 
-      hitStopRemaining = heatRatio > 0.8 ? 3 : (heatRatio > 0.4 ? 2 : 1);
+      hitStopRemaining = intensity === "finisher" ? 6 : intensity === "heavy" ? 3 : 1;
 
-      if (punchHits % 5 === 0 || heatRatio >= 0.85) {
-        triggerImpactFrame("mono", 2);
+      if (intensity !== "normal") {
+        triggerImpactFrame(intensity === "finisher" ? "crimson" : "mono", intensity === "finisher" ? 5 : 2);
       }
 
-      const pushX = (currentHand === "left" ? 0.38 : -0.38) * (0.8 + heatRatio * 0.8);
-      const pushZ = -0.75 * (1.0 + heatRatio * 1.0);
+      const pushX = (currentHand === "left" ? 0.38 : -0.38) * (0.8 + heatRatio * 0.8) * impactBoost;
+      const pushZ = -0.75 * (1.0 + heatRatio * 1.0) * impactBoost;
       bagVelocity.z += pushZ;
       bagVelocity.x += pushX;
 
-      dentHeavyBag(0.1, 0.22 + heatRatio * 0.25);
+      dentHeavyBag(0.1, (0.22 + heatRatio * 0.25) * impactBoost);
+      paintBagDamage(Math.min(3, Math.ceil(heatRatio * 3)));
 
       animateGloveJab(currentHand, speedFactor);
       currentHand = currentHand === "left" ? "right" : "left";
 
       const contactZ = 0.9;
-      spawnHitSpark(pushX * 0.5, 0.2, contactZ);
-      spawnShockwave(pushX * 0.3, 0.2, contactZ, 0.8 + heatRatio * 0.8);
-      if (punchHits % 2 === 0 || heatRatio > 0.7) {
+      spawnHitSpark(pushX * 0.5, 0.2, contactZ, intensity === "finisher");
+      spawnShockwave(pushX * 0.3, 0.2, contactZ, (0.8 + heatRatio * 0.8) * impactBoost);
+      if (intensity !== "normal") {
         spawnComicSFX(pushX * 0.4, 0.4, contactZ);
       }
 
@@ -866,9 +939,9 @@ addEventListener('message',e=>{
  if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='squabblemon-scene')return;
  const d=e.data;
  if(d.type==='settings'){reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;AudioEngine.enabled=Boolean(d.sound);}
- if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:12;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;armed=true;}
- if(d.type==='punch'&&!reduced)deliverPunch();
- if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=12;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};}
+ if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:3;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;paintBagDamage(0);applyOmen(d.omen);armed=true;}
+ if(d.type==='punch'&&!reduced)deliverPunch(d.intensity);
+ if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=3;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};paintBagDamage(0);applyOmen("Common");}
 });
     function onWindowResize() {
       if (!renderer || !camera) return;
@@ -1017,7 +1090,12 @@ addEventListener('message',e=>{
     }
 
 
-addEventListener('error',()=>emit({type:'error'}));
-try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;emit({type:'error'});});requestAnimationFrame(()=>emit({type:'ready'}));}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
+addEventListener('error',event=>{if(event.error)emit({type:'error',message:event.error.message});});
+addEventListener('unhandledrejection',event=>emit({type:'error',message:String(event.reason || 'The gym could not be rendered.')}));
+try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;sceneInitialized=false;emit({type:'error'});});sceneInitialized=true;emit({type:'ready'});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
 
 addEventListener('pagehide',()=>{disposed=true;AudioEngine.context?.close();scene?.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});renderer?.dispose();});
+
+addEventListener('message', event => {
+  if (event.origin === location.origin && event.source === parent && event.data?.channel === 'squabblemon-scene' && event.data.type === 'ping' && sceneInitialized && renderer && !disposed && !renderer.getContext().isContextLost()) emit({type:'ready'});
+});

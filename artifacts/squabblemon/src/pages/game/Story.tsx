@@ -1,4 +1,5 @@
 import { GameGlyph } from '../../components/venue/GameGlyph';
+import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
 import '../../styles/studio.css';
@@ -80,6 +81,7 @@ function rewardLabel(reward: StoryReward | StoryGrantedReward) {
 export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const storyQuery = useGetPlayerStory();
   const mapViewport = useRef<HTMLDivElement>(null);
+  const mapDrag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const [location, setLocation] = useLocation();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
@@ -175,11 +177,9 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
   return (
-    <div className="studio-page story-atlas">
+    <div className="studio-page story-atlas world-decor-host">
+      <PageDecor theme="story" />
       <header className="story-atlas__header">
-        <Link href="/game" className="story-atlas__back" aria-label="Back to Safehouse">
-          <ArrowLeft size={14} /> Safehouse
-        </Link>
         <nav className="story-reels" aria-label="Chapters">
           {campaign.chapters.map((chapter) => {
             const active = chapter.id === currentChapter?.id;
@@ -206,15 +206,24 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <h1 className="story-title">{currentChapter?.title}</h1>
       </header>
 
-      <div ref={mapViewport} className="story-atlas__viewport" aria-label="Campaign map. Scroll to explore the territory.">
-        <div className="story-atlas__terrain" style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}>
-          <div className="story-atlas__wash" />
-          <img
-            src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')}
-            alt=""
-            aria-hidden="true"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, mixBlendMode: 'screen', pointerEvents: 'none', zIndex: 0 }}
-          />
+      <div className="story-atlas__viewport" style={{ backgroundImage: `url("${getAssetUrl(currentChapter?.mapAssetId || '')}")` }}>
+        <div ref={mapViewport} className="story-atlas__pan" tabIndex={0} role="region" aria-label="Campaign nodes. Swipe or use arrow keys to explore."
+          onPointerDown={event => {
+            mapDrag.current = null;
+            if (event.pointerType !== 'mouse' || event.button !== 0) return;
+            mapDrag.current = { x: event.clientX, y: event.clientY, left: event.currentTarget.scrollLeft, top: event.currentTarget.scrollTop, moved: false };
+          }}
+          onPointerMove={event => {
+            const drag = mapDrag.current;
+            if (!drag || !event.buttons) return;
+            const x = event.clientX - drag.x, y = event.clientY - drag.y;
+            if (Math.hypot(x, y) > 6) { drag.moved = true; event.currentTarget.setPointerCapture(event.pointerId); }
+            if (drag.moved) { event.currentTarget.scrollLeft = drag.left - x; event.currentTarget.scrollTop = drag.top - y; }
+          }}
+          onPointerUp={event => { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
+          onPointerCancel={() => { mapDrag.current = null; }}
+          onClickCapture={event => { if (event.detail !== 0 && mapDrag.current?.moved) { event.stopPropagation(); event.preventDefault(); } }}>
+        <div className="story-atlas__terrain">
           <svg className="story-atlas__routes" aria-hidden="true">
             {nodes.flatMap((node) =>
               node.prerequisites.map((id) => {
@@ -283,6 +292,9 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             );
           })}
         </div>
+        </div>
+          <div className="story-atlas__wash" />
+          <div className="story-atlas__light" aria-hidden="true" />
         {currentChapter && chapterContent && (
           <button
             type="button"

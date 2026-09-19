@@ -1,7 +1,7 @@
 import { MusicControls } from '../MusicControls';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Compass, Coins, Crown, Layers, Map, Menu, ScrollText, ShoppingBag, Swords, Ticket, Users, Wallet, X } from 'lucide-react';
+import { Compass, Coins, Crown, Layers, Map, Menu, ScrollText, ShoppingBag, Swords, Ticket, Users, Wallet, X, TrainFront } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../lib/assets';
 import './fan-navigation.css';
@@ -163,35 +163,36 @@ export function CinemaNavSheet({
   return <>
     <button
       type="button"
-      className="cinema-nav-toggle"
+      className="cinema-nav-toggle city-line-toggle"
       aria-label="Open game navigation"
       aria-haspopup="dialog"
       aria-expanded={open}
       aria-controls="cinema-nav-sheet"
       onClick={toggle}
     >
-      <span className="cinema-nav-toggle__dot" aria-hidden="true" />
-      <span>Menu</span>
+      <TrainFront size={18} aria-hidden="true" />
+      <span>City Line</span>
     </button>
     <dialog
       id="cinema-nav-sheet"
       ref={sheetRef}
-      className="cinema-nav-sheet"
+      className="cinema-nav-sheet city-line"
       aria-labelledby="cinema-nav-title"
       onClose={() => setOpen(false)}
       onClick={event => { if (event.target === sheetRef.current) sheetRef.current?.close(); }}
     >
       <header className="cinema-nav-sheet__header">
         <div>
-          <small>Reverse 1991 · Director's Cut</small>
-          <h2 id="cinema-nav-title">Pick your scene</h2>
+          <small>SQUABBLEMON TRANSIT · ALL STOPS</small>
+          <h2 id="cinema-nav-title">The City Line</h2>
         </div>
         <button type="button" className="cinema-nav-sheet__close" aria-label="Close game navigation" onClick={() => sheetRef.current?.close()}>
           <X size={18} aria-hidden="true" />
         </button>
       </header>
+      <div className="city-line__train" aria-hidden="true"><TrainFront /><span>04</span><b>LAST STOP: HOME COURT</b><i /><i /><i /></div>
       <nav className="cinema-nav-sheet__grid" aria-label="Game destinations">
-        {routes.map(route => {
+        {routes.map((route, index) => {
           const selected = active(route.path);
           return (
             <button
@@ -201,7 +202,7 @@ export function CinemaNavSheet({
               aria-current={selected ? 'page' : undefined}
               onClick={() => choose(route.path)}
             >
-              <span className="cinema-nav-sheet__choice__glyph"><Glyph name={route.glyph} /></span>
+              <span className="city-line__stop">{String(index + 1).padStart(2, '0')}</span><span className="cinema-nav-sheet__choice__glyph"><Glyph name={route.glyph} /></span>
               <span className="cinema-nav-sheet__choice__copy">
                 <strong>{route.label}</strong>
                 <small>{route.detail}</small>

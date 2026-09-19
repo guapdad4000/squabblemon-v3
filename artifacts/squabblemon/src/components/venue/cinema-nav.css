@@ -1,12 +1,12 @@
-/* ──────────────────────────────────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Reverse-1991 navigation.
    Replaces the chunky painted fan-nav with a slim, transparent, on-demand
    "director's menu" that only takes space when summoned. Pages that need
    full immersion (story, dialogue, gameplay, onboarding, online, decks/test)
    hide it entirely; a small floating "DIRECTOR" toggle reopens it.
-   ────────────────────────────────────────────────────────────────────────── */
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-/* ───── The toggle (always visible on shell pages that opt in). ───── */
+/* â”€â”€â”€â”€â”€ The toggle (always visible on shell pages that opt in). â”€â”€â”€â”€â”€ */
 .cinema-nav-toggle {
   position: fixed;
   z-index: 70;
@@ -104,7 +104,7 @@
   }
 }
 
-/* ───── The menu sheet (dialog). ───── */
+/* â”€â”€â”€â”€â”€ The menu sheet (dialog). â”€â”€â”€â”€â”€ */
 .cinema-nav-sheet {
   position: fixed;
   inset: 0;
@@ -303,3 +303,36 @@
     transition: none !important;
   }
 }
+
+/* The return path lives outside route scrolling, even when a scene is loading. */
+.game-return-bar { flex: none; display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 3px max(16px, env(safe-area-inset-left)) 3px max(16px, env(safe-area-inset-right)); color: #dac99f; background: #0c1110; border-bottom: 1px solid #c9b98425; z-index: 45; }
+.game-return { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 700 11px var(--font-mono); }
+.game-return:hover { color: #fff0bd; }
+.game-return:focus-visible { outline: 2px solid #f2c273; outline-offset: 2px; }
+.game-return-bar > span { margin-left: auto; font: 600 8px var(--font-mono); letter-spacing: .16em; }
+.game-return-bar .cinema-nav-toggle { position: static; transform: none; height: 44px; padding: 0 12px; border-radius: 6px 15px 6px 6px; gap: 7px; flex: none; letter-spacing: .04em; background: #213b3b; color: #f5d995; border: 1px solid #81958d; box-shadow: inset 0 -4px #e8aa44, 0 3px 8px #0005; }
+.game-return-bar .cinema-nav-toggle:active { transform: translateY(1px); }
+.game-return-bar:has(+ .game-route-stage .story-node-overlay) { visibility: hidden; }
+.city-line { --cinema-amber: #f3c56b; background: linear-gradient(145deg,#17363b,#0b1b22 60%); border: 1px solid #77a2a0; border-top: 5px solid #eac169; border-radius: 18px 18px 5px 5px; padding: 22px; width: min(610px,calc(100% - 24px)); max-height: calc(100dvh - 24px); box-shadow: 0 22px 80px #000b; }
+.city-line .cinema-nav-sheet__header { border-bottom: 0; padding: 0 0 16px; }
+.city-line .cinema-nav-sheet__header small { color: #aec4c0; font-size: 8px; letter-spacing: .11em; }
+.city-line .cinema-nav-sheet__header h2 { font: 900 italic 34px/1 var(--font-display); margin-top: 7px; color: #f6e5b8; }
+.city-line__train { position: relative; height: 90px; margin: 3px 4px 25px; display: flex; align-items: center; gap: 8px; padding: 15px; background: linear-gradient(#b5cdba 0 57%,#eab565 57% 65%,#365e60 65%); border: 3px solid #08171e; border-radius: 9px 36px 8px 8px; box-shadow: 0 8px 0 -3px #07151c, 0 13px 0 -6px #b9c9b3; color: #102c31; transform: rotate(-2deg); }
+.city-line__train::before,.city-line__train::after { content:''; position:absolute; bottom:-12px; width:22px; height:22px; background:#99b0a5; border:6px solid #09191e; border-radius:50%; }
+.city-line__train::before {left:26px}.city-line__train::after {right:30px}
+.city-line__train > svg { width:32px; height:32px; flex:none; }
+.city-line__train > span { position:absolute; bottom:5px; left:16px; color:#f4d69b; font:900 10px var(--font-mono); }
+.city-line__train > b { position:absolute; top:6px; left:58px; font:800 7px var(--font-mono); letter-spacing:.13em; }
+.city-line__train > i { display:block; height:29px; flex:1; max-width:95px; background:linear-gradient(125deg,#1a363f 30%,#5d9796 31%,#264a53 37%,#1a363f 70%,#749f9d 71%,#254c54 78%); border:2px solid #304a4b; border-radius:4px; }
+.city-line .cinema-nav-sheet__grid { grid-template-columns: 1fr 1fr; gap: 9px; padding: 0; }
+.city-line .cinema-nav-sheet__choice { position:relative; min-height:65px; padding:12px 8px; gap:9px; background:#07151e80; border:1px solid #708b803f; border-left:3px solid #90b2a7; border-radius:3px; }
+.city-line .cinema-nav-sheet__choice.is-active { border-color:#edbc61; background:#314e44; }
+.city-line .cinema-nav-sheet__choice__glyph { width:24px; height:24px; border:0; background:transparent; }
+.city-line .cinema-nav-sheet__choice__copy strong { color:#f7e6bc; font-size:13px; }
+.city-line .cinema-nav-sheet__choice__copy small { color:#a8c4bf; font-size:8px; }
+.city-line__stop { font:700 9px var(--font-mono); color:#e8bc72; }
+.city-line .cinema-nav-sheet__footer { border-color:#729d9440; margin-top:18px; padding:15px 0 0; }
+@media(max-width:420px) { .game-return-bar { gap:8px; padding-inline:12px; }.game-return-bar>span{display:none}.game-return-bar .cinema-nav-toggle{margin-left:auto}.city-line{padding:17px 13px}.city-line__stop{display:none} }
+@media(max-height:550px) { .game-return-bar{min-height:48px}.city-line__train{display:none}.city-line .cinema-nav-sheet__choice{min-height:48px} }
+
+.city-line .cinema-nav-sheet__close { width:44px;height:44px; }
