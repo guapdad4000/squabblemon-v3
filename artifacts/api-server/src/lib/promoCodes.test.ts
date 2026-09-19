@@ -12,6 +12,8 @@ test('promo lookup accepts casing and surrounding whitespace, rejects unknown an
   assert.deepEqual(findPromoCode(' simmyfoodz '), { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] });
   assert.deepEqual(findPromoCode(' citylegends '), { code: 'CITYLEGENDS', packTickets: 0, softCurrency: 40_000, styleShards: 0,
     cardIds: ['dragonfly-jones', 'sho-nuff', 'yasuke', 'mansa-musa', 'tron', 'john-henry', 'leroy'] });
+  assert.deepEqual(findPromoCode(' jetsetcabin\n'), { code: 'JETSETCABIN', packTickets: 25, softCurrency: 10_000, styleShards: 0,
+    cardIds: ['ashlee', 'captain-jigga'] });
   for (const code of ['', ' ', 'DEV TEST', 'NOTREAL', '__proto__', 'constructor', 'toString']) assert.equal(findPromoCode(code), null);
 });
 

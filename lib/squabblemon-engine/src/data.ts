@@ -17,7 +17,7 @@ export type Card = {
   ability: string;
   effect: string;
   roles?: string[];
-  kind?: 'character' | 'support';
+  kind?: 'character' | 'support' | 'token';
   /** Supplied full portrait art may intentionally retain its original backdrop. */
   artworkLayout?: 'portrait';
   deck?: string;

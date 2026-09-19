@@ -20,7 +20,7 @@ export const BLOCK_EXPANSION = [
   ['ogdominican', 'og-dominican', 'OG Dominican', 'Rare', 'Air', 3, 3, 'Block Shortcut', 'Move to your weakest other district. If moved, gain +2 Hands.', 'Movement'],
   ['conductor', 'last-train-conductor', 'Last Train Conductor', 'Mythical', 'Water', 4, 3, 'Last Stop', 'Move your lowest-Hands other ally here to your weakest other district. If moved, give it +3 Hands.', 'Movement'],
   ['midnightmayor', 'midnight-mayor', 'Midnight Mayor', 'Mythical', 'Dark', 3, 2, 'Keys to the City', 'Gain +1 Hands for each different friendly card type here, up to +3.', 'Pressure'],
-  ['bigzoey', 'big-zoey', 'Big Zoey', 'Mythical', 'Earth', 3, 2, 'Hold the Block', 'Give your lowest-Hands other ally here +2 Hands and the lowest-Hands enemy here -2 Hands.', 'Disruption'],
+  ['bigzoey', 'big-zoey', 'Big Zoey', 'Legendary', 'Earth', 3, 2, 'Hold the Block', 'Give your lowest-Hands other ally here +2 Hands and the lowest-Hands enemy here -2 Hands.', 'Disruption'],
   ['leroy', 'leroy', 'Leroy', 'Mythical', 'Light', 5, 5, 'Golden Glow', 'If your board has at least three different friendly card types, gain +1 Hands and give the highest-Hands enemy here -3 Hands.', 'Disruption'],
   ['partytitan', 'block-party-titan', 'Block Party Titan', 'Mythical', 'Earth', 6, 7, 'Everybody Outside', 'Give your lowest-Hands other friendly card in each district +1 Hands.', 'Support'],
 ] as const;
