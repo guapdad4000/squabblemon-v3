@@ -60,12 +60,19 @@
 .collector-card--tactile:hover .collector-glare { opacity: .85; }
 .collector-tier-cue { color: var(--rarity-color); letter-spacing: -.14em; }
 .collector-webgl canvas { display: block; width: 100%; height: 100%; }
+.collector-card--inspector { container-type: inline-size; }
 .collector-card--inspector .collector-frame { padding: 5px; }
 .collector-card--inspector .collector-portrait { bottom: 17%; height: 79%; }
-.collector-card--inspector h4 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.collector-card--inspector h4 { font-size: clamp(14px, 9cqw, 30px); }
 .collector-card--long-name h4 { overflow-wrap: anywhere; }
-.collector-card--inspector.collector-card--long-name h4 { font-size: clamp(0.95rem, 2vw, 1.35rem); }
+.collector-card--inspector.collector-card--long-name h4 { font-size: clamp(12px, 7cqw, 22px); }
 .collector-card--inspector .collector-tier-cue { font-size: 8px; }
+/* Anchor names and descriptions to the dark lower edge in every card context. */
+.collector-card-copy { top: auto; bottom: 0; }
+.collector-card-copy--inspector { padding: 10px 12px; background: linear-gradient(0deg, #07090af5 65%, #07090acc 85%, transparent); }
+.collector-card--inspector .collector-card-ability > div:first-child { font-size: 9px; line-height: 1.3; letter-spacing: .06em; }
+.collector-card--inspector .collector-card-ability > div:last-child { font-size: 11px; line-height: 1.35; color: #f3eee3; -webkit-line-clamp: 3; }
+
 .collector-inspector-backdrop {
   position: fixed; inset: 0; background-size: cover; background-position: center;
   opacity: .18; filter: blur(8px); pointer-events: none;

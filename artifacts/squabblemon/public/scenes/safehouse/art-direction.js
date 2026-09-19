@@ -21,7 +21,7 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
             + 0.38*smoothstep(0.64,0.69,sqLight)
             + 0.50*smoothstep(1.16,1.23,sqLight)
             + 0.65*smoothstep(1.98,2.08,sqLight);
-          totalDiffuse *= mix(1.0,sqBand/max(sqLight,0.035),0.84);
+          totalDiffuse *= mix(1.0,sqBand/max(sqLight,0.035),0.38);
           float sqShadow=1.0-smoothstep(0.26,0.86,sqLight);
           totalDiffuse *= mix(vec3(1.045,1.015,0.96),vec3(0.68,0.70,1.12),sqShadow*0.72);
           // Tiny print dots only in the shaded material; screens are excluded above.
@@ -63,7 +63,7 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
         vec3 n=texture2D(normalMap,vUv).rgb*2.0-1.0;
         float center=viewDepth(vUv);
         // A constant pixel width keeps cards and the bag legible at every camera distance.
-        vec2 stepUV=vec2(1.35*pixelRatio)/resolution;
+        vec2 stepUV=vec2(0.85*pixelRatio)/resolution;
         float depthEdge=0.0,normalEdge=0.0;
         for(int x=-1;x<=1;x++){
           for(int y=-1;y<=1;y++){
@@ -77,7 +77,15 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
           }
         }
         float ink=max(smoothstep(0.012,0.03,depthEdge),smoothstep(0.43,0.75,normalEdge));
-        color=mix(color,vec3(0.005,0.003,0.009),ink*0.96);
+        color=mix(color,vec3(0.005,0.003,0.009),ink*0.60);
+        // A restrained glow around practical lights, without another fullscreen pass.
+        vec3 glow=vec3(0.0);
+        for(int i=0;i<8;i++){
+          float a=float(i)*0.785398;
+          vec2 offset=vec2(cos(a),sin(a))*8.0*pixelRatio/resolution;
+          glow+=max(texture2D(colorMap,clamp(vUv+offset,vec2(0.0),vec2(1.0))).rgb-vec3(1.1),vec3(0.0));
+        }
+        color+=glow*0.055;
         // The final pass owns tone mapping and display color conversion exactly once.
         gl_FragColor=vec4(color,1.0);
         #include <tonemapping_fragment>

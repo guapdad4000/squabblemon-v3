@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 
-export type SceneMessage = { type: string; view?: string; hits?: number; message?: string; anchors?: { id: string; x: number; y: number; visible: boolean }[] };
+export type SceneMessage = { type: string; view?: string; night?: boolean; hits?: number; message?: string; anchors?: { id: string; x: number; y: number; visible: boolean }[] };
 
 export function sendScene(frame: RefObject<HTMLIFrameElement | null>, payload: Record<string, unknown>) {
   frame.current?.contentWindow?.postMessage({ channel: 'squabblemon-scene', ...payload }, window.location.origin);
@@ -14,6 +14,7 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   onReady?: () => void;
   poster?: string;
 }) {
+  const publicBase = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [attempt, setAttempt] = useState(0);
   const handlers = useRef({ onMessage, onReady });
@@ -38,7 +39,7 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   }, [attempt, frameRef]);
   return <div className={`venue-scene is-${status}`}>
     {poster && <img className="venue-scene__poster" src={poster} alt="" />}
-    <iframe key={attempt} ref={frameRef} src={`${import.meta.env.BASE_URL}scenes/${kind}/index.html`}
+    <iframe key={attempt} ref={frameRef} src={`${publicBase}scenes/${kind}/index.html`}
       title={kind === 'safehouse' ? 'Interactive safehouse' : 'Interactive heavy bag'} className="venue-scene__frame" />
     {status !== 'ready' && <div className="venue-scene__status" role="status">
       <span className="venue-kicker">{status === 'loading' ? 'Setting the scene' : 'Room unavailable'}</span>
