@@ -2,7 +2,7 @@ import { cards, completeEngineCrew } from './data';
 import type { StoryEncounterSnapshot } from './gameEngine';
 import chapterTwoDraft from './storyChapters/chapterTwo.json';
 import { TICKETS_PER_MAJOR_STORY_NODE } from './economy';
-import type { StoryChapter, StoryDialogueLine, StoryNode, StoryReward } from './story';
+import type { StoryChapter, StoryDialogueLine, StoryNode, StoryReward, StoryStarObjective } from './story';
 
 // Each chapter finale grants a ten-pull worth of tickets. Centralised so the
 // runtime reward augmentation (chapter 2) and the authored finale rewards
@@ -54,11 +54,39 @@ const deckReceipts = ['cornball', 'roaster', 'nerd', 'snow', 'plug', 'baby', 'ho
 const deckFamily = ['baby', 'wifey', 'og', 'cornball', 'snow', 'hooper', 'rastamon'];
 const deckMedia = ['streamer', 'gamer', 'techbro', 'plug', 'nerd', 'snow', 'roaster'];
 const deckFinal = ['cornball', 'plug', 'streamer', 'gamer', 'techbro', 'vibe', 'wifey'];
-const stars = [
-  { id: 'win', description: 'Win the encounter.' },
-  { id: 'districts', description: 'Finish holding all three districts.' },
-  { id: 'squabble', description: 'Win without using SQUABBLE.' },
-] as const;
+const stars: readonly StoryStarObjective[] = [
+  { id: 'win', description: 'Win the encounter.', criterion: { kind: 'win' } },
+  { id: 'districts', description: 'Finish holding all three districts.', criterion: { kind: 'districts-held', owner: 'player', atLeast: 3 } },
+  { id: 'squabble', description: 'Win without using SQUABBLE.', criterion: { kind: 'squabble-used', owner: 'player', used: false } },
+];
+const chapterTwoObjectives: Readonly<Record<string, readonly StoryStarObjective[]>> = {
+  'red-tapes-red-side-open': [
+    { id: 'win', description: 'Win the encounter.', criterion: { kind: 'win' } },
+    { id: 'outside', description: 'Finish holding both outside districts.', criterion: { kind: 'specific-districts-held', owner: 'player', lanes: [0, 2] } },
+    { id: 'squabble', description: 'Win without using SQUABBLE.', criterion: { kind: 'squabble-used', owner: 'player', used: false } },
+  ],
+  'red-tapes-cheese-has-terms': [
+    { id: 'win', description: 'Win the four-round table.', criterion: { kind: 'win' } },
+    { id: 'movement', description: 'Move at least one of your cards.', criterion: { kind: 'cards-moved', owner: 'player', atLeast: 1 } },
+    { id: 'districts', description: 'Finish holding all three districts.', criterion: { kind: 'districts-held', owner: 'player', atLeast: 3 } },
+  ],
+  'red-tapes-pay-per-view': [
+    { id: 'win', description: 'Win the encounter.', criterion: { kind: 'win' } },
+    { id: 'motion', description: 'Finish with at least 1 Motion.', criterion: { kind: 'motion-remaining', owner: 'player', atLeast: 1 } },
+    { id: 'districts', description: 'Finish holding all three districts.', criterion: { kind: 'districts-held', owner: 'player', atLeast: 3 } },
+  ],
+  'red-tapes-roast-with-a-receipt': [
+    { id: 'win', description: 'Win the encounter.', criterion: { kind: 'win' } },
+    { id: 'motion', description: 'Finish with at least 1 Motion.', criterion: { kind: 'motion-remaining', owner: 'player', atLeast: 1 } },
+    { id: 'squabble', description: 'Win without using SQUABBLE.', criterion: { kind: 'squabble-used', owner: 'player', used: false } },
+  ],
+  'red-tapes-side-eye-security': [
+    { id: 'win', description: 'Win the mini-boss encounter.', criterion: { kind: 'win' } },
+    { id: 'districts', description: 'Finish holding all three districts.', criterion: { kind: 'districts-held', owner: 'player', atLeast: 3 } },
+    { id: 'squabble', description: 'Win without using SQUABBLE.', criterion: { kind: 'squabble-used', owner: 'player', used: false } },
+  ],
+  'red-tapes-mama-has-the-floor': stars,
+};
 const soundHooks = { intro: 'story.encounter.intro', play: 'story.card.play', phase: 'story.boss.phase', victory: 'story.victory', defeat: 'story.defeat' };
 const cinematic = (venue: string) => ({
   videoAssetId: 'assets/story/chapter-one/media/standard-clash.mp4',
@@ -73,8 +101,87 @@ const phase = (id: string, round: number, amount: number): NonNullable<StoryEnco
   trigger: { kind: 'round', atLeast: round }, onEnter: [{ kind: 'motion', owner: 'cpu', amount }],
 });
 
+const winObjective = (description = 'Win the encounter.'): StoryStarObjective => ({
+  id: 'win', description, criterion: { kind: 'win' },
+});
+const centerObjective: StoryStarObjective = {
+  id: 'center', description: 'Finish holding the center district.',
+  criterion: { kind: 'specific-districts-held', owner: 'player', lanes: [1] },
+};
+const outsideObjective: StoryStarObjective = {
+  id: 'outside', description: 'Finish holding both outside districts.',
+  criterion: { kind: 'specific-districts-held', owner: 'player', lanes: [0, 2] },
+};
+const allDistrictsObjective: StoryStarObjective = {
+  id: 'districts', description: 'Finish holding all three districts.',
+  criterion: { kind: 'districts-held', owner: 'player', atLeast: 3 },
+};
+const useSquabbleObjective: StoryStarObjective = {
+  id: 'squabble', description: 'Use SQUABBLE before the encounter ends.',
+  criterion: { kind: 'squabble-used', owner: 'player', used: true },
+};
+const holdSquabbleObjective: StoryStarObjective = {
+  id: 'squabble', description: 'Win without using SQUABBLE.',
+  criterion: { kind: 'squabble-used', owner: 'player', used: false },
+};
+const saveMotionObjective: StoryStarObjective = {
+  id: 'motion', description: 'Finish with at least 1 Motion.',
+  criterion: { kind: 'motion-remaining', owner: 'player', atLeast: 1 },
+};
+
+function encounterRoundLimit(beat: Beat, battleIndex: number): number {
+  if (beat.optional || beat.battleType === 'guided' || battleIndex === 0) return 4;
+  if (beat.battleType === 'rule-twist') return 5;
+  return 6;
+}
+
+function encounterObjectives(beat: Beat, battleIndex: number, roundLimit: number): readonly StoryStarObjective[] {
+  const win = winObjective(roundLimit < 6 ? `Win the ${roundLimit}-round encounter.` : undefined);
+  if (beat.optional) return [win, centerObjective, saveMotionObjective];
+  if (beat.battleType === 'guided' || battleIndex === 0) return [win, centerObjective, useSquabbleObjective];
+  if (beat.battleType === 'rule-twist') return [win, outsideObjective, saveMotionObjective];
+  if (beat.battleType === 'mini-boss') return [winObjective('Win the mini-boss encounter.'), allDistrictsObjective, useSquabbleObjective];
+  if (beat.battleType === 'boss') return [winObjective('Win the boss encounter.'), allDistrictsObjective, holdSquabbleObjective];
+  const standardObjectives: readonly (readonly StoryStarObjective[])[] = [
+    [win, centerObjective, saveMotionObjective],
+    [win, allDistrictsObjective, holdSquabbleObjective],
+    [win, outsideObjective, useSquabbleObjective],
+  ];
+  return standardObjectives[battleIndex % standardObjectives.length];
+}
+
+function encounterXp(beat: Beat): number {
+  if (beat.optional) return 125;
+  if (beat.battleType === 'guided') return 75;
+  if (beat.battleType === 'rule-twist') return 110;
+  if (beat.battleType === 'mini-boss') return 150;
+  if (beat.battleType === 'boss') return 225;
+  return 90;
+}
+
+function focusCardsForObjectives(objectives: readonly StoryStarObjective[]): readonly string[] {
+  const criteria = objectives.flatMap((objective) => objective.criterion ? [objective.criterion] : []);
+  if (criteria.some((criterion) => criterion.kind === 'districts-held' && criterion.atLeast === 3)) {
+    return ['hooper', 'rastamon', 'wifey'];
+  }
+  if (criteria.some((criterion) => criterion.kind === 'cards-moved') || objectives.some((objective) => objective.id === 'outside')) {
+    return ['carmeet', 'delivery', 'plug'];
+  }
+  if (criteria.some((criterion) => criterion.kind === 'motion-remaining')) {
+    return ['cornball', 'plug', 'buspass'];
+  }
+  if (criteria.some((criterion) => criterion.kind === 'squabble-used' && criterion.used)) {
+    return ['hooper', 'rastamon', 'wifey'];
+  }
+  if (criteria.some((criterion) => criterion.kind === 'specific-districts-held')) {
+    return ['carmeet', 'delivery', 'plug'];
+  }
+  return ['cornball', 'snow', 'rastamon'];
+}
+
 function buildChapter(plan: ChapterPlan): StoryChapter {
   const required = plan.beats.filter((beat) => !beat.optional);
+  const battles = plan.beats.filter((beat) => beat.opponent);
   let previousRequired: string | undefined;
   const nodes: StoryNode[] = plan.beats.map((beat) => {
     const index = required.indexOf(beat);
@@ -84,11 +191,23 @@ function buildChapter(plan: ChapterPlan): StoryChapter {
     const prerequisites = beat.afterNode ? [beat.afterNode] : previousRequired ? [previousRequired] : [];
     if (!beat.optional) previousRequired = beat.id;
     const venue = beat.venue ?? plan.venue;
+    const battleIndex = battles.indexOf(beat);
+    const roundLimit = beat.opponent ? encounterRoundLimit(beat, battleIndex) : 6;
+    const objectives = beat.opponent ? encounterObjectives(beat, battleIndex, roundLimit) : [];
+    const focusCards = beat.opponent ? focusCardsForObjectives(objectives) : ['cornball'];
     const base = {
       id: beat.id, title: beat.title, mapPosition: position, prerequisites,
-      optional: Boolean(beat.optional), rewards: beat.rewards ?? (beat.opponent ? [xp(beat.battleType === 'boss' ? 200 : 90)] : []),
+      optional: Boolean(beat.optional), rewards: beat.rewards ?? (beat.opponent ? [xp(encounterXp(beat))] : []),
       cinematic: cinematic(venue),
-      teaching: { tips: [beat.opponent ? 'Win the match to advance this story.' : 'Continue the story at your own pace.'], focusMechanics: [beat.battleType === 'rule-twist' ? 'district rules' : 'story progression'], focusCards: ['cornball'] },
+      teaching: {
+        tips: beat.opponent
+          ? [`This encounter lasts ${roundLimit} rounds.`, ...objectives.slice(1).map((objective) => objective.description)]
+          : ['Continue the story at your own pace.'],
+        focusMechanics: beat.opponent
+          ? objectives.slice(1).map((objective) => objective.criterion?.kind ?? 'story objective')
+          : ['story progression'],
+        focusCards,
+      },
     };
     if (!beat.opponent) return { ...base, kind: beat.kind ?? 'dialogue', scenes: dialogue(beat.before) };
     const selected = beat.deck ?? deckBlue;
@@ -97,11 +216,11 @@ function buildChapter(plan: ChapterPlan): StoryChapter {
       enemy: { id: `${beat.id}:enemy`, name: beat.opponent, portraitAssetId: portrait(beat.opponent), deckId: `${beat.id}-deck`, cardIds: completeEngineCrew(selected), behaviorProfile: beat.battleType === 'boss' ? 'combo-boss' : 'balanced' },
       battlefieldAssetId: cinematic(venue).environmentAssetId,
       cinematic: cinematic(venue), soundHooks,
-      modifiers: beat.modifiers ?? {}, phases: beat.phases ?? [], starObjectives: stars,
+      modifiers: beat.modifiers ?? {}, phases: beat.phases ?? [], roundLimit, starObjectives: objectives,
     };
     return { ...base, kind: 'battle', battleType: beat.battleType ?? 'standard', encounter,
       preDialogue: dialogue(beat.before), postDialogue: dialogue(beat.after ?? [[beat.opponent, 'Good game. The next table is waiting.']]),
-      starObjectives: stars, recommendedCollection: ['cornball', 'snow', 'rastamon'] };
+      starObjectives: objectives, recommendedCollection: focusCards };
   });
   return { id: plan.id, order: plan.order, title: plan.title, subtitle: plan.subtitle, description: plan.description,
     mapAssetId: `assets/layered/${plan.map}.webp`, prerequisites: [plan.order === 3 ? 'red-side-tapes' : chapterIds[plan.order - 1]], nodes };
@@ -119,17 +238,25 @@ const chapterTwoNodes = chapterTwoBase.nodes.map((node): StoryNode => {
   if (next.kind !== 'battle') return next.kind === 'reward'
     ? { ...next, rewards: [...next.rewards, majorNodeTickets()] }
     : next;
-  return { ...next, encounter: { ...next.encounter, enemy: { ...next.encounter.enemy, cardIds: completeEngineCrew(next.encounter.enemy.cardIds) }, battlefieldAssetId: cinematic(venue).environmentAssetId, cinematic: cinematic(venue) } };
+  const starObjectives = chapterTwoObjectives[next.id] ?? stars;
+  return { ...next, starObjectives, encounter: { ...next.encounter, enemy: { ...next.encounter.enemy, cardIds: completeEngineCrew(next.encounter.enemy.cardIds) }, battlefieldAssetId: cinematic(venue).environmentAssetId, cinematic: cinematic(venue), starObjectives } };
 });
 const alleyInterlude: StoryNode = {
-  id: 'red-tapes-courier-table', title: 'Courier Table', kind: 'battle', battleType: 'standard',
-  mapPosition: { x: 36, y: 81 }, prerequisites: ['red-tapes-red-side-open'], optional: true, rewards: [xp(75)],
+  id: 'red-tapes-courier-table', title: 'Courier Table', kind: 'reward',
+  mapPosition: { x: 36, y: 81 }, prerequisites: ['red-tapes-red-side-open'], optional: true,
+  rewards: [
+    xp(75),
+    { kind: 'pack-ticket', id: 'street-pack-ticket', amount: 1, claimKey: 'red-tapes-courier-table:stars:3:auto-ticket:v1' },
+  ],
   cinematic: cinematic('corner-store-court'),
-  teaching: { tips: ['This optional table does not block the Red Side Gauntlet.'], focusMechanics: ['movement'], focusCards: ['bikelife'] },
-  encounter: { id: 'red-tapes-courier-table', enemy: { id: 'red-tapes-courier-table:enemy', name: 'Alley Runner', portraitAssetId: portrait('Alley Runner'), deckId: 'red-tapes-courier-table-deck', cardIds: completeEngineCrew(deckRed), behaviorProfile: 'movement' }, battlefieldAssetId: cinematic('corner-store-court').environmentAssetId, cinematic: cinematic('corner-store-court'), soundHooks, modifiers: {}, phases: [], starObjectives: stars },
-  preDialogue: dialogue([['Alley Runner', 'Everybody is selling a version of that recording. I am delivering event flyers. Different job.'], ['Cornball', 'Does the flyer mention my cheese appeal?'], ['Alley Runner', 'Win this table and I will let you read the back.']]),
-  postDialogue: dialogue([['Alley Runner', 'You earned the side route. The message still belongs to Baby Momma.'], ['Cornball', 'The back says volunteers needed. That is somehow worse.']]),
-  starObjectives: stars, recommendedCollection: ['bikelife', 'vibe', 'cornball'],
+  teaching: { tips: ['Read the flyer for an optional story beat and a Street Pack Ticket.'], focusMechanics: ['story checkpoint'], focusCards: ['cornball'] },
+  scenes: dialogue([
+    ['Alley Runner', 'Everybody is selling a version of that recording. I am delivering event flyers. Different job.'],
+    ['Cornball', 'Does the flyer mention my cheese appeal?'],
+    ['Alley Runner', 'Read the back. Volunteers needed.'],
+    ['Cornball', 'That is somehow worse.'],
+    ['Alley Runner', 'The message still belongs to Baby Momma.'],
+  ]),
 };
 export const chapterTwo: StoryChapter = { ...chapterTwoBase, mapAssetId: 'assets/layered/red-court.webp',
   nodes: [...chapterTwoNodes.slice(0, 2), alleyInterlude, ...chapterTwoNodes.slice(2)] };
@@ -161,6 +288,7 @@ const plans: ChapterPlan[] = [
         before: [['Scammer', "My cut is longer, sharper and half price. Look at this professional watermark."], ['Cornball', "It says WARTERMARK."], ['Scammer', "Limited edition. Play the table."]],
         after: [['Scammer', "Okay. The date is wrong. I still stand by the font."], ['Ganger Red', "We need the continuous recording, not his sales page."]] },
       { id: 'church-aunties-setup', title: "Auntie's Setup", opponent: 'Church Auntie', deck: deckFamily,
+        modifiers: { startingMotion: { player: 3, cpu: 0 }, handSize: { cpu: 4 } },
         before: [['Church Auntie', "This is a community supper, not a funeral and not a screening party."], ['Snitch', "I already printed screening passes."], ['Church Auntie', "Then you can print refunds. Help me set the tables first."]],
         after: [['Church Auntie', "Good. People can eat while Red checks the source."], ['Ganger Red', "The original warehouse footage is still out there."]] },
       { id: 'nail-techs-counter', title: "Nail Tech's Counter", opponent: 'Nail Tech', deck: deckReceipts, optional: true, afterNode: 'the-scammers-pitch',
@@ -198,7 +326,9 @@ const plans: ChapterPlan[] = [
       { id: 'hooper-closes', title: 'Last Open Table', opponent: 'Hooper', deck: deckBlue, battleType: 'mini-boss', phases: [phase('last-open-table', 4, 1)],
         before: [['Hooper', "This is the last open table before OG speaks. The crowd is trying to call it a verdict."], ['Church Auntie', "A game cannot pardon a father. Let them play anyway."], ['Hooper', "That I can run."]],
         after: [['Hooper', "Table closed. The rest belongs to the people who were there."], ['OG Uncle', "Then I will start."]] },
-      { id: 'og-uncles-verdict', title: "OG Uncle's Account", opponent: 'OG Uncle', deck: deckFamily, battleType: 'boss', phases: [phase('old-history', 2, 1), phase('last-word', 5, 1)],
+      { id: 'og-uncles-verdict', title: "OG Uncle's Account", opponent: 'OG Uncle', deck: deckFamily, battleType: 'boss',
+        modifiers: { handSize: { cpu: 4 } },
+        phases: [phase('old-history', 2, 1), phase('last-word', 5, 1)],
         before: [['OG Uncle', "I warned the authorities because the warehouse handoff put my son in danger. He survived. I let you believe he died."], ['Ganger Blue', "I gave Snitch the address because I wanted him gone from the block. I did not mean for him to die."], ['Cracked Head', "You both made a story without asking me. I am here for the whole account."], ['OG Uncle', "Play this table. Then we finish talking."]],
         after: [['OG Uncle', "I chose the false memorial. Blue chose the leak. Red chose silence. None of us gets to swap blame."], ['Ganger Blue', "I will tell my brother what I did, to his face."], ['Cracked Head', "Then do it where the block can hear."]] },
       { id: 'the-family-blessed', title: 'No Easy Blessing', kind: 'reward', rewards: [key(6), majorNodeTickets()],
@@ -209,7 +339,7 @@ const plans: ChapterPlan[] = [
       { id: 'function-opening', title: 'The Function', opponent: 'Bottle Girl', deck: deckRed,
         before: [['Bottle Girl', "Welcome to the fundraiser. Setup crew gets fed before the headliners."], ['Cornball', "I brought a clipboard and an appetite. Which one checks in first?"], ['Bottle Girl', "Win the opening table and I will decide."]],
         after: [['Bottle Girl', "Good. Open entry stays on the sign."], ['Live Streamer', "Camera is rolling, and somehow the chairs are still being carried."]] },
-      { id: 'the-bar-fight', title: 'The Bar Fight', opponent: 'Bottle Girl', deck: deckFamily, battleType: 'rule-twist', modifiers: { laneLocks: [{ round: 3, owner: 'both', lanes: [1] }] },
+      { id: 'the-bar-fight', title: 'The Bar Fight', opponent: 'Bottle Girl', deck: deckFamily, battleType: 'rule-twist', modifiers: { startingMotion: { player: 3 }, laneLocks: [{ round: 3, owner: 'both', lanes: [1] }] },
         before: [['Bottle Girl', "Somebody moved the check-in list behind the bar. This is a card table, not a bar fight."], ['Alley Runner', "I delivered the list. I did not hide it."], ['Bottle Girl', "Then help me get it back in view."]],
         after: [['Bottle Girl', "List is public again. Drinks after cleanup."], ['Alley Runner', "Best delivery policy I have heard all week."]] },
       { id: 'the-booking', title: 'The Booking', opponent: 'Promoter', deck: deckMedia, battleType: 'mini-boss', phases: [phase('booking-pressure', 4, 1)],
@@ -249,7 +379,7 @@ const plans: ChapterPlan[] = [
     ] },
   { id: 'the-crown', order: 8, title: 'Chapter Eight: The Crown', subtitle: 'The Open belongs to the people who play it.',
     description: 'Cross the neighborhood, win the final and defend the Open as the rooftop changes owners.', map: 'sunset-block', venue: 'crown-rooftop-court', beats: [
-      { id: 'crown-open-entry', title: 'Open Entry', opponent: 'Bottle Girl', deck: deckRed, venue: 'corner-store-court', battleType: 'guided',
+      { id: 'crown-open-entry', title: 'Open Entry', opponent: 'Bottle Girl', deck: deckRed, venue: 'corner-store-court', battleType: 'guided', modifiers: { startingMotion: { player: 3 } },
         before: [['Bottle Girl', "Corner store table is open. No crew colors required, and nobody pays Snitch for a line pass."], ['Cornball', "I made signs. One says OPEN and one says STILL OPEN."], ['Bottle Girl', "First match sets the tone. Show them both signs are true."]],
         after: [['Bottle Girl', "First table cleared. Every name stays on the board."], ['Cornball', "I am putting the second sign up anyway."]] },
       { id: 'crown-published-rules', title: 'Published Rules', opponent: 'Promoter', deck: deckMedia, venue: 'corner-store-court',
@@ -264,7 +394,7 @@ const plans: ChapterPlan[] = [
       { id: 'crown-snitch-credits-source', title: 'Credit the Source', opponent: 'Snitch', deck: deckMedia, venue: 'red-fence-night-court',
         before: [['Snitch', "My stream needs a title. I was considering Snitch Saves the Open."], ['Wifey', "Try The People Who Built It."], ['Snitch', "That is less searchable. Beat my table and I will use it."]],
         after: [['Snitch', "Fine. Credit goes to Red for the full file, Wifey for the list, and the volunteers for everything I stepped around."], ['Wifey', "Keep that line in the replay."]] },
-      { id: 'crown-hoopers-seed', title: "Hooper's Seed", opponent: 'Hooper', deck: deckBlue, venue: 'red-fence-night-court', battleType: 'mini-boss', phases: [phase('semifinal-push', 4, 1)],
+      { id: 'crown-hoopers-seed', title: "Hooper's Seed", opponent: 'Hooper', deck: deckBlue, venue: 'red-fence-night-court', battleType: 'mini-boss', modifiers: { startingMotion: { player: 3 } }, phases: [phase('semifinal-push', 4, 1)],
         before: [['Hooper', "Last Red Side table. Win and you keep your rooftop seed."], ['Promoter', "Published seeding. No surprise eliminations."], ['Hooper', "Good. I want the best match, not the best paperwork."]],
         after: [['Hooper', "Seed held. Go meet the people waiting upstairs."], ['Promoter', "The rooftop is ready."]] },
       { id: 'crown-blue-sets-the-table', title: 'Blue Sets the Table', opponent: 'Ganger Blue', deck: deckBlue,

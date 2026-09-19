@@ -3,30 +3,8 @@ import test from 'node:test';
 import {randomUUID} from 'node:crypto';
 import {draftOffers,eventWeek} from '@workspace/squabblemon-engine/activities';
 import {ROOKIE_CORE_IDS,catalogIdsToEngineIds} from '@workspace/squabblemon-engine/data';
-import {createStoryMatch, playTurnCard, pass, revealCpuTurn, nextRound, canAffordSelection, getDistrictResults, getMatchWinner, type Match, type Lane, type PlayerMove} from '@workspace/squabblemon-engine/gameEngine';
-
-// Vary only legal player choices. The server still replays every move against
-// its database-issued snapshots; no result or progress is injected.
-function winningStoryMoves(initial: Match) {
- for (let attempt=0; attempt<40; attempt++) {
-  let match=initial, seed=attempt+1; const moves: PlayerMove[]=[];
-  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-  while(match.phase!=='complete') {
-   for(let play=0;play<7;play++) {
-    const options=match.playerHand.flatMap(card=>([0,1,2] as Lane[]).filter(lane=>canAffordSelection(match,'player',card.instanceId,lane)).map(lane=>{
-     const after=playTurnCard(match,'player',card.instanceId,lane);
-     const score=getDistrictResults(after).reduce((n,d)=>n+(d.winner==='player'?12:d.winner==='cpu'?-12:0)+12*(d.player-d.cpu)/(4+Math.abs(d.player-d.cpu)),0)+random()*attempt;
-     return {card,lane,after,score};
-    })).sort((a,b)=>b.score-a.score);
-    if(!options.length)break;
-    const best=options[0];moves.push({cardInstanceId:best.card.instanceId,lane:best.lane,squabble:false,endTurn:false});match=best.after;
-   }
-   moves.push({cardInstanceId:null,lane:null,squabble:false,endTurn:true});match=nextRound(revealCpuTurn(pass(match,'player')));
-  }
-  if(getMatchWinner(match)==='player')return moves;
- }
- throw new Error('Could not find a legal winning fixture');
-}
+import {createStoryMatch,getStoryStars,verifyStoryMatchTranscript} from '@workspace/squabblemon-engine/gameEngine';
+import {solveStoryMoves} from './storyMoveSolver';
 
 test('real activity routes validate drafts, normalize combat, replay events and credit once', {skip:!process.env.DATABASE_URL}, async t=>{
  const {default:express}=await import('express');
@@ -88,10 +66,14 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  assert.equal(story.status,201,JSON.stringify(story.body));
  assert.equal(story.body.playerDeckId,savedDeckId);
  const storyMatch=createStoryMatch(story.body.encounterSnapshot,catalogIdsToEngineIds(ROOKIE_CORE_IDS),savedDeckId,story.body.abilityUpgradeSnapshot,story.body.districtSnapshot);
- const winningMoves=winningStoryMoves(storyMatch);
+ const winningMoves=solveStoryMoves(storyMatch);
+ const verifiedStoryMatch=verifyStoryMatchTranscript(story.body.encounterSnapshot,catalogIdsToEngineIds(ROOKIE_CORE_IDS),winningMoves,savedDeckId,story.body.abilityUpgradeSnapshot,story.body.districtSnapshot);
+ const expectedStoryStars=getStoryStars(verifiedStoryMatch);
  const cleared=await post(`/player/matches/${story.body.id}/complete`,{moves:winningMoves});
  assert.equal(cleared.status,200,JSON.stringify(cleared.body));
- assert.equal(cleared.body.campaign.nodes.find((n:any)=>n.nodeId==='welcome-to-the-block').status,'cleared');
+ const welcomeProgress=cleared.body.campaign.nodes.find((n:any)=>n.nodeId==='welcome-to-the-block');
+ assert.equal(welcomeProgress.status,'cleared');
+ assert.equal(welcomeProgress.stars,expectedStoryStars);
  assert.equal(cleared.body.campaign.nodes.find((n:any)=>n.nodeId==='blue-side-pressure').status,'available');
  const retried=await post(`/player/matches/${story.body.id}/complete`,{moves:winningMoves});
  assert.equal(retried.status,200);assert.equal(retried.body.alreadyCompleted,true);

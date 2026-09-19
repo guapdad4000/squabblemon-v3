@@ -16,6 +16,7 @@ import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_COR
 import {
   applyCardXp,
   createCardProgressionSnapshot,
+  normalizeCatalogCardId,
   participatingCatalogCardIds,
   type CardProgressionSnapshot,
   type CardXpReward,
@@ -242,8 +243,27 @@ export async function completeStandardMatchReward(input: {
       if (!canonicalRoster) {
         throw new PlayerRewardError("Legacy match roster is unavailable", 409);
       }
+      const owned = new Set(profile.ownedCardIds);
+      const compatibleRoster = canonicalRoster.filter(cardId => {
+        const catalogId = normalizeCatalogCardId(cardId);
+        return catalogId !== null && owned.has(catalogId);
+      });
+      // A historical recipe may have lost or reordered cards since this match
+      // was issued. Keep any verified participating cards that the player
+      // still owns so legacy matches can award their earned card XP.
+      for (const cardId of input.verifiedMatch.playerCardIds) {
+        const catalogId = normalizeCatalogCardId(cardId);
+        if (
+          catalogId &&
+          owned.has(catalogId) &&
+          participantCardIds.includes(catalogId) &&
+          !compatibleRoster.includes(cardId)
+        ) {
+          compatibleRoster.push(cardId);
+        }
+      }
       progressionSnapshot = createCardProgressionSnapshot(
-        canonicalRoster,
+        compatibleRoster,
         profile.ownedCardIds,
         profile.cardProgression,
       );

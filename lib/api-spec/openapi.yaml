@@ -25,6 +25,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /readyz:
+    get:
+      operationId: readinessCheck
+      tags: [health]
+      summary: Verify the API can reach its database
+      responses:
+        "200":
+          description: Ready
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+        "503":
+          description: Database unavailable; connection details are never returned
+  /deploymentz:
+    get:
+      operationId: getDeploymentIdentity
+      tags: [health]
+      summary: Read non-secret deployment identity before guarded verification
+      responses:
+        "200":
+          description: Target-side deployment identity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeploymentIdentity"
+        "503":
+          description: Deployment identity unavailable or internally inconsistent
   /player/bootstrap:
     get:
       operationId: getPlayerBootstrap
@@ -571,6 +599,27 @@ components:
         status:
           type: string
       required: [status]
+    DeploymentIdentity:
+      type: object
+      properties:
+        environment:
+          type: string
+          enum: [production, staging]
+        context:
+          type: string
+          enum: [production, deploy-preview, branch-deploy, staging]
+        deployId:
+          type: string
+        origin:
+          type: string
+          format: uri
+        databaseFingerprint:
+          type: string
+          pattern: "^[a-f0-9]{16}$"
+        clerkEnvironment:
+          type: string
+          enum: [live, test]
+      required: [environment, context, deployId, origin, databaseFingerprint, clerkEnvironment]
     PlayerSettings:
       type: object
       properties:
@@ -1164,7 +1213,7 @@ components:
       properties:
         moves:
           type: array
-          minItems: 6
+          minItems: 1
           maxItems: 64
           items:
             $ref: "#/components/schemas/MatchMove"

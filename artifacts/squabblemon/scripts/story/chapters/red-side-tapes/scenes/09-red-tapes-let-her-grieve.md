@@ -98,11 +98,10 @@ lines:
 
 Node `red-tapes-let-her-grieve` in [chapter-two.proposed.json](../chapter-two.proposed.json) contains the full proposed definition: prerequisites, map position, dialogue, rewards, and non-battle presentation metadata. All Chapter Two node IDs and media paths are new and unregistered.
 
-Proposed reward: `baby` card ×1 and `story-key:chapter-three` ×1, granted after the node's final line completes. No bonus ticket, new cosmetic, or character unlock is proposed. This is a card reward, not ownership of a person. Chapter Three is not currently playable.
+Runtime reward: `baby` card ×1, Street Pack Ticket ×10, and `story-key:chapter-three` ×1, granted after the node's final line completes. No new cosmetic or character unlock is configured. This is a card reward, not ownership of a person. The key opens the playable Chapter Three route.
 
 ## 4. Continuity and handoff
 
-The key reveal is that OG Uncle directed silence, not why he rescued Cracked Head. His serious illness is Chapter Three information and receives no medical tease here. The event recognizes the host before the porch scene; the game's actual reward grant occurs on completion of this reward node after the final line. A match cannot compel a confession. Do not advertise Chapter Three as playable.
+The key reveal is that OG Uncle directed silence, not why he rescued Cracked Head. His serious illness is Chapter Three information and receives no medical tease here. The event recognizes the host before the porch scene; the game's actual reward grant occurs on completion of this reward node after the final line. A match cannot compel a confession. The Chapter Three route becomes playable only after this completion grant.
 
 Preserve before-fight versus victory gating. Keep retry lines outside the canonical dialogue arrays. New speakers need roster integration even if their portrait file already exists. See [production and integration handoff](../HANDOFF.md) for missing art, exports, and validation status.
-

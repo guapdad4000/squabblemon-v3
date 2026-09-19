@@ -30,6 +30,7 @@ import {
   createStoryMatch,
   getDistrictResults,
   getMatchWinner,
+  getStoryStars,
   type StoryEncounterSnapshot,
   verifyMatchTranscript,
   verifyStoryMatchTranscript,
@@ -42,6 +43,8 @@ import {
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
 import { canUseRewardedDeck } from "../lib/matchAuthorization";
+import { districtSeedForMatch } from "../lib/matchDistrictSeed";
+import { completedTutorialMilestones, getTutorialMilestones } from "../lib/tutorialMilestones";
 import {
   getPlayerStoryCampaign,
   requireAvailableStoryNode,
@@ -401,7 +404,11 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   const [previous] = parsed.data.mode === 'practice' ? await db.select().from(playerMatchesTable)
     .where(and(eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.mode, 'practice'), isNotNull(playerMatchesTable.completedAt)))
     .orderBy(desc(playerMatchesTable.completedAt)).limit(1) : [];
-  const seed = randomUUID();
+  const seed = districtSeedForMatch(
+    parsed.data.mode,
+    randomUUID(),
+    parsed.data.storyNodeId,
+  );
   const districtSnapshot = createDistrictSnapshot(seed);
   let rivalDeckId =
     parsed.data.mode === "practice"
@@ -631,6 +638,16 @@ router.post(
                 playerRoster,
                 districtSnapshot,
               );
+        if (match.mode === "tutorial") {
+          const milestones = getTutorialMilestones(verifiedMatch);
+          if (!completedTutorialMilestones(milestones)) {
+            res.status(400).json({
+              error: "Complete the guided tutorial lessons before continuing",
+              milestones,
+            });
+            return;
+          }
+        }
         const winner = getMatchWinner(verifiedMatch);
         verifiedOutcome =
           winner === "player" ? "win" : winner === "cpu" ? "loss" : "draw";
@@ -689,7 +706,7 @@ router.post(
           .update(playerMatchesTable)
           .set({
             outcome: verifiedOutcome,
-            rounds: 6,
+            rounds: verifiedMatch!.round,
             districtsWon,
             rewardXp: computedReward.xp,
             rewardStreetRep: computedReward.streetRep,
@@ -783,11 +800,7 @@ router.post(
               ),
             );
           const won = verifiedOutcome === "win";
-          const stars = won
-            ? 1 +
-              (districtsWon === 3 ? 1 : 0) +
-              (!verifiedMatch.squabbleUsed ? 1 : 0)
-            : 0;
+          const stars = getStoryStars(verifiedMatch);
           firstStoryClear = won && !prior?.cleared;
           const canonicalCleared = (prior?.cleared ?? false) || won;
           const canonicalStars = Math.max(prior?.stars ?? 0, stars);

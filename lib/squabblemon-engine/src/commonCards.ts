@@ -2,7 +2,7 @@ import type { AbilityUpgradeEffect, Card } from './data';
 
 /** Neighborhood Commons: inexpensive bodies and straightforward support effects. */
 const definitions = [
-  ['youngbull', 'young-bull', 'Young Bull', 'Fire', 2, 3, 'Step Up', 'On Reveal: Gain +1 Hand. If an enemy is here, also apply 1 Burn to the highest-Hands enemy here.', 'Pressure'],
+  ['youngbull', 'young-bull', 'Young Bull', 'Fire', 2, 2, 'Step Up', 'On Reveal: Gain +1 Hand. If an enemy is here, also apply 1 Burn to the highest-Hands enemy here.', 'Pressure'],
   ['transplant', 'racially-ambiguous-transplant', 'Racially Ambiguous Transplant', 'Air', 1, 1, 'New Here', 'If you have no other cards here, gain +1 Hands.', 'Opener'],
   ['tayaty', 'bad-lil-cousin-tayaty', 'Bad Lil Cousin Tayaty', 'Fire', 1, 1, 'Act Up', 'On Reveal: Echo the last On Reveal ability that resolved this round. Gain +1 Hand.', 'Combo'],
   ['edgar', 'edgar', 'Edgar', 'Normal', 2, 2, 'Crew Check', 'If another friendly card costing 2 or less is here, gain +1 Hands.', 'Pressure'],

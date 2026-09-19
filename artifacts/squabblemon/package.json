@@ -7,7 +7,7 @@
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "build": "vite build --config vite.config.ts && pnpm run validate:bundle",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
-    "test": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/cardBalance.test.ts src/mythicLegends.test.ts src/characterAssets.test.ts src/streetWave.test.ts src/supportCards.test.ts src/blockExpansion.test.ts src/neighborhoodCommons.test.ts src/rosterRefresh.test.ts src/specialMoves.test.ts src/superCommonCards.test.ts src/gameEngine.test.ts src/districts.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/training.test.ts src/lib/deckWorkshop.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/musicPlayer.test.ts src/battleVisibility.test.ts src/lib/analytics.test.ts src/components/Battle.test.tsx && node --test scripts/check-entry-bundle.test.mjs",
+    "test": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/cardBalance.test.ts src/mythicLegends.test.ts src/characterAssets.test.ts src/streetWave.test.ts src/supportCards.test.ts src/blockExpansion.test.ts src/neighborhoodCommons.test.ts src/rosterRefresh.test.ts src/specialMoves.test.ts src/superCommonCards.test.ts src/gameEngine.test.ts src/districts.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/training.test.ts src/lib/deckWorkshop.test.ts src/matchTranscript.test.ts src/presentationTimeline.test.ts src/battleFeedback.test.ts src/musicPlayer.test.ts src/battleVisibility.test.ts src/lib/analytics.test.ts src/components/tutorialGuidance.test.ts src/components/story/StoryStage.test.tsx src/components/venue/GameNav.test.tsx src/lib/story/ticketLedger.test.tsx src/components/Battle.test.tsx && node --test scripts/check-entry-bundle.test.mjs",
     "pretest:e2e": "playwright install chromium firefox webkit",
     "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -29,7 +29,8 @@
     "test:music": "node --import tsx --test src/musicPlayer.test.ts",
     "test:music-browser": "node e2e/verify-music.mjs",
     "test:safehouse": "node --test e2e/safehouse-static.test.mjs",
-    "test:safehouse-browser": "node e2e/verify-safehouse.mjs"
+    "test:safehouse-browser": "node e2e/verify-safehouse.mjs",
+    "test:e2e:campaign": "playwright test --config e2e/playwright.campaign.config.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

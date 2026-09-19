@@ -4,7 +4,7 @@ This is the source repository for the current Squabblemon card game. The older p
 
 ## Season One story
 
-The local campaign contains eight playable chapters, 62 story nodes and 52 card battles. Chapter Two uses the revised screenplay. Chapters Three through Seven adapt the MiniMax September 17 drafts to the established Chapter One canon. Chapter Eight completes the Crown story. The original MiniMax scripts are preserved under [`artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/`](artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/). Read the [story index](artifacts/squabblemon/scripts/story/README.md) and [story bible](artifacts/squabblemon/scripts/story/STORY_BIBLE.md) before changing the campaign.
+The local campaign contains eight playable chapters, 62 story nodes and 51 card battles. Chapter Two uses the revised screenplay. Chapters Three through Seven adapt the MiniMax September 17 drafts to the established Chapter One canon. Chapter Eight completes the Crown story. The original MiniMax scripts are preserved under [`artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/`](artifacts/squabblemon/scripts/story/sources/minimax-2026-09-17/). Read the [story index](artifacts/squabblemon/scripts/story/README.md) and [story bible](artifacts/squabblemon/scripts/story/STORY_BIBLE.md) before changing the campaign.
 
 The story engine is [`lib/squabblemon-engine/src/story.ts`](lib/squabblemon-engine/src/story.ts) plus [`seasonChapters.ts`](lib/squabblemon-engine/src/seasonChapters.ts). The game route is `/game/story`; `/story-studio` previews dialogue without saving progress or starting battles.
 

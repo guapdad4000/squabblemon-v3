@@ -1,6 +1,6 @@
 # Story Mode — editorial library
 
-The local playable campaign is defined in `lib/squabblemon-engine/src/story.ts` and `seasonChapters.ts`. All eight chapters are loaded there: 62 nodes, including 52 card battles. Start with the [story bible](STORY_BIBLE.md) and [Chapter One read-through](chapters/block-party/CHAPTER_ONE_READTHROUGH.md).
+The local playable campaign is defined in `lib/squabblemon-engine/src/story.ts` and `seasonChapters.ts`. All eight chapters are loaded there: 62 nodes, including 51 card battles. Start with the [story bible](STORY_BIBLE.md) and [Chapter One read-through](chapters/block-party/CHAPTER_ONE_READTHROUGH.md).
 
 ## Current writing
 

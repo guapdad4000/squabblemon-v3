@@ -5,6 +5,16 @@ import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { EconomyTransactionError } from './collectionTransactions';
 import { findPromoCode } from './promoCodes';
 
+const POSTGRES_INTEGER_MAX = 2_147_483_647;
+
+function checkedWalletCredit(current: number, credit: number): number {
+  const next = current + credit;
+  if (!Number.isSafeInteger(next) || next > POSTGRES_INTEGER_MAX) {
+    throw new Error("integer out of range");
+  }
+  return next;
+}
+
 export async function redeemPromoCode(userId: string, input: string) {
   const reward = findPromoCode(input);
   if (!reward) throw new EconomyTransactionError(400, 'This promo code is not available. Check the code and try again.');
@@ -38,9 +48,9 @@ export async function redeemPromoCode(userId: string, input: string) {
       cardProgression[cardId] = normalizeCardProgress(cardProgression[cardId]);
     }
     await tx.update(playerProfilesTable).set({
-      packTickets: profile.packTickets + reward.packTickets,
-      softCurrency: profile.softCurrency + reward.softCurrency,
-      styleShards: profile.styleShards + reward.styleShards,
+      packTickets: checkedWalletCredit(profile.packTickets, reward.packTickets),
+      softCurrency: checkedWalletCredit(profile.softCurrency, reward.softCurrency),
+      styleShards: checkedWalletCredit(profile.styleShards, reward.styleShards),
       ownedCardIds: [...owned],
       discoveredCardIds: [...discovered],
       collectionProgress: owned.size,

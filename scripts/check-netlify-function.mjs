@@ -16,7 +16,13 @@ for (const [path, status] of [
   ['/api/player/bootstrap', 401],
   ['/api/multiplayer', 401],
 ]) {
-  const response = await handler(new Request(`https://squabble.today${path}`), { ip: '127.0.0.1' });
+  const response = await handler(new Request(`https://squabble.today${path}`), {
+    ip: '127.0.0.1',
+    deploy: {
+      context: 'staging',
+      id: 'release-build-smoke',
+    },
+  });
   assert.equal(response.status, status, `${path}: ${await response.text()}`);
 }
 console.log('Release API bundle: health and anonymous-access checks passed.');

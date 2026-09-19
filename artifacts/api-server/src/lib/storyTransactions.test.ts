@@ -110,6 +110,121 @@ test("Chapter Two opens after the Crown and hands off to Chapter Three", async (
   assert.deepEqual(retry.rewards, []);
 });
 
+test("courier checkpoint reuses legacy battle reward claims without double granting", async (t) => {
+  const userId = await storyPlayer(t, "story-courier-migration");
+  await unlockCrown(userId);
+  await completeNonBattleStoryNode(userId, "block-crowned", randomUUID(), []);
+  await completeNonBattleStoryNode(userId, "red-tapes-open-the-envelope", randomUUID(), []);
+  await db.insert(playerStoryNodesTable).values([
+    { clerkUserId: userId, chapterId: "red-side-tapes", nodeId: "red-tapes-red-side-open", cleared: true },
+    { clerkUserId: userId, chapterId: "red-side-tapes", nodeId: "red-tapes-courier-table", cleared: true, stars: 3 },
+  ]);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  await db.update(playerProfilesTable).set({ xp: profile.xp + 75, packTickets: profile.packTickets + 1 })
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  await db.insert(playerStoryRewardClaimsTable).values([
+    {
+      clerkUserId: userId,
+      chapterId: "red-side-tapes",
+      nodeId: "red-tapes-courier-table",
+      rewardKey: "red-tapes-courier-table:0:currency:street-xp",
+      reward: { kind: "currency", id: "street-xp", amount: 75 },
+    },
+    {
+      clerkUserId: userId,
+      chapterId: "red-side-tapes",
+      nodeId: "red-tapes-courier-table",
+      rewardKey: "red-tapes-courier-table:stars:3:auto-ticket:v1",
+      reward: { kind: "pack-ticket", id: "street-pack-ticket", amount: 1 },
+    },
+  ]);
+  const before = (await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId)))[0];
+  const result = await completeNonBattleStoryNode(userId, "red-tapes-courier-table", randomUUID(), []);
+  const after = (await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId)))[0];
+  assert.equal(result.alreadyCompleted, true);
+  assert.deepEqual(result.rewards, []);
+  assert.equal(after.xp, before.xp);
+  assert.equal(after.packTickets, before.packTickets);
+  const [claims] = await db.select({ value: count() }).from(playerStoryRewardClaimsTable)
+    .where(and(eq(playerStoryRewardClaimsTable.clerkUserId, userId), eq(playerStoryRewardClaimsTable.nodeId, "red-tapes-courier-table")));
+  assert.equal(claims.value, 2);
+});
+test("campaign load backfills the Courier Table ticket for a lower-star historical clear once", async (t) => {
+  const userId = await storyPlayer(t, "story-courier-lower-star-migration");
+  await unlockCrown(userId);
+  await completeNonBattleStoryNode(userId, "block-crowned", randomUUID(), []);
+  await completeNonBattleStoryNode(userId, "red-tapes-open-the-envelope", randomUUID(), []);
+  await db.insert(playerStoryNodesTable).values([
+    { clerkUserId: userId, chapterId: "red-side-tapes", nodeId: "red-tapes-red-side-open", cleared: true },
+    { clerkUserId: userId, chapterId: "red-side-tapes", nodeId: "red-tapes-courier-table", cleared: true, stars: 2 },
+  ]);
+  const [legacyProfile] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  await db
+    .update(playerProfilesTable)
+    .set({ xp: legacyProfile.xp + 75 })
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  await db.insert(playerStoryRewardClaimsTable).values({
+    clerkUserId: userId,
+    chapterId: "red-side-tapes",
+    nodeId: "red-tapes-courier-table",
+    rewardKey: "red-tapes-courier-table:0:currency:street-xp",
+    reward: { kind: "currency", id: "street-xp", amount: 75 },
+  });
+
+  const [before] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  const firstCampaign = await getPlayerStoryCampaign(userId);
+  const secondCampaign = await getPlayerStoryCampaign(userId);
+  const [afterLoads] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+
+  assert.equal(
+    firstCampaign.nodes.find((node) => node.nodeId === "red-tapes-courier-table")?.cleared,
+    true,
+  );
+  assert.equal(secondCampaign.contentVersion, firstCampaign.contentVersion);
+  assert.equal(afterLoads.xp, before.xp);
+  assert.equal(afterLoads.packTickets, before.packTickets + 1);
+
+  const completion = await completeNonBattleStoryNode(
+    userId,
+    "red-tapes-courier-table",
+    randomUUID(),
+    [],
+  );
+  const [afterCompletion] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  const claims = await db
+    .select()
+    .from(playerStoryRewardClaimsTable)
+    .where(
+      and(
+        eq(playerStoryRewardClaimsTable.clerkUserId, userId),
+        eq(playerStoryRewardClaimsTable.nodeId, "red-tapes-courier-table"),
+      ),
+    );
+
+  assert.equal(completion.alreadyCompleted, true);
+  assert.deepEqual(completion.rewards, []);
+  assert.equal(afterCompletion.xp, before.xp);
+  assert.equal(afterCompletion.packTickets, before.packTickets + 1);
+  assert.deepEqual(
+    claims.map((claim) => claim.rewardKey).sort(),
+    [
+      "red-tapes-courier-table:0:currency:street-xp",
+      "red-tapes-courier-table:stars:3:auto-ticket:v1",
+    ],
+  );
+});
 test("all eight chapters unlock in order and the final reward is claimed once", async (t) => {
   const userId = await storyPlayer(t, "story-season-one");
   assert.equal(storyContent.chapters.length, 8);

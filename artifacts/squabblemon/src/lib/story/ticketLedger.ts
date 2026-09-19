@@ -27,6 +27,10 @@ export type ChapterTicketProgress = {
   readonly isCompact: boolean;
   readonly battleCount: number;
   readonly perfectClears: number;
+  readonly perfectTicketsEarned: number;
+  readonly perfectTicketsAvailable: number;
+  readonly directTicketsEarned: number;
+  readonly directTicketsAvailable: number;
   readonly ticketsEarned: number;
   readonly ticketsAvailable: number;
   readonly ticketsRemaining: number;
@@ -37,8 +41,8 @@ export type ChapterTicketProgress = {
 /**
  * A chapter is "compact" when it has exactly 3 battle nodes — the 3-battle,
  * 1-ticket-per-clean-sweep format the user asked for. Long-form chapters
- * (5+ nodes) still surface the same progress widget, but their ticket
- * forecast is the count of all battle nodes the player can earn a ticket on.
+ * (5+ nodes) still surface the same progress widget. The chapter forecast
+ * includes both perfect-clear tickets and configured pack-ticket rewards.
  */
 export function isCompactTicketChapter(chapter: Pick<StoryChapter, "nodes">): boolean {
   const battleCount = chapter.nodes.filter((n) => n.kind === "battle").length;
@@ -63,15 +67,30 @@ export function summarizeChapterBattles(
     });
   }
   const perfectClears = battles.filter((b) => b.ticketAwarded).length;
-  const ticketsEarned = perfectClears * TICKETS_PER_PERFECT_BATTLE;
-  const ticketsAvailable = battles.length * TICKETS_PER_PERFECT_BATTLE;
-  const ticketsRemaining = ticketsAvailable - ticketsEarned;
+  const perfectTicketsEarned = perfectClears * TICKETS_PER_PERFECT_BATTLE;
+  const perfectTicketsAvailable = battles.length * TICKETS_PER_PERFECT_BATTLE;
+  let directTicketsEarned = 0;
+  let directTicketsAvailable = 0;
+  for (const node of chapter.nodes) {
+    const nodeTickets = node.rewards
+      .filter((reward) => reward.kind === "pack-ticket")
+      .reduce((total, reward) => total + reward.amount, 0);
+    directTicketsAvailable += nodeTickets;
+    if (nodeProgressById[node.id]?.cleared) directTicketsEarned += nodeTickets;
+  }
+  const ticketsEarned = perfectTicketsEarned + directTicketsEarned;
+  const ticketsAvailable = perfectTicketsAvailable + directTicketsAvailable;
+  const ticketsRemaining = Math.max(0, ticketsAvailable - ticketsEarned);
   const progressFraction = ticketsAvailable > 0 ? ticketsEarned / ticketsAvailable : 0;
   return {
     chapterId: chapter.id,
     isCompact: isCompactTicketChapter(chapter),
     battleCount: battles.length,
     perfectClears,
+    perfectTicketsEarned,
+    perfectTicketsAvailable,
+    directTicketsEarned,
+    directTicketsAvailable,
     ticketsEarned,
     ticketsAvailable,
     ticketsRemaining,

@@ -371,13 +371,14 @@
           "lane commitment"
         ],
         "focusCards": [
-          "bikelife",
-          "vibe",
-          "cornball"
+          "carmeet",
+          "delivery",
+          "plug"
         ]
       },
       "encounter": {
         "id": "red-tapes-cheese-has-terms",
+        "roundLimit": 4,
         "enemy": {
           "id": "red-tapes-cheese-has-terms:enemy",
           "name": "Cornball",
@@ -523,9 +524,9 @@
         }
       ],
       "recommendedCollection": [
-        "bikelife",
-        "vibe",
-        "cornball"
+        "carmeet",
+        "delivery",
+        "plug"
       ]
     },
     {
@@ -928,7 +929,7 @@
         },
         "modifiers": {
           "startingMotion": {
-            "cpu": 1
+            "cpu": 3
           }
         },
         "phases": [],
@@ -1078,7 +1079,7 @@
       },
       "teaching": {
         "tips": [
-          "Wifey's opponent hand starts at four cards.",
+          "Wifey's opponent hand starts at six cards.",
           "Existing protection can block targeted effects; choose your timing carefully."
         ],
         "focusMechanics": [
@@ -1124,7 +1125,7 @@
         },
         "modifiers": {
           "handSize": {
-            "cpu": 4
+            "cpu": 6
           }
         },
         "phases": [],
@@ -1302,7 +1303,7 @@
           "reinforcements"
         ],
         "focusCards": [
-          "baby",
+          "rastamon",
           "wifey",
           "hooper"
         ]
@@ -1517,7 +1518,7 @@
         }
       ],
       "recommendedCollection": [
-        "baby",
+        "rastamon",
         "wifey",
         "hooper"
       ]

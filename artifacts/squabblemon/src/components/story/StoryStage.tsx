@@ -1,18 +1,67 @@
 import { useState } from 'react';
-import { getStoryNode, storyContent, type StoryDialogueLine } from '@workspace/squabblemon-engine/story';
+import {
+  getStoryNode,
+  storyContent,
+  type StoryChapter,
+  type StoryDialogueLine,
+  type StoryNode,
+} from '@workspace/squabblemon-engine/story';
 import { getAssetUrl } from '../../lib/assets';
 import './story-stage.css';
 
-export const CHAPTER_ONE_STAGES: Record<string, { backdrop: string; place: string; caption: string }> = {
-  'welcome-to-the-block': { backdrop: 'corner-store', place: 'The corner store', caption: 'Everybody wants a seat.' },
-  'blue-side-pressure': { backdrop: 'moon-rooftop', place: 'Blue’s rooftop', caption: 'An empire. One extension cord.' },
-  'receipts-on-camera': { backdrop: 'corner-store', place: 'The corner store', caption: 'Somebody kept the receipts.' },
-  'red-side-retaliation': { backdrop: 'red-court', place: 'Red’s territory', caption: 'The invitation was a warning.' },
-  'side-alley-challenge': { backdrop: 'gold-alley', place: 'The side alley', caption: 'A little extra trouble. Optional.' },
-  'snitch-at-the-corner': { backdrop: 'civic-summit', place: 'Snitch’s press conference', caption: 'Live. Unfortunately.' },
-  'cracked-head-takes-the-block': { backdrop: 'crown-court', place: 'The crown court', caption: 'The dead have terrible timing.' },
-  'block-crowned': { backdrop: 'crown-court', place: 'The ceremony', caption: 'Nobody said the night was over.' },
+export type StoryStageDefinition = {
+  backdropAssetId: string;
+  place: string;
+  caption: string;
 };
+
+export const CHAPTER_ONE_STAGES: Record<string, StoryStageDefinition> = {
+  'welcome-to-the-block': { backdropAssetId: 'assets/layered/corner-store.webp', place: 'The corner store', caption: 'Everybody wants a seat.' },
+  'blue-side-pressure': { backdropAssetId: 'assets/layered/moon-rooftop.webp', place: 'Blue’s rooftop', caption: 'An empire. One extension cord.' },
+  'receipts-on-camera': { backdropAssetId: 'assets/layered/corner-store.webp', place: 'The corner store', caption: 'Somebody kept the receipts.' },
+  'red-side-retaliation': { backdropAssetId: 'assets/layered/red-court.webp', place: 'Red’s territory', caption: 'The invitation was a warning.' },
+  'side-alley-challenge': { backdropAssetId: 'assets/layered/gold-alley.webp', place: 'The side alley', caption: 'A little extra trouble. Optional.' },
+  'snitch-at-the-corner': { backdropAssetId: 'assets/layered/civic-summit.webp', place: 'Snitch’s press conference', caption: 'Live. Unfortunately.' },
+  'cracked-head-takes-the-block': { backdropAssetId: 'assets/layered/crown-court.webp', place: 'The crown court', caption: 'The dead have terrible timing.' },
+  'block-crowned': { backdropAssetId: 'assets/layered/crown-court.webp', place: 'The ceremony', caption: 'Nobody said the night was over.' },
+};
+
+/**
+ * Chapter Two has no dedicated scene plates yet. These shipped layered
+ * backdrops preserve each authored time and place instead of presenting the
+ * entire day on the chapter map or the nighttime combat plate.
+ */
+export const CHAPTER_TWO_STAGES: Record<string, StoryStageDefinition> = {
+  'red-tapes-open-the-envelope': { backdropAssetId: 'assets/layered/crown-court.webp', place: 'The crown rooftop, after hours', caption: 'The recorder finally plays.' },
+  'red-tapes-red-side-open': { backdropAssetId: 'assets/layered/morning-block.webp', place: 'Red Side, next morning', caption: 'The doors are open. The family is not.' },
+  'red-tapes-courier-table': { backdropAssetId: 'assets/layered/corner-store.webp', place: 'The courier table', caption: 'Every message has a route.' },
+  'red-tapes-cheese-has-terms': { backdropAssetId: 'assets/layered/corner-store.webp', place: 'The corner store', caption: 'Late morning. The cheese has paperwork.' },
+  'red-tapes-pay-per-view': { backdropAssetId: 'assets/layered/civic-summit.webp', place: 'The media table', caption: 'Midday questions. Premium seating.' },
+  'red-tapes-the-wrong-person': { backdropAssetId: 'assets/layered/sunlit-hall.webp', place: 'The private back room', caption: 'No audience. No easy answer.' },
+  'red-tapes-roast-with-a-receipt': { backdropAssetId: 'assets/layered/red-court.webp', place: 'Red Side, early afternoon', caption: 'The jokes came with receipts.' },
+  'red-tapes-side-eye-security': { backdropAssetId: 'assets/layered/tidal-street.webp', place: 'The harbor table', caption: 'Late light. Longer side-eye.' },
+  'red-tapes-mama-has-the-floor': { backdropAssetId: 'assets/layered/sunset-block.webp', place: 'The final table at sunset', caption: 'Baby Momma takes the floor.' },
+  'red-tapes-let-her-grieve': { backdropAssetId: 'assets/layered/old-town.webp', place: 'OG Uncle’s porch', caption: 'Evening. One chair stays empty.' },
+};
+
+const STORY_STAGES: Readonly<Record<string, StoryStageDefinition>> = {
+  ...CHAPTER_ONE_STAGES,
+  ...CHAPTER_TWO_STAGES,
+};
+
+export function resolveStoryStage(
+  nodeId: string,
+  node?: StoryNode,
+  chapter?: StoryChapter,
+): StoryStageDefinition {
+  return STORY_STAGES[nodeId] ?? {
+    backdropAssetId: node?.cinematic.environmentAssetId
+      ?? chapter?.mapAssetId
+      ?? 'assets/layered/corner-store.webp',
+    place: node?.title ?? 'The block',
+    caption: chapter?.subtitle ?? 'The story continues.',
+  };
+}
 
 export type StoryStageProps = {
   nodeId: string; section: 'pre' | 'post' | 'main'; line: StoryDialogueLine;
@@ -25,8 +74,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const [still, setStill] = useState(false);
   const node = getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
-  const scene = CHAPTER_ONE_STAGES[nodeId] ?? { backdrop: '', place: node?.title ?? 'The block', caption: chapter?.subtitle ?? 'The story continues.' };
-  const backdrop = scene.backdrop ? `assets/layered/${scene.backdrop}.webp` : chapter?.mapAssetId ?? 'assets/layered/corner-store.webp';
+  const scene = resolveStoryStage(nodeId, node, chapter);
   const lines = node?.kind === 'battle' ? (section === 'post' ? node.postDialogue : node.preDialogue) : node?.scenes ?? [];
   // Only show people who have entered; the ceremony reveal stays a surprise.
   const previous = lines.slice(0, position - 1).findLast((item) => item.speaker !== line.speaker);
@@ -36,7 +84,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
     <section className={`story-stage ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`}>
-      <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(backdrop)}")` }} />
+      <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(scene.backdropAssetId)}")` }} />
       <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
       <div className="story-stage__light" />
       <div className="story-stage__dust" aria-hidden="true" />

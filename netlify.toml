@@ -8,6 +8,18 @@
   BASE_PATH = "/"
   NODE_ENV = "production"
 
+[context.production.environment]
+  APP_ENV = "production"
+
+[context.deploy-preview.environment]
+  APP_ENV = "staging"
+
+[context.branch-deploy.environment]
+  APP_ENV = "staging"
+
+[context.staging.environment]
+  APP_ENV = "staging"
+
 [functions]
   directory = "artifacts/api-server/dist/netlify-functions"
   node_bundler = "esbuild"

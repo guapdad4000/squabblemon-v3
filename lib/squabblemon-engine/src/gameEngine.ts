@@ -28,6 +28,20 @@ export type StoryEffect =
   | { readonly kind: "reinforcement"; readonly owner: Owner; readonly cardId: string }
   | { readonly kind: "lane-power"; readonly owner: Owner | "both"; readonly lane: Lane; readonly amount: number }
   | { readonly kind: "lane-lock"; readonly owner: Owner | "both"; readonly lanes: readonly Lane[] };
+export const DEFAULT_MATCH_ROUND_LIMIT = 6;
+export type StoryObjectiveCriterion =
+  | { readonly kind: "win" }
+  | { readonly kind: "districts-held"; readonly owner: Owner; readonly atLeast: number }
+  | { readonly kind: "specific-districts-held"; readonly owner: Owner; readonly lanes: readonly Lane[] }
+  | { readonly kind: "squabble-used"; readonly owner: Owner; readonly used: boolean }
+  | { readonly kind: "motion-remaining"; readonly owner: Owner; readonly atLeast: number }
+  | { readonly kind: "cards-moved"; readonly owner: Owner; readonly atLeast: number };
+export type StoryStarObjective = {
+  readonly id: string;
+  readonly description: string;
+  /** Missing only on encounters saved before objective criteria were introduced. */
+  readonly criterion?: StoryObjectiveCriterion;
+};
 export type StoryEncounterSnapshot = {
   readonly id: string;
   readonly activity?: { readonly kind: string; readonly seed: string; readonly normalized: boolean; readonly previousCardIds?: readonly string[] };
@@ -50,6 +64,8 @@ export type StoryEncounterSnapshot = {
     readonly description: string;
   };
   readonly soundHooks: Readonly<Record<string, string>>;
+  /** Defaults to six for legacy snapshots and standard matches. */
+  readonly roundLimit?: number;
   readonly modifiers?: {
     readonly startingMotion?: Partial<Readonly<Record<Owner, number>>>;
     readonly handSize?: Partial<Readonly<Record<Owner, number>>>;
@@ -65,10 +81,7 @@ export type StoryEncounterSnapshot = {
     readonly trigger: StoryTrigger;
     readonly onEnter?: readonly StoryEffect[];
   }[];
-  readonly starObjectives?: readonly {
-    readonly id: string;
-    readonly description: string;
-  }[];
+  readonly starObjectives?: readonly StoryStarObjective[];
 };
 export type StoryRuntime = {
   activePhaseIndex: number;
@@ -128,7 +141,9 @@ const freshDistrictRuntime = (): DistrictRuntime => ({
   plays: { player: [0, 0, 0], cpu: [0, 0, 0] }, roundPlays: { player: [0, 0, 0], cpu: [0, 0, 0] },
   trailing: { player: [false, false, false], cpu: [false, false, false] }, trappedCardIds: [], detainedCardIds: [],
 });
+const SUPPRESS_PRESENTATION_EVENTS = Symbol("squabblemon.search-without-presentation-events");
 export type Match = {
+  [SUPPRESS_PRESENTATION_EVENTS]?: true;
   /** Absent only for pre-location matches and their legacy transcripts. */
   districtSnapshot?: DistrictSnapshot;
   districtRuntime?: DistrictRuntime;
@@ -146,6 +161,14 @@ export type Match = {
   storyEncounter?: StoryEncounterSnapshot; storyRuntime?: StoryRuntime;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
+/** Search copies skip expensive presentation snapshots while preserving rules. */
+export function suppressMatchPresentationEvents(match: Match): Match {
+  return {
+    ...match,
+    [SUPPRESS_PRESENTATION_EVENTS]: true,
+    effectLog: [],
+  };
+}
 const lane = (n: number): Lane => n as Lane;
 const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false, weakened: false, locked: false, boosted: false, burnStacks: 0 });
 const abilityCardId = (card: CardInstance) => card.copiedAbilityCardId ?? card.cardId;
@@ -330,12 +353,81 @@ export function getDistrictResults(match: Match) {
     return { lane: i as Lane, player, cpu, winner: player === cpu ? "draw" as const : player > cpu ? "player" as const : "cpu" as const };
   });
 }
+export function getMatchRoundLimit(value?: Match | StoryEncounterSnapshot | null): number {
+  const snapshot = value && "round" in value ? value.storyEncounter : value;
+  const configured = snapshot?.roundLimit;
+  return Number.isInteger(configured) && configured! >= 1 && configured! <= DEFAULT_MATCH_ROUND_LIMIT
+    ? configured!
+    : DEFAULT_MATCH_ROUND_LIMIT;
+}
 export function getMatchWinner(match: Match): Owner | 'draw' | null {
   const results = getDistrictResults(match), player = results.filter((r) => r.winner === 'player').length, cpu = results.filter((r) => r.winner === 'cpu').length;
   if (player >= 2) return 'player';
   if (cpu >= 2) return 'cpu';
-  return match.round >= 6 && match.phase === 'complete' ? 'draw' : null;
+  return match.round >= getMatchRoundLimit(match) && match.phase === 'complete' ? 'draw' : null;
 }
+export type StoryObjectiveEvaluation = StoryStarObjective & { readonly achieved: boolean };
+
+const legacyStoryObjectiveCriterion = (objective: StoryStarObjective): StoryObjectiveCriterion | null => {
+  if (objective.criterion) return objective.criterion;
+  if (objective.id === "win") return { kind: "win" };
+  if (objective.id === "districts") return { kind: "districts-held", owner: "player", atLeast: 3 };
+  if (objective.id === "squabble") return { kind: "squabble-used", owner: "player", used: false };
+  return null;
+};
+
+const historicallyMovedCardIds = (match: Match, owner: Owner): Set<string> => {
+  // Keep final-card flags for legacy snapshots, then add every authoritative
+  // board-to-board lane transition so later destruction cannot erase credit.
+  const moved = new Set(match.boards.flat()
+    .filter(card => card.owner === owner && card.moved)
+    .map(card => card.instanceId));
+  for (const event of match.effectLog) {
+    if (event.kind !== "move") continue;
+    for (const participant of [event.source, ...event.targets]) {
+      if (!participant || participant.owner !== owner) continue;
+      const beforeLane = participant.before?.lane;
+      const afterLane = participant.after?.lane;
+      if (beforeLane !== null && beforeLane !== undefined
+        && afterLane !== null && afterLane !== undefined
+        && beforeLane !== afterLane) moved.add(participant.cardInstanceId);
+    }
+  }
+  return moved;
+};
+/** Evaluates saved and current story objectives from the final authoritative match state. */
+export function evaluateStoryStarObjectives(
+  match: Match,
+  objectives: readonly StoryStarObjective[] = match.storyEncounter?.starObjectives ?? [],
+): StoryObjectiveEvaluation[] {
+  const won = match.phase === "complete" && getMatchWinner(match) === "player";
+  const results = getDistrictResults(match);
+  const usedSquabble = (owner: Owner) => match.squabbleByOwner?.[owner] ?? (owner === "player" ? match.squabbleUsed : false);
+  return objectives.map((objective) => {
+    const criterion = legacyStoryObjectiveCriterion(objective);
+    let achieved = false;
+    if (won && criterion) {
+      switch (criterion.kind) {
+        case "win": achieved = true; break;
+        case "districts-held":
+          achieved = results.filter((result) => result.winner === criterion.owner).length >= criterion.atLeast;
+          break;
+        case "specific-districts-held":
+          achieved = criterion.lanes.every((target) => results[target]?.winner === criterion.owner);
+          break;
+        case "squabble-used": achieved = usedSquabble(criterion.owner) === criterion.used; break;
+        case "motion-remaining": achieved = (criterion.owner === "player" ? match.playerMotion : match.cpuMotion) >= criterion.atLeast; break;
+        case "cards-moved":
+          achieved = historicallyMovedCardIds(match, criterion.owner).size >= criterion.atLeast;
+          break;
+      }
+    }
+    return { ...objective, achieved };
+  });
+}
+
+export const getStoryStars = (match: Match): number =>
+  evaluateStoryStarObjectives(match).filter((objective) => objective.achieved).length;
 const activeLandlord = (match: Match, owner: Owner, targetLane: Lane) =>
   inLane(match, owner === "player" ? "cpu" : "player", targetLane)
     .some((card) => abilityCardId(card) === "landlord" && !card.statuses.silenced);
@@ -663,6 +755,7 @@ const targetEnemyBurnAndPowerReduction = (
 
 const storyLog = (before: Match, after: Match, id: string, owner: Owner, note: string): Match => {
   const logged = addEvent(before, after, { type: 'ability', owner, lane: 0, kind: 'story', note });
+  if (logged[SUPPRESS_PRESENTATION_EVENTS]) return logged;
   return {
     ...logged,
     effectLog: [...logged.effectLog.slice(0, -1), {
@@ -755,6 +848,8 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
   if (!snapshot) return [];
   const modifiers = snapshot.modifiers;
   const summaries: string[] = [];
+  const roundLimit = getMatchRoundLimit(snapshot);
+  if (roundLimit !== DEFAULT_MATCH_ROUND_LIMIT) summaries.push(`Match length: ${roundLimit} rounds`);
   if (modifiers?.startingMotion) summaries.push(`Starting Motion: player ${modifiers.startingMotion.player ?? 2}, CPU ${modifiers.startingMotion.cpu ?? 2}`);
   if (modifiers?.handSize) summaries.push(`Opening hand: player ${modifiers.handSize.player ?? 5}, CPU ${modifiers.handSize.cpu ?? 5}`);
   for (const lock of modifiers?.laneLocks ?? []) summaries.push(`Round ${lock.round}: ${lock.owner} cannot play lane${lock.lanes.length === 1 ? "" : "s"} ${lock.lanes.join(", ")}`);
@@ -1314,7 +1409,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         m = { ...m, timedEffects: [...m.timedEffects, { id: `stud:${source.instanceId}:${target.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId, targetInstanceId: target.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7, expiration: 'match-complete' }] };
       }
     } else if (id === 'gothkid' || id === 'redpill') {
-      const target = id === 'gothkid' ? lowest(enemies.filter(c => cards[c.cardId].cost <= 2)) : highest(enemies);
+      const target = id === 'gothkid' ? lowest(enemies.filter(c => c.cost <= 2)) : highest(enemies);
       if (target) {
         if (id === 'gothkid') {
           targetIds.add(target.instanceId);
@@ -1620,7 +1715,7 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
   // Resolve each candidate through the real rules, including movement, cleansing,
   // protection, upgrades and story effects. Never reward an existing stack itself.
   const value = (resolved: Match) => {
-    const board = match.round === 6 ? nextRound(resolved) : resolved;
+    const board = match.round === getMatchRoundLimit(match) ? nextRound(resolved) : resolved;
     const results = getDistrictResults(board);
     const control = results.reduce((sum, r) => sum + (r.winner === "cpu" ? 1 : r.winner === "player" ? -1 : 0), 0);
     const margins = results.reduce((sum, r) => {
@@ -1633,7 +1728,7 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
     const style = match.storyEncounter?.enemy.behaviorProfile ?? rivalStyle(match.cpuDeck);
     const active = board.boards.flat().filter(c => c.owner === 'cpu' && !c.statuses.frozen && !c.statuses.silenced);
     const cheap = board.cpuHand.filter(c => c.cost <= 2).length;
-    const setup = board.round < 6 ? active.reduce((sum, c) => sum
+    const setup = board.round < getMatchRoundLimit(board) ? active.reduce((sum, c) => sum
       + (abilityCardId(c) === 'gamer' ? Math.min(2, cheap) : abilityCardId(c) === 'streamer' ? Math.min(2 - board.cheapBuffsUsed.cpu, cheap) : abilityCardId(c) === 'bossbabe' ? 2 - (c.networkBoosts ?? 0) : 0)
       + (c.statuses.protected ? 0.7 : 0), 0) + Math.min(2, board.discountTokens.filter(t => t.owner === 'cpu').length) : 0;
     const styleValue = /movement|Movement/.test(style) ? board.boards.filter(items => items.some(c => c.owner === 'cpu')).length * 0.7
@@ -1651,7 +1746,7 @@ export function chooseCpuPlay(match: Match, lookAhead = true): { instanceId: str
   candidates.sort((a, b) => b.score - a.score);
   // A bounded second turn values setup and saving removal. The opponent's private
   // hand is never read: this is an optimistic own-turn plan, weighted below now.
-  if (lookAhead && match.round < 6) for (const candidate of candidates.slice(0, 4)) {
+  if (lookAhead && match.round < getMatchRoundLimit(match)) for (const candidate of candidates.slice(0, 4)) {
     const future = pass(nextRound(candidate.resolved), 'player');
     const choice = chooseCpuPlay(future, false);
     const after = choice ? playCard(future, 'cpu', choice.instanceId, choice.lane) : pass(future, 'cpu');
@@ -1678,7 +1773,7 @@ export function nextRound(match: Match): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
   const roundEnded = applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(match));
-  if (match.round >= 6) {
+  if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
   }
@@ -1765,6 +1860,68 @@ export type PlayerMove = {
 type TranscriptMove = Omit<PlayerMove, 'lane'> & { lane: number | null };
 export const MAX_MATCH_MOVES = 64;
 
+/** Build the exact legal transcript taught by the six-round guided tutorial. */
+export function createGuidedTutorialTranscript(
+  abilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
+  districtSnapshot?: DistrictSnapshot,
+): PlayerMove[] {
+  let match = createMatch(
+    "vibes",
+    "combo",
+    undefined,
+    abilityUpgradeSnapshot,
+    districtSnapshot,
+  );
+  const moves: PlayerMove[] = [];
+  const roundLimit = getMatchRoundLimit(match);
+
+  for (let round = 1; round <= roundLimit; round += 1) {
+    if (round === 1 || round === 2 || round === 4) {
+      const candidates = match.playerHand.flatMap((card) =>
+        ([0, 1, 2] as const)
+          .filter((lane) => canAffordSelection(match, "player", card.instanceId, lane))
+          .map((lane) => ({ card, lane })),
+      );
+      candidates.sort((left, right) =>
+        round === 4
+          ? right.card.basePower - left.card.basePower || left.lane - right.lane
+          : left.card.cost - right.card.cost || left.lane - right.lane,
+      );
+      const selected = candidates[0];
+      if (!selected) {
+        throw new Error(`Tutorial round ${round} needs an affordable play`);
+      }
+      const squabble = round === 4;
+      moves.push({
+        cardInstanceId: selected.card.instanceId,
+        lane: selected.lane,
+        squabble,
+        endTurn: false,
+      });
+      match = playTurnCard(
+        match,
+        "player",
+        selected.card.instanceId,
+        selected.lane,
+        squabble,
+      );
+    }
+
+    moves.push({
+      cardInstanceId: null,
+      lane: null,
+      squabble: false,
+      endTurn: true,
+    });
+    match = nextRound(revealCpuTurn(pass(match, "player")));
+  }
+
+  if (match.phase !== "complete") {
+    throw new Error("Guided tutorial transcript did not complete the match");
+  }
+  return moves;
+}
+
 export function validateTurnRules(moves: readonly TranscriptMove[], version: 1 | 2) {
   if (moves.some(move => version === 2 ? typeof move.endTurn !== 'boolean' : move.endTurn !== undefined)) {
     throw new Error('Transcript does not match this match’s turn rules');
@@ -1772,10 +1929,12 @@ export function validateTurnRules(moves: readonly TranscriptMove[], version: 1 |
 }
 
 function replayPlayerMoves(initial: Match, moves: readonly TranscriptMove[]): Match {
-  if (moves.length < 6 || moves.length > MAX_MATCH_MOVES) throw new Error('A match needs six round endings and at most 64 actions');
+  const roundLimit = getMatchRoundLimit(initial);
+  const roundLabel = roundLimit === DEFAULT_MATCH_ROUND_LIMIT ? "six" : String(roundLimit);
+  if (moves.length < roundLimit || moves.length > MAX_MATCH_MOVES) throw new Error(`A match needs ${roundLabel} round endings and at most 64 actions`);
   const multiCardTurns = moves.some(move => move.endTurn !== undefined);
   validateTurnRules(moves, multiCardTurns ? 2 : 1);
-  if (!multiCardTurns && moves.length !== 6) throw new Error('A legacy match transcript needs six moves');
+  if (!multiCardTurns && moves.length !== roundLimit) throw new Error(`A legacy match transcript needs ${roundLabel} moves`);
   let match = initial;
   for (const move of moves) {
     if (match.phase !== 'player') throw new Error('Transcript contains actions after the match ended');
@@ -1794,7 +1953,7 @@ function replayPlayerMoves(initial: Match, moves: readonly TranscriptMove[]): Ma
       match = nextRound(match);
     }
   }
-  if (match.phase !== 'complete') throw new Error('Transcript did not complete six rounds');
+  if (match.phase !== 'complete') throw new Error(`Transcript did not complete ${roundLabel} rounds`);
   return match;
 }
 export function verifyMatchTranscript(
@@ -1935,6 +2094,17 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
 export type ScoreState = { lane: Lane; player: number; cpu: number };
 
 const addEvent = (before: Match, after: Match, input: EventInput): Match => {
+  if (
+    before[SUPPRESS_PRESENTATION_EVENTS] ||
+    after[SUPPRESS_PRESENTATION_EVENTS]
+  ) {
+    return {
+      ...after,
+      [SUPPRESS_PRESENTATION_EVENTS]: true,
+      nextEventSequence: after.nextEventSequence + 1,
+      effectLog: [],
+    };
+  }
   const source = input.sourceId ? participant(before, after, input.sourceId) : null;
   const targetIds = [...new Set(input.targetIds ?? [])].filter((id) => id !== input.sourceId);
   const sourceCard = input.sourceId ? findCard(after, input.sourceId) ?? findCard(before, input.sourceId) : undefined;

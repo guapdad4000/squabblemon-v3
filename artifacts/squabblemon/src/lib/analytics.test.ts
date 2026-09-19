@@ -81,6 +81,29 @@ test('battle analytics drops unexpected private fields and invalid values before
   }
 });
 
+test('tutorial analytics only accepts fixed step and mechanic identifiers', () => {
+  const originalWindow = globalThis.window;
+  const calls: Array<{ name: string, data?: Record<string, string | number | boolean> }> = [];
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: { umami: { track: (name: string, data?: Record<string, string | number | boolean>) => calls.push({ name, data }) } },
+  });
+
+  try {
+    trackEvent('tutorial_step_shown', { round: 1, step: 'r1_choose_card', card_id: 'private-card' } as Record<string, string | number | boolean>);
+    trackEvent('mechanic_lesson_dismissed', { lesson: 'burn', account_id: 'private-account' } as Record<string, string | number | boolean>);
+    trackEvent('mechanic_lesson_shown', { lesson: 'made_up_status' });
+    assert.deepEqual(calls, [
+      { name: 'tutorial_step_shown', data: { round: 1, step: 'r1_choose_card' } },
+      { name: 'mechanic_lesson_dismissed', data: { lesson: 'burn' } },
+      { name: 'mechanic_lesson_shown', data: {} },
+    ]);
+    assert.doesNotMatch(JSON.stringify(calls), /private-card|private-account|made_up_status/);
+  } finally {
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: originalWindow });
+  }
+});
+
 test('analytics failures never escape into gameplay', () => {
   const originalWindow = globalThis.window;
   Object.defineProperty(globalThis, 'window', {

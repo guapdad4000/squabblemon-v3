@@ -17,10 +17,16 @@ import {
   type PlayerMove,
 } from "./gameEngine";
 import {
+  createCardInstance,
   createStoryMatch,
+  evaluateStoryStarObjectives,
   getActiveStoryPhase,
+  getMatchRoundLimit,
   getStoryLockedLanes,
+  getStoryStars,
+  playTurnCard,
   verifyStoryMatchTranscript,
+  type Match,
   type StoryEncounterSnapshot,
 } from "@workspace/squabblemon-engine/gameEngine";
 import {
@@ -29,6 +35,10 @@ import {
   validateStoryContent,
   type StoryContent,
 } from "@workspace/squabblemon-engine/story";
+import {
+  ROOKIE_FOUNDATION_IDS,
+  catalogIdsToEngineIds,
+} from "@workspace/squabblemon-engine/data";
 
 test("the server-verifiable transcript reproduces the local match", () => {
   let local = createMatch("block", "slide");
@@ -175,10 +185,11 @@ test("phase on-enter effects and logs are applied exactly once", () => {
   };
   let match = createStoryMatch(snapshot, "block");
   assert.equal(getActiveStoryPhase(match)?.id, "opening");
-  assert.equal(match.cpuMotion, 5);
+  const phaseEntryMotion = Math.min(9, (base.modifiers?.startingMotion?.cpu ?? 2) + 3);
+  assert.equal(match.cpuMotion, phaseEntryMotion);
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
   match = revealCpu(pass(match, "player"));
-  assert.equal(match.cpuMotion, 5 - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
+  assert.equal(match.cpuMotion, phaseEntryMotion - (match.boards.flat().find((card) => card.owner === "cpu")?.cost ?? 0));
   assert.equal(match.effectLog.filter((entry) => entry.cardInstanceId === "story:phase:opening:0").length, 1);
 });
 
@@ -204,4 +215,229 @@ test("Cracked Head has three deterministic telegraphed phases", () => {
   }
   assert.equal(getActiveStoryPhase(match)?.id, "last-call");
   assert.equal(match.cpuHand.filter((card) => card.cardId === "snow").length, 1);
+});
+
+test("four-round story encounters complete and verify after four endings", () => {
+  const snapshot = getStoryBattle("blue-side-pressure")!.encounter;
+  assert.equal(getMatchRoundLimit(snapshot), 4);
+  const moves = Array.from({ length: 4 }, () => ({ cardInstanceId: null, lane: null, squabble: false }));
+  const verified = verifyStoryMatchTranscript(snapshot, "block", moves);
+  assert.equal(verified.round, 4);
+  assert.equal(verified.phase, "complete");
+  assert.throws(() => verifyStoryMatchTranscript(snapshot, "block", moves.slice(0, 3)), /4 round endings/);
+});
+
+test("typed and legacy story objectives share one deterministic evaluator", () => {
+  const snapshot = getStoryBattle("welcome-to-the-block")!.encounter;
+  const base = createStoryMatch(snapshot, "block");
+  const cardIds = ["cornball", "snow", "roaster"] as const;
+  const boards = cardIds.map((cardId, lane) => [{
+    ...createCardInstance(cardId, "player", "objective-test", lane),
+    lane: lane as Lane,
+    playedRound: 1,
+    moved: lane === 0,
+  }]) as Match["boards"];
+  const completed: Match = {
+    ...base,
+    phase: "complete",
+    round: getMatchRoundLimit(base),
+    boards,
+    playerMotion: 2,
+    squabbleUsed: true,
+  };
+  assert.deepEqual(evaluateStoryStarObjectives(completed).map((objective) => objective.achieved), [true, true, true]);
+  assert.equal(getStoryStars(completed), 3);
+
+  const criteria = evaluateStoryStarObjectives(completed, [
+    { id: "win-now", description: "win", criterion: { kind: "win" } },
+    { id: "district-count", description: "districts", criterion: { kind: "districts-held", owner: "player", atLeast: 3 } },
+    { id: "outside", description: "outside", criterion: { kind: "specific-districts-held", owner: "player", lanes: [0, 2] } },
+    { id: "used", description: "squabble", criterion: { kind: "squabble-used", owner: "player", used: true } },
+    { id: "motion", description: "motion", criterion: { kind: "motion-remaining", owner: "player", atLeast: 2 } },
+    { id: "moved", description: "movement", criterion: { kind: "cards-moved", owner: "player", atLeast: 1 } },
+  ]);
+  assert.ok(criteria.every((objective) => objective.achieved));
+
+  const legacy = evaluateStoryStarObjectives({ ...completed, squabbleUsed: false }, [
+    { id: "win", description: "Win the encounter." },
+    { id: "districts", description: "Finish holding all three districts." },
+    { id: "squabble", description: "Win without using SQUABBLE." },
+  ]);
+  assert.ok(legacy.every((objective) => objective.achieved));
+  assert.ok(evaluateStoryStarObjectives({ ...completed, phase: "resolved" }).every((objective) => !objective.achieved));
+});
+
+test("a moved card keeps story objective credit after it is destroyed", () => {
+  const snapshot = getStoryBattle("welcome-to-the-block")!.encounter;
+  const base = createStoryMatch(snapshot, "block");
+  const mover = createCardInstance("vibe", "player", "movement-history", 0);
+  const traveler = {
+    ...createCardInstance("cornball", "player", "movement-history", 1),
+    lane: 1 as Lane,
+    playedRound: 1,
+  };
+  const afterMove = playTurnCard({
+    ...base,
+    playerHand: [mover],
+    playerMotion: 10,
+    boards: [[], [traveler], []],
+  }, "player", mover.instanceId, 0);
+  assert.equal(afterMove.boards[0].some(card => card.instanceId === traveler.instanceId), true);
+  assert(afterMove.effectLog.some(event => event.kind === "move"));
+
+  const laneOneWinner = {
+    ...createCardInstance("hooper", "player", "movement-history", 2),
+    lane: 1 as Lane,
+    playedRound: 1,
+  };
+  const completed: Match = {
+    ...afterMove,
+    phase: "complete",
+    round: getMatchRoundLimit(afterMove),
+    boards: [
+      afterMove.boards[0].filter(card => card.instanceId !== traveler.instanceId),
+      [laneOneWinner],
+      [],
+    ],
+  };
+  assert(!completed.boards.flat().some(card => card.moved));
+  const [objective] = evaluateStoryStarObjectives(completed, [{
+    id: "movement-history",
+    description: "Move a card even if it leaves play.",
+    criterion: { kind: "cards-moved", owner: "player", atLeast: 1 },
+  }]);
+  assert.equal(objective.achieved, true);
+});
+test("Chapters Three through Eight apply the authored pacing and reward tiers", () => {
+  const lateChapters = storyContent.chapters.filter(({ order }) => order >= 3 && order <= 8);
+  assert.deepEqual(lateChapters.map(({ order }) => order), [3, 4, 5, 6, 7, 8]);
+
+  const xpByBattleType = {
+    guided: 75,
+    standard: 90,
+    "rule-twist": 110,
+    "mini-boss": 150,
+    boss: 225,
+  } as const;
+
+  for (const chapter of lateChapters) {
+    const battles = chapter.nodes.filter((node) => node.kind === "battle");
+    assert.ok(battles.length >= 3, `${chapter.id} should contain at least three battles`);
+
+    for (const [battleIndex, battle] of battles.entries()) {
+      const expectedRoundLimit = battle.optional || battleIndex === 0 || battle.battleType === "guided"
+        ? 4
+        : battle.battleType === "rule-twist"
+          ? 5
+          : 6;
+      assert.equal(
+        getMatchRoundLimit(battle.encounter),
+        expectedRoundLimit,
+        `${battle.id} should run for ${expectedRoundLimit} rounds`,
+      );
+
+      const streetXp = battle.rewards.filter(
+        (reward) => reward.kind === "currency" && reward.id === "street-xp",
+      );
+      assert.deepEqual(
+        streetXp.map(({ amount }) => amount),
+        [battle.optional ? 125 : xpByBattleType[battle.battleType]],
+        `${battle.id} should use its battle tier's Street XP reward`,
+      );
+    }
+  }
+});
+
+test("late campaign objectives vary by chapter and remain embedded in each encounter", () => {
+  for (const chapter of storyContent.chapters.filter(({ order }) => order >= 3 && order <= 8)) {
+    const battles = chapter.nodes.filter((node) => node.kind === "battle");
+    const signatures = new Set<string>();
+
+    for (const battle of battles) {
+      assert.equal(battle.starObjectives.length, 3, `${battle.id} should have three objectives`);
+      assert.ok(
+        battle.starObjectives.every((objective) => objective.criterion),
+        `${battle.id} should use typed objective criteria`,
+      );
+      assert.deepEqual(
+        battle.encounter.starObjectives,
+        battle.starObjectives,
+        `${battle.id} should embed the exact objectives used by its story node`,
+      );
+      signatures.add(JSON.stringify(battle.starObjectives.map(({ criterion }) => criterion)));
+    }
+
+    if (battles.length >= 3) {
+      assert.ok(
+        signatures.size >= 3,
+        `${chapter.id} should offer at least three distinct objective sets`,
+      );
+    }
+  }
+});
+
+test("late campaign phase timing fits every shortened encounter and validates", () => {
+  assert.equal(validateStoryContent(storyContent), storyContent);
+
+  for (const chapter of storyContent.chapters.filter(({ order }) => order >= 3 && order <= 8)) {
+    for (const node of chapter.nodes) {
+      if (node.kind !== "battle") continue;
+      const roundLimit = getMatchRoundLimit(node.encounter);
+      for (const storyPhase of node.encounter.phases ?? []) {
+        if (storyPhase.trigger.kind !== "round") continue;
+        assert.ok(
+          storyPhase.trigger.atLeast <= roundLimit,
+          `${node.id} phase ${storyPhase.id} should trigger by round ${roundLimit}`,
+        );
+      }
+    }
+  }
+});
+
+test("early campaign balance content retains IDs, rewards, and authored encounter rules", () => {
+  assert.equal(storyContent.version, 5);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 62);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 51);
+
+  const newAccountCards = new Set(catalogIdsToEngineIds(ROOKIE_FOUNDATION_IDS));
+  for (const chapter of storyContent.chapters.filter(({ order }) => order <= 2)) {
+    for (const node of chapter.nodes) {
+      if (node.kind === "battle") {
+        for (const cardId of new Set([...node.teaching.focusCards, ...node.recommendedCollection])) {
+          assert.ok(newAccountCards.has(cardId), node.id + " recommends unavailable new-account card " + cardId);
+        }
+      }
+      for (const reward of node.rewards) {
+        if (reward.kind === "card") newAccountCards.add(reward.id);
+      }
+    }
+  }
+
+  const welcome = getStoryBattle("welcome-to-the-block")!;
+  assert.deepEqual(welcome.starObjectives.find((objective) => objective.id === "squabble")?.criterion, {
+    kind: "squabble-used", owner: "player", used: true,
+  });
+  assert.equal(getStoryBattle("blue-side-pressure")!.encounter.roundLimit, 4);
+  assert.equal(getStoryBattle("red-tapes-cheese-has-terms")!.encounter.roundLimit, 4);
+  assert.equal(getStoryBattle("red-tapes-roast-with-a-receipt")!.encounter.modifiers?.startingMotion?.cpu, 3);
+
+  const wifey = getStoryBattle("red-tapes-side-eye-security")!;
+  assert.equal(wifey.battleType, "mini-boss");
+  assert.equal(wifey.encounter.modifiers?.handSize?.cpu, 6);
+  assert.equal(createStoryMatch(wifey.encounter, "block").cpuHand.length, 6);
+
+  const chapterTwo = storyContent.chapters.find((chapter) => chapter.id === "red-side-tapes")!;
+  const courier = chapterTwo.nodes.find((node) => node.id === "red-tapes-courier-table")!;
+  assert.equal(courier.kind, "reward");
+  assert.equal(courier.optional, true);
+  assert.deepEqual(courier.prerequisites, ["red-tapes-red-side-open"]);
+  assert.deepEqual(courier.rewards.map(({ kind, id, amount }) => ({ kind, id, amount })), [
+    { kind: "currency", id: "street-xp", amount: 75 },
+    { kind: "pack-ticket", id: "street-pack-ticket", amount: 1 },
+  ]);
+  assert.equal(courier.rewards[1].claimKey, "red-tapes-courier-table:stars:3:auto-ticket:v1");
+  assert.equal(chapterTwo.nodes.filter((node) => node.kind === "battle").length, 6);
+  assert.ok(storyContent.chapters.flatMap((chapter) => chapter.nodes)
+    .filter((node) => node.kind === "battle")
+    .every((node) => node.starObjectives.length === 3 && node.starObjectives.every((objective) => objective.criterion)));
 });

@@ -57,6 +57,10 @@ export default defineConfig({
       prettier: true,
       override: {
         zod: {
+          // The workspace deliberately pins Zod 3. Orval 8's automatic
+          // detection can fall back to Zod 4 syntax when generated workspace
+          // metadata is unavailable, so keep generation explicit.
+          version: 3,
           coerce: {
             query: ['boolean', 'number', 'string'],
             param: ['boolean', 'number', 'string'],

@@ -17,6 +17,30 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary Verify the API can reach its database
+ */
+export const ReadinessCheckResponse = zod.object({
+  "status": zod.string()
+})
+
+
+/**
+ * @summary Read non-secret deployment identity before guarded verification
+ */
+export const getDeploymentIdentityResponseDatabaseFingerprintRegExp = new RegExp('^[a-f0-9]{16}$');
+
+
+export const GetDeploymentIdentityResponse = zod.object({
+  "environment": zod.enum(['production', 'staging']),
+  "context": zod.enum(['production', 'deploy-preview', 'branch-deploy', 'staging']),
+  "deployId": zod.string(),
+  "origin": zod.string().url(),
+  "databaseFingerprint": zod.string().regex(getDeploymentIdentityResponseDatabaseFingerprintRegExp),
+  "clerkEnvironment": zod.enum(['live', 'test'])
+})
+
+
+/**
  * @summary Load or provision the authenticated player
  */
 export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMin = 0;
@@ -82,6 +106,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -130,6 +155,16 @@ export const GetPlayerBootstrapResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -398,6 +433,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -446,6 +482,16 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -608,6 +654,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -656,6 +703,16 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -778,6 +835,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -826,6 +884,16 @@ export const UpdatePlayerProfileResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -920,6 +988,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -968,6 +1037,16 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -1055,6 +1134,7 @@ export const ClaimExperimentCardResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1103,6 +1183,16 @@ export const ClaimExperimentCardResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -1199,7 +1289,6 @@ export const CompletePlayerMatchParams = zod.object({
 export const completePlayerMatchBodyMovesItemLaneMin = 0;
 export const completePlayerMatchBodyMovesItemLaneMax = 2;
 
-export const completePlayerMatchBodyMovesMin = 6;
 export const completePlayerMatchBodyMovesMax = 64;
 
 
@@ -1210,7 +1299,7 @@ export const CompletePlayerMatchBody = zod.object({
   "lane": zod.number().min(completePlayerMatchBodyMovesItemLaneMin).max(completePlayerMatchBodyMovesItemLaneMax).nullable(),
   "squabble": zod.boolean(),
   "endTurn": zod.boolean().optional().describe('False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.')
-})).min(completePlayerMatchBodyMovesMin).max(completePlayerMatchBodyMovesMax)
+})).min(1).max(completePlayerMatchBodyMovesMax)
 })
 
 export const completePlayerMatchResponseProfileCardProgressionMoveTierMin = 0;
@@ -1276,6 +1365,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1491,6 +1581,7 @@ export const SavePlayerDeckResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1539,6 +1630,16 @@ export const SavePlayerDeckResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -1627,6 +1728,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1676,6 +1778,16 @@ export const DeletePlayerDeckResponse = zod.object({
   "detail": zod.string()
 }))
 }),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
   "threshold": zod.number(),
@@ -1694,11 +1806,14 @@ export const DeletePlayerDeckResponse = zod.object({
 export const openPlayerPackBodyIdempotencyKeyMin = 8;
 export const openPlayerPackBodyIdempotencyKeyMax = 80;
 
+export const openPlayerPackBodyPullCountMax = 10;
+
 
 
 export const OpenPlayerPackBody = zod.object({
   "idempotencyKey": zod.string().min(openPlayerPackBodyIdempotencyKeyMin).max(openPlayerPackBodyIdempotencyKeyMax),
-  "paymentMethod": zod.enum(['ticket', 'softCurrency'])
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "pullCount": zod.number().min(1).max(openPlayerPackBodyPullCountMax).optional().describe('Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.')
 })
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMin = 0;
@@ -1765,6 +1880,7 @@ export const OpenPlayerPackResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1814,6 +1930,16 @@ export const OpenPlayerPackResponse = zod.object({
   "detail": zod.string()
 }))
 }),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
   "threshold": zod.number(),
@@ -1829,6 +1955,7 @@ export const OpenPlayerPackResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1924,6 +2051,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -1972,6 +2100,16 @@ export const CraftPlayerVariantResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -2064,6 +2202,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -2112,6 +2251,16 @@ export const EquipPlayerVariantResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -2201,6 +2350,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -2249,6 +2399,16 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -2341,6 +2501,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -2389,6 +2550,16 @@ export const ClaimPlayerMissionResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -2494,6 +2665,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -2542,6 +2714,16 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),
@@ -2645,6 +2827,7 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "oddsVersion": zod.string(),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
   "cost": zod.number(),
+  "pullCount": zod.number(),
   "rewards": zod.array(zod.object({
   "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
   "cardId": zod.string().nullable(),
@@ -2693,6 +2876,16 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "chance": zod.number(),
   "detail": zod.string()
 }))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
 }),
   "collectionRoad": zod.array(zod.object({
   "id": zod.string(),

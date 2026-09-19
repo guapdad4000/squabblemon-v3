@@ -37,6 +37,18 @@ function pathnameFor(location: string) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
 }
 
+type CinemaNavDialog = { readonly open: boolean; close: () => void };
+type CinemaNavQueryRoot = { querySelector: (selector: string) => Element | null };
+
+export function syncCinemaNavWithStoryOverlay(
+  sheet: CinemaNavDialog | null,
+  root: CinemaNavQueryRoot | null,
+): boolean {
+  const suppressed = Boolean(root?.querySelector('.story-node-overlay'));
+  if (suppressed && sheet?.open) sheet.close();
+  return suppressed;
+}
+
 function fanPosition(index: number, count: number): CSSProperties {
   const offset = index - (count - 1) / 2;
   return {
@@ -136,6 +148,7 @@ export function CinemaNavSheet({
 }) {
   const sheetRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
+  const [storyOverlayPresent, setStoryOverlayPresent] = useState(false);
   const pathname = pathnameFor(location);
   const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
 
@@ -143,6 +156,19 @@ export function CinemaNavSheet({
     sheetRef.current?.close();
     setOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined' || typeof MutationObserver === 'undefined') return;
+    const sync = () => {
+      const suppressed = syncCinemaNavWithStoryOverlay(sheetRef.current, document);
+      setStoryOverlayPresent(previous => previous === suppressed ? previous : suppressed);
+      if (suppressed) setOpen(false);
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   function toggle() {
     const sheet = sheetRef.current;
@@ -159,6 +185,8 @@ export function CinemaNavSheet({
     setOpen(false);
     navigate(path);
   }
+
+  if (storyOverlayPresent) return null;
 
   return <>
     <button

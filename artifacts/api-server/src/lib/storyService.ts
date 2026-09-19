@@ -1,7 +1,9 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, lt, sql } from "drizzle-orm";
 import {
   db,
+  playerProfilesTable,
   playerStoryNodesTable,
+  playerStoryRewardClaimsTable,
   type PlayerStoryNodeRecord,
 } from "@workspace/db";
 import {
@@ -11,6 +13,77 @@ import {
   type StoryNode,
 } from "@workspace/squabblemon-engine/story";
 import { ensurePlayer } from "./playerState";
+
+const COURIER_TABLE_NODE_ID = "red-tapes-courier-table";
+const COURIER_TABLE_CHAPTER_ID = "red-side-tapes";
+const COURIER_TABLE_TICKET_CLAIM_KEY =
+  "red-tapes-courier-table:stars:3:auto-ticket:v1";
+
+/**
+ * Courier Table used to be a battle whose ticket required three stars. It is
+ * now a reward node whose ticket belongs to every clear. Backfill historical
+ * sub-three-star clears when their campaign is next loaded. The immutable
+ * reward claim makes repeated and concurrent loads safe.
+ */
+async function backfillCourierTableTicket(userId: string) {
+  const [legacyCandidate] = await db
+    .select({ id: playerStoryNodesTable.id })
+    .from(playerStoryNodesTable)
+    .where(
+      and(
+        eq(playerStoryNodesTable.clerkUserId, userId),
+        eq(playerStoryNodesTable.nodeId, COURIER_TABLE_NODE_ID),
+        eq(playerStoryNodesTable.cleared, true),
+        lt(playerStoryNodesTable.stars, 3),
+      ),
+    )
+    .limit(1);
+  if (!legacyCandidate) return;
+
+  await db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
+    );
+    const [legacyClear] = await tx
+      .select({ id: playerStoryNodesTable.id })
+      .from(playerStoryNodesTable)
+      .where(
+        and(
+          eq(playerStoryNodesTable.clerkUserId, userId),
+          eq(playerStoryNodesTable.nodeId, COURIER_TABLE_NODE_ID),
+          eq(playerStoryNodesTable.cleared, true),
+          lt(playerStoryNodesTable.stars, 3),
+        ),
+      )
+      .limit(1);
+    if (!legacyClear) return;
+
+    const reward = {
+      kind: "pack-ticket" as const,
+      id: "street-pack-ticket",
+      amount: 1,
+    };
+    const [claim] = await tx
+      .insert(playerStoryRewardClaimsTable)
+      .values({
+        clerkUserId: userId,
+        chapterId: COURIER_TABLE_CHAPTER_ID,
+        nodeId: COURIER_TABLE_NODE_ID,
+        rewardKey: COURIER_TABLE_TICKET_CLAIM_KEY,
+        reward,
+      })
+      .onConflictDoNothing()
+      .returning({ id: playerStoryRewardClaimsTable.id });
+    if (!claim) return;
+
+    await tx
+      .update(playerProfilesTable)
+      .set({
+        packTickets: sql`${playerProfilesTable.packTickets} + ${reward.amount}`,
+      })
+      .where(eq(playerProfilesTable.clerkUserId, userId));
+  });
+}
 
 export class StoryRequestError extends Error {
   constructor(
@@ -164,6 +237,7 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
 
 export async function getPlayerStoryCampaign(userId: string) {
   await ensurePlayer(userId);
+  await backfillCourierTableTicket(userId);
   const rows = await db
     .select()
     .from(playerStoryNodesTable)

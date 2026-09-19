@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "hello": "tsx ./src/hello.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test ./src/balanceLab.test.ts",
+    "balance:smoke": "tsx ./src/balance-lab.ts --smoke",
+    "balance:full": "tsx ./src/balance-lab.ts --full"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "tsx": "catalog:"
+    "tsx": "catalog:",
+    "@workspace/squabblemon-engine": "workspace:*"
   }
 }
