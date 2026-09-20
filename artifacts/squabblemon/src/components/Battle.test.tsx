@@ -7,7 +7,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { cards, catalogCardById, decks, districts } from '../data';
+import { cards, catalogCardById, decks, districts, getCardImage } from '../data';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
@@ -911,4 +911,9 @@ test('online projection flips guest perspective and preserves authoritative cost
   assert.match(html, /battlefield-grid/); assert.match(html, /battle-hand-tray/);
   assert.match(html, /Play card · 0 Motion/); assert.match(html, /aria-valuemax="75"/);
   assert.doesNotMatch(html, /data-testid="preview-lane/); assert.doesNotMatch(html, /online-arena/);
+});
+
+test('older Shiesty clone snapshots still resolve the revisioned character portrait', () => {
+  assert.equal(getCardImage('shiesty'), getCardImage(cards.shiesty.id));
+  assert.match(getCardImage('shiesty'), /shiesty-yn\.webp\?v=/);
 });

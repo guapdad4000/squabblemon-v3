@@ -33,6 +33,7 @@ import {
 import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
 import { getMatchRoundLimit, getStoryModifierSummaries } from '../../gameEngine';
 import { StoryStage } from '../../components/story/StoryStage';
+import { ChapterTickets } from '../../components/story/ChapterTickets';
 import {
   ChapterTicketProgress,
   ThreeStarResults,
@@ -190,29 +191,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </svg>
       <PageDecor theme="story" />
       <header className="story-atlas__header">
-        <nav className="story-reels" aria-label="Chapters">
-          {campaign.chapters.filter(chapter => chapter.status !== 'locked').map((chapter) => {
-            const active = chapter.id === currentChapter?.id;
-            return (
-              <button
-                key={chapter.id}
-                type="button"
-                disabled={chapter.status === 'locked'}
-                aria-pressed={active}
-                aria-current={active ? 'true' : undefined}
-                onClick={() => setActiveChapterId(chapter.id)}
-                className={`story-reel ${active ? 'is-active' : ''} ${chapter.status === 'locked' ? 'is-locked' : ''}`}
-              >
-                <span className="story-reel__sprockets" aria-hidden="true" />
-                <span className="story-reel__label">
-                  <small>Chapter {String(chapter.order || 1).padStart(2, '0')}</small>
-                  <strong>{chapter.title}</strong>
-                </span>
-                {chapter.status === 'locked' && <LockKeyhole size={11} className="story-reel__lock" />}
-              </button>
-            );
-          })}
-        </nav>
+        <ChapterTickets chapters={campaign.chapters} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
         <h1 className="story-title">{currentChapter?.title}</h1>
       </header>
 

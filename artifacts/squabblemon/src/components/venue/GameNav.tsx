@@ -1,4 +1,5 @@
 import { MusicControls } from '../MusicControls';
+import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useLocation } from 'wouter';
 import { X } from 'lucide-react';
@@ -136,6 +137,7 @@ export function CinemaNavSheet({
   const sheetRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [storyOverlayPresent, setStoryOverlayPresent] = useState(false);
+  const [battleNavigationSlot, setBattleNavigationSlot] = useState<HTMLElement | null>(null);
   const pathname = pathnameFor(location);
   const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
 
@@ -148,6 +150,8 @@ export function CinemaNavSheet({
     if (typeof document === 'undefined' || typeof MutationObserver === 'undefined') return;
     const sync = () => {
       const suppressed = syncCinemaNavWithStoryOverlay(sheetRef.current, document);
+      const slot = document.querySelector<HTMLElement>('[data-battle-navigation-slot]');
+      setBattleNavigationSlot(previous => previous === slot ? previous : slot);
       setStoryOverlayPresent(previous => previous === suppressed ? previous : suppressed);
       if (suppressed) setOpen(false);
     };
@@ -175,10 +179,9 @@ export function CinemaNavSheet({
 
   if (storyOverlayPresent) return null;
 
-  return <>
-    <button
+  const trigger = <button
       type="button"
-      className="cinema-nav-toggle city-line-toggle express-toggle"
+      className={`cinema-nav-toggle city-line-toggle express-toggle${battleNavigationSlot ? ' express-toggle--battle' : ''}`}
       aria-label="Open game navigation"
       aria-haspopup="dialog"
       aria-expanded={open}
@@ -187,7 +190,9 @@ export function CinemaNavSheet({
     >
       <img src={getAssetUrl('brand/navigation/squabble-express.png')} width={1254} height={1254} alt="" draggable={false} />
       <span>Express</span>
-    </button>
+    </button>;
+  return <>
+    {battleNavigationSlot ? createPortal(trigger, battleNavigationSlot) : trigger}
     <dialog
       id="cinema-nav-sheet"
       ref={sheetRef}

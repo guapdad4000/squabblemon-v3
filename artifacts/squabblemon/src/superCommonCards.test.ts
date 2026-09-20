@@ -41,6 +41,7 @@ test('Shiesty YN deterministically repeats its 50% self-summon with an eight-cop
   };
   const results = Array.from({ length: 128 }, (_, index) => run(index));
   const counts = results.map(match => match.boards[0].filter(card => card.cardId === 'shiesty').length);
+  assert(results.every(match => match.boards.flat().filter(card => card.cardId === 'shiesty').every(card => card.id === cards.shiesty.id)), 'every cloned Shiesty retains his portrait ID through the full chain');
   assert(counts.some(count => count === 1), 'some first flips should miss');
   assert(counts.some(count => count >= 3), 'a summoned copy should sometimes win its own repeat flip');
   assert(counts.every(count => count <= 9), 'the original plus eight extra copies is the hard cap');

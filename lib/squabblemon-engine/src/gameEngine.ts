@@ -702,7 +702,7 @@ const summonCard = (
   tokenId: string,
   source: CardInstance,
   uncounterable = false,
-  artworkId = tokenId,
+  artworkId = template.id,
 ): Match => {
   const instanceId = `summon:${owner}:${source.instanceId}:${m.round}:${tokenId}:${m.nextEventSequence}:${m.boards.flat().length}`;
   const instance: CardInstance = {

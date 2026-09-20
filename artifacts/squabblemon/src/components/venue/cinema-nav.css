@@ -396,3 +396,13 @@ body:has(.fight-night) .cinema-nav-toggle.express-toggle {
 @media(max-height:550px) and (orientation:landscape) { .cinema-nav-sheet.express-sheet {width:clamp(308px,calc((100dvh - 16px) * .8),420px)} }
 @media(prefers-reduced-motion:reduce) { .express-sign__board{transition:none} }
 html[data-reduce-motion='true'] .express-sign__board{transition:none}
+
+/* In a fade, Express belongs in the battle menu, away from hand and Confirm. */
+body:has(.battle-arena) .cinema-nav-toggle.express-toggle:not(.express-toggle--battle) { display: none; }
+.battle-tools__panel .cinema-nav-toggle.express-toggle--battle {
+  position: static; inset: auto; transform: none; display: flex; width: 100%;
+  min-width: 0; min-height: 36px; height: auto; padding: 2px 8px; gap: 7px;
+  justify-content: flex-start; overflow: hidden;
+}
+.battle-tools__panel .express-toggle--battle img { width: 36px; height: 30px; }
+.battle-tools__panel .express-toggle--battle > span { font: inherit; }
