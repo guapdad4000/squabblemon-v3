@@ -11,11 +11,12 @@ import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { CardProgress } from './CardProgress';
+import { getVariantKind } from './CardVariantTreatment';
 import { catalogCardByEngineId, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
-import { CARD_FINISH, getCardWallpaper } from '../lib/cardFinish';
+import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaper } from '../lib/cardFinish';
 import '../styles/collection-inspector.css';
 import '../styles/fighter-resume.css';
 
@@ -40,7 +41,7 @@ function scoutNote(card: any): string {
 }
 
 export function CardInspector({ card, onClose, bootstrap, variantId, match, useCachedProfile = false }: any) {
-  const reduceMotion = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
+  const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   const isInstance = 'instanceId' in card;
   const panel = React.useRef<HTMLDivElement>(null);
@@ -63,6 +64,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = (catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : undefined) ?? variantId;
+  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(null);
+  const displayedVariant = preview && preview.cardId === card.id ? preview.variant : equippedVariant;
+  const previewKind = getVariantKind(displayedVariant);
+  const isPreview = (displayedVariant ?? null) !== (equippedVariant ?? null);
   const progression = catalogCard ? bootstrap?.profile.cardProgression[catalogCard.catalogId] : undefined;
   const matchUpgradeIds = instance && match?.abilityUpgradeSnapshot
     ? snapshotUpgradesForCard(match.abilityUpgradeSnapshot, instance.owner, instance.cardId).map((upgrade: { id: string }) => upgrade.id)
@@ -94,7 +99,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
 
   const effectivePower = instance ? getEffectiveCardPower(instance) : card.power;
   const rarityLabel = catalogCard ? CARD_RARITY_DEFINITIONS[catalogCard.rarity].label : 'Standard';
-  const finishLabel = catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition';
+  const finishLabel = catalogCard ? cardFinishLabel(catalogCard.rarity, previewKind) : 'Collector edition';
   const faction = catalogCard?.faction ?? 'Independent';
   const crewTags = catalogCard?.crewTags ?? [];
   const usedDecks = catalogCard
@@ -127,13 +132,14 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         {/* ============================================================
             LEFT — Polaroid portrait
             ============================================================ */}
+        <div className="collector-display-stack">
         <div className="polaroid mx-auto md:mx-0">
           <div className="polaroid__tape" aria-hidden="true" />
           <div className="polaroid__photo">
             <CardView
               card={card}
               covered={isCovered}
-              variantId={equippedVariant}
+              variantId={displayedVariant ?? undefined}
               progress={progression}
               testId="card-inspector"
               inspectionLayout={instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined}
@@ -151,6 +157,16 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
             <small>Move across the card to catch the light</small>
           </div>
+        </div>
+
+          {variantSlots.length > 0 && <div className="collector-finish-controls">
+            <div className="collector-finish-controls__label" aria-live="polite">{isPreview ? 'Finish preview' : 'Your finish'} · {finishLabel}</div>
+            <nav aria-label="Preview card finish">
+              <button type="button" aria-pressed={!displayedVariant} onClick={() => setPreview({cardId: card.id, variant: null})}>Original</button>
+              {variantSlots.map((slot: any) => <button type="button" key={slot.id} data-finish={getVariantKind(slot.id)} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>{slot.name}</button>)}
+            </nav>
+            <small>Touch or hover to catch the light. Arrow keys work too.</small>
+          </div>}
         </div>
 
         {/* ============================================================
@@ -334,7 +350,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
                   ))
                 ) : (
                   <div className="dossier-table__row" style={{ gridTemplateColumns: '1fr' }}>
-                    <small style={{ color: 'var(--resume-ink-soft)' }}>Not on any saved decks yet — pull 'em into a crew.</small>
+                    <small style={{ color: 'var(--resume-ink-soft)' }}>Not on any saved decks yet — pull 'em into a gang.</small>
                   </div>
                 )}
               </div>
@@ -346,19 +362,23 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <section className="dossier-section">
               <div className="dossier-section__head">
                 <h4>Variants & Crafting</h4>
-                <em>alt coats unlocked with Style Shards</em>
+                <em>collector finishes · crafted with Style Shards</em>
               </div>
               <div className="dossier-variants">
                 {variantSlots.map((slot: any) => {
                   const isOwned = bootstrap?.profile?.ownedVariants?.includes(slot.id);
                   const canAfford = (bootstrap?.profile?.styleShards ?? 0) >= slot.shardCost;
                   return (
-                    <article key={slot.id} className="dossier-variant">
+                    <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
+                      <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>
+                        <CardView card={card} variantId={slot.id} fillContainer presentationOnly disableLayout />
+                        <span>Preview finish</span>
+                      </button>
                       <div className="dossier-variant__cost">
                         {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : `${slot.shardCost} Shards`}
                       </div>
                       <h5>{slot.name}</h5>
-                      <p>{slot.description}</p>
+                      <p>{VARIANT_FINISH[getVariantKind(slot.id) ?? 'tagged'].description}</p>
                       {bootstrap && catalogCard && (
                         isOwned ? (
                           <button

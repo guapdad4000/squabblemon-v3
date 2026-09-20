@@ -2,7 +2,7 @@ import type { AbilityUpgradeEffect, Card } from './data';
 
 /** Cheap everyday characters and items for spending the rest of a turn's Motion. */
 const definitions = [
-  ['shiesty', 'shiesty-yn', 'Shiesty YN', 'Dark', 1, 1, 'Mean Mug', 'If an enemy is here, gain +1 Hands.', 'character', 'Pressure'],
+  ['shiesty', 'shiesty-yn', 'Shiesty YN', 'Dark', 1, 1, 'Mean Mug', '50% chance to summon another Shiesty YN here. Each summoned copy repeats this effect, up to 8 extra.', 'character', 'Pressure'],
   ['torta', 'torta', 'Torta', 'Earth', 2, 2, 'Earth Bond', 'Ongoing: While Torta is in your hand, your other Earth characters gain +1 Hand at round end.', 'character', 'Sustain', 'Earth'],
   ['waterboy', 'water-boy', 'Water Boy', 'Water', 1, 1, 'Cold Water', 'If another friendly card is here, gain +1 Motion.', 'character', 'Tempo'],
   ['buspass', 'bus-pass', 'Bus Pass', 'Air', 0, 0, 'All-Day Transfer', 'Your next card costs 1 less Motion.', 'support', 'Support'],

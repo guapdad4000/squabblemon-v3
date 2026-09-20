@@ -254,7 +254,7 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
     if (profile.onboardingStep === "tutorial") {
       if (!(await hasVerifiedTutorialMatch(userId))) {
         res.status(409).json({
-          error: "Complete the guided match before choosing a starter crew",
+          error: "Complete the guided fade before choosing a starter gang",
         });
         return;
       }
@@ -273,7 +273,7 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
     if (starterDeckId === ROOKIE_FOUNDATION_ID) {
       await grantFirstCollection(userId);
     } else if (!starterDeckId || !deckCards[starterDeckId]) {
-      res.status(400).json({ error: "Choose a valid starter crew" });
+      res.status(400).json({ error: "Choose a valid starter gang" });
       return;
     } else if (profile.onboardingStep === "crew") {
       await db.transaction(async tx => {
@@ -299,7 +299,7 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
               ...current.savedDecks,
               {
                 id: `starter-${starterDeckId}`,
-                name: "Starter Crew",
+                name: "Starter Gang",
                 cardIds: deckCards[starterDeckId],
                 heroCardId: deckHeroes[starterDeckId],
                 recipeId: starterDeckId,
@@ -349,7 +349,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     return;
   }
   if (parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId]) {
-    res.status(400).json({ error: "Unknown crew" });
+    res.status(400).json({ error: "Unknown gang" });
     return;
   }
   const activity = parsed.data.activity ?? 'auto';
@@ -385,7 +385,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       )
     ) {
       res.status(403).json({
-        error: "Unlock every card in this crew before using it for rewards",
+        error: "Unlock every card in this gang before using it for rewards",
       });
       return;
     }
@@ -397,7 +397,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   if (parsed.data.mode === "tutorial" && !recipe && savedDeck?.id !== ROOKIE_DECK_ID) { res.status(400).json({ error: "Use the guided tutorial crew" }); return; }
   const rosterCardIds = drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards;
   if (!rosterCardIds) {
-    res.status(400).json({ error: "Unknown player crew" });
+    res.status(400).json({ error: "Unknown player gang" });
     return;
   }
   let playerEngineCardIds: string[] = [...rosterCardIds];
@@ -475,7 +475,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     storyEncounterSnapshot?.enemy.cardIds ??
     starterRecipes.find((item) => item.id === rivalDeckId)?.cards;
   if (!rivalRosterCardIds) {
-    res.status(400).json({ error: "Unknown rival crew" });
+    res.status(400).json({ error: "Unknown rival gang" });
     return;
   }
   try {
@@ -487,7 +487,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       [...rivalRosterCardIds],
     );
   } catch {
-    res.status(403).json({ error: "Match roster contains an unowned or invalid card" });
+    res.status(403).json({ error: "Fade roster contains an unowned or invalid card" });
     return;
   }
   const [match] = await db
@@ -533,7 +533,7 @@ router.post(
     const params = CompletePlayerMatchParams.safeParse(req.params);
     const parsed = CompletePlayerMatchBody.safeParse(req.body);
     if (!params.success || !parsed.success) {
-      res.status(400).json({ error: "Invalid match completion" });
+      res.status(400).json({ error: "Invalid fade completion" });
       return;
     }
 
@@ -547,7 +547,7 @@ router.post(
         ),
       );
     if (!match) {
-      res.status(404).json({ error: "Match not found" });
+      res.status(404).json({ error: "Fade not found" });
       return;
     }
 
@@ -568,10 +568,10 @@ router.post(
           match.storyProgressionSnapshot,
         );
         if (storyProgression.nodeId !== match.storyNodeId) {
-          throw new Error("Stored story match has mismatched node snapshots");
+          throw new Error("Stored story fade has mismatched node snapshots");
         }
       } catch (error) {
-        req.log.warn({ error, matchId: match.id }, "Rejected stale story match");
+        req.log.warn({ error, matchId: match.id }, "Rejected stale story fade");
         res.status(409).json({
           error: "This story encounter is outdated. Return to the map and start it again.",
         });
@@ -660,18 +660,18 @@ router.post(
           (district) => district.winner === "player",
         ).length;
       } catch (error) {
-        req.log.warn({ error }, "Rejected invalid match transcript");
+        req.log.warn({ error }, "Rejected invalid fade transcript");
         if (error instanceof Error && error.message.includes("snapshot is missing")) {
-          res.status(409).json({ error: "This match is outdated. Start a new match to continue." });
+          res.status(409).json({ error: "This fade is outdated. Start a new fade to continue." });
           return;
         }
-        res.status(400).json({ error: "Match transcript could not be verified" });
+        res.status(400).json({ error: "Fade transcript could not be verified" });
         return;
       }
     }
 
     if (!verifiedOutcome) {
-      res.status(409).json({ error: "Completed match is missing its outcome" });
+      res.status(409).json({ error: "Completed fade is missing its outcome" });
       return;
     }
 
@@ -903,7 +903,7 @@ router.post(
         ),
       );
     if (!persistedMatch?.completedAt || !persistedMatch.outcome) {
-      res.status(409).json({ error: "Match completion did not persist" });
+      res.status(409).json({ error: "Fade completion did not persist" });
       return;
     }
     const persistedOutcome = persistedMatch.outcome as "win" | "loss" | "draw";

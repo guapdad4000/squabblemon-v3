@@ -10,7 +10,7 @@ export const SHOP_OFFERS = [
   { id: 'training-intensive', name: 'Intensive Training', description: '+250 XP for one owned character.', price: 225, currency: 'softCurrency', needsCard: true },
   { id: 'move-training', name: 'Move Coaching', description: 'Activate the next move tier. Requires character level 2, 5, or 8.', price: 150, currency: 'softCurrency', needsCard: true },
   { id: 'ticket', name: 'Street Pack Ticket', description: 'One ticket for one Street Pack.', price: 200, currency: 'softCurrency', needsCard: false },
-  { id: 'deck-slot', name: 'Extra Crew Slot', description: 'Save one more custom deck. Maximum 12 slots.', price: 350, currency: 'softCurrency', needsCard: false },
+  { id: 'deck-slot', name: 'Extra Gang Slot', description: 'Save one more custom deck. Maximum 12 slots.', price: 350, currency: 'softCurrency', needsCard: false },
   { id: 'common-recruit', name: 'Neighborhood Recruit', description: 'Choose one unowned Common. A guaranteed character, with no random roll.', price: 400, currency: 'softCurrency', needsCard: true },
   { id: 'tagged-style', name: 'Tagged Finish', description: 'Craft the Tagged cosmetic for an owned character.', price: 80, currency: 'styleShards', needsCard: true },
   { id: 'chrome-style', name: 'Chrome Finish', description: 'Craft the Chrome cosmetic for an owned character.', price: 140, currency: 'styleShards', needsCard: true },
@@ -64,9 +64,9 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     next.packTickets += 1;
     summary = '+1 Street Pack ticket.';
   } else if (offer.id === 'deck-slot') {
-    if (wallet.deckSlots >= MAX_DECK_SLOTS) throw new ShopRuleError('All 12 crew slots are unlocked.');
+    if (wallet.deckSlots >= MAX_DECK_SLOTS) throw new ShopRuleError('All 12 gang slots are unlocked.');
     next.deckSlots += 1;
-    summary = `Crew slot ${next.deckSlots} unlocked.`;
+    summary = `Gang slot ${next.deckSlots} unlocked.`;
   } else if (offer.id === 'common-recruit') {
     if (card!.rarity !== 'Common') throw new ShopRuleError('Neighborhood recruitment is for Common cards.');
     if (wallet.ownedCardIds.includes(card!.catalogId)) throw new ShopRuleError('You already own this character.');

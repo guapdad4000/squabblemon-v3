@@ -22,20 +22,20 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
     queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
   }
   if (playing) return <PlayLoop mode="practice" hideLobby turnTimerEnabled={false} initialDeckId={ROOKIE_DECK_ID}
-    customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your crew', accent: 'TEST', plan: 'Try your idea. There is no win requirement.' }}
+    customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your gang', accent: 'TEST', plan: 'Try your idea. There is no win requirement.' }}
     equippedVariants={bootstrap.profile.equippedVariants} onVerifiedComplete={match => { setResult(match); trackEvent('rookie_test_completed', { rounds: match.round }); }}
     onExit={() => { setPlaying(null); setReview(tested); }} />;
   if (review && tested) return <section className="rookie-review"><div>
-    <img src={getCardImage(saved?.heroCardId || 'hooper')} alt="Your crew cover" />
-    <span className="venue-kicker">ROOKIE ROAD / LESSON COMPLETE</span><h1>You built this crew.</h1>
-    <p>{result ? summarizeDeckTest(result, focus) : 'Your first match is saved. You built a crew, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.'}</p>
+    <img src={getCardImage(saved?.heroCardId || 'hooper')} alt="Your gang cover" />
+    <span className="venue-kicker">ROOKIE ROAD / LESSON COMPLETE</span><h1>You built this gang.</h1>
+    <p>{result ? summarizeDeckTest(result, focus) : 'Your first match is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.'}</p>
     <p>Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.</p>
     <p>Welcome reward: 100 XP · 250 Clout · 1 pack ticket</p>
     <nav><button className="venue-button" onClick={() => setReview(false)}>Back to my deck</button><button className="venue-button venue-button--gold" onClick={onComplete}>Claim reward & enter Chapter One</button></nav>
   </div></section>;
   return <div className="rookie-workshop">
-    {tested && <div className="p-4 bg-black text-white"><button className="venue-button" onClick={() => setReview(true)}>Continue from your saved practice match</button></div>}
-    <DeckWorkbench key={ROOKIE_DECK_ID} initial={saved ?? { name: 'My First Crew', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null }}
+    {tested && <div className="p-4 bg-black text-white"><button className="venue-button" onClick={() => setReview(true)}>Continue from your saved practice fade</button></div>}
+    <DeckWorkbench key={ROOKIE_DECK_ID} initial={saved ?? { name: 'My First Gang', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null }}
       ownedCardIds={bootstrap.profile.ownedCardIds} equippedVariants={bootstrap.profile.equippedVariants} lesson
       onSave={persist} onTest={async (draft, cardId) => { await persist(draft); setFocus(cardId); setResult(null); setPlaying(draft); }} />
   </div>;

@@ -30,3 +30,9 @@ New accounts follow one path: profile → Safehouse tour → first collection �
 - All ten starter replacement options pass legal-win and tutorial-milestone checks.
 
 Browser fixtures and isolated database tests do not measure real-player comprehension. Use the existing tutorial-step analytics and first-battle outcomes to evaluate new-user completion and drop-off after release.
+
+## Reconciled release
+
+The tutorial is combined with the live checkout’s inventory, soundtracks, reward artwork, foil treatments, expanded districts, KYLE and STOCKZ. Existing campaign rarity and upgrade fixes are retained. Character/video revisions match file hashes. Story v1 seeds retain their original sixteen-district pool so new locations cannot silently reshuffle authored battles. The Cheese Has Terms grants two extra opening Motion. Mama Has the Floor, Auntie’s Setup, The Function, Snitch’s Roll Call and OG Uncle have one less rival Motion on later rounds; The Bar Fight has two less. These targeted adjustments preserve their phases and lane rules while allowing the guided starting deck to win.
+
+The source of truth is GitHub main in guapdad4000/squabblemon-v3. Netlify automatically deploys main, and the same reconciled checkout can be published with the documented CLI command. See README for deployment details.

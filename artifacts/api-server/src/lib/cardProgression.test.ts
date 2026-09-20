@@ -55,7 +55,7 @@ test("card progression snapshots reject forged or unowned card ids", () => {
   );
 });
 
-test("card XP only changes unique participants present in the match snapshot", () => {
+test("card XP only changes unique participants present in the fade snapshot", () => {
   const snapshot = createCardProgressionSnapshot(
     ["cornball", "snow-bunny"],
     ["cornball", "snow-bunny"],
@@ -80,7 +80,7 @@ test("card XP only changes unique participants present in the match snapshot", (
   assert.equal(result.progression["forged-card"], undefined);
 });
 
-test("a match progression snapshot stays unchanged after live progression advances", () => {
+test("a fade progression snapshot stays unchanged after live progression advances", () => {
   const live = { cornball: { xp: 90, level: 1 } };
   const snapshot = createCardProgressionSnapshot(
     ["cornball"],
@@ -100,7 +100,7 @@ test("a match progression snapshot stays unchanged after live progression advanc
   );
 });
 
-test("match upgrade snapshots reject forged, stale, and malformed upgrades", () => {
+test("fade upgrade snapshots reject forged, stale, and malformed upgrades", () => {
   const snapshot = createCardProgressionSnapshot(
     ["cornball"],
     ["cornball"],

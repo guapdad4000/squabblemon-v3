@@ -2,7 +2,7 @@ import { catalogCardByEngineId, catalogCardById, decks } from "./data";
 import { stableHash } from "./activities";
 import { normalizeCardProgress, type CardProgressionMap } from "./cardProgression";
 
-export type TrainingDifficulty = "Rookie" | "Even Match" | "Advanced";
+export type TrainingDifficulty = "Rookie" | "Even Fade" | "Advanced";
 
 const deckTier: Record<string, number> = {
   block: 1,
@@ -77,5 +77,5 @@ export function trainingDifficulty(
   const difference = (deckTier[rivalDeckId] ?? 2) - playerBand;
   if (difference < 0) return "Rookie";
   if (difference > 0) return "Advanced";
-  return "Even Match";
+  return "Even Fade";
 }

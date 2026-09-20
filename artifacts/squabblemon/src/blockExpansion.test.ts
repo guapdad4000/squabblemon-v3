@@ -54,12 +54,12 @@ for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities
       assert.equal(ally.powerModifier,id === 'laundry' ? 1 : 0);
       assert.equal(second.statuses.frozen,id === 'laundry');
     }
-    if (id === 'busker') { assert.equal(ally.powerModifier,1); assert.equal(second.powerModifier,0); }
+    if (id === 'busker') { assert.equal(ally.powerModifier,1); assert.equal(second.powerModifier,1); }
     if (id === 'cornercoach' || id === 'bigzoey') assert.equal(ally.powerModifier,2);
     if (id === 'nightcashier') assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'],8);
     if (id === 'chessregular') assert.equal(enemy.statuses.burnStacks, 2);
     if (id === 'bigzoey') assert.equal(enemy.powerModifier,-2);
-    if (id === 'leroy') assert.equal(enemy.powerModifier,-3);
+    if (id === 'leroy') assert.equal(enemy.powerModifier,-2);
     if (id === 'piratedj' || id === 'partytitan') {
       assert.equal(after.boards[1][0].powerModifier,1); assert.equal(after.boards[2][0].powerModifier,1);
       assert.equal(ally.powerModifier,id === 'partytitan' ? 1 : 0);
@@ -89,7 +89,7 @@ test('Mural Apprentice Locks when supported or gains a Hand when Lock cannot fir
   assert.equal(playCard(alone, 'player', source.instanceId, 0).boards[0][0].powerModifier, 1);
 });
 
-test('new roster crews replay identical complete matches through authoritative reward verification', () => {
+test('new roster gangs replay identical complete fades through authoritative reward verification', () => {
   for (const offset of [0,5,10]) {
     const ids=BLOCK_EXPANSION.slice(offset,offset+10).map(c=>c[0]);
     const locations=createDistrictSnapshot(`expansion-${offset}`);

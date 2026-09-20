@@ -42,14 +42,14 @@ export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
 });
 
 const missionTemplates = [
-  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice match.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice fade.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
   { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win practice with a moved ally in a district you hold.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested crew. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested gang. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
   {
     missionKey: "rookie-road",
     cadence: "onboarding",
     title: "Finish Rookie Road",
-    description: "Complete the guided match and choose your first crew.",
+    description: "Complete the guided fade and choose your first gang.",
     goal: 1,
     rewardCurrency: "packTickets",
     rewardAmount: 1,
@@ -58,7 +58,7 @@ const missionTemplates = [
     missionKey: "daily-show-up",
     cadence: "daily",
     title: "Show Up",
-    description: "Finish one match today.",
+    description: "Finish one fade today.",
     goal: 1,
     rewardCurrency: "softCurrency",
     rewardAmount: 100,
@@ -67,7 +67,7 @@ const missionTemplates = [
     missionKey: "daily-take-room",
     cadence: "daily",
     title: "Take A Room",
-    description: "Win one match today.",
+    description: "Win one fade today.",
     goal: 1,
     rewardCurrency: "softCurrency",
     rewardAmount: 150,
@@ -76,7 +76,7 @@ const missionTemplates = [
     missionKey: "weekly-main-character",
     cadence: "weekly",
     title: "Main Character Week",
-    description: "Finish five matches this week. No streak required.",
+    description: "Finish five fades this week. No streak required.",
     goal: 5,
     rewardCurrency: "packTickets",
     rewardAmount: 2,
@@ -336,9 +336,9 @@ function getNextAction(
   if (profile.onboardingStep !== "complete") {
     const messages: Record<string, [string, string]> = {
       profile: ["Create your fighter tag", "Confirm your profile to begin."],
-      tutorial: ["Learn the streets", "Play the guided Rookie Road match."],
-      crew: ["Make it your crew", "Open your collection and build around the cards you like."],
-      reward: ["Build and test your crew", "Choose a card, save your deck, and try it in practice."],
+      tutorial: ["Learn the streets", "Play the guided Rookie Road fade."],
+      crew: ["Make it your gang", "Open your collection and build around the cards you like."],
+      reward: ["Build and test your gang", "Choose a card, save your deck, and try it in practice."],
     };
     const [title, description] =
       messages[profile.onboardingStep] ?? messages.profile;
@@ -348,7 +348,7 @@ function getNextAction(
       title,
       description,
       destination: "onboarding",
-      rewardLabel: "Starter crew + 1 Street Pack",
+      rewardLabel: "Starter gang + 1 Street Pack",
     };
   }
 
@@ -382,7 +382,7 @@ function getNextAction(
 
   return {
     id: "play-practice",
-    eyebrow: "Build your crew",
+    eyebrow: "Build your gang",
     title: "XP Training",
     description: "Train against a fair CPU rival. Played owned cards earn XP even when you lose.",
     destination: "play",
@@ -422,7 +422,7 @@ export async function getPlayerBootstrap(clerkUserId: string) {
       eq(playerMatchesTable.clerkUserId, clerkUserId), sql`${playerMatchesTable.mode} in ('practice', 'tutorial')`,
       eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
     )).limit(1);
-    if (tested) { nextAction.id = "rookie-tested"; nextAction.title = "Your crew is ready"; }
+    if (tested) { nextAction.id = "rookie-tested"; nextAction.title = "Your gang is ready"; }
   }
 
   return {

@@ -13,11 +13,12 @@ async function run(width: number, height: number) {
   page.on('pageerror', (error) => errors.push(error.message));
   const cards = ['Rare', 'Epic'].map((rarity) => cardCatalog.find((card) => card.rarity === rarity)!);
   let calls = 0;
-  let ticketBalance = 3;
+  let ticketBalance = 12;
   let cloutBalance = 500;
   const openings = new Map<string, any>();
   const requests: any[] = [];
   const owned = [...ROOKIE_FOUNDATION_IDS];
+  const duplicateCard = cardCatalog.find((card) => card.catalogId === owned[0])!;
   function bootstrap() {
     return {
       profile: {
@@ -52,7 +53,7 @@ async function run(width: number, height: number) {
         savedDecks: [
           {
             id: 'crew',
-            name: 'My crew',
+            name: 'My gang',
             cardIds: [...ROOKIE_CORE_IDS],
             heroCardId: 'hooper',
             recipeId: null,
@@ -71,7 +72,7 @@ async function run(width: number, height: number) {
         id: 'play',
         eyebrow: 'Training',
         title: 'Test your idea',
-        description: 'Build a crew',
+        description: 'Build a gang',
         destination: 'play',
         rewardLabel: null,
       },
@@ -128,12 +129,16 @@ async function run(width: number, height: number) {
         requests.push(body);
         let opening = openings.get(body.idempotencyKey);
         if (!opening) {
-          if (body.paymentMethod === 'ticket') ticketBalance--;
-          else cloutBalance -= 200;
+          const openingCost = body.pullCount === 10
+            ? body.paymentMethod === 'ticket' ? 9 : 1800
+            : body.paymentMethod === 'ticket' ? 1 : 200;
+          if (body.paymentMethod === 'ticket') ticketBalance -= openingCost;
+          else cloutBalance -= openingCost;
           opening = {
             id: body.idempotencyKey,
             paymentMethod: body.paymentMethod,
-            cost: body.paymentMethod === 'ticket' ? 1 : 200,
+            cost: openingCost,
+            pullCount: body.pullCount ?? 1,
             oddsVersion: 'fixture',
             pityBefore: 4,
             pityAfter: 5,
@@ -150,10 +155,10 @@ async function run(width: number, height: number) {
               })),
               {
                 kind: 'styleShards',
-                cardId: null,
+                cardId: duplicateCard.catalogId,
                 variantId: null,
-                name: 'Style shards',
-                rarity: null,
+                name: 'Duplicate converted',
+                rarity: duplicateCard.rarity,
                 isNew: false,
                 amount: 25,
               },
@@ -202,24 +207,32 @@ async function run(width: number, height: number) {
     await retry.click();
     await page.locator('.gacha-stage[data-phase="punching"]').waitFor();
     assert.equal(calls, 2);
-    assert.equal(ticketBalance, 2);
+    assert.equal(ticketBalance, 11);
     assert.deepEqual(requests[0], requests[1]);
-    assert.equal(await page.getByRole('button', { name: 'Punch the bag', exact: true }).count(), 1);
-    await page.getByRole('button', { name: 'Punch the bag', exact: true }).click();
-    await page.getByRole('progressbar', { name: 'Hits to reveal' }).waitFor();
+    assert.equal(await page.getByRole('button', { name: /^Snap the jab/ }).count(), 1);
+    await page.getByRole('button', { name: /^Snap the jab/ }).click();
+    await page.getByRole('progressbar', { name: 'Rounds to reveal' }).waitFor();
+    await page.locator('.gacha-stage__rounds .is-landed').waitFor();
+    assert.equal(await page.getByRole('button', { name: /^Throw the hook/ }).count(), 1);
     await shot('punching');
     await page.getByRole('button', { name: 'Auto rush', exact: true }).click();
-    await page.getByRole('heading', { name: 'Look who showed up.', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
     await shot('reveal');
-    await page.getByRole('button', { name: 'Next reward', exact: true }).click();
+    await page.getByRole('button', { name: 'Next reveal', exact: true }).click();
     await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
     await shot('haul');
     assert.equal(await page.locator('.gym-results__item').count(), 3);
+    await page.getByRole('button', { name: `Inspect ${duplicateCard.name}`, exact: true }).click();
+    const conversion = page.locator('.gym-reward__conversion');
+    await conversion.waitFor();
+    assert.match(await conversion.innerText(), /Already on your crew[\s\S]*\+25 Style Shards/i);
+    assert.equal(await page.locator('.gym-reward--duplicate .collector-card').count(), 1);
+    await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Meet the haul.', exact: true }).waitFor();
     assert.equal(calls, 2, 'Restoring the reveal must not purchase another pack');
     await page.getByRole('button', { name: `Inspect ${cards[0].name}`, exact: true }).click();
-    await page.getByRole('heading', { name: 'Look who showed up.', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
     await page.keyboard.press('Escape');
     await page.locator('.gacha-stage[data-phase="idle"]').waitFor();
     assert.equal(await page.evaluate(() => sessionStorage.getItem('squabblemon:pack-reveal:gacha-fixture')), null);
@@ -236,18 +249,33 @@ async function run(width: number, height: number) {
     await page.locator('.venue-scene.is-ready').waitFor();
     await page.getByRole('button', { name: 'Open · 1 ticket', exact: true }).click();
     await page.getByRole('button', { name: 'Skip animation & reveal', exact: true }).click();
-    await page.getByRole('heading', { name: 'Look who showed up.', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
     await page.getByRole('button', { name: 'Close rewards', exact: true }).click();
+    await page.getByRole('button', { name: 'Open 10× · 9 tickets', exact: true }).click();
+    await page.locator('.gacha-stage[data-phase="tenPunching"]').waitFor();
+    await page.getByRole('button', { name: /^Triple jab/ }).click();
+    await page.getByRole('button', { name: /^Triple hook/ }).waitFor();
+    await page.getByRole('button', { name: /^Triple hook/ }).click();
+    await page.getByRole('button', { name: /^Launch the finisher/ }).waitFor();
+    await page.getByRole('button', { name: /^Launch the finisher/ }).click();
+    await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Next reveal', exact: true }).click();
+    await conversion.waitFor();
+    await page.getByRole('button', { name: 'Reveal the headliner', exact: true }).click();
+    await page.getByRole('heading', { name: 'The whole gym stands.', exact: true }).waitFor();
+    await page.getByText(/GUARANTEED RARE\+/).waitFor();
+    await page.getByRole('button', { name: 'View the haul', exact: true }).click();
+    await page.getByRole('button', { name: 'Back to gacha · 10× earned', exact: true }).click();
     ticketBalance = 0;
     cloutBalance = 0;
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: 'Open · 1 ticket', exact: true }).waitFor();
     assert.equal(await page.getByRole('button', { name: 'Open · 1 ticket', exact: true }).isDisabled(), true);
     assert.equal(await page.getByRole('button', { name: 'Open · 200 Clout', exact: true }).isDisabled(), true);
-    assert.equal(calls, 4);
+    assert.equal(calls, 5);
     assert.deepEqual(errors, []);
     console.log(
-      `${width}px: tab order, deep links, history, odds, interrupted purchase recovery, punching, rush, reveal, refresh recovery and reduced motion passed.`,
+      `${width}px: recovery, three-round boxing, duplicate conversion, ten-pull headliner, reveal, refresh and reduced motion passed.`,
     );
   } catch (error) {
     await page.screenshot({ path: `../../screenshots/gacha-debug-${width}.png` });

@@ -31,7 +31,7 @@ test('two affordable cards spend Motion in one turn, with no rival action or ext
   assert.equal(pass(match, 'player').phase, 'cpu-reveal');
 });
 
-test('same-turn discounts apply immediately and Squabble stays once per match', () => {
+test('same-turn discounts apply immediately and Squabble stays once per fade', () => {
   let match = { ...create(), playerMotion: cards.plug.cost + cards.snow.cost - 1 };
   const plug = match.playerHand.find(card => card.cardId === 'plug')!;
   match = playTurnCard(match, 'player', plug.instanceId, 0, true);
@@ -101,7 +101,7 @@ test('transcripts reject overspending, duplicate cards, unfinished rounds, extra
   assert.throws(() => replay([move, move, ...Array(6).fill(end)]), /not in this hand/);
   assert.throws(() => replay([{ ...move, cardInstanceId: 'player:my-crew:2:plug' }, { ...move, cardInstanceId: 'player:my-crew:4:snow' }, ...Array(6).fill(end)]), /Not enough Motion/);
   assert.throws(() => replay([...Array(5).fill(end), move]), /six rounds|not in this hand/);
-  assert.throws(() => replay(Array(7).fill(end)), /after the match ended/);
+  assert.throws(() => replay(Array(7).fill(end)), /after the fade ended/);
   assert.throws(() => replay([{ ...end, endTurn: false }, ...Array(6).fill(end)]), /Invalid end turn/);
   assert.throws(() => validateTurnRules([{ cardInstanceId: null, lane: null, squabble: false }], 2), /turn rules/);
   assert.equal(CompletePlayerMatchBody.safeParse({ moves: Array(65).fill(end) }).success, false);

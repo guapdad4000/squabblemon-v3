@@ -5,6 +5,7 @@ import {
   getDistrictResults,
   getEffectiveCardPower,
   getLegalCardCost,
+  getStoryLockedLanes,
   getMatchWinner,
   nextRound,
   pass,
@@ -173,14 +174,14 @@ export function applyOnlineCommand(
 ): OnlineRoom {
   if (room.rulesVersion !== ONLINE_RULES_VERSION)
     throw new OnlineError(
-      "This match uses an older rules version. Create a new room.",
+      "This fade uses an older rules version. Create a new room.",
     );
   if (!room.members[seat])
     throw new OnlineError("Participant is missing.", 403);
   let next = { ...room, revision: room.revision + 1 };
   if (command.type === "surrender") {
     if (room.status !== "active" && room.status !== "waiting")
-      throw new OnlineError("This match has already ended.");
+      throw new OnlineError("This fade has already ended.");
     return {
       ...next,
       status: room.status === "active" ? "complete" : "closed",
@@ -203,7 +204,7 @@ export function applyOnlineCommand(
   }
   if (command.type === "rematch") {
     if (room.status !== "complete" || !room.members.cpu)
-      throw new OnlineError("Finish this match first.");
+      throw new OnlineError("Finish this fade first.");
     next.rematch = { ...room.rematch, [seat]: true };
     if (!next.rematch.player || !next.rematch.cpu) return next;
     return {
@@ -224,7 +225,7 @@ export function applyOnlineCommand(
     };
   }
   if (room.status !== "active" || !room.match)
-    throw new OnlineError("This match is not active.");
+    throw new OnlineError("This fade is not active.");
   if (room.deadline !== null && now >= room.deadline)
     throw new OnlineError("The turn deadline has passed.");
   if (room.activeSeat !== seat) throw new OnlineError("Wait for your turn.");
@@ -288,6 +289,9 @@ export function applyOnlineCommand(
 }
 
 export type PublicCard = {
+  /** Public artwork identity; summons may share mechanics but use different portraits. */
+  artworkId?: string;
+  smileBomb?: CardInstance['smileBomb'];
   instanceId: string;
   cardId: string;
   owner: Seat;
@@ -310,6 +314,7 @@ export type PublicEvent = {
   cardId: string | null;
 };
 export type OnlineRoomView = {
+  lockedLanes?: Lane[];
   districts: ReturnType<typeof getMatchDistricts>;
   code: string;
   revision: number;
@@ -345,6 +350,8 @@ export function onlineRoomView(
   const seat = memberSeat(room, userId),
     match = room.match;
   const showCard = (card: CardInstance): PublicCard => ({
+    artworkId: card.id,
+    ...(card.smileBomb ? { smileBomb: { ...card.smileBomb } } : {}),
     instanceId: card.instanceId,
     cardId: card.cardId,
     owner: card.owner,
@@ -365,6 +372,7 @@ export function onlineRoomView(
       : null;
   return {
     districts: getMatchDistricts(match, seat),
+    lockedLanes: match ? getStoryLockedLanes(match, seat) : [],
     code,
     revision: room.revision,
     gameNumber: room.gameNumber,

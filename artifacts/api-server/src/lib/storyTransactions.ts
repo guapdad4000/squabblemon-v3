@@ -330,7 +330,7 @@ export async function completeNonBattleStoryNode(
       .where(eq(playerStoryNodesTable.clerkUserId, userId));
     const { node, chapter } = requireAvailableStoryNode(nodeId, rows);
     if (node.kind === "battle") {
-      throw new StoryRequestError(400, "Battle nodes must be completed by a match");
+      throw new StoryRequestError(400, "Battle nodes must be completed by a fade");
     }
     const action = await claimStoryAction(
       tx,

@@ -7,7 +7,7 @@ export const STREET_WAVE = [
   ['fein', 'fein', 'Fein', 'Common', 'Poison', 1, 1, 'One More', 'On Reveal: If an enemy is here, gain +1 Hand. If 2 or more enemies are here, also apply 1 Burn to the highest-Hands enemy.', 'Pressure'],
   ['alchy', 'alchy', 'Alchy', 'Common', 'Water', 2, 3, 'Last Round', 'Ongoing: On round 4 or later, gain +1 Hands at round end. Gain an extra +1 if you are losing this district.', 'Closer'],
   ['stud', 'stud', 'STUD', 'Rare', 'Earth', 3, 3, 'Hold You Down', 'Give your lowest-Hands other friendly character here +1 Hands and protect it from one targeted hostile ability.', 'Support'],
-  ['gothkid', 'goth-kid', 'Goth Kid', 'Uncommon', 'Dark', 2, 2, 'Dead Air', 'Silence the lowest-Hands enemy here with a printed cost of 2 or less.', 'Disruption'],
+  ['gothkid', 'goth-kid', 'Goth Kid', 'Uncommon', 'Dark', 2, 3, 'Dead Air', 'Silence the lowest-Hands enemy here with a printed cost of 2 or less.', 'Disruption'],
   ['stonerjr', 'stoner-jr', 'Stoner Jr.', 'Common', 'Plant', 1, 2, 'Chill Out', 'Cleanse your lowest-Hands frozen or silenced friendly character here. If cleansed, give it +1 Hands.', 'Support'],
   ['stonersr', 'stoner-sr', 'Stoner Sr.', 'Rare', 'Plant', 3, 2, 'OG Session', 'Cleanse freeze and silence from every other friendly character here. Each cleansed character gains +1 Hands.', 'Support'],
   ['divorceddad', 'divorced-dad', 'Divorced Dad', 'Uncommon', 'Normal', 3, 3, 'My Weekend', 'If no other friendly character is here and an enemy is here, gain +2 Hands.', 'Pressure'],

@@ -9,3 +9,8 @@
 @media(max-height:500px){.music-panel{padding:16px 20px}.music-panel h2{font-size:23px}.music-now{margin:12px 0;padding:10px 14px}.music-volume,.music-track{margin-top:12px}.music-note{margin-top:10px}}
 
 @media(max-width:600px){.music-lobby{width:44px;padding:8px}.music-lobby span,.music-lobby i{display:none}}
+.music-banks { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; }
+.music-banks fieldset { min-width:0; border:1px solid #c8a45555; padding:12px; }
+.music-banks legend { font-size:11px; color:#e7cb90; padding:0 5px; }
+.music-banks label { font-size:12px; }
+.music-banks .music-volume { margin-top:12px; }

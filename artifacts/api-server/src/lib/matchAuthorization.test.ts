@@ -3,7 +3,7 @@ import test from "node:test";
 import { starterRecipes, ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS } from "@workspace/squabblemon-engine/data";
 import { canUseRewardedRecipe, canUseRewardedDeck } from "./matchAuthorization";
 
-test("rewarded practice accepts only crews whose ten cards are owned", () => {
+test("rewarded practice accepts only gangs whose ten cards are owned", () => {
   const recipe = starterRecipes[0];
   assert.equal(
     canUseRewardedRecipe(recipe.id, recipe.catalogCardIds),
@@ -19,7 +19,7 @@ test("rewarded practice accepts only crews whose ten cards are owned", () => {
   );
 });
 
-test('custom matches require a legal owned saved roster, including mixed crews', () => {
+test('custom fades require a legal owned saved roster, including mixed gangs', () => {
   const deck = { id: 'personal', cardIds: [...ROOKIE_CORE_IDS.slice(0, 9), 'nail-tech'], heroCardId: 'nail-tech' };
   assert.equal(canUseRewardedDeck('personal', [deck], ROOKIE_FOUNDATION_IDS), true);
   assert.equal(canUseRewardedDeck('personal', [deck], ROOKIE_CORE_IDS), false);

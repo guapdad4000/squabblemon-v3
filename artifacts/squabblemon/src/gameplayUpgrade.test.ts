@@ -11,7 +11,7 @@ import { createLocalPracticeMatch } from './lib/localPracticeMatch';
 import { createStoryMatch, createCardInstance, createMatch, chooseCpuPlay, playCard, pass, nextRound, verifyStoryMatchTranscript, getMatchWinner, type Match, type Lane } from './gameEngine';
 
 const roster = completeEngineCrew(['cornball','earthy','pinaynurse','nguyen','edgar','bikelife','abuela']);
-test('local preview preserves every selected activity, crew and event rule', () => {
+test('local preview preserves every selected activity, gang and event rule', () => {
   const week = '2026-09-07';
   const draftPicks = draftOffers(week).map(offer => offer[0]);
   for (const activity of activities) {
@@ -83,11 +83,11 @@ test('rival planning cannot inspect private player cards even through Promoter',
 test('Nurse now supports a healthy ally and Edgar/Abuela have their tuned bodies', () => {
   const nurse = createCardInstance('pinaynurse','player','test',0), ally = {...createCardInstance('edgar','player','test',1),lane:0 as Lane};
   const m = playCard({...createMatch('block','block'), playerMotion:2, playerHand:[nurse],boards:[[ally],[],[]]},'player',nurse.instanceId,0);
-  assert.equal(m.boards[0][0].powerModifier,1);
+  assert.equal(m.boards[0][0].powerModifier,2);
   assert.equal(cards.edgar.power,2); assert.equal(cards.abuela.power,4); assert.equal(cards.abuela.cost,4);
   assert.equal(battleAchievements(m).cleansed,false);
 });
-test('crew guidance uses actual opening order and explains conditional support', () => {
+test('gang guidance uses actual opening order and explains conditional support', () => {
   const advice = crewInsights(roster.map(id => catalogCardByEngineId[id].catalogId));
   assert(advice.opening >= 2); assert(advice.tips.some(t => t.includes('Nguyen')));
   assert.equal(advice.curve.reduce((a,b)=>a+b),10);

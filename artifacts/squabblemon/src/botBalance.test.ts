@@ -104,6 +104,6 @@ test('Common upgrades require real effects, while Step Up and Act Up always succ
   m = upgraded('pinaynurse', [[patient], [], []]);
   m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
   assert.equal(m.boards[0].find(c => c.cardId === 'pinaynurse')?.powerModifier, 3);
-  assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 1);
+  assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 2);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.statuses.frozen, false);
 });

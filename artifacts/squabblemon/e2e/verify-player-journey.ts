@@ -93,7 +93,7 @@ async function run(width: number, height: number) {
     let clicks = 0;
     for (let attempt = 0; attempt < 550; attempt++) {
       if (await page.getByRole('heading', { name: 'Something went wrong' }).count()) throw Error(await page.locator('body').innerText());
-      if (await page.getByTestId('status-match-result').count() || await page.getByRole('heading', { name: 'You built this crew.' }).count()) break;
+      if (await page.getByTestId('status-match-result').count() || await page.getByRole('heading', { name: 'You built this gang.' }).count()) break;
       if (await page.getByTestId('fade-spotlight').count()) {
         if (clicks === 1) await page.screenshot({ path: '../../screenshots/rookie-battle-' + width + '.png' });
         await clickCoach(page); clicks++;
@@ -111,9 +111,9 @@ async function run(width: number, height: number) {
       assert.equal(await page.getByRole('button', { name: 'Continue Chapter', exact: true }).count(), 0, 'Tutorial must use the tutorial result actions');
       await page.getByTestId('button-complete-tutorial').click();
     }
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     await page.reload();
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     await page.getByRole('button', { name: 'Claim reward & enter Chapter One' }).click();
     await page.waitForURL('**/game/story');
     assert.equal(started, 1, 'Only one match is required');

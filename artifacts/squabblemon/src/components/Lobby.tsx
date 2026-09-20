@@ -64,7 +64,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
 
       <div className="relative z-20 min-h-0 min-w-0 w-full overflow-hidden bg-black/88 border-y md:border-y-0 md:border-l border-white/10 p-3 md:p-6 md:pb-3 flex flex-col">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="font-mono text-[9px] md:text-xs tracking-[0.18em] text-white/55 uppercase">Select crew</span>
+          <span className="font-mono text-[9px] md:text-xs tracking-[0.18em] text-white/55 uppercase">Select gang</span>
           <span className="font-mono text-[8px] md:text-[10px] text-primary uppercase">Swipe roster</span>
         </div>
 
@@ -106,7 +106,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
 
         <div className="mt-2.5 border-t border-white/10 pt-2.5 min-w-0">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-mono text-[8px] md:text-[10px] tracking-[0.18em] text-white/55 uppercase">Crew lineup // 10 members</span>
+            <span className="font-mono text-[8px] md:text-[10px] tracking-[0.18em] text-white/55 uppercase">Gang lineup // 10 members</span>
             <span className="font-mono text-[7px] md:text-[9px] text-primary/80 uppercase">Tap to inspect</span>
           </div>
           <motion.div

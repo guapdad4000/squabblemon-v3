@@ -1,4 +1,6 @@
+import { rewardReceipts } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
+import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
 import '../../styles/studio.css';
@@ -156,7 +158,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <div className="font-mono text-[10px] text-white/45 uppercase tracking-[.2em]">Story</div>
         <div className="font-display font-black italic text-2xl uppercase">The streets are out of reach.</div>
         <p className="text-sm text-white/55 max-w-sm mx-auto">
-          Connect your account to continue your campaign. In the meantime, sharpen your crew in a practice fight.
+          Connect your account to continue your campaign. In the meantime, sharpen your gang in a practice fight.
         </p>
         <Link
           href="/game/play"
@@ -175,7 +177,17 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
   return (
-    <div className="studio-page story-atlas">
+    <div className="studio-page story-atlas world-decor-host">
+      {/* Knock out only the near-white matte in the supplied decorative images. */}
+      <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
+        <defs>
+          <filter id="story-film-cutout" colorInterpolationFilters="sRGB">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -6 -6 -6 0 18" result="matte" />
+            <feComposite in="SourceGraphic" in2="matte" operator="in" />
+          </filter>
+        </defs>
+      </svg>
+      <PageDecor theme="story" />
       <header className="story-atlas__header">
         <Link href="/game" className="story-atlas__back" aria-label="Back to Safehouse">
           <ArrowLeft size={14} /> Safehouse
@@ -215,6 +227,22 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             aria-hidden="true"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, mixBlendMode: 'screen', pointerEvents: 'none', zIndex: 0 }}
           />
+          {/* Static film-reel decorations (transparent BG, pointer-events: none). */}
+          <span className="story-atlas__ornament story-atlas__ornament--reel-tl" aria-hidden="true">
+            <img src={getAssetUrl('brand/story-cinematic/film-reel-corner.png')} alt="" draggable={false} />
+          </span>
+          <span className="story-atlas__ornament story-atlas__ornament--reel-tr" aria-hidden="true">
+            <img src={getAssetUrl('brand/story-cinematic/film-reel-pair.png')} alt="" draggable={false} />
+          </span>
+          <span className="story-atlas__ornament story-atlas__ornament--strip-left" aria-hidden="true">
+            <img src={getAssetUrl('brand/story-cinematic/film-reel-flow.png')} alt="" draggable={false} />
+          </span>
+          <span className="story-atlas__ornament story-atlas__ornament--reel-br" aria-hidden="true">
+            <img src={getAssetUrl('brand/story-cinematic/film-reel-corner.png')} alt="" draggable={false} />
+          </span>
+          <span className="story-atlas__ornament story-atlas__ornament--cluster-bl" aria-hidden="true">
+            <img src={getAssetUrl('brand/story-cinematic/film-reel-cluster.png')} alt="" draggable={false} />
+          </span>
           <svg className="story-atlas__routes" aria-hidden="true">
             {nodes.flatMap((node) =>
               node.prerequisites.map((id) => {
@@ -295,6 +323,11 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </button>
         )}
       </div>
+
+      {/* Cinematic film-strip wave divider between viewport and footer. */}
+      <span className="story-atlas__ornament story-atlas__ornament--wave-divider" aria-hidden="true">
+        <img src={getAssetUrl('brand/story-cinematic/film-strip-wave.png')} alt="" draggable={false} />
+      </span>
 
       <AnimatePresence>
         {rewardsOpen && currentChapter && chapterContent && (
@@ -442,6 +475,7 @@ export function NodeOverlay({
         });
         applyCampaign(result.campaign, result.bootstrap);
         setGrantedRewards(result.rewards);
+        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? 'xp' as const : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
         setScreen('completed');
         return;
       }
@@ -693,7 +727,7 @@ function BattleBriefing({
 
         <section className="mt-3 border border-white/10 bg-black p-4">
           <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">
-            {battle.teaching.focusCards.length ? 'Focus Cards' : 'Recommended crew cards'}
+            {battle.teaching.focusCards.length ? 'Focus Cards' : 'Recommended gang cards'}
           </h3>
           <div className="mt-3 flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
             {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, type PlayerBootstrap } from '@workspace/api-client-react';
-import { ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2 } from 'lucide-react';
+import { Briefcase, ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2 } from 'lucide-react';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { MusicControls } from '../../components/MusicControls';
 import { useMusic, musicActions } from '../../musicStore';
@@ -13,10 +13,11 @@ import '../../styles/studio.css';
 import '../../styles/safehouse-stage.css';
 
 const stations = [
+  { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
   { id: 'story', label: 'The television', short: 'Story', icon: Tv, title: 'The block is waiting.', detail: 'Pick up your story where you left it.', action: 'Hit the streets', href: '/game/story' },
-  { id: 'training', label: 'The heavy bag', short: 'Train', icon: Dumbbell, title: 'Stay ready.', detail: 'Get your reps in. Then put your crew to work.', action: 'Start training', href: '/game/play' },
-  { id: 'cards', label: 'Your crew cards', short: 'Crew', icon: Layers, title: 'Every legend starts here.', detail: 'Build the lineup that runs your block.', action: 'Build your crew', href: '/game/decks' },
-  { id: 'phone', label: 'The phone', short: 'Fight', icon: Smartphone, title: 'Call somebody out.', detail: 'Your friend. Your crew. A score to settle.', action: 'Challenge a friend', href: '/game/online' },
+  { id: 'training', label: 'The heavy bag', short: 'Train', icon: Dumbbell, title: 'Stay ready.', detail: 'Get your reps in. Then put your gang to work.', action: 'Start training', href: '/game/play' },
+  { id: 'cards', label: 'Your gang cards', short: 'Gang', icon: Layers, title: 'Every legend starts here.', detail: 'Build the lineup that runs your block.', action: 'Build your gang', href: '/game/decks' },
+  { id: 'phone', label: 'The phone', short: 'Fight', icon: Smartphone, title: 'Call somebody out.', detail: 'Your friend. Your gang. A score to settle.', action: 'Challenge a friend', href: '/game/online' },
   { id: 'music', label: 'The turntable', short: 'Records', icon: Disc3, title: 'Oakland Chrome and Curls.', detail: 'Original music by Treblo. Made for the block.', action: '', href: '' },
 ] as const;
 type Station = typeof stations[number]['id'];
@@ -155,6 +156,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
             aria-label={night ? 'Switch to golden hour' : 'Switch to late night'} aria-pressed={night}>
             {night ? <Moon size={16} /> : <Sun size={16} />}<span>{night ? 'Late night' : 'Golden hour'}</span>
           </button>
+          <Link href="/game/inventory" className="room-tool"><Briefcase size={16} /><span>Bag</span></Link>
           <MusicControls compact />
           <button type="button" className="room-tool room-tool--reset" aria-label="Reset room camera" onClick={() => explore('room')}><RotateCcw size={16} /></button>
         </div>
@@ -169,14 +171,14 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
         {station ? <section className="safehouse-room-detail" aria-live="polite" aria-label={station.label}>
           <button type="button" className="room-back" ref={backButton} onClick={() => explore('room')}><ArrowLeft size={14} /> Back to the room</button>
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.title}</h2>
-            <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${soundtrack[music.trackIndex].title} · Treblo` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
+            <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'music' ? <MusicControls /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your crew<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'music' ? <MusicControls /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => sendScene(frame, { type: 'punch' })}>Hit the bag</button>}
             </div>
           </div>
         </section> : <div className="safehouse-room-welcome">
-          <div><span className="room-eyebrow">YOUR CORNER OF THE CITY</span><p>Kick back. Build your crew. Run it back.</p></div>
+          <div><span className="room-eyebrow">YOUR CORNER OF THE CITY</span><p>Kick back. Build your gang. Run it back.</p></div>
           <Link href="/game/play" className="room-action">Run the block<ArrowRight size={15} /></Link>
         </div>}
         <div className="safehouse-room-hint"><span><Move size={11} /> Drag to look <i /> Pinch or scroll to zoom</span>

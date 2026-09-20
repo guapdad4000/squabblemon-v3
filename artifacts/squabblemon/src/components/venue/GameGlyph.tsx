@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { Coins, Diamond, Flame, Sparkles, Ticket, type LucideIcon } from 'lucide-react';
+import { Sparkles, type LucideIcon } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import '../../styles/game-ornaments.css';
 
@@ -9,15 +9,19 @@ const artwork = {
   crew: 'props/deck-stack',
   story: 'props/neighborhood-map',
   bounty: 'props/sticker-phone',
-  mastery: 'props/championship-chain',
+  mastery: 'rewards/medallions',
+  clout: 'rewards/clout-token',
+  cloutStack: 'rewards/clout-stack',
+  cloutBag: 'rewards/clout-bag',
+  ticket: 'rewards/fight-ticket',
+  cloutTicket: 'rewards/clout-ticket',
+  shards: 'rewards/style-hanger',
+  rep: 'rewards/medallion',
+  squabble: 'rewards/squabble-chain',
   pack: 'props/foil-pack',
 } as const;
 const stamps = {
-  clout: Coins,
-  ticket: Ticket,
-  shards: Diamond,
   xp: Sparkles,
-  rep: Flame,
 } as const;
 export type GameGlyphName = keyof typeof artwork | keyof typeof stamps;
 

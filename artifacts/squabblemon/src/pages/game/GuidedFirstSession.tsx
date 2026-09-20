@@ -13,10 +13,10 @@ import type { DeckDraft } from '../../lib/deckWorkshop';
 const homeLessons = [
   { target: '.safehouse-room-title', title: 'This is home.', body: 'Your Safehouse is where you return between fights. The objects in this room open the parts of your game.', next: 'Show me the story' },
   { target: '[aria-label="Explore the television"]', title: 'The television opens your story.', body: 'Tap Story. This is your main adventure: dialogue, battles, new cards, and chapter rewards.' },
-  { target: '.safehouse-room-detail__body', title: 'One chapter at a time.', body: 'Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.', next: 'Find my crew' },
+  { target: '.safehouse-room-detail__body', title: 'One chapter at a time.', body: 'Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.', next: 'Find my gang' },
   { target: '.room-back', title: 'Back to your room.', body: 'Tap Back to the room. Your cards live right here in the Safehouse too.' },
-  { target: '[aria-label="Explore your crew cards"]', title: 'These are your crew cards.', body: 'Tap Crew. Your collection is every card you own. Your deck is the ten cards you take into a battle.' },
-  { target: '.safehouse-room-actions', title: 'Let’s build your first deck.', body: 'I have twenty free cards for you. We’ll start with ten, make one swap together, and save your crew.' },
+  { target: '[aria-label="Explore your gang cards"]', title: 'These are your gang cards.', body: 'Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.' },
+  { target: '.safehouse-room-actions', title: 'Let’s build your first deck.', body: 'I have twenty free cards for you. We’ll start with ten, make one swap together, and save your gang.' },
 ];
 export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { bootstrap: PlayerBootstrap; onCollect: () => void; onComplete: () => void }) {
   const [stage, setStage] = useState<'welcome' | 'home' | 'deck' | 'battle'>(bootstrap.profile.starterDeckId === ROOKIE_FOUNDATION_ID ? 'deck' : 'welcome');
@@ -31,7 +31,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
   };
   if (stage === 'battle' && playing) return <PlayLoop mode="tutorial" hideLobby turnTimerEnabled={false}
     initialDeckId={ROOKIE_DECK_ID} initialRivalId="vibes" equippedVariants={bootstrap.profile.equippedVariants}
-    customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your first crew', accent: 'ROOKIE', plan: 'Follow Dr. Fade’s highlighted moves.' }}
+    customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your first gang', accent: 'ROOKIE', plan: 'Follow Dr. Fade’s highlighted moves.' }}
     onExit={() => setStage('deck')} onTutorialComplete={onComplete} />;
   if (saved && (stage === 'deck' || stage === 'home')) return <div className="rookie-workshop">
     <DeckWorkbench initial={saved} ownedCardIds={bootstrap.profile.ownedCardIds} equippedVariants={bootstrap.profile.equippedVariants}
@@ -48,8 +48,8 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
   }
   return <main className="rookie-tour" style={{ backgroundImage: 'linear-gradient(90deg,#07100eef,#07100e90),url("' + getAssetUrl('scenes/safehouse/concept.png') + '")', backgroundSize: 'cover', backgroundPosition: 'center' }} data-testid="rookie-welcome"><div className="rookie-tour__welcome">
     <section><span className="fade-eyebrow">ROOKIE ROAD / WELCOME TO THE BLOCK</span><h1>You belong<br />on this block.</h1>
-      <p>I’m Dr. Fade. I’ll show you around, help you build your first crew, and stay beside you through your first win. One move at a time.</p>
-      <div className="rookie-tour__steps"><span>01 · Find your feet</span><span>02 · Build your crew</span><span>03 · First battle</span></div>
+      <p>I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.</p>
+      <div className="rookie-tour__steps"><span>01 · Find your feet</span><span>02 · Build your gang</span><span>03 · First battle</span></div>
       <button className="venue-button venue-button--gold" onClick={() => setStage('home')}>Show me around</button>
       <p className="text-sm">No timer. No purchases. We’ll learn by playing.</p>
     </section><DrFadePortrait />

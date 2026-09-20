@@ -11,7 +11,7 @@ import { CardUpgradeCue } from './CardUpgrades';
 import { Card, getCardImage } from '../data';
 import { cardEntryAccent } from '@workspace/squabblemon-engine/data';
 import { CARD_RARITY_DEFINITIONS } from '../data';
-import { CARD_FINISH, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
+import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
 import { CardFoil } from './CardFoil';
 import { useCardInspection } from './CardInspection';
 import './card-finish.css';
@@ -63,7 +63,9 @@ function CardViewComponent({
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
-  const displayPower = effectivePower ?? card.power;
+  const fuseRound = instance?.smileBomb?.detonatesAtRound;
+  const fuseDescription = card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
+  const displayPower = card.hazard ? 0 : effectivePower ?? card.power;
   const displayCost = cost ?? card.cost;
 
   const isFrozen = instance?.statuses?.frozen;
@@ -88,9 +90,7 @@ function CardViewComponent({
   ].filter(Boolean).join(' ');
   const powerModifier = instance?.powerModifier ?? 0;
   const variantKind = getVariantKind(variantId);
-  // Summons are real board cards but intentionally stay out of the collectible catalog.
-  // Render them with their summoner's Mythical treatment instead of throwing on an unknown catalog ID.
-  const rarity = card.kind === 'token' ? 'Mythical' : getCardRarity(card.id);
+  const rarity = getCardRarity(card.id, card.kind);
   const entryAccent = cardEntryAccent(card);
 
   const isLarge = isInspector || (!isBoard && !className.includes('w-[64px]'));
@@ -104,7 +104,7 @@ function CardViewComponent({
   const popClass = portraitPop ? 'portrait-pop' : '';
   const tactile = !unavailable && (!isBoard || fillContainer || isInspector);
   const moveFoil = (event: React.PointerEvent<HTMLElement>) => {
-    if (!tactile || cardMotionReduced() || event.pointerType === 'touch') return;
+    if (!tactile || cardMotionReduced() || (event.pointerType === 'touch' && !isInspector)) return;
     const node = event.currentTarget;
     const rect = node.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
@@ -134,14 +134,16 @@ function CardViewComponent({
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
       data-card-kind={card.kind ?? 'character'}
+      data-bomb-round={fuseRound}
       data-frozen={isFrozen ? true : undefined}
-      data-card-finish={CARD_FINISH[rarity]}
+      data-card-finish={cardFinishLabel(rarity, variantKind)}
+      tabIndex={isInspector ? 0 : undefined}
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
       onPointerCancel={resetFoil}
-      aria-label={`${card.name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity.${boardStatusLabel ? ` ${boardStatusLabel}` : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
+      aria-label={`${card.name}. ${card.kind === 'token' ? 'Summoned token' : CARD_RARITY_DEFINITIONS[rarity].label + ' rarity'}.${boardStatusLabel ? " " + boardStatusLabel : ""}${fuseDescription}${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
       aria-pressed={!isBoard && !isInspector && !presentationOnly ? !!queued : undefined}
-      title={disabledReason}
+      title={disabledReason ?? (card.hazard ? fuseDescription.trim() : undefined)}
       onClick={presentationOnly ? undefined : onClick}
       whileHover={presentationOnly ? undefined : !isBoard && !isInspector ? { y: -12, scale: 1.05, zIndex: 50 } : isBoard ? { scale: 1.05 } : {}}
       whileTap={presentationOnly ? undefined : !isInspector ? { scale: 0.95 } : {}}
@@ -192,8 +194,8 @@ function CardViewComponent({
 
           <div className="card-stat-pair absolute top-0 inset-x-0 flex justify-between z-20 pointer-events-none">
             <div className="bg-primary text-black px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-r border-b border-black/30" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)' }}>
-              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">Motion</span>}
-              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{displayCost}</span>
+              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{card.hazard ? 'Explodes' : 'Motion'}</span>}
+              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost}</span>
             </div>
 
             <div className={`px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${powerModifier > 0 ? 'bg-green-400 text-black' : powerModifier < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
@@ -225,7 +227,7 @@ function CardViewComponent({
           <div className={`collector-card-copy absolute inset-x-0 bottom-0 p-1.5 md:p-2.5 z-20 flex flex-col justify-end pointer-events-none ${isInspector ? 'collector-card-copy--inspector' : ''}`}>
             <div className="flex flex-wrap items-center gap-1 mb-1">
               <span className={`font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-white border border-[var(--rarity-color)] leading-none shadow-sm`}>
-                <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{CARD_RARITY_DEFINITIONS[rarity].label}
+                <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{card.kind === 'token' ? 'Summon' : CARD_RARITY_DEFINITIONS[rarity].label}
               </span>
               <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest text-[var(--rarity-color)] leading-none bg-black/40 px-1 py-0.5">
                 {card.kind === 'support' ? `Support · ${card.type}` : card.type}
@@ -241,10 +243,10 @@ function CardViewComponent({
               {card.name}
             </h4>
 
-            {isInspector && (
-               <div className="collector-card-ability mt-1.5 border-t border-white/20 pt-1.5">
-                 <div className="text-[7px] md:text-[8px] font-mono tracking-widest text-primary mb-0.5 uppercase">{card.ability}</div>
-                 <div className="text-[8px] md:text-[10px] text-white/70 leading-tight font-sans line-clamp-3">{card.effect}</div>
+            {(isInspector || (!isBoard && !presentationOnly)) && (
+               <div className={`collector-card-ability mt-1 border-t border-white/15 pt-1 ${isInspector ? '' : 'opacity-90'}`}>
+                 <div className={`font-mono tracking-widest text-primary mb-0.5 uppercase ${isInspector ? 'text-[7px] md:text-[8px]' : 'text-[5px] md:text-[6px]'}`}>{card.ability}</div>
+                 <div className={`text-white/75 leading-tight font-sans ${isInspector ? '' : 'line-clamp-2'} ${isInspector ? 'text-[8px] md:text-[10px]' : 'text-[6px] md:text-[7px]'}`}>{card.effect}</div>
                </div>
             )}
 
@@ -258,10 +260,14 @@ function CardViewComponent({
 
           <CardRarityTreatment rarity={rarity} />
           <span className="collector-art-rim" aria-hidden="true" />
+          <span className="collector-engraving" aria-hidden="true" />
+          <span className="collector-edition-seal" aria-hidden="true">SM</span>
           <CardVariantTreatment variantId={variantId} />
           <span className="collector-foil" aria-hidden="true" />
+          <span className="collector-foil-pattern" aria-hidden="true" />
+          <span className="collector-foil-grain" aria-hidden="true" />
           <span className="collector-glare" aria-hidden="true" />
-          {isInspector && (rarity !== 'SuperCommon' || variantKind === 'chrome') && <CardFoil tier={variantKind === 'chrome' ? 4 : CARD_RARITY_DEFINITIONS[rarity].order} />}
+          {isInspector && (rarity !== 'SuperCommon' || variantKind) && <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} />}
         </div>
       </div>
     </MotionElement>{inspection.dialog}</>

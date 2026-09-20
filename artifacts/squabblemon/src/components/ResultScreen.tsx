@@ -1,9 +1,7 @@
-import { GameGlyph } from './venue/GameGlyph';
+import { ResultArtwork } from './ResultArtwork';
 import { coachBattle } from '@workspace/squabblemon-engine/insights';
 import { ArrowRight, RotateCcw, Star } from 'lucide-react';
-import { BattleVictory } from './BattleVictory';
-import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
-import { decks, getAssetUrl, getCardImage } from '../data';
+import { getCardImage } from '../data';
 import { type Match, evaluateStoryStarObjectives, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { BattleEarnings } from './BattleEarnings';
 import '../styles/studio.css';
@@ -33,10 +31,8 @@ export function ResultScreen({
     isDraw = winner === 'draw';
   const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
   const isTutorial = Boolean(tutorial);
-  const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
   const objectiveResults = evaluateStoryStarObjectives(m);
   const earnedStars = objectiveResults.filter((objective) => objective.achieved).length;
-  const environment = m.storyEncounter?.cinematic?.environmentAssetId;
   const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved]));
   const retry = (
     <div className="result-stage__save" role="alert">
@@ -58,17 +54,8 @@ export function ResultScreen({
 
   return (
     <div
-      className={`battle-result-screen studio-results result-stage ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
+      className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
     >
-      {environment && (
-        <div className="result-stage__environment" style={{ backgroundImage: `url("${getAssetUrl(environment)}")` }} />
-      )}
-      <img
-        className={`result-stage__signature variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, playerDeck.hero)) ?? 'base'}`}
-        src={getCardImage(playerDeck.hero)}
-        alt=""
-        aria-hidden="true"
-      />
       <div className="result-stage__content">
         <header className="result-stage__heading">
           <span className="studio-eyebrow">
@@ -76,102 +63,13 @@ export function ResultScreen({
             <span>•</span>
             {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
           </span>
-          {isVictory ? (
-            <GameGlyph name="mastery" className="result-stage__emblem" />
-          ) : (
-            <GameGlyph name="fight" className="result-stage__emblem" />
-          )}
           <h2 data-testid="status-match-result">
             {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
           </h2>
         </header>
-        {isDraw ? (
-          <div className="result-stage__draw">
-            <img src={getCardImage(playerDeck.hero)} alt="" />
-            <span>Settle it in the next round.</span>
-          </div>
-        ) : (
-          <BattleVictory match={m} winner={winner} equippedVariants={equippedVariants} />
-        )}
-        <div className="result-stage__scores" aria-label="Final district scores">
-          {results.map((r, i) => (
-            <div key={i} data-winner={r.winner}>
-              <span>{districts[i]?.name ?? `District ${i + 1}`}</span>
-              <strong>
-                {r.player}
-                <small>:</small>
-                {r.cpu}
-              </strong>
-              <em>{r.winner === 'player' ? 'Secured' : r.winner === 'draw' ? 'Dead heat' : 'Lost'}</em>
-            </div>
-          ))}
-        </div>
-        {isStory && (
-          <section className="result-stage__story" aria-label="Story outcome">
-            {storyMetadata ? (
-              <>
-                <div className="result-stage__stars" aria-label={`${earnedStars} of 3 stars this run`}>
-                  {[1, 2, 3].map((n) => (
-                    <Star
-                      key={n}
-                      size={25}
-                      fill={n <= earnedStars ? 'currentColor' : 'none'}
-                      style={{ opacity: n <= earnedStars ? 1 : 0.25 }}
-                    />
-                  ))}
-                </div>
-                <p>
-                  {storyMetadata.outcome === 'win'
-                    ? storyMetadata.firstClear
-                      ? `Encounter cleared · ${earnedStars} / 3 stars`
-                      : `This run ${earnedStars} / 3 · Best ${storyMetadata.stars} / 3`
-                    : 'Adjust your crew and claim the rematch.'}
-                </p>
-                <details className="result-stage__details">
-                  <summary>Star objectives</summary>
-                  <ul>
-                    {m.storyEncounter?.starObjectives?.map((objective) => (
-                      <li key={objective.id}>
-                        <Star size={13} fill={objectiveHits.get(objective.id) ? 'currentColor' : 'none'} />
-                        {objective.description}
-                        <span>{objectiveHits.get(objective.id) ? 'Earned' : 'Missed'}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              </>
-            ) : rewardError ? (
-              retry
-            ) : (
-              <p className="studio-notice" role="status">
-                Saving chapter outcome…
-              </p>
-            )}
-            {reward?.storyRewards?.length > 0 && (
-              <div className="result-stage__first-rewards">
-                <span className="studio-eyebrow">First-clear rewards</span>
-                {reward.storyRewards.map((r: any) => (
-                  <p key={r.rewardKey}>{r.description}</p>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-        {isGuest ? (
-          <p className="studio-notice result-stage__offline">
-            Offline Training result — rewards are unsaved.
-            <br />
-            {customPlayerDeck ? 'Deck tests do not grant rewards.' : 'Sign in to save Card XP from your next run.'}
-          </p>
-        ) : !isStory && rewardError ? (
-          retry
-        ) : reward ? (
-          <BattleEarnings reward={reward} />
-        ) : !isStory ? (
-          <p className="studio-notice" role="status">
-            Saving battle earnings…
-          </p>
-        ) : null}
+        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
+          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending} />
+        <div className="result-stage__receipt">
         <nav className="result-stage__actions" aria-label="After the battle">
           {isStory ? (
             <>
@@ -225,7 +123,7 @@ export function ResultScreen({
                 <ArrowRight size={15} />
               </button>
               <button className="studio-action" data-testid="button-change-deck" onClick={onChangeDeck}>
-                Adjust Crew
+                Adjust Gang
               </button>
               <button className="studio-text-action" onClick={onGoHome}>
                 Home
@@ -233,6 +131,73 @@ export function ResultScreen({
             </>
           )}
         </nav>
+        {isStory && (
+          <section className="result-stage__story" aria-label="Story outcome">
+            {storyMetadata ? (
+              <>
+                <div className="result-stage__stars" aria-label={`${earnedStars} of 3 stars this run`}>
+                  {[1, 2, 3].map((n) => (
+                    <Star
+                      key={n}
+                      size={25}
+                      fill={n <= earnedStars ? 'currentColor' : 'none'}
+                      style={{ opacity: n <= earnedStars ? 1 : 0.25 }}
+                    />
+                  ))}
+                </div>
+                <p>
+                  {storyMetadata.outcome === 'win'
+                    ? storyMetadata.firstClear
+                      ? `Encounter cleared · ${earnedStars} / 3 stars`
+                      : `This run ${earnedStars} / 3 · Best ${storyMetadata.stars} / 3`
+                    : 'Adjust your gang and claim the runback.'}
+                </p>
+                <details className="result-stage__details">
+                  <summary>Star objectives</summary>
+                  <ul>
+                    {m.storyEncounter?.starObjectives?.map((objective) => (
+                      <li key={objective.id}>
+                        <Star size={13} fill={objectiveHits.get(objective.id) ? 'currentColor' : 'none'} />
+                        {objective.description}
+                        <span>{objectiveHits.get(objective.id) ? 'Earned' : 'Missed'}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </>
+            ) : rewardError ? (
+              retry
+            ) : (
+              <p className="studio-notice" role="status">
+                Saving chapter outcome…
+              </p>
+            )}
+            {reward?.storyRewards?.length > 0 && (
+              <div className="result-stage__first-rewards">
+                <span className="studio-eyebrow">First-clear rewards</span>
+                {reward.storyRewards.map((r: any) => (
+                  <p key={r.rewardKey}>{r.description}</p>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+        {isGuest ? (
+          <p className="studio-notice result-stage__offline">
+            Offline Training result — rewards are unsaved.
+            <br />
+            {customPlayerDeck ? 'Deck tests do not grant rewards.' : 'Sign in to save Card XP from your next run.'}
+          </p>
+        ) : !isStory && rewardError ? (
+          retry
+        ) : reward ? (
+          <BattleEarnings reward={reward} showTotals={false} />
+        ) : !isStory ? (
+          <p className="studio-notice" role="status">
+            Saving battle earnings…
+          </p>
+        ) : null}
+
         <aside className="result-stage__coach" aria-label="Dr. Fade match advice">
           <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
           <div>
@@ -240,6 +205,7 @@ export function ResultScreen({
             <p>{coachBattle(m)}</p>
           </div>
         </aside>
+        </div>
       </div>
     </div>
   );

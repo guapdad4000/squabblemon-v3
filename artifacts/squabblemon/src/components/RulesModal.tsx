@@ -13,13 +13,13 @@ export function RulesModal({ onClose }: any) {
 
   const rules = [
     "Drag a card from your hand into a district to play it immediately. Swipe sideways to browse your hand. You can also tap a card, choose a district, and press Play card. Keep playing while you have Motion, then End Turn.",
-    "Both crews start with 2 Motion. Each new round refills to its round number plus up to 1 unspent Motion, capped at 9. Plug can discount your next card in another district.",
+    "Both gangs start with 2 Motion. Each new round refills to its round number plus up to 1 unspent Motion, capped at 9. Plug can discount your next card in another district.",
     "Each card resolves immediately and stays on the board. After you end your turn, the Rival can also play multiple cards with its remaining Motion.",
     "Abilities resolve immediately. Hands changes, movement, freeze, silence, protection, and blocked effects stay visible on the affected cards.",
     "Frozen cards add 0 Hands until cleansed. Silenced cards keep their Hands but cannot fire their ability.",
-    "Each match draws three of sixteen locations. Rules can help or hurt: Dive Bar lowers costs and Hands; Corrupt Church charges extra Motion for a buff. Location penalties cannot lower a card below 0 Hands. Read each mat before playing.",
-    "When the final round ends, claim at least two of three districts to win. A 1–1–1 split or no two-district claim is a draw.",
-    "SQUABBLE can be armed once per match after selecting a card. It doubles that card's Base Hands: save it to steal a close district or force the rival to answer, but do not wait past the final round."
+    "Each fade draws three of sixteen locations. Rules can help or hurt: Dive Bar lowers costs and Hands; Corrupt Church charges extra Motion for a buff. Location penalties cannot lower a card below 0 Hands. Read each mat before playing.",
+    "After round six, claim at least two of three districts to win. A 1–1–1 split or no two-district claim is a draw.",
+    "SQUABBLE can be armed once per fade after selecting a card. It doubles that card's Base Hands: save it to steal a close district or force the rival to answer, but do not wait past round six."
   ];
 
   return (

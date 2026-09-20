@@ -56,7 +56,7 @@ export function DefeatCross() {
 export function BattleStartArt({ phase, player, rival }: { phase: PresentationPhase; player: Deck; rival: Deck }) {
   const countdown = phase.startsWith('countdown-');
   const versus = phase === 'versus';
-  const title = countdown ? phase.slice(-1) : versus ? 'VS' : phase === 'deal' ? 'CREW UP' : 'SQUABBLE!';
+  const title = countdown ? phase.slice(-1) : versus ? 'VS' : phase === 'deal' ? 'GANG UP' : 'SQUABBLE!';
   return (
     <span
       className={`battle-start-art ${countdown ? 'is-countdown' : ''} ${versus ? 'is-versus' : ''}`}
@@ -86,7 +86,7 @@ export function BattleStartArt({ phase, player, rival }: { phase: PresentationPh
           {countdown
             ? 'Get ready'
             : versus
-              ? 'Your crew · Their turf'
+              ? 'Your gang · Their turf'
               : phase === 'deal'
                 ? 'Make your first move'
                 : 'Take the block'}

@@ -22,7 +22,9 @@ type SearchBudget = {
   maximumExpansions: number;
 };
 
-export const STORY_SOLVER_NODE_BUDGET_MS = 5_000;
+// Verification runs share CPU with the database harness; keep the deterministic
+// expansion cap while allowing slower machines ten seconds per encounter.
+export const STORY_SOLVER_NODE_BUDGET_MS = 10_000;
 export const STORY_SOLVER_MAX_EXPANSIONS = 20_000;
 const MAX_PLAYER_ACTIONS_PER_TURN = 4;
 

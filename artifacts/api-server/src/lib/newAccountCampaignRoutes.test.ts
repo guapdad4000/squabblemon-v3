@@ -23,6 +23,7 @@ import {
 import { storyContent, type StoryNode } from "@workspace/squabblemon-engine/story";
 import playerRouter from "../routes/player";
 import storyRouter from "../routes/story";
+import collectionRouter from "../routes/collection";
 import { ensurePlayer } from "./playerState";
 import {
   STORY_SOLVER_NODE_BUDGET_MS,
@@ -41,6 +42,8 @@ test("new account completes every campaign node through HTTP with isolated, idem
   skip: !process.env.DATABASE_URL,
   timeout: 240_000,
 }, async t => {
+  const campaignCrew = [...ROOKIE_CORE_IDS];
+  campaignCrew[5] = "nail-tech"; // The same required first swap as Dr. Fade’s UI lesson.
   const runId = randomUUID();
   const playerId = `campaign-e2e-${runId}`;
   const controlId = `campaign-control-${runId}`;
@@ -65,7 +68,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
     (req as any).log = { warn() {}, error() {} };
     next();
   });
-  app.use("/api", playerRouter, storyRouter);
+  app.use("/api", playerRouter, storyRouter, collectionRouter);
   app.use((error: Error, _req: unknown, res: express.Response, _next: express.NextFunction) => {
     res.status(500).json({ error: error.message });
   });
@@ -129,6 +132,11 @@ test("new account completes every campaign node through HTTP with isolated, idem
   const collection = await playerRequest("/player/onboarding", { action: "choose-starter", starterDeckId: ROOKIE_FOUNDATION_ID });
   assert.equal(collection.body.profile.onboardingStep, "tutorial");
   assert.equal(collection.body.profile.ownedCardIds.length, 20);
+  const savedDeck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
+    name: "My First Gang", cardIds: campaignCrew, heroCardId: "hooper", recipeId: null,
+  }, "PUT");
+  assert.equal(savedDeck.status, 200, JSON.stringify(savedDeck.body));
+  assert.deepEqual(savedDeck.body.profile.savedDecks.find((deck: { id: string }) => deck.id === ROOKIE_DECK_ID).cardIds, campaignCrew);
   const beforeLessonReward = await playerRequest("/player/onboarding", { action: "claim-reward" });
   assert.equal(beforeLessonReward.body.profile.starterRewardClaimed, false);
   const tutorial = await playerRequest("/player/matches", {
@@ -151,7 +159,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
     tutorial.body.abilityUpgradeSnapshot,
     tutorial.body.districtSnapshot,
     tutorial.body.encounterSnapshot,
-    catalogIdsToEngineIds(ROOKIE_CORE_IDS),
+    catalogIdsToEngineIds(campaignCrew),
     ROOKIE_DECK_ID,
   );
   const tutorialComplete = await playerRequest(
@@ -264,7 +272,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
       assert.equal(started.status, 201, `${node.id}: ${JSON.stringify(started.body)}`);
       const match = createStoryMatch(
         started.body.encounterSnapshot,
-        catalogIdsToEngineIds(ROOKIE_CORE_IDS),
+        catalogIdsToEngineIds(campaignCrew),
         ROOKIE_DECK_ID,
         started.body.abilityUpgradeSnapshot,
         started.body.districtSnapshot,

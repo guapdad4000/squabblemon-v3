@@ -1,6 +1,7 @@
 import { PropArt } from '../../components/venue/PropArt';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { ProgressRing } from '../../components/venue/ProgressRing';
+import { PageDecor } from '../../components/venue/PageDecor';
 import { CombatSprite } from '../../components/BattleArt';
 import { useLocation, useSearch } from 'wouter';
 import { Market } from './Market';
@@ -33,16 +34,56 @@ type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | '
 type Payment = 'softCurrency' | 'ticket';
 type PullSize = 1 | 10;
 
-// Pacing knobs. Single-pack: 12 hits to break the bag. Ten-pull: 30 hits,
-// three per click, so the puncher feels like they're dismantling the bag
-// in waves. The bag scene messages `hit` with a numeric count; we map that
-// to the combo progress in the ringside HUD.
-const HITS_PER_PULL: Record<PullSize, number> = { 1: 12, 10: 30 };
+// Every opening is a three-beat fight: jab, hook, finisher. A ten-pull still
+// lands three strikes per input, so its scene can hit harder without becoming
+// a thirty-click chore. The awarded result is already secured before this runs.
+const HITS_PER_PULL: Record<PullSize, number> = { 1: 3, 10: 9 };
 const HITS_PER_CLICK: Record<PullSize, number> = { 1: 1, 10: 3 };
-// Stage messaging to the bag scene for what kind of beat just landed. The
-// scene file can choose its own response, but a strong ten-pull hit gets
-// labelled so the visual upgrade is unambiguous.
-type ScenePunchMessage = { type: 'punch'; intensity?: 'normal' | 'heavy' };
+type StrikeIntensity = 'normal' | 'heavy' | 'finisher';
+type ScenePunchMessage = { type: 'punch'; intensity?: StrikeIntensity };
+
+const FIGHT_BEATS: readonly {
+  round: string;
+  move: string;
+  direction: string;
+  intensity: StrikeIntensity;
+}[] = [
+  { round: 'Round one', move: 'Test the leather', direction: 'Snap a clean jab.', intensity: 'normal' },
+  { round: 'Round two', move: 'Break its guard', direction: 'Turn the shoulder. Land the hook.', intensity: 'heavy' },
+  { round: 'Main event', move: 'Finish the bag', direction: 'Put the whole block behind it.', intensity: 'finisher' },
+];
+
+const RARITY_RANK: Record<string, number> = {
+  SuperCommon: -1,
+  Common: 0,
+  Uncommon: 1,
+  Rare: 2,
+  Epic: 3,
+  Legendary: 4,
+  Mythical: 5,
+};
+
+const RARITY_CEREMONY: Record<string, { signal: string; title: string; callout: string }> = {
+  SuperCommon: { signal: 'Street print', title: 'A familiar face.', callout: 'Every gang starts on the block.' },
+  Common: { signal: 'Corner lights', title: 'Someone stepped up.', callout: 'The neighborhood keeps producing fighters.' },
+  Uncommon: { signal: 'Green room open', title: 'The room shifts.', callout: 'There is more technique in this one.' },
+  Rare: { signal: 'Blue corner lit', title: 'The crowd gets louder.', callout: 'A rare name is walking through the ropes.' },
+  Epic: { signal: 'Crimson pressure', title: 'The whole gym stands.', callout: 'A super rare fighter answers the bell.' },
+  Legendary: { signal: 'Championship metal', title: 'History enters the ring.', callout: 'The chain only shines for a legend.' },
+  Mythical: { signal: 'The block goes silent', title: 'A myth takes the floor.', callout: 'You will remember this pull.' },
+  currency: { signal: 'Locker bonus', title: 'The corner came through.', callout: 'Put it back into the gang.' },
+};
+const PUBLIC_BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+const rewardRarity = (reward: PackReward | undefined) =>
+  reward?.rarity && reward.rarity in RARITY_RANK ? reward.rarity : 'currency';
+
+function highestRarity(rewards: readonly PackReward[]) {
+  return rewards.reduce(
+    (best, reward) => ((RARITY_RANK[reward.rarity ?? ''] ?? -2) > (RARITY_RANK[best] ?? -2) ? reward.rarity! : best),
+    'Common',
+  );
+}
 
 const resourceName = (reward: PackReward) =>
   reward.kind === 'styleShards' ? 'Style shards' : reward.kind === 'softCurrency' ? 'Clout' : (reward.name ?? 'Card');
@@ -51,12 +92,11 @@ const resourceName = (reward: PackReward) =>
 // "GUARANTEED RARE" reward on the ten-pull reveal. Returns -1 if none —
 // callers should still render the haul but skip the highlight.
 function indexOfRarestReward(rewards: readonly PackReward[]): number {
-  const rarityRank: Record<string, number> = { Rare: 1, Epic: 2, Legendary: 3, Mythical: 4 };
   let bestIndex = -1;
-  let bestRank = 0;
+  let bestRank = 1;
   for (let i = 0; i < rewards.length; i++) {
     const rarity = rewards[i].rarity ?? '';
-    const rank = rarityRank[rarity] ?? 0;
+    const rank = RARITY_RANK[rarity] ?? -2;
     if (rank > bestRank) {
       bestRank = rank;
       bestIndex = i;
@@ -65,18 +105,27 @@ function indexOfRarestReward(rewards: readonly PackReward[]): number {
   return bestIndex;
 }
 
+const rewardDisplayName = (reward: PackReward) => {
+  const card = reward.cardId ? catalogCardById[reward.cardId] : undefined;
+  return card?.name ?? reward.name ?? resourceName(reward);
+};
+
 function RewardCard({ reward, large = false }: { reward: PackReward; large?: boolean }) {
   const card = reward.cardId ? catalogCardById[reward.cardId] : undefined;
+  const isDuplicate = reward.kind === 'styleShards' && Boolean(card);
   return (
-    <div className={`gym-reward ${large ? 'gym-reward--large' : ''}`} data-rarity={reward.rarity?.toLowerCase()}>
-      {card && (reward.kind === 'card' || reward.kind === 'variant') ? (
+    <div
+      className={`gym-reward ${large ? 'gym-reward--large' : ''} ${isDuplicate ? 'gym-reward--duplicate' : ''}`}
+      data-rarity={rewardRarity(reward).toLowerCase()}
+    >
+      {card && (reward.kind === 'card' || reward.kind === 'variant' || isDuplicate) ? (
         <CardView
           card={card}
           variantId={reward.variantId ?? undefined}
           isInspector={large}
           fillContainer
           presentationOnly
-          inspectable
+          inspectable={large}
           disableLayout
           className="w-full"
         />
@@ -85,11 +134,19 @@ function RewardCard({ reward, large = false }: { reward: PackReward; large?: boo
           <GameGlyph name={reward.kind === 'styleShards' ? 'shards' : 'clout'} />
           <strong>+{reward.amount}</strong>
           <span>{resourceName(reward)}</span>
-          {card && <small>Duplicate: {card.name}</small>}
         </div>
       )}
       {reward.isNew && reward.kind !== 'variant' && <span className="gym-reward__new">NEW FIND</span>}
       {reward.kind === 'variant' && <span className="gym-reward__new">STYLE UNLOCKED</span>}
+      {isDuplicate && (
+        <div className="gym-reward__conversion">
+          <GameGlyph name="shards" />
+          <span>
+            Already on your gang
+            <strong>+{reward.amount} Style Shards</strong>
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -146,6 +203,17 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const hitCap = HITS_PER_PULL[pullSize];
   const hitsPerClick = HITS_PER_CLICK[pullSize];
   const rareHighlightIndex = isTenPull ? indexOfRarestReward(rewards) : -1;
+  const rareHighlightReward = rareHighlightIndex >= 0 ? rewards[rareHighlightIndex] : undefined;
+  const arrangedRewards = rareHighlightReward
+    ? [...rewards.filter((_, index) => index !== rareHighlightIndex), rareHighlightReward]
+    : rewards;
+  const landedStrikes = Math.min(3, Math.ceil(hits / hitsPerClick));
+  const beatIndex = Math.min(2, landedStrikes);
+  const fightBeat = FIGHT_BEATS[beatIndex];
+  const omenRarity = highestRarity(rewards);
+  const currentReward = arrangedRewards[revealIndex];
+  const currentRarity = rewardRarity(currentReward);
+  const ceremony = RARITY_CEREMONY[currentRarity] ?? RARITY_CEREMONY.currency;
 
   useEffect(() => {
     mounted.current = true;
@@ -182,6 +250,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   const reveal = () => {
     sendScene(frame, { type: 'reset' });
+    setRevealIndex(0);
     setPhase(reduced ? 'summary' : 'reveal');
   };
   const handleOpen = async (method: Payment, size: PullSize = 1) => {
@@ -273,6 +342,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           type: 'arm',
           targetHits: HITS_PER_PULL[requestedSize],
           hitsPerPunch: HITS_PER_CLICK[requestedSize],
+          omen: highestRarity(result.rewards),
         });
         setPhase(requestedSize === 10 ? 'tenPunching' : 'punching');
         if (window.matchMedia('(max-width: 760px)').matches)
@@ -305,7 +375,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       return;
     }
     setRush(true);
-    sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage);
+    sendScene(frame, { type: 'punch', intensity: fightBeat.intensity } satisfies ScenePunchMessage);
     // The 10-pull's auto-rush tempo is faster than the single pack's. Three
     // hits per tick keeps the bag "dismantling" feel rather than a slow
     // metronome of single punches.
@@ -314,6 +384,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       isTenPull ? 180 : 260,
     );
   }
+  function landStrike() {
+    if (!sceneReady) return;
+    sendScene(frame, { type: 'punch', intensity: fightBeat.intensity } satisfies ScenePunchMessage);
+    if ('vibrate' in navigator) navigator.vibrate(fightBeat.intensity === 'finisher' ? [24, 35, 55] : 18);
+  }
   const showInfo = (tab: 'odds' | 'history') => {
     setInfo(tab);
     infoDialog.current?.showModal();
@@ -321,11 +396,14 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <div
-      className="gym venue-page studio-page gacha-stage"
+      className="gym venue-page studio-page gacha-stage world-decor-host"
       data-phase={phase}
       data-pull-size={pullSize}
       data-reduced-motion={reduced}
+      data-round={isPunching ? beatIndex + 1 : undefined}
+      data-omen={omenRarity.toLowerCase()}
     >
+      <PageDecor theme="market" />
       <div className="gym__arena" ref={arena}>
         <SceneFrame
           kind="gym"
@@ -373,7 +451,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <>
               Step up. Break the bag.
               <br />
-              Meet your next crew member.
+              Meet your next gang member.
             </>
           )}
         </p>
@@ -462,7 +540,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                         disabled={phase !== 'idle' || (!affordable && !pending)}
                         onClick={() => void handleOpen(method, 1)}
                       >
-                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
+                        <GameGlyph name={ticket ? 'ticket' : 'cloutTicket'} />
                         <span>
                           {phase === 'requesting'
                             ? 'Securing your drop…'
@@ -495,7 +573,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                         disabled={phase !== 'idle' || (!affordable && !pending)}
                         onClick={() => void handleOpen(method, 10)}
                       >
-                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
+                        <GameGlyph name={ticket ? 'ticket' : 'cloutTicket'} />
                         <span>
                           {phase === 'requesting'
                             ? 'Securing your 10…'
@@ -539,39 +617,42 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="gacha-stage__ringside">
         {isPunching ? (
           <>
-            <div className="gacha-stage__combo" aria-live="polite">
-              <ProgressRing value={hits} max={hitCap} label="Hits to reveal">
-                <strong>{String(hits).padStart(2, '0')}</strong>
+            <div className="gacha-stage__rounds" aria-label="Fight progress">
+              {FIGHT_BEATS.map((beat, index) => (
+                <span
+                  key={beat.round}
+                  className={index < landedStrikes ? 'is-landed' : index === beatIndex ? 'is-live' : ''}
+                >
+                  <b>{index + 1}</b>
+                  <small>{beat.round}</small>
+                </span>
+              ))}
+            </div>
+            <div className="gacha-stage__combo" key={hits} aria-live="polite">
+              <ProgressRing value={landedStrikes} max={3} label="Rounds to reveal">
+                <strong>{landedStrikes}<small>/3</small></strong>
               </ProgressRing>
               <div>
-                <strong>
-                  {isTenPull
-                    ? hits >= Math.floor(hitCap * 0.75)
-                      ? 'Finish it.'
-                      : hits >= Math.floor(hitCap * 0.4)
-                        ? 'Keep that energy.'
-                        : 'Triple combo, keep it rolling.'
-                    : hits >= 9
-                      ? 'Finish it.'
-                      : hits >= 5
-                        ? 'Keep that energy.'
-                        : 'Make some noise.'}
-                </strong>
-                <span>
-                  {hits} of {hitCap} hits ·{' '}
-                  {isTenPull ? 'Triple combo lands three at once' : 'The drop is yours'}
-                </span>
+                <span className="studio-eyebrow">{fightBeat.round}</span>
+                <strong>{fightBeat.move}</strong>
+                <span>{fightBeat.direction}</span>
               </div>
             </div>
             <div className="gacha-stage__punch-actions">
               <button
-                className="studio-action studio-action--gold"
+                className={`studio-action studio-action--gold gacha-stage__strike gacha-stage__strike--${fightBeat.intensity}`}
                 disabled={!sceneReady}
-                onClick={() => sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage)}
+                onClick={landStrike}
               >
                 <GameGlyph name="fight" />
-                {isTenPull ? 'Triple-combo punch' : 'Punch the bag'}
-                <small>+{hitsPerClick}</small>
+                {fightBeat.intensity === 'finisher'
+                  ? 'Launch the finisher'
+                  : isTenPull
+                    ? `${fightBeat.intensity === 'heavy' ? 'Triple hook' : 'Triple jab'}`
+                    : fightBeat.intensity === 'heavy'
+                      ? 'Throw the hook'
+                      : 'Snap the jab'}
+                <small>{isTenPull ? `×${hitsPerClick}` : fightBeat.intensity.toUpperCase()}</small>
               </button>
               <button className="studio-action" disabled={!sceneReady} aria-pressed={rush} onClick={toggleRush}>
                 {rush ? 'Pause rush' : 'Auto rush'}
@@ -607,12 +688,21 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         ref={rewardDialog}
         className="gym-results studio-results gacha-results"
         data-pull-size={pullSize}
+        data-phase={phase}
+        data-rarity={currentRarity.toLowerCase()}
         aria-labelledby="gym-results-title"
         onCancel={(e) => {
           e.preventDefault();
           finish();
         }}
       >
+        <div className="gacha-results__atmosphere" aria-hidden="true">
+          <span className="gacha-results__spotlight gacha-results__spotlight--left" />
+          <span className="gacha-results__spotlight gacha-results__spotlight--right" />
+          <span className="gacha-results__smoke" />
+          <img className="gacha-results__impact" src={`${PUBLIC_BASE}brand/gacha/knockout-impact.webp`} alt="" />
+          <img className="gacha-results__stage-art" src={`${PUBLIC_BASE}brand/gacha/ringside-reveal-stage.webp`} alt="" />
+        </div>
         <div className="gym-results__header">
           <span className="studio-eyebrow">
             {isTenPull
@@ -627,54 +717,64 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <X size={20} />
           </button>
         </div>
+        <div className="gacha-results__signal" aria-hidden="true">
+          <span />
+          <b>{phase === 'reveal' ? ceremony.signal : 'Fight night haul'}</b>
+          <span />
+        </div>
         <GameGlyph name="pack" className="gacha-results__emblem" />
         <h2 id="gym-results-title">
-          {phase === 'reveal' ? 'Look who showed up.' : isTenPull ? 'Meet the 10× haul.' : 'Meet the haul.'}
+          {phase === 'reveal' ? ceremony.title : isTenPull ? 'Your main event lineup.' : 'Meet the haul.'}
         </h2>
         <p>
           {phase === 'reveal'
-            ? `Reward ${revealIndex + 1} of ${rewards.length}`
+            ? `${ceremony.callout} · Reveal ${revealIndex + 1} of ${arrangedRewards.length}`
             : preview
               ? 'A taste of the drop. Your real collection is unchanged.'
               : isTenPull
                 ? 'Ten packs. Sixty rewards. One guaranteed Rare+ — find it highlighted.'
                 : 'Added to your collection. Now put them to work.'}
         </p>
-        {phase === 'reveal' && rewards[revealIndex] ? (
-          <div className="gym-results__single">
+        {phase === 'reveal' && currentReward ? (
+          <div className="gym-results__single" data-rarity={currentRarity.toLowerCase()}>
             <RewardCard
               key={revealIndex}
-              reward={rewards[revealIndex]}
+              reward={currentReward}
               large
             />
-            <h3>{rewards[revealIndex].name ?? resourceName(rewards[revealIndex])}</h3>
+            <h3>{rewardDisplayName(currentReward)}</h3>
             <span className="studio-eyebrow">
-              {CARD_RARITY_DEFINITIONS[rewards[revealIndex].rarity as CardRarity]?.label ?? 'Currency'}
-              {isTenPull && revealIndex === rareHighlightIndex && (
+              {CARD_RARITY_DEFINITIONS[currentReward.rarity as CardRarity]?.label ?? 'Gang resource'}
+              {isTenPull && currentReward === rareHighlightReward && (
                 <span className="gacha-results__badge"> · GUARANTEED RARE+</span>
               )}
             </span>
+            {currentReward.kind === 'styleShards' && currentReward.cardId && (
+              <p className="gacha-results__conversion-note">
+                Full fighter reveal complete. The extra copy powered up your gang with {currentReward.amount} Style Shards.
+              </p>
+            )}
           </div>
         ) : (
           <div
             className={`gym-results__grid${isTenPull ? ' gym-results__grid--ten' : ''}`}
             data-pull-size={pullSize}
           >
-            {rewards.map((reward, i) => (
+            {arrangedRewards.map((reward, i) => (
               <button
                 key={i}
-                className={`gym-results__item${isTenPull && i === rareHighlightIndex ? ' gym-results__item--rare' : ''}`}
-                aria-label={`Inspect ${reward.name ?? resourceName(reward)}`}
+                className={`gym-results__item${isTenPull && reward === rareHighlightReward ? ' gym-results__item--rare' : ''}`}
+                aria-label={`Inspect ${rewardDisplayName(reward)}`}
                 onClick={() => {
                   setRevealIndex(i);
                   setPhase('reveal');
                 }}
               >
                 <RewardCard reward={reward} />
-                <strong>{reward.name ?? resourceName(reward)}</strong>
+                <strong>{rewardDisplayName(reward)}</strong>
                 <small>
                   {CARD_RARITY_DEFINITIONS[reward.rarity as CardRarity]?.label ?? `+${reward.amount}`}
-                  {isTenPull && i === rareHighlightIndex && (
+                  {isTenPull && reward === rareHighlightReward && (
                     <span className="gacha-results__badge"> · GUARANTEED</span>
                   )}
                 </small>
@@ -688,11 +788,15 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <button
                 className="studio-action studio-action--gold"
                 onClick={() => {
-                  if (revealIndex + 1 < rewards.length) setRevealIndex(revealIndex + 1);
+                  if (revealIndex + 1 < arrangedRewards.length) setRevealIndex(revealIndex + 1);
                   else setPhase('summary');
                 }}
               >
-                {revealIndex + 1 < rewards.length ? 'Next reward' : 'View the haul'}
+                {revealIndex + 1 < arrangedRewards.length
+                  ? revealIndex + 2 === arrangedRewards.length && rareHighlightReward
+                    ? 'Reveal the headliner'
+                    : 'Next reveal'
+                  : 'View the haul'}
                 <ArrowRight size={18} />
               </button>
               <button className="studio-text-action" onClick={() => setPhase('summary')}>

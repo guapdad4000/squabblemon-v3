@@ -57,7 +57,7 @@ function bootstrap(step: Step, claimed = false): PlayerBootstrap {
       id: complete ? 'enter-story' : `onboarding-${step}`,
       eyebrow: complete ? 'Chapter One' : 'Rookie Road',
       title: complete ? 'Enter the story' : 'Finish setup',
-      description: complete ? 'Your crew is ready.' : 'Complete the next Rookie Road step.',
+      description: complete ? 'Your gang is ready.' : 'Complete the next Rookie Road step.',
       destination: complete ? 'story' : 'onboarding',
       rewardLabel: null,
     },
@@ -175,12 +175,12 @@ test('Rookie Road survives refreshes, claims once, and clears account cache on s
   await expect(page.getByRole('button', { name: 'Start Tutorial' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Start Tutorial' }).click();
-  await page.getByRole('button', { name: 'Complete guided test match' }).click();
-  await expect(page.getByRole('button', { name: 'Tutorial Complete · Choose Your Crew' })).toBeVisible();
-  await page.getByRole('button', { name: 'Tutorial Complete · Choose Your Crew' }).click();
-  await expect(page.getByText('Pick Your Crew')).toBeVisible();
+  await page.getByRole('button', { name: 'Complete guided test fade' }).click();
+  await expect(page.getByRole('button', { name: 'Tutorial Complete · Choose Your Gang' })).toBeVisible();
+  await page.getByRole('button', { name: 'Tutorial Complete · Choose Your Gang' }).click();
+  await expect(page.getByText('Pick Your Gang')).toBeVisible();
   await page.reload();
-  await expect(page.getByText('Pick Your Crew')).toBeVisible();
+  await expect(page.getByText('Pick Your Gang')).toBeVisible();
   await page.getByRole('button', { name: /^Claim / }).click();
   await expect(page.getByText('Welcome to the Streets')).toBeVisible();
   await page.reload();

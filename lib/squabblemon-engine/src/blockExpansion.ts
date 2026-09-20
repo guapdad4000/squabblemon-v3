@@ -17,11 +17,11 @@ export const BLOCK_EXPANSION = [
   ['dancecaptain', 'dance-circle-captain', 'Dance Circle Captain', 'Rare', 'Fire', 3, 3, 'Whole Block Moving', 'If you have a friendly card in all three districts, gain +3 Hands.', 'Pressure'],
   ['nightmedic', 'night-shift-medic', 'Night Shift Medic', 'Rare', 'Light', 3, 4, 'All Clear', 'Cleanse freeze and silence from every other friendly card here.', 'Support'],
   ['subwaymagician', 'subway-magician', 'Subway Magician', 'Rare', 'Dark', 4, 3, 'Now You See Me', 'On Reveal: Apply Weaken to the highest-Hands enemy here, then move to your weakest other district.', 'Movement'],
-  ['ogdominican', 'og-dominican', 'OG Dominican', 'Rare', 'Air', 3, 3, 'Block Shortcut', 'Move to your weakest other district. If moved, gain +2 Hands.', 'Movement'],
+  ['ogdominican', 'og-dominican', 'OG Dominican', 'Rare', 'Air', 3, 4, 'Block Shortcut', 'Move to your weakest other district. If moved, gain +2 Hands.', 'Movement'],
   ['conductor', 'last-train-conductor', 'Last Train Conductor', 'Mythical', 'Water', 4, 3, 'Last Stop', 'Move your lowest-Hands other ally here to your weakest other district. If moved, give it +3 Hands.', 'Movement'],
   ['midnightmayor', 'midnight-mayor', 'Midnight Mayor', 'Mythical', 'Dark', 3, 2, 'Keys to the City', 'Gain +1 Hands for each different friendly card type here, up to +3.', 'Pressure'],
   ['bigzoey', 'big-zoey', 'Big Zoey', 'Legendary', 'Earth', 3, 2, 'Hold the Block', 'Give your lowest-Hands other ally here +2 Hands and the lowest-Hands enemy here -2 Hands.', 'Disruption'],
-  ['leroy', 'leroy', 'Leroy', 'Mythical', 'Light', 5, 5, 'Golden Glow', 'If your board has at least three different friendly card types, gain +1 Hands and give the highest-Hands enemy here -3 Hands.', 'Disruption'],
+  ['leroy', 'leroy', 'Leroy', 'Mythical', 'Light', 3, 4, 'Golden Glow', 'If your board has at least three different friendly card types, gain +1 Hands and give the highest-Hands enemy here -2 Hands.', 'Disruption'],
   ['partytitan', 'block-party-titan', 'Block Party Titan', 'Mythical', 'Earth', 6, 7, 'Everybody Outside', 'Give your lowest-Hands other friendly card in each district +1 Hands.', 'Support'],
 ] as const;
 

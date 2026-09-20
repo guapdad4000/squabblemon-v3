@@ -6,7 +6,9 @@ import {
   type CardRarity,
 } from '../data';
 
-export function getCardRarity(cardId: string): CardRarity {
+export function getCardRarity(cardId: string, kind?: 'character' | 'support' | 'token'): CardRarity {
+  // Summons are board-only cards, so they have no collectible catalog entry.
+  if (kind === 'token') return cardId === 'smile-bomb' ? 'Common' : 'Mythical';
   const card = catalogCardById[cardId] ?? catalogCardByEngineId[cardId];
   if (!card) throw new Error(`Cannot render rarity for unknown card ${cardId}`);
   return card.rarity;

@@ -59,7 +59,7 @@ function cleanup(t: test.TestContext, clerkUserId: string) {
   });
 }
 
-test("simultaneous match completions return one persisted reward and credit it once", async (t) => {
+test("simultaneous fade completions return one persisted reward and credit it once", async (t) => {
   const clerkUserId = `match-retry-${randomUUID()}`;
   cleanup(t, clerkUserId);
   await db.insert(playerProfilesTable).values({
@@ -72,7 +72,7 @@ test("simultaneous match completions return one persisted reward and credit it o
       missionKey: "daily-show-up",
       cadence: "daily",
       title: "Show Up",
-      description: "Finish one match.",
+      description: "Finish one fade.",
       goal: 1,
       rewardCurrency: "softCurrency",
       rewardAmount: 100,
@@ -83,7 +83,7 @@ test("simultaneous match completions return one persisted reward and credit it o
       missionKey: "daily-take-room",
       cadence: "daily",
       title: "Take A Room",
-      description: "Win one match.",
+      description: "Win one fade.",
       goal: 1,
       rewardCurrency: "softCurrency",
       rewardAmount: 150,
@@ -94,7 +94,7 @@ test("simultaneous match completions return one persisted reward and credit it o
       missionKey: "weekly-main-character",
       cadence: "weekly",
       title: "Main Character Week",
-      description: "Finish five matches.",
+      description: "Finish five fades.",
       goal: 5,
       rewardCurrency: "packTickets",
       rewardAmount: 2,
@@ -205,7 +205,7 @@ test("simultaneous completions grant participating card XP once and persist the 
   assert.deepEqual(profile.cardProgression[playedCardId], { xp: 120, level: 2, moveTier: 0 });
 });
 
-test("a legacy active match rebuilds its snapshot from the server-owned roster", async (t) => {
+test("a legacy active fade rebuilds its snapshot from the server-owned roster", async (t) => {
   const clerkUserId = `card-xp-legacy-${randomUUID()}`;
   cleanup(t, clerkUserId);
   const verifiedMatch = matchWithPlayedPlayerCard();
@@ -300,7 +300,7 @@ test("a cadence reset racing a claim cannot reopen an expired claimed mission", 
     missionKey: "daily-show-up",
     cadence: "daily",
     title: "Show Up",
-    description: "Finish one match.",
+    description: "Finish one fade.",
     progress: 1,
     goal: 1,
     rewardCurrency: "softCurrency",
@@ -325,7 +325,7 @@ test("a cadence reset racing a claim cannot reopen an expired claimed mission", 
   assert.equal((await profileFor(clerkUserId)).softCurrency, 0);
 });
 
-test("a cadence reset racing match completion preserves current-period progress", async (t) => {
+test("a cadence reset racing fade completion preserves current-period progress", async (t) => {
   const clerkUserId = `match-reset-${randomUUID()}`;
   cleanup(t, clerkUserId);
   await db.insert(playerProfilesTable).values({
@@ -337,7 +337,7 @@ test("a cadence reset racing match completion preserves current-period progress"
     missionKey: "daily-show-up",
     cadence: "daily",
     title: "Show Up",
-    description: "Finish one match.",
+    description: "Finish one fade.",
     progress: 1,
     goal: 3,
     rewardCurrency: "softCurrency",

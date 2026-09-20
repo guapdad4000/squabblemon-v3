@@ -6,7 +6,7 @@ import { cards, catalogCardByEngineId } from '@workspace/squabblemon-engine/data
 import { createMatch, createCardInstance, playCard, type Match } from '@workspace/squabblemon-engine/gameEngine';
 import { createCardProgressionSnapshot } from './cardProgression';
 
-test('experiment claims, match retries, and bootstrap normalization preserve one reward', {skip:!process.env.DATABASE_URL}, async t => {
+test('experiment claims, fade retries, and bootstrap normalization preserve one reward', {skip:!process.env.DATABASE_URL}, async t => {
   const { db, pool, playerProfilesTable, playerMatchesTable } = await import('@workspace/db');
   const { eq } = await import('drizzle-orm');
   const { ensurePlayer, getPlayerBootstrap } = await import('./playerState');
