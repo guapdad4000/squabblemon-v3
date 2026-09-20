@@ -10,7 +10,7 @@ import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-e
 import { CardRarityTreatment, getCardRarity, getRarityClass } from './CardRarityTreatment';
 import { CardUpgradeCue } from './CardUpgrades';
 import { Card, getCardImage } from '../data';
-import { cardEntryAccent } from '@workspace/squabblemon-engine/data';
+import { canonicalElement, cardEntryAccent } from '@workspace/squabblemon-engine/data';
 import { CARD_RARITY_DEFINITIONS } from '../data';
 import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
 import { CardFoil } from './CardFoil';
@@ -193,7 +193,7 @@ function CardViewComponent({
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
 
           <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/5 font-display font-black text-5xl md:text-7xl italic uppercase pointer-events-none z-0 whitespace-nowrap rotate-[-15deg]">
-            {card.type}
+            {canonicalElement(card.type)}
           </div>
 
           <div className={`absolute inset-0 bg-gradient-to-t from-zinc-900 to-zinc-800/20 ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''} z-0`} />
@@ -245,7 +245,7 @@ function CardViewComponent({
                 <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{card.kind === 'token' ? 'Summon' : CARD_RARITY_DEFINITIONS[rarity].label}
               </span>
               <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest text-[var(--rarity-color)] leading-none bg-black/40 px-1 py-0.5">
-                {card.kind === 'support' ? `Support · ${card.type}` : card.type}
+                {card.kind === 'support' ? `Support · ${canonicalElement(card.type)}` : canonicalElement(card.type)}
               </span>
               {variantKind && (
                 <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-[var(--rarity-color)] border border-white/20 leading-none shadow-sm ml-auto">

@@ -1,4 +1,4 @@
-import { cards, catalogCardByEngineId, catalogIdsToEngineIds, decks, DECK_SIZE, MAX_MOTION, districts as legacyDistricts, type Card, type Deck } from './data';
+import { canonicalElement, cards, catalogCardByEngineId, catalogIdsToEngineIds, decks, DECK_SIZE, MAX_MOTION, districts as legacyDistricts, type Card, type Deck } from './data';
 import { validateDistrictSnapshot, type DistrictSnapshot, type DistrictDisplay } from './districts';
 import { expansionCards } from './blockExpansion';
 import { streetWaveCards } from './streetWave';
@@ -331,7 +331,7 @@ export function getDistrictCardBonusForMatch(match: Match, card: CardInstance, l
 export function getDistrictSharedBonus(match: Match, owner: Owner, laneIndex: Lane, allies = match.boards[laneIndex].filter(c => c.owner === owner)): number {
   allies = allies.filter(ally => !ally.hazard);
   const effect = match.districtSnapshot?.locations[laneIndex].effect;
-  const local = effect?.kind === 'diversity' && new Set(allies.map(c => c.type)).size >= effect.types ? effect.amount : 0;
+  const local = effect?.kind === 'diversity' && new Set(allies.map(c => canonicalElement(c.type))).size >= effect.types ? effect.amount : 0;
   let broadcast = 0;
   for (const [i, district] of (match.districtSnapshot?.locations ?? []).entries()) {
     const rule = district.effect;
@@ -349,7 +349,7 @@ export function getMatchDistricts(match?: Match | null, owner: Owner = 'player')
     if (effect.kind === 'comeback') status = runtime.roundPlays[owner][i] ? 'First play used this round' : runtime.trailing[owner][i] ? `Your comeback: +${effect.amount} ready` : 'You did not start behind';
     if (effect.kind === 'detain-first') status = runtime.plays[owner][i] ? 'Your first arrival recorded' : 'Your first arrival will be held';
     if (effect.kind === 'penthouse') status = match.round < effect.changesAtRound ? `Solo +${effect.solo} · Gang +${effect.crew} in R${effect.changesAtRound}` : `Party is on · +${effect.crew} per card`;
-    if (effect.kind === 'diversity') status = `${new Set(match.boards[i].filter(c => !c.hazard && c.owner === owner).map(c => c.type)).size}/${effect.types} card types in your gang`;
+    if (effect.kind === 'diversity') status = `${new Set(match.boards[i].filter(c => !c.hazard && c.owner === owner).map(c => canonicalElement(c.type))).size}/${effect.types} card types in your gang`;
     if (effect.kind === 'late-arrival') status = match.round < effect.startsAtRound ? `Spotlight starts R${effect.startsAtRound}` : runtime.roundPlays[owner][i] ? 'Your spotlight used this round' : `Your spotlight: +${effect.amount} ready`;
     if (effect.kind === 'subway') status = runtime.roundPlays[owner][i] ? 'Your ride used this round' : `Next stop: ${match.districtSnapshot!.locations[(i + 1) % 3].name}`;
     if (effect.kind === 'outnumber') {
@@ -551,12 +551,11 @@ const ELEMENTAL_MATCHUP_BONUS: Record<string, Record<string, number>> = {
   Electric: { Water: 1 },
   Air: { Electric: 1 },
   Earth: { Electric: 1 },
-  Rock: { Electric: 1 },
   Light: { Dark: 1 },
   Dark: { Light: 1 },
 };
 const elementalMatchupBonus = (attackerType: string, defenderType: string): number =>
-  ELEMENTAL_MATCHUP_BONUS[attackerType]?.[defenderType] ?? 0;
+  ELEMENTAL_MATCHUP_BONUS[canonicalElement(attackerType)]?.[canonicalElement(defenderType)] ?? 0;
 
 const applyBurn = (m: Match, source: CardInstance, target: CardInstance, stacks: number, note: string): Match => {
   if (target.statuses.uncounterable) {
@@ -567,7 +566,7 @@ const applyBurn = (m: Match, source: CardInstance, target: CardInstance, stacks:
   return targetEnemy(m, source, target, c => ({
     ...c,
     statuses: { ...c.statuses, burnStacks: (c.statuses.burnStacks ?? 0) + total },
-    lastEffectNote: bonus ? `${note} (+${bonus} ${source.type}→${target.type})` : note,
+    lastEffectNote: bonus ? `${note} (+${bonus} ${canonicalElement(source.type)}→${canonicalElement(target.type)})` : note,
   }));
 };
 const applyWeaken = (m: Match, source: CardInstance, target: CardInstance, note: string): Match =>
@@ -734,9 +733,9 @@ const applyOngoingRoundEndHandEffects = (m: Match): Match => {
   let result = m;
   for (const hand of [result.playerHand, result.cpuHand] as const) {
     for (const card of hand) {
-      const bond = card.elementalBond;
+      const bond = card.elementalBond && canonicalElement(card.elementalBond);
       if (!bond) continue;
-      const allies = result.boards.flat().filter(c => !c.hazard && c.owner === card.owner && c.kind !== 'support' && c.type === bond && c.instanceId !== card.instanceId);
+      const allies = result.boards.flat().filter(c => !c.hazard && c.owner === card.owner && c.kind !== 'support' && canonicalElement(c.type) === bond && c.instanceId !== card.instanceId);
       for (const ally of allies) {
         result = modify(result, ally.instanceId, c => ({
           ...c,
@@ -883,7 +882,7 @@ const targetEnemyBurnAndPowerReduction = (
   const reducedAmount = Math.min(0, amount + (mitigation ? 1 : 0));
   const matchupBonus = elementalMatchupBonus(source.type, target.type);
   const burnStacks = stacks + matchupBonus;
-  const appliedNote = matchupBonus ? `${note} (+${matchupBonus} ${source.type}→${target.type})` : note;
+  const appliedNote = matchupBonus ? `${note} (+${matchupBonus} ${canonicalElement(source.type)}→${canonicalElement(target.type)})` : note;
   const previousBurn = target.statuses.burnStacks ?? 0;
   let result = targetEnemy(m, source, target, c => ({
     ...c,
@@ -1351,7 +1350,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     note(targets.length ? `${source.ability} gave ${targets.length} allies +${amount} Hands.` : `${source.ability} needs another friendly card.`);
   }
   else if (source.cardId === 'mural') {
-    const diverse = inLane(m, source.owner, l).some(c => c.instanceId !== source.instanceId && c.type !== source.type);
+    const diverse = inLane(m, source.owner, l).some(c => c.instanceId !== source.instanceId && canonicalElement(c.type) !== canonicalElement(source.type));
     const target = highest(inLane(m, enemy, l));
     if (diverse && target) {
       targetIds.add(target.instanceId);
@@ -1367,7 +1366,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       : source.cardId === 'dogwalker' ? allies.length >= 2
       : source.cardId === 'dancecaptain' ? m.boards.every(board => board.some(c => c.owner === source.owner)) : true;
     const amount = source.cardId === 'dogwalker' ? 2 : source.cardId === 'dancecaptain' ? 3
-      : source.cardId === 'midnightmayor' ? Math.min(3, new Set(inLane(m, source.owner, l).map(c => c.type)).size) : 1;
+      : source.cardId === 'midnightmayor' ? Math.min(3, new Set(inLane(m, source.owner, l).map(c => canonicalElement(c.type))).size) : 1;
     if (succeeds) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
     note(succeeds ? `${source.ability}: +${amount} Hands.` : `${source.ability}: condition not met.`);
   }
@@ -1427,7 +1426,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     note(ally || target ? 'Hold the Block shifted the district.' : 'Hold the Block found no other cards.');
   }
   else if (source.cardId === 'leroy') {
-    const succeeds = new Set(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner).map(c => c.type)).size >= 3;
+    const succeeds = new Set(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner).map(c => canonicalElement(c.type))).size >= 3;
     if (succeeds) {
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Golden Glow: +1 Hands.' }));
       const target = highest(inLane(m, enemy, l));

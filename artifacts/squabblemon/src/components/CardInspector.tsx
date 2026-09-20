@@ -12,7 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { CardProgress } from './CardProgress';
 import { getVariantKind } from './CardVariantTreatment';
-import { catalogCardByEngineId, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
+import { canonicalElement, catalogCardByEngineId, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
@@ -186,7 +186,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             </span>
             <span className="dossier-banner__stamp" aria-hidden="true" />
             <span className="dossier-banner__meta">
-              {card.type} class · {card.cost} motion · {rarityLabel}
+              {canonicalElement(card.type)} class · {card.cost} motion · {rarityLabel}
             </span>
           </header>
 
@@ -213,7 +213,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
               <div className="dossier-stat" role="listitem">
                 <span className="dossier-stat__pin" aria-hidden="true" />
                 <div className="dossier-stat__label">Class</div>
-                <div className="dossier-stat__value">{card.type}</div>
+                <div className="dossier-stat__value">{canonicalElement(card.type)}</div>
                 <div className="dossier-stat__sub">Energy type</div>
               </div>
               <div className="dossier-stat" role="listitem">

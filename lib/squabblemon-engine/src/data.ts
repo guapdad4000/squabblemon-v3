@@ -8,6 +8,9 @@ import { mythicLegendCards, mythicLegendRarities, mythicLegendUpgradeEffects } f
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
 
+/** Rock was merged into Earth; older battle snapshots can still carry its former name. */
+export const canonicalElement = (type: string): string => type === 'Rock' ? 'Earth' : type;
+
 export type Card = {
   id: string;
   name: string;
@@ -47,7 +50,7 @@ export type Card = {
 
 /** Resolve the per-card entry accent, falling back to a card-type-derived color. */
 export const cardEntryAccent = (card: Card): string =>
-  card.entryVfx?.accent ?? card.portraitAccent ?? defaultEntryAccent(card.type);
+  card.entryVfx?.accent ?? card.portraitAccent ?? defaultEntryAccent(canonicalElement(card.type));
 
 const defaultEntryAccent = (type: string): string => {
   const t = type.toLowerCase();
@@ -220,7 +223,7 @@ export const cards: Record<string, Card> = {
   bottle: { id: "bottle-girl", name: "Bottle Girl", type: "Poison", cost: 2, power: 3, ability: "Last Call", effect: "On Reveal: If played on Round 4 or later, gain +2 Hands. Your next 2-Cost card costs 1 less Motion.", abilityUpgrades: upgrades("bottle", [["After Hours", "Last Call grants +1 Hands to Bottle Girl.", "VIP Section", "Last Call grants +1 Hands to Bottle Girl.", "Closing Time", "Last Call grants +1 Hands to Bottle Girl."]]) },
   sneaker: { id: "sneaker-reseller", name: "Sneaker Reseller", type: "Normal", cost: 3, power: 3, ability: "Flip Season", effect: "On Reveal: Gain +X Hands where X is the printed Power of the highest-Hands enemy on the board, up to +7. Apply Weaken to that enemy.", abilityUpgrades: upgrades("sneaker", [["Authenticated", "Flip Season grants +1 Hands to Sneaker Reseller.", "Markup", "Flip Season grants +1 Hands to Sneaker Reseller.", "Sold Out", "Flip Season grants +1 Hands to Sneaker Reseller."]]) },
   church: { id: "church-auntie", name: "Church Auntie", type: "Light", cost: 3, power: 4, artworkLayout: "portrait", ability: "Covered", effect: "On Reveal: Give your lowest-Hands other ally here +2 Hands and Protect. Ongoing: While on board, the first time each round protection blocks a hostile effect on one of your Light characters, it gains +2 Hands.", abilityUpgrades: upgrades("church", [["Prayer Circle", "Covered grants +1 Hands to its friendly target.", "Sunday Best", "Covered grants +1 Hands to Church Auntie.", "Amen Corner", "Covered grants +1 Hands to its friendly target."]]) },
-  landlord: { id: "landlord", name: "Landlord", type: "Rock", cost: 4, power: 6, ability: "Rent Due", effect: "Ongoing: The first enemy card played at this district each round costs 1 additional Motion.", roles: ["Disruption"], abilityUpgrades: upgrades("landlord", [["Late Fee", "Rent Due grants +1 Hands to Landlord.", "Lease Renewal", "Rent Due grants +1 Hands to Landlord.", "Keyholder", "Rent Due grants +1 Hands to Landlord."]]), entryVfx: { accent: "#d4a373" }, portraitAccent: "#d4a373" },
+  landlord: { id: "landlord", name: "Landlord", type: "Earth", cost: 4, power: 6, ability: "Rent Due", effect: "Ongoing: The first enemy card played at this district each round costs 1 additional Motion.", roles: ["Disruption"], abilityUpgrades: upgrades("landlord", [["Late Fee", "Rent Due grants +1 Hands to Landlord.", "Lease Renewal", "Rent Due grants +1 Hands to Landlord.", "Keyholder", "Rent Due grants +1 Hands to Landlord."]]), entryVfx: { accent: "#d4a373" }, portraitAccent: "#d4a373" },
   carmeet: { id: "car-meet-kid", name: "Car Meet Kid", type: "Electric", cost: 2, power: 2, ability: "Sideshow", effect: "On Reveal: Move Car Meet Kid to your weakest other district. Then give its lowest-Hands other friendly card +1 Hands.", roles: ["Movement"], abilityUpgrades: upgrades("carmeet", [["Clean Slide", "Sideshow grants +1 Hands to Car Meet Kid.", "Rev Limit", "Sideshow grants +1 Hands to Car Meet Kid.", "Burnout", "Sideshow grants +1 Hands to Car Meet Kid."]]) },
   promoter: { id: "promoter", name: "Promoter", type: "Air", cost: 3, power: 3, ability: "Guest List", effect: "On Reveal: Reveal one enemy hand card. If it costs 4+, your next card in another district costs 1 less Motion. Ongoing: While on board, your first Air ally to move each round gains +2 Hands.", abilityUpgrades: upgrades("promoter", [["Plus One", "Guest List grants +1 Hands to Promoter.", "Wristband", "Guest List grants +1 Hands to Promoter.", "Headliner", "Guest List grants +1 Hands to Promoter."]]) },
   nail: { id: "nail-tech", name: "Nail Tech", type: "Poison", cost: 2, power: 3, ability: "Fresh Set", effect: "On Reveal: Give another friendly card here +2 Hands. The next time that card is hit by an enemy Hands reduction, reduce that loss by 1.", abilityUpgrades: upgrades("nail", [["Chrome Finish", "Fresh Set grants +1 Hands to its friendly target.", "Gem Detail", "Fresh Set grants +1 Hands to Nail Tech.", "Top Coat", "Fresh Set grants +1 Hands to its friendly target."]]) },

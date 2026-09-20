@@ -2,7 +2,7 @@ import { completeEngineCrew } from '@workspace/squabblemon-engine/data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cardCatalog, cards, CARD_RARITY_DEFINITIONS, validateCardAbilityUpgrades } from './data';
-import { createCardInstance, createMatchFromEngineCards, getLegalCardCost, playTurnCard, pass, revealCpuTurn, nextRound, verifyMatchTranscript, type Match, type Owner, type PlayerMove } from './gameEngine';
+import { createCardInstance, createMatchFromEngineCards, getLegalCardCost, playTurnCard, pass, revealCpuTurn, nextRound, verifyMatchTranscript, getDistrictSharedBonus, DISTRICT_CATALOG, type Match, type Owner, type PlayerMove } from './gameEngine';
 import { superCommonIds } from '../../../lib/squabblemon-engine/src/superCommonCards';
 import { generateStreetPack, STREET_PACK_RARITY_WEIGHTS } from '../../api-server/src/lib/collectionEconomy';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
@@ -51,7 +51,7 @@ test('Shiesty YN deterministically repeats its 50% self-summon with an eight-cop
 });
 
 test('Torta and Concrete expose hand-bond metadata', () => {
-  for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Rock']] as const) {
+  for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Earth']] as const) {
     assert.equal(cards[id].elementalBond, element);
     assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', 'player')], [], []] })), id).powerModifier, 0);
   }
@@ -158,4 +158,74 @@ test('new cards can complete a deterministic six-round fade and server replay', 
   }
   assert.equal(m.playerHand.length, 0);
   assert.deepEqual(verifyMatchTranscript('essentials', 'block', moves, initial.abilityUpgradeSnapshot, crew), m);
+});
+
+test('Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs', () => {
+  assert(!cardCatalog.some(c => c.type === 'Rock' || c.elementalBond === 'Rock'));
+  const earth = cardCatalog.filter(c => c.type === 'Earth' && (c.kind ?? 'character') === 'character');
+  assert.equal(earth.length, 11);
+  for (const [id, catalogId, rarity, cost, power] of [
+    ['concrete', 'concrete', 'SuperCommon', 1, 1],
+    ['landlord', 'landlord', 'Legendary', 4, 6],
+    ['johnhenry', 'john-henry', 'Mythical', 5, 5],
+  ] as const) {
+    const entry = cardCatalog.find(c => c.engineId === id)!;
+    assert.equal(entry.catalogId, catalogId);
+    assert.equal(entry.type, 'Earth'); assert.equal(entry.rarity, rarity);
+    assert.equal(entry.cost, cost); assert.equal(entry.power, power);
+    assert.deepEqual(entry.abilityUpgrades.map(u => u.id), [1, 2, 3].map(t => `${id}:upgrade:${t}`));
+  }
+  assert.equal(cards.concrete.ability, 'Earth Bond');
+  assert.match(cards.concrete.effect, /other Earth characters/);
+});
+
+for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete stack Earth bonds across districts for ' + owner, () => {
+  const enemy = owner === 'player' ? 'cpu' : 'player';
+  const m: Match = { ...fresh(), phase: 'resolved', playerHand: [], cpuHand: [],
+    [owner === 'player' ? 'playerHand' : 'cpuHand']: [instance('torta', owner, 20), instance('concrete', owner, 21)],
+    boards: [[instance('manman', owner, 1), instance('manman', enemy, 2)],
+      [{ ...instance('landlord', owner, 3), lane: 1 }],
+      [{ ...instance('johnhenry', owner, 4), lane: 2 }, { ...instance('hooper', owner, 5), lane: 2 }]],
+  };
+  const before = JSON.stringify(m), after = nextRound(m);
+  for (const id of ['manman', 'landlord', 'johnhenry']) assert.equal(find(after, id).powerModifier, 2);
+  assert.equal(after.boards[0].find(c => c.owner === enemy)!.powerModifier, 0);
+  assert.equal(find(after, 'hooper').powerModifier, 0);
+  assert.equal(JSON.stringify(m), before, 'round resolution does not mutate the saved input');
+});
+
+test('a legacy Rock bond and old Rock ally share the Earth pool after JSON restore', () => {
+  const holder = { ...instance('concrete'), type: 'Rock', elementalBond: 'Rock' };
+  const legacy = { ...instance('landlord', 'player', 2), type: 'Rock' };
+  const m: Match = { ...fresh(), phase: 'resolved', playerHand: [holder], cpuHand: [],
+    boards: [[instance('manman', 'player', 1), legacy], [], []],
+    abilityUpgradeSnapshot: createAbilityUpgradeSnapshot(crew, fresh().cpuCardIds,
+      { player: { concrete: { xp: 4500, level: 10, moveTier: 3 } } }),
+  };
+  const after = nextRound(JSON.parse(JSON.stringify(m)));
+  assert.equal(find(after, 'manman').powerModifier + find(after, 'landlord').powerModifier, 5,
+    'both receive the bond and all three earned training boosts still apply');
+  assert.match(find(after, 'landlord').lastEffectNote ?? '', /Earth bond/);
+});
+
+test('Earth and legacy Rock cannot count as two elements for district diversity', () => {
+  const m: Match = { ...fresh(), boards: [[instance('manman'), { ...instance('landlord', 'player', 1), type: 'Rock' }, instance('hooper', 'player', 2)], [], []],
+    districtSnapshot: { version: 1, locations: [DISTRICT_CATALOG.find(d => d.id === 'time-square')!, DISTRICT_CATALOG[0], DISTRICT_CATALOG[1]] },
+  };
+  assert.equal(getDistrictSharedBonus(m, 'player', 0), 0);
+  m.boards[0].push(instance('waterboy', 'player', 3));
+  assert.equal(getDistrictSharedBonus(m, 'player', 0), 3);
+});
+
+test('John Henry keeps Steel Driver strength as Earth and in legacy snapshots', () => {
+  for (const type of ['Earth', 'Rock']) {
+    const source = { ...instance('johnhenry', 'player', 3), type };
+    const target = instance('techbro', 'cpu', 4);
+    const after = playTurnCard({ ...fresh(), playerMotion: 9, playerHand: [source], cpuHand: [],
+      boards: [[instance('manman'), instance('landlord', 'player', 1), target], [], []] },
+    'player', source.instanceId, 0);
+    assert.equal(find(after, 'johnhenry').powerModifier, 2);
+    assert.equal(find(after, 'techbro').powerModifier, -1);
+    assert.match(find(after, 'techbro').lastEffectNote ?? '', /Steel Driver/);
+  }
 });

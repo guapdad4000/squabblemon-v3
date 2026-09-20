@@ -9,7 +9,7 @@ const definitions = [
   ['cognac', 'cognac-bottle', 'Cognac Bottle', 'Fire', 1, 0, 'Liquid Courage', 'Give your lowest-Hands friendly character here +2 Hands.', 'support', 'Support'],
   ['bustdown', 'bust-down-watch', 'Bust-Down Watch', 'Light', 1, 0, 'Wrist Check', 'Protect your lowest-Hands friendly character here from one targeted hostile ability.', 'support', 'Support'],
   ['soulfood', 'soul-food', 'Soul Food', 'Plant', 1, 0, 'Full Plate', 'Give your lowest-Hands friendly character here +1 Hands and cleanse its freeze and silence.', 'support', 'Support'],
-  ['concrete', 'concrete', 'Concrete', 'Rock', 1, 1, 'Rock Bond', 'Ongoing: While Concrete is in your hand, your other Rock characters gain +1 Hand at round end.', 'character', 'Sustain', 'Rock'],
+  ['concrete', 'concrete', 'Concrete', 'Earth', 1, 1, 'Earth Bond', 'Ongoing: While Concrete is in your hand, your other Earth characters gain +1 Hand at round end.', 'character', 'Sustain', 'Earth'],
 ] as const;
 
 export const superCommonIds = definitions.map(([id]) => id);
