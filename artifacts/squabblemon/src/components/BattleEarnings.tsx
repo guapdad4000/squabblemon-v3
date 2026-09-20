@@ -1,3 +1,4 @@
+import { rewardReceipts } from '../lib/rewardReceipts';
 import { GameGlyph } from './venue/GameGlyph';
 import { Link } from 'wouter';
 import { ArrowRight } from 'lucide-react';
@@ -5,10 +6,10 @@ import type { MatchReward } from '@workspace/api-client-react';
 import { catalogCardById, getCardImage } from '../data';
 import { cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
 
-export function BattleEarnings({ reward }: { reward: MatchReward }) {
+export function BattleEarnings({ reward, showTotals = true }: { reward: MatchReward; showTotals?: boolean }) {
   return (
     <section aria-label="Earned battle rewards" className="battle-earnings">
-      <div className="battle-earnings__totals">
+      {showTotals && <div className="battle-earnings__totals">
         <div>
           <GameGlyph name="clout" />
           <strong>+{reward.softCurrency}</strong>
@@ -24,11 +25,12 @@ export function BattleEarnings({ reward }: { reward: MatchReward }) {
           <strong>+{reward.streetRep}</strong>
           <span>Street Rep</span>
         </div>
-      </div>
+      </div>}
+      <button className="studio-text-action" onClick={() => rewardReceipts.show({ id: `battle:${reward.id}:${crypto.randomUUID()}`, title: 'Battle earnings', items: [{label: 'Clout', amount: reward.softCurrency, glyph: 'cloutStack'}, {label: 'Profile XP', amount: reward.xp, glyph: 'xp'}, {label: 'Street Rep', amount: reward.streetRep, glyph: 'rep'}, ...(reward.packTickets > 0 ? [{label: 'Tickets', amount: reward.packTickets, glyph: 'ticket' as const}] : [])] })}>View reward haul →</button>
       {!!reward.cardXp?.length && (
         <details className="result-stage__details">
           <summary>
-            Your crew earned XP <span>{reward.cardXp.length} characters</span>
+            Your gang earned XP <span>{reward.cardXp.length} characters</span>
           </summary>
           <div className="battle-earnings__crew">
             {reward.cardXp.map((entry) => {

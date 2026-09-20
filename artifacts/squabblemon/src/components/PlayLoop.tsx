@@ -43,22 +43,9 @@ export function trackBattleTurnCommitted(match: Match, action: 'lock_in' | 'pass
 const allCards = (match: Match) => [...match.playerHand, ...match.cpuHand, ...match.boards.flat()];
 const cardById = (match: Match, id: string) => allCards(match).find(card => card.instanceId === id);
 /** Rebuild only participants from the authoritative before/after event snapshots. */
-export const applyEventState = (visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match => {
-  let playerHand = [...visual.playerHand], cpuHand = [...visual.cpuHand];
-  const boards = visual.boards.map(lane => [...lane]) as Match['boards'];
-  for (const participant of [event.source, ...event.targets]) {
-    if (!participant) continue;
-    const state = participant[key], id = participant.cardInstanceId;
-    playerHand = playerHand.filter(card => card.instanceId !== id); cpuHand = cpuHand.filter(card => card.instanceId !== id);
-    for (let lane = 0; lane < boards.length; lane += 1) boards[lane] = boards[lane].filter(card => card.instanceId !== id);
-    if (!state) continue;
-    const template = cardById(visual, id) ?? cardById(authoritative, id);
-    if (!template) continue;
-    const card = { ...template, lane: state.lane, basePower: state.basePower, powerModifier: state.powerModifier, moved: state.moved, statuses: state.statuses, lastEffectNote: state.lastEffectNote };
-    if (state.lane === null) (state.owner === 'player' ? playerHand : cpuHand).push(card); else boards[state.lane].push(card);
-  }
-  return { ...visual, districtSnapshot: event.replay[key].districtSnapshot, districtRuntime: event.replay[key].districtRuntime, playerHand, cpuHand, boards, playerMotion: event.resources[key].playerMotion, cpuMotion: event.resources[key].cpuMotion, round: event.state[key].round, phase: event.state[key].phase, playerDrawIndex: event.state[key].playerDrawIndex, cpuDrawIndex: event.state[key].cpuDrawIndex, squabbleUsed: event.state[key].squabbleUsed, plugDiscountLane: event.state[key].plugDiscountLane, cheapBuffsUsed: event.state[key].cheapBuffsUsed };
-};
+/** Use the complete event snapshot: participant-only patches omit summons and lane-wide effects. */
+export const applyEventState = (_visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match =>
+  buildReplayFrame(authoritative, event, key);
 
 /** Apply the engine-captured complete visual state for one historical step. */
 export const buildReplayFrame = (live: Match, selected: EffectLogEntry, key: 'before' | 'after'): Match => ({
@@ -148,7 +135,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   useEffect(() => { skipTransitionRef.current = false; }, [presentationPhase]);
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false, resetClock = true) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round} · DECISION IN 1`); if (!immediate && !await waitForBeat(1100, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); if (resetClock) setTimerSeconds(TURN_SECONDS); locked.current = false; fastForwardRef.current = false; setSquabbleCinematicLane(null); }, [waitForBeat]);
-  const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'CREW UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
+  const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
   const beginMatch = useCallback((initial: Match) => {
     cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); playerMovesRef.current = []; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); playedSpecialMovesRef.current.clear(); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
     // Chapter dialogue is presented on the 2D stage before this real match.
@@ -206,7 +193,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     try {
       startLocalMatch();
     } catch (error) {
-      setStartError(error instanceof Error ? error.message : 'The practice match could not be started.');
+      setStartError(error instanceof Error ? error.message : 'The practice fade could not be started.');
     }
   }, [beginMatch, customPlayerDeck, deckId, mode, rival, startLocalMatch, startPlayerMatch, storyNodeId, activity, draftWeek, draftPicks]);
   useEffect(() => { if (hideLobby && !match && !autoStartRef.current) { autoStartRef.current = true; void start(); } }, [hideLobby, match, start]);
@@ -401,7 +388,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
         className="absolute right-2 top-2 z-[80] border border-primary bg-black px-3 py-2 font-mono text-[9px] uppercase text-primary"
         onClick={() => void finishMatchSession(match)}
       >
-        Complete guided test match
+        Complete guided test fade
       </button>
     )}
     {mode === 'guest' && (
@@ -409,7 +396,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
         Offline training — rewards are unsaved
       </div>
     )}
-    {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the match</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
+    {startError && !match && <div className="relative z-20 grid h-full place-items-center p-6 text-center"><div className="max-w-sm border border-accent/40 bg-zinc-950 p-6"><div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent">Encounter unavailable</div><h1 className="mt-2 font-display text-3xl font-black italic uppercase">Could not start the fade</h1><p role="alert" className="mt-3 text-sm text-white/55">{startError}</p><div className="mt-6 flex gap-2"><button type="button" onClick={onExit} className="flex-1 border border-white/20 px-4 py-3 hover:bg-white/5">Back</button><button type="button" onClick={() => void start()} disabled={startPlayerMatch.isPending} className="flex-1 bg-primary px-4 py-3 text-black hover:bg-yellow-400">{startPlayerMatch.isPending ? 'Retrying' : 'Retry'}</button></div></div></div>}
     {screen === 'lobby' && !hideLobby && <Lobby onStart={start} deckId={deckId} setDeckId={setDeckId} rival={rival} setRival={setRival} availableDeckIds={availableDeckIds} onShowRules={() => setShowRules(true)} onInspect={setInspect} isLoading={startPlayerMatch.isPending} onExit={onExit} equippedVariants={equippedVariants} cardProgression={cardProgression} />}
     {encounterCinematic && (
       <StoryCinematic

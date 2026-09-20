@@ -215,7 +215,7 @@ router.delete(
         if (deletingIsLegal && otherLegalDecks.length === 0) {
           throw new RouteError(
             400,
-            "Keep at least one legal crew before deleting this deck",
+            "Keep at least one legal gang before deleting this deck",
           );
         }
 

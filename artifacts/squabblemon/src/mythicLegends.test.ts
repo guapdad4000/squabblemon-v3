@@ -125,7 +125,7 @@ test('new effects respect conditions, guard and direct protection', () => {
   assert.equal(onBoard(smallCrew, john.foe).powerModifier, 2);
 });
 
-test('all six new Mythicals can play and replay in a complete match', () => {
+test('all six new Mythicals can play and replay in a complete fade', () => {
   const ids = [...MYTHIC_LEGENDS.map(([id]) => id), 'leroy', 'cornball', 'plug', 'wifey'];
   const rival = createMatch('vibes', 'vibes');
   let match = createMatchFromEngineCards('mythic-legends', ids, 'vibes', rival.cpuCardIds);

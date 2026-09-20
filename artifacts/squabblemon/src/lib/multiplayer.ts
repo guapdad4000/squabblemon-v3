@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { ApiError, customFetch } from "@workspace/api-client-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
@@ -11,14 +12,40 @@ export type RoomSummary = {
   rival: string;
   gameNumber: number;
 };
-const request = <T>(path: string, body?: unknown, signal?: AbortSignal) =>
-  customFetch<T>(`/api/multiplayer${path}`, {
-    method: body ? "POST" : "GET",
-    body: body ? JSON.stringify(body) : undefined,
-    credentials: "same-origin",
-    responseType: "json",
-    signal,
-  });
+// A stalled mobile request must release the poll/mutation so reconnection can recover.
+const request = async <T>(
+  path: string,
+  body?: unknown,
+  signal?: AbortSignal,
+): Promise<T> => {
+  const controller = new AbortController();
+  const cancel = () => controller.abort(signal?.reason);
+  if (signal?.aborted) cancel();
+  signal?.addEventListener("abort", cancel, { once: true });
+  const timeout = setTimeout(
+    () =>
+      controller.abort(
+        new DOMException(
+          "Fade connection timed out. Reconnecting…",
+          "TimeoutError",
+        ),
+      ),
+    8000,
+  );
+  try {
+    return await customFetch<T>(`/api/multiplayer${path}`, {
+      method: body ? "POST" : "GET",
+      body: body ? JSON.stringify(body) : undefined,
+      credentials: "same-origin",
+      cache: "no-store",
+      responseType: "json",
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener("abort", cancel);
+  }
+};
 export const createFriendMatch = (deckId: string, requestId: string) =>
   request<OnlineRoomView>("", { deckId, requestId });
 export const joinFriendMatch = (code: string, deckId: string) =>
@@ -36,9 +63,11 @@ export function onlineErrorMessage(error: unknown) {
     ? error.message
     : "Connection interrupted. Please retry.";
 }
-export function useFriendMatch(code?: string) {
+export function useFriendMatch(accountId: string, code?: string) {
   const client = useQueryClient();
-  const key = ["friend-match", code];
+  const key = ["friend-match", accountId, code];
+  const [online, setOnline] = useState(() => navigator.onLine);
+  const [now, setNow] = useState(Date.now);
   const newer = (incoming: OnlineRoomView): OnlineRoomView => {
     const current = client.getQueryData<OnlineRoomView>(key);
     return current && current.revision > incoming.revision ? current : incoming;
@@ -52,13 +81,19 @@ export function useFriendMatch(code?: string) {
       !(
         error instanceof ApiError && [400, 401, 403, 404].includes(error.status)
       ) && attempt < 1,
-    refetchInterval: (state) =>
-      state.state.data?.status === "active"
-        ? 1200
-        : state.state.data
-          ? 2500
-          : false,
-    refetchOnWindowFocus: true,
+    refetchInterval: (state) => {
+      const error = state.state.error;
+      if (
+        error instanceof ApiError &&
+        [400, 401, 403, 404].includes(error.status)
+      )
+        return false;
+      if (state.state.data?.status === "closed") return false;
+      return state.state.data?.status === "active" ? 800 : 2000;
+    },
+    refetchOnWindowFocus: "always",
+    refetchOnReconnect: "always",
+    refetchIntervalInBackground: true,
   });
   const mutation = useMutation({
     mutationFn: (input: {
@@ -66,7 +101,10 @@ export function useFriendMatch(code?: string) {
       expectedRevision: number;
       command: OnlineCommand;
     }) => request<OnlineRoomView>(`/${code}/actions`, input),
-    retry: (count, error) => !(error instanceof ApiError) && count < 1,
+    // Retry the identical request ID if an acknowledgement is lost; never double-play.
+    networkMode: "always",
+    retry: (count, error) =>
+      (!(error instanceof ApiError) || error.status >= 500) && count < 1,
     onSuccess: (data) => {
       client.setQueryData(key, newer(data));
     },
@@ -74,10 +112,40 @@ export function useFriendMatch(code?: string) {
       void query.refetch();
     },
   });
+  useEffect(() => {
+    const recover = () => {
+      setOnline(navigator.onLine);
+      if (navigator.onLine && code)
+        void client.invalidateQueries({
+          queryKey: ["friend-match", accountId, code],
+        });
+    };
+    const offline = () => setOnline(false);
+    const visible = () => {
+      if (!document.hidden) recover();
+    };
+    window.addEventListener("online", recover);
+    window.addEventListener("offline", offline);
+    window.addEventListener("pageshow", recover);
+    document.addEventListener("visibilitychange", visible);
+    const tick = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => {
+      clearInterval(tick);
+      window.removeEventListener("online", recover);
+      window.removeEventListener("offline", offline);
+      window.removeEventListener("pageshow", recover);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [accountId, code, client]);
   return {
+    connected:
+      online &&
+      !query.isError &&
+      !!query.data &&
+      now - query.dataUpdatedAt < 10000,
     query,
     mutation,
     accept: (view: OnlineRoomView) =>
-      client.setQueryData(["friend-match", view.code], view),
+      client.setQueryData(["friend-match", accountId, view.code], view),
   };
 }

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "underground-ring",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-370806e0-2398-4842-9c25-2cf1aa354b05.png",
+    "path": "artifacts/squabblemon/public/assets/locations/underground-ring-node.webp",
+    "bytes": 73178,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "underground-ring",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-370806e0-2398-4842-9c25-2cf1aa354b05.png",
+    "path": "artifacts/squabblemon/public/assets/locations/underground-ring.webp",
+    "bytes": 268466,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "rooftop-garden",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-43592c24-de83-419c-b34c-aaab5dd2935d.png",
+    "path": "artifacts/squabblemon/public/assets/locations/rooftop-garden-node.webp",
+    "bytes": 96580,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "rooftop-garden",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-43592c24-de83-419c-b34c-aaab5dd2935d.png",
+    "path": "artifacts/squabblemon/public/assets/locations/rooftop-garden.webp",
+    "bytes": 351868,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "pawn-shop",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-2bdd8810-aa10-44d0-b0b3-abdabf9a86dc.png",
+    "path": "artifacts/squabblemon/public/assets/locations/pawn-shop-node.webp",
+    "bytes": 84400,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "pawn-shop",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-2bdd8810-aa10-44d0-b0b3-abdabf9a86dc.png",
+    "path": "artifacts/squabblemon/public/assets/locations/pawn-shop.webp",
+    "bytes": 316766,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "pirate-radio",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-f558a05c-55da-41ae-9fb6-e5f9552d1188.png",
+    "path": "artifacts/squabblemon/public/assets/locations/pirate-radio-node.webp",
+    "bytes": 93522,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "pirate-radio",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-f558a05c-55da-41ae-9fb6-e5f9552d1188.png",
+    "path": "artifacts/squabblemon/public/assets/locations/pirate-radio.webp",
+    "bytes": 316966,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "blackout-block",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-ba2fca3a-7310-450c-8490-6a05a4806215.png",
+    "path": "artifacts/squabblemon/public/assets/locations/blackout-block-node.webp",
+    "bytes": 75006,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "blackout-block",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-ba2fca3a-7310-450c-8490-6a05a4806215.png",
+    "path": "artifacts/squabblemon/public/assets/locations/blackout-block.webp",
+    "bytes": 267590,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "flood-channel",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-f9185366-aa94-4f7a-a649-d8addb13b1f3.png",
+    "path": "artifacts/squabblemon/public/assets/locations/flood-channel-node.webp",
+    "bytes": 84392,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "flood-channel",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-f9185366-aa94-4f7a-a649-d8addb13b1f3.png",
+    "path": "artifacts/squabblemon/public/assets/locations/flood-channel.webp",
+    "bytes": 299286,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "construction-site",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-868850f9-b631-4361-a68b-d35a9a59b4b4.png",
+    "path": "artifacts/squabblemon/public/assets/locations/construction-site-node.webp",
+    "bytes": 84624,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "construction-site",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-868850f9-b631-4361-a68b-d35a9a59b4b4.png",
+    "path": "artifacts/squabblemon/public/assets/locations/construction-site.webp",
+    "bytes": 306578,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "night-market",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-3f931060-aca0-427f-88da-6912a5b94b99.png",
+    "path": "artifacts/squabblemon/public/assets/locations/night-market-node.webp",
+    "bytes": 90636,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "night-market",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-3f931060-aca0-427f-88da-6912a5b94b99.png",
+    "path": "artifacts/squabblemon/public/assets/locations/night-market.webp",
+    "bytes": 325672,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "mirror-arcade",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-70f090fa-5f5a-4791-bf16-f1c1d963f487.png",
+    "path": "artifacts/squabblemon/public/assets/locations/mirror-arcade-node.webp",
+    "bytes": 79298,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "mirror-arcade",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-70f090fa-5f5a-4791-bf16-f1c1d963f487.png",
+    "path": "artifacts/squabblemon/public/assets/locations/mirror-arcade.webp",
+    "bytes": 279202,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "community-kitchen",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-247b37c9-dec2-45d2-b5ac-0b13536ca95b.png",
+    "path": "artifacts/squabblemon/public/assets/locations/community-kitchen-node.webp",
+    "bytes": 86412,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "community-kitchen",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-247b37c9-dec2-45d2-b5ac-0b13536ca95b.png",
+    "path": "artifacts/squabblemon/public/assets/locations/community-kitchen.webp",
+    "bytes": 315866,
+    "width": 1200,
+    "sourceAlpha": true
+  },
+  {
+    "id": "rush-hour",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-e1e63961-7f11-4660-872d-c212430227b0.png",
+    "path": "artifacts/squabblemon/public/assets/locations/rush-hour-node.webp",
+    "bytes": 75754,
+    "width": 600,
+    "sourceAlpha": true
+  },
+  {
+    "id": "rush-hour",
+    "source": "C:/Users/Vicky/.codex/generated_images/01a0aef6-214d-7042-98a3-a86af041c229/exec-e1e63961-7f11-4660-872d-c212430227b0.png",
+    "path": "artifacts/squabblemon/public/assets/locations/rush-hour.webp",
+    "bytes": 263146,
+    "width": 1200,
+    "sourceAlpha": true
+  }
+]

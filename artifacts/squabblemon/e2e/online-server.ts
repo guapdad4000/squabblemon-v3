@@ -17,6 +17,9 @@ if (
   throw new Error(
     "This test host requires the isolated localhost:55439 database and ONLINE_E2E=1.",
   );
+// PGlite has one database session: avoid interleaving independent transactions.
+// Production keeps its normal PostgreSQL pool.
+pool.options.max = 1;
 const ids = {
   a: `online-browser-${randomUUID()}`,
   b: `online-browser-${randomUUID()}`,
@@ -40,9 +43,9 @@ await db
       savedDecks: [
         {
           id: "my-online-crew",
-          name: seat === "a" ? "The Home Crew" : "The Away Crew",
+          name: seat === "a" ? "The Home Gang" : "The Away Gang",
           heroCardId: seat === "a" ? "hooper" : "wifey",
-          cardIds: [...ROOKIE_CORE_IDS],
+          cardIds: process.env.ONLINE_E2E_KYLE === "1" ? ["kyle", ...ROOKIE_CORE_IDS.slice(0, 9)] : [...ROOKIE_CORE_IDS],
         },
       ],
       settings: { reducedMotion: true, turnTimerEnabled: true },

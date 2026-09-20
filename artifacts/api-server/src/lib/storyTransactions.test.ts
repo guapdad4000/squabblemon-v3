@@ -300,7 +300,7 @@ test("story transcript verification uses explicit immutable snapshot and cards",
   assert.deepEqual(verified.playerCardIds, recipe.cards);
 });
 
-test("story match progression snapshot survives a later content revision", () => {
+test("story fade progression snapshot survives a later content revision", () => {
   const chapter = storyContent.chapters[0];
   const node = getStoryBattle("welcome-to-the-block");
   assert.ok(chapter);
@@ -326,7 +326,7 @@ test("story match progression snapshot survives a later content revision", () =>
   assert.equal(stored.nodeId, node.id);
 });
 
-test("stored story match result reconstructs byte-equivalent retry metadata", async (t) => {
+test("stored story fade result reconstructs byte-equivalent retry metadata", async (t) => {
   const userId = await storyPlayer(t, "story-match-retry");
   const reward = {
     rewardKey: "welcome-to-the-block:0:currency:street-xp",

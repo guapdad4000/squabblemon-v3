@@ -35,7 +35,33 @@ export const PlayerProfileOnboardingStep = {
   complete: 'complete',
 } as const;
 
+export type CosmeticLoadoutBannerFinish = typeof CosmeticLoadoutBannerFinish[keyof typeof CosmeticLoadoutBannerFinish];
+
+
+export const CosmeticLoadoutBannerFinish = {
+  base: 'base',
+  silver: 'silver',
+} as const;
+
+export type CosmeticLoadoutCardBackgrounds = {[key: string]: 'blue-hour'};
+
+export interface CosmeticLoadout {
+  /**
+     * @maxLength 64
+     * @nullable
+     */
+  bannerCardId?: string | null;
+  bannerFinish?: CosmeticLoadoutBannerFinish;
+  /**
+     * @maxItems 3
+     * @items.maxLength 80
+     */
+  stickers?: string[];
+  cardBackgrounds?: CosmeticLoadoutCardBackgrounds;
+}
+
 export interface PlayerSettings {
+  cosmetics?: CosmeticLoadout;
   reducedMotion: boolean;
   turnTimerEnabled: boolean;
 }
@@ -295,6 +321,9 @@ export const ShopPurchaseInputItemId = {
   'common-recruit': 'common-recruit',
   'tagged-style': 'tagged-style',
   'chrome-style': 'chrome-style',
+  'character-stickers': 'character-stickers',
+  'character-backdrop': 'character-backdrop',
+  'character-banner-finish': 'character-banner-finish',
 } as const;
 
 export interface ShopPurchaseInput {
@@ -369,7 +398,11 @@ export interface OpenPackInput {
      */
   idempotencyKey: string;
   paymentMethod: OpenPackInputPaymentMethod;
-  /** Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience. */
+  /**
+     * Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
+     * @minimum 1
+     * @maximum 10
+     */
   pullCount?: number;
 }
 

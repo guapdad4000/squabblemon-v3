@@ -86,7 +86,7 @@ test('Mural Apprentice weakens a rival when supported, or gains Hands on an empt
   assert.equal(revealed.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier, 1);
 });
 
-test('new roster crews replay identical complete matches through authoritative reward verification', () => {
+test('new roster gangs replay identical complete fades through authoritative reward verification', () => {
   for (const offset of [0,5,10]) {
     const ids=BLOCK_EXPANSION.slice(offset,offset+10).map(c=>c[0]);
     const locations=createDistrictSnapshot(`expansion-${offset}`);

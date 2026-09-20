@@ -1,3 +1,6 @@
+import { rewardReceipts } from '../../lib/rewardReceipts';
+import { Inventory } from './Inventory';
+import { RewardReveal } from '../../components/RewardReveal';
 import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { readPreviewDecks } from '../../lib/previewDecks';
@@ -67,6 +70,7 @@ function BootstrapError({
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  useEffect(() => { rewardReceipts.reset(); return () => rewardReceipts.reset(); }, [bootstrap.profile.id]);
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
@@ -75,6 +79,8 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }, [bootstrap]);
 
   return (
+    <>
+    <RewardReveal />
     <Switch>
       <Route path="/game/onboarding">
         <Onboarding bootstrap={bootstrap} />
@@ -83,6 +89,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/online/:code">{params => <Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} />}</Route>
       <Route path="/game/online"><Multiplayer bootstrap={bootstrap} /></Route>
       <Route path="/game/story/play/:nodeId">{params => <PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} />}</Route>
+      <Route path="/game/inventory"><GameShell bootstrap={bootstrap} location={location}><Inventory bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/collection">
         <GameShell bootstrap={bootstrap} location={location}><Collection bootstrap={bootstrap} /></GameShell>
       </Route>
@@ -112,6 +119,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </Route>
       <Route component={() => <Redirect to="/game" />} />
     </Switch>
+    </>
   );
 }
 
@@ -209,7 +217,7 @@ function getE2EBootstrap(): PlayerBootstrap {
       id: 'e2e-next',
       eyebrow: 'Tonight',
       title: 'Run the block',
-      description: 'Take two of three districts in an offline practice match.',
+      description: 'Take two of three districts in an offline practice fade.',
       destination: 'play',
       rewardLabel: null,
     },

@@ -38,7 +38,7 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  const userId=`activity-http-${randomUUID()}`;
  const savedDeckId=randomUUID(); // The crew builder creates 36-character IDs.
  await ensurePlayer(userId);
- await db.update(playerProfilesTable).set({onboardingStep:'complete',ownedCardIds:[...ROOKIE_CORE_IDS],cardProgression:{cornball:{xp:2800,level:8,moveTier:3}},savedDecks:[{id:'custom',name:'My Crew',cardIds:[...ROOKIE_CORE_IDS],heroCardId:'hooper'}]}).where(eq(playerProfilesTable.clerkUserId,userId));
+ await db.update(playerProfilesTable).set({onboardingStep:'complete',ownedCardIds:[...ROOKIE_CORE_IDS],cardProgression:{cornball:{xp:2800,level:8,moveTier:3}},savedDecks:[{id:'custom',name:'My Gang',cardIds:[...ROOKIE_CORE_IDS],heroCardId:'hooper'}]}).where(eq(playerProfilesTable.clerkUserId,userId));
  const app=express();app.use(express.json());
  // Test-only authenticated session; production middleware is never modified.
  app.use((req,_res,next)=>{(req as any).auth=Object.assign(()=>({userId,sessionId:'test',tokenType:'session_token',isAuthenticated:true}),{[Symbol.for('@clerk/express.auth')]:true});(req as any).log={warn(data:any){console.log(data.error?.message)},error(){}};next();});
@@ -52,7 +52,7 @@ test('real activity routes validate drafts, normalize combat, replay events and 
  // longest supported saved ID. Matching must never truncate a crew's identity.
  assert.equal((await post('/player/matches',{...start,playerDeckId:'custom'})).status,201);
  for(const id of [savedDeckId,'saved-'.padEnd(80,'x')]) {
-  const saved=await post(`/player/decks/${id}`,{name:'Custom Crew',cardIds:[...ROOKIE_CORE_IDS],heroCardId:'hooper',recipeId:null},'PUT');
+  const saved=await post(`/player/decks/${id}`,{name:'Custom Gang',cardIds:[...ROOKIE_CORE_IDS],heroCardId:'hooper',recipeId:null},'PUT');
   assert.equal(saved.status,200,JSON.stringify(saved.body));
   assert(saved.body.profile.savedDecks.some((deck:any)=>deck.id===id));
   const started=await post('/player/matches',{...start,playerDeckId:id});

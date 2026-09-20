@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { starterRecipes } from '../../data';
 import { DeckWorkbench } from '../../components/DeckWorkbench';
 import type { DeckDraft } from '../../lib/deckWorkshop';
+import { PageDecor } from '../../components/venue/PageDecor';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { deckId = '' } = useParams();
@@ -24,7 +25,8 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return id;
   }
   if (!initial) return <div className="p-6 text-white"><p>Deck not found.</p><button className="venue-button" onClick={() => setLocation('/game/decks')}>Back to my decks</button></div>;
-  return <div className="deck-editor-screen">
+  return <div className="deck-editor-screen world-decor-host">
+    <PageDecor theme="crew" />
     <nav className="deck-editor-nav" aria-label="Deck navigation"><button className="arsenal-link" onClick={() => setLocation('/game/decks')}><ArrowLeft size={15} aria-hidden="true" />Back to my decks</button>
       {recipe && <p>Learning example · save to make it yours</p>}
       {preview && <p>Saved on this device</p>}

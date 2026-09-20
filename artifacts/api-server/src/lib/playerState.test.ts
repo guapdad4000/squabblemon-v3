@@ -10,7 +10,7 @@ import {
 import { validateSavedDeck } from "@workspace/squabblemon-engine/data";
 import { CITY_NEVER_SLEEPS_CATALOG_IDS, ensurePlayer, hasVerifiedTutorialMatch } from "./playerState";
 
-test("only a completed tutorial match unlocks tutorial advancement", async (t) => {
+test("only a completed tutorial fade unlocks tutorial advancement", async (t) => {
   const clerkUserId = `tutorial-guard-${randomUUID()}`;
   await db.insert(playerProfilesTable).values({
     clerkUserId,
@@ -62,7 +62,7 @@ test("normalization preserves legacy ownership and earned moves without new cata
     },
     savedDecks: [{
       id: "saved-deck",
-      name: "Saved Crew",
+      name: "Saved Gang",
       cardIds: ownedCardIds,
       heroCardId: "cornball",
     }],

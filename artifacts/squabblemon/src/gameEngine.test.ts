@@ -33,7 +33,7 @@ test("City Never Sleeps cards use deterministic reveal, protection, movement, an
   m = playCard(m, "player", church.instanceId, 0);
   m = { ...m, phase: "cpu-reveal", cpuMotion: 20, cpuHand: [roaster], boards: m.boards.map(items => items.map(card => card.instanceId === church.instanceId ? { ...card, statuses: { ...card.statuses, frozen: true } } : card)) as Match["boards"] };
   m = playCard(m, "cpu", roaster.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.powerModifier, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.powerModifier, 2);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 
   const carMeet = custom("carmeet", "player", 8), delivery = custom("delivery", "player", 9);
@@ -70,7 +70,7 @@ test("Church Auntie's Covered shield survives rounds until it blocks one hostile
       : card)) as Match["boards"],
   };
   m = playCard(m, "cpu", roaster.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 0);
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 2);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 });
 
@@ -186,7 +186,7 @@ test('every gameplay card has the fixed, valid three-upgrade path', () => {
   }
 });
 
-test('match-start upgrade snapshots are immutable, tiered, ordered, and reject forgery', () => {
+test('fade-start upgrade snapshots are immutable, tiered, ordered, and reject forgery', () => {
   const player = completeEngineCrew(['cornball', 'hooper', 'plug', 'snow', 'wifey', 'baby', 'bikelife']);
   const cpu = completeEngineCrew(['rastamon', 'roaster', 'nerd', 'streamer', 'gamer', 'techbro', 'vibe']);
   for (const [level, unlocked] of [[1, 0], [2, 1], [5, 2], [8, 3], [10, 3]] as const) {
@@ -387,7 +387,7 @@ test('Plug discount waits for a different district and is then consumed', () => 
   assert.equal(match.plugDiscountLane.player, null);
 });
 
-test('SQUABBLE is a once-per-match card modifier', () => {
+test('SQUABBLE is a once-per-fade card modifier', () => {
   let match = createMatch('vibes', 'combo');
   const card = match.playerHand[0];
   match = { ...match, playerMotion: 20 };
@@ -406,7 +406,7 @@ test('SQUABBLE is a once-per-match card modifier', () => {
   assert.throws(() => playCard({ ...match, phase: 'player' }, 'player', match.playerHand[0].instanceId, 1, true));
 });
 
-test('a complete six-round pass match resolves deterministically', () => {
+test('a complete six-round pass fade resolves deterministically', () => {
   let match = createMatch('vibes', 'combo');
   for (let round = 1; round <= 6; round += 1) {
     match = pass(match, 'player');
@@ -540,4 +540,24 @@ test('passes are synchronous authoritative events and survive round transitions'
   const draws = roundStart.targets.filter((target) => target.before === null && target.after?.lane === null);
   assert.equal(draws.length, 2);
   assert.deepEqual(match.effectLog.map(event => event.sequence), [1, 2, 3]);
+});
+
+test('Church Auntie buff adds immediate Hands, preserves existing shields, and respects silence', () => {
+  assert.equal(cards.church.cost,3); assert.equal(cards.church.power,4);
+  validateCardAbilityUpgrades({church:cards.church});
+  for(const protectedAlready of [false,true]){
+    const ally={...custom('cornball','player',91),lane:0 as const};
+    ally.statuses.protected=protectedAlready;
+    const result=playOne('church',m=>({...m,boards:[[ally],[],[]]}));
+    const target=result.boards[0].find(c=>c.instanceId===ally.instanceId)!;
+    assert.equal(target.powerModifier,2);
+    assert.equal(target.statuses.protected,true);
+    assert.equal(result.timedEffects.filter(e=>e.kind==='church-protection').length,protectedAlready?0:1);
+  }
+  const alone=playOne('church');
+  assert.equal(alone.boards[0][0].basePower,4);
+  assert.equal(alone.boards[0][0].statuses.protected,false);
+  const ally={...custom('cornball','player',92),lane:0 as const};
+  const silenced=playOne('church',m=>({...m,playerHand:m.playerHand.map(c=>({...c,statuses:{...c.statuses,silenced:true}})),boards:[[ally],[],[]]}));
+  assert.equal(silenced.boards[0].find(c=>c.instanceId===ally.instanceId)!.powerModifier,0);
 });

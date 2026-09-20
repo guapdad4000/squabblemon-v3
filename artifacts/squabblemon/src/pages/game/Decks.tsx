@@ -7,6 +7,7 @@ import { useDeckPersistence } from '../../lib/useDeckPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 import { catalogCardById, getCardImage, starterRecipes, validateSavedDeck, CARD_RARITY_DEFINITIONS } from '../../data';
 import { useState } from 'react';
+import { PageDecor } from '../../components/venue/PageDecor';
 
 function CrewPortrait({ name, heroId, count, valid, index, subtitle, onClick }: {
   name: string; heroId: string; count: number; valid: boolean; index: number; subtitle?: string; onClick: () => void;
@@ -46,9 +47,10 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     }
   };
 
-  return <ArsenalScreen className="arsenal-archive" label="Your crews">
+  return <ArsenalScreen className="arsenal-archive world-decor-host" label="Your gangs">
+    <PageDecor theme="crew" />
     <div className="arsenal-heading-row">
-      <PageHeading art="deck-stack" eyebrow="THE LINEUP / CREW BUILDER" title="Your crew.">{bootstrap.profile.savedDecks.length} / {bootstrap.profile.deckSlots} saved crews. Bring the right energy.</PageHeading>
+      <PageHeading art="deck-stack" eyebrow="THE LINEUP / GANG BUILDER" title="Your gang.">{bootstrap.profile.savedDecks.length} / {bootstrap.profile.deckSlots} saved gangs. Bring the right energy.</PageHeading>
       <div className="arsenal-heading-actions">
         <FocusViewButton />
         <button
@@ -63,13 +65,13 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </div>
     </div>
     {error && <p role="alert" className="arsenal-error">{error}</p>}
-    {atCapacity && <p className="arsenal-error">All crew slots are in use. Edit a crew, or delete one to free a slot.</p>}
+    {atCapacity && <p className="arsenal-error">All gang slots are in use. Edit a gang, or delete one to free a slot.</p>}
     <div className="arsenal-archive__section">
       <h2 className="arsenal-section-label">
-        <span>Your crews</span>
+        <span>Your gangs</span>
         <span className="arsenal-section-label__count">{bootstrap.profile.savedDecks.length} / {bootstrap.profile.deckSlots}</span>
       </h2>
-      {bootstrap.profile.savedDecks.length === 0 ? <div className="arsenal-empty"><Layers size={32} aria-hidden="true" /><h2>Every crew starts with you.</h2><p>Pick ten cards, find your chemistry, and make your mark on the block.</p><button type="button" className="arsenal-link" disabled={creating || atCapacity} onClick={handleCreateNew}><Plus size={16} />Build your first crew</button></div>
+      {bootstrap.profile.savedDecks.length === 0 ? <div className="arsenal-empty"><Layers size={32} aria-hidden="true" /><h2>Every gang starts with you.</h2><p>Pick ten cards, find your chemistry, and make your mark on the block.</p><button type="button" className="arsenal-link" disabled={creating || atCapacity} onClick={handleCreateNew}><Plus size={16} />Build your first gang</button></div>
         : <div className="arsenal-archive__grid">{bootstrap.profile.savedDecks.map((deck, index) =>
           <CrewPortrait key={deck.id} name={deck.name} heroId={deck.heroCardId} count={deck.cardIds.length} index={index}
             valid={validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId).valid}
@@ -77,7 +79,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         )}</div>}
     </div>
     <details className="arsenal-archive__examples"><summary><ChevronDown size={14} aria-hidden="true" />Learning examples · find your starting point</summary>
-      <p>Mix any owned cards. Saving an example creates your own crew.</p>
+      <p>Mix any owned cards. Saving an example creates your own gang.</p>
       <div className="arsenal-archive__grid">{starterRecipes.map((recipe, index) =>
         <CrewPortrait key={recipe.id} name={recipe.name} heroId={recipe.hero} count={recipe.catalogCardIds.length} index={index} subtitle={recipe.archetype}
           valid={validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid}

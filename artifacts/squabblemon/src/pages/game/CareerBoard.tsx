@@ -1,3 +1,4 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -31,6 +32,7 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         body: JSON.stringify({ cardId }),
       });
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result);
+      revealProfileRewards(bootstrap, result, cardId, 'New gang member');
       setSelected(null);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Could not claim this card. Try again.');
@@ -54,7 +56,7 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     },
     {
       done: progress.changedCrew,
-      label: 'Test a changed crew after a previous practice match',
+      label: 'Test a changed gang after a previous practice fade',
       hint: 'Try a fresh lineup. Drafts excluded.',
       icon: Shuffle,
     },

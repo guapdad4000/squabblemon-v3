@@ -1,7 +1,8 @@
 import { MusicControls } from '../MusicControls';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Crown, Ticket, X, Coins } from 'lucide-react';
+import { X } from 'lucide-react';
+import { GameGlyph } from './GameGlyph';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../lib/assets';
 import './fan-navigation.css';
@@ -11,7 +12,7 @@ const routes = [
   { path: '/game/story', label: 'The streets', detail: 'Story mode', art: 'streets', primary: true, glyph: 'map' },
   { path: '/game/collection', label: 'Collection', detail: 'Your arsenal', art: 'collection', primary: false, glyph: 'layers' },
   { path: '/game/online', label: 'Fight', detail: 'Challenge a friend', art: 'fight', primary: true, glyph: 'crossed' },
-  { path: '/game/decks', label: 'Your crew', detail: 'Build a lineup', art: 'crew', primary: false, glyph: 'users' },
+  { path: '/game/decks', label: 'Your gang', detail: 'Build a lineup', art: 'crew', primary: false, glyph: 'users' },
   { path: '/game/missions', label: 'Bounties', detail: 'Work the city', art: 'bounties', primary: false, glyph: 'scroll' },
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
   { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false, glyph: 'wallet' },
@@ -93,9 +94,9 @@ export function GameHud({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <header className="venue-hud">
     <Link href="/game/settings" className="venue-hud__identity"><span className="venue-hud__level">{profile.level.toString().padStart(2, '0')}</span><span><small>YOUR REPUTATION STARTS HERE</small><strong>{profile.displayName}</strong></span></Link>
     <div className="venue-hud__wallet" aria-label="Player balances">
-      <span title="Street reputation"><Crown size={16} /><b>{profile.streetRep.toLocaleString()}</b><small>REP</small></span>
-      <Link href="/game/shop?view=training" title="Spend Clout at the Trading Post"><Coins size={16} /><b>{profile.softCurrency.toLocaleString()}</b><small>CLOUT</small></Link>
-      <Link href="/game/shop?view=packs" title="Pack tickets"><Ticket size={16} /><b>{profile.packTickets.toLocaleString()}</b><small>TICKETS</small></Link>
+      <span title="Street reputation"><GameGlyph name="rep" /><b>{profile.streetRep.toLocaleString()}</b><small>REP</small></span>
+      <Link href="/game/shop?view=training" title="Spend Clout at the Trading Post"><GameGlyph name="clout" /><b>{profile.softCurrency.toLocaleString()}</b><small>CLOUT</small></Link>
+      <Link href="/game/shop?view=packs" title="Pack tickets"><GameGlyph name="ticket" /><b>{profile.packTickets.toLocaleString()}</b><small>TICKETS</small></Link>
     </div>
     <MusicControls compact />
     {profile.id === 'e2e-player' && <span className="venue-hud__preview">LOCAL PREVIEW</span>}

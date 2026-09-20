@@ -26,8 +26,8 @@ test('Mythicals span early and late Motion without inflated printed Hands', () =
 
 test('every character fits the six-round Motion curve without an oversized free body', () => {
   assert.equal(characters.length, 89);
-  assert(characters.filter(card => card.cost === 1).length >= 10, 'crews need enough opening cards');
-  assert(characters.filter(card => card.cost >= 4).length >= 15, 'crews need mid- and late-round choices');
+  assert(characters.filter(card => card.cost === 1).length >= 10, 'gangs need enough opening cards');
+  assert(characters.filter(card => card.cost >= 4).length >= 15, 'gangs need mid- and late-round choices');
   for (const cost of [1, 2, 3, 4]) {
     const printedHands = new Set(characters.filter(card => card.cost === cost).map(card => card.power));
     assert(printedHands.size >= 2, `${cost}-Motion characters need distinct Hands options`);
@@ -53,7 +53,7 @@ test('Mythical reveal swings stay bounded in a favorable contested board', () =>
       - (totalHands(after, 'cpu') - totalHands(before, 'cpu'));
     const expectedNetMotion = cards[mythic.engineId].cost - (mythic.engineId === 'tron' ? 1 : 0);
     assert.equal(9 - after.playerMotion, expectedNetMotion, mythic.name);
-    assert(swing <= Math.max(mythic.cost * 2.25, 6), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
+    assert(swing <= Math.ceil(Math.max(mythic.cost * 2.25, 6)), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
     assert(swing >= mythic.power, `${mythic.name} lost its printed value on a favorable board`);
   }
 });

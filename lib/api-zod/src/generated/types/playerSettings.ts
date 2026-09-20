@@ -5,8 +5,10 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+import type { CosmeticLoadout } from './cosmeticLoadout';
 
 export interface PlayerSettings {
+  cosmetics?: CosmeticLoadout;
   reducedMotion: boolean;
   turnTimerEnabled: boolean;
 }

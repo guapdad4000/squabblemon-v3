@@ -14,6 +14,7 @@ test('promo lookup accepts casing and surrounding whitespace, rejects unknown an
     cardIds: ['dragonfly-jones', 'sho-nuff', 'yasuke', 'mansa-musa', 'tron', 'john-henry', 'leroy'] });
   assert.deepEqual(findPromoCode(' jetsetcabin\n'), { code: 'JETSETCABIN', packTickets: 25, softCurrency: 10_000, styleShards: 0,
     cardIds: ['ashlee', 'captain-jigga'] });
+  assert.deepEqual(findPromoCode(' kyle '), { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] });
   for (const code of ['', ' ', 'DEV TEST', 'NOTREAL', '__proto__', 'constructor', 'toString']) assert.equal(findPromoCode(code), null);
 });
 
@@ -225,4 +226,18 @@ test('promo redemption persists rewards once and works with the real economy', {
     await db.update(playerProfilesTable).set({ styleShards: 20 }).where(eq(playerProfilesTable.clerkUserId, id));
     assert.equal((await redeemPromoCode(id, 'DEVTEST')).alreadyRedeemed, false);
   });
+});
+
+test('DEVSTOCKZ grants only the redeemable STOCKZ character', () => {
+  const reward = findPromoCode(' devstockz ');
+  assert.deepEqual(reward, { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] });
+  assert.equal(catalogCardById.stockz.kind, 'character');
+});
+
+
+test('KYLE grants the legendary character, tickets and Clout', () => {
+  const reward = findPromoCode(' kyle ');
+  assert.deepEqual(reward, { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] });
+  assert.equal(catalogCardById.kyle.kind, 'character');
+  assert.equal(catalogCardById.kyle.rarity, 'Legendary');
 });

@@ -1,0 +1,118 @@
+[
+  {
+    "id": "underground-ring",
+    "name": "UNDERGROUND RING",
+    "rule": "Only your strongest card here contributes Hands. Other cards still use abilities.",
+    "strategy": "Commit a champion and use the rest as support. Tied champions count only once. Frozen cards cannot be champion.",
+    "accent": "#ef4444",
+    "effect": {
+      "kind": "champion-only"
+    }
+  },
+  {
+    "id": "rooftop-garden",
+    "name": "ROOFTOP GARDEN",
+    "rule": "At the start of rounds 2–6, every card here permanently gains +1 Hands.",
+    "strategy": "Plant early and let your crew grow. The bonus travels with cards that move away; Frozen cards still grow.",
+    "accent": "#84cc16",
+    "effect": {
+      "kind": "round-growth",
+      "amount": 1
+    }
+  },
+  {
+    "id": "pawn-shop",
+    "name": "PAWN SHOP",
+    "rule": "Your first play here each round destroys your weakest other ally here and gains its current Hands before its ability.",
+    "strategy": "Trade a small ally into a bigger threat. Frozen allies give 0; district bonuses are excluded. No other ally means no trade.",
+    "accent": "#f59e0b",
+    "effect": {
+      "kind": "pawn-sacrifice"
+    }
+  },
+  {
+    "id": "pirate-radio",
+    "name": "PIRATE RADIO",
+    "rule": "While you have exactly 2 cards here, your side gains +3 district Hands in each other lane.",
+    "strategy": "Hold a two-card broadcast crew. A third ally turns the signal off. The bonus can score in an empty lane.",
+    "accent": "#a78bfa",
+    "effect": {
+      "kind": "broadcast",
+      "requiredAllies": 2,
+      "amount": 3
+    }
+  },
+  {
+    "id": "blackout-block",
+    "name": "BLACKOUT BLOCK",
+    "rule": "Cards played here are Silenced before their abilities resolve. Moving in avoids the blackout.",
+    "strategy": "Bring raw Hands or move your ability cards here. Silence stays after leaving until cleansed.",
+    "accent": "#64748b",
+    "effect": {
+      "kind": "silence-arrival"
+    }
+  },
+  {
+    "id": "flood-channel",
+    "name": "FLOOD CHANNEL",
+    "rule": "At the start of round 4, all cards here move one lane right. Rightmost wraps left.",
+    "strategy": "Build a crew for the flood, or wait until it passes. Locked cards stay. Movement triggers still apply; abilities do not repeat.",
+    "accent": "#06b6d4",
+    "effect": {
+      "kind": "flood",
+      "atRound": 4
+    }
+  },
+  {
+    "id": "construction-site",
+    "name": "CONSTRUCTION SITE",
+    "rule": "From round 4, neither side can play cards here. Cards can still move in or out.",
+    "strategy": "Claim the site early, then use movement to reinforce or invade after the gates close.",
+    "accent": "#fb923c",
+    "effect": {
+      "kind": "close-lane",
+      "atRound": 4
+    }
+  },
+  {
+    "id": "night-market",
+    "name": "NIGHT MARKET",
+    "rule": "Your first play here each round draws the next card from your deck before its ability.",
+    "strategy": "Find more options while you still have Motion to spend. An empty deck draws nothing; moving in does not draw.",
+    "accent": "#e879f9",
+    "effect": {
+      "kind": "market-draw"
+    }
+  },
+  {
+    "id": "mirror-arcade",
+    "name": "MIRROR ARCADE",
+    "rule": "Each card here scores its printed Motion cost instead of its current Hands. Frozen cards score 0.",
+    "strategy": "Big costs become reliable scores. Buffs, penalties and SQUABBLE still matter when cards leave. Abilities still work.",
+    "accent": "#38bdf8",
+    "effect": {
+      "kind": "cost-power"
+    }
+  },
+  {
+    "id": "community-kitchen",
+    "name": "COMMUNITY KITCHEN",
+    "rule": "Your first play here each round gives all your cards in the other lanes +1 permanent Hands.",
+    "strategy": "Spread your crew before serving. The meal resolves before the new card’s ability and never buffs cards in this lane.",
+    "accent": "#fdba74",
+    "effect": {
+      "kind": "feed-neighbors",
+      "amount": 1
+    }
+  },
+  {
+    "id": "rush-hour",
+    "name": "RUSH HOUR",
+    "rule": "The first play here each round, by either side, pushes every other card here one lane right before its ability.",
+    "strategy": "Both crews share one traffic trigger per round. The new arrival stays; Locked cards resist. Rightmost wraps left.",
+    "accent": "#f97316",
+    "effect": {
+      "kind": "rush-hour"
+    }
+  }
+]

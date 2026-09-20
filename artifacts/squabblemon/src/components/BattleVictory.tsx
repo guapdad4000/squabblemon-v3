@@ -20,7 +20,7 @@ export function BattleVictory({
     .slice(0, 3);
   if (!crew.length) return null;
   return (
-    <section className={`winning-crew winning-crew--${winner}`} aria-label="Winning crew" data-testid="winning-crew">
+    <section className={`winning-crew winning-crew--${winner}`} aria-label="Winning gang" data-testid="winning-crew">
       <div className="winning-crew__light" aria-hidden="true" />
       {crew.map((card, index) => (
         <figure key={card.instanceId} style={{ '--crew-delay': `${index * 100}ms` } as React.CSSProperties}>
@@ -32,7 +32,7 @@ export function BattleVictory({
           <figcaption>
             {card.name}
             <span>
-              {index === 0 ? 'Top Hands' : 'Winning crew'} · {getEffectiveCardPower(card)}
+              {index === 0 ? 'Top Hands' : 'Winning gang'} · {getEffectiveCardPower(card)}
             </span>
           </figcaption>
         </figure>

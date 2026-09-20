@@ -270,7 +270,7 @@
         },
         {
           "speaker": "Ganger Red",
-          "text": "I'm first. Middle district closes in round three, both sides. The canopy crew needs the space.",
+          "text": "I'm first. Middle district closes in round three, both sides. The canopy gang needs the space.",
           "portraitAssetId": "assets/characters/ganger-red.webp"
         },
         {
@@ -462,7 +462,7 @@
         },
         {
           "speaker": "Wifey",
-          "text": "The card match is free too. Before you try to bundle it.",
+          "text": "The card fade is free too. Before you try to bundle it.",
           "portraitAssetId": "assets/characters/wifey.webp"
         },
         {
@@ -474,7 +474,7 @@
       "postDialogue": [
         {
           "speaker": "Cornball",
-          "text": "Okay. I lost the match. The company remains confident.",
+          "text": "Okay. I lost the fade. The company remains confident.",
           "portraitAssetId": "assets/characters/cornball.webp"
         },
         {
@@ -985,7 +985,7 @@
         },
         {
           "speaker": "Baby Momma",
-          "text": "Play the match.",
+          "text": "Play the fade.",
           "portraitAssetId": "assets/characters/baby-momma.webp"
         },
         {
@@ -1446,7 +1446,7 @@
         },
         {
           "speaker": "Baby Momma",
-          "text": "Two phases. One match. Winner hosts. My family business stays mine either way.",
+          "text": "Two phases. One fade. Winner hosts. My family business stays mine either way.",
           "portraitAssetId": "assets/characters/baby-momma.webp"
         }
       ],

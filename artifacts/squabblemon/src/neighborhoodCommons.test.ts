@@ -59,7 +59,17 @@ test('supports buff allies without buffing enemies or themselves; nurse cleanses
   const m = reveal('pinaynurse', m => ({ ...m, boards: [[ally], [], []] }));
   assert.equal(m.boards[0][0].statuses.frozen, false);
   assert.equal(m.boards[0][0].statuses.silenced, false);
-  assert.equal(m.boards[0][0].powerModifier, 1);
+  assert.equal(m.boards[0][0].powerModifier, 2);
+});
+
+test('Pinay Nurse cleanses and gives the lowest-Hands ally +2 Hands', () => {
+  const ally = instance('cornball', 'player', 1);
+  ally.statuses = { ...ally.statuses, frozen: true, silenced: true };
+  const m = reveal('pinaynurse', match => ({ ...match, boards: [[ally], [], []] }));
+  const treated = m.boards[0].find(card => card.instanceId === ally.instanceId)!;
+  assert.equal(treated.statuses.frozen, false);
+  assert.equal(treated.statuses.silenced, false);
+  assert.equal(treated.powerModifier, 2);
 });
 
 test('Tayaty and Honest Thot target only the lowest enemy', () => {

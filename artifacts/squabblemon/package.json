@@ -12,6 +12,8 @@
     "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:battle-drag": "node e2e/verify-battle-drag.mjs",
+    "test:card-details": "node e2e/verify-card-details.mjs",
+    "test:foil": "node e2e/verify-foil.mjs",
     "test:gameplay-browser": "node --import tsx e2e/verify-gameplay-upgrade.ts",
     "test:local-practice": "node e2e/verify-local-practice.mjs",
     "test:super-common": "node e2e/verify-super-common.mjs",
@@ -26,7 +28,9 @@
     "validate:bundle": "node scripts/check-entry-bundle.mjs",
     "test:battle": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/Battle.test.tsx src/battleDestruction.test.ts src/gameEngine.test.ts src/districts.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/neighborhoodCommons.test.ts src/superCommonCards.test.ts src/battleChoreography.test.ts src/battlePreview.test.ts src/battleFeedback.test.ts src/presentationTimeline.test.ts src/battleVisibility.test.ts",
     "test:music": "node --import tsx --test src/musicPlayer.test.ts",
-    "test:music-browser": "node e2e/verify-music.mjs"
+    "test:music-browser": "node e2e/verify-music.mjs",
+    "test:safehouse": "node --test e2e/safehouse-static.test.mjs",
+    "test:safehouse-browser": "node e2e/verify-safehouse.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

@@ -205,7 +205,7 @@ test("ten-pull guarantee prefers an unowned Rare+ before an owned Mythical", () 
 
 test("published rarity odds are generated from the roll weights", () => {
   const published = STREET_PACK_CONFIG.odds.find(
-    (odd) => odd.label === "Slots 3–5 · Crew cards",
+    (odd) => odd.label === "Slots 3–5 · Gang cards",
   )?.detail ?? "";
   assert.equal(
     Object.values(STREET_PACK_RARITY_WEIGHTS).reduce((sum, weight) => sum + weight, 0),

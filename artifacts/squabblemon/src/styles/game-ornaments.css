@@ -311,3 +311,5 @@ html[data-reduce-motion='true'] :is(.studio-page, .studio-results, .battle-arena
   animation: none !important;
   transition: none !important;
 }
+.venue-hud__wallet .game-glyph { --glyph-size: 27px; }
+@media (max-width: 639px) { .venue-hud__wallet .game-glyph { --glyph-size: 23px; } }

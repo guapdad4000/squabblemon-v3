@@ -1,3 +1,4 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { OnboardingProgressInput, PlayerBootstrap, PlayerProfileOnboardingStep } from '@workspace/api-client-react';
@@ -22,7 +23,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await advance.mutateAsync({ data: payload });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
-      if (payload.action === 'claim-reward') setLocation('/game/story');
+      if (payload.action === 'claim-reward') { revealProfileRewards(bootstrap, res, 'onboarding', 'Your first haul'); setLocation('/game/story'); }
     } catch (e) {
       console.error(e);
       setError('The block could not save that step. Check your connection and try again.');
@@ -155,8 +156,8 @@ function CrewStep({ onComplete }: { onComplete: (id: string) => void }) {
   return <section className="rookie-review"><div>
     <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
     <span className="venue-kicker">ROOKIE ROAD / YOUR COLLECTION</span>
-    <h1>Make it your crew.</h1>
-    <p>You’ve learned the match. Now choose who you bring. Your first collection includes 20 cards to mix, match, and make your own.</p>
+    <h1>Make it your gang.</h1>
+    <p>You’ve learned the fade. Now choose who you bring. Your first collection includes 20 cards to mix, match, and make your own.</p>
     <p>We’ll put ten on the table to get you started. Every slot is editable, and your cover character is your choice.</p>
     <nav><button className="venue-button venue-button--gold" onClick={() => onComplete(ROOKIE_FOUNDATION_ID)}>Open my card collection</button></nav>
   </div></section>;

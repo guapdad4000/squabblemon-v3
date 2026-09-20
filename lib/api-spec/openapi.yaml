@@ -428,6 +428,27 @@ paths:
           description: Authentication required
         "404":
           description: Mission not found
+  /player/cosmetics:
+    put:
+      operationId: equipPlayerCosmetics
+      summary: Save an owned banner, stickers, and character card scenes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CosmeticLoadout'
+      responses:
+        '200':
+          description: Persisted cosmetic loadout and refreshed player state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerBootstrap'
+        '400':
+          description: Invalid or unowned cosmetic
+        '401':
+          description: Authentication required
   /player/shop:
     get:
       operationId: getPlayerShop
@@ -536,7 +557,7 @@ components:
           pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
         itemId:
           type: string
-          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style]
+          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style, character-stickers, character-backdrop, character-banner-finish]
         cardId:
           type: string
           minLength: 1
@@ -571,9 +592,34 @@ components:
         status:
           type: string
       required: [status]
+    CosmeticLoadout:
+      type: object
+      additionalProperties: false
+      properties:
+        bannerCardId:
+          type: [string, "null"]
+          maxLength: 64
+        bannerFinish:
+          type: string
+          enum: [base, silver]
+        stickers:
+          type: array
+          maxItems: 3
+          uniqueItems: true
+          items:
+            type: string
+            maxLength: 80
+        cardBackgrounds:
+          type: object
+          maxProperties: 200
+          additionalProperties:
+            type: string
+            enum: [blue-hour]
     PlayerSettings:
       type: object
       properties:
+        cosmetics:
+          $ref: "#/components/schemas/CosmeticLoadout"
         reducedMotion:
           type: boolean
         turnTimerEnabled:

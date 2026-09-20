@@ -30,7 +30,7 @@ import {
   type StoryContent,
 } from "@workspace/squabblemon-engine/story";
 
-test("the server-verifiable transcript reproduces the local match", () => {
+test("the server-verifiable transcript reproduces the local fade", () => {
   let local = createMatch("block", "slide");
   const moves: PlayerMove[] = [];
 

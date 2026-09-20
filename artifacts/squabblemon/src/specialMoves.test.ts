@@ -176,3 +176,36 @@ test('play-once gate suppresses repeated chroma playback per fighter while keepi
   played.clear();
   assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, clip!.durationMs);
 });
+
+test('STOCKZ uses its delivered animation once while ongoing gains keep resolving', () => {
+  const clip = resolveSpecialMove('stockz')!;
+  assert.equal(clip.id, 'char102');
+  assert.equal(clip.move, cards.stockz.ability);
+  assert.equal(clip.chroma, 'cyan');
+  assert.equal(clip.durationMs, 6500);
+  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'stockz' })?.id, 'char102');
+  const key = { owner: 'player' as const, sourceInstanceId: 'stockz-1', moveId: clip.id };
+  const played = new Set<string>();
+  assert.equal(gateSpecialMoveReplay(clip, key, played)?.id, 'char102');
+  markSpecialMovePlayed(played, key);
+  assert.equal(gateSpecialMoveReplay(clip, key, played), null);
+  assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, 650);
+});
+
+
+test('KYLE uses the delivered Smile Bombs animation once per fade', () => {
+  const clip = resolveSpecialMove('kyle')!;
+  assert.equal(clip.id, 'char103');
+  assert.equal(clip.file, 'char103_chroma.mp4');
+  assert.equal(clip.move, cards.kyle.ability);
+  assert.equal(clip.chroma, 'cyan');
+  assert.equal(clip.durationMs, 6500);
+  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'kyle' })?.id, 'char103');
+  assert.ok(existsSync(new URL('../public/assets/special-moves/char103_chroma.mp4', import.meta.url)));
+  const key = { owner: 'player' as const, sourceInstanceId: 'kyle-1', moveId: clip.id };
+  const played = new Set<string>();
+  assert.equal(gateSpecialMoveReplay(clip, key, played)?.id, 'char103');
+  markSpecialMovePlayed(played, key);
+  assert.equal(gateSpecialMoveReplay(clip, key, played), null);
+  assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, 650);
+});

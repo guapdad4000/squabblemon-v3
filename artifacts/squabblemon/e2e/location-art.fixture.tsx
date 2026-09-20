@@ -34,7 +34,7 @@ function LocationArtGallery() {
         {locations.map(([id, art], index) => <article key={id}>
           <img src={getLocationArtwork(id).node} alt={`${art.name} painted location`} width="600" height="400" />
           <span>{String(index + 1).padStart(2, '0')} / {id.startsWith('legacy') ? 'CLASSIC' : 'THE CITY'}</span>
-          <h2>{art.name}</h2><p>{DISTRICT_CATALOG.find(d => d.id === id)?.strategy ?? 'Artwork for classic saved matches.'}</p>
+          <h2>{art.name}</h2><p>{DISTRICT_CATALOG.find(d => d.id === id)?.strategy ?? 'Artwork for classic saved fades.'}</p>
         </article>)}
       </section>
     </>}

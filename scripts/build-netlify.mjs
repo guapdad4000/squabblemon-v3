@@ -21,6 +21,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   run(['node_modules/typescript/bin/tsc','--build','lib/squabblemon-engine','lib/db','lib/api-zod','lib/api-client-react'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/api-server/tsconfig.json','--noEmit'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/squabblemon/tsconfig.json','--noEmit'],env);
+  // Summoner regressions must block publication before the client/API bundles ship.
+  run(['--import','./scripts/battle-test-css.mjs','--import','tsx','--test','--test-name-pattern=battle renders after|summons render|later copy|summon Hands|stewardesses each','artifacts/squabblemon/src/components/Battle.test.tsx'],env);
+  // Both human seats and private online projections are release gates.
+  run(['scripts/check-online.mjs','artifacts/squabblemon/src/multiplayer.test.ts','artifacts/squabblemon/src/kyle.test.ts'],env);
   run(['scripts/build-netlify-function.mjs'],env);
   run(['scripts/check-netlify-function.mjs'],env);
   run(['node_modules/vite/bin/vite.js','build','--config','artifacts/squabblemon/vite.config.ts'],env);

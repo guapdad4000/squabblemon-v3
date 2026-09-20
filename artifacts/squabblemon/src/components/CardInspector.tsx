@@ -1,19 +1,22 @@
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CardView } from './CardView';
+import { PageDecor } from './venue/PageDecor';
 import { X } from 'lucide-react';
 import { CardInstance, getEffectiveCardPower } from '../gameEngine';
 import { PlayerBootstrap, useCraftPlayerVariant, useEquipPlayerVariant } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { CardProgress } from './CardProgress';
+import { getVariantKind } from './CardVariantTreatment';
 import { catalogCardByEngineId, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
-import { CARD_FINISH, getCardWallpaper } from '../lib/cardFinish';
+import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaper } from '../lib/cardFinish';
 import '../styles/collection-inspector.css';
 import '../styles/fighter-resume.css';
 
@@ -38,14 +41,17 @@ function scoutNote(card: any): string {
 }
 
 export function CardInspector({ card, onClose, bootstrap, variantId, match, useCachedProfile = false }: any) {
-  const reduceMotion = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
+  const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   const isInstance = 'instanceId' in card;
   const panel = React.useRef<HTMLDivElement>(null);
+  // Escape transformed route containers while staying inside a native dialog's top layer.
+  const [portalHost] = React.useState(() => typeof document === 'undefined' ? null
+    : document.activeElement?.closest<HTMLDialogElement>('dialog[open]') ?? document.body);
   React.useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     panel.current?.querySelector<HTMLButtonElement>('[data-testid=button-close-inspector]')?.focus({ preventScroll: true });
-    return () => previous?.focus({ preventScroll: true });
+    return () => { if (previous?.isConnected) previous.focus({ preventScroll: true }); };
   }, []);
   const instance = isInstance ? card as CardInstance : null;
   const isCovered = Boolean(instance && match?.timedEffects?.some((effect: any) => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === instance.instanceId));
@@ -58,6 +64,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = (catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : undefined) ?? variantId;
+  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(null);
+  const displayedVariant = preview && preview.cardId === card.id ? preview.variant : equippedVariant;
+  const previewKind = getVariantKind(displayedVariant);
+  const isPreview = (displayedVariant ?? null) !== (equippedVariant ?? null);
   const progression = catalogCard ? bootstrap?.profile.cardProgression[catalogCard.catalogId] : undefined;
   const matchUpgradeIds = instance && match?.abilityUpgradeSnapshot
     ? snapshotUpgradesForCard(match.abilityUpgradeSnapshot, instance.owner, instance.cardId).map((upgrade: { id: string }) => upgrade.id)
@@ -89,7 +99,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
 
   const effectivePower = instance ? getEffectiveCardPower(instance) : card.power;
   const rarityLabel = catalogCard ? CARD_RARITY_DEFINITIONS[catalogCard.rarity].label : 'Standard';
-  const finishLabel = catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition';
+  const finishLabel = catalogCard ? cardFinishLabel(catalogCard.rarity, previewKind) : 'Collector edition';
   const faction = catalogCard?.faction ?? 'Independent';
   const crewTags = catalogCard?.crewTags ?? [];
   const usedDecks = catalogCard
@@ -98,18 +108,20 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const isBattleMode = Boolean(match);
   const variantSlots = catalogCard?.variantSlots ?? [];
 
-  return (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-start justify-center ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume')} onClick={onClose} onKeyDown={event => {
-      if (event.key === 'Escape') { event.stopPropagation(); onClose(); }
+  const inspector = (
+    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
+      if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
-        const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
+        const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);
         const first = elements[0], last = elements[elements.length-1];
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }
     }}>
+      {!match && <PageDecor theme={catalogCard?.rarity === 'Mythical' ? 'mythic' : 'profile'} compact />}
       <div className="collector-inspector-backdrop" style={{ backgroundImage: `url("${getCardWallpaper(card.type)}")` }} aria-hidden="true" />
-      {!match && <button type="button" className="collection-inspector__close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} /><span>Close</span></button>}
+      <button type="button" className="card-inspector-close" data-testid="button-close-inspector" aria-label="Close card details" onClick={event => { event.stopPropagation(); onClose(); }}><X size={22} aria-hidden="true" /><span>{match ? 'Back to battle' : 'Close details'}</span></button>
+      <div className="card-inspector-scroll">
       <motion.div
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -120,13 +132,14 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         {/* ============================================================
             LEFT — Polaroid portrait
             ============================================================ */}
+        <div className="collector-display-stack">
         <div className="polaroid mx-auto md:mx-0">
           <div className="polaroid__tape" aria-hidden="true" />
           <div className="polaroid__photo">
             <CardView
               card={card}
               covered={isCovered}
-              variantId={equippedVariant}
+              variantId={displayedVariant ?? undefined}
               progress={progression}
               testId="card-inspector"
               inspectionLayout={instance && match && !reduceMotion ? 'battle-inspect-' + instance.instanceId : undefined}
@@ -144,6 +157,16 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
             <small>Move across the card to catch the light</small>
           </div>
+        </div>
+
+          {variantSlots.length > 0 && <div className="collector-finish-controls">
+            <div className="collector-finish-controls__label" aria-live="polite">{isPreview ? 'Finish preview' : 'Your finish'} · {finishLabel}</div>
+            <nav aria-label="Preview card finish">
+              <button type="button" aria-pressed={!displayedVariant} onClick={() => setPreview({cardId: card.id, variant: null})}>Original</button>
+              {variantSlots.map((slot: any) => <button type="button" key={slot.id} data-finish={getVariantKind(slot.id)} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>{slot.name}</button>)}
+            </nav>
+            <small>Touch or hover to catch the light. Arrow keys work too.</small>
+          </div>}
         </div>
 
         {/* ============================================================
@@ -164,16 +187,6 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <span className="dossier-banner__meta">
               {card.type} class · {card.cost} motion · {rarityLabel}
             </span>
-            {match && (
-              <button
-                data-testid="button-close-inspector"
-                aria-label="Close card details"
-                onClick={onClose}
-                className="ml-auto w-9 h-9 border border-white/30 flex items-center justify-center text-white/70 hover:bg-primary hover:text-black hover:border-primary transition-colors flex-shrink-0 bg-black/60"
-              >
-                <X size={16} />
-              </button>
-            )}
           </header>
 
           {/* Title plate */}
@@ -337,7 +350,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
                   ))
                 ) : (
                   <div className="dossier-table__row" style={{ gridTemplateColumns: '1fr' }}>
-                    <small style={{ color: 'var(--resume-ink-soft)' }}>Not on any saved decks yet — pull 'em into a crew.</small>
+                    <small style={{ color: 'var(--resume-ink-soft)' }}>Not on any saved decks yet — pull 'em into a gang.</small>
                   </div>
                 )}
               </div>
@@ -349,19 +362,23 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             <section className="dossier-section">
               <div className="dossier-section__head">
                 <h4>Variants & Crafting</h4>
-                <em>alt coats unlocked with Style Shards</em>
+                <em>collector finishes · crafted with Style Shards</em>
               </div>
               <div className="dossier-variants">
                 {variantSlots.map((slot: any) => {
                   const isOwned = bootstrap?.profile?.ownedVariants?.includes(slot.id);
                   const canAfford = (bootstrap?.profile?.styleShards ?? 0) >= slot.shardCost;
                   return (
-                    <article key={slot.id} className="dossier-variant">
+                    <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
+                      <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>
+                        <CardView card={card} variantId={slot.id} fillContainer presentationOnly disableLayout />
+                        <span>Preview finish</span>
+                      </button>
                       <div className="dossier-variant__cost">
                         {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : `${slot.shardCost} Shards`}
                       </div>
                       <h5>{slot.name}</h5>
-                      <p>{slot.description}</p>
+                      <p>{VARIANT_FINISH[getVariantKind(slot.id) ?? 'tagged'].description}</p>
                       {bootstrap && catalogCard && (
                         isOwned ? (
                           <button
@@ -390,6 +407,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
           {catalogCard && <CardRarityTreatment rarity={catalogCard.rarity} />}
         </div>
       </motion.div>
+      </div>
     </div>
   );
+  return portalHost ? createPortal(inspector, portalHost) : inspector;
 }

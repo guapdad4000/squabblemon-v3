@@ -422,3 +422,73 @@
     margin-top: 35px;
   }
 }
+/* Supplied result artwork: percentage anchors stay attached to the uncropped canvas. */
+.result-stage.result-stage--art { padding: 0 0 max(24px, env(safe-area-inset-bottom)); background: #100e0b; }
+.result-stage--art::before { display: none; }
+.result-stage--art .result-stage__content { max-width: 1672px; }
+.result-stage--art .result-stage__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; background: #100e0b; }
+.result-stage--art .result-stage__heading h2 { font-size: clamp(18px, 2.3vw, 30px); margin: 0; }
+.result-stage--art .result-stage__heading .studio-eyebrow { font-size: 10px; }
+.result-art { position: relative; container-type: inline-size; width: 100%; color: #2b1b0c; }
+.result-art picture, .result-art__image { display: block; width: 100%; }
+.result-art__image { height: auto; aspect-ratio: 1672 / 941; }
+.result-art__toggle { position: absolute; top: 16px; right: 16px; min-height: 44px; padding: 8px 16px; border: 1px solid #e0b76d; border-radius: 3px; color: #ffe4ac; background: #100e0bea; font-size: 12px; font-weight: 800; box-shadow: 0 2px 12px #0009; }
+.result-art__toggle:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+.result-art__plaque { position: absolute; left: 62%; top: 47%; width: 31%; height: 15%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: .5%; }
+.result-art__caption { font-size: clamp(10px, 1cqw, 15px); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.result-art__rewards { display: flex; align-items: center; justify-content: space-evenly; width: 100%; gap: 4%; }
+.result-art__rewards > div { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 5px; }
+.result-art__rewards .game-glyph { --glyph-size: clamp(22px, 3cqw, 46px); grid-row: span 2; }
+.result-art__rewards strong { font-size: clamp(13px, 1.7cqw, 27px); line-height: 1.1; }
+.result-art__rewards span { font-size: clamp(9px, .85cqw, 13px); font-weight: 700; }
+.result-art__scores { position: absolute; left: 59%; top: 66%; width: 37%; height: 15%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.7%; }
+.result-art__scores > div { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2%; min-width: 0; }
+.result-art__scores span { font-size: clamp(10px, 1.05cqw, 16px); font-weight: 900; line-height: 1.1; max-width: 100%; }
+.result-art__scores strong { font-size: clamp(18px, 2.8cqw, 42px); line-height: 1.2; font-family: var(--font-display, Impact, sans-serif); }
+.result-art__scores small { font-size: .6em; opacity: .65; }
+.result-art__scores em { font-size: clamp(9px, .8cqw, 13px); font-style: normal; text-transform: uppercase; font-weight: 800; }
+.result-art--loss .result-art__plaque { left: 29%; top: 65%; width: 43%; height: 12%; }
+.result-art--loss .result-art__scores { left: 26.5%; top: 81%; width: 47%; height: 10%; gap: 2.5%; }
+.result-art--loss .result-art__scores strong { font-size: clamp(18px, 2.4cqw, 36px); }
+.result-art__loss-notes { display: none; }
+.result-stage__receipt { max-width: 860px; margin: 0 auto; padding: 20px 24px; }
+.result-stage--art .result-stage__actions { margin: 16px 0 24px; }
+.result-stage--art .result-stage__crew-details { margin: 16px 0; text-align: left; }
+.result-stage--art .result-stage__crew-details .winning-crew { margin-top: 32px; }
+.result-art--draw .result-art__plaque { left: 10%; top: 55%; width: 80%; height: 20%; background: #f8e8cfeF; border: 1px solid #d1a857; }
+.result-art--draw .result-art__scores { left: 10%; top: 76%; width: 80%; height: 20%; background: #f8e8cfef; }
+.venue-hud__wallet .game-glyph { --glyph-size: 27px; }
+@media (min-width: 640px) and (max-width: 1100px) {
+  .result-art--win .result-art__plaque { left: 29%; top: 63%; width: 41%; height: 13%; }
+  .result-art--win .result-art__scores { left: 28%; top: 80%; width: 44%; height: 11%; }
+  .result-art--loss .result-art__plaque { left: 27%; top: 70%; width: 46%; height: 11%; }
+  .result-art--loss .result-art__scores { left: 21%; top: 85%; width: 58%; height: 10%; }
+  .result-art__scores strong { font-size: 2.6cqw; }
+}
+@media (max-width: 639px) {
+  .result-stage--art .result-stage__heading { display: block; padding: 12px; }
+  .result-stage--art .result-stage__heading h2 { margin-top: 6px; font-size: 25px; }
+  .result-art__image { aspect-ratio: 941 / 1672; }
+  .result-art__toggle { top: 10px; right: 10px; }
+  .result-art--win .result-art__plaque { left: 15%; top: 55%; width: 70%; height: 12.5%; }
+  .result-art--win .result-art__scores { left: 9%; top: 71.5%; width: 81%; height: 11.5%; gap: 4%; }
+  .result-art--loss .result-art__plaque { left: 10%; top: 59.5%; width: 80%; height: 10%; }
+  .result-art--loss .result-art__scores { left: 7%; top: 72.5%; width: 87%; height: 8.5%; gap: 3%; }
+  .result-art__caption { font-size: clamp(9px, 2.5cqw, 15px); letter-spacing: .02em; }
+  .result-art__rewards { gap: 0; margin-top: 3px; }
+  .result-art__rewards > div { column-gap: 2px; }
+  .result-art__rewards .game-glyph { --glyph-size: 7cqw; }
+  .result-art__rewards strong { font-size: 4cqw; }
+  .result-art__rewards span { font-size: 2.3cqw; }
+  .result-art__scores span { font-size: 2.8cqw; }
+  .result-art__scores strong, .result-art--loss .result-art__scores strong { font-size: 6cqw; }
+  .result-art__scores em { font-size: 2.3cqw; }
+  .result-art__loss-notes { position: absolute; display: grid; grid-template-columns: repeat(3, 1fr); left: 7%; top: 83.5%; width: 85%; height: 6%; align-items: center; font-size: 3cqw; font-weight: 900; text-transform: uppercase; }
+  .result-stage__receipt { padding: 12px 16px; }
+  .venue-hud__wallet .game-glyph { --glyph-size: 23px; }
+}
+@media (max-width: 639px) {
+  .result-art__loss-notes { grid-template-columns: repeat(4, 1fr); left: 6.5%; width: 87%; gap: 2%; font-size: 2.5cqw; }
+}
+.result-stage__captain { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: #e9d6ac; }
+.result-stage__captain img { width: 64px; height: 80px; object-fit: cover; object-position: top; }

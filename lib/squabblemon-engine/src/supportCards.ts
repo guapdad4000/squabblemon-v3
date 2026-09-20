@@ -2,11 +2,11 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 const definitions = [
   ['energydrink', 'energy-drink', 'Energy Drink', 'Common', 'Fire', 1, 'Second Wind', 'Restore 3 Motion, up to the 9-Motion cap.', 'Tempo'],
-  ['charger', 'phone-charger', 'Phone Charger', 'Common', 'Electric', 1, 'Plug In', 'If a friendly Electric character is here, restore 2 Motion, up to the 9-Motion cap.', 'Tempo'],
+  ['charger', 'phone-charger', 'Phone Charger', 'Common', 'Electric', 1, 'Refund', 'On Reveal: Restore 1 Motion for each friendly character here, up to 3.', 'Tempo'],
   ['firstaid', 'first-aid-kit', 'First Aid Kit', 'Uncommon', 'Light', 2, 'Patch Up', 'Cleanse freeze and silence from every friendly character here.', 'Support'],
   ['boombox', 'boombox', 'Boombox', 'Uncommon', 'Air', 2, 'Turn It Up', 'Give every friendly character here +1 Hands.', 'Support'],
-  ['subwaymap', 'subway-map', 'Subway Map', 'Common', 'Air', 1, 'Alternate Route', 'Move your lowest-Hands friendly character here to your weakest other district. If moved, give it +1 Hands.', 'Movement'],
-  ['workboots', 'work-boots', 'Work Boots', 'Common', 'Earth', 1, 'Stand Firm', 'Give your lowest-Hands friendly character here +1 Hands and protect it from one targeted hostile ability.', 'Support'],
+  ['subwaymap', 'subway-map', 'Subway Map', 'Common', 'Air', 0, 'Alternate Route', 'Move your lowest-Hands friendly character here to your weakest other district. If moved, give it +1 Hands.', 'Movement'],
+  ['workboots', 'work-boots', 'Buttahs', 'Common', 'Earth', 1, 'Stand Firm', 'Give your lowest-Hands friendly character here +2 Hands and protect it from one targeted hostile ability.', 'Support'],
 ] as const;
 
 export const supportCardIds = definitions.map(([id]) => id);

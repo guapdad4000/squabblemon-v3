@@ -9,6 +9,23 @@ import { moveAssignments, resolveSpecialMove } from './specialMoves';
 
 const crew = completeEngineCrew(['energydrink', 'charger', 'cornball', 'plug', 'boombox', 'firstaid', 'subwaymap', 'workboots']);
 const unit = (id: string, owner: Owner, index = 0) => ({ ...createCardInstance(id, owner, 'supports', index), lane: 0 as const });
+test('requested balance pass updates starting Hands, Motion, support strength, and Buttahs display name', () => {
+  assert.equal(cards.landlord.power, 6);
+  assert.equal(cards.bottle.power, 3);
+  assert.equal(cards.ogdominican.power, 4);
+  assert.equal(cards.leroy.cost, 3);
+  assert.equal(cards.leroy.power, 4);
+  assert.equal(cards.pinaynurse.effect.includes('+2 Hands'), true);
+  assert.equal(cards.workboots.name, 'Buttahs');
+  assert.equal(cards.workboots.effect.includes('+2 Hands'), true);
+  assert.deepEqual([cards.hooper.cost, cards.hooper.power], [5, 5]);
+  assert.deepEqual([cards.plug.cost, cards.plug.power], [1, 2]);
+  assert.deepEqual([cards.honestthot.cost, cards.honestthot.power], [1, 2]);
+  assert.deepEqual([cards.nail.cost, cards.nail.power], [2, 3]);
+  assert.deepEqual([cards.subwaymap.cost, cards.subwaymap.power], [0, 0]);
+  assert.deepEqual([cards.gothkid.cost, cards.gothkid.power], [2, 3]);
+});
+
 function setup(id: string, owner: Owner) {
   const source = unit(id, owner), ally = unit('plug', owner, 1), second = unit('cornball', owner, 2), item = unit('buspass', owner, 3);
   const enemy = unit('hooper', owner === 'player' ? 'cpu' : 'player', 4);
@@ -28,7 +45,7 @@ for (const owner of ['player', 'cpu'] as const) test(`six support effects respec
     if (id === 'firstaid') { assert.equal(find(ally.instanceId).statuses.frozen, false); assert.equal(find(second.instanceId).statuses.silenced, false); }
     if (id === 'boombox') { assert.equal(find(ally.instanceId).powerModifier, 1); assert.equal(find(second.instanceId).powerModifier, 1); }
     if (id === 'subwaymap') { assert.equal(find(ally.instanceId).lane, 1); assert.equal(find(ally.instanceId).powerModifier, 1); }
-    if (id === 'workboots') { assert.equal(find(ally.instanceId).statuses.protected, true); assert.equal(find(ally.instanceId).powerModifier, 1); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, ally.instanceId); }
+    if (id === 'workboots') { assert.equal(find(ally.instanceId).statuses.protected, true); assert.equal(find(ally.instanceId).powerModifier, 2); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, ally.instanceId); }
     assert.equal(find(item.instanceId).powerModifier, 0);
     assert.equal(find(enemy.instanceId).powerModifier, 0);
     const event = after.effectLog.find(e => e.type === 'ability')!;
@@ -45,7 +62,7 @@ test('support conditions and status suppression prevent free effects', () => {
   }
   const { source, match } = setup('charger', 'player');
   match.boards = [[unit('buspass', 'player')], [], []];
-  assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 8);
+  assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 9);
 });
 
 test('a coached Subway Map cannot award Hands when County Jail blocks its move', () => {
@@ -61,7 +78,7 @@ test('a coached Subway Map cannot award Hands when County Jail blocks its move',
   assert.equal(after.effectLog.some(e => e.abilityMetadata?.sourceCardId === 'subwaymap'), false);
 });
 
-test('ten-card crews draw all ten by round six and reject seven-card submissions', () => {
+test('ten-card gangs draw all ten by round six and reject seven-card submissions', () => {
   assert.equal(DECK_SIZE, 10);
   assert.throws(() => createMatchFromEngineCards('p', crew.slice(0, 7), 'c', crew), /ten unique/);
   assert.throws(() => createMatchFromEngineCards('p', crew, 'c', crew.slice(0, 7)), /ten unique/);
@@ -74,14 +91,14 @@ test('ten-card crews draw all ten by round six and reject seven-card submissions
   assert.equal(playTurnCard(m, 'player', energy.instanceId, 0).playerMotion, 9);
   const catalog = crew.map(id => cards[id].id);
   assert(validateSavedDeck(catalog, catalog, catalog[0]).valid);
-  assert(SavePlayerDeckBody.safeParse({ name: 'Support Crew', cardIds: catalog, heroCardId: catalog[0], recipeId: null }).success);
+  assert(SavePlayerDeckBody.safeParse({ name: 'Support Gang', cardIds: catalog, heroCardId: catalog[0], recipeId: null }).success);
   assert(!SavePlayerDeckBody.safeParse({ name: 'Too Many', cardIds: [...catalog, 'guap'], heroCardId: catalog[0], recipeId: null }).success);
   const picks = draftOffers('2026-09-14').map(o => o[0]);
   assert.equal(picks.length, 10); assert(validateDraft('2026-09-14', picks));
   assert(StartPlayerMatchBody.safeParse({ mode: 'practice', playerDeckId: 'p', rivalDeckId: 'block', activity: 'draft', draftPicks: picks }).success);
 });
 
-test('legacy crew completion preserves order and only uses owned cards', () => {
+test('legacy gang completion preserves order and only uses owned cards', () => {
   const owned = cardCatalog.map(c => c.catalogId), old = crew.slice(0, 7).map(id => cards[id].id);
   const migrated = upgradeLegacySavedDeck(old, owned);
   assert.equal(migrated.length, 10); assert.deepEqual(migrated.slice(0, 7), old); assert.equal(new Set(migrated).size, 10);
@@ -112,7 +129,7 @@ test('discounted Motion refunds cannot exceed nine, and Work Boots blocks exactl
   }
 });
 
-test('support crews complete and replay the same match; missing videos use the effects fallback', () => {
+test('support gangs complete and replay the same fade; missing videos use the effects fallback', () => {
   let m = createMatchFromEngineCards('supports', crew, 'block', createMatch('block', 'block').cpuCardIds);
   const initial = m, moves: PlayerMove[] = [];
   while (m.phase !== 'complete') {

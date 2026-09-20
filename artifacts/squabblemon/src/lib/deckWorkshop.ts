@@ -18,11 +18,11 @@ export const workshopSuggestions = [
 
 export function summarizeDeckTest(match: Match, cardId: string): string {
   const card = catalogCardById[cardId];
-  if (!card) return 'Your practice match is saved. Keep experimenting with your crew.';
+  if (!card) return 'Your practice fade is saved. Keep experimenting with your gang.';
   // Instance identity is available even on events whose source snapshot is absent.
   const instance = [...match.boards.flat(), ...match.playerHand].find(item => item.id === cardId && item.owner === 'player');
   const play = match.effectLog.find(event => event.type === 'play' && event.owner === 'player' && event.cardInstanceId === instance?.instanceId);
-  if (!play) return `${card.name} was not played in this match. Try it next time, or swap it for a card you could use earlier.`;
+  if (!play) return `${card.name} was not played in this fade. Try it next time, or swap it for a card you could use earlier.`;
   const ability = match.effectLog.find(event => event.type === 'ability' && event.owner === 'player' && event.cardInstanceId === play.cardInstanceId);
   return ability ? `${card.name}: ${ability.note}` : `${card.name} was played in round ${play.round}. Review its ability condition and compare it with the card you replaced.`;
 }

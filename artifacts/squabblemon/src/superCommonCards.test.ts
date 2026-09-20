@@ -18,8 +18,8 @@ function reveal(id: string, setup?: (m: Match) => Match, owner: Owner = 'player'
 }
 const find = (m: Match, id: string) => m.boards.flat().find(c => c.cardId === id)!;
 
-test('seven illustrated Super Commons include four support items and have working pack acquisition', () => {
-  assert.equal(superCommonIds.length, 7);
+test('eight illustrated Super Commons include four support items and have working pack acquisition', () => {
+  assert.equal(superCommonIds.length, 8);
   assert.equal(superCommonIds.filter(id => cards[id].kind === 'support').length, 4);
   validateCardAbilityUpgrades();
   assert(CARD_RARITY_DEFINITIONS.SuperCommon.order < CARD_RARITY_DEFINITIONS.Common.order);
@@ -34,14 +34,27 @@ test('seven illustrated Super Commons include four support items and have workin
   }
 });
 
-test('Shiesty and Torta gain Hands only when their printed conditions are met', () => {
-  for (const id of ['shiesty', 'torta']) {
-    assert.equal(find(reveal(id), id).powerModifier, 0);
-    const owner = id === 'shiesty' ? 'cpu' : 'player';
-    assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', owner)], [], []] })), id).powerModifier, 1);
-  }
+test('Shiesty YN deterministically repeats its 50% self-summon with an eight-copy cap', () => {
+  const run = (index: number) => {
+    const source = instance('shiesty', 'player', 1_000 + index);
+    return playTurnCard({ ...fresh(), playerMotion: 3, playerHand: [source], boards: [[], [], []] }, 'player', source.instanceId, 0);
+  };
+  const results = Array.from({ length: 128 }, (_, index) => run(index));
+  const counts = results.map(match => match.boards[0].filter(card => card.cardId === 'shiesty').length);
+  assert(counts.some(count => count === 1), 'some first flips should miss');
+  assert(counts.some(count => count >= 3), 'a summoned copy should sometimes win its own repeat flip');
+  assert(counts.every(count => count <= 9), 'the original plus eight extra copies is the hard cap');
+  const chainedIndex = counts.findIndex(count => count >= 3);
+  assert.deepEqual(run(chainedIndex), run(chainedIndex), 'the chain must replay identically from the same state');
+  assert.match(cards.shiesty.effect, /50% chance.*repeats.*8 extra/);
 });
 
+test('Torta grants its Earth bond while held in hand at round end', () => {
+  const earthAlly = instance('manman', 'player', 7);
+  const holder = instance('torta', 'player', 8);
+  const after = nextRound({ ...fresh(), phase: 'resolved', playerHand: [holder], boards: [[earthAlly], [], []] });
+  assert.equal(find(after, 'manman').powerModifier, 1);
+});
 test('Water Boy restores exactly one Motion for either owner, and needs company', () => {
   for (const owner of ['player', 'cpu'] as const) {
     const key = owner === 'player' ? 'playerMotion' : 'cpuMotion';
@@ -121,7 +134,7 @@ test('coached Water Boy upgrades require a successful refund; support upgrades b
   }
 });
 
-test('new cards can complete a deterministic six-round match and server replay', () => {
+test('new cards can complete a deterministic six-round fade and server replay', () => {
   const initial = fresh();
   let m = initial;
   const moves: PlayerMove[] = [];

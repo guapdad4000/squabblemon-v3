@@ -345,387 +345,6 @@
   margin-left: 12px;
   text-decoration: underline;
 }
-.online-arena {
-  padding: 12px 20px 35px;
-}
-.online-arena__hud {
-  max-width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 15px;
-}
-.online-contender {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-.online-contender img {
-  height: 78px;
-  width: 65px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.online-contender strong {
-  display: block;
-  font-size: 18px;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
-.online-contender small {
-  display: block;
-  font-size: 9px;
-  letter-spacing: 0.05em;
-  color: #dfbd7c;
-}
-.online-contender--rival {
-  flex-direction: row-reverse;
-  text-align: right;
-}
-.online-round {
-  text-align: center;
-}
-.online-round > span {
-  display: block;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: #cdb783;
-}
-.online-round > strong {
-  font-size: 36px;
-  line-height: 1.1;
-  color: #f5d99e;
-}
-.online-round small {
-  font-size: 15px;
-  color: #9e8d6a;
-}
-.online-turn {
-  max-width: 1200px;
-  margin: 12px auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 15px;
-  background: #19191de6;
-  border-block: 1px solid #ba985055;
-}
-.online-turn > strong {
-  flex: 1;
-  font-size: 16px;
-}
-.online-clock {
-  font-size: 22px;
-  font-weight: 900;
-  color: #d9e6c1;
-}
-.online-clock--urgent {
-  color: #ff9b83;
-}
-.online-claims {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  margin: 12px auto;
-  color: #e8cd96;
-}
-.online-claims > span {
-  color: #bdb6a8;
-  font-size: 11px;
-}
-.online-districts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 1200px;
-  margin: auto;
-  gap: 12px;
-}
-.online-district {
-  background: linear-gradient(180deg, #272326ec, #161717e8);
-  border: 1px solid #82735975;
-  border-top: 3px solid #b4a07b;
-  min-width: 0;
-  padding: 12px;
-  position: relative;
-  box-shadow: 0 8px 25px #0005;
-}
-.online-district[data-winner="you"] {
-  border-top-color: #b5ce8b;
-}
-.online-district[data-winner="rival"] {
-  border-top-color: #d57068;
-}
-.online-district.is-selected {
-  outline: 2px solid #f8d58b;
-  outline-offset: 2px;
-}
-.online-district > header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.online-district h2 {
-  font-size: 17px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-.online-district > header > div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.online-district > header b {
-  font-size: 23px;
-  color: #f2d59b;
-}
-.online-district > header span {
-  font-size: 7px;
-  max-width: 26px;
-  text-align: center;
-  color: #b5a58a;
-}
-.online-district__rule {
-  font-size: 10px;
-  color: #bdb19b;
-  min-height: 28px;
-  margin: 5px 0 9px;
-  line-height: 1.4;
-}
-.online-board-row {
-  display: flex;
-  gap: 5px;
-  overflow-x: auto;
-  min-height: 100px;
-  align-items: center;
-  padding: 6px 1px;
-}
-.online-board-row:first-child {
-  border-bottom: 1px dashed #c0975040;
-}
-.online-board-card {
-  width: 70px;
-  min-width: 70px;
-}
-.online-board-card > button {
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 98px !important;
-}
-.online-empty-side {
-  font-size: 10px;
-  font-style: italic;
-  color: #857e70;
-  width: 100%;
-  text-align: center;
-}
-.online-place {
-  margin-top: 6px;
-  padding: 10px 6px;
-  width: 100%;
-  font-size: 11px;
-  font-weight: 800;
-  background: #b38c3540;
-  color: #f5d49c;
-  border: 1px solid #c49b5755;
-  min-height: 44px;
-}
-.online-place:disabled {
-  opacity: 0.35;
-}
-.online-place[aria-pressed="true"] {
-  background: #b79144;
-  color: #17140d;
-}
-.online-last-play {
-  max-width: 1200px;
-  margin: 12px auto;
-  min-height: 42px;
-  background: #151619c9;
-  border-left: 3px solid #d4aa62;
-  padding: 10px 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  animation: online-impact 0.3s ease-out;
-}
-.online-last-play > span {
-  font-size: 10px;
-  font-weight: 900;
-  color: #e9c780;
-  margin-right: 6px;
-}
-.online-hand-area {
-  max-width: 1000px;
-  margin: 16px auto 0;
-}
-.online-hand-heading {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 38px;
-  margin-bottom: 6px;
-}
-.online-hand-heading > strong {
-  font-size: 27px;
-  color: #eacb87;
-  white-space: nowrap;
-}
-.online-hand-heading small {
-  font-size: 10px;
-}
-.online-hand-heading > span {
-  font-size: 12px;
-  color: #d0c4ae;
-  line-height: 1.4;
-}
-.online-hand {
-  display: flex;
-  gap: 12px;
-  padding: 10px 6px 14px;
-  overflow-x: auto;
-}
-.online-hand-card {
-  width: 106px;
-  min-width: 106px;
-}
-.online-hand-card > button {
-  width: 100% !important;
-  min-width: 0 !important;
-  height: 150px !important;
-}
-.online-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  padding-top: 10px;
-}
-.online-actions > .online-secondary {
-  margin: 0;
-}
-.online-result {
-  max-width: 900px;
-  margin: 25px auto;
-  text-align: center;
-  padding: 25px;
-  background: #19191be8;
-  border: 1px solid #bf9c5c66;
-}
-.online-result h1 {
-  font-size: 32px;
-  font-weight: 900;
-  color: #edca89;
-}
-.online-result p {
-  font-size: 13px;
-  line-height: 1.7;
-  margin: 12px;
-}
-.online-result details {
-  margin-top: 20px;
-  text-align: left;
-  font-size: 13px;
-}
-.online-battle-footer {
-  max-width: 1200px;
-  margin: 25px auto;
-  display: flex;
-  gap: 20px;
-  font-size: 12px;
-  color: #c7bda9;
-  align-items: start;
-}
-.online-battle-footer details {
-  flex: 1;
-}
-.online-battle-footer details p,
-.online-battle-footer li {
-  line-height: 1.6;
-  padding-top: 8px;
-}
-.online-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  background: #050609df;
-  padding: 20px;
-}
-.online-modal > div {
-  max-width: 380px;
-  text-align: center;
-  background: #29241f;
-  border: 1px solid #cba765;
-  padding: 24px;
-  width: 100%;
-}
-.online-modal img {
-  height: 250px;
-  margin: auto;
-}
-.online-modal h2 {
-  font-size: 25px;
-  font-weight: 900;
-  color: #e7c789;
-}
-.online-modal p {
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 15px 0;
-}
-.online-modal button {
-  margin: 8px 0 0;
-  width: 100%;
-}
-@keyframes online-impact {
-  from {
-    transform: translateY(5px);
-    opacity: 0.6;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.online-side-label {
-  position: absolute;
-  top: 2px;
-  left: 0;
-  font-size: 7px;
-  letter-spacing: 0.12em;
-  color: #c4b391;
-  font-weight: 800;
-}
-.online-board-row {
-  position: relative;
-  padding-top: 14px;
-}
-.online-dialog {
-  background: #25211c;
-  border: 1px solid #cba765;
-  color: #f4e5cd;
-  text-align: center;
-  max-width: min(380px, calc(100vw - 28px));
-}
-.online-dialog img {
-  height: 220px;
-  margin: auto;
-}
-.online-dialog h2 {
-  font-size: 25px;
-  color: #e7c789;
-}
-.online-dialog p {
-  color: #d1c0a6;
-  line-height: 1.6;
-}
-.online-lobby__hero h1 {
-  font-size: clamp(42px, 5vw, 62px);
-}
 @media (max-width: 700px) {
   .online-lobby__content {
     padding: 0 14px 40px;
@@ -803,116 +422,623 @@
   .online-lineup {
     height: 105px;
   }
+}
+
+/* The arena has one viewport: board, hand and controls each own their space. */
+.online-arena {
+  height: 100dvh;
+  min-height: 650px;
+  padding: 8px max(12px, env(safe-area-inset-right))
+    max(4px, env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: 64px 44px 22px minmax(220px, 1fr) 26px auto 24px;
+  gap: 5px;
+  overflow: hidden;
+}
+.online-arena
+  > :is(
+    header,
+    section,
+    footer,
+    .online-turn,
+    .online-claims,
+    .online-last-play
+  ) {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.online-arena__venue {
+  opacity: 0.5;
+}
+.online-arena__hud {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.online-contender {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.online-contender img {
+  height: 60px;
+  width: 50px;
+  object-fit: contain;
+}
+.online-contender strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.online-contender small {
+  display: block;
+  font-size: 8px;
+  color: #e5c588;
+}
+.online-contender--rival {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.online-round {
+  text-align: center;
+}
+.online-round > span {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: #d0b57c;
+}
+.online-round > strong {
+  color: #ffe5af;
+  font-size: 29px;
+  line-height: 1;
+}
+.online-round small {
+  font-size: 13px;
+  color: #bb9b69;
+}
+.online-turn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 10px;
+  background: #131415c9;
+  border-block: 1px solid #b795514f;
+}
+.online-turn > strong {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+}
+.online-turn .online-icon,
+.online-turn .music-trigger {
+  min-height: 36px;
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+}
+.online-clock {
+  font-size: 22px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #def1c5;
+}
+.online-clock--urgent {
+  color: #ff9b83;
+}
+.online-claims {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #e8cd96;
+}
+.online-claims > span {
+  color: #bdb6a8;
+}
+.online-arena .online-districts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  min-height: 0;
+}
+.online-arena .online-district {
+  position: relative;
+  isolation: isolate;
+  padding: 6px;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 96px minmax(0, 1fr);
+  border: 1px solid #b9965138;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #351b1b4d, #11101142 50%, #29281588);
+  box-shadow: inset 0 0 20px #0006;
+}
+.online-arena .online-district[data-winner="you"] {
+  border-color: #c9b36888;
+}
+.online-arena .online-district[data-winner="rival"] {
+  border-color: #bd6c5988;
+}
+.online-arena .online-district.is-selected {
+  outline: 2px solid #f1c974;
+  outline-offset: -2px;
+}
+.online-arena .online-location-heading {
+  grid-row: 2;
+  grid-column: 1;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.online-arena .online-location-heading .location-node {
+  inset: -12px -6px;
+}
+.online-arena .online-location-heading .location-node__scene {
+  object-fit: cover;
+  opacity: 0.7;
+}
+.online-arena .online-location-heading > header {
+  gap: 2px;
+}
+.online-arena .online-location-heading h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.online-arena .online-location-heading > header b {
+  font-size: 25px;
+  color: #ffe1a0;
+  font-variant-numeric: tabular-nums;
+}
+.online-arena .online-location-heading > header span {
+  font-size: 7px;
+}
+.online-arena .online-district__status {
+  display: none;
+}
+.online-district-info {
+  position: relative;
+  z-index: 2;
+  font-size: 9px;
+  text-decoration: underline;
+  color: #e5d3ad;
+  min-height: 24px;
+}
+.online-district__sides {
+  display: contents;
+}
+.online-arena .online-board-row {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-content: flex-start;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 16px 4px 2px;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #b59050 #141313;
+}
+.online-arena .online-board-row[data-side="you"] {
+  grid-row: 3;
+}
+.online-side-label {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #b9ad9b;
+}
+.online-board-row[data-side="you"] .online-side-label {
+  color: #e6c77d;
+}
+.online-empty-side {
+  margin: auto;
+  font-size: 10px;
+  color: #bdada276;
+  text-align: center;
+}
+.online-board-card {
+  width: clamp(60px, 10vh, 96px);
+  flex: 0 0 auto;
+}
+.online-arena .online-board-card > button {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 63 / 88;
+}
+.online-arena .online-board-card .collector-card-copy {
+  padding: 4px;
+}
+.online-arena .online-board-card .collector-card-copy > div {
+  display: none;
+}
+.online-arena .online-board-card h4 {
+  font-size: 9px;
+}
+.online-arena .online-board-card .card-stat-pair > div {
+  min-width: 18px;
+  padding: 2px 4px;
+}
+.online-arena .online-board-card .card-stat-pair span {
+  font-size: 12px;
+}
+.online-place {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100px;
+  min-height: 48px;
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #291f10f5;
+  border: 1px solid #ffe0a0;
+  border-radius: 4px;
+  color: #ffe5b2;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 4px 14px #000;
+}
+.online-place small {
+  font-size: 10px;
+  font-weight: 400;
+}
+.online-place[aria-pressed="true"] {
+  background: #e1bd74;
+  color: #17100a;
+}
+.online-place:disabled {
+  opacity: 0.5;
+}
+.online-last-play {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  align-self: center;
+  font-size: 11px;
+  color: #c9c0af;
+}
+.online-last-play > span {
+  color: #efcc80;
+  font-size: 9px;
+  font-weight: 900;
+}
+.online-hand-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 28px auto 46px;
+  gap: 3px;
+  min-width: 0;
+  isolation: isolate;
+}
+.online-hand-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 15px;
+  padding-inline: 6px;
+}
+.online-hand-heading > strong {
+  flex: 0 0 auto;
+  font-size: 25px;
+  color: #f7d690;
+}
+.online-hand-heading small {
+  font-size: 9px;
+}
+.online-hand-heading > span {
+  min-width: 0;
+  font-size: 11px;
+  color: #c7bca7;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.online-hand {
+  display: flex;
+  gap: 10px;
+  padding: 12px 8px 4px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #b59050 #141313;
+  position: relative;
+  z-index: 1;
+}
+.online-hand-card {
+  flex: 0 0 auto;
+  width: clamp(82px, 12vh, 112px);
+}
+.online-arena .online-hand-card > button {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 63 / 88;
+}
+.online-actions {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 8px;
+  padding: 2px;
+  background: #111013;
+  border-top: 1px solid #b795514f;
+}
+.online-actions > button {
+  margin: 0;
+  min-height: 42px;
+  padding: 8px;
+  justify-content: center;
+}
+.online-battle-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+}
+.online-live {
+  color: #aed59b;
+}
+.online-arena[data-connected="false"] .online-live {
+  color: #edbf7f;
+}
+.online-arena[data-status="complete"] {
+  grid-template-rows: 64px 44px 22px minmax(200px, 1fr) 26px auto 24px;
+}
+.online-result {
+  text-align: center;
+  padding: 10px;
+  background: #181610e6;
+  border: 1px solid #a88742;
+}
+.online-result h1 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #f3d38b;
+}
+.online-result p {
+  font-size: 12px;
+  color: #cdbb9d;
+  margin: 6px;
+}
+.online-result details {
+  font-size: 11px;
+}
+.online-dialog {
+  width: min(92vw, 460px);
+  max-height: 88dvh;
+  overflow-y: auto;
+  border: 1px solid #ae8849;
+  background: #151414;
+  color: #f6e4bf;
+}
+.online-dialog img {
+  height: min(44dvh, 340px);
+  width: 100%;
+  object-fit: contain;
+}
+.online-event-list {
+  font-size: 12px;
+  line-height: 1.6;
+  max-height: 35dvh;
+  overflow: auto;
+}
+.online-event-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ffffff15;
+}
+.game-route-stage:has(.online-arena) {
+  position: relative;
+}
+.game-route-stage:has(.online-arena) > .online-connection {
+  position: absolute;
+  inset: 112px 10px auto;
+  z-index: 80;
+  padding: 10px;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
   .online-arena {
-    padding: 8px 10px 25px;
-  }
-  .online-contender img {
-    height: 52px;
-    width: 35px;
+    min-height: 620px;
+    padding: 4px 5px max(3px, env(safe-area-inset-bottom));
+    grid-template-rows: 48px 42px 18px minmax(270px, 1fr) 22px auto 22px;
+    gap: 3px;
   }
   .online-contender {
-    gap: 5px;
+    gap: 4px;
+  }
+  .online-contender img {
+    width: 34px;
+    height: 44px;
   }
   .online-contender strong {
     font-size: 12px;
   }
   .online-contender small {
-    font-size: 7px;
-  }
-  .online-arena__hud {
-    gap: 6px;
+    font-size: 6px;
   }
   .online-round > strong {
-    font-size: 27px;
+    font-size: 24px;
   }
   .online-round > span {
-    font-size: 7px;
+    font-size: 6px;
   }
   .online-turn {
-    gap: 8px;
-    padding: 8px 10px;
+    padding-inline: 6px;
+    gap: 6px;
   }
   .online-turn > strong {
-    font-size: 13px;
+    font-size: 12px;
+  }
+  .online-clock {
+    font-size: 19px;
   }
   .online-claims {
-    font-size: 10px;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .online-districts {
-    grid-template-columns: 1fr;
-    gap: 9px;
-  }
-  .online-district {
-    padding: 8px 10px;
-  }
-  .online-district h2 {
-    font-size: 14px;
-  }
-  .online-district__rule {
-    min-height: 0;
-    margin: 0 0 3px;
     font-size: 9px;
-  }
-  .online-district__sides {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .online-board-row {
-    min-height: 74px;
-    padding: 4px 0;
     gap: 4px;
   }
-  .online-board-row:first-child {
-    border-bottom: 0;
-    border-right: 1px dashed #c0975040;
-    padding-right: 6px;
+  .online-claims > span {
+    display: none;
   }
-  .online-board-card {
-    width: 49px;
-    min-width: 49px;
+  .online-arena .online-districts {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 5px;
   }
-  .online-board-card > button {
-    height: 69px !important;
+  .online-arena .online-district {
+    grid-template-columns: minmax(0, 1fr) 94px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    padding: 2px;
   }
-  .online-district > header b {
+  .online-arena .online-location-heading {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .online-arena .online-location-heading h2 {
+    font-size: 10px;
+    text-wrap: balance;
+  }
+  .online-arena .online-location-heading > header b {
     font-size: 20px;
   }
-  .online-hand-card {
-    width: 82px;
-    min-width: 82px;
+  .online-arena .online-location-heading > header > div {
+    gap: 3px;
   }
-  .online-hand-card > button {
-    height: 116px !important;
+  .online-arena .online-location-heading > header span {
+    font-size: 5px;
   }
-  .online-hand {
-    gap: 9px;
+  .online-arena .online-location-heading .location-node {
+    inset: -2px -12px;
+  }
+  .online-arena .online-board-row {
+    grid-row: 1;
+    grid-column: 1;
+    padding: 15px 2px 2px;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-content: flex-start;
+  }
+  .online-arena .online-board-row[data-side="you"] {
+    grid-row: 1;
+    grid-column: 3;
+  }
+  .online-board-card {
+    width: calc((100% - 4px) / 2);
+    max-width: 66px;
+  }
+  .online-arena .online-board-card h4 {
+    font-size: 7px;
+  }
+  .online-arena .online-board-card .card-stat-pair > div {
+    min-width: 13px;
+    padding: 2px;
+  }
+  .online-arena .online-board-card .card-stat-pair span {
+    font-size: 10px;
+  }
+  .online-side-label {
+    font-size: 7px;
+  }
+  .online-empty-side {
+    font-size: 8px;
+    align-self: center;
+  }
+  .online-district-info {
+    font-size: 8px;
+  }
+  .online-place {
+    min-width: 86px;
+    max-width: 94px;
+    font-size: 11px;
+  }
+  .online-last-play {
+    font-size: 10px;
+  }
+  .online-hand-area {
+    grid-template-rows: 25px auto 44px;
+  }
+  .online-hand-heading {
+    gap: 10px;
   }
   .online-hand-heading > span {
-    font-size: 11px;
+    font-size: 9px;
+  }
+  .online-hand-heading > strong {
+    font-size: 22px;
+  }
+  .online-hand {
+    gap: 7px;
+    padding: 10px 5px 4px;
+  }
+  .online-hand-card {
+    width: clamp(74px, 10.5dvh, 88px);
+  }
+  .online-arena .online-hand-card h4 {
+    font-size: 10px;
+  }
+  .online-arena .online-hand-card .collector-card-copy {
+    padding: 4px;
+  }
+  .online-arena .online-hand-card .collector-card-ability {
+    display: none;
   }
   .online-actions {
-    gap: 6px;
+    gap: 4px;
   }
   .online-actions > button {
-    font-size: 11px;
-    padding: 11px 9px;
-    flex: 1;
-  }
-  .online-result {
-    padding: 20px 12px;
-  }
-  .online-result h1 {
-    font-size: 26px;
+    font-size: 10px;
+    padding: 6px 3px;
   }
   .online-battle-footer {
-    flex-wrap: wrap;
-    gap: 15px;
+    font-size: 9px;
   }
-  .online-battle-footer details {
-    min-width: 120px;
+  .online-arena[data-status="complete"] {
+    grid-template-rows: 48px 42px 18px minmax(260px, 1fr) 22px auto 22px;
+  }
+  .online-result {
+    padding: 6px;
+  }
+  .online-result h1 {
+    font-size: 20px;
+  }
+  .online-result p {
+    font-size: 10px;
+  }
+  .online-result button {
+    min-height: 40px;
+    padding: 7px;
+    font-size: 12px;
+  }
+  .game-route-stage:has(.online-arena) > .online-connection {
+    top: 94px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -921,35 +1047,21 @@
     transition: none !important;
   }
 }
-html[data-reduce-motion="true"] .online-arena * {
+.online-arena[data-reduced-motion="true"] * {
   animation: none !important;
   transition: none !important;
 }
+
+/* Keep a full formation visible when summons arrive on portrait phones. */
 @media (max-width: 700px) {
-  .online-board-row {
-    padding-top: 14px;
+  .online-arena .online-board-row {
+    container-type: size;
+    display: grid;
+    grid-template-columns: repeat(var(--formation-columns), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--formation-rows), minmax(0, 1fr));
+    align-items: start;
   }
-  .online-lobby__hero h1 {
-    font-size: 35px;
-  }
-  .online-arena {
-    padding-bottom: 100px;
-  }
-  .online-actions {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 25;
-    background: #151416f5;
-    border-top: 1px solid #b79355;
-    padding: 10px 10px max(10px, env(safe-area-inset-bottom));
-    box-shadow: 0 -10px 25px #0007;
-  }
-  .online-hand-card > button {
-    font-size: 11px;
-  }
-  .online-lobby__fighters {
-    height: 280px;
+  .online-arena .online-board-card {
+    width: min(66px, calc((100cqw - (var(--formation-columns) - 1) * 4px) / var(--formation-columns)), calc((100cqh - (var(--formation-rows) - 1) * 4px) / var(--formation-rows) * 63 / 88));
   }
 }

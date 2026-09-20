@@ -1,4 +1,6 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
+import { PageDecor } from '../../components/venue/PageDecor';
 import { useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
@@ -97,6 +99,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           body: JSON.stringify(request),
         });
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
+      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag');
       clearShopRequest(sessionStorage, profile.id);
       setPending(null);
       setReceipt(result.receipt);
@@ -122,19 +125,20 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
     id.includes('training')
       ? ('portable-speaker' as const)
       : id === 'ticket'
-        ? ('foil-pack' as const)
+        ? ('fight-ticket' as const)
         : id === 'common-recruit'
           ? ('collection-box' as const)
           : id.includes('style')
-            ? ('championship-chain' as const)
+            ? ('style-hanger' as const)
             : ('deck-stack' as const);
   return (
     <div
-      className="studio-page market"
+      className="studio-page market world-decor-host"
       style={{
         backgroundImage: `linear-gradient(110deg,#101710f5,#101710b8),url('${getAssetUrl('/assets/layered/gold-vault.webp')}')`,
       }}
     >
+      <PageDecor theme="market" />
       <header className="market-hero">
         <div>
           <span className="studio-eyebrow">Dr. Fade’s Trading Post</span>
@@ -143,12 +147,12 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             <br />
             <em>your legend.</em>
           </h1>
-          <p>A sharper crew. A fresh recruit. Your next big pull.</p>
+          <p>A sharper gang. A fresh recruit. Your next big pull.</p>
         </div>
         <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
         <div className="market-wallet">
           <span>
-            <GameGlyph name="clout" />
+            <GameGlyph name="cloutBag" />
             <strong>{profile.softCurrency.toLocaleString()}</strong>
             <small>Clout</small>
           </span>
@@ -317,7 +321,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             <ArrowRight size={13} />
           </Link>
           <Link href="/game/play">
-            Play a match
+            Play a fade
             <ArrowRight size={13} />
           </Link>
           <Link href="/game/missions">
@@ -343,7 +347,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             <li>
               <b>Build and return</b>
               <span>
-                Add recruits to your ten-card crew. Replay story for XP and Clout; first clears have separate rewards.
+                Add recruits to your ten-card gang. Replay story for XP and Clout; first clears have separate rewards.
               </span>
             </li>
           </ol>
@@ -352,7 +356,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             Style Shards for cosmetic finishes.
           </p>
           <Link className="studio-text-action" href="/game/decks">
-            Build your crew
+            Build your gang
             <ArrowRight size={14} />
           </Link>
         </details>

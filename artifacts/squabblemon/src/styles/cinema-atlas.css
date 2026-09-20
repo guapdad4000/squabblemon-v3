@@ -696,3 +696,117 @@
   .story-atlas__viewport { min-height: 100px; }
   .story-atlas__terrain { min-height: 340px; }
 }
+
+/* ───── Static film-reel decorations ─────
+   Each decoration is `pointer-events: none` so it never blocks clicks on the
+   underlying terrain or markers. They sit between the grain layer and the
+   routes/markers (z-index 4). On narrow screens most decorations hide so
+   the map keeps enough room to read. */
+.story-atlas__ornament {
+  animation: none;
+  transition: none;
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  user-select: none;
+  filter:
+    drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 24px rgba(240, 179, 90, 0.18));
+  display: block;
+}
+.story-atlas__ornament img {
+  filter: url("#story-film-cutout");
+  animation: none;
+  transition: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Single reel + curling strip — top-left corner of the viewport. */
+.story-atlas__ornament--reel-tl {
+  top: -38px;
+  left: -54px;
+  width: 200px;
+  height: 200px;
+  opacity: 0.95;
+  transform: rotate(-6deg);
+}
+
+/* Pair of reels — top-right corner of the viewport, mirrored. */
+.story-atlas__ornament--reel-tr {
+  top: -68px;
+  right: -62px;
+  width: 230px;
+  height: 230px;
+  opacity: 0.92;
+}
+
+/* Vertical flow strip — left rail of the viewport. */
+.story-atlas__ornament--strip-left {
+  top: 50%;
+  left: -28px;
+  width: 96px;
+  height: 82%;
+  transform: translateY(-50%) rotate(-8deg);
+  opacity: 0.78;
+  filter:
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 22px rgba(240, 179, 90, 0.22));
+}
+
+/* Single reel + strip — bottom-right of the viewport (mirrored). */
+.story-atlas__ornament--reel-br {
+  bottom: -56px;
+  right: -50px;
+  width: 220px;
+  height: 220px;
+  opacity: 0.85;
+}
+
+/* Cluster of reels — anchored to the lower-left of the viewport (mirrored). */
+.story-atlas__ornament--cluster-bl {
+  bottom: -68px;
+  left: -68px;
+  width: 240px;
+  height: 240px;
+  opacity: 0.82;
+  transform: scaleX(-1) rotate(-2deg);
+}
+
+/* Long horizontal film strip — divider between viewport and footer. */
+.story-atlas__ornament--wave-divider {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, 92%);
+  height: 60px;
+  margin-top: -22px;
+  margin-bottom: -10px;
+  opacity: 0.9;
+  z-index: 5;
+  filter:
+    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 18px rgba(240, 179, 90, 0.18));
+}
+
+
+/* Mobile / narrow: hide the heavy decorations so the map reads. */
+@media (max-width: 980px) {
+  .story-atlas__ornament--strip-left,
+  .story-atlas__ornament--cluster-bl,
+  .story-atlas__ornament--reel-br { display: none; }
+  .story-atlas__ornament--reel-tl { width: 140px; height: 140px; top: -28px; left: -34px; }
+  .story-atlas__ornament--reel-tr { width: 150px; height: 150px; top: -36px; right: -36px; }
+}
+@media (max-width: 640px) {
+  .story-atlas__ornament--reel-tl { width: 110px; height: 110px; opacity: 0.55; }
+  .story-atlas__ornament--reel-tr { display: none; }
+  .story-atlas__ornament--wave-divider { height: 36px; margin-top: -6px; margin-bottom: -4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-atlas__ornament--reel-tl,
+  .story-atlas__ornament--reel-tr,
+  .story-atlas__ornament--reel-br { animation: none !important; }
+}

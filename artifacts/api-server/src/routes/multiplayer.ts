@@ -26,7 +26,7 @@ function bodyOf(req: Request, keys: string[]) {
 }
 const deckId = (value: unknown) => {
   if (typeof value !== "string" || !value.length || value.length > 100)
-    throw new OnlineError("Choose a crew.", 400);
+    throw new OnlineError("Choose a gang.", 400);
   return value;
 };
 const requestId = (value: unknown) => {
@@ -85,11 +85,11 @@ const endpoint =
         res.status(error.status).json({ error: error.message });
         return;
       }
-      req.log?.error({ err: error }, "Friend match request failed");
+      req.log?.error({ err: error }, "Friend fade request failed");
       res
         .status(503)
         .json({
-          error: "Online matches are temporarily unavailable. Please retry.",
+          error: "Online fades are temporarily unavailable. Please retry.",
         });
     }
   };
@@ -126,7 +126,7 @@ router.post(
       !Number.isSafeInteger(b.expectedRevision) ||
       (b.expectedRevision as number) < 0
     )
-      throw new OnlineError("A match revision is required.", 400);
+      throw new OnlineError("A fade revision is required.", 400);
     return accessFriendRoom(codeOf(req), userId, {
       kind: "command",
       requestId: requestId(b.requestId),

@@ -57,7 +57,7 @@ test('tickets, slots, recruitment and styles use the correct currency and reject
   assert.throws(() => planShopPurchase(styled, { itemId: 'tagged-style', cardId: 'cornball' }), /already own/);
 });
 
-test('XP does not activate unpurchased moves and an active match retains its starting moves', () => {
+test('XP does not activate unpurchased moves and an active fade retains its starting moves', () => {
   const initial = wallet({ cardProgression: { cornball: { xp: 100, level: 2, moveTier: 0 } } });
   const snapshot = createCardProgressionSnapshot(['cornball'], ['cornball'], initial.cardProgression);
   const purchased = planShopPurchase(initial, { itemId: 'move-training', cardId: 'cornball' });
@@ -103,7 +103,7 @@ test('database: separate simultaneous purchases cannot overspend the same wallet
   assert.equal(profile.softCurrency,50); assert.equal(profile.packTickets,1);
 });
 
-test('database: normalization and a match reward preserve a concurrent purchase', { skip: !process.env.DATABASE_URL }, async t => {
+test('database: normalization and a fade reward preserve a concurrent purchase', { skip: !process.env.DATABASE_URL }, async t => {
   const { db, playerProfilesTable, playerMatchesTable } = await import('@workspace/db');
   const { eq } = await import('drizzle-orm');
   const { purchaseShopItem } = await import('./shopTransactions');

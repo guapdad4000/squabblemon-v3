@@ -31,7 +31,7 @@ async function completeBattle(page: Page, testSwap = false) {
     if (await skip.count()) await skip.click({ timeout: 500 }).catch(() => {});
     await page.waitForTimeout(70);
   }
-  throw new Error('Match result did not appear');
+  throw new Error('Fade result did not appear');
 }
 
 async function run(width: number, height: number) {
@@ -40,7 +40,7 @@ async function run(width: number, height: number) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   let step = 'tutorial', tested = false, failSave = false, claims = 0;
-  let draft = { id: ROOKIE_DECK_ID, name: 'My First Crew', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
+  let draft = { id: ROOKIE_DECK_ID, name: 'My First Gang', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
   let issued: Match | null = null;
   let issuedMode = '';
   let started = 0;
@@ -50,7 +50,7 @@ async function run(width: number, height: number) {
       storyChapter: 1, storyNode: 0, tutorialCompleted: step !== 'tutorial', starterRewardClaimed: step === 'complete', ageConfirmedAt: new Date(0).toISOString(), termsAcceptedAt: new Date(0).toISOString(),
       settings: { reducedMotion: true, turnTimerEnabled: false }, ownedCardIds: ROOKIE_FOUNDATION_IDS, discoveredCardIds: ROOKIE_FOUNDATION_IDS, cardProgression: {}, ownedVariants: [], equippedVariants: {},
       unlockedCosmeticIds: [], savedDecks: ['reward','complete'].includes(step) ? [draft] : [], storyProgress: {}, inbox: [], packHistory: [], lastActiveAt: new Date(0).toISOString() },
-    missions: [], nextAction: { id: tested ? 'rookie-tested' : `onboarding-${step}`, eyebrow: 'Rookie Road', title: 'Build your crew', description: 'Test your idea', destination: 'onboarding', rewardLabel: null },
+    missions: [], nextAction: { id: tested ? 'rookie-tested' : `onboarding-${step}`, eyebrow: 'Rookie Road', title: 'Build your gang', description: 'Test your idea', destination: 'onboarding', rewardLabel: null },
     packConfig: { id: 'street-pack', name: 'Street Pack', oddsVersion: 'test', softCurrencyCost: 200, ticketCost: 1, rewardsPerPack: 3, pityLimit: 10, odds: [] }, collectionRoad: [],
   }; }
   try {
@@ -83,7 +83,7 @@ async function run(width: number, height: number) {
         assert.equal(verified.phase, 'complete');
         if (issuedMode === 'tutorial') step = 'crew'; else tested = true;
         const state = bootstrap();
-        return route.fulfill({ json: { ...state, reward: { id: 'test-reward', label: 'Match saved', xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0, descriptions: [], cardXpRewards: [], storyRewards: [] }, alreadyCompleted: false, campaign: null, story: null } });
+        return route.fulfill({ json: { ...state, reward: { id: 'test-reward', label: 'Fade saved', xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0, descriptions: [], cardXpRewards: [], storyRewards: [] }, alreadyCompleted: false, campaign: null, story: null } });
       }
       return route.fulfill({ status: 404, json: { error: 'Unexpected fixture request' } });
     });
@@ -93,33 +93,33 @@ async function run(width: number, height: number) {
     await page.getByTestId('button-complete-tutorial').click();
     await page.getByRole('button', { name: 'Open my card collection' }).click();
     await page.getByRole('button', { name: 'Try Nail Tech', exact: true }).click();
-    await page.getByLabel('Deck name', { exact: true }).fill('My Mixed Crew');
+    await page.getByLabel('Deck name', { exact: true }).fill('My Mixed Gang');
     await page.getByRole('button', { name: 'Save deck', exact: true }).click();
     await page.getByRole('status').filter({ hasText: 'Deck saved.' }).waitFor();
     assert.equal(draft.cardIds[5], 'nail-tech');
     assert.deepEqual(draft.cardIds.slice(0,5), ROOKIE_CORE_IDS.slice(0,5));
     await page.reload();
-    assert.equal(await page.getByLabel('Deck name', { exact: true }).inputValue(), 'My Mixed Crew');
+    assert.equal(await page.getByLabel('Deck name', { exact: true }).inputValue(), 'My Mixed Gang');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     await page.screenshot({ path: `../../screenshots/player-workshop-${width}.png`, fullPage: true });
     failSave = true;
-    await page.getByRole('button', { name: 'Save & test crew' }).click();
+    await page.getByRole('button', { name: 'Save & test gang' }).click();
     await page.getByRole('alert').waitFor();
-    assert.equal(started, 1, 'Failed save must not start a match');
-    await page.getByRole('button', { name: 'Save & test crew' }).click();
+    assert.equal(started, 1, 'Failed save must not start a fade');
+    await page.getByRole('button', { name: 'Save & test gang' }).click();
     await completeBattle(page, true);
     await page.getByTestId('button-change-deck').click();
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     assert.match(await page.locator('body').innerText(), /Nail Tech:/);
     await page.reload();
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     await page.getByRole('button', { name: 'Claim reward & enter Chapter One' }).click();
     await page.waitForURL('**/game/story');
     assert.equal(claims, 1);
     await page.goto(`${origin}/game/play`);
     await page.getByRole('button', { name: /My Mixed Crew/ }).waitFor();
     assert.deepEqual(errors, []);
-    console.log(`${width}px: tutorial, swap, save, reload, failed-save recovery, verified custom match, recap, reward, and deck selection passed.`);
+    console.log(`${width}px: tutorial, swap, save, reload, failed-save recovery, verified custom fade, recap, reward, and deck selection passed.`);
   } catch (error) { console.log(JSON.stringify({errors,body:await page.locator("body").innerText(), phase:await page.getByTestId("battle-arena").getAttribute("data-presentation-phase"), engine:await page.getByTestId("battle-arena").getAttribute("data-engine-phase")})); await page.screenshot({path:"../../screenshots/rookie-regression-debug.png",fullPage:true}); throw error; } finally { await browser.close(); }
 }
 if(process.env.JOURNEY_WIDTH !== 'desktop') await run(390, 844);

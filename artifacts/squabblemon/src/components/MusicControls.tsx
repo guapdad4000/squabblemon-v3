@@ -1,17 +1,19 @@
 import { useId, useRef, useState } from 'react';
 import { Music2, Pause, Play, SkipForward, Volume2, VolumeX, X } from 'lucide-react';
 import { soundtrack } from '../musicPlayer';
-import { musicActions, useMusic } from '../musicStore';
+import { musicActions, useMusic, useMusicBanks, updateMusicBank } from '../musicStore';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import './music-controls.css';
 
 export function MusicControls({ compact = false, className = '' }: { compact?: boolean; className?: string }) {
   const music = useMusic();
+  const banks = useMusicBanks();
+  const playlist = music.playlist ?? soundtrack;
   const [feedback, saveFeedback] = useFeedbackPreferences();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const id = useId();
-  const track = soundtrack[music.trackIndex];
+  const track = music.track ?? soundtrack[music.trackIndex];
   const audible = music.playing && feedback.audioEnabled && music.volume > 0;
   const canPause = music.playing && feedback.audioEnabled;
   const status = !feedback.audioEnabled ? 'Game sound muted' : music.error ?? (music.blocked ? 'Tap play to start the music' : !music.enabled ? 'Music paused' : music.playing ? 'Now playing' : 'Ready when you are');
@@ -31,9 +33,9 @@ export function MusicControls({ compact = false, className = '' }: { compact?: b
       onKeyDown={event => event.stopPropagation()}
       onClick={event => { if (event.target === dialog.current) dialog.current.close(); }}>
       <div className="music-panel">
-        <header><div><span className="music-eyebrow">THE BLOCK HAS A SOUNDTRACK</span><h2 id={`${id}-title`}>Oakland Chrome<br />and Curls</h2></div>
+        <header><div><span className="music-eyebrow">THE BLOCK HAS A SOUNDTRACK</span><h2 id={`${id}-title`}>The soundtrack</h2></div>
           <button type="button" aria-label="Close music controls" onClick={() => dialog.current?.close()}><X size={20} /></button></header>
-        <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>Original music by {track.artist}</p></div>
+        <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>{track.album} · {track.artist}</p></div>
         <div className="music-transport">
           <button type="button" className="music-play" aria-label={canPause ? 'Pause music' : 'Play music'}
             onClick={() => { if (canPause) musicActions.pause(); else play(); }}>
@@ -51,12 +53,17 @@ export function MusicControls({ compact = false, className = '' }: { compact?: b
             aria-label="Music volume" aria-valuetext={`${Math.round(music.volume * 100)} percent`}
             onChange={event => musicActions.volume(Number(event.target.value) / 100)} />
         </label>
-        <label className="music-track"><span>On the turntable <b>{music.trackIndex + 1} / {soundtrack.length}</b></span>
+        <label className="music-track"><span>On the turntable <b>{music.trackIndex + 1} / {playlist.length}</b></span>
           <select aria-label="Choose music track" value={music.trackIndex} onChange={event => musicActions.select(Number(event.target.value))}>
-            {soundtrack.map((song, index) => <option key={song.id} value={index}>{String(index + 1).padStart(2, '0')} · {song.title}</option>)}
+            {playlist.map((song, index) => <option key={song.id} value={index}>{String(index + 1).padStart(2, '0')} · {song.title}</option>)}
           </select>
         </label>
-        <p className="music-note">All six tracks play in rotation. Your music settings stay saved on this device.</p>
+        <div className="music-banks">{(['background', 'mode'] as const).map(bank => <fieldset key={bank}>
+          <legend>{bank === 'background' ? 'Background playlist' : 'Story & mode music'}</legend>
+          <label><input type="checkbox" checked={banks[bank].enabled} onChange={event => updateMusicBank(bank, { enabled: event.target.checked })} /> Enabled</label>
+          <label className="music-volume"><span>Volume <b>{Math.round(banks[bank].volume * 100)}%</b></span><input aria-label={bank === 'background' ? 'Background playlist volume' : 'Story and mode volume'} type="range" min="0" max="100" value={Math.round(banks[bank].volume * 100)} onChange={event => updateMusicBank(bank, { volume: Number(event.target.value) / 100 })} /></label>
+        </fieldset>)}</div>
+        <p className="music-note">Background records play in the safehouse and menus. Story, boss, training, and gacha tracks follow your current mode. One soundtrack plays at a time; both preferences stay saved.</p>
       </div>
     </dialog>
   </>;

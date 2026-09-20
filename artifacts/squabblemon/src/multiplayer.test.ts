@@ -195,7 +195,7 @@ test("timeout forfeits once and both players must consent to a rematch", () => {
   assert.equal(room.members.player.ready, false);
 });
 
-test("starting near the waiting-room expiry gives the active match its full lifetime", () => {
+test("starting near the waiting-room expiry gives the active fade its full lifetime", () => {
   const active = fixture();
   const waiting: OnlineRoom = {
     ...active,

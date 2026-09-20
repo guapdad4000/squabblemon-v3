@@ -22,6 +22,7 @@ import type {
 import type {
   ClaimExperimentCardBody,
   CollectionRoadClaimResult,
+  CosmeticLoadout,
   CraftVariantInput,
   CraftVariantResult,
   EquipVariantInput,
@@ -1373,6 +1374,77 @@ export const useClaimPlayerMission = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getClaimPlayerMissionMutationOptions(options));
+    }
+
+export const getEquipPlayerCosmeticsUrl = () => {
+
+
+
+
+  return `/api/player/cosmetics`
+}
+
+/**
+ * @summary Save an owned banner, stickers, and character card scenes
+ */
+export const equipPlayerCosmetics = async (cosmeticLoadout: CosmeticLoadout, options?: RequestInit): Promise<PlayerBootstrap> => {
+
+  return customFetch<PlayerBootstrap>(getEquipPlayerCosmeticsUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(cosmeticLoadout)
+  }
+);}
+
+
+
+
+
+export const getEquipPlayerCosmeticsMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof equipPlayerCosmetics>>, TError,{data: BodyType<CosmeticLoadout>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof equipPlayerCosmetics>>, TError,{data: BodyType<CosmeticLoadout>}, TContext> => {
+
+const mutationKey = ['equipPlayerCosmetics'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof equipPlayerCosmetics>>, {data: BodyType<CosmeticLoadout>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  equipPlayerCosmetics(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EquipPlayerCosmeticsMutationResult = NonNullable<Awaited<ReturnType<typeof equipPlayerCosmetics>>>
+    export type EquipPlayerCosmeticsMutationBody = BodyType<CosmeticLoadout>
+    export type EquipPlayerCosmeticsMutationError = ErrorType<void>
+
+    /**
+ * @summary Save an owned banner, stickers, and character card scenes
+ */
+export const useEquipPlayerCosmetics = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof equipPlayerCosmetics>>, TError,{data: BodyType<CosmeticLoadout>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof equipPlayerCosmetics>>,
+        TError,
+        {data: BodyType<CosmeticLoadout>},
+        TContext
+      > => {
+      return useMutation(getEquipPlayerCosmeticsMutationOptions(options));
     }
 
 export const getGetPlayerShopUrl = () => {

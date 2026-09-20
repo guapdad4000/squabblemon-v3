@@ -1,4 +1,5 @@
 import React from 'react';
+import './card-upgrades.css';
 import { LockKeyhole, Sparkles, Zap } from 'lucide-react';
 import { unlockedAbilityUpgrades } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { catalogCardById } from '@workspace/squabblemon-engine/data';
@@ -62,7 +63,8 @@ export function CardUpgradeCue({
   const active = upgrades.filter(upgrade => upgradeState(card ?? {}, upgrade, progress, activeUpgradeIds).active);
   const next = upgrades.find(upgrade => !upgradeState(card ?? {}, upgrade, progress, activeUpgradeIds).active);
   return (
-    <div data-testid="card-upgrade-cue" className={`font-mono uppercase ${className}`}>
+    <div data-testid="card-upgrade-cue" className={`card-upgrade-cue font-mono uppercase ${className}`}>
+      <span className="card-upgrade-pips" aria-hidden="true">{upgrades.map((upgrade, index) => <i key={upgrade.id ?? index} data-active={upgradeState(card ?? {}, upgrade, progress, activeUpgradeIds).active} />)}</span>
       <span className="text-primary">{active.length ? `${active.length}/3 active` : '3 upgrades'}</span>
       {next && <span className="ml-1 text-white/55">· {(progress?.level ?? 0) >= (next.unlockLevel ?? next.level ?? 2) ? 'ready to train' : `next LV ${next.unlockLevel ?? next.level}`}</span>}
     </div>
@@ -92,7 +94,7 @@ export function CardUpgrades({
         const isNew = !!upgrade.id && newlyUnlockedIds.includes(upgrade.id);
         const level = upgrade.unlockLevel ?? upgrade.level;
         return (
-          <div key={upgrade.id ?? `${upgrade.name}-${index}`} data-testid={`card-upgrade-${upgrade.id ?? index}`} className={`border px-2 py-1.5 ${state.active ? 'border-primary/50 bg-primary/10' : isNew || state.newlyUnlocked ? 'border-yellow-300/60 bg-yellow-300/10' : 'border-white/10 bg-black/30 opacity-70'}`}>
+          <div key={upgrade.id ?? `${upgrade.name}-${index}`} data-testid={`card-upgrade-${upgrade.id ?? index}`} data-active={state.active} data-new={isNew} className={`card-upgrade-plaque border px-2 py-1.5 ${state.active ? 'border-primary/50 bg-primary/10' : isNew || state.newlyUnlocked ? 'border-yellow-300/60 bg-yellow-300/10' : 'border-white/10 bg-black/30 opacity-70'}`}>
             <div className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-wider">
               {state.active ? <Zap size={11} className="text-primary" /> : isNew || state.newlyUnlocked ? <Sparkles size={11} className="text-yellow-200" /> : <LockKeyhole size={10} className="text-white/45" />}
               <b className="text-white">{upgrade.name}</b>
