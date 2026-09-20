@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { styleSetFor, stickerById } from '@workspace/squabblemon-engine/cosmetics';
 import { catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { getAssetUrl, getCardImage } from '../lib/assets';
@@ -25,12 +25,12 @@ export function CharacterBanner({ cardId, finish = 'base', stickers = [], displa
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); };
   }, [animated, cardId]);
   if (!set || !card) return null;
-  return <div ref={root} className={'character-banner' + (compact ? ' character-banner--compact' : '')} data-finish={finish} data-animated={animated && running} aria-label={card.name + ' character banner'}>
+  return <div ref={root} className={'character-banner' + (compact ? ' character-banner--compact' : '')} data-finish={finish} data-long-name={card.name.length > 11} data-animated={animated && running} style={{ '--style-accent': set.accent } as CSSProperties} aria-label={card.name + ' character banner'}>
     <img className="character-banner__scene" src={getAssetUrl(set.background)} alt="" decoding="async" />
     <div className="character-banner__shade" />
-    <span className="character-banner__print" aria-hidden="true">K★</span>
+    <span className="character-banner__print" aria-hidden="true">{set.emblem}</span>
     <img className="character-banner__fighter" src={getCardImage(cardId)} alt="" decoding="async" />
-    <div className="character-banner__copy"><span>{displayName ?? 'SQUABBLEMON / SIGNATURE SERIES 001'}</span><strong>{card.name}</strong><p>{set.tagline}</p><small>{CARD_RARITY_DEFINITIONS[card.rarity].label} / {finish === 'silver' ? 'SILVER LINING' : 'BLUE HOUR'}</small></div>
+    <div className="character-banner__copy"><span>{displayName ?? 'SQUABBLEMON / SIGNATURE SERIES ' + set.series}</span><strong>{card.name}</strong><p>{set.tagline}</p><small>{CARD_RARITY_DEFINITIONS[card.rarity].label} / {finish === 'silver' ? 'SILVER LINING' : set.sceneName.toUpperCase()}</small></div>
     <div className="character-banner__stickers">{stickers.slice(0, 3).map(id => <CharacterSticker key={id} id={id} />)}</div>
     <div className="character-banner__sheen" aria-hidden="true" />
   </div>;

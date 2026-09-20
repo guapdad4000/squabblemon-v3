@@ -59,7 +59,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <PageDecor theme="collection" />
     <div className="collection-stage__header">
       <div className="arsenal-heading-row"><PageHeading art="collection-box" eyebrow="THE ARSENAL / CARD ARCHIVE" title="The collection.">{owned.size} / {cardCatalog.length} cards owned. Every card has a story.</PageHeading><FocusViewButton /></div>
-      <Link href="/game/style/kyle" className="arsenal-link">KYLE’s signature collection · Stickers & banners →</Link>
+      <Link href="/game/style" className="arsenal-link">Signature collections · Stickers & banners →</Link>
       <nav className="collection-tabs" aria-label="Collection views">
         <button type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
         <button type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>Collection Road</button>

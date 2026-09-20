@@ -47,3 +47,29 @@ test('database: retry-safe purchase and equip persist across reload without over
   const [row]=await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,id));
   assert.equal(row.styleShards,0);assert.equal(row.settings.reducedMotion,true);assert.equal(row.settings.turnTimerEnabled,false);assert.deepEqual(row.settings.cosmetics?.stickers,['kyle:smile','kyle:star']);assert(row.unlockedCosmeticIds.includes('badge:earned'));
 });
+
+test('every completed collection has four unique stickers and isolated purchase ownership', () => {
+  const ids=Object.keys(CHARACTER_STYLE_SETS),owner=wallet({ownedCardIds:ids,styleShards:100000});
+  const stickerIds=new Set<string>(),series=new Set<string>();
+  for(const [cardId,set] of Object.entries(CHARACTER_STYLE_SETS)) {
+    assert.equal(set.cardId,cardId);assert(set.stickerAtlas);assert.equal(set.stickers.length,4);assert.deepEqual(set.stickers.map(s=>s.cell),[0,1,2,3]);
+    assert(!series.has(set.series));series.add(set.series);
+    for(const sticker of set.stickers){assert(!stickerIds.has(sticker.id));stickerIds.add(sticker.id);assert(sticker.id.startsWith(cardId+':'));}
+    let bought=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
+    assert.equal(bought.styleShards,99900);
+    assert.equal(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:set.stickers.slice(0,3).map(s=>s.id)}),null);
+    const other=ids.find(id=>id!==cardId)!;
+    assert.match(validateCosmeticLoadout(bought,{bannerCardId:cardId,stickers:[CHARACTER_STYLE_SETS[other].stickers[0].id]})!,/Unlock/);
+    bought=planShopPurchase(bought,{itemId:'character-backdrop',cardId}).wallet;
+    assert.equal(validateCosmeticLoadout(bought,{cardBackgrounds:{[cardId]:'blue-hour'}}),null);
+    assert.match(validateCosmeticLoadout(bought,{cardBackgrounds:{[other]:'blue-hour'}})!,/Unlock/);
+  }
+});
+test('owned sticker packs mix across banners while preserving per-character scenes', () => {
+ let owner=wallet({ownedCardIds:['kyle','stockz','ashlee'],styleShards:1000});
+ for(const cardId of owner.ownedCardIds)owner=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
+ for(const cardId of ['kyle','ashlee'])owner=planShopPurchase(owner,{itemId:'character-backdrop',cardId}).wallet;
+ assert.equal(validateCosmeticLoadout(owner,{bannerCardId:'stockz',stickers:['kyle:smile','stockz:signature','ashlee:signature'],cardBackgrounds:{kyle:'blue-hour',ashlee:'blue-hour'}}),null);
+ assert.equal(owner.styleShards,580);
+ assert.match(validateCosmeticLoadout(owner,{bannerCardId:'stockz',bannerFinish:'silver'})!,/Unlock/);
+});
