@@ -106,6 +106,7 @@ function CardViewComponent({
   const moveFoil = (event: React.PointerEvent<HTMLElement>) => {
     if (!tactile || cardMotionReduced() || (event.pointerType === 'touch' && !isInspector)) return;
     const node = event.currentTarget;
+    node.dataset.tilting = 'true';
     const rect = node.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
@@ -115,6 +116,7 @@ function CardViewComponent({
     node.style.setProperty('--tilt-y', `${(x - 0.5) * 17}deg`);
   };
   const resetFoil = (event: React.PointerEvent<HTMLElement>) => {
+    delete event.currentTarget.dataset.tilting;
     for (const key of ['--foil-x', '--foil-y', '--tilt-x', '--tilt-y']) event.currentTarget.style.removeProperty(key);
   };
 
@@ -138,10 +140,17 @@ function CardViewComponent({
       data-frozen={isFrozen ? true : undefined}
       data-card-finish={cardFinishLabel(rarity, variantKind)}
       tabIndex={isInspector ? 0 : undefined}
+      onPointerDown={event => {
+        inspection.props.onPointerDown?.(event);
+        if (isInspector && !cardMotionReduced()) { event.currentTarget.setPointerCapture(event.pointerId); moveFoil(event); }
+      }}
+      onPointerUp={event => {
+        if (isInspector) { resetFoil(event); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }
+      }}
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
       onPointerCancel={resetFoil}
-      aria-label={`${card.name}. ${card.kind === 'token' ? 'Summoned token' : CARD_RARITY_DEFINITIONS[rarity].label + ' rarity'}.${boardStatusLabel ? " " + boardStatusLabel : ""}${fuseDescription}${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
+      aria-label={`${card.name}. ${card.kind === 'token' ? 'Summoned token' : CARD_RARITY_DEFINITIONS[rarity].label + ' rarity'}.${boardStatusLabel ? ` ${boardStatusLabel}` : ''}${fuseDescription}${covered ? ' Covered until the next targeted hostile ability.' : ''}${disabledReason ? ` ${disabledReason}` : ''}`}
       aria-pressed={!isBoard && !isInspector && !presentationOnly ? !!queued : undefined}
       title={disabledReason ?? (card.hazard ? fuseDescription.trim() : undefined)}
       onClick={presentationOnly ? undefined : onClick}

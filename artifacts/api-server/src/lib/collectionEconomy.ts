@@ -222,10 +222,10 @@ export function generateStreetPack(
   rng: RandomInt = randomInt,
 ): GeneratedStreetPack {
   const ownedCards = new Set(
-    current.ownedCardIds.filter((id) => catalogCardById[id]),
+    current.ownedCardIds,
   );
   const discoveredCards = new Set(
-    current.discoveredCardIds.filter((id) => catalogCardById[id]),
+    current.discoveredCardIds,
   );
   const ownedVariants = new Set(current.ownedVariants);
   const rewards: ApiPackReward[] = [];
@@ -327,9 +327,9 @@ export function generateStreetTenPull(
   },
   rng: RandomInt = randomInt,
 ): GeneratedStreetTenPull {
-  let ownedCards = new Set(current.ownedCardIds.filter((id) => catalogCardById[id]));
+  let ownedCards = new Set(current.ownedCardIds);
   let discoveredCards = new Set(
-    current.discoveredCardIds.filter((id) => catalogCardById[id]),
+    current.discoveredCardIds,
   );
   let ownedVariants = new Set(current.ownedVariants);
   const rewards: ApiPackReward[] = [];

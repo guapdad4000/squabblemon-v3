@@ -133,19 +133,20 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             : ('deck-stack' as const);
   return (
     <div
-      className="studio-page market world-decor-host"
+      className="studio-page market training-studio world-decor-host"
       style={{
-        backgroundImage: `linear-gradient(110deg,#101710f5,#101710b8),url('${getAssetUrl('/assets/layered/gold-vault.webp')}')`,
+        backgroundImage: `linear-gradient(110deg,#101710f5,#101710b8),url('${getAssetUrl('/assets/layered/training-hall.webp')}')`,
       }}
     >
       <PageDecor theme="market" />
+      <div className="training-studio__board" aria-hidden="true"><span>OPEN LATE</span><b>01 / PUT IN WORK</b><span>OAKLAND ATHLETIC CLUB</span></div>
       <header className="market-hero">
         <div>
-          <span className="studio-eyebrow">Dr. Fade’s Trading Post</span>
+          <span className="studio-eyebrow">DR. FADE’S · TRAINING CLUB</span>
           <h1>
-            Invest in
+            Earn your
             <br />
-            <em>your legend.</em>
+            <em>reputation.</em>
           </h1>
           <p>A sharper gang. A fresh recruit. Your next big pull.</p>
         </div>

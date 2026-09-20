@@ -28,7 +28,7 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
   if (review && tested) return <section className="rookie-review"><div>
     <img src={getCardImage(saved?.heroCardId || 'hooper')} alt="Your gang cover" />
     <span className="venue-kicker">ROOKIE ROAD / LESSON COMPLETE</span><h1>You built this gang.</h1>
-    <p>{result ? summarizeDeckTest(result, focus) : 'Your first match is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.'}</p>
+    <p>{result ? summarizeDeckTest(result, focus) : 'Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.'}</p>
     <p>Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.</p>
     <p>Welcome reward: 100 XP · 250 Clout · 1 pack ticket</p>
     <nav><button className="venue-button" onClick={() => setReview(false)}>Back to my deck</button><button className="venue-button venue-button--gold" onClick={onComplete}>Claim reward & enter Chapter One</button></nav>

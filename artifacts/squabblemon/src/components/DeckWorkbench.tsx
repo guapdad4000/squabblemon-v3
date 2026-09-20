@@ -143,7 +143,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         {error && <p role="alert">{error}</p>}
       </div>
       <button className="arsenal-link" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />{busy ? 'Saving…' : 'Save deck'}</button>
-      <button data-guide-save="true" className="arsenal-action" disabled={busy || !legality.valid} onClick={() => void persist(true)}><Swords size={17} aria-hidden="true" />{busy ? 'Saving…' : lesson ? 'Save & start lesson' : 'Save & test crew'}</button>
+      <button data-guide-save="true" className="arsenal-action" disabled={busy || !legality.valid} onClick={() => void persist(true)}><Swords size={17} aria-hidden="true" />{busy ? 'Saving…' : lesson ? 'Save & start lesson' : 'Save & test gang'}</button>
     </footer>
     {lesson && !busy && <CoachSpotlight target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : '[data-guide-save="true"]'} step={'YOUR GANG ' + (guideStep + 1) + ' / 3'} title={guideStep === 0 ? 'Ten cards make a deck.' : guideStep === 1 ? 'Choose a new recruit.' : 'Your gang is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideStep === 0 ? 'These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.' : guideStep === 1 ? 'Tap ' + catalogCardById[recruit ?? '']?.name + '. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.' : 'You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.'}</CoachSpotlight>}
   </ArsenalScreen>;

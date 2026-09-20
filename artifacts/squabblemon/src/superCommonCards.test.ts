@@ -49,6 +49,13 @@ test('Shiesty YN deterministically repeats its 50% self-summon with an eight-cop
   assert.match(cards.shiesty.effect, /50% chance.*repeats.*8 extra/);
 });
 
+test('Torta and Concrete expose hand-bond metadata', () => {
+  for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Rock']] as const) {
+    assert.equal(cards[id].elementalBond, element);
+    assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', 'player')], [], []] })), id).powerModifier, 0);
+  }
+});
+
 test('Torta grants its Earth bond while held in hand at round end', () => {
   const earthAlly = instance('manman', 'player', 7);
   const holder = instance('torta', 'player', 8);

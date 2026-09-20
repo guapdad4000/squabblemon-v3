@@ -116,6 +116,24 @@
 [data-inspect-holding="true"] { outline: 2px solid #edc96788; outline-offset: 3px; }
 .card-details-loading { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #080a0dec; color: #f7e6bb; }
 
+
+/* Touch manipulation belongs to the enlarged card, not cards in a battle hand. */
+.collector-card--inspector { touch-action:none; user-select:none; cursor:grab; }
+.collector-card--inspector[data-tilting='true'] { cursor:grabbing; }
+.collector-card[data-tilting='true'] .collector-frame { transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y)); transition:transform .08s ease-out; }
+.collector-card--inspector .collector-frame { box-shadow: 3px 4px 0 #c1aa7655, 6px 8px 0 #141920, 0 25px 45px #000a; }
+.collector-card--inspector[data-tilting='true'] .collector-portrait { translate:calc((var(--foil-x) - 50%) * -.055) calc((var(--foil-y) - 50%) * -.035); }
+.collector-card--inspector[data-tilting='true'] .collector-glare { opacity:.9; }
+.card-touch-hint { margin:18px 0 0; text-align:center; color:#b2aa98; font:9px var(--font-mono); letter-spacing:.03em; }
+@media(hover:none) and (prefers-reduced-motion:no-preference) {
+ .collector-card--inspector:not([data-tilting='true']) .collector-frame { animation:inspector-arrive 1.2s ease-out both; }
+}
+@keyframes inspector-arrive { from{transform:rotateY(-13deg) rotateX(5deg)}to{transform:rotateY(0) rotateX(0)} }
+html[data-reduce-motion='true'] .collector-card .collector-frame,html[data-reduced-motion='true'] .collector-card .collector-frame { animation:none!important; transform:none!important; transition:none!important; }
+html[data-reduce-motion='true'] .card-touch-hint {display:none}
+@media(prefers-reduced-motion:reduce) { .collector-card--inspector .collector-frame {animation:none!important}.card-touch-hint{display:none} }
+
+.card-inspector-shell .polaroid__photo { overflow:visible; }
 .collector-card--inspector .collector-card-ability > div:last-child { display: block; -webkit-line-clamp: unset; overflow: visible; }
 
 .collector-display-stack{flex-shrink:0;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:16px;}

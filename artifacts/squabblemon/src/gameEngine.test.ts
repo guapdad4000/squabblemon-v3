@@ -34,6 +34,7 @@ test("City Never Sleeps cards use deterministic reveal, protection, movement, an
   m = { ...m, phase: "cpu-reveal", cpuMotion: 20, cpuHand: [roaster], boards: m.boards.map(items => items.map(card => card.instanceId === church.instanceId ? { ...card, statuses: { ...card.statuses, frozen: true } } : card)) as Match["boards"] };
   m = playCard(m, "cpu", roaster.instanceId, 0);
   assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.powerModifier, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === protectedAlly.instanceId)?.statuses.burnStacks, 0);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 
   const carMeet = custom("carmeet", "player", 8), delivery = custom("delivery", "player", 9);
@@ -71,6 +72,7 @@ test("Church Auntie's Covered shield survives rounds until it blocks one hostile
   };
   m = playCard(m, "cpu", roaster.instanceId, 0);
   assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 2);
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.statuses.burnStacks, 0);
   assert(!m.timedEffects.some(effect => effect.kind === "church-protection"));
 });
 

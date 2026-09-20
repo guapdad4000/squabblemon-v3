@@ -184,7 +184,7 @@ test(
     assert.equal(play.status, 200, JSON.stringify(play.body));
     assert.equal(duplicate.status, 200, JSON.stringify(duplicate.body));
     assert.equal(play.body.revision, duplicate.body.revision);
-    assert.equal(play.body.boards[0].length, 1);
+    assert.equal(play.body.boards.flat().filter((card: { instanceId: string }) => card.instanceId === cheap.instanceId).length, 1, "duplicate request plays the card once, including movement locations");
     assert.equal(
       (
         await request(firstActor, `/${code}/actions`, {

@@ -24,6 +24,8 @@
     radial-gradient(circle at 50% 38%, #221a0a 0%, #0d0a05 38%, #070603 75%),
     #050403;
   position: fixed;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   isolation: isolate;
 }
 .collection-inspector.fighter-resume::before {

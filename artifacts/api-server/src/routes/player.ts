@@ -62,6 +62,7 @@ import {
   claimMissionReward,
   claimStarterReward,
   grantFirstCollection,
+  lockPlayerProfile,
   completeStandardMatchReward,
   advanceBattleMissions,
   PlayerRewardError,
@@ -183,32 +184,21 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
     return;
   }
 
-  const [current] = await db
-    .select()
-    .from(playerProfilesTable)
-    .where(eq(playerProfilesTable.clerkUserId, userId));
-  if (!current) await getPlayerBootstrap(userId);
-
-  const settings = {
-    reducedMotion:
-      parsed.data.reducedMotion ??
-      current?.settings.reducedMotion ??
-      false,
-    turnTimerEnabled:
-      parsed.data.turnTimerEnabled ??
-      current?.settings.turnTimerEnabled ??
-      true,
-  };
-  await db
-    .update(playerProfilesTable)
-    .set({
-      ...(parsed.data.displayName
-        ? { displayName: parsed.data.displayName.trim() }
-        : {}),
+  await getPlayerBootstrap(userId);
+  await db.transaction(async tx => {
+    await lockPlayerProfile(tx, userId);
+    const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+    if (!current) return;
+    await tx.update(playerProfilesTable).set({
+      ...(parsed.data.displayName ? { displayName: parsed.data.displayName.trim() } : {}),
       ...(parsed.data.avatarKey ? { avatarKey: parsed.data.avatarKey } : {}),
-      settings,
-    })
-    .where(eq(playerProfilesTable.clerkUserId, userId));
+      settings: {
+        ...current.settings,
+        reducedMotion: parsed.data.reducedMotion ?? current.settings.reducedMotion,
+        turnTimerEnabled: parsed.data.turnTimerEnabled ?? current.settings.turnTimerEnabled,
+      },
+    }).where(eq(playerProfilesTable.clerkUserId, userId));
+  });
 
   res.json(
     UpdatePlayerProfileResponse.parse(await getPlayerBootstrap(userId)),
@@ -394,7 +384,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   let storyContentVersion: number | null = null;
   let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
   let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
-  if (parsed.data.mode === "tutorial" && !recipe && savedDeck?.id !== ROOKIE_DECK_ID) { res.status(400).json({ error: "Use the guided tutorial crew" }); return; }
+  if (parsed.data.mode === "tutorial" && !recipe && savedDeck?.id !== ROOKIE_DECK_ID) { res.status(400).json({ error: "Use the guided tutorial gang" }); return; }
   const rosterCardIds = drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards;
   if (!rosterCardIds) {
     res.status(400).json({ error: "Unknown player gang" });

@@ -54,7 +54,7 @@ for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities
       assert.equal(ally.powerModifier,id === 'laundry' ? 1 : 0);
       assert.equal(second.statuses.frozen,id === 'laundry');
     }
-    if (id === 'busker') { assert.equal(ally.powerModifier,1); assert.equal(second.powerModifier,1); }
+    if (id === 'busker') { assert.equal(ally.powerModifier,1); assert.equal(second.powerModifier,second.cost === 1 ? 1 : 0); }
     if (id === 'cornercoach' || id === 'bigzoey') assert.equal(ally.powerModifier,2);
     if (id === 'nightcashier') assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'],8);
     if (id === 'chessregular') assert.equal(enemy.statuses.burnStacks, 2);

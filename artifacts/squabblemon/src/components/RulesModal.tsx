@@ -18,8 +18,8 @@ export function RulesModal({ onClose }: any) {
     "Abilities resolve immediately. Hands changes, movement, freeze, silence, protection, and blocked effects stay visible on the affected cards.",
     "Frozen cards add 0 Hands until cleansed. Silenced cards keep their Hands but cannot fire their ability.",
     "Each fade draws three of sixteen locations. Rules can help or hurt: Dive Bar lowers costs and Hands; Corrupt Church charges extra Motion for a buff. Location penalties cannot lower a card below 0 Hands. Read each mat before playing.",
-    "After round six, claim at least two of three districts to win. A 1–1–1 split or no two-district claim is a draw.",
-    "SQUABBLE can be armed once per fade after selecting a card. It doubles that card's Base Hands: save it to steal a close district or force the rival to answer, but do not wait past round six."
+    "When the final round ends, claim at least two of three districts to win. A 1–1–1 split or no two-district claim is a draw.",
+    "SQUABBLE can be armed once per fade after selecting a card. It doubles that card's Base Hands: save it to steal a close district or force the rival to answer, but do not wait past the final round."
   ];
 
   return (

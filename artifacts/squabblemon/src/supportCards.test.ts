@@ -62,7 +62,7 @@ test('support conditions and status suppression prevent free effects', () => {
   }
   const { source, match } = setup('charger', 'player');
   match.boards = [[unit('buspass', 'player')], [], []];
-  assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 8);
+  assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 9 - cards.charger.cost);
 });
 
 test('a coached Subway Map cannot award Hands when County Jail blocks its move', () => {

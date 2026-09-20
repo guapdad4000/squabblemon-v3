@@ -1,7 +1,9 @@
 import { ResultArtwork } from './ResultArtwork';
 import { coachBattle } from '@workspace/squabblemon-engine/insights';
 import { ArrowRight, RotateCcw, Star } from 'lucide-react';
-import { getCardImage } from '../data';
+import { BattleVictory } from './BattleVictory';
+import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
+import { decks, getCardImage } from '../data';
 import { type Match, evaluateStoryStarObjectives, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { BattleEarnings } from './BattleEarnings';
 import '../styles/studio.css';
@@ -31,6 +33,7 @@ export function ResultScreen({
     isDraw = winner === 'draw';
   const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
   const isTutorial = Boolean(tutorial);
+  const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
   const objectiveResults = evaluateStoryStarObjectives(m);
   const earnedStars = objectiveResults.filter((objective) => objective.achieved).length;
   const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved]));
@@ -38,7 +41,7 @@ export function ResultScreen({
     <div className="result-stage__save" role="alert">
       <p>
         {isTutorial
-          ? 'Tutorial completion could not be verified. Restart the guided match and complete each highlighted lesson.'
+          ? 'Tutorial completion could not be verified. Restart the guided fade and complete each highlighted lesson.'
           : isStory
             ? 'Failed to save outcome.'
             : 'Your rewards were not saved. Your battle result remains available on this screen.'}
@@ -59,7 +62,7 @@ export function ResultScreen({
       <div className="result-stage__content">
         <header className="result-stage__heading">
           <span className="studio-eyebrow">
-            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
+            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
             <span>•</span>
             {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
           </span>
@@ -98,7 +101,7 @@ export function ResultScreen({
                 data-testid="button-restart-tutorial"
                 onClick={onRestart}
               >
-                Restart Guided Match
+                Restart Guided Fade
                 <RotateCcw size={15} />
               </button>
             ) : (
@@ -198,7 +201,15 @@ export function ResultScreen({
           </p>
         ) : null}
 
-        <aside className="result-stage__coach" aria-label="Dr. Fade match advice">
+        <details className="result-stage__details result-stage__crew-details">
+          <summary>Battle breakdown · Your gang</summary>
+          <figure className="result-stage__captain">
+            <img className={`variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, playerDeck.hero)) ?? 'base'}`} src={getCardImage(playerDeck.hero)} alt="Your gang captain" />
+            <figcaption>Your captain</figcaption>
+          </figure>
+          {isDraw ? <div className="result-stage__draw"><img src={getCardImage(playerDeck.hero)} alt="" /><span>Settle it in the next round.</span></div> : <BattleVictory match={m} winner={winner} equippedVariants={equippedVariants} />}
+        </details>
+        <aside className="result-stage__coach" aria-label="Dr. Fade advice">
           <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
           <div>
             <span className="studio-eyebrow">Dr. Fade · Next time</span>

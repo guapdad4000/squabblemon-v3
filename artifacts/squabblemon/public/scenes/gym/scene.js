@@ -1,5 +1,5 @@
 import * as THREE from '../shared/three.module.js';
-let disposed=false;
+let disposed=false,sceneInitialized=false;
 let armed=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const emit=payload=>parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);
 const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try{this.context??=new AudioContext();this.context.resume();}catch{}},playPunch(){this.tone(95,.14)},playKO(){this.tone(52,.5)},tone(hz,duration){if(!this.enabled)return;this.init();const c=this.context;if(!c)return;const o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(hz,c.currentTime);o.frequency.exponentialRampToValueAtTime(28,c.currentTime+duration);g.gain.setValueAtTime(.16,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);o.onended=()=>{o.disconnect();g.disconnect()}}};
@@ -1092,6 +1092,10 @@ addEventListener('message',e=>{
 
 addEventListener('error',event=>{if(event.error)emit({type:'error',message:event.error.message});});
 addEventListener('unhandledrejection',event=>emit({type:'error',message:String(event.reason || 'The gym could not be rendered.')}));
-try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;emit({type:'error'});});emit({type:'ready'});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
+try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;sceneInitialized=false;emit({type:'error'});});sceneInitialized=true;emit({type:'ready'});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
 
 addEventListener('pagehide',()=>{disposed=true;AudioEngine.context?.close();scene?.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});renderer?.dispose();});
+
+addEventListener('message', event => {
+  if (event.origin === location.origin && event.source === parent && event.data?.channel === 'squabblemon-scene' && event.data.type === 'ping' && sceneInitialized && renderer && !disposed && !renderer.getContext().isContextLost()) emit({type:'ready'});
+});

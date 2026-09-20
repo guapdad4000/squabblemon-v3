@@ -136,10 +136,20 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     const normalizeCardId = (cardId: string) =>
       catalogCardById[cardId]?.catalogId ??
       catalogCardByEngineId[cardId]?.catalogId ??
-      null;
+      cardId;
+    // Profile reads must not delete newer cards during a rolling deploy or rollback.
+    // Recover ownership only from immutable, server-issued card reward receipts.
+    const earnedCards = await tx.execute<{ cardId: string }>(sql`
+      select distinct reward->>'cardId' as "cardId"
+      from ${playerPackOpeningsTable},
+        lateral jsonb_array_elements(${playerPackOpeningsTable.rewards}) as reward
+      where ${playerPackOpeningsTable.clerkUserId} = ${clerkUserId}
+        and reward->>'kind' = 'card'
+        and reward->>'cardId' is not null
+    `);
     const normalizedOwned = [
       ...new Set(
-        current.ownedCardIds
+        [...current.ownedCardIds, ...earnedCards.rows.map(reward => reward.cardId)]
           .map(normalizeCardId)
           .filter((id): id is string => Boolean(id)),
       ),
@@ -176,7 +186,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
         name: deck.name,
         cardIds,
         heroCardId:
-          normalizeCardId(deck.heroCardId ?? "") ??
+          (deck.heroCardId ? normalizeCardId(deck.heroCardId) : null) ??
           (inferredRecipe
             ? inferredRecipe.hero
             : cardIds[0] ?? ""),
@@ -185,19 +195,18 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     });
     const equippedVariants = Object.fromEntries(
       Object.entries(current.equippedVariants ?? {}).filter(([cardId, variantId]) => {
-        const card = catalogCardById[cardId];
         return Boolean(
-          card &&
           normalizedOwned.includes(cardId) &&
-          current.ownedVariants.includes(variantId) &&
-          card.variantSlots.some((slot) => slot.id === variantId),
+          current.ownedVariants.includes(variantId),
         );
       }),
     );
     const cardProgression: CardProgressionMap = Object.fromEntries(
       normalizedOwned.map((cardId) => [
         cardId,
-        normalizeCardProgress(current.cardProgression?.[cardId]),
+        !catalogCardById[cardId] && current.cardProgression?.[cardId]
+          ? current.cardProgression[cardId]
+          : normalizeCardProgress(current.cardProgression?.[cardId]),
       ]),
     );
 

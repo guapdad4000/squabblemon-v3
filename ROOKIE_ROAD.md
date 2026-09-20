@@ -33,6 +33,10 @@ Browser fixtures and isolated database tests do not measure real-player comprehe
 
 ## Reconciled release
 
-The tutorial is combined with the live checkout’s inventory, soundtracks, reward artwork, foil treatments, expanded districts, KYLE and STOCKZ. Existing campaign rarity and upgrade fixes are retained. Character/video revisions match file hashes. Story v1 seeds retain their original sixteen-district pool so new locations cannot silently reshuffle authored battles. The Cheese Has Terms grants two extra opening Motion. Mama Has the Floor, Auntie’s Setup, The Function, Snitch’s Roll Call and OG Uncle have one less rival Motion on later rounds; The Bar Fight has two less. These targeted adjustments preserve their phases and lane rules while allowing the guided starting deck to win.
+The tutorial is combined with the live checkout’s inventory, soundtracks, reward artwork, foil treatments, expanded districts, KYLE and STOCKZ. Existing campaign rarity and upgrade fixes are retained. Character/video revisions match file hashes. Story v1 seeds retain their original sixteen-district pool so new locations cannot silently reshuffle authored battles. Cheese Has Terms grants two extra opening Motion. Mama Has the Floor, Auntie’s Setup, The Function, Snitch’s Roll Call and OG Uncle have one less rival Motion on later rounds; The Bar Fight has two less. These targeted adjustments preserve their phases and lane rules while allowing the guided starting deck to win.
 
 The source of truth is GitHub main in guapdad4000/squabblemon-v3. Netlify automatically deploys main, and the same reconciled checkout can be published with the documented CLI command. See README for deployment details.
+
+The release also includes the newer GitHub mobile navigation, Squabble Express, ticket-based gacha, Fight lobby and cosmetic changes. The complete campaign API check saves the actual guided Nail Tech replacement through the deck endpoint before verifying all 62 nodes.
+
+Collection protection: bootstrap preserves saved card IDs, deck slots, progression and owned variant selections when a running server does not recognize newer catalog content. Persisted gacha card receipts restore missing ownership without charging currency or replaying rewards. Already-erased deck positions and XP cannot be reconstructed from pack receipts.

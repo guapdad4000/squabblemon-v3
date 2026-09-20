@@ -215,3 +215,13 @@ test("published rarity odds are generated from the roll weights", () => {
     assert(published.includes(`${CARD_RARITY_DEFINITIONS[rarity as CardRarity].label} ${weight}%`));
   }
 });
+
+
+test('single and ten pulls preserve earned cards absent from this deployment catalog', () => {
+  for (const generate of [generateStreetPack, generateStreetTenPull]) {
+    const result = generate({ ownedCardIds: ['next-release-character'], discoveredCardIds: ['next-release-character'], ownedVariants: [], pity: 0 }, zero);
+    assert(result.ownedCardIds.includes('next-release-character'));
+    assert(result.discoveredCardIds.includes('next-release-character'));
+    assert(result.rewards.filter(reward => reward.kind === 'card').every(reward => reward.cardId && catalogCardById[reward.cardId]), 'New pulls still come only from the active catalog');
+  }
+});

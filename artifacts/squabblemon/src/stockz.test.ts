@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, catalogCardById, validateCardAbilityUpgrades } from '@workspace/squabblemon-engine/data';
-import { createCardInstance, createMatch, playCard, nextRound, type Match, type Lane } from '@workspace/squabblemon-engine';
+import { createCardInstance, createMatch, playCard, nextRound, type Match, type Lane } from '@workspace/squabblemon-engine/gameEngine';
 test('STOCKZ is a collectible Rare with valid upgrades and supplied portrait', () => {
   assert.equal(catalogCardById.stockz.rarity, 'Rare');
   assert.equal(cards.stockz.cost, 3); assert.equal(cards.stockz.power, 3);

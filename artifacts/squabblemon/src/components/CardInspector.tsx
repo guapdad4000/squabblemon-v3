@@ -153,6 +153,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
             {card.name}
             <em>{finishLabel} · {rarityLabel}</em>
           </div>
+          <p className="card-touch-hint">Drag the card to catch the light</p>
           <div className="collector-display-caption sr-only">
             <span>{catalogCard ? CARD_FINISH[catalogCard.rarity] : 'Collector edition'}</span>
             <small>Move across the card to catch the light</small>

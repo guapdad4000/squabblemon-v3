@@ -355,7 +355,14 @@ test('Nail Salon protects first arrivals once, follows movement, and expires aft
   assert.equal(riding.boards[1][0].statuses.protected, true);
   riding = play(riding, 'roaster', 1, 'cpu');
   assert.equal(riding.boards[1][0].powerModifier, 1);
-
+  let shoved = play(initial('nail-salon', 'bodega', 'the-trap'), 'cornball', 0);
+  const shielded = shoved.boards[0][0].instanceId;
+  shoved.boards[0].push(card('hooper', 'player', 90, 0), card('og', 'player', 91, 0));
+  shoved = play(shoved, 'cornball', 0, 'cpu');
+  assert(shoved.boards[0].some(c => c.instanceId === shielded));
+  assert.equal(shoved.boards[0].find(c => c.instanceId === shielded)!.statuses.burnStacks, 0);
+  shoved = play(shoved, 'cornball', 0, 'cpu');
+  assert.equal(shoved.boards[0].find(c => c.instanceId === shielded)!.statuses.burnStacks, 1);
 });
 
 test('Barbershop cleans allies before reveal, preserves buffs and opponents, and resets each round', () => {
@@ -497,13 +504,10 @@ test('Online Night Market draws stay private while the rival sees only the hand 
   assert(!JSON.stringify(rival).includes(host.hand.at(-1)!.instanceId));
 });
 
-test('story v1 boards stay stable when the district catalog expands', () => {
-  const boards = {
-    'welcome-to-the-block': ['the-trap', 'bodega', 'corrupt-church'],
-    'og-uncles-verdict': ['nail-salon', 'county-jail', 'hollywood-strip'],
-    'red-tapes-cheese-has-terms': ['barbershop', 'the-trap', 'vip-section'],
-  };
-  for (const [node, expected] of Object.entries(boards)) {
-    assert.deepEqual(createDistrictSnapshot('story-node-v1:' + node).locations.map(d => d.id), expected);
-  }
+
+test('campaign v1 boards stay stable while random battles can use the expanded location pool', () => {
+  assert.deepEqual(createDistrictSnapshot('story-node-v1:welcome-to-the-block').locations.map(location => location.id), ['the-trap', 'bodega', 'corrupt-church']);
+  const randomIds = new Set(Array.from({ length: 100 }, (_, i) => createDistrictSnapshot('expanded-battle:' + i).locations).flat().map(location => location.id));
+  assert(randomIds.has('mirror-arcade'));
+  assert(randomIds.has('night-market'));
 });

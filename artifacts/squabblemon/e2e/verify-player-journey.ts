@@ -25,7 +25,7 @@ async function run(width: number, height: number) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   let step = 'tutorial', collected = false, tested = false, failSave = true, claims = 0, started = 0;
-  let draft = { id: ROOKIE_DECK_ID, name: 'My First Crew', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
+  let draft = { id: ROOKIE_DECK_ID, name: 'My First Gang', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
   let issued: Match | null = null;
   const districts = rookieDistricts(), encounter = rookieEncounter();
   function bootstrap() { return {
@@ -34,7 +34,7 @@ async function run(width: number, height: number) {
       storyChapter: 1, storyNode: 0, tutorialCompleted: tested, starterRewardClaimed: step === 'complete', ageConfirmedAt: new Date(0).toISOString(), termsAcceptedAt: new Date(0).toISOString(),
       settings: { reducedMotion: true, turnTimerEnabled: false }, ownedCardIds: collected ? ROOKIE_FOUNDATION_IDS : [], discoveredCardIds: ROOKIE_FOUNDATION_IDS, cardProgression: {}, ownedVariants: [], equippedVariants: {},
       unlockedCosmeticIds: [], savedDecks: collected ? [draft] : [], storyProgress: {}, inbox: [], packHistory: [], lastActiveAt: new Date(0).toISOString() },
-    missions: [], nextAction: { id: tested ? 'rookie-tested' : 'onboarding-' + step, eyebrow: 'Rookie Road', title: 'Build your crew', description: 'Learn together', destination: 'onboarding', rewardLabel: null },
+    missions: [], nextAction: { id: tested ? 'rookie-tested' : 'onboarding-' + step, eyebrow: 'Rookie Road', title: 'Build your gang', description: 'Learn together', destination: 'onboarding', rewardLabel: null },
     packConfig: { id: 'street-pack', name: 'Street Pack', oddsVersion: 'test', softCurrencyCost: 200, ticketCost: 1, rewardsPerPack: 3, pityLimit: 10, odds: [] }, collectionRoad: [],
   }; }
   try {

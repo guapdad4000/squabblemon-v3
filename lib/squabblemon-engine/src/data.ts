@@ -495,7 +495,7 @@ export function validateSavedDeck(
     issues.push("A deck can only use one gameplay copy of each card.");
   }
   if (unknownCardIds.length) {
-    issues.push("Remove cards that are no longer in the catalog.");
+    issues.push("Some saved cards are temporarily unavailable. Your lineup is preserved.");
   }
   if (missingCardIds.length) {
     issues.push(

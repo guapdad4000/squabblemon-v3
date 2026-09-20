@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import {
   db,
   playerMatchesTable,
+  playerPackOpeningsTable,
   playerProfilesTable,
 } from "@workspace/db";
 import { validateSavedDeck } from "@workspace/squabblemon-engine/data";
@@ -103,4 +104,46 @@ test("new profiles earn their starter foundation through onboarding without rece
   const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   assert.deepEqual(profile.ownedCardIds, []);
   assert.deepEqual(profile.discoveredCardIds, []);
+});
+
+test("profile refresh preserves cards and deck slots from a newer catalog", async t => {
+  const clerkUserId = 'future-catalog-' + randomUUID();
+  t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
+  const future = 'next-release-character';
+  const cardIds = ['cornball', future, 'kyle', 'stockz'];
+  const progress = { xp: 450, level: 3, moveTier: 1 };
+  const deck = { id: 'preserved', name: 'My Gang', deckSize: 10, cardIds, heroCardId: future, recipeId: null };
+  await db.insert(playerProfilesTable).values({ clerkUserId, ownedCardIds: cardIds,
+    discoveredCardIds: [future], cardProgression: { [future]: progress },
+    savedDecks: [deck], ownedVariants: [future + ':chrome'], equippedVariants: { [future]: future + ':chrome' } });
+  await ensurePlayer(clerkUserId);
+  await ensurePlayer(clerkUserId);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.deepEqual(profile.ownedCardIds, cardIds);
+  assert(profile.discoveredCardIds.includes(future));
+  assert.deepEqual(profile.savedDecks, [deck]);
+  assert.deepEqual(profile.cardProgression[future], progress);
+  assert.equal(profile.equippedVariants[future], future + ':chrome');
+  assert.equal(validateSavedDeck(cardIds, profile.ownedCardIds, future).valid, false, 'Unavailable cards remain unplayable without deleting their save');
+});
+
+test("saved gacha card receipts restore missing ownership without charging or replaying currencies", async t => {
+  const clerkUserId = 'receipt-recovery-' + randomUUID();
+  t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
+  await db.insert(playerProfilesTable).values({ clerkUserId, ownedCardIds: ['cornball'], softCurrency: 75, packTickets: 2, styleShards: 10 });
+  await db.insert(playerPackOpeningsTable).values({ clerkUserId, idempotencyKey: randomUUID(), oddsVersion: 'street-pack-v5', paymentMethod: 'ticket', cost: 1, pityBefore: 0, pityAfter: 1,
+    rewards: [
+      ...['kyle', 'stockz'].map(cardId => ({ kind: 'card' as const, cardId, variantId: null, name: cardId, rarity: 'Rare', isNew: true, amount: 1 })),
+      { kind: 'softCurrency', cardId: null, variantId: null, name: 'Clout', rarity: null, isNew: false, amount: 100 },
+      { kind: 'styleShards', cardId: 'hooper', variantId: null, name: 'Duplicate', rarity: 'Rare', isNew: false, amount: 25 },
+    ] });
+  await ensurePlayer(clerkUserId);
+  await ensurePlayer(clerkUserId);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.deepEqual([...profile.ownedCardIds].sort(), ['cornball', 'kyle', 'stockz']);
+  assert(profile.discoveredCardIds.includes('kyle') && profile.discoveredCardIds.includes('stockz'));
+  assert.equal(profile.collectionProgress, 3);
+  assert.equal(profile.softCurrency, 75);
+  assert.equal(profile.packTickets, 2);
+  assert.equal(profile.styleShards, 10);
 });

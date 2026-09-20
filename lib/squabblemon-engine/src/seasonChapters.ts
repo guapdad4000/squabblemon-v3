@@ -386,7 +386,7 @@ const plans: ChapterPlan[] = [
   { id: 'the-crown', order: 8, title: 'Chapter Eight: The Crown', subtitle: 'The Open belongs to the people who play it.',
     description: 'Cross the neighborhood, win the final and defend the Open as the rooftop changes owners.', map: 'sunset-block', venue: 'crown-rooftop-court', beats: [
       { id: 'crown-open-entry', title: 'Open Entry', opponent: 'Bottle Girl', deck: deckRed, venue: 'corner-store-court', battleType: 'guided', modifiers: { startingMotion: { player: 3 } },
-        before: [['Bottle Girl', "Corner store table is open. No crew colors required, and nobody pays Snitch for a line pass."], ['Cornball', "I made signs. One says OPEN and one says STILL OPEN."], ['Bottle Girl', "First match sets the tone. Show them both signs are true."]],
+        before: [['Bottle Girl', "Corner store table is open. No gang colors required, and nobody pays Snitch for a line pass."], ['Cornball', "I made signs. One says OPEN and one says STILL OPEN."], ['Bottle Girl', "First fade sets the tone. Show them both signs are true."]],
         after: [['Bottle Girl', "First table cleared. Every name stays on the board."], ['Cornball', "I am putting the second sign up anyway."]] },
       { id: 'crown-published-rules', title: 'Published Rules', opponent: 'Promoter', deck: deckMedia, venue: 'corner-store-court',
         before: [['Promoter', "Three venues. Same bracket. The rules are printed where everyone can see them."], ['Ganger Blue', "I checked every name twice. No more private copies."], ['Promoter', "Good. Now check your deck."]],
@@ -401,7 +401,7 @@ const plans: ChapterPlan[] = [
         before: [['Snitch', "My stream needs a title. I was considering Snitch Saves the Open."], ['Wifey', "Try The People Who Built It."], ['Snitch', "That is less searchable. Beat my table and I will use it."]],
         after: [['Snitch', "Fine. Credit goes to Red for the full file, Wifey for the list, and the volunteers for everything I stepped around."], ['Wifey', "Keep that line in the replay."]] },
       { id: 'crown-hoopers-seed', title: "Hooper's Seed", opponent: 'Hooper', deck: deckBlue, venue: 'red-fence-night-court', battleType: 'mini-boss', modifiers: { startingMotion: { player: 3 } }, phases: [phase('semifinal-push', 4, 1)],
-        before: [['Hooper', "Last Red Side table. Win and you keep your rooftop seed."], ['Promoter', "Published seeding. No surprise eliminations."], ['Hooper', "Good. I want the best match, not the best paperwork."]],
+        before: [['Hooper', "Last Red Side table. Win and you keep your rooftop seed."], ['Promoter', "Published seeding. No surprise eliminations."], ['Hooper', "Good. I want the best fade, not the best paperwork."]],
         after: [['Hooper', "Seed held. Go meet the people waiting upstairs."], ['Promoter', "The rooftop is ready."]] },
       { id: 'crown-blue-sets-the-table', title: 'Blue Sets the Table', opponent: 'Ganger Blue', deck: deckBlue,
         before: [['Ganger Blue', "I set up the final table. I do not get a title shot, and that is fair."], ['Cracked Head', "You can still play a warm-up without changing the bracket."], ['Ganger Blue', "Then let this be a warm-up I can lose honestly."]],
