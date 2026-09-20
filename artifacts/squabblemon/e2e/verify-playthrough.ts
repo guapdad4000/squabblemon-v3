@@ -23,7 +23,7 @@ try{
   const page=activePage=await context.newPage();page.setDefaultTimeout(20000);page.on('pageerror',e=>report.errors.push(`${name}: ${e.message}`));
   await page.route('**/api/**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(route.request().url().endsWith('/story')?campaign:route.request().url().includes('multiplayer')?{rooms:[]}:{})}));
   const shot=async(part:string)=>{assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,part+' overflow');await page.screenshot({path:`../../screenshots/playthrough-${part}-${name}.jpg`,type:'jpeg',quality:82});};
-  await page.goto(origin+'/game/shop');await page.locator('.venue-scene.is-ready').waitFor();
+  await page.goto(origin+'/game/shop');await page.locator('.gacha-stage').waitFor();
   const back=page.getByRole('link',{name:'Back to safehouse',exact:true}),menu=page.getByRole('button',{name:'Open game navigation',exact:true});
   await visible(back,width,height);assert.equal(await menu.count(),1);await visible(menu,width,height);
   await page.locator('.game-route-stage').evaluate(e=>e.scrollTop=e.scrollHeight);await visible(back,width,height);
@@ -42,8 +42,6 @@ try{
  }
  const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});await context.addInitScript(()=>localStorage.setItem('squabblemon_e2e_user','signed-in'));
  const page=activePage=await context.newPage();page.setDefaultTimeout(22000);await page.route('**/api/**',route=>route.fulfill({contentType:'application/json',body:'{}'}));
- await page.route('**/scenes/gym/scene.js',route=>route.abort());await page.goto(origin+'/game/shop');await visible(page.getByRole('link',{name:'Back to safehouse',exact:true}),390,844);
- await page.getByText('The lights went out.',{exact:true}).waitFor();await page.unroute('**/scenes/gym/scene.js');await page.getByRole('button',{name:'Reload scene',exact:true}).click();await page.locator('.venue-scene.is-ready').waitFor();report.checks.push('Blocked gym script: accessible exit, bounded loading timeout, successful scene retry');
  await page.goto(origin+'/game/collection');await page.getByTestId('collection-card-control').first().click();const card=page.getByTestId('card-inspector');await card.waitFor();await drag(page,card,-35,10);assert.equal(await card.getAttribute('data-tilting'),null);assert.equal(await card.locator('.collector-frame').evaluate(e=>getComputedStyle(e).animationName),'none');report.checks.push('Reduced motion disables tilt and entrance animation');await context.close();assert.deepEqual(report.errors,[]);report.complete=true;
 }catch(error){report.failure=String(error.stack??error);await activePage?.screenshot({path:'../../screenshots/playthrough-failure.jpg',type:'jpeg',quality:80}).catch(()=>{});throw error;}
 finally{await browser.close();await writeFile('../../screenshots/playthrough-verification.json',JSON.stringify(report,null,2));}

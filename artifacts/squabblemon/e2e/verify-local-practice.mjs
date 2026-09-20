@@ -12,7 +12,7 @@ page.on('request', request => {
 await page.addInitScript(() => {
   localStorage.setItem('squabblemon_e2e_user', 'signed-in');
   localStorage.setItem('squabblemon.preview-decks.v1', JSON.stringify([{
-    id: 'local-practice-check', name: 'Local Test Crew', heroCardId: 'cornball', recipeId: null,
+    id: 'local-practice-check', name: 'Local Test Gang', heroCardId: 'cornball', recipeId: null,
     cardIds: ['cornball', 'earthy-sugar-foot', 'plug', 'gamer', 'snow-bunny', 'wifey', 'baby-momma'],
     valid: true, issues: [],
   }]));
@@ -97,9 +97,9 @@ try {
   assert.equal(await page.getByRole('button', { name: 'Retry Save', exact: true }).count(), 0);
   await page.getByTestId('button-restart-match').click();
   await page.getByTestId('battle-arena').waitFor();
-  assert.deepEqual(matchRequests, [], 'Local preview must not start or save API matches.');
+  assert.deepEqual(matchRequests, [], 'Local preview must not start or save API fades.');
   assert.deepEqual(errors, []);
-  console.log('Local preview passed: two cards in one turn, correct Motion spending, explicit End Turn, training, draft, six rounds, and rematch without match API requests.');
+  console.log('Local preview passed: two cards in one turn, correct Motion spending, explicit End Turn, training, draft, six rounds, and runback without fade API requests.');
 } finally {
   await browser.close();
 }

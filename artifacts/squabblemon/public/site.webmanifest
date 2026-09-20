@@ -2,7 +2,7 @@
   "name": "Squabblemon",
   "short_name": "Squabblemon",
   "id": "./",
-  "description": "Build your crew, claim the districts, and own the room in an illustrated street-social card battler.",
+  "description": "Build your gang, claim the districts, and own the room in an illustrated street-social card battler.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

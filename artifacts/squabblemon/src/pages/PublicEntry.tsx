@@ -38,7 +38,7 @@ export function PublicEntry() {
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
           <div className="font-mono text-[9px] md:text-[11px] text-primary uppercase tracking-[.28em] mb-3">The city is watching</div>
           <p className="font-sans text-sm md:text-base text-white/70 max-w-sm mb-8 leading-relaxed">
-            Build your crew, read the room, and take two of three districts in a six-round clash.
+            Build your gang, read the room, and take two of three districts in a six-round clash.
           </p>
         </motion.div>
 
@@ -65,7 +65,7 @@ export function PublicEntry() {
           </div>
 
           <Link href="/play/guest" className="w-full min-h-12 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest flex items-center justify-center hover:text-white hover:border-white/30 transition-all active:scale-95">
-            Play Practice Match
+            Play Practice Fade
           </Link>
           <Link href="/how-to-play" className="py-3 text-primary text-center font-mono text-[10px] uppercase tracking-widest hover:text-yellow-200">
             How to play · The field guide →

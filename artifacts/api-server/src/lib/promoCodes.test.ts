@@ -246,3 +246,17 @@ test('promo redemption persists rewards once and works with the real economy', {
     assert.equal((await redeemPromoCode(id, 'DEVTEST')).alreadyRedeemed, false);
   });
 });
+
+test('DEVSTOCKZ grants only the redeemable STOCKZ character', () => {
+  const reward = findPromoCode(' devstockz ');
+  assert.deepEqual(reward, { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] });
+  assert.equal(catalogCardById.stockz.kind, 'character');
+});
+
+
+test('KYLE grants the legendary character, tickets and Clout', () => {
+  const reward = findPromoCode(' kyle ');
+  assert.deepEqual(reward, { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] });
+  assert.equal(catalogCardById.kyle.kind, 'character');
+  assert.equal(catalogCardById.kyle.rarity, 'Legendary');
+});

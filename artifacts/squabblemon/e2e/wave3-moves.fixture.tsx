@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Battle } from '../src/components/Battle';
-import { buildReplayFrame } from '../src/components/PlayLoop';
+import { applyEventState } from '../src/components/PlayLoop';
 import { createMatch, createCardInstance, playCard, type Match } from '../src/gameEngine';
 import { decks, cards } from '../src/data';
 import '../src/index.css';
@@ -24,7 +24,7 @@ function Fixture() {
   const [impact, setImpact] = useState(false);
   const [ready, setReady] = useState(false);
   (window as any).wave3Fixture = { impact: () => setImpact(true), ready: () => setReady(true) };
-  const match = buildReplayFrame(resolved, event, impact ? 'after' : 'before');
+  const match = applyEventState(base, resolved, event, impact ? 'after' : 'before');
   return <div style={{ height: '100dvh', color: 'white' }}><Battle match={match} deck={decks[0]} rivalDeck={decks[1]}
     selectedInstanceId={null} setSelectedInstanceId={() => {}} selectedLane={null} setSelectedLane={() => {}}
     commit={() => {}} skipSequence={() => setReady(true)} presentationPhase={ready ? 'player-ready' : 'effects'}

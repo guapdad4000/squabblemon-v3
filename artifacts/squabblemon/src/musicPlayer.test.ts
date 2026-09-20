@@ -167,3 +167,31 @@ test('Web Audio controls music volume and reconnects playback after context susp
   assert.equal(context.state, 'running'); assert.ok(resumed >= 2);
   player.dispose(); assert.equal(disconnected, 2); assert.equal(closed, 1);
 });
+
+test('mode playlists rotate locally, obey muted preferences, and restore the background selection', async () => {
+  const { modeSoundtracks } = await import('./musicModes');
+  const s = setup(); s.player.unlock(); await settle();
+  s.player.selectTrack(3); await settle();
+  const background = { enabled:true, volume:.2, trackIndex:3 };
+  s.player.setPlaylist(modeSoundtracks.story, { enabled:true, volume:.4, trackIndex:0 }); await settle();
+  assert(s.audio.src.endsWith('story-mode-ost.mp3'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost-2.mp3'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost.mp3'));
+  s.player.setPlaylist(modeSoundtracks.boss, { enabled:false, volume:.4, trackIndex:0 }); await settle();
+  assert.equal(s.audio.paused,true);
+  s.player.setPlaylist(soundtrack,background); await settle();
+  assert.equal(s.state.trackIndex,3); assert.equal(s.audio.volume,.2); assert.equal(s.audio.paused,false);
+  s.player.dispose();
+});
+
+test('routes choose story, boss, training, gacha, and background music', async () => {
+  const { musicModeForRoute } = await import('./musicModes');
+  assert.equal(musicModeForRoute('/game'),'background');
+  assert.equal(musicModeForRoute('/game/story'),'story');
+  assert.equal(musicModeForRoute('/game/play'),'training');
+  assert.equal(musicModeForRoute('/game/shop'),'gacha');
+  assert.equal(musicModeForRoute('/game/story/play/welcome-to-the-block'),'story');
+  const { storyContent } = await import('@workspace/squabblemon-engine/story');
+  const boss=storyContent.chapters.flatMap(chapter=>chapter.nodes).find(node=>node.kind==='battle' && node.battleType==='boss');
+  assert(boss); assert.equal(musicModeForRoute(`/game/story/play/${boss.id}`),'boss');
+});

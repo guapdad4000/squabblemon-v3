@@ -9,7 +9,7 @@ test('preview deck saves survive reload, updates keep one copy, and deleting rel
   const storage = { getItem: () => saved || null, setItem: (_: string, value: string) => { saved = value; } };
   const recipe = starterRecipes[0];
   const initial = { profile: { savedDecks: [], deckSlots: 1, ownedCardIds: recipe.catalogCardIds } } as unknown as PlayerBootstrap;
-  const draft = { name: 'My Crew', cardIds: recipe.catalogCardIds, heroCardId: recipe.hero, recipeId: recipe.id };
+  const draft = { name: 'My Gang', cardIds: recipe.catalogCardIds, heroCardId: recipe.hero, recipeId: recipe.id };
   const first = updatePreviewDeck(initial, 'local-one', draft, storage);
   assert.equal(initial.profile.savedDecks.length, 0);
   assert.deepEqual(readPreviewDecks(storage), first.profile.savedDecks);
@@ -29,9 +29,9 @@ test('corrupt local saves fall back safely and blocked storage does not report s
   assert.throws(() => updatePreviewDeck(bootstrap, 'local', null, { getItem: () => null, setItem: () => { throw new Error('Storage full'); } }), /Storage full/);
 });
 
-test('legacy crews expand once while newly saved seven-card drafts stay incomplete', () => {
+test('legacy gangs expand once while newly saved seven-card drafts stay incomplete', () => {
   const recipe = starterRecipes[0];
-  const old = { id: 'old', name: 'Old Crew', cardIds: recipe.catalogCardIds.slice(0, 7), heroCardId: recipe.hero, recipeId: null, valid: true, issues: [] };
+  const old = { id: 'old', name: 'Old Gang', cardIds: recipe.catalogCardIds.slice(0, 7), heroCardId: recipe.hero, recipeId: null, valid: true, issues: [] };
   let saved = JSON.stringify([old]);
   const storage = { getItem: () => saved, setItem: (_: string, value: string) => { saved = value; } };
   const migrated = readPreviewDecks(storage)[0];

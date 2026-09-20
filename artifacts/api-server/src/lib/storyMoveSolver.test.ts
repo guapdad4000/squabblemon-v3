@@ -279,7 +279,7 @@ test("suppressed presentation events preserve complete boss gameplay state", {
   );
   assert(normal.districtRuntime);
   assert.equal(normal.storyRuntime?.activePhaseIndex, 2);
-  assert(normal.timedEffects.length > 0);
+  assert(normal.effectLog.some(event => event.duration?.unit === "round"), "replay includes timed effects even if they expire before the final round");
   assert(normal.effectLog.length > 0);
   assert.equal(suppressed.effectLog.length, 0);
   assert.deepEqual(gameplayState(suppressed), gameplayState(normal));

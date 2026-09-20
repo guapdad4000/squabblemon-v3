@@ -95,7 +95,7 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
     if (!profile || !["crew", "tutorial"].includes(profile.onboardingStep)) return;
     const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
     const savedDecks = [...profile.savedDecks];
-    if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Crew", cardIds: [...ROOKIE_CORE_IDS], heroCardId: "hooper", recipeId: null });
+    if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Gang", cardIds: [...ROOKIE_CORE_IDS], heroCardId: "hooper", recipeId: null });
     await tx.update(playerProfilesTable).set({
       starterDeckId: ROOKIE_FOUNDATION_ID, ownedCardIds,
       discoveredCardIds: [...new Set([...profile.discoveredCardIds, ...ownedCardIds])],
@@ -116,7 +116,7 @@ export async function claimStarterReward(
         eq(playerMatchesTable.clerkUserId, clerkUserId), sql`${playerMatchesTable.mode} in ('practice', 'tutorial')`,
         eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
       )).limit(1);
-      if (!tested) throw new PlayerRewardError("Finish a practice match with your crew before claiming the welcome reward", 409);
+      if (!tested) throw new PlayerRewardError("Finish a practice fade with your gang before claiming the welcome reward", 409);
     }
     const [claimed] = await tx
       .update(playerProfilesTable)
@@ -228,7 +228,7 @@ export async function completeStandardMatchReward(input: {
           eq(playerMatchesTable.clerkUserId, input.clerkUserId),
         ),
       );
-    if (!storedMatch) throw new PlayerRewardError("Match not found", 404);
+    if (!storedMatch) throw new PlayerRewardError("Fade not found", 404);
     // Pre-upgrade snapshots were an array. They remain reward-safe by
     // rebuilding only from the server-owned recipe and current profile; never
     // access `.cards` on the legacy JSON shape.
@@ -241,7 +241,7 @@ export async function completeStandardMatchReward(input: {
         (recipe) => recipe.id === storedMatch.playerDeckId,
       )?.cards;
       if (!canonicalRoster) {
-        throw new PlayerRewardError("Legacy match roster is unavailable", 409);
+        throw new PlayerRewardError("Legacy fade roster is unavailable", 409);
       }
       const owned = new Set(profile.ownedCardIds);
       const compatibleRoster = canonicalRoster.filter(cardId => {
@@ -335,7 +335,7 @@ export async function completeStandardMatchReward(input: {
         ),
       );
     if (!persisted?.completedAt || !persisted.outcome) {
-      throw new PlayerRewardError("Match completion did not persist", 409);
+      throw new PlayerRewardError("Fade completion did not persist", 409);
     }
     return {
       completed: Boolean(updated),

@@ -10,7 +10,7 @@ export function crewInsights(ids: readonly string[]) {
   if (opening < 2) tips.push('Your opening hand has fewer than two cards you can summon with 2 Motion. Move a cheap card earlier or add one.');
   if (engines.includes('nguyen')) tips.push('Nguyen gains Hands when an ally is in another district. Spread an opener before summoning him.');
   if (engines.includes('gamer')) tips.push(crew.filter(c => c.cost <= 2).length < 3 ? 'Gamer has few cheap partners. Add another 1- or 2-cost card to give his ability more chances.' : 'Play Gamer before your cheap arrivals; each arrival here strengthens both cards.');
-  if (engines.includes('icecream') || engines.includes('manman')) tips.push('Your crew rewards gathering allies. Keep enough plays available to contest a second district.');
+  if (engines.includes('icecream') || engines.includes('manman')) tips.push('Your gang rewards gathering allies. Keep enough plays available to contest a second district.');
   if (engines.some(id => ['earthy', 'nail', 'abuela', 'pinaynurse', 'boombox', 'workboots', 'charger'].includes(id))) tips.push('Your support cards need an ally already on the board. Lead with an opener.');
   if (!engines.some(id => ['pinaynurse', 'rastamon', 'soulfood', 'firstaid', 'laundry', 'nightmedic'].includes(id))) tips.push('You have no cleanser. Freeze will need to be prevented, avoided, or played around.');
   if (engines.some(id => ['bikelife', 'delivery', 'carmeet', 'vibe', 'subwaymap'].includes(id))) tips.push('Movement can shift Hands to a second district without spending another summon there.');

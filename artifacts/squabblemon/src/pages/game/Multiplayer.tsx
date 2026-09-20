@@ -1,4 +1,4 @@
-import { MusicControls } from '../../components/MusicControls';
+import { MusicControls } from "../../components/MusicControls";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -66,9 +66,12 @@ export function Multiplayer({
   const [copied, setCopied] = useState(false);
   const operationLock = useRef(false);
   const createKey = useRef<{ deckId: string; id: string } | null>(null);
-  const { query, mutation, accept } = useFriendMatch(code);
+  const { query, mutation, accept, connected } = useFriendMatch(
+    profile.id,
+    code,
+  );
   const rooms = useQuery({
-    queryKey: ["friend-rooms"],
+    queryKey: ["friend-rooms", profile.id],
     queryFn: listFriendMatches,
     enabled: !code,
     refetchInterval: 10000,
@@ -115,7 +118,7 @@ export function Multiplayer({
     }
   }
   async function send(command: OnlineCommand) {
-    if (!room || operationLock.current || mutation.isPending) return;
+    if (!room || operationLock.current || mutation.isPending) return false;
     operationLock.current = true;
     setError(null);
     try {
@@ -124,8 +127,10 @@ export function Multiplayer({
         expectedRevision: room.revision,
         command,
       });
+      return true;
     } catch (reason) {
       setError(onlineErrorMessage(reason));
+      return false;
     } finally {
       operationLock.current = false;
     }
@@ -143,8 +148,8 @@ export function Multiplayer({
   const working = busy || mutation.isPending;
   const errorBanner =
     error ||
-    (room && query.isError
-      ? "Connection interrupted. Reconnecting to your match…"
+    (room && !connected
+      ? "Connection interrupted. Reconnecting to your fade…"
       : null);
   if (room?.status === "active" || room?.status === "complete")
     return (
@@ -158,7 +163,7 @@ export function Multiplayer({
                 void query.refetch();
               }}
             >
-              Refresh match
+              Refresh fade
             </button>
           </div>
         )}
@@ -166,15 +171,15 @@ export function Multiplayer({
           key={`${room.code}:${room.gameNumber}`}
           room={room}
           busy={working}
-          connected={!query.isError}
+          connected={connected}
           reducedMotion={profile.settings.reducedMotion}
-          send={(command) => void send(command)}
+          send={send}
           onLeave={leave}
         />
       </>
     );
   return (
-    <main className="online-lobby fight-night">
+    <main className="online-lobby fight-night" aria-label="Fight night lobby" tabIndex={-1}>
       <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
       <img
         className="online-lobby__venue"
@@ -185,11 +190,15 @@ export function Multiplayer({
         <Link to="/game" className="online-icon" aria-label="Back to safehouse">
           <ArrowLeft size={20} />
         </Link>
-        <span>THE MAIN EVENT · FRIEND MATCHES</span>
+        <span>FRIEND FADES · LIVE 1V1</span>
         <Link to="/game/play">Solo training</Link>
       </header>
       <div className="online-lobby__content">
-        <div className="flex items-center justify-end gap-2 pt-3"><MusicControls /><InstallGame /></div>
+        <div className="fight-night__tools">
+          <MusicControls />
+          <InstallGame />
+        </div>
+        <div className="fight-night__poster">
         <section className="online-lobby__hero">
           <span className="fight-night__billing" aria-hidden="true">SQUABBLEMON PRESENTS</span>
           <div>
@@ -201,7 +210,7 @@ export function Multiplayer({
               <br />
               <em>night.</em>
             </h1>
-            <p>Your crew. Their problem. Take two districts and own the night.</p>
+            <p>Your gang. Their problem. Take two districts and own the night.</p>
           </div>
           <div className="online-lobby__fighters" aria-hidden="true">
             <img src={getCardImage(chosen?.hero ?? "ganger-red")} alt="" />
@@ -210,6 +219,7 @@ export function Multiplayer({
           </div>
         </section>
         <div className="fight-night__ticket"><span>LIVE 1V1</span><b>06 ROUNDS</b><span>03 DISTRICTS</span><b>ONE WINNER</b></div>
+        </div>
         {errorBanner && (
           <p className="online-notice" role="alert">
             {errorBanner}
@@ -219,7 +229,7 @@ export function Multiplayer({
           <section className="online-room-panel">
             <h2>
               {query.isPending
-                ? "Finding your room…"
+                ? "Searching for a fade…"
                 : "Could not connect to this room."}
             </h2>
             {query.error && (
@@ -293,7 +303,7 @@ export function Multiplayer({
               ))}
             </div>
             <p>
-              Your crew: <strong>{room.ownDeck.name}</strong>.{" "}
+              Your gang: <strong>{room.ownDeck.name}</strong>.{" "}
               {room.members[room.firstThisRound]?.name ?? "Your rival"} starts
               round one; the starting player switches each round.
             </p>
@@ -320,7 +330,7 @@ export function Multiplayer({
         ) : (
           <section className="online-room-panel">
             <span className="online-eyebrow">
-              {joinable ? `JOIN ROOM ${code}` : "CHOOSE YOUR CREW"}
+              {joinable ? `JOIN ROOM ${code}` : "CHOOSE YOUR GANG"}
             </span>
             {crews.length ? (
               <>
@@ -360,7 +370,7 @@ export function Multiplayer({
                       onClick={() => void openRoom()}
                     >
                       <Swords size={18} />
-                      {working ? "Connecting…" : "Create friend match"}
+                      {working ? "Connecting…" : "Create friend fade"}
                     </button>
                     <form
                       onSubmit={(event) => {
@@ -394,10 +404,10 @@ export function Multiplayer({
               </>
             ) : (
               <>
-                <h2>Bring a complete crew.</h2>
-                <p>Save ten unique cards you own to enter a friend match.</p>
+                <h2>Bring a complete gang.</h2>
+                <p>Save ten unique cards you own to enter a friend fade.</p>
                 <Link className="online-primary" to="/game/decks">
-                  Build your crew
+                  Build your gang
                 </Link>
               </>
             )}
@@ -409,7 +419,7 @@ export function Multiplayer({
           <span>75 SECONDS PER TURN</span>
           <p>
             Play cards openly during your turn. Unplayed cards stay private. A
-            missed turn deadline forfeits the match. Friendly matches award no
+            missed turn deadline forfeits the fade. Friendly fades award no
             currency or rank.
           </p>
         </div>

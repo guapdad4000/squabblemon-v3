@@ -11,7 +11,7 @@ import {
 } from "@workspace/squabblemon-engine/data";
 
 test(
-  "real online routes: authorization, join races, private views, retries, complete match, reconnect and rematch",
+  "real online routes: authorization, join races, private views, retries, complete fade, reconnect and rematch",
   { skip: !process.env.DATABASE_URL },
   async (t) => {
     const { default: express } = await import("express");
@@ -37,7 +37,7 @@ test(
         savedDecks: [
           {
             id: "custom",
-            name: "My real crew",
+            name: "My real gang",
             heroCardId: "hooper",
             cardIds: [...ROOKIE_CORE_IDS],
           },
@@ -147,8 +147,12 @@ test(
     let view = (await request(users[0], `/${code}`)).body;
     const readyA = await action(users[0], view, { type: "ready" });
     assert.equal(readyA.status, 200);
-    const readyB = await action(users[1], readyA.body, { type: "ready" });
-    assert.equal(readyB.status, 200);
+    const readyB = await action(users[1], view, { type: "ready" });
+    assert.equal(
+      readyB.status,
+      200,
+      "both ready votes from the same revision succeed",
+    );
     view = readyB.body;
     assert.equal(view.status, "active");
     const actor = () => (view.activeSeat === "player" ? users[0] : users[1]);
@@ -180,7 +184,7 @@ test(
     assert.equal(play.status, 200, JSON.stringify(play.body));
     assert.equal(duplicate.status, 200, JSON.stringify(duplicate.body));
     assert.equal(play.body.revision, duplicate.body.revision);
-    assert.equal(play.body.boards[0].length, 1);
+    assert.equal(play.body.boards.flat().filter((card: { instanceId: string }) => card.instanceId === cheap.instanceId).length, 1, "duplicate request plays the card once, including movement locations");
     assert.equal(
       (
         await request(firstActor, `/${code}/actions`, {
@@ -232,7 +236,7 @@ test(
     assert.equal(finalA.winner, finalB.winner);
     assert(finalA.revealedDecks);
     const rematchA = await action(users[0], finalA, { type: "rematch" });
-    const rematchB = await action(users[1], rematchA.body, { type: "rematch" });
+    const rematchB = await action(users[1], finalA, { type: "rematch" });
     assert.equal(rematchB.body.status, "waiting");
     assert.equal(rematchB.body.gameNumber, 2);
     const profiles = await db
@@ -241,7 +245,7 @@ test(
       .where(inArray(playerProfilesTable.clerkUserId, users));
     assert(
       profiles.every((p) => p.softCurrency === 0 && p.xp === 0),
-      "friend matches do not farm account rewards",
+      "friend fades do not farm account rewards",
     );
     const [storedRoom] = await db
       .select()

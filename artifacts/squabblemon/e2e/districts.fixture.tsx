@@ -6,6 +6,8 @@ import { createMatch, createCardInstance, DISTRICT_CATALOG, playTurnCard, pass, 
 import '../src/index.css';
 
 const sets: [DistrictId, DistrictId, DistrictId][] = [
+  ['underground-ring', 'rooftop-garden', 'pawn-shop'], ['pirate-radio', 'blackout-block', 'flood-channel'],
+  ['construction-site', 'night-market', 'mirror-arcade'], ['community-kitchen', 'rush-hour', 'the-trap'],
   ['bodega', 'penthouse', 'county-jail'], ['the-trap', 'waff-l-house', 'vip-section'], ['time-square', 'magic-city', 'bodega'],
   ['the-subway', 'the-trap', 'o-block'], ['hollywood-strip', 'dive-bar', 'acorn-projects'], ['corrupt-church', 'nail-salon', 'barbershop'],
 ];

@@ -18,4 +18,7 @@ export const ShopPurchaseInputItemId = {
   'common-recruit': 'common-recruit',
   'tagged-style': 'tagged-style',
   'chrome-style': 'chrome-style',
+  'character-stickers': 'character-stickers',
+  'character-backdrop': 'character-backdrop',
+  'character-banner-finish': 'character-banner-finish',
 } as const;

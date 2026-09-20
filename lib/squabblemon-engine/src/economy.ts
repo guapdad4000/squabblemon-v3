@@ -1,4 +1,5 @@
 import { catalogCardById } from './data';
+import { CHARACTER_STYLE_OFFERS, cosmeticId, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
 
 export const ECONOMY_VERSION = 'block-economy-v1';
@@ -6,11 +7,12 @@ export const TICKETS_PER_MAJOR_STORY_NODE = 10;
 export const MOVE_TRAINING_COSTS = [150, 400, 900] as const;
 export const MAX_DECK_SLOTS = 12;
 export const SHOP_OFFERS = [
+  ...CHARACTER_STYLE_OFFERS,
   { id: 'training', name: 'Practice Session', description: '+100 XP for one owned character.', price: 100, currency: 'softCurrency', needsCard: true },
   { id: 'training-intensive', name: 'Intensive Training', description: '+250 XP for one owned character.', price: 225, currency: 'softCurrency', needsCard: true },
   { id: 'move-training', name: 'Move Coaching', description: 'Activate the next move tier. Requires character level 2, 5, or 8.', price: 150, currency: 'softCurrency', needsCard: true },
   { id: 'ticket', name: 'Street Pack Ticket', description: 'One ticket for one Street Pack.', price: 200, currency: 'softCurrency', needsCard: false },
-  { id: 'deck-slot', name: 'Extra Crew Slot', description: 'Save one more custom deck. Maximum 12 slots.', price: 350, currency: 'softCurrency', needsCard: false },
+  { id: 'deck-slot', name: 'Extra Gang Slot', description: 'Save one more custom deck. Maximum 12 slots.', price: 350, currency: 'softCurrency', needsCard: false },
   { id: 'common-recruit', name: 'Neighborhood Recruit', description: 'Choose one unowned Common. A guaranteed character, with no random roll.', price: 400, currency: 'softCurrency', needsCard: true },
   { id: 'tagged-style', name: 'Tagged Finish', description: 'Craft the Tagged cosmetic for an owned character.', price: 80, currency: 'styleShards', needsCard: true },
   { id: 'chrome-style', name: 'Chrome Finish', description: 'Craft the Chrome cosmetic for an owned character.', price: 140, currency: 'styleShards', needsCard: true },
@@ -19,7 +21,7 @@ export type ShopItemId = typeof SHOP_OFFERS[number]['id'];
 export type ShopRequest = { idempotencyKey: string; itemId: ShopItemId; cardId?: string };
 export type ShopWallet = {
   softCurrency: number; packTickets: number; styleShards: number; deckSlots: number;
-  ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[];
+  ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; unlockedCosmeticIds?: string[];
   cardProgression: CardProgressionMap; collectionProgress: number;
 };
 export type ShopReceipt = { itemId: ShopItemId; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string };
@@ -64,9 +66,9 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     next.packTickets += 1;
     summary = '+1 Street Pack ticket.';
   } else if (offer.id === 'deck-slot') {
-    if (wallet.deckSlots >= MAX_DECK_SLOTS) throw new ShopRuleError('All 12 crew slots are unlocked.');
+    if (wallet.deckSlots >= MAX_DECK_SLOTS) throw new ShopRuleError('All 12 gang slots are unlocked.');
     next.deckSlots += 1;
-    summary = `Crew slot ${next.deckSlots} unlocked.`;
+    summary = `Gang slot ${next.deckSlots} unlocked.`;
   } else if (offer.id === 'common-recruit') {
     if (card!.rarity !== 'Common') throw new ShopRuleError('Neighborhood recruitment is for Common cards.');
     if (wallet.ownedCardIds.includes(card!.catalogId)) throw new ShopRuleError('You already own this character.');
@@ -75,6 +77,13 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     next.cardProgression[card!.catalogId] = normalizeCardProgress();
     next.collectionProgress = next.ownedCardIds.length;
     summary = `${card!.name} joined your collection.`;
+  } else if (offer.id.startsWith('character-')) {
+    const set = styleSetFor(card!.catalogId);
+    if (!set || (offer.id === 'character-stickers' && !set.stickerAtlas)) throw new ShopRuleError('This character collection is not ready yet.');
+    const id = cosmeticId(card!.catalogId, offer.id as CharacterStyleOfferId);
+    if (wallet.unlockedCosmeticIds?.includes(id)) throw new ShopRuleError('You already own this cosmetic.');
+    next.unlockedCosmeticIds = [...(wallet.unlockedCosmeticIds ?? []), id];
+    summary = card!.name + ': ' + offer.name + ' unlocked. Find it in your character collection.';
   } else {
     const variant = card!.variantSlots.find(slot => slot.id.endsWith(offer.id === 'tagged-style' ? ':tagged' : ':chrome'))!;
     if (!variant) throw new ShopRuleError('This finish is unavailable.');

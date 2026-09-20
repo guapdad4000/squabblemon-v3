@@ -108,7 +108,7 @@ export default {
       {
         "speaker": "Ganger Blue",
         "portraitAssetId": "assets/characters/ganger-blue.webp",
-        "text": "Fine. Your crew gets in. No colors. I said what I said."
+        "text": "Fine. Your gang gets in. No colors. I said what I said."
       },
       {
         "speaker": "Wifey",
@@ -132,7 +132,7 @@ export default {
       {
         "speaker": "Ganger Red",
         "portraitAssetId": "assets/characters/ganger-red.webp",
-        "text": "I watched your match. Then I watched Blue explain your match. That's two different genres."
+        "text": "I watched your fade. Then I watched Blue explain your fade. That's two different genres."
       },
       {
         "speaker": "Snitch",
@@ -162,7 +162,7 @@ export default {
       {
         "speaker": "Ganger Red",
         "portraitAssetId": "assets/characters/ganger-red.webp",
-        "text": "Win and your name goes forward. Whole match stays up. No cousins in the comments demanding a recount."
+        "text": "Win and your name goes forward. Whole fade stays up. No cousins in the comments demanding a recount."
       }
     ],
     "post": [
@@ -228,7 +228,7 @@ export default {
       {
         "speaker": "Ganger Red",
         "portraitAssetId": "assets/characters/ganger-red.webp",
-        "text": "One more match. Win, I sign your final entry. Save some Motion. I'm not coming gentle in round four."
+        "text": "One more fade. Win, I sign your final entry. Save some Motion. I'm not coming gentle in round four."
       }
     ],
     "post": [
@@ -284,7 +284,7 @@ export default {
       {
         "speaker": "Alley Runner",
         "portraitAssetId": "assets/characters/ganger-blue.webp",
-        "text": "Win here, you get a cardback tag. No crew tax. No uncle you gotta impress."
+        "text": "Win here, you get a cardback tag. No gang tax. No uncle you gotta impress."
       },
       {
         "speaker": "Alley Runner",
@@ -325,7 +325,7 @@ export default {
       {
         "speaker": "Snitch",
         "portraitAssetId": "assets/characters/snitch.webp",
-        "text": "Look who survived both sides. Independent crew, undefeated attitude. Your documentary just got a second episode."
+        "text": "Look who survived both sides. Independent gang, undefeated attitude. Your documentary just got a second episode."
       },
       {
         "speaker": "Ganger Red",
@@ -350,7 +350,7 @@ export default {
       {
         "speaker": "Snitch",
         "portraitAssetId": "assets/characters/snitch.webp",
-        "text": "I watched your matches. Round four, I get active. That's when the subscription renews."
+        "text": "I watched your fades. Round four, I get active. That's when the subscription renews."
       },
       {
         "speaker": "Ganger Red",
@@ -497,7 +497,7 @@ export default {
       {
         "speaker": "Ganger Red",
         "portraitAssetId": "assets/characters/ganger-red.webp",
-        "text": "We got a winner. Crown, schedule, seat for your crew. Please don't start appointing cousins to positions."
+        "text": "We got a winner. Crown, schedule, seat for your gang. Please don't start appointing cousins to positions."
       },
       {
         "speaker": "Wifey",

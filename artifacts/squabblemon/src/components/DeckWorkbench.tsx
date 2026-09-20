@@ -41,7 +41,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
       setNotice(`${catalogCardById[cardId].name} replaces ${old.name}.`);
     } else if (draft.cardIds.length < DECK_SIZE) {
       setUndo(draft); setDraft({ ...draft, cardIds: [...draft.cardIds, cardId], heroCardId: draft.heroCardId || cardId });
-      setNotice(`${catalogCardById[cardId].name} added to your crew.`);
+      setNotice(`${catalogCardById[cardId].name} added to your gang.`);
     } else { setNotice('Choose a crew card to replace first.'); return; }
     setFocusCard(cardId); setSlot(null); if (lesson) setGuideStep(2);
   }
@@ -56,18 +56,18 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
     if (busy) return;
     setBusy(true); setError('');
     try {
-      const next = { ...draft, name: draft.name.trim() || 'My Crew' };
+      const next = { ...draft, name: draft.name.trim() || 'My Gang' };
       if (test) await onTest(next, next.cardIds.includes(focusCard) ? focusCard : next.heroCardId);
       else { await onSave(next); setNotice('Deck saved. Your lineup is ready.'); }
       trackEvent(test ? 'deck_test_started' : 'deck_saved', { lesson, cards: next.cardIds.length });
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not save your deck. Please retry.'); }
     finally { setBusy(false); }
   }
-  return <ArsenalScreen className="deck-workbench" label={lesson ? 'Build your first crew' : 'Deck builder'}>
+  return <ArsenalScreen className="deck-workbench" label={lesson ? 'Build your first gang' : 'Deck builder'}>
     <header className="deck-workbench__header">
       {lesson && <DrFadePortrait pose="right" className="deck-workbench__coach-art" />}
       <div className="deck-workbench__title">
-        <h1 className="sr-only">{lesson ? 'Your cards. Your call.' : 'Build your crew.'}</h1>
+        <h1 className="sr-only">{lesson ? 'Your cards. Your call.' : 'Build your gang.'}</h1>
         <span className="venue-kicker">{lesson ? 'ROOKIE ROAD / MAKE IT YOURS' : 'THE LINEUP / DECK BUILDER'}</span>
         <label className="deck-workbench__name"><span className="sr-only">Deck name</span>
           <input aria-label="Deck name" maxLength={40} disabled={busy} value={draft.name} onChange={e => setDraft({ ...draft, name: e.target.value })} />
@@ -78,7 +78,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
       <div className="deck-workbench__header-tools"><span className="deck-workbench__count"><strong>{draft.cardIds.length}</strong>/ {DECK_SIZE}</span><FocusViewButton /></div>
     </header>
     <fieldset disabled={busy} className="deck-workbench__body">
-      <legend className="sr-only">Crew lineup and collection</legend>
+      <legend className="sr-only">Gang lineup and collection</legend>
       <div className="deck-workbench__lineup">
         <div className="deck-workbench__roster" data-testid="deck-roster-grid" aria-label="Your ten card lineup">
           {Array.from({ length: DECK_SIZE }, (_, index) => {
@@ -90,9 +90,9 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
                 <CardPressTarget onInspect={lesson ? () => {} : undefined} data-guide-slot={index} card={card} variantId={equippedVariants[id]} aria-label={`Replace ${card.name}`} aria-pressed={slot === index} onClick={() => { setSlot(slot === index ? null : index); if (lesson) setGuideStep(1); }}>
                   <CardView card={card} variantId={equippedVariants[id]} isBoard fillContainer presentationOnly disableLayout />
                 </CardPressTarget>
-                <button type="button" className="deck-slot__cover" title={draft.heroCardId === id ? 'Crew cover' : `Set ${card.name} as cover`}
+                <button type="button" className="deck-slot__cover" title={draft.heroCardId === id ? 'Gang cover' : `Set ${card.name} as cover`}
                   aria-label={`Set ${card.name} as cover`} aria-pressed={draft.heroCardId === id}
-                  onClick={() => { setUndo(draft); setDraft({ ...draft, heroCardId: id }); setNotice(`${card.name} is your crew cover.`); }}>
+                  onClick={() => { setUndo(draft); setDraft({ ...draft, heroCardId: id }); setNotice(`${card.name} is your gang cover.`); }}>
                   <Crown size={15} fill={draft.heroCardId === id ? 'currentColor' : 'none'} aria-hidden="true" />
                 </button>
               </> : <button type="button" aria-label={`Add card to slot ${index + 1}`} onClick={() => { setSlot(null); searchInput.current?.focus(); searchInput.current?.scrollIntoView({ block: 'nearest' }); }}><Plus size={22} aria-hidden="true" /><span>Recruit</span></button>}
@@ -131,7 +131,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         </div>
         <div className="deck-workbench__collection" data-testid="deck-collection-grid">{visible.map(card => <CardPressTarget onInspect={lesson ? () => {} : undefined} data-guide-recruit={card.catalogId} card={card} variantId={equippedVariants[card.catalogId]} key={card.catalogId} onClick={() => choose(card.catalogId)} aria-label={`${draft.cardIds.includes(card.catalogId) ? 'Select' : 'Add'} ${card.name}`}>
           <CardView card={card} variantId={equippedVariants[card.catalogId]} isBoard fillContainer presentationOnly disableLayout />
-          {draft.cardIds.includes(card.catalogId) && <span className="deck-workbench__in-crew" title="In your crew"><Check size={14} aria-hidden="true" /><span className="sr-only">In your crew</span></span>}
+          {draft.cardIds.includes(card.catalogId) && <span className="deck-workbench__in-crew" title="In your gang"><Check size={14} aria-hidden="true" /><span className="sr-only">In your gang</span></span>}
         </CardPressTarget>)}</div>
         {!visible.length && <div className="arsenal-empty"><Search size={24} /><p>No matching cards. Try another name or ability.</p><button className="arsenal-link" onClick={() => setSearch('')}>Clear search</button></div>}
         {!legality.valid && <ul className="deck-workbench__issues">{legality.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}
@@ -143,7 +143,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         {error && <p role="alert">{error}</p>}
       </div>
       <button className="arsenal-link" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />{busy ? 'Saving…' : 'Save deck'}</button>
-      <button data-guide-save="true" className="arsenal-action" disabled={busy || !legality.valid} onClick={() => void persist(true)}><Swords size={17} aria-hidden="true" />{busy ? 'Saving…' : lesson ? 'Save & start lesson' : 'Save & test crew'}</button>
+      <button data-guide-save="true" className="arsenal-action" disabled={busy || !legality.valid} onClick={() => void persist(true)}><Swords size={17} aria-hidden="true" />{busy ? 'Saving…' : lesson ? 'Save & start lesson' : 'Save & test gang'}</button>
     </footer>
     {lesson && !busy && <CoachSpotlight target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : '[data-guide-save="true"]'} step={'YOUR CREW ' + (guideStep + 1) + ' / 3'} title={guideStep === 0 ? 'Ten cards make a deck.' : guideStep === 1 ? 'Choose a new recruit.' : 'Your crew is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideStep === 0 ? 'These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.' : guideStep === 1 ? 'Tap ' + catalogCardById[recruit ?? '']?.name + '. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.' : 'You made your first swap. Save your crew and take it into a guided match. I’ll point to every move.'}</CoachSpotlight>}
   </ArsenalScreen>;

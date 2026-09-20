@@ -53,7 +53,7 @@ async function run(width: number, height: number) {
         savedDecks: [
           {
             id: 'crew',
-            name: 'My crew',
+            name: 'My gang',
             cardIds: [...ROOKIE_CORE_IDS],
             heroCardId: 'hooper',
             recipeId: null,
@@ -72,7 +72,7 @@ async function run(width: number, height: number) {
         id: 'play',
         eyebrow: 'Training',
         title: 'Test your idea',
-        description: 'Build a crew',
+        description: 'Build a gang',
         destination: 'play',
         rewardLabel: null,
       },
@@ -179,6 +179,12 @@ async function run(width: number, height: number) {
     await page.locator('.venue-scene.is-ready').waitFor();
     await page.waitForTimeout(700);
     await shot('stage');
+    assert.equal(await page.locator('.gacha-stage__ticket-choice').count(), 2, 'only the two selected-pull payment choices should show');
+    assert.equal(await page.locator('.gacha-stage__payment').count(), 0, 'the old stacked payment rows should be gone');
+    const ticketHeights = await page.locator('.gacha-stage__ticket-choice img').evaluateAll((images) =>
+      images.map((image) => image.getBoundingClientRect().height));
+    const minimumTicketHeight = height <= 550 ? 60 : width <= 390 ? 90 : 110;
+    assert(ticketHeights.every((ticketHeight) => ticketHeight >= minimumTicketHeight), 'ticket artwork should own the purchase surface');
     await page.getByRole('button', { name: 'Training', exact: true }).click();
     await page.locator('.market').waitFor();
     assert(page.url().includes('view=training'));
@@ -210,7 +216,8 @@ async function run(width: number, height: number) {
     assert.equal(ticketBalance, 11);
     assert.deepEqual(requests[0], requests[1]);
     assert.equal(await page.getByRole('button', { name: /^Snap the jab/ }).count(), 1);
-    await page.getByRole('button', { name: /^Snap the jab/ }).click();
+    assert.equal(await page.locator('.gacha-stage__bag-cue').isVisible(), true, 'the bag tap cue should be visible');
+    await page.frameLocator('iframe[title="Interactive heavy bag"]').locator('#webgl-container').click();
     await page.getByRole('progressbar', { name: 'Rounds to reveal' }).waitFor();
     await page.locator('.gacha-stage__rounds .is-landed').waitFor();
     assert.equal(await page.getByRole('button', { name: /^Throw the hook/ }).count(), 1);
@@ -225,7 +232,7 @@ async function run(width: number, height: number) {
     await page.getByRole('button', { name: `Inspect ${duplicateCard.name}`, exact: true }).click();
     const conversion = page.locator('.gym-reward__conversion');
     await conversion.waitFor();
-    assert.match(await conversion.innerText(), /Already on your crew[\s\S]*\+25 Style Shards/i);
+    assert.match(await conversion.innerText(), /Already on your gang[\s\S]*\+25 Style Shards/i);
     assert.equal(await page.locator('.gym-reward--duplicate .collector-card').count(), 1);
     await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
     await page.reload({ waitUntil: 'domcontentloaded' });
@@ -251,6 +258,7 @@ async function run(width: number, height: number) {
     await page.getByRole('button', { name: 'Skip animation & reveal', exact: true }).click();
     await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
     await page.getByRole('button', { name: 'Close rewards', exact: true }).click();
+    await page.getByRole('button', { name: /^10 pull/i }).click();
     await page.getByRole('button', { name: 'Open 10× · 9 tickets', exact: true }).click();
     await page.locator('.gacha-stage[data-phase="tenPunching"]').waitFor();
     await page.getByRole('button', { name: /^Triple jab/ }).click();

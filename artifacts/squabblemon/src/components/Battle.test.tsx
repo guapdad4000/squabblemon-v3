@@ -1,3 +1,6 @@
+import { getDistrictResults } from '../gameEngine';
+import { asCard } from './MultiplayerBattle';
+import { getCardRarity } from './CardRarityTreatment';
 import { Router } from 'wouter';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -115,7 +118,7 @@ test('summoned token cards render with their own art instead of requiring a cata
   };
   const html = renderToStaticMarkup(<CardView card={steward} presentationOnly />);
   assert.match(html, /data-card-kind="token"/);
-  assert.match(html, /data-card-rarity="Mythical"/);
+  assert.match(html, /data-card-rarity="Common"/);
   assert.match(html, /assets\/characters\/steward\.webp/);
 });
 test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
@@ -542,7 +545,7 @@ test('authoritative history helper ignores a rewound visual log', () => {
   assert.match(html, /Replay · Before/); assert.match(html, /data-testid="button-battle-history"/); assert.match(html, /Return to live battle/);
 });
 
-test('replay frames do not mutate live match and rewind later actions', () => {
+test('replay frames do not mutate live fade and rewind later actions', () => {
   const initial = createMatch('block', 'combo'), card = initial.playerHand.find(c => c.cost <= initial.playerMotion)!;
   const afterPlayer = playCard(initial, 'player', card.instanceId, 0), cpu = afterPlayer.cpuHand.find(c => c.cost <= afterPlayer.cpuMotion)!;
   const live = playCard(afterPlayer, 'cpu', cpu.instanceId, 1), event = afterPlayer.effectLog[0];
@@ -797,4 +800,85 @@ test('Nail Salon shows lasting Covered protection on the board and in power deta
   assert.match(renderBattle(match), /data-card-status="covered"/);
   const html = renderToStaticMarkup(<BattlePowerBreakdown card={match.boards[0][0]} match={match} />);
   assert.match(html, /NAIL SALON: blocks this card’s next targeted enemy ability/);
+});
+
+for (const [summoner, token, count] of [['ashlee', 'guyana', 1], ['captainjigga', 'steward', 2], ['kyle', 'smile-bomb', 4]] as const) {
+  test(`battle renders after ${summoner} special and its summons have unique identities`, () => {
+    const card = createCardInstance(summoner, 'player', 'test', 0);
+    const match = playCard({ ...createMatch('block', 'slide'), playerHand: [card], playerMotion: 9 }, 'player', card.instanceId, 0);
+    const summons = match.boards.flat().filter(c => c.cardId === token);
+    assert.equal(summons.length, count);
+    const html = renderBattle(match);
+    assert.match(html, new RegExp('data-card-id="' + token + '"'));
+    assert.equal(new Set(summons.map(c => c.instanceId)).size, count);
+  });
+}
+
+test('summons render in multiplayer and can be inspected without becoming collectibles', () => {
+  for (const summoner of ['ashlee', 'captainjigga', 'kyle']) {
+    const card = createCardInstance(summoner, 'player', 'test', 0);
+    const match = playCard({ ...createMatch('block', 'slide'), playerHand: [card], playerMotion: 9 }, 'player', card.instanceId, 0);
+    for (const token of match.boards.flat().filter(c => c.kind === 'token')) {
+      const publicCard = asCard({
+        cardId: token.cardId, artworkId: token.id, instanceId: token.instanceId, owner: token.owner, lane: token.lane,
+        power: token.basePower + token.powerModifier, basePower: token.basePower, powerModifier: token.powerModifier,
+        statuses: token.statuses, covered: false, moved: token.moved, costs: [0, 0, 0],
+      });
+      assert.equal(publicCard.kind, 'token');
+      assert.equal(publicCard.id, token.id);
+      assert.equal(publicCard.name, token.name);
+      assert.match(renderToStaticMarkup(<CardView card={publicCard} isBoard />), /Summoned token/);
+      assert.doesNotThrow(() => renderToStaticMarkup(
+        <QueryClientProvider client={new QueryClient()}><CardInspector card={token} match={match} onClose={noop} /></QueryClientProvider>,
+      ));
+      assert.equal(catalogCardById[token.id], undefined);
+    }
+  }
+  assert.throws(() => getCardRarity('invalid-roster-card'), /unknown card/);
+});
+
+test('later copy, cheap ally buffs, and enemy targeting handle summoned cards', () => {
+  const captain = createCardInstance('captainjigga', 'player', 'test', 0);
+  const summoned = playCard({ ...createMatch('block', 'slide'), playerHand: [captain], playerMotion: 9 }, 'player', captain.instanceId, 0);
+  const tokens = summoned.boards[0].filter(c => c.kind === 'token');
+  for (const [id, owner] of [['scammer', 'cpu'], ['gothkid', 'cpu'], ['failedrapper', 'player']] as const) {
+    const played = createCardInstance(id, owner, 'followup', 1);
+    const match = playCard({ ...summoned, boards: [tokens, [], []],
+      phase: owner === 'player' ? 'player' : 'cpu-reveal',
+      playerHand: owner === 'player' ? [played] : [], cpuHand: owner === 'cpu' ? [played] : [],
+      playerMotion: 9, cpuMotion: 9,
+    }, owner, played.instanceId, 0);
+    assert.doesNotThrow(() => renderBattle(match));
+    if (id === 'scammer') assert.equal(match.boards[0].find(c => c.cardId === id)?.ability, tokens[0].ability);
+    if (id === 'gothkid') assert.equal(match.boards[0].filter(c => c.kind === 'token' && c.statuses.silenced).length, 1);
+    if (id === 'failedrapper') assert.ok(match.boards[0].filter(c => c.kind === 'token').every(c => c.powerModifier === 1));
+  }
+});
+
+for (const summoner of ['ashlee', 'captainjigga', 'kyle']) {
+  test(`summon Hands stay synchronized with live lane totals during ${summoner} animation`, () => {
+    const actor = createCardInstance(summoner, 'player', 'test', 0);
+    const base = { ...createMatch('block', 'slide'), playerHand: [actor], playerMotion: 9 };
+    const resolved = playCard(base, 'player', actor.instanceId, 0);
+    let frame = base;
+    for (const event of resolved.effectLog) {
+      frame = applyEventState(frame, resolved, event, 'after');
+      assert.deepEqual(getDistrictResults(frame).map(({lane,player,cpu})=>({lane,player,cpu})), event.scores.after,
+        event.note + ': visible cards and scoreboard must agree');
+    }
+    assert.deepEqual(frame.boards, resolved.boards);
+    const tokens = frame.boards.flat().filter(c => c.kind === 'token');
+    assert.equal(tokens.reduce((n,c)=>n+c.basePower+c.powerModifier,0), summoner === 'ashlee' ? 4 : summoner === 'captainjigga' ? 4 : 0);
+  });
+}
+
+test('stewardesses each remove exactly 2 Hands from distinct unprotected enemies', () => {
+  const actor = createCardInstance('captainjigga', 'player', 'test', 0);
+  const foes = ['og','hooper'].map((id,i)=>({...createCardInstance(id,'cpu','test',i),lane:1 as const}));
+  const base: Match = {...createMatch('block','slide'),playerHand:[actor],playerMotion:9,boards:[[],foes,[]]};
+  const resolved=playCard(base,'player',actor.instanceId,0);
+  for(const foe of foes) assert.equal(resolved.boards.flat().find(c=>c.instanceId===foe.instanceId)!.powerModifier,-2);
+  assert.deepEqual(resolved.boards[0].filter(c=>c.cardId==='steward').map(c=>c.id), ['steward', 'steward-blue']);
+  const event=resolved.effectLog.find(e=>e.type==='ability' && e.cardId==='captainjigga')!;
+  assert.equal(event.scores.before[1].cpu-event.scores.after[1].cpu,4);
 });

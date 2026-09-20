@@ -94,7 +94,7 @@ function cleanup(t: test.TestContext, clerkUserId: string) {
   });
 }
 
-test("concurrent HTTP match completions return one persisted reward and apply it once", async (t) => {
+test("concurrent HTTP fade completions return one persisted reward and apply it once", async (t) => {
   const clerkUserId = `route-match-${randomUUID()}`;
   cleanup(t, clerkUserId);
   await db.insert(playerProfilesTable).values({

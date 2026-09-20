@@ -64,14 +64,14 @@ const RARITY_RANK: Record<string, number> = {
 };
 
 const RARITY_CEREMONY: Record<string, { signal: string; title: string; callout: string }> = {
-  SuperCommon: { signal: 'Street print', title: 'A familiar face.', callout: 'Every crew starts on the block.' },
+  SuperCommon: { signal: 'Street print', title: 'A familiar face.', callout: 'Every gang starts on the block.' },
   Common: { signal: 'Corner lights', title: 'Someone stepped up.', callout: 'The neighborhood keeps producing fighters.' },
   Uncommon: { signal: 'Green room open', title: 'The room shifts.', callout: 'There is more technique in this one.' },
   Rare: { signal: 'Blue corner lit', title: 'The crowd gets louder.', callout: 'A rare name is walking through the ropes.' },
   Epic: { signal: 'Crimson pressure', title: 'The whole gym stands.', callout: 'A super rare fighter answers the bell.' },
   Legendary: { signal: 'Championship metal', title: 'History enters the ring.', callout: 'The chain only shines for a legend.' },
   Mythical: { signal: 'The block goes silent', title: 'A myth takes the floor.', callout: 'You will remember this pull.' },
-  currency: { signal: 'Locker bonus', title: 'The corner came through.', callout: 'Put it back into the crew.' },
+  currency: { signal: 'Locker bonus', title: 'The corner came through.', callout: 'Put it back into the gang.' },
 };
 const PUBLIC_BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
@@ -142,7 +142,7 @@ function RewardCard({ reward, large = false }: { reward: PackReward; large?: boo
         <div className="gym-reward__conversion">
           <GameGlyph name="shards" />
           <span>
-            Already on your crew
+            Already on your gang
             <strong>+{reward.amount} Style Shards</strong>
           </span>
         </div>
@@ -199,6 +199,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
   const rewards = Array.isArray(opening?.rewards) ? opening.rewards : [];
   const isTenPull = pullSize === 10;
+  const selectedTier = isTenPull ? tenPullConfig : bootstrap.packConfig;
   const isPunching = phase === 'punching' || phase === 'tenPunching';
   const hitCap = HITS_PER_PULL[pullSize];
   const hitsPerClick = HITS_PER_CLICK[pullSize];
@@ -210,6 +211,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const landedStrikes = Math.min(3, Math.ceil(hits / hitsPerClick));
   const beatIndex = Math.min(2, landedStrikes);
   const fightBeat = FIGHT_BEATS[beatIndex];
+  const strikeLabel = fightBeat.intensity === 'finisher'
+    ? 'Launch the finisher'
+    : isTenPull
+      ? fightBeat.intensity === 'heavy' ? 'Triple hook' : 'Triple jab'
+      : fightBeat.intensity === 'heavy' ? 'Throw the hook' : 'Snap the jab';
   const omenRarity = highestRarity(rewards);
   const currentReward = arrangedRewards[revealIndex];
   const currentRarity = rewardRarity(currentReward);
@@ -451,7 +457,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <>
               Step up. Break the bag.
               <br />
-              Meet your next crew member.
+              Meet your next gang member.
             </>
           )}
         </p>
@@ -519,83 +525,71 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <Check size={16} />
               <span>
                 {preview ? 'Preview loaded.' : 'Your rewards are secured.'}
-                <small>{isTenPull ? 'Sixty cards. Head to the bag to reveal them.' : 'Head to the bag to reveal them.'}</small>
+                <small>Hit the bag three times to reveal {isTenPull ? 'the ten-pull' : 'your pack'}.</small>
               </span>
             </div>
           ) : (
             <>
-              <span className="studio-eyebrow">{pending ? 'Recover your opening' : 'Choose your opening'}</span>
-              <div className="gacha-stage__payments">
-                {/* Single-pack CTA. Costs 1 ticket (or 200 Clout). */}
+              <div className="gacha-stage__pull-switch" role="group" aria-label="Pull size">
+                <button
+                  type="button"
+                  aria-pressed={!isTenPull}
+                  disabled={phase !== 'idle' || Boolean(pending)}
+                  onClick={() => setPullSize(1)}
+                >
+                  <b>1</b> pull
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={isTenPull}
+                  disabled={phase !== 'idle' || Boolean(pending)}
+                  onClick={() => setPullSize(10)}
+                >
+                  <b>10</b> pull <small>Rare+</small>
+                </button>
+              </div>
+              <div className="gacha-stage__ticket-choices">
                 {(['ticket', 'softCurrency'] as const).map((method) => {
                   const ticket = method === 'ticket';
-                  const cost = ticket ? bootstrap.packConfig.ticketCost : bootstrap.packConfig.softCurrencyCost;
+                  const cost = ticket ? selectedTier.ticketCost : selectedTier.softCurrencyCost;
                   const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
                   const affordable = balance >= cost;
-                  if (pending && (pending.paymentMethod !== method || (pending.pullCount ?? 1) !== 1)) return null;
+                  const pendingSize = pending?.pullCount ?? 1;
+                  if (pending && (pending.paymentMethod !== method || pendingSize !== pullSize)) return null;
+                  const actionLabel = phase === 'requesting'
+                    ? `Securing ${isTenPull ? 'ten pulls' : 'your pull'}`
+                    : pending
+                      ? isTenPull ? 'Retry this 10-pull' : 'Retry this opening'
+                      : `Open${isTenPull ? ' 10×' : ''} · ${cost} ${ticket ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout'}`;
                   return (
-                    <div className="gacha-stage__payment" key={method} data-pull="single">
-                      <button
-                        className={`studio-action ${ticket ? 'studio-action--gold' : ''}`}
-                        disabled={phase !== 'idle' || (!affordable && !pending)}
-                        onClick={() => void handleOpen(method, 1)}
-                      >
-                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
-                        <span>
-                          {phase === 'requesting'
-                            ? 'Securing your drop…'
-                            : pending
-                              ? 'Retry this opening'
-                              : `Open · ${cost} ${ticket ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout'}`}
-                        </span>
-                        <ArrowRight size={16} />
-                      </button>
-                      <small>
-                        {balance.toLocaleString()} {ticket ? 'tickets' : 'Clout'} available
-                      </small>
-                    </div>
-                  );
-                })}
-                {/* Ten-pull CTA. Costs 10 tickets (or 1,800 Clout) and unlocks the
-                    upgraded punching-bag animation + the 6×10 reveal grid with the
-                    guaranteed Rare+ highlight. */}
-                {(['ticket', 'softCurrency'] as const).map((method) => {
-                  const ticket = method === 'ticket';
-                  const tier = tenPullConfig;
-                  const cost = ticket ? tier.ticketCost : tier.softCurrencyCost;
-                  const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
-                  const affordable = balance >= cost;
-                  if (pending && (pending.paymentMethod !== method || pending.pullCount !== 10)) return null;
-                  return (
-                    <div className="gacha-stage__payment gacha-stage__payment--ten" key={`ten-${method}`} data-pull="ten">
-                      <button
-                        className={`studio-action studio-action--ten ${ticket ? 'studio-action--gold' : ''}`}
-                        disabled={phase !== 'idle' || (!affordable && !pending)}
-                        onClick={() => void handleOpen(method, 10)}
-                      >
-                        <GameGlyph name={ticket ? 'ticket' : 'clout'} />
-                        <span>
-                          {phase === 'requesting'
-                            ? 'Securing your 10…'
-                              : pending
-                                ? 'Retry this 10-pull'
-                                : `Open 10× · ${cost} ${ticket ? 'tickets' : 'Clout'}`}
-                        </span>
-                        <ArrowRight size={16} />
-                      </button>
-                      <small>
-                        <span className="gacha-stage__payment-tag">UPGRADED · RARE+ GUARANTEED</span>
-                        {' · '}
-                        {balance.toLocaleString()} {ticket ? 'tickets' : 'Clout'} available
-                      </small>
-                    </div>
+                    <button
+                      type="button"
+                      className={`gacha-stage__ticket-choice gacha-stage__ticket-choice--${ticket ? 'fight' : 'clout'}`}
+                      key={method}
+                      aria-label={actionLabel}
+                      disabled={phase !== 'idle' || (!affordable && !pending)}
+                      onClick={() => void handleOpen(method, pullSize)}
+                    >
+                      <img
+                        src={`${PUBLIC_BASE}assets/rewards/${ticket ? 'fight-ticket' : 'clout-ticket'}.webp`}
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <span>
+                        <em>{ticket ? 'Fight ticket' : 'Clout pass'}</em>
+                        <strong>{ticket ? `${cost} ticket${cost === 1 ? '' : 's'}` : `${cost.toLocaleString()} Clout`}</strong>
+                        <small>{balance.toLocaleString()} owned</small>
+                      </span>
+                    </button>
                   );
                 })}
               </div>
               <small className="gym__payment-note">
-                {preview
-                  ? 'Uses preview balances only.'
-                  : 'Punching never changes the odds. Ten-pull guarantees at least one Rare+.'}
+                {pending
+                  ? 'Your secured opening is ready to recover.'
+                  : isTenPull
+                    ? 'Ten pulls · at least one Rare+ guaranteed.'
+                    : 'One pull · duplicates convert to Style Shards.'}
               </small>
             </>
           )}
@@ -614,63 +608,80 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </button>
         </div>
       </aside>
+      {isPunching && (
+        <div className="gacha-stage__bag-cue" aria-hidden="true">
+          <GameGlyph name="fight" />
+          <span>
+            <strong>Tap the bag</strong>
+            <small>{3 - landedStrikes} hit{3 - landedStrikes === 1 ? '' : 's'} to the reveal</small>
+          </span>
+        </div>
+      )}
       <div className="gacha-stage__ringside">
         {isPunching ? (
           <>
-            <div className="gacha-stage__rounds" aria-label="Fight progress">
+            <div
+              className="gacha-stage__rounds"
+              role="progressbar"
+              aria-label="Rounds to reveal"
+              aria-valuemin={0}
+              aria-valuemax={3}
+              aria-valuenow={landedStrikes}
+            >
               {FIGHT_BEATS.map((beat, index) => (
                 <span
                   key={beat.round}
                   className={index < landedStrikes ? 'is-landed' : index === beatIndex ? 'is-live' : ''}
+                  title={beat.round}
                 >
                   <b>{index + 1}</b>
-                  <small>{beat.round}</small>
                 </span>
               ))}
             </div>
             <div className="gacha-stage__combo" key={hits} aria-live="polite">
-              <ProgressRing value={landedStrikes} max={3} label="Rounds to reveal">
-                <strong>{landedStrikes}<small>/3</small></strong>
-              </ProgressRing>
+              <span className="gacha-stage__hit-count">{landedStrikes}<small>/3</small></span>
               <div>
                 <span className="studio-eyebrow">{fightBeat.round}</span>
-                <strong>{fightBeat.move}</strong>
-                <span>{fightBeat.direction}</span>
+                <strong>{landedStrikes === 0 ? 'Hit the bag' : fightBeat.move}</strong>
+                <span>{landedStrikes === 0 ? 'Tap the bag itself or use the glove.' : fightBeat.direction}</span>
               </div>
             </div>
             <div className="gacha-stage__punch-actions">
               <button
-                className={`studio-action studio-action--gold gacha-stage__strike gacha-stage__strike--${fightBeat.intensity}`}
+                type="button"
+                className={`gacha-stage__strike gacha-stage__strike--${fightBeat.intensity}`}
+                aria-label={strikeLabel}
+                title={strikeLabel}
                 disabled={!sceneReady}
                 onClick={landStrike}
               >
                 <GameGlyph name="fight" />
-                {fightBeat.intensity === 'finisher'
-                  ? 'Launch the finisher'
-                  : isTenPull
-                    ? `${fightBeat.intensity === 'heavy' ? 'Triple hook' : 'Triple jab'}`
-                    : fightBeat.intensity === 'heavy'
-                      ? 'Throw the hook'
-                      : 'Snap the jab'}
-                <small>{isTenPull ? `×${hitsPerClick}` : fightBeat.intensity.toUpperCase()}</small>
+                <span>Hit</span>
+                {isTenPull && <small>×{hitsPerClick}</small>}
               </button>
-              <button className="studio-action" disabled={!sceneReady} aria-pressed={rush} onClick={toggleRush}>
-                {rush ? 'Pause rush' : 'Auto rush'}
-              </button>
+              <div className="gacha-stage__secondary-actions">
+                <button
+                  type="button"
+                  className="studio-text-action"
+                  disabled={!sceneReady}
+                  aria-pressed={rush}
+                  onClick={toggleRush}
+                >
+                  {rush ? 'Pause rush' : 'Auto rush'}
+                </button>
+                <button type="button" className="studio-text-action" onClick={reveal}>
+                  {isTenPull ? 'Skip to 10× reveal' : 'Skip animation & reveal'} <ArrowRight size={14} />
+                </button>
+              </div>
             </div>
-            <button className="studio-text-action" onClick={reveal}>
-              {isTenPull ? 'Skip to 10× reveal' : 'Skip animation & reveal'} <ArrowRight size={14} />
-            </button>
           </>
         ) : (
           phase === 'idle' && (
             <div className="gacha-stage__ready">
               <GameGlyph name="fight" />
               <span>
-                {isTenPull
-                  ? `Ten packs. ${hitCap} hits. Triple-combo each click.`
-                  : `One pack. ${hitCap} hits.`}
-                <small>Open a pack to step into the ring.</small>
+                Pick a pull. Use a ticket or Clout.
+                <small>Then hit the bag three times to open it.</small>
               </span>
             </div>
           )
@@ -744,14 +755,14 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             />
             <h3>{rewardDisplayName(currentReward)}</h3>
             <span className="studio-eyebrow">
-              {CARD_RARITY_DEFINITIONS[currentReward.rarity as CardRarity]?.label ?? 'Crew resource'}
+              {CARD_RARITY_DEFINITIONS[currentReward.rarity as CardRarity]?.label ?? 'Gang resource'}
               {isTenPull && currentReward === rareHighlightReward && (
                 <span className="gacha-results__badge"> · GUARANTEED RARE+</span>
               )}
             </span>
             {currentReward.kind === 'styleShards' && currentReward.cardId && (
               <p className="gacha-results__conversion-note">
-                Full fighter reveal complete. The extra copy powered up your crew with {currentReward.amount} Style Shards.
+                Full fighter reveal complete. The extra copy powered up your gang with {currentReward.amount} Style Shards.
               </p>
             )}
           </div>

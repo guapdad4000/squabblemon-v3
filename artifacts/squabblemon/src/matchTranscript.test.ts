@@ -40,7 +40,7 @@ import {
   catalogIdsToEngineIds,
 } from "@workspace/squabblemon-engine/data";
 
-test("the server-verifiable transcript reproduces the local match", () => {
+test("the server-verifiable transcript reproduces the local fade", () => {
   let local = createMatch("block", "slide");
   const moves: PlayerMove[] = [];
 

@@ -18,6 +18,7 @@
     "./training": "./src/training.ts",
     "./story": "./src/story.ts",
     "./districts": "./src/districts.ts",
-    "./balanceLab": "./src/balanceLab.ts"
+    "./balanceLab": "./src/balanceLab.ts",
+    "./cosmetics": "./src/cosmetics.ts"
   }
 }

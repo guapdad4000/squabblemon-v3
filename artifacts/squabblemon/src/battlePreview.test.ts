@@ -3,7 +3,7 @@ import test from 'node:test';
 import { previewBattlePlay } from './battlePreview';
 import { createMatch, createCardInstance, getDistrictResults, playCard } from './gameEngine';
 
-test('known-board preview predicts a freeze and leaves the live match untouched', () => {
+test('known-board preview predicts a freeze and leaves the live fade untouched', () => {
   const match=createMatch('block','combo');
   const snow=createCardInstance('snow','player','preview',0);
   const victim={...createCardInstance('hooper','cpu','preview',1),lane:0 as const};

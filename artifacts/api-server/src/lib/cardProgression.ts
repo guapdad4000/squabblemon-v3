@@ -79,7 +79,7 @@ export function createCardProgressionSnapshot(
       (cardId) => !cardId || (!allowUnowned && !owned.has(cardId)),
     )
   ) {
-    throw new Error("Match roster contains an unowned card");
+    throw new Error("Fade roster contains an unowned card");
   }
   const cards = [...new Set(normalized as string[])].map((cardId) => {
     const progress = normalizeCardProgress(progression[cardId]);
@@ -130,7 +130,7 @@ export function parseCardProgressionSnapshot(
     !Array.isArray((value as CardProgressionSnapshot).cards) ||
     !(value as CardProgressionSnapshot).abilityUpgradeSnapshot
   ) {
-    throw new Error("Match upgrade snapshot is missing");
+    throw new Error("Fade upgrade snapshot is missing");
   }
   const snapshot = value as CardProgressionSnapshot;
   const entries = snapshot.cards.map((entry) => {
@@ -141,16 +141,16 @@ export function parseCardProgressionSnapshot(
       !Number.isInteger((entry as CardProgressionSnapshotEntry).xp) ||
        !Number.isInteger((entry as CardProgressionSnapshotEntry).level)
     ) {
-      throw new Error("Match upgrade snapshot is malformed");
+      throw new Error("Fade upgrade snapshot is malformed");
     }
     const parsed = entry as CardProgressionSnapshotEntry;
     const canonicalId = normalizeCatalogCardId(parsed.cardId);
     if (!canonicalId || canonicalId !== parsed.cardId) {
-      throw new Error("Match upgrade snapshot has an unknown card");
+      throw new Error("Fade upgrade snapshot has an unknown card");
     }
     const normalized = normalizeCardProgress(parsed);
     if (normalized.xp !== parsed.xp || normalized.level !== parsed.level || (parsed.moveTier !== undefined && normalized.moveTier !== parsed.moveTier)) {
-      throw new Error("Match upgrade snapshot has invalid progression");
+      throw new Error("Fade upgrade snapshot has invalid progression");
     }
     return {
       cardId: parsed.cardId,
@@ -160,7 +160,7 @@ export function parseCardProgressionSnapshot(
     };
   });
   if (new Set(entries.map((entry) => entry.cardId)).size !== entries.length) {
-    throw new Error("Match upgrade snapshot has duplicate cards");
+    throw new Error("Fade upgrade snapshot has duplicate cards");
   }
   const expectedCatalogIds = expectedPlayerCards.map(normalizeCatalogCardId);
   if (
@@ -168,7 +168,7 @@ export function parseCardProgressionSnapshot(
     entries.length !== expectedCatalogIds.length ||
     entries.some((entry) => !expectedCatalogIds.includes(entry.cardId))
   ) {
-    throw new Error("Match upgrade snapshot has a mismatched roster");
+    throw new Error("Fade upgrade snapshot has a mismatched roster");
   }
   const expected = createCardProgressionSnapshot(
     [...expectedPlayerCards],
@@ -183,7 +183,7 @@ export function parseCardProgressionSnapshot(
     JSON.stringify(canonicalUpgrades(snapshot.abilityUpgradeSnapshot.player)) !== JSON.stringify(canonicalUpgrades(expected.abilityUpgradeSnapshot.player)) ||
     JSON.stringify(canonicalUpgrades(snapshot.abilityUpgradeSnapshot.cpu)) !== JSON.stringify(canonicalUpgrades(expected.abilityUpgradeSnapshot.cpu))
   ) {
-    throw new Error("Match upgrade snapshot is stale or forged");
+    throw new Error("Fade upgrade snapshot is stale or forged");
   }
   return {
     version: CARD_UPGRADE_SNAPSHOT_VERSION,

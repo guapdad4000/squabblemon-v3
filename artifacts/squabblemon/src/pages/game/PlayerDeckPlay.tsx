@@ -98,7 +98,7 @@ const presentations = {
   draft: {
     portrait: 'plug',
     icon: Layers,
-    title: 'Ten picks.\nOne crew.',
+    title: 'Ten picks.\nOne gang.',
     color: '#cbb0ff',
   },
   boss: {
@@ -143,7 +143,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       name: chosen.name,
       cards: chosen.cardIds,
       hero: chosen.heroCardId,
-      archetype: 'Your crew',
+      archetype: 'Your gang',
       accent: 'PLAY',
       plan: 'Your cards. Your strategy.',
     });
@@ -192,7 +192,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       </header>
       {!storyNodeId && (
         <nav className="studio-tabs activity-stage__tabs" aria-label="Battle categories">
-          <button onClick={() => navigate('/game/online')}>Online · Friend match</button>
+          <button onClick={() => navigate('/game/online')}>Online · Friend fade</button>
           <button
             aria-pressed={!showEvents}
             onClick={() => {
@@ -220,7 +220,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
             {storyNodeId ? 'Bring your best' : current.name}
           </span>
           <h1>{storyNodeId ? 'Who are you\nbringing?' : presentation.title}</h1>
-          <p>{storyNodeId ? 'Choose your crew. The next chapter is waiting.' : current.description}</p>
+          <p>{storyNodeId ? 'Choose your gang. The next chapter is waiting.' : current.description}</p>
           {current.normalized && !storyNodeId && (
             <span className="activity-stage__rule">
               <Shield size={13} /> Equal move tiers
@@ -270,14 +270,14 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       <section
         id="crew-picker"
         className="activity-stage__crew"
-        aria-label={isDraft ? 'Street draft' : 'Choose your crew'}
+        aria-label={isDraft ? 'Street draft' : 'Choose your gang'}
       >
         {isDraft ? (
           <>
             <div className="activity-stage__section-title">
               <div>
                 <span className="studio-eyebrow">Street draft · {week}</span>
-                <h2>{picks.length < DECK_SIZE ? `Pick ${picks.length + 1} of ${DECK_SIZE}` : 'Your crew is ready.'}</h2>
+                <h2>{picks.length < DECK_SIZE ? `Pick ${picks.length + 1} of ${DECK_SIZE}` : 'Your gang is ready.'}</h2>
               </div>
               {picks.length > 0 && (
                 <button className="studio-text-action" onClick={() => setPicks(picks.slice(0, -1))}>
@@ -326,7 +326,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
                     hero: cards[picks[0]].id,
                     archetype: 'Your draft',
                     accent: 'DRAFT',
-                    plan: 'Ten choices. Your crew.',
+                    plan: 'Ten choices. Your gang.',
                   })
                 }
               >
@@ -339,10 +339,10 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
             <div className="activity-stage__section-title">
               <div>
                 <span className="studio-eyebrow">Your corner</span>
-                <h2>Bring your crew.</h2>
+                <h2>Bring your gang.</h2>
               </div>
               <button className="studio-text-action" onClick={() => navigate('/game/decks')}>
-                Manage crews <ArrowRight size={14} />
+                Manage gangs <ArrowRight size={14} />
               </button>
             </div>
             {saved.length > 0 ? (
@@ -370,9 +370,9 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
               </div>
             ) : (
               <div className="activity-stage__empty">
-                <p>Build a ten-card crew to step into the circuit.</p>
+                <p>Build a ten-card gang to step into the circuit.</p>
                 <button className="studio-action studio-action--gold" onClick={() => navigate('/game/decks')}>
-                  Build your crew <ArrowRight size={17} />
+                  Build your gang <ArrowRight size={17} />
                 </button>
               </div>
             )}
