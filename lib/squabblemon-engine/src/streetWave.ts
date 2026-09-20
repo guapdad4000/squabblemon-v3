@@ -22,7 +22,7 @@ export const STREET_WAVE = [
   ["incel","incel","Incel","Common","Dark",2,3,"Dark Bond","Ongoing: While Incel is in your hand, your other Dark characters gain +1 Hand at round end.","Sustain","Dark"],
   ["redpill","red-pill","Red Pill","Legendary","Dark",3,3,"Echo Chamber","On Reveal: Apply Weaken to the highest-Hands enemy here. If already Weakened, Silence them and gain +2 Hands instead.","Disruption"],
   ['simmy', 'simmy', 'Simmy', 'Mythical', 'Poison', 4, 4, 'Heartbreak', 'Give the highest-Hands enemy here -3 Hands and your lowest-Hands other friendly character here +2 Hands.', 'Disruption'],
-  ['foodz', 'foodz', 'Foodz', 'Mythical', 'Light', 3, 2, "What's Crackin'!", 'Cleanse every other friendly character on your board. Give your lowest-Hands other friendly character in each district +1 Hands.', 'Support'],
+  ['foodz', 'foodz', 'Foodz', 'Mythical', 'Light', 3, 2, "What's Crackin'!", 'Cleanse every other friendly character on your board. Give your lowest-Hands other ally in each district +1 Hand, plus an extra +1 to the lowest-Hands Light ally you actually cleansed.', 'Support'],
 ] as const;
 
 export const streetWaveUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(

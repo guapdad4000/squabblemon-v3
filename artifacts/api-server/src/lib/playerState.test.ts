@@ -147,3 +147,33 @@ test("saved gacha card receipts restore missing ownership without charging or re
   assert.equal(profile.packTickets, 2);
   assert.equal(profile.styleShards, 10);
 });
+
+test("Light leader promotions preserve existing copies, saved decks, training and cosmetics", async t => {
+  const clerkUserId = 'light-promotion-' + randomUUID();
+  t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
+  const cardIds = ['church-auntie', 'night-shift-medic', 'crossing-guard', 'leroy', 'foodz', 'wifey', 'cornball', 'kyle', 'stockz', 'dr-fade'];
+  const savedDeck = { id: 'light-crew', name: 'My Light Crew', cardIds, heroCardId: 'church-auntie', deckSize: 10, recipeId: null };
+  const progression = { 'church-auntie': { xp: 2800, level: 8, moveTier: 3 }, 'night-shift-medic': { xp: 1000, level: 5, moveTier: 2 } };
+  const variants = ['church-auntie:chrome', 'night-shift-medic:chrome'];
+  await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'complete',
+    ownedCardIds: cardIds, discoveredCardIds: cardIds, savedDecks: [savedDeck], cardProgression: progression,
+    ownedVariants: variants, equippedVariants: { 'church-auntie': variants[0], 'night-shift-medic': variants[1] },
+    softCurrency: 725, packTickets: 9, styleShards: 88 });
+  // Historical Rare receipts remain valid after the catalog becomes Epic.
+  await db.insert(playerPackOpeningsTable).values({ clerkUserId, idempotencyKey: randomUUID(),
+    oddsVersion: 'street-pack-v5', paymentMethod: 'ticket', cost: 1, pityBefore: 0, pityAfter: 1,
+    rewards: cardIds.slice(0, 2).map(cardId => ({ kind: 'card' as const, cardId, variantId: null,
+      name: cardId, rarity: 'Rare', isNew: true, amount: 1 })) });
+  await ensurePlayer(clerkUserId);
+  await ensurePlayer(clerkUserId);
+  const [profile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.deepEqual(profile.ownedCardIds, cardIds);
+  assert.deepEqual(profile.savedDecks, [savedDeck]);
+  for (const id of ['church-auntie', 'night-shift-medic'] as const) {
+    assert.deepEqual(profile.cardProgression[id], progression[id]);
+  }
+  assert.deepEqual(profile.ownedVariants, variants);
+  assert.deepEqual(profile.equippedVariants, { 'church-auntie': variants[0], 'night-shift-medic': variants[1] });
+  assert.deepEqual([profile.softCurrency, profile.packTickets, profile.styleShards], [725, 9, 88]);
+  assert(validateSavedDeck(cardIds, profile.ownedCardIds, 'church-auntie').valid);
+});

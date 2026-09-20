@@ -20,7 +20,7 @@ function setup(id: string, owner: Owner = 'player') {
 
 test('the expansion uses the current six-tier rarity ladder with pack access and three training tiers', () => {
   assert.equal(BLOCK_EXPANSION.length, 20);
-  assert.deepEqual(['Common','Uncommon','Epic','Rare','Legendary','Mythical'].map(r => BLOCK_EXPANSION.filter(c => c[3] === r).length), [8,2,1,4,1,4]);
+  assert.deepEqual(['Common','Uncommon','Epic','Rare','Legendary','Mythical'].map(r => BLOCK_EXPANSION.filter(c => c[3] === r).length), [8,2,2,3,1,4]);
   validateCardAbilityUpgrades();
   for (const [id, artworkId, name, rarity] of BLOCK_EXPANSION) {
     const card = cardCatalog.find(c => c.engineId === id)!;

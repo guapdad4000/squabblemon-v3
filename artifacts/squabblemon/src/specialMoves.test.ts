@@ -117,7 +117,7 @@ test('Wave 5 covers all twenty expansion characters with their current printed m
     const rarity = cardCatalog.find(card => card.engineId === id)!.rarity;
     rarities[rarity] = (rarities[rarity] ?? 0) + 1;
   }
-  assert.deepEqual(rarities, { Common: 8, Uncommon: 2, Epic: 1, Rare: 4, Mythical: 4, Legendary: 1 });
+  assert.deepEqual(rarities, { Common: 8, Uncommon: 2, Epic: 2, Rare: 3, Mythical: 4, Legendary: 1 });
 });
 
 test('Wave 6 covers the six original City Legends with their printed moves and current rarity', () => {
