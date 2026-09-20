@@ -278,24 +278,23 @@ export function Battle({
   const modifierSummaries = m.storyEncounter ? getStoryModifierSummaries(m) : [];
   const activePhase = getActiveStoryPhase(m);
   const activePhaseIndex = m.storyRuntime?.activePhaseIndex ?? -1;
-  const prevPhaseIndexRef = React.useRef(-1);
+  const activePhaseName = activePhase?.name;
+  const prevPhaseIndexRef = useRef(-1);
   const [phaseBanner, setPhaseBanner] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    let timer: number | undefined;
+  useEffect(() => {
     if (activePhaseIndex > prevPhaseIndexRef.current) {
-      const phase = getActiveStoryPhase(m);
-      if (phase) {
-        setPhaseBanner(`Phase ${activePhaseIndex + 1}: ${phase.name}`);
-        timer = window.setTimeout(() => setPhaseBanner(null), 3000);
-        prevPhaseIndexRef.current = activePhaseIndex;
-      }
+      if (activePhaseName) setPhaseBanner('Phase ' + (activePhaseIndex + 1) + ': ' + activePhaseName);
       prevPhaseIndexRef.current = activePhaseIndex;
     }
-    return () => {
-      if (timer !== undefined) window.clearTimeout(timer);
-    };
-  }, [activePhaseIndex, m]);
+  }, [activePhaseIndex, activePhaseName]);
+
+  useEffect(() => {
+    if (!phaseBanner) return;
+    // The banner owns its lifetime. Board snapshots must not cancel dismissal.
+    const timer = window.setTimeout(() => setPhaseBanner(null), 3000);
+    return () => window.clearTimeout(timer);
+  }, [phaseBanner]);
 
   const [crewView, setCrewView] = useState<{ lane: number; owner: 'player' | 'cpu' } | null>(null);
   const [showModifiers, setShowModifiers] = useState(false);
@@ -465,7 +464,7 @@ export function Battle({
 
     <AnimatePresence>
       {phaseBanner && (
-        <motion.div initial={{ opacity: 0, scale: 0.9, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 1.1 }} className="absolute inset-0 z-50 pointer-events-none grid place-items-center bg-black/70 backdrop-blur-md border-y-2 border-accent">
+        <motion.div data-testid="story-phase-warning" role="status" initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.9, y: reducedMotion ? 0 : -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: reducedMotion ? 1 : 1.1 }} transition={{ duration: reducedMotion ? 0 : 0.18 }} className="absolute inset-0 z-50 pointer-events-none grid place-items-center bg-black/70 backdrop-blur-md border-y-2 border-accent">
           <div className="text-center p-8 bg-black/50 border border-accent/20 w-full max-w-2xl mx-auto shadow-[0_0_80px_rgba(225,29,72,0.3)]">
             <div className="font-mono text-accent text-[12px] uppercase tracking-[0.4em] mb-2 font-bold">{phaseBanner.split(':')[0]}</div>
             <div className="font-display font-black italic text-5xl md:text-7xl uppercase text-white drop-shadow-[0_4px_24px_rgba(225,29,72,0.8)]">{phaseBanner.split(':')[1]}</div>

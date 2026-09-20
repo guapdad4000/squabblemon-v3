@@ -33,7 +33,8 @@
     "test:music-browser": "node e2e/verify-music.mjs",
     "test:safehouse": "node --test e2e/safehouse-static.test.mjs",
     "test:safehouse-browser": "node e2e/verify-safehouse.mjs",
-    "test:e2e:campaign": "playwright test --config e2e/playwright.campaign.config.ts"
+    "test:e2e:campaign": "playwright test --config e2e/playwright.campaign.config.ts",
+    "test:story-phase": "tsx e2e/verify-story-phase.ts"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",
