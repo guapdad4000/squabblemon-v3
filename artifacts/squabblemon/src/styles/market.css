@@ -531,3 +531,26 @@
     bottom: 0;
   }
 }
+
+
+/* A worn athletic club: warm paper, painted type, and a featured trainer. */
+.training-studio { background-attachment:local; padding-bottom:50px; }
+.training-studio__board { display:flex; align-items:center; justify-content:space-between; gap:12px; max-width:1140px; margin:0 auto 24px; padding:10px 0; border-bottom:1px solid #b5c2a63d; font:700 8px var(--font-mono); letter-spacing:.12em; color:#9bbfb0; }
+.training-studio__board > span:first-child { border:1px solid #d6bf7977; padding:6px 9px; color:#efce81; transform:rotate(-3deg); }
+.training-studio .market-hero { min-height:230px; border-bottom:1px solid #ced19c30; }
+.training-studio .market-hero h1 { font:900 italic clamp(42px,5vw,74px)/.95 var(--font-display); text-transform:uppercase; letter-spacing:-.04em; }
+.training-studio .market-hero h1 em { font-family:'Permanent Marker',cursive; color:#ecc773; font-weight:400; font-size:.85em; }
+.training-studio .market-hero > img { height:260px; width:220px; align-self:end; filter:drop-shadow(0 15px 25px #0009); }
+.training-studio .market-offers { gap:8px; }
+.training-studio .market-offers button { padding:13px 9px; border:1px solid #bbc0a425; background:#10241abf; border-radius:3px; }
+.training-studio .market-offers button[aria-pressed='true'] { border-color:#edc47b; background:#33462dd9; }
+.training-studio .market-checkout { padding:25px; background:linear-gradient(125deg,#24352beb,#132319e8); border:1px solid #bcc59335; border-top:3px solid #e8bc68; box-shadow:0 15px 35px #0004; }
+.training-studio .market-showcase { border-bottom:2px solid #cfb17350; }
+@media(max-width:700px) {
+ .training-studio{padding:14px 18px 45px}.training-studio__board{margin-bottom:12px}.training-studio__board>span:last-child{display:none}
+ .training-studio .market-hero{min-height:205px;display:grid;grid-template-columns:1fr 94px;gap:12px}.training-studio .market-hero h1{font-size:40px}.training-studio .market-hero>img{height:170px;width:125px;max-width:none;margin-left:-15px}.training-studio .market-wallet{grid-column:1/-1;display:flex;justify-content:space-between;padding:10px 0 16px}.training-studio .market-checkout{padding:20px}.training-studio .market-layout{gap:15px;margin:18px 0}.training-studio .market-showcase>img{height:210px}
+}
+
+.training-studio .market-hero > img { position:relative; right:auto; bottom:auto; opacity:1; }
+.training-studio .market-wallet { flex-direction:row; flex-wrap:wrap; }
+@media(max-width:700px) { .training-studio .market-wallet { gap:12px; }.training-studio .market-wallet strong{font-size:18px}.training-studio .market-hero{grid-template-columns:minmax(0,1fr) 95px}.training-studio .market-hero>div:first-child{min-width:0}.training-studio .market-hero h1{font-size:clamp(31px,9vw,40px)}.training-studio .market-hero>img{height:200px;width:115px}.training-studio .market-hero p{font-size:11px} }

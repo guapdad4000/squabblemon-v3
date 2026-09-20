@@ -1,7 +1,7 @@
 import { MusicControls } from '../MusicControls';
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Compass, Coins, Crown, Layers, Map, Menu, ScrollText, ShoppingBag, Swords, Ticket, Users, Wallet, X } from 'lucide-react';
+import { Coins, Crown, Ticket, X } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl } from '../../lib/assets';
 import './fan-navigation.css';
@@ -17,20 +17,6 @@ const routes = [
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
   { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false, glyph: 'wallet' },
 ] as const;
-
-const Glyph = ({ name }: { name: typeof routes[number]['glyph'] }): ReactNode => {
-  const glyphs: Record<typeof routes[number]['glyph'], ReactNode> = {
-    compass: <Compass size={17} />,
-    map: <Map size={17} />,
-    layers: <Layers size={17} />,
-    crossed: <Swords size={17} />,
-    users: <Users size={17} />,
-    scroll: <ScrollText size={17} />,
-    bag: <ShoppingBag size={17} />,
-    wallet: <Wallet size={17} />,
-  };
-  return glyphs[name] ?? <Menu size={17} />;
-};
 
 function pathnameFor(location: string) {
   const pathname = location.split(/[?#]/, 1)[0] || '/game';
@@ -191,60 +177,58 @@ export function CinemaNavSheet({
   return <>
     <button
       type="button"
-      className="cinema-nav-toggle"
+      className="cinema-nav-toggle city-line-toggle express-toggle"
       aria-label="Open game navigation"
       aria-haspopup="dialog"
       aria-expanded={open}
       aria-controls="cinema-nav-sheet"
       onClick={toggle}
     >
-      <span className="cinema-nav-toggle__dot" aria-hidden="true" />
-      <span>Menu</span>
+      <img src={getAssetUrl('brand/navigation/squabble-express.png')} width={1254} height={1254} alt="" draggable={false} />
+      <span>Express</span>
     </button>
     <dialog
       id="cinema-nav-sheet"
       ref={sheetRef}
-      className="cinema-nav-sheet"
+      className="cinema-nav-sheet express-sheet"
       aria-labelledby="cinema-nav-title"
       onClose={() => setOpen(false)}
       onClick={event => { if (event.target === sheetRef.current) sheetRef.current?.close(); }}
     >
-      <header className="cinema-nav-sheet__header">
-        <div>
-          <small>Reverse 1991 · Director's Cut</small>
-          <h2 id="cinema-nav-title">Pick your scene</h2>
-        </div>
-        <button type="button" className="cinema-nav-sheet__close" aria-label="Close game navigation" onClick={() => sheetRef.current?.close()}>
-          <X size={18} aria-hidden="true" />
-        </button>
-      </header>
-      <nav className="cinema-nav-sheet__grid" aria-label="Game destinations">
-        {routes.map(route => {
-          const selected = active(route.path);
-          return (
-            <button
-              key={route.path}
-              type="button"
-              className={`cinema-nav-sheet__choice ${selected ? 'is-active' : ''}`}
-              aria-current={selected ? 'page' : undefined}
-              onClick={() => choose(route.path)}
-            >
-              <span className="cinema-nav-sheet__choice__glyph"><Glyph name={route.glyph} /></span>
-              <span className="cinema-nav-sheet__choice__copy">
-                <strong>{route.label}</strong>
-                <small>{route.detail}</small>
-              </span>
-              {route.art === 'bounties' && rewards > 0 && (
-                <span className="cinema-nav-sheet__badge" aria-label={`${rewards} rewards ready`}>{rewards}</span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
-      <footer className="cinema-nav-sheet__footer">
-        <span>Squabblemon · 1991</span>
-        <div className="music-controls-row"><MusicControls compact /></div>
-      </footer>
+      <h2 id="cinema-nav-title" className="sr-only">Squabble Express</h2>
+      <button type="button" className="express-close" aria-label="Close game navigation" onClick={() => sheetRef.current?.close()}>
+        <X size={21} aria-hidden="true" />
+      </button>
+      <div className="express-board">
+        <img className="express-board__art" src={getAssetUrl('brand/navigation/squabble-express-map.png')}
+          width={1122} height={1402} alt="" draggable={false} />
+        <nav className="express-map" aria-label="Game destinations">
+          <p className="express-map__heading">Pick your stop</p>
+          <svg className="express-map__streets" viewBox="0 0 400 440" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="#7c8b7040" stroke="#67775c55" strokeWidth="1">
+              <path d="M8 8h105v66H8z M291 8h96v66h-96z M8 117h69v73H8z M315 117h72v73h-72z M9 240h75v78H9z M301 240h87v78h-87z M9 365h90v61H9z M299 365h90v61h-90z" />
+              <path d="M145 12h90v66h-90z M140 127h114v65H140z M145 247h100v60H145z M144 361h96v68h-96z" fill="#ac986329" />
+            </g>
+            <path d="M-10 97H410 M-10 219H410 M-10 341H410 M126-10V460 M276-10V460" fill="none" stroke="#86734d30" strokeWidth="18" />
+            <path d="M-10 97H410 M-10 219H410 M-10 341H410 M126-10V460 M276-10V460" fill="none" stroke="#f4e6c177" strokeWidth="2" strokeDasharray="7 7" />
+            <path d="M82 53H306V164H95V281H303V398H94" fill="none" stroke="#99642e80" strokeWidth="3" strokeDasharray="3 7" strokeLinecap="round" />
+          </svg>
+          <div className="express-map__stops">
+            {routes.map((route, index) => {
+              const selected = active(route.path);
+              return <button key={route.path} type="button"
+                className={`express-sign ${index % 2 ? 'express-sign--right' : 'express-sign--left'} ${selected ? 'is-active' : ''}`}
+                aria-label={`${route.label} · ${route.detail}`} aria-current={selected ? 'page' : undefined}
+                title={`${route.label} · ${route.detail}`} onClick={() => choose(route.path)}>
+                <span className="express-sign__post" aria-hidden="true" />
+                <span className="express-sign__board"><span className="express-sign__bolt" aria-hidden="true" /><strong>{route.label}</strong><span className="express-sign__arrow" aria-hidden="true">{index % 2 ? '›' : '‹'}</span></span>
+                {selected && <span className="express-sign__here">You are here</span>}
+                {route.art === 'bounties' && rewards > 0 && <span className="express-sign__reward" aria-label={`${rewards} rewards ready`}>{rewards}</span>}
+              </button>;
+            })}
+          </div>
+        </nav>
+      </div>
     </dialog>
   </>;
 }

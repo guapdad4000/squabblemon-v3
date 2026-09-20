@@ -705,3 +705,18 @@
   .story-atlas__viewport { min-height: 100px; }
   .story-atlas__terrain { min-height: 340px; }
 }
+/* Pan the campaign graph over a fixed illustrated backdrop. */
+.story-atlas__viewport { overflow: hidden; background-position: center; background-size: cover; isolation: isolate; min-height: 0; }
+.story-atlas__pan { position:absolute; inset:0; z-index:2; overflow:auto; overscroll-behavior:contain; touch-action:pan-x pan-y; scrollbar-width:none; cursor:grab; scroll-padding:70px; }
+.story-atlas__pan:active { cursor:grabbing; }
+.story-atlas__pan:focus-visible { outline:2px solid #e1be71; outline-offset:-3px; }
+.story-atlas__terrain { background:none; border:0; min-width:900px; min-height:520px; height:100%; }
+.story-atlas__terrain::before,.story-atlas__terrain::after { display:none; }
+.story-atlas__viewport > .story-atlas__wash { z-index:0; background:linear-gradient(180deg,#060d1659,#060d1699); }
+.story-atlas__viewport > .story-atlas__ornament { z-index:3; pointer-events:none; opacity:.4; }
+.story-atlas__viewport > img { pointer-events:none; }
+.story-atlas__rewards-fab { z-index:4; }
+.story-atlas__header { padding-top:12px; }
+@media(max-width:700px) { .story-atlas__terrain{min-width:850px;min-height:500px}.story-atlas__viewport{min-height:0;flex:1} }
+
+.story-atlas__light { position:absolute;inset:0;pointer-events:none;background:conic-gradient(from 90deg at 0 0,transparent 0deg,#ffe0a51a 12deg,transparent 50deg);z-index:1; }

@@ -34,5 +34,6 @@ export function getCrewScenery(deckId: string) {
 
 export function cardMotionReduced() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    || document.documentElement.dataset.reducedMotion === 'true';
+    || document.documentElement.dataset.reducedMotion === 'true'
+    || document.documentElement.dataset.reduceMotion === 'true';
 }

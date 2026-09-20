@@ -174,7 +174,8 @@ export function Multiplayer({
       </>
     );
   return (
-    <main className="online-lobby">
+    <main className="online-lobby fight-night">
+      <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
       <img
         className="online-lobby__venue"
         src={getAssetUrl("assets/venues/red-fence-night-court.webp")}
@@ -184,29 +185,31 @@ export function Multiplayer({
         <Link to="/game" className="online-icon" aria-label="Back to safehouse">
           <ArrowLeft size={20} />
         </Link>
-        <span>FRIEND MATCHES · LIVE 1V1</span>
+        <span>THE MAIN EVENT · FRIEND MATCHES</span>
         <Link to="/game/play">Solo training</Link>
       </header>
       <div className="online-lobby__content">
         <div className="flex items-center justify-end gap-2 pt-3"><MusicControls /><InstallGame /></div>
         <section className="online-lobby__hero">
+          <span className="fight-night__billing" aria-hidden="true">SQUABBLEMON PRESENTS</span>
           <div>
             <span className="online-eyebrow">
               <Users size={16} /> BRING SOMEONE WHO TALKS BACK
             </span>
             <h1>
-              Your crew.
+              Fight
               <br />
-              Their problem.
+              <em>night.</em>
             </h1>
-            <p>Six rounds. Three districts. One rival who knows your name.</p>
+            <p>Your crew. Their problem. Take two districts and own the night.</p>
           </div>
           <div className="online-lobby__fighters" aria-hidden="true">
             <img src={getCardImage(chosen?.hero ?? "ganger-red")} alt="" />
             <img src={getCardImage("ganger-blue")} alt="" />
-            <Swords />
+            <span className="fight-night__versus">VS</span>
           </div>
         </section>
+        <div className="fight-night__ticket"><span>LIVE 1V1</span><b>06 ROUNDS</b><span>03 DISTRICTS</span><b>ONE WINNER</b></div>
         {errorBanner && (
           <p className="online-notice" role="alert">
             {errorBanner}

@@ -21,25 +21,30 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   handlers.current = { onMessage, onReady };
   useEffect(() => {
     let ready = false;
-    const timeout = window.setTimeout(() => { if (!ready) setStatus('error'); }, 20000);
+    setStatus('loading');
+    const timeout = window.setTimeout(() => { if (!ready) { clearInterval(probe); setStatus('error'); handlers.current.onMessage?.({ type: 'error' }); } }, 15000);
+    const probe = window.setInterval(() => { if (!ready) sendScene(frameRef, { type: 'ping' }); }, 600);
     const receive = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== frameRef.current?.contentWindow) return;
       const message = event.data;
       if (!message || message.channel !== 'squabblemon-scene') return;
       if (message.type === 'ready') {
+        if (ready) return;
         ready = true;
+        clearInterval(probe);
         clearTimeout(timeout);
         setStatus('ready');
         handlers.current.onReady?.();
-      } else if (message.type === 'error') { clearTimeout(timeout); setStatus('error'); }
+      } else if (message.type === 'error') { clearTimeout(timeout); clearInterval(probe); setStatus('error'); }
       handlers.current.onMessage?.(message);
     };
     window.addEventListener('message', receive);
-    return () => { clearTimeout(timeout); window.removeEventListener('message', receive); };
-  }, [attempt, frameRef]);
+    return () => { clearTimeout(timeout); clearInterval(probe); window.removeEventListener('message', receive); };
+  }, [attempt, frameRef, kind]);
   return <div className={`venue-scene is-${status}`}>
     {poster && <img className="venue-scene__poster" src={poster} alt="" />}
     <iframe key={attempt} ref={frameRef} src={`${publicBase}scenes/${kind}/index.html`}
+      onLoad={() => sendScene(frameRef, { type: 'ping' })}
       title={kind === 'safehouse' ? 'Interactive safehouse' : 'Interactive heavy bag'} className="venue-scene__frame" />
     {status !== 'ready' && <div className="venue-scene__status" role="status">
       <span className="venue-kicker">{status === 'loading' ? 'Setting the scene' : 'Room unavailable'}</span>

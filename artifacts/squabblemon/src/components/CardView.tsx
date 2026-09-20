@@ -104,8 +104,9 @@ function CardViewComponent({
   const popClass = portraitPop ? 'portrait-pop' : '';
   const tactile = !unavailable && (!isBoard || fillContainer || isInspector);
   const moveFoil = (event: React.PointerEvent<HTMLElement>) => {
-    if (!tactile || cardMotionReduced() || event.pointerType === 'touch') return;
+    if (!tactile || cardMotionReduced() || (event.pointerType === 'touch' && !isInspector)) return;
     const node = event.currentTarget;
+    node.dataset.tilting = 'true';
     const rect = node.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
@@ -115,6 +116,7 @@ function CardViewComponent({
     node.style.setProperty('--tilt-y', `${(x - 0.5) * 17}deg`);
   };
   const resetFoil = (event: React.PointerEvent<HTMLElement>) => {
+    delete event.currentTarget.dataset.tilting;
     for (const key of ['--foil-x', '--foil-y', '--tilt-x', '--tilt-y']) event.currentTarget.style.removeProperty(key);
   };
 
@@ -136,6 +138,13 @@ function CardViewComponent({
       data-card-kind={card.kind ?? 'character'}
       data-frozen={isFrozen ? true : undefined}
       data-card-finish={CARD_FINISH[rarity]}
+      onPointerDown={event => {
+        inspection.props.onPointerDown?.(event);
+        if (isInspector && !cardMotionReduced()) { event.currentTarget.setPointerCapture(event.pointerId); moveFoil(event); }
+      }}
+      onPointerUp={event => {
+        if (isInspector) { resetFoil(event); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }
+      }}
       onPointerMove={moveFoil}
       onPointerLeave={resetFoil}
       onPointerCancel={resetFoil}
