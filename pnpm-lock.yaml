@@ -702,6 +702,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.9.4
+      '@workspace/squabblemon-engine':
+        specifier: workspace:*
+        version: link:../lib/squabblemon-engine
       tsx:
         specifier: 'catalog:'
         version: 4.23.0

@@ -117,7 +117,7 @@ mechanicalChanges: none
 
 Reward node only, unlocked by the existing Cracked Head boss victory. No new match, choice, bonus condition, or character unlock.
 
-**Rewards:** Existing ceremony grants: card nerd ×1; street-pack-ticket ×1; block-party-crowned cosmetic ×1; story-key:chapter-two ×1. The card is a tournament prize, not a character extracted from the boss's deck. Chapter Two is still awaiting implementation.
+**Rewards:** Existing ceremony grants: card nerd ×1; street-pack-ticket ×10; block-party-crowned cosmetic ×1; story-key:chapter-two ×1. The card is a tournament prize, not a character extracted from the boss's deck. Completing the ceremony opens the playable Chapter Two route.
 
 
 
@@ -130,4 +130,3 @@ This ending works without the optional alley scene: Cornball arrives with paper 
 - Dialogue/camera cue integration should use input-driven beats, with no fixed cue advancing unread text.
 - Sound direction: venue ambience beneath conversation; lower crowd sound during personal exchanges. Optional hooks require an audio-bus mapping before use.
 - Validate rewards and node identity against the existing engine at integration time. Do not copy obsolete unlock promises from the earlier templates.
-

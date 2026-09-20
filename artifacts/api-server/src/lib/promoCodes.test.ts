@@ -59,7 +59,7 @@ test('promo redemption persists rewards once and works with the real economy', {
     else process.env.NODE_ENV = originalNodeEnvironment;
   });
   const { default: express } = await import('express');
-  const { db, pool, playerProfilesTable, playerCollectionClaimsTable } = await import('@workspace/db');
+  const { db, playerProfilesTable, playerCollectionClaimsTable } = await import('@workspace/db');
   const { eq } = await import('drizzle-orm');
   const { default: router } = await import('../routes/promoCodes');
   const { redeemPromoCode } = await import('./promoCodeTransactions');
@@ -90,7 +90,6 @@ test('promo redemption persists rewards once and works with the real economy', {
   t.after(async () => {
     await new Promise<void>(resolve => server.close(() => resolve()));
     for (const id of ids) await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, id));
-    await pool.end();
   });
   const address = server.address() as { port: number };
   const post = async (body: unknown, userId?: string) => {

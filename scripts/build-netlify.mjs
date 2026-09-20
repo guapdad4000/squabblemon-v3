@@ -2,14 +2,52 @@ import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 
+const previewContexts = new Set(['deploy-preview', 'branch-deploy', 'staging']);
+
+function httpsOrigin(name, value) {
+  if (!value) throw new Error(`Configure ${name} before publishing.`);
+  const url = new URL(value);
+  const normalized = value.replace(/\/$/, '');
+  if (url.protocol !== 'https:' || url.origin !== normalized) {
+    throw new Error(`${name} must be an exact HTTPS origin with no path, query, or fragment.`);
+  }
+  return url.origin;
+}
+
+export function deploymentEnvironment(source) {
+  const context = source.CONTEXT?.trim();
+  if (context === 'production') return 'production';
+  if (previewContexts.has(context) || (!context && source.BRANCH === 'staging')) return 'staging';
+  if (context) throw new Error(`Unsupported Netlify deploy context: ${context}`);
+  if (source.NETLIFY === 'true') throw new Error('Netlify builds must declare CONTEXT.');
+  if (source.APP_ENV === 'production' || source.APP_ENV === 'staging') return source.APP_ENV;
+  throw new Error('Local release builds must declare APP_ENV=production or APP_ENV=staging.');
+}
+
 export function releaseEnvironment(source) {
+  const environment = deploymentEnvironment(source);
   const publishable = source.VITE_CLERK_PUBLISHABLE_KEY?.trim();
-  if (!publishable?.match(/^pk_(live|test)_/)) throw new Error('Configure VITE_CLERK_PUBLISHABLE_KEY before publishing. Test-auth preview builds are not a release.');
-  const origin = source.PUBLIC_ORIGIN || source.DEPLOY_PRIME_URL || source.URL;
-  if (!origin) throw new Error('Configure the public HTTPS site origin before publishing.');
-  const url = new URL(origin);
-  if (url.protocol !== 'https:' || url.origin !== origin.replace(/\/$/,'')) throw new Error('PUBLIC_ORIGIN must be an HTTPS origin with no path.');
-  return {...source, PORT:'5173',BASE_PATH:'/',NODE_ENV:'production',VITE_E2E_AUTH:'false',PUBLIC_ORIGIN:url.origin};
+  const requiredPrefix = environment === 'production' ? 'pk_live_' : 'pk_test_';
+  if (!publishable?.startsWith(requiredPrefix)) {
+    throw new Error(`${environment} builds require a ${requiredPrefix} Clerk publishable key.`);
+  }
+  const platformOrigin = environment === 'production'
+    ? source.URL
+    : source.DEPLOY_PRIME_URL || (source.CONTEXT === 'staging' ? source.URL : undefined);
+  const selectedOrigin = source.PUBLIC_ORIGIN || platformOrigin;
+  const origin = httpsOrigin('PUBLIC_ORIGIN', selectedOrigin);
+  if (platformOrigin && origin !== httpsOrigin('Netlify deploy origin', platformOrigin)) {
+    throw new Error('PUBLIC_ORIGIN must exactly match the current Netlify deploy origin.');
+  }
+  return {
+    ...source,
+    APP_ENV: environment,
+    PORT: '5173',
+    BASE_PATH: '/',
+    NODE_ENV: 'production',
+    VITE_E2E_AUTH: 'false',
+    PUBLIC_ORIGIN: origin,
+  };
 }
 function run(args, env, cwd) {
   const result = spawnSync(process.execPath,args,{stdio:'inherit',env,cwd});

@@ -11,6 +11,8 @@ import {
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
 
+import { campaignLogProps, requestId } from "./lib/requestContext";
+
 function productionAuthMiddleware(): RequestHandler {
   return clerkMiddleware((req) => ({
     publishableKey: publishableKeyFromHost(
@@ -28,6 +30,8 @@ export function createApp(
   app.use(
     pinoHttp({
     logger,
+    genReqId: requestId,
+    customProps: campaignLogProps,
     serializers: {
       req(req) {
         return {

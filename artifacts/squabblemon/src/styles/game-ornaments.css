@@ -20,7 +20,7 @@
   object-fit: contain;
 }
 .game-glyph--stamp {
-  background: url('../../public/assets/layered/motion-medallion.webp') center / contain no-repeat;
+  background: url('/assets/layered/motion-medallion.webp') center / contain no-repeat;
 }
 .game-glyph--stamp > svg {
   width: 51%;
@@ -50,7 +50,7 @@
 .battle-arena.battle-hud .battle-actions .battle-primary-action.action-primary {
   position: relative;
   isolation: isolate;
-  background: url('../../public/assets/ui/action-gold.webp') center / 100% 100% no-repeat;
+  background: url('/assets/ui/action-gold.webp') center / 100% 100% no-repeat;
   border: 1px solid transparent;
   border-image: none;
   border-radius: 26px;
@@ -90,7 +90,7 @@
 }
 :is(.studio-page, .studio-results) .studio-icon {
   border-color: transparent;
-  background: url('../../public/assets/layered/motion-medallion.webp') center / contain no-repeat;
+  background: url('/assets/layered/motion-medallion.webp') center / contain no-repeat;
   color: #dfd0aa;
 }
 .studio-page .studio-progress::after {
@@ -99,7 +99,7 @@
   inset: 5px;
   z-index: -1;
   border-radius: 50%;
-  background: url('../../public/assets/layered/motion-medallion.webp') center / contain no-repeat;
+  background: url('/assets/layered/motion-medallion.webp') center / contain no-repeat;
   opacity: 0.6;
 }
 .studio-page .studio-progress {

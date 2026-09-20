@@ -55,7 +55,7 @@ function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, marke
   }
 }
 
-export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstrap; onGuideComplete?: () => void }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [sceneReady, setSceneReady] = useState(false);
   const [view, setView] = useState<Station | 'room'>('room');
@@ -159,7 +159,7 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <button type="button" className="room-tool room-tool--reset" aria-label="Reset room camera" onClick={() => explore('room')}><RotateCcw size={16} /></button>
         </div>
       </header>
-      <nav ref={markerLayer} className="safehouse-room-markers" hidden={view !== 'room' || !sceneReady} aria-label="Explore the safehouse">
+      <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !sceneReady)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
           aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
           <item.icon size={16} aria-hidden="true" /><span>{item.short}</span>
@@ -171,7 +171,7 @@ export function Home({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${soundtrack[music.trackIndex].title} · Treblo` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'music' ? <MusicControls /> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'music' ? <MusicControls /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your crew<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => sendScene(frame, { type: 'punch' })}>Hit the bag</button>}
             </div>
           </div>

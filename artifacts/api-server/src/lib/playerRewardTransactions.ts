@@ -16,6 +16,7 @@ import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_COR
 import {
   applyCardXp,
   createCardProgressionSnapshot,
+  normalizeCatalogCardId,
   participatingCatalogCardIds,
   type CardProgressionSnapshot,
   type CardXpReward,
@@ -91,7 +92,7 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
   await db.transaction(async tx => {
     await lockPlayerProfile(tx, clerkUserId);
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-    if (!profile || profile.onboardingStep !== "crew") return;
+    if (!profile || !["crew", "tutorial"].includes(profile.onboardingStep)) return;
     const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
     const savedDecks = [...profile.savedDecks];
     if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Crew", cardIds: [...ROOKIE_CORE_IDS], heroCardId: "hooper", recipeId: null });
@@ -99,7 +100,7 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
       starterDeckId: ROOKIE_FOUNDATION_ID, ownedCardIds,
       discoveredCardIds: [...new Set([...profile.discoveredCardIds, ...ownedCardIds])],
       savedDecks, deckSlots: Math.max(profile.deckSlots, savedDecks.length),
-      collectionProgress: ownedCardIds.length, onboardingStep: "reward",
+      collectionProgress: ownedCardIds.length, onboardingStep: profile.onboardingStep === "tutorial" ? "tutorial" : "reward",
     }).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   });
 }
@@ -112,7 +113,7 @@ export async function claimStarterReward(
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
     if (profile?.starterDeckId === ROOKIE_FOUNDATION_ID && profile.onboardingStep === "reward") {
       const [tested] = await tx.select({ id: playerMatchesTable.id }).from(playerMatchesTable).where(and(
-        eq(playerMatchesTable.clerkUserId, clerkUserId), eq(playerMatchesTable.mode, "practice"),
+        eq(playerMatchesTable.clerkUserId, clerkUserId), sql`${playerMatchesTable.mode} in ('practice', 'tutorial')`,
         eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
       )).limit(1);
       if (!tested) throw new PlayerRewardError("Finish a practice match with your crew before claiming the welcome reward", 409);
@@ -242,8 +243,27 @@ export async function completeStandardMatchReward(input: {
       if (!canonicalRoster) {
         throw new PlayerRewardError("Legacy match roster is unavailable", 409);
       }
+      const owned = new Set(profile.ownedCardIds);
+      const compatibleRoster = canonicalRoster.filter(cardId => {
+        const catalogId = normalizeCatalogCardId(cardId);
+        return catalogId !== null && owned.has(catalogId);
+      });
+      // A historical recipe may have lost or reordered cards since this match
+      // was issued. Keep any verified participating cards that the player
+      // still owns so legacy matches can award their earned card XP.
+      for (const cardId of input.verifiedMatch.playerCardIds) {
+        const catalogId = normalizeCatalogCardId(cardId);
+        if (
+          catalogId &&
+          owned.has(catalogId) &&
+          participantCardIds.includes(catalogId) &&
+          !compatibleRoster.includes(cardId)
+        ) {
+          compatibleRoster.push(cardId);
+        }
+      }
       progressionSnapshot = createCardProgressionSnapshot(
-        canonicalRoster,
+        compatibleRoster,
         profile.ownedCardIds,
         profile.cardProgression,
       );

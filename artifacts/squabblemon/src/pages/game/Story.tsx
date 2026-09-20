@@ -30,7 +30,7 @@ import {
   type StoryReward,
 } from '@workspace/squabblemon-engine/story';
 import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
-import { getStoryModifierSummaries } from '../../gameEngine';
+import { getMatchRoundLimit, getStoryModifierSummaries } from '../../gameEngine';
 import { StoryStage } from '../../components/story/StoryStage';
 import {
   ChapterTicketProgress,
@@ -181,7 +181,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <PageDecor theme="story" />
       <header className="story-atlas__header">
         <nav className="story-reels" aria-label="Chapters">
-          {campaign.chapters.map((chapter) => {
+          {campaign.chapters.filter(chapter => chapter.status !== 'locked').map((chapter) => {
             const active = chapter.id === currentChapter?.id;
             return (
               <button
@@ -641,7 +641,7 @@ function BattleBriefing({
             {battle.optional && <div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent mb-2 border border-accent/30 bg-accent/10 inline-block px-2 py-0.5">Mastery Node</div>}
             <div className={`font-mono text-[9px] uppercase tracking-[.22em] ${isBoss ? 'text-accent' : 'text-primary'}`}>{cleared ? 'Mastery replay' : battle.battleType}</div>
             <h2 className={`mt-2 font-display text-4xl font-black italic uppercase leading-none md:text-6xl ${isBoss ? 'text-white drop-shadow-[0_2px_12px_rgba(225,29,72,0.8)]' : ''}`}>{battle.encounter.enemy.name}</h2>
-            <p className="mt-3 text-sm text-white/55">{battle.encounter.enemy.behaviorProfile} rival · six rounds · first to two districts</p>
+            <p className="mt-3 text-sm text-white/55">{battle.encounter.enemy.behaviorProfile} rival · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
             <div className="mt-5 flex gap-2">{historyButton}</div>
           </div>
         </div>
@@ -683,10 +683,13 @@ function BattleBriefing({
           </section>
           <section className="border border-white/10 bg-white/5 p-4">
             <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Star objectives</h3>
+            <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-white/45" data-testid="briefing-best-stars">
+              Best clear: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} stars
+            </p>
             <div className="mt-3 space-y-2 text-xs text-white/70">
-              {battle.starObjectives.map((objective, index) => (
+              {battle.starObjectives.map((objective) => (
                 <div key={objective.id} className="flex gap-2">
-                  <span className={`mt-1 h-2 w-2 shrink-0 rotate-45 ${index < stars ? 'bg-primary' : 'border border-white/25'}`} />
+                  <span aria-hidden="true" className="mt-1 h-2 w-2 shrink-0 rotate-45 border border-white/30 bg-white/5" />
                   <span>{objective.description}</span>
                 </div>
               ))}

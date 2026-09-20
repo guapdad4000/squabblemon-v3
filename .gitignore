@@ -82,3 +82,6 @@ Thumbs.db
 /artifacts/squabblemon/.extract-special-move-frames.mjs
 /artifacts/squabblemon/.key-captain.mjs
 /artifacts/squabblemon/.visual-audit.mjs
+
+# Temporary real-account campaign manifests
+/.campaign-e2e/

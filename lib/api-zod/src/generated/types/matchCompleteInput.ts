@@ -9,7 +9,7 @@ import type { MatchMove } from './matchMove';
 
 export interface MatchCompleteInput {
   /**
-     * @minItems 6
+     * @minItems 1
      * @maxItems 64
      */
   moves: MatchMove[];

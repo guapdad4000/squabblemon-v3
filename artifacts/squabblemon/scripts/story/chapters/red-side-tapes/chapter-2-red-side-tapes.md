@@ -67,9 +67,10 @@ Required route: **1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9**. Battles o
 | Wifey | 200 street-xp |
 | Baby Momma | 250 street-xp |
 | Six first three-star clears | One ticket each, maximum six |
-| Final reward node | `baby` card ×1; `story-key:chapter-three` ×1 |
+| Optional Courier Table | 75 street-xp; Street Pack Ticket ×1 |
+| Final reward node | `baby` card ×1; Street Pack Ticket ×10; `story-key:chapter-three` ×1 |
 
-Total proposed battle XP: **1,000**. Total first-perfect-run tickets: **six**, with no extra finale ticket. No new cosmetic or character-unlock reward is proposed. Card key `baby` is the existing Baby Momma card; `baby-momma` is the portrait/story identity. Hosting is narrative authority over an event, not property ownership or a new item system. The final reward grants after the porch scene completes, although event recognition happens before the visit.
+Total required battle XP: **1,000**, with **75 optional street-xp** at the Courier Table. A complete first-perfect run that also claims the courier and finale yields **17 tickets**: six perfect-clear tickets, one courier ticket, and ten finale tickets. No new cosmetic or character-unlock reward is configured. Card key `baby` is the existing Baby Momma card; `baby-momma` is the portrait/story identity. Hosting is narrative authority over an event, not property ownership or a new item system. The final reward grants after the porch scene completes, although event recognition happens before the visit.
 
 All six decks have seven existing engine card keys. The proposed encounters use existing modifier/phase shapes. These are design specifications; playtesting must establish fair difficulty. Art paths for Chapter Two map and movies are placeholders explicitly awaiting production.
 
@@ -90,4 +91,3 @@ All six decks have seven existing engine card keys. The proposed encounters use 
 Written: nine complete scenes, 158 normal lines, six defeat lines, two phase lines, six encounter designs, rewards proposal, ten speaking-character references, and video/implementation handoff.
 
 Remaining: narrative review, balance playtests, roster and campaign integration, correct daytime/eye-level scene art, new expressions/props, audio, cutscenes, captions, and real device playthrough. Chapter One's handed-off ZIP is frozen and has not been changed by this chapter's writing.
-

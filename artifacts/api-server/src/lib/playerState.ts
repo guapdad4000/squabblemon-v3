@@ -419,7 +419,7 @@ export async function getPlayerBootstrap(clerkUserId: string) {
   const nextAction = getNextAction(profile, missions);
   if (profile.starterDeckId === ROOKIE_FOUNDATION_ID && profile.onboardingStep === "reward") {
     const [tested] = await db.select({ id: playerMatchesTable.id }).from(playerMatchesTable).where(and(
-      eq(playerMatchesTable.clerkUserId, clerkUserId), eq(playerMatchesTable.mode, "practice"),
+      eq(playerMatchesTable.clerkUserId, clerkUserId), sql`${playerMatchesTable.mode} in ('practice', 'tutorial')`,
       eq(playerMatchesTable.playerDeckId, ROOKIE_DECK_ID), isNotNull(playerMatchesTable.completedAt),
     )).limit(1);
     if (tested) { nextAction.id = "rookie-tested"; nextAction.title = "Your crew is ready"; }

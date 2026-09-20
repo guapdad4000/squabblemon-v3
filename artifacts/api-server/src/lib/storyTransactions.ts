@@ -162,7 +162,7 @@ export async function grantStoryRewards(
     ) {
       throw new StoryRequestError(500, "Story reward is invalid");
     }
-    const rewardKey = `${nodeId}:${index}:${configured.kind}:${configured.id}`;
+    const rewardKey = configured.claimKey ?? `${nodeId}:${index}:${configured.kind}:${configured.id}`;
     let duplicateShards = 0;
     let rewardCard:
       | (typeof catalogCardById)[string]
@@ -185,7 +185,9 @@ export async function grantStoryRewards(
         : 0;
     }
     const base: PlayerStoryReward = {
-      ...configured,
+      kind: configured.kind,
+      id: configured.id,
+      amount: configured.amount,
       ...(duplicateShards ? { duplicateShards } : {}),
     };
     const [claim] = await tx

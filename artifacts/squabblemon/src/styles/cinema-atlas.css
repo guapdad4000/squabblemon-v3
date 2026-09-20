@@ -321,6 +321,14 @@
 .story-atlas__rewards-fab:focus-visible { outline: 2px solid var(--cinema-amber-bright); outline-offset: 3px; }
 .game-shell--fan .story-atlas__rewards-fab { bottom: calc(var(--fan-clearance) + 22px); }
 
+/* Keep the two persistent story controls on opposite corners. Both controls
+   stay reachable at pointer and touch sizes without one intercepting the
+   other. */
+.game-shell:has(.story-atlas) .cinema-nav-toggle {
+  right: auto;
+  left: 18px;
+}
+
 /* Rewards panel — modal-style card that slides up from the bottom-right. */
 .story-atlas__rewards-panel {
   position: fixed;
@@ -682,6 +690,7 @@
   .story-atlas__rewards-fab { right: 12px; bottom: 12px; padding: 8px 12px 8px 10px; }
   .story-atlas__rewards-fab span { display: none; }
   .story-atlas__rewards-panel { right: 12px; left: 12px; width: auto; }
+  .game-shell:has(.story-atlas) .cinema-nav-toggle { left: 12px; }
 }
 
 @media (max-height: 650px) and (min-width: 681px) {

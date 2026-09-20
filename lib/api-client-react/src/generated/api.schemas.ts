@@ -334,6 +334,42 @@ export interface HealthStatus {
   status: string;
 }
 
+export type DeploymentIdentityEnvironment = typeof DeploymentIdentityEnvironment[keyof typeof DeploymentIdentityEnvironment];
+
+
+export const DeploymentIdentityEnvironment = {
+  production: 'production',
+  staging: 'staging',
+} as const;
+
+export type DeploymentIdentityContext = typeof DeploymentIdentityContext[keyof typeof DeploymentIdentityContext];
+
+
+export const DeploymentIdentityContext = {
+  production: 'production',
+  'deploy-preview': 'deploy-preview',
+  'branch-deploy': 'branch-deploy',
+  staging: 'staging',
+} as const;
+
+export type DeploymentIdentityClerkEnvironment = typeof DeploymentIdentityClerkEnvironment[keyof typeof DeploymentIdentityClerkEnvironment];
+
+
+export const DeploymentIdentityClerkEnvironment = {
+  live: 'live',
+  test: 'test',
+} as const;
+
+export interface DeploymentIdentity {
+  environment: DeploymentIdentityEnvironment;
+  context: DeploymentIdentityContext;
+  deployId: string;
+  origin: string;
+  /** @pattern ^[a-f0-9]{16}$ */
+  databaseFingerprint: string;
+  clerkEnvironment: DeploymentIdentityClerkEnvironment;
+}
+
 export interface SaveDeckInput {
   /**
      * @minLength 2
@@ -369,7 +405,11 @@ export interface OpenPackInput {
      */
   idempotencyKey: string;
   paymentMethod: OpenPackInputPaymentMethod;
-  /** Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience. */
+  /**
+     * Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.
+     * @minimum 1
+     * @maximum 10
+     */
   pullCount?: number;
 }
 
@@ -558,7 +598,7 @@ export interface MatchMove {
 
 export interface MatchCompleteInput {
   /**
-     * @minItems 6
+     * @minItems 1
      * @maxItems 64
      */
   moves: MatchMove[];

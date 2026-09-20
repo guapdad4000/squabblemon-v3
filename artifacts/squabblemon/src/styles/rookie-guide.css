@@ -1,0 +1,31 @@
+.fade-mask{position:fixed;z-index:10000;background:rgba(4,7,10,.76);touch-action:none}
+.fade-target{position:fixed;z-index:10001;pointer-events:none;border:2px solid #f6d36b;border-radius:10px;box-shadow:0 0 0 4px #f6d36b22,0 0 24px #f6d36b44}
+.fade-tip{position:fixed;z-index:10002;left:50%;transform:translateX(-50%);width:min(530px,calc(100vw - 24px));display:flex;align-items:center;gap:14px;padding:18px 22px 18px 8px;background:#151b1a;border:1px solid #617b54;border-radius:18px;color:#f7f4e8;box-shadow:0 14px 60px #0009}
+.fade-tip--bottom{bottom:max(18px,env(safe-area-inset-bottom))}.fade-tip--top{top:max(16px,env(safe-area-inset-top))}
+.fade-tip>.dr-fade-portrait{width:105px;height:140px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 5px 8px #0008)}
+.fade-eyebrow{font-size:10px;letter-spacing:.12em;color:#e7c77b;font-weight:800}
+.fade-tip h2{font-size:22px;line-height:1.15;font-weight:800;margin:6px 0}
+.fade-tip p{font-size:14px;line-height:1.5;color:#ddd;margin:6px 0 10px}
+.fade-tip .venue-button{min-height:42px;font-size:12px}
+.rookie-tour{min-height:100dvh;background:#07100e;color:#faf5e6;padding:clamp(22px,5vw,80px);position:relative;display:flex;flex-direction:column;justify-content:center;isolation:isolate}
+
+.rookie-tour__welcome{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.7fr);align-items:center;gap:30px;max-width:1050px;width:100%;margin:auto}
+.rookie-tour h1{font-size:clamp(38px,6vw,78px);font-weight:950;line-height:1;letter-spacing:-.045em;margin:18px 0}
+.rookie-tour p{font-size:17px;line-height:1.6;max-width:480px;color:#d7ddd5;margin:18px 0 26px}
+.rookie-tour__welcome>.dr-fade-portrait{height:min(76dvh,760px);width:100%;object-fit:contain;filter:drop-shadow(0 10px 35px #0009)}
+.rookie-tour__steps{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0;font-size:12px;color:#c3ceba}
+.rookie-tour__steps span{padding:7px 10px;border:1px solid #73866d55;border-radius:30px}
+.rookie-home-tour{height:100dvh;position:relative}
+.rookie-road-progress{position:fixed;z-index:80;top:8px;left:50%;transform:translateX(-50%);border-radius:20px;background:#0e191aee;border:1px solid #c2ab6244;color:#edd88e;padding:7px 16px;font-size:11px;white-space:nowrap;pointer-events:none}
+.battle-guidance--coached .dr-fade-coach-frame{overflow:visible}
+.battle-guidance--coached .dr-fade-coach{object-fit:contain;object-position:center;width:100%;height:100%}
+@media(max-width:600px){
+ .rookie-tour{padding:24px}.rookie-tour__welcome{grid-template-columns:1fr;gap:0}.rookie-tour__welcome>.dr-fade-portrait{grid-row:1;height:33dvh}
+ .rookie-tour h1{font-size:40px}.rookie-tour p{font-size:15px;margin:12px 0 20px}
+ .fade-tip{padding:12px 14px 12px 2px;gap:6px}.fade-tip>.dr-fade-portrait{width:76px;height:110px}.fade-tip h2{font-size:19px}.fade-tip p{font-size:13px}.fade-eyebrow{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.fade-tip,.fade-target{animation:none;transition:none}}
+.rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"]{position:absolute;inset:30% 18px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"] button{position:relative;left:auto;top:auto;transform:none}
+@media(max-height:500px){.fade-tip>.dr-fade-portrait{height:80px;width:64px}.fade-tip{padding:8px;max-width:430px}.fade-tip h2{font-size:17px}.fade-tip p{font-size:12px;margin:4px 0}.fade-tip .venue-button{min-height:32px}.rookie-tour__welcome{grid-template-columns:1fr .5fr}.rookie-tour__welcome>.dr-fade-portrait{grid-row:auto;height:70dvh}}
+.fade-spotlight{position:fixed;inset:0;pointer-events:none;z-index:10000}.fade-mask,.fade-tip{pointer-events:auto}

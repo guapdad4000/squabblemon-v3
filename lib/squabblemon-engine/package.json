@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./rookie": "./src/rookie.ts",
     "./multiplayer": "./src/multiplayer.ts",
     "./economy": "./src/economy.ts",
     ".": "./src/gameEngine.ts",
@@ -16,6 +17,7 @@
     "./insights": "./src/insights.ts",
     "./training": "./src/training.ts",
     "./story": "./src/story.ts",
-    "./districts": "./src/districts.ts"
+    "./districts": "./src/districts.ts",
+    "./balanceLab": "./src/balanceLab.ts"
   }
 }

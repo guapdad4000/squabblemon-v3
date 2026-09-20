@@ -249,3 +249,39 @@
   .battle-arena.battle-hud .rival-presence { display: none; }
   .battle-arena.battle-hud .battle-rival-copy .font-display { font-size: 9px; }
 }
+
+/* Guided Rookie Road focus. The root attribute is only present during a live tutorial decision. */
+.battle-arena.battle-hud[data-tutorial-focus] .battle-guidance--coached {
+  background: linear-gradient(90deg, #07101bd9, #0c1420a8 70%, transparent);
+}
+.battle-arena.battle-hud[data-tutorial-focus] .battle-guidance-kicker {
+  color: #f1d89f;
+  letter-spacing: .14em;
+}
+.battle-arena.battle-hud[data-tutorial-focus='card'] .battle-hand-tray,
+.battle-arena.battle-hud[data-tutorial-focus='district'] .district-lane.is-legal .district-target,
+.battle-arena.battle-hud[data-tutorial-focus='squabble'] .battle-squabble:not(:disabled),
+.battle-arena.battle-hud[data-tutorial-focus='play'] .battle-primary-action:not(:disabled),
+.battle-arena.battle-hud[data-tutorial-focus='end-turn'] .battle-primary-action:not(:disabled) {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid #f3cf7a;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #f3cf7a1c, 0 0 28px #e6b84d55;
+  animation: rookie-road-focus 1.4s ease-in-out infinite alternate;
+}
+.battle-arena.battle-hud[data-tutorial-focus='district'] .district-lane.is-legal .district-target {
+  border-radius: 50%;
+}
+@keyframes rookie-road-focus {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-arena.battle-hud[data-tutorial-focus] :is(.battle-hand-tray,.district-target,.battle-squabble,.battle-primary-action) {
+    animation: none;
+  }
+}
+.battle-arena.battle-hud[data-reduced-motion='true'][data-tutorial-focus] :is(.battle-hand-tray,.district-target,.battle-squabble,.battle-primary-action) {
+  animation: none;
+}

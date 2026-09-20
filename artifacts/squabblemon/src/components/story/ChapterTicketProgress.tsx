@@ -2,9 +2,8 @@
  * ChapterTicketProgress — the chapter-card widget that shows the
  * 3-battle → 3-stars → 1-ticket loop in action.
  *
- * Renders a compact progress meter (perfectClears / battleCount, with
- * ticketsEarned / ticketsAvailable), a row of battle chips that highlight
- * which ones have been 3-starred, and a forecast for fresh chapters.
+ * Renders total ticket progress, separates perfect-clear tickets from direct
+ * chapter rewards, and shows which battles have already been 3-starred.
  */
 import { motion } from 'framer-motion';
 import { Star, Ticket, MapPin } from 'lucide-react';
@@ -52,6 +51,16 @@ export function ChapterTicketProgress({
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
+      <div className="grid grid-cols-2 gap-2 font-mono text-[9px] uppercase tracking-widest text-white/55">
+        <span data-testid="perfect-ticket-total">
+          Perfect clears <b className="text-white">{progress.perfectTicketsEarned} / {progress.perfectTicketsAvailable}</b>
+        </span>
+        {progress.directTicketsAvailable > 0 && (
+          <span data-testid="direct-ticket-total" className="text-right">
+            Direct rewards <b className="text-primary">{progress.directTicketsEarned} / {progress.directTicketsAvailable}</b>
+          </span>
+        )}
+      </div>
       <div className="grid grid-cols-3 gap-2">
         {progress.battles.map((battle) => {
           const perfect = battle.ticketAwarded;
@@ -94,9 +103,19 @@ export function ChapterTicketProgress({
           );
         })}
       </div>
-      {progress.ticketsRemaining > 0 && (
-        <div className="border-t border-white/10 pt-2 font-mono text-[9px] uppercase tracking-widest text-white/45">
-          {progress.ticketsRemaining} more ticket{progress.ticketsRemaining === 1 ? '' : 's'} available — 3-star every battle.
+      {(progress.perfectTicketsEarned < progress.perfectTicketsAvailable
+        || progress.directTicketsEarned < progress.directTicketsAvailable) && (
+        <div className="space-y-1 border-t border-white/10 pt-2 font-mono text-[9px] uppercase tracking-widest text-white/45">
+          {progress.perfectTicketsEarned < progress.perfectTicketsAvailable && (
+            <div>
+              {progress.perfectTicketsAvailable - progress.perfectTicketsEarned} ticket{progress.perfectTicketsAvailable - progress.perfectTicketsEarned === 1 ? '' : 's'} remain from 3-star battle clears.
+            </div>
+          )}
+          {progress.directTicketsEarned < progress.directTicketsAvailable && (
+            <div>
+              {progress.directTicketsAvailable - progress.directTicketsEarned} ticket{progress.directTicketsAvailable - progress.directTicketsEarned === 1 ? '' : 's'} remain in direct chapter rewards.
+            </div>
+          )}
         </div>
       )}
     </div>

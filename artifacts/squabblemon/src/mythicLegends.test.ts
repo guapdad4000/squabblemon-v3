@@ -63,8 +63,10 @@ test('City Legend Motion prices and Dragonfly Jones Hands are printed on playabl
   assert.equal(cards.yasuke.cost, 2);
   assert.equal(cards.tron.cost, 3);
   assert.equal(cards.ashlee.cost, 5);
+  assert.equal(cards.ashlee.power, 3);
   assert.equal(cards.captainjigga.cost, 5);
   assert.equal(cards.counter.cost, 4);
+  assert.equal(cards.counter.power, 2);
 });
 
 for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend reveals resolve for ${owner}`, () => {
@@ -109,6 +111,35 @@ for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend revea
       assert.equal(self.powerModifier, 4, 'Mirror is capped at +4 even against a 5-cost enemy');
       assert.equal(self.statuses.protected, true);
       assert(after.timedEffects.some(effect => effect.sourceInstanceId === source.instanceId && effect.targetInstanceId === source.instanceId));
+    }
+  }
+});
+
+test('Goth Kid safely evaluates Ashlee and Captain Jigga summon costs', () => {
+  for (const [legendId, tokenId] of [['ashlee', 'guyana'], ['captainjigga', 'steward']] as const) {
+    const legend = setup(legendId);
+    let summoned = playCard(legend.m, 'player', legend.source.instanceId, 0);
+    summoned = {
+      ...summoned,
+      boards: summoned.boards.map(lane =>
+        lane.filter(card => card.owner === 'player' && card.cardId === tokenId),
+      ),
+    };
+    const tokens = summoned.boards.flat();
+    assert(tokens.length > 0, `${legendId} must summon ${tokenId}`);
+
+    const goth = unit('gothkid', 'cpu', 90);
+    const after = playTurnCard({
+      ...summoned,
+      phase: 'cpu-reveal',
+      cpuMotion: 9,
+      cpuHand: [goth],
+    }, 'cpu', goth.instanceId, 0);
+    const resolvedTokens = after.boards.flat().filter(card => card.cardId === tokenId);
+    if (tokenId === 'guyana') {
+      assert(resolvedTokens.every(card => card.statuses.uncounterable && !card.statuses.silenced));
+    } else {
+      assert(resolvedTokens.some(card => card.statuses.silenced));
     }
   }
 });

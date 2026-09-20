@@ -7,7 +7,14 @@
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "test": "pnpm -r --if-present run test"
+    "test": "pnpm -r --if-present run test",
+    "test:balance": "pnpm --filter @workspace/scripts test",
+    "balance:smoke": "pnpm --filter @workspace/scripts balance:smoke",
+    "balance:full": "pnpm --filter @workspace/scripts balance:full",
+    "test:campaign:db": "node scripts/test-api-database.mjs",
+    "test:campaign:preflight": "node scripts/campaign-e2e-preflight.mjs",
+    "test:campaign:remote": "node scripts/campaign-remote.mjs",
+    "test:campaign:cleanup": "pnpm --filter @workspace/api-server exec tsx ../../scripts/campaign-cleanup.mjs"
   },
   "private": true,
   "dependencies": {

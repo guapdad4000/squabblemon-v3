@@ -4,12 +4,13 @@ import { ArrowRight, RotateCcw, Star } from 'lucide-react';
 import { BattleVictory } from './BattleVictory';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { decks, getAssetUrl, getCardImage } from '../data';
-import { type Match, getDistrictResults, getMatchWinner } from '../gameEngine';
+import { type Match, evaluateStoryStarObjectives, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { BattleEarnings } from './BattleEarnings';
 import '../styles/studio.css';
 import '../styles/result-stage.css';
 
 export function ResultScreen({
+  tutorial,
   onRestart,
   onChangeDeck,
   onGoHome,
@@ -30,28 +31,28 @@ export function ResultScreen({
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
     isDraw = winner === 'draw';
-  const isStory = !!m.storyEncounter && !m.storyEncounter.activity;
+  const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
+  const isTutorial = Boolean(tutorial);
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
-  const earnedStars = isVictory
-    ? 1 + (results.every((result) => result.winner === 'player') ? 1 : 0) + (m.squabbleUsed ? 0 : 1)
-    : 0;
+  const objectiveResults = evaluateStoryStarObjectives(m);
+  const earnedStars = objectiveResults.filter((objective) => objective.achieved).length;
   const environment = m.storyEncounter?.cinematic?.environmentAssetId;
-  const objectiveHits = [
-    isVictory,
-    isVictory && results.every((result) => result.winner === 'player'),
-    isVictory && !m.squabbleUsed,
-  ];
+  const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved]));
   const retry = (
     <div className="result-stage__save" role="alert">
       <p>
-        {isStory
-          ? 'Failed to save outcome.'
-          : 'Your rewards were not saved. Your battle result remains available on this screen.'}
+        {isTutorial
+          ? 'Tutorial completion could not be verified. Restart the guided match and complete each highlighted lesson.'
+          : isStory
+            ? 'Failed to save outcome.'
+            : 'Your rewards were not saved. Your battle result remains available on this screen.'}
       </p>
-      <button className="studio-text-action" onClick={onRetryReward} disabled={rewardPending}>
-        <RotateCcw size={14} />
-        {rewardPending ? 'Retrying' : 'Retry Save'}
-      </button>
+      {!isTutorial && (
+        <button className="studio-text-action" onClick={onRetryReward} disabled={rewardPending}>
+          <RotateCcw size={14} />
+          {rewardPending ? 'Retrying' : 'Retry Save'}
+        </button>
+      )}
     </div>
   );
 
@@ -71,7 +72,7 @@ export function ResultScreen({
       <div className="result-stage__content">
         <header className="result-stage__heading">
           <span className="studio-eyebrow">
-            {isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
+            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
             <span>•</span>
             {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
           </span>
@@ -129,11 +130,11 @@ export function ResultScreen({
                 <details className="result-stage__details">
                   <summary>Star objectives</summary>
                   <ul>
-                    {m.storyEncounter?.starObjectives?.map((objective, i) => (
+                    {m.storyEncounter?.starObjectives?.map((objective) => (
                       <li key={objective.id}>
-                        <Star size={13} fill={objectiveHits[i] ? 'currentColor' : 'none'} />
+                        <Star size={13} fill={objectiveHits.get(objective.id) ? 'currentColor' : 'none'} />
                         {objective.description}
-                        <span>{objectiveHits[i] ? 'Earned' : 'Missed'}</span>
+                        <span>{objectiveHits.get(objective.id) ? 'Earned' : 'Missed'}</span>
                       </li>
                     ))}
                   </ul>
@@ -192,16 +193,27 @@ export function ResultScreen({
                 <ArrowRight size={15} />
               </button>
             </>
-          ) : onTutorialComplete ? (
-            <button
-              className="studio-action studio-action--gold"
-              data-testid="button-complete-tutorial"
-              onClick={onTutorialComplete}
-              disabled={rewardPending}
-            >
-              {rewardPending ? 'Saving Tutorial' : 'Tutorial Complete · Build Your Crew'}
-              <ArrowRight size={15} />
-            </button>
+          ) : isTutorial ? (
+            rewardError ? (
+              <button
+                className="studio-action studio-action--gold"
+                data-testid="button-restart-tutorial"
+                onClick={onRestart}
+              >
+                Restart Guided Match
+                <RotateCcw size={15} />
+              </button>
+            ) : (
+              <button
+                className="studio-action studio-action--gold"
+                data-testid="button-complete-tutorial"
+                onClick={onTutorialComplete}
+                disabled={rewardPending || !reward || !onTutorialComplete}
+              >
+                {rewardPending || !reward ? 'Saving Tutorial' : 'Tutorial Complete · Continue'}
+                <ArrowRight size={15} />
+              </button>
+            )
           ) : (
             <>
               <button

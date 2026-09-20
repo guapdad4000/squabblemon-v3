@@ -13,13 +13,15 @@ import { CardUpgrades } from './CardUpgrades';
 import { CardView } from './CardView';
 import { CardInspector } from './CardInspector';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { applyEventState, buildReplayFrame, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
+import { applyEventState, buildReplayFrame, shouldRunTurnTimer, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
 import { DISTRICT_CATALOG, type DistrictSnapshot, createDistrictSnapshot, getMatchDistricts, playTurnCard, createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import { BATTLE_VENUES, resolveBattleVenue } from '../battleVenues';
+import { RulesModal } from './RulesModal';
+import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS, getTutorialGuidance } from './tutorialGuidance';
 
 const noop = () => {};
 const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
@@ -166,6 +168,69 @@ test('reward growth resolves catalog card ids and links newly eligible move trai
   assert.match(html, /card=snow-bunny/);
 });
 
+
+test('tutorial mode disables the turn timer and automatic turn commits', () => {
+  assert.equal(shouldRunTurnTimer('tutorial', true), false);
+  assert.equal(shouldRunTurnTimer('tutorial', false), false);
+  assert.equal(shouldRunTurnTimer('practice', true), true);
+  assert.equal(shouldRunTurnTimer('story', true), true);
+});
+
+test('unverified tutorial completion requires a fresh guided restart', () => {
+  const match = createMatch('block', 'combo');
+  const failed = renderToStaticMarkup(
+    <Router ssrPath="/"><ResultScreen
+      tutorial
+      match={match}
+      districts={districts}
+      equippedVariants={{}}
+      onRestart={noop}
+      onChangeDeck={noop}
+      onGoHome={noop}
+      onTutorialComplete={noop}
+      onRetryReward={noop}
+      rewardError
+    /></Router>,
+  );
+  assert.match(failed, /Tutorial completion could not be verified/);
+  assert.match(failed, /data-testid="button-restart-tutorial"/);
+  assert.doesNotMatch(failed, /data-testid="button-complete-tutorial"/);
+  assert.doesNotMatch(failed, /Retry Save/);
+
+  const verifying = renderToStaticMarkup(
+    <Router ssrPath="/"><ResultScreen
+      tutorial
+      match={match}
+      districts={districts}
+      equippedVariants={{}}
+      onRestart={noop}
+      onChangeDeck={noop}
+      onGoHome={noop}
+      onTutorialComplete={noop}
+      onRetryReward={noop}
+    /></Router>,
+  );
+  assert.match(verifying, /Saving Tutorial/);
+  assert.match(openingButton(verifying, 'button-complete-tutorial'), /disabled/);
+
+  const verified = renderToStaticMarkup(
+    <Router ssrPath="/"><ResultScreen
+      tutorial
+      match={match}
+      districts={districts}
+      equippedVariants={{}}
+      onRestart={noop}
+      onChangeDeck={noop}
+      onGoHome={noop}
+      onTutorialComplete={noop}
+      onRetryReward={noop}
+      reward={{ streetRep: 0, softCurrency: 0, cardXp: [] }}
+    /></Router>,
+  );
+  assert.match(verified, /data-testid="button-complete-tutorial"/);
+  assert.doesNotMatch(verified, /data-testid="button-restart-tutorial"/);
+});
+
 test('authenticated initialization retains the server-issued leveled snapshot', () => {
   const snapshot = createAbilityUpgradeSnapshot(
     decks.find(deck => deck.id === 'block')!.cards,
@@ -217,6 +282,175 @@ test('guidance, treatments, and broadcast signals remain available', () => {
   assert.match(renderBattle(match, { presentationPhase: 'round-intro', phaseMessage: 'ROUND 1' }), /broadcast-round-01/);
 });
 
+test('guided battle renders the current Dr. Fade action and focus target', () => {
+  const match = createMatch('vibes', 'combo');
+  const tutorialGuidance = getTutorialGuidance({
+    match,
+    selectedInstanceId: null,
+    selectedLane: null,
+    squabble: false,
+    playsThisRound: 0,
+  });
+  const html = renderBattle(match, { tutorialCoach: true, tutorialGuidance });
+  assert.match(html, /data-tutorial-focus="card"/);
+  assert.match(html, /data-testid="tutorial-step-r1_choose_card"/);
+  assert.match(html, /Choose your first fighter/);
+  assert.match(html, /Cards cost Motion and add Hands/);
+});
+
+
+const openingButton = (html: string, testId: string) => {
+  const tag = html.match(new RegExp('<button[^>]*data-testid="' + testId + '"[^>]*>'))?.[0];
+  assert(tag, 'missing ' + testId);
+  return tag;
+};
+
+test('guided rounds one and two require a play before either End Turn control enables', () => {
+  for (const round of [1, 2]) {
+    const match = { ...createMatch('vibes', 'combo'), round } as Match;
+    const beforePlay = getTutorialGuidance({
+      match, selectedInstanceId: null, selectedLane: null, squabble: false, playsThisRound: 0,
+    });
+    const blocked = renderBattle(match, {
+      tutorialCoach: true,
+      tutorialGuidance: beforePlay,
+      endTurn: noop,
+    });
+    assert.match(blocked, /Play a Card First/);
+    assert.match(openingButton(blocked, 'button-next-round'), /disabled/);
+    assert.match(openingButton(blocked, 'button-menu-end-turn'), /disabled/);
+
+    const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
+    const selectedGuidance = getTutorialGuidance({
+      match, selectedInstanceId: card.instanceId, selectedLane: 0, squabble: false, playsThisRound: 0,
+    });
+    const selected = renderBattle(match, {
+      tutorialCoach: true,
+      tutorialGuidance: selectedGuidance,
+      selectedInstanceId: card.instanceId,
+      selectedLane: 0,
+      onPlayCard: noop,
+    });
+    assert.match(openingButton(selected, 'button-squabble'), /disabled/);
+
+    const afterPlay = getTutorialGuidance({
+      match, selectedInstanceId: null, selectedLane: null, squabble: false, playsThisRound: 1,
+    });
+    const enabled = renderBattle(match, {
+      tutorialCoach: true,
+      tutorialGuidance: afterPlay,
+      endTurn: noop,
+    });
+    assert.match(enabled, />End Turn</);
+    assert.doesNotMatch(openingButton(enabled, 'button-next-round'), /disabled/);
+    assert.doesNotMatch(openingButton(enabled, 'button-menu-end-turn'), /disabled/);
+  }
+});
+
+test('guided round three requires clearing a selected card before banking Motion', () => {
+  const match = { ...createMatch('vibes', 'combo'), round: 3 } as Match;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
+  const selectedGuidance = getTutorialGuidance({
+    match, selectedInstanceId: card.instanceId, selectedLane: 0, squabble: false, playsThisRound: 0,
+  });
+  const selected = renderBattle(match, {
+    tutorialCoach: true,
+    tutorialGuidance: selectedGuidance,
+    selectedInstanceId: card.instanceId,
+    selectedLane: 0,
+    endTurn: noop,
+    onPlayCard: noop,
+  });
+  assert.match(selected, /Clear Card to Bank Motion/);
+  assert.match(openingButton(selected, 'button-tutorial-clear-card'), /disabled/);
+  assert.match(openingButton(selected, 'button-menu-end-turn'), /disabled/);
+
+  const bankGuidance = getTutorialGuidance({
+    match, selectedInstanceId: null, selectedLane: null, squabble: false, playsThisRound: 0,
+  });
+  const ready = renderBattle(match, {
+    tutorialCoach: true,
+    tutorialGuidance: bankGuidance,
+    endTurn: noop,
+  });
+  assert.doesNotMatch(openingButton(ready, 'button-next-round'), /disabled/);
+  assert.doesNotMatch(openingButton(ready, 'button-menu-end-turn'), /disabled/);
+});
+
+test('guided round four gates play and End Turn until SQUABBLE is armed and used', () => {
+  const match = { ...createMatch('vibes', 'combo'), round: 4, playerMotion: 6 } as Match;
+  const card = match.playerHand.find(item => item.cost <= match.playerMotion)!;
+  const chooseGuidance = getTutorialGuidance({
+    match, selectedInstanceId: null, selectedLane: null, squabble: false, playsThisRound: 0,
+  });
+  const choose = renderBattle(match, {
+    tutorialCoach: true,
+    tutorialGuidance: chooseGuidance,
+    endTurn: noop,
+  });
+  assert.match(choose, /Choose a Card for SQUABBLE/);
+  assert.match(openingButton(choose, 'button-next-round'), /disabled/);
+
+  const armGuidance = getTutorialGuidance({
+    match, selectedInstanceId: card.instanceId, selectedLane: 0, squabble: false, playsThisRound: 0,
+  });
+  const arm = renderBattle(match, {
+    tutorialCoach: true,
+    tutorialGuidance: armGuidance,
+    selectedInstanceId: card.instanceId,
+    selectedLane: 0,
+    endTurn: noop,
+    onPlayCard: noop,
+  });
+  assert.match(arm, /Arm SQUABBLE First/);
+  assert.match(openingButton(arm, 'button-tutorial-arm-squabble'), /disabled/);
+  assert.match(openingButton(arm, 'button-menu-end-turn'), /disabled/);
+  assert.doesNotMatch(openingButton(arm, 'button-squabble'), /disabled/);
+
+  const playGuidance = getTutorialGuidance({
+    match, selectedInstanceId: card.instanceId, selectedLane: 0, squabble: true, playsThisRound: 0,
+  });
+  const armed = renderBattle(match, {
+    tutorialCoach: true,
+    tutorialGuidance: playGuidance,
+    selectedInstanceId: card.instanceId,
+    selectedLane: 0,
+    squabble: true,
+    endTurn: noop,
+    onPlayCard: noop,
+  });
+  assert.match(armed, /Play card · [0-9]+ Motion · ×2/);
+  assert.doesNotMatch(openingButton(armed, 'button-lock'), /disabled/);
+  assert.match(openingButton(armed, 'button-menu-end-turn'), /disabled/);
+
+  const spentMatch = { ...match, squabbleUsed: true } as Match;
+  const endGuidance = getTutorialGuidance({
+    match: spentMatch, selectedInstanceId: null, selectedLane: null, squabble: false, playsThisRound: 1,
+  });
+  const spent = renderBattle(spentMatch, {
+    tutorialCoach: true,
+    tutorialGuidance: endGuidance,
+    endTurn: noop,
+  });
+  assert.doesNotMatch(openingButton(spent, 'button-next-round'), /disabled/);
+  assert.doesNotMatch(openingButton(spent, 'button-menu-end-turn'), /disabled/);
+});
+
+test('first-seen lesson and Field Manual expose the same mechanic reference', () => {
+  const match = createMatch('block', 'combo');
+  const html = renderBattle(match, {
+    presentationPhase: 'effects',
+    mechanicLesson: MECHANIC_LESSONS.burn,
+    onDismissMechanicLesson: noop,
+  });
+  assert.match(html, /data-testid="mechanic-lesson"/);
+  assert.match(html, /data-mechanic="burn"/);
+  assert.match(html, /Burn stacks remove that many Hands/);
+  const rules = renderToStaticMarkup(<RulesModal onClose={noop} />);
+  assert.match(rules, /data-testid="mechanic-reference"/);
+  assert.equal((rules.match(/data-mechanic=/g) ?? []).length, MECHANIC_LESSON_IDS.length);
+});
+
 test("status help distinguishes durable Church Auntie and Nail Salon shields from Wifey's round guard", () => {
   assert.match(source, /Church Auntie or Nail Salon blocks this card’s next targeted hostile ability, even in a later round/);
   assert.match(source, /Wifey blocks one targeted effect in her district this round/);
@@ -241,6 +475,14 @@ test('every authored round intro uses its matching fight-night asset', () => {
     assert.match(html, new RegExp(`broadcast-${productionName}`));
     assert.match(html, new RegExp(`assets/fight-night/${productionName}\\.webp`));
   }
+});
+
+test('battle HUD reflects authored four-round encounter length', () => {
+  const encounter = getStoryBattle('blue-side-pressure')!.encounter;
+  const match = createStoryMatch(encounter, 'block');
+  const html = renderBattle(match, { rivalDeck: decks[0] });
+  assert.match(html, /aria-label="Round 1 of 4"/);
+  assert.ok(html.includes('<small> / 04</small>'));
 });
 
 test('district-first selection stays selected when a card is chosen', () => {

@@ -63,9 +63,9 @@ The final opponent is Cracked Head. The memorial describes what Blue believed, n
 | Required battles 1, 2, 3, 4, 6, 7 | 50 + 75 + 100 + 125 + 175 + 250 = 775 street-xp |
 | Optional battle 5 | side-alley-tagged-cardback ×1 |
 | Seven first perfect battle clears | Up to seven Street Pack Tickets, one per battle |
-| Ceremony | nerd card ×1; Street Pack Ticket ×1; block-party-crowned cosmetic ×1; story-key:chapter-two ×1 |
+| Ceremony | nerd card ×1; Street Pack Ticket ×10; block-party-crowned cosmetic ×1; story-key:chapter-two ×1 |
 
-A first perfect run including the optional match yields **eight tickets**. Character unlocks are not configured and are not promised by this screenplay. The Nerd card is an event prize, not a character pulled out of Cracked Head's deck. A key reward does not mean Chapter Two is currently playable.
+A first perfect run including the optional match, followed by the ceremony, yields **17 tickets**: seven perfect-clear tickets and ten ceremony tickets. Character unlocks are not configured and are not promised by this screenplay. The Nerd card is an event prize, not a character pulled out of Cracked Head's deck. The chapter key opens the playable Chapter Two route.
 
 ## 5. Setup, payoff, and pacing
 
@@ -83,5 +83,3 @@ There are 106 main-route/optional-route authored dialogue cards across the eight
 All eight scenes are written. All speaking characters have voice and continuity notes. Main-route clues survive skipping the alley. Pre-battle dialogue no longer congratulates the player for an unplayed match. Any legal boss win gets the same canonical ending. The ending sets up Red Side Tapes without an unimplemented Chapter Two availability claim.
 
 Production remains: dialogue integration, three new Chapter 1 roster entries, asset/cue alignment, saved-dialogue migration review, and playthrough verification. See the handoff before treating this draft as shipped.
-
-

@@ -32,9 +32,9 @@ Populate or deliberately bypass the empty story venue registry using the game's 
 
 ## Economy and future chapter
 
-Six required battles grant 775 street-xp in total. Optional alley grants side-alley-tagged-cardback. Each of seven battles can award one ticket on its first perfect clear. Ceremony grants nerd ×1, street-pack-ticket ×1, block-party-crowned ×1, story-key:chapter-two ×1. Perfect first run with alley: eight tickets.
+Six required battles grant 775 street-xp in total. Optional alley grants side-alley-tagged-cardback. Each of seven battles can award one ticket on its first perfect clear. The current ceremony grants nerd ×1, street-pack-ticket ×10, block-party-crowned ×1, and story-key:chapter-two ×1. A perfect first run with the alley and ceremony yields 17 tickets.
 
-Nerd is a tournament card prize, not in the current boss deck. No playable Chapter Two exists yet. The new ending hints at Red Side Tapes without saying its route is open. Existing game teaching/UI copy that says Chapter Two is unlocked needs an implementation review so it does not imply available content. The key can remain an earned reward while the next chapter is in development.
+Nerd is a tournament card prize, not in the current boss deck. Chapter Two is now playable, and the ceremony's chapter key opens that route after the final line completes.
 
 ## Release verification after implementation
 
@@ -48,4 +48,3 @@ Nerd is a tournament card prize, not in the current boss deck. No playable Chapt
 - Verify fallbacks for missing layers and absence of an active Chapter Two route claim.
 
 These are implementation checks to run after integration. This writing pass checked the documents, references, dialogue tokens, portraits, and mechanical contract; it did not playtest new content that is not yet loaded.
-

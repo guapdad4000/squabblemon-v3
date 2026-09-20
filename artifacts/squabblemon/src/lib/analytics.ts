@@ -1,3 +1,5 @@
+import { MECHANIC_LESSON_IDS, TUTORIAL_STEP_IDS } from '../components/tutorialGuidance';
+
 export type AnalyticsData = Record<string, string | number | boolean>;
 
 type AnalyticsValue = AnalyticsData[string];
@@ -15,6 +17,20 @@ const battleEventSchemas = {
   deck_saved: { lesson: isBoolean, cards: isFiniteNumber },
   deck_test_started: { lesson: isBoolean, cards: isFiniteNumber },
   rookie_test_completed: { rounds: isFiniteNumber },
+  tutorial_step_shown: {
+    round: isFiniteNumber,
+    step: oneOf(...TUTORIAL_STEP_IDS),
+  },
+  tutorial_step_completed: {
+    round: isFiniteNumber,
+    step: oneOf(...TUTORIAL_STEP_IDS),
+  },
+  mechanic_lesson_shown: {
+    lesson: oneOf(...MECHANIC_LESSON_IDS),
+  },
+  mechanic_lesson_dismissed: {
+    lesson: oneOf(...MECHANIC_LESSON_IDS),
+  },
   battle_card_selection_backed_out: {
     round: isFiniteNumber,
     action: oneOf('deselect', 'replace'),

@@ -12,7 +12,7 @@
    screen and has its own "Continue"/"Next" controls near the bottom edge —
    hide the fan-nav for as long as that overlay is open so it can't overlap
    or intercept clicks on those controls. */
-.game-shell:has(.story-node-overlay) .fan-nav { display: none; }
+.game-shell:has(.story-node-overlay) :is(.fan-nav, .cinema-nav-toggle, .cinema-nav-sheet) { display: none; }
 .game-shell--fan .game-shell__content { margin-left: 0; padding-bottom: 0; }
 .game-shell--fan .game-route-stage { scroll-padding-bottom: var(--fan-clearance); }
 .game-shell--fan .game-route-stage::after { content: ''; display: block; height: var(--fan-clearance); pointer-events: none; }
