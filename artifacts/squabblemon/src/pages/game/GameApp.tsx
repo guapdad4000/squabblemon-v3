@@ -1,5 +1,7 @@
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { Inventory } from './Inventory';
+import { CharacterStyles } from './CharacterStyles';
+import { CosmeticProvider } from '../../components/CosmeticContext';
 import { RewardReveal } from '../../components/RewardReveal';
 import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
 import { LoadingScreen } from '../../components/LoadingScreen';
@@ -84,7 +86,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }, [bootstrap]);
 
   return (
-    <>
+    <CosmeticProvider profile={bootstrap.profile}>
     <RewardReveal />
     <Switch>
       <Route path="/game/onboarding">
@@ -95,6 +97,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/inventory"><GameShell bootstrap={bootstrap} location={location}><Inventory bootstrap={bootstrap} /></GameShell></Route>
+      <Route path="/game/style/:cardId">{params => <GameShell bootstrap={bootstrap} location={location}><CharacterStyles key={params.cardId} cardId={params.cardId} bootstrap={bootstrap} /></GameShell>}</Route>
       <Route path="/game/collection">
         <GameShell bootstrap={bootstrap} location={location}><Collection bootstrap={bootstrap} /></GameShell>
       </Route>
@@ -124,7 +127,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </Route>
       <Route component={() => <Redirect to="/game" />} />
     </Switch>
-    </>
+    </CosmeticProvider>
   );
 }
 

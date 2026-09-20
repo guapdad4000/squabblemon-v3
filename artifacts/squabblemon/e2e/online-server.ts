@@ -2,20 +2,21 @@
 import { randomUUID } from "node:crypto";
 import { createServer } from "vite";
 import { createApp } from "../../api-server/src/app";
-import { db, pool, playerProfilesTable } from "@workspace/db";
+import { db, pool, playerProfilesTable } from "../../../lib/db/src/index";
 import {
   cardCatalog,
   ROOKIE_CORE_IDS,
 } from "@workspace/squabblemon-engine/data";
-import { inArray } from "drizzle-orm";
+import { createRequire } from "node:module";
+const { inArray } = createRequire(new URL("../../api-server/package.json", import.meta.url))("drizzle-orm");
 import type { Request } from "express";
 
 if (
   process.env.ONLINE_E2E !== "1" ||
-  !process.env.DATABASE_URL?.includes("@127.0.0.1:55439/")
+  !process.env.DATABASE_URL || !["127.0.0.1", "localhost"].includes(new URL(process.env.DATABASE_URL).hostname)
 )
   throw new Error(
-    "This test host requires the isolated localhost:55439 database and ONLINE_E2E=1.",
+    "This test host requires a loopback database and ONLINE_E2E=1.",
   );
 // PGlite has one database session: avoid interleaving independent transactions.
 // Production keeps its normal PostgreSQL pool.

@@ -174,8 +174,9 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           LOCAL PREVIEW · Purchases change this preview only; no account is charged.
         </p>
       )}
+      <Link href="/game/style/kyle" className="market-style-link">KYLE Signature Collection · Stickers, banners & card scenes →</Link>
       <nav className="market-offers" aria-label="Shop items">
-        {SHOP_OFFERS.map((item) => (
+        {SHOP_OFFERS.filter((item) => !item.id.startsWith('character-')).map((item) => (
           <button
             key={item.id}
             disabled={!!pending || working}

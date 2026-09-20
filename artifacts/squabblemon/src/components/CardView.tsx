@@ -15,6 +15,7 @@ import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/car
 import { CardFoil } from './CardFoil';
 import { useCardInspection } from './CardInspection';
 import './card-finish.css';
+import { useCardScene } from './CosmeticContext';
 
 interface CardViewProps {
   card: Card | CardInstance;
@@ -45,6 +46,7 @@ interface CardViewProps {
   covered?: boolean;
   /** When true, the card is the source of an ability and should burst on entry. */
   entryBurst?: boolean;
+  backgroundUrl?: string;
   /** Score position relative to opponent's score in this lane. Used to lean/breath. */
   scoreStance?: 'leading' | 'trailing' | 'tied';
   /** Show the per-card portrait pop animation on first hand-draw render. */
@@ -57,9 +59,10 @@ function CardViewComponent({
   effectRole, effectKind, disableLayout, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
-  entryBurst, scoreStance, portraitPop,
+  entryBurst, scoreStance, portraitPop, backgroundUrl,
 }: CardViewProps) {
   const inspection = useCardInspection(card, inspectable ?? (!presentationOnly && !isInspector), onInspect, variantId);
+  const equippedScene = useCardScene(card.id);
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
@@ -184,7 +187,7 @@ function CardViewComponent({
         ${isInspector ? 'bg-gradient-to-br from-zinc-600 to-zinc-900' : ''}
       `}>
         <div className="relative w-full h-full bg-zinc-950 card-bevel-inner overflow-hidden flex flex-col group/inner">
-          <img src={getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" className="collector-wallpaper" />
+          <img src={backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" className="collector-wallpaper" />
           <div className="collector-atmosphere" aria-hidden="true" />
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
 
@@ -310,6 +313,7 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.fillContainer === next.fillContainer
     && previous.presentationOnly === next.presentationOnly
     && previous.covered === next.covered
+    && previous.backgroundUrl === next.backgroundUrl
     && previous.entryBurst === next.entryBurst
     && previous.scoreStance === next.scoreStance
     && previous.portraitPop === next.portraitPop;

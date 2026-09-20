@@ -1,4 +1,6 @@
 import { revealProfileRewards } from '../../lib/rewardReceipts';
+import { CharacterBanner } from '../../components/CharacterBanner';
+import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { MusicControls } from '../../components/MusicControls';
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'wouter';
@@ -74,7 +76,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       if (!name.trim()) { setStatus('Enter a display name before saving.'); return; }
       if (e2eAuthEnabled && bootstrap.profile.id === 'e2e-player') {
         queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), {
-          ...bootstrap, profile: { ...bootstrap.profile, displayName: name.trim(), settings: { reducedMotion, turnTimerEnabled } },
+          ...bootstrap, profile: { ...bootstrap.profile, displayName: name.trim(), settings: { ...bootstrap.profile.settings, reducedMotion, turnTimerEnabled } },
         });
         setStatus('Preview settings applied for this session.');
         return;
@@ -110,6 +112,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         How to play · Characters, Street Packs & card upgrades →
       </Link>
 
+      {styleSetFor(bootstrap.profile.settings.cosmetics?.bannerCardId) && <section className="profile-character-banner"><CharacterBanner cardId={bootstrap.profile.settings.cosmetics!.bannerCardId!} finish={bootstrap.profile.settings.cosmetics?.bannerFinish} stickers={bootstrap.profile.settings.cosmetics?.stickers} displayName={bootstrap.profile.displayName}/><Link href={"/game/style/" + bootstrap.profile.settings.cosmetics!.bannerCardId}>Customize your banner →</Link></section>}
       <section id="promo-code" aria-labelledby="promo-code-title" className="mb-6 border-y border-primary/30 py-5">
         <h2 id="promo-code-title" className="font-display text-xl font-black italic uppercase text-primary">Got a code?</h2>
         <p id="promo-code-help" className="mt-1 mb-4 text-sm text-white/60">

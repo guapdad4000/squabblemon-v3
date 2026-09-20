@@ -1,4 +1,6 @@
 import { Link } from 'wouter';
+import { CharacterBanner } from '../../components/CharacterBanner';
+import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { getAssetUrl } from '../../lib/assets';
@@ -17,5 +19,6 @@ export function Inventory({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <div className="inventory-room__links"><Link href="/game/collection">{profile.ownedCardIds.length} cards · Open collection →</Link><Link href="/game/settings">{profile.unlockedCosmeticIds.length} cosmetics · Profile →</Link><Link href="/game/missions">Claim your bounties →</Link></div>
       </section>
     </div>
+    <section className="inventory-style-entry"><span className="studio-eyebrow">SIGNATURE COLLECTIONS / MAKE IT YOURS</span><CharacterBanner cardId={styleSetFor(profile.settings.cosmetics?.bannerCardId)?.cardId ?? "kyle"} finish={profile.settings.cosmetics?.bannerFinish} stickers={profile.settings.cosmetics?.stickers} displayName={profile.settings.cosmetics?.bannerCardId ? profile.displayName : "KYLE / SIGNATURE SERIES 001"} compact/><Link href="/game/style/kyle">Open KYLE’s collection · Stickers, banners & card scenes →</Link></section>
   </main>;
 }

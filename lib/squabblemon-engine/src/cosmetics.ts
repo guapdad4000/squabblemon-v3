@@ -23,7 +23,7 @@ export const CHARACTER_STYLE_SETS: Record<string, CharacterStyleSet> = {
     ],
   },
 };
-export type CosmeticLoadout = { bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, string> };
+export type CosmeticLoadout = { bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
 export type CosmeticOwner = { ownedCardIds: string[]; unlockedCosmeticIds?: string[] };
 export const cosmeticId = (cardId: string, kind: CharacterStyleOfferId) => 'style:' + cardId + ':' + kind.replace('character-', '');
 export function ownsStyle(owner: CosmeticOwner, cardId: string, kind: CharacterStyleOfferId) {

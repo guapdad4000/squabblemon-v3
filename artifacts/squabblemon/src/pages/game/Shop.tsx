@@ -1,3 +1,5 @@
+import { CharacterUnlock } from '../../components/CharacterUnlock';
+import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { PropArt } from '../../components/venue/PropArt';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { ProgressRing } from '../../components/venue/ProgressRing';
@@ -748,11 +750,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </p>
         {phase === 'reveal' && currentReward ? (
           <div className="gym-results__single" data-rarity={currentRarity.toLowerCase()}>
-            <RewardCard
-              key={revealIndex}
-              reward={currentReward}
-              large
-            />
+            {currentReward.kind === 'card' && currentReward.isNew && styleSetFor(currentReward.cardId) ? <CharacterUnlock key={revealIndex} cardId={currentReward.cardId!}><RewardCard reward={currentReward} large /></CharacterUnlock> : <RewardCard key={revealIndex} reward={currentReward} large />}
             <h3>{rewardDisplayName(currentReward)}</h3>
             <span className="studio-eyebrow">
               {CARD_RARITY_DEFINITIONS[currentReward.rarity as CardRarity]?.label ?? 'Gang resource'}
