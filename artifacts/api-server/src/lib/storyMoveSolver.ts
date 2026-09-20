@@ -91,7 +91,8 @@ function value(match: Match, desired: StorySolveOutcome): number {
     evaluation.playerDistricts * 1_000 -
     evaluation.cpuDistricts * 1_200 +
     match.playerMotion * 3 +
-    match.playerHand.length * 0.1;
+    match.playerHand.length * 0.1 +
+    match.playerHand.reduce((total, card) => total + card.basePower, 0) * 25;
   return desired === "win" ? playerValue : -playerValue;
 }
 function assertBudget(budget: SearchBudget): void {
