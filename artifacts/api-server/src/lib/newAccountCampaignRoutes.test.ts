@@ -126,15 +126,20 @@ test("new account completes every campaign node through HTTP with isolated, idem
   assert.equal(accepted.status, 200);
   assert.equal(accepted.body.profile.onboardingStep, "tutorial");
 
+  const collection = await playerRequest("/player/onboarding", { action: "choose-starter", starterDeckId: ROOKIE_FOUNDATION_ID });
+  assert.equal(collection.body.profile.onboardingStep, "tutorial");
+  assert.equal(collection.body.profile.ownedCardIds.length, 20);
+  const beforeLessonReward = await playerRequest("/player/onboarding", { action: "claim-reward" });
+  assert.equal(beforeLessonReward.body.profile.starterRewardClaimed, false);
   const tutorial = await playerRequest("/player/matches", {
     mode: "tutorial",
-    playerDeckId: "vibes",
+    playerDeckId: ROOKIE_DECK_ID,
     rivalDeckId: "combo",
   });
   assert.equal(tutorial.status, 201, JSON.stringify(tutorial.body));
   const tutorialBypass = await playerRequest(
     `/player/matches/${tutorial.body.id}/complete`,
-    { moves: passMoves },
+    { moves: passMoves.slice(0, 4) },
   );
   assert.equal(tutorialBypass.status, 400, JSON.stringify(tutorialBypass.body));
   assert.deepEqual(tutorialBypass.body.milestones, {
@@ -145,6 +150,9 @@ test("new account completes every campaign node through HTTP with isolated, idem
   const tutorialMoves = createGuidedTutorialTranscript(
     tutorial.body.abilityUpgradeSnapshot,
     tutorial.body.districtSnapshot,
+    tutorial.body.encounterSnapshot,
+    catalogIdsToEngineIds(ROOKIE_CORE_IDS),
+    ROOKIE_DECK_ID,
   );
   const tutorialComplete = await playerRequest(
     `/player/matches/${tutorial.body.id}/complete`,
@@ -157,7 +165,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
   );
   assert.equal(tutorialReplay.body.alreadyCompleted, true);
   const advanced = await playerRequest("/player/onboarding", { action: "complete-tutorial" });
-  assert.equal(advanced.body.profile.onboardingStep, "crew");
+  assert.equal(advanced.body.profile.onboardingStep, "reward");
 
   const starter = await playerRequest("/player/onboarding", {
     action: "choose-starter",
@@ -167,21 +175,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
   assert.equal(starter.body.profile.onboardingStep, "reward");
   assert(starter.body.profile.savedDecks.some((deck: { id: string }) => deck.id === ROOKIE_DECK_ID));
 
-  const prematureReward = await playerRequest("/player/onboarding", { action: "claim-reward" });
-  assert.equal(prematureReward.status, 409);
-
-  const practice = await playerRequest("/player/matches", {
-    mode: "practice",
-    playerDeckId: ROOKIE_DECK_ID,
-    rivalDeckId: "block",
-  });
-  assert.equal(practice.status, 201, JSON.stringify(practice.body));
-  const practiceComplete = await playerRequest(
-    `/player/matches/${practice.body.id}/complete`,
-    { moves: passMoves },
-  );
-  assert.equal(practiceComplete.status, 200, JSON.stringify(practiceComplete.body));
-  const beforeReward = practiceComplete.body.profile;
+  const beforeReward = tutorialComplete.body.profile;
   const rewards = await Promise.all([
     playerRequest("/player/onboarding", { action: "claim-reward" }),
     playerRequest("/player/onboarding", { action: "claim-reward" }),

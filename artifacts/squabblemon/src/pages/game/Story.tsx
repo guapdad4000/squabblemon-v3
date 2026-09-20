@@ -181,7 +181,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <ArrowLeft size={14} /> Safehouse
         </Link>
         <nav className="story-reels" aria-label="Chapters">
-          {campaign.chapters.map((chapter) => {
+          {campaign.chapters.filter(chapter => chapter.status !== 'locked').map((chapter) => {
             const active = chapter.id === currentChapter?.id;
             return (
               <button

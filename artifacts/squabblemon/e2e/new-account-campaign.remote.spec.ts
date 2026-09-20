@@ -165,6 +165,7 @@ test("real Clerk UI signup verifies Rookie Road and every authored campaign node
   const tutorialMoves = createGuidedTutorialTranscript(
     result.body.abilityUpgradeSnapshot,
     result.body.districtSnapshot,
+    result.body.encounterSnapshot,
   );
   expect((await api(page, `/player/matches/${result.body.id}/complete`, { moves: tutorialMoves })).status).toBe(200);
   const passes = Array.from({ length: 6 }, () => ({

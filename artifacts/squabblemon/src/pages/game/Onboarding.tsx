@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GuidedFirstSession } from './GuidedFirstSession';
 import { motion } from 'framer-motion';
 import { OnboardingProgressInput, PlayerBootstrap, PlayerProfileOnboardingStep } from '@workspace/api-client-react';
 import { useAdvancePlayerOnboarding } from '@workspace/api-client-react';
@@ -51,11 +52,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   if (step === PlayerProfileOnboardingStep.tutorial) {
     return withStatus(
-      <TutorialStep
-        turnTimerEnabled={false}
-        equippedVariants={bootstrap.profile.equippedVariants}
-        onComplete={() => void handleAdvance({ action: 'complete-tutorial' })}
-      />,
+      <GuidedFirstSession bootstrap={bootstrap} onCollect={() => void handleAdvance({ action: 'choose-starter', starterDeckId: ROOKIE_FOUNDATION_ID })} onComplete={() => void handleAdvance({ action: 'complete-tutorial' })} />,
     );
   }
 

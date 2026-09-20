@@ -81,7 +81,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return (
     <Switch>
       <Route path="/game/onboarding">
-        <ImmersiveGameRoute bootstrap={bootstrap}><Onboarding bootstrap={bootstrap} /></ImmersiveGameRoute>
+        <Onboarding bootstrap={bootstrap} />
       </Route>
       <Route path="/game/play"><ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>

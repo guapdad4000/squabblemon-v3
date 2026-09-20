@@ -31,7 +31,7 @@ export function ResultScreen({
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
     isDraw = winner === 'draw';
-  const isStory = !!m.storyEncounter && !m.storyEncounter.activity;
+  const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
   const isTutorial = Boolean(tutorial);
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
   const objectiveResults = evaluateStoryStarObjectives(m);
@@ -72,7 +72,7 @@ export function ResultScreen({
       <div className="result-stage__content">
         <header className="result-stage__heading">
           <span className="studio-eyebrow">
-            {isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
+            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
             <span>•</span>
             {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
           </span>
@@ -210,7 +210,7 @@ export function ResultScreen({
                 onClick={onTutorialComplete}
                 disabled={rewardPending || !reward || !onTutorialComplete}
               >
-                {rewardPending || !reward ? 'Saving Tutorial' : 'Tutorial Complete · Build Your Crew'}
+                {rewardPending || !reward ? 'Saving Tutorial' : 'Tutorial Complete · Continue'}
                 <ArrowRight size={15} />
               </button>
             )

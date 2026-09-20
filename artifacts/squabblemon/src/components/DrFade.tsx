@@ -1,7 +1,9 @@
-import { getCardImage } from '../lib/assets';
+import { getAssetUrl } from '../lib/assets';
+import '../styles/rookie-guide.css';
+export type FadePose = 'welcome' | 'up' | 'down' | 'left' | 'right';
 
-export function DrFadePortrait({ className = '' }: { className?: string }) {
-  return <img src={getCardImage('dr-fade')} alt="Dr. Fade, your tutorial coach" className={`dr-fade-portrait ${className}`} width={768} height={1024} decoding="async" draggable={false} />;
+export function DrFadePortrait({ className = '', pose = 'welcome' }: { className?: string; pose?: FadePose }) {
+  return <img src={getAssetUrl('assets/tutorial/dr-fade-' + pose + '.png')} alt="Dr. Fade, your tutorial coach" className={`dr-fade-portrait ${className}`} width={768} height={1024} decoding="async" draggable={false} />;
 }
 
 export const DR_FADE_LESSONS = [

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/rookie";
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
 import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
 import { getAuth } from "@clerk/express";
@@ -259,7 +260,7 @@ router.post("/player/onboarding", async (req, res): Promise<void> => {
       }
       await db
         .update(playerProfilesTable)
-        .set({ tutorialCompleted: true, onboardingStep: "crew" })
+        .set({ tutorialCompleted: true, onboardingStep: profile.starterDeckId === ROOKIE_FOUNDATION_ID ? "reward" : "crew" })
         .where(
           and(
             eq(playerProfilesTable.clerkUserId, userId),
@@ -393,7 +394,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   let storyContentVersion: number | null = null;
   let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
   let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
-  if (parsed.data.mode === "tutorial" && !recipe) { res.status(400).json({ error: "Use the guided tutorial crew" }); return; }
+  if (parsed.data.mode === "tutorial" && !recipe && savedDeck?.id !== ROOKIE_DECK_ID) { res.status(400).json({ error: "Use the guided tutorial crew" }); return; }
   const rosterCardIds = drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards;
   if (!rosterCardIds) {
     res.status(400).json({ error: "Unknown player crew" });
@@ -409,7 +410,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     randomUUID(),
     parsed.data.storyNodeId,
   );
-  const districtSnapshot = createDistrictSnapshot(seed);
+  const districtSnapshot = parsed.data.mode === 'tutorial' ? rookieDistricts() : createDistrictSnapshot(seed);
   let rivalDeckId =
     parsed.data.mode === "practice"
       ? selectTrainingRival(
@@ -465,6 +466,10 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     // Preserve the chosen training recipe id for repeat avoidance, even though
     // challenge rosters are independently captured in the encounter snapshot.
     storyEncounterSnapshot = { ...storyEncounterSnapshot, enemy: { ...storyEncounterSnapshot.enemy, deckId: rivalDeckId } };
+  }
+  if (parsed.data.mode === 'tutorial') {
+    storyEncounterSnapshot = rookieEncounter();
+    rivalDeckId = storyEncounterSnapshot.enemy.deckId;
   }
   const rivalRosterCardIds =
     storyEncounterSnapshot?.enemy.cardIds ??
@@ -743,7 +748,7 @@ router.post(
             .update(playerProfilesTable)
             .set({
               tutorialCompleted: true,
-              onboardingStep: "crew",
+              onboardingStep: match.playerDeckId === ROOKIE_DECK_ID ? "reward" : "crew",
             })
             .where(
               and(

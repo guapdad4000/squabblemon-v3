@@ -373,6 +373,10 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       && canAffordSelection(match, 'player', cardId, targetLane as Lane);
     if (!endTurn && cardId && !selectedIsLegal && !automatic) return;
     const playsCard = !endTurn && selectedIsLegal;
+    if (mode === "tutorial" && match.storyEncounter?.id === "rookie-road-v2") {
+      const guide = getTutorialGuidance({ match, selectedInstanceId: cardId, selectedLane: targetLane, squabble: armed, playsThisRound: tutorialPlaysByRound[match.round] ?? 0 });
+      if (endTurn ? guide.focus !== "end-turn" : guide.focus !== "play" || guide.expectedCard !== cardId || guide.expectedLane !== targetLane || (match.round === 4 && !armed)) return;
+    }
     feedback.current.unlockAudio(); locked.current = true; cancelTimers();
     const id = timeline.current.id;
     if (playsCard) feedback.current.cue('lock', false);
@@ -416,7 +420,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     setVisualFrame(next); setPresentationScores(null);
     if (next.phase === 'player') void enterPlayerTurn(next.round, true, false);
     else await runRival(next, id);
-  }, [cancelTimers, enterPlayerTurn, match, mode, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, setVisualFrame, squabble, waitForBeat]);
+  }, [cancelTimers, enterPlayerTurn, match, mode, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, setVisualFrame, squabble, tutorialPlaysByRound, waitForBeat]);
   const showReplayFrame = useCallback((event: EffectLogEntry, step: 'before' | 'after') => {
     if (!match || presentationPhase !== 'player-ready') return;
     if (!replayLiveFrame.current) { replayLiveFrame.current = visualMatchRef.current; replayLiveTimer.current = timerSeconds; }

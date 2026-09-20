@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./rookie": "./src/rookie.ts",
     "./multiplayer": "./src/multiplayer.ts",
     "./economy": "./src/economy.ts",
     ".": "./src/gameEngine.ts",

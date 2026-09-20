@@ -1860,12 +1860,28 @@ export type PlayerMove = {
 type TranscriptMove = Omit<PlayerMove, 'lane'> & { lane: number | null };
 export const MAX_MATCH_MOVES = 64;
 
-/** Build the exact legal transcript taught by the six-round guided tutorial. */
+/** Pick a legal teaching move. Spread winning Hands across the districts. */
+export function getTutorialPlay(match: Match): { instanceId: string; lane: Lane } | null {
+  if (match.phase !== "player") return null;
+  let best: { instanceId: string; lane: Lane; value: number } | null = null;
+  for (const card of match.playerHand) for (const lane of [0, 1, 2] as const) {
+    if (!canAffordSelection(match, "player", card.instanceId, lane)) continue;
+    const played = playTurnCard(match, "player", card.instanceId, lane, match.round === 4 && !match.squabbleUsed);
+    const results = getDistrictResults(revealCpuTurn(pass(played, "player")));
+    const value = results.reduce((sum, d) => sum + (d.winner === "player" ? 1000 : 0) + Math.max(-12, Math.min(12, d.player - d.cpu)), 0);
+    if (!best || value > best.value) best = { instanceId: card.instanceId, lane, value };
+  }
+  return best ? { instanceId: best.instanceId, lane: best.lane } : null;
+}
+/** Build the exact legal transcript taught by the guided tutorial. */
 export function createGuidedTutorialTranscript(
   abilityUpgradeSnapshot?: AbilityUpgradeSnapshot,
   districtSnapshot?: DistrictSnapshot,
+  encounter?: StoryEncounterSnapshot,
+  playerCardIds?: string[],
+  playerDeckId = "vibes",
 ): PlayerMove[] {
-  let match = createMatch(
+  let match = encounter ? createStoryMatch(encounter, playerCardIds ?? deckById(playerDeckId).cards, playerDeckId, abilityUpgradeSnapshot, districtSnapshot) : createMatch(
     "vibes",
     "combo",
     undefined,
@@ -1887,7 +1903,8 @@ export function createGuidedTutorialTranscript(
           ? right.card.basePower - left.card.basePower || left.lane - right.lane
           : left.card.cost - right.card.cost || left.lane - right.lane,
       );
-      const selected = candidates[0];
+      const teaching = encounter ? getTutorialPlay(match) : null;
+      const selected = teaching ? candidates.find(c => c.card.instanceId === teaching.instanceId && c.lane === teaching.lane) : candidates[0];
       if (!selected) {
         throw new Error(`Tutorial round ${round} needs an affordable play`);
       }

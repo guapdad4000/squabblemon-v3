@@ -1,4 +1,4 @@
-import type { EffectLogEntry, Match, Statuses } from '../gameEngine';
+import { getTutorialPlay, getMatchDistricts, getLegalCardCost, type EffectLogEntry, type Match, type Statuses } from '../gameEngine';
 
 export const TUTORIAL_STEP_IDS = [
   'r1_choose_card',
@@ -27,6 +27,9 @@ export type TutorialGuidance = {
   focus: TutorialFocus;
   title: string;
   body: string;
+  target?: string;
+  expectedCard?: string;
+  expectedLane?: number;
 };
 
 type TutorialGuidanceInput = {
@@ -72,7 +75,7 @@ const playSequence = (
   };
 };
 
-export function getTutorialGuidance({
+function getBaseTutorialGuidance({
   match, selectedInstanceId, selectedLane, squabble, playsThisRound,
 }: TutorialGuidanceInput): TutorialGuidance {
   if (match.round === 1) return playSequence(1, 'r1', selectedInstanceId, selectedLane, playsThisRound);
@@ -126,6 +129,21 @@ export function getTutorialGuidance({
   };
 }
 
+export function getTutorialGuidance(input: TutorialGuidanceInput): TutorialGuidance {
+  const guidance = getBaseTutorialGuidance(input);
+  if (input.match.storyEncounter?.id !== "rookie-road-v2") return guidance;
+  const choice = guidance.focus === "end-turn" ? null : getTutorialPlay(input.match);
+  const card = input.match.playerHand.find(c => c.instanceId === choice?.instanceId);
+  const district = choice ? getMatchDistricts(input.match)[choice.lane] : null;
+  const common = { ...guidance, expectedCard: choice?.instanceId, expectedLane: choice?.lane };
+  const selector = (id: string) => '[data-testid="' + id + '"]';
+  if (guidance.focus === "card" && card && choice) return { ...common, target: selector("card-" + card.id), body: "Tap " + card.name + ". It costs " + getLegalCardCost(input.match, "player", card, choice.lane) + " Motion in our target district. Hands is the strength it adds to your side." };
+  if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: "Tap this district. You win by leading in two of the three districts at the end. " + (input.match.round === 1 ? district.rule : "Spread your strength instead of putting everyone in one place.") };
+  if (guidance.focus === "play") return { ...common, target: selector("button-lock") };
+  if (guidance.focus === "squabble") return { ...common, target: selector("button-squabble") };
+  if (guidance.focus === "end-turn") return { ...common, target: selector("button-next-round"), title: input.match.round === 3 ? "Save a little for later." : "Now let the rival respond.", body: input.match.round === 3 ? "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts." : "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion." };
+  return guidance;
+}
 export const MECHANIC_LESSON_IDS = [
   'burn', 'freeze', 'cleanse', 'protect', 'blocked', 'weaken', 'silence', 'movement', 'lock', 'boost',
 ] as const;
