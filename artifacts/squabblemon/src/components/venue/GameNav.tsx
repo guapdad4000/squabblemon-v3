@@ -12,7 +12,7 @@ const routes = [
   { path: '/game', label: 'Safehouse', detail: 'Home court', art: 'safehouse', primary: true, glyph: 'compass' },
   { path: '/game/story', label: 'The streets', detail: 'Story mode', art: 'streets', primary: true, glyph: 'map' },
   { path: '/game/collection', label: 'Collection', detail: 'Your arsenal', art: 'collection', primary: false, glyph: 'layers' },
-  { path: '/game/online', label: 'Fight', detail: 'Challenge a friend', art: 'fight', primary: true, glyph: 'crossed' },
+  { path: '/game/online', label: 'Fight', detail: 'Fade Park & friend fades', art: 'fight', primary: true, glyph: 'crossed' },
   { path: '/game/decks', label: 'Your gang', detail: 'Build a lineup', art: 'crew', primary: false, glyph: 'users' },
   { path: '/game/missions', label: 'Bounties', detail: 'Work the city', art: 'bounties', primary: false, glyph: 'scroll' },
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },

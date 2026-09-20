@@ -10,6 +10,7 @@ import {
 const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(workspaceRoot);
 
+const rankedBrowser = process.argv[2] === 'fade-park';
 const providedUrl = process.env.DATABASE_URL?.trim();
 let databaseUrl = providedUrl;
 const pnpmCli = process.env.npm_execpath;
@@ -135,11 +136,12 @@ try {
 
   assertCampaignDatabaseTarget({ ...process.env, DATABASE_URL: databaseUrl });
   run(
-    ["--filter", "@workspace/api-server", "test:db"],
+    rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
     {
       ...process.env,
       DATABASE_URL: databaseUrl,
       CAMPAIGN_DATABASE_TESTS: "1",
+      ...(rankedBrowser ? { FADE_PARK_BROWSER: "1" } : {}),
       ...(databaseProcess ? { DATABASE_POOL_MAX: "1" } : {}),
     },
   );

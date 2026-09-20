@@ -5,6 +5,7 @@ import {
   type OnlineCommand,
 } from "@workspace/squabblemon-engine/multiplayer";
 import {
+  rankedLobby, cancelRankedSearch,
   accessFriendRoom,
   createFriendRoom,
   listFriendRooms,
@@ -104,6 +105,16 @@ router.post(
     return createFriendRoom(userId, deckId(b.deckId), requestId(b.requestId));
   }, 201),
 );
+router.get('/multiplayer/ranked', endpoint((_req, userId) => rankedLobby(userId)));
+router.post('/multiplayer/ranked/search', endpoint((req, userId) => {
+  const b = bodyOf(req, ['deckId', 'requestId']);
+  return rankedLobby(userId, { deckId: deckId(b.deckId), requestId: requestId(b.requestId) });
+}));
+router.post('/multiplayer/ranked/cancel', endpoint((req, userId) => {
+  const b = bodyOf(req, ['code']);
+  if (typeof b.code !== 'string' || !/^[A-F0-9]{12}$/.test(b.code)) throw new OnlineError('Invalid search code.', 400);
+  return cancelRankedSearch(userId, b.code);
+}));
 router.get(
   "/multiplayer/:code",
   endpoint((req, userId) => accessFriendRoom(codeOf(req), userId)),

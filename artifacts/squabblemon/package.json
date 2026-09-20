@@ -21,7 +21,7 @@
     "test:super-common": "node e2e/verify-super-common.mjs",
     "test:player-journey": "node --import tsx e2e/verify-player-journey.ts",
     "test:online": "tsx --test src/multiplayer.test.ts",
-    "test:online-browser": "node e2e/verify-online.mjs",
+    "test:online-browser": "pnpm -w run test:fade-park",
     "test:special-moves": "tsx --test src/specialMoves.test.ts",
     "test:roster": "tsx --test src/rosterRefresh.test.ts src/blockExpansion.test.ts src/mythicLegends.test.ts src/neighborhoodCommons.test.ts src/superCommonCards.test.ts src/characterAssets.test.ts src/specialMoves.test.ts",
     "test:pack-opening": "node --test src/lib/packJournal.test.ts",

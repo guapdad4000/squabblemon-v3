@@ -1,3 +1,6 @@
+import type { RankedResult } from './ranked';
+export { RANKED_BOT_WAIT_MS, RANKED_QUEUE_IDLE_MS, RANKED_SEASON, RANK_TIERS, rankedStats, rankProgress, awardRank } from './ranked';
+export type { RankedStats, RankedResult } from './ranked';
 import {
   createDistrictSnapshot,
   getMatchDistricts,
@@ -41,6 +44,7 @@ export type OnlineCommand =
   | { type: "ready" | "end-turn" | "surrender" | "rematch" }
   | { type: "play"; instanceId: string; lane: Lane; squabble: boolean };
 export type OnlineRoom = {
+  ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
   revision: number;
   gameNumber: number;
@@ -203,6 +207,7 @@ export function applyOnlineCommand(
       : next;
   }
   if (command.type === "rematch") {
+    if (room.ranked) throw new OnlineError("Return to Fade Park to find your next ranked opponent.");
     if (room.status !== "complete" || !room.members.cpu)
       throw new OnlineError("Finish this fade first.");
     next.rematch = { ...room.rematch, [seat]: true };
@@ -305,6 +310,7 @@ export type PublicCard = {
   costs: [number, number, number];
 };
 export type PublicEvent = {
+  round: number;
   sequence: number;
   type: EventType;
   kind: EffectKind;
@@ -314,6 +320,7 @@ export type PublicEvent = {
   cardId: string | null;
 };
 export type OnlineRoomView = {
+  ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
   districts: ReturnType<typeof getMatchDistricts>;
   code: string;
@@ -371,6 +378,7 @@ export function onlineRoomView(
       ? { name: member.name, hero: member.deck.hero, ready: member.ready }
       : null;
   return {
+    ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),
     districts: getMatchDistricts(match, seat),
     lockedLanes: match ? getStoryLockedLanes(match, seat) : [],
     code,
@@ -410,6 +418,7 @@ export function onlineRoomView(
       .slice(-24)
       .map((event) => ({
         sequence: event.sequence,
+        round: event.round,
         type: event.type,
         kind: event.kind,
         note: event.type === "pass" ? "Turn ended." : event.note,

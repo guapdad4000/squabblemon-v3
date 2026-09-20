@@ -883,3 +883,32 @@ test('stewardesses each remove exactly 2 Hands from distinct unprotected enemies
   const event=resolved.effectLog.find(e=>e.type==='ability' && e.cardId==='captainjigga')!;
   assert.equal(event.scores.before[1].cpu-event.scores.after[1].cpu,4);
 });
+
+// Both seats reuse the solo board with server costs/scores, never a reconstructed rival hand.
+test('online projection flips guest perspective and preserves authoritative costs, scores and public history', async () => {
+  const { onlineBattleProjection } = await import('./MultiplayerBattle');
+  const { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, onlineRoomView } = await import('@workspace/squabblemon-engine/multiplayer');
+  const member = (id: string, deck = decks[0]) => ({ userId: id, name: id, ready: false, deck });
+  let room = createOnlineRoom(member('a'), 'cpu', Date.now());
+  room = joinOnlineRoom(room, member('b', decks[1]), Date.now());
+  room = applyOnlineCommand(room, 'player', { type: 'ready' }, Date.now());
+  room = applyOnlineCommand(room, 'cpu', { type: 'ready' }, Date.now());
+  const view = onlineRoomView(room, 'AABBCCDDEEFF', 'b', Date.now());
+  view.scores = view.scores.map((score, i) => ({ ...score, player: 90 + i, cpu: 120 + i, winner: 'cpu' }));
+  view.hand[0].costs = [0, 7, 8];
+  const { match, presentation } = onlineBattleProjection(view);
+  assert.deepEqual(match.cpuHand, []); assert.deepEqual(match.cpuCardIds, []);
+  assert(match.playerHand.every(card => card.owner === 'player'));
+  assert.equal(match.playerHand[0].instanceId, view.hand[0].instanceId);
+  assert.equal(presentation.scores[0].player, 120); assert.equal(presentation.scores[0].cpu, 90);
+  assert.equal(presentation.scores[0].winner, 'player');
+  assert.deepEqual(presentation.costs[view.hand[0].instanceId], [0, 7, 8]);
+  const html = renderBattle(match, { deck: view.ownDeck, rivalDeck: { hero: 'hooper', name: 'Human rival' },
+    selectedInstanceId: view.hand[0].instanceId, selectedLane: 0,
+    online: { ...presentation, status: 'Your turn', clockRunning: true, yourTurn: true },
+    presentationScores: presentation.scores, timerEnabled: true, timerSeconds: 75,
+  });
+  assert.match(html, /battlefield-grid/); assert.match(html, /battle-hand-tray/);
+  assert.match(html, /Play card · 0 Motion/); assert.match(html, /aria-valuemax="75"/);
+  assert.doesNotMatch(html, /data-testid="preview-lane/); assert.doesNotMatch(html, /online-arena/);
+});

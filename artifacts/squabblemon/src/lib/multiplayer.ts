@@ -13,7 +13,7 @@ export type RoomSummary = {
   gameNumber: number;
 };
 // A stalled mobile request must release the poll/mutation so reconnection can recover.
-const request = async <T>(
+export const request = async <T>(
   path: string,
   body?: unknown,
   signal?: AbortSignal,
@@ -149,3 +149,12 @@ export function useFriendMatch(accountId: string, code?: string) {
       client.setQueryData(["friend-match", accountId, view.code], view),
   };
 }
+
+export type RankedLobby = {
+  stats: import('@workspace/squabblemon-engine/multiplayer').RankedStats;
+  progress: ReturnType<typeof import('@workspace/squabblemon-engine/multiplayer').rankProgress>;
+  room: OnlineRoomView | null;
+};
+export const getRankedLobby = (signal?: AbortSignal) => request<RankedLobby>('/ranked', undefined, signal);
+export const searchRanked = (deckId: string, requestId: string) => request<RankedLobby>('/ranked/search', { deckId, requestId });
+export const cancelRanked = (code: string) => request<OnlineRoomView>('/ranked/cancel', { code });

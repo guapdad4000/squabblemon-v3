@@ -1,6 +1,7 @@
+import { FadePark, FightTabs } from './FadePark';
 import { MusicControls } from "../../components/MusicControls";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
 import { ArrowLeft, Check, Copy, Swords, Users } from "lucide-react";
@@ -31,6 +32,7 @@ export function Multiplayer({
   code?: string;
 }) {
   const [, navigate] = useLocation();
+  const friends = new URLSearchParams(useSearch()).get('tab') === 'friends';
   const { profile } = bootstrap;
   const saved = profile.savedDecks.filter(
     (deck) =>
@@ -73,7 +75,7 @@ export function Multiplayer({
   const rooms = useQuery({
     queryKey: ["friend-rooms", profile.id],
     queryFn: listFriendMatches,
-    enabled: !code,
+    enabled: !code && friends,
     refetchInterval: 10000,
     retry: 1,
   });
@@ -89,7 +91,7 @@ export function Multiplayer({
   }, [code]);
   function leave() {
     sessionStorage.removeItem("squabblemon_friend_invite");
-    navigate("/game/online");
+    navigate(room?.ranked ? "/game/online" : "/game/online?tab=friends");
   }
   async function openRoom(join = false) {
     if (operationLock.current || !chosen) return;
@@ -178,6 +180,7 @@ export function Multiplayer({
         />
       </>
     );
+  if (!code && !friends) return <FadePark bootstrap={bootstrap} />;
   return (
     <main className="online-lobby fight-night" aria-label="Fight night lobby" tabIndex={-1}>
       <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
@@ -190,7 +193,7 @@ export function Multiplayer({
         <Link to="/game" className="online-icon" aria-label="Back to safehouse">
           <ArrowLeft size={20} />
         </Link>
-        <span>FRIEND FADES · LIVE 1V1</span>
+        <FightTabs friends />
         <Link to="/game/play">Solo training</Link>
       </header>
       <div className="online-lobby__content">
