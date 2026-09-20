@@ -1,0 +1,33 @@
+{
+  "width": 1008,
+  "height": 1792,
+  "layers": [
+    {
+      "name": "chain",
+      "source": "metal-chain.png",
+      "x": 204,
+      "y": 0,
+      "width": 293,
+      "height": 184,
+      "asset": "assets/cards/dr-fade/chain.webp?v=0c99e172053e"
+    },
+    {
+      "name": "bag",
+      "source": "punching-bag.png",
+      "x": 79,
+      "y": 15,
+      "width": 508,
+      "height": 1204,
+      "asset": "assets/cards/dr-fade/bag.webp?v=eafa93dae22d"
+    },
+    {
+      "name": "fighter",
+      "source": "man.png",
+      "x": 308,
+      "y": 296,
+      "width": 700,
+      "height": 1466,
+      "asset": "assets/cards/dr-fade/fighter.webp?v=bfe7e3cce46a"
+    }
+  ]
+}

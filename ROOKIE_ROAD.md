@@ -5,7 +5,7 @@ New accounts follow one path: profile → Safehouse tour → first collection �
 ## Progress and compatibility
 
 - Existing server onboarding steps remain authoritative. No database migration is required.
-- Choosing the foundation during the tutorial grants twenty cards once and preserves the tutorial step.
+- Choosing the foundation during the tutorial grants twenty-one cards once (including Legendary Dr. Fade) and preserves the tutorial step.
 - The first crew is saved before battle. A verified tutorial with that crew qualifies for the welcome reward; a second practice match is unnecessary.
 - Accounts already at the old crew/reward steps retain their existing path. Completed accounts keep their progress.
 - Refreshing restores the saved crew or earned reward from the server. An unfinished match can be restarted without charging currency.

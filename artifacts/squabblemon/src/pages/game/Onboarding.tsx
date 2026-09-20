@@ -154,7 +154,7 @@ function CrewStep({ onComplete }: { onComplete: (id: string) => void }) {
     <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
     <span className="venue-kicker">ROOKIE ROAD / YOUR COLLECTION</span>
     <h1>Make it your gang.</h1>
-    <p>You’ve learned the fade. Now choose who you bring. Your first collection includes 20 cards to mix, match, and make your own.</p>
+    <p>You’ve learned the fade. Now choose who you bring. Your first collection includes 21 cards, including Legendary Dr. Fade, to mix, match, and make your own.</p>
     <p>We’ll put ten on the table to get you started. Every slot is editable, and your cover character is your choice.</p>
     <nav><button className="venue-button venue-button--gold" onClick={() => onComplete(ROOKIE_FOUNDATION_ID)}>Open my card collection</button></nav>
   </div></section>;

@@ -104,6 +104,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   oink: [{ kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }],
   snow: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
   wifey: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
+  drfade: [{ kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }],
   barber: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }],
   bottle: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   sneaker: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
@@ -192,6 +193,7 @@ export type DeckLegality = {
 };
 
 export const cards: Record<string, Card> = {
+  drfade: { id: "dr-fade", name: "Dr. Fade", kind: "character", type: "Light", cost: 4, power: 6, ability: "The First Lesson", effect: "On Reveal: Give the strongest enemy here -2 Hands. Give your weakest ally in another district +2 Hands.", roles: ["Pressure", "Support"], abilityUpgrades: upgrades("drfade", [["Corner Advice", "Your coached ally gains another Hand.", "Lead by Example", "Dr. Fade gets stronger.", "Class Dismissed", "Your punch hits harder."]]), entryVfx: { accent: "#69e7a3" }, portraitAccent: "#69e7a3" },
   guap: { id: "guap", name: "GUAP", type: "Fire", cost: 6, power: 5, ability: "FINNAM!", effect: "On Reveal: Gain +1 Hands for each other friendly card here, up to +5. Give every enemy here -1 Hands. Ongoing: While GUAP is in your hand, your other Fire characters gain +1 Hands at round end.", roles: ["Pressure", "Disruption"], elementalBond: "Fire", abilityUpgrades: upgrades("guap", [["Golden Charge", "FINNAM! gathers golden energy.", "Falcon Ascendant", "FINNAM! spreads its burning wings.", "Phoenix Supernova", "FINNAM! erupts in a golden supernova."]]), entryVfx: { accent: "#f5c542" }, portraitAccent: "#f5c542" /* GUAP is the Fire bond in the elemental-bond system; Ice Cream Truck is Water, Rooftop Gardener is Plant, Pirate Radio DJ is Electric. */ },
   bossbabe: { id: "boss-babe", name: "Boss Bae", type: "Electric", cost: 3, power: 3, ability: "Network Boost", effect: "The first 2 times you play a card in another district, gain +1 Hands. After the second, your next card costing 4 or more costs 1 less Motion.", abilityUpgrades: upgrades("bossbabe", [["First Meeting", "Network Boost grants +1 Hands to Boss Bae.", "Closing Deals", "Network Boost grants +1 Hands to Boss Bae.", "Corner Office", "Network Boost grants +1 Hands to Boss Bae."]]) },
   scammer: { id: "scammer", name: "Scammer", type: "Dark", cost: 3, power: 3, ability: "Imposter", effect: "On Reveal: Copy the base Hands (up to 7) and printed ability of the highest-Hands enemy here. Copied On Reveal abilities do not trigger.", roles: ["Disruption", "Copy"], abilityUpgrades: upgrades("scammer", [["New Alias", "Imposter grants +1 Hands to Scammer.", "Fine Print", "Imposter grants +1 Hands to Scammer.", "Perfect Cover", "Imposter grants +1 Hands to Scammer."]]) },
@@ -264,6 +266,7 @@ export const decks: Deck[] = [
 ].map(deck => ({ ...deck, cards: completeEngineCrew(deck.cards) }));
 
 export const rarityByEngineId = {
+  drfade: "Legendary",
   ...streetWaveRarities,
   ...mythicLegendRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
@@ -341,6 +344,7 @@ const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.keys(streetWaveCards).map(id => [id, streetWaveRarities[id] === 'Mythical' ? 'City Legends' : ['break', 'krump', 'bboy'].includes(id) ? 'The Cypher' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(mythicLegendCards).map(id => [id, 'City Legends'])),
   ...Object.fromEntries(Object.keys(supportCards).map(id => [id, 'Everyday Essentials'])),
+  drfade: "Old Heads Know",
   guap: "City Legends",
   ...Object.fromEntries(Object.keys(expansionCards).map(id => [id, expansionRarities[id] === 'Mythical' ? 'City Legends' : 'Around the Block'])),
   bossbabe: "Who You Know",
@@ -379,6 +383,7 @@ const factionByEngineId: Record<string, string> = {
 };
 
 const sourceByEngineId: Record<string, string[]> = {
+  drfade: ["Guaranteed tutorial Legendary", "Street Packs"],
   cornball: ["Starter gangs", "Street Packs"],
   snow: ["Starter gangs", "Collection Road"],
   roaster: ["Starter gangs", "Street Packs"],
@@ -446,7 +451,10 @@ export const starterRecipes = decks.map((deck) => ({
 export const ROOKIE_FOUNDATION_ID = "foundation-v1";
 export const ROOKIE_DECK_ID = "my-first-crew";
 export const ROOKIE_CORE_IDS = ["cornball", "plug", "snow-bunny", "wifey", "hooper", "rastamon", "all-jokes-roaster", "bus-pass", "soul-food", "cognac-bottle"];
-export const ROOKIE_FOUNDATION_IDS = [...ROOKIE_CORE_IDS, ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)];
+export const ROOKIE_MENTOR_ID = "dr-fade";
+// Existing saved lineups retain their slots; only new crews use the mentor lineup.
+export const ROOKIE_MENTOR_CORE_IDS = ROOKIE_CORE_IDS.map(id => id === "hooper" ? ROOKIE_MENTOR_ID : id);
+export const ROOKIE_FOUNDATION_IDS = [ROOKIE_MENTOR_ID, ...ROOKIE_CORE_IDS, ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)];
 
 export function catalogIdsToEngineIds(catalogIds: string[]): string[] {
   return catalogIds.map((catalogId) => {

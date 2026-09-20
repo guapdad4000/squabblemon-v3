@@ -8,6 +8,8 @@ import { battleChanges, eventIntensity } from '../battleChoreography';
 import { getCardWallpaper } from '../lib/cardFinish';
 import type { PresentationEffect } from './PlayLoop';
 
+import { DrFadeEntrance } from './DrFadeArt';
+
 type Point = { x: number; y: number; width: number; height: number };
 type Geometry = { source?: Point; current: Map<string, Point>; before: Map<string, Point> };
 
@@ -63,7 +65,10 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     data-testid="character-attack" data-character={card.id} data-owner={effect.owner} data-impact={impact}
     style={{ '--attack-color': cardEntryAccent(card) } as React.CSSProperties} aria-hidden="true">
     {move && source && <div className="battle-special-move" data-move-id={move.id} style={{ left: source.x, top: `clamp(min(24vh, 205px), ${source.y}px, calc(100% - min(24vh, 205px)))` }}><SpecialMove clip={move} audioEnabled={audioEnabled} /></div>}
-    {showPortrait && <div className="attack-caption">
+    {card.id === 'dr-fade' && effect.type === 'ability' && !effect.abilityMetadata?.upgradeId
+      && <DrFadeEntrance key={effect.sequence} cueId={effect.sequence}
+        squabble={!!effect.source?.after && effect.source.after.powerModifier >= effect.source.after.basePower} />}
+    {showPortrait && card.id !== 'dr-fade' && <div className="attack-caption">
       <img className="attack-caption__scene" src={getCardWallpaper(card.type)} alt="" />
       <img className="attack-caption__fighter" src={getCardImage(card.id)} alt="" />
       <div><span>{intensity === 'squabble' ? 'SQUABBLE · DOUBLE HANDS' : card.name}</span>
@@ -76,7 +81,7 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         const self = id === sourceId;
         const path = `M ${source.x} ${source.y} Q ${(source.x + target.x) / 2 + 35} ${(source.y + target.y) / 2} ${target.x} ${target.y}`;
         return <g key={id} data-attack-target={id}>
-          {!self && <path className="attack-beam" d={path} pathLength="1" />}
+          {!self && <path className={'attack-beam' + (card.id === 'dr-fade' && effect.targets.some(target => target.cardInstanceId === id && target.owner === effect.owner) ? ' dr-fade-coaching' : '')} d={path} pathLength="1" />}
           {impact && <g className="attack-hit" style={{ transformOrigin: `${target.x}px ${target.y}px` }}>
             {effect.kind === 'blocked'
               ? <path className="attack-shield" d={`M ${target.x} ${target.y - 35} l 28 12 v 26 q -4 23 -28 34 q -24 -11 -28 -34 v -26 Z`} />

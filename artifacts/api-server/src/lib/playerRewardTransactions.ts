@@ -12,7 +12,7 @@ import {
 } from "@workspace/db";
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
 import { battleEarnings } from '@workspace/squabblemon-engine/economy';
-import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_CORE_IDS, ROOKIE_DECK_ID } from "@workspace/squabblemon-engine/data";
+import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, ROOKIE_MENTOR_ID } from "@workspace/squabblemon-engine/data";
 import {
   applyCardXp,
   createCardProgressionSnapshot,
@@ -95,7 +95,7 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
     if (!profile || !["crew", "tutorial"].includes(profile.onboardingStep)) return;
     const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
     const savedDecks = [...profile.savedDecks];
-    if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Gang", cardIds: [...ROOKIE_CORE_IDS], heroCardId: "hooper", recipeId: null });
+    if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Gang", cardIds: [...ROOKIE_MENTOR_CORE_IDS], heroCardId: ROOKIE_MENTOR_ID, recipeId: null });
     await tx.update(playerProfilesTable).set({
       starterDeckId: ROOKIE_FOUNDATION_ID, ownedCardIds,
       discoveredCardIds: [...new Set([...profile.discoveredCardIds, ...ownedCardIds])],

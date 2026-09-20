@@ -110,6 +110,8 @@ function describeClaim(
   let description = `${reward.amount} ${reward.id}`;
   if (reward.kind === "currency" && reward.id === "street-xp") {
     description = `+${reward.amount} Street XP`;
+  } else if (reward.kind === "currency" && reward.id === "clout") {
+    description = `+${reward.amount} Clout · Training fund`;
   } else if (reward.kind === "card") {
     const card = catalogCardById[reward.id] ?? catalogCardByEngineId[reward.id];
     description = duplicateShards
@@ -207,6 +209,11 @@ export async function grantStoryRewards(
         })
         .where(eq(playerProfilesTable.clerkUserId, userId));
       description = `+${configured.amount} Street XP`;
+    } else if (configured.kind === "currency" && configured.id === "clout") {
+      await tx.update(playerProfilesTable)
+        .set({ softCurrency: sql`${playerProfilesTable.softCurrency} + ${configured.amount}` })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+      description = `+${configured.amount} Clout · Training fund`;
     } else if (configured.kind === "card") {
       const card = rewardCard!;
       const profile = cardProfile as typeof playerProfilesTable.$inferSelect;

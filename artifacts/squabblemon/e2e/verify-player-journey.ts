@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium, type Page } from '@playwright/test';
 import { spawn } from 'node:child_process';
-import { ROOKIE_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_FOUNDATION_ID, catalogIdsToEngineIds } from '../src/data';
+import { ROOKIE_MENTOR_CORE_IDS, ROOKIE_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_FOUNDATION_ID, catalogIdsToEngineIds } from '../src/data';
 import { createStoryMatch, verifyStoryMatchTranscript, getMatchWinner, type Match } from '../src/gameEngine';
 import { rookieDistricts, rookieEncounter } from '@workspace/squabblemon-engine/rookie';
 import { getTutorialMilestones } from '../../api-server/src/lib/tutorialMilestones';
@@ -25,12 +25,12 @@ async function run(width: number, height: number) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   let step = 'tutorial', collected = false, tested = false, failSave = true, claims = 0, started = 0;
-  let draft = { id: ROOKIE_DECK_ID, name: 'My First Gang', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
+  let draft = { id: ROOKIE_DECK_ID, name: 'My First Gang', cardIds: [...ROOKIE_MENTOR_CORE_IDS], heroCardId: 'dr-fade', recipeId: null, valid: true, issues: [] };
   let issued: Match | null = null;
   const districts = rookieDistricts(), encounter = rookieEncounter();
   function bootstrap() { return {
     profile: { id: 'rookie-browser', displayName: 'Rookie', avatarKey: 'hooper', onboardingStep: step, starterDeckId: collected ? ROOKIE_FOUNDATION_ID : null,
-      streetRep: 0, xp: 0, level: 1, softCurrency: 0, packTickets: 0, styleShards: 0, packPity: 0, deckSlots: 4, cosmeticCurrency: 0, collectionProgress: collected ? 20 : 0,
+      streetRep: 0, xp: 0, level: 1, softCurrency: 0, packTickets: 0, styleShards: 0, packPity: 0, deckSlots: 4, cosmeticCurrency: 0, collectionProgress: collected ? ROOKIE_FOUNDATION_IDS.length : 0,
       storyChapter: 1, storyNode: 0, tutorialCompleted: tested, starterRewardClaimed: step === 'complete', ageConfirmedAt: new Date(0).toISOString(), termsAcceptedAt: new Date(0).toISOString(),
       settings: { reducedMotion: true, turnTimerEnabled: false }, ownedCardIds: collected ? ROOKIE_FOUNDATION_IDS : [], discoveredCardIds: ROOKIE_FOUNDATION_IDS, cardProgression: {}, ownedVariants: [], equippedVariants: {},
       unlockedCosmeticIds: [], savedDecks: collected ? [draft] : [], storyProgress: {}, inbox: [], packHistory: [], lastActiveAt: new Date(0).toISOString() },
@@ -66,6 +66,8 @@ async function run(width: number, height: number) {
         const verified = verifyStoryMatchTranscript(encounter, catalogIdsToEngineIds(draft.cardIds), req.postDataJSON().moves, ROOKIE_DECK_ID, issued.abilityUpgradeSnapshot, districts);
         assert.equal(getMatchWinner(verified), 'player');
         assert.deepEqual(getTutorialMilestones(verified), { playerCardPlayed: true, bankedMotionAfterPlay: true, squabbleUsed: true });
+        const mentor = verified.effectLog.find(event => event.type === 'play' && event.cardId === 'drfade');
+        assert.equal(mentor?.round, 4); assert.match(mentor!.note, /SQUABBLE/);
         tested = true; step = 'reward';
         return route.fulfill({ json: { ...bootstrap(), reward: { id: 'test-reward', label: 'Lesson saved', xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0, descriptions: [], cardXpRewards: [], storyRewards: [] }, alreadyCompleted: false, campaign: null, story: null } });
       }
@@ -81,6 +83,11 @@ async function run(width: number, height: number) {
       await clickCoach(page);
       await page.waitForTimeout(250);
     }
+    await page.getByTestId('dr-fade-welcome').waitFor();
+    await page.waitForFunction(() => [...document.querySelectorAll<HTMLImageElement>('.dr-fade-art img')].every(img => img.complete && img.naturalWidth > 0));
+    assert.ok(await page.getByTestId('dr-fade-welcome').getByText('6', { exact: true }).count());
+    await page.screenshot({ path: '../../screenshots/dr-fade-welcome-' + width + '.png', fullPage: true });
+    await page.getByRole('button', { name: 'Build with Dr. Fade' }).click();
     await page.locator('[data-guide-slot="5"]').waitFor();
     await clickCoach(page);
     await clickCoach(page);

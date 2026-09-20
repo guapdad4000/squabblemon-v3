@@ -1020,6 +1020,19 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     note(`Civic Pressure weakened ${weakenedCount} enemies.`);
   }
   else if (source.cardId === 'snow') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, frozen: true }, lastEffectNote: 'Cold Shoulder: frozen.' })); note('Cold Shoulder froze the highest enemy.'); } else note('Cold Shoulder found no enemy.'); }
+  else if (source.cardId === 'drfade') {
+    const hostile = highest(inLane(m, enemy, l));
+    const friendly = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.lane !== l));
+    if (hostile) {
+      targetIds.add(hostile.instanceId);
+      m = targetEnemyPowerReduction(m, source, hostile, -2, 'The First Lesson: -2 Hands.');
+    }
+    if (friendly) {
+      targetIds.add(friendly.instanceId);
+      m = modify(m, friendly.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Corner advice: +2 Hands.' }));
+    }
+    note(hostile || friendly ? 'The First Lesson: throw hands here, coach an ally across the block.' : 'Dr. Fade is holding this district. His lesson needs another fighter.');
+  }
   else if (source.cardId === 'barber') {
     const friendly = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId));
     const hostile = highest(inLane(m, enemy, l));
@@ -2071,6 +2084,12 @@ export function getTutorialPlay(match: Match): { instanceId: string; lane: Lane 
   let best: { instanceId: string; lane: Lane; value: number } | null = null;
   for (const card of match.playerHand) for (const lane of [0, 1, 2] as const) {
     if (!canAffordSelection(match, "player", card.instanceId, lane)) continue;
+    // Keep the mentor for the lesson's final SQUABBLE. Older saved crews
+    // without him continue to use the normal legal-move guidance.
+    const mentorLesson = match.storyEncounter?.id === 'rookie-road-v2'
+      && match.playerHand.some(c => c.cardId === 'drfade');
+    if (mentorLesson && ((match.round < 4 && card.cardId === 'drfade')
+      || (match.round === 4 && card.cardId !== 'drfade'))) continue;
     const played = playTurnCard(match, "player", card.instanceId, lane, match.round === 4 && !match.squabbleUsed);
     const results = getDistrictResults(revealCpuTurn(pass(played, "player")));
     const value = results.reduce((sum, d) => sum + (d.winner === "player" ? 1000 : 0) + Math.max(-12, Math.min(12, d.player - d.cpu)), 0);

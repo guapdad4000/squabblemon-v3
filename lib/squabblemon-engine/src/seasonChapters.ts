@@ -242,7 +242,11 @@ const chapterTwoNodes = chapterTwoBase.nodes.map((node): StoryNode => {
     ? 'crown-rooftop-court' : 'red-fence-night-court';
   const next = { ...node, cinematic: cinematic(venue) };
   if (next.kind !== 'battle') return next.kind === 'reward'
-    ? { ...next, rewards: [...next.rewards, majorNodeTickets()] }
+    ? { ...next, rewards: [...next.rewards, majorNodeTickets(),
+        ...(next.id === 'red-tapes-let-her-grieve' ? [{ kind: 'currency' as const, id: 'clout', amount: 500, claimKey: 'dr-fade-training:chapter-two:v1' }] : [])],
+        teaching: next.id === 'red-tapes-let-her-grieve'
+          ? { ...next.teaching, tips: [...next.teaching.tips, 'Your 500 Clout training fund can buy character XP and Move Coaching at the Trading Post.'] }
+          : next.teaching }
     : next;
   const starObjectives = chapterTwoObjectives[next.id] ?? stars;
   return { ...next, starObjectives, encounter: { ...next.encounter, enemy: { ...next.encounter.enemy, cardIds: completeEngineCrew(next.encounter.enemy.cardIds) }, battlefieldAssetId: cinematic(venue).environmentAssetId, cinematic: cinematic(venue), starObjectives } };

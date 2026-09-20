@@ -1,4 +1,5 @@
 import { BattleStatus } from './BattleEffects';
+import { DrFadeArt } from './DrFadeArt';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CardInstance } from '../gameEngine';
@@ -196,11 +197,13 @@ function CardViewComponent({
           </div>
 
           <div className={`absolute inset-0 bg-gradient-to-t from-zinc-900 to-zinc-800/20 ${isEnemy ? 'hue-rotate-180 brightness-50' : ''} ${isFrozen ? 'brightness-150 saturate-50 hue-rotate-180 mix-blend-hard-light' : ''} z-0`} />
-          <img
-            src={getCardImage(card.id)}
-            alt=""
-            className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
-          />
+          {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
+            ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
+            : <img
+                src={getCardImage(card.id)}
+                alt=""
+                className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
+              />}
 
           <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
 

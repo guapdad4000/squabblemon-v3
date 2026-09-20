@@ -11,7 +11,7 @@ import {
   playerStoryNodesTable,
 } from "@workspace/db";
 import {
-  ROOKIE_CORE_IDS,
+  ROOKIE_MENTOR_CORE_IDS,
   ROOKIE_DECK_ID,
   ROOKIE_FOUNDATION_ID,
   catalogIdsToEngineIds,
@@ -42,7 +42,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
   skip: !process.env.DATABASE_URL,
   timeout: 240_000,
 }, async t => {
-  const campaignCrew = [...ROOKIE_CORE_IDS];
+  const campaignCrew = [...ROOKIE_MENTOR_CORE_IDS];
   campaignCrew[5] = "nail-tech"; // The same required first swap as Dr. Fade’s UI lesson.
   const runId = randomUUID();
   const playerId = `campaign-e2e-${runId}`;
@@ -131,9 +131,9 @@ test("new account completes every campaign node through HTTP with isolated, idem
 
   const collection = await playerRequest("/player/onboarding", { action: "choose-starter", starterDeckId: ROOKIE_FOUNDATION_ID });
   assert.equal(collection.body.profile.onboardingStep, "tutorial");
-  assert.equal(collection.body.profile.ownedCardIds.length, 20);
+  assert.equal(collection.body.profile.ownedCardIds.length, 21);
   const savedDeck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
-    name: "My First Gang", cardIds: campaignCrew, heroCardId: "hooper", recipeId: null,
+    name: "My First Gang", cardIds: campaignCrew, heroCardId: "dr-fade", recipeId: null,
   }, "PUT");
   assert.equal(savedDeck.status, 200, JSON.stringify(savedDeck.body));
   assert.deepEqual(savedDeck.body.profile.savedDecks.find((deck: { id: string }) => deck.id === ROOKIE_DECK_ID).cardIds, campaignCrew);

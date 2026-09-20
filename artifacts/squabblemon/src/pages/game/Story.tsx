@@ -77,7 +77,7 @@ function rewardLabel(reward: StoryReward | StoryGrantedReward) {
       : `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
   if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
   if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} unlocked`;
-  return `+${reward.amount} Street XP`;
+  return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Street XP`;
 }
 
 export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -464,7 +464,7 @@ export function NodeOverlay({
         });
         applyCampaign(result.campaign, result.bootstrap);
         setGrantedRewards(result.rewards);
-        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? 'xp' as const : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
         setScreen('completed');
         return;
       }

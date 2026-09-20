@@ -22,7 +22,7 @@ import {
   catalogCardById,
   starterRecipes,
   validateSavedDeck, DECK_SIZE, upgradeLegacySavedDeck,
-  ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID,
+  ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_ID,
 } from "@workspace/squabblemon-engine/data";
 import { COLLECTION_ROAD, STREET_PACK_CONFIG, STREET_PACK_TEN_PULL_CONFIG } from "./collectionEconomy";
 import { resetExpiredPlayerMissions } from "./playerRewardTransactions";
@@ -149,7 +149,8 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     `);
     const normalizedOwned = [
       ...new Set(
-        [...current.ownedCardIds, ...earnedCards.rows.map(reward => reward.cardId)]
+        [...current.ownedCardIds, ...earnedCards.rows.map(reward => reward.cardId),
+          ...(current.starterDeckId || current.tutorialCompleted || current.starterRewardClaimed ? [ROOKIE_MENTOR_ID] : [])]
           .map(normalizeCardId)
           .filter((id): id is string => Boolean(id)),
       ),

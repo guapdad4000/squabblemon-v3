@@ -137,6 +137,12 @@ export function getTutorialGuidance(input: TutorialGuidanceInput): TutorialGuida
   const district = choice ? getMatchDistricts(input.match)[choice.lane] : null;
   const common = { ...guidance, expectedCard: choice?.instanceId, expectedLane: choice?.lane };
   const selector = (id: string) => '[data-testid="' + id + '"]';
+  if (card?.cardId === 'drfade' && input.match.round === 4) {
+    if (guidance.focus === 'card') return { ...common, target: selector('card-dr-fade'), title: 'Your Legendary is ready.', body: 'Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.' };
+    if (guidance.focus === 'squabble') return { ...common, target: selector('button-squabble'), title: 'Double Dr. Fade to 12 Hands.', body: 'Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.' };
+    if (guidance.focus === 'district' && choice && district) return { ...common, target: selector('lane-' + choice.lane), title: 'Put your coach to work.', body: 'Tap ' + district.name + '. Dr. Fade fights here while helping an ally in another district. Watch both scores.' };
+    if (guidance.focus === 'play') return { ...common, target: selector('button-lock'), title: 'Watch close. You’re next.', body: 'Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.' };
+  }
   if (guidance.focus === "card" && card && choice) return { ...common, target: selector("card-" + card.id), body: "Tap " + card.name + ". It costs " + getLegalCardCost(input.match, "player", card, choice.lane) + " Motion in our target district. Hands is the strength it adds to your side." };
   if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: "Tap this district. You win by leading in two of the three districts at the end. " + (input.match.round === 1 ? district.rule : "Spread your strength instead of putting everyone in one place.") };
   if (guidance.focus === "play") return { ...common, target: selector("button-lock") };

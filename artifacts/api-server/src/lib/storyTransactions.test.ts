@@ -101,7 +101,7 @@ test("Chapter Two opens after the Crown and hands off to Chapter Three", async (
     .map((node) => ({ clerkUserId: userId, chapterId: chapter.id, nodeId: node.id, cleared: true })));
   const ending = await completeNonBattleStoryNode(userId, "red-tapes-let-her-grieve", randomUUID(), []);
   assert.equal(ending.alreadyCompleted, false);
-  assert.deepEqual(ending.rewards.map((reward) => reward.id).sort(), ["baby", "story-key:chapter-three", "street-pack-ticket"]);
+  assert.deepEqual(ending.rewards.map((reward) => reward.id).sort(), ["baby", "clout", "story-key:chapter-three", "street-pack-ticket"]);
   const campaign = await getPlayerStoryCampaign(userId);
   assert.equal(campaign.chapters.find((item) => item.id === "blue-side-blues")?.status, "available");
   assert.equal(campaign.recommendedNodeId, "blue-in-denial");
@@ -322,7 +322,8 @@ test("concurrent story reward completion grants immutable rewards once", async (
     .select()
     .from(playerProfilesTable)
     .where(eq(playerProfilesTable.clerkUserId, userId));
-  assert.equal(claims.value, 4);
+  assert.equal(claims.value, 5);
+  assert.equal(profile.softCurrency, 250);
   assert.equal(profile.packTickets, 10);
   assert.equal(profile.ownedCardIds.includes("closet-nerd"), true);
   assert.deepEqual(profile.unlockedCosmeticIds.sort(), ["block-party-crowned", "story-key:chapter-two"]);
