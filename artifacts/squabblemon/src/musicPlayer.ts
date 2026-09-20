@@ -1,9 +1,10 @@
+import type { SoundtrackTrack } from './musicModes';
 import tracks from './soundtrack.json';
 
 export const soundtrack = tracks;
 export const MUSIC_STORAGE_KEY = 'squabblemon_music_v1';
 export type MusicPreferences = { enabled: boolean; volume: number; trackIndex: number };
-export type MusicSnapshot = MusicPreferences & { playing: boolean; blocked: boolean; error: string | null };
+export type MusicSnapshot = MusicPreferences & { playing: boolean; blocked: boolean; error: string | null; track?: SoundtrackTrack; playlist?: readonly SoundtrackTrack[] };
 export const defaultMusic: MusicSnapshot = { enabled: true, volume: 0.24, trackIndex: 0, playing: false, blocked: false, error: null };
 
 export function readMusicPreferences(storage?: Pick<Storage, 'getItem'>): MusicPreferences {
@@ -19,6 +20,7 @@ export function readMusicPreferences(storage?: Pick<Storage, 'getItem'>): MusicP
 
 type Options = {
   preferences?: MusicPreferences;
+  tracks?: readonly SoundtrackTrack[];
   assetUrl: (path: string) => string;
   publish: (snapshot: MusicSnapshot) => void;
   save?: (preferences: MusicPreferences) => void;
@@ -28,6 +30,7 @@ type Options = {
 // One media element for the whole game. Battle cue timing remains independent.
 export class MusicPlayer {
   private state: MusicSnapshot;
+  private tracks: readonly SoundtrackTrack[];
   private context?: AudioContext;
   private source?: MediaElementAudioSourceNode;
   private gain?: GainNode;
@@ -43,7 +46,10 @@ export class MusicPlayer {
   private failures = new Set<number>();
 
   constructor(private audio: HTMLAudioElement, private options: Options) {
-    this.state = { ...defaultMusic, ...options.preferences };
+    this.tracks = options.tracks ?? soundtrack;
+    this.state = { ...defaultMusic, ...options.preferences, playlist: this.tracks };
+    if (this.state.trackIndex >= this.tracks.length) this.state.trackIndex = 0;
+    this.state.track = this.tracks[this.state.trackIndex];
     audio.preload = 'none';
     audio.addEventListener('ended', this.onEnded);
     audio.addEventListener('playing', this.onPlaying);
@@ -54,8 +60,19 @@ export class MusicPlayer {
 
   get snapshot() { return this.state; }
 
+  setPlaylist(tracks: readonly SoundtrackTrack[], preferences: MusicPreferences) {
+    this.stop(); this.tracks = tracks; this.loadedIndex = -1; this.failures.clear();
+    this.update({ ...preferences, trackIndex: preferences.trackIndex < tracks.length ? preferences.trackIndex : 0, error: null, blocked: false });
+    this.sync();
+  }
+  applyPreferences(preferences: MusicPreferences) {
+    this.update({ enabled: preferences.enabled, volume: preferences.volume });
+    this.applyVolume(); this.sync();
+  }
+
   private update(next: Partial<MusicSnapshot>, persist = false) {
     this.state = { ...this.state, ...next };
+    this.state = { ...this.state, track: this.tracks[this.state.trackIndex], playlist: this.tracks };
     this.options.publish(this.state);
     if (persist) {
       const { enabled, volume, trackIndex } = this.state;
@@ -98,12 +115,12 @@ export class MusicPlayer {
   }
 
   selectTrack(index: number) {
-    if (!Number.isInteger(index) || index < 0 || index >= soundtrack.length) return;
+    if (!Number.isInteger(index) || index < 0 || index >= this.tracks.length) return;
     this.failures.clear();
     this.changeTrack(index);
   }
 
-  next = () => this.selectTrack((this.state.trackIndex + 1) % soundtrack.length);
+  next = () => this.selectTrack((this.state.trackIndex + 1) % this.tracks.length);
 
   private changeTrack(index: number) {
     this.stop();
@@ -114,7 +131,7 @@ export class MusicPlayer {
 
   private onEnded = () => {
     this.failures.clear();
-    this.changeTrack((this.state.trackIndex + 1) % soundtrack.length);
+    this.changeTrack((this.state.trackIndex + 1) % this.tracks.length);
   };
   private onPlaying = () => {
     if (!this.allowed) { this.stop(); return; }
@@ -126,17 +143,17 @@ export class MusicPlayer {
     this.stop();
     if (this.format === 'ogg') {
       this.format = 'aac';
-      this.audio.src = this.options.assetUrl(soundtrack[this.state.trackIndex].aac);
+      this.audio.src = this.options.assetUrl(this.tracks[this.state.trackIndex].aac);
       this.sync();
       return;
     }
     this.failures.add(this.state.trackIndex);
-    if (this.failures.size >= soundtrack.length) {
+    if (this.failures.size >= this.tracks.length) {
       this.update({ playing: false, error: 'Music could not load. Tap play to retry.' });
       return;
     }
-    let next = (this.state.trackIndex + 1) % soundtrack.length;
-    while (this.failures.has(next)) next = (next + 1) % soundtrack.length;
+    let next = (this.state.trackIndex + 1) % this.tracks.length;
+    while (this.failures.has(next)) next = (next + 1) % this.tracks.length;
     this.changeTrack(next);
   };
 
@@ -173,7 +190,7 @@ export class MusicPlayer {
     if (this.loadedIndex !== this.state.trackIndex) {
       this.format = this.audio.canPlayType('audio/ogg; codecs="vorbis"') ? 'ogg' : 'aac';
       this.loadedIndex = this.state.trackIndex;
-      this.audio.src = this.options.assetUrl(soundtrack[this.state.trackIndex][this.format]);
+      this.audio.src = this.options.assetUrl(this.tracks[this.state.trackIndex][this.format]);
     }
     this.connectAudio();
     this.applyVolume();

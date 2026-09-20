@@ -30,13 +30,13 @@ export const STREET_PACK_CONFIG = {
   pityLimit: 10,
   odds: [
     {
-      label: "Slots 1–2 · New crew cards",
+      label: "Slots 1–2 · New gang cards",
       chance: 100,
       detail:
         "Each of the first two pulls guarantees a new gameplay card while one remains. If the rolled rarity has no unowned cards, choose uniformly from remaining missing cards. Effective rarity odds change with your collection. Owned cards become 25 Style Shards.",
     },
     {
-      label: "Slots 3–5 · Crew cards",
+      label: "Slots 3–5 · Gang cards",
       chance: 100,
       detail: `Base card rarity odds: ${publishedRarityOdds}. Five different card pulls per pack; a rarity with no eligible cards falls back to the remaining pool, so effective odds can vary. Owned cards become 25 Style Shards.`,
     },
@@ -413,8 +413,8 @@ export const COLLECTION_ROAD: CollectionRoadDefinition[] = [
   {
     id: "first-seven",
     threshold: 7,
-    title: "Crew Certified",
-    description: "Your collection has seven cards. Keep collecting to fill a ten-card crew.",
+    title: "Gang Certified",
+    description: "Your collection has seven cards. Keep collecting to fill a ten-card gang.",
     rewardLabel: "Closet Nerd",
     cardId: "closet-nerd",
     reward: { cardId: "closet-nerd" },

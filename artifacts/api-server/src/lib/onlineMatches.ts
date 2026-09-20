@@ -46,7 +46,7 @@ async function loadMember(
     .for("update");
   if (!profile || profile.onboardingStep !== "complete")
     throw new OnlineError(
-      "Finish your first crew lesson before playing online.",
+      "Finish your first gang lesson before playing online.",
       403,
     );
   const saved = profile.savedDecks.find((deck) => deck.id === deckId);
@@ -55,7 +55,7 @@ async function loadMember(
   const hero = saved?.heroCardId ?? recipe?.hero;
   if (!validateSavedDeck(cardIds, profile.ownedCardIds, hero).valid)
     throw new OnlineError(
-      "Choose a saved crew of ten unique cards you own.",
+      "Choose a saved gang of ten unique cards you own.",
       400,
     );
   return {
@@ -91,7 +91,7 @@ export async function createFriendRoom(
     if (existing) {
       if (restore(existing.state).members.player.deck.id !== deckId)
         throw new OnlineError(
-          "This request was already used for another crew.",
+          "This request was already used for another gang.",
         );
       return onlineRoomView(
         expireOnlineRoom(restore(existing.state), Date.now()),
@@ -221,9 +221,23 @@ export async function accessFriendRoom(
               "This request ID was already used for another action.",
             );
         } else {
-          if (room.revision !== mutation.expectedRevision)
+          // Ready/rematch votes commute when the only unseen revision is the rival's vote.
+          // Plays and end-turns always require the exact board revision.
+          const seat = memberSeat(room, userId);
+          const rival = seat === "player" ? "cpu" : "player";
+          const concurrentVote =
+            mutation.expectedRevision === room.revision - 1 &&
+            ((mutation.command.type === "ready" &&
+              room.status === "waiting" &&
+              !room.members[seat]!.ready &&
+              room.members[rival]?.ready) ||
+              (mutation.command.type === "rematch" &&
+                room.status === "complete" &&
+                !room.rematch[seat] &&
+                room.rematch[rival]));
+          if (room.revision !== mutation.expectedRevision && !concurrentVote)
             throw new OnlineError(
-              "The match changed. Your board has been refreshed; choose your next action.",
+              "The fade changed. Your board has been refreshed; choose your next action.",
             );
           room = applyOnlineCommand(
             room,

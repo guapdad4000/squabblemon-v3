@@ -68,7 +68,7 @@ try {
       await page.getByRole('button', { name: 'Reset room camera', exact: true }).click();
       await frame.waitForFunction(() => window.Squabblemon.getSceneStatus().music.ceilingVisible === true);
     }
-    for (const [label, view] of [['the television', 'story'], ['the heavy bag', 'training'], ['your crew cards', 'cards'], ['the phone', 'phone'], ['the turntable', 'music']]) {
+    for (const [label, view] of [['the television', 'story'], ['the heavy bag', 'training'], ['your gang cards', 'cards'], ['the phone', 'phone'], ['the turntable', 'music']]) {
       const button = page.getByRole('button', { name: `Explore ${label}`, exact: true });
       if (touch) await button.tap(); else await button.click();
       await frame.waitForFunction(view => window.Squabblemon.getSceneStatus().view === view, view);

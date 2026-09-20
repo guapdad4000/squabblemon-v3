@@ -78,7 +78,7 @@ export function InstallGame({ className = "" }: { className?: string }) {
           <Smartphone className="text-amber-200" size={28} />
           <DialogTitle>Bring the block to your home screen.</DialogTitle>
           <DialogDescription className="text-white/70">
-            Install Squabblemon from your browser. Your crew stays with your
+            Install Squabblemon from your browser. Your gang stays with your
             account. An internet connection is required for online play.
           </DialogDescription>
           <div className="space-y-4 text-sm leading-relaxed text-white/80">

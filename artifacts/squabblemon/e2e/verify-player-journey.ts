@@ -25,7 +25,7 @@ async function run(width: number, height: number) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   let step = 'tutorial', collected = false, tested = false, failSave = true, claims = 0, started = 0;
-  let draft = { id: ROOKIE_DECK_ID, name: 'My First Crew', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
+  let draft = { id: ROOKIE_DECK_ID, name: 'My First Gang', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'hooper', recipeId: null, valid: true, issues: [] };
   let issued: Match | null = null;
   const districts = rookieDistricts(), encounter = rookieEncounter();
   function bootstrap() { return {
@@ -34,7 +34,7 @@ async function run(width: number, height: number) {
       storyChapter: 1, storyNode: 0, tutorialCompleted: tested, starterRewardClaimed: step === 'complete', ageConfirmedAt: new Date(0).toISOString(), termsAcceptedAt: new Date(0).toISOString(),
       settings: { reducedMotion: true, turnTimerEnabled: false }, ownedCardIds: collected ? ROOKIE_FOUNDATION_IDS : [], discoveredCardIds: ROOKIE_FOUNDATION_IDS, cardProgression: {}, ownedVariants: [], equippedVariants: {},
       unlockedCosmeticIds: [], savedDecks: collected ? [draft] : [], storyProgress: {}, inbox: [], packHistory: [], lastActiveAt: new Date(0).toISOString() },
-    missions: [], nextAction: { id: tested ? 'rookie-tested' : 'onboarding-' + step, eyebrow: 'Rookie Road', title: 'Build your crew', description: 'Learn together', destination: 'onboarding', rewardLabel: null },
+    missions: [], nextAction: { id: tested ? 'rookie-tested' : 'onboarding-' + step, eyebrow: 'Rookie Road', title: 'Build your gang', description: 'Learn together', destination: 'onboarding', rewardLabel: null },
     packConfig: { id: 'street-pack', name: 'Street Pack', oddsVersion: 'test', softCurrencyCost: 200, ticketCost: 1, rewardsPerPack: 3, pityLimit: 10, odds: [] }, collectionRoad: [],
   }; }
   try {
@@ -93,7 +93,7 @@ async function run(width: number, height: number) {
     let clicks = 0;
     for (let attempt = 0; attempt < 550; attempt++) {
       if (await page.getByRole('heading', { name: 'Something went wrong' }).count()) throw Error(await page.locator('body').innerText());
-      if (await page.getByTestId('status-match-result').count() || await page.getByRole('heading', { name: 'You built this crew.' }).count()) break;
+      if (await page.getByTestId('status-match-result').count() || await page.getByRole('heading', { name: 'You built this gang.' }).count()) break;
       if (await page.getByTestId('fade-spotlight').count()) {
         if (clicks === 1) await page.screenshot({ path: '../../screenshots/rookie-battle-' + width + '.png' });
         await clickCoach(page); clicks++;
@@ -111,9 +111,9 @@ async function run(width: number, height: number) {
       assert.equal(await page.getByRole('button', { name: 'Continue Chapter', exact: true }).count(), 0, 'Tutorial must use the tutorial result actions');
       await page.getByTestId('button-complete-tutorial').click();
     }
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     await page.reload();
-    await page.getByRole('heading', { name: 'You built this crew.' }).waitFor();
+    await page.getByRole('heading', { name: 'You built this gang.' }).waitFor();
     await page.getByRole('button', { name: 'Claim reward & enter Chapter One' }).click();
     await page.waitForURL('**/game/story');
     assert.equal(started, 1, 'Only one match is required');

@@ -20,10 +20,11 @@ type SearchBudget = {
   deadline: number;
   expansions: number;
   maximumExpansions: number;
+  preserveBanks?: boolean;
 };
 
-export const STORY_SOLVER_NODE_BUDGET_MS = 5_000;
-export const STORY_SOLVER_MAX_EXPANSIONS = 20_000;
+export const STORY_SOLVER_NODE_BUDGET_MS = 10_000;
+export const STORY_SOLVER_MAX_EXPANSIONS = 40_000;
 const MAX_PLAYER_ACTIONS_PER_TURN = 4;
 
 function compact(match: Match): Match {
@@ -332,7 +333,20 @@ function turnOptions(
     assertBudget(budget);
   }
 
-  return selectStates(stoppable, desired, width, 1);
+  if (!budget.preserveBanks) return selectStates(stoppable, desired, width, 1);
+  // A cheap play must not crowd every bank-and-save option out of the beam.
+  // Keep the best outcome for each remaining-hand / SQUABBLE combination,
+  // then fill the rest by the usual district score and semantic diversity.
+  const bankedOptions = new Map<string, SearchState>();
+  for (const state of stoppable) {
+    const key = `${state.match.playerHand.length}:${state.match.squabbleUsed ? 1 : 0}`;
+    const previous = bankedOptions.get(key);
+    if (!previous || value(state.match, desired) > value(previous.match, desired)) bankedOptions.set(key, state);
+  }
+  const reserved = selectStates([...bankedOptions.values()], desired, Math.ceil(width / 2));
+  const seen = new Set(reserved.map(state => semanticMatchKey(state.match)));
+  return [...reserved, ...selectStates(stoppable, desired, width, 1)
+    .filter(state => !seen.has(semanticMatchKey(state.match)))].slice(0, width);
 }
 
 function allPassTranscript(initial: Match): {
@@ -435,11 +449,11 @@ function search(
 export function solveStoryMoves(
   initial: Match,
   desired: StorySolveOutcome = "win",
-  maximumStates = 32,
+  maximumStates = 64,
 ): PlayerMove[] {
   const maximumWidth = Math.max(
     8,
-    Math.min(maximumStates, 32),
+    Math.min(maximumStates, 64),
   );
   const budget: SearchBudget = {
     deadline: Date.now() + STORY_SOLVER_NODE_BUDGET_MS,
@@ -459,20 +473,18 @@ export function solveStoryMoves(
     }
   }
 
-  const widths = [8, 12, 16, 24, 32].filter((width) => width <= maximumWidth);
+  const widths = [8, 16, 32, 64].filter((width) => width <= maximumWidth);
   if (!widths.includes(maximumWidth)) widths.push(maximumWidth);
-  for (const width of widths) {
-    const moves = search(
-      searchInitial,
-      desired,
-      width,
-      budget,
-    );
-    if (moves) {
+  for (const preserveBanks of [false, true]) {
+    budget.preserveBanks = preserveBanks;
+    for (const width of widths) {
+      const moves = search(searchInitial, desired, width, budget);
+      if (moves) {
+        assertBudget(budget);
+        return moves;
+      }
       assertBudget(budget);
-      return moves;
     }
-    assertBudget(budget);
   }
 
   throw new Error(

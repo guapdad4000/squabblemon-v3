@@ -14,7 +14,7 @@ export function BattlePowerBreakdown({ card, match }: { card: CardInstance; matc
       {suppression !== 0 && <div><dt>{card.statuses.frozen ? 'Frozen suppression' : 'Minimum Hands adjustment'}</dt><dd>{suppression > 0 ? '+' : ''}{suppression}</dd></div>}
       <div><dt>Current card Hands</dt><dd>{effective}</dd></div><div><dt>District bonus / penalty</dt><dd>{district > 0 ? '+' : ''}{district}</dd></div><div className="power-total"><dt>Contribution to district</dt><dd>{inPlay ? effective + district : 'Not deployed'}</dd></div></dl>
     {shared !== 0 && <p>District-wide rule: {shared > 0 ? '+' : ''}{shared}. Applied once to the lane, not to each card.</p>}
-    {match.districtRuntime?.detainedCardIds.includes(card.instanceId) && <p>COUNTY JAIL: held here for the rest of the match. This card cannot move.</p>}
+    {match.districtRuntime?.detainedCardIds.includes(card.instanceId) && <p>COUNTY JAIL: held here for the rest of the fade. This card cannot move.</p>}
     {match.timedEffects.some(effect => effect.kind === 'salon-protection' && effect.targetInstanceId === card.instanceId) && <p>NAIL SALON: blocks this card’s next targeted enemy ability. Protection follows it when it moves.</p>}
     {card.lastEffectNote && <p>{card.lastEffectNote}</p>}
   </section>;

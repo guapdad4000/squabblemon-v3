@@ -15,6 +15,7 @@
     "test:playthrough": "node --import tsx e2e/verify-playthrough.ts",
     "test:gacha-browser": "node --import tsx e2e/verify-gacha.ts",
     "test:card-details": "node e2e/verify-card-details.mjs",
+    "test:foil": "node e2e/verify-foil.mjs",
     "test:gameplay-browser": "node --import tsx e2e/verify-gameplay-upgrade.ts",
     "test:local-practice": "node e2e/verify-local-practice.mjs",
     "test:super-common": "node e2e/verify-super-common.mjs",

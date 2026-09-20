@@ -1,6 +1,7 @@
 /** Versioned location rules. Issued matches keep their complete definitions. */
 export type DistrictId = 'bodega' | 'the-trap' | 'waff-l-house' | 'vip-section' | 'county-jail' | 'penthouse' | 'time-square' | 'magic-city'
-  | 'the-subway' | 'o-block' | 'hollywood-strip' | 'dive-bar' | 'acorn-projects' | 'corrupt-church' | 'nail-salon' | 'barbershop';
+  | 'the-subway' | 'o-block' | 'hollywood-strip' | 'dive-bar' | 'acorn-projects' | 'corrupt-church' | 'nail-salon' | 'barbershop'
+  | 'underground-ring' | 'rooftop-garden' | 'pawn-shop' | 'pirate-radio' | 'blackout-block' | 'flood-channel' | 'construction-site' | 'night-market' | 'mirror-arcade' | 'community-kitchen' | 'rush-hour';
 export type DistrictEffect =
   | { kind: 'first-discount'; amount: number; minimum: number }
   | { kind: 'move-bonus'; amount: number }
@@ -17,7 +18,18 @@ export type DistrictEffect =
   | { kind: 'cheap-crew'; maximumCost: number; maximumBonus: number }
   | { kind: 'tithe'; tax: number; amount: number }
   | { kind: 'salon-protection' }
-  | { kind: 'crew-cleanse' };
+  | { kind: 'crew-cleanse' }
+  | { kind: 'champion-only' }
+  | { kind: 'round-growth'; amount: number }
+  | { kind: 'pawn-sacrifice' }
+  | { kind: 'broadcast'; requiredAllies: number; amount: number }
+  | { kind: 'silence-arrival' }
+  | { kind: 'flood'; atRound: number }
+  | { kind: 'close-lane'; atRound: number }
+  | { kind: 'market-draw' }
+  | { kind: 'cost-power' }
+  | { kind: 'feed-neighbors'; amount: number }
+  | { kind: 'rush-hour' };
 export type DistrictDefinition = {
   id: DistrictId; name: string; rule: string; strategy: string; accent: string; effect: DistrictEffect;
 };
@@ -29,25 +41,40 @@ export const DISTRICT_CATALOG: readonly DistrictDefinition[] = [
   { id: 'the-trap', name: 'THE TRAP', rule: 'The first time each card moves here, it gains +2 Hands.', strategy: 'Play elsewhere, then move in. Playing directly here does not earn the bonus.', accent: '#fb7185', effect: { kind: 'move-bonus', amount: 2 } },
   { id: 'waff-l-house', name: 'WAFF-L HOUSE', rule: 'Started the round behind here? Your first play here this round gains +2 Hands.', strategy: 'The comeback bonus is decided at round start, before either player acts.', accent: '#facc15', effect: { kind: 'comeback', amount: 2 } },
   { id: 'vip-section', name: 'VIP SECTION', rule: 'Cards with a printed cost of 4 or more have +2 Hands here.', strategy: 'Discounted big characters still get the bonus. Frozen cards contribute 0.', accent: '#c084fc', effect: { kind: 'expensive', amount: 2, minimumCost: 4 } },
-  { id: 'county-jail', name: 'COUNTY JAIL', rule: 'Each side’s first card played here cannot move for the rest of the match.', strategy: 'Choose your first arrival carefully. Later arrivals and cards moving in stay free.', accent: '#94a3b8', effect: { kind: 'detain-first' } },
-  { id: 'penthouse', name: 'PENTHOUSE', rule: 'Rounds 1–3: your lone card has +3 Hands. From round 4: each of your cards has +1 instead.', strategy: 'Claim it with a solo threat, then bring the crew when the party starts.', accent: '#f0abfc', effect: { kind: 'penthouse', solo: 3, crew: 1, changesAtRound: 4 } },
-  { id: 'time-square', name: 'TIME SQUARE', rule: 'Have 3 different card types here to give your side +3 district Hands.', strategy: 'Build a mixed crew. Losing a type removes the district bonus.', accent: '#22d3ee', effect: { kind: 'diversity', amount: 3, types: 3 } },
+  { id: 'county-jail', name: 'COUNTY JAIL', rule: 'Each side’s first card played here cannot move for the rest of the fade.', strategy: 'Choose your first arrival carefully. Later arrivals and cards moving in stay free.', accent: '#94a3b8', effect: { kind: 'detain-first' } },
+  { id: 'penthouse', name: 'PENTHOUSE', rule: 'Rounds 1–3: your lone card has +3 Hands. From round 4: each of your cards has +1 instead.', strategy: 'Claim it with a solo threat, then bring the gang when the party starts.', accent: '#f0abfc', effect: { kind: 'penthouse', solo: 3, crew: 1, changesAtRound: 4 } },
+  { id: 'time-square', name: 'TIME SQUARE', rule: 'Have 3 different card types here to give your side +3 district Hands.', strategy: 'Build a mixed gang. Losing a type removes the district bonus.', accent: '#22d3ee', effect: { kind: 'diversity', amount: 3, types: 3 } },
   { id: 'magic-city', name: 'MAGIC CITY', rule: 'On rounds 5 and 6, your first card played here each round gains +2 Hands.', strategy: 'Save a late arrival for the spotlight. Each side gets its own bonus.', accent: '#f472b6', effect: { kind: 'late-arrival', amount: 2, startsAtRound: 5 } },
   { id: 'the-subway', name: 'THE SUBWAY', rule: 'Your first play here each round moves right after its ability. Rightmost wraps left.', strategy: 'Abilities resolve here before the ride. Cards that already left do not ride again. Moving in does not trigger on-play rules.', accent: '#38bdf8', effect: { kind: 'subway' } },
-  { id: 'o-block', name: 'O-BLOCK', rule: 'Your cards here have +2 Hands while you outnumber the rival; −1 while outnumbered.', strategy: 'Equal crews get no modifier. Reinforcements or movement can flip both sides’ bonuses. Hands cannot fall below 0.', accent: '#f87171', effect: { kind: 'outnumber', bonus: 2, penalty: 1 } },
+  { id: 'o-block', name: 'O-BLOCK', rule: 'Your cards here have +2 Hands while you outnumber the rival; −1 while outnumbered.', strategy: 'Equal gangs get no modifier. Reinforcements or movement can flip both sides’ bonuses. Hands cannot fall below 0.', accent: '#f87171', effect: { kind: 'outnumber', bonus: 2, penalty: 1 } },
   { id: 'hollywood-strip', name: 'HOLLYWOOD STRIP', rule: 'Your newest arrival has +3 Hands here. Your other cards here have −1.', strategy: 'Each play or move into this lane steals the spotlight. If that card leaves, your previous arrival gets it back. Minimum 0 Hands.', accent: '#fcd34d', effect: { kind: 'spotlight', bonus: 3, penalty: 1 } },
   { id: 'dive-bar', name: 'DIVE BAR', rule: 'Plays cost 1 less Motion (min 1; discounts don’t stack). Cards here have −2 Hands (min 0).', strategy: 'Get a cheaper play, then move out to shake off the Hands penalty. This penalty does not destroy cards.', accent: '#fb923c', effect: { kind: 'dive-discount', amount: 1, minimum: 1, penalty: 2 } },
-  { id: 'acorn-projects', name: 'ACORN PROJECTS', rule: 'Your cards with printed cost 2 or less gain +1 Hands per other ally here, up to +3.', strategy: 'Build a crew around your cheap characters. The bonus shrinks when allies leave.', accent: '#a3e635', effect: { kind: 'cheap-crew', maximumCost: 2, maximumBonus: 3 } },
+  { id: 'acorn-projects', name: 'ACORN PROJECTS', rule: 'Your cards with printed cost 2 or less gain +1 Hands per other ally here, up to +3.', strategy: 'Build a gang around your cheap characters. The bonus shrinks when allies leave.', accent: '#a3e635', effect: { kind: 'cheap-crew', maximumCost: 2, maximumBonus: 3 } },
   { id: 'corrupt-church', name: 'CORRUPT CHURCH', rule: 'Your first play here each round costs +1 Motion and gains +2 Hands before its ability.', strategy: 'Pay the tithe for lasting Hands. The extra cost comes after discounts and adds to any Rent Due tax.', accent: '#d8b4fe', effect: { kind: 'tithe', tax: 1, amount: 2 } },
   { id: 'nail-salon', name: 'NAIL SALON', rule: 'Your first play here each round blocks the next targeted enemy ability against it.', strategy: 'Protection follows the card if it moves and lasts until used. Lane penalties still apply.', accent: '#f9a8d4', effect: { kind: 'salon-protection' } },
   { id: 'barbershop', name: 'BARBERSHOP', rule: 'Your first play here each round clears Freeze, Silence, and negative Hands from your other cards here.', strategy: 'The cleanup happens before the new card’s ability. Positive buffs stay; ongoing lane penalties still apply.', accent: '#2dd4bf', effect: { kind: 'crew-cleanse' } },
+  {"id":"underground-ring","name":"UNDERGROUND RING","rule":"Only your strongest card here contributes Hands. Other cards still use abilities.","strategy":"Commit a champion and use the rest as support. Tied champions count only once. Frozen cards cannot be champion.","accent":"#ef4444","effect":{"kind":"champion-only"}},
+  {"id":"rooftop-garden","name":"ROOFTOP GARDEN","rule":"At the start of rounds 2–6, every card here permanently gains +1 Hands.","strategy":"Plant early and let your gang grow. The bonus travels with cards that move away; Frozen cards still grow.","accent":"#84cc16","effect":{"kind":"round-growth","amount":1}},
+  {"id":"pawn-shop","name":"PAWN SHOP","rule":"Your first play here each round destroys your weakest other ally here and gains its current Hands before its ability.","strategy":"Trade a small ally into a bigger threat. Frozen allies give 0; district bonuses are excluded. No other ally means no trade.","accent":"#f59e0b","effect":{"kind":"pawn-sacrifice"}},
+  {"id":"pirate-radio","name":"PIRATE RADIO","rule":"While you have exactly 2 cards here, your side gains +3 district Hands in each other lane.","strategy":"Hold a two-card broadcast gang. A third ally turns the signal off. The bonus can score in an empty lane.","accent":"#a78bfa","effect":{"kind":"broadcast","requiredAllies":2,"amount":3}},
+  {"id":"blackout-block","name":"BLACKOUT BLOCK","rule":"Cards played here are Silenced before their abilities resolve. Moving in avoids the blackout.","strategy":"Bring raw Hands or move your ability cards here. Silence stays after leaving until cleansed.","accent":"#64748b","effect":{"kind":"silence-arrival"}},
+  {"id":"flood-channel","name":"FLOOD CHANNEL","rule":"At the start of round 4, all cards here move one lane right. Rightmost wraps left.","strategy":"Build a gang for the flood, or wait until it passes. Locked cards stay. Movement triggers still apply; abilities do not repeat.","accent":"#06b6d4","effect":{"kind":"flood","atRound":4}},
+  {"id":"construction-site","name":"CONSTRUCTION SITE","rule":"From round 4, neither side can play cards here. Cards can still move in or out.","strategy":"Claim the site early, then use movement to reinforce or invade after the gates close.","accent":"#fb923c","effect":{"kind":"close-lane","atRound":4}},
+  {"id":"night-market","name":"NIGHT MARKET","rule":"Your first play here each round draws the next card from your deck before its ability.","strategy":"Find more options while you still have Motion to spend. An empty deck draws nothing; moving in does not draw.","accent":"#e879f9","effect":{"kind":"market-draw"}},
+  {"id":"mirror-arcade","name":"MIRROR ARCADE","rule":"Each card here scores its printed Motion cost instead of its current Hands. Frozen cards score 0.","strategy":"Big costs become reliable scores. Buffs, penalties and SQUABBLE still matter when cards leave. Abilities still work.","accent":"#38bdf8","effect":{"kind":"cost-power"}},
+  {"id":"community-kitchen","name":"COMMUNITY KITCHEN","rule":"Your first play here each round gives all your cards in the other lanes +1 permanent Hands.","strategy":"Spread your gang before serving. The meal resolves before the new card’s ability and never buffs cards in this lane.","accent":"#fdba74","effect":{"kind":"feed-neighbors","amount":1}},
+  {"id":"rush-hour","name":"RUSH HOUR","rule":"The first play here each round, by either side, pushes every other card here one lane right before its ability.","strategy":"Both gangs share one traffic trigger per round. The new arrival stays; Locked cards resist. Rightmost wraps left.","accent":"#f97316","effect":{"kind":"rush-hour"}},
 ];
 
 /** Deterministic Fisher–Yates: randomness belongs at match issuance, never in a play. */
 export function createDistrictSnapshot(seed: string): DistrictSnapshot {
   let state = 2166136261;
   for (const char of seed) state = Math.imul(state ^ char.charCodeAt(0), 16777619) >>> 0;
-  const pool = [...DISTRICT_CATALOG];
+  // Campaign v1 was authored against these sixteen locations. Keep its seeded
+  // boards stable when the random battle pool gains a new wave of districts.
+  const pool = seed.startsWith('story-node-v1:')
+    ? DISTRICT_CATALOG.slice(0, 16)
+    : [...DISTRICT_CATALOG];
   for (let i = pool.length - 1; i > 0; i--) {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
     const j = Math.floor((state / 4294967296) * (i + 1));
@@ -59,7 +86,7 @@ export function createDistrictSnapshot(seed: string): DistrictSnapshot {
 export function validateDistrictSnapshot(value: unknown): DistrictSnapshot {
   const snapshot = value as DistrictSnapshot | undefined;
   if (snapshot?.version !== 1 || !Array.isArray(snapshot.locations) || snapshot.locations.length !== 3
-    || new Set(snapshot.locations.map(item => item?.id)).size !== 3) throw new Error('District snapshot is missing or outdated. Start a new match.');
+    || new Set(snapshot.locations.map(item => item?.id)).size !== 3) throw new Error('District snapshot is missing or outdated. Start a new fade.');
   for (const location of snapshot.locations) {
     const definition = DISTRICT_CATALOG.find(item => item.id === location?.id);
     // Never silently reinterpret an issued snapshot after a content deployment.
@@ -70,7 +97,7 @@ export function validateDistrictSnapshot(value: unknown): DistrictSnapshot {
       || Object.keys(definition.effect).length !== Object.keys(effect).length
       || Object.entries(definition.effect).some(([key, expected]) => effect[key] !== expected)
       || ['name', 'rule', 'strategy', 'accent'].some(key => typeof location[key as keyof DistrictDefinition] !== 'string')) {
-      throw new Error('District snapshot is missing or outdated. Start a new match.');
+      throw new Error('District snapshot is missing or outdated. Start a new fade.');
     }
   }
   return JSON.parse(JSON.stringify(snapshot)) as DistrictSnapshot;

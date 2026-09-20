@@ -1,3 +1,4 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { MusicControls } from '../../components/MusicControls';
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'wouter';
@@ -8,6 +9,7 @@ import { storyContent } from '@workspace/squabblemon-engine/story';
 import { catalogCardById } from '@workspace/squabblemon-engine/data';
 import { basePath } from '../../lib/routing';
 import { PageHeading } from '../../components/venue/PageHeading';
+import { PageDecor } from '../../components/venue/PageDecor';
 
 export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { signOut } = useAppClerk();
@@ -35,6 +37,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       await queryClient.cancelQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
       const { receipt } = result;
+      if (!result.alreadyRedeemed) revealProfileRewards(bootstrap, result.bootstrap, `promo:${receipt.code}`, 'Promo rewards');
       const cardNames = receipt.cardIds?.map(id => catalogCardById[id]?.name ?? id).join(' and ');
       const cardSummary = receipt.cardIds?.length && receipt.cardIds.length > 2
         ? `${receipt.cardIds.length} characters` : cardNames;
@@ -100,7 +103,8 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
 
   return (
-    <div className="p-4 md:p-6 pb-24 h-full overflow-y-auto">
+    <div className="profile-stage world-decor-host p-4 md:p-6 pb-24 h-full overflow-y-auto">
+      <PageDecor theme="profile" />
       <PageHeading art="championship-chain" eyebrow="YOUR NAME / YOUR RULES" title="Your profile.">Set your identity. Find your rhythm.</PageHeading>
       <Link href="/how-to-play" className="block mb-6 border border-primary/30 bg-primary/5 p-4 text-primary text-sm font-bold hover:bg-primary/10">
         How to play · Characters, Street Packs & card upgrades →
@@ -136,7 +140,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         {promoStatus && !promoStatus.error && (
           <div className="mt-3 flex flex-wrap gap-5 text-sm font-bold text-primary">
             {promoStatus.showPacks && <Link href="/game/shop?view=packs" className="underline underline-offset-4">Open packs →</Link>}
-            <Link href="/game/decks" className="underline underline-offset-4">Build your crew →</Link>
+            <Link href="/game/decks" className="underline underline-offset-4">Build your gang →</Link>
           </div>
         )}
       </section>

@@ -3,14 +3,14 @@ import type { StoryEncounterSnapshot } from './gameEngine';
 
 export const activities = [
   { id: 'auto', name: 'Open training', description: 'Meet a rotating rival with your own card upgrades.', normalized: false },
-  { id: 'pressure', name: 'Pressure test', description: 'Face an aggressive mixed crew that contests early districts.', normalized: false },
+  { id: 'pressure', name: 'Pressure test', description: 'Face an aggressive mixed gang that contests early districts.', normalized: false },
   { id: 'control', name: 'Control test', description: 'Practice timing against silence and protection.', normalized: false },
   { id: 'movement', name: 'Movement test', description: 'Track a rival that shifts Hands between districts.', normalized: false },
   { id: 'support', name: 'Support test', description: 'Break up a rival’s buffs and protection.', normalized: false },
   { id: 'freeze', name: 'Beat the freeze', description: 'Practice recovery against Snow. Bring a cleanser.', normalized: false },
-  { id: 'cheap', name: 'Break the chain', description: 'Face Gamer and a crew of cheap arrivals.', normalized: false },
-  { id: 'fair', name: 'Equal footing', description: 'Competitive practice: both crews use base move tiers. No ranked ladder yet.', normalized: true },
-  { id: 'neighborhood', name: 'Neighborhood night', description: 'Weekly rotating district rules; both crews use base move tiers.', normalized: true },
+  { id: 'cheap', name: 'Break the chain', description: 'Face Gamer and a gang of cheap arrivals.', normalized: false },
+  { id: 'fair', name: 'Equal footing', description: 'Competitive practice: both gangs use base move tiers. No ranked ladder yet.', normalized: true },
+  { id: 'neighborhood', name: 'Neighborhood night', description: 'Weekly rotating district rules; both gangs use base move tiers.', normalized: true },
   { id: 'draft', name: 'Street draft', description: 'Pick one of three cards ten times. Borrowed cards are for this event only; equal move tiers.', normalized: true },
   { id: 'boss', name: 'After-hours boss', description: 'A tougher three-phase rival. Equal move tiers; earn a clear badge.', normalized: true },
 ] as const;
@@ -54,13 +54,13 @@ export function makeActivityEncounter(kind: ActivityId, seed: string, fallback: 
   const rule = stableHash(week) % 3;
   const title = activities.find(a => a.id === kind)!;
   const description = kind === 'neighborhood' ? [
-    'Street festival: both crews gain +2 district Hands in The Town.',
-    'Server maintenance: neither crew can summon in Server Room in round 3.',
-    'Open mic: both crews gain +2 district Hands in Group Chat.',
+    'Street festival: both gangs gain +2 district Hands in The Town.',
+    'Server maintenance: neither gang can summon in Server Room in round 3.',
+    'Open mic: both gangs gain +2 district Hands in Group Chat.',
   ][rule] : kind === 'boss' ? 'Round 1: +1 rival Motion. Round 4: +2 rival Hands in Group Chat. Round 5: Snow joins the rival hand.' : title.description;
   return {
     id: `activity:${kind}:${week}`, activity: { kind, seed, normalized: title.normalized, previousCardIds },
-    enemy: { id: `rival:${seed}`, name: kind === 'boss' ? 'After-hours Crew' : `${style[0].toUpperCase()}${style.slice(1)} Rival`, portraitAssetId: `assets/characters/${catalogCardByEngineId[roster[0]].catalogId}.webp`, deckId: `rival-${style}`, cardIds: roster, behaviorProfile: style },
+    enemy: { id: `rival:${seed}`, name: kind === 'boss' ? 'After-hours Gang' : `${style[0].toUpperCase()}${style.slice(1)} Rival`, portraitAssetId: `assets/characters/${catalogCardByEngineId[roster[0]].catalogId}.webp`, deckId: `rival-${style}`, cardIds: roster, behaviorProfile: style },
     battlefieldAssetId: 'assets/venues/red-fence-night-court.webp', soundHooks: {},
     passive: { name: title.name, description },
     ...(kind === 'neighborhood' ? { modifiers: rule === 1 ? { laneLocks: [{ round: 3, owner: 'both', lanes: [2] }] } : { lanePowerBonuses: [{ owner: 'both', lane: rule === 0 ? 0 : 1, amount: 2 }] } } : {}),

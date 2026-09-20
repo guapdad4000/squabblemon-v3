@@ -30,7 +30,7 @@ test('welcome reward requires a completed personal practice and remains idempote
   t.after(async () => { await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId)); });
   await db.insert(playerProfilesTable).values({ clerkUserId, onboardingStep: 'crew' });
   await grantFirstCollection(clerkUserId);
-  await assert.rejects(claimStarterReward(clerkUserId), /Finish a practice match/);
+  await assert.rejects(claimStarterReward(clerkUserId), /Finish a practice fade/);
   // This test exercises the claim transaction; transcript verification has separate engine tests.
   await db.insert(playerMatchesTable).values({ clerkUserId, mode: 'practice', playerDeckId: ROOKIE_DECK_ID, rivalDeckId: 'combo', completedAt: new Date(), outcome: 'loss', rounds: 6 });
   const claims = await Promise.all([claimStarterReward(clerkUserId), claimStarterReward(clerkUserId)]);

@@ -1103,13 +1103,35 @@
     "char101": {
       "file": "char101_chroma.mp4",
       "label": "Captain Jigga",
-      "move": "Cabin Crew",
+      "move": "Cabin Gang",
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
       "durationMs": 6500,
       "playbackRate": 1,
       "revision": "c4fcbebe4470d678"
+    },
+    "char102": {
+      "file": "char102_chroma.mp4",
+      "label": "STOCKZ",
+      "move": "Compound Interest",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "863a9d1d6bc8e096"
+    },
+    "char103": {
+      "file": "char103_chroma.mp4",
+      "label": "KYLE",
+      "move": "Smile Bombs",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 6500,
+      "playbackRate": 1,
+      "revision": "8a19217adf1b1a2b"
     }
   },
   "assignments": {
@@ -1215,6 +1237,10 @@
     "ashlee": "char100",
     "captainjigga": "char101",
     "concrete": null,
-    "counter": null
+    "counter": null,
+    "guyana": null,
+    "steward": null,
+    "stockz": "char102",
+    "kyle": "char103"
   }
 }

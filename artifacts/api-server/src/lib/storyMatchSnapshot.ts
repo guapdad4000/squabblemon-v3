@@ -32,7 +32,7 @@ export function parseStoryMatchProgressionSnapshot(
   value: unknown,
 ): StoryMatchProgressionSnapshot {
   if (!value || typeof value !== "object") {
-    throw new Error("Stored story match is missing its progression snapshot");
+    throw new Error("Stored story fade is missing its progression snapshot");
   }
   const candidate = value as Partial<StoryMatchProgressionSnapshot>;
   const validReward = (reward: unknown): reward is StoryReward => {
@@ -55,7 +55,7 @@ export function parseStoryMatchProgressionSnapshot(
     !Array.isArray(candidate.rewards) ||
     !candidate.rewards.every(validReward)
   ) {
-    throw new Error("Stored story match has an invalid progression snapshot");
+    throw new Error("Stored story fade has an invalid progression snapshot");
   }
   return structuredClone(candidate as StoryMatchProgressionSnapshot);
 }

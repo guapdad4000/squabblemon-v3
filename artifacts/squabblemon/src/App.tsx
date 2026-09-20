@@ -127,7 +127,7 @@ function ClerkProviderWithRoutes() {
         signIn: {
           start: {
             title: 'Back on the block',
-            subtitle: 'Sign in to recover your crew and Street Rep',
+            subtitle: 'Sign in to recover your gang and Street Rep',
           },
         },
         signUp: {

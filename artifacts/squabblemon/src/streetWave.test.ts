@@ -117,7 +117,7 @@ test('new fighters are collectible, trained and use replaceable special-move fal
   }
 });
 
-test('crews containing every new fighter replay deterministically', () => {
+test('gangs containing every new fighter replay deterministically', () => {
   for (let offset = 0; offset < STREET_WAVE.length; offset += 10) {
     const crew = completeEngineCrew(STREET_WAVE.slice(offset, offset + 10).map(c => c[0]));
     let m = createMatchFromEngineCards('street', crew, 'block', createMatch('block', 'block').cpuCardIds);

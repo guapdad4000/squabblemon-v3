@@ -66,7 +66,7 @@ test('City Legend Motion prices and Dragonfly Jones Hands are printed on playabl
   assert.equal(cards.ashlee.power, 3);
   assert.equal(cards.captainjigga.cost, 5);
   assert.equal(cards.counter.cost, 4);
-  assert.equal(cards.counter.power, 2);
+  assert.equal(cards.counter.power, 3);
 });
 
 for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend reveals resolve for ${owner}`, () => {
@@ -105,7 +105,7 @@ for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend revea
       assert.equal(stewards.length, 2);
       assert.equal(new Set(stewards.map(card => card.instanceId)).size, 2, 'each summon must have a unique instance id');
       assert(stewards.every(card => card.basePower === 2));
-      assert.equal(rival.powerModifier, 1, 'one enemy can only be targeted by one Steward');
+      assert.equal(rival.powerModifier, 0, 'one enemy can only take one -2 hit from the Stewards');
     }
     if (id === 'counter') {
       assert.equal(self.powerModifier, 4, 'Mirror is capped at +4 even against a 5-cost enemy');
@@ -199,7 +199,7 @@ test('new effects respect conditions, guard and direct protection', () => {
   assert.equal(onBoard(smallCrew, john.foe).powerModifier, 2);
 });
 
-test('all nine City Legends can play and replay in a complete match', () => {
+test('all nine City Legends can play and replay in a complete fade', () => {
   const ids = [...MYTHIC_LEGENDS.map(([id]) => id), 'leroy'];
   const rival = createMatch('vibes', 'vibes');
   let match = createMatchFromEngineCards('mythic-legends', ids, 'vibes', rival.cpuCardIds);

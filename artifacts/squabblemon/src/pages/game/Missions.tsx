@@ -1,3 +1,4 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { CareerBoard } from './CareerBoard';
 import {
@@ -11,6 +12,7 @@ import { ArrowRight, Check } from 'lucide-react';
 import { Link } from 'wouter';
 import { getCardImage } from '../../data';
 import { ProgressRing } from '../../components/venue/ProgressRing';
+import { PageDecor } from '../../components/venue/PageDecor';
 import '../../styles/studio.css';
 import '../../styles/hustle-stage.css';
 
@@ -29,6 +31,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await claimMission.mutateAsync({ missionId });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
+      revealProfileRewards(bootstrap, res, missionId, 'Bounty collected');
     } catch {
       setError('Reward claim failed. Nothing was spent; try again.');
     } finally {
@@ -38,7 +41,8 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
   const ready = bootstrap.missions.filter((m) => m.status === 'claimable').length;
   return (
-    <div className="studio-page hustle-stage" data-tab={tab}>
+    <div className="studio-page hustle-stage world-decor-host" data-tab={tab}>
+      <PageDecor theme={tab} />
       <header className="hustle-stage__hero">
         <div>
           <span className="studio-eyebrow">The hustle · Make your name</span>
@@ -48,13 +52,13 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <em>mark.</em>
           </h1>
           <p>
-            Make moves. Master your crew.
+            Make moves. Master your gang.
             <br />
             Collect what’s yours.
           </p>
           <span className="hustle-stage__ready">
             <GameGlyph name="mastery" />
-            {ready ? `${ready} ${ready === 1 ? 'reward' : 'rewards'} ready to claim` : 'Every match moves you forward'}
+            {ready ? `${ready} ${ready === 1 ? 'reward' : 'rewards'} ready to claim` : 'Every fade moves you forward'}
           </span>
         </div>
         <img src={getCardImage('techbro-rich')} alt="" />

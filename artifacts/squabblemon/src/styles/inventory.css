@@ -1,0 +1,11 @@
+.inventory-room { min-height: 100%; padding: 28px 5% 180px; background: radial-gradient(ellipse at 25% 45%,#80603355,transparent 60%),#15120e; color:#f3e4c5; }
+.inventory-room__layout { max-width: 1100px; margin:40px auto; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px; }
+.inventory-room__art img { width:100%; filter:drop-shadow(0 18px 24px #0009); }
+.inventory-room h1 { font:900 clamp(40px,6vw,78px)/1 var(--font-display,Impact,sans-serif); text-transform:uppercase; margin:12px 0 28px; }
+.inventory-room__wallet { display:grid;grid-template-columns:1fr 1fr;gap:22px; }
+.inventory-room__wallet a { display:grid;grid-template-columns:70px 1fr;align-items:center;column-gap:10px;padding-bottom:15px;border-bottom:1px solid #cba66840; }
+.inventory-room__wallet .game-glyph { --glyph-size:70px;grid-row:span 2; }
+.inventory-room__wallet strong { font-size:26px;color:#ffe0a1; }
+.inventory-room__wallet span { font-size:12px; }
+.inventory-room__links { display:flex;flex-direction:column;gap:14px;margin-top:28px;font-size:13px; }
+@media(max-width:639px) { .inventory-room__layout { grid-template-columns:1fr;gap:12px;margin-top:12px; } .inventory-room__art { max-width:200px;margin:auto; } .inventory-room__wallet { gap:14px; } .inventory-room__wallet a { grid-template-columns:55px 1fr; } .inventory-room__wallet .game-glyph { --glyph-size:55px; } }

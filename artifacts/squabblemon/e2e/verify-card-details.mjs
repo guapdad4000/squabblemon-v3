@@ -50,7 +50,7 @@ async function verifyDetails(page, name, mode, width, height, touch) {
   assert.ok(geometry.scrollWidth <= geometry.width + 1, 'Details do not scroll sideways');
   assert.ok(Math.abs(geometry.copyBottom - geometry.cardBottom) <= 18, 'Description sits at the card bottom');
   assert.ok(geometry.effectTop > geometry.cardMiddle && geometry.effectFont >= 11, 'Description is readable in the lower half');
-  assert.ok(await dialog.locator('.collector-card h4').evaluate(element => element.scrollWidth <= element.clientWidth + 1), 'Card name fits its artwork width');
+  assert.ok(await dialog.locator('[data-testid=card-inspector] h4').evaluate(element => element.scrollWidth <= element.clientWidth + 1), 'Card name fits its artwork width');
   await page.screenshot({ path: `../../screenshots/card-details-${mode}-${name}.jpg`, type: 'jpeg', quality: 85 });
   // Scrolling either the portrait page or desktop dossier must not move dismissal.
   await page.locator('.card-inspector-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });

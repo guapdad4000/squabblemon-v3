@@ -7,7 +7,9 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE', PromoCodeReward> = {
+  DEVSTOCKZ: { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] },
+  KYLE: { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] },
   DEVTEST: { code: 'DEVTEST', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
   DEVTEST2: { code: 'DEVTEST2', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
   SIMMYFOODZ: { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] },

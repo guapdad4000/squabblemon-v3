@@ -86,7 +86,7 @@ test('GUAP gains three training bonuses only after an unblocked ability', () => 
   assert.equal(playCard(m, 'player', source.instanceId, 0).boards[0][0].powerModifier, 2);
 });
 
-test('GUAP can finish a six-round crew battle and replay identically on the authoritative engine', () => {
+test('GUAP can finish a six-round gang battle and replay identically on the authoritative engine', () => {
   const rival = createMatch('vibes', 'vibes');
   let m = createMatchFromEngineCards('guap-crew', crew, 'vibes', rival.cpuCardIds);
   const start = m, moves: PlayerMove[] = [];

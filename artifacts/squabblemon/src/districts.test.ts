@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   createAbilityUpgradeSnapshot, DISTRICT_CATALOG, createDistrictSnapshot, validateDistrictSnapshot, createMatch, createCardInstance,
+  getStoryLockedLanes, canAffordSelection, getEffectiveCardPower, getDistrictSharedBonus,
   getDistrictResults, getDistrictCardBonusForMatch, getMatchDistricts, getLegalCardCost, getCardCostExplanation, nextRound,
   playTurnCard, pass, revealCpuTurn, verifyMatchTranscript, createStoryMatch, verifyStoryMatchTranscript,
   type DistrictId, type DistrictSnapshot, type Match, type Lane, type Owner, type PlayerMove,
@@ -22,7 +23,7 @@ function play(match: Match, id: string, lane: Lane, owner: Owner = 'player', ind
 }
 const advance = (match: Match) => nextRound({ ...match, phase: 'resolved' });
 
-test('district draw is deterministic, includes all sixteen, has no duplicates, and copies definitions', () => {
+test('district draw is deterministic, includes all twenty-seven, has no duplicates, and copies definitions', () => {
   const seen = new Set<string>();
   for (let i = 0; i < 100; i++) {
     const result = createDistrictSnapshot(`match-${i}`);
@@ -30,10 +31,10 @@ test('district draw is deterministic, includes all sixteen, has no duplicates, a
     assert.equal(new Set(result.locations.map(d => d.id)).size, 3);
     result.locations.forEach(d => seen.add(d.id));
   }
-  assert.equal(seen.size, 16);
+  assert.equal(seen.size, 27);
   const source = snapshot('bodega', 'penthouse', 'county-jail');
   const m = createMatch('vibes', 'vibes', undefined, undefined, source);
-  source.locations[0].name = 'Changed outside match';
+  source.locations[0].name = 'Changed outside fade';
   assert.equal(getMatchDistricts(m)[0].name, 'BODEGA');
   assert.throws(() => validateDistrictSnapshot({ version: 2, locations: [] }), /outdated/);
   assert.throws(() => validateDistrictSnapshot(snapshot('bodega', 'bodega', 'penthouse')), /outdated/);
@@ -138,7 +139,7 @@ test('Penthouse changes once at round four and replay frames preserve both score
   assert.match(m.effectLog.at(-1)!.note, /party starts/);
   m.boards[0].push(card('cornball', 'player', 1, 0));
   assert.equal(getDistrictResults(m)[0].player, 4);
-  assert.equal(getDistrictResults(advance(m))[0].player, 4, 'crew bonus does not accumulate');
+  assert.equal(getDistrictResults(advance(m))[0].player, 4, 'gang bonus does not accumulate');
 });
 
 test('Time Square adds a single reversible side bonus for three distinct types', () => {
@@ -172,7 +173,7 @@ function finish(initialMatch: Match) {
   const moves: PlayerMove[] = [];
   while (m.phase !== 'complete') {
     for (const entry of [...m.playerHand]) {
-      const target = ([0, 1, 2] as Lane[]).find(l => getLegalCardCost(m, 'player', entry, l) <= m.playerMotion);
+      const target = ([0, 1, 2] as Lane[]).find(l => canAffordSelection(m, 'player', entry.instanceId, l));
       if (target === undefined) continue;
       moves.push({ cardInstanceId: entry.instanceId, lane: target, squabble: false, endTurn: false });
       const preview = previewBattlePlay(m, entry.instanceId, target)!;
@@ -185,15 +186,15 @@ function finish(initialMatch: Match) {
   return { m, moves };
 }
 
-test('new district matches reproduce full CPU turns, previews, scores, and runtime in reward replay', () => {
-  for (const ids of [['bodega', 'penthouse', 'waff-l-house'], ['the-trap', 'county-jail', 'vip-section'], ['magic-city', 'time-square', 'penthouse'], ['the-subway', 'the-trap', 'o-block'], ['hollywood-strip', 'dive-bar', 'acorn-projects'], ['corrupt-church', 'nail-salon', 'barbershop']] as [DistrictId, DistrictId, DistrictId][]) {
+test('new district fades reproduce full CPU turns, previews, scores, and runtime in reward replay', () => {
+  for (const ids of [['bodega', 'penthouse', 'waff-l-house'], ['the-trap', 'county-jail', 'vip-section'], ['magic-city', 'time-square', 'penthouse'], ['the-subway', 'the-trap', 'o-block'], ['hollywood-strip', 'dive-bar', 'acorn-projects'], ['corrupt-church', 'nail-salon', 'barbershop'], ['underground-ring', 'rooftop-garden', 'pawn-shop'], ['pirate-radio', 'blackout-block', 'flood-channel'], ['construction-site', 'night-market', 'mirror-arcade'], ['community-kitchen', 'rush-hour', 'the-trap']] as [DistrictId, DistrictId, DistrictId][]) {
     const start = initial(...ids), { m, moves } = finish(start);
     const verified = verifyMatchTranscript('vibes', 'vibes', moves, start.abilityUpgradeSnapshot, undefined, start.districtSnapshot);
     assert.deepEqual(verified, m);
   }
 });
 
-test('story matches replay the exact issued locations alongside encounter modifiers', () => {
+test('story fades replay the exact issued locations alongside encounter modifiers', () => {
   const encounter = getStoryBattle('cracked-head-takes-the-block')!.encounter;
   const locations = snapshot('bodega', 'penthouse', 'waff-l-house');
   const start = createStoryMatch(encounter, 'vibes', undefined, undefined, locations);
@@ -337,7 +338,7 @@ test('Corrupt Church charges and buffs first plays per side and round, after dis
   assert.equal(m.boards[0].at(-1)!.powerModifier, 2);
 });
 
-test('Nail Salon protects first arrivals once, follows movement, and blocks hostile effects', () => {
+test('Nail Salon protects first arrivals once, follows movement, and expires after one hostile ability', () => {
   let m = play(initial('nail-salon', 'bodega', 'the-trap'), 'hooper', 0);
   const target = m.boards[0][0].instanceId;
   m = play(m, 'snow', 0, 'cpu');
@@ -366,7 +367,7 @@ test('Nail Salon protects first arrivals once, follows movement, and blocks host
 
 test('Barbershop cleans allies before reveal, preserves buffs and opponents, and resets each round', () => {
   let m = initial('barbershop', 'bodega', 'the-trap');
-  const hurt = { ...card('hooper', 'player', 80, 0), powerModifier: -2, statuses: { frozen: true, silenced: true, protected: false, blocked: false } };
+  const hurt = { ...card('hooper', 'player', 80, 0), powerModifier: -2, statuses: { ...card('hooper').statuses, frozen: true, silenced: true } };
   const buffed = { ...card('og', 'player', 81, 0), powerModifier: 3 };
   const enemy = { ...card('hooper', 'cpu', 82, 0), powerModifier: -1, statuses: { ...hurt.statuses } };
   m.boards[0] = [hurt, buffed, enemy];
@@ -404,4 +405,109 @@ test('Nail Salon also blocks attack upgrades and keeps Wifey protection independ
   assert.equal(guarded.boards[0][0].statuses.frozen, false, 'Side Eye blocks independently after salon shield');
   guarded = play(guarded, 'snow', 0, 'cpu');
   assert.equal(guarded.boards[0][0].statuses.frozen, true);
+});
+
+test('Underground Ring counts one champion even with tied Hands and excludes Frozen cards', () => {
+  const m = initial('underground-ring', 'bodega', 'the-trap');
+  const a = {...card('cornball', 'player', 1, 0), basePower: 8}, b = {...card('cornball', 'player', 2, 0), basePower: 8};
+  m.boards[0] = [a,b]; assert.equal(getDistrictResults(m)[0].player,8);
+  m.boards[0][0] = {...a,statuses:{...a.statuses,frozen:true}}; assert.equal(getDistrictResults(m)[0].player,8);
+  m.boards[0][1] = {...b,statuses:{...b.statuses,frozen:true}}; assert.equal(getDistrictResults(m)[0].player,0);
+});
+test('Rooftop Garden grows both sides at each boundary through round six and records replay', () => {
+  let m = initial('rooftop-garden','bodega','the-trap'); const b=card('cornball','cpu',1,0);
+  m.boards[0]=[card('cornball','player',1,0),{...b,statuses:{...b.statuses,frozen:true}}];
+  for(let round=2;round<=6;round++){m=advance(m);assert.deepEqual(m.boards[0].map(c=>c.powerModifier),[round-1,round-1]);assert.equal(getDistrictResults(m)[0].cpu,0);}
+  const event=m.effectLog.find(e=>e.note.startsWith('ROOFTOP GARDEN:'))!;
+  assert.equal(event.replay.before.boards[0][0].powerModifier,0);assert.equal(event.replay.after.boards[0][0].powerModifier,1);
+  assert.equal(advance(m).boards[0][0].powerModifier,5);
+});
+test('Pawn Shop sacrifices the weakest other ally once per side per round', () => {
+  let m=initial('pawn-shop','bodega','the-trap');const weak={...card('cornball','player',80,0),powerModifier:2};
+  m.boards[0]=[weak,{...card('cornball','player',81,0),basePower:20},card('cornball','cpu',80,0)];
+  m=play(m,'cornball',0);assert(!m.boards[0].some(c=>c.instanceId===weak.instanceId));assert.equal(m.boards[0].at(-1)!.powerModifier,3);
+  assert(m.effectLog.find(e=>e.note.startsWith('PAWN SHOP:'))!.targets.some(t=>t.cardInstanceId===weak.instanceId&&t.after===null));
+  m=play(m,'cornball',0);assert.equal(m.boards[0].at(-1)!.powerModifier,0);
+  assert.equal(play(initial('pawn-shop','bodega','the-trap'),'cornball',0).boards[0][0].powerModifier,0);
+});
+test('Pirate Radio scores empty neighboring lanes and switches off with a third ally',()=>{
+ const m=initial('pirate-radio','underground-ring','mirror-arcade');m.boards[0]=[card('cornball','player',1,0),card('cornball','player',2,0)];
+ assert.deepEqual(getDistrictResults(m).map(s=>s.player),[2,3,3]);assert.equal(getDistrictSharedBonus(m,'cpu',1),0);
+ m.boards[0].push(card('cornball','player',3,0));assert.deepEqual(getDistrictResults(m).map(s=>s.player),[3,0,0]);
+});
+test('Blackout silences before reveal; moving in avoids Silence',()=>{
+ let m=play(initial('blackout-block','bodega','the-trap'),'bikelife',0);assert.equal(m.boards[0][0].statuses.silenced,true);assert.equal(m.boards[0][0].powerModifier,0);assert.equal(m.boards[0][0].moved,false);
+ m=initial('blackout-block','bodega','the-trap');m.boards[2]=[{...card('cornball','player',99,2),basePower:30}];m=play(m,'bikelife',1);assert.equal(m.boards[0][0].cardId,'bikelife');assert.equal(m.boards[0][0].statuses.silenced,false);
+});
+test('Flood moves both gangs only at round four, respects locks, wraps, and triggers Trap',()=>{
+ let m=initial('flood-channel','the-trap','bodega');const locked=card('cornball','player',3,0);
+ m.boards[0]=[card('cornball','player',1,0),card('cornball','cpu',2,0),{...locked,statuses:{...locked.statuses,locked:true}}];
+ m=advance(advance(m));assert.equal(m.boards[0].length,3);m=advance(m);assert.equal(m.boards[0].length,1);assert.equal(m.boards[0][0].instanceId,locked.instanceId);assert.deepEqual(m.boards[1].map(c=>c.powerModifier),[2,2]);
+ m.boards[0].push(card('cornball','cpu',7,0));m=advance(m);assert.equal(m.boards[0].length,2);
+ let wrap=initial('bodega','the-trap','flood-channel');wrap.boards[2]=[card('cornball','player',1,2)];wrap=advance({...wrap,round:3});assert.equal(wrap.boards[0][0].moved,true);
+});
+test('Construction rejects both direct plays and previews from round four, but allows movement',()=>{
+ let m=initial('construction-site','bodega','the-trap');assert.deepEqual(getStoryLockedLanes(m),[]);m=advance({...m,round:3});
+ for(const owner of ['player','cpu'] as const){assert.deepEqual(getStoryLockedLanes(m,owner),[0]);assert.throws(()=>play(m,'cornball',0,owner),/locked/);}
+ const entry=card('cornball');assert.equal(previewBattlePlay({...m,playerHand:[entry]},entry.instanceId,0),null);
+ m.boards[2]=[{...card('cornball','player',99,2),basePower:30}];m=play(m,'bikelife',1);assert.equal(m.boards[0][0].cardId,'bikelife');
+});
+test('Night Market draws once per side per round, shares the normal deck cursor, and handles exhaustion',()=>{
+ let m=initial('night-market','bodega','the-trap');const index=m.playerDrawIndex,nextId=m.playerCardIds[index];
+ m=play(m,'cornball',0);assert.equal(m.playerHand[0].cardId,nextId);assert.equal(m.playerDrawIndex,index+1);
+ m=play(m,'cornball',0);assert.equal(m.playerDrawIndex,index+1);const ci=m.cpuDrawIndex;
+ m=play(m,'cornball',0,'cpu');assert.equal(m.cpuDrawIndex,ci+1);m=advance(m);assert.equal(m.playerDrawIndex,index+2);
+ m.playerDrawIndex=m.playerCardIds.length;m=play(m,'cornball',0);assert.equal(m.playerHand.length,0);assert.match(m.effectLog.findLast(e=>e.note.startsWith('NIGHT MARKET:'))!.note,/deck empty/);
+});
+test('Mirror Arcade scores printed cost regardless of Hands, except when Frozen',()=>{
+ const m=initial('mirror-arcade','bodega','the-trap');const a={...card('hooper','player',1,0),powerModifier:20},b={...card('cornball','player',2,0),powerModifier:-1};
+ m.boards[0]=[a,b];assert.equal(getDistrictResults(m)[0].player,a.cost+b.cost);assert.equal(getDistrictCardBonusForMatch(m,a,1),0);
+ m.boards[0][0]={...a,statuses:{...a.statuses,frozen:true}};assert.equal(getDistrictResults(m)[0].player,b.cost);
+});
+test('Community Kitchen buffs other friendly lanes once per round',()=>{
+ let m=initial('community-kitchen','bodega','the-trap');m.boards=[[card('cornball','player',80,0)],[card('cornball','player',81,1)],[card('cornball','player',82,2),card('cornball','cpu',83,2)]];
+ m=play(m,'cornball',0);assert.deepEqual(m.boards.flat().map(c=>c.powerModifier),[0,0,1,1,0]);m=play(m,'cornball',0);assert.equal(m.boards[1][0].powerModifier,1);m=play(advance(m),'cornball',0);assert.equal(m.boards[1][0].powerModifier,2);
+});
+test('Rush Hour shares one traffic trigger across both sides and honors locks before reveal',()=>{
+ let m=initial('rush-hour','the-trap','bodega');const locked=card('cornball','player',82,0);
+ m.boards[0]=[card('cornball','player',80,0),card('cornball','cpu',81,0),{...locked,statuses:{...locked.statuses,locked:true}}];
+ m=play(m,'cornball',0);assert.equal(m.boards[1].length,2);assert.deepEqual(m.boards[1].map(c=>c.powerModifier),[2,2]);assert.equal(m.boards[0].length,2);
+ m=play(m,'cornball',0,'cpu');assert.equal(m.boards[1].length,2);
+ const traffic=m.effectLog.find(e=>e.note.startsWith('RUSH HOUR:'))!;assert.equal(traffic.replay.before.boards[0].length,4);assert.equal(traffic.replay.after.boards[0].length,2);
+ m=play(advance(m),'cornball',0,'cpu');assert.equal(m.boards[0].length,2);
+});
+
+test('Online Construction locks reach both seats and server commands reject closed lanes', () => {
+  const deck = decks.find(d => d.id === 'vibes')!;
+  const member = (userId: string): OnlineMember => ({ userId, name: userId, ready: false, deck: { ...deck } });
+  let room = joinOnlineRoom(createOnlineRoom(member('host'), 'player', 1000), member('guest'), 1001);
+  room = applyOnlineCommand(applyOnlineCommand(room, 'player', { type: 'ready' }, 1002), 'cpu', { type: 'ready' }, 1003);
+  room.match = { ...initial('construction-site', 'night-market', 'rush-hour'), round: 4, squabbleByOwner: { player: false, cpu: false } };
+  assert.deepEqual(onlineRoomView(room, 'ROOM', 'host', 1004).lockedLanes, [0]);
+  assert.deepEqual(onlineRoomView(room, 'ROOM', 'guest', 1004).lockedLanes, [0]);
+  assert.throws(() => applyOnlineCommand(room, 'player', { type: 'play', instanceId: room.match!.playerHand[0].instanceId, lane: 0, squabble: false }, 1004), /locked/);
+});
+
+test('Online Night Market draws stay private while the rival sees only the hand count', () => {
+  const deck = decks.find(d => d.id === 'vibes')!;
+  const member = (userId: string): OnlineMember => ({ userId, name: userId, ready: false, deck: { ...deck } });
+  let room = joinOnlineRoom(createOnlineRoom(member('host'), 'player', 1000), member('guest'), 1001);
+  room = applyOnlineCommand(applyOnlineCommand(room, 'player', { type: 'ready' }, 1002), 'cpu', { type: 'ready' }, 1003);
+  room.match = { ...initial('night-market', 'mirror-arcade', 'pawn-shop'), squabbleByOwner: { player: false, cpu: false } };
+  const before = room.match.playerHand.length, drawIndex = room.match.playerDrawIndex;
+  const cheap = room.match.playerHand.find(c => c.cost <= room.match!.playerMotion)!;
+  room = applyOnlineCommand(room, 'player', { type: 'play', instanceId: cheap.instanceId, lane: 0, squabble: false }, 1004);
+  const host = onlineRoomView(room, 'ROOM', 'host', 1005), rival = onlineRoomView(room, 'ROOM', 'guest', 1005);
+  assert.equal(host.hand.length, before); assert.equal(rival.rivalHandCount, before);
+  assert.equal(room.match!.playerDrawIndex, drawIndex + 1);
+  assert.equal(rival.events.find(e => e.note.startsWith('NIGHT MARKET:'))!.note, 'NIGHT MARKET: drew one card.');
+  assert(!JSON.stringify(rival).includes(host.hand.at(-1)!.instanceId));
+});
+
+
+test('campaign v1 boards stay stable while random battles can use the expanded location pool', () => {
+  assert.deepEqual(createDistrictSnapshot('story-node-v1:welcome-to-the-block').locations.map(location => location.id), ['the-trap', 'bodega', 'corrupt-church']);
+  const randomIds = new Set(Array.from({ length: 100 }, (_, i) => createDistrictSnapshot('expanded-battle:' + i).locations).flat().map(location => location.id));
+  assert(randomIds.has('mirror-arcade'));
+  assert(randomIds.has('night-market'));
 });

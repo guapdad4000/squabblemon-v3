@@ -1,9 +1,9 @@
-import { GameGlyph } from './venue/GameGlyph';
+import { ResultArtwork } from './ResultArtwork';
 import { coachBattle } from '@workspace/squabblemon-engine/insights';
 import { ArrowRight, RotateCcw, Star } from 'lucide-react';
 import { BattleVictory } from './BattleVictory';
 import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
-import { decks, getAssetUrl, getCardImage } from '../data';
+import { decks, getCardImage } from '../data';
 import { type Match, evaluateStoryStarObjectives, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { BattleEarnings } from './BattleEarnings';
 import '../styles/studio.css';
@@ -36,13 +36,12 @@ export function ResultScreen({
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
   const objectiveResults = evaluateStoryStarObjectives(m);
   const earnedStars = objectiveResults.filter((objective) => objective.achieved).length;
-  const environment = m.storyEncounter?.cinematic?.environmentAssetId;
   const objectiveHits = new Map(objectiveResults.map((objective) => [objective.id, objective.achieved]));
   const retry = (
     <div className="result-stage__save" role="alert">
       <p>
         {isTutorial
-          ? 'Tutorial completion could not be verified. Restart the guided match and complete each highlighted lesson.'
+          ? 'Tutorial completion could not be verified. Restart the guided fade and complete each highlighted lesson.'
           : isStory
             ? 'Failed to save outcome.'
             : 'Your rewards were not saved. Your battle result remains available on this screen.'}
@@ -58,54 +57,83 @@ export function ResultScreen({
 
   return (
     <div
-      className={`battle-result-screen studio-results result-stage ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
+      className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
     >
-      {environment && (
-        <div className="result-stage__environment" style={{ backgroundImage: `url("${getAssetUrl(environment)}")` }} />
-      )}
-      <img
-        className={`result-stage__signature variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, playerDeck.hero)) ?? 'base'}`}
-        src={getCardImage(playerDeck.hero)}
-        alt=""
-        aria-hidden="true"
-      />
       <div className="result-stage__content">
         <header className="result-stage__heading">
           <span className="studio-eyebrow">
-            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Match complete'}
+            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
             <span>•</span>
             {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
           </span>
-          {isVictory ? (
-            <GameGlyph name="mastery" className="result-stage__emblem" />
-          ) : (
-            <GameGlyph name="fight" className="result-stage__emblem" />
-          )}
           <h2 data-testid="status-match-result">
             {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
           </h2>
         </header>
-        {isDraw ? (
-          <div className="result-stage__draw">
-            <img src={getCardImage(playerDeck.hero)} alt="" />
-            <span>Settle it in the next round.</span>
-          </div>
-        ) : (
-          <BattleVictory match={m} winner={winner} equippedVariants={equippedVariants} />
-        )}
-        <div className="result-stage__scores" aria-label="Final district scores">
-          {results.map((r, i) => (
-            <div key={i} data-winner={r.winner}>
-              <span>{districts[i]?.name ?? `District ${i + 1}`}</span>
-              <strong>
-                {r.player}
-                <small>:</small>
-                {r.cpu}
-              </strong>
-              <em>{r.winner === 'player' ? 'Secured' : r.winner === 'draw' ? 'Dead heat' : 'Lost'}</em>
-            </div>
-          ))}
-        </div>
+        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
+          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending} />
+        <div className="result-stage__receipt">
+        <nav className="result-stage__actions" aria-label="After the battle">
+          {isStory ? (
+            <>
+              {storyMetadata?.outcome !== 'win' && (
+                <button
+                  className="studio-action studio-action--gold"
+                  data-testid="button-restart-match"
+                  onClick={onRestart}
+                >
+                  Retry Encounter
+                  <RotateCcw size={15} />
+                </button>
+              )}
+              <button
+                className={`studio-action ${storyMetadata?.outcome === 'win' ? 'studio-action--gold' : ''}`}
+                onClick={onGoHome}
+              >
+                Continue Chapter
+                <ArrowRight size={15} />
+              </button>
+            </>
+          ) : isTutorial ? (
+            rewardError ? (
+              <button
+                className="studio-action studio-action--gold"
+                data-testid="button-restart-tutorial"
+                onClick={onRestart}
+              >
+                Restart Guided Fade
+                <RotateCcw size={15} />
+              </button>
+            ) : (
+              <button
+                className="studio-action studio-action--gold"
+                data-testid="button-complete-tutorial"
+                onClick={onTutorialComplete}
+                disabled={rewardPending || !reward || !onTutorialComplete}
+              >
+                {rewardPending || !reward ? 'Saving Tutorial' : 'Tutorial Complete · Continue'}
+                <ArrowRight size={15} />
+              </button>
+            )
+          ) : (
+            <>
+              <button
+                className="studio-action studio-action--gold"
+                data-testid="button-restart-match"
+                onClick={onRestart}
+              >
+                Train Again
+                <ArrowRight size={15} />
+              </button>
+              <button className="studio-action" data-testid="button-change-deck" onClick={onChangeDeck}>
+                Adjust Gang
+              </button>
+              <button className="studio-text-action" onClick={onGoHome}>
+                Home
+              </button>
+            </>
+          )}
+        </nav>
         {isStory && (
           <section className="result-stage__story" aria-label="Story outcome">
             {storyMetadata ? (
@@ -125,7 +153,7 @@ export function ResultScreen({
                     ? storyMetadata.firstClear
                       ? `Encounter cleared · ${earnedStars} / 3 stars`
                       : `This run ${earnedStars} / 3 · Best ${storyMetadata.stars} / 3`
-                    : 'Adjust your crew and claim the rematch.'}
+                    : 'Adjust your gang and claim the runback.'}
                 </p>
                 <details className="result-stage__details">
                   <summary>Star objectives</summary>
@@ -166,80 +194,29 @@ export function ResultScreen({
         ) : !isStory && rewardError ? (
           retry
         ) : reward ? (
-          <BattleEarnings reward={reward} />
+          <BattleEarnings reward={reward} showTotals={false} />
         ) : !isStory ? (
           <p className="studio-notice" role="status">
             Saving battle earnings…
           </p>
         ) : null}
-        <nav className="result-stage__actions" aria-label="After the battle">
-          {isStory ? (
-            <>
-              {storyMetadata?.outcome !== 'win' && (
-                <button
-                  className="studio-action studio-action--gold"
-                  data-testid="button-restart-match"
-                  onClick={onRestart}
-                >
-                  Retry Encounter
-                  <RotateCcw size={15} />
-                </button>
-              )}
-              <button
-                className={`studio-action ${storyMetadata?.outcome === 'win' ? 'studio-action--gold' : ''}`}
-                onClick={onGoHome}
-              >
-                Continue Chapter
-                <ArrowRight size={15} />
-              </button>
-            </>
-          ) : isTutorial ? (
-            rewardError ? (
-              <button
-                className="studio-action studio-action--gold"
-                data-testid="button-restart-tutorial"
-                onClick={onRestart}
-              >
-                Restart Guided Match
-                <RotateCcw size={15} />
-              </button>
-            ) : (
-              <button
-                className="studio-action studio-action--gold"
-                data-testid="button-complete-tutorial"
-                onClick={onTutorialComplete}
-                disabled={rewardPending || !reward || !onTutorialComplete}
-              >
-                {rewardPending || !reward ? 'Saving Tutorial' : 'Tutorial Complete · Continue'}
-                <ArrowRight size={15} />
-              </button>
-            )
-          ) : (
-            <>
-              <button
-                className="studio-action studio-action--gold"
-                data-testid="button-restart-match"
-                onClick={onRestart}
-              >
-                Train Again
-                <ArrowRight size={15} />
-              </button>
-              <button className="studio-action" data-testid="button-change-deck" onClick={onChangeDeck}>
-                Adjust Crew
-              </button>
-              <button className="studio-text-action" onClick={onGoHome}>
-                Home
-              </button>
-            </>
-          )}
-        </nav>
-        <aside className="result-stage__coach" aria-label="Dr. Fade match advice">
+
+        <details className="result-stage__details result-stage__crew-details">
+          <summary>Battle breakdown · Your gang</summary>
+          <figure className="result-stage__captain">
+            <img className={`variant-portrait-${getVariantKind(getEquippedVariant(equippedVariants, playerDeck.hero)) ?? 'base'}`} src={getCardImage(playerDeck.hero)} alt="Your gang captain" />
+            <figcaption>Your captain</figcaption>
+          </figure>
+          {isDraw ? <div className="result-stage__draw"><img src={getCardImage(playerDeck.hero)} alt="" /><span>Settle it in the next round.</span></div> : <BattleVictory match={m} winner={winner} equippedVariants={equippedVariants} />}
+        </details>
+        <aside className="result-stage__coach" aria-label="Dr. Fade advice">
           <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
           <div>
             <span className="studio-eyebrow">Dr. Fade · Next time</span>
             <p>{coachBattle(m)}</p>
           </div>
         </aside>
+        </div>
       </div>
     </div>
   );

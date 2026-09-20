@@ -35,7 +35,7 @@ function bootstrap(): PlayerBootstrap {
       unlockedCosmeticIds: [],
       savedDecks: [{
         id: 'grid-deck',
-        name: 'Grid Crew',
+        name: 'Grid Gang',
         cardIds,
         heroCardId: 'rastamon',
         recipeId: null,
@@ -51,7 +51,7 @@ function bootstrap(): PlayerBootstrap {
       id: 'enter-story',
       eyebrow: 'Chapter One',
       title: 'Enter the story',
-      description: 'Your crew is ready.',
+      description: 'Your gang is ready.',
       destination: 'story',
       rewardLabel: null,
     },

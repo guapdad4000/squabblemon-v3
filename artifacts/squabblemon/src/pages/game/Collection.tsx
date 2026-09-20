@@ -1,3 +1,4 @@
+import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { PageHeading } from '../../components/venue/PageHeading';
 import { ArsenalScreen, FocusViewButton } from '../../components/venue/ArsenalScreen';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { CardPressTarget } from '../../components/CardInspection';
 import { CardInspector } from '../../components/CardInspector';
 import { cardCatalog, CARD_RARITY_DEFINITIONS } from '../../data';
 import { CardView } from '../../components/CardView';
+import { PageDecor } from '../../components/venue/PageDecor';
 
 const types = [...new Set(cardCatalog.map(card => card.type))];
 const factions = [...new Set(cardCatalog.map(card => card.faction))];
@@ -48,10 +50,12 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await claimMilestone.mutateAsync({ milestoneId });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res.bootstrap);
+      revealProfileRewards(bootstrap, res.bootstrap, milestoneId, 'Collection Road reward');
     } catch { setClaimError('Could not claim this reward. Please try again.'); }
   }
   const inspectedCard = inspectId ? cardCatalog.find(card => card.catalogId === inspectId) : null;
-  return <ArsenalScreen className="collection-stage" label="Card collection">
+  return <ArsenalScreen className="collection-stage world-decor-host" label="Card collection">
+    <PageDecor theme="collection" />
     <div className="collection-stage__header">
       <div className="arsenal-heading-row"><PageHeading art="collection-box" eyebrow="THE ARSENAL / CARD ARCHIVE" title="The collection.">{owned.size} / {cardCatalog.length} cards owned. Every card has a story.</PageHeading><FocusViewButton /></div>
       <nav className="collection-tabs" aria-label="Collection views">
@@ -79,7 +83,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             const Icon = typeIcons[type] ?? Circle;
             return <button type="button" key={type} aria-pressed={filterType === type} onClick={() => setFilterType(filterType === type ? null : type)}><Icon size={13} aria-hidden="true" />{type}</button>;
           })}</div>
-          <div className="collection-filter-row" aria-label="Filter by crew"><span>Crew</span>{factions.map(faction => <button type="button" key={faction} aria-pressed={filterCrew === faction} onClick={() => setFilterCrew(filterCrew === faction ? null : faction)}>{faction}</button>)}</div>
+          <div className="collection-filter-row" aria-label="Filter by gang"><span>Gang</span>{factions.map(faction => <button type="button" key={faction} aria-pressed={filterCrew === faction} onClick={() => setFilterCrew(filterCrew === faction ? null : faction)}>{faction}</button>)}</div>
           <div className="collection-filter-row">
             <label>Motion<select aria-label="Filter by Motion cost" value={filterCost ?? ''} onChange={e => setFilterCost(e.target.value === '' ? null : Number(e.target.value))}><option value="">Any cost</option>{costs.map(cost => <option key={cost} value={cost}>{cost} Motion</option>)}</select></label>
             <label>Hands<select aria-label="Filter by Hands" value={filterPower ?? ''} onChange={e => setFilterPower(e.target.value === '' ? null : Number(e.target.value))}><option value="">Any Hands</option>{powers.map(power => <option key={power} value={power}>{power} Hands</option>)}</select></label>

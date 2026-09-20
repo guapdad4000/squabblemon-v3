@@ -21,6 +21,7 @@ export async function purchaseShopItem(userId: string, input: ShopRequest) {
     await tx.update(playerProfilesTable).set({
       softCurrency: wallet.softCurrency, packTickets: wallet.packTickets, styleShards: wallet.styleShards,
       deckSlots: wallet.deckSlots, ownedCardIds: wallet.ownedCardIds, discoveredCardIds: wallet.discoveredCardIds,
+      unlockedCosmeticIds: wallet.unlockedCosmeticIds ?? profile.unlockedCosmeticIds,
       ownedVariants: wallet.ownedVariants, cardProgression: wallet.cardProgression, collectionProgress: wallet.collectionProgress,
     }).where(eq(playerProfilesTable.clerkUserId, userId));
     await tx.insert(playerCollectionClaimsTable).values({ clerkUserId: userId, milestoneKey: key, reward: { shopPurchase: receipt } });
