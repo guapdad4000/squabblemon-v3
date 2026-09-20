@@ -225,3 +225,11 @@ test('single and ten pulls preserve earned cards absent from this deployment cat
     assert(result.rewards.filter(reward => reward.kind === 'card').every(reward => reward.cardId && catalogCardById[reward.cardId]), 'New pulls still come only from the active catalog');
   }
 });
+
+
+test('Buddy and Folks enter Street Packs through the existing new-card protection', () => {
+  const owned = cardCatalog.filter(card => !['buddy', 'folks'].includes(card.catalogId)).map(card => card.catalogId);
+  const result = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, zero);
+  assert.deepEqual(new Set(result.rewards.slice(0, 2).map(reward => reward.cardId)), new Set(['buddy', 'folks']));
+  assert(result.rewards.slice(0, 2).every(reward => reward.rarity === 'Legendary' && reward.isNew));
+});

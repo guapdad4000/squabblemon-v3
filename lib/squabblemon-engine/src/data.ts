@@ -78,6 +78,8 @@ export const ABILITY_UPGRADE_UNLOCK_LEVELS = [2, 5, 8] as const;
 export const ABILITY_UPGRADE_COUNT = 3;
 
 const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
+  buddy: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: -1, target: "enemy", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
+  folks: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
   kyle: Array.from({ length: 3 }, () => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const })),
   stockz: Array.from({ length: 3 }, () => ({ kind: 'self-power' as const, amount: 1 as const, trigger: 'base-success' as const })),
   guap: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
@@ -193,6 +195,8 @@ export type DeckLegality = {
 };
 
 export const cards: Record<string, Card> = {
+  buddy: { id: "buddy", name: "BUDDY", kind: "character", type: "Dark", cost: 3, power: 4, ability: "Myth Buster", effect: "On Reveal: Target the strongest Mythical here, otherwise the strongest enemy here. Give it -2 Hands, or -5 and Silence if Mythical. If the Mythical hit lands, gain +2 Hands.", roles: ["Disruption", "Pressure"], abilityUpgrades: upgrades("buddy", [["Purple Pressure", "After a successful hit, BUDDY gains +1 Hand.", "No Exceptions", "The successfully hit enemy loses 1 more Hand.", "Big Buddy", "After a successful hit, BUDDY gains +1 Hand."]]), entryVfx: { accent: "#b064ff" }, portraitAccent: "#b064ff" },
+  folks: { id: "folks", name: "FOLKS", kind: "character", type: "Fire", cost: 4, power: 3, ability: "Whole Block Hot", effect: "On Reveal: Apply 3 Burn to every enemy on the board. Give every other friendly Fire character +1 Hand. Burn deals its stacked Hands loss once at round end; Fire deals +1 Burn against Plant.", roles: ["Disruption", "Support"], abilityUpgrades: upgrades("folks", [["Heat Check", "After the ability succeeds, FOLKS gains +1 Hand.", "Feed the Flame", "One Fire ally buffed by the ability gains another Hand.", "Still Hot", "After the ability succeeds, FOLKS gains +1 Hand."]]), entryVfx: { accent: "#ff6b25" }, portraitAccent: "#ff6b25" },
   drfade: { id: "dr-fade", name: "Dr. Fade", kind: "character", type: "Light", cost: 4, power: 6, ability: "The First Lesson", effect: "On Reveal: Give the strongest enemy here -2 Hands. Give your weakest ally in another district +2 Hands.", roles: ["Pressure", "Support"], abilityUpgrades: upgrades("drfade", [["Corner Advice", "Your coached ally gains another Hand.", "Lead by Example", "Dr. Fade gets stronger.", "Class Dismissed", "Your punch hits harder."]]), entryVfx: { accent: "#69e7a3" }, portraitAccent: "#69e7a3" },
   guap: { id: "guap", name: "GUAP", type: "Fire", cost: 6, power: 5, ability: "FINNAM!", effect: "On Reveal: Gain +1 Hands for each other friendly card here, up to +5. Give every enemy here -1 Hands. Ongoing: While GUAP is in your hand, your other Fire characters gain +1 Hands at round end.", roles: ["Pressure", "Disruption"], elementalBond: "Fire", abilityUpgrades: upgrades("guap", [["Golden Charge", "FINNAM! gathers golden energy.", "Falcon Ascendant", "FINNAM! spreads its burning wings.", "Phoenix Supernova", "FINNAM! erupts in a golden supernova."]]), entryVfx: { accent: "#f5c542" }, portraitAccent: "#f5c542" /* GUAP is the Fire bond in the elemental-bond system; Ice Cream Truck is Water, Rooftop Gardener is Plant, Pirate Radio DJ is Electric. */ },
   bossbabe: { id: "boss-babe", name: "Boss Bae", type: "Electric", cost: 3, power: 3, ability: "Network Boost", effect: "The first 2 times you play a card in another district, gain +1 Hands. After the second, your next card costing 4 or more costs 1 less Motion.", abilityUpgrades: upgrades("bossbabe", [["First Meeting", "Network Boost grants +1 Hands to Boss Bae.", "Closing Deals", "Network Boost grants +1 Hands to Boss Bae.", "Corner Office", "Network Boost grants +1 Hands to Boss Bae."]]) },
@@ -266,6 +270,8 @@ export const decks: Deck[] = [
 ].map(deck => ({ ...deck, cards: completeEngineCrew(deck.cards) }));
 
 export const rarityByEngineId = {
+  buddy: "Legendary",
+  folks: "Legendary",
   drfade: "Legendary",
   ...streetWaveRarities,
   ...mythicLegendRarities,
@@ -344,6 +350,8 @@ const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.keys(streetWaveCards).map(id => [id, streetWaveRarities[id] === 'Mythical' ? 'City Legends' : ['break', 'krump', 'bboy'].includes(id) ? 'The Cypher' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(mythicLegendCards).map(id => [id, 'City Legends'])),
   ...Object.fromEntries(Object.keys(supportCards).map(id => [id, 'Everyday Essentials'])),
+  buddy: "City Legends",
+  folks: "Around the Block",
   drfade: "Old Heads Know",
   guap: "City Legends",
   ...Object.fromEntries(Object.keys(expansionCards).map(id => [id, expansionRarities[id] === 'Mythical' ? 'City Legends' : 'Around the Block'])),
@@ -383,6 +391,8 @@ const factionByEngineId: Record<string, string> = {
 };
 
 const sourceByEngineId: Record<string, string[]> = {
+  buddy: ["Street Packs"],
+  folks: ["Street Packs"],
   drfade: ["Guaranteed tutorial Legendary", "Street Packs"],
   cornball: ["Starter gangs", "Street Packs"],
   snow: ["Starter gangs", "Collection Road"],

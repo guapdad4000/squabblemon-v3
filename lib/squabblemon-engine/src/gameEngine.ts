@@ -1,4 +1,4 @@
-import { cards, catalogIdsToEngineIds, decks, DECK_SIZE, MAX_MOTION, districts as legacyDistricts, type Card, type Deck } from './data';
+import { cards, catalogCardByEngineId, catalogIdsToEngineIds, decks, DECK_SIZE, MAX_MOTION, districts as legacyDistricts, type Card, type Deck } from './data';
 import { validateDistrictSnapshot, type DistrictSnapshot, type DistrictDisplay } from './districts';
 import { expansionCards } from './blockExpansion';
 import { streetWaveCards } from './streetWave';
@@ -1020,6 +1020,36 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     note(`Civic Pressure weakened ${weakenedCount} enemies.`);
   }
   else if (source.cardId === 'snow') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, frozen: true }, lastEffectNote: 'Cold Shoulder: frozen.' })); note('Cold Shoulder froze the highest enemy.'); } else note('Cold Shoulder found no enemy.'); }
+  else if (source.cardId === 'buddy') {
+    const enemies = inLane(m, enemy, l);
+    const isMythical = (card: CardInstance) => catalogCardByEngineId[card.cardId]?.rarity === 'Mythical';
+    const target = highest(enemies.filter(isMythical)) ?? highest(enemies);
+    if (target) {
+      const mythical = isMythical(target);
+      targetIds.add(target.instanceId);
+      m = targetEnemyPowerReduction(m, source, target, mythical ? -5 : -2,
+        mythical ? 'Myth Buster: -5 Hands and Silence.' : 'Myth Buster: -2 Hands.');
+      const afterHit = findCard(m, target.instanceId);
+      const hitLanded = !afterHit || afterHit.powerModifier < target.powerModifier;
+      // Damage and Silence are one hostile hit: protection blocks the entire package.
+      if (mythical && hitLanded) {
+        if (afterHit) m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, silenced: true } }));
+        m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Myth Buster: +2 Hands for hitting a Mythical.' }));
+      }
+      note(hitLanded ? mythical ? 'Myth Buster hit a Mythical: -5 Hands, Silence, BUDDY +2.' : 'Myth Buster: -2 Hands.' : 'Myth Buster was blocked.');
+    } else note('Myth Buster found no enemy here.');
+  }
+  else if (source.cardId === 'folks') {
+    for (const target of m.boards.flat().filter(c => !c.hazard && c.owner === enemy)) {
+      targetIds.add(target.instanceId);
+      m = applyBurn(m, source, target, 3, 'Whole Block Hot: 3 Burn.');
+    }
+    for (const ally of m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.instanceId !== source.instanceId && c.kind !== 'support' && c.type === 'Fire')) {
+      targetIds.add(ally.instanceId);
+      m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Whole Block Hot: Fire ally +1 Hand.' }));
+    }
+    note(targetIds.size ? 'Whole Block Hot: 3 Burn across the enemy board; other Fire allies +1 Hand.' : 'Whole Block Hot needs an enemy or another Fire ally.');
+  }
   else if (source.cardId === 'drfade') {
     const hostile = highest(inLane(m, enemy, l));
     const friendly = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.lane !== l));
