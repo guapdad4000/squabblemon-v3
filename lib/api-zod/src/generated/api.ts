@@ -1361,6 +1361,9 @@ export const CompletePlayerMatchParams = zod.object({
 export const completePlayerMatchBodyMovesItemLaneMin = 0;
 export const completePlayerMatchBodyMovesItemLaneMax = 2;
 
+export const completePlayerMatchBodyMovesItemInvestmentMin = 0;
+export const completePlayerMatchBodyMovesItemInvestmentMax = 4;
+
 export const completePlayerMatchBodyMovesMax = 64;
 
 
@@ -1370,7 +1373,8 @@ export const CompletePlayerMatchBody = zod.object({
   "cardInstanceId": zod.string().nullable(),
   "lane": zod.number().min(completePlayerMatchBodyMovesItemLaneMin).max(completePlayerMatchBodyMovesItemLaneMax).nullable(),
   "squabble": zod.boolean(),
-  "endTurn": zod.boolean().optional().describe('False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.')
+  "endTurn": zod.boolean().optional().describe('False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.'),
+  "investment": zod.number().min(completePlayerMatchBodyMovesItemInvestmentMin).max(completePlayerMatchBodyMovesItemInvestmentMax).optional().describe('Extra Motion chosen for Homeless Guy. Defaults to zero; the engine validates affordability.')
 })).min(1).max(completePlayerMatchBodyMovesMax)
 })
 

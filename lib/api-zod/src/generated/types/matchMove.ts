@@ -18,4 +18,10 @@ export interface MatchMove {
   squabble: boolean;
   /** False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches. */
   endTurn?: boolean;
+  /**
+     * Extra Motion chosen for Homeless Guy. Defaults to zero; the engine validates affordability.
+     * @minimum 0
+     * @maximum 4
+     */
+  investment?: number;
 }

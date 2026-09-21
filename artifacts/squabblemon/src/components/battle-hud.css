@@ -285,3 +285,8 @@
 .battle-arena.battle-hud[data-reduced-motion='true'][data-tutorial-focus] :is(.battle-hand-tray,.district-target,.battle-squabble,.battle-primary-action) {
   animation: none;
 }
+/* Ability choices stay in document flow so Confirm remains reachable on phones. */
+.battle-hud .wild-investment { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 3px 8px; background: #1d1630; border-top: 1px solid #bba0eb55; color: #eaddff; font-size: 11px; flex-wrap: wrap; }
+.battle-hud .wild-investment select { min-height: 44px; max-width: 150px; background: #211b30; color: white; border: 1px solid #bba0eb88; border-radius: 5px; padding: 0 8px; font: inherit; }
+.battle-hud .wild-investment select:focus-visible { outline: 2px solid #e4ccff; outline-offset: 2px; }
+.battle-hud .character-district-mark { display: block; color: #f0d6ff; font: 600 9px/1.2 sans-serif; white-space: normal; padding: 2px 3px; background: #21102bc9; border-radius: 3px; }

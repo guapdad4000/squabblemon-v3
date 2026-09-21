@@ -4,6 +4,8 @@ export type { RankedStats, RankedResult } from './ranked';
 import {
   createDistrictSnapshot,
   getMatchDistricts,
+  getCharacterDistrictMarks,
+  type CharacterDistrictMark,
   createMatchFromEngineCards,
   getDistrictResults,
   getEffectiveCardPower,
@@ -42,7 +44,7 @@ export type OnlineMember = {
 };
 export type OnlineCommand =
   | { type: "ready" | "end-turn" | "surrender" | "rematch" }
-  | { type: "play"; instanceId: string; lane: Lane; squabble: boolean };
+  | { type: "play"; instanceId: string; lane: Lane; squabble: boolean; investment?: number };
 export type OnlineRoom = {
   ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
@@ -244,6 +246,7 @@ export function applyOnlineCommand(
         command.instanceId,
         command.lane,
         command.squabble,
+        command.investment,
       );
     } catch (error) {
       throw new OnlineError(
@@ -297,6 +300,7 @@ export type PublicCard = {
   /** Public artwork identity; summons may share mechanics but use different portraits. */
   artworkId?: string;
   smileBomb?: CardInstance['smileBomb'];
+  idolId?: string;
   instanceId: string;
   cardId: string;
   owner: Seat;
@@ -322,6 +326,7 @@ export type PublicEvent = {
 export type OnlineRoomView = {
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
+  districtMarks?: CharacterDistrictMark[];
   districts: ReturnType<typeof getMatchDistricts>;
   code: string;
   revision: number;
@@ -358,6 +363,7 @@ export function onlineRoomView(
     match = room.match;
   const showCard = (card: CardInstance): PublicCard => ({
     artworkId: card.id,
+    ...(card.idolId ? { idolId: card.idolId } : {}),
     ...(card.smileBomb ? { smileBomb: { ...card.smileBomb } } : {}),
     instanceId: card.instanceId,
     cardId: card.cardId,
@@ -381,6 +387,7 @@ export function onlineRoomView(
     ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),
     districts: getMatchDistricts(match, seat),
     lockedLanes: match ? getStoryLockedLanes(match, seat) : [],
+    districtMarks: match ? getCharacterDistrictMarks(match) : [],
     code,
     revision: room.revision,
     gameNumber: room.gameNumber,

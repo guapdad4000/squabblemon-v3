@@ -48,12 +48,13 @@ function parseCommand(value: unknown): OnlineCommand {
   if (c.type === "play") {
     if (
       Object.keys(c).some(
-        (k) => !["type", "instanceId", "lane", "squabble"].includes(k),
+        (k) => !["type", "instanceId", "lane", "squabble", "investment"].includes(k),
       ) ||
       typeof c.instanceId !== "string" ||
       c.instanceId.length > 200 ||
       ![0, 1, 2].includes(c.lane as number) ||
-      typeof c.squabble !== "boolean"
+      typeof c.squabble !== "boolean" ||
+      (c.investment !== undefined && (!Number.isInteger(c.investment) || Number(c.investment) < 0 || Number(c.investment) > 4))
     )
       throw new OnlineError("Invalid card play.", 400);
     return {
@@ -61,6 +62,7 @@ function parseCommand(value: unknown): OnlineCommand {
       instanceId: c.instanceId,
       lane: c.lane as 0 | 1 | 2,
       squabble: c.squabble,
+      ...(c.investment === undefined ? {} : { investment: c.investment as number }),
     };
   }
   if (

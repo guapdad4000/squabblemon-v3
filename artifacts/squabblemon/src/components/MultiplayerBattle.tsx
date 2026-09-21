@@ -39,6 +39,7 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
   };
   return { match, presentation: {
     districts: room.districts, scores, costs: Object.fromEntries(room.hand.map(c => [c.instanceId, c.costs])),
+    districtMarks: room.districtMarks?.map(mark => ({ ...mark, owner: owner(mark.owner) })),
     covered: new Set(room.boards.flat().filter(c => c.covered).map(c => c.instanceId)), lockedLanes: room.lockedLanes ?? [],
     history: room.events.map(event => ({ ...event, owner: owner(event.owner), cardId: event.cardId ?? '', round: event.round ?? room.round })),
     turnSeconds: TURN_SECONDS, rivalHandCount: room.rivalHandCount,
@@ -110,7 +111,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
       squabble={squabble} setSquabble={setSquabble} setInspect={setInspect}
       commit={() => selected && lane !== null && void act({ type: 'play', instanceId: selected, lane, squabble })}
-      onPlayCard={(instanceId: string, target: Lane, armed: boolean) => void act({ type: 'play', instanceId, lane: target, squabble: armed })}
+      onPlayCard={(instanceId: string, target: Lane, armed: boolean, investment = 0) => void act({ type: 'play', instanceId, lane: target, squabble: armed, investment })}
       endTurn={() => void act({ type: 'end-turn' })}
       presentationPhase={interactive ? 'player-ready' : 'rival-thinking'}
       phaseMessage={`${status}${latest && !myTurn ? ' · ' + latest.note : ''}`}

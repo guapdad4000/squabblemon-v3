@@ -1279,6 +1279,11 @@ components:
         endTurn:
           type: boolean
           description: False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.
+        investment:
+          type: integer
+          minimum: 0
+          maximum: 4
+          description: Extra Motion chosen for Homeless Guy. Defaults to zero; the engine validates affordability.
       required: [cardInstanceId, lane, squabble]
       additionalProperties: false
     MatchReward:

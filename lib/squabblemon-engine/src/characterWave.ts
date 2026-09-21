@@ -1,19 +1,19 @@
 import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
-/** The first full community character wave. Variants stay cosmetic. */
+/** Stable collection IDs: balance updates never replace owned cards or cosmetics. */
 export const CHARACTER_WAVE = [
-  ['homelessguy', 'homeless-guy', 'Homeless Guy', 'Mythical', 'Normal', 4, 3, 'Wild Card', 'On Reveal: Copy the type of your lowest-Hands elemental ally and gain +2 Hands. If you have none, gain +1 instead. Ongoing: At round end, gain +1 Hand while another ally shares your type.', 'Growth'],
-  ['fangirl', 'fangirl', 'Fangirl', 'SuperCommon', 'Light', 1, 1, 'Day One', 'On Reveal: Give your strongest other ally here +2 Hands. If Grown-Man Fanboy is here, Protect that ally and give both fans +1 Hand.', 'Support'],
-  ['grownfanboy', 'grown-man-fanboy', 'Grown-Man Fanboy', 'Epic', 'Normal', 3, 3, "I'm Your Biggest Fan", "On Reveal: Match your strongest other ally here's printed Hands, up to 6. If Fangirl is here, Protect that ally and give both fans +1 Hand.", 'Support'],
-  ['lawlessyn', 'lawless-yn', 'Lawless YN', 'Rare', 'Dark', 2, 2, 'No Rules', 'On Reveal: Steal Protection from the strongest enemy here. If nobody is Protected, apply Weaken to that enemy instead.', 'Disruption'],
-  ['streetapostle', 'street-apostle', 'The Street Apostle', 'Epic', 'Plant', 3, 3, 'Spread the Word', 'On Reveal: Give your lowest-Hands other Plant ally here +1 Hand. Ongoing: Your first Plant established in a new district each round gives your weakest Plant elsewhere +2 Hands.', 'Growth'],
-  ['asphaltapostle', 'asphalt-apostle', 'The Asphalt Apostle', 'Epic', 'Earth', 3, 4, 'Stand on Business', 'Ongoing: At round end, give your weakest other unmoved Earth ally here +2 Hands. If you control this district, Protect that ally.', 'Support'],
-  ['colognecriminal', 'cologne-criminal', 'Cologne Criminal', 'Epic', 'Poison', 3, 3, 'Unsolicited Sample', 'On Reveal: Apply Weaken to the strongest enemy here. If already Weakened, apply 1 Burn instead. Ongoing: Your first successful Weaken each round gives your weakest Poison ally +2 Hands.', 'Disruption'],
-  ['passportbro', 'passport-bro', 'Passport Bro', 'Epic', 'Water', 3, 3, 'International Waters', 'On Reveal: Move your lowest-Hands other ally here to your weakest other district. Ongoing: Your first Water ally moved each round is cleansed, gains +1 Hand, and refunds 1 Motion.', 'Movement'],
-  ['seafoodassassin', 'seafood-assassin', 'Seafood Assassin', 'Legendary', 'Poison', 4, 3, 'Extra Sauce', 'On Reveal: Apply 3 Burn to every enemy here. Enemies already Burning are also Weakened. Give your weakest other Poison ally +1 Hand for each enemy hit.', 'Disruption'],
-  ['homelesslegend', 'homeless-legend', 'Homeless Legend', 'Legendary', 'Plant', 4, 4, 'Still Standing', 'Ongoing: The first time this would be destroyed, survive at 1 Hand and give every other Plant ally +1 Hand.', 'Sustain'],
-  ['godofhookah', 'god-of-hookah', 'God of Hookah', 'Mythical', 'Poison', 5, 4, 'Everybody Catching Smoke', 'On Reveal: In every district, Weaken the strongest enemy. If that enemy is already Weakened, apply 2 Burn instead.', 'Disruption'],
-  ['mailman', 'the-mailman', 'The Mailman', 'Mythical', 'Electric', 4, 3, 'Special Delivery', 'On Reveal: Give the weakest other Electric ally in every district +1 Hand. If you have Electric allies in all three districts, refund 1 Motion.', 'Support'],
+  ['homelessguy', 'homeless-guy', 'Homeless Guy', 'Mythical', 'Normal', 3, 3, 'Nothing to Lose', 'On Reveal: Choose 0–4 extra Motion; gain that many Hands. If the deployment cost alone spent your last Motion, instead steal up to 2 Hands from the strongest enemy here.', 'Growth'],
+  ['fangirl', 'fangirl', 'Fangirl', 'SuperCommon', 'Light', 1, 1, 'Day One', 'On Reveal: Your strongest other ally here becomes your idol. Ongoing: The first time your idol gains Hands each round, gain +1 Hand.', 'Support'],
+  ['grownfanboy', 'grown-man-fanboy', 'Grown-Man Fanboy', 'Epic', 'Normal', 3, 4, 'He Doesn’t Know You', 'On Reveal: Your strongest other ally becomes your idol. Ongoing: Intercept the first hostile ability targeting your idol each round. If Fangirl is here when you take the hit, gain +2 Hands.', 'Support'],
+  ['lawlessyn', 'lawless-yn', 'Lawless YN', 'Rare', 'Dark', 2, 2, 'Wrong Block', 'On Reveal: Move the weakest enemy here to their strongest other open district. Protection, immunity and movement locks can stop this.', 'Disruption'],
+  ['streetapostle', 'street-apostle', 'The Street Apostle', 'Epic', 'Plant', 3, 3, 'Spread the Word', 'Ongoing: The first time another Plant ally gains Hands each round, repeat up to 2 of that gain onto your weakest Plant ally in each other district. Copied gains cannot trigger this again.', 'Growth'],
+  ['asphaltapostle', 'asphalt-apostle', 'The Asphalt Apostle', 'Epic', 'Earth', 3, 4, 'Concrete Congregation', 'On Reveal: Protect your weakest other Earth ally here. Ongoing: Once per round, block the first hostile forced move against an Earth ally; give that ally +2 Hands instead.', 'Support'],
+  ['colognecriminal', 'cologne-criminal', 'Cologne Criminal', 'Epic', 'Poison', 3, 3, 'You Can Still Smell Him', 'On Reveal: Leave Lingering Scent here through the end of next round. The first enemy entering this district each round gets 2 Burn, even if moved here. Scent stays after you leave.', 'Disruption'],
+  ['passportbro', 'passport-bro', 'Passport Bro', 'Epic', 'Water', 3, 3, 'Geographic Arbitrage', 'On Reveal: Move your weakest other ally here to your weakest other open district. Ongoing: Once per round, when another Water ally leaves a district you are losing, cleanse it and give it +2 Hands.', 'Movement'],
+  ['seafoodassassin', 'seafood-assassin', 'Seafood Assassin', 'Legendary', 'Poison', 4, 3, 'Extra Sauce', 'On Reveal: Apply 2 Burn to every enemy here, then immediately detonate all their Burn as Hands damage and consume it. Protection blocks the whole hit.', 'Disruption'],
+  ['homelesslegend', 'homeless-legend', 'Homeless Legend', 'Legendary', 'Plant', 4, 4, 'Built Different', 'Ongoing: Survive your first lethal Hands reduction at 1 Hand. At round end, recover up to 2 Hands lost to damage.', 'Sustain'],
+  ['godofhookah', 'god-of-hookah', 'God of Hookah', 'Mythical', 'Poison', 4, 4, 'Pass the Hose', 'Ongoing: At round end, the first enemy damaged by Burn in each district passes 1 Burn to the weakest unburned enemy in the next district. New Burn waits until next round.', 'Disruption'],
+  ['mailman', 'the-mailman', 'The Mailman', 'Mythical', 'Electric', 3, 3, 'Express Delivery', 'Ongoing: Your second Electric character played each round sends a Package to your weakest other open district. The next Electric character played there costs 1 less Motion and gains +2 Hands. Only one Package can be pending.', 'Support'],
 ] as const;
 
 export const characterWaveUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(
@@ -25,7 +25,7 @@ export const characterWaveCards: Record<string, Card> = Object.fromEntries(CHARA
     id, name, type, cost, power, ability, effect, kind: 'character', roles: [role],
     abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({
       id: engineId + ':upgrade:' + (index + 1), name: ability + ' ' + ['Practice', 'Confidence', 'Mastery'][index],
-      description: 'After the base ability succeeds, this card gains +1 Hand.', unlockLevel,
+      description: 'The first time the base ability succeeds this match, gain +1 Hand.', unlockLevel,
       effect: characterWaveUpgradeEffects[engineId][index],
     })),
   }],
