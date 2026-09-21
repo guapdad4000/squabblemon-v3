@@ -1135,6 +1135,10 @@
     }
   },
   "assignments": {
+    "dorothy": null, "scarecrow": null, "tinman": null, "lion": null, "oz": null,
+    "alice": null, "cheshire": null, "queenofhearts": null, "sherlock": null, "watson": null,
+    "undercova": null, "thefeds": null, "dmvworker": null, "ptang": null, "bonnetgirl": null,
+    "corruptpastor": null, "powerhouse": null, "ronald": null, "trapvamp": null, "squabblecook": null, "squabbleserver": null,
     "guap": "char91",
     "bossbabe": "char16",
     "scammer": "char62",

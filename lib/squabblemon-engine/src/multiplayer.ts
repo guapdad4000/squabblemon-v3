@@ -300,6 +300,8 @@ export type PublicCard = {
   /** Public artwork identity; summons may share mechanics but use different portraits. */
   artworkId?: string;
   smileBomb?: CardInstance['smileBomb'];
+  bankedMotion?: number;
+  aliceReady?: boolean;
   idolId?: string;
   instanceId: string;
   cardId: string;
@@ -363,6 +365,8 @@ export function onlineRoomView(
     match = room.match;
   const showCard = (card: CardInstance): PublicCard => ({
     artworkId: card.id,
+    ...(card.cardId === 'powerhouse' ? { bankedMotion: card.bankedMotion ?? 0 } : {}),
+    ...(card.aliceReady ? { aliceReady: true } : {}),
     ...(card.idolId ? { idolId: card.idolId } : {}),
     ...(card.smileBomb ? { smileBomb: { ...card.smileBomb } } : {}),
     instanceId: card.instanceId,

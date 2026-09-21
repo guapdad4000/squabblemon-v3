@@ -67,6 +67,8 @@ function CardViewComponent({
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
 
+  const chargeLabel = instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
+    : instance?.aliceReady ? 'Next play: +3 Hands' : '';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
   const fuseDescription = card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
   const displayPower = card.hazard ? 0 : effectivePower ?? card.power;
@@ -82,6 +84,7 @@ function CardViewComponent({
   const isBoosted = instance?.statuses?.boosted;
   const isMoved = instance?.moved;
   const boardStatusLabel = [
+    chargeLabel,
     covered ? 'Covered.' : isProtected ? 'Protected.' : '',
     isBlocked ? 'Blocked.' : '',
     isSilenced ? 'Silenced.' : '',
@@ -224,6 +227,7 @@ function CardViewComponent({
             </div>
           </div>
 
+          {chargeLabel && <span className="absolute top-[24%] inset-x-1 z-20 rounded bg-black/85 px-1 py-0.5 text-center font-mono text-[7px] font-bold text-cyan-100" data-testid="card-charge">{chargeLabel}</span>}
           {isBoard && (
             <div className="card-status-stack absolute top-[28px] right-1 z-20 pointer-events-none" aria-hidden="true">
               {covered && <div data-card-status="covered" title="Covered" className="card-status bg-amber-200 text-black ring-1 ring-amber-500"><Shield size={8} strokeWidth={3} /></div>}

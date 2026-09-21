@@ -4,13 +4,24 @@ import { Battle } from '../src/components/Battle';
 import { MultiplayerBattle } from '../src/components/MultiplayerBattle';
 import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, onlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
 import { createMatch, createCardInstance, playTurnCard, pass, nextRound, revealCpuTurn, DISTRICT_CATALOG, type Match, type DistrictSnapshot, type Lane } from '../src/gameEngine';
-import { decks } from '../src/data';
+import { decks, cards } from '../src/data';
+import { CardView } from '../src/components/CardView';
+import { FAIRYTALE_WAVE, FAIRYTALE_ALTERNATE_ART } from '../../../lib/squabblemon-engine/src/fairytaleWave';
 import '../src/index.css';
 import '../src/styles/multiplayer.css';
 
 const params = new URLSearchParams(location.search);
 const locations: DistrictSnapshot = { version: 1, locations: ['bodega', 'corrupt-church', 'the-subway'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'] };
 function waveFixture(match: Match): Match {
+  if (params.has('fairytale')) {
+    const dmv = { ...createCardInstance('dmvworker', 'cpu', 'fairytale', 8), lane: 0 as Lane };
+    const sherlock = { ...createCardInstance('sherlock', 'cpu', 'fairytale', 9), lane: 2 as Lane };
+    return { ...match, districtSnapshot: locations, round: 3, playerMotion: 9, cpuMotion: 9,
+      playerHand: ['dorothy', 'powerhouse', 'alice', 'oz'].map((id, i) => ({ ...createCardInstance(id, 'player', 'fairytale', i), ...(id === 'powerhouse' ? { bankedMotion: 2 } : {}) })),
+      boards: [[{ ...createCardInstance('bonnetgirl', 'player', 'fairytale', 5), lane: 0 }], [{ ...createCardInstance('hooper', 'cpu', 'fairytale', 6), lane: 1 }], [{ ...createCardInstance('cheshire', 'player', 'fairytale', 7), lane: 2 }]],
+      districtTraps: [{ kind: 'dmv', owner: 'cpu', lane: 0, source: dmv, expiresAfterRound: 4 }, { kind: 'stakeout', owner: 'cpu', lane: 1, source: sherlock, expiresAfterRound: 4 }],
+    };
+  }
   if (!params.has('wave')) return match;
   const source = { ...createCardInstance('colognecriminal', 'cpu', 'wave', 10), lane: 1 as Lane };
   return { ...match, round: 3, playerMotion: 8, cpuMotion: 8,
@@ -55,4 +66,12 @@ function Online() {
   return <MultiplayerBattle room={onlineRoomView(room, 'DRAG', 'host', Date.now())} busy={false} connected reducedMotion
     send={command => setRoom(room => applyOnlineCommand(room, 'player', command, Date.now()))} onLeave={() => {}} />;
 }
-createRoot(document.getElementById('root')!).render(params.has('online') ? <Online /> : <Solo />);
+function Gallery() {
+  return <main style={{padding:24,display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))',gap:18,background:'#14212a'}}>
+    {FAIRYTALE_WAVE.flatMap(([id,art]) => [
+      <CardView key={id} card={cards[id]} fillContainer presentationOnly />,
+      ...(FAIRYTALE_ALTERNATE_ART.some(a=>a===art) ? [<CardView key={id+'alt'} card={cards[id]} variantId={art+':alternate'} fillContainer presentationOnly />] : []),
+    ])}
+  </main>;
+}
+createRoot(document.getElementById('root')!).render(params.has('gallery') ? <Gallery /> : params.has('online') ? <Online /> : <Solo />);
