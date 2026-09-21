@@ -4,6 +4,7 @@ import { expansionCards, expansionRarities, expansionUpgradeEffects } from './bl
 import { supportCards, supportRarities, supportUpgradeEffects } from './supportCards';
 import { streetWaveCards, streetWaveRarities, streetWaveUpgradeEffects } from './streetWave';
 import { mythicLegendCards, mythicLegendRarities, mythicLegendUpgradeEffects } from './mythicLegends';
+import { characterWaveCards, characterWaveRarities, characterWaveUpgradeEffects } from './characterWave';
 
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
@@ -92,6 +93,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...supportUpgradeEffects,
   ...streetWaveUpgradeEffects,
   ...mythicLegendUpgradeEffects,
+  ...characterWaveUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -235,6 +237,7 @@ export const cards: Record<string, Card> = {
   ...supportCards,
   ...streetWaveCards,
   ...mythicLegendCards,
+  ...characterWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
 };
@@ -278,6 +281,7 @@ export const rarityByEngineId = {
   drfade: "Legendary",
   ...streetWaveRarities,
   ...mythicLegendRarities,
+  ...characterWaveRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
   tron: "Legendary",
@@ -352,6 +356,7 @@ export function validateCardCatalogRarities(
 const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.keys(streetWaveCards).map(id => [id, streetWaveRarities[id] === 'Mythical' ? 'City Legends' : ['break', 'krump', 'bboy'].includes(id) ? 'The Cypher' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(mythicLegendCards).map(id => [id, 'City Legends'])),
+  ...Object.fromEntries(Object.keys(characterWaveCards).map(id => [id, characterWaveRarities[id] === 'Mythical' ? 'City Legends' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(supportCards).map(id => [id, 'Everyday Essentials'])),
   buddy: "City Legends",
   folks: "Around the Block",
@@ -441,6 +446,12 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
         description: "Reflective showcase frame for your favorite gang.",
         shardCost: 140,
       },
+      ...(engineId === 'colognecriminal' ? [{
+        id: 'cologne-criminal:crazy',
+        name: 'Crazy',
+        description: 'The Cologne Criminal crashes through the frame in his full airborne showcase art.',
+        shardCost: 180,
+      }] : []),
     ],
   }),
 );

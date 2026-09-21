@@ -14,9 +14,10 @@ export const CARD_FINISH: Record<CardRarity, string> = {
 export const VARIANT_FINISH = {
   tagged: { name: 'Tagged', finish: 'Gold-stamped lacquer', description: 'Raised gold ink, vermilion tags and a lacquered frame over the original foil.' },
   chrome: { name: 'Chrome', finish: 'Mirror-cut chrome', description: 'Polished silver, diamond-cut engraving and an icy spectral reflection.' },
+  crazy: { name: 'Crazy', finish: 'Breakout action frame', description: 'Alternate airborne character art crashing beyond the collector frame.' },
 } as const;
 
-export function cardFinishLabel(rarity: CardRarity, variant?: 'tagged' | 'chrome' | null) {
+export function cardFinishLabel(rarity: CardRarity, variant?: 'tagged' | 'chrome' | 'crazy' | null) {
   return variant ? VARIANT_FINISH[variant].finish : CARD_FINISH[rarity];
 }
 

@@ -200,7 +200,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={getCardImage(card.id)}
+                src={getCardImage(card.id, variantId)}
                 alt=""
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
               />}

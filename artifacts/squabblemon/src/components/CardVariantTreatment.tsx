@@ -16,9 +16,10 @@ export function getEquippedVariant(
   return equippedVariants?.[getCatalogCardId(cardId)];
 }
 
-export function getVariantKind(variantId?: string | null): 'tagged' | 'chrome' | null {
+export function getVariantKind(variantId?: string | null): 'tagged' | 'chrome' | 'crazy' | null {
   if (variantId?.endsWith(':tagged')) return 'tagged';
   if (variantId?.endsWith(':chrome')) return 'chrome';
+  if (variantId?.endsWith(':crazy')) return 'crazy';
   return null;
 }
 

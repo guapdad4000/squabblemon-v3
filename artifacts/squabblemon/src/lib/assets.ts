@@ -5,8 +5,11 @@ export const getAssetUrl = (path: string) =>
 
 // Older saved battles used the gameplay ID for these summoned portraits.
 const legacyPortraitIds: Record<string, string> = { shiesty: 'shiesty-yn' };
-export const getCardImage = (cardId: string) => {
-  const id = Object.hasOwn(legacyPortraitIds, cardId) ? legacyPortraitIds[cardId] : cardId;
+export const getCardImage = (cardId: string, variantId?: string | null) => {
+  const baseId = Object.hasOwn(legacyPortraitIds, cardId) ? legacyPortraitIds[cardId] : cardId;
+  const id = baseId === 'cologne-criminal' && variantId?.endsWith(':crazy')
+    ? 'cologne-criminal-crazy'
+    : baseId;
   const url = getAssetUrl(`assets/characters/${id}.webp`);
   const revision = (characterRevisions as Record<string, string>)[id];
   return revision ? `${url}?v=${revision}` : url;

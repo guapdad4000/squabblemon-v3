@@ -778,15 +778,19 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
   background-size: 240% 100%;
   animation: chrome-sweep 2.8s linear infinite;
 }
+.card-variant-crazy::after { background:linear-gradient(145deg,rgba(255,245,225,.22),transparent 34%,rgba(239,68,68,.28)); }
 .card-variant-sheen { position:absolute; inset:0; z-index:15; pointer-events:none; mix-blend-mode:screen; }
 .card-variant-tagged .card-variant-sheen { background:radial-gradient(circle at 18% 20%,rgba(250,204,21,.35),transparent 24%); }
 .card-variant-chrome .card-variant-sheen { background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 42%,rgba(103,232,249,.18)); }
+.card-variant-crazy .card-variant-sheen { background:radial-gradient(circle at 56% 34%,rgba(255,255,255,.28),transparent 24%),linear-gradient(135deg,transparent 45%,rgba(239,68,68,.2)); }
 .card-variant-label { position:absolute; right:3px; bottom:-12px; z-index:25; padding:2px 4px; background:#050505; border:1px solid currentColor; color:#fff; font:900 .42rem/1 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; pointer-events:none; opacity: 0; }
 .card-variant-tagged .card-variant-label { color:#fb7185; transform:rotate(-3deg); }
 .card-variant-chrome .card-variant-label { color:#a5f3fc; }
+.card-variant-crazy .card-variant-label { color:#fca5a5; transform:rotate(2deg); }
 @keyframes chrome-sweep { from { background-position:180% 0; } to { background-position:-80% 0; } }
 .variant-portrait-tagged { filter: drop-shadow(-5px 3px 0 rgba(239,42,105,.75)) drop-shadow(5px -2px 0 rgba(250,204,21,.45)); }
 .variant-portrait-chrome { filter: saturate(.7) contrast(1.18) drop-shadow(0 0 14px rgba(103,232,249,.65)); }
+.variant-portrait-crazy { filter: saturate(1.14) contrast(1.08) drop-shadow(0 0 16px rgba(239,68,68,.5)); }
 .effect-source { animation: effect-source .78s ease-in-out; }
 .effect-target { animation: effect-target .78s ease-in-out; }
 .effect-kind-fire { --effect-color: #fb923c; }

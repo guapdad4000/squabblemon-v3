@@ -3,7 +3,7 @@ import { getAssetUrl } from '../lib/assets';
 import { cardMotionReduced } from '../lib/cardFinish';
 
 /** Only the inspected card allocates a renderer. The complete CSS finish serves grids and reduced motion. */
-export function CardFoil({ tier, variant }: { tier: number; variant?: 'tagged' | 'chrome' | null }) {
+export function CardFoil({ tier, variant }: { tier: number; variant?: 'tagged' | 'chrome' | 'crazy' | null }) {
   const host = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const element = host.current;
