@@ -101,6 +101,91 @@ const phase = (id: string, round: number, amount: number): NonNullable<StoryEnco
   trigger: { kind: 'round', atLeast: round }, onEnter: [{ kind: 'motion', owner: 'cpu', amount }],
 });
 
+// The compact beat cards above carry the essential exchange. These authored
+// button lines give every later encounter a playable entrance and exit without
+// inventing a runtime fallback. Keep them keyed by node id so a new battle
+// cannot silently inherit another character's voice.
+const battleSetupCards: Readonly<Record<string, Speech>> = {
+  'blue-in-denial': ['Ganger Blue', 'The chairs are mine, the roster is mine, and this match is the only thing I can control.'],
+  'wifeys-push': ['Cornball', 'The player is holding the door while you two argue about who owns the hinges.'],
+  'open-slots': ['Ganger Blue', 'If that center table opens, somebody might ask why I closed it.'],
+  'the-receipts-market': ['Ganger Red', 'A clipped second can turn a witness into a villain, so count every breath.'],
+  'snitchs-price': ['Cornball', 'Public interview means public snacks, and I am entering that demand into evidence.'],
+  'the-scammers-pitch': ['Ganger Red', 'A watermark is not a chain of custody, no matter how shiny it looks.'],
+  'church-aunties-setup': ['Cornball', 'I have separated the dinner plates from the evidence plates. Nobody thank me all at once.'],
+  'nail-techs-counter': ['Nail Tech', 'A clean label survives a loud room better than a confident lie.'],
+  'the-fake-funeral': ['Church Auntie', 'Turn those speakers down before grief gets mistaken for your marketing plan.'],
+  'snitchs-verdict': ['Ganger Red', 'No one leaves until the timestamp, the source, and the harm sit together.'],
+  'the-old-heads-convene': ['Baby Momma', 'This table is for truth, not a performance of who suffered most.'],
+  'baby-mommas-truth': ['Cracked Head', 'I am not asking a game to forgive me; I am asking for the chance to listen.'],
+  'wifeys-stand': ['Baby Momma', 'Love can stand nearby, but it cannot stand between me and an answer.'],
+  'church-aunties-blessing': ['Ganger Red', 'A full plate does not erase an empty explanation.'],
+  'alleys-confession': ['Alley Runner', 'I carry parcels, not excuses; make yours light enough to say yourself.'],
+  'red-owns-the-silence': ['Ganger Red', 'The archive has a spine, and I am done bending it to protect grown men.'],
+  'hooper-closes': ['Church Auntie', 'Keep the crowd from turning a family reckoning into halftime entertainment.'],
+  'og-uncles-verdict': ['Cracked Head', 'I want the account plain, without a heroic edit for anybody in this room.'],
+  'function-opening': ['Bottle Girl', 'Every volunteer gets a plate and every contender gets the same doorway.'],
+  'the-bar-fight': ['Cornball', 'The list is under a napkin, beside a lime, which is how institutions begin.'],
+  'the-booking': ['Wifey', 'Put the promise on paper before the applause convinces us it was enough.'],
+  'blue-takes-the-deal': ['Ganger Red', 'A printed rule can still be bent by the hand that feeds the printer.'],
+  'snitchs-roll-call': ['Promoter', 'Two copies are a problem; two dates and one signature are a case.'],
+  'blues-guilt': ['Ganger Blue', 'I know what the list says because I am the one who made it say less.'],
+  'cracked-head-at-the-corner': ['Cracked Head', 'Do not hand me a favor dressed as access. Hand me the table.'],
+  'baby-mommas-boundary': ['Baby Momma', 'Privacy is not a side quest; it is the rule around my child.'],
+  'wifey-checks-the-list': ['Promoter', 'We verify names in daylight, where loyalty cannot blur the ink.'],
+  'blue-restores-the-list': ['Ganger Blue', 'The correction has to cost me something or it is just another announcement.'],
+  'the-lie-exposed': ['Cracked Head', 'This exhibition is not revenge; it is proof that a fair route can survive us.'],
+  'crown-open-entry': ['Bottle Girl', 'No velvet rope, no secret fee, no color test—just a seat and a shuffle.'],
+  'crown-published-rules': ['Ganger Blue', 'The board is public, the terms are boring, and that is beautiful.'],
+  'crown-cornballs-table': ['Cornball', 'I brought my receipt, my deck, and a personal grudge against store credit.'],
+  'crown-reds-full-feed': ['Ganger Red', 'The cleanest record is the one that leaves room for my own mistake.'],
+  'crown-snitch-credits-source': ['Snitch', 'Credit is a tax on ego, and apparently I am finally paying mine.'],
+  'crown-hoopers-seed': ['Hooper', 'A seed is not a crown; it is permission to prove you belong in the soil.'],
+  'crown-blue-sets-the-table': ['Ganger Blue', 'I can serve a final without secretly selecting who gets to play it.'],
+  'crown-baby-mommas-terms': ['Baby Momma', 'Win or lose, nobody gets to call one good night a repaired family.'],
+  'crown-final-rival': ['Cracked Head', 'Let the result belong to the player, not to the story we brought in here.'],
+};
+const battleAfterCards: Readonly<Record<string, Speech>> = {
+  'blue-in-denial': ['Cornball', 'The event has a pulse, the chairs are still standing, and Blue finally has somewhere to go.'],
+  'wifeys-push': ['Wifey', 'Take the next step without turning it into a speech about your sacrifice.'],
+  'open-slots': ['Ganger Blue', 'The open slot is an accusation I can see from the sidewalk.'],
+  'the-receipts-market': ['Snitch', 'The missing seconds now have a destination, and destinations make people nervous.'],
+  'snitchs-price': ['Ganger Red', 'The microphone is live; now let the uncomfortable version stay live too.'],
+  'the-scammers-pitch': ['Cornball', 'His font survived, but the story did not. I am filing both outcomes.'],
+  'church-aunties-setup': ['Church Auntie', 'The tables are ready, and nobody gets to sell dinner as a premiere.'],
+  'nail-techs-counter': ['Nail Tech', 'There is the trail. Follow it with your eyes open and your price honest.'],
+  'the-fake-funeral': ['OG Uncle', 'A crowded room cannot make an old lie current.'],
+  'snitchs-verdict': ['Snitch', 'The camera stayed on because the truth deserved more than twelve seconds.'],
+  'the-old-heads-convene': ['Baby Momma', 'Listening is not a victory, but it is where the work starts.'],
+  'baby-mommas-truth': ['Cracked Head', 'I will answer the next question without hiding behind what I sent.'],
+  'wifeys-stand': ['Wifey', 'I can love him and still refuse to edit the record for him.'],
+  'church-aunties-blessing': ['Church Auntie', 'Eat first, then bring your excuses back when your hands are steady.'],
+  'alleys-confession': ['Alley Runner', 'Route delivered. The next message has to come from your own mouth.'],
+  'red-owns-the-silence': ['Ganger Red', 'Read the original slowly; nobody is racing you toward forgiveness.'],
+  'hooper-closes': ['Hooper', 'The table is closed, but the truth has not been scored yet.'],
+  'og-uncles-verdict': ['OG Uncle', 'I will live with the names attached to my choices, and let the family decide what follows.'],
+  'function-opening': ['Bottle Girl', 'Feed the setup crew, post the terms, and let the headliners wait their turn.'],
+  'the-bar-fight': ['Bottle Girl', 'The list is back in the light; keep your hands off it after closing.'],
+  'the-booking': ['Promoter', 'The terms are printed, witnessed, and boring enough to protect everybody.'],
+  'blue-takes-the-deal': ['Ganger Blue', 'A public correction starts with admitting who made the private copy.'],
+  'snitchs-roll-call': ['Snitch', 'The feed tells the same story as the paperwork, which is a first for my channel.'],
+  'blues-guilt': ['Ganger Blue', 'I will return the list before I ask anybody to trust my hands again.'],
+  'cracked-head-at-the-corner': ['Cracked Head', 'That was a real table. I will meet the next one without a shortcut.'],
+  'baby-mommas-boundary': ['Baby Momma', 'The quiet sign stays up, and the boundary stays mine.'],
+  'wifey-checks-the-list': ['Wifey', 'Every name is visible now; accountability can read the board.'],
+  'blue-restores-the-list': ['Promoter', 'The penalty is recorded, and the restored entry is recorded with it.'],
+  'the-lie-exposed': ['Cracked Head', 'I will take the final place without pretending this exhibition repaired us.'],
+  'crown-open-entry': ['Cornball', 'Both signs are true, and I am charging the vending machine for the lettering.'],
+  'crown-published-rules': ['Promoter', 'The same bracket reached three venues without changing its price.'],
+  'crown-cornballs-table': ['Alley Runner', 'Justice costs less than the machine claimed, especially when you share the water.'],
+  'crown-reds-full-feed': ['Baby Momma', 'Run the feed wide enough for truth, never wide enough to expose my child.'],
+  'crown-snitch-credits-source': ['Snitch', 'The title is less shiny now, but the record is finally useful.'],
+  'crown-hoopers-seed': ['Hooper', 'Seed secured. Let the final be decided by cards, not rumors.'],
+  'crown-blue-sets-the-table': ['Ganger Blue', 'I can lose honestly and still be useful tomorrow.'],
+  'crown-baby-mommas-terms': ['Baby Momma', 'Tomorrow has a time and a task; that is more real than a reunion speech.'],
+  'crown-final-rival': ['Cracked Head', 'The Open survives because nobody here gets to own the result.'],
+};
+
 const winObjective = (description = 'Win the encounter.'): StoryStarObjective => ({
   id: 'win', description, criterion: { kind: 'win' },
 });
@@ -210,6 +295,11 @@ function buildChapter(plan: ChapterPlan): StoryChapter {
       },
     };
     if (!beat.opponent) return { ...base, kind: beat.kind ?? 'dialogue', scenes: dialogue(beat.before) };
+    const setup = battleSetupCards[beat.id];
+    const aftermath = battleAfterCards[beat.id];
+    if (!setup || !aftermath || !beat.after) {
+      throw new Error(`Battle ${beat.id} is missing authored setup or aftermath dialogue.`);
+    }
     const selected = beat.deck ?? deckBlue;
     // Keep these entry tables approachable with the guided first deck after the roster rebalance.
     const reduceRivalMotion = ['church-aunties-setup', 'function-opening', 'snitchs-roll-call'].includes(beat.id);
@@ -225,7 +315,7 @@ function buildChapter(plan: ChapterPlan): StoryChapter {
       modifiers, phases: beat.phases ?? [], roundLimit, starObjectives: objectives,
     };
     return { ...base, kind: 'battle', battleType: beat.battleType ?? 'standard', encounter,
-      preDialogue: dialogue(beat.before), postDialogue: dialogue(beat.after ?? [[beat.opponent, 'Good game. The next table is waiting.']]),
+      preDialogue: dialogue([...beat.before, setup]), postDialogue: dialogue([...beat.after, aftermath]),
       starObjectives: objectives, recommendedCollection: focusCards };
   });
   return { id: plan.id, order: plan.order, title: plan.title, subtitle: plan.subtitle, description: plan.description,
@@ -281,7 +371,7 @@ const plans: ChapterPlan[] = [
         before: [['Wifey', "Blue built a throne out of folding chairs. I need a player who can keep the seats open while I get him moving."], ['Ganger Blue', "You are making a fade out of my marriage?"], ['Wifey', "No. Out of your event rules. Shuffle."]],
         after: [['Wifey', "Good. The tables belong to everyone on the list."], ['Ganger Blue', "I will see him. And then I want the whole truth."]] },
       { id: 'open-slots', title: 'Open Slots', opponent: 'Cornball', deck: deckReceipts, battleType: 'rule-twist', modifiers: { laneLocks: [{ round: 3, owner: 'both', lanes: [1] }] },
-        before: [['Cornball', "Blue canceled the middle table for a dramatic pause. I uncanceled it, but the timer is still broken."], ['Wifey', "Win two districts. Keep the open slots posted where he can see them."]],
+        before: [['Cornball', "Blue canceled the middle table for a dramatic pause. I uncanceled it, but the timer is still broken."], ['Wifey', "Win two districts. Keep the open slots posted where he can see them."], ['Cornball', "I wrote OPEN twice. Once for the players, once for Blue's selective vision."]],
         after: [['Cornball', "The list is up. The machine gave me water I did not order. A historic day."], ['Wifey', "Blue is at his father's door. Come on."]] },
       { id: 'og-uncles-visit', title: "OG Uncle's Visit", kind: 'reward', rewards: [key(4), majorNodeTickets()],
         before: [['OG Uncle', "Blue. Sit. I have been sick longer than I let you know."], ['Ganger Blue', "You let me hold a memorial for a brother who walked onto our roof."], ['OG Uncle', "I let you believe he died. That was my choice, and I was wrong."], ['Ganger Blue', "Why?"], ['OG Uncle', "I owe you the rest. First tell me why Snitch knew the warehouse address."], ['Wifey', "Blue, stay in the chair. We are not leaving this conversation halfway through."]] },

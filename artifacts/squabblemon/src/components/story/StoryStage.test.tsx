@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { getStoryNode, storyContent } from '@workspace/squabblemon-engine/story';
-import { CHAPTER_TWO_STAGES, resolveStoryStage } from './StoryStage';
+import { CHAPTER_TWO_STAGES, createDialogueRevealRun, resolveDialogueTap, resolveStoryStage } from './StoryStage';
 
 const expectedChapterTwoStages = {
   'red-tapes-open-the-envelope': ['assets/layered/crown-court.webp', 'crown rooftop'],
@@ -38,4 +38,42 @@ test('unmapped stages use node cinematic art before the chapter map', () => {
   const node = chapter.nodes[0];
   assert.notEqual(node.cinematic.environmentAssetId, chapter.mapAssetId);
   assert.equal(resolveStoryStage(node.id, node, chapter).backdropAssetId, node.cinematic.environmentAssetId);
+});
+
+test('dialogue taps reveal first, advance second, and reject rapid duplicate input', () => {
+  assert.equal(resolveDialogueTap({ pending: false, revealComplete: false, lastTap: 0, now: 20 }), 'reveal');
+  assert.equal(resolveDialogueTap({ pending: false, revealComplete: true, lastTap: 20, now: 80 }), 'ignore');
+  assert.equal(resolveDialogueTap({ pending: false, revealComplete: true, lastTap: 20, now: 220 }), 'advance');
+});
+
+test('pending saves block dialogue surface advancement', () => {
+  assert.equal(resolveDialogueTap({ pending: true, revealComplete: false, lastTap: 0, now: 500 }), 'ignore');
+  assert.equal(resolveDialogueTap({ pending: true, revealComplete: true, lastTap: 0, now: 500 }), 'ignore');
+});
+
+test('completing a partial reveal cancels later timer writes before the next tap advances', () => {
+  let rendered = '';
+  let scheduledTick: () => void = () => {};
+  let timerActive = false;
+  const run = createDialogueRevealRun({
+    text: 'A full line stays full.',
+    onReveal: value => { rendered = value; },
+    schedule: tick => {
+      scheduledTick = tick;
+      timerActive = true;
+      return () => { timerActive = false; };
+    },
+  });
+
+  scheduledTick();
+  scheduledTick();
+  assert.equal(rendered, 'A ');
+
+  run.complete();
+  assert.equal(rendered, 'A full line stays full.');
+  assert.equal(timerActive, false);
+
+  if (timerActive) scheduledTick();
+  assert.equal(rendered, 'A full line stays full.');
+  assert.equal(resolveDialogueTap({ pending: false, revealComplete: true, lastTap: 100, now: 300 }), 'advance');
 });

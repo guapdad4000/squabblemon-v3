@@ -10,7 +10,7 @@ The local playable campaign is defined in `lib/squabblemon-engine/src/story.ts` 
 | Season One outline | Revised eight-chapter plan; Chapter 8 is now playable. |
 | Chapter One | Eight complete scenes, 106 normal dialogue lines, seven optional defeat lines, three optional boss phase lines. |
 | Chapter Two | [Red Side Tapes](chapters/red-side-tapes/CHAPTER_TWO_READTHROUGH.md): nine authored scenes, six original fights, 158 normal lines. The local game adds an optional courier table and a finale ticket. |
-| Chapters Three–Seven | Playable local chapters adapted from the [MiniMax September 17 screenplay](sources/minimax-2026-09-17/chapters) to the revised story bible. |
+| Chapters Three–Eight | Playable local chapters adapted from the [MiniMax September 17 screenplay](sources/minimax-2026-09-17/chapters) to the revised story bible; every battle now has authored four-line setup and three-line aftermath cards. |
 | Chapter Eight | Playable nine-battle conclusion written from the revised bible; the MiniMax checkout contained no Chapter Eight script. |
 | Character bibles | Eleven: the original nine plus All Jokes Roaster and Church Auntie. |
 | Stage instructions | Proposed staging and camera briefs, not certified production art. |
@@ -29,7 +29,7 @@ Markdown is not consumed automatically by the game. The local game now contains 
 
 ## Scene format
 
-Each scene has stage directions, a proposed layer/camera brief, ordered dialogue, an encounter reference, and director notes. The encounter reference incorporates the current engine node rather than duplicating decks and numeric rules in a second source. Stage directions are not spoken dialogue.
+Each scene has stage directions, a proposed layer/camera brief, ordered dialogue, an encounter reference, and director notes. The encounter reference incorporates the current engine node rather than duplicating decks and numeric rules in a second source. Stage directions are not spoken dialogue. The executable Chapters Three–Eight cards are authored in `seasonChapters.ts`; battles do not use a generic post-match fallback.
 
 Use tokens node-id:pre:index and node-id:post:index for battle lines, and node-id:main:index for dialogue/reward nodes, matching the current Story.tsx derivation. StoryDialogueLine itself has no token property. Optional defeat and phase cues need separate integration; they are not currently supported by simply inserting them in an array.
 

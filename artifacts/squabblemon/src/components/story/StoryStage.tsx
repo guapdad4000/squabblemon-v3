@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   getStoryNode,
   storyContent,
@@ -70,8 +71,110 @@ export type StoryStageProps = {
   onHistory?: () => void; historyDisabled?: boolean;
 };
 
+export type DialogueTapResult = 'ignore' | 'reveal' | 'advance';
+export type DialogueRevealRun = { complete: () => void; cancel: () => void };
+
+export function createDialogueRevealRun({
+  text,
+  onReveal,
+  schedule,
+}: {
+  text: string;
+  onReveal: (value: string) => void;
+  schedule: (tick: () => void) => () => void;
+}): DialogueRevealRun {
+  let index = 0;
+  let active = true;
+  let stop: () => void = () => {};
+  const cancel = () => {
+    if (!active) return;
+    active = false;
+    stop();
+  };
+  stop = schedule(() => {
+    if (!active) return;
+    index += 1;
+    onReveal(text.slice(0, index));
+    if (index >= text.length) cancel();
+  });
+  return {
+    cancel,
+    complete: () => {
+      cancel();
+      onReveal(text);
+    },
+  };
+}
+
+export function resolveDialogueTap({
+  pending,
+  revealComplete,
+  lastTap,
+  now,
+}: {
+  pending: boolean;
+  revealComplete: boolean;
+  lastTap: number;
+  now: number;
+}): DialogueTapResult {
+  if (pending) return 'ignore';
+  if (lastTap > 0 && now - lastTap < 180) return 'ignore';
+  return revealComplete ? 'advance' : 'reveal';
+}
+
 export function StoryStage({ nodeId, section, line, position, total, pending, error, onNext, onSkip, onClose, onHistory, historyDisabled }: StoryStageProps) {
   const [still, setStill] = useState(false);
+  const systemReducedMotion = useReducedMotion();
+  const lineKey = `${nodeId}:${section}:${position}`;
+  const [revealed, setRevealed] = useState(systemReducedMotion ? line.text : '');
+  const lastTap = useRef(0);
+  const lineRef = useRef(lineKey);
+  const revealRun = useRef<DialogueRevealRun | null>(null);
+  const revealComplete = revealed.length >= line.text.length;
+  const motionOff = still || systemReducedMotion;
+
+  // Keep the reveal local to the authored line key. This is intentionally not
+  // tied to the line object identity: replay and campaign hydration can create
+  // fresh objects for the same line without restarting its presentation.
+  useEffect(() => {
+    revealRun.current?.cancel();
+    revealRun.current = null;
+    lineRef.current = lineKey;
+    lastTap.current = 0;
+    setRevealed(motionOff ? line.text : '');
+    if (motionOff) return;
+    const run = createDialogueRevealRun({
+      text: line.text,
+      onReveal: setRevealed,
+      schedule: (tick) => {
+        const timer = window.setInterval(tick, 18);
+        return () => window.clearInterval(timer);
+      },
+    });
+    revealRun.current = run;
+    return () => {
+      run.cancel();
+      if (revealRun.current === run) revealRun.current = null;
+    };
+  }, [lineKey, line.text, motionOff]);
+
+  const advanceFromSurface = () => {
+    if (pending || lineRef.current !== lineKey) return;
+    const now = typeof performance === 'undefined' ? Date.now() : performance.now();
+    const result = resolveDialogueTap({ pending: Boolean(pending), revealComplete, lastTap: lastTap.current, now });
+    if (result === 'ignore') return;
+    lastTap.current = now;
+    if (result === 'reveal') {
+      revealRun.current?.complete();
+      revealRun.current = null;
+      return;
+    }
+    onNext();
+  };
+  const isolate = (action: () => void) => (event: MouseEvent) => {
+    event.stopPropagation();
+    action();
+  };
   const node = getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
   const scene = resolveStoryStage(nodeId, node, chapter);
@@ -83,15 +186,15 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const shouting = /[A-Z]{4,}|!/.test(line.text);
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
-    <section className={`story-stage ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`}>
+    <section className={`story-stage ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
       <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(scene.backdropAssetId)}")` }} />
       <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
       <div className="story-stage__light" />
       <div className="story-stage__dust" aria-hidden="true" />
       <header className="story-stage__header">
-        <button onClick={onClose} type="button">← Back</button>
+        <button onClick={isolate(onClose)} type="button">← Back</button>
         <span>Squabblemon <i> / </i> Chapter {String(chapter?.order ?? 1).padStart(2, '0')}</span>
-        <button onClick={() => setStill(!still)} aria-pressed={still} type="button">{still ? 'Motion off' : 'Motion on'}</button>
+        <button onClick={isolate(() => setStill(!still))} aria-pressed={still} type="button">{still ? 'Motion off' : 'Motion on'}</button>
       </header>
       <div className="story-stage__location"><span>{chapter?.title ?? 'BLOCK PARTY OPEN'}</span><h2>{scene.place}</h2><p>{scene.caption}</p></div>
       {prop && <div className={`story-stage__prop story-stage__prop--${prop}`} aria-hidden="true">
@@ -107,12 +210,16 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
       </div>
       <div className="story-stage__vignette" />
       <div className="story-stage__script">
-        <div className="story-stage__speaker"><span>{line.speaker}</span><small>{section === 'post' ? 'AFTERMATH' : 'ON THE BLOCK'} · {position.toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}</small></div>
-        <p key={`${nodeId}:${section}:${position}`} className="story-stage__line" aria-live="polite">{line.text}</p>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={lineKey} className="story-stage__speaker" initial={motionOff ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={motionOff ? undefined : { opacity: 0, y: -8 }} transition={{ duration: motionOff ? 0 : .22 }}>
+            <span>{line.speaker}</span><small>{section === 'post' ? 'AFTERMATH' : 'ON THE BLOCK'} · {position.toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}</small>
+          </motion.div>
+        </AnimatePresence>
+        <motion.p key={lineKey} className="story-stage__line" aria-live="polite" initial={motionOff ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionOff ? 0 : .22 }}>{revealed}<span className="story-stage__caret" aria-hidden="true">{revealComplete ? '' : '▌'}</span></motion.p>
         {error && <p className="story-stage__error" role="alert">{error}</p>}
         <footer>
-          <div><button type="button" onClick={onHistory} disabled={!onHistory || historyDisabled}>Transcript</button><button type="button" onClick={onSkip} disabled={pending}>Skip scene</button></div>
-          <button className="story-stage__next" type="button" onClick={onNext} disabled={pending}>{pending ? 'Saving…' : position === total ? 'Continue →' : 'Next →'}</button>
+          <div><button type="button" onClick={isolate(onHistory ?? (() => undefined))} disabled={!onHistory || historyDisabled}>Transcript</button><button type="button" onClick={isolate(onSkip)} disabled={pending}>Skip scene</button></div>
+          <button className="story-stage__next" type="button" onClick={isolate(advanceFromSurface)} disabled={pending}>{pending ? 'Saving…' : !revealComplete ? 'Complete line' : position === total ? 'Continue →' : 'Next →'}</button>
         </footer>
       </div>
     </section>

@@ -45,5 +45,5 @@ The concluding Open crosses three venues before its rooftop final. “The Block�
 | 7 | 8 | 8 | 0 |
 | 8 | 9 | 9 | 1 |
 
-The implemented route totals 51 battles and 51 possible first perfect-clear tickets. The optional Courier Table grants the one replacement ticket directly, preserving 52 route tickets. All eight chapter finales grant 10 tickets each, for a maximum of 132 across a perfect season. Optional encounters do not gate chapter completion.
+The implemented route totals 51 battles and 51 possible first perfect-clear tickets. The optional Courier Table grants the one replacement ticket directly, preserving 52 route tickets. All eight chapter finales grant 10 tickets each, for a maximum of 132 across a perfect season. Optional encounters do not gate chapter completion. Chapters Three–Eight use authored setup/aftermath dialogue cards (at least four setup lines and three aftermath lines per battle), while node IDs, prerequisites, mechanics, rewards, and the locked reveal order remain the executable contract.
 

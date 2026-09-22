@@ -127,6 +127,38 @@ test("Block Party content validates and rejects unknown cards, cycles, and optio
   assert.throws(() => validateStoryContent(cycle), /cycles or unreachable/);
 });
 
+test("later-season encounters use authored dialogue cards and preserve reveal order", () => {
+  const later = storyContent.chapters.filter((chapter) => chapter.order >= 3);
+  assert.equal(later.length, 6);
+  for (const chapter of later) {
+    for (const node of chapter.nodes) {
+      const lines = node.kind === "battle"
+        ? [...node.preDialogue, ...node.postDialogue]
+        : node.scenes;
+      assert.ok(lines.length >= 4, `${node.id} needs a substantial scene`);
+      for (const line of lines) {
+        assert.ok(line.speaker.trim());
+        assert.match(line.portraitAssetId, /^assets\/characters\/.+\.webp$/);
+        assert.ok(line.text.trim());
+      }
+      if (node.kind === "battle") {
+        assert.ok(node.preDialogue.length >= 4, `${node.id} needs four setup lines`);
+        assert.ok(node.postDialogue.length >= 3, `${node.id} needs three aftermath lines`);
+        assert.doesNotMatch(node.postDialogue.map((line) => line.text).join(" "), /Good game\. The next table is waiting/);
+      }
+    }
+  }
+  const chapterText = later.map((chapter) => chapter.nodes.flatMap((node) =>
+    node.kind === "battle" ? [...node.preDialogue, ...node.postDialogue] : node.scenes,
+  ).map((line) => line.text).join(" "));
+  assert.match(chapterText[0], /sick|memorial|death story/i);
+  assert.match(chapterText[1], /edited|continuous|address/i);
+  assert.match(chapterText[2], /rescue|false memorial|warehouse/i);
+  assert.match(chapterText[3], /equal.access|terms|contender/i);
+  assert.match(chapterText[4], /crossed out|restor|disqualif/i);
+  assert.match(chapterText[5], /sale agreement|owner|building/i);
+});
+
 test("every Chapter One media and portrait reference exists in public assets", () => {
   const publicRoot = new URL("../public/", import.meta.url);
   const references = new Set<string>();
