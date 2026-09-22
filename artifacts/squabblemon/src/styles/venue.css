@@ -134,29 +134,43 @@
 .gym__combo strong{display:block;font:700 62px/.95 var(--font-display);color:var(--venue-gold);text-shadow:3px 4px #08060b}
 .gym__combo strong small{font:500 18px var(--font-display);color:#c2c2c2}
 .gym__combo>span{display:block;font:700 7px/1.8 var(--font-mono);letter-spacing:.1em;color:#bebebe;margin-top:8px}
-/* Native dialogs provide focus containment, Escape support and return focus. */
+/* Native dialogs: Torn paper surfaces with texture and ink contrast */
 .venue-menu,.venue-info,.gym-results{
   position:fixed;
   inset:0;
   margin:auto;
-  background: url("/assets/inspector/paper-grain.jpg") center/cover, #e8dcc4;
-  color:#1a1611;
-  border:none;
-  box-shadow:none;
-  filter:drop-shadow(0 15px 30px rgba(0,0,0,0.6));
-  clip-path: polygon(
-    0% 2%, 2% 0%, 5% 1%, 8% 0%, 12% 2%, 15% 0%, 18% 1%, 22% 0%, 25% 2%, 28% 0%,
-    32% 1%, 35% 0%, 38% 2%, 42% 0%, 45% 1%, 48% 0%, 52% 2%, 55% 0%, 58% 1%, 62% 0%,
-    65% 2%, 68% 0%, 72% 1%, 75% 0%, 78% 2%, 82% 0%, 85% 1%, 88% 0%, 92% 2%, 95% 0%, 98% 1%, 100% 2%,
-    99% 10%, 100% 20%, 99% 30%, 100% 40%, 98% 50%, 100% 60%, 99% 70%, 100% 80%, 99% 90%, 100% 98%,
-    98% 100%, 95% 99%, 92% 100%, 88% 98%, 85% 99%, 82% 100%, 78% 99%, 75% 100%, 72% 98%, 68% 100%,
-    65% 99%, 62% 100%, 58% 98%, 55% 100%, 52% 99%, 48% 100%, 45% 98%, 42% 100%, 38% 99%, 35% 100%,
-    32% 98%, 28% 100%, 25% 99%, 22% 100%, 18% 98%, 15% 100%, 12% 99%, 8% 100%, 5% 98%, 2% 100%, 0% 98%,
-    1% 90%, 0% 80%, 1% 70%, 0% 60%, 2% 50%, 0% 40%, 1% 30%, 0% 20%, 1% 10%
-  );
+  background: #fdfaf3;
+  color:#1a1a1a;
+  border:2px solid #111;
+  box-shadow: 10px 10px 0 rgba(0,0,0,0.85);
   max-height:calc(100dvh - 40px);
   overflow:auto;
   padding:32px 32px 38px;
+  background-image:
+    linear-gradient(90deg, transparent 50px, #d5c8b3 50px, #d5c8b3 52px, transparent 52px),
+    linear-gradient(#f4eee0 1px, transparent 1px);
+  background-size: 100% 28px;
+  line-height: 28px;
+  position: relative;
+}
+/* Torn top and bottom edges using pseudo-elements */
+.venue-menu::before,.venue-info::before,.gym-results::before {
+  content: '';
+  position: absolute;
+  top: -8px; left: -2px; right: -2px; height: 16px;
+  background: #fdfaf3;
+  border-top: 2px solid #111;
+  clip-path: polygon(0% 50%, 2% 0%, 5% 40%, 8% 10%, 12% 60%, 15% 5%, 18% 50%, 22% 0%, 25% 40%, 28% 10%, 32% 60%, 35% 5%, 38% 50%, 42% 0%, 45% 40%, 48% 10%, 52% 60%, 55% 5%, 58% 50%, 62% 0%, 65% 40%, 68% 10%, 72% 60%, 75% 5%, 78% 50%, 82% 0%, 85% 40%, 88% 10%, 92% 60%, 95% 5%, 98% 50%, 100% 0%, 100% 100%, 0% 100%);
+  z-index: -1;
+}
+.venue-menu::after,.venue-info::after,.gym-results::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: -2px; right: -2px; height: 16px;
+  background: #fdfaf3;
+  border-bottom: 2px solid #111;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 98% 100%, 95% 60%, 92% 90%, 88% 40%, 85% 95%, 82% 50%, 78% 100%, 75% 60%, 72% 90%, 68% 40%, 65% 95%, 62% 50%, 58% 100%, 55% 60%, 52% 90%, 48% 40%, 45% 95%, 42% 50%, 38% 100%, 35% 60%, 32% 90%, 28% 40%, 25% 95%, 22% 50%, 18% 100%, 15% 60%, 12% 90%, 8% 40%, 5% 95%, 2% 50%, 0% 100%);
+  z-index: -1;
 }
 .venue-menu::backdrop,.venue-info::backdrop,.gym-results::backdrop{background:#070707e8;backdrop-filter:blur(10px)}
 .venue-menu{width:min(580px,calc(100% - 30px))}
@@ -247,68 +261,59 @@ html[data-reduce-motion="true"] :is(.venue-scene__frame,.station-tile,.venue-but
 @keyframes venue-ko-in{from{transform:translateX(-40px) rotate(-7deg);opacity:0}to{transform:rotate(-7deg);opacity:1}}
 @media(prefers-reduced-motion:reduce){.gym__knockout{animation:none}}
 html[data-reduce-motion="true"] .gym__knockout{animation:none}
-/* Fight-night component treatment, shared with the existing public and training screens. */
+/* Fight-night component treatment: Express-inspired physical street-sign */
 .venue-button {
   min-height: 48px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 12px 24px;
-  background: #111;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 6px;
+  padding: 12px 28px;
+  background: #f0eadd;
+  color: #111;
+  border: none;
   font: 900 italic 16px/1 var(--font-display);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   position: relative;
-  box-shadow:
-    inset 0 0 0 3px #111,
-    0 6px 16px rgba(0,0,0,0.6);
-  clip-path: none;
+  box-shadow: 0 8px 0 #111, 0 15px 20px rgba(0,0,0,0.4);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
   isolation: isolate;
   text-decoration: none;
-  transition: transform 0.16s, box-shadow 0.16s, background 0.16s;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.venue-button::before,
+.venue-button::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 2px solid #111;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  pointer-events: none;
+}
 .venue-button::after {
   content: '';
   position: absolute;
   width: 6px; height: 6px;
-  background: #aaa;
+  background: #888;
   border-radius: 50%;
   box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.4);
   top: 50%;
   transform: translateY(-50%);
-}
-.venue-button::before { left: 8px; }
-.venue-button::after { right: 8px; }
-.venue-button:not(:disabled):hover {
-  background: #222;
-  transform: translateY(-2px);
-  box-shadow: inset 0 0 0 3px #222, 0 8px 20px rgba(0,0,0,0.8);
+  left: 10px;
 }
 .venue-button:not(:disabled):active {
-  transform: translateY(2px);
-  box-shadow: inset 0 0 0 3px #111, 0 2px 4px rgba(0,0,0,0.8);
+  transform: translateY(6px);
+  box-shadow: 0 2px 0 #111, 0 5px 10px rgba(0,0,0,0.4);
 }
 .venue-button--gold {
   background: #d4a656;
-  color: #111;
-  border-color: #111;
-  text-shadow: none;
-  box-shadow:
-    inset 0 0 0 3px #d4a656,
-    0 6px 16px rgba(0,0,0,0.6);
 }
-.venue-button--gold::before,
-.venue-button--gold::after {
-  background: #333;
+.venue-button--dark {
+  background: #1a1a1a;
+  color: #f0eadd;
 }
-.venue-button--gold:not(:disabled):hover {
-  background: #e8bd68;
-  box-shadow: inset 0 0 0 3px #e8bd68, 0 8px 20px rgba(0,0,0,0.8);
+.venue-button--dark::before {
+  border-color: #f0eadd;
 }
 .venue-icon-button{border:1px solid #ffffff35;background:#070707d9;color:#fff;box-shadow:none;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
 .venue-icon-button:hover{color:var(--venue-gold);border-color:var(--venue-gold);background:#191919}
