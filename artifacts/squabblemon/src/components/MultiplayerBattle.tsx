@@ -12,6 +12,7 @@ import { RulesModal } from './RulesModal';
 import { BattleFeedback } from '../battleFeedback';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
+import { setBattleMusicMode } from '../musicStore';
 
 const definition = (id: string) => cards[id] ?? SUMMON_TEMPLATES[id as keyof typeof SUMMON_TEMPLATES];
 export const asCard = (card: PublicCard): CardInstance => ({
@@ -79,6 +80,9 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const feedback = useRef<BattleFeedback | null>(null);
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
   const sending = useRef(false);
+  useEffect(() => {
+    if (room.status === 'active') setBattleMusicMode(null);
+  }, [room.status, room.code, room.gameNumber]);
   useEffect(() => { feedback.current = new BattleFeedback(preferences); return () => feedback.current?.reset(); }, []);
   useEffect(() => { feedback.current?.setPreferences(preferences); }, [preferences]);
   useEffect(() => { clockOffset.current = room.serverTime - Date.now(); }, [room.serverTime]);

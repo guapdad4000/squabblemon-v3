@@ -15,6 +15,7 @@ import '../../styles/fade-park.css';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
+import { setBattleMusicMode } from '../../musicStore';
 
 export function FightTabs({ friends = false, searching = false }: { friends?: boolean; searching?: boolean }) {
   return <nav className="fight-tabs" aria-label="Fight modes">
@@ -41,9 +42,21 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [clock, setClock] = useState(Date.now());
   const operation = useRef(false), retry = useRef<{ deckId: string; id: string } | null>(null);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
+  const markerVoice = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
-    welcomeVoice.current = playVoiceLine('fade-park-welcome', loadFeedbackPreferences().audioEnabled);
-    return () => stopSoundEffect(welcomeVoice.current);
+    // Fade Park always owns battle music. Clear any result override left by the
+    // previous match before the route soundtrack chooses its playlist.
+    setBattleMusicMode(null);
+    // Defer the welcome until after React's development remount check. Playing
+    // synchronously here produced a clipped first word when that check cleaned up.
+    const timer = window.setTimeout(() => {
+      welcomeVoice.current = playVoiceLine('fade-park-welcome', loadFeedbackPreferences().audioEnabled);
+    }, 250);
+    return () => {
+      window.clearTimeout(timer);
+      stopSoundEffect(welcomeVoice.current);
+      stopSoundEffect(markerVoice.current);
+    };
   }, []);
 
   const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
@@ -68,7 +81,9 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   async function search() {
     if (!chosen || operation.current) return;
     operation.current = true; setBusy(true); setError(null);
-    playVoiceLine('fade-marker', loadFeedbackPreferences().audioEnabled);
+    stopSoundEffect(welcomeVoice.current);
+    welcomeVoice.current = null;
+    markerVoice.current = playVoiceLine('fade-marker', loadFeedbackPreferences().audioEnabled);
     try {
       // Stop an older lobby read overwriting the search acknowledgement.
       await client.cancelQueries({ queryKey: key });

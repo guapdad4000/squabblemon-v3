@@ -35,7 +35,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
   return <>
     {variant === 'dj' ? (
       <div className={`music-dj-wrapper ${wrapperClassName}`}>
-        <img src={getAssetUrl('assets/generated/dr-fade-dj-turntable.png')} alt="" aria-hidden="true" className="music-dj-art" width={1024} height={1024} decoding="async" draggable={false} />
+        <img src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="" aria-hidden="true" className="music-dj-art" width={560} height={700} decoding="async" draggable={false} />
         {trigger}
       </div>
     ) : trigger}
@@ -45,7 +45,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
       onClick={event => { if (event.target === dialog.current) dialog.current.close(); }}>
       <div className="music-panel">
         <header className="music-dj-header">
-          <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.png')} alt="Dr. Fade at the Fade Tapes turntables" width={1024} height={1024} draggable={false} />
+          <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="Dr. Fade at the Fade Tapes turntables" width={560} height={700} draggable={false} />
           <div><span className="music-eyebrow">DR. FADE PRESENTS</span><h2 id={`${id}-title`}>The Fade Tapes</h2></div>
           <button type="button" aria-label="Close music controls" onClick={() => dialog.current?.close()}><X size={20} /></button></header>
         <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>{track.album} · {track.artist}</p></div>

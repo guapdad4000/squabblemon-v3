@@ -202,6 +202,8 @@ test('routes choose ranked battle, story, boss, training, gacha, and background 
   const { storyContent } = await import('@workspace/squabblemon-engine/story');
   const boss=storyContent.chapters.flatMap(chapter=>chapter.nodes).find(node=>node.kind==='battle' && node.battleType==='boss');
   assert(boss); assert.equal(musicModeForRoute(`/game/story/play/${boss.id}`),'boss');
+  assert.equal(activeMusicMode('/game/online', 'defeat'), 'battle', 'Fade Park ignores a stale result override');
+  assert.equal(activeMusicMode('/game/online?tab=friends', 'victory'), 'battle', 'friend lobby ignores a stale result override');
   assert.equal(activeMusicMode('/game/online/ABCD12', 'victory'), 'victory');
   assert.equal(activeMusicMode('/game/online/ABCD12', null), 'battle', 'clearing a result override restores the route playlist');
   assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', 'defeat'), 'defeat');

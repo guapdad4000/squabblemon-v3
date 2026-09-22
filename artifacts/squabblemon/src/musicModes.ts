@@ -57,5 +57,8 @@ export function soundtrackForRoute(path: string, mode: MusicMode): readonly Soun
   return chapter?.order && chapter.order % 2 === 0 ? storyChapterSoundtracks.even : storyChapterSoundtracks.odd;
 }
 export function activeMusicMode(path: string, override: 'boss' | 'victory' | 'defeat' | null): MusicMode {
+  // A completed room may keep its result component alive briefly while routing
+  // back to the lobby. The lobby must never inherit that room's outcome cue.
+  if (/^\/game\/online(?:\?|$)/.test(path)) return 'battle';
   return override ?? musicModeForRoute(path);
 }
