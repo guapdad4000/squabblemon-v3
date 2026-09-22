@@ -29,7 +29,9 @@ export function ParkResult({ outcome, ranked, rank, description, claimed, rivalC
   return <DialogContent ref={panelRef} className={'park-result park-result--illustrated outcome-' + outcome} aria-describedby="park-result-description" data-testid="park-result-dialog">
     <DialogClose className="park-result-close" aria-label="Close result" data-park-result-close><span aria-hidden="true">×</span></DialogClose>
     <div className="park-result-scene" style={{ backgroundImage: `linear-gradient(0deg,#18251f00,#09161455),url("${getAssetUrl('assets/fade-park/park.png')}")` }} aria-hidden="true"><div className="park-result-sun" /><motion.img src={getAssetUrl('assets/pvp/dr-fade-' + (win ? 'win' : 'loss') + '.webp')}
-      initial={reduced ? false : { y: 45, scale: .85, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 16, delay: .1 }} /></div>
+      initial={reduced ? false : { y: 45, scale: .85, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 16, delay: .1 }} />
+      {outcome !== 'draw' && <img className="park-result-outcome-mark" src={getAssetUrl(`assets/results/${win ? 'win-w' : 'loss-l'}.gif`)} alt="" />}
+    </div>
     <header className="park-result-sign"><span>{ranked ? 'FADE PARK · RANKED' : 'FRIEND FADE'}</span><DialogTitle>{win ? ranked ? 'YOU OWN THE PARK.' : 'YOU WON THE FADE.' : outcome === 'draw' ? 'DEAD HEAT.' : 'RUN IT BACK.'}</DialogTitle><p>{win ? 'Make some noise. This one is yours.' : outcome === 'draw' ? 'Nobody folds. Meet in the middle.' : 'Take a breath. The next fade is yours.'}</p></header>
     <div className="park-result-receipt">
       <DialogDescription id="park-result-description">{description}</DialogDescription>

@@ -34,6 +34,7 @@ import {
   savePackOpening,
   type PendingPackRequest,
 } from '../../lib/packJournal';
+import { playSoundEffect, playVoiceLine, stopSoundEffect, type SoundEffect, type VoiceLine } from '../../lib/sfx';
 
 type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | 'tenKnockout' | 'reveal' | 'summary';
 type Payment = 'softCurrency' | 'ticket';
@@ -166,6 +167,10 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const busy = useRef(false);
   const mounted = useRef(true);
   const rushTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const revealSound = useRef<HTMLAudioElement | null>(null);
+  const revealSoundKey = useRef('');
+  const rarityVoice = useRef<HTMLAudioElement | null>(null);
+  const rarityVoiceKey = useRef('');
   const preview = e2eAuthEnabled && bootstrap.profile.id === 'e2e-player';
   const [pending, setPending] = useState<PendingPackRequest | null>(() =>
     loadPackRequest(sessionStorage, bootstrap.profile.id),
@@ -235,6 +240,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       mounted.current = false;
       preference.removeEventListener('change', update);
       if (rushTimer.current) clearInterval(rushTimer.current);
+      stopSoundEffect(revealSound.current);
+      stopSoundEffect(rarityVoice.current);
     };
   }, []);
   useEffect(() => {
@@ -255,9 +262,40 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }, [reduced, isPunching]);
   useEffect(() => {
     if (phase !== 'knockout' && phase !== 'tenKnockout') return;
+    playSoundEffect('pack-break', sound, 0.72);
     const timeout = window.setTimeout(() => setPhase(reduced ? 'summary' : 'reveal'), reduced ? 0 : 850);
     return () => clearTimeout(timeout);
-  }, [phase, reduced]);
+  }, [phase, reduced, sound]);
+  useEffect(() => {
+    if (phase !== 'reveal' || !currentReward || !sound) return;
+    const key = `${opening?.id ?? 'opening'}:${revealIndex}`;
+    if (revealSoundKey.current === key) return;
+    revealSoundKey.current = key;
+    stopSoundEffect(revealSound.current);
+    const soundName: SoundEffect =
+      currentRarity === 'Legendary' || currentRarity === 'Mythical'
+        ? 'gacha-legendary'
+        : currentRarity === 'Epic'
+          ? 'gacha-epic'
+          : currentRarity === 'Rare'
+            ? revealIndex % 2 ? 'gacha-rare-b' : 'gacha-rare-a'
+            : 'gacha-common';
+    revealSound.current = playSoundEffect(soundName, true, currentRarity === 'Mythical' ? 1 : 0.78);
+  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound]);
+  useEffect(() => {
+    if (phase !== 'reveal' || !currentReward || !sound) return;
+    const key = `${opening?.id ?? 'opening'}:${revealIndex}`;
+    if (rarityVoiceKey.current === key) return;
+    const voiceName: VoiceLine | null =
+      currentRarity === 'Rare' ? 'rarity-rare'
+        : currentRarity === 'Epic' ? 'rarity-epic'
+          : currentRarity === 'Legendary' ? 'rarity-legendary'
+            : currentRarity === 'Mythical' ? 'rarity-mythical' : null;
+    if (!voiceName) return;
+    rarityVoiceKey.current = key;
+    stopSoundEffect(rarityVoice.current);
+    rarityVoice.current = playVoiceLine(voiceName, true, currentRarity === 'Mythical' ? 1 : 0.9);
+  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound]);
 
   const reveal = () => {
     sendScene(frame, { type: 'reset' });
@@ -273,6 +311,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
     if (!pending && balance < cost) return;
     busy.current = true;
+    playVoiceLine('gacha-intro', sound, 0.9);
+    playSoundEffect(requestedSize === 10 ? 'pack-ten' : 'pack-tear', sound, 0.72);
     setPullSize(requestedSize);
     setPhase('requesting');
     setError(null);

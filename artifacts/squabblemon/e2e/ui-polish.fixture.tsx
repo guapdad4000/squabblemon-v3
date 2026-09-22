@@ -86,6 +86,8 @@ createRoot(document.getElementById('root')!).render(
           <button className="venue-button venue-button--gold" onClick={action('inspect')}>Inspect final board</button>
         </ParkResult>
       </Dialog>
+    ) : mode === 'arrival' ? (
+      <MatchArrival player={{ name: 'GuapDad', hero: 'folks' }} rival={{ name: 'Park Bot', hero: 'big-boss' }} label="Park Bot found · ranked sparring" onContinue={action('enter')} />
     ) : mode === 'music' ? (
       <div className="h-screen w-full bg-black p-10 flex items-start justify-center">
         <MusicControls variant="dj" />

@@ -5,13 +5,15 @@ import '../styles/ui-polish.css';
 import type { MatchReward } from '@workspace/api-client-react';
 import { getAssetUrl } from '../lib/assets';
 import { GameGlyph } from './venue/GameGlyph';
+import { Star } from 'lucide-react';
 
 type DistrictResult = { player: number; cpu: number; winner: string };
 /** Panel coordinates follow the supplied artwork; the image is never cropped. */
-export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending, actions, onRegroup, onTrain, onRebuild }: {
+export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending, storyStars, actions, onRegroup, onTrain, onRebuild }: {
   actions?: ReactNode; onRegroup?: () => void; onTrain?: () => void; onRebuild?: () => void;
   victory: boolean; draw: boolean; results: DistrictResult[]; districts: { name: string }[];
   reward?: MatchReward; isGuest?: boolean; rewardError?: unknown; rewardPending?: boolean;
+  storyStars?: number;
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const [scene, setScene] = useState(false);
@@ -28,6 +30,9 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
       <img className="result-art__image" src={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-wide`)} alt="" width={1672} height={941} fetchPriority="high" />
     </picture>
     {!draw && !scene && <img className="result-art__outcome-mark" src={getAssetUrl(`assets/results/${outcome === 'win' ? 'win-w' : 'loss-l'}.gif`)} alt="" aria-hidden="true" />}
+    {!scene && storyStars !== undefined && <div className="result-art__story-stars" aria-label={`${storyStars} of 3 story stars earned`}>
+      {[1, 2, 3].map(n => <Star key={n} fill={n <= storyStars ? 'currentColor' : 'none'} aria-hidden="true" />)}
+    </div>}
     {!draw && <button className="result-art__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>{scene ? 'Show results' : 'View scene'}</button>}
     {!scene && <>
       <div className="result-art__plaque" role="status">

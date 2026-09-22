@@ -2,7 +2,48 @@ import * as THREE from '../shared/three.module.js';
 let disposed=false,sceneInitialized=false;
 let armed=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const emit=payload=>parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);
-const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try{this.context??=new AudioContext();this.context.resume();}catch{}},playPunch(){this.tone(95,.14)},playKO(){this.tone(52,.5)},tone(hz,duration){if(!this.enabled)return;this.init();const c=this.context;if(!c)return;const o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(hz,c.currentTime);o.frequency.exponentialRampToValueAtTime(28,c.currentTime+duration);g.gain.setValueAtTime(.16,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);o.onended=()=>{o.disconnect();g.disconnect()}}};
+const AudioEngine={
+  enabled:false,
+  context:null,
+  sampleRoot:new URL('../../audio/sfx/gacha/',location.href),
+  init(){
+    if(!this.enabled)return;
+    try{this.context??=new AudioContext();this.context.resume();}catch{}
+    for(const name of ['jab','hook','finisher','knockout'])this.preload(name);
+  },
+  source(name){
+    const probe=document.createElement('audio');
+    const extension=probe.canPlayType('audio/ogg; codecs=\"vorbis\"')?'ogg':'m4a';
+    return new URL(`${name}.${extension}`,this.sampleRoot).href;
+  },
+  preload(name){
+    const audio=new Audio(this.source(name));
+    audio.preload='auto';
+  },
+  sample(name,volume=.82){
+    if(!this.enabled)return;
+    const audio=new Audio(this.source(name));
+    audio.volume=volume;
+    audio.play().catch(()=>this.tone(name==='knockout'?52:95,name==='knockout'?.5:.14));
+  },
+  playPunch(intensity='normal'){
+    this.sample(intensity==='finisher'?'finisher':intensity==='heavy'?'hook':'jab',intensity==='finisher'?1:.84);
+  },
+  playKO(){this.sample('knockout',1)},
+  tone(hz,duration){
+    if(!this.enabled)return;
+    this.init();
+    const c=this.context;
+    if(!c)return;
+    const o=c.createOscillator(),g=c.createGain();
+    o.frequency.setValueAtTime(hz,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(28,c.currentTime+duration);
+    g.gain.setValueAtTime(.16,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);
+    o.onended=()=>{o.disconnect();g.disconnect()}
+  }
+};
     function drawEmblem(ctx, cx, cy, scale = 1, showGloves = true) {
       ctx.save();
       ctx.translate(cx, cy);
@@ -848,7 +889,7 @@ const AudioEngine={enabled:false,context:null,init(){if(!this.enabled)return;try
       const heatRatio = Math.min(punchHits / targetKoHits, 1.0);
       const speedFactor = (1.0 + heatRatio * 2.8) * impactBoost;
 
-      AudioEngine.playPunch(speedFactor);
+      AudioEngine.playPunch(intensity);
       screenShake = reduced ? 0 : Math.min(0.2, (0.025 + heatRatio * 0.07) * impactBoost);
 
       hitStopRemaining = intensity === "finisher" ? 6 : intensity === "heavy" ? 3 : 1;

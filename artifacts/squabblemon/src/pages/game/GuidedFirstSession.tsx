@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DrFadeWelcome } from '../../components/DrFadeWelcome';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey, useSavePlayerDeck, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -10,6 +10,8 @@ import { CoachSpotlight } from '../../components/CoachSpotlight';
 import { DeckWorkbench } from '../../components/DeckWorkbench';
 import { PlayLoop } from '../../components/PlayLoop';
 import type { DeckDraft } from '../../lib/deckWorkshop';
+import { loadFeedbackPreferences } from '../../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const homeLessons = [
   { target: '.safehouse-room-title', title: 'This is home.', body: 'Your Safehouse is where you return between fights. The objects in this room open the parts of your game.', next: 'Show me the story' },
@@ -25,6 +27,12 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
   const [playing, setPlaying] = useState<DeckDraft | null>(null);
   const save = useSavePlayerDeck();
   const queryClient = useQueryClient();
+  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    if (stage !== 'welcome') return;
+    welcomeVoice.current = playVoiceLine('app-welcome', loadFeedbackPreferences().audioEnabled);
+    return () => stopSoundEffect(welcomeVoice.current);
+  }, [stage]);
   const saved = bootstrap.profile.savedDecks.find(deck => deck.id === ROOKIE_DECK_ID);
   const persist = async (draft: DeckDraft) => {
     const res = await save.mutateAsync({ deckId: ROOKIE_DECK_ID, data: draft });

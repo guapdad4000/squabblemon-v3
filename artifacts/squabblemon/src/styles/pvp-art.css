@@ -5,3 +5,28 @@
 @media(max-height:650px){.park-result-scene{height:100px}.park-result-scene>img{height:165px;width:175px;margin-left:-87px;top:-6px}.park-result-sign{padding:6px 8px}.park-result-sign h2{font-size:25px}.park-result-award{padding:5px 0}.park-result-award .rank-trophy{height:75px}.park-result-receipt{padding:8px 12px 10px}.park-result-actions{margin-top:4px;gap:5px}.park-result-score b{font-size:20px}}
 .match-poster.match-poster--park{justify-content:space-between;padding:20px 18px}.match-poster--park:after{display:none}.match-poster--park .match-poster__fighter{grid-template-rows:auto auto;justify-items:start;align-items:center}.match-poster--park .match-poster__vs{margin-left:0}.match-poster--park footer{margin-top:auto}.match-poster--park .match-poster__billing{margin-bottom:auto}
 @media(max-width:500px){.match-poster--park .match-poster__fighter{justify-items:center;gap:5px}}
+
+/* Result marks, glow, and the ranked fist-clash impact pass. */
+.park-result.park-result--illustrated{box-shadow:0 28px 90px #000c,0 24px 42px #f3ca576b}
+.park-result.park-result--illustrated.outcome-loss{box-shadow:0 28px 90px #000c,0 24px 42px #d832326e}
+.park-result-outcome-mark{position:absolute!important;z-index:3!important;left:14px!important;top:20px!important;width:90px!important;height:90px!important;margin:0!important;object-fit:contain!important;filter:drop-shadow(0 8px 10px #000a)!important}
+.versus-crack{left:43%;width:14%;filter:contrast(1.8) brightness(.32) drop-shadow(0 0 3px #000) drop-shadow(0 0 12px #080808)}
+.versus-impact{position:absolute;inset:0;z-index:3;pointer-events:none}
+.versus-impact i{position:absolute;left:50%;top:42%;width:4px;height:31%;background:#090909;clip-path:polygon(40% 0,100% 0,58% 43%,100% 43%,0 100%,32% 54%,0 54%);transform-origin:top center;opacity:0;animation:versus-bolt .38s .48s ease-out both}
+.versus-impact i:nth-child(2){transform:rotate(47deg) scale(.8)}
+.versus-impact i:nth-child(3){transform:rotate(-58deg) scale(.72)}
+.versus-impact i:nth-child(4){transform:rotate(137deg) scale(.58)}
+.versus-impact b{position:absolute;left:50%;top:43%;width:22vmin;height:22vmin;border:10px solid #090909;clip-path:polygon(50% 0,60% 37%,100% 25%,68% 51%,100% 78%,61% 64%,50% 100%,42% 63%,3% 82%,33% 51%,0 27%,40% 38%);transform:translate(-50%,-50%) scale(0);animation:versus-burst .42s .46s ease-out both}
+.versus-logo{position:absolute;z-index:5;left:50%;top:43%;width:clamp(112px,22vw,230px);height:auto;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 7px 3px #000a) drop-shadow(0 0 16px #f3c85d80)}
+.match-poster--park .versus-park{animation:versus-screen-shake .45s .48s linear both}
+.match-poster--park .match-poster__fighter{padding:11px 14px;background:linear-gradient(120deg,#0a1712f5,#1c3528e8);box-shadow:5px 6px 0 #08100dd9,0 0 22px #f2ca5740;transform:skew(-3deg)}
+.match-poster--park .match-poster__fighter.side-1{transform:skew(3deg)}
+.match-poster--park .match-poster__fighter h2{font-size:clamp(15px,2.8vw,27px);line-height:1;color:#fff2d0;text-shadow:2px 2px #090f0c}
+.match-poster--park footer{background:linear-gradient(transparent,#101d18e8 42%);padding:18px 16px max(14px,env(safe-area-inset-bottom))}
+.match-poster--park footer button{width:min(100%,340px);min-height:54px}
+@keyframes versus-bolt{0%{opacity:0;scale:.3}35%{opacity:1}100%{opacity:0;scale:1.25}}
+@keyframes versus-burst{35%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
+@keyframes versus-screen-shake{0%,100%{transform:translate(0)}20%{transform:translate(-8px,5px) rotate(-.6deg)}40%{transform:translate(7px,-5px) rotate(.5deg)}60%{transform:translate(-4px,3px)}80%{transform:translate(3px,-2px)}}
+@media(prefers-reduced-motion:reduce){.match-poster--park .versus-park,.versus-impact i,.versus-impact b{animation:none!important}}
+html[data-reduce-motion="true"] .match-poster--park .versus-park,html[data-reduce-motion="true"] .versus-impact i,html[data-reduce-motion="true"] .versus-impact b{animation:none!important}
+@media(max-width:500px){.versus-logo{top:43%;width:clamp(104px,34vw,145px)}}

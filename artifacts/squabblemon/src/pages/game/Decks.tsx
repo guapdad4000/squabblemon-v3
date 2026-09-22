@@ -6,12 +6,15 @@ import { PlayerBootstrap, getGetPlayerBootstrapQueryKey } from '@workspace/api-c
 import { useDeckPersistence } from '../../lib/useDeckPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 import { starterRecipes, validateSavedDeck } from '../../data';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
+import { loadFeedbackPreferences } from '../../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const [, setLocation] = useLocation();
   const { save: saveDeck } = useDeckPersistence(bootstrap);
   const queryClient = useQueryClient();
@@ -24,6 +27,10 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     [...savedDeckIds, ...starterDeckIds.filter(id => !savedDeckIds.includes(id))],
   );
   const atCapacity = bootstrap.profile.savedDecks.length >= bootstrap.profile.deckSlots;
+  useEffect(() => {
+    welcomeVoice.current = playVoiceLine('decks-welcome', loadFeedbackPreferences().audioEnabled);
+    return () => stopSoundEffect(welcomeVoice.current);
+  }, []);
 
   const handleCreateNew = async () => {
     if (creating || atCapacity) return;

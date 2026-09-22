@@ -12,6 +12,8 @@ import { BattleEarnings } from './BattleEarnings';
 import { setBattleMusicMode } from '../musicStore';
 import '../styles/studio.css';
 import '../styles/result-stage.css';
+import { loadFeedbackPreferences } from '../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../lib/sfx';
 
 export function ResultScreen({
   tutorial,
@@ -38,10 +40,23 @@ export function ResultScreen({
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
     isDraw = winner === 'draw';
+  const resultVoice = useRef<HTMLAudioElement | null>(null);
+  const resultVoiceKey = useRef('');
   useEffect(() => {
     if (isDraw) return;
     setBattleMusicMode(isVictory ? 'victory' : 'defeat');
-    return () => setBattleMusicMode(null);
+    const key = `${m.playerDeck}:${m.round}:${winner}`;
+    if (resultVoiceKey.current !== key) {
+      resultVoiceKey.current = key;
+      resultVoice.current = playVoiceLine(
+        isVictory ? (m.round % 2 === 0 ? 'win-b' : 'win-a') : 'loss',
+        loadFeedbackPreferences().audioEnabled,
+      );
+    }
+    return () => {
+      setBattleMusicMode(null);
+      stopSoundEffect(resultVoice.current);
+    };
   }, [isDraw, isVictory]);
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -160,6 +175,7 @@ export function ResultScreen({
         </header>
         <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
           reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
+          storyStars={isStory && storyMetadata ? earnedStars : undefined}
           actions={actions} onRegroup={onGoHome} onTrain={onRestart} onRebuild={rebuild} />
 
         <details className="result-stage__receipt-drawer">
@@ -170,16 +186,6 @@ export function ResultScreen({
           <section className="result-stage__story" aria-label="Story outcome">
             {storyMetadata ? (
               <>
-                <div className="result-stage__stars" aria-label={`${earnedStars} of 3 stars this run`}>
-                  {[1, 2, 3].map((n) => (
-                    <Star
-                      key={n}
-                      size={25}
-                      fill={n <= earnedStars ? 'currentColor' : 'none'}
-                      style={{ opacity: n <= earnedStars ? 1 : 0.25 }}
-                    />
-                  ))}
-                </div>
                 <p>
                   {storyMetadata.outcome === 'win'
                     ? storyMetadata.firstClear

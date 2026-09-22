@@ -11,6 +11,8 @@ import { SceneFrame, sendScene, type SceneMessage } from '../../components/venue
 import { storyContent } from '@workspace/squabblemon-engine/story';
 import '../../styles/studio.css';
 import '../../styles/safehouse-stage.css';
+import { loadFeedbackPreferences } from '../../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
@@ -58,6 +60,7 @@ function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, marke
 
 export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstrap; onGuideComplete?: () => void }) {
   const frame = useRef<HTMLIFrameElement>(null);
+  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const [sceneReady, setSceneReady] = useState(false);
   const [view, setView] = useState<Station | 'room'>('room');
   const [night, setNight] = useState(() => {
@@ -68,6 +71,10 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const markerLayer = useRef<HTMLElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
   const previousView = useRef<Station | 'room'>('room');
+  useEffect(() => {
+    welcomeVoice.current = playVoiceLine('home-fade', loadFeedbackPreferences().audioEnabled);
+    return () => stopSoundEffect(welcomeVoice.current);
+  }, []);
   const station = stations.find(item => item.id === view);
   const crew = (bootstrap.profile.savedDecks[0]?.cardIds ?? bootstrap.profile.ownedCardIds).slice(0, 3).map(id => catalogCardById[id]).filter(Boolean);
   function explore(next: Station | 'room') { setView(next); sendScene(frame, { type: 'view', view: next }); }

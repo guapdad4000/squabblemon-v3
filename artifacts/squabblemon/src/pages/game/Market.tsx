@@ -1,7 +1,7 @@
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -25,6 +25,8 @@ import '../../styles/studio.css';
 import { PropArt } from '../../components/venue/PropArt';
 import { clearShopRequest, readShopRequest, saveShopRequest } from '../../lib/shopJournal';
 import { e2eAuthEnabled } from '../../lib/auth';
+import { loadFeedbackPreferences } from '../../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; openPacks: () => void }) {
   const { profile } = bootstrap;
@@ -40,6 +42,11 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   const [receipt, setReceipt] = useState<ShopReceipt | null>(null);
   const [error, setError] = useState<string | null>(null);
   const lock = useRef(false);
+  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    welcomeVoice.current = playVoiceLine('market-welcome', loadFeedbackPreferences().audioEnabled);
+    return () => stopSoundEffect(welcomeVoice.current);
+  }, []);
   const offer = SHOP_OFFERS.find((item) => item.id === (pending?.itemId ?? selectedId))!;
   const choices = cardCatalog.filter((card) =>
     offer.id === 'common-recruit'
@@ -99,6 +106,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           body: JSON.stringify(request),
         });
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
+      const purchaseTake = request.idempotencyKey.charCodeAt(0) % 2 ? 'purchase-a' : 'purchase-b';
+      playVoiceLine(purchaseTake, loadFeedbackPreferences().audioEnabled);
       revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag');
       clearShopRequest(sessionStorage, profile.id);
       setPending(null);
@@ -132,9 +141,9 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             ? ('style-hanger' as const)
             : ('deck-stack' as const);
   const trainingArt: Partial<Record<ShopItemId, string>> = {
-    training: 'assets/training/practice-session.jpeg',
-    'training-intensive': 'assets/training/intensive-training.jpeg',
-    'move-training': 'assets/training/move-coaching.jpeg',
+    training: 'assets/training/practice-session.png',
+    'training-intensive': 'assets/training/intensive-training.png',
+    'move-training': 'assets/training/move-coaching.png',
   };
   return (
     <div
@@ -156,8 +165,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           <p>A sharper gang. A fresh recruit. Your next big pull.</p>
         </div>
         <picture className="market-hero__fade-art">
-          <source media="(max-width: 600px)" srcSet={getAssetUrl('assets/training/dr-fade-coach.jpeg')} />
-          <img src={getAssetUrl('assets/training/dr-fade-heavy-bag.jpeg')} alt="Dr. Fade working the heavy bag" />
+          <source media="(max-width: 600px)" srcSet={getAssetUrl('assets/training/dr-fade-coach.png')} />
+          <img src={getAssetUrl('assets/training/dr-fade-heavy-bag.png')} alt="Dr. Fade working the heavy bag" />
         </picture>
         <div className="market-wallet">
           <span>

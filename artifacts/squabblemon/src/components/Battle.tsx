@@ -30,6 +30,7 @@ import './battle-locations.css';
 import { LocationNode, LocationWallpaper } from './LocationArtwork';
 import type { MechanicLesson, TutorialGuidance } from './tutorialGuidance';
 import { CoachSpotlight } from './CoachSpotlight';
+import { playVoiceLine } from '../lib/sfx';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -60,13 +61,14 @@ type BattleDecisionContext = {
   setSelectedLane: (value: number | null) => void;
   setSquabble: (value: boolean) => void;
   beginSquabbleTransition?: () => boolean;
+  onSquabbleArmed?: () => void;
 };
 
 export function createBattleDecisionHandlers(context: BattleDecisionContext) {
   const {
     match, interactive, selectedInstanceId, selectedLane, squabble,
     lockedDistricts, decisionStartedAt, setSelectedInstanceId, setSelectedLane, setSquabble,
-    beginSquabbleTransition,
+    beginSquabbleTransition, onSquabbleArmed,
   } = context;
   const decisionTime = () => decisionTimeBucket(decisionStartedAt ?? Date.now());
 
@@ -115,6 +117,7 @@ export function createBattleDecisionHandlers(context: BattleDecisionContext) {
         decision_time: decisionTime(),
       });
       setSquabble(!squabble);
+      if (!squabble) onSquabbleArmed?.();
     },
     openHistory(entries: number) {
       trackEvent('battle_history_opened', {
@@ -393,6 +396,7 @@ export function Battle({
     lockedDistricts: lockedLanes.length, decisionStartedAt,
     setSelectedInstanceId, setSelectedLane, setSquabble,
     beginSquabbleTransition: () => tutorialSquabbleAllowed && tryLockInteraction(squabbleTransitionRef),
+    onSquabbleArmed: () => playVoiceLine(m.round % 2 === 0 ? 'squabble-b' : 'squabble-a', feedback?.audioEnabled ?? true),
   });
   const drag = useBattleDrag({
     enabled: !tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed, contextKey: `${m.round}:${m.nextEventSequence}:${phase}`,
@@ -582,7 +586,7 @@ export function Battle({
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}
       </div>}
-      <div className="battle-actions"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><GameGlyph name="squabble" /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button></div>
+      <div className="battle-actions"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><video src={getAssetUrl('assets/combat/squabble-button.webm')} autoPlay loop muted playsInline /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button></div>
     </div>
   </div>;
 }
