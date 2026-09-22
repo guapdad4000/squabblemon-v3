@@ -183,9 +183,9 @@
 }
 .activity-stage__crew-row {
   display: flex;
-  gap: 30px;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
 }
 .activity-stage__crew-options {
   display: flex;

@@ -425,7 +425,7 @@
 /* Supplied result artwork: percentage anchors stay attached to the uncropped canvas. */
 .result-stage.result-stage--art { padding: 0 0 max(24px, env(safe-area-inset-bottom)); background: #100e0b; }
 .result-stage--art::before { display: none; }
-.result-stage--art .result-stage__content { max-width: 1672px; }
+.result-stage--art .result-stage__content { max-width: 1672px; position: relative; margin: 0 auto; }
 .result-stage--art .result-stage__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; background: #100e0b; }
 .result-stage--art .result-stage__heading h2 { font-size: clamp(18px, 2.3vw, 30px); margin: 0; }
 .result-stage--art .result-stage__heading .studio-eyebrow { font-size: 10px; }
@@ -451,10 +451,35 @@
 .result-art--loss .result-art__scores { left: 26.5%; top: 81%; width: 47%; height: 10%; gap: 2.5%; }
 .result-art--loss .result-art__scores strong { font-size: clamp(18px, 2.4cqw, 36px); }
 .result-art__loss-notes { display: none; }
-.result-stage__receipt { max-width: 860px; margin: 0 auto; padding: 20px 24px; }
-.result-stage--art .result-stage__actions { margin: 16px 0 24px; }
+.result-stage__receipt { max-width: 860px; margin: 0 auto; padding: 24px 24px 40px; }
+.result-stage--art .result-stage__actions { position: absolute; bottom: 6%; left: 0; right: 0; z-index: 20; margin: 0; }
 .result-stage--art .result-stage__crew-details { margin: 16px 0; text-align: left; }
 .result-stage--art .result-stage__crew-details .winning-crew { margin-top: 32px; }
+
+.result-stage__receipt-drawer {
+  background: #0b100f;
+  margin-top: -4px;
+}
+.result-stage__receipt-drawer summary {
+  padding: 16px 24px;
+  font: 700 12px var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #c2b59b;
+  background: #111816;
+  border-top: 1px solid #c2b59b40;
+  border-bottom: 1px solid #111;
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.2s, color 0.2s;
+  text-align: center;
+}
+.result-stage__receipt-drawer summary::-webkit-details-marker { display: none; }
+.result-stage__receipt-drawer summary:hover {
+  background: #192420;
+  color: #fff;
+}
+
 .result-art--draw .result-art__plaque { left: 10%; top: 55%; width: 80%; height: 20%; background: #f8e8cfeF; border: 1px solid #d1a857; }
 .result-art--draw .result-art__scores { left: 10%; top: 76%; width: 80%; height: 20%; background: #f8e8cfef; }
 .venue-hud__wallet .game-glyph { --glyph-size: 27px; }

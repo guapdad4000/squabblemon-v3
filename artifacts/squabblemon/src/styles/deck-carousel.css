@@ -23,6 +23,104 @@
 .deck-box__brand{position:absolute;z-index:1;top:5%;left:10%;right:10%;font:900 18px/1 Georgia,serif;color:#e1cca2;text-shadow:0 1px #000;text-align:center}.deck-box__brand>span{display:block;font:600 5px/2.5 Arial,sans-serif;letter-spacing:.25em}
 .deck-box__spine{position:absolute;top:0;bottom:0;right:100%;width:26px;transform-origin:right;transform:rotateY(-90deg);background:linear-gradient(90deg,#213137,#6d6d59,#172329);border:1px solid #c4b188;color:#d5c199;font-size:7px;letter-spacing:.18em;writing-mode:vertical-rl;text-align:center;padding:10px 6px;border-radius:3px}
 .deck-box__title{position:absolute;bottom:6%;left:10%;width:80%;font:800 11px/1.2 Arial,sans-serif;text-transform:uppercase;color:#e9d2a8;text-align:center;overflow-wrap:anywhere}.deck-box__title small{display:block;font-size:4px;letter-spacing:.2em;margin-top:6px}
+.decks-spectacle {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: radial-gradient(circle at 50% 30%, #151e24 0%, #0d1217 60%, #06090c 100%);
+  color: #fff;
+}
+.decks-spectacle__hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+}
+.decks-spectacle__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.decks-spectacle__title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #d4a656;
+}
+.decks-spectacle__title h1 {
+  font: 900 italic clamp(28px, 4vw, 42px)/1 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #fff;
+  text-shadow: 3px 4px 0 rgba(0,0,0,0.6);
+}
+.decks-spectacle__stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font: 700 14px var(--font-mono);
+  color: #a3a3a3;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.decks-spectacle__carousel-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px 0;
+}
+.decks-spectacle .deck-carousel {
+  margin: 0;
+  border-top: 1px solid #d4a65620;
+  border-bottom: 1px solid #d4a65620;
+  background: radial-gradient(ellipse at 50% 50%, #131c2088, transparent 75%);
+}
+.decks-spectacle .deck-carousel__slide {
+  height: clamp(340px, 45vh, 480px);
+}
+.decks-spectacle .deck-carousel__copy h3 {
+  font-size: clamp(35px, 5vw, 56px);
+}
+.decks-spectacle__examples {
+  background: #0a0e11;
+  border-top: 1px solid #1f2933;
+}
+.decks-spectacle__examples summary {
+  padding: 24px 32px;
+  font: 700 12px var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #7b8e9c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.2s;
+  list-style: none;
+}
+.decks-spectacle__examples summary::-webkit-details-marker { display: none; }
+.decks-spectacle__examples summary:hover {
+  color: #d4a656;
+}
+.decks-spectacle__examples-content {
+  padding: 0 32px 32px;
+}
+.decks-spectacle__examples-content p {
+  font-size: 12px;
+  color: #637685;
+  margin-bottom: 20px;
+}
+@media(max-width:767px) {
+  .decks-spectacle__hero { padding: 20px 16px; }
+  .decks-spectacle__header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+  .decks-spectacle__stats { width: 100%; justify-content: space-between; font-size: 11px; }
+  .decks-spectacle__examples summary { padding: 16px; font-size: 10px; }
+  .decks-spectacle__examples-content { padding: 0 16px 24px; }
+}
+
 .arsenal-archive .deck-carousel{margin-top:20px}.arsenal-archive__examples .deck-carousel{margin-top:12px}
 .deck-lobby{overflow-y:auto}.deck-lobby>div:nth-child(3){overflow:visible}.deck-lobby .deck-carousel__slide{height:242px}.deck-lobby .deck-carousel__copy h3{font-size:25px}
 @media(max-width:600px){.deck-carousel__bar{padding:12px 14px 0}.deck-carousel__bar label{font-size:8px;letter-spacing:.1em}.deck-carousel__slide{height:238px;padding:0 3%;grid-template-columns:48% 52%}.deck-carousel__copy{padding:8px 4px 8px 8px}.deck-carousel__copy h3{font-size:25px;margin:8px 0}.deck-carousel__eyebrow{font-size:7px;letter-spacing:.12em}.deck-carousel .deck-carousel__hero{font-size:10px;margin-bottom:10px}.deck-carousel__status{font-size:9px;gap:5px;flex-direction:column}.deck-carousel__lineup{height:38px;margin-top:8px}.deck-carousel__edit{font-size:11px;gap:6px}.deck-carousel__navigation{padding:0 14px 12px;gap:12px}.deck-carousel__jump>span{font-size:6px;letter-spacing:.06em}.deck-box__brand{font-size:15px}.deck-box__title{font-size:9px}}

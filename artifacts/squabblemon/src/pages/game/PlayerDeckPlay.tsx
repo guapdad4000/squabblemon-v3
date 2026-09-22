@@ -25,6 +25,7 @@ import {
   type ActivityId,
 } from '@workspace/squabblemon-engine/activities';
 import { cards, getAssetUrl, getCardImage, starterRecipes, validateSavedDeck, type Deck } from '../../data';
+import { DeckCarousel } from '../../components/DeckCarousel';
 import { PlayLoop } from '../../components/PlayLoop';
 import { CardView } from '../../components/CardView';
 import { e2eAuthEnabled } from '../../lib/auth';
@@ -347,26 +348,25 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
             </div>
             {saved.length > 0 ? (
               <div className="activity-stage__crew-row">
-                <div className="activity-stage__crew-options">
-                  {saved.map((deck) => (
-                    <button
-                      key={deck.id}
-                      type="button"
-                      aria-pressed={chosen?.id === deck.id}
-                      onClick={() => setCrewId(deck.id)}
-                    >
-                      <img src={getCardImage(deck.heroCardId)} alt="" />
-                      <span>
-                        <strong>{deck.name}</strong>
-                        <small>{DECK_SIZE} cards</small>
-                      </span>
-                      {chosen?.id === deck.id && <Check size={15} />}
-                    </button>
-                  ))}
+                <DeckCarousel
+                  decks={saved.map((deck) => ({
+                    id: deck.id,
+                    name: deck.name,
+                    heroCardId: deck.heroCardId,
+                    cardIds: deck.cardIds,
+                    subtitle: 'YOUR GANG',
+                  }))}
+                  selectedId={chosen.id}
+                  onSelect={setCrewId}
+                  onOpen={(id) => navigate(`/game/decks/${id}`)}
+                  label="Choose your gang"
+                  openLabel="Edit gang"
+                />
+                <div style={{ padding: '0 20px 20px', marginTop: '-10px' }}>
+                  <button className="studio-action studio-action--gold" onClick={enterFight} style={{ width: '100%' }}>
+                    <GameGlyph name="fight" /> Enter fight <ArrowRight size={17} />
+                  </button>
                 </div>
-                <button className="studio-action studio-action--gold" onClick={enterFight}>
-                  <GameGlyph name="fight" /> Enter fight <ArrowRight size={17} />
-                </button>
               </div>
             ) : (
               <div className="activity-stage__empty">

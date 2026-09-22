@@ -138,7 +138,10 @@ export function ResultScreen({
         <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
           reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
           actions={actions} onRegroup={onGoHome} onTrain={onRestart} onRebuild={rebuild} />
-        <div className="result-stage__receipt">
+
+        <details className="result-stage__receipt-drawer">
+          <summary>Match Details & Breakdown</summary>
+          <div className="result-stage__receipt">
 
         {isStory && (
           <section className="result-stage__story" aria-label="Story outcome">
@@ -222,7 +225,8 @@ export function ResultScreen({
             <p>{coachBattle(m)}</p>
           </div>
         </aside>
-        </div>
+          </div>
+        </details>
       </div>
     </div>
   );

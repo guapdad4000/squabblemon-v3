@@ -3,9 +3,10 @@ import { Music2, Pause, Play, SkipForward, Volume2, VolumeX, X } from 'lucide-re
 import { soundtrack } from '../musicPlayer';
 import { musicActions, useMusic, useMusicBanks, updateMusicBank } from '../musicStore';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
+import { getAssetUrl } from '../data';
 import './music-controls.css';
 
-export function MusicControls({ compact = false, className = '' }: { compact?: boolean; className?: string }) {
+export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '' }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string }) {
   const music = useMusic();
   const banks = useMusicBanks();
   const playlist = music.playlist ?? soundtrack;
@@ -21,13 +22,23 @@ export function MusicControls({ compact = false, className = '' }: { compact?: b
     if (!feedback.audioEnabled) saveFeedback(value => ({ ...value, audioEnabled: true }));
     musicActions.play();
   }
-  return <>
-    <button type="button" className={`music-trigger ${compact ? 'music-trigger--compact' : ''} ${className}`}
+
+  const trigger = (
+    <button type="button" className={`music-trigger ${compact ? 'music-trigger--compact' : ''} ${variant === 'dj' ? 'music-trigger--dj' : ''} ${className}`}
       aria-label="Music controls" aria-haspopup="dialog" aria-expanded={open} aria-controls={id}
       title={`${audible ? 'Now playing' : 'Soundtrack'}: ${track.title}`}
       onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
       <Music2 size={17} aria-hidden="true" /><span>Music</span><i className={audible ? 'is-playing' : ''} aria-hidden="true" />
     </button>
+  );
+
+  return <>
+    {variant === 'dj' ? (
+      <div className={`music-dj-wrapper ${wrapperClassName}`}>
+        <img src={getAssetUrl('assets/generated/dr-fade-dj-turntable.png')} alt="" aria-hidden="true" className="music-dj-art" />
+        {trigger}
+      </div>
+    ) : trigger}
     <dialog id={id} ref={dialog} className="music-dialog" aria-labelledby={`${id}-title`}
       onClose={() => setOpen(false)}
       onKeyDown={event => event.stopPropagation()}

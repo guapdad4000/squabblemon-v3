@@ -198,7 +198,7 @@ export function Multiplayer({
       </header>
       <div className="online-lobby__content">
         <div className="fight-night__tools">
-          <MusicControls />
+          <MusicControls variant="dj" wrapperClassName="fight-dj" />
           <InstallGame />
         </div>
         <div className="fight-night__poster">

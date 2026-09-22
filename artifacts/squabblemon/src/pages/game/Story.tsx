@@ -6,6 +6,7 @@ import { ArrowLeft, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } fro
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
+import '../../styles/story-briefing.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
@@ -485,17 +486,18 @@ export function NodeOverlay({
   };
 
   const historyButton = (
-    <div className="flex flex-wrap gap-2">
-    <button
-      type="button"
-      onClick={() => setShowHistory(true)}
-      disabled={!history.length}
-      className="border border-white/15 px-3 py-2 font-mono text-[8px] uppercase tracking-widest text-white/55 disabled:opacity-30"
-    >
-      Dialogue History
-    </button>
-    <button type="button" onClick={() => setReplayIndex(0)} className="border border-white/15 px-3 py-2 font-mono text-[8px] uppercase tracking-widest text-white/55">Replay scenes</button>
-    </div>
+    <>
+      <button
+        type="button"
+        onClick={() => setShowHistory(true)}
+        disabled={!history.length}
+      >
+        Dialogue History
+      </button>
+      <button type="button" onClick={() => setReplayIndex(0)}>
+        Replay scenes
+      </button>
+    </>
   );
 
   return (
@@ -559,7 +561,7 @@ export function NodeOverlay({
                 ))}
               </div>
             )}
-            <div className="mt-6 flex justify-center gap-2">
+            <div className="mt-6 flex justify-center gap-2 story-briefing__history">
               {historyButton}
               <button type="button" onClick={onClose} className="bg-primary px-7 py-3 font-display font-black italic uppercase text-black">
                 Return to Map
@@ -644,95 +646,109 @@ function BattleBriefing({
   const isBoss = battle.encounter.phases && battle.encounter.phases.length > 0;
 
   return (
-    <div className="h-full overflow-y-auto p-4 pb-[max(2rem,env(safe-area-inset-bottom))] md:p-8">
-      <div className="mx-auto max-w-4xl">
-        <div className={`grid min-h-56 overflow-hidden border border-white/10 ${isBoss ? 'bg-[radial-gradient(circle_at_20%_30%,rgba(225,29,72,.15),transparent_45%),#090909]' : 'bg-[radial-gradient(circle_at_20%_30%,rgba(250,204,21,.15),transparent_45%),#090909]'} md:grid-cols-[260px_1fr]`}>
-          <img src={getAssetUrl(battle.encounter.enemy.portraitAssetId)} alt={battle.encounter.enemy.name} className="h-56 w-full object-contain object-bottom md:h-full" />
-          <div className="p-5 md:p-8">
-            {battle.optional && <div className="font-mono text-[9px] uppercase tracking-[.22em] text-accent mb-2 border border-accent/30 bg-accent/10 inline-block px-2 py-0.5">Mastery Node</div>}
-            <div className={`font-mono text-[9px] uppercase tracking-[.22em] ${isBoss ? 'text-accent' : 'text-primary'}`}>{cleared ? 'Mastery replay' : battle.battleType}</div>
-            <h2 className={`mt-2 font-display text-4xl font-black italic uppercase leading-none md:text-6xl ${isBoss ? 'text-white drop-shadow-[0_2px_12px_rgba(225,29,72,0.8)]' : ''}`}>{battle.encounter.enemy.name}</h2>
-            <p className="mt-3 text-sm text-white/55">{battle.encounter.enemy.behaviorProfile} rival · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
-            <div className="mt-5 flex gap-2">{historyButton}</div>
+    <div className="story-briefing">
+      <div className="story-briefing__bg">
+        <img src={getAssetUrl('assets/venues/red-fence-night-court.webp')} alt="" />
+      </div>
+      <div className="story-briefing__container">
+        <div className="story-briefing__header">
+          <div className={`story-briefing__title ${isBoss ? 'is-boss' : ''}`}>
+            {battle.optional && <span className="eyebrow">Mastery Node</span>}
+            {!battle.optional && <span className="eyebrow">{cleared ? 'Mastery replay' : battle.battleType}</span>}
+            <h2>{battle.encounter.enemy.name}</h2>
+            <p>{battle.encounter.enemy.behaviorProfile} rival · {getMatchRoundLimit(battle.encounter)} rounds · first to two districts</p>
+            <div className="story-briefing__history">{historyButton}</div>
+          </div>
+          <div className="story-briefing__enemy">
+            <img src={getAssetUrl(battle.encounter.enemy.portraitAssetId)} alt={battle.encounter.enemy.name} />
           </div>
         </div>
 
-        {battle.teaching && (
-          <section className="border border-primary/20 bg-primary/5 p-4 mt-4">
-            <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Intel</h3>
-            <ul className="mt-3 space-y-2 text-xs text-white/80 list-disc pl-4">
-              {battle.teaching.tips.map(tip => <li key={tip}>{tip}</li>)}
-            </ul>
-            {battle.teaching.focusMechanics.length > 0 && (
-              <div className="mt-3 text-[10px] text-white/50 font-mono uppercase tracking-wider border-t border-primary/20 pt-2">Focus: {battle.teaching.focusMechanics.join(', ')}</div>
-            )}
-          </section>
-        )}
-
-        {battle.encounter.passive && (
-          <section className="border border-purple-500/30 bg-purple-500/10 p-4 mt-4">
-            <h3 className="font-mono text-[8px] uppercase tracking-widest text-purple-400">Enemy Passive</h3>
-            <div className="mt-2 font-bold text-sm text-purple-200">{battle.encounter.passive.name}</div>
-            <p className="mt-1 text-xs text-white/70">{battle.encounter.passive.description}</p>
-          </section>
-        )}
-
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
-          <section className="border border-white/10 bg-white/5 p-4">
-            <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Encounter rules</h3>
-            <div className="mt-3 space-y-2 text-xs text-white/70">
-              {modifiers.length ? modifiers.map((modifier) => <p key={modifier}>{modifier}</p>) : <p>Standard district rules apply.</p>}
-            </div>
-            {battle.encounter.phases && battle.encounter.phases.length > 0 && (
-              <div className="mt-4 pt-3 border-t border-white/10">
-                <h4 className="font-mono text-[8px] uppercase text-accent mb-2">Boss Phases</h4>
-                <ul className="space-y-2 text-[10px] text-white/60">
-                  {battle.encounter.phases.map((phase, index) => <li key={phase.id}><span className="text-white">Phase {index + 1}:</span> {phase.description}</li>)}
-                </ul>
-              </div>
-            )}
-          </section>
-          <section className="border border-white/10 bg-white/5 p-4">
-            <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">Star objectives</h3>
-            <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-white/45" data-testid="briefing-best-stars">
-              Best clear: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} stars
-            </p>
-            <div className="mt-3 space-y-2 text-xs text-white/70">
-              {battle.starObjectives.map((objective) => (
-                <div key={objective.id} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-1 h-2 w-2 shrink-0 rotate-45 border border-white/30 bg-white/5" />
-                  <span>{objective.description}</span>
+        <div className="story-briefing__dossier">
+          {battle.teaching && (
+            <div className="story-briefing__section">
+              <div className="story-briefing__section-title">Intel</div>
+              <ul className="list-disc pl-5 mt-2 space-y-1 text-sm font-semibold">
+                {battle.teaching.tips.map(tip => <li key={tip}>{tip}</li>)}
+              </ul>
+              {battle.teaching.focusMechanics.length > 0 && (
+                <div className="mt-3 text-xs font-mono uppercase tracking-wider text-[#c63333] font-bold">
+                  Focus: {battle.teaching.focusMechanics.join(', ')}
                 </div>
-              ))}
+              )}
             </div>
-          </section>
-          <section className="border border-white/10 bg-white/5 p-4">
-            <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">First-clear rewards</h3>
-            <div className="mt-3 space-y-2 text-xs text-white/70">
-              {battle.rewards.map((reward, index) => <p key={`${reward.id}-${index}`}>{rewardLabel(reward)}</p>)}
+          )}
+
+          {battle.encounter.passive && (
+            <div className="story-briefing__section">
+              <div className="story-briefing__section-title" style={{ background: '#7e22ce' }}>Enemy Passive</div>
+              <div className="mt-2 font-bold text-sm text-purple-900">{battle.encounter.passive.name}</div>
+              <p className="mt-1 text-sm font-medium">{battle.encounter.passive.description}</p>
             </div>
-          </section>
+          )}
+
+          <div className="story-briefing__grid">
+            <div className="story-briefing__card taped">
+              <div className="story-briefing__section-title">Encounter Rules</div>
+              <div className="mt-2">
+                {modifiers.length ? modifiers.map((modifier) => <p key={modifier} className="text-sm font-semibold mb-1">{modifier}</p>) : <p className="text-sm font-semibold">Standard district rules apply.</p>}
+              </div>
+              {battle.encounter.phases && battle.encounter.phases.length > 0 && (
+                <div className="mt-4 pt-3 border-t border-[#c8bba3]">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#c63333] mb-2 font-bold">Boss Phases</div>
+                  <ul className="space-y-2 text-xs font-medium">
+                    {battle.encounter.phases.map((phase, index) => <li key={phase.id}><strong>Phase {index + 1}:</strong> {phase.description}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="story-briefing__card taped">
+              <div className="story-briefing__section-title">Objectives</div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-[#555] mb-3 font-bold" data-testid="briefing-best-stars">
+                Best clear: {Math.min(stars, battle.starObjectives.length)} / {battle.starObjectives.length} stars
+              </div>
+              <div>
+                {battle.starObjectives.map((objective) => (
+                  <div key={objective.id} className="story-briefing__objective">
+                    <Check size={16} strokeWidth={3} />
+                    <span>{objective.description}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="story-briefing__card taped">
+              <div className="story-briefing__section-title">Rewards</div>
+              <div className="mt-2 text-sm font-semibold">
+                {battle.rewards.map((reward, index) => <p key={`${reward.id}-${index}`} className="mb-1">• {rewardLabel(reward)}</p>)}
+                {battle.rewards.length === 0 && <p>No first-clear rewards.</p>}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <section className="mt-3 border border-white/10 bg-black p-4">
-          <h3 className="font-mono text-[8px] uppercase tracking-widest text-primary">
+        <div className="story-briefing__focus">
+          <div className="story-briefing__section-title">
             {battle.teaching.focusCards.length ? 'Focus Cards' : 'Recommended gang cards'}
-          </h3>
-          <div className="mt-3 flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
+          </div>
+          <div className="story-briefing__focus-cards">
             {(battle.teaching.focusCards.length ? battle.teaching.focusCards : battle.recommendedCollection).map((cardId) => {
               const rarity = catalogCardByEngineId[cardId].rarity;
-              return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`relative flex min-w-24 items-center gap-2 border border-white/10 bg-white/5 p-2 overflow-hidden ${getRarityClass(rarity)}`}>
-                <img src={getCardImage(cards[cardId].id)} alt="" className="h-12 w-9 object-cover" />
-                <span className="font-display text-xs font-bold uppercase">{cards[cardId].name}</span>
-                <CardRarityTreatment rarity={rarity} compact />
+              return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`story-briefing__focus-card ${getRarityClass(rarity)}`} style={{ display: 'flex', flexDirection: 'column', padding: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <img src={getCardImage(cards[cardId].id)} alt="" style={{ height: '70px', objectFit: 'contain', width: '100%' }} />
+                <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', textAlign: 'center', marginTop: '4px' }}>{cards[cardId].name}</span>
+                <div style={{ marginTop: '4px' }}><CardRarityTreatment rarity={rarity} compact /></div>
               </div>
             })}
           </div>
-        </section>
+        </div>
 
-        <div className="mt-5 flex gap-3">
-          <button type="button" onClick={onClose} className="flex-1 border border-white/20 bg-black py-4 font-display font-black italic uppercase hover:bg-white/5 transition-colors">Fall Back</button>
-          <button type="button" onClick={onStart} className={`flex-[2] py-4 font-display font-black italic uppercase text-black transition-transform active:translate-y-1 ${isBoss ? 'bg-accent shadow-[0_4px_0_#9f1239]' : 'bg-primary shadow-[0_4px_0_#854d0e]'}`}>
+        <div className="story-briefing__actions">
+          <button type="button" onClick={onClose} className="story-briefing__btn story-briefing__btn--back">
+            <ArrowLeft size={24} /> Fall Back
+          </button>
+          <button type="button" onClick={onStart} className={`story-briefing__btn story-briefing__btn--start ${isBoss ? 'boss' : ''}`}>
             {cleared ? 'Replay Encounter' : 'Engage Target'}
           </button>
         </div>

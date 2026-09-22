@@ -25,7 +25,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
         <button aria-label="Leave practice" onClick={onExit} className="w-10 h-10 bg-black/50 border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full">
            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
-        <MusicControls className="music-lobby" />
+        <MusicControls variant="dj" className="music-lobby" wrapperClassName="training-dj" />
       </div>
 
       <div className="relative min-h-0 overflow-hidden md:row-span-2">

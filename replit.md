@@ -6,6 +6,7 @@ A playable three-district competitive card battler with seven starter decks, six
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm --filter @workspace/squabblemon run dev` — run the Squabblemon web game through its managed workflow
+- Production deploys are Git-driven: after verification, commit the release and push the current release branch to GitHub `main` to trigger the live deployment. Do not use Replit Publish for this project.
 - `pnpm --filter @workspace/squabblemon run typecheck` — typecheck the game
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
