@@ -6,8 +6,11 @@ import { cards, catalogCardByEngineId, decks, getCardImage, CARD_RARITY_DEFINITI
 import { CardVariantTreatment, getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { selectTrainingRival, trainingDifficulty, TRAINING_REWARD_RULES } from '@workspace/squabblemon-engine/training';
+import { useLocation } from 'wouter';
+import { DeckCarousel } from './DeckCarousel';
 
 export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds, equippedVariants, cardProgression = {} }: any) {
+  const [, navigate] = useLocation();
   const selectedDeck = decks.find(d => d.id === deckId)!;
   const availableDecks = availableDeckIds
     ? decks.filter((deck) => availableDeckIds.includes(deck.id))
@@ -63,46 +66,22 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
       </div>
 
       <div className="relative z-20 min-h-0 min-w-0 w-full overflow-hidden bg-black/88 border-y md:border-y-0 md:border-l border-white/10 p-3 md:p-6 md:pb-3 flex flex-col">
-        <div className="flex items-center justify-between mb-2.5">
-          <span className="font-mono text-[9px] md:text-xs tracking-[0.18em] text-white/55 uppercase">Select gang</span>
-          <span className="font-mono text-[8px] md:text-[10px] text-primary uppercase">Swipe roster</span>
-        </div>
-
-        <div className="flex min-w-0 w-full md:grid md:grid-cols-2 gap-2 overflow-x-auto md:overflow-y-auto hide-scrollbar snap-x snap-mandatory pb-1 md:pb-2">
-          {availableDecks.map(d => {
-            const isSelected = d.id === deckId;
-            const heroRarity = catalogCardByEngineId[d.cards.find(id => cards[id].id === d.hero) ?? d.cards[0]].rarity;
-            return (
-              <button
-                key={d.id}
-                data-testid={`deck-${d.id}`}
-                aria-pressed={isSelected}
-                onClick={() => {
-                  setDeckId(d.id);
-                  if (rival === d.id) {
-                    setRival(decks.find(candidate => candidate.id !== d.id)!.id);
-                  }
-                }}
-                className={`relative shrink-0 snap-start w-[92px] h-[102px] md:w-auto md:h-[92px] overflow-hidden border text-left transition-all active:scale-95 ${getRarityClass(heroRarity)} ${getVariantKind(getEquippedVariant(equippedVariants, d.hero)) ? `card-variant card-variant-${getVariantKind(getEquippedVariant(equippedVariants, d.hero))}` : ''} ${
-                  isSelected
-                    ? 'border-primary bg-primary/15 shadow-[0_0_20px_rgba(250,204,21,0.2)]'
-                    : 'border-white/15 bg-white/5 hover:border-white/35'
-                }`}
-                style={{ clipPath: 'polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px))' }}
-              >
-                <img src={getCrewScenery(d.id)} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-60" />
-                <img src={getCardImage(d.hero)} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain object-top opacity-90" />
-                <CardRarityTreatment rarity={heroRarity} compact />
-                <CardVariantTreatment variantId={getEquippedVariant(equippedVariants, d.hero)} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-2">
-                  <div className={`font-mono text-[6px] md:text-[7px] tracking-wider uppercase ${isSelected ? 'text-primary' : 'text-white/50'}`}>{d.accent}</div>
-                  <div className="font-display font-black text-[10px] md:text-sm leading-[0.95] uppercase line-clamp-2">{d.name}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <DeckCarousel
+          decks={availableDecks.map(d => ({
+            id: d.id,
+            name: d.name,
+            heroCardId: d.hero,
+            cardIds: d.cards.map(cardId => cards[cardId].id),
+            subtitle: d.archetype,
+          }))}
+          selectedId={deckId}
+          onSelect={id => {
+            setDeckId(id);
+            if (rival === id) setRival(decks.find(candidate => candidate.id !== id)!.id);
+          }}
+          onOpen={id => navigate(`/game/decks/${id}`)}
+          openLabel="Customize deck"
+        />
 
         <div className="mt-2.5 border-t border-white/10 pt-2.5 min-w-0">
           <div className="flex items-center justify-between mb-2">
