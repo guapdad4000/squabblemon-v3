@@ -177,9 +177,9 @@ test('mode playlists rotate locally, obey muted preferences, and restore the bac
   s.player.selectTrack(3); await settle();
   const background = { enabled:true, volume:.2, trackIndex:3 };
   s.player.setPlaylist(modeSoundtracks.story, { enabled:true, volume:.4, trackIndex:0 }); await settle();
-  assert(s.audio.src.endsWith('story-mode-ost.mp3'));
-  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost-2.mp3'));
-  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost.mp3'));
+  assert(s.audio.src.endsWith('story-music.ogg'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-music-3.ogg'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-music.ogg'));
   s.player.setPlaylist(modeSoundtracks.boss, { enabled:false, volume:.4, trackIndex:0 }); await settle();
   assert.equal(s.audio.paused,true);
   s.player.setPlaylist(soundtrack,background); await settle();
@@ -195,6 +195,9 @@ test('routes choose ranked battle, story, boss, training, gacha, and background 
   assert.equal(musicModeForRoute('/game/online'),'battle');
   assert.equal(musicModeForRoute('/game/online/ABCD12'),'battle');
   assert.equal(musicModeForRoute('/game/shop'),'gacha');
+  assert.equal(musicModeForRoute('/game/shop?view=packs'),'gacha');
+  assert.equal(musicModeForRoute('/game/shop?view=training'),'training');
+  assert.equal(musicModeForRoute('/game/shop?view=corner'),'background');
   assert.equal(musicModeForRoute('/game/story/play/welcome-to-the-block'),'story');
   const { storyContent } = await import('@workspace/squabblemon-engine/story');
   const boss=storyContent.chapters.flatMap(chapter=>chapter.nodes).find(node=>node.kind==='battle' && node.battleType==='boss');
@@ -211,7 +214,8 @@ test('catalog preserves the original records and adds each unique uploaded battl
   ]);
   assert.deepEqual(soundtrack.slice(6).map(track => track.id), [
     'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3',
-    'track-1-wav-master', 'squabblemon-win', 'win-music', 'squabblemon-loss',
+    'track-1-wav-master', 'squabblemon-win', 'win-music', 'squabblemon-loss', 'story-music', 'story-music-3',
+    'weird-kids-can-fight-too', 'tooth-punch-fruit-punch', 'swirling-fists-in-a-pain-tornado', 'huge-aura',
   ]);
   assert.equal(new Set(soundtrack.map(track => track.id)).size, soundtrack.length);
   assert.equal(new Set(soundtrack.map(track => track.sourceSha256)).size, soundtrack.length);
@@ -227,7 +231,7 @@ test('battle modes retain the original six tracks alongside six non-outcome uplo
     ...originalIds,
   ]);
   assert.deepEqual(modeSoundtracks.training.map(track => track.id), ['training-ost']);
-  assert.deepEqual(modeSoundtracks.story.map(track => track.id), ['story-mode-ost', 'story-mode-ost-2']);
+  assert.deepEqual(modeSoundtracks.story.map(track => track.id), ['story-music', 'story-music-3']);
   assert.deepEqual(modeSoundtracks.boss.map(track => track.id), ['boss-fight-ost']);
   for (const playlist of [modeSoundtracks.battle, modeSoundtracks.training, modeSoundtracks.story, modeSoundtracks.boss]) {
     assert.equal(playlist.some(track => ['squabblemon-win', 'win-music', 'squabblemon-loss'].includes(track.id)), false);
@@ -250,7 +254,7 @@ test('result playlists use only their dedicated cues', async () => {
   assert(s.audio.src.endsWith('/audio/treblo/squabblemon-loss.ogg'));
   const { modeSoundtracks } = await import('./musicModes');
   s.player.setPlaylist(modeSoundtracks.story, { enabled: true, volume: .4, trackIndex: 0 }); await settle();
-  assert(s.audio.src.endsWith('/audio/modes/story-mode-ost.mp3'), 'leaving a result restores the active route mode');
+  assert(s.audio.src.endsWith('/audio/treblo/story-music.ogg'), 'leaving a result restores the active route mode');
   s.player.dispose();
 });
 
@@ -259,7 +263,7 @@ test('every original catalog ID remains selectable and playable in the battle qu
   const originalIds = [
     'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
   ];
-  assert.equal(soundtrack.length, 15);
+  assert.equal(soundtrack.length, 21);
   for (const playlist of [battleSoundtrack]) {
     const s = setup();
     s.player.setPlaylist(playlist, { enabled: true, volume: .24, trackIndex: 0 });
@@ -283,7 +287,6 @@ test('catalog, result, and transparent DJ assets ship in web formats without the
     for (const path of [track.ogg, track.aac]) assert(statSync(join(root, path)).size > 1_000);
   }
   assert.equal(readdirSync(join(root, 'audio', 'treblo')).some(file => file.endsWith('.wav')), false);
-  const artwork = readFileSync(join(root, 'assets', 'generated', 'dr-fade-dj-turntable.webp'));
-  assert.equal(artwork.subarray(0, 4).toString('ascii'), 'RIFF');
-  assert.equal(artwork.subarray(8, 12).toString('ascii'), 'WEBP');
+  const artwork = readFileSync(join(root, 'assets', 'generated', 'dr-fade-dj-turntable.png'));
+  assert.equal(artwork.subarray(1, 4).toString('ascii'), 'PNG');
 });

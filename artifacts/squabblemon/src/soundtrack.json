@@ -148,5 +148,65 @@
     "ogg": "audio/treblo/squabblemon-loss.ogg",
     "aac": "audio/treblo/squabblemon-loss.m4a",
     "sourceSha256": "208b97eee15e0a73b8e6f8cfa85e507918488e7d3e2cafe3974514384fab9479"
+  },
+  {
+    "id": "story-music",
+    "title": "Story Music",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 200.21,
+    "ogg": "audio/treblo/story-music.ogg",
+    "aac": "audio/treblo/story-music.m4a",
+    "sourceSha256": "db6487fe15748d4d56878876b8f524b4ae88b2ae50132766f333c6b1fb17272e"
+  },
+  {
+    "id": "story-music-3",
+    "title": "Story Music 3",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 100.83,
+    "ogg": "audio/treblo/story-music-3.ogg",
+    "aac": "audio/treblo/story-music-3.m4a",
+    "sourceSha256": "9c9feb5aa65a2f1a528bec6e3cf5c486e8e45de4b205a959715ee9cde9a953c1"
+  },
+  {
+    "id": "weird-kids-can-fight-too",
+    "title": "Weird Kids Can Fight Too",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 154.37,
+    "ogg": "audio/treblo/weird-kids-can-fight-too.ogg",
+    "aac": "audio/treblo/weird-kids-can-fight-too.m4a",
+    "sourceSha256": "2c03b64376bc7e0ad518f0e6af228b10958d7518fa78cd266a9d2f59fcd5149a"
+  },
+  {
+    "id": "tooth-punch-fruit-punch",
+    "title": "Tooth Punch Fruit Punch",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 270.75,
+    "ogg": "audio/treblo/tooth-punch-fruit-punch.ogg",
+    "aac": "audio/treblo/tooth-punch-fruit-punch.m4a",
+    "sourceSha256": "275cc5d3249bf4802e023fbc8e47c48bd276959cf0a0a7c44a6000a77b385423"
+  },
+  {
+    "id": "swirling-fists-in-a-pain-tornado",
+    "title": "Swirling Fists in a Pain Tornado",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 149.22,
+    "ogg": "audio/treblo/swirling-fists-in-a-pain-tornado.ogg",
+    "aac": "audio/treblo/swirling-fists-in-a-pain-tornado.m4a",
+    "sourceSha256": "df714f07c009b7686fd457d5977a492d38972824ac1f381c748fa38e0ef76420"
+  },
+  {
+    "id": "huge-aura",
+    "title": "Huge Aura",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 219.53,
+    "ogg": "audio/treblo/huge-aura.ogg",
+    "aac": "audio/treblo/huge-aura.m4a",
+    "sourceSha256": "1822102f2c60cf7ca2343c368f960c1cc560aedd5b63e590247a1c28137b0ae5"
   }
 ]

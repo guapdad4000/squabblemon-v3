@@ -38,6 +38,36 @@
   transform: none;
   animation: dj-bob-corner 4s ease-in-out infinite alternate;
 }
+.city-header__dj {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+}
+.city-header__dj .music-dj-art {
+  inset: 0;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  transform: none;
+  animation: none;
+}
+.city-header__dj .music-trigger {
+  position: absolute;
+  inset: 0;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.city-header__dj .music-trigger > svg { display: none; }
+.city-header__dj .music-trigger i {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+}
 @keyframes dj-bob {
   0% { transform: translateX(-50%) translateY(0); }
   100% { transform: translateX(-50%) translateY(-6px); }

@@ -35,6 +35,7 @@ import {
   type PendingPackRequest,
 } from '../../lib/packJournal';
 import { playSoundEffect, playVoiceLine, stopSoundEffect, type SoundEffect, type VoiceLine } from '../../lib/sfx';
+import { loadFeedbackPreferences } from '../../battleFeedback';
 
 type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | 'tenKnockout' | 'reveal' | 'summary';
 type Payment = 'softCurrency' | 'ticket';
@@ -186,7 +187,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   );
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
-  const [sound, setSound] = useState(false);
+  const [sound, setSound] = useState(() => loadFeedbackPreferences().audioEnabled);
   const [rush, setRush] = useState(false);
   const [info, setInfo] = useState<'odds' | 'history'>('odds');
   const [error, setError] = useState<string | null>(null);
@@ -426,18 +427,34 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       return;
     }
     setRush(true);
-    sendScene(frame, { type: 'punch', intensity: fightBeat.intensity } satisfies ScenePunchMessage);
+    let strikeIndex = beatIndex;
+    const punch = () => {
+      const intensity = FIGHT_BEATS[Math.min(2, strikeIndex)].intensity;
+      sendScene(frame, { type: 'punch', intensity } satisfies ScenePunchMessage);
+      playSoundEffect(
+        intensity === 'finisher' ? 'vs-impact-c' : intensity === 'heavy' ? 'vs-impact-b' : 'vs-impact-a',
+        sound,
+        intensity === 'finisher' ? 1 : 0.86,
+      );
+      strikeIndex += 1;
+    };
+    punch();
     // The 10-pull's auto-rush tempo is faster than the single pack's. Three
     // hits per tick keeps the bag "dismantling" feel rather than a slow
     // metronome of single punches.
     rushTimer.current = setInterval(
-      () => sendScene(frame, { type: 'punch' } satisfies ScenePunchMessage),
+      punch,
       isTenPull ? 180 : 260,
     );
   }
   function landStrike() {
     if (!sceneReady) return;
     sendScene(frame, { type: 'punch', intensity: fightBeat.intensity } satisfies ScenePunchMessage);
+    playSoundEffect(
+      fightBeat.intensity === 'finisher' ? 'vs-impact-c' : fightBeat.intensity === 'heavy' ? 'vs-impact-b' : 'vs-impact-a',
+      sound,
+      fightBeat.intensity === 'finisher' ? 1 : 0.86,
+    );
     if ('vibrate' in navigator) navigator.vibrate(fightBeat.intensity === 'finisher' ? [24, 35, 55] : 18);
   }
   const showInfo = (tab: 'odds' | 'history') => {

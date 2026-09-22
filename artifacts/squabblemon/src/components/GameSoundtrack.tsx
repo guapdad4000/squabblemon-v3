@@ -1,19 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { MusicPlayer, soundtrack } from '../musicPlayer';
-import { useLocation } from 'wouter';
-import { activeMusicMode, modeSoundtracks } from '../musicModes';
+import { useLocation, useSearch } from 'wouter';
+import { activeMusicMode, soundtrackForRoute } from '../musicModes';
 import { attachMusicPlayer, publishMusic, useMusicBanks, getMusicBanks, saveMusicBank, useBattleMusicMode, type MusicBank } from '../musicStore';
 import { getAssetUrl } from '../lib/assets';
 
 export default function GameSoundtrack() {
   const [preferences] = useFeedbackPreferences();
   const [location] = useLocation();
+  const search = useSearch();
+  const route = search ? `${location}?${search}` : location;
   const override = useBattleMusicMode();
-  const mode = activeMusicMode(location, override);
+  const mode = activeMusicMode(route, override);
+  const playlist = soundtrackForRoute(route, mode);
   const banks = useMusicBanks();
   const activeBank = useRef<MusicBank>(mode === 'background' ? 'background' : 'mode');
   const previousMode = useRef(mode);
+  const previousPlaylist = useRef(playlist);
   const player = useRef<MusicPlayer | null>(null);
   const master = useRef(preferences.audioEnabled);
   master.current = preferences.audioEnabled;
@@ -24,7 +28,7 @@ export default function GameSoundtrack() {
     document.body.appendChild(audio);
     const current = new MusicPlayer(audio, {
       preferences: getMusicBanks()[activeBank.current],
-      tracks: mode === 'background' ? soundtrack : modeSoundtracks[mode],
+      tracks: playlist,
       assetUrl: getAssetUrl,
       publish: publishMusic,
       save: value => saveMusicBank(activeBank.current, value),
@@ -62,11 +66,12 @@ export default function GameSoundtrack() {
     player.current?.setEnvironment(true, !document.hidden, preferences.audioEnabled);
   }, [preferences.audioEnabled]);
   useEffect(() => {
-    if (previousMode.current === mode) return;
+    if (previousMode.current === mode && previousPlaylist.current === playlist) return;
     previousMode.current = mode;
+    previousPlaylist.current = playlist;
     activeBank.current = mode === 'background' ? 'background' : 'mode';
-    player.current?.setPlaylist(mode === 'background' ? soundtrack : modeSoundtracks[mode], getMusicBanks()[activeBank.current]);
-  }, [mode]);
+    player.current?.setPlaylist(playlist, getMusicBanks()[activeBank.current]);
+  }, [mode, playlist]);
   useEffect(() => { player.current?.applyPreferences(banks[activeBank.current]); }, [banks, mode]);
   return null;
 }

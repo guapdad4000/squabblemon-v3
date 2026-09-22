@@ -23,6 +23,7 @@ const stations = [
   { id: 'music', label: 'The turntable', short: 'Records', icon: Disc3, title: 'Oakland Chrome and Curls.', detail: 'Original music by Treblo. Made for the block.', action: '', href: '' },
 ] as const;
 type Station = typeof stations[number]['id'];
+const welcomedPlayers = new Set<string>();
 
 // Keep the one set of room controls reachable when an object moves out of view.
 // Read geometry before writing positions, and use nearby free spots for overlapping labels.
@@ -72,9 +73,11 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const backButton = useRef<HTMLButtonElement>(null);
   const previousView = useRef<Station | 'room'>('room');
   useEffect(() => {
+    if (welcomedPlayers.has(bootstrap.profile.id)) return;
+    welcomedPlayers.add(bootstrap.profile.id);
     welcomeVoice.current = playVoiceLine('home-fade', loadFeedbackPreferences().audioEnabled);
     return () => stopSoundEffect(welcomeVoice.current);
-  }, []);
+  }, [bootstrap.profile.id]);
   const station = stations.find(item => item.id === view);
   const crew = (bootstrap.profile.savedDecks[0]?.cardIds ?? bootstrap.profile.ownedCardIds).slice(0, 3).map(id => catalogCardById[id]).filter(Boolean);
   function explore(next: Station | 'room') { setView(next); sendScene(frame, { type: 'view', view: next }); }
