@@ -6,11 +6,12 @@ process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = '1';
 const origin = process.env.GACHA_ORIGIN ?? 'http://127.0.0.1:4193/game';
 
 async function run(width: number, height: number) {
-  const browser = await chromium.launch({ channel: 'msedge', headless: true });
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'no-preference' });
   page.setDefaultTimeout(30000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
   const cards = ['Rare', 'Epic'].map((rarity) => cardCatalog.find((card) => card.rarity === rarity)!);
   let calls = 0;
   let ticketBalance = 12;
@@ -18,7 +19,7 @@ async function run(width: number, height: number) {
   const openings = new Map<string, any>();
   const requests: any[] = [];
   const owned = [...ROOKIE_FOUNDATION_IDS];
-  const duplicateCard = cardCatalog.find((card) => card.catalogId === owned[0])!;
+  const duplicateCard = cardCatalog.find((card) => card.catalogId === owned.find(id => cardCatalog.find(c => c.catalogId === id)?.rarity === 'Common'))!;
   function bootstrap() {
     return {
       profile: {
@@ -174,8 +175,8 @@ async function run(width: number, height: number) {
     });
 
     await goto();
-    assert.deepEqual(await page.locator('.market-tabs button').allTextContents(), ['Gacha', 'Training']);
-    assert.equal(await page.getByRole('button', { name: 'Gacha', exact: true }).getAttribute('aria-pressed'), 'true');
+    assert.deepEqual(await page.locator('.market-tabs button').allTextContents(), ['Gotcha', 'Training', 'Fade Market']);
+    assert.equal(await page.getByRole('button', { name: 'Gotcha', exact: true }).getAttribute('aria-pressed'), 'true');
     await page.locator('.venue-scene.is-ready').waitFor();
     await page.waitForTimeout(700);
     await shot('stage');
@@ -183,8 +184,16 @@ async function run(width: number, height: number) {
     assert.equal(await page.locator('.gacha-stage__payment').count(), 0, 'the old stacked payment rows should be gone');
     const ticketHeights = await page.locator('.gacha-stage__ticket-choice img').evaluateAll((images) =>
       images.map((image) => image.getBoundingClientRect().height));
-    const minimumTicketHeight = height <= 550 ? 60 : width <= 390 ? 90 : 110;
+    const minimumTicketHeight = width <= 700 ? 40 : height <= 550 ? 60 : 110;
     assert(ticketHeights.every((ticketHeight) => ticketHeight >= minimumTicketHeight), 'ticket artwork should own the purchase surface');
+    if (width <= 700) {
+      const dock = await page.locator('.gym__offer').boundingBox();
+      assert(dock && dock.height <= height * .5, 'Mobile purchase dock must leave most of the scene visible');
+      const payments = await page.locator('.gacha-stage__ticket-choice').evaluateAll(buttons =>
+        buttons.map(button => button.getBoundingClientRect().height));
+      assert(payments.every(buttonHeight => buttonHeight >= 44), 'Compact payment controls retain touch targets');
+    }
+    assert.equal(await page.locator('.gacha-results').isVisible(), false, 'Closed reveal must remain hidden');
     await page.getByRole('button', { name: 'Training', exact: true }).click();
     await page.locator('.market').waitFor();
     assert(page.url().includes('view=training'));

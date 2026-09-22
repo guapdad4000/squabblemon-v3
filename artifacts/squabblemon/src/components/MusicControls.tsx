@@ -35,7 +35,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
   return <>
     {variant === 'dj' ? (
       <div className={`music-dj-wrapper ${wrapperClassName}`}>
-        <img src={getAssetUrl('assets/generated/dr-fade-dj-turntable.png')} alt="" aria-hidden="true" className="music-dj-art" />
+        <img src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="" aria-hidden="true" className="music-dj-art" width={560} height={700} decoding="async" />
         {trigger}
       </div>
     ) : trigger}
@@ -44,7 +44,9 @@ export function MusicControls({ compact = false, variant = 'default', className 
       onKeyDown={event => event.stopPropagation()}
       onClick={event => { if (event.target === dialog.current) dialog.current.close(); }}>
       <div className="music-panel">
-        <header><div><span className="music-eyebrow">THE BLOCK HAS A SOUNDTRACK</span><h2 id={`${id}-title`}>The soundtrack</h2></div>
+        <header className="music-dj-header">
+          <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="Dr. Fade at the Fade Tapes turntables" width={560} height={700} />
+          <div><span className="music-eyebrow">DR. FADE PRESENTS</span><h2 id={`${id}-title`}>The Fade Tapes</h2></div>
           <button type="button" aria-label="Close music controls" onClick={() => dialog.current?.close()}><X size={20} /></button></header>
         <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>{track.album} · {track.artist}</p></div>
         <div className="music-transport">
@@ -70,11 +72,11 @@ export function MusicControls({ compact = false, variant = 'default', className 
           </select>
         </label>
         <div className="music-banks">{(['background', 'mode'] as const).map(bank => <fieldset key={bank}>
-          <legend>{bank === 'background' ? 'Background playlist' : 'Story & mode music'}</legend>
+          <legend>{bank === 'background' ? 'Background playlist' : 'Battle, story & mode music'}</legend>
           <label><input type="checkbox" checked={banks[bank].enabled} onChange={event => updateMusicBank(bank, { enabled: event.target.checked })} /> Enabled</label>
-          <label className="music-volume"><span>Volume <b>{Math.round(banks[bank].volume * 100)}%</b></span><input aria-label={bank === 'background' ? 'Background playlist volume' : 'Story and mode volume'} type="range" min="0" max="100" value={Math.round(banks[bank].volume * 100)} onChange={event => updateMusicBank(bank, { volume: Number(event.target.value) / 100 })} /></label>
+          <label className="music-volume"><span>Volume <b>{Math.round(banks[bank].volume * 100)}%</b></span><input aria-label={bank === 'background' ? 'Background playlist volume' : 'Battle, story, and mode volume'} type="range" min="0" max="100" value={Math.round(banks[bank].volume * 100)} onChange={event => updateMusicBank(bank, { volume: Number(event.target.value) / 100 })} /></label>
         </fieldset>)}</div>
-        <p className="music-note">Background records play in the safehouse and menus. Story, boss, training, and gacha tracks follow your current mode. One soundtrack plays at a time; both preferences stay saved.</p>
+        <p className="music-note">Background records play in the safehouse and menus. Ranked, story, boss, training, and gacha tracks follow your current mode. One soundtrack plays at a time; both preferences stay saved.</p>
       </div>
     </dialog>
   </>;

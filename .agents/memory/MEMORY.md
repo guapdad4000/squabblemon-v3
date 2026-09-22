@@ -11,3 +11,4 @@
 - [Authenticated journey fidelity](authenticated-match-fixtures.md) — Auth journey mocks must preserve request/response invariants or fallback branches can invalidate route assertions.
 - [City Never Sleeps rules](city-never-sleeps-rules.md) — Expansion effects use explicit replay-safe state; movement is deterministic until the transcript records choices.
 - [Squabblemon physical UI language](squabblemon-physical-ui.md) — Favor street-sign controls, torn-paper overlays, deep parallax, and original cel-shaded arcade art.
+- [Visual regression proof](visual-regression-proof.md) — Require mounted real components, final-action clicks, decoration bounds, and screenshots; geometry logs alone missed prior regressions.

@@ -13,6 +13,7 @@ import { rankedStats, rankProgress, type OnlineRoomView } from '@workspace/squab
 import { cancelRanked, getRankedLobby, onlineErrorMessage, searchRanked, type RankedLobby } from '../../lib/multiplayer';
 import { MusicControls } from '../../components/MusicControls';
 import '../../styles/fade-park.css';
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 
 export function FightTabs({ friends = false, searching = false }: { friends?: boolean; searching?: boolean }) {
   return <nav className="fight-tabs" aria-label="Fight modes">
@@ -33,7 +34,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const crews = [...saved.map(d => ({ id: d.id, name: d.name, hero: d.heroCardId!, cards: d.cardIds })),
     ...starterRecipes.filter(d => !saved.some(s => s.id === d.id) && validateSavedDeck(d.catalogCardIds, profile.ownedCardIds, d.hero).valid)
       .map(d => ({ id: d.id, name: d.name, hero: d.hero, cards: d.catalogCardIds }))];
-  const [deckId, setDeckId] = useState(crews[0]?.id ?? '');
+  const [deckId, setDeckId] = usePersistentDeckSelection(profile.id, crews.map(crew => crew.id));
   const chosen = crews.find(d => d.id === deckId) ?? crews[0];
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const [clock, setClock] = useState(Date.now());
@@ -83,11 +84,13 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     finally { operation.current = false; setBusy(false); }
   }
   return <main className="fade-park" aria-label="Fade Park ranked lobby" data-testid="fade-park" onPointerMove={handlePointerMove}>
-    <div className="park-layer park-layer--bg">
-      <img className="fade-park-wallpaper" src={getAssetUrl('assets/fade-park/park.png')} alt="" fetchPriority="high" />
+    <div className="park-environment">
+      <div className="park-layer park-layer--bg">
+        <img className="fade-park-wallpaper" src={getAssetUrl('assets/fade-park/park.png')} alt="" fetchPriority="high" />
+      </div>
+      <div className="park-layer park-layer--shade fade-park-shade" />
+      <div className="park-layer park-layer--dust" />
     </div>
-    <div className="park-layer park-layer--shade fade-park-shade" />
-    <div className="park-layer park-layer--dust" />
     <header className="park-topbar"><Link to="/game" className="park-back" aria-label="Back to home"><ArrowLeft size={19} /></Link><FightTabs searching={searching} /></header>
     <div className="park-content">
       <section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section>
@@ -105,7 +108,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Checking search…' : 'Cancel search'}</button>
           </div> : <>
             {chosen ? <>
-              <div className="park-crew-carousel" style={{ margin: '15px -25px 25px' }}>
+              <div className="park-crew-carousel">
                 <DeckCarousel
                   decks={crews.map(c => ({
                     id: c.id,

@@ -58,5 +58,95 @@
     "ogg": "audio/treblo/shaolin-static.ogg",
     "aac": "audio/treblo/shaolin-static.m4a",
     "sourceSha256": "859cfe43a8dfc7bd85f4a0a378eeb5f43d50e01eec3fc3067d29473ce85426b6"
+  },
+  {
+    "id": "battle-music",
+    "title": "Battle Music",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 285.0,
+    "ogg": "audio/treblo/battle-music.ogg",
+    "aac": "audio/treblo/battle-music.m4a",
+    "sourceSha256": "9ed9d6f38577cc848fe581f5f3c3ec5dd1be53010484756553047f5cdeb50a5e"
+  },
+  {
+    "id": "squabblemon-battle-2",
+    "title": "Squabblemon Battle 2",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 284.03,
+    "ogg": "audio/treblo/squabblemon-battle-2.ogg",
+    "aac": "audio/treblo/squabblemon-battle-2.m4a",
+    "sourceSha256": "41d5e6b4efb77ce4e6cd0bd3df76a875db21765c4319d27fdbb5a9d6b7971472"
+  },
+  {
+    "id": "track-1-take-2",
+    "title": "Track 1 (Take 2)",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 166.3,
+    "ogg": "audio/treblo/track-1-take-2.ogg",
+    "aac": "audio/treblo/track-1-take-2.m4a",
+    "sourceSha256": "fe8f96af1c6cf50685091a4a74913cb01030ec422d77de459ab0264372e5e701"
+  },
+  {
+    "id": "track-1",
+    "title": "Track 1",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 101.38,
+    "ogg": "audio/treblo/track-1.ogg",
+    "aac": "audio/treblo/track-1.m4a",
+    "sourceSha256": "b6adaacb13fdcc463a39c975d1a3079b5cb286d38f32deb14818244ea345f265"
+  },
+  {
+    "id": "track-1-take-3",
+    "title": "Track 1 (Take 3)",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 196.44,
+    "ogg": "audio/treblo/track-1-take-3.ogg",
+    "aac": "audio/treblo/track-1-take-3.m4a",
+    "sourceSha256": "1d00dc15b817f4a390c47f8ecdf151f6ff7fc95de786fae060ceac41ed01fedf"
+  },
+  {
+    "id": "track-1-wav-master",
+    "title": "Track 1 (WAV Master)",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 113.03,
+    "ogg": "audio/treblo/track-1-wav-master.ogg",
+    "aac": "audio/treblo/track-1-wav-master.m4a",
+    "sourceSha256": "951888e4cda6f6daff2962f35fb4015f4608fe5cb4d1d289eaa72b89b3d505ab"
+  },
+  {
+    "id": "squabblemon-win",
+    "title": "Squabblemon Win",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 106.11,
+    "ogg": "audio/treblo/squabblemon-win.ogg",
+    "aac": "audio/treblo/squabblemon-win.m4a",
+    "sourceSha256": "c3ffb2cae105b7a4755513b59076d541f94f9e9a3e76f2248bcb10813bde4896"
+  },
+  {
+    "id": "win-music",
+    "title": "Win Music",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 150.31,
+    "ogg": "audio/treblo/win-music.ogg",
+    "aac": "audio/treblo/win-music.m4a",
+    "sourceSha256": "e6ffac69438f2dee192a205c2e909e0527b6f9c9f8799cc5b77c81bac55fad43"
+  },
+  {
+    "id": "squabblemon-loss",
+    "title": "Squabblemon Loss",
+    "artist": "Treblo",
+    "album": "Oakland Chrome and Curls",
+    "duration": 102.06,
+    "ogg": "audio/treblo/squabblemon-loss.ogg",
+    "aac": "audio/treblo/squabblemon-loss.m4a",
+    "sourceSha256": "208b97eee15e0a73b8e6f8cfa85e507918488e7d3e2cafe3974514384fab9479"
   }
 ]

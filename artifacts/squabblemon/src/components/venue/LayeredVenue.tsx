@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { getAssetUrl } from '../../lib/assets';
+import './LayeredVenue.css';
 
 type Layer = { name: string; x: number; y: number; width: number; height: number; depth: number };
 type Scene = { width: number; height: number; layers: Layer[] };
@@ -19,39 +20,144 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' }) 
       .then(setData).catch(() => {});
     return () => controller.abort();
   }, [path]);
+
   useEffect(() => {
     const node = root.current;
     if (!node) return;
-    let visible = true, frame = 0;
+    let visible = true;
+    let frame = 0;
+
+    // Parallax logic
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    let hasPointer = false;
+    let time = 0;
+
     const disabled = () => reduced || document.documentElement.dataset.reduceMotion === 'true';
+
+    const resetTransforms = () => {
+      node.style.setProperty('--scene-x', '0px');
+      node.style.setProperty('--scene-y', '0px');
+      targetX = 0; targetY = 0;
+      currentX = 0; currentY = 0;
+    };
+
     const fit = () => {
-      const width = Math.max(node.clientWidth, node.clientHeight * 16 / 9) * 1.025;
+      // Provide a bit more overscan budget (1.15) to allow for stronger parallax without showing edges
+      const width = Math.max(node.clientWidth, node.clientHeight * 16 / 9) * 1.15;
       node.style.setProperty('--scene-width', width + 'px');
       node.style.setProperty('--scene-height', width * 9 / 16 + 'px');
     };
-    const move = (x: number, y: number) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        node.style.setProperty('--scene-x', disabled() ? '0px' : x + 'px');
-        node.style.setProperty('--scene-y', disabled() ? '0px' : y + 'px');
-      });
+
+    const loop = () => {
+      if (!visible || disabled() || document.hidden) {
+        if (disabled()) resetTransforms();
+        frame = 0;
+        return; // Stops requesting animation frames
+      }
+
+      if (!hasPointer) {
+        // Subtle ambient movement when idle or on mobile (no device motion needed)
+        time += 0.01;
+        targetX = Math.sin(time) * 12;
+        targetY = Math.cos(time * 0.8) * 8;
+      }
+
+      // Smooth interpolation for both pointer and ambient target
+      // Faster response for pointer, slower for ambient
+      const ease = hasPointer ? 0.08 : 0.02;
+      currentX += (targetX - currentX) * ease;
+      currentY += (targetY - currentY) * ease;
+
+      node.style.setProperty('--scene-x', currentX + 'px');
+      node.style.setProperty('--scene-y', currentY + 'px');
+
+      frame = requestAnimationFrame(loop);
     };
+
+    const startLoop = () => {
+      if (!frame && visible && !disabled() && !document.hidden) {
+        frame = requestAnimationFrame(loop);
+      }
+    };
+
     const pointer = (e: PointerEvent) => {
-      if (!visible || e.pointerType === 'touch') return;
+      if (!visible || document.hidden || disabled() || e.pointerType === 'touch') {
+        hasPointer = false;
+        return;
+      }
       const rect = node.getBoundingClientRect();
-      move(Math.max(-1, Math.min(1, (e.clientX - rect.left) / rect.width * 2 - 1)) * 3,
-        Math.max(-1, Math.min(1, (e.clientY - rect.top) / rect.height * 2 - 1)) * 2);
+      const inBounds = e.clientX >= rect.left && e.clientX <= rect.right &&
+                       e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+      if (!inBounds) {
+        hasPointer = false;
+        return;
+      }
+
+      hasPointer = true;
+      const nx = (e.clientX - rect.left) / rect.width * 2 - 1;
+      const ny = (e.clientY - rect.top) / rect.height * 2 - 1;
+
+      // Amplified target distance for stronger parallax
+      targetX = Math.max(-1, Math.min(1, nx)) * 65;
+      targetY = Math.max(-1, Math.min(1, ny)) * 35;
+      startLoop();
     };
-    const scroll = () => { if (visible) move(0, Math.max(-2, Math.min(2, node.getBoundingClientRect().top / innerHeight * 3))); };
-    const resize = new ResizeObserver(fit); resize.observe(node); fit();
-    const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; node.dataset.paused = String(!visible); }); intersection.observe(node);
-    const preferences = new MutationObserver(() => { if (disabled()) move(0, 0); });
+
+    const scroll = () => {
+      // Scrolling can also act as an interaction hint
+      startLoop();
+    };
+
+    const visibilityChange = () => {
+      if (!document.hidden && visible) startLoop();
+    };
+
+    const resize = new ResizeObserver(fit);
+    resize.observe(node);
+    fit();
+
+    const intersection = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      node.dataset.paused = String(!visible);
+      if (visible) startLoop();
+    });
+    intersection.observe(node);
+
+    const preferences = new MutationObserver(() => {
+      if (disabled()) {
+         resetTransforms();
+         // loop will naturally exit on the next frame due to disabled()
+      } else {
+         startLoop();
+      }
+    });
     preferences.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
+
     window.addEventListener('pointermove', pointer, { passive: true });
     window.addEventListener('scroll', scroll, { passive: true, capture: true });
-    return () => { cancelAnimationFrame(frame); resize.disconnect(); intersection.disconnect(); preferences.disconnect(); window.removeEventListener('pointermove', pointer); window.removeEventListener('scroll', scroll, true); };
+    document.addEventListener('visibilitychange', visibilityChange);
+
+    // Initial setup check
+    if (disabled()) {
+      resetTransforms();
+    } else {
+      startLoop();
+    }
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      resize.disconnect();
+      intersection.disconnect();
+      preferences.disconnect();
+      window.removeEventListener('pointermove', pointer);
+      window.removeEventListener('scroll', scroll, true);
+      document.removeEventListener('visibilitychange', visibilityChange);
+    };
   }, [reduced, scene]);
-  return <div ref={root} className={`layered-venue layered-venue--${scene}`} aria-hidden="true" data-reduced={!!reduced}>
+
+  return <div ref={root} className={`layered-venue layered-venue--${scene} layered-venue--enhanced`} aria-hidden="true" data-reduced={!!reduced}>
     <div className="layered-venue__canvas">
       <img className="layered-venue__base" src={getAssetUrl(path + 'background.webp')} alt="" />
       {data?.layers.map(layer => <img key={layer.name} className={'layered-venue__cutout' + (/lamp|bulb|sign/.test(layer.name) ? ' layered-venue__light' : '')}

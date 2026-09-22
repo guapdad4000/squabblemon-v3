@@ -738,7 +738,8 @@ function BattleBriefing({
               return <div key={cardId} aria-label={`${cards[cardId].name}. ${CARD_RARITY_DEFINITIONS[rarity].label} rarity`} className={`story-briefing__focus-card ${getRarityClass(rarity)}`} style={{ display: 'flex', flexDirection: 'column', padding: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
                 <img src={getCardImage(cards[cardId].id)} alt="" style={{ height: '70px', objectFit: 'contain', width: '100%' }} />
                 <span style={{ fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', textAlign: 'center', marginTop: '4px' }}>{cards[cardId].name}</span>
-                <div style={{ marginTop: '4px' }}><CardRarityTreatment rarity={rarity} compact /></div>
+                <span className="story-briefing__focus-rarity">◆ {CARD_RARITY_DEFINITIONS[rarity].label}</span>
+                <CardRarityTreatment rarity={rarity} compact />
               </div>
             })}
           </div>

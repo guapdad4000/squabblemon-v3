@@ -8,6 +8,7 @@ import { starterRecipes } from '../../data';
 import { DeckWorkbench } from '../../components/DeckWorkbench';
 import type { DeckDraft } from '../../lib/deckWorkshop';
 import { PageDecor } from '../../components/venue/PageDecor';
+import { getDeckSelectionStorage, persistDeckSelection } from '../../lib/deckSelection';
 
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { deckId = '' } = useParams();
@@ -22,6 +23,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const id = recipe ? crypto.randomUUID() : deckId;
     const res = await save.mutateAsync({ deckId: id, data: draft });
     queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
+    persistDeckSelection(bootstrap.profile.id, id, res.profile.savedDecks.map(deck => deck.id), getDeckSelectionStorage());
     return id;
   }
   if (!initial) return <div className="p-6 text-white"><p>Deck not found.</p><button className="venue-button" onClick={() => setLocation('/game/decks')}>Back to my decks</button></div>;

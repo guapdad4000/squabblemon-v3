@@ -350,9 +350,10 @@
 .gym-results.gacha-results {
   inset: 0;
   width: 100%;
-  height: 100dvh;
+  height: 100%;
   max-width: none;
   max-height: none;
+  box-sizing: border-box;
   margin: 0;
   padding: 28px clamp(20px, 6vw, 90px) 36px;
   border: 0;
@@ -360,11 +361,19 @@
   border-radius: 0;
   background: radial-gradient(ellipse at 50% 40%, #77612c22, transparent 55%), #0b100e;
   color: #f4efdf;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.gym-results.gacha-results[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .gacha-results .gym-results__header {
+  width: 100%;
   max-width: 1100px;
-  margin: auto;
+  margin: 0 auto;
+  text-align: center;
 }
 .gacha-results__emblem.game-glyph {
   --glyph-size: 60px;
@@ -453,7 +462,12 @@
 }
 .gacha-results .gym-results__single {
   gap: 7px;
-  margin: 35px auto 22px;
+  margin: auto auto 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 .gacha-results .gym-reward--large {
   width: clamp(200px, 20vw, 245px);
@@ -608,14 +622,21 @@
   .gym.gacha-stage {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     gap: 0;
-    height: auto;
+    height: calc(100dvh - 51px - 32px); /* Fallback */
+    height: 100%;
+    flex: 1;
     min-height: 0;
-    padding: 20px 18px max(30px, env(safe-area-inset-bottom));
+    padding: 0;
+    position: relative;
   }
   .gacha-stage__heading {
-    order: 0;
-    max-width: calc(100% - 28px);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
   }
   .gacha-stage__heading .studio-eyebrow {
     font-size: 8px;
@@ -627,33 +648,41 @@
   .gacha-stage__heading h1 {
     font-size: clamp(35px, 9.5vw, 50px);
     margin: 14px 0 11px;
+    text-shadow: 0 2px 10px #000;
   }
   .gacha-stage__heading > p {
     font-size: 11px;
     line-height: 1.6;
+    text-shadow: 0 2px 5px #000;
   }
   .gacha-stage .gacha-stage__sound {
     right: 16px;
     top: 25px;
     width: 37px;
     height: 37px;
+    background: #101513aa;
+    border-radius: 50%;
   }
   .gacha-stage .gym__arena {
-    inset: 100px 0 auto;
-    height: 330px;
+    position: absolute;
+    inset: 0;
+    height: 100%;
     width: 100%;
     border: 0;
+    z-index: 0;
   }
   .gacha-stage .venue-scene {
     left: 0;
   }
   .gacha-stage .gym__vignette {
-    background: linear-gradient(0deg, #101513, transparent 28%, transparent 60%, #101513 100%);
+    background: linear-gradient(0deg, #101513 0%, #101513e6 15%, transparent 40%);
   }
   .gacha-stage .gym__offer {
-    order: 2;
-    margin-top: 190px;
-    padding: 0;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px max(24px, env(safe-area-inset-bottom));
+    margin: 0;
+    background: linear-gradient(180deg, transparent, #101513 15%);
     overflow: visible;
   }
   .gacha-stage__pack {
@@ -688,12 +717,11 @@
     font-size: 8px;
   }
   .gacha-stage__ringside {
-    position: absolute;
-    left: 20px;
-    right: 20px;
-    top: 335px;
-    width: auto;
-    padding: 0;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px max(24px, env(safe-area-inset-bottom));
+    width: 100%;
+    background: linear-gradient(180deg, transparent, #101513 15%);
   }
   .gacha-stage__ready {
     justify-content: flex-start;
@@ -710,14 +738,11 @@
     margin-top: 4px;
   }
   .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__ringside {
-    order: 1;
-    position: relative;
-    inset: auto;
-    margin-top: 180px;
-    width: 100%;
+    margin-top: 0;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
   .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gym__offer {
-    margin-top: 24px;
+    display: none; /* Hide offer during punching to save space */
   }
   .gacha-stage__punch-actions {
     gap: 8px;
@@ -770,7 +795,8 @@
     width: 205px;
   }
   .gacha-results .gym-results__single {
-    margin-top: 33px;
+    margin-top: auto;
+    margin-bottom: 22px;
   }
   .venue-info.gacha-info {
     padding: 25px 22px;
@@ -1474,6 +1500,70 @@ html[data-reduce-motion='true'] :is(
 
 /* Streamlined ticket counter: the artwork is the purchase surface, while pull
    size and secondary actions stay visually quiet. */
+@media (max-width: 700px) {
+  .gym.gacha-stage {
+    min-height: max(620px, calc(100svh - 114px));
+    padding-top: 290px;
+  }
+  .gym.gacha-stage .gym__offer {
+    width: calc(100% - 24px);
+    margin: auto 12px 12px;
+    padding: 12px 14px max(12px, env(safe-area-inset-bottom));
+    border-radius: 3px 18px 3px 3px;
+    background: #111b17ed;
+  }
+  .gym.gacha-stage .gacha-stage__pack {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .gym.gacha-stage .gacha-stage__pack > .venue-prop {
+    width: 30px;
+    height: 40px;
+  }
+  .gym.gacha-stage .gym__offer h2 {
+    margin: 2px 0;
+    font-size: 20px;
+  }
+  .gym.gacha-stage .gacha-stage__pack p { margin: 2px 0; font-size: 10px; }
+  .gym.gacha-stage .gacha-stage__guarantee {
+    gap: 8px;
+    margin: 6px 0;
+    font-size: 10px;
+  }
+  .gym.gacha-stage .gacha-stage__guarantee > :first-child {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+  }
+  .gym.gacha-stage .gacha-stage__duplicates {
+    margin: 4px 0;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+  .gym.gacha-stage .gacha-stage__duplicates .game-glyph { --glyph-size: 18px; }
+  .gym.gacha-stage .gym__actions { margin-top: 5px; gap: 5px; }
+  .gym.gacha-stage .gacha-stage__pull-switch button { min-height: 36px; padding-bottom: 5px; }
+  .gym.gacha-stage .gacha-stage__ticket-choices { width: 100%; gap: 8px; }
+  .gym.gacha-stage .gacha-stage__ticket-choice {
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: center;
+    padding: 5px 3px;
+    border: 1px solid #d9ca9c35;
+    min-height: 62px;
+    border-radius: 3px;
+  }
+  .gym.gacha-stage .gacha-stage__ticket-choice img {
+    width: 46px;
+    height: 44px;
+    transform: rotate(-3deg);
+  }
+  .gym.gacha-stage .gacha-stage__ticket-choice > span { margin-top: 0; gap: 3px; }
+  .gym.gacha-stage .gacha-stage__ticket-choice strong { font-size: 12px; }
+  .gym.gacha-stage .gym__payment-note { margin: 2px 0; font-size: 8px; }
+  .gym.gacha-stage .gym__links { margin-top: 4px; gap: 16px; }
+  .gym.gacha-stage .gym__links button { min-height: 36px; font-size: 9px; }
+  .gym.gacha-stage .gacha-stage__heading h1 { font-size: 30px; margin: 10px 0 6px; }
+}
 .gacha-stage .gym__actions {
   gap: 8px;
   margin-top: 13px;

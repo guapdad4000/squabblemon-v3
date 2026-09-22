@@ -29,6 +29,7 @@ import { DeckCarousel } from '../../components/DeckCarousel';
 import { PlayLoop } from '../../components/PlayLoop';
 import { CardView } from '../../components/CardView';
 import { e2eAuthEnabled } from '../../lib/auth';
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import '../../styles/studio.css';
 import '../../styles/activity-stage.css';
 
@@ -115,16 +116,31 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
   const [selected, setSelected] = useState<Deck | null>(null);
   const [activity, setActivity] = useState<ActivityId>('auto');
   const [showEvents, setShowEvents] = useState(false);
-  const [crewId, setCrewId] = useState<string | null>(null);
   const [picks, setPicks] = useState<string[]>([]);
   const [week] = useState(() => eventWeek());
   const saved = bootstrap.profile.savedDecks.filter(
     (deck) => validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId).valid,
   );
-  const chosen = saved.find((deck) => deck.id === crewId) ?? saved[0];
   const fallback = starterRecipes.filter(
     (recipe) => validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid,
   );
+  const crews = [
+    ...saved,
+    ...fallback
+      .filter(recipe => !saved.some(deck => deck.id === recipe.id))
+      .map(recipe => ({
+        id: recipe.id,
+        name: recipe.name,
+        cardIds: recipe.catalogCardIds,
+        heroCardId: recipe.hero,
+        recipeId: recipe.id,
+      })),
+  ];
+  const [crewId, setCrewId] = usePersistentDeckSelection(
+    bootstrap.profile.id,
+    crews.map(deck => deck.id),
+  );
+  const chosen = crews.find(deck => deck.id === crewId) ?? crews[0];
   const offers = draftOffers(week);
   const current = activities.find((item) => item.id === activity)!;
   const presentation = presentations[activity];
@@ -346,15 +362,15 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
                 Manage gangs <ArrowRight size={14} />
               </button>
             </div>
-            {saved.length > 0 ? (
+            {crews.length > 0 ? (
               <div className="activity-stage__crew-row">
                 <DeckCarousel
-                  decks={saved.map((deck) => ({
+                   decks={crews.map((deck) => ({
                     id: deck.id,
                     name: deck.name,
                     heroCardId: deck.heroCardId,
                     cardIds: deck.cardIds,
-                    subtitle: 'YOUR GANG',
+                     subtitle: saved.some(item => item.id === deck.id) ? 'YOUR GANG' : 'STARTER GANG',
                   }))}
                   selectedId={chosen.id}
                   onSelect={setCrewId}

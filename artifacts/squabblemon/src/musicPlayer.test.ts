@@ -1,5 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { MusicPlayer, MUSIC_STORAGE_KEY, readMusicPreferences, soundtrack, type MusicSnapshot } from './musicPlayer';
 
 class FakeAudio extends EventTarget {
@@ -31,7 +34,7 @@ function setup(audio = new FakeAudio()) {
   return { player, audio, saved, get state() { return state; } };
 }
 
-test('does not fetch or play before a gesture, then advances all six tracks and wraps', async () => {
+test('does not fetch or play before a gesture, then advances the full catalog and wraps', async () => {
   const s = setup();
   assert.equal(s.audio.src, ''); assert.equal(s.audio.plays, 0);
   s.player.unlock(); await settle();
@@ -176,7 +179,7 @@ test('mode playlists rotate locally, obey muted preferences, and restore the bac
   s.player.setPlaylist(modeSoundtracks.story, { enabled:true, volume:.4, trackIndex:0 }); await settle();
   assert(s.audio.src.endsWith('story-mode-ost.mp3'));
   s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost-2.mp3'));
-  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost.mp3'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('battle-music.ogg'));
   s.player.setPlaylist(modeSoundtracks.boss, { enabled:false, volume:.4, trackIndex:0 }); await settle();
   assert.equal(s.audio.paused,true);
   s.player.setPlaylist(soundtrack,background); await settle();
@@ -184,14 +187,79 @@ test('mode playlists rotate locally, obey muted preferences, and restore the bac
   s.player.dispose();
 });
 
-test('routes choose story, boss, training, gacha, and background music', async () => {
-  const { musicModeForRoute } = await import('./musicModes');
+test('routes choose ranked battle, story, boss, training, gacha, and background music', async () => {
+  const { activeMusicMode, musicModeForRoute } = await import('./musicModes');
   assert.equal(musicModeForRoute('/game'),'background');
   assert.equal(musicModeForRoute('/game/story'),'story');
   assert.equal(musicModeForRoute('/game/play'),'training');
+  assert.equal(musicModeForRoute('/game/online'),'battle');
+  assert.equal(musicModeForRoute('/game/online/ABCD12'),'battle');
   assert.equal(musicModeForRoute('/game/shop'),'gacha');
   assert.equal(musicModeForRoute('/game/story/play/welcome-to-the-block'),'story');
   const { storyContent } = await import('@workspace/squabblemon-engine/story');
   const boss=storyContent.chapters.flatMap(chapter=>chapter.nodes).find(node=>node.kind==='battle' && node.battleType==='boss');
   assert(boss); assert.equal(musicModeForRoute(`/game/story/play/${boss.id}`),'boss');
+  assert.equal(activeMusicMode('/game/online/ABCD12', 'victory'), 'victory');
+  assert.equal(activeMusicMode('/game/online/ABCD12', null), 'battle', 'clearing a result override restores the route playlist');
+  assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', 'defeat'), 'defeat');
+  assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', null), 'story');
+});
+
+test('catalog preserves the original records and adds each unique uploaded battle track once', () => {
+  assert.deepEqual(soundtrack.slice(0, 6).map(track => track.id), [
+    'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
+  ]);
+  assert.deepEqual(soundtrack.slice(6).map(track => track.id), [
+    'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3',
+    'track-1-wav-master', 'squabblemon-win', 'win-music', 'squabblemon-loss',
+  ]);
+  assert.equal(new Set(soundtrack.map(track => track.id)).size, soundtrack.length);
+  assert.equal(new Set(soundtrack.map(track => track.sourceSha256)).size, soundtrack.length);
+});
+
+test('battle modes append six non-outcome uploads after each authored mode soundtrack', async () => {
+  const { battleSoundtrack, modeSoundtracks } = await import('./musicModes');
+  assert.deepEqual(battleSoundtrack.map(track => track.id), [
+    'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3', 'track-1-wav-master',
+  ]);
+  assert.deepEqual(modeSoundtracks.training.map(track => track.id), ['training-ost', ...battleSoundtrack.map(track => track.id)]);
+  assert.deepEqual(modeSoundtracks.story.slice(0, 2).map(track => track.id), ['story-mode-ost', 'story-mode-ost-2']);
+  assert.deepEqual(modeSoundtracks.story.slice(2).map(track => track.id), battleSoundtrack.map(track => track.id));
+  assert.deepEqual(modeSoundtracks.boss.map(track => track.id), ['boss-fight-ost', ...battleSoundtrack.map(track => track.id)]);
+  for (const playlist of [modeSoundtracks.battle, modeSoundtracks.training, modeSoundtracks.story, modeSoundtracks.boss]) {
+    assert.equal(playlist.some(track => ['squabblemon-win', 'win-music', 'squabblemon-loss'].includes(track.id)), false);
+  }
+});
+
+test('result playlists map the explicit win and loss recordings and retain gesture-gated playback', async () => {
+  const { outcomeSoundtracks } = await import('./musicModes');
+  assert.deepEqual(outcomeSoundtracks.victory.map(track => track.id), ['squabblemon-win', 'win-music']);
+  assert.deepEqual(outcomeSoundtracks.defeat.map(track => track.id), ['squabblemon-loss']);
+  const s = setup();
+  s.player.setPlaylist(outcomeSoundtracks.victory, { enabled: true, volume: .24, trackIndex: 0 });
+  assert.equal(s.audio.plays, 0);
+  assert.equal(s.audio.src, '');
+  s.player.unlock(); await settle();
+  assert(s.audio.src.endsWith('/audio/treblo/squabblemon-win.ogg'));
+  s.audio.dispatchEvent(new Event('ended')); await settle();
+  assert(s.audio.src.endsWith('/audio/treblo/win-music.ogg'));
+  s.player.setPlaylist(outcomeSoundtracks.defeat, { enabled: true, volume: .24, trackIndex: 0 }); await settle();
+  assert(s.audio.src.endsWith('/audio/treblo/squabblemon-loss.ogg'));
+  const { modeSoundtracks } = await import('./musicModes');
+  s.player.setPlaylist(modeSoundtracks.story, { enabled: true, volume: .4, trackIndex: 0 }); await settle();
+  assert(s.audio.src.endsWith('/audio/modes/story-mode-ost.mp3'), 'leaving a result restores the active route mode');
+  s.player.dispose();
+});
+
+test('catalog, result, and transparent DJ assets ship in web formats without the source WAV', async () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'public');
+  const { outcomeSoundtracks } = await import('./musicModes');
+  const tracks = [...soundtrack, ...outcomeSoundtracks.victory, ...outcomeSoundtracks.defeat];
+  for (const track of tracks) {
+    for (const path of [track.ogg, track.aac]) assert(statSync(join(root, path)).size > 1_000);
+  }
+  assert.equal(readdirSync(join(root, 'audio', 'treblo')).some(file => file.endsWith('.wav')), false);
+  const artwork = readFileSync(join(root, 'assets', 'generated', 'dr-fade-dj-turntable.webp'));
+  assert.equal(artwork.subarray(0, 4).toString('ascii'), 'RIFF');
+  assert.equal(artwork.subarray(8, 12).toString('ascii'), 'WEBP');
 });

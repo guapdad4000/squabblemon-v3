@@ -9,6 +9,9 @@
   padding: 32px 24px 36px;
   --result-color: #edcb81;
 }
+.result-stage.world-decor-host {
+  position: fixed;
+}
 .result-stage:before {
   content: '';
   position: fixed;
@@ -423,7 +426,57 @@
   }
 }
 /* Supplied result artwork: percentage anchors stay attached to the uncropped canvas. */
+.result-art__canvas {
+  position: relative;
+  container-type: inline-size;
+  width: min(100%, calc((100svh - 220px) * 1672 / 941));
+  min-width: min(100%, 360px);
+  margin-inline: auto;
+}
+.result-art__canvas picture { display: block; }
+.result-art {
+  isolation: isolate;
+}
+.result-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(#100e0bd9, #100e0bf2), var(--result-backdrop) center / cover;
+}
+.result-stage--art .result-stage__receipt { padding: 14px 20px 20px; }
+.result-stage__receipt .result-stage__story { margin: 8px 0; }
+.result-stage__receipt .result-stage__first-rewards { margin: 12px 0; }
+.result-stage__receipt .battle-earnings { margin-top: 12px; }
+.result-stage__receipt .result-stage__details { margin-top: 8px; }
+.result-stage__receipt .result-stage__details summary { padding: 10px 12px; }
+.result-stage__receipt .battle-earnings > .studio-text-action { margin: 4px auto; }
+.result-stage__receipt .result-stage__crew-details { margin: 8px 0; }
+@media (max-aspect-ratio: 1/1), (max-width: 639px) {
+  .result-art__canvas {
+    width: min(100%, calc((100svh - 190px) * 941 / 1672));
+    min-width: min(100%, 280px);
+  }
+}
 .result-stage.result-stage--art { padding: 0 0 max(24px, env(safe-area-inset-bottom)); background: #100e0b; }
+.result-stage__return {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 49;
+  min-height: 44px;
+  transform: translateX(-50%);
+  border: 1px solid #e0b76d;
+  border-radius: 999px;
+  padding: 8px 20px;
+  color: #19130b;
+  background: #f7d58c;
+  box-shadow: 0 4px 18px #000a;
+  font-size: 12px;
+  font-weight: 800;
+}
+.result-stage__return:focus-visible { outline: 3px solid white; outline-offset: 3px; }
 .result-stage--art::before { display: none; }
 .result-stage--art .result-stage__content { max-width: 1672px; position: relative; margin: 0 auto; }
 .result-stage--art .result-stage__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; background: #100e0b; }
@@ -490,29 +543,29 @@
   .result-art--loss .result-art__scores { left: 21%; top: 85%; width: 58%; height: 10%; }
   .result-art__scores strong { font-size: 2.6cqw; }
 }
-@media (max-width: 639px) {
+@media (max-aspect-ratio: 1/1), (max-width: 639px) {
   .result-stage--art .result-stage__heading { display: block; padding: 12px; }
   .result-stage--art .result-stage__heading h2 { margin-top: 6px; font-size: 25px; }
-  .result-art__image { aspect-ratio: 941 / 1672; }
+  .result-art__image { aspect-ratio: 941 / 1672 !important; }
   .result-art__toggle { top: 10px; right: 10px; }
-  .result-art--win .result-art__plaque { left: 15%; top: 55%; width: 70%; height: 12.5%; }
-  .result-art--win .result-art__scores { left: 9%; top: 71.5%; width: 81%; height: 11.5%; gap: 4%; }
-  .result-art--loss .result-art__plaque { left: 10%; top: 59.5%; width: 80%; height: 10%; }
-  .result-art--loss .result-art__scores { left: 7%; top: 72.5%; width: 87%; height: 8.5%; gap: 3%; }
+  .result-art--win .result-art__plaque { left: 15% !important; top: 55% !important; width: 70% !important; height: 12.5% !important; }
+  .result-art--win .result-art__scores { left: 9% !important; top: 71.5% !important; width: 81% !important; height: 11.5% !important; gap: 4% !important; }
+  .result-art--loss .result-art__plaque { left: 10% !important; top: 59.5% !important; width: 80% !important; height: 10% !important; }
+  .result-art--loss .result-art__scores { left: 7% !important; top: 72.5% !important; width: 87% !important; height: 8.5% !important; gap: 3% !important; }
   .result-art__caption { font-size: clamp(9px, 2.5cqw, 15px); letter-spacing: .02em; }
   .result-art__rewards { gap: 0; margin-top: 3px; }
   .result-art__rewards > div { column-gap: 2px; }
-  .result-art__rewards .game-glyph { --glyph-size: 7cqw; }
-  .result-art__rewards strong { font-size: 4cqw; }
-  .result-art__rewards span { font-size: 2.3cqw; }
-  .result-art__scores span { font-size: 2.8cqw; }
-  .result-art__scores strong, .result-art--loss .result-art__scores strong { font-size: 6cqw; }
-  .result-art__scores em { font-size: 2.3cqw; }
+  .result-art__rewards .game-glyph { --glyph-size: min(7cqw, 36px); }
+  .result-art__rewards strong { font-size: min(4cqw, 24px); }
+  .result-art__rewards span { font-size: min(2.3cqw, 14px); }
+  .result-art__scores span { font-size: min(2.8cqw, 16px); }
+  .result-art__scores strong, .result-art--loss .result-art__scores strong { font-size: min(6cqw, 32px); }
+  .result-art__scores em { font-size: min(2.3cqw, 14px); }
   .result-art__loss-notes { position: absolute; display: grid; grid-template-columns: repeat(3, 1fr); left: 7%; top: 83.5%; width: 85%; height: 6%; align-items: center; font-size: 3cqw; font-weight: 900; text-transform: uppercase; }
   .result-stage__receipt { padding: 12px 16px; }
   .venue-hud__wallet .game-glyph { --glyph-size: 23px; }
 }
-@media (max-width: 639px) {
+@media (max-aspect-ratio: 1/1), (max-width: 639px) {
   .result-art__loss-notes { grid-template-columns: repeat(4, 1fr); left: 6.5%; width: 87%; gap: 2%; font-size: 2.5cqw; }
 }
 .result-stage__captain { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: #e9d6ac; }

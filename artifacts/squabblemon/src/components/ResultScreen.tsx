@@ -1,3 +1,5 @@
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { navigate } from 'wouter/use-browser-location';
 import { ResultArtwork } from './ResultArtwork';
 import { coachBattle } from '@workspace/squabblemon-engine/insights';
@@ -7,6 +9,7 @@ import { getEquippedVariant, getVariantKind } from './CardVariantTreatment';
 import { decks, getCardImage } from '../data';
 import { type Match, evaluateStoryStarObjectives, getDistrictResults, getMatchWinner } from '../gameEngine';
 import { BattleEarnings } from './BattleEarnings';
+import { setBattleMusicMode } from '../musicStore';
 import '../styles/studio.css';
 import '../styles/result-stage.css';
 
@@ -26,13 +29,26 @@ export function ResultScreen({
   customPlayerDeck,
   storyMetadata,
   equippedVariants,
+  onInspectBoard,
 }: any) {
+  const stageRef = useRef<HTMLDivElement>(null);
   const rebuild = () => isGuest ? onChangeDeck?.() : navigate('/game/decks');
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
     isDraw = winner === 'draw';
+  useEffect(() => {
+    if (isDraw) return;
+    setBattleMusicMode(isVictory ? 'victory' : 'defeat');
+    return () => setBattleMusicMode(null);
+  }, [isDraw, isVictory]);
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    stage.scrollTop = 0;
+    stage.scrollLeft = 0;
+  }, []);
   const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
   const isTutorial = Boolean(tutorial);
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];
@@ -118,11 +134,18 @@ export function ResultScreen({
               </button>
             </>
           )}
+          {onInspectBoard && (
+            <button className="studio-text-action" data-testid="button-inspect-final-board" onClick={onInspectBoard}>
+              Inspect final board
+            </button>
+          )}
         </nav>
   );
-  return (
+  const screen = (
     <div
+      ref={stageRef}
       className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
+      data-testid="battle-result-screen"
     >
       <div className="result-stage__content">
         <header className="result-stage__heading">
@@ -230,4 +253,5 @@ export function ResultScreen({
       </div>
     </div>
   );
+  return typeof document === 'undefined' ? screen : createPortal(screen, document.body);
 }

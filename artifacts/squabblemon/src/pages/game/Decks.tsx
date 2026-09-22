@@ -9,6 +9,7 @@ import { starterRecipes, validateSavedDeck } from '../../data';
 import { useState } from 'react';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { DeckCarousel } from '../../components/DeckCarousel';
+import { usePersistentDeckSelection } from '../../lib/deckSelection';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [, setLocation] = useLocation();
@@ -16,8 +17,12 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDeckId, setSelectedDeckId] = useState(bootstrap.profile.savedDecks[0]?.id ?? '');
-  const [selectedExampleId, setSelectedExampleId] = useState(starterRecipes[0]?.id ?? '');
+  const savedDeckIds = bootstrap.profile.savedDecks.map(deck => deck.id);
+  const starterDeckIds = starterRecipes.map(recipe => recipe.id);
+  const [selectedDeckId, setSelectedDeckId] = usePersistentDeckSelection(
+    bootstrap.profile.id,
+    [...savedDeckIds, ...starterDeckIds.filter(id => !savedDeckIds.includes(id))],
+  );
   const atCapacity = bootstrap.profile.savedDecks.length >= bootstrap.profile.deckSlots;
 
   const handleCreateNew = async () => {
@@ -74,7 +79,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               ...deck,
               valid: validateSavedDeck(deck.cardIds, bootstrap.profile.ownedCardIds, deck.heroCardId).valid,
             }))}
-            selectedId={selectedDeckId}
+            selectedId={savedDeckIds.includes(selectedDeckId) ? selectedDeckId : savedDeckIds[0]}
             onSelect={setSelectedDeckId}
             onOpen={id => setLocation(`/game/decks/${id}`)}
             label="Your saved decks"
@@ -96,8 +101,8 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             subtitle: recipe.archetype,
             valid: validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid,
           }))}
-          selectedId={selectedExampleId}
-          onSelect={setSelectedExampleId}
+          selectedId={starterDeckIds.includes(selectedDeckId) ? selectedDeckId : starterDeckIds[0]}
+          onSelect={setSelectedDeckId}
           onOpen={id => setLocation(`/game/decks/${id}`)}
           label="Learning examples"
           openLabel="Build from example"

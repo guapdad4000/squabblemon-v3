@@ -1,6 +1,7 @@
 import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cards } from '../data';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
@@ -122,7 +123,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? onLeave() : setSurrender(true)} />
     </LayoutGroup>
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
-    {room.status === 'complete' && reviewBoard && <button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>}
+    {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
     <Dialog open={room.status === 'complete' && !reviewBoard} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}

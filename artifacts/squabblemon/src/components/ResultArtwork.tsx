@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, type ReactNode, type CSSProperties } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedNumber } from './AnimatedNumber';
 import '../styles/ui-polish.css';
@@ -20,9 +20,10 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
   const asset = (name: string) => getAssetUrl(`assets/results/${name}.webp`);
   const savedReward = !isGuest && !rewardError && !rewardPending ? reward : undefined;
   const stateLabel = isGuest ? 'Offline training · no saved rewards' : rewardError ? 'Rewards not saved · retry below' : rewardPending || !reward ? 'Saving battle earnings…' : 'Battle earnings';
-  return <section className={`result-art result-art--${draw ? 'draw' : outcome} ${cinematic ? 'result-art--cinematic' : ''}`} aria-label="Battle outcome artwork">
+  return <section className={`result-art result-art--${draw ? 'draw' : outcome} ${cinematic ? 'result-art--cinematic' : ''}`} style={{ '--result-backdrop': `url("${asset(`${draw ? 'win' : outcome}-scene-wide`)}")` } as CSSProperties} aria-label="Battle outcome artwork">
+    <div className="result-art__canvas">
     <picture>
-      <source media="(max-width: 639px)" srcSet={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-portrait`)} />
+      <source media="(max-aspect-ratio: 1/1), (max-width: 639px)" srcSet={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-portrait`)} />
       {!cinematic && <source media="(max-width: 1100px)" srcSet={asset(victory ? 'win-wide-centered' : 'loss-wide-harbor')} />}
       <img className="result-art__image" src={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-wide`)} alt="" width={1672} height={941} fetchPriority="high" />
     </picture>
@@ -45,6 +46,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
       </div>
       {!victory && !draw && <nav className="result-art__loss-notes" aria-label="Plan your comeback"><button onClick={onRegroup}>Regroup</button><button onClick={onTrain}>Train</button><button onClick={onRebuild}>Rebuild</button><button onClick={onTrain}>Run it back</button></nav>}
     </>}
+    </div>
     <div className="result-art__actions">{actions}</div>
   </section>;
 }

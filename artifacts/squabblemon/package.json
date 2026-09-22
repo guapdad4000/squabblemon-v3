@@ -37,7 +37,10 @@
     "test:story-phase": "tsx e2e/verify-story-phase.ts",
     "test:mobile-ui": "tsx e2e/verify-mobile-fixes.ts",
     "test:buddy-folks": "tsx e2e/verify-buddy-folks.ts",
-    "test:dr-fade": "tsx e2e/verify-dr-fade.ts"
+    "test:dr-fade": "tsx e2e/verify-dr-fade.ts",
+    "test:deck-selection": "node --import tsx --test src/lib/deckSelection.test.ts",
+    "test:deck-selection-browser": "node e2e/verify-deck-selection.mjs"
+    ,"test:result-reopen-browser": "node e2e/verify-result-reopen.mjs"
   },
   "devDependencies": {
     "@clerk/react": "^6.15.1",

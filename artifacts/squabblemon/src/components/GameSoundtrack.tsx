@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { MusicPlayer, soundtrack } from '../musicPlayer';
 import { useLocation } from 'wouter';
-import { modeSoundtracks, musicModeForRoute } from '../musicModes';
+import { activeMusicMode, modeSoundtracks } from '../musicModes';
 import { attachMusicPlayer, publishMusic, useMusicBanks, getMusicBanks, saveMusicBank, useBattleMusicMode, type MusicBank } from '../musicStore';
 import { getAssetUrl } from '../lib/assets';
 
@@ -10,7 +10,7 @@ export default function GameSoundtrack() {
   const [preferences] = useFeedbackPreferences();
   const [location] = useLocation();
   const override = useBattleMusicMode();
-  const mode = override ?? musicModeForRoute(location);
+  const mode = activeMusicMode(location, override);
   const banks = useMusicBanks();
   const activeBank = useRef<MusicBank>(mode === 'background' ? 'background' : 'mode');
   const previousMode = useRef(mode);

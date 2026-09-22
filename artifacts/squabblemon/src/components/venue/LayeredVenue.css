@@ -1,0 +1,52 @@
+/* Scene-specific enhancements for layered venues (gacha-bg, fade-market) */
+/* Reduces over-darkening on containers hosting enhanced venues */
+
+/* The JS loop handles smooth interpolation now, so we disable CSS transition 
+   for enhanced venues to prevent "mushy" double-easing lag */
+.layered-venue--enhanced .layered-venue__canvas,
+.layered-venue--enhanced .layered-venue__cutout {
+  transition: none !important;
+}
+
+/* Base image shouldn't strictly have deep black crush if we want depth visible */
+.layered-venue--enhanced .layered-venue__base {
+  filter: saturate(1.1) brightness(0.95);
+}
+
+/* Light up the overall gacha stage by weakening the oppressive vignette */
+/* We target .gym__vignette implicitly if a layered venue is present in its arena */
+.gym:has(.layered-venue--enhanced) .gym__vignette {
+  opacity: 0.35 !important;
+  mix-blend-mode: overlay;
+  background: linear-gradient(0deg, #11140e 5%, transparent 60%), radial-gradient(ellipse at center, transparent 40%, #11140edd 90%) !important;
+}
+
+/* Also ensure Corner Store / Fade Market scenes let the art shine through */
+.corner-store:has(.layered-venue--enhanced)::after {
+  opacity: 0.5 !important;
+}
+
+/* Enhanced parallax multiplier variable via css overrides */
+.layered-venue--enhanced .layered-venue__cutout {
+  /* Using standard depth variable but the x/y values passed in are now ~30x larger */
+  /* This brings out the 3D pop dramatically */
+  filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .layered-venue--enhanced .layered-venue__canvas {
+    transform: translate(-50%, -50%) !important;
+  }
+  .layered-venue--enhanced .layered-venue__cutout {
+    transform: none !important;
+  }
+}
+
+html[data-reduce-motion="true"] .layered-venue--enhanced .layered-venue__canvas {
+  transform: translate(-50%, -50%) !important;
+}
+
+html[data-reduce-motion="true"] .layered-venue--enhanced .layered-venue__cutout {
+  transform: none !important;
+}
