@@ -1,5 +1,4 @@
 import { FadePark, FightTabs } from './FadePark';
-import { MusicControls } from "../../components/MusicControls";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -198,7 +197,6 @@ export function Multiplayer({
       </header>
       <div className="online-lobby__content">
         <div className="fight-night__tools">
-          <MusicControls variant="dj" wrapperClassName="fight-dj" />
           <InstallGame />
         </div>
         <div className="fight-night__poster">

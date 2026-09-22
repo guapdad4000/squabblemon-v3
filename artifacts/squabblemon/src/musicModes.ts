@@ -3,15 +3,26 @@ import soundtrack from './soundtrack.json';
 export type MusicMode = 'background' | 'battle' | 'training' | 'story' | 'boss' | 'gacha' | 'victory' | 'defeat';
 export type SoundtrackTrack = { id: string; title: string; artist: string; album: string; ogg: string; aac: string };
 const modeTrack = (id: string, title: string): SoundtrackTrack => ({ id, title, artist: 'Squabblemon', album: 'Mode soundtrack', ogg: `audio/modes/${id}.mp3`, aac: `audio/modes/${id}.mp3` });
-const trebloTrack = (id: string, title: string): SoundtrackTrack => ({ id, title, artist: 'Treblo', album: 'Oakland Chrome and Curls', ogg: `audio/treblo/${id}.ogg`, aac: `audio/treblo/${id}.m4a` });
+const catalogById = new Map(soundtrack.map(track => [track.id, track]));
+const catalogTracks = (ids: readonly string[]): SoundtrackTrack[] => ids.map(id => {
+  const track = catalogById.get(id);
+  if (!track) throw new Error(`Missing soundtrack track: ${id}`);
+  return track;
+});
+const originalTrackIds = [
+  'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
+] as const;
+const originalSoundtrack = catalogTracks(originalTrackIds);
 export const outcomeSoundtracks = {
-  victory: [trebloTrack('squabblemon-win', 'Squabblemon Win'), trebloTrack('win-music', 'Win Music')],
-  defeat: [trebloTrack('squabblemon-loss', 'Squabblemon Loss')],
+  // Keep the new result cue first without taking the original catalog out of rotation.
+  victory: [...catalogTracks(['squabblemon-win', 'win-music']), ...originalSoundtrack],
+  defeat: [...catalogTracks(['squabblemon-loss']), ...originalSoundtrack],
 };
-const uploadedBattleIds = new Set([
+const uploadedBattleIds = [
   'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3', 'track-1-wav-master',
-]);
-export const battleSoundtrack: readonly SoundtrackTrack[] = soundtrack.filter(track => uploadedBattleIds.has(track.id));
+] as const;
+// Append the originals so existing saved mode indexes still point at the same new upload.
+export const battleSoundtrack: readonly SoundtrackTrack[] = [...catalogTracks(uploadedBattleIds), ...originalSoundtrack];
 export const modeSoundtracks = {
   battle: battleSoundtrack,
   training: [modeTrack('training-ost', 'Training OST'), ...battleSoundtrack],

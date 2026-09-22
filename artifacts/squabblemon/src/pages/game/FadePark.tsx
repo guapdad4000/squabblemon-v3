@@ -11,7 +11,6 @@ import { getAssetUrl, getCardImage, starterRecipes, validateSavedDeck, cardCatal
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { rankedStats, rankProgress, type OnlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
 import { cancelRanked, getRankedLobby, onlineErrorMessage, searchRanked, type RankedLobby } from '../../lib/multiplayer';
-import { MusicControls } from '../../components/MusicControls';
 import '../../styles/fade-park.css';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 
@@ -135,6 +134,5 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </section>
       </div>
     </div>
-    <MusicControls variant="dj" wrapperClassName="park-dj" />
   </main>;
 }

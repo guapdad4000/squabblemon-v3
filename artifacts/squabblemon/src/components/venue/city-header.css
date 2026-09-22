@@ -1,0 +1,23 @@
+.city-header .city-header__music {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 44px;
+  height: 44px;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: #f5dfb2;
+}
+.city-header .city-header__music span {
+  display: block;
+  font: 700 7px/10px var(--font-sans, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.city-header .city-header__music svg { width: 21px; height: 21px; }
+.city-header__identity small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 360px) {
+  .city-header { gap: 5px; padding-inline: 8px; }
+}

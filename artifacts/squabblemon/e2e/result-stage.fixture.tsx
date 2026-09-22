@@ -26,6 +26,7 @@ function Fixture(){
  </div>;
 }
 function OnlineFixture(){
+ const rankedDraw=new URLSearchParams(location.search).get('result')==='ranked-draw';
  const [room,setRoom]=useState<OnlineRoom>(()=>{
    const now=Date.now(),deck=decks.find(deck=>deck.id==='block')!;
    let next=joinOnlineRoom(createOnlineRoom({userId:'host',name:'Host',ready:false,deck},'player',now),{userId:'guest',name:'Guest',ready:false,deck},now);
@@ -33,8 +34,9 @@ function OnlineFixture(){
    next=applyOnlineCommand(next,'cpu',{type:'ready'},now);
    const finished={...next.match!,phase:'complete' as const,round:6};
    finished.boards=[['cornball'],['hooper'],['wifey']].map((ids,lane)=>ids.map((id,i)=>({...createCardInstance(id,'cpu','online-result',i),lane,playedRound:1}))) as Match['boards'];
-   return {...next,status:'complete',winner:'cpu',reason:'districts',deadline:null,match:finished};
+    return {...next,status:'complete',winner:rankedDraw?'draw':'cpu',reason:'districts',deadline:null,match:finished,
+      ...(rankedDraw?{ranked:{queuedAt:now-20_000,heartbeatAt:now,botAfter:now-8_000,bot:false,ratings:{player:1000,cpu:1000},settlement:{player:{before:95,after:100,delta:5,tier:'Bronze',outcome:'draw',bot:false}}}}:{})};
  });
- return <div style={{transform:'translate3d(0,0,0)'}}><MultiplayerBattle room={onlineRoomView(room,'RESULT','host',Date.now())} busy={false} connected reducedMotion send={command=>setRoom(current=>applyOnlineCommand(current,'player',command,Date.now()))} onLeave={()=>{document.body.dataset.action='Online exit';}} /></div>;
+ return <div data-testid="transformed-result-parent" style={{height:'100dvh',overflow:'auto',transform:'translate3d(0,0,0)'}}><MultiplayerBattle room={onlineRoomView(room,'RESULT','host',Date.now())} busy={false} connected reducedMotion send={command=>setRoom(current=>applyOnlineCommand(current,'player',command,Date.now()))} onLeave={()=>{document.body.dataset.action='Online exit';}} /><div aria-hidden="true" style={{height:'50dvh'}} /></div>;
 }
 createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).get('flow')==='online'?<OnlineFixture/>:<Fixture/>);

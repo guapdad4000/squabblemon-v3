@@ -1985,3 +1985,173 @@ html[data-reduce-motion='true'] :is(
     transition: none;
   }
 }
+
+/* Regression guard: a completed opening is a contact sheet, never a carousel.
+   Keep the cinematic sizing above exclusive to the one-at-a-time reveal. */
+.gacha-results[data-phase='summary'] {
+  padding: 14px clamp(14px, 3vw, 42px) max(16px, env(safe-area-inset-bottom));
+}
+.gacha-results[data-phase='summary'] .gym-results__header {
+  min-height: 36px;
+}
+.gacha-results[data-phase='summary'] .gacha-results__signal {
+  margin-top: 2px;
+}
+.gacha-results[data-phase='summary'] .gacha-results__emblem.game-glyph {
+  --glyph-size: 34px;
+  margin: 5px auto 3px;
+}
+.gacha-results[data-phase='summary'] h2 {
+  font-size: clamp(25px, 3.2vw, 42px);
+  margin: 3px 0 6px;
+}
+.gacha-results[data-phase='summary'] > p {
+  flex: none;
+  margin: 0 auto;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.gacha-results[data-phase='summary'] .gym-results__grid {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 132px));
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  max-width: 930px;
+  gap: 14px;
+  margin: 14px auto 12px;
+  padding: 6px; /* Keep the guaranteed reward's outer frame inside the grid. */
+  overflow: visible;
+  scroll-snap-type: none;
+}
+.gacha-results[data-phase='summary'] .gym-results__grid--ten {
+  grid-template-columns: repeat(5, minmax(0, 122px));
+  max-width: 720px;
+}
+.gacha-results[data-phase='summary'] .gym-results__item {
+  width: 100%;
+  min-width: 0;
+  scroll-snap-align: none;
+}
+.gacha-results[data-phase='summary'] .gym-results__item > strong {
+  min-width: 0;
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.gacha-results[data-phase='summary'] .gym-results__item > small {
+  display: block;
+  margin-top: 2px;
+  font-size: 7px;
+  line-height: 1.25;
+}
+.gacha-results[data-phase='summary'] .gym-reward {
+  filter: drop-shadow(0 7px 10px #0008);
+}
+.gacha-results[data-phase='summary'] .gym-reward__new {
+  inset: 4px 4px auto;
+  padding: 3px;
+  background: #15130ed9;
+  border: 1px solid currentColor;
+  font-size: 6px;
+  line-height: 1;
+}
+.gacha-results[data-phase='summary'] .gym-reward__conversion {
+  inset: auto 3px 3px;
+  min-height: 30px;
+  padding: 4px;
+  gap: 3px;
+}
+.gacha-results[data-phase='summary'] .gym-reward__conversion .game-glyph {
+  --glyph-size: 18px;
+}
+.gacha-results[data-phase='summary'] .gym-reward__conversion span {
+  font-size: 5px;
+}
+.gacha-results[data-phase='summary'] .gym-reward__conversion strong {
+  margin-top: 1px;
+  font-size: 6px;
+}
+.gacha-results[data-phase='summary'] .gym-results__actions {
+  flex: none;
+  margin-top: 4px;
+}
+
+@media (max-width: 700px) {
+  .gacha-results[data-phase='summary'] {
+    padding-inline: 12px;
+  }
+  .gacha-results[data-phase='summary'] .gacha-results__signal b {
+    font-size: 7px;
+  }
+  .gacha-results[data-phase='summary'] .gacha-results__emblem.game-glyph {
+    --glyph-size: 28px;
+  }
+  .gacha-results[data-phase='summary'] h2 {
+    font-size: 27px;
+  }
+  .gacha-results[data-phase='summary'] .gym-results__grid,
+  .gacha-results[data-phase='summary'] .gym-results__grid--ten {
+    grid-template-columns: repeat(3, minmax(0, 112px));
+    max-width: 352px;
+    gap: 11px 7px;
+    margin-block: 11px 9px;
+  }
+
+  /* Punching shares one bounded stage with its HUD. The late purchase-dock
+     min-height/padding rules must not survive after the offer is removed. */
+  .trading-post > .gym.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gym__arena {
+    height: 100%; /* Override the legacy 470px single-pull arena. */
+  }
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__ringside {
+    position: absolute;
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, transparent, #101513 22%, #101513 100%);
+  }
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__rounds {
+    margin-bottom: 7px;
+  }
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__combo {
+    margin-bottom: 8px;
+  }
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gacha-stage__bag-cue {
+    top: 48%;
+  }
+}
+
+@media (max-height: 550px) and (orientation: landscape) {
+  .trading-post > .gym.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .gacha-results[data-phase='summary'] {
+    padding-block: 8px 12px;
+  }
+  .gacha-results[data-phase='summary'] .gacha-results__emblem,
+  .gacha-results[data-phase='summary'] > p {
+    display: none;
+  }
+  .gacha-results[data-phase='summary'] h2 {
+    margin-block: 1px 4px;
+    font-size: 24px;
+  }
+  .gacha-results[data-phase='summary'] .gym-results__grid {
+    gap: 8px;
+    margin-block: 8px;
+  }
+}

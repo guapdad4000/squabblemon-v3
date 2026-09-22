@@ -10,3 +10,9 @@ Authenticated UI fixes need real-component fixtures with required-element assert
 **How to apply:** Fail if the target component is missing; check the final action after scrolling, hit-test it, and verify its callback. Inspect screenshots of the relevant state. Keep fixtures out of production routes and mock API response contracts accurately. Test decoration bounds as well as page overflow.
 
 For results, also assert that the primary continuation action is visible on first render and does not overlap earnings. Correct portrait asset selection and successful scroll-to-click checks alone can still leave an oversized scene with its primary action below the fold.
+
+Use production-sized reward batches in layout fixtures, not shortened samples.
+
+**Why:** A ten-pack fixture containing only ten rewards concealed the scrolling requirements of the real sixty-reward haul. Geometry checks also missed empty strips between an independently sized scene and its controls.
+
+**How to apply:** Match real batch cardinality, inspect the final item and continuation action after scrolling, and measure spacing between adjacent regions as well as their viewport bounds.

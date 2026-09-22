@@ -2,12 +2,24 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FadePark } from '../src/pages/game/FadePark';
+import { CityHeader } from '../src/components/venue/CityHeader';
+import GameSoundtrack from '../src/components/GameSoundtrack';
+import { rankedStats, rankProgress } from '@workspace/squabblemon-engine/multiplayer';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { cardCatalog } from '../src/data';
 import '../src/index.css';
 import '../src/styles/fade-park.css';
 
 const queryClient = new QueryClient();
+const stats = { ...rankedStats(null), points: 105, wins: 10, losses: 12, draws: 5 };
+const nativeFetch = window.fetch.bind(window);
+window.fetch = (input, init) => {
+  const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url, location.href);
+  if (url.pathname.endsWith('/api/multiplayer/ranked')) {
+    return Promise.resolve(Response.json({ stats, progress: rankProgress(stats.points), room: null }));
+  }
+  return nativeFetch(input, init);
+};
 
 const allCardIds = cardCatalog.map(c => c.catalogId);
 
@@ -15,8 +27,11 @@ const bootstrap: PlayerBootstrap = {
   profile: {
     id: 'fixture-player',
     username: 'Fixture Player',
+    displayName: 'A very long player name',
+    streetRep: 735,
+    packTickets: 12,
     createdAt: new Date().toISOString(),
-    softCurrency: 1000,
+    softCurrency: 42485,
     hardCurrency: 100,
     onboardingStep: 'complete',
     level: 5,
@@ -68,6 +83,10 @@ const bootstrap: PlayerBootstrap = {
 
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
-    <FadePark bootstrap={bootstrap} />
+    <GameSoundtrack />
+    <div className="immersive-shell">
+      <CityHeader bootstrap={bootstrap} />
+      <FadePark bootstrap={bootstrap} />
+    </div>
   </QueryClientProvider>
 );

@@ -6,13 +6,19 @@ import { MusicControls } from '../src/components/MusicControls';
 import GameSoundtrack from '../src/components/GameSoundtrack';
 import { RewardReveal } from '../src/components/RewardReveal';
 import { rewardReceipts } from '../src/lib/rewardReceipts';
+import { setBattleMusicMode } from '../src/musicStore';
 import '../src/index.css';
 import '../src/styles/studio.css';
 function Fixture() {
   const [location] = useLocation();
   return <main style={{padding:24,color:'white',background:'#16110c',minHeight:'100vh'}}>
     <GameSoundtrack/><RewardReveal/><MusicControls/>
-    <p>{location}</p><nav style={{display:'flex',gap:20}}>{['/game','/game/story','/game/play','/game/shop'].map(path=><Link key={path} href={path}>{path}</Link>)}</nav>
+    <p>{location}</p><nav style={{display:'flex',gap:20}}>{['/game','/game/story','/game/play','/game/shop','/game/online'].map(path=><Link key={path} href={path}>{path}</Link>)}</nav>
+    <div>
+      <button data-testid="music-battle" onClick={()=>setBattleMusicMode(null)}>Battle music</button>
+      <button data-testid="music-victory" onClick={()=>setBattleMusicMode('victory')}>Victory music</button>
+      <button data-testid="music-defeat" onClick={()=>setBattleMusicMode('defeat')}>Defeat music</button>
+    </div>
     <button onClick={()=>rewardReceipts.show({id:crypto.randomUUID(), title:'Bounty collected', preview:true, items:[{label:'Clout',amount:100,glyph:'cloutStack'},{label:'Tickets',amount:2,glyph:'ticket'},{label:'Style Shards',amount:25,glyph:'shards'}]})}>Preview reward</button>
   </main>;
 }
