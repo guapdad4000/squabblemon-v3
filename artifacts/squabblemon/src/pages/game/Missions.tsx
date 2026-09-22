@@ -61,7 +61,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             {ready ? `${ready} ${ready === 1 ? 'reward' : 'rewards'} ready to claim` : 'Every fade moves you forward'}
           </span>
         </div>
-        <img src={getCardImage('techbro-rich')} alt="" />
+        <img src={getCardImage('techbro-rich')} alt="" draggable={false} />
       </header>
       <nav className="studio-tabs" aria-label="Progression categories">
         <button aria-pressed={tab === 'bounties'} onClick={() => setTab('bounties')}>

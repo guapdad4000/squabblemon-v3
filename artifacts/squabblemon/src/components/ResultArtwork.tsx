@@ -27,9 +27,9 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
     <picture>
       <source media="(max-aspect-ratio: 1/1), (max-width: 639px)" srcSet={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-portrait`)} />
       {!cinematic && <source media="(max-width: 1100px)" srcSet={asset(victory ? 'win-wide-centered' : 'loss-wide-harbor')} />}
-      <img className="result-art__image" src={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-wide`)} alt="" width={1672} height={941} fetchPriority="high" />
+      <img draggable={false} className="result-art__image" src={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-wide`)} alt="" width={1672} height={941} fetchPriority="high" />
     </picture>
-    {!draw && !scene && <img className="result-art__outcome-mark" src={getAssetUrl(`assets/results/${outcome === 'win' ? 'win-w' : 'loss-l'}.gif`)} alt="" aria-hidden="true" />}
+    {!draw && !scene && <img draggable={false} className="result-art__outcome-mark" src={getAssetUrl(`assets/results/${outcome === 'win' ? 'win-w' : 'loss-l'}.gif`)} alt="" aria-hidden="true" />}
     {!scene && storyStars !== undefined && <div className="result-art__story-stars" aria-label={`${storyStars} of 3 story stars earned`}>
       {[1, 2, 3].map(n => <Star key={n} fill={n <= storyStars ? 'currentColor' : 'none'} aria-hidden="true" />)}
     </div>}

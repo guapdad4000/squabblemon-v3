@@ -727,10 +727,21 @@
   z-index: 3;
   display: flex;
   justify-content: center;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+  scrollbar-width: none;
   padding: calc(76px + env(safe-area-inset-top, 0px)) clamp(14px, 4vw, 48px) max(24px, env(safe-area-inset-bottom, 0px));
+}
+.card-inspector-scroll::-webkit-scrollbar,
+.card-inspector-shell .dossier-paper::-webkit-scrollbar {
+  display: none;
+}
+.collector-card,
+.collector-card img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .card-inspector-close {
   position: absolute;
@@ -782,11 +793,8 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
 .card-inspector-shell .dossier-paper {
   width: 100%;
   min-width: 0;
-  max-height: min(calc(100dvh - 112px - env(safe-area-inset-top, 0px)), 760px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--rarity-color, var(--resume-red)) 55%, transparent) transparent;
+  max-height: none;
+  overflow: visible;
 }
 .card-inspector-shell .dossier-banner__meta {
   color: var(--resume-ink-soft);
@@ -884,6 +892,7 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
     align-self: stretch;
     max-height: calc(100dvh - 84px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
+    scrollbar-width: none;
     padding: 16px 18px 22px;
   }
   .card-inspector-shell .dossier-banner {

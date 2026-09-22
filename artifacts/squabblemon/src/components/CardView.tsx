@@ -191,7 +191,7 @@ function CardViewComponent({
         ${isInspector ? 'bg-gradient-to-br from-zinc-600 to-zinc-900' : ''}
       `}>
         <div className="relative w-full h-full bg-zinc-950 card-bevel-inner overflow-hidden flex flex-col group/inner">
-          <img src={backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" className="collector-wallpaper" />
+          <img src={backgroundUrl ?? (!isEnemy && (!instance || instance.owner === 'player') ? equippedScene : undefined) ?? getCardWallpaper(card.type)} alt="" loading="lazy" decoding="async" draggable={false} className="collector-wallpaper" />
           <div className="collector-atmosphere" aria-hidden="true" />
           <div className="absolute inset-0 bg-[image:var(--rarity-pattern)] opacity-20 mix-blend-screen pointer-events-none z-0" />
 
@@ -205,6 +205,7 @@ function CardViewComponent({
             : <img
                 src={getCardImage(card.id, variantId)}
                 alt=""
+                 draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
               />}
 

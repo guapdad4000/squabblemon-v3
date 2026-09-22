@@ -51,6 +51,8 @@ async function verifyDetails(page, name, mode, width, height, touch) {
   assert.ok(Math.abs(geometry.copyBottom - geometry.cardBottom) <= 18, 'Description sits at the card bottom');
   assert.ok(geometry.effectTop > geometry.cardMiddle && geometry.effectFont >= 11, 'Description is readable in the lower half');
   assert.ok(await dialog.locator('[data-testid=card-inspector] h4').evaluate(element => element.scrollWidth <= element.clientWidth + 1), 'Card name fits its artwork width');
+  assert.equal(await dialog.locator('.collector-card img').evaluateAll(images => images.every(image => image.draggable === false)), true, 'Card artwork is not natively draggable');
+  assert.equal(await dialog.locator('.collector-card').evaluateAll(cards => cards.every(card => getComputedStyle(card).userSelect === 'none')), true, 'Card artwork cannot be selected like webpage content');
   await page.screenshot({ path: `../../screenshots/card-details-${mode}-${name}.jpg`, type: 'jpeg', quality: 85 });
   // Scrolling either the portrait page or desktop dossier must not move dismissal.
   await page.locator('.card-inspector-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });
@@ -70,7 +72,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   assert.ok(ready, 'Preview server starts');
-  browser = await chromium.launch({ channel: 'msedge', headless: true });
+  browser = await chromium.launch({ headless: true });
   for (const [name,width,height,touch] of sizes.filter(([name]) => !process.env.CARD_DETAILS_SIZES || process.env.CARD_DETAILS_SIZES.split(',').includes(name))) {
     const context = await browser.newContext({ viewport: {width,height}, hasTouch: touch, isMobile: touch, reducedMotion: name === 'desktop' ? 'no-preference' : 'reduce' });
     await context.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));

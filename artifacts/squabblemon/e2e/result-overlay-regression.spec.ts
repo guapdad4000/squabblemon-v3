@@ -72,6 +72,8 @@ for (const resultCase of resultCases) {
     ];
 
     await expectNoOverlap(mark, 'result mark', protectedRegions);
+    await expect(page.locator('.result-stage')).toHaveCSS('scrollbar-width', 'none');
+    await expect(page.locator('.result-art__image')).toHaveAttribute('draggable', 'false');
 
     const stars = canvas.locator('.result-art__story-stars');
     if (resultCase.stars) {
@@ -96,6 +98,9 @@ for (const outcome of ['win', 'loss'] as const) {
 
     const dialog = page.getByTestId('park-result-dialog');
     const mark = dialog.locator('.park-result-outcome-mark');
+    await expect(dialog).toHaveCSS('scrollbar-width', 'none');
+    await expect(dialog.locator('.park-result-scene > img').first()).toHaveAttribute('draggable', 'false');
+    await expect(mark).toHaveAttribute('draggable', 'false');
     await expectNoOverlap(mark, 'ranked result mark', [
       [dialog.locator('.park-result-score'), 'ranked score panel'],
       [dialog.locator('.park-result-actions'), 'ranked result actions'],

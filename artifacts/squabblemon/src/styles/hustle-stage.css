@@ -1,6 +1,9 @@
 .hustle-stage {
   height: 100%;
-  overflow: auto;
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+  overflow-y: auto;
   background: radial-gradient(ellipse at 90% 0, #33364d55, transparent 50%), #101614;
   padding: 30px clamp(22px, 5vw, 90px) 110px;
 }
@@ -75,6 +78,7 @@
   min-height: 123px;
   padding: 24px 0;
   border-bottom: 1px solid #d7e1ed14;
+  min-width: 0;
 }
 .bounty-line__copy {
   flex: 1;
@@ -331,10 +335,14 @@
     min-height: 245px;
   }
   .hustle-stage__hero > img {
-    right: -40px;
+    right: 0;
     width: 200px;
     height: 270px;
     opacity: 0.5;
+  }
+  .hustle-stage .world-decor[data-decor='bounties'] .world-decor__primary {
+    right: 0;
+    max-width: 100%;
   }
   .hustle-stage__hero h1 {
     font-size: 49px;
@@ -348,7 +356,9 @@
   }
   .bounty-line {
     display: grid;
-    grid-template-columns: 46px 1fr auto;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 46px) minmax(0, 1fr) auto;
     gap: 13px;
     padding: 24px 0;
   }
@@ -359,6 +369,7 @@
   }
   .bounty-line h2 {
     font-size: 14px;
+    overflow-wrap: anywhere;
   }
   .bounty-line p {
     font-size: 11px;

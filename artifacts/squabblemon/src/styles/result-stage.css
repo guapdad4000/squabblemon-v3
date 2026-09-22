@@ -3,12 +3,15 @@
   inset: 0;
   z-index: 50;
   isolation: isolate;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
   background: #0b100f;
   text-align: center;
   padding: 32px 24px 36px;
   --result-color: #edcb81;
 }
+.result-stage::-webkit-scrollbar { display: none; }
 .result-stage.world-decor-host {
   position: fixed;
 }
@@ -484,9 +487,9 @@
 .result-stage--art .result-stage__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; background: #100e0b; }
 .result-stage--art .result-stage__heading h2 { font-size: clamp(18px, 2.3vw, 30px); margin: 0; }
 .result-stage--art .result-stage__heading .studio-eyebrow { font-size: 10px; }
-.result-art { position: relative; container-type: inline-size; width: 100%; color: #2b1b0c; }
+.result-art { position: relative; container-type: inline-size; width: 100%; color: #2b1b0c; user-select: none; -webkit-user-select: none; }
 .result-art picture, .result-art__image { display: block; width: 100%; }
-.result-art__image { height: auto; aspect-ratio: 1672 / 941; }
+.result-art__image { height: auto; aspect-ratio: 1672 / 941; -webkit-user-drag: none; }
 .result-art__outcome-mark {
   position: absolute;
   top: 3%;
