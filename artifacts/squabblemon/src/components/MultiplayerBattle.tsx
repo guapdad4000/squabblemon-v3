@@ -1,9 +1,8 @@
 import { MatchArrival } from './MatchArrival';
-import { AnimatedNumber } from './AnimatedNumber';
-import { GameGlyph } from './venue/GameGlyph';
+import { ParkResult } from './ParkResult';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { cards, getCardImage } from '../data';
+import { cards } from '../data';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
 import { Battle, type OnlineBattlePresentation } from './Battle';
@@ -104,7 +103,6 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     try { if ((await send(command)) !== false) { setSelected(null); setLane(null); setSquabble(false); } }
     finally { sending.current = false; }
   }
-  const result = room.winner === 'draw' ? 'Draw. Run it back.' : room.winner === room.seat ? 'You own the park.' : 'Next fade is yours.';
   const rank = room.ranked?.result;
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
@@ -126,16 +124,13 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && <button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>}
     <Dialog open={room.status === 'complete' && !reviewBoard} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
-      <DialogContent className="park-result" aria-describedby="park-result-description">
-        <span className="park-eyebrow">{room.ranked ? 'Fade Park · ranked result' : 'Friend fade · result'}</span>
-        <DialogTitle className="park-result-title">{room.ranked ? result : room.winner === room.seat ? 'You won the fade.' : room.winner === 'draw' ? 'Draw. Run it back.' : `${rival.name} wins.`}</DialogTitle>
-        <div className="park-result-portraits" aria-hidden="true"><img src={getCardImage(room.members[room.seat]!.hero)} alt="" /><b>VS</b><img src={getCardImage(rival.hero)} alt="" /></div>
-        <DialogDescription id="park-result-description">{room.reason === 'timeout' ? 'The turn clock expired.' : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'} You claimed {room.scores.filter(s => s.winner === room.seat).length}; your rival claimed {room.scores.filter(s => s.winner === rivalSeat).length}.</DialogDescription>
-        {rank && <div className="park-result-rank" data-testid="ranked-result"><GameGlyph name="mastery" /><strong><AnimatedNumber value={rank.delta} prefix={rank.delta >= 0 ? '+' : ''} /> RP</strong><span>{rank.tier} · {rank.after} RP{rank.bot ? ' · Park bot' : ''}</span></div>}
+      <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
+        claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
+        description={room.reason === 'timeout' ? 'The turn clock expired.' : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'}>
         {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => void act({ type: 'rematch' })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
         <button className="online-primary" onClick={onLeave}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
-      </DialogContent>
+      </ParkResult>
     </Dialog>
     <Dialog open={surrender} onOpenChange={setSurrender}><DialogContent className="street-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app does not pause the turn clock.</DialogDescription><button className="online-primary" disabled={busy || !connected} onClick={() => { setSurrender(false); void act({ type: 'surrender' }); }}>Surrender</button><button className="online-secondary" onClick={() => setSurrender(false)}>Keep playing</button></DialogContent></Dialog>
   </main>;

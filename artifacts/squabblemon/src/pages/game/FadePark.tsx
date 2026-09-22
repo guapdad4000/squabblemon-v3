@@ -1,3 +1,4 @@
+import { RankTrophy, RPToken, RankLadder } from '../../components/RankArtwork';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { Search } from 'lucide-react';
@@ -79,7 +80,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <div className="park-content">
       <section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section>
       <section className="park-ticket" aria-label="Find a ranked match">
-        <div className="park-rank"><span className="park-rank-emblem"><GameGlyph name="mastery" /></span><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
+        <div className="park-rank"><RankTrophy tier={progress.tier} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><RPToken /><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
         <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${progress.progress}%` }} /></div>
         <div className="park-rank-caption"><span>{progress.nextAt ? `${progress.nextAt - stats.points} RP to ${progress.nextTier}` : 'Top tier. Keep your spot.'}</span><span>{stats.wins} W · {stats.losses} L · {stats.draws} D</span></div>
         {error || query.isError ? <div className="park-notice" role="alert"><p>{error ?? onlineErrorMessage(query.error)}</p><button onClick={() => { setError(null); void query.refetch(); }}>Reconnect</button></div> : null}
@@ -95,6 +96,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <Link className="park-edit" to="/game/decks">Edit your gang</Link></> : <div className="park-empty"><h3>Bring your first gang.</h3><p>Save ten different cards you own, then meet us here.</p><Link className="park-find" to="/game/decks">Build your gang <ArrowUpRight size={22} /></Link></div>}
           <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>
         </>}
+        <RankLadder />
         <details className="park-rules"><summary>How ranked fades work</summary><p>Same board, same rules. Win two of three districts after six rounds. Each turn lasts 75 seconds; running out of time forfeits the match.</p><p>Base card strength keeps the matchup fair. One SQUABBLE per player. Player wins +25 RP, losses −15; bot wins +12, losses −6. Draws earn +5 against players or +2 against bots. Rank points never fall below zero.</p><p>After ranked matches, search again for a new opponent. Private friend fades have rematches and do not affect rank.</p></details>
       </section>
     </div>
