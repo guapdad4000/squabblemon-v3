@@ -1,3 +1,4 @@
+import { AnimatedNumber } from './AnimatedNumber';
 import { rewardReceipts } from '../lib/rewardReceipts';
 import { GameGlyph } from './venue/GameGlyph';
 import { Link } from 'wouter';
@@ -12,17 +13,17 @@ export function BattleEarnings({ reward, showTotals = true }: { reward: MatchRew
       {showTotals && <div className="battle-earnings__totals">
         <div>
           <GameGlyph name="clout" />
-          <strong>+{reward.softCurrency}</strong>
+          <strong><AnimatedNumber value={reward.softCurrency} prefix="+" /></strong>
           <span>Clout</span>
         </div>
         <div>
           <GameGlyph name="xp" />
-          <strong>+{reward.xp}</strong>
+          <strong><AnimatedNumber value={reward.xp} prefix="+" /></strong>
           <span>Profile XP</span>
         </div>
         <div>
           <GameGlyph name="rep" />
-          <strong>+{reward.streetRep}</strong>
+          <strong><AnimatedNumber value={reward.streetRep} prefix="+" /></strong>
           <span>Street Rep</span>
         </div>
       </div>}
@@ -43,7 +44,7 @@ export function BattleEarnings({ reward, showTotals = true }: { reward: MatchRew
                   <div>
                     <strong>{card?.name ?? entry.cardId}</strong>
                     <p>
-                      +{entry.xpGained} XP · LV {entry.level}
+                      <AnimatedNumber value={entry.xpGained} prefix="+" /> XP · LV {entry.level}
                     </p>
                     <progress
                       max={100}

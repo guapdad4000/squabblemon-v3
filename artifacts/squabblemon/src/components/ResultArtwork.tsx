@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatedNumber } from './AnimatedNumber';
+import '../styles/ui-polish.css';
 import type { MatchReward } from '@workspace/api-client-react';
 import { getAssetUrl } from '../lib/assets';
 import { GameGlyph } from './venue/GameGlyph';
 
 type DistrictResult = { player: number; cpu: number; winner: string };
 /** Panel coordinates follow the supplied artwork; the image is never cropped. */
-export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending }: {
+export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending, actions, onRegroup, onTrain, onRebuild }: {
+  actions?: ReactNode; onRegroup?: () => void; onTrain?: () => void; onRebuild?: () => void;
   victory: boolean; draw: boolean; results: DistrictResult[]; districts: { name: string }[];
   reward?: MatchReward; isGuest?: boolean; rewardError?: unknown; rewardPending?: boolean;
 }) {
+  const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const [scene, setScene] = useState(false);
   const outcome = victory ? 'win' : 'loss';
   const cinematic = scene || draw;
@@ -26,19 +31,20 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
       <div className="result-art__plaque" role="status">
         <span className="result-art__caption">{stateLabel}</span>
         {savedReward && <div className="result-art__rewards">
-          <div><GameGlyph name="cloutStack" /><strong>+{savedReward.softCurrency}</strong><span>Clout</span></div>
-          <div><GameGlyph name="xp" /><strong>+{savedReward.xp}</strong><span>Profile XP</span></div>
-          <div><GameGlyph name="rep" /><strong>+{savedReward.streetRep}</strong><span>Street Rep</span></div>
+          <div><GameGlyph name="cloutStack" /><strong><AnimatedNumber value={savedReward.softCurrency} prefix="+" delay={.2} /></strong><span>Clout</span></div>
+          <div><GameGlyph name="xp" /><strong><AnimatedNumber value={savedReward.xp} prefix="+" delay={.2} /></strong><span>Profile XP</span></div>
+          <div><GameGlyph name="rep" /><strong><AnimatedNumber value={savedReward.streetRep} prefix="+" delay={.2} /></strong><span>Street Rep</span></div>
         </div>}
       </div>
       <div className="result-art__scores" aria-label="Final district scores">
-        {results.map((result, i) => <div key={i} data-winner={result.winner}>
+        {results.map((result, i) => <motion.div key={i} data-winner={result.winner} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .22 }}>
           <span>{districts[i]?.name ?? `District ${i + 1}`}</span>
-          <strong>{result.player}<small> : </small>{result.cpu}</strong>
+          <strong><AnimatedNumber value={result.player} delay={i * .22} /><small> : </small><AnimatedNumber value={result.cpu} delay={i * .22} /></strong>
           <em>{result.winner === 'player' ? 'Secured' : result.winner === 'draw' ? 'Dead heat' : 'Lost'}</em>
-        </div>)}
+        </motion.div>)}
       </div>
-      {!victory && !draw && <div className="result-art__loss-notes" aria-hidden="true"><span>Regroup</span><span>Train</span><span>Rebuild</span><span>Run it back</span></div>}
+      {!victory && !draw && <nav className="result-art__loss-notes" aria-label="Plan your comeback"><button onClick={onRegroup}>Regroup</button><button onClick={onTrain}>Train</button><button onClick={onRebuild}>Rebuild</button><button onClick={onTrain}>Run it back</button></nav>}
     </>}
+    <div className="result-art__actions">{actions}</div>
   </section>;
 }

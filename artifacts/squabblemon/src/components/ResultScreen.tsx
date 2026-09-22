@@ -1,3 +1,4 @@
+import { navigate } from 'wouter/use-browser-location';
 import { ResultArtwork } from './ResultArtwork';
 import { coachBattle } from '@workspace/squabblemon-engine/insights';
 import { ArrowRight, RotateCcw, Star } from 'lucide-react';
@@ -26,6 +27,7 @@ export function ResultScreen({
   storyMetadata,
   equippedVariants,
 }: any) {
+  const rebuild = () => isGuest ? onChangeDeck?.() : navigate('/game/decks');
   const m = match as Match;
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
@@ -55,24 +57,7 @@ export function ResultScreen({
     </div>
   );
 
-  return (
-    <div
-      className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
-    >
-      <div className="result-stage__content">
-        <header className="result-stage__heading">
-          <span className="studio-eyebrow">
-            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
-            <span>•</span>
-            {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
-          </span>
-          <h2 data-testid="status-match-result">
-            {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
-          </h2>
-        </header>
-        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
-          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending} />
-        <div className="result-stage__receipt">
+  const actions = (
         <nav className="result-stage__actions" aria-label="After the battle">
           {isStory ? (
             <>
@@ -122,11 +107,11 @@ export function ResultScreen({
                 data-testid="button-restart-match"
                 onClick={onRestart}
               >
-                Train Again
+                Continue the fade
                 <ArrowRight size={15} />
               </button>
-              <button className="studio-action" data-testid="button-change-deck" onClick={onChangeDeck}>
-                Adjust Gang
+              <button className="studio-action" data-testid="button-change-deck" onClick={rebuild}>
+                Rebuild the deck
               </button>
               <button className="studio-text-action" onClick={onGoHome}>
                 Home
@@ -134,6 +119,27 @@ export function ResultScreen({
             </>
           )}
         </nav>
+  );
+  return (
+    <div
+      className={`battle-result-screen studio-results result-stage result-stage--art world-decor-host ${isVictory ? 'is-victory' : isDraw ? 'is-draw' : 'is-defeat'}`}
+    >
+      <div className="result-stage__content">
+        <header className="result-stage__heading">
+          <span className="studio-eyebrow">
+            {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
+            <span>•</span>
+            {isVictory ? 'Victory' : isDraw ? 'Draw' : 'Defeat'}
+          </span>
+          <h2 data-testid="status-match-result">
+            {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
+          </h2>
+        </header>
+        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
+          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
+          actions={actions} onRegroup={onGoHome} onTrain={onRestart} onRebuild={rebuild} />
+        <div className="result-stage__receipt">
+
         {isStory && (
           <section className="result-stage__story" aria-label="Story outcome">
             {storyMetadata ? (

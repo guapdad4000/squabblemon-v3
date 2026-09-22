@@ -1,0 +1,60 @@
+{
+  "width": 1792,
+  "height": 1008,
+  "layers": [
+    {
+      "name": "store-sign.webp",
+      "x": 557,
+      "y": 174,
+      "width": 566,
+      "height": 202,
+      "error": 0,
+      "depth": 0.4
+    },
+    {
+      "name": "red-awning.webp",
+      "x": 532,
+      "y": 304,
+      "width": 577,
+      "height": 129,
+      "error": 0,
+      "depth": 0.55
+    },
+    {
+      "name": "street-lamp.webp",
+      "x": 388,
+      "y": 85,
+      "width": 119,
+      "height": 774,
+      "error": 0,
+      "depth": 0.8
+    },
+    {
+      "name": "hanging-light-bulb.webp",
+      "x": 913,
+      "y": 447,
+      "width": 34,
+      "height": 55,
+      "error": 0,
+      "depth": 0.3
+    },
+    {
+      "name": "potted-plants-3.webp",
+      "x": 1271,
+      "y": 533,
+      "width": 102,
+      "height": 305,
+      "error": 0,
+      "depth": 1
+    },
+    {
+      "name": "potted-plants-4.webp",
+      "x": 1165,
+      "y": 513,
+      "width": 130,
+      "height": 327,
+      "error": 0,
+      "depth": 1
+    }
+  ]
+}

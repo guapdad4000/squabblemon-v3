@@ -1,3 +1,4 @@
+import '../styles/ui-polish.css';
 import { setBattleMusicMode } from '../musicStore';
 import { MusicControls } from './MusicControls';
 import { BattleArtPreload, BattleStartArt } from './BattleArt';
@@ -128,7 +129,7 @@ export function createBattleDecisionHandlers(context: BattleDecisionContext) {
 export const getRecentBattleActions = (match: Match, authoritativeHistory?: BattleHistoryEntry[]) =>
   (authoritativeHistory ?? match.effectLog).slice(-6).reverse();
 
-/** Animates a lane score from the previous value to the new one with a quick flash. */
+/** Animates a lane score from the previous value to the new one with an explicit signed change. */
 function PowerScore({
   value, side, tone, testId, reducedMotion,
 }: {
@@ -142,31 +143,34 @@ function PowerScore({
   const rounded = useTransform(motionValue, latest => Math.round(latest).toString());
   const prevRef = useRef(value);
   const [changedKey, setChangedKey] = useState(0);
+  const [delta, setDelta] = useState(0);
   useEffect(() => {
     const from = prevRef.current;
     const to = value;
     prevRef.current = to;
     if (from === to) return;
+    setDelta(to - from);
+    const clear = setTimeout(() => setDelta(0), 1600);
     if (reducedMotion) {
       motionValue.set(to);
       setChangedKey(tick => tick + 1);
-      return;
+      return () => clearTimeout(clear);
     }
     const controls = animate(motionValue, to, { duration: 0.6, ease: [0.2, 0.8, 0.2, 1] });
     setChangedKey(tick => tick + 1);
-    return () => controls.stop();
+    return () => { controls.stop(); clearTimeout(clear); };
   }, [value, motionValue, reducedMotion]);
   const colorClass = tone === 'leading'
     ? (side === 'player' ? 'text-primary' : 'text-accent')
     : 'text-white/55';
   return (
-    <motion.span
+    <span className="score-with-delta"><motion.span
       data-testid={testId}
       key={`${side}-${changedKey}`}
       className={`score-tick score-tick--${side} ${changedKey > 0 ? 'score-tick--changed' : ''} ${colorClass}`}
     >
       <motion.span>{rounded}</motion.span>
-    </motion.span>
+    </motion.span>{delta !== 0 && <motion.small key={changedKey} className="score-delta" initial={reducedMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }}>{delta > 0 ? '+' : ''}{delta}</motion.small>}</span>
   );
 }
 
@@ -545,7 +549,7 @@ export function Battle({
       <div className="min-w-0">
         <div className="battle-guidance-kicker" data-testid={coachedTitle && interactive ? 'tutorial-step-' + (tutorialGuidance as TutorialGuidance).id : undefined}>{tutorialCoach && <span className="dr-fade-coach__name">DR. FADE · </span>}{replaying ? `Replay · ${replay.step === 'before' ? 'Before' : 'After'}` : interactive ? coachedTitle ?? 'Your decision' : presentedEffect ? `${presentedEffect.owner === 'player' ? 'Your' : 'Rival'} ${presentedEffect.type}` : 'Fade flow'}</div>
         <div data-testid="battle-guidance" className="battle-guidance-message">{presentedEffect && <span className={`effect-kind-chip kind-${presentedEffect.kind}`}>{presentedEffect.kind}{presentedEffect.durationLabel ? ` · ${presentedEffect.durationLabel}` : ''}</span>} {phase === 'round-result' || (phase === 'round-intro' && m.round > 1) ? <BattleRound match={m} phase={phase} /> : interactive ? coachedDecision : phaseMessage}</div>
-        {presentedEffect && <div data-testid="effect-causality" className={replaying ? "battle-causality" : "sr-only"}>{triggeredUpgradeName(presentedEffect) && <span data-testid="effect-upgrade-trigger" className="mr-1 font-mono text-[9px] uppercase text-primary">Upgrade · {triggeredUpgradeName(presentedEffect)} · </span>}<b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
+        {presentedEffect && <div data-testid="effect-causality" className={replaying ? "battle-causality" : "battle-causality--live"}>{triggeredUpgradeName(presentedEffect) && <span data-testid="effect-upgrade-trigger" className="mr-1 font-mono text-[9px] uppercase text-primary">Upgrade · {triggeredUpgradeName(presentedEffect)} · </span>}<b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
         {replaying && <div data-testid="replay-controls" className="mt-2 flex flex-wrap items-center gap-2"><button type="button" disabled={replay.step === 'before'} onClick={() => onReplayStep(replay.event, 'before')} className="battle-utility">Before</button><button type="button" disabled={replay.step === 'after'} onClick={() => onReplayStep(replay.event, 'after')} className="battle-utility">After</button><button type="button" onClick={onExitReplay} className="battle-fast-forward">Return to live battle</button><span className="w-full text-[10px] text-white/60">{[replay.event.source, ...replay.event.targets].filter(Boolean).map(participantChange).join(' · ')}</span></div>}
       </div>
       <span data-testid="claims-live" className="battle-claims" aria-label={`District claims: you ${playerClaims}, rival ${cpuClaims}. Win two districts.`} title="Win two districts"><Flag size={13} aria-hidden="true" /><b className="claims-player">{playerClaims}</b><span className="claims-divider">/</span><b className="claims-rival">{cpuClaims}</b><span className="sr-only"> district claims</span></span>

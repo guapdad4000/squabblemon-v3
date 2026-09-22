@@ -1,0 +1,10 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { ResultArtwork } from '../src/components/ResultArtwork';
+import { MatchArrival } from '../src/components/MatchArrival';
+import '../src/index.css';
+import '../src/styles/studio.css';
+import '../src/styles/result-stage.css';
+const mode=new URLSearchParams(location.search).get('mode');
+const action=(name:string)=>()=>{document.body.dataset.action=name};
+createRoot(document.getElementById('root')!).render(mode==='versus' ? <MatchArrival player={{name:'Guap Dad',hero:'dorothy'}} rival={{name:'The Challenger',hero:'powerhouse'}} onContinue={action('enter')} /> : <div className="result-stage result-stage--art"><ResultArtwork victory={mode!=='loss'} draw={false} results={[{player:24,cpu:12,winner:'player'},{player:8,cpu:18,winner:'cpu'},{player:30,cpu:23,winner:'player'}]} districts={[{name:'The Bodega'},{name:'The Subway'},{name:'Fade Park'}]} reward={{softCurrency:120,xp:80,streetRep:12} as any} onRegroup={action('regroup')} onTrain={action('retry')} onRebuild={action('rebuild')} actions={<nav className="result-stage__actions"><button className="studio-action studio-action--gold" onClick={action('continue')}>Continue the fade</button><button className="studio-action" onClick={action('rebuild')}>Rebuild the deck</button><button className="studio-text-action" onClick={action('home')}>Home</button></nav>}/></div>);

@@ -1,3 +1,6 @@
+import { LayeredVenue } from '../../components/venue/LayeredVenue';
+import { CornerStore } from './CornerStore';
+import '../../styles/ui-polish.css';
 import { CharacterUnlock } from '../../components/CharacterUnlock';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { PropArt } from '../../components/venue/PropArt';
@@ -413,6 +416,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     >
       <PageDecor theme="market" />
       <div className="gym__arena" ref={arena}>
+        <LayeredVenue scene="gatcha-bg" />
         <SceneFrame
           kind="gym"
           frameRef={frame}
@@ -897,13 +901,13 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const search = useSearch();
   const params = new URLSearchParams(search);
   const view = params.get('view');
-  const tab =
+  const tab = view === 'corner' ? 'corner' :
     view === 'training' || view === 'market' || (view !== 'packs' && (params.has('item') || params.has('card')))
       ? 'market'
       : 'packs';
-  function selectTab(next: 'market' | 'packs') {
+  function selectTab(next: 'market' | 'packs' | 'corner') {
     const query = new URLSearchParams(search);
-    query.set('view', next === 'market' ? 'training' : 'packs');
+    query.set('view', next === 'market' ? 'training' : next);
     navigate(`/game/shop?${query}`);
   }
   return (
@@ -911,14 +915,15 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <nav className="market-tabs" aria-label="Shop departments">
         <button aria-pressed={tab === 'packs'} onClick={() => selectTab('packs')}>
           <GameGlyph name="pack" />
-          Gacha
+          Gotcha
         </button>
         <button aria-pressed={tab === 'market'} onClick={() => selectTab('market')}>
           <GameGlyph name="motion" />
           Training
         </button>
+        <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
-      {tab === 'market' ? (
+      {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
         <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (
         <PackGym bootstrap={bootstrap} />

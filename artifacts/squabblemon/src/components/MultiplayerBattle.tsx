@@ -1,3 +1,6 @@
+import { MatchArrival } from './MatchArrival';
+import { AnimatedNumber } from './AnimatedNumber';
+import { GameGlyph } from './venue/GameGlyph';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cards, getCardImage } from '../data';
@@ -60,7 +63,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   useEffect(() => {
     if (!arrival) return;
     try { sessionStorage.setItem(arrivalKey, 'seen'); } catch { /* Storage is optional. */ }
-    const timer = setTimeout(() => setArrival(false), reducedMotion ? 350 : 1200);
+    const timer = setTimeout(() => setArrival(false), reducedMotion ? 600 : 2600);
     return () => clearTimeout(timer);
   }, [arrival, arrivalKey, reducedMotion]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -105,7 +108,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const rank = room.ranked?.result;
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
-    {arrival && <div className="park-arrival" role="status" data-testid="match-arrival"><span className="park-eyebrow">{room.ranked ? 'Fade Park · match found' : 'Friend fade · ready'}</span><div><section><img src={getCardImage(room.members[room.seat]!.hero)} alt="" /><strong>{room.members[room.seat]!.name}</strong></section><b>VS</b><section><img src={getCardImage(rival.hero)} alt="" /><strong>{rival.name}</strong></section></div><p>{room.ranked?.opponent === 'bot' ? 'Park Bot · ranked sparring' : 'Live 1v1'} · Three districts. One fade.</p></div>}
+    <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     <LayoutGroup><Battle match={projected.match} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
       online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected }}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
@@ -128,12 +131,12 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
         <DialogTitle className="park-result-title">{room.ranked ? result : room.winner === room.seat ? 'You won the fade.' : room.winner === 'draw' ? 'Draw. Run it back.' : `${rival.name} wins.`}</DialogTitle>
         <div className="park-result-portraits" aria-hidden="true"><img src={getCardImage(room.members[room.seat]!.hero)} alt="" /><b>VS</b><img src={getCardImage(rival.hero)} alt="" /></div>
         <DialogDescription id="park-result-description">{room.reason === 'timeout' ? 'The turn clock expired.' : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'} You claimed {room.scores.filter(s => s.winner === room.seat).length}; your rival claimed {room.scores.filter(s => s.winner === rivalSeat).length}.</DialogDescription>
-        {rank && <div className="park-result-rank" data-testid="ranked-result"><strong>{rank.delta >= 0 ? '+' : ''}{rank.delta} RP</strong><span>{rank.tier} · {rank.after} RP{rank.bot ? ' · Park bot' : ''}</span></div>}
+        {rank && <div className="park-result-rank" data-testid="ranked-result"><GameGlyph name="mastery" /><strong><AnimatedNumber value={rank.delta} prefix={rank.delta >= 0 ? '+' : ''} /> RP</strong><span>{rank.tier} · {rank.after} RP{rank.bot ? ' · Park bot' : ''}</span></div>}
         {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => void act({ type: 'rematch' })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
         <button className="online-primary" onClick={onLeave}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
       </DialogContent>
     </Dialog>
-    <Dialog open={surrender} onOpenChange={setSurrender}><DialogContent><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app does not pause the turn clock.</DialogDescription><button className="online-primary" disabled={busy || !connected} onClick={() => { setSurrender(false); void act({ type: 'surrender' }); }}>Surrender</button><button className="online-secondary" onClick={() => setSurrender(false)}>Keep playing</button></DialogContent></Dialog>
+    <Dialog open={surrender} onOpenChange={setSurrender}><DialogContent className="street-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app does not pause the turn clock.</DialogDescription><button className="online-primary" disabled={busy || !connected} onClick={() => { setSurrender(false); void act({ type: 'surrender' }); }}>Surrender</button><button className="online-secondary" onClick={() => setSurrender(false)}>Keep playing</button></DialogContent></Dialog>
   </main>;
 }

@@ -1,3 +1,6 @@
+import { AnimatedNumber } from '../../components/AnimatedNumber';
+import { GameGlyph } from '../../components/venue/GameGlyph';
+import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -76,7 +79,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <div className="park-content">
       <section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section>
       <section className="park-ticket" aria-label="Find a ranked match">
-        <div className="park-rank"><Trophy size={24} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong>{stats.points}<small> RP</small></strong></h2></div></div>
+        <div className="park-rank"><span className="park-rank-emblem"><GameGlyph name="mastery" /></span><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
         <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${progress.progress}%` }} /></div>
         <div className="park-rank-caption"><span>{progress.nextAt ? `${progress.nextAt - stats.points} RP to ${progress.nextTier}` : 'Top tier. Keep your spot.'}</span><span>{stats.wins} W · {stats.losses} L · {stats.draws} D</span></div>
         {error || query.isError ? <div className="park-notice" role="alert"><p>{error ?? onlineErrorMessage(query.error)}</p><button onClick={() => { setError(null); void query.refetch(); }}>Reconnect</button></div> : null}
@@ -88,7 +91,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div> : <>
           {chosen ? <><label className="park-crew-label" htmlFor="park-crew">Your gang<select id="park-crew" value={chosen.id} disabled={busy} onChange={e => setDeckId(e.target.value)}>{crews.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select></label>
             <div className="park-lineup" aria-label="Selected gang">{chosen.cards.map(id => <img key={id} src={getCardImage(id)} alt={cardCatalog.find(c => c.catalogId === id)?.name ?? id} />)}</div>
-            <button className="park-find" data-testid="find-ranked-fade" disabled={busy || query.isPending || query.isError} onClick={() => void search()}><Swords size={22} /><span>{busy ? 'Entering the park…' : query.isPending ? 'Connecting…' : 'Find a fade'}</span><ArrowUpRight size={22} /></button>
+            <button className="park-find" data-testid="find-ranked-fade" disabled={busy || query.isPending || query.isError} onClick={() => void search()}><span className="fade-finder-icon" aria-hidden="true"><GameGlyph name="fight" /><Search /></span><span>{busy ? 'Entering the park…' : query.isPending ? 'Connecting…' : 'Find a fade'}</span><ArrowUpRight size={22} /></button>
             <Link className="park-edit" to="/game/decks">Edit your gang</Link></> : <div className="park-empty"><h3>Bring your first gang.</h3><p>Save ten different cards you own, then meet us here.</p><Link className="park-find" to="/game/decks">Build your gang <ArrowUpRight size={22} /></Link></div>}
           <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>
         </>}

@@ -1,3 +1,4 @@
+import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { Inventory } from './Inventory';
 import { CharacterStyles } from './CharacterStyles';
@@ -12,10 +13,9 @@ import {
   useGetPlayerBootstrap,
 } from '@workspace/api-client-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
-import { GameNav, GameHud } from '../../components/venue/GameNav';
+import { GameNav } from '../../components/venue/GameNav';
 import { useEffect, type ReactNode } from 'react';
-import { Link, Redirect, Route, Switch, useLocation } from 'wouter';
-import { ArrowLeft } from 'lucide-react';
+import { Redirect, Route, Switch, useLocation } from 'wouter';
 
 import { cardCatalog, starterRecipes } from '../../data';
 import { Collection } from './Collection';
@@ -74,7 +74,7 @@ function BootstrapError({
 }
 
 function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
-  return <><GameNav bootstrap={bootstrap} />{children}</>;
+  return <div className="immersive-shell"><CityHeader bootstrap={bootstrap} />{children}</div>;
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -151,12 +151,7 @@ function GameShell({
           <div className="noise-overlay" />
           {normalized === '/game' && <GameNav bootstrap={bootstrap} />}
           <div className="game-shell__content">
-            <GameHud bootstrap={bootstrap} />
-            {normalized !== '/game' && <div className="game-return-bar">
-              <Link href="/game" className="game-return" aria-label="Back to safehouse"><ArrowLeft size={17} /><span>Safehouse</span></Link>
-              <span>{normalized === '/game/shop' ? 'DR. FADE’S' : normalized === '/game/collection' ? 'YOUR COLLECTION' : normalized === '/game/story' ? 'THE STREETS' : 'YOUR TERRITORY'}</span>
-              <GameNav bootstrap={bootstrap} />
-            </div>}
+            <CityHeader bootstrap={bootstrap} />
             <div className="game-route-stage" key={location}>
               {children}
             </div>

@@ -235,6 +235,7 @@ export function CinemaNavSheet({
           </div>
         </nav>
       </div>
+      <div className="express-audio"><MusicControls compact /></div>
     </dialog>
   </>;
 }
