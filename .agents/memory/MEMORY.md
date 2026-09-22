@@ -12,3 +12,4 @@
 - [City Never Sleeps rules](city-never-sleeps-rules.md) — Expansion effects use explicit replay-safe state; movement is deterministic until the transcript records choices.
 - [Squabblemon physical UI language](squabblemon-physical-ui.md) — Favor street-sign controls, torn-paper overlays, deep parallax, and original cel-shaded arcade art.
 - [Visual regression proof](visual-regression-proof.md) — Require mounted real components, final-action clicks, decoration bounds, and screenshots; geometry logs alone missed prior regressions.
+- [Git release history](git-release-history.md) — Workspace checkpoints can diverge from GitHub release ancestry; preserve remote history and release only verified content.

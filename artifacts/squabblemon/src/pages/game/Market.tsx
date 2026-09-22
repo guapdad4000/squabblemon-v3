@@ -131,6 +131,11 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           : id.includes('style')
             ? ('style-hanger' as const)
             : ('deck-stack' as const);
+  const trainingArt: Partial<Record<ShopItemId, string>> = {
+    training: 'assets/training/practice-session.jpeg',
+    'training-intensive': 'assets/training/intensive-training.jpeg',
+    'move-training': 'assets/training/move-coaching.jpeg',
+  };
   return (
     <div
       className="studio-page market training-studio world-decor-host"
@@ -150,7 +155,10 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           </h1>
           <p>A sharper gang. A fresh recruit. Your next big pull.</p>
         </div>
-        <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
+        <picture className="market-hero__fade-art">
+          <source media="(max-width: 600px)" srcSet={getAssetUrl('assets/training/dr-fade-coach.jpeg')} />
+          <img src={getAssetUrl('assets/training/dr-fade-heavy-bag.jpeg')} alt="Dr. Fade working the heavy bag" />
+        </picture>
         <div className="market-wallet">
           <span>
             <GameGlyph name="cloutBag" />
@@ -187,7 +195,11 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
               setError(null);
             }}
           >
-            <PropArt id={propFor(item.id)} />
+            {trainingArt[item.id] ? (
+              <img className="market-offer-art" src={getAssetUrl(trainingArt[item.id]!)} alt="" />
+            ) : (
+              <PropArt id={propFor(item.id)} />
+            )}
             <strong>{item.name}</strong>
             <span>
               {item.id === 'move-training' ? '150–900' : item.price}{' '}

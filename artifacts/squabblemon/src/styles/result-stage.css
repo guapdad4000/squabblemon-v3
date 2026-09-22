@@ -485,6 +485,16 @@
 .result-art { position: relative; container-type: inline-size; width: 100%; color: #2b1b0c; }
 .result-art picture, .result-art__image { display: block; width: 100%; }
 .result-art__image { height: auto; aspect-ratio: 1672 / 941; }
+.result-art__outcome-mark {
+  position: absolute;
+  top: 3%;
+  left: 3%;
+  z-index: 5;
+  width: clamp(74px, 14%, 190px);
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px #000a);
+}
 .result-art__toggle { position: absolute; top: 16px; right: 16px; min-height: 44px; padding: 8px 16px; border: 1px solid #e0b76d; border-radius: 3px; color: #ffe4ac; background: #100e0bea; font-size: 12px; font-weight: 800; box-shadow: 0 2px 12px #0009; }
 .result-art__toggle:focus-visible { outline: 3px solid white; outline-offset: 3px; }
 .result-art__plaque { position: absolute; left: 62%; top: 47%; width: 31%; height: 15%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: .5%; }
@@ -548,6 +558,7 @@
   .result-stage--art .result-stage__heading h2 { margin-top: 6px; font-size: 25px; }
   .result-art__image { aspect-ratio: 941 / 1672 !important; }
   .result-art__toggle { top: 10px; right: 10px; }
+  .result-art__outcome-mark { top: 2.5%; left: 3%; width: 25%; max-width: 126px; }
   .result-art--win .result-art__plaque { left: 15% !important; top: 55% !important; width: 70% !important; height: 12.5% !important; }
   .result-art--win .result-art__scores { left: 9% !important; top: 71.5% !important; width: 81% !important; height: 11.5% !important; gap: 4% !important; }
   .result-art--loss .result-art__plaque { left: 10% !important; top: 59.5% !important; width: 80% !important; height: 10% !important; }

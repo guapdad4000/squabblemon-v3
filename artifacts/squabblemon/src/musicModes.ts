@@ -14,9 +14,8 @@ const originalTrackIds = [
 ] as const;
 const originalSoundtrack = catalogTracks(originalTrackIds);
 export const outcomeSoundtracks = {
-  // Keep the new result cue first without taking the original catalog out of rotation.
-  victory: [...catalogTracks(['squabblemon-win', 'win-music']), ...originalSoundtrack],
-  defeat: [...catalogTracks(['squabblemon-loss']), ...originalSoundtrack],
+  victory: catalogTracks(['squabblemon-win', 'win-music']),
+  defeat: catalogTracks(['squabblemon-loss']),
 };
 const uploadedBattleIds = [
   'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3', 'track-1-wav-master',
@@ -25,9 +24,9 @@ const uploadedBattleIds = [
 export const battleSoundtrack: readonly SoundtrackTrack[] = [...catalogTracks(uploadedBattleIds), ...originalSoundtrack];
 export const modeSoundtracks = {
   battle: battleSoundtrack,
-  training: [modeTrack('training-ost', 'Training OST'), ...battleSoundtrack],
-  story: [modeTrack('story-mode-ost', 'Story Mode OST'), modeTrack('story-mode-ost-2', 'Story Mode OST 2'), ...battleSoundtrack],
-  boss: [modeTrack('boss-fight-ost', 'Boss Fight OST'), ...battleSoundtrack],
+  training: [modeTrack('training-ost', 'Training OST')],
+  story: [modeTrack('story-mode-ost', 'Story Mode OST'), modeTrack('story-mode-ost-2', 'Story Mode OST 2')],
+  boss: [modeTrack('boss-fight-ost', 'Boss Fight OST')],
   gacha: [modeTrack('gatcha-ost', 'Gacha OST')],
   ...outcomeSoundtracks,
 };

@@ -27,6 +27,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
       {!cinematic && <source media="(max-width: 1100px)" srcSet={asset(victory ? 'win-wide-centered' : 'loss-wide-harbor')} />}
       <img className="result-art__image" src={asset(`${draw ? 'win' : outcome}${cinematic ? '-scene' : ''}-wide`)} alt="" width={1672} height={941} fetchPriority="high" />
     </picture>
+    {!draw && !scene && <img className="result-art__outcome-mark" src={getAssetUrl(`assets/results/${outcome === 'win' ? 'win-w' : 'loss-l'}.gif`)} alt="" aria-hidden="true" />}
     {!draw && <button className="result-art__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>{scene ? 'Show results' : 'View scene'}</button>}
     {!scene && <>
       <div className="result-art__plaque" role="status">

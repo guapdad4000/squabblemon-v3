@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "8nQcCmGmciR_XCReXjcuV"
+uri = "file://artifacts/squabblemon/public/assets/results/win-w.gif"
+type = "image"
+title = "Squabblemon Win W"
+description = "Transparent looping flaming W animation used on victory results."
+logical_id = "37a8e59f-240a-46f1-a4c3-c462a86c9374"
+content_hash = "sha256:eba8febd4b8e4d4323fb7ea4e80ae804498832848e948eb9231d90ece0b048da"
+size = 2362767
+mtime_ms = 1790078714608
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/37a8e59f-240a-46f1-a4c3-c462a86c9374/e00092db-958a-4f28-b51d-fa3424066bce"
+storage_version_token = "1790078865483377"
+content_type = "image/gif"
+
+[[outputs]]
+id = "GuybbotlnCSz0qr4Ki1WE"
+uri = "file://artifacts/squabblemon/public/assets/results/loss-l.gif"
+type = "image"
+title = "Squabblemon Loss L"
+description = "Transparent looping icy L animation used on defeat results."
+logical_id = "24c0451d-c14e-473e-a13b-04d398809634"
+content_hash = "sha256:ac3f1dbf35752f0c95bb075cc0f49f28863523e6904cd222a46015597014e5f3"
+size = 2178796
+mtime_ms = 1790078718096
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/24c0451d-c14e-473e-a13b-04d398809634/85eaf2b8-fc76-44f4-98f3-913a45a1e7bb"
+storage_version_token = "1790078866276826"
+content_type = "image/gif"

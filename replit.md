@@ -49,7 +49,7 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Story, boss, training, gacha, victory, and defeat use only their dedicated music queues. General and original tracks belong only in the battle queue; never append battle tracks as fallback music for dedicated modes.
 
 ## Pointers
 

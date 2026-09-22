@@ -179,7 +179,7 @@ test('mode playlists rotate locally, obey muted preferences, and restore the bac
   s.player.setPlaylist(modeSoundtracks.story, { enabled:true, volume:.4, trackIndex:0 }); await settle();
   assert(s.audio.src.endsWith('story-mode-ost.mp3'));
   s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost-2.mp3'));
-  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('battle-music.ogg'));
+  s.audio.dispatchEvent(new Event('ended')); await settle(); assert(s.audio.src.endsWith('story-mode-ost.mp3'));
   s.player.setPlaylist(modeSoundtracks.boss, { enabled:false, volume:.4, trackIndex:0 }); await settle();
   assert.equal(s.audio.paused,true);
   s.player.setPlaylist(soundtrack,background); await settle();
@@ -226,22 +226,18 @@ test('battle modes retain the original six tracks alongside six non-outcome uplo
     'battle-music', 'squabblemon-battle-2', 'track-1-take-2', 'track-1', 'track-1-take-3', 'track-1-wav-master',
     ...originalIds,
   ]);
-  assert.deepEqual(modeSoundtracks.training.map(track => track.id), ['training-ost', ...battleSoundtrack.map(track => track.id)]);
-  assert.deepEqual(modeSoundtracks.story.slice(0, 2).map(track => track.id), ['story-mode-ost', 'story-mode-ost-2']);
-  assert.deepEqual(modeSoundtracks.story.slice(2).map(track => track.id), battleSoundtrack.map(track => track.id));
-  assert.deepEqual(modeSoundtracks.boss.map(track => track.id), ['boss-fight-ost', ...battleSoundtrack.map(track => track.id)]);
+  assert.deepEqual(modeSoundtracks.training.map(track => track.id), ['training-ost']);
+  assert.deepEqual(modeSoundtracks.story.map(track => track.id), ['story-mode-ost', 'story-mode-ost-2']);
+  assert.deepEqual(modeSoundtracks.boss.map(track => track.id), ['boss-fight-ost']);
   for (const playlist of [modeSoundtracks.battle, modeSoundtracks.training, modeSoundtracks.story, modeSoundtracks.boss]) {
     assert.equal(playlist.some(track => ['squabblemon-win', 'win-music', 'squabblemon-loss'].includes(track.id)), false);
   }
 });
 
-test('result playlists lead with explicit cues and retain every original track', async () => {
+test('result playlists use only their dedicated cues', async () => {
   const { outcomeSoundtracks } = await import('./musicModes');
-  const originalIds = [
-    'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
-  ];
-  assert.deepEqual(outcomeSoundtracks.victory.map(track => track.id), ['squabblemon-win', 'win-music', ...originalIds]);
-  assert.deepEqual(outcomeSoundtracks.defeat.map(track => track.id), ['squabblemon-loss', ...originalIds]);
+  assert.deepEqual(outcomeSoundtracks.victory.map(track => track.id), ['squabblemon-win', 'win-music']);
+  assert.deepEqual(outcomeSoundtracks.defeat.map(track => track.id), ['squabblemon-loss']);
   const s = setup();
   s.player.setPlaylist(outcomeSoundtracks.victory, { enabled: true, volume: .24, trackIndex: 0 });
   assert.equal(s.audio.plays, 0);
@@ -258,13 +254,13 @@ test('result playlists lead with explicit cues and retain every original track',
   s.player.dispose();
 });
 
-test('every original catalog ID remains selectable and playable in battle and result queues', async () => {
+test('every original catalog ID remains selectable and playable in the battle queue', async () => {
   const { battleSoundtrack, outcomeSoundtracks } = await import('./musicModes');
   const originalIds = [
     'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
   ];
   assert.equal(soundtrack.length, 15);
-  for (const playlist of [battleSoundtrack, outcomeSoundtracks.victory, outcomeSoundtracks.defeat]) {
+  for (const playlist of [battleSoundtrack]) {
     const s = setup();
     s.player.setPlaylist(playlist, { enabled: true, volume: .24, trackIndex: 0 });
     s.player.unlock(); await settle();
