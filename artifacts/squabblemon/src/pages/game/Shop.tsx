@@ -771,11 +771,13 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         }}
       >
         <div className="gacha-results__atmosphere" aria-hidden="true">
+          <div className="gacha-results__venue">
+            <LayeredVenue scene="gatcha-bg" />
+          </div>
           <span className="gacha-results__spotlight gacha-results__spotlight--left" />
           <span className="gacha-results__spotlight gacha-results__spotlight--right" />
           <span className="gacha-results__smoke" />
           <img className="gacha-results__impact" src={`${PUBLIC_BASE}brand/gacha/knockout-impact.webp`} alt="" />
-          <img className="gacha-results__stage-art" src={`${PUBLIC_BASE}brand/gacha/ringside-reveal-stage.webp`} alt="" />
         </div>
         <div className="gym-results__header">
           <span className="studio-eyebrow">

@@ -1,42 +1,22 @@
 {
-  "width": 1792,
-  "height": 1008,
+  "width": 1024,
+  "height": 1792,
   "layers": [
     {
-      "name": "boxing-ring.webp",
-      "x": 504,
-      "y": 489,
-      "width": 773,
-      "height": 477,
-      "error": 0,
-      "depth": 0.65
-    },
-    {
-      "name": "ring-platform.webp",
-      "x": 503,
-      "y": 683,
-      "width": 776,
-      "height": 283,
-      "error": 0,
-      "depth": 0.7
-    },
-    {
-      "name": "overhead-industrial-lamp.webp",
-      "x": 807,
-      "y": 2,
-      "width": 179,
-      "height": 164,
-      "error": 0,
-      "depth": 0.35
-    },
-    {
-      "name": "hanging-punching-bag-2.webp",
-      "x": 410,
+      "name": "reveal-midground.webp",
+      "x": 0,
       "y": 0,
-      "width": 90,
-      "height": 675,
-      "error": 0,
-      "depth": 0.5
+      "width": 1024,
+      "height": 1792,
+      "depth": 0.38
+    },
+    {
+      "name": "reveal-foreground.webp",
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 1792,
+      "depth": 0.9
     }
   ]
 }

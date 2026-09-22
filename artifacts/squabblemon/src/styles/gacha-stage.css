@@ -49,8 +49,8 @@
 }
 .gacha-stage .gym__vignette {
   background:
-    linear-gradient(90deg, #101513 15%, #101513ee 29%, #10151380 44%, transparent 65%),
-    linear-gradient(0deg, #101513 1%, #101513bb 14%, transparent 36%, #10151333);
+    linear-gradient(90deg, #101513 8%, #101513d9 24%, #10151366 42%, transparent 67%),
+    linear-gradient(0deg, #101513 0%, #101513a8 11%, transparent 34%, #1015131c);
 }
 .gacha-stage__heading {
   grid-column: 1;
@@ -675,7 +675,9 @@
     left: 0;
   }
   .gacha-stage .gym__vignette {
-    background: linear-gradient(0deg, #101513 0%, #101513e6 15%, transparent 40%);
+    background:
+      linear-gradient(0deg, #101513 0%, #101513d9 12%, transparent 35%),
+      radial-gradient(ellipse at 50% 42%, transparent 38%, #07100d66 100%);
   }
   .gacha-stage .gym__offer {
     position: relative;
@@ -1247,7 +1249,6 @@
   pointer-events: none;
   overflow: hidden;
 }
-.gacha-results__stage-art,
 .gacha-results__impact {
   position: absolute;
   inset: 50% auto auto 50%;
@@ -1257,10 +1258,14 @@
   object-fit: contain;
   pointer-events: none;
 }
-.gacha-results__stage-art {
-  z-index: 3;
-  opacity: .76;
-  filter: drop-shadow(0 25px 55px #000c) saturate(.88);
+.gacha-results__venue {
+  position: absolute;
+  z-index: 0;
+  inset: -3%;
+  opacity: .72;
+  filter: saturate(.88) contrast(1.04);
+  mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+  transition: opacity 420ms ease;
 }
 .gacha-results__impact {
   z-index: 1;
@@ -1282,7 +1287,7 @@
   animation-duration: 1.15s;
 }
 .gacha-results[data-phase='summary'] .gacha-results__impact { opacity: .08; }
-.gacha-results[data-phase='summary'] .gacha-results__stage-art { opacity: .2; }
+.gacha-results[data-phase='summary'] .gacha-results__venue { opacity: .2; }
 .gacha-results__spotlight {
   position: absolute;
   top: -24vh;
@@ -1455,11 +1460,7 @@
   .gacha-stage__rounds small { font-size: 6px; }
   .gacha-stage__combo { padding: 9px 7px; margin-bottom: 10px; }
   .gacha-stage__strike { min-width: 0; flex: 1; }
-  .gacha-results__stage-art {
-    width: 125vw;
-    height: 125vw;
-    top: 48%;
-  }
+  .gacha-results__venue { inset: -2%; opacity: .8; }
   .gacha-results__impact {
     width: 112vw;
     height: 112vw;

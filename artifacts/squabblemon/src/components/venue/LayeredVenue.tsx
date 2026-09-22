@@ -43,10 +43,11 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' }) 
     };
 
     const fit = () => {
-      // Provide a bit more overscan budget (1.15) to allow for stronger parallax without showing edges
-      const width = Math.max(node.clientWidth, node.clientHeight * 16 / 9) * 1.15;
+      const aspect = data ? data.width / data.height : 16 / 9;
+      const overscan = scene === 'gatcha-bg' ? 1.08 : 1.15;
+      const width = Math.max(node.clientWidth, node.clientHeight * aspect) * overscan;
       node.style.setProperty('--scene-width', width + 'px');
-      node.style.setProperty('--scene-height', width * 9 / 16 + 'px');
+      node.style.setProperty('--scene-height', width / aspect + 'px');
     };
 
     const loop = () => {
@@ -155,12 +156,12 @@ export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' }) 
       window.removeEventListener('scroll', scroll, true);
       document.removeEventListener('visibilitychange', visibilityChange);
     };
-  }, [reduced, scene]);
+  }, [data, reduced, scene]);
 
   return <div ref={root} className={`layered-venue layered-venue--${scene} layered-venue--enhanced`} aria-hidden="true" data-reduced={!!reduced}>
     <div className="layered-venue__canvas">
       <img className="layered-venue__base" src={getAssetUrl(path + 'background.webp')} alt="" />
-      {data?.layers.map(layer => <img key={layer.name} className={'layered-venue__cutout' + (/lamp|bulb|sign/.test(layer.name) ? ' layered-venue__light' : '')}
+      {data?.layers.map(layer => <img key={layer.name} className={'layered-venue__cutout' + (/lamp|bulb|sign|midground/.test(layer.name) ? ' layered-venue__light' : '')}
         src={getAssetUrl(path + layer.name)} alt="" loading="lazy" style={{ left: `${layer.x / data.width * 100}%`, top: `${layer.y / data.height * 100}%`, width: `${layer.width / data.width * 100}%`, height: `${layer.height / data.height * 100}%`, '--depth': layer.depth } as CSSProperties} />)}
     </div>
   </div>;
