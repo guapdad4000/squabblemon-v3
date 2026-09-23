@@ -7,6 +7,7 @@ import { cards } from '../data';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
 import { Battle, type OnlineBattlePresentation } from './Battle';
+import { BattleStartSmoke } from './BattleStartSmoke';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
 import { BattleFeedback } from '../battleFeedback';
@@ -16,7 +17,7 @@ import { setBattleMusicMode } from '../musicStore';
 
 const definition = (id: string) => cards[id] ?? SUMMON_TEMPLATES[id as keyof typeof SUMMON_TEMPLATES];
 export const asCard = (card: PublicCard): CardInstance => ({
-  ...definition(card.cardId), ...card, id: card.artworkId ?? definition(card.cardId).id,
+  ...definition(card.cardId), ...card, ...card.form, id: card.artworkId ?? definition(card.cardId).id,
   deck: 'online', playedRound: null, lastEffectNote: '',
 });
 
@@ -61,6 +62,9 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     if (room.status !== 'active' || room.round !== 1 || room.events.length > 0) return false;
     try { return sessionStorage.getItem(arrivalKey) !== 'seen'; } catch { return true; }
   });
+  // Share the once-per-game arrival boundary, but play the dust after the
+  // versus poster clears so the full animation is visible over the arena.
+  const [battleStartEffectVisible, setBattleStartEffectVisible] = useState(arrival && !reducedMotion);
   useEffect(() => {
     if (!arrival) return;
     try { sessionStorage.setItem(arrivalKey, 'seen'); } catch { /* Storage is optional. */ }
@@ -112,6 +116,9 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
+    {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
+      <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
+    )}
     <LayoutGroup><Battle match={projected.match} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
       online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected }}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}

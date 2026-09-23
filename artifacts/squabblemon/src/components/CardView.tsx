@@ -97,7 +97,7 @@ function CardViewComponent({
   ].filter(Boolean).join(' ');
   const powerModifier = instance?.powerModifier ?? 0;
   const variantKind = getVariantKind(variantId);
-  const rarity = getCardRarity(card.id, card.kind);
+  const rarity = getCardRarity(instance?.cardId ?? card.id, card.kind);
   const entryAccent = cardEntryAccent(card);
 
   const isLarge = isInspector || (!isBoard && !className.includes('w-[64px]'));

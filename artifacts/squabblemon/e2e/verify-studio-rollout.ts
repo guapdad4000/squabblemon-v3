@@ -6,12 +6,12 @@ import {planShopPurchase} from '@workspace/squabblemon-engine/economy';
 process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY='1';
 const origin='http://127.0.0.1:4180/squabblemon';
 async function run(width:number,height:number){
- const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});page.setDefaultTimeout(30000);
+ const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width,height},reducedMotion:process.env.STUDIO_BATTLE_SMOKE_ONLY?'no-preference':'reduce'});page.setDefaultTimeout(30000);
  const errors:string[]=[];const failedAssets:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',response=>{const request=response.request();if(response.status()<400||!['document','stylesheet','script','image','media','font'].includes(request.resourceType()))return;const url=new URL(response.url());if(url.origin===new URL(origin).origin)failedAssets.push(String(response.status())+' '+url.pathname);});page.on('requestfailed',request=>{if(!['document','stylesheet','script','image','media','font'].includes(request.resourceType()))return;const failure=request.failure()?.errorText??'unknown';if(request.resourceType()==='media'&&failure==='net::ERR_ABORTED')return;const url=new URL(request.url());if(url.origin===new URL(origin).origin)failedAssets.push('FAILED '+url.pathname+' '+failure);});let claimCalls=0,purchaseCalls=0;const purchases=new Map<string,any>();
  const owned=[...ROOKIE_FOUNDATION_IDS],deck={id:'my-crew',name:'My Mixed Gang',cardIds:[...ROOKIE_CORE_IDS],heroCardId:'hooper',recipeId:null,valid:true,issues:[]};
  let wallet:any={softCurrency:2500,packTickets:3,styleShards:250,deckSlots:4,cardProgression:{cornball:{xp:130,level:2,moveTier:0}},ownedVariants:[],collectionProgress:owned.length};
  const missions=[{id:'win-three',cadence:'daily',title:'Own the streets',description:'Win three fades with your gang.',rewardAmount:120,rewardCurrency:'softCurrency',progress:2,goal:3,status:'active'},{id:'play-five',cadence:'weekly',title:'Put in the work',description:'Complete five verified battles.',rewardAmount:1,rewardCurrency:'packTickets',progress:5,goal:5,status:'claimable'},{id:'first-win',cadence:'daily',title:'First blood',description:'Win your first battle of the day.',rewardAmount:50,rewardCurrency:'softCurrency',progress:1,goal:1,status:'claimed'}];
- function bootstrap():any{return {profile:{id:'studio-fixture',displayName:'Rookie',avatarKey:'hooper',onboardingStep:'complete',starterDeckId:'foundation-v1',streetRep:68,xp:400,level:3,...wallet,packPity:0,cosmeticCurrency:0,storyChapter:1,storyNode:2,tutorialCompleted:true,starterRewardClaimed:true,ageConfirmedAt:new Date(0).toISOString(),termsAcceptedAt:new Date(0).toISOString(),settings:{reducedMotion:true,turnTimerEnabled:false},ownedCardIds:owned,discoveredCardIds:owned,equippedVariants:{},unlockedCosmeticIds:['badge:street-draft'],savedDecks:[deck],storyProgress:{gameplay:{cleansed:true,choices:[],wins:{cornball:5,hooper:3,'nail-tech':2}}},inbox:[],packHistory:[],lastActiveAt:new Date(0).toISOString()},missions,nextAction:{id:'play',eyebrow:'Training',title:'Test your idea',description:'Build a gang',destination:'play',rewardLabel:null},packConfig:{id:'street-pack',name:'Street Pack',oddsVersion:'test',softCurrencyCost:200,ticketCost:1,rewardsPerPack:3,pityLimit:10,odds:[]},collectionRoad:[]};}
+  function bootstrap():any{return {profile:{id:process.env.STUDIO_BATTLE_SMOKE_ONLY?'e2e-player':'studio-fixture',displayName:'Rookie',avatarKey:'hooper',onboardingStep:'complete',starterDeckId:'foundation-v1',streetRep:68,xp:400,level:3,...wallet,packPity:0,cosmeticCurrency:0,storyChapter:1,storyNode:2,tutorialCompleted:true,starterRewardClaimed:true,ageConfirmedAt:new Date(0).toISOString(),termsAcceptedAt:new Date(0).toISOString(),settings:{reducedMotion:false,turnTimerEnabled:false},ownedCardIds:owned,discoveredCardIds:owned,equippedVariants:{},unlockedCosmeticIds:['badge:street-draft'],savedDecks:[deck],storyProgress:{gameplay:{cleansed:true,choices:[],wins:{cornball:5,hooper:3,'nail-tech':2}}},inbox:[],packHistory:[],lastActiveAt:new Date(0).toISOString()},missions,nextAction:{id:'play',eyebrow:'Training',title:'Test your idea',description:'Build a gang',destination:'play',rewardLabel:null},packConfig:{id:'street-pack',name:'Street Pack',oddsVersion:'test',softCurrencyCost:200,ticketCost:1,rewardsPerPack:3,pityLimit:10,odds:[]},collectionRoad:[]};}
  const chapters=storyContent.chapters.map(c=>({...c,status:'available',completedNodes:2,totalNodes:c.nodes.length,completedRequiredNodes:2,totalRequiredNodes:c.nodes.filter(n=>!n.optional).length,stars:6,bossStatus:'locked'})), cleared=new Set(['welcome-to-the-block','blue-side-pressure']);
  const nodes=storyContent.chapters.flatMap(c=>c.nodes.map(n=>({chapterId:c.id,nodeId:n.id,title:n.title,kind:n.kind,optional:n.optional,status:cleared.has(n.id)?'cleared':n.prerequisites.every(id=>cleared.has(id))?'available':'locked',mapPosition:n.mapPosition,prerequisites:[...n.prerequisites],rewards:[...n.rewards],cleared:cleared.has(n.id),stars:cleared.has(n.id)?3:0,attempts:0,wins:0,lastOutcome:null,dialogueSeen:n.kind==='battle'?n.preDialogue.map((_,i)=>storyDialogueToken(n.id,'pre',i)):[],bossHighestPhase:0,firstClearedAt:null,lastPlayedAt:null})));
  const campaign={contentVersion:storyContent.version,chapters,nodes,recommendedNodeId:'receipts-on-camera',totalStars:6,completedNodes:2};
@@ -41,7 +41,39 @@ async function run(width:number,height:number){
     console.log(`${width}px: story starter fallback entered the requested battle without routing to deck building.`);
     return;
    }
-  await goto('/play','.activity-stage');await shot('training');await page.getByRole('button',{name:'Events & equal footing',exact:true}).click();await page.getByRole('button',{name:'After-hours boss',exact:true}).click();await shot('events');
+   if(process.env.STUDIO_FIGHT_TABS_ONLY){
+    await goto('/online','.fight-tabs');
+    const tabs=page.getByRole('navigation',{name:'Fight modes'});
+    await tabs.getByRole('link',{name:/Fade Park/}).waitFor();
+    await tabs.getByRole('link',{name:/Friend fades/}).waitFor();
+    await tabs.getByRole('link',{name:/Challenges/}).waitFor();
+    assert.equal(await tabs.getByRole('link').count(),3);
+    await shot('fight-tabs');
+    assert.deepEqual(errors,[]);
+    assert.deepEqual(failedAssets,[]);
+    console.log(`${width}px: Fight modes show Fade Park, Friend fades, and Challenges.`);
+    return;
+   }
+  await goto('/play','.activity-stage');
+  if(process.env.STUDIO_BATTLE_SMOKE_ONLY){
+   await page.getByRole('button',{name:'Enter fight',exact:true}).click();
+   const smoke=page.locator('.battle-start-smoke');
+   await smoke.waitFor();
+   await page.waitForTimeout(700);
+   const bounds=await smoke.boundingBox();
+   assert.ok(bounds,'Battle-start smoke must have visible bounds');
+   assert.equal(Math.round(bounds.x),0);
+   assert.equal(Math.round(bounds.y),0);
+   assert.equal(Math.round(bounds.width),width);
+   assert.equal(Math.round(bounds.height),height);
+   assert.equal(await smoke.evaluate(video=>getComputedStyle(video).objectPosition),'50% 50%');
+   await shot('battle-start-smoke');
+   assert.deepEqual(errors,[]);
+   assert.deepEqual(failedAssets,[]);
+   console.log(`${width}px: transparent battle-start smoke covered the viewport and stayed centered.`);
+   return;
+  }
+  await shot('training');await page.getByRole('button',{name:'Events & equal footing',exact:true}).click();await page.getByRole('button',{name:'After-hours boss',exact:true}).click();await shot('events');
   await goto('/missions','.hustle-stage');const bountyOverflow=await page.locator('.hustle-stage').evaluate(stage=>{const bounds=stage.getBoundingClientRect();return {overflow:stage.scrollWidth>stage.clientWidth+1,scrollWidth:stage.scrollWidth,clientWidth:stage.clientWidth,offenders:[...stage.querySelectorAll('*')].filter(el=>{const r=el.getBoundingClientRect();return r.right>bounds.right+1||r.left<bounds.left-1||el.scrollWidth>el.clientWidth+1;}).slice(0,12).map(el=>({tag:el.tagName,className:(el as HTMLElement).className,left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),clientWidth:el.clientWidth,scrollWidth:el.scrollWidth}))};});assert.equal(bountyOverflow.overflow,false,`Bounties never scroll sideways: ${JSON.stringify(bountyOverflow)}`);await shot('bounties');if(process.env.STUDIO_BOUNTIES_ONLY){assert.deepEqual(errors,[]);assert.deepEqual(failedAssets,[]);console.log(`${width}px: Bounties fit without horizontal scrolling.`);return;}await page.getByRole('button',{name:'Claim reward for Put in the work'}).click();await page.getByRole('alert').waitFor();await page.getByRole('button',{name:'Claim reward for Put in the work'}).click();await page.getByRole('button',{name:'Claim reward for Put in the work'}).waitFor({state:'detached'});assert.equal(claimCalls,2);await page.getByRole('button',{name:/Keep going/}).click();await page.getByRole('button',{name:'Experiments & mastery'}).click();await shot('mastery');await page.locator('.career-stage__gallery').scrollIntoViewIfNeeded();await shot('mastery-wall');
    await goto('/shop?view=training','.market');await shot('market');await page.getByRole('button',{name:'Buy · 100 Clout',exact:true}).scrollIntoViewIfNeeded();await shot('market-checkout');await page.getByRole('button',{name:/Street Pack Ticket/}).click();const before=wallet.softCurrency;await page.getByRole('button',{name:'Buy · 200 Clout',exact:true}).click();await page.getByRole('alert').waitFor();await page.reload({waitUntil:'domcontentloaded'});await page.getByRole('button',{name:'Recover purchase',exact:true}).click();await page.getByText('Purchase complete',{exact:true}).waitFor();assert.equal(wallet.softCurrency,before-200);assert.equal(purchaseCalls,2);assert.equal(purchases.size,1);await page.getByRole('button',{name:'Open your pack',exact:true}).click();await page.locator('.gym').waitFor();await page.locator('.gym__arena > .layered-venue--gatcha-bg').waitFor();await page.waitForTimeout(900);await shot('gacha');if(process.env.STUDIO_GACHA_ONLY){assert.deepEqual(errors,[]);assert.deepEqual(failedAssets,[]);console.log(`${width}px: portrait Gacha scene rendered without failed assets.`);return;}
   await goto('/story','.story-atlas');await shot('story');await page.getByRole('button',{name:'Receipts on Camera, available',exact:true}).click();await page.getByRole('button',{name:'Engage Target',exact:true}).waitFor();await shot('story-briefing');await goto('/story','.story-atlas');await page.getByLabel('Chapter ticket rewards').click();await shot('story-rewards');

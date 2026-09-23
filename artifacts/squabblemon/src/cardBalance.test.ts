@@ -13,7 +13,7 @@ const totalHands = (match: Match, owner: Owner) => match.boards.flat()
   .reduce((total, card) => total + getEffectiveCardPower(card), 0);
 
 test('Mythicals span early and late Motion without inflated printed Hands', () => {
-  assert.equal(mythicals.length, 18);
+  assert.equal(mythicals.length, 19);
   const costs = mythicals.map(card => card.cost);
   assert(costs.filter(cost => cost <= 3).length >= 3, 'early-round Mythicals need more than one cost option');
   assert(costs.filter(cost => cost === 6).length >= 2, 'late finishers should still require six Motion');
@@ -25,7 +25,7 @@ test('Mythicals span early and late Motion without inflated printed Hands', () =
 });
 
 test('every character fits the six-round Motion curve without an oversized free body', () => {
-  assert.equal(characters.length, 131);
+  assert.equal(characters.length, 141);
   assert(characters.filter(card => card.cost === 1).length >= 10, 'gangs need enough opening cards');
   assert(characters.filter(card => card.cost >= 4).length >= 15, 'gangs need mid- and late-round choices');
   for (const cost of [1, 2, 3, 4]) {

@@ -299,6 +299,8 @@ export function applyOnlineCommand(
 export type PublicCard = {
   /** Public artwork identity; summons may share mechanics but use different portraits. */
   artworkId?: string;
+  /** Public battle form presentation; never changes collection identity. */
+  form?: { name: string; ability: string; effect: string };
   smileBomb?: CardInstance['smileBomb'];
   bankedMotion?: number;
   aliceReady?: boolean;
@@ -365,6 +367,8 @@ export function onlineRoomView(
     match = room.match;
   const showCard = (card: CardInstance): PublicCard => ({
     artworkId: card.id,
+    ...(card.cardId === 'luigion' && card.id === 'luigion-powered'
+      ? { form: { name: card.name, ability: card.ability, effect: card.effect } } : {}),
     ...(card.cardId === 'powerhouse' ? { bankedMotion: card.bankedMotion ?? 0 } : {}),
     ...(card.aliceReady ? { aliceReady: true } : {}),
     ...(card.idolId ? { idolId: card.idolId } : {}),

@@ -9,7 +9,10 @@
 /* Result marks, glow, and the ranked fist-clash impact pass. */
 .park-result.park-result--illustrated{box-shadow:0 28px 90px #000c,0 24px 42px #f3ca576b}
 .park-result.park-result--illustrated.outcome-loss{box-shadow:0 28px 90px #000c,0 24px 42px #d832326e}
+.park-result.park-result--illustrated.outcome-draw{box-shadow:0 28px 90px #000c,0 24px 42px #5cc9d06e}
+.outcome-draw .park-result-sun{background:radial-gradient(circle,#79d8dfa3,transparent 68%)}
 .park-result-outcome-mark{position:absolute!important;z-index:3!important;left:10px!important;top:8px!important;width:140px!important;height:140px!important;margin:0!important;object-fit:contain!important;filter:drop-shadow(0 10px 14px #000b)!important}
+.outcome-draw .park-result-outcome-mark{left:22px!important}
 .versus-crack{left:43%;width:14%;filter:contrast(1.8) brightness(.32) drop-shadow(0 0 3px #000) drop-shadow(0 0 12px #080808)}
 .versus-impact{position:absolute;inset:0;z-index:3;pointer-events:none}
 .versus-impact i{position:absolute;left:50%;top:42%;width:4px;height:31%;background:#090909;clip-path:polygon(40% 0,100% 0,58% 43%,100% 43%,0 100%,32% 54%,0 54%);transform-origin:top center;opacity:0;animation:versus-bolt .38s .48s ease-out both}

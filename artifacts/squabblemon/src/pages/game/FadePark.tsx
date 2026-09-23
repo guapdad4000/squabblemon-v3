@@ -21,6 +21,7 @@ export function FightTabs({ friends = false, searching = false }: { friends?: bo
   return <nav className="fight-tabs" aria-label="Fight modes">
     <Link to="/game/online" aria-current={!friends ? 'page' : undefined}><Swords size={15} />Fade Park<span>Ranked</span></Link>
     {searching ? <span className="fight-tabs-disabled" title="Cancel your search to open friend fades"><Users size={15} />Friend fades</span> : <Link to="/game/online?tab=friends" aria-current={friends ? 'page' : undefined}><Users size={15} />Friend fades<span>Private</span></Link>}
+    <Link to="/game/play"><Trophy size={15} />Challenges<span>Solo</span></Link>
   </nav>;
 }
 
@@ -55,7 +56,8 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return () => {
       window.clearTimeout(timer);
       stopSoundEffect(welcomeVoice.current);
-      stopSoundEffect(markerVoice.current);
+      // The fight marker belongs to the transition into the match. Its detached
+      // Audio element must survive this lobby unmount so the line can finish.
     };
   }, []);
 
@@ -83,6 +85,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     operation.current = true; setBusy(true); setError(null);
     stopSoundEffect(welcomeVoice.current);
     welcomeVoice.current = null;
+    stopSoundEffect(markerVoice.current);
     markerVoice.current = playVoiceLine('fade-marker', loadFeedbackPreferences().audioEnabled);
     try {
       // Stop an older lobby read overwriting the search acknowledgement.

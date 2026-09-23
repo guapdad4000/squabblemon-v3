@@ -17,6 +17,35 @@ import {
 
 const zero = () => 0;
 
+test('neighborhood and cellblock characters can be recruited from packs without dropping battle-only forms', () => {
+  const newcomers = [
+    'hair-stylist', 'stylist', 'demario', 'luigion', 'black-cowboy',
+    'inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james',
+  ];
+  const battleOnly = ['demario-mushroom', 'luigion-powered'];
+  for (const id of newcomers) {
+    assert.ok(catalogCardById[id], `${id} must be a collectible character`);
+    const owned = cardCatalog.filter(card => card.catalogId !== id).map(card => card.catalogId);
+    const result = generateStreetPack({
+      ownedCardIds: owned,
+      discoveredCardIds: owned,
+      ownedVariants: [],
+      pity: 0,
+    }, zero);
+    assert.equal(result.rewards[0].kind, 'card');
+    assert.equal(result.rewards[0].cardId, id);
+    assert.equal(result.rewards[0].isNew, true);
+    assert.equal(result.rewards[0].rarity, catalogCardById[id].rarity);
+    assert.ok(result.ownedCardIds.includes(id));
+    assert.ok(result.discoveredCardIds.includes(id));
+    for (const formId of battleOnly) {
+      assert.equal(catalogCardById[formId], undefined);
+      assert.equal(result.ownedCardIds.includes(formId), false);
+      assert.equal(result.rewards.some(reward => reward.cardId === formId), false);
+    }
+  }
+});
+
 test('collection protection handles one or two remaining cards without repeats or duplicate unlocks', () => {
   for (const count of [1, 2]) {
     const missing = cardCatalog.slice(-count).map(card => card.catalogId);

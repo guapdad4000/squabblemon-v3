@@ -198,5 +198,21 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     if (original[i + 3] === 0) { original.fill(0, i, i + 3); imported.fill(0, i, i + 3); }
   }
   assert(imported.equals(original), 'foodz: importing must preserve visible pixels and the full alpha channel');
-  assert.deepEqual(cardCatalog.filter(card => card.artworkLayout === 'portrait').map(card => card.artworkId), ['church-auntie', 'simmy', 'captain-jigga', 'kyle', 'stockz']);
+  assert.deepEqual(cardCatalog.filter(card => card.artworkLayout === 'portrait').map(card => card.artworkId), [
+    'church-auntie',
+    'simmy',
+    'captain-jigga',
+    'hair-stylist',
+    'stylist',
+    'demario',
+    'luigion',
+    'black-cowboy',
+    'inmate-crafty',
+    'inmate-boyfriend',
+    'inmate-informant',
+    'inmate-contraband',
+    'lebron-james',
+    'kyle',
+    'stockz',
+  ]);
 });

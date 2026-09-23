@@ -90,7 +90,7 @@ for (const resultCase of resultCases) {
   });
 }
 
-for (const outcome of ['win', 'loss'] as const) {
+for (const outcome of ['win', 'loss', 'draw'] as const) {
   test(`ranked PvP ${outcome} keeps its mark clear of scores and dialog controls`, async ({ page }) => {
     await page.goto(`/squabblemon/e2e/ui-polish.fixture.html?mode=ranked-${outcome}`);
     await waitForStableArtwork(page);

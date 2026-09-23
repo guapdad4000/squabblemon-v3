@@ -187,16 +187,13 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
         onExit={() => (storyNodeId ? navigate(`/game/story?node=${storyNodeId}`) : setSelected(null))}
       />
     );
-  return (
-    <section
-      className="studio-page activity-stage"
-      style={
-        {
-          '--activity-color': presentation.color,
-          '--activity-scene': `url("${getAssetUrl('assets/venues/red-fence-night-court.webp')}")`,
-        } as React.CSSProperties
-      }
-    >
+  const fightButton = (
+    <button className="studio-action studio-action--gold" onClick={enterFight} style={{ width: '100%' }}>
+      <GameGlyph name="fight" /> Enter fight <ArrowRight size={17} />
+    </button>
+  );
+  const setup = (
+    <>
       <header className="activity-stage__header">
         <button
           className="studio-icon"
@@ -382,11 +379,11 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
                   label="Choose your gang"
                   openLabel="Edit gang"
                 />
-                <div style={{ padding: '0 20px 20px', marginTop: '-10px' }}>
-                  <button className="studio-action studio-action--gold" onClick={enterFight} style={{ width: '100%' }}>
-                    <GameGlyph name="fight" /> Enter fight <ArrowRight size={17} />
-                  </button>
-                </div>
+                {!storyNodeId && (
+                  <div style={{ padding: '0 20px 20px', marginTop: '-10px' }}>
+                    {fightButton}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="activity-stage__empty">
@@ -414,6 +411,26 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
           </>
         )}
       </section>
+    </>
+  );
+  return (
+    <section
+      className={`studio-page activity-stage${storyNodeId ? ' activity-stage--story' : ''}`}
+      style={
+        {
+          '--activity-color': presentation.color,
+          '--activity-scene': `url("${getAssetUrl('assets/venues/red-fence-night-court.webp')}")`,
+        } as React.CSSProperties
+      }
+    >
+      {storyNodeId ? (
+        <>
+          <div className="activity-stage__story-content" role="region" aria-label="Choose your story gang" tabIndex={0}>
+            {setup}
+          </div>
+          {crews.length > 0 && <footer className="activity-stage__story-start">{fightButton}</footer>}
+        </>
+      ) : setup}
     </section>
   );
 }
