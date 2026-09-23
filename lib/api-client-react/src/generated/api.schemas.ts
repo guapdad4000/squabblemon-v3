@@ -781,6 +781,40 @@ export interface StoryNodeProgress {
   lastPlayedAt: string | null;
 }
 
+export type StorySeasonProgressKind = typeof StorySeasonProgressKind[keyof typeof StorySeasonProgressKind];
+
+
+export const StorySeasonProgressKind = {
+  season: 'season',
+  special: 'special',
+} as const;
+
+export type StorySeasonProgressStatus = typeof StorySeasonProgressStatus[keyof typeof StorySeasonProgressStatus];
+
+
+export const StorySeasonProgressStatus = {
+  locked: 'locked',
+  available: 'available',
+  cleared: 'cleared',
+} as const;
+
+export interface StorySeasonProgress {
+  id: string;
+  kind: StorySeasonProgressKind;
+  title: string;
+  subtitle: string;
+  description: string;
+  chapterIds: string[];
+  posterAssetId: string;
+  status: StorySeasonProgressStatus;
+  /** @nullable */
+  recommendedNodeId: string | null;
+  starsEarned: number;
+  starsAvailable: number;
+  clearedNodes: number;
+  totalNodes: number;
+}
+
 export type StoryCampaignBossStatus = typeof StoryCampaignBossStatus[keyof typeof StoryCampaignBossStatus];
 
 
@@ -799,6 +833,7 @@ export interface StoryCampaign {
   recommendedNodeId: string | null;
   totalStars: number;
   completedNodes: number;
+  seasons?: StorySeasonProgress[];
   bossStatus: StoryCampaignBossStatus;
 }
 
@@ -842,6 +877,32 @@ export interface StoryNodeCompleteInput {
   dialogueSeen: string[];
 }
 
+export interface StoryPuzzleCompleteInput {
+  /**
+     * @minLength 2
+     * @maxLength 80
+     */
+  nodeId: string;
+  /**
+     * @minLength 8
+     * @maxLength 80
+     */
+  idempotencyKey: string;
+  /**
+     * @minItems 1
+     * @maxItems 8
+     * @items.minLength 1
+     * @items.maxLength 80
+     */
+  order?: string[];
+  skip?: boolean;
+  /**
+     * @maxItems 100
+     * @items.maxLength 120
+     */
+  dialogueSeen?: string[];
+}
+
 export interface StoryDevelopmentResetInput {
   /**
      * @maxLength 80
@@ -857,6 +918,22 @@ export interface StoryNodeCompletion {
   bootstrap: PlayerBootstrap;
   rewards: StoryGrantedReward[];
   alreadyCompleted: boolean;
+}
+
+export type StoryPuzzleCompletionResolution = typeof StoryPuzzleCompletionResolution[keyof typeof StoryPuzzleCompletionResolution];
+
+
+export const StoryPuzzleCompletionResolution = {
+  solved: 'solved',
+  skipped: 'skipped',
+} as const;
+
+export interface StoryPuzzleCompletion {
+  campaign: StoryCampaign;
+  bootstrap: PlayerBootstrap;
+  rewards: StoryGrantedReward[];
+  alreadyCompleted: boolean;
+  resolution: StoryPuzzleCompletionResolution;
 }
 
 export interface StoryDialogueProgressResponse {

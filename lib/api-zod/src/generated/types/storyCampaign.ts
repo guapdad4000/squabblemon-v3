@@ -8,6 +8,7 @@
 import type { StoryCampaignBossStatus } from './storyCampaignBossStatus';
 import type { StoryChapterProgress } from './storyChapterProgress';
 import type { StoryNodeProgress } from './storyNodeProgress';
+import type { StorySeasonProgress } from './storySeasonProgress';
 
 export interface StoryCampaign {
   contentVersion: number;
@@ -17,5 +18,6 @@ export interface StoryCampaign {
   recommendedNodeId: string | null;
   totalStars: number;
   completedNodes: number;
+  seasons?: StorySeasonProgress[];
   bossStatus: StoryCampaignBossStatus;
 }

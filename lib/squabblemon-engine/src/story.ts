@@ -2,6 +2,12 @@ import { cards, DECK_SIZE, completeEngineCrew } from "./data";
 import chapterOneDialogue from "./chapterOneDialogue";
 import { sequelChapters } from "./seasonChapters";
 import type { StoryEncounterSnapshot, StoryStarObjective as EngineStoryStarObjective } from "./gameEngine";
+import { validateStoryPuzzle, type StoryPuzzleDefinition } from "./storyPuzzles";
+import { seasonTwoChapters } from "./seasonTwo";
+import { specialPresentationChapters } from "./storySpecials";
+import { expandSeasonOneDialogue } from "./seasonOneDialogueExpansion";
+export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
+export { isStoryPuzzleSolution, type StoryPuzzleDefinition } from "./storyPuzzles";
 
 export type StoryMapPosition = { readonly x: number; readonly y: number };
 export type StoryDialogueLine = { readonly speaker: string; readonly portraitAssetId: string; readonly text: string; readonly soundHook?: string };
@@ -12,6 +18,8 @@ export type StoryCinematic = { readonly videoAssetId: string; readonly posterAss
 type StoryNodeBase = {
   readonly id: string; readonly title: string; readonly mapPosition: StoryMapPosition; readonly prerequisites: readonly string[];
   readonly optional: boolean; readonly rewards: readonly StoryReward[]; readonly teaching: StoryTeaching; readonly cinematic: StoryCinematic;
+  /** A non-battle scene with an additional server-validated completion step. */
+  readonly puzzle?: StoryPuzzleDefinition;
 };
 export type StoryDialogueNode = StoryNodeBase & { readonly kind: "dialogue"; readonly scenes: readonly StoryDialogueLine[] };
 export type StoryRewardNode = StoryNodeBase & { readonly kind: "reward"; readonly scenes: readonly StoryDialogueLine[] };
@@ -148,6 +156,16 @@ const rosterEntries: readonly StoryCharacterRosterEntry[] = [
   { id: "promoter", name: "Promoter", portraitAssetId: "assets/characters/promoter.webp", crew: "function", role: "rival", unlockHint: "Check the published bracket." },
   { id: "live-streamer", name: "Live Streamer", portraitAssetId: "assets/characters/live-streamer.webp", crew: "side-show", role: "cameo", unlockHint: "Attend the fundraiser." },
   { id: "delivery-demon", name: "Delivery Demon", portraitAssetId: "assets/characters/delivery-demon.webp", crew: "independent", role: "cameo", unlockHint: "Reach the rooftop notice." },
+  { id: "techbro", name: "Techbro Rich", portraitAssetId: "assets/characters/techbro-rich.webp", crew: "city", role: "rival", unlockHint: "Meet the rooftop's prospective buyer." },
+  { id: "landlord", name: "Landlord", portraitAssetId: "assets/characters/landlord.webp", crew: "city", role: "support", unlockHint: "Follow the Season Two rooftop negotiations." },
+  { id: "oink", name: "Officer Oink", portraitAssetId: "assets/characters/officer-oink.webp", crew: "city", role: "cameo", unlockHint: "Attend the neighborhood's repair inspection." },
+  { id: "inmate-crafty", name: "Inmate Crafty", portraitAssetId: "assets/characters/inmate-crafty.webp", crew: "independent", role: "support", unlockHint: "Help with the Season Two repairs." },
+  { id: "inmate-boyfriend", name: "Inmate Boyfriend", portraitAssetId: "assets/characters/inmate-boyfriend.webp", crew: "independent", role: "cameo", unlockHint: "Attend the Season Two rent party." },
+  { id: "inmate-informant", name: "Inmate Informant", portraitAssetId: "assets/characters/inmate-informant.webp", crew: "independent", role: "support", unlockHint: "Follow the paper trail in Season Two." },
+  { id: "inmate-contraband", name: "Inmate Contraband", portraitAssetId: "assets/characters/inmate-contraband.webp", crew: "independent", role: "support", unlockHint: "Find the neighborhood repair crew." },
+  { id: "lebron-james", name: "Regular guy named LeBron James", portraitAssetId: "assets/characters/lebron-james.webp", crew: "independent", role: "cameo", unlockHint: "Investigate some completely regular behavior." },
+  { id: "sherlock", name: "Sherlock", portraitAssetId: "assets/characters/sherlock.webp", crew: "independent", role: "lead", unlockHint: "Enter The Missing Motion special presentation." },
+  { id: "alice", name: "Alice", portraitAssetId: "assets/characters/alice.webp", crew: "independent", role: "support", unlockHint: "Follow the missing film reel with Sherlock." },
 ];
 
 export const STORY_CHARACTERS: readonly StoryCharacterRosterEntry[] = Object.freeze(rosterEntries);
@@ -194,6 +212,7 @@ export function validateStoryContent(content: StoryContent): StoryContent {
     const local = new Map(chapter.nodes.map((node) => [node.id, node]));
     if (!chapter.nodes.length) fail(`chapter ${chapter.id} has no nodes`);
     for (const node of chapter.nodes) {
+      if (node.puzzle && (node.kind === "battle" || !validateStoryPuzzle(node.puzzle))) fail(`node ${node.id} has invalid puzzle`);
       if (!node.id || nodeIds.has(node.id) || !node.title || !local.has(node.id) || ![node.mapPosition.x, node.mapPosition.y].every((x) => Number.isFinite(x) && x >= 0 && x <= 100)) fail(`invalid node ${node.id}`);
       nodeIds.add(node.id);
       if (!node.teaching.tips.length || !node.teaching.focusMechanics.length || !node.teaching.focusCards.length || node.teaching.focusCards.some((id) => !cards[id]) || !node.cinematic.videoAssetId.endsWith(".mp4") || !node.cinematic.posterAssetId.endsWith(".webp") || !node.cinematic.environmentAssetId) fail(`node ${node.id} presentation is incomplete`);
@@ -231,13 +250,13 @@ export function validateStoryContent(content: StoryContent): StoryContent {
 }
 const screenplay = chapterOneDialogue as Record<string, Partial<Record<'pre' | 'post' | 'main', StoryDialogueLine[]>>>;
 export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:script-v3:${section}:${index}`;
-export const storyContent = validateStoryContent({ version: 5, chapters: [{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyContent = validateStoryContent({ version: 6, chapters: [...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'
     ? { ...node, preDialogue: dialogue.pre ?? node.preDialogue, postDialogue: dialogue.post ?? node.postDialogue }
     : { ...node, scenes: dialogue.main ?? node.scenes };
-}) }, ...sequelChapters] });
+}) }, ...sequelChapters]), ...seasonTwoChapters, ...specialPresentationChapters] });
 export const getStoryChapter = (chapterId: string) => storyContent.chapters.find((chapter) => chapter.id === chapterId);
 export const getStoryNode = (nodeId: string) => storyContent.chapters.flatMap((chapter) => chapter.nodes).find((node) => node.id === nodeId);
 

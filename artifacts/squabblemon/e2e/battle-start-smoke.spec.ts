@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 
-const smokeSelector = 'video.battle-start-smoke';
+const smokeSelector = 'canvas.battle-start-smoke';
 
 async function sendFixtureAction(page: Page, action: 'update' | 'disconnect' | 'reconnect' | 'complete' | 'rematch') {
   await page.evaluate(detail => {
@@ -11,11 +11,30 @@ async function sendFixtureAction(page: Page, action: 'update' | 'disconnect' | '
 async function expectPlayingFullscreen(page: Page, smoke: Locator) {
   await expect(smoke).toHaveCount(1);
   await expect(smoke).toBeVisible();
-  await expect(smoke).toHaveAttribute('src', /assets\/effects\/battle-start-smoke\.webm$/);
-  await expect.poll(() => smoke.evaluate((video: HTMLVideoElement) => video.currentTime), {
-    message: 'the native smoke video should actually play',
+  await expect(smoke).toHaveAttribute('data-source', /assets\/effects\/battle-start-smoke\.webm$/);
+  await expect.poll(() => smoke.getAttribute('data-ready'), {
+    message: 'the keyed smoke canvas should render a decoded frame',
     timeout: 5_000,
-  }).toBeGreaterThan(0.05);
+  }).toBe('true');
+  const readAlphaRange = () => smoke.evaluate((canvas: HTMLCanvasElement) => {
+      const context = canvas.getContext('2d');
+      const pixels = context?.getImageData(0, 0, canvas.width, canvas.height).data;
+      if (!pixels) return null;
+      let min = 255;
+      let max = 0;
+      for (let i = 3; i < pixels.length; i += 16) {
+        min = Math.min(min, pixels[i]);
+        max = Math.max(max, pixels[i]);
+      }
+      return { min, max };
+    });
+  await expect.poll(async () => (await readAlphaRange())?.max ?? 0, {
+      message: 'the decoded dust frame should contain keyed transparency and visible ink',
+      timeout: 5_000,
+    }).toBeGreaterThan(140);
+  const alphaRange = await readAlphaRange();
+  expect(alphaRange).not.toBeNull();
+  expect(alphaRange!.min).toBeLessThan(80);
   const box = await smoke.boundingBox();
   const viewport = page.viewportSize();
   expect(box).not.toBeNull();
@@ -45,13 +64,35 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
 });
 
-test('mounted guest training PlayLoop plays one native full-viewport smoke effect', async ({ page }) => {
+test('mounted guest training PlayLoop plays one keyed full-viewport smoke effect', async ({ page }) => {
   await page.goto('/squabblemon/e2e/battle-start-smoke.fixture.html?flow=local');
   const smoke = page.locator(smokeSelector);
   await expectPlayingFullscreen(page, smoke);
   await expect(page.getByText(/offline training/i)).toBeVisible();
   await smoke.dispatchEvent('ended');
   await expect(smoke).toHaveCount(0);
+});
+
+test('SQUABBLE button icon removes its encoded green field', async ({ page }) => {
+  await page.goto('/squabblemon/e2e/battle-start-smoke.fixture.html?flow=local');
+  const smoke = page.locator(smokeSelector);
+  await expect(smoke).toHaveCount(1);
+  await smoke.dispatchEvent('ended');
+  const icon = page.locator('canvas.battle-squabble__video');
+  await expect(icon).toHaveAttribute('data-source', /assets\/combat\/squabble-button\.webm$/);
+  await expect.poll(() => icon.getAttribute('data-ready'), { timeout: 5_000 }).toBe('true');
+  const alphaRange = await icon.evaluate((canvas: HTMLCanvasElement) => {
+    const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data;
+    let min = 255;
+    let max = 0;
+    for (let i = 3; i < pixels.length; i += 4) {
+      min = Math.min(min, pixels[i]);
+      max = Math.max(max, pixels[i]);
+    }
+    return { min, max };
+  });
+  expect(alphaRange.min).toBeLessThan(20);
+  expect(alphaRange.max).toBeGreaterThan(220);
 });
 
 for (const kind of ['friend', 'ranked', 'bot'] as const) {
@@ -113,7 +154,7 @@ test('a rematch game number gets one fresh effect under the real route key', asy
   await expect(page.getByTestId('online-battle')).toHaveAttribute('data-round', '1');
 });
 
-test('native video error clears the effect without duplication', async ({ page }, testInfo) => {
+test('decode error clears the keyed effect without duplication', async ({ page }, testInfo) => {
   const smoke = await enterOnlineBattle(
     page,
     `/squabblemon/e2e/battle-start-smoke.fixture.html?kind=friend&code=error-${testInfo.project.name}`,

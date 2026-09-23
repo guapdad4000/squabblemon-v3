@@ -12,6 +12,7 @@ import { RivalTell, BattleRound } from './BattleReadability';
 import { BattleCrew } from './BattleCrew';
 import { eventIntensity } from '../battleChoreography';
 import { BattleAttack } from './BattleAttack';
+import { KeyedVideo } from './KeyedVideo';
 import React, { useEffect, useRef, useState } from 'react';
 import { cards, getAssetUrl } from '../data';
 import { CardView } from './CardView';
@@ -586,7 +587,7 @@ export function Battle({
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}
       </div>}
-      <div className="battle-actions"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><video src={getAssetUrl('assets/combat/squabble-button.webm')} autoPlay loop muted playsInline /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button></div>
+      <div className="battle-actions"><div className="battle-motion" aria-label={`Your Motion: ${m.playerMotion}`}><GameGlyph name="motion" className="battle-motion__icon" /><MotionEnergy value={m.playerMotion} testId="motion-player" replaying={replaying} /><div>Your Motion</div></div><button data-testid="button-squabble" aria-pressed={squabble} aria-label={m.squabbleUsed ? 'Squabble spent' : squabble ? 'Disarm Squabble' : 'Arm Squabble'} title={m.squabbleUsed ? 'SQUABBLE has already been used.' : !selectedCard ? 'Choose a card first.' : 'Double this card’s base Hands once per fade.'} className={`battle-squabble ${squabble ? 'is-armed' : ''}`} onClick={() => decisionHandlers.toggleSquabble(selectedCard ?? null)} disabled={m.squabbleUsed || !interactive || !selectedCard || !tutorialSquabbleAllowed}><span className="battle-squabble__sigil" aria-hidden="true"><KeyedVideo src={getAssetUrl('assets/combat/squabble-button.webm')} mode="green" className="battle-squabble__video" loop maxWidth={96} /><b>×2</b></span><span className="battle-squabble__label">{m.squabbleUsed ? 'Spent' : squabble ? 'Armed' : 'Squabble'}</span></button><button data-testid={action.testId} onClick={action.onClick} disabled={action.disabled} className={`battle-primary-action action-${action.type}`}><span>{action.label}</span>{action.type === 'primary' && <ArrowRight size={18} aria-hidden="true" />}</button></div>
     </div>
   </div>;
 }

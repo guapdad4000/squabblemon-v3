@@ -37,6 +37,7 @@
     "test:safehouse-browser": "node e2e/verify-safehouse.mjs",
     "test:e2e:campaign": "playwright test --config e2e/playwright.campaign.config.ts",
     "test:story-phase": "tsx e2e/verify-story-phase.ts",
+    "test:story:seasons": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/storySeasons.test.ts src/storyAssets.test.ts src/components/story/StoryStage.test.tsx src/storyContentExpansion.test.ts",
     "test:mobile-ui": "tsx e2e/verify-mobile-fixes.ts",
     "test:buddy-folks": "tsx e2e/verify-buddy-folks.ts",
     "test:dr-fade": "tsx e2e/verify-dr-fade.ts",

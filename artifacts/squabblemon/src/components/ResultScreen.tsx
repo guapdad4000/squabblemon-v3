@@ -191,7 +191,9 @@ export function ResultScreen({
                     ? storyMetadata.firstClear
                       ? `Encounter cleared · ${earnedStars} / 3 stars`
                       : `This run ${earnedStars} / 3 · Best ${storyMetadata.stars} / 3`
-                    : 'Adjust your gang and claim the runback.'}
+                    : isDraw
+                      ? 'Encounter tied · no side claimed the chapter.'
+                      : 'Adjust your gang and claim the runback.'}
                 </p>
                 <details className="result-stage__details">
                   <summary>Star objectives</summary>

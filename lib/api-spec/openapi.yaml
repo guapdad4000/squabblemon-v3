@@ -130,9 +130,39 @@ paths:
               schema:
                 $ref: "#/components/schemas/StoryNodeCompletion"
         "400":
-          description: Unknown, locked, or battle node
+          description: Battle, puzzle, or otherwise invalid node completion
         "401":
           description: Authentication required
+        "404":
+          description: Story node not found
+        "409":
+          description: Locked node or conflicting idempotency key
+  /player/story/puzzle:
+    post:
+      operationId: completePlayerStoryPuzzle
+      tags: [player]
+      summary: Solve or explicitly skip an available story puzzle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryPuzzleCompleteInput"
+      responses:
+        "200":
+          description: Updated story and player state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryPuzzleCompletion"
+        "400":
+          description: Node has no puzzle or the solution is invalid
+        "401":
+          description: Authentication required
+        "404":
+          description: Story node not found
+        "409":
+          description: Locked node or conflicting idempotency key
   /player/story/nodes/{nodeId}/dialogue:
     post:
       operationId: savePlayerStoryDialogue
@@ -1506,10 +1536,48 @@ components:
           type: integer
         completedNodes:
           type: integer
+        seasons:
+          type: array
+          items:
+            $ref: "#/components/schemas/StorySeasonProgress"
         bossStatus:
           type: string
           enum: [locked, available, in-progress, cleared]
       required: [contentVersion, chapters, nodes, recommendedNodeId, totalStars, completedNodes, bossStatus]
+    StorySeasonProgress:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum: [season, special]
+        title:
+          type: string
+        subtitle:
+          type: string
+        description:
+          type: string
+        chapterIds:
+          type: array
+          items:
+            type: string
+        posterAssetId:
+          type: string
+        status:
+          type: string
+          enum: [locked, available, cleared]
+        recommendedNodeId:
+          type: [string, "null"]
+        starsEarned:
+          type: integer
+        starsAvailable:
+          type: integer
+        clearedNodes:
+          type: integer
+        totalNodes:
+          type: integer
+      required: [id, kind, title, subtitle, description, chapterIds, posterAssetId, status, recommendedNodeId, starsEarned, starsAvailable, clearedNodes, totalNodes]
     StoryNodeCompleteInput:
       type: object
       properties:
@@ -1524,6 +1592,35 @@ components:
             type: string
             maxLength: 120
       required: [idempotencyKey, dialogueSeen]
+      additionalProperties: false
+    StoryPuzzleCompleteInput:
+      type: object
+      properties:
+        nodeId:
+          type: string
+          minLength: 2
+          maxLength: 80
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 80
+        order:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items:
+            type: string
+            minLength: 1
+            maxLength: 80
+        skip:
+          type: boolean
+        dialogueSeen:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 120
+      required: [nodeId, idempotencyKey]
       additionalProperties: false
     StoryDevelopmentResetInput:
       type: object
@@ -1549,6 +1646,23 @@ components:
         alreadyCompleted:
           type: boolean
       required: [campaign, bootstrap, rewards, alreadyCompleted]
+    StoryPuzzleCompletion:
+      type: object
+      properties:
+        campaign:
+          $ref: "#/components/schemas/StoryCampaign"
+        bootstrap:
+          $ref: "#/components/schemas/PlayerBootstrap"
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGrantedReward"
+        alreadyCompleted:
+          type: boolean
+        resolution:
+          type: string
+          enum: [solved, skipped]
+      required: [campaign, bootstrap, rewards, alreadyCompleted, resolution]
     StoryDialogueProgressResponse:
       type: object
       properties:

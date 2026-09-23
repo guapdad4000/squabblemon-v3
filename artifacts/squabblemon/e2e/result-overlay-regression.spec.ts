@@ -90,6 +90,40 @@ for (const resultCase of resultCases) {
   });
 }
 
+for (const resultCase of [
+  { name: 'story-draw', state: 'story-draw', story: true },
+  { name: 'training-draw', state: 'draw', story: false },
+] as const) {
+  test(`${resultCase.name} uses the dedicated tie scene and preserves its actions`, async ({ page }) => {
+    await page.goto(`/squabblemon/e2e/result-stage.fixture.html?state=${resultCase.state}`);
+    await waitForStableArtwork(page);
+
+    const art = page.locator('.result-art');
+    await expect(art).toHaveAttribute('data-result-outcome', 'draw');
+    await expect(art).toHaveAttribute('aria-label', 'Tied battle outcome artwork');
+    await expect(art.locator('.result-art__image')).toHaveAttribute('src', /draw-scene-wide\.webp$/);
+    await expect(art.locator('.result-art__draw-mark')).toHaveAccessibleName('Tie');
+    await expect(page.getByTestId('status-match-result')).toHaveText('Nobody Owns The Room');
+    await expect(page.getByTestId('button-restart-match')).toBeVisible();
+    if (resultCase.story) {
+      await expect(page.getByText('Continue Chapter')).toBeVisible();
+      await page.locator('.result-stage__receipt-drawer').evaluate((drawer: HTMLDetailsElement) => {
+        drawer.open = true;
+      });
+      await expect(page.getByText('Encounter tied · no side claimed the chapter.')).toBeVisible();
+      await expect(page.getByTestId('button-change-deck')).toHaveCount(0);
+    } else {
+      await expect(page.getByTestId('button-change-deck')).toBeVisible();
+      await expect(page.getByText('Home', { exact: true })).toBeVisible();
+    }
+
+    await expect(art).toHaveScreenshot(
+      `${resultCase.name}.png`,
+      { animations: 'disabled', caret: 'hide', scale: 'css' },
+    );
+  });
+}
+
 for (const outcome of ['win', 'loss', 'draw'] as const) {
   test(`ranked PvP ${outcome} keeps its mark clear of scores and dialog controls`, async ({ page }) => {
     await page.goto(`/squabblemon/e2e/ui-polish.fixture.html?mode=ranked-${outcome}`);
@@ -120,6 +154,15 @@ test('phone project renders the overlay fixtures with reduced motion', async ({ 
   await page.goto('/squabblemon/e2e/result-stage.fixture.html?state=story');
   await expect.poll(() => page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
   await expect(page.locator('.result-art__scores > div').first()).toHaveCSS('opacity', '1');
+
+  await page.goto('/squabblemon/e2e/result-stage.fixture.html?state=draw');
+  await waitForStableArtwork(page);
+  await expect(page.locator('.result-art__draw-mark')).toBeVisible();
+  await expect(page.locator('.result-art__scores > div').first()).toHaveCSS('opacity', '1');
+  await expect(page.locator('.result-art')).toHaveScreenshot(
+    'training-draw-phone.png',
+    { animations: 'disabled', caret: 'hide', scale: 'css' },
+  );
 
   await page.goto('/squabblemon/e2e/ui-polish.fixture.html?mode=ranked-win');
   await expect(page.getByTestId('ranked-result')).toBeVisible();

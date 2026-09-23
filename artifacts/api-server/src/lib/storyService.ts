@@ -9,6 +9,7 @@ import {
 import {
   getStoryNode,
   storyContent,
+  storySeasons,
   type StoryChapter,
   type StoryNode,
 } from "@workspace/squabblemon-engine/story";
@@ -220,6 +221,56 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
     (bosses.length && bosses.every((chapter) => chapter.bossStatus === "cleared")
       ? "cleared"
       : "locked");
+  const chaptersById = new Map(chapters.map((chapter) => [chapter.id, chapter]));
+  const nodesByChapter = new Map(
+    orderedChapters.map((chapter) => [
+      chapter.id,
+      nodes.filter((node) => node.chapterId === chapter.id),
+    ]),
+  );
+  const seasons = storySeasons.map((season) => {
+    const seasonChapters = season.chapterIds
+      .map((chapterId) => chaptersById.get(chapterId))
+      .filter((chapter) => chapter !== undefined);
+    const seasonNodes = season.chapterIds.flatMap(
+      (chapterId) => nodesByChapter.get(chapterId) ?? [],
+    );
+    const requiredSeasonNodes = seasonNodes.filter((progress) => {
+      const chapter = storyContent.chapters.find(
+        (item) => item.id === progress.chapterId,
+      );
+      return !chapter?.nodes.find((item) => item.id === progress.nodeId)?.optional;
+    });
+    const recommendedNodeId =
+      seasonNodes.find(
+        (node) =>
+          node.status === "available" && !node.cleared && !node.optional,
+      )?.nodeId ??
+      seasonNodes.find(
+        (node) => node.status === "available" && !node.cleared,
+      )?.nodeId ??
+      null;
+    return {
+      ...season,
+      chapterIds: [...season.chapterIds],
+      status:
+        seasonChapters.length === season.chapterIds.length &&
+        requiredSeasonNodes.length > 0 &&
+        requiredSeasonNodes.every((node) => node.cleared)
+          ? ("cleared" as const)
+          : seasonChapters.some((chapter) => chapter.status !== "locked")
+            ? ("available" as const)
+            : ("locked" as const),
+      recommendedNodeId,
+      starsEarned: seasonNodes.reduce((sum, node) => sum + node.stars, 0),
+      starsAvailable: seasonNodes.reduce(
+        (sum, node) => sum + (node.kind === "battle" ? 3 : 0),
+        0,
+      ),
+      clearedNodes: seasonNodes.filter((node) => node.cleared).length,
+      totalNodes: seasonNodes.length,
+    };
+  });
   return {
     contentVersion: storyContent.version,
     chapters,
@@ -232,6 +283,7 @@ export function buildStoryCampaign(rows: PlayerStoryNodeRecord[]) {
     totalStars: nodes.reduce((sum, node) => sum + node.stars, 0),
     completedNodes: nodes.filter((node) => node.cleared).length,
     bossStatus,
+    seasons,
   };
 }
 

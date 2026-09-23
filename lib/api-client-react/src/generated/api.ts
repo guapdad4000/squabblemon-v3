@@ -47,7 +47,9 @@ import type {
   StoryDevelopmentResetInput,
   StoryDialogueProgressResponse,
   StoryNodeCompleteInput,
-  StoryNodeCompletion
+  StoryNodeCompletion,
+  StoryPuzzleCompleteInput,
+  StoryPuzzleCompletion
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -603,6 +605,77 @@ export const useCompletePlayerStoryNode = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getCompletePlayerStoryNodeMutationOptions(options));
+    }
+
+export const getCompletePlayerStoryPuzzleUrl = () => {
+
+
+
+
+  return `/api/player/story/puzzle`
+}
+
+/**
+ * @summary Solve or explicitly skip an available story puzzle
+ */
+export const completePlayerStoryPuzzle = async (storyPuzzleCompleteInput: StoryPuzzleCompleteInput, options?: RequestInit): Promise<StoryPuzzleCompletion> => {
+
+  return customFetch<StoryPuzzleCompletion>(getCompletePlayerStoryPuzzleUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(storyPuzzleCompleteInput)
+  }
+);}
+
+
+
+
+
+export const getCompletePlayerStoryPuzzleMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryPuzzle>>, TError,{data: BodyType<StoryPuzzleCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryPuzzle>>, TError,{data: BodyType<StoryPuzzleCompleteInput>}, TContext> => {
+
+const mutationKey = ['completePlayerStoryPuzzle'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completePlayerStoryPuzzle>>, {data: BodyType<StoryPuzzleCompleteInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  completePlayerStoryPuzzle(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompletePlayerStoryPuzzleMutationResult = NonNullable<Awaited<ReturnType<typeof completePlayerStoryPuzzle>>>
+    export type CompletePlayerStoryPuzzleMutationBody = BodyType<StoryPuzzleCompleteInput>
+    export type CompletePlayerStoryPuzzleMutationError = ErrorType<void>
+
+    /**
+ * @summary Solve or explicitly skip an available story puzzle
+ */
+export const useCompletePlayerStoryPuzzle = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePlayerStoryPuzzle>>, TError,{data: BodyType<StoryPuzzleCompleteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof completePlayerStoryPuzzle>>,
+        TError,
+        {data: BodyType<StoryPuzzleCompleteInput>},
+        TContext
+      > => {
+      return useMutation(getCompletePlayerStoryPuzzleMutationOptions(options));
     }
 
 export const getSavePlayerStoryDialogueUrl = (nodeId: string,) => {

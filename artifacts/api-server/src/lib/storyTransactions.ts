@@ -15,6 +15,7 @@ import {
   MAX_STARS_PER_BATTLE,
   TICKETS_PER_PERFECT_BATTLE,
   getStoryNode,
+  isStoryPuzzleSolution,
   isStoryCharacterId,
   isStoryCosmeticId,
   storyContent,
@@ -37,19 +38,29 @@ export type GrantedStoryReward = PlayerStoryReward & {
   description: string;
 };
 
-type StoryActionKind = "complete" | "dialogue";
+type StoryActionKind = "complete" | "dialogue" | "puzzle";
 export const isDevelopmentStoryResetEnabled = (
   environment: string | undefined = process.env.NODE_ENV,
 ) => environment === "development";
 
-function canonicalActionPayload(dialogueSeen: string[]) {
-  return { dialogueSeen: [...new Set(dialogueSeen)] };
+type StoryActionPayload = {
+  dialogueSeen: string[];
+  order?: string[];
+  skip?: boolean;
+};
+
+function canonicalActionPayload(payload: StoryActionPayload): StoryActionPayload {
+  return {
+    dialogueSeen: [...new Set(payload.dialogueSeen)],
+    ...(payload.order ? { order: [...payload.order] } : {}),
+    ...(payload.skip !== undefined ? { skip: payload.skip } : {}),
+  };
 }
 
 function actionFingerprint(
   nodeId: string,
   actionKind: StoryActionKind,
-  payload: { dialogueSeen: string[] },
+  payload: StoryActionPayload,
 ) {
   return createHash("sha256")
     .update(JSON.stringify({ nodeId, actionKind, payload }))
@@ -62,9 +73,9 @@ async function claimStoryAction(
   idempotencyKey: string,
   nodeId: string,
   actionKind: StoryActionKind,
-  dialogueSeen: string[],
+  input: StoryActionPayload,
 ): Promise<{ alreadyApplied: boolean; dialogueSeen: string[] }> {
-  const payload = canonicalActionPayload(dialogueSeen);
+  const payload = canonicalActionPayload(input);
   const requestFingerprint = actionFingerprint(nodeId, actionKind, payload);
   const [existing] = await tx
     .select()
@@ -97,7 +108,7 @@ async function claimStoryAction(
     nodeId,
     actionKind,
     requestFingerprint,
-    payload,
+    payload: { dialogueSeen: payload.dialogueSeen },
   });
   return { alreadyApplied: false, dialogueSeen: payload.dialogueSeen };
 }
@@ -339,13 +350,19 @@ export async function completeNonBattleStoryNode(
     if (node.kind === "battle") {
       throw new StoryRequestError(400, "Battle nodes must be completed by a fade");
     }
+    if (node.puzzle) {
+      throw new StoryRequestError(
+        400,
+        "Puzzle nodes must be completed by the puzzle endpoint",
+      );
+    }
     const action = await claimStoryAction(
       tx,
       userId,
       idempotencyKey,
       nodeId,
       "complete",
-      dialogueSeen,
+      { dialogueSeen },
     );
     if (action.alreadyApplied) {
       return {
@@ -412,6 +429,109 @@ export async function completeNonBattleStoryNode(
   };
 }
 
+export async function completeStoryPuzzle(
+  userId: string,
+  nodeId: string,
+  idempotencyKey: string,
+  order: string[] | undefined,
+  skip: boolean | undefined,
+  dialogueSeen: string[] = [],
+) {
+  const resolution = skip === true ? ("skipped" as const) : ("solved" as const);
+  const result = await db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
+    );
+    const rows = await tx
+      .select()
+      .from(playerStoryNodesTable)
+      .where(eq(playerStoryNodesTable.clerkUserId, userId));
+    const { node, chapter } = requireAvailableStoryNode(nodeId, rows);
+    if (!node.puzzle) {
+      throw new StoryRequestError(400, "Story node does not have a puzzle");
+    }
+    if (skip === true && order !== undefined) {
+      throw new StoryRequestError(400, "Puzzle skip cannot include a solution");
+    }
+    if (skip !== true && (!order || !isStoryPuzzleSolution(node.puzzle, order))) {
+      throw new StoryRequestError(400, "Puzzle solution is incorrect");
+    }
+    const action = await claimStoryAction(
+      tx,
+      userId,
+      idempotencyKey,
+      nodeId,
+      "puzzle",
+      {
+        dialogueSeen,
+        ...(order ? { order } : {}),
+        ...(skip !== undefined ? { skip } : {}),
+      },
+    );
+    if (action.alreadyApplied) {
+      return {
+        alreadyCompleted: true,
+        rewards: await getClaimedStoryRewards(tx, userId, nodeId),
+      };
+    }
+    const existing = rows.find((row) => row.nodeId === nodeId);
+    const seen = [
+      ...new Set([...(existing?.dialogueSeen ?? []), ...action.dialogueSeen]),
+    ];
+    const alreadyCompleted = existing?.cleared ?? false;
+    const now = new Date();
+    await tx
+      .insert(playerStoryNodesTable)
+      .values({
+        clerkUserId: userId,
+        chapterId: chapter.id,
+        nodeId,
+        cleared: true,
+        stars: 0,
+        attempts: (existing?.attempts ?? 0) + (alreadyCompleted ? 0 : 1),
+        wins: 0,
+        lastOutcome: `puzzle-${resolution}`,
+        dialogueSeen: seen,
+        firstClearedAt: existing?.firstClearedAt ?? now,
+        lastPlayedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: [playerStoryNodesTable.clerkUserId, playerStoryNodesTable.nodeId],
+        set: {
+          cleared: true,
+          dialogueSeen: seen,
+          firstClearedAt: existing?.firstClearedAt ?? now,
+          lastPlayedAt: now,
+        },
+      });
+    const rewards = await grantStoryRewards(
+      tx,
+      userId,
+      chapter.id,
+      node.id,
+      node.rewards,
+    );
+    const chapterNumber = Math.max(1, chapter.order);
+    const nodeNumber =
+      chapter.nodes.findIndex((item) => item.id === node.id) + 1;
+    await tx
+      .update(playerProfilesTable)
+      .set({
+        storyChapter: sql`greatest(${playerProfilesTable.storyChapter}, ${chapterNumber})`,
+        storyNode: sql`case when ${playerProfilesTable.storyChapter} < ${chapterNumber} then ${nodeNumber} when ${playerProfilesTable.storyChapter} = ${chapterNumber} then greatest(${playerProfilesTable.storyNode}, ${nodeNumber}) else ${playerProfilesTable.storyNode} end`,
+        storyProgress: sql`coalesce(${playerProfilesTable.storyProgress}, '{}'::jsonb) || ${JSON.stringify({ [node.id]: { cleared: true } })}::jsonb`,
+      })
+      .where(eq(playerProfilesTable.clerkUserId, userId));
+    return { alreadyCompleted, rewards };
+  });
+  return {
+    ...result,
+    resolution,
+    campaign: await getPlayerStoryCampaign(userId),
+    bootstrap: await getPlayerBootstrap(userId),
+  };
+}
+
 export async function saveStoryDialogue(
   userId: string,
   nodeId: string,
@@ -450,7 +570,7 @@ export async function saveStoryDialogue(
       idempotencyKey,
       nodeId,
       "dialogue",
-      dialogueSeen,
+      { dialogueSeen },
     );
     if (action.alreadyApplied) return { alreadyApplied: true };
     const seen = [

@@ -609,8 +609,6 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
   z-index: 76;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {

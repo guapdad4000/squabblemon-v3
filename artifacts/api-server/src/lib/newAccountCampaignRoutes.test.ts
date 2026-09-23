@@ -102,6 +102,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
       method,
       headers: {
         "content-type": "application/json",
+        "connection": "close",
         "x-test-user-id": userId,
         "x-campaign-run-id": runId,
       },
@@ -239,22 +240,38 @@ test("new account completes every campaign node through HTTP with isolated, idem
 
     if (node.kind !== "battle") {
       const key = `complete-${node.id}-${runId}`;
-      const first = await playerRequest(`/player/story/nodes/${node.id}/complete`, {
-        idempotencyKey: key,
-        dialogueSeen,
-      });
+      const completionPath = node.puzzle
+        ? "/player/story/puzzle"
+        : `/player/story/nodes/${node.id}/complete`;
+      const completionBody = (seen: string[]) => node.puzzle
+        ? {
+            nodeId: node.id,
+            idempotencyKey: key,
+            order: [...node.puzzle.solution],
+            dialogueSeen: seen,
+          }
+        : {
+            idempotencyKey: key,
+            dialogueSeen: seen,
+          };
+      if (node.puzzle) {
+        const ordinary = await playerRequest(`/player/story/nodes/${node.id}/complete`, {
+          idempotencyKey: `ordinary-puzzle-${node.id}-${runId}`,
+          dialogueSeen,
+        });
+        assert.equal(ordinary.status, 400);
+      }
+      const first = await playerRequest(completionPath, completionBody(dialogueSeen));
       assert.equal(first.status, 200, `${node.id}: ${JSON.stringify(first.body)}`);
-      const retry = await playerRequest(`/player/story/nodes/${node.id}/complete`, {
-        idempotencyKey: key,
-        dialogueSeen,
-      });
+      if (node.puzzle) assert.equal(first.body.resolution, "solved");
+      const retry = await playerRequest(completionPath, completionBody(dialogueSeen));
       assert.equal(retry.status, 200);
       assert.equal(retry.body.alreadyCompleted, true);
       if (!actionConflictTested) {
-        const conflict = await playerRequest(`/player/story/nodes/${node.id}/complete`, {
-          idempotencyKey: key,
-          dialogueSeen: [...dialogueSeen, "changed"],
-        });
+        const conflict = await playerRequest(completionPath, completionBody([
+          ...dialogueSeen,
+          "changed",
+        ]));
         assert.equal(conflict.status, 409);
         actionConflictTested = true;
       }

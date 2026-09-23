@@ -9,7 +9,7 @@ import '../../styles/cinema-atlas.css';
 import '../../styles/story-briefing.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
-import { useLocation } from 'wouter';
+import { useLocation, useSearch } from 'wouter';
 import { Link } from 'wouter';
 import {
   getGetPlayerBootstrapQueryKey,
@@ -26,6 +26,8 @@ import {
   STORY_CHARACTERS,
   getStoryChapter,
   getStoryNode,
+  getStorySeason,
+  getStorySeasonForChapter,
   type StoryBattleNode,
   type StoryDialogueLine,
   type StoryNode,
@@ -40,6 +42,8 @@ import {
   ThreeStarResults,
 } from '../../components/story';
 import { CardRarityTreatment, getRarityClass } from '../../components/CardRarityTreatment';
+import { StoryTheater } from './story/StoryTheater';
+import { StoryPuzzle } from './story/StoryPuzzle';
 
 type SceneEntry = {
   token: string;
@@ -86,23 +90,36 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const mapViewport = useRef<HTMLDivElement>(null);
   const mapDrag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const [location, setLocation] = useLocation();
+  const search = useSearch();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
+  const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [rewardsOpen, setRewardsOpen] = useState(false);
 
   const campaign = storyQuery.data;
   useEffect(() => {
     if (!campaign || typeof campaign !== 'object' || !Array.isArray(campaign.nodes)) return;
-    const requestedNode = new URLSearchParams(window.location.search).get('node');
+    const params = new URLSearchParams(search);
+    const requestedNode = params.get('node');
+    const requestedSeason = params.get('season');
+
     const requestedProgress = campaign.nodes.find((node) => node.nodeId === requestedNode);
     if (requestedProgress && requestedProgress.status !== 'locked') {
       setSelectedNodeId(requestedProgress.nodeId);
       setActiveChapterId(requestedProgress.chapterId);
+      setActiveSeasonId(getStorySeasonForChapter(requestedProgress.chapterId)?.id ?? null);
       return;
     }
-    const recommended = campaign.nodes.find((node) => node.nodeId === campaign.recommendedNodeId);
-    setActiveChapterId((current) => current ?? recommended?.chapterId ?? campaign.chapters[0]?.id ?? null);
-  }, [campaign, location]);
+
+    setSelectedNodeId(null);
+    const season = requestedSeason ? getStorySeason(requestedSeason) : undefined;
+    setActiveSeasonId(season?.id ?? null);
+    const allowedChapters = campaign.chapters.filter(chapter => !season || season.chapterIds.includes(chapter.id));
+    const recommended = campaign.nodes.find(node => node.nodeId === campaign.recommendedNodeId && allowedChapters.some(chapter => chapter.id === node.chapterId))
+      ?? campaign.nodes.find(node => node.status === 'available' && !node.optional && allowedChapters.some(chapter => chapter.id === node.chapterId));
+    setActiveChapterId(current => allowedChapters.some(chapter => chapter.id === current)
+      ? current : recommended?.chapterId ?? allowedChapters[0]?.id ?? null);
+  }, [campaign, location, search]);
 
   const currentChapter = (Array.isArray(campaign?.chapters)
     ? campaign.chapters.find((chapter) => chapter.id === activeChapterId) ??
@@ -125,7 +142,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     const observer = new ResizeObserver(centerNext);
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, [currentChapter?.id, campaign?.recommendedNodeId, campaign?.nodes]);
+  }, [currentChapter?.id, activeSeasonId, campaign?.recommendedNodeId, campaign?.nodes]);
   if (storyQuery.error) {
     return (
       <div className="h-full grid place-items-center bg-zinc-950 p-6 text-center">
@@ -176,6 +193,16 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return <div className="h-full grid place-items-center bg-black text-sm text-white/55">No chapters are active.</div>;
   }
 
+  if (!activeSeasonId && !selectedNodeId) {
+    return (
+      <StoryTheater
+        campaign={campaign}
+        onSelectSeason={(seasonId) => setLocation(`/game/story?season=${seasonId}`)}
+        onContinue={(nodeId) => setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`)}
+      />
+    );
+  }
+
   const nodes = campaign.nodes.filter((node) => node.chapterId === currentChapter!.id);
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
@@ -192,7 +219,8 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </svg>
       <PageDecor theme="story" />
       <header className="story-atlas__header">
-        <ChapterTickets chapters={campaign.chapters} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
+        <button type="button" onClick={() => setLocation('/game/story')} className="text-white/70 text-xs font-mono uppercase tracking-widest absolute top-2 left-4 z-10 hover:text-white">&larr; Browse presentations</button>
+        <ChapterTickets chapters={campaign.chapters.filter(c => !activeSeasonId || getStorySeason(activeSeasonId)?.chapterIds.includes(c.id))} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
         <h1 className="story-title">{currentChapter?.title}</h1>
       </header>
 
@@ -262,7 +290,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 aria-disabled={locked}
                 aria-label={`${node.title}, ${node.status}`}
                 onClick={() => {
-                  if (!locked) setSelectedNodeId(node.nodeId);
+                  if (!locked) setLocation(`/game/story?node=${encodeURIComponent(node.nodeId)}`);
                 }}
                 className={`story-atlas__node ${isNext ? 'is-next' : ''} ${boss ? 'is-boss' : ''} ${locked ? 'is-locked' : ''} ${cleared ? 'is-cleared' : ''} ${node.optional ? 'is-optional' : ''}`}
                 style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
@@ -355,7 +383,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 onSelectBattle={(nodeId) => {
                   const progress = campaign.nodes.find((node) => node.nodeId === nodeId);
                   if (progress?.status !== 'locked') {
-                    setSelectedNodeId(nodeId);
+                    setLocation(`/game/story?node=${encodeURIComponent(nodeId)}`);
                     setRewardsOpen(false);
                   }
                 }}
@@ -368,11 +396,13 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <AnimatePresence>
         {selectedNodeId && (
           <NodeOverlay
+            key={selectedNodeId}
             nodeId={selectedNodeId}
             campaign={campaign}
             onClose={() => {
               setSelectedNodeId(null);
-              if (window.location.search) setLocation('/game/story', { replace: true });
+              const season = getStorySeasonForChapter(currentChapter!.id);
+              setLocation(season ? `/game/story?season=${season.id}` : '/game/story', { replace: true });
             }}
             onStartBattle={(nodeId) => setLocation(`/game/story/play/${nodeId}`)}
           />
@@ -398,7 +428,7 @@ export function NodeOverlay({
   const nodeProgress = campaign.nodes.find((node) => node.nodeId === nodeId);
   const storyNode = getStoryNode(nodeId);
   const actionLock = useRef(false);
-  const [screen, setScreen] = useState<'dialogue' | 'briefing' | 'completed'>('dialogue');
+  const [screen, setScreen] = useState<'dialogue' | 'briefing' | 'puzzle' | 'completed'>('dialogue');
   const [showHistory, setShowHistory] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [grantedRewards, setGrantedRewards] = useState<StoryGrantedReward[]>([]);
@@ -415,13 +445,15 @@ export function NodeOverlay({
   const history = entries.filter((entry) => seen.has(entry.token));
   const replayEntries = entries.filter((entry) => entry.section !== 'post' || nodeProgress?.cleared);
   const isBattle = storyNode?.kind === 'battle';
+  const hasPuzzle = !!storyNode?.puzzle;
+  const isCleared = nodeProgress?.cleared;
   const pending = completeNode.isPending || saveDialogue.isPending;
 
   useEffect(() => {
     setActionError(null);
     if (pendingEntries.length) setScreen('dialogue');
-    else setScreen(isBattle ? 'briefing' : 'completed');
-  }, [isBattle, nodeId, pendingEntries.length]);
+    else setScreen(isBattle ? 'briefing' : hasPuzzle && !isCleared ? 'puzzle' : 'completed');
+  }, [isBattle, hasPuzzle, isCleared, nodeId, pendingEntries.length]);
 
   if (!storyNode || !nodeProgress) {
     return (
@@ -455,7 +487,7 @@ export function NodeOverlay({
     const remaining = skipRemaining ? pendingEntries : [current];
     setActionError(null);
     try {
-      if (!isBattle && (pendingEntries.length === 1 || skipRemaining)) {
+      if (!isBattle && !hasPuzzle && (pendingEntries.length === 1 || skipRemaining)) {
         const result = await completeNode.mutateAsync({
           nodeId,
           data: {
@@ -477,7 +509,7 @@ export function NodeOverlay({
         },
       });
       applyCampaign(result.campaign, result.bootstrap);
-      if (skipRemaining || pendingEntries.length === 1) setScreen('briefing');
+      if (skipRemaining || pendingEntries.length === 1) setScreen(hasPuzzle && !isCleared ? 'puzzle' : 'briefing');
     } catch {
       setActionError('Progress could not be saved. Try again before continuing.');
     } finally {
@@ -508,13 +540,14 @@ export function NodeOverlay({
       className="story-node-overlay absolute inset-0 z-50 bg-black/95"
     >
       {replayIndex !== null && replayEntries[replayIndex] ? (
-        <DialogueView entry={replayEntries[replayIndex]}
+        <DialogueView nodeId={nodeId} entry={replayEntries[replayIndex]}
           position={replayEntries.slice(0, replayIndex + 1).filter((entry) => entry.section === replayEntries[replayIndex].section).length}
           total={replayEntries.filter((entry) => entry.section === replayEntries[replayIndex].section).length}
           pending={false} error={null} onClose={() => setReplayIndex(null)} onHistory={() => setShowHistory(true)} historyDisabled={!history.length}
           onNext={() => setReplayIndex(replayIndex + 1 < replayEntries.length ? replayIndex + 1 : null)} onSkip={() => setReplayIndex(null)} />
       ) : screen === 'dialogue' && pendingEntries[0] && (
         <DialogueView
+          nodeId={nodeId}
           entry={pendingEntries[0]}
           position={entries.filter((entry) => entry.section === pendingEntries[0].section).length - pendingEntries.length + 1}
           total={entries.filter((entry) => entry.section === pendingEntries[0].section).length}
@@ -539,6 +572,20 @@ export function NodeOverlay({
         />
       )}
 
+      {replayIndex === null && screen === 'puzzle' && storyNode.puzzle && (
+        <StoryPuzzle
+          puzzle={storyNode.puzzle}
+          nodeId={nodeId}
+          onCompleted={(result) => {
+            applyCampaign(result.campaign, result.bootstrap);
+            setGrantedRewards(result.rewards);
+            rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(r => r.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+            setScreen('completed');
+          }}
+          onClose={onClose}
+        />
+      )}
+
       {replayIndex === null && screen === 'completed' && !isBattle && (
         <div className="grid h-full place-items-center overflow-y-auto p-6 text-center">
           <div className="max-w-md">
@@ -551,6 +598,11 @@ export function NodeOverlay({
               {nodeProgress.cleared ? 'Location secured' : 'Ready to claim'}
             </div>
             <h2 className="mt-2 font-display text-4xl font-black italic uppercase">{storyNode.title}</h2>
+            {storyNode.puzzle && nodeProgress.cleared && (
+              <p role="status" className="mt-4 text-sm leading-relaxed text-white/80">
+                {nodeProgress.lastOutcome === 'puzzle-skipped' ? storyNode.puzzle.skipText : storyNode.puzzle.solvedText}
+              </p>
+            )}
             {!!storyNode.rewards.length && (
               <div className="mt-5 border border-primary/25 bg-primary/5 p-4 text-left">
                 <div className="font-mono text-[8px] uppercase tracking-widest text-primary">
@@ -600,6 +652,7 @@ export function NodeOverlay({
 }
 
 function DialogueView({
+  nodeId,
   entry,
   position,
   total,
@@ -611,6 +664,7 @@ function DialogueView({
   onNext,
   onSkip,
 }: {
+  nodeId: string;
   entry: SceneEntry;
   position: number;
   total: number;
@@ -622,7 +676,7 @@ function DialogueView({
   onNext: () => void;
   onSkip: () => void;
 }) {
-  return <StoryStage nodeId={entry.token.split(':')[0]} section={entry.section} line={entry.line}
+  return <StoryStage nodeId={nodeId} section={entry.section} line={entry.line}
     position={position} total={total} pending={pending} error={error} onClose={onClose}
     onHistory={onHistory} historyDisabled={historyDisabled} onNext={onNext} onSkip={onSkip} />;
 }

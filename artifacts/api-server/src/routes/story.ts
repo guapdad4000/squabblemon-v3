@@ -4,6 +4,8 @@ import {
   CompletePlayerStoryNodeBody,
   CompletePlayerStoryNodeParams,
   CompletePlayerStoryNodeResponse,
+  CompletePlayerStoryPuzzleBody,
+  CompletePlayerStoryPuzzleResponse,
   GetPlayerStoryResponse,
   SavePlayerStoryDialogueBody,
   SavePlayerStoryDialogueParams,
@@ -18,6 +20,7 @@ import {
 } from "../lib/storyService";
 import {
   completeNonBattleStoryNode,
+  completeStoryPuzzle,
   saveStoryDialogue,
   resetStoryDevelopment,
   isDevelopmentStoryResetEnabled,
@@ -84,6 +87,37 @@ router.post(
         body.data.dialogueSeen,
       );
       res.json(CompletePlayerStoryNodeResponse.parse(completion));
+    } catch (error) {
+      if (error instanceof StoryRequestError) {
+        res.status(error.status).json({ error: error.message });
+        return;
+      }
+      throw error;
+    }
+  },
+);
+
+router.post(
+  "/player/story/puzzle",
+  async (req, res): Promise<void> => {
+    const id = userId(req, res);
+    if (!id) return;
+    const body = CompletePlayerStoryPuzzleBody.safeParse(req.body);
+    if (!body.success) {
+      res.status(400).json({ error: "Invalid story puzzle completion" });
+      return;
+    }
+    try {
+      await ensurePlayer(id);
+      const completion = await completeStoryPuzzle(
+        id,
+        body.data.nodeId,
+        body.data.idempotencyKey,
+        body.data.order,
+        body.data.skip,
+        body.data.dialogueSeen,
+      );
+      res.json(CompletePlayerStoryPuzzleResponse.parse(completion));
     } catch (error) {
       if (error instanceof StoryRequestError) {
         res.status(error.status).json({ error: error.message });

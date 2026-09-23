@@ -65,6 +65,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   // Both human seats and private online projections are release gates.
   run(['scripts/check-online.mjs','artifacts/squabblemon/src/fairytaleWave.test.ts','artifacts/squabblemon/src/characterWave.test.ts','artifacts/squabblemon/src/multiplayer.test.ts','artifacts/squabblemon/src/elementDecks.test.ts','artifacts/squabblemon/src/lightLeaders.test.ts','artifacts/squabblemon/src/buddyFolks.test.ts','artifacts/squabblemon/src/kyle.test.ts','artifacts/squabblemon/src/stockz.test.ts','artifacts/api-server/src/lib/collectionEconomy.test.ts'],env);
   run(['--import',pathToFileURL(createRequire(import.meta.url).resolve('tsx', { paths: [path.resolve('artifacts/api-server')] })).href,'--test','artifacts/api-server/src/lib/cosmetics.test.ts','artifacts/squabblemon/src/cosmeticAssets.test.ts'],{ ...env, DATABASE_URL: '' });
+  // Old saves and every new presentation's rendered artwork are release invariants.
+  run(['--import',pathToFileURL(createRequire(import.meta.url).resolve('tsx', { paths: [path.resolve('artifacts/squabblemon')] })).href,'--test','artifacts/squabblemon/src/storySeasons.test.ts','artifacts/squabblemon/src/storyAssets.test.ts','artifacts/squabblemon/src/storyContentExpansion.test.ts'],env);
   run(['scripts/build-netlify-function.mjs'],env);
   run(['scripts/check-netlify-function.mjs'],env);
   run(['node_modules/vite/bin/vite.js','build','--config','artifacts/squabblemon/vite.config.ts'],env);

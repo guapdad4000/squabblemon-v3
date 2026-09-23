@@ -1,0 +1,61 @@
+{
+  "description": "Original generated, text-free story artwork. Live labels remain accessible HTML.",
+  "assets": [
+    {
+      "source": "story-theater-master.png",
+      "output": "theater.webp",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 175896
+    },
+    {
+      "source": "story-curtain-cutout.png",
+      "output": "curtain-left.webp",
+      "width": 524,
+      "height": 1018,
+      "bytes": 80350
+    },
+    {
+      "source": "story-curtain-cutout.png",
+      "output": "curtain-right.webp",
+      "width": 524,
+      "height": 1018,
+      "bytes": 79322
+    },
+    {
+      "source": "story-season-one-poster.png",
+      "output": "season-one.webp",
+      "width": 800,
+      "height": 800,
+      "bytes": 148580
+    },
+    {
+      "source": "story-season-two-poster.png",
+      "output": "season-two.webp",
+      "width": 800,
+      "height": 800,
+      "bytes": 161310
+    },
+    {
+      "source": "story-sherlock-poster.png",
+      "output": "sherlock.webp",
+      "width": 800,
+      "height": 800,
+      "bytes": 141718
+    },
+    {
+      "source": "story-rooftop-morning.png",
+      "output": "rooftop.webp",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 213548
+    },
+    {
+      "source": "story-evidence-board.png",
+      "output": "evidence.webp",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 228880
+    }
+  ]
+}

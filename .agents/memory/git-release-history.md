@@ -14,3 +14,9 @@ Command-line Git authentication and the connected GitHub integration can have di
 **Why:** Git transport rejected authentication while the authenticated integration could read and update the repository normally.
 
 **How to apply:** Use the integration's credential-injecting API when it is healthy; do not extract its OAuth credentials into shell commands or assume it needs reconnecting because Git transport failed.
+
+Serialize machine-readable Git comparisons as JSON before returning them through tools. Do not rely on tab separators surviving rendered shell output, and sanity-check an unexpectedly empty diff.
+
+**Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies.
+
+**How to apply:** Parse Git's NUL-delimited output inside the shell process, then emit JSON. Compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.

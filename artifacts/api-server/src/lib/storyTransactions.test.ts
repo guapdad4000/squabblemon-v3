@@ -13,6 +13,7 @@ import {
 import {
   getStoryBattle,
   storyContent,
+  storySeasons,
 } from "@workspace/squabblemon-engine/story";
 import {
   createStoryMatch,
@@ -227,8 +228,15 @@ test("campaign load backfills the Courier Table ticket for a lower-star historic
 });
 test("all eight chapters unlock in order and the final reward is claimed once", async (t) => {
   const userId = await storyPlayer(t, "story-season-one");
-  assert.equal(storyContent.chapters.length, 8);
-  for (const [index, chapter] of storyContent.chapters.entries()) {
+  const seasonOne = storySeasons.find((season) => season.id === "season-1");
+  assert.ok(seasonOne);
+  const seasonOneChapters = seasonOne.chapterIds.map((chapterId) => {
+    const chapter = storyContent.chapters.find((item) => item.id === chapterId);
+    assert.ok(chapter, chapterId);
+    return chapter;
+  });
+  assert.equal(seasonOneChapters.length, 8);
+  for (const [index, chapter] of seasonOneChapters.entries()) {
     const openingCampaign = await getPlayerStoryCampaign(userId);
     assert.equal(openingCampaign.chapters.find((item) => item.id === chapter.id)?.status, "available", chapter.id);
     const ending = chapter.nodes.find((node) => node.kind === "reward" && !node.optional);
@@ -240,12 +248,19 @@ test("all eight chapters unlock in order and the final reward is claimed once", 
     assert.equal(result.alreadyCompleted, false, chapter.id);
     const after = await getPlayerStoryCampaign(userId);
     assert.equal(after.chapters.find((item) => item.id === chapter.id)?.status, "cleared", chapter.id);
-    if (index + 1 < storyContent.chapters.length) {
-      const next = storyContent.chapters[index + 1];
+    if (index + 1 < seasonOneChapters.length) {
+      const next = seasonOneChapters[index + 1];
       assert.equal(after.chapters.find((item) => item.id === next.id)?.status, "available", next.id);
       assert.equal(after.recommendedNodeId, next.nodes.find((node) => !node.optional)?.id, next.id);
     } else {
-      assert.ok(after.nodes.filter((node) => !node.optional).every((node) => node.status === "cleared"));
+      const seasonOneNodeIds = new Set(
+        seasonOneChapters.flatMap((item) => item.nodes.map((node) => node.id)),
+      );
+      assert.ok(
+        after.nodes
+          .filter((node) => seasonOneNodeIds.has(node.nodeId) && !node.optional)
+          .every((node) => node.status === "cleared"),
+      );
       assert.deepEqual(result.rewards.map((reward) => reward.id).sort(), ["cracked-head", "street-pack-ticket", "street-xp"]);
       const retry = await completeNonBattleStoryNode(userId, ending.id, randomUUID(), []);
       assert.equal(retry.alreadyCompleted, true);

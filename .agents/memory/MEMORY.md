@@ -14,3 +14,6 @@
 - [Squabblemon physical UI language](squabblemon-physical-ui.md) — Favor street-sign controls, torn-paper overlays, deep parallax, and original cel-shaded arcade art.
 - [Visual regression proof](visual-regression-proof.md) — Require mounted real components, final-action clicks, decoration bounds, and screenshots; geometry logs alone missed prior regressions.
 - [Git release history](git-release-history.md) — Workspace checkpoints can diverge from GitHub release ancestry; preserve remote history and release only verified content.
+- [Speech playback verification](speech-playback-verification.md) — Diagnose the encoded clip before changing lifecycle; preserve internal pauses and distinguish natural-end pause events from interruptions.
+- [Story save evolution](story-save-evolution.md) — Presentation grouping must not rename progression/reward identities or invalidate positional dialogue history.
+- [iPad keyed battle video](ipad-keyed-battle-video.md) — VP9 video layers can expose encoded matte colors on iPad; verify transparency from rendered pixels.

@@ -16,3 +16,9 @@ Use production-sized reward batches in layout fixtures, not shortened samples.
 **Why:** A ten-pack fixture containing only ten rewards concealed the scrolling requirements of the real sixty-reward haul. Geometry checks also missed empty strips between an independently sized scene and its controls.
 
 **How to apply:** Match real batch cardinality, inspect the final item and continuation action after scrolling, and measure spacing between adjacent regions as well as their viewport bounds.
+
+Verify setup-screen reachability inside the real route shell at the reported viewport, not only in an isolated component at a wider size.
+
+**Why:** An isolated wide-screen Story selector looked fixed while the real viewport-constrained shell still clipped the start action at an intermediate width. Automated locator clicks can also scroll an overflow-hidden ancestor that a user's wheel cannot scroll, hiding the bug.
+
+**How to apply:** Assert the primary action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content, then select a crew and enter the actual first turn with a valid match-start response. Check both width and height breakpoints.

@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   ROOKIE_CORE_IDS,
   ROOKIE_DECK_ID,
+  ROOKIE_MENTOR_CORE_IDS,
   catalogIdsToEngineIds,
 } from "@workspace/squabblemon-engine/data";
 import {
@@ -243,6 +244,48 @@ test("Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win"
     `Crown Hooper solve took ${elapsed.toFixed(1)}ms`,
   );
 });
+
+test("Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win", {
+  timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
+}, () => {
+  const battle = getStoryBattle("s2-pledge-drive-final");
+  assert(battle);
+  assert.equal(battle.encounter.roundLimit, 6);
+  assert.equal(battle.encounter.phases?.length, 2);
+  assert.equal(battle.encounter.modifiers?.handSize?.cpu, 3);
+  assert.equal(battle.encounter.starObjectives?.length, 3);
+  const campaignCrew = [...ROOKIE_MENTOR_CORE_IDS];
+  campaignCrew[5] = "nail-tech";
+  const cards = catalogIdsToEngineIds(campaignCrew);
+  const districts = createDistrictSnapshot(
+    "story-node-v1:s2-pledge-drive-final",
+  );
+  const startedAt = performance.now();
+  const moves = solveStoryMoves(
+    createStoryMatch(
+      battle.encounter,
+      cards,
+      ROOKIE_DECK_ID,
+      undefined,
+      districts,
+    ),
+  );
+  const elapsed = performance.now() - startedAt;
+  const completed = verifyStoryMatchTranscript(
+    battle.encounter,
+    cards,
+    moves,
+    ROOKIE_DECK_ID,
+    undefined,
+    districts,
+  );
+  assert.equal(getMatchWinner(completed), "player");
+  assert(
+    elapsed <= STORY_SOLVER_NODE_BUDGET_MS + 500,
+    `Pledge Drive Final solve took ${elapsed.toFixed(1)}ms`,
+  );
+});
+
 test("suppressed presentation events preserve complete boss gameplay state", {
   timeout: STORY_SOLVER_NODE_BUDGET_MS + 3_000,
 }, () => {
