@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import express from 'express';
 import { webRequestAdapter } from './webRequestAdapter';
+import Stripe from 'stripe';
 
 test('hosting adapter preserves JSON, query parameters, auth headers, and separate cookies', async () => {
   const app = express(); app.use(express.json());
@@ -19,4 +20,27 @@ test('hosting adapter preserves binary bodies and empty 204 responses', async ()
   const handle=webRequestAdapter(app);
   assert.deepEqual(new Uint8Array(await (await handle(new Request('https://game.example/api/binary'))).arrayBuffer()),new Uint8Array([0,128,255]));
   const empty=await handle(new Request('https://game.example/api/empty',{method:'POST'}));assert.equal(empty.status,204);assert.equal(await empty.text(),'');
+});
+
+test('Netlify adapter preserves signed UTF-8 JSON bytes before parsers or auth', async () => {
+  const app = express();
+  const secret = 'whsec_adapter_fixture_not_a_credential';
+  // Whitespace, Unicode, and escape spelling must remain byte-for-byte intact.
+  const raw = Buffer.from('{\n "id": "evt_adapter", "livemode": false, "text": "Clout ✓ café", "escaped": "\\u0061"\n}\n');
+  const signature = Stripe.webhooks.generateTestHeaderString({ payload: raw.toString('utf8'), secret });
+  app.post('/api/payments/webhook', express.raw({ type: 'application/json', inflate: false }), (req, res) => {
+    assert.ok(Buffer.isBuffer(req.body));
+    assert.deepEqual(req.body, raw);
+    Stripe.webhooks.constructEvent(req.body, req.header('stripe-signature')!, secret, 300);
+    res.json({ received: true });
+  });
+  app.use(express.json());
+  app.use((_req, res) => { res.status(401).json({ error: 'Authentication required' }); });
+  const handle = webRequestAdapter(app);
+  const response = await handle(new Request('https://game.example/api/payments/webhook', {
+    method: 'POST', headers: { 'content-type': 'application/json', 'stripe-signature': signature }, body: raw,
+  }));
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { received: true });
+  assert.equal((await handle(new Request('https://game.example/api/player/payments/orders'))).status, 401);
 });

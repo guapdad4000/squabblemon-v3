@@ -70,5 +70,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   run(['scripts/build-netlify-function.mjs'],env);
   run(['scripts/check-netlify-function.mjs'],env);
   run(['node_modules/vite/bin/vite.js','build','--config','artifacts/squabblemon/vite.config.ts'],env);
+  run(['scripts/stage-netlify-migrations.mjs'],env);
   run(['scripts/check-entry-bundle.mjs'],env,'artifacts/squabblemon');
 }

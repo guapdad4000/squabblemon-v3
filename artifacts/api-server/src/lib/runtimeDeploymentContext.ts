@@ -4,6 +4,8 @@ export type RuntimeDeploymentContext = {
   context: string;
   deployId: string;
   origin: string;
+  /** IP-derived country from Netlify's invocation context, never request headers. */
+  countryCode?: string;
 };
 
 const deploymentStorage = new AsyncLocalStorage<RuntimeDeploymentContext>();

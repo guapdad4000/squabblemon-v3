@@ -5,6 +5,126 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+export type PaymentCheckoutInputOfferId = typeof PaymentCheckoutInputOfferId[keyof typeof PaymentCheckoutInputOfferId];
+
+
+export const PaymentCheckoutInputOfferId = {
+  'clout-pocket': 'clout-pocket',
+  'clout-stack': 'clout-stack',
+  'clout-bag': 'clout-bag',
+} as const;
+
+export interface PaymentCheckoutInput {
+  /** Must be true for a new checkout. Self-attestation of age 18 or older, not verified age. Optional only for retries of existing orders. */
+  adultConfirmed?: boolean;
+  /** Must be true for a new checkout. Self-declaration of US location, not verified geography. Optional only for retries of existing orders. */
+  unitedStatesConfirmed?: boolean;
+  offerId: PaymentCheckoutInputOfferId;
+  idempotencyKey: string;
+}
+
+export type PaymentCatalogTaxMode = typeof PaymentCatalogTaxMode[keyof typeof PaymentCatalogTaxMode];
+
+
+export const PaymentCatalogTaxMode = {
+  none: 'none',
+  automatic: 'automatic',
+} as const;
+
+export type PaymentCatalogMode = typeof PaymentCatalogMode[keyof typeof PaymentCatalogMode];
+
+
+export const PaymentCatalogMode = {
+  disabled: 'disabled',
+  test: 'test',
+  live: 'live',
+} as const;
+
+export interface PaymentOffer {
+  id: string;
+  name: string;
+  amountMinor: number;
+  currency: string;
+  clout: number;
+  enabled: boolean;
+}
+
+export interface PaymentCatalog {
+  taxMode: PaymentCatalogTaxMode;
+  version: string;
+  mode: PaymentCatalogMode;
+  enabled: boolean;
+  message: string;
+  /** @nullable */
+  supportUrl: string | null;
+  /** @nullable */
+  refundPolicyUrl: string | null;
+  offers: PaymentOffer[];
+}
+
+export type PaymentOrderTaxMode = typeof PaymentOrderTaxMode[keyof typeof PaymentOrderTaxMode];
+
+
+export const PaymentOrderTaxMode = {
+  none: 'none',
+  automatic: 'automatic',
+} as const;
+
+export type PaymentOrderMode = typeof PaymentOrderMode[keyof typeof PaymentOrderMode];
+
+
+export const PaymentOrderMode = {
+  test: 'test',
+  live: 'live',
+} as const;
+
+export type PaymentOrderStatus = typeof PaymentOrderStatus[keyof typeof PaymentOrderStatus];
+
+
+export const PaymentOrderStatus = {
+  pending: 'pending',
+  processing: 'processing',
+  fulfilled: 'fulfilled',
+  failed: 'failed',
+  expired: 'expired',
+  refunded: 'refunded',
+  disputed: 'disputed',
+} as const;
+
+export interface PaymentOrder {
+  taxMode: PaymentOrderTaxMode;
+  /** @nullable */
+  taxAmountMinor: number | null;
+  /** @nullable */
+  totalAmountMinor: number | null;
+  id: string;
+  offerId: string;
+  offerName: string;
+  mode: PaymentOrderMode;
+  currency: string;
+  amountMinor: number;
+  clout: number;
+  status: PaymentOrderStatus;
+  createdAt: string;
+  /** @nullable */
+  fulfilledAt: string | null;
+  refundedAmountMinor: number;
+  /** @nullable */
+  checkoutUrl: string | null;
+}
+
+export interface PaymentCheckout {
+  order: PaymentOrder;
+  /** @nullable */
+  checkoutUrl: string | null;
+}
+
+export interface PaymentHistory {
+  orders: PaymentOrder[];
+  /** @nullable */
+  nextCursor: string | null;
+}
+
 export interface PromoCodeInput {
   /**
      * @minLength 1
@@ -949,4 +1069,8 @@ export type ClaimExperimentCardBody = {
 };
 
 export type GetPlayerShop200 = { [key: string]: unknown };
+
+export type ListPaymentOrdersParams = {
+cursor?: string;
+};
 

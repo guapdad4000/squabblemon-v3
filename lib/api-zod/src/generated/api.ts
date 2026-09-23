@@ -3586,3 +3586,123 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
 })
 
 
+/**
+ * @summary Get the current real-money payment catalog
+ */
+export const GetPaymentCatalogResponse = zod.object({
+  "taxMode": zod.enum(['none', 'automatic']),
+  "version": zod.string(),
+  "mode": zod.enum(['disabled', 'test', 'live']),
+  "enabled": zod.boolean(),
+  "message": zod.string(),
+  "supportUrl": zod.string().nullable(),
+  "refundPolicyUrl": zod.string().nullable(),
+  "offers": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "amountMinor": zod.number(),
+  "currency": zod.string(),
+  "clout": zod.number(),
+  "enabled": zod.boolean()
+}))
+})
+
+
+/**
+ * @summary Create a checkout session for a catalog offer
+ */
+export const CreatePaymentCheckoutBody = zod.object({
+  "adultConfirmed": zod.boolean().optional().describe('Must be true for a new checkout. Self-attestation of age 18 or older, not verified age. Optional only for retries of existing orders.'),
+  "unitedStatesConfirmed": zod.boolean().optional().describe('Must be true for a new checkout. Self-declaration of US location, not verified geography. Optional only for retries of existing orders.'),
+  "offerId": zod.enum(['clout-pocket', 'clout-stack', 'clout-bag']),
+  "idempotencyKey": zod.string().uuid()
+})
+
+export const CreatePaymentCheckoutResponse = zod.object({
+  "order": zod.object({
+  "taxMode": zod.enum(['none', 'automatic']),
+  "taxAmountMinor": zod.number().nullable(),
+  "totalAmountMinor": zod.number().nullable(),
+  "id": zod.string(),
+  "offerId": zod.string(),
+  "offerName": zod.string(),
+  "mode": zod.enum(['test', 'live']),
+  "currency": zod.string(),
+  "amountMinor": zod.number(),
+  "clout": zod.number(),
+  "status": zod.enum(['pending', 'processing', 'fulfilled', 'failed', 'expired', 'refunded', 'disputed']),
+  "createdAt": zod.coerce.date(),
+  "fulfilledAt": zod.coerce.date().nullable(),
+  "refundedAmountMinor": zod.number(),
+  "checkoutUrl": zod.string().nullable()
+}),
+  "checkoutUrl": zod.string().nullable()
+})
+
+
+/**
+ * @summary List the authenticated player's payment orders
+ */
+export const ListPaymentOrdersQueryParams = zod.object({
+  "cursor": zod.coerce.string().optional()
+})
+
+export const ListPaymentOrdersResponse = zod.object({
+  "orders": zod.array(zod.object({
+  "taxMode": zod.enum(['none', 'automatic']),
+  "taxAmountMinor": zod.number().nullable(),
+  "totalAmountMinor": zod.number().nullable(),
+  "id": zod.string(),
+  "offerId": zod.string(),
+  "offerName": zod.string(),
+  "mode": zod.enum(['test', 'live']),
+  "currency": zod.string(),
+  "amountMinor": zod.number(),
+  "clout": zod.number(),
+  "status": zod.enum(['pending', 'processing', 'fulfilled', 'failed', 'expired', 'refunded', 'disputed']),
+  "createdAt": zod.coerce.date(),
+  "fulfilledAt": zod.coerce.date().nullable(),
+  "refundedAmountMinor": zod.number(),
+  "checkoutUrl": zod.string().nullable()
+})),
+  "nextCursor": zod.string().nullable()
+})
+
+
+/**
+ * @summary Get one of the authenticated player's payment orders
+ */
+export const GetPaymentOrderParams = zod.object({
+  "orderId": zod.coerce.string()
+})
+
+export const GetPaymentOrderResponse = zod.object({
+  "taxMode": zod.enum(['none', 'automatic']),
+  "taxAmountMinor": zod.number().nullable(),
+  "totalAmountMinor": zod.number().nullable(),
+  "id": zod.string(),
+  "offerId": zod.string(),
+  "offerName": zod.string(),
+  "mode": zod.enum(['test', 'live']),
+  "currency": zod.string(),
+  "amountMinor": zod.number(),
+  "clout": zod.number(),
+  "status": zod.enum(['pending', 'processing', 'fulfilled', 'failed', 'expired', 'refunded', 'disputed']),
+  "createdAt": zod.coerce.date(),
+  "fulfilledAt": zod.coerce.date().nullable(),
+  "refundedAmountMinor": zod.number(),
+  "checkoutUrl": zod.string().nullable()
+})
+
+
+/**
+ * Unauthenticated endpoint for Stripe. The Stripe-Signature header must be verified against the unmodified raw request body before parsing or processing the event. This endpoint intentionally does not define a request object shape. Redelivered events are acknowledged without regranting rewards.
+ * @summary Receive a signed Stripe webhook
+ */
+export const ReceivePaymentWebhookHeader = zod.object({
+  "Stripe-Signature": zod.string().describe('Stripe signature for the unmodified raw request body.')
+})
+
+export const ReceivePaymentWebhookResponse = zod.unknown()
+
+

@@ -175,3 +175,8 @@ html[data-reduce-motion=true] :is(.score-delta,.brand-loader__halo,.brand-loader
 html[data-reduce-motion=true] .layered-venue *,.layered-venue[data-reduced=true] *{animation:none!important;transition:none!important}
 
 .match-poster__fighter{display:grid;grid-template-rows:minmax(0,1fr) 16px 68px;justify-items:center;align-items:center}.match-poster__fighter>img{height:100%;min-height:0}.match-poster__fighter h2{align-self:start;margin:7px 0 0}.match-poster__fighters{margin-bottom:26px}.result-art__actions .studio-text-action{color:#ffe1a2!important;display:flex;align-items:center;justify-content:center}.trading-post .gacha-stage__ready{display:none}@media(max-width:639px){.corner-store__heading h1 em:before{content:' '}.match-poster__fighter>img{height:100%}.match-poster__fighter h2{font-size:20px}.match-poster__fighters{grid-template-rows:minmax(0,1fr);margin-bottom:20px}}
+
+/* Keep real checkout actions in the Shop scroll flow. */
+.corner-store{flex:none;min-height:650px;display:block;padding:0}
+.corner-store__scroll{position:static;inset:auto;overflow:visible;display:grid;grid-template-columns:minmax(200px,.7fr) minmax(0,1.3fr);gap:clamp(24px,5vw,72px);padding:40px clamp(20px,5vw,70px)}
+@media(max-width:639px){.corner-store__scroll{grid-template-columns:1fr;gap:24px;padding:24px 18px}}

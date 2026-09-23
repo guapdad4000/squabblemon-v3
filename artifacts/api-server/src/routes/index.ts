@@ -7,6 +7,8 @@ import shopRouter from "./shop";
 import promoCodesRouter from './promoCodes';
 import multiplayerRouter from './multiplayer';
 
+import paymentsRouter from './payments';
+
 const router: IRouter = Router();
 
 router.use(healthRouter);
@@ -16,5 +18,7 @@ router.use(storyRouter);
 router.use(shopRouter);
 router.use(promoCodesRouter);
 router.use(multiplayerRouter);
+
+router.use(paymentsRouter);
 
 export default router;

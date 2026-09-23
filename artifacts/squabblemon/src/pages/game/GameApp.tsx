@@ -15,7 +15,7 @@ import {
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameNav } from '../../components/venue/GameNav';
 import { useEffect, type ReactNode } from 'react';
-import { Redirect, Route, Switch, useLocation } from 'wouter';
+import { Redirect, Route, Switch, useSearch, useLocation } from 'wouter';
 
 import { cardCatalog, starterRecipes } from '../../data';
 import { Collection } from './Collection';
@@ -246,6 +246,7 @@ function getE2EBootstrap(): PlayerBootstrap {
 export default function GameApp() {
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
+  const search = useSearch();
   const { data: apiBootstrap, isLoading, isFetching, error, refetch } = useGetPlayerBootstrap({
     query: {
       queryKey: getGetPlayerBootstrapQueryKey(),
@@ -256,12 +257,12 @@ export default function GameApp() {
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
       if (/^\/game\/online\/[a-f0-9]{12}$/i.test(location)) sessionStorage.setItem('squabblemon_friend_invite', location);
-      if (location.startsWith('/game')) sessionStorage.setItem('squabblemon_after_sign_in', location);
+      if (location.startsWith('/game')) sessionStorage.setItem('squabblemon_after_sign_in', `${location}${search ? `?${search}` : ''}`);
       setLocation('/sign-in');
     } else if (isLoaded && isSignedIn) {
       clearAfterSignIn();
     }
-  }, [isLoaded, isSignedIn, location, setLocation]);
+  }, [isLoaded, isSignedIn, location, search, setLocation]);
 
   if (!isLoaded || !isSignedIn || isLoading) return <LoadingScreen />;
 
