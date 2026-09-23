@@ -20,3 +20,9 @@ Use file-backed JSON for complete Git tree comparisons. Do not rely on tab separ
 **Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies. A large JSON tree listing also arrived as a truncated tail despite a raised shell output budget.
 
 **How to apply:** Parse Git's NUL-delimited output inside the shell process, save full trees to temporary JSON files, and return only the comparison summary. Verify entry counts and compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.
+
+If Git fetch succeeds but HTTPS push rejects the workspace credential, transfer the verified release through the connected GitHub API: upload missing binary blobs, create a tree on the current remote base, and require its SHA to equal the tested local tree before creating the remote-parent commit. Advance `main` with `force: false`; keep the original workspace branch intact and check out the newly fetched remote commit.
+
+**Why:** Read access and write authentication can differ. The API route preserved the newer GitHub parent without extracting credentials, while a tree-SHA comparison proved the uploaded release was byte-for-byte the one that passed validation.
+
+**How to apply:** Use this only after confirming the remote parent has not moved. A successful GitHub update does not prove the Git-triggered Netlify deployment succeeded; check that provider separately.

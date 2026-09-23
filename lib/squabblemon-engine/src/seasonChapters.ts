@@ -1,16 +1,14 @@
 import { cards, completeEngineCrew } from './data';
 import type { StoryEncounterSnapshot } from './gameEngine';
 import chapterTwoDraft from './storyChapters/chapterTwo.json';
-import { TICKETS_PER_MAJOR_STORY_NODE } from './economy';
 import type { StoryChapter, StoryDialogueLine, StoryNode, StoryReward, StoryStarObjective } from './story';
 
-// Each chapter finale grants a ten-pull worth of tickets. Centralised so the
-// runtime reward augmentation (chapter 2) and the authored finale rewards
-// (chapters 1 + 8) all read from the same knob.
+// Season One's saved and already-issued finale rewards promise a ten-pull.
+// Keep them separate from the lower ticket rate for newly authored chapters.
 const majorNodeTickets = (): StoryReward => ({
   kind: 'pack-ticket',
   id: 'street-pack-ticket',
-  amount: TICKETS_PER_MAJOR_STORY_NODE,
+  amount: 10,
 });
 
 // Chapter One's playable continuity is the source of truth. The September 17
