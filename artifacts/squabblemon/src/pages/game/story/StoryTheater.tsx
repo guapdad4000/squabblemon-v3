@@ -1,11 +1,14 @@
 import { type StoryCampaign, type StorySeasonProgress } from '@workspace/api-client-react';
 import { storyContent, storySeasons } from '@workspace/squabblemon-engine/story';
-import { ChevronLeft, ChevronRight, LockKeyhole, Play, Projector, Star, X } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
+import { ChevronLeft, ChevronRight, LockKeyhole, Play } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'wouter';
 import { getAssetUrl } from '../../../data';
 import '../../../styles/theater.css';
+import { SeasonPoster } from './components/SeasonPoster';
+import { usePopcornParticles } from './components/usePopcornParticles';
+import { useProjectorBeam } from './components/useProjectorBeam';
 
 type TheaterProps = {
   campaign: StoryCampaign;
@@ -45,15 +48,27 @@ function legacySeasons(campaign: StoryCampaign): StorySeasonProgress[] {
 }
 
 export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const posterRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const requestRef = useRef<number | null>(null);
-  const dragRef = useRef<{ pointerId: number; x: number; y: number; dragged: boolean } | null>(null);
+  const posterRailRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    x: number;
+    y: number;
+    scrollLeft: number;
+    dragged: boolean;
+    onPosterRail: boolean;
+  } | null>(null);
   const suppressClickRef = useRef(false);
+  const suppressResetRef = useRef<number | null>(null);
+
+  const { containerRef: popcornContainerRef, spawnParticles } = usePopcornParticles();
+  const { logoRef, beamRef, lensAnchorRef, handlePointerMove, updateBeam } = useProjectorBeam();
+
   const seasons = useMemo(
     () => campaign.seasons?.length ? campaign.seasons : legacySeasons(campaign),
     [campaign],
   );
+
   const recommendedNode = useMemo(() => {
     const available = campaign.nodes.filter((node) => node.status === 'available' && !node.cleared);
     return available.find((node) => node.nodeId === campaign.recommendedNodeId) ??
@@ -61,12 +76,13 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
       available[0] ??
       null;
   }, [campaign.nodes, campaign.recommendedNodeId, seasons]);
+
   const recommendedSeason = seasons.find((season) =>
     season.chapterIds.includes(recommendedNode?.chapterId ?? ''),
   );
+
   const initialSeason = recommendedSeason ?? seasons.find((season) => season.status !== 'locked') ?? seasons[0];
   const [selectedId, setSelectedId] = useState(initialSeason?.id ?? '');
-  const [boothOpen, setBoothOpen] = useState(false);
   const selected = seasons.find((season) => season.id === selectedId) ?? initialSeason;
   const selectedIndex = seasons.findIndex((season) => season.id === selected?.id);
 
@@ -77,25 +93,18 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
   }, [initialSeason, seasons, selectedId]);
 
   useEffect(() => () => {
-    if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
+    if (suppressResetRef.current !== null) window.clearTimeout(suppressResetRef.current);
   }, []);
 
-  const aimBeam = (event: PointerEvent<HTMLDivElement>) => {
-    const host = containerRef.current;
-    if (!host) return;
-    const rect = host.getBoundingClientRect();
-    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
-    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
-    if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
-    requestRef.current = requestAnimationFrame(() => {
-      host.style.setProperty('--mx', String(x));
-      host.style.setProperty('--my', String(y));
-      requestRef.current = null;
-    });
-  };
-
-  const selectSeason = (seasonId: string, focus = false) => {
+  const selectSeason = (seasonId: string, focus = false, openImmediately = false) => {
     setSelectedId(seasonId);
+
+    const season = seasons.find((item) => item.id === seasonId);
+    if (openImmediately && season && season.status !== 'locked') {
+      onSelectSeason(seasonId);
+      return;
+    }
+
     const poster = posterRefs.current[seasonId];
     poster?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -111,11 +120,8 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
     else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') target = Math.max(0, index - 1);
     else if (event.key === 'Home') target = 0;
     else if (event.key === 'End') target = seasons.length - 1;
-    else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      selectSeason(seasons[index].id);
-      return;
-    } else return;
+    else return;
+
     event.preventDefault();
     selectSeason(seasons[target].id, true);
   };
@@ -130,50 +136,96 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
   return createPortal(
     <div
       className="theater-host"
-      ref={containerRef}
-      onPointerMove={(event) => {
-        aimBeam(event);
-        if (dragRef.current?.pointerId === event.pointerId) {
-          const distance = Math.hypot(event.clientX - dragRef.current.x, event.clientY - dragRef.current.y);
-          if (distance > 8) dragRef.current.dragged = true;
+      onPointerMoveCapture={(event) => {
+        handlePointerMove(event);
+        const drag = dragRef.current;
+        if (drag?.pointerId === event.pointerId) {
+          const deltaX = event.clientX - drag.x;
+          const distance = Math.hypot(deltaX, event.clientY - drag.y);
+          if (distance > 8) drag.dragged = true;
+          if (drag.dragged && drag.onPosterRail && posterRailRef.current) {
+            posterRailRef.current.scrollLeft = drag.scrollLeft - deltaX;
+          }
         }
       }}
-      onPointerDown={(event) => {
-        aimBeam(event);
-        dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, dragged: false };
+      onPointerDownCapture={(event) => {
+        handlePointerMove(event);
+        const target = event.target as Element;
+        dragRef.current = {
+          pointerId: event.pointerId,
+          x: event.clientX,
+          y: event.clientY,
+          scrollLeft: posterRailRef.current?.scrollLeft ?? 0,
+          dragged: false,
+          onPosterRail: Boolean(target.closest('.theater-posters')),
+        };
       }}
-      onPointerUp={(event) => {
-        if (dragRef.current?.pointerId === event.pointerId) {
-          suppressClickRef.current = dragRef.current.dragged;
+      onPointerUpCapture={(event) => {
+        const drag = dragRef.current;
+        if (drag?.pointerId === event.pointerId) {
+          suppressClickRef.current = drag.dragged;
           dragRef.current = null;
+          if (drag.dragged) {
+            if (suppressResetRef.current !== null) window.clearTimeout(suppressResetRef.current);
+            suppressResetRef.current = window.setTimeout(() => {
+              suppressClickRef.current = false;
+              suppressResetRef.current = null;
+            }, 500);
+          } else {
+            spawnParticles(event);
+          }
         }
       }}
       onPointerCancel={() => { dragRef.current = null; }}
-      style={{ '--mx': 50, '--my': 50 } as CSSProperties}
       data-testid="region-story-theater"
     >
       <div className="theater-hall">
-        <div className="theater-bg" style={{ backgroundImage: `url(${getAssetUrl('assets/story/theater/theater.webp')})` }} />
-        <div className="theater-beam" aria-hidden="true" />
-        <div className="theater-curtain theater-curtain--left" style={{ backgroundImage: `url(${getAssetUrl('assets/story/theater/curtain-left.webp')})` }} />
-        <div className="theater-curtain theater-curtain--right" style={{ backgroundImage: `url(${getAssetUrl('assets/story/theater/curtain-right.webp')})` }} />
+        {/* Environment */}
+        <div className="theater-bg" style={{ backgroundImage: `url(${getAssetUrl('assets/story/theater/cinema-hall.webp')})` }} />
+
+        {/* Curtains */}
+        <img src={getAssetUrl('assets/story/theater/cinema-curtain.webp')} className="theater-curtain theater-curtain--left" alt="" />
+        <img src={getAssetUrl('assets/story/theater/cinema-curtain.webp')} className="theater-curtain theater-curtain--right" alt="" />
+
+        {/* Bottom Film Elements */}
+        <img src={getAssetUrl('assets/story/theater/cinema-film-strip.webp')} className="cinema-film-strip" alt="" />
+        <div className="cinema-reel-container">
+          <img src={getAssetUrl('assets/story/theater/cinema-reel.webp')} className="cinema-reel" alt="" />
+        </div>
+
+        {/* Dynamic Beam and Logo */}
+        <div className="theater-beam" ref={beamRef} aria-hidden="true" data-testid="projector-beam" />
+        <div
+          ref={lensAnchorRef}
+          aria-hidden="true"
+          data-testid="projector-lens-anchor"
+          style={{ position: 'fixed', width: 1, height: 1, pointerEvents: 'none' }}
+        />
+        <img
+          ref={logoRef}
+          src={getAssetUrl('assets/story/theater/cinema-logo.webp')}
+          className="cinema-logo"
+          alt=""
+          onLoad={() => updateBeam()}
+        />
 
         <div className="theater-content">
-          <Link href="/game" className="theater-exit" aria-label="Return to safehouse">Back to block</Link>
-          <header className="theater-header">
-            <h1>Squabblemon Cinema</h1>
-            <p>Select a presentation</p>
-          </header>
-
-          <button
-            type="button"
-            className="theater-booth"
-            onClick={() => setBoothOpen(true)}
-            aria-label="Visit the projection booth"
-            data-testid="button-projection-booth"
+          <h1
+            style={{
+              position: 'absolute',
+              width: 1,
+              height: 1,
+              padding: 0,
+              margin: -1,
+              overflow: 'hidden',
+              clip: 'rect(0, 0, 0, 0)',
+              whiteSpace: 'nowrap',
+              border: 0,
+            }}
           >
-            <Projector aria-hidden="true" /> <span>Projection booth</span>
-          </button>
+            Squabblemon Cinema
+          </h1>
+          <Link href="/game" className="theater-exit" aria-label="Return to safehouse">Back to block</Link>
 
           {([-1, 1] as const).map((direction) => {
             const target = seasons[selectedIndex + direction];
@@ -182,83 +234,59 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
                 key={direction}
                 type="button"
                 className={`theater-nav theater-nav--${direction < 0 ? 'previous' : 'next'}`}
+                style={{ minWidth: 44, minHeight: 44 }}
                 aria-label={direction < 0 ? 'Previous presentation' : 'Next presentation'}
                 disabled={!target}
-                onClick={() => target && selectSeason(target.id)}
+                onClick={() => {
+                  if (target) selectSeason(target.id);
+                }}
               >
                 {direction < 0 ? <ChevronLeft aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}
               </button>
             );
           })}
-          <div className="theater-posters" role="listbox" aria-label="Story presentations">
+
+          <div className="theater-posters" ref={posterRailRef} aria-label="Story presentations">
             {seasons.map((season, index) => {
               const isSelected = season.id === selected?.id;
               return (
-                <button
+                <SeasonPoster
                   key={season.id}
                   ref={(node) => { posterRefs.current[season.id] = node; }}
-                  type="button"
-                  role="option"
-                  aria-selected={isSelected}
-                  tabIndex={isSelected ? 0 : -1}
+                  season={season}
+                  isSelected={isSelected}
                   onFocus={() => selectSeason(season.id)}
                   onKeyDown={(event) => handlePosterKeys(event, index)}
-                  onClick={() => {
+                  onSelect={() => {
                     if (suppressClickRef.current) {
                       suppressClickRef.current = false;
+                      if (suppressResetRef.current !== null) {
+                        window.clearTimeout(suppressResetRef.current);
+                        suppressResetRef.current = null;
+                      }
                       return;
                     }
-                    selectSeason(season.id);
+                    selectSeason(season.id, false, true);
                   }}
-                  className="theater-poster"
-                  data-selected={isSelected}
-                  data-status={season.status}
-                  data-testid={`button-presentation-${season.id}`}
-                >
-                  <img src={getAssetUrl(season.posterAssetId)} alt="" draggable={false} />
-                  <div className="theater-poster__copy">
-                    <span>{season.subtitle}</span>
-                    <h2>{season.title}</h2>
-                    <div className="theater-poster__progress">
-                      <span><Star aria-hidden="true" /> {season.starsEarned} / {season.starsAvailable}</span>
-                      <span>{season.clearedNodes} / {season.totalNodes} scenes</span>
-                    </div>
-                  </div>
-                  <div className="theater-poster__status" data-status={season.status}>
-                    {season.status === 'available' ? (season.clearedNodes ? 'Playing' : 'Available') : season.status}
-                  </div>
-                </button>
+                />
               );
             })}
           </div>
 
           {selected && (
             <section className="theater-selection" aria-live="polite" data-testid="status-selected-presentation">
-              <div className="theater-selection__copy">
-                <strong>{selected.title}</strong>
-                <span>{selected.description}</span>
-                {unlockCondition && (
-                  <small data-testid={`status-unlock-${selected.id}`}>
-                    <LockKeyhole aria-hidden="true" /> Unlock by completing {unlockCondition}.
-                  </small>
-                )}
-              </div>
-              <button
-                type="button"
-                className="theater-open"
-                disabled={selected.status === 'locked'}
-                onClick={() => selected.status !== 'locked' && onSelectSeason(selected.id)}
-                data-testid="button-open-presentation"
-              >
-                {selected.status === 'locked' ? <LockKeyhole aria-hidden="true" /> : <Play aria-hidden="true" />}
-                Open Presentation
-              </button>
+              <span>{selected.description}</span>
+              {unlockCondition && (
+                <small data-testid={`status-unlock-${selected.id}`}>
+                  <LockKeyhole aria-hidden="true" /> Unlock by completing {unlockCondition}.
+                </small>
+              )}
             </section>
           )}
 
           <button
             type="button"
-            className="theater-continue"
+            className="theater-continue-ticket"
             disabled={!recommendedNode}
             onClick={() => {
               if (!recommendedNode) return;
@@ -270,30 +298,20 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
             }}
             data-testid="button-continue-story"
           >
-            <Play aria-hidden="true" /> Continue Story
+            <span>
+              <Play aria-hidden="true" fill="currentColor" /> Continue Story
+            </span>
           </button>
         </div>
       </div>
 
-      {boothOpen && (
-        <div className="theater-note-backdrop" role="presentation" onMouseDown={() => setBoothOpen(false)}>
-          <section
-            className="theater-note"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="projection-note-title"
-            onMouseDown={(event) => event.stopPropagation()}
-            data-testid="dialog-projection-booth"
-          >
-            <button type="button" onClick={() => setBoothOpen(false)} aria-label="Close projection booth note" data-testid="button-close-projection-booth">
-              <X aria-hidden="true" />
-            </button>
-            <Projector aria-hidden="true" />
-            <h2 id="projection-note-title">Projection Booth</h2>
-            <p>Cornball asked Snitch if the projector was running. Snitch said, “Yeah—and I already told it where you live.”</p>
-          </section>
-        </div>
-      )}
+      {/* Particle Container */}
+      <div
+        ref={popcornContainerRef}
+        data-testid="popcorn-particles"
+        aria-hidden="true"
+        style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }}
+      />
     </div>,
     document.body
   );

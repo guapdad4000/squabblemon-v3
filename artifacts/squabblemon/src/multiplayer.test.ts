@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   applyOnlineCommand,
+  CARD_BALANCE_VERSION,
   createOnlineRoom,
   expireOnlineRoom,
   joinOnlineRoom,
@@ -29,6 +30,15 @@ function fixture(opening: Seat = "player") {
   room = applyOnlineCommand(room, "player", { type: "ready" }, 1);
   return applyOnlineCommand(room, "cpu", { type: "ready" }, 2);
 }
+test("card balance and online room versions reject incompatible in-progress fades safely", () => {
+  const room = fixture();
+  assert.equal(room.rulesVersion >= CARD_BALANCE_VERSION, true);
+  assert.throws(
+    () => applyOnlineCommand({ ...room, rulesVersion: room.rulesVersion - 1 }, "player", { type: "end-turn" }, 3),
+    /older rules version|new room/,
+  );
+});
+
 test("six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU", () => {
   let room = fixture();
   for (let round = 1; round <= 6; round++) {

@@ -42,20 +42,35 @@ test('GUAP is a playable top-tier Mythical with pack access, three upgrades, and
   assert.equal(resolveSpecialMove('guap', {guap: 'char45'})?.id, 'char45');
 });
 
-for (const owner of ['player', 'cpu'] as const) test('FINNAM! charges GUAP and hits only enemies in his district for ' + owner, () => {
+for (const owner of ['player', 'cpu'] as const) test('FINNAM! charges GUAP globally and hits every enemy district for ' + owner, () => {
   const { m, source, ally, foe, fragile, elsewhere } = setup(owner);
   const after = playCard(m, owner, source.instanceId, 0);
   const find = (id: string) => after.boards.flat().find(c => c.instanceId === id);
-  assert.equal(find(source.instanceId)?.powerModifier, 2);
+  assert.equal(find(source.instanceId)?.powerModifier, 1);
   assert.equal(find(foe.instanceId)?.powerModifier, -1);
   assert.equal(find(fragile.instanceId), undefined, 'a one-Hands enemy is destroyed');
   assert.equal(find(ally.instanceId)?.powerModifier, 0);
-  assert.equal(find(elsewhere.instanceId)?.powerModifier, 0);
+  assert.equal(find(elsewhere.instanceId)?.powerModifier, -1);
   assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 0);
   const event = after.effectLog.find(e => e.type === 'ability' && e.cardInstanceId === source.instanceId)!;
   assert.equal(event.kind, 'fire'); assert.match(event.note, /FINNAM!/);
-  assert.equal(event.source?.after?.powerModifier, 2);
-  assert.deepEqual(event.targets.filter(t => t.cardInstanceId !== source.instanceId).map(t => t.cardInstanceId).sort(), [foe.instanceId, fragile.instanceId].sort());
+  assert.equal(event.source?.after?.powerModifier, 1);
+  assert.deepEqual(event.targets.filter(t => t.cardInstanceId !== source.instanceId).map(t => t.cardInstanceId).sort(), [foe.instanceId, fragile.instanceId, elsewhere.instanceId].sort());
+});
+
+test('FINNAM! counts characters across the board, excludes Mushroom tokens, and is once per owner per round', () => {
+  const { m, source, elsewhere } = setup();
+  const remote = unit('plug', 'player', 8, 2);
+  const mushroom = { ...remote, instanceId: 'mushroom', cardId: 'demario-mushroom', kind: 'token' as const, basePower: 1, powerModifier: 0 };
+  m.boards[2].push(remote, mushroom);
+  m.playerMotion = 9;
+  const first = playCard(m, 'player', source.instanceId, 0);
+  assert.equal(first.boards[0].find(c => c.cardId === 'guap')?.powerModifier, 2);
+  assert.equal(first.boards[1].find(c => c.instanceId === elsewhere.instanceId)?.powerModifier, -1);
+  const second = unit('guap', 'player', 9);
+  const repeated = playCard({ ...first, phase: 'player', playerHand: [second], playerMotion: 6 }, 'player', second.instanceId, 1);
+  assert.equal(repeated.boards[1].find(c => c.instanceId === second.instanceId)?.lastEffectNote, 'FINNAM!: already used this round.');
+  assert.equal(repeated.boards[0].find(c => c.cardId === 'guap')?.powerModifier, 2);
 });
 
 test('FINNAM! respects protective effects and damage mitigation', () => {
@@ -69,7 +84,7 @@ test('FINNAM! respects protective effects and damage mitigation', () => {
   const after = playCard(m, 'player', source.instanceId, 0);
   for (const target of [foe, fragile]) assert.equal(after.boards[0].find(c => c.instanceId === target.instanceId)?.powerModifier, 0);
   assert.equal(after.timedEffects.length, 0);
-  assert.equal(after.boards[0].find(c => c.cardId === 'guap')?.powerModifier, 2);
+  assert.equal(after.boards[0].find(c => c.cardId === 'guap')?.powerModifier, 1);
 });
 
 test('GUAP gains three training bonuses only after an unblocked ability', () => {
@@ -79,11 +94,11 @@ test('GUAP gains three training bonuses only after an unblocked ability', () => 
     if (status) source.statuses[status] = true;
     const before = structuredClone(m.boards);
     const after = playCard(m, 'player', source.instanceId, 0);
-    assert.equal(after.boards[0].find(c => c.cardId === 'guap')?.powerModifier, status ? 0 : 5);
+    assert.equal(after.boards[0].find(c => c.cardId === 'guap')?.powerModifier, status ? 0 : 4);
     if (status) assert.deepEqual(after.boards.map(board => board.filter(c => c.instanceId !== source.instanceId)), before);
   }
   const {m, source} = setup(); m.boards = [[],[],[]];
-  assert.equal(playCard(m, 'player', source.instanceId, 0).boards[0][0].powerModifier, 2);
+  assert.equal(playCard(m, 'player', source.instanceId, 0).boards[0][0].powerModifier, 0);
 });
 
 test('GUAP can finish a six-round gang battle and replay identically on the authoritative engine', () => {

@@ -11,9 +11,14 @@ export function replaceDeckCard(draft: DeckDraft, index: number, cardId: string)
 }
 
 export const workshopSuggestions = [
-  { cardId: 'nail-tech', title: 'Strengthen an ally', detail: 'Give another friendly card here +2 Hands and soften its next enemy Hands reduction.' },
-  { cardId: 'delivery-demon', title: 'Move your Hands', detail: 'Move another friendly 1- or 2-Cost card here to your weakest other district.' },
-  { cardId: 'landlord', title: 'Make entry costly', detail: 'The first enemy card here each round costs 1 extra Motion. Landlord costs 4, so plan for a later play.' },
+  { cardId: 'landlord', title: 'Build an Earth tax crew', detail: 'Landlord is an affordable opener: tax the first enemy arrival here each round, then pair him with Earth supports and wide finishers.', testCrew: ['landlord', 'asphaltapostle', 'mansamusa', 'johnhenry'] },
+  { cardId: 'dorothy', title: 'Echo movement value', detail: 'The Wiz wants open districts: move a small ally with Dorothy, then let Oz repeat a successful entrance instead of stacking one lane.', testCrew: ['dorothy', 'scarecrow', 'tinman', 'oz'] },
+  { cardId: 'alice', title: 'Turn returns into tempo', detail: 'Alice leaves the board once, then returns with a Hands boost and a cheaper redeployment. Cheshire turns each return into lasting board value.', testCrew: ['alice', 'cheshire', 'watson', 'vibe'] },
+  { cardId: 'sherlock', title: 'Predict and protect', detail: 'Sherlock marks the strongest other district; Watson protects the detective and repairs an injured ally so a cancelled entrance becomes a swing.', testCrew: ['sherlock', 'watson', 'church', 'counter'] },
+  { cardId: 'guap', title: 'Finish with Fire', detail: 'Build friendly characters across the map before GUAP: FINNAM! charges from the whole board and pressures every opposing district.', testCrew: ['guap', 'folks', 'hooper', 'baby'] },
+  { cardId: 'bottle-girl', title: 'Chain Poison entries', detail: 'Bottle Girl rewards a later play and discounts your next Poison character. Follow with entry punishment from Cologne Criminal or Nail Tech.', testCrew: ['bottle-girl', 'colognecriminal', 'nail-tech', 'sneaker'] },
+  { cardId: 'inmate-crafty', title: 'Sequence Cellblock lanes', detail: 'Establish a lane with a real support and character, then use Crafty, Boyfriend, Informant, and Contraband for bounded local payoffs.', testCrew: ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'] },
+  { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'Demario creates one visible Mushroom for the next friendly character. Luigion works alone or with an ally; SQUABBLE adds the optional powered movement payoff.', testCrew: ['demario', 'luigion', 'rastamon', 'plug'] },
 ] as const;
 
 export function summarizeDeckTest(match: Match, cardId: string): string {

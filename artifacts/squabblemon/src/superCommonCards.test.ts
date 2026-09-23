@@ -166,8 +166,8 @@ test('Rock merges into Earth without changing catalog, rarity, stats or upgrade 
   assert.equal(earth.length, 17);
   for (const [id, catalogId, rarity, cost, power] of [
     ['concrete', 'concrete', 'SuperCommon', 1, 1],
-    ['landlord', 'landlord', 'Legendary', 4, 6],
-    ['johnhenry', 'john-henry', 'Mythical', 5, 5],
+    ['landlord', 'landlord', 'Legendary', 2, 3],
+    ['johnhenry', 'john-henry', 'Mythical', 5, 6],
   ] as const) {
     const entry = cardCatalog.find(c => c.engineId === id)!;
     assert.equal(entry.catalogId, catalogId);
@@ -225,7 +225,7 @@ test('John Henry keeps Steel Driver strength as Earth and in legacy snapshots', 
       boards: [[instance('manman'), instance('landlord', 'player', 1), target], [], []] },
     'player', source.instanceId, 0);
     assert.equal(find(after, 'johnhenry').powerModifier, 2);
-    assert.equal(find(after, 'techbro').powerModifier, -1);
+    assert.equal(find(after, 'techbro').powerModifier, -2);
     assert.match(find(after, 'techbro').lastEffectNote ?? '', /Steel Driver/);
   }
 });

@@ -127,7 +127,7 @@ for (const protection of ['shield', 'locked', 'uncounterable', 'asphalt'] as con
   else target.statuses[protection] = true;
   const after = cast(m, 'lawlessyn').after;
   assert.equal(find(after, target).lane, 0);
-  assert.equal(find(after, target).powerModifier, protection === 'asphalt' ? 2 : 0);
+  assert.equal(find(after, target).powerModifier, protection === 'asphalt' ? 3 : 1);
 });
 test('Concrete Congregation protects on reveal and blocks only one forced Earth move per round', () => {
   const m = blank(), earth = unit('landlord', 'player', 0), other = unit('landlord', 'player', 1, 2);

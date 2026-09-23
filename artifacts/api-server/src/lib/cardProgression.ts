@@ -12,6 +12,7 @@ import {
   ABILITY_UPGRADE_SNAPSHOT_VERSION,
   unlockedAbilityUpgrades,
 } from "@workspace/squabblemon-engine/abilityUpgrades";
+import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
 
 export const CARD_UPGRADE_SNAPSHOT_VERSION = ABILITY_UPGRADE_SNAPSHOT_VERSION;
@@ -30,6 +31,8 @@ export type CardProgressionSnapshotEntry = {
 
 export type CardProgressionSnapshot = {
   version: typeof CARD_UPGRADE_SNAPSHOT_VERSION;
+  /** The card rules used to issue and verify this reward-bearing fade. */
+  balanceRulesVersion: typeof CARD_BALANCE_VERSION;
   cards: CardProgressionSnapshotEntry[];
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
@@ -103,6 +106,7 @@ export function createCardProgressionSnapshot(
   }));
   return {
     version: CARD_UPGRADE_SNAPSHOT_VERSION,
+    balanceRulesVersion: CARD_BALANCE_VERSION,
     cards,
     abilityUpgradeSnapshot: {
       version: CARD_UPGRADE_SNAPSHOT_VERSION,
@@ -127,6 +131,7 @@ export function parseCardProgressionSnapshot(
     !value ||
     typeof value !== "object" ||
     (value as CardProgressionSnapshot).version !== CARD_UPGRADE_SNAPSHOT_VERSION ||
+    (value as CardProgressionSnapshot).balanceRulesVersion !== CARD_BALANCE_VERSION ||
     !Array.isArray((value as CardProgressionSnapshot).cards) ||
     !(value as CardProgressionSnapshot).abilityUpgradeSnapshot
   ) {
@@ -187,6 +192,7 @@ export function parseCardProgressionSnapshot(
   }
   return {
     version: CARD_UPGRADE_SNAPSHOT_VERSION,
+    balanceRulesVersion: CARD_BALANCE_VERSION,
     cards: entries,
     abilityUpgradeSnapshot: structuredClone(expected.abilityUpgradeSnapshot),
   };

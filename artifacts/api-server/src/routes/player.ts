@@ -79,6 +79,7 @@ import {
   type CardProgressionSnapshot,
 } from "../lib/cardProgression";
 import { selectTrainingRival } from "@workspace/squabblemon-engine/training";
+import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 
 const router: IRouter = Router();
 
@@ -567,6 +568,22 @@ router.post(
         });
         return;
       }
+    }
+
+    // A card rebalance changes authoritative outcomes. Never reinterpret an
+    // unfinished reward fade under new values; it is a safe restart, not a
+    // cheating/forfeit result. Completed rows intentionally skip this check
+    // so already-issued rewards and account state remain immutable.
+    if (!alreadyCompleted && (
+      !match.playerCardProgressionSnapshot ||
+      Array.isArray(match.playerCardProgressionSnapshot) ||
+      match.playerCardProgressionSnapshot.balanceRulesVersion !== CARD_BALANCE_VERSION
+    )) {
+      req.log.info({ matchId: match.id }, "Rejected reward fade issued under incompatible card rules");
+      res.status(409).json({
+        error: "This fade uses an older card balance. Start a new fade to continue; your account rewards are unchanged.",
+      });
+      return;
     }
 
     if (!alreadyCompleted) {

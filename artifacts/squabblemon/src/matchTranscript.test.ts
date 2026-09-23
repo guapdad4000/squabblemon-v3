@@ -129,21 +129,24 @@ test("Block Party content validates and rejects unknown cards, cycles, and optio
 
 test("later-season encounters use authored dialogue cards and preserve reveal order", () => {
   const later = storyContent.chapters.filter((chapter) => chapter.order >= 3);
-  assert.equal(later.length, 6);
+  assert.equal(later.length, 17);
   for (const chapter of later) {
     for (const node of chapter.nodes) {
       const lines = node.kind === "battle"
         ? [...node.preDialogue, ...node.postDialogue]
         : node.scenes;
-      assert.ok(lines.length >= 4, `${node.id} needs a substantial scene`);
+      const minimumLines = chapter.id.startsWith("special-") ? 2 : 4;
+      assert.ok(lines.length >= minimumLines, `${node.id} needs a substantial scene`);
       for (const line of lines) {
         assert.ok(line.speaker.trim());
         assert.match(line.portraitAssetId, /^assets\/characters\/.+\.webp$/);
         assert.ok(line.text.trim());
       }
       if (node.kind === "battle") {
-        assert.ok(node.preDialogue.length >= 4, `${node.id} needs four setup lines`);
-        assert.ok(node.postDialogue.length >= 3, `${node.id} needs three aftermath lines`);
+        const minimumSetupLines = chapter.id.startsWith("special-") ? 1 : 4;
+        const minimumAftermathLines = chapter.id.startsWith("special-") ? 2 : 3;
+        assert.ok(node.preDialogue.length >= minimumSetupLines, `${node.id} needs enough setup lines`);
+        assert.ok(node.postDialogue.length >= minimumAftermathLines, `${node.id} needs enough aftermath lines`);
         assert.doesNotMatch(node.postDialogue.map((line) => line.text).join(" "), /Good game\. The next table is waiting/);
       }
     }
@@ -427,9 +430,9 @@ test("late campaign phase timing fits every shortened encounter and validates", 
 });
 
 test("early campaign balance content retains IDs, rewards, and authored encounter rules", () => {
-  assert.equal(storyContent.version, 5);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 62);
-  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 51);
+  assert.equal(storyContent.version, 6);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 119);
+  assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 81);
 
   const newAccountCards = new Set(catalogIdsToEngineIds(ROOKIE_FOUNDATION_IDS));
   for (const chapter of storyContent.chapters.filter(({ order }) => order <= 2)) {

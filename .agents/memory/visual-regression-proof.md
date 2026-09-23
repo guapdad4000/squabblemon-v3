@@ -22,3 +22,9 @@ Verify setup-screen reachability inside the real route shell at the reported vie
 **Why:** An isolated wide-screen Story selector looked fixed while the real viewport-constrained shell still clipped the start action at an intermediate width. Automated locator clicks can also scroll an overflow-hidden ancestor that a user's wheel cannot scroll, hiding the bug.
 
 **How to apply:** Assert the primary action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content, then select a crew and enter the actual first turn with a valid match-start response. Check both width and height breakpoints.
+
+For effects attached to illustrated objects, verify the rendered transform and occlusion as well as the intended origin coordinates.
+
+**Why:** A beam's coordinate attributes can match its lens perfectly while opaque artwork above it hides the visible start, making it appear disconnected.
+
+**How to apply:** Test the transformed effect geometry independently of diagnostic attributes, inspect stacking against the source illustration, and confirm the visible join in a screenshot.

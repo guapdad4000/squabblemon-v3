@@ -24,7 +24,14 @@ import {
   type Statuses,
 } from "./gameEngine";
 
-export const ONLINE_RULES_VERSION = 2;
+/** Bumped whenever a persisted online room can no longer be replayed safely. */
+export const ONLINE_RULES_VERSION = 3;
+/**
+ * Card values and trigger semantics are part of a reward match's issued
+ * snapshot.  Keep this separate from the transport rules version so a
+ * cosmetic/network change does not invalidate an in-progress reward fade.
+ */
+export const CARD_BALANCE_VERSION = 3;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;

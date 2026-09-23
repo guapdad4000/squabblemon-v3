@@ -226,11 +226,28 @@ test('Protection prevents damage reactions, and opposing cooks cannot retaliate 
   const hit=cast({...blocked,playerMotion:9},'ptang').after;assert(hit.effectLog.length<40);
   assert.equal(find(hit,b).waveRounds?.squabblecook,3);assert.equal(find(hit,a).waveRounds?.squabblecook,3);
 });
-test('Oz repeats the last moved ally entrance once per match, and refuses copying loops', () => {
-  const m=blank(), ally=unit('corruptpastor','player',0), donor=unit('hooper','player',0);m.boards[0]=[ally,donor];m.lastMovedAlly={player:{instanceId:ally.instanceId,round:3}};
-  const {source,after}=cast(m,'oz','player',1);assert(find(after,source).waveOnce?.oz);assert.equal(find(after,ally).powerModifier,2);
-  const loop=blank(), echo=unit('tayaty','player',0);loop.boards[0]=[echo];loop.lastMovedAlly={player:{instanceId:echo.instanceId,round:3}};
+test('Oz repeats the most recent historical eligible entrance once per match, and refuses copying loops', () => {
+  const m=blank(), ally=unit('corruptpastor','player',0), donor=unit('hooper','player',0);ally.moved=true;m.boards[0]=[ally,donor];m.entranceHistory=[ally.instanceId];m.roundMovedIds={player:[ally.instanceId],cpu:[]};
+  const {source,after}=cast(m,'oz','player',1);assert(find(after,source).waveOnce?.oz);assert.equal(find(after,ally).powerModifier,4);
+  const loop=blank(), echo=unit('tayaty','player',0);loop.boards[0]=[echo];loop.entranceHistory=[echo.instanceId];
   const rejected=cast(loop,'oz');assert(!find(rejected.after,rejected.source).waveOnce?.oz);
+});
+
+test('Oz movement bonus uses successful current-round IDs, not persistent moved flags or one-mover history', () => {
+  const ally = unit('corruptpastor', 'player', 0), later = unit('hooper', 'player', 0);
+  ally.moved = true; // Historical objective flag alone must not qualify.
+  let m = blank();
+  m.boards[0] = [ally, later];
+  m.entranceHistory = [later.instanceId, ally.instanceId];
+  m.roundMovedIds = { player: [ally.instanceId, later.instanceId], cpu: [] };
+  const first = cast(m, 'oz', 'player', 1).after;
+  assert.equal(find(first, ally).powerModifier, 4); // entrance value + current-round movement bonus
+  assert(first.roundMovedIds?.player.includes(ally.instanceId));
+  assert.deepEqual(cast(JSON.parse(JSON.stringify(m)), 'oz', 'player', 1).after, first);
+
+  const next = { ...m, round: 4, roundMovedIds: { player: [], cpu: [] } };
+  const noBonus = cast(next, 'oz', 'player', 1).after;
+  assert.equal(find(noBonus, ally).powerModifier, 2);
 });
 test('the same fairytale rules survive six-round authoritative online games for both seats', () => {
   const ids=FAIRYTALE_WAVE.slice(0,10).map(([id])=>id), other=FAIRYTALE_WAVE.slice(11).map(([id])=>id);

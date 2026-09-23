@@ -1,0 +1,33 @@
+{
+  "description": "User-supplied transparent cinema artwork, alpha-trimmed without distorting proportions.",
+  "assets": [
+    {
+      "source": "ChatGPT_Image_Sep_22,_2026,_09_08_04_PM_1790136544907.png",
+      "output": "cinema-curtain.webp",
+      "width": 523,
+      "height": 1649,
+      "bytes": 179588
+    },
+    {
+      "source": "ChatGPT_Image_Sep_22,_2026,_09_04_39_PM_1790136544907.png",
+      "output": "cinema-film-strip.webp",
+      "width": 1440,
+      "height": 405,
+      "bytes": 140632
+    },
+    {
+      "source": "f870a746-3124-48bd-8512-21a3f7411dcf_1790136544907.png",
+      "output": "cinema-reel.webp",
+      "width": 760,
+      "height": 766,
+      "bytes": 184172
+    },
+    {
+      "source": "ChatGPT_Image_Sep_22,_2026,_08_53_35_PM_1790136544907.png",
+      "output": "cinema-logo.webp",
+      "width": 1200,
+      "height": 515,
+      "bytes": 185964
+    }
+  ]
+}

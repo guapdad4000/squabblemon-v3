@@ -14,6 +14,8 @@ import {
   runPairedCardSwaps,
   seededDeckRotation,
   simulateBalanceMatch,
+  firstLegalBalancePolicy,
+  seededLegalBalancePolicy,
   type BalancePolicy,
 } from '@workspace/squabblemon-engine/balanceLab';
 import {
@@ -121,11 +123,31 @@ test('seeded deck rotations are reproducible permutations', () => {
 
 test('the full command covers every deck pairing with mirrored seats and both tiers', () => {
   const config = createBalanceMatrixConfig('full');
-  assert.equal(config.decks.length, 12);
-  assert.equal(config.districtSeeds.length, 4);
+  assert.equal(config.decks.length, 11);
+  assert.equal(config.decks.filter((deck) => deck.id.startsWith('focus-')).length, 11);
+  assert.equal(config.districtSeeds.length, 2);
   assert.deepEqual(config.rotations, [0, 5]);
   assert.deepEqual(config.tiers, [0, 3]);
-  assert.equal(countBalanceMatrixMatches(config), 2_496);
+  assert.equal(countBalanceMatrixMatches(config), 880);
+});
+
+test('task 118 archetype shells are ten-card, unique and deterministic', () => {
+  const decks = createDefaultBalanceDecks();
+  for (const id of ['focus-earth-tax', 'focus-detective', 'focus-wiz', 'focus-wonderland',
+    'focus-fire-guap', 'focus-poison-entry', 'focus-cellblock', 'focus-demario-luigion']) {
+    const deck = decks.find((candidate) => candidate.id === id);
+    assert.ok(deck, `missing ${id}`);
+    assert.equal(deck.cardIds.length, 10);
+    assert.equal(new Set(deck.cardIds).size, 10);
+  }
+  const [a, b] = decks;
+  for (const policy of [firstLegalBalancePolicy, seededLegalBalancePolicy]) {
+    const result = simulateBalanceMatch({
+      deckA: a, deckB: b, districtSeed: 'task-118-policy', rotation: 3, tier: 3,
+      seat: 'a-player', policy, allowSquabble: false,
+    });
+    assert.equal(result.winner === 'player' || result.winner === 'cpu' || result.winner === 'draw', true);
+  }
 });
 
 test('the matrix mirrors seats, tiers and deck order deterministically', () => {

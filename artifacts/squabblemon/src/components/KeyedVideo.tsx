@@ -42,6 +42,11 @@ export function KeyedVideo({
   onEnded?: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const onEndedRef = useRef(onEnded);
+
+  useEffect(() => {
+    onEndedRef.current = onEnded;
+  }, [onEnded]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -56,7 +61,7 @@ export function KeyedVideo({
     const finish = () => {
       if (stopped) return;
       stopped = true;
-      onEnded?.();
+      onEndedRef.current?.();
     };
     const sizeCanvas = () => {
       const bounds = canvas.getBoundingClientRect();
@@ -138,7 +143,7 @@ export function KeyedVideo({
       video.removeAttribute('src');
       video.load();
     };
-  }, [loop, maxWidth, mode, onEnded, src]);
+  }, [loop, maxWidth, mode, src]);
 
   return <canvas ref={canvasRef} className={className} data-source={src} data-ready="false" aria-hidden="true" />;
 }

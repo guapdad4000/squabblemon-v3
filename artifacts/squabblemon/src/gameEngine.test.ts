@@ -26,7 +26,7 @@ test("City Never Sleeps cards use deterministic reveal, protection, movement, an
   const bottle = custom("bottle", "player", 4);
   m = { ...m, phase: "player", playerMotion: 5, playerHand: [bottle] };
   m = playCard(m, "player", bottle.instanceId, 1);
-  assert(m.discountTokens.some(token => token.eligibility === "printed-two-cost"));
+  assert(m.discountTokens.some(token => token.eligibility === "poison-character" && token.expiresAfterRound === m.round + 1));
 
   const church = custom("church", "player", 5), protectedAlly = custom("cornball", "player", 6), roaster = custom("roaster", "cpu", 7);
   m = { ...m, phase: "player", playerMotion: 20, playerHand: [church], boards: [[protectedAlly], [], []] };
@@ -108,6 +108,34 @@ test("City Never Sleeps taxes, discounts, Sneaker, Promoter, Nail, and OG Uncle 
   assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1);
   assert.equal(m.boards[0].find(card => card.instanceId === target.instanceId)?.statuses.burnStacks, 2);
   assert(!m.timedEffects.some(effect => effect.kind === "nail-mitigation"));
+});
+
+test("Landlord is an affordable round-one tax and grows only on actual rent paid", () => {
+  const landlord = custom("landlord", "player", 201);
+  const enemy = custom("cornball", "cpu", 202);
+  let m = { ...createMatch("vibes", "vibes"), playerHand: [landlord], playerMotion: 2 };
+  m = playCard(m, "player", landlord.instanceId, 0);
+  assert.equal(m.boards[0].find(c => c.instanceId === landlord.instanceId)?.basePower, 3);
+  assert.equal(m.playerMotion, 0);
+
+  const paid = { ...m, phase: "cpu-reveal" as const, cpuHand: [enemy], cpuMotion: 2 };
+  const afterPaid = playCard(paid, "cpu", enemy.instanceId, 0);
+  assert.equal(afterPaid.boards[0].find(c => c.instanceId === landlord.instanceId)?.powerModifier, 1);
+  assert.equal(afterPaid.landlordTaxUsed.cpu[0], true);
+  const second = custom("bonnetgirl", "cpu", 203);
+  const afterSecond = playCard({ ...afterPaid, phase: "cpu-reveal", cpuHand: [second], cpuMotion: 1 }, "cpu", second.instanceId, 0);
+  assert.equal(afterSecond.boards[0].find(c => c.instanceId === landlord.instanceId)?.powerModifier, 1);
+});
+
+test("Disabled Landlords neither tax nor grow; unrelated blocked status remains legal", () => {
+  for (const disabled of ["silenced", "frozen", "weakened"] as const) {
+    const landlord = { ...custom("landlord", "player", 210), statuses: { ...custom("landlord", "player", 210).statuses, [disabled]: true } };
+    const enemy = custom("cornball", "cpu", 211);
+    const m = { ...createMatch("vibes", "vibes"), phase: "cpu-reveal" as const, boards: [[landlord], [], []] as Match["boards"], cpuHand: [enemy], cpuMotion: 1 };
+    assert.equal(getLegalCardCost(m, "cpu", enemy, 0), 1);
+    const after = playCard(m, "cpu", enemy.instanceId, 0);
+    assert.equal(after.boards[0].find(c => c.instanceId === landlord.instanceId)?.powerModifier, 0);
+  }
 });
 
 test('initial hands are stable, owner-specific instances', () => {

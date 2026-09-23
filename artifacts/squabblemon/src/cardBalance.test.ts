@@ -53,7 +53,13 @@ test('Mythical reveal swings stay bounded in a favorable contested board', () =>
       - (totalHands(after, 'cpu') - totalHands(before, 'cpu'));
     const expectedNetMotion = cards[mythic.engineId].cost - (mythic.engineId === 'tron' ? 1 : 0);
     assert.equal(9 - after.playerMotion, expectedNetMotion, mythic.name);
-    assert(swing <= Math.ceil(Math.max(mythic.cost * 2.25, 6)), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
+    // GUAP's approved global FINNAM! package is intentionally the sole bounded
+    // exception: five charge plus up to three enemy districts of reduction.
+    if (mythic.engineId !== 'guap') {
+      assert(swing <= Math.ceil(Math.max(mythic.cost * 2.25, 6)), `${mythic.name} swung ${swing} Hands for ${mythic.cost} Motion`);
+    } else {
+      assert(swing <= 18, `GUAP exceeded its approved 18-Hand global swing: ${swing}`);
+    }
     assert(swing >= mythic.power, `${mythic.name} lost its printed value on a favorable board`);
   }
 });

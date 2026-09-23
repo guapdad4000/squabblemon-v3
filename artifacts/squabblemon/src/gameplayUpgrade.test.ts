@@ -91,7 +91,7 @@ test('gang guidance uses actual opening order and explains conditional support',
   const advice = crewInsights(roster.map(id => catalogCardByEngineId[id].catalogId));
   assert(advice.opening >= 2); assert(advice.tips.some(t => t.includes('Nguyen')));
   assert.equal(advice.curve.reduce((a,b)=>a+b),10);
-  assert.equal(crewInsights(completeEngineCrew(['techbro','landlord','hooper','baby','og','cornball','earthy'])).opening,0);
+  assert.equal(crewInsights(completeEngineCrew(['techbro','landlord','hooper','baby','og','cornball','earthy'])).opening,1);
 });
 test('career goals require actual cleanse, a changed roster, and wins for mastery', () => {
   const nurse = createCardInstance('pinaynurse','player','test',0);

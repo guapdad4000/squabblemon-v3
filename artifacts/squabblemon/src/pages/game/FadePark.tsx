@@ -109,10 +109,17 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     finally { operation.current = false; setBusy(false); }
   }
   return <main className="fade-park" aria-label="Fade Park ranked lobby" data-testid="fade-park" onPointerMove={handlePointerMove}>
-    <div className="park-environment">
+    <div className="park-environment" aria-hidden="true">
       <div className="park-layer park-layer--bg">
         <img className="fade-park-wallpaper" src={getAssetUrl('assets/fade-park/park.png')} alt="" fetchPriority="high" />
       </div>
+      <img
+        className="park-street-sign"
+        src={getAssetUrl('assets/fade-park/catch-hands-sign.webp')}
+        alt=""
+        draggable={false}
+        decoding="async"
+      />
       <div className="park-layer park-layer--shade fade-park-shade" />
       <div className="park-layer park-layer--dust" />
     </div>

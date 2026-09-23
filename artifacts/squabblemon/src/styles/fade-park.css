@@ -1,5 +1,17 @@
 .fade-park { min-height: 100dvh; position: relative; isolation: isolate; color: #fff8e9; background: #121c19; padding: max(20px, env(safe-area-inset-top)) clamp(20px, 5vw, 88px) max(30px, env(safe-area-inset-bottom)); }
 .park-environment { position: fixed; inset: 0; z-index: -3; pointer-events: none; overflow: hidden; }
+.park-street-sign {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 83%;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  transform: translateX(-50%);
+  pointer-events: none;
+  user-select: none;
+}
 .park-layer { position: absolute; inset: -8%; width: 116%; height: 116%; pointer-events: none; }
 .park-layer--bg { transform: translate(calc((var(--mx, 0.5) - 0.5) * -4%), calc((var(--my, 0.5) - 0.5) * -4%)); transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1); }
 .park-layer--shade { transform: translate(calc((var(--mx, 0.5) - 0.5) * -1.5%), calc((var(--my, 0.5) - 0.5) * -1.5%)); transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1); }

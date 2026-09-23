@@ -2,7 +2,7 @@
 
 **Gate status: PENDING.** No human findings are recorded until real sessions are completed. The deterministic lab identifies candidates for observation; it does not replace players.
 
-The current redacted automated aggregate is recorded in [BALANCE_BASELINE.md](./BALANCE_BASELINE.md). Raw JSON and human row-level notes remain in ignored or access-controlled storage.
+The current redacted automated aggregate is recorded in [BALANCE_BASELINE.md](./BALANCE_BASELINE.md). Raw JSON and human row-level notes remain in ignored or access-controlled storage. Task 118 adds Earth, detective, Wiz, Wonderland, Fire/GUAP, Poison, Cellblock, and Demario/Luigion shells; these are recommended comparison crews, not new starters or replacements for saved crews.
 
 ## Minimum sessions
 
@@ -68,6 +68,7 @@ The deterministic lab uses a transparent one-ply greedy policy. Treat its flags 
 - The player/CPU seat split includes turn-order and reveal behavior. Use the mirrored logical-deck result for card comparisons, and investigate the seat flag separately.
 - Do not change a card from one policy signal alone. Corroborate it with a second deterministic policy or fixture, direct effect math, and the human sessions above.
 - If an alternate policy reverses the sign or materially changes the rank of a swap, record it as model-sensitive and test the actual play pattern with players.
+- For the new shells, record first effective round, Motion spent before the first successful signature ability, and whether the intended lane or cross-district payoff actually occurred. For Landlord, record tax payments and earned Hands; for GUAP, record affected districts; for Demario/Luigion, record Mushroom consumption and powered movement.
 - Automated blockers remain open until the underlying case is explained, fixed, or accepted with evidence. They do not change the human gate from `PENDING` to `PASS`.
 ## Severity rubric
 

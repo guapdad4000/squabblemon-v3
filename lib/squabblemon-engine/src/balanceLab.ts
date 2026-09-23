@@ -260,8 +260,16 @@ export type BalanceLabReport = {
   };
   readonly matrix: BalanceMatrixReport;
   readonly swaps: readonly BalanceSwapSummary[];
+  readonly policySensitivity: readonly BalancePolicySensitivity[];
   readonly combos: readonly BalanceComboProbe[];
   readonly flags: readonly BalanceFlag[];
+};
+
+export type BalancePolicySensitivity = {
+  readonly policy: string;
+  readonly pairedCases: number;
+  readonly swaps: readonly BalanceSwapSummary[];
+  readonly playerSeatScoreRate: number;
 };
 
 const LANES: readonly Lane[] = [0, 1, 2];
@@ -435,6 +443,17 @@ export const greedyBalancePolicy: BalancePolicy = ({ match, owner, legalPlays, e
       || left.option.cardId.localeCompare(right.option.cardId)
       || left.option.lane - right.option.lane);
   return ranked[0].score > baseline + 0.05 ? ranked[0].option : null;
+};
+
+/** Deterministic low-information baseline used to expose policy-sensitive results. */
+export const firstLegalBalancePolicy: BalancePolicy = ({ legalPlays }) =>
+  legalPlays.find((option) => !option.squabble) ?? legalPlays[0] ?? null;
+
+/** A reproducible tie-shuffled policy, deliberately independent of card strength. */
+export const seededLegalBalancePolicy: BalancePolicy = ({ legalPlays, seed, actionIndex }) => {
+  if (!legalPlays.length) return null;
+  const index = hashSeed(`${seed}:legal:${actionIndex}`) % legalPlays.length;
+  return legalPlays[index];
 };
 
 function cardObservations(match: Match, owner: Owner, deck: BalanceDeck): BalanceCardObservation[] {
@@ -981,6 +1000,12 @@ export function runHighRiskComboProbe(spec: BalanceComboSpec, tier: BalanceTier,
 }
 
 export const HIGH_RISK_COMBOS: readonly BalanceComboSpec[] = [
+  { id: 'guap-with-tayaty', firstCardId: 'guap', echoCardId: 'tayaty' },
+  { id: 'landlord-with-tayaty', firstCardId: 'landlord', echoCardId: 'tayaty' },
+  { id: 'oz-with-tayaty', firstCardId: 'oz', echoCardId: 'tayaty' },
+  { id: 'queen-with-tayaty', firstCardId: 'queenofhearts', echoCardId: 'tayaty' },
+  { id: 'demario-with-tayaty', firstCardId: 'demario', echoCardId: 'tayaty' },
+  { id: 'luigion-with-tayaty', firstCardId: 'luigion', echoCardId: 'tayaty' },
   { id: 'ashlee-into-tayaty', firstCardId: 'ashlee', echoCardId: 'tayaty' },
   { id: 'captain-jigga-into-tayaty', firstCardId: 'captainjigga', echoCardId: 'tayaty' },
   { id: 'counter-into-tayaty', firstCardId: 'counter', echoCardId: 'tayaty' },
@@ -1005,6 +1030,14 @@ export function createDefaultBalanceDecks(): BalanceDeck[] {
     balanceDeck('focus-air-bond', 'Air Bond', ['honestthot', 'ashlee', 'captainjigga', 'roaster', 'bikelife', 'vibe']),
     balanceDeck('focus-late-scaling', 'Late Scaling', ['alchy', 'icecream', 'waterboy', 'laundry', 'stonersr', 'foodz']),
     balanceDeck('focus-counterplay', 'Counterplay', ['counter', 'stud', 'pinaynurse', 'wifey', 'rastamon', 'gothkid']),
+    balanceDeck('focus-earth-tax', 'Earth Tax and Finishers', ['landlord', 'bigzoey', 'stud', 'torta', 'concrete', 'mansamusa', 'johnhenry', 'partytitan', 'asphaltapostle', 'failedathlete']),
+    balanceDeck('focus-detective', 'Sherlock and Watson', ['sherlock', 'watson', 'crossingguard', 'nightmedic', 'wifey', 'counter', 'oz', 'rastamon', 'bustdown', 'tinman']),
+    balanceDeck('focus-wiz', 'The Wiz Movement', ['dorothy', 'scarecrow', 'tinman', 'oz', 'lion', 'passportbro', 'break', 'bboy', 'ogdominican', 'delivery']),
+    balanceDeck('focus-wonderland', 'Wonderland Return', ['alice', 'cheshire', 'watson', 'vibe', 'snow', 'laundry', 'waterboy', 'conductor', 'alchy', 'squabbleserver']),
+    balanceDeck('focus-fire-guap', 'Fire and GUAP', ['guap', 'folks', 'hooper', 'bbldemon', 'cornercoach', 'cognac', 'krump', 'dancecaptain', 'og', 'baby']),
+    balanceDeck('focus-poison-entry', 'Poison Entry Punishment', ['bottle', 'colognecriminal', 'nail', 'mural', 'fein', 'simmy', 'bbldemon', 'roaster', 'plug', 'wifey']),
+    balanceDeck('focus-cellblock', 'Cellblock Lane Sequence', ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james', 'bustdown', 'cognac', 'rastamon', 'wifey', 'stud']),
+    balanceDeck('focus-demario-luigion', 'Demario and Luigion', ['demario', 'luigion', 'rastamon', 'vibe', 'plug', 'bustdown', 'soulfood', 'black-cowboy', 'hair-stylist', 'stylist']),
   ];
 }
 
@@ -1022,12 +1055,28 @@ function createSwapExperiments(): BalanceSwapExperiment[] {
 export function createBalanceMatrixConfig(mode: BalanceLabMode, onProgress?: (completed: number, total: number) => void): BalanceMatrixConfig {
   const allDecks = createDefaultBalanceDecks();
   return mode === 'full' ? {
-    id: 'wave7-full-v1',
-    decks: allDecks,
-    districtSeeds: Array.from({ length: 4 }, (_, index) => `wave7-balance-district-${index.toString().padStart(2, '0')}`),
+    id: 'task118-full-v1',
+    // Task 118 release coverage: eight affected shells plus three deliberately distinct
+    // strong Fire/control/movement benchmarks. Historical shells remain available to
+    // targeted experiments but do not make the release gate impractically large.
+    decks: [
+      allDecks.find((deck) => deck.id === 'focus-earth-tax')!,
+      allDecks.find((deck) => deck.id === 'focus-detective')!,
+      allDecks.find((deck) => deck.id === 'focus-wiz')!,
+      allDecks.find((deck) => deck.id === 'focus-wonderland')!,
+      allDecks.find((deck) => deck.id === 'focus-fire-guap')!,
+      allDecks.find((deck) => deck.id === 'focus-poison-entry')!,
+      allDecks.find((deck) => deck.id === 'focus-cellblock')!,
+      allDecks.find((deck) => deck.id === 'focus-demario-luigion')!,
+      allDecks.find((deck) => deck.id === 'focus-wave7-legends')!,
+      allDecks.find((deck) => deck.id === 'focus-counterplay')!,
+      allDecks.find((deck) => deck.id === 'focus-air-bond')!,
+    ],
+    districtSeeds: ['task118-full-district-00', 'task118-full-district-01'],
     rotations: [0, 5],
     tiers: [0, 3],
-    includeMirrors: true,
+    // Compare distinct decks only; both seat assignments below still mirror every pairing.
+    includeMirrors: false,
     allowSquabble: true,
     minimumSampleSize: 16,
     onProgress,
@@ -1065,6 +1114,43 @@ export function runBalanceLab(mode: BalanceLabMode, onProgress?: (completed: num
     tiers: [0, 3],
     allowSquabble: true,
   });
+  const sensitivitySeeds = mode === 'full' ? matrixConfig.districtSeeds.slice(0, 2) : matrixConfig.districtSeeds.slice(0, 1);
+  const sensitivityRotations = mode === 'full' ? matrixConfig.rotations : matrixConfig.rotations.slice(0, 1);
+  const sensitivityExperiments = createSwapExperiments().slice(0, 3);
+  const policySensitivity: BalancePolicySensitivity[] = [
+    { policy: 'greedy', pairedCases: swaps.reduce((sum, swap) => sum + swap.pairedCases, 0), swaps, playerSeatScoreRate: matrix.seat.scoreRate },
+    ...([
+      ['first-legal', firstLegalBalancePolicy],
+      ['seeded-legal', seededLegalBalancePolicy],
+    ] as const).map(([policy, alternate]) => {
+      const alternateSwaps = runPairedCardSwaps({
+        experiments: sensitivityExperiments,
+        opponents: opponents.slice(0, mode === 'full' ? 2 : 1),
+        districtSeeds: sensitivitySeeds,
+        rotations: sensitivityRotations,
+        tiers: [0, 3],
+        allowSquabble: false,
+        policy: alternate,
+      });
+      const alternateMatrix = runBalanceMatrix({
+        id: `${matrixConfig.id}-${policy}`,
+        decks: matrixConfig.decks.slice(0, 4),
+        districtSeeds: sensitivitySeeds,
+        rotations: sensitivityRotations,
+        tiers: [0, 3],
+        includeMirrors: true,
+        allowSquabble: false,
+        policy: alternate,
+        minimumSampleSize: 1,
+      });
+      return {
+        policy,
+        pairedCases: alternateSwaps.reduce((sum, swap) => sum + swap.pairedCases, 0),
+        swaps: alternateSwaps,
+        playerSeatScoreRate: alternateMatrix.seat.scoreRate,
+      };
+    }),
+  ];
   const combos = HIGH_RISK_COMBOS.flatMap((spec) => ([0, 3] as const).flatMap((tier) =>
     (['player', 'cpu'] as const).map((owner) => runHighRiskComboProbe(spec, tier, owner)),
   ));
@@ -1104,6 +1190,7 @@ export function runBalanceLab(mode: BalanceLabMode, onProgress?: (completed: num
     humanPlaytest: { status: 'pending' as const, protocol: 'scripts/BALANCE_PLAYTEST.md' as const },
     matrix,
     swaps,
+    policySensitivity,
     combos,
     flags: flags.sort((left, right) => left.severity.localeCompare(right.severity) || left.code.localeCompare(right.code) || left.subject.localeCompare(right.subject)),
   };
@@ -1140,6 +1227,14 @@ export function renderBalanceLabMarkdown(report: BalanceLabReport): string {
     '| Swap | Cases | Baseline | Candidate | Delta | Gate |',
     '| --- | ---: | ---: | ---: | ---: | --- |',
     ...report.swaps.map((swap) => `| ${swap.name} | ${swap.pairedCases} | ${percent(swap.baselineScoreRate)} | ${percent(swap.candidateScoreRate)} | ${signedPercent(swap.delta)} | ${swap.flag} |`),
+    '',
+    '## Policy sensitivity',
+    '',
+    'Alternate deterministic policies are model-sensitivity evidence, not release gates.',
+    '',
+    '| Policy | Paired cases | Player-seat score | Largest swap delta |',
+    '| --- | ---: | ---: | ---: |',
+    ...report.policySensitivity.map((policy) => `| ${policy.policy} | ${policy.pairedCases} | ${percent(policy.playerSeatScoreRate)} | ${policy.swaps.length ? signedPercent(policy.swaps[0].delta) : 'n/a'} |`),
     '',
     '## High-risk echo probes',
     '',

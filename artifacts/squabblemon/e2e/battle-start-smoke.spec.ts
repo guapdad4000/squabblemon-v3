@@ -2,6 +2,18 @@ import { expect, test, type Locator, type Page, type TestInfo } from '@playwrigh
 
 const smokeSelector = 'canvas.battle-start-smoke';
 
+type SmokeMediaStats = {
+  creations: number;
+  plays: number;
+  pauses: number;
+};
+
+async function smokeMediaStats(page: Page): Promise<SmokeMediaStats> {
+  return page.evaluate(() => (
+    window as typeof window & { __battleSmokeMedia: SmokeMediaStats }
+  ).__battleSmokeMedia);
+}
+
 async function sendFixtureAction(page: Page, action: 'update' | 'disconnect' | 'reconnect' | 'complete' | 'rematch') {
   await page.evaluate(detail => {
     window.dispatchEvent(new CustomEvent('battle-smoke-fixture', { detail }));
@@ -61,6 +73,41 @@ async function captureVisibleSmoke(page: Page, testInfo: TestInfo) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const stats: SmokeMediaStats = { creations: 0, plays: 0, pauses: 0 };
+    (window as typeof window & { __battleSmokeMedia: SmokeMediaStats }).__battleSmokeMedia = stats;
+    const nativeCreateElement = Document.prototype.createElement;
+    const nativeSrc = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
+
+    Document.prototype.createElement = function createElement(tagName: string, options?: ElementCreationOptions) {
+      const element = nativeCreateElement.call(this, tagName, options);
+      if (tagName.toLowerCase() !== 'video' || !(element instanceof HTMLVideoElement) || !nativeSrc?.get || !nativeSrc.set) {
+        return element;
+      }
+
+      let isSmoke = false;
+      Object.defineProperty(element, 'src', {
+        configurable: true,
+        get: () => nativeSrc.get!.call(element),
+        set: (value: string) => {
+          isSmoke = value.includes('assets/effects/battle-start-smoke.webm');
+          if (isSmoke) stats.creations += 1;
+          nativeSrc.set!.call(element, value);
+        },
+      });
+      const nativePlay = element.play.bind(element);
+      const nativePause = element.pause.bind(element);
+      element.play = () => {
+        if (isSmoke) stats.plays += 1;
+        return nativePlay();
+      };
+      element.pause = () => {
+        if (isSmoke) stats.pauses += 1;
+        nativePause();
+      };
+      return element;
+    } as typeof Document.prototype.createElement;
+  });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
 });
 
@@ -113,17 +160,26 @@ test('room updates and reconnects in the same game never replay the effect', asy
     `/squabblemon/e2e/battle-start-smoke.fixture.html?kind=friend&code=stable-${testInfo.project.name}`,
   );
   await expectPlayingFullscreen(page, smoke);
-  await smoke.dispatchEvent('ended');
-  await expect(smoke).toHaveCount(0);
+  await expect.poll(() => smokeMediaStats(page)).toEqual({ creations: 1, plays: 1, pauses: 0 });
 
   await sendFixtureAction(page, 'update');
   await expect(page.getByTestId('online-battle')).toHaveAttribute('data-revision', '4');
-  await expect(smoke).toHaveCount(0);
   await sendFixtureAction(page, 'disconnect');
   await expect(page.getByTestId('online-battle')).toHaveAttribute('data-connected', 'false');
   await sendFixtureAction(page, 'reconnect');
   await expect(page.getByTestId('online-battle')).toHaveAttribute('data-connected', 'true');
+  await expect(smoke).toHaveCount(1);
+  await expect.poll(() => smokeMediaStats(page), {
+    message: 'parent updates must not replace or replay the in-flight smoke video',
+  }).toEqual({ creations: 1, plays: 1, pauses: 0 });
+
+  await expect(smoke).toHaveCount(0, { timeout: 10_000 });
+  await expect.poll(() => smokeMediaStats(page), {
+    message: 'the naturally ended smoke video should be cleaned up exactly once',
+  }).toEqual({ creations: 1, plays: 1, pauses: 1 });
+  await sendFixtureAction(page, 'update');
   await expect(smoke).toHaveCount(0);
+  expect(await smokeMediaStats(page)).toEqual({ creations: 1, plays: 1, pauses: 1 });
 });
 
 test('result and final-board review do not replay smoke', async ({ page }, testInfo) => {

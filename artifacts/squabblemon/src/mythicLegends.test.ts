@@ -89,7 +89,7 @@ for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend revea
       for (const card of [ally, second, third]) assert.equal(onBoard(after, card).powerModifier, 1);
       assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.tron.cost + 1);
     }
-    if (id === 'johnhenry') { assert.equal(self.powerModifier, 3); assert.equal(rival.powerModifier, 1); }
+    if (id === 'johnhenry') { assert.equal(self.powerModifier, 0); assert.equal(rival.powerModifier, 2); }
     if (id === 'ashlee') {
       for (const card of [ally, second, third]) assert.equal(onBoard(after, card).powerModifier, 1);
       assert.equal(rival.powerModifier, 1);
@@ -195,7 +195,7 @@ test('new effects respect conditions, guard and direct protection', () => {
   const john = setup('johnhenry');
   john.m.boards[0] = [john.ally, john.foe];
   const smallCrew = playCard(john.m, 'player', john.source.instanceId, 0);
-  assert.equal(onBoard(smallCrew, john.source).powerModifier, 1);
+  assert.equal(onBoard(smallCrew, john.source).powerModifier, 0);
   assert.equal(onBoard(smallCrew, john.foe).powerModifier, 2);
 });
 

@@ -10,7 +10,8 @@ import { moveAssignments, resolveSpecialMove } from './specialMoves';
 const crew = completeEngineCrew(['energydrink', 'charger', 'cornball', 'plug', 'boombox', 'firstaid', 'subwaymap', 'workboots']);
 const unit = (id: string, owner: Owner, index = 0) => ({ ...createCardInstance(id, owner, 'supports', index), lane: 0 as const });
 test('requested balance pass updates starting Hands, Motion, support strength, and Buttahs display name', () => {
-  assert.equal(cards.landlord.power, 6);
+  assert.equal(cards.landlord.cost, 2);
+  assert.equal(cards.landlord.power, 3);
   assert.equal(cards.bottle.power, 3);
   assert.equal(cards.ogdominican.power, 4);
   assert.equal(cards.leroy.cost, 3);

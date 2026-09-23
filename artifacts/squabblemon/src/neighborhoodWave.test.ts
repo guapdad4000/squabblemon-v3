@@ -48,7 +48,7 @@ for (const owner of ['player', 'cpu'] as const) {
       const after = cast(m, id, owner, 0, false, tier);
       assert.equal(JSON.stringify(m), saved);
       assert.deepEqual(cast(JSON.parse(saved), id, owner, 0, false, tier), after);
-      assert.equal(find(after, id).powerModifier, tier + (id === 'luigion' ? 1 : 0));
+       assert.equal(find(after, id).powerModifier, tier + (id === 'luigion' ? 2 : 0));
       if (id === 'hair-stylist') {
         assert.equal(find(after, 'rastamon').statuses.burnStacks, 0);
         assert.equal(find(after, 'rastamon').statuses.frozen, false);
@@ -67,9 +67,9 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(cast(full, 'demario', owner, 0, false, 3), 'demario').powerModifier, 0);
     const solo = cast(blank(), 'luigion', owner, 0, true);
     assert.equal(find(solo, 'luigion').id, 'luigion-powered');
-    assert.equal(find(solo, 'luigion').powerModifier, 2);
-    assert.equal(find(cast(blank(), 'luigion', owner), 'luigion').powerModifier, 0);
-    assert.equal(find(cast(blank(), 'luigion', owner, 0, true, 3), 'luigion').powerModifier, 5);
+    assert.equal(find(solo, 'luigion').powerModifier, 5);
+    assert.equal(find(cast(blank(), 'luigion', owner), 'luigion').powerModifier, 2);
+    assert.equal(find(cast(blank(), 'luigion', owner, 0, true, 3), 'luigion').powerModifier, 8);
   });
 }
 
@@ -85,14 +85,14 @@ test('Luigion consumes only one same-owner same-lane mushroom, preserving identi
   assert.equal(luigion.cardId, 'luigion');
   assert.equal(luigion.name, 'Powered Luigion');
   assert.equal(luigion.instanceId, 'player:cast:0:luigion');
-  assert.equal(luigion.powerModifier, 5); // +2 Squabble, +1 character ally, +2 mushroom
+  assert.equal(luigion.powerModifier, 6); // +2 Squabble, +1 base reveal, +2 Mushroom, +1 jump
   assert.equal(after.boards[0].filter(c => c.owner === 'player' && c.cardId === 'demario-mushroom').length, 1);
   assert.ok(after.boards[0].some(c => c.instanceId === 'enemy-mushroom'));
   assert.ok(after.boards[1].some(c => c.instanceId === 'remote-mushroom'));
   assert.deepEqual(cast(JSON.parse(before), 'luigion', 'player', 0, true), after);
   assert.ok(after.effectLog.some(e => e.replay.after.boards.flat().some(c => c.id === 'luigion-powered')));
   const normal = cast(m, 'luigion');
-  assert.equal(normal.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 3);
+  assert.equal(normal.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 2);
 });
 
 test('form preserves existing statuses and buffs and projects public art without leaking rival hands', () => {
@@ -117,7 +117,7 @@ test('opponent and remote mushrooms never grant a transformation bonus', () => {
   m.boards[0] = [{ ...seed, owner: 'cpu', instanceId: 'enemy-only' }];
   m.boards[1] = [{ ...seed, lane: 1, instanceId: 'remote-only' }];
   const after = cast(m, 'luigion', 'player', 0, true);
-  assert.equal(find(after, 'luigion').powerModifier, 2);
+  assert.equal(find(after, 'luigion').powerModifier, 5);
   assert.ok(after.boards[0].some(c => c.instanceId === 'enemy-only'));
   assert.ok(after.boards[1].some(c => c.instanceId === 'remote-only'));
 });

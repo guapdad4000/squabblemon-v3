@@ -61,7 +61,8 @@ for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities
     if (id === 'bigzoey') assert.equal(enemy.powerModifier,-2);
     if (id === 'leroy') assert.equal(enemy.powerModifier,-2);
     if (id === 'piratedj' || id === 'partytitan') {
-      assert.equal(after.boards[1][0].powerModifier,1); assert.equal(after.boards[2][0].powerModifier,1);
+      assert.equal(after.boards[1][0].powerModifier,1);
+      assert.equal(after.boards[2][0].powerModifier,1);
       assert.equal(ally.powerModifier,id === 'partytitan' ? 1 : 0);
     }
     if (id === 'subwaymagician') { assert.equal(enemy.statuses.weakened,true); assert.notEqual(self.lane,0); }

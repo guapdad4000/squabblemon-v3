@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { replaceDeckCard, summarizeDeckTest } from './deckWorkshop';
+import { replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
 import { ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, decks } from '../data';
 import { createMatchFromEngineCards, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
 
@@ -36,4 +36,17 @@ test('custom deck transcript replays the issued roster even if the saved deck ch
   assert.throws(() => verifyMatchTranscript('my-first-crew', 'combo', moves, snapshot, ids));
   assert.throws(() => verifyMatchTranscript('my-first-crew', 'combo', [{ ...moves[0], cardInstanceId: 'forged' }, ...moves.slice(1)], snapshot, issued));
   assert.match(summarizeDeckTest(match, 'nail-tech'), /Nail Tech/);
+});
+
+test('workshop teaches each affected archetype without creating or replacing decks', () => {
+  assert.deepEqual(
+    workshopSuggestions.map(lesson => lesson.cardId),
+    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario'],
+  );
+  for (const lesson of workshopSuggestions) {
+    assert.ok(lesson.title.length > 0);
+    assert.ok(lesson.detail.length > 0);
+    assert.ok(lesson.testCrew.length >= 4);
+    assert.ok(lesson.testCrew.includes(lesson.cardId));
+  }
 });

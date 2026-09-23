@@ -7,6 +7,7 @@ import {
   createCardProgressionSnapshot,
   parseCardProgressionSnapshot,
 } from "./cardProgression";
+import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 
 test("card levels change at every XP threshold and stop at level 10", () => {
   const thresholds = [0, 100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500];
@@ -123,6 +124,22 @@ test("fade upgrade snapshots reject forged, stale, and malformed upgrades", () =
   );
   assert.throws(
     () => parseCardProgressionSnapshot([{ cardId: "cornball", xp: 0, level: 1 }], ["cornball"], []),
+    /missing/,
+  );
+});
+
+test("reward snapshots carry the card balance version and reject older rules", () => {
+  const snapshot = createCardProgressionSnapshot(["cornball"], ["cornball"], {});
+  assert.equal(snapshot.balanceRulesVersion, CARD_BALANCE_VERSION);
+  const stale = { ...snapshot, balanceRulesVersion: CARD_BALANCE_VERSION - 1 };
+  assert.throws(
+    () => parseCardProgressionSnapshot(stale, ["cornball"], []),
+    /missing/,
+  );
+  const legacy = { ...snapshot };
+  delete (legacy as { balanceRulesVersion?: number }).balanceRulesVersion;
+  assert.throws(
+    () => parseCardProgressionSnapshot(legacy, ["cornball"], []),
     /missing/,
   );
 });

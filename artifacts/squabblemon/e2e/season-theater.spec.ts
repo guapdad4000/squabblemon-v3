@@ -4,8 +4,9 @@ const fixture = '/e2e/season-theater.fixture.html';
 const screenshots = 'e2e/screenshots';
 const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
+  { name: 'tablet', width: 1024, height: 1366 },
   { name: 'phone', width: 390, height: 844 },
-  { name: 'phone-short', width: 390, height: 667 },
+  { name: 'phone-short', width: 375, height: 667 },
 ] as const;
 
 async function hitTestable(locator: Locator) {
@@ -35,7 +36,7 @@ async function userScrollToAction(page: Page, locator: Locator) {
   })).toBe(true);
 }
 
-async function loadFixture(page: Page, scenario: string, viewport = viewports[0]) {
+async function loadFixture(page: Page, scenario: string, viewport: { name: string; width: number; height: number } = viewports[0]) {
   await page.setViewportSize(viewport);
   const failedAssets: string[] = [];
   page.on('response', (response) => {
@@ -53,10 +54,10 @@ test.describe('season theater in the real game shell', () => {
   for (const viewport of viewports) {
     test(`${viewport.name}: all presentations and final action stay reachable`, async ({ page }) => {
       const failedAssets = await loadFixture(page, 'theater', viewport);
-      await expect(page.getByRole('heading', { name: 'Squabblemon Cinema' })).toBeVisible();
-      const region = page.getByRole('listbox', { name: 'Story presentations' });
+      await expect(page.getByRole('heading', { name: 'Squabblemon Cinema' })).toHaveCount(1);
+      const region = page.locator('.theater-posters');
       await expect(region).toBeVisible();
-      const posters = region.getByRole('option');
+      const posters = region.locator('.cinema-poster');
       await expect(posters).toHaveCount(3);
       await expect(page.getByTestId('button-presentation-season-1')).toBeVisible();
       await expect(page.getByTestId('button-presentation-season-2')).toBeAttached();
@@ -66,14 +67,32 @@ test.describe('season theater in the real game shell', () => {
         const lastPoster = page.getByTestId('button-presentation-special-sherlock');
         await lastPoster.focus();
         await expect(lastPoster).toBeFocused();
-        await expect(lastPoster).toHaveAttribute('aria-selected', 'true');
+        await expect(lastPoster).toHaveAttribute('data-selected', 'true');
         await expect(lastPoster).toBeInViewport();
       }
 
       const finalAction = page.getByTestId('button-continue-story');
       await hitTestable(finalAction);
+      const explanation = page.locator('.theater-selection > span');
+      await expect(explanation).toBeVisible();
+      await expect(page.locator('.theater-selection strong')).toHaveCount(0);
+      const selectedPoster = page.locator('.cinema-poster[data-selected="true"]');
+      const [posterBox, descriptionBox, actionBox, filmBox] = await Promise.all([
+        selectedPoster.boundingBox(), explanation.boundingBox(), finalAction.boundingBox(),
+        page.locator('.cinema-film-strip').boundingBox(),
+      ]);
+      expect(descriptionBox!.y).toBeGreaterThanOrEqual(posterBox!.y + posterBox!.height);
+      expect(actionBox!.y).toBeGreaterThanOrEqual(descriptionBox!.y + descriptionBox!.height);
+      expect(actionBox!.y - (posterBox!.y + posterBox!.height)).toBeLessThan(155);
+      expect(filmBox!.height).toBeGreaterThanOrEqual(180);
+      expect(filmBox!.y + filmBox!.height).toBeGreaterThan(viewport.height);
+      for (const curtain of await page.locator('.theater-curtain').all()) {
+        const box = (await curtain.boundingBox())!;
+        const originalWidth = Math.min(180, Math.max(50, viewport.width * 0.12));
+        expect(box.width).toBeCloseTo(originalWidth + viewport.width * 0.05, 0);
+      }
       expect(failedAssets).toEqual([]);
-      const brokenImages = await page.locator('.theater-poster img').evaluateAll((images) =>
+      const brokenImages = await page.locator('.cinema-poster img').evaluateAll((images) =>
         images.filter((image) => !(image as HTMLImageElement).complete ||
           (image as HTMLImageElement).naturalWidth === 0).length);
       expect(brokenImages).toBe(0);
@@ -83,13 +102,8 @@ test.describe('season theater in the real game shell', () => {
       expect(hostBox?.y).toBe(0);
       const safehouse = page.getByRole('link', { name: 'Return to safehouse' });
       await hitTestable(safehouse);
-      for (const curtain of await page.locator('.theater-curtain').all()) {
-        const [curtainBox, hostBox] = await Promise.all([curtain.boundingBox(), host.boundingBox()]);
-        expect(curtainBox).not.toBeNull();
-        expect(hostBox).not.toBeNull();
-        expect(curtainBox!.y).toBeGreaterThanOrEqual(hostBox!.y);
-        expect(curtainBox!.y + curtainBox!.height).toBeLessThanOrEqual(hostBox!.y + hostBox!.height + 1);
-      }
+      await expect(page.getByTestId('button-open-presentation')).toHaveCount(0);
+      await expect(page.getByTestId('button-projection-booth')).toHaveCount(0);
       await page.screenshot({
         path: `${screenshots}/season-theater-${viewport.name}.png`,
         animations: 'disabled',
@@ -97,26 +111,78 @@ test.describe('season theater in the real game shell', () => {
     });
   }
 
-  test('mouse, keyboard and touch aiming move a bottom-center spotlight', async ({ page }) => {
+  test('mouse and touch aim the light; keyboard and a single tap open a season', async ({ page }) => {
     await loadFixture(page, 'theater');
     const host = page.locator('.theater-host');
     const beam = page.locator('.theater-beam');
+    const logo = page.locator('.cinema-logo');
     const hostBox = (await host.boundingBox())!;
-    const beamBox = (await beam.boundingBox())!;
-    expect(Math.abs((beamBox.x + beamBox.width / 2) - (hostBox.x + hostBox.width / 2))).toBeLessThan(2);
-    expect(Math.abs((beamBox.y + beamBox.height) - (hostBox.y + hostBox.height))).toBeLessThan(2);
 
-    const before = await beam.evaluate((el) => getComputedStyle(el).clipPath);
+    await expect.poll(() => logo.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+    await expect(beam).toHaveAttribute('data-motion', 'active');
+    const initial = await beam.evaluate((element) => ({
+      originX: Number((element as HTMLElement).dataset.originX),
+      originY: Number((element as HTMLElement).dataset.originY),
+      targetX: Number((element as HTMLElement).dataset.targetX),
+      targetY: Number((element as HTMLElement).dataset.targetY),
+    }));
+    const logoBox = (await logo.boundingBox())!;
+    expect(initial.originX).toBeCloseTo(logoBox.x + logoBox.width * 0.07, 0);
+    expect(initial.originY).toBeCloseTo(logoBox.y + logoBox.height * 0.47, 0);
+    const visibleCone = await beam.evaluate((element) => {
+      const beam = element as HTMLElement;
+      const style = getComputedStyle(beam);
+      const [originX, originY] = style.transformOrigin.split(' ').map(Number.parseFloat);
+      const transformed = new DOMPoint(-originX, beam.offsetHeight / 2 - originY)
+        .matrixTransform(new DOMMatrix(style.transform));
+      const parent = beam.offsetParent!.getBoundingClientRect();
+      return {
+        x: parent.left + beam.offsetLeft + originX + transformed.x,
+        y: parent.top + beam.offsetTop + originY + transformed.y,
+        layer: Number(style.zIndex),
+        logoLayer: Number(getComputedStyle(document.querySelector('.cinema-logo')!).zIndex),
+      };
+    });
+    expect(visibleCone.x).toBeCloseTo(initial.originX, 1);
+    expect(visibleCone.y).toBeCloseTo(initial.originY, 1);
+    expect(visibleCone.layer).toBeGreaterThan(visibleCone.logoLayer);
+
     await page.mouse.move(hostBox.x + hostBox.width * 0.2, hostBox.y + hostBox.height * 0.25);
-    await expect.poll(() => beam.evaluate((el) => getComputedStyle(el).clipPath)).not.toBe(before);
+    await expect.poll(() => beam.evaluate((element) => Number((element as HTMLElement).dataset.targetX))).not.toBe(initial.targetX);
+    const afterMouse = await beam.evaluate((element) => ({
+      originX: Number((element as HTMLElement).dataset.originX),
+      originY: Number((element as HTMLElement).dataset.originY),
+      targetX: Number((element as HTMLElement).dataset.targetX),
+    }));
+    expect(afterMouse.originX).toBeCloseTo(initial.originX, 3);
+    expect(afterMouse.originY).toBeCloseTo(initial.originY, 3);
+
+    await host.dispatchEvent('pointermove', {
+      pointerType: 'touch',
+      pointerId: 17,
+      clientX: hostBox.x + hostBox.width * 0.75,
+      clientY: hostBox.y + hostBox.height * 0.6,
+    });
+    await expect.poll(() => beam.evaluate((element) => Number((element as HTMLElement).dataset.targetX))).not.toBe(afterMouse.targetX);
+    expect(Number(await page.getByTestId('projector-lens-anchor').getAttribute('data-x'))).toBeCloseTo(initial.originX, 3);
+
+    await page.setViewportSize(viewports[1]);
+    await page.evaluate(() => window.dispatchEvent(new Event('orientationchange')));
+    await expect.poll(async () => {
+      const [box, origin] = await Promise.all([
+        logo.boundingBox(),
+        beam.evaluate((element) => Number((element as HTMLElement).dataset.originX)),
+      ]);
+      return box ? Math.abs(origin - (box.x + box.width * 0.07)) : Infinity;
+    }).toBeLessThan(1);
 
     const first = page.getByTestId('button-presentation-season-1');
     await first.focus();
     await expect(first).toBeFocused();
     await page.keyboard.press('End');
-    await expect(page.getByTestId('button-presentation-special-sherlock')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('button-presentation-special-sherlock')).toHaveAttribute('data-selected', 'true');
     await page.keyboard.press('Home');
-    await page.getByTestId('button-open-presentation').click();
+    await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/season=season-1/);
 
     await page.goto(`${fixture}?scenario=theater`, { waitUntil: 'networkidle' });
@@ -124,12 +190,11 @@ test.describe('season theater in the real game shell', () => {
     await touchTarget.dispatchEvent('pointerdown', { pointerType: 'touch', pointerId: 7 });
     await touchTarget.dispatchEvent('pointerup', { pointerType: 'touch', pointerId: 7 });
     await touchTarget.dispatchEvent('click');
-    await page.getByTestId('button-open-presentation').click();
     await expect(page).toHaveURL(/season=season-1/);
   });
 
   test('ordinary mouse rail controls reach every presentation', async ({ page }) => {
-    for (const viewport of [viewports[0], viewports[2]]) {
+    for (const viewport of [viewports[0], viewports[3]]) {
       await loadFixture(page, 'theater', viewport);
       const previous = page.getByRole('button', { name: 'Previous presentation' });
       const next = page.getByRole('button', { name: 'Next presentation' });
@@ -150,17 +215,50 @@ test.describe('season theater in the real game shell', () => {
       };
 
       await clickWithMouse(next);
-      await expect(page.getByTestId('button-presentation-season-2')).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByTestId('button-presentation-season-2')).toHaveAttribute('data-selected', 'true');
       await clickWithMouse(next);
-      await expect(page.getByTestId('button-presentation-special-sherlock')).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByTestId('button-presentation-special-sherlock')).toHaveAttribute('data-selected', 'true');
       await expect(next).toBeDisabled();
 
       await clickWithMouse(previous);
-      await expect(page.getByTestId('button-presentation-season-2')).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByTestId('button-presentation-season-2')).toHaveAttribute('data-selected', 'true');
       await clickWithMouse(previous);
-      await expect(page.getByTestId('button-presentation-season-1')).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByTestId('button-presentation-season-1')).toHaveAttribute('data-selected', 'true');
       await expect(previous).toBeDisabled();
     }
+  });
+
+  test('poster buttons are direct actions while drag-scrolling never opens one', async ({ page }) => {
+    await loadFixture(page, 'theater');
+    const first = page.getByTestId('button-presentation-season-1');
+    await expect(first).not.toHaveAttribute('role', 'option');
+    await first.click();
+    await expect(page).toHaveURL(/season=season-1/);
+
+    await loadFixture(page, 'theater');
+    const original = page.url();
+    const poster = page.getByTestId('button-presentation-season-1');
+    const box = (await poster.boundingBox())!;
+    await poster.dispatchEvent('pointerdown', {
+      pointerType: 'touch',
+      pointerId: 31,
+      clientX: box.x + box.width / 2,
+      clientY: box.y + box.height / 2,
+    });
+    await page.locator('.theater-host').dispatchEvent('pointermove', {
+      pointerType: 'touch',
+      pointerId: 31,
+      clientX: box.x + box.width / 2 - 80,
+      clientY: box.y + box.height / 2,
+    });
+    await poster.dispatchEvent('pointerup', {
+      pointerType: 'touch',
+      pointerId: 31,
+      clientX: box.x + box.width / 2 - 80,
+      clientY: box.y + box.height / 2,
+    });
+    await poster.dispatchEvent('click');
+    await expect(page).toHaveURL(original);
   });
 
   test('locked presentations cannot open or become the continue target', async ({ page }) => {
@@ -169,19 +267,42 @@ test.describe('season theater in the real game shell', () => {
     await expect(locked).toHaveAttribute('data-status', 'locked');
     const original = page.url();
     await locked.click();
-    await expect(locked).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByTestId('button-open-presentation')).toBeDisabled();
+    await expect(locked).toHaveAttribute('data-selected', 'true');
+    await expect(page).toHaveURL(original);
+    await expect(page.getByTestId('status-unlock-season-2')).toContainText('Unlock');
+    await locked.focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(original);
+    await expect(page.getByTestId('status-unlock-season-2')).toContainText('Unlock by completing Chapter Eight: The Crown.');
     await page.getByTestId('button-continue-story').click();
     await expect(page).not.toHaveURL(/season=season-2/);
     await page.goBack();
     await expect(page).toHaveURL(original);
-    await expect(page.getByRole('heading', { name: 'Squabblemon Cinema' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Squabblemon Cinema' })).toHaveCount(1);
+  });
+
+  test('popcorn is bounded, nonblocking, and cleans itself up after any screen press', async ({ page }) => {
+    await loadFixture(page, 'theater');
+    const particles = page.getByTestId('popcorn-particles').locator('.popcorn-particle');
+    const disabledPrevious = page.getByRole('button', { name: 'Previous presentation' });
+    const previousBox = (await disabledPrevious.boundingBox())!;
+    await page.mouse.click(previousBox.x + previousBox.width / 2, previousBox.y + previousBox.height / 2);
+    await expect.poll(() => particles.count()).toBeGreaterThan(0);
+
+    const viewport = page.viewportSize()!;
+    await page.mouse.click(viewport.width / 2, 8);
+    for (let index = 0; index < 12; index++) {
+      await page.mouse.click(previousBox.x + previousBox.width / 2, previousBox.y + previousBox.height / 2);
+    }
+    expect(await particles.count()).toBeLessThanOrEqual(24);
+    await expect.poll(() => particles.count(), { timeout: 3_000 }).toBe(0);
+    await expect(page.getByTestId('button-continue-story')).toBeEnabled();
   });
 
   test('existing save resumes season one and season two filters its chapter tickets', async ({ page }) => {
     await loadFixture(page, 'existing-save');
     await page.getByTestId('button-continue-story').click();
-    await expect(page).toHaveURL(/node=/);
+    await expect(page).toHaveURL(/node=receipts-on-camera/);
     await expect(page.getByRole('heading', { name: 'Squabblemon Cinema' })).toHaveCount(0);
     await page.getByRole('button', { name: /Back|Fall Back/ }).first().click();
     await page.getByRole('button', { name: 'Browse presentations' }).click();
@@ -207,16 +328,54 @@ test.describe('season theater in the real game shell', () => {
     const duration = await poster.evaluate((el) =>
       Number.parseFloat(getComputedStyle(el).transitionDuration) || 0);
     expect(duration).toBeLessThanOrEqual(0.001);
+    const beam = page.getByTestId('projector-beam');
+    await expect(beam).toHaveAttribute('data-motion', 'reduced');
+    const targetBefore = await beam.getAttribute('data-target-x');
+    await page.mouse.move(20, 20);
+    await expect(beam).toHaveAttribute('data-target-x', targetBefore!);
+    await page.mouse.click(30, 300);
+    await expect(page.getByTestId('popcorn-particles').locator('.popcorn-particle')).toHaveCount(0);
   });
 
-  test('projection booth Easter egg opens and closes without a reward action', async ({ page }) => {
+  test('profile reduced motion also freezes beam targeting and popcorn', async ({ page }) => {
     await loadFixture(page, 'theater');
-    await page.getByTestId('button-projection-booth').click();
-    const dialog = page.getByTestId('dialog-projection-booth');
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole('button')).toHaveCount(1);
-    await page.getByTestId('button-close-projection-booth').click();
-    await expect(dialog).toHaveCount(0);
+    await page.evaluate(() => {
+      document.documentElement.dataset.reduceMotion = 'true';
+    });
+    const beam = page.getByTestId('projector-beam');
+    await expect(beam).toHaveAttribute('data-motion', 'reduced');
+    const targetBefore = await beam.getAttribute('data-target-x');
+    await page.mouse.move(40, 420);
+    await expect(beam).toHaveAttribute('data-target-x', targetBefore!);
+    await page.mouse.click(40, 420);
+    await expect(page.getByTestId('popcorn-particles').locator('.popcorn-particle')).toHaveCount(0);
+  });
+
+  test('season posters use game characters and the supplied cinema decoration', async ({ page }) => {
+    await loadFixture(page, 'theater');
+    for (const id of ['season-1', 'season-2', 'special-sherlock']) {
+      const poster = page.getByTestId(`button-presentation-${id}`);
+      expect(await poster.locator('img[src*="/assets/characters/"]').count()).toBeGreaterThan(0);
+      await expect(poster.locator('img[src$="/season-one.webp"], img[src$="/season-two.webp"], img[src$="/sherlock.webp"][src*="/theater/"]')).toHaveCount(0);
+    }
+    for (const asset of ['cinema-logo.webp', 'cinema-curtain.webp', 'cinema-film-strip.webp', 'cinema-reel.webp']) {
+      expect(await page.locator(`img[src$="/${asset}"]`).count()).toBeGreaterThan(0);
+    }
+    const decorations = page.locator('.cinema-logo, .theater-curtain, .cinema-film-strip, .cinema-reel-container');
+    for (const decoration of await decorations.all()) {
+      expect(await decoration.evaluate((element) => getComputedStyle(element).pointerEvents)).toBe('none');
+    }
+    for (const curtain of await page.locator('.theater-curtain').all()) {
+      const source = await curtain.evaluate((image: HTMLImageElement) => ({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        objectFit: getComputedStyle(image).objectFit,
+      }));
+      expect(source.width / source.height).toBeCloseTo(523 / 1649, 4);
+      expect(['contain', 'cover']).toContain(source.objectFit);
+    }
+    await hitTestable(page.getByTestId('button-continue-story'));
+    await expect(page.getByText('Projection Booth', { exact: true })).toHaveCount(0);
   });
 });
 

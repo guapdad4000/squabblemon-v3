@@ -31,6 +31,7 @@ export const playerMatchesTable = pgTable("player_matches", {
   playerCardProgressionSnapshot: jsonb("player_card_progression_snapshot")
     .$type<{
       turnRulesVersion?: 1 | 2;
+      balanceRulesVersion?: number;
       districtSnapshot?: Record<string, unknown>;
       version: number;
       cards: Array<{ cardId: string; xp: number; level: number }>;
