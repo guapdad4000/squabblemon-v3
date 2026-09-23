@@ -609,7 +609,16 @@ html[data-reduce-motion="true"] .brand-loader__crest, html[data-reduce-motion="t
   z-index: 76;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  opacity: 0;
   pointer-events: none;
+}
+.battle-start-smoke[data-ready="true"] {
+  animation: battle-dust-clear var(--battle-dust-duration) linear both;
+}
+@keyframes battle-dust-clear {
+  0%, 88% { opacity: 1; }
+  100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .battle-start-smoke { display: none; }

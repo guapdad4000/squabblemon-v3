@@ -2,6 +2,10 @@
 
 **Automated baseline: RECORDED. Human playtest gate: PENDING.**
 
+This opening record is the preserved Task 118 baseline, not the latest live rule
+description. See the [Task 126 appendix](#task-126-four-crew-follow-up) below and
+the [controlled four-crew evidence](../docs/balance-four-crews.md) for the current patch.
+
 This file preserves the redacted aggregate from the full deterministic run. It contains no
 participant data or raw match transcripts. The generated machine-readable report remains under
 the ignored `scripts/tmp/balance-task-118-final/` directory.
@@ -107,3 +111,36 @@ No additional isolated stat reduction is justified from this automated evidence 
 ## Release interpretation
 
 The automated blockers remain investigation items. They do not override the human protocol or change its gate. Human comprehension, fun, strategy discovery, and campaign pacing remain **PENDING** until the sessions and aggregate gates in [BALANCE_PLAYTEST.md](./BALANCE_PLAYTEST.md) are completed.
+
+## Task 126 four-crew follow-up
+
+**Final rules retain Nerd at 4/3. Human gate remains PENDING. Automated gate remains
+FAILED with 20 blocker / 25 review flags; zero engine failures.**
+
+- Command: `pnpm --filter @workspace/scripts exec tsx src/four-crew-balance.ts --rules candidate --nerd-cost 4 --full`
+- Final fingerprint: **47aa7d1f** (historical fingerprint **54f19dec**).
+- Full matrix: **880/880 successful**, identical 11 shells/55 pairings, district
+  seeds, rotations, tiers and mirrored seats; original Counterplay preserved.
+- Final full scores: Wave 7 72.8%, Poison 66.6%, Fire 65.9%, Earth 64.1%, Air
+  63.7%, Wiz 58.8%, Wonderland 52.2%, Cellblock 26.9%, Sherlock/Watson 26.6%,
+  original Counterplay 26.3%, Demario/Luigion 26.3%. Player-seat score 36.5%.
+- Separate controlled evidence: **3,024/3,024 matches**, zero failures, holding
+  original compositions fixed across old/new rules and isolating the optional
+  Nerd cost. Also 96 sequencing cases and 60 combo probes.
+- Explicit Counterplay composition, not a leader buff, provides the dependable
+  gain across all three policies. Nerd 3 improves affordability but worsens
+  the coherent crew under both alternate policies, so the discount is rejected.
+- **Demario/Luigion is mixed, not solved:** full greedy score falls 33.8%→26.3%;
+  the strongest-opponent greedy slice also falls, while first-legal and
+  seeded-legal improve. The retained change delivers earlier setup and a normal
+  Luigion combo, not demonstrated universal competitive improvement.
+- Largest inherited signals remain Cornball/Sneaker echo efficiency, Wave 7's
+  upper band, Captain/Alchy swaps, and seat skew. Luigion's tier-3 echo blocker
+  is directly reproduced unchanged under old/new rules. Demario's tier-3 echo
+  efficiency rises 3.50→4.33 (review, below the 5.0 blocker threshold).
+
+The machine aggregates, complete flag list, all before/after values, seat/tier
+limitations and commands are linked from
+[docs/balance-four-crews.md](../docs/balance-four-crews.md). They contain no account
+data or raw human sessions. No inherited thresholds, gates, or unresolved flags
+were removed to make the patch appear balanced.

@@ -7,13 +7,15 @@
 - [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
 - [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.
 - [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
-- [Battle Motion curve](battle-motion-curve.md) — Six-round pacing starts at 2 Motion, carries at most 1 unspent Motion, and caps at 6 to preserve tempo without automatic late turns.
+- [Battle Motion curve](battle-motion-curve.md) — Crew tuning must not change the combat economy; historical notes recommending a 6-Motion cap are obsolete.
 - [Authenticated journey fidelity](authenticated-match-fixtures.md) — Auth journey mocks must preserve request/response invariants or fallback branches can invalidate route assertions.
 - [Story crew recovery](story-crew-recovery.md) — Prefer the selected legal crew; if none survives ownership filtering, story alone may use a canonical server-authored starter.
 - [City Never Sleeps rules](city-never-sleeps-rules.md) — Expansion effects use explicit replay-safe state; movement is deterministic until the transcript records choices.
 - [Squabblemon physical UI language](squabblemon-physical-ui.md) — Favor street-sign controls, torn-paper overlays, deep parallax, and original cel-shaded arcade art.
 - [Visual regression proof](visual-regression-proof.md) — Require mounted real components, final-action clicks, decoration bounds, and screenshots; geometry logs alone missed prior regressions.
 - [Git release history](git-release-history.md) — Workspace checkpoints can diverge from GitHub release ancestry; preserve remote history and release only verified content.
+- [Post-merge workflow ownership](post-merge-workflows.md) — A failed workflow can still have a stale process holding its port after reconciliation.
 - [Speech playback verification](speech-playback-verification.md) — Diagnose the encoded clip before changing lifecycle; preserve internal pauses and distinguish natural-end pause events from interruptions.
 - [Story save evolution](story-save-evolution.md) — Presentation grouping must not rename progression/reward identities or invalidate positional dialogue history.
 - [iPad keyed battle video](ipad-keyed-battle-video.md) — VP9 video layers can expose encoded matte colors on iPad; verify transparency from rendered pixels.
+- [Long-running verification](long-running-verification.md) — Use explicit background tasks; shell detachment alone may be cleaned up before evidence is written.

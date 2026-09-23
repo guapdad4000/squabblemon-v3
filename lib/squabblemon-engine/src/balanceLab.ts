@@ -1038,6 +1038,8 @@ export function createDefaultBalanceDecks(): BalanceDeck[] {
     balanceDeck('focus-poison-entry', 'Poison Entry Punishment', ['bottle', 'colognecriminal', 'nail', 'mural', 'fein', 'simmy', 'bbldemon', 'roaster', 'plug', 'wifey']),
     balanceDeck('focus-cellblock', 'Cellblock Lane Sequence', ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james', 'bustdown', 'cognac', 'rastamon', 'wifey', 'stud']),
     balanceDeck('focus-demario-luigion', 'Demario and Luigion', ['demario', 'luigion', 'rastamon', 'vibe', 'plug', 'bustdown', 'soulfood', 'black-cowboy', 'hair-stylist', 'stylist']),
+    // Keep the original focus-counterplay shell for historical rule-only comparisons.
+    balanceDeck('focus-counterplay-coherent', 'Counterplay — Dark Control', ['counter', 'gamer', 'gothkid', 'nerd', 'redpill', 'buddy', 'wifey', 'pinaynurse', 'plug', 'bustdown']),
   ];
 }
 

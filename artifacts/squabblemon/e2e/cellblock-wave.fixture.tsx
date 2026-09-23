@@ -28,6 +28,11 @@ function Fixture() {
     initial.playerHand = ids.map((id, index) =>
       createCardInstance(id, 'player', 'cellblock-wave', index)
     );
+    const support = createCardInstance('bustdown', 'player', 'cellblock-wave-setup', 20);
+    const spreadInmate = createCardInstance('inmate-contraband', 'player', 'cellblock-wave-setup', 21);
+    support.lane = 0;
+    spreadInmate.lane = 1;
+    initial.boards = [[support], [spreadInmate], []];
     return initial;
   });
   const [selected, setSelected] = useState<string | null>(null);
@@ -46,6 +51,16 @@ function Fixture() {
     <output
       data-testid="cellblock-board-count"
       data-count={match.boards.flat().filter(card => ids.includes(card.cardId)).length}
+      style={{ position: 'fixed', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)' }}
+    />
+    <output
+      data-testid="cellblock-sequencing-state"
+      data-crafty-power={match.boards.flat().find(card => card.cardId === 'inmate-crafty')?.powerModifier ?? ''}
+      data-spread-inmate-power={match.boards[1].find(card => card.cardId === 'inmate-contraband')?.powerModifier ?? ''}
+      data-boyfriend-targets={match.effectLog
+        .filter(event => event.cardId === 'inmate-boyfriend' && event.type === 'ability')
+        .flatMap(event => event.targets.map(target => target.cardInstanceId))
+        .join(',')}
       style={{ position: 'fixed', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)' }}
     />
     <Battle

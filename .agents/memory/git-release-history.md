@@ -15,8 +15,8 @@ Command-line Git authentication and the connected GitHub integration can have di
 
 **How to apply:** Use the integration's credential-injecting API when it is healthy; do not extract its OAuth credentials into shell commands or assume it needs reconnecting because Git transport failed.
 
-Serialize machine-readable Git comparisons as JSON before returning them through tools. Do not rely on tab separators surviving rendered shell output, and sanity-check an unexpectedly empty diff.
+Use file-backed JSON for complete Git tree comparisons. Do not rely on tab separators or large shell output surviving tool transport, and sanity-check an unexpectedly empty diff.
 
-**Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies.
+**Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies. A large JSON tree listing also arrived as a truncated tail despite a raised shell output budget.
 
-**How to apply:** Parse Git's NUL-delimited output inside the shell process, then emit JSON. Compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.
+**How to apply:** Parse Git's NUL-delimited output inside the shell process, save full trees to temporary JSON files, and return only the comparison summary. Verify entry counts and compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.

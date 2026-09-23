@@ -61,6 +61,7 @@ function Fixture() {
     setSquabble(false);
   };
   const powered = match.boards.flat().find(card => card.cardId === 'luigion' && card.id === 'luigion-powered');
+  const normal = match.boards.flat().find(card => card.cardId === 'luigion' && card.id !== 'luigion-powered');
   const mushroomCount = match.boards.flat().filter(card => card.cardId === 'demario-mushroom').length;
   const projected = powered ? authoritativeProjection(match) : null;
 
@@ -69,6 +70,9 @@ function Fixture() {
       data-testid="neighborhood-wave-state"
       data-powered={powered ? 'true' : 'false'}
       data-powered-hands={powered ? getEffectiveCardPower(powered) : ''}
+      data-normal={normal ? 'true' : 'false'}
+      data-normal-hands={normal ? getEffectiveCardPower(normal) : ''}
+      data-demario-cost={match.boards.flat().find(card => card.cardId === 'demario')?.cost ?? match.playerHand.find(card => card.cardId === 'demario')?.cost ?? ''}
       data-mushrooms={mushroomCount}
       style={{ position: 'fixed', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)' }}
     >

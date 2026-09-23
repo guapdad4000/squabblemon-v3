@@ -1,0 +1,6502 @@
+{
+  "baseline-nerd4": {
+    "greedy/focus-cellblock": {
+      "games": 48,
+      "wins": 4,
+      "draws": 2,
+      "scoreRate": 0.10416666666666667,
+      "asPlayerScoreRate": 0.08333333333333333,
+      "asCpuScoreRate": 0.125,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.08333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.125
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.15625,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.15625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 15.6% across the matrix.",
+          "value": 0.15625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 84.4% across the matrix.",
+          "value": 0.84375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 84.4% across the matrix.",
+          "value": 0.84375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 15.6% across the matrix.",
+          "value": 0.15625,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/focus-detective": {
+      "games": 48,
+      "wins": 5,
+      "draws": 2,
+      "scoreRate": 0.125,
+      "asPlayerScoreRate": 0,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.08333333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.125,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "crossingguard",
+          "message": "Crossing Guard was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nightmedic",
+          "message": "Night Shift Medic was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "tinman",
+          "message": "Tin Man's observed ability events succeeded 29.2% of the time.",
+          "value": 0.2916666666666667,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/focus-demario-luigion": {
+      "games": 48,
+      "wins": 6,
+      "draws": 1,
+      "scoreRate": 0.13541666666666666,
+      "asPlayerScoreRate": 0.08333333333333333,
+      "asCpuScoreRate": 0.1875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.041666666666666664
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.125,
+        "focus-wave7-legends": 0.09375,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 9.4% across the matrix.",
+          "value": 0.09375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 90.6% across the matrix.",
+          "value": 0.90625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        }
+      ]
+    },
+    "greedy/focus-counterplay": {
+      "games": 48,
+      "wins": 6,
+      "draws": 2,
+      "scoreRate": 0.14583333333333334,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.0625
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/control-coherent": {
+      "games": 48,
+      "wins": 13,
+      "draws": 3,
+      "scoreRate": 0.3020833333333333,
+      "asPlayerScoreRate": 0.16666666666666666,
+      "asCpuScoreRate": 0.4375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3125
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.1875,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/dark-splash": {
+      "games": 48,
+      "wins": 23,
+      "draws": 4,
+      "scoreRate": 0.5208333333333334,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.7083333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.5416666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.6875,
+        "focus-wave7-legends": 0.5,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 25.0%.",
+          "value": 0.25,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "wifey",
+          "message": "Wifey was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/echo-splash": {
+      "games": 48,
+      "wins": 9,
+      "draws": 4,
+      "scoreRate": 0.22916666666666666,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.4166666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.25
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.15625,
+        "focus-wave7-legends": 0.1875,
+        "focus-air-bond": 0.34375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 15.6% across the matrix.",
+          "value": 0.15625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 84.4% across the matrix.",
+          "value": 0.84375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "first-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 0,
+      "draws": 21,
+      "scoreRate": 0.21875,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "bustdown",
+          "message": "Bust-Down Watch's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-detective": {
+      "games": 48,
+      "wins": 0,
+      "draws": 28,
+      "scoreRate": 0.2916666666666667,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.2916666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.5,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 0,
+      "draws": 12,
+      "scoreRate": 0.125,
+      "asPlayerScoreRate": 0.125,
+      "asCpuScoreRate": 0.125,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.125
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.3125,
+        "focus-wave7-legends": 0.0625,
+        "focus-air-bond": 0
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 6.3% across the matrix.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 93.8% across the matrix.",
+          "value": 0.9375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "bustdown",
+          "message": "Bust-Down Watch's observed ability events succeeded 26.3% of the time.",
+          "value": 0.2631578947368421,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 0,
+      "draws": 18,
+      "scoreRate": 0.1875,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.1875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/control-coherent": {
+      "games": 48,
+      "wins": 0,
+      "draws": 39,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.3958333333333333,
+      "asCpuScoreRate": 0.4166666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4583333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.4375,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/dark-splash": {
+      "games": 48,
+      "wins": 2,
+      "draws": 27,
+      "scoreRate": 0.3229166666666667,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.3541666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3333333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/echo-splash": {
+      "games": 48,
+      "wins": 1,
+      "draws": 30,
+      "scoreRate": 0.3333333333333333,
+      "asPlayerScoreRate": 0.3125,
+      "asCpuScoreRate": 0.3541666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.375
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.5,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "seeded-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 9,
+      "draws": 2,
+      "scoreRate": 0.20833333333333334,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.14583333333333334
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2708333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.1875,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 56.3%.",
+          "value": 0.5625,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/focus-detective": {
+      "games": 48,
+      "wins": 15,
+      "draws": 6,
+      "scoreRate": 0.375,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.4583333333333333,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.25
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.34375,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "cognac",
+          "message": "Cognac Bottle's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "tinman",
+          "message": "Tin Man's observed ability events succeeded 29.2% of the time.",
+          "value": 0.2916666666666667,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 9,
+      "draws": 5,
+      "scoreRate": 0.23958333333333334,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.1875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.25
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.03125,
+        "focus-wave7-legends": 0.34375,
+        "focus-air-bond": 0.34375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 3.1% across the matrix.",
+          "value": 0.03125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 96.9% across the matrix.",
+          "value": 0.96875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 59.4%.",
+          "value": 0.59375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "seeded-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 12,
+      "draws": 5,
+      "scoreRate": 0.3020833333333333,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.3958333333333333,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3958333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.1875,
+        "focus-wave7-legends": 0.40625,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "gothkid",
+          "message": "Goth Kid's observed ability events succeeded 26.3% of the time.",
+          "value": 0.2631578947368421,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "og",
+          "message": "OG Uncle was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/control-coherent": {
+      "games": 48,
+      "wins": 17,
+      "draws": 5,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.5208333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4791666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.34375,
+        "focus-wave7-legends": 0.46875,
+        "focus-air-bond": 0.40625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "counter",
+          "message": "Counter was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 15.6%.",
+          "value": 0.15625,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/dark-splash": {
+      "games": 48,
+      "wins": 24,
+      "draws": 2,
+      "scoreRate": 0.5208333333333334,
+      "asPlayerScoreRate": 0.3958333333333333,
+      "asCpuScoreRate": 0.6458333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.4583333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.5625,
+        "focus-air-bond": 0.5625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/echo-splash": {
+      "games": 48,
+      "wins": 21,
+      "draws": 5,
+      "scoreRate": 0.4895833333333333,
+      "asPlayerScoreRate": 0.4791666666666667,
+      "asCpuScoreRate": 0.5,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.375
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.6041666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.3125,
+        "focus-air-bond": 0.71875
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        }
+      ]
+    }
+  },
+  "candidate-nerd4": {
+    "greedy/focus-cellblock": {
+      "games": 48,
+      "wins": 5,
+      "draws": 3,
+      "scoreRate": 0.13541666666666666,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.08333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.1875
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "greedy/focus-detective": {
+      "games": 48,
+      "wins": 7,
+      "draws": 2,
+      "scoreRate": 0.16666666666666666,
+      "asPlayerScoreRate": 0.020833333333333332,
+      "asCpuScoreRate": 0.3125,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.1875
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.14583333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.3125,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.0625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 25.0%.",
+          "value": 0.25,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nightmedic",
+          "message": "Night Shift Medic was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nightmedic",
+          "message": "Night Shift Medic was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 93.8% across the matrix.",
+          "value": 0.9375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 6.3% across the matrix.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        }
+      ]
+    },
+    "greedy/focus-demario-luigion": {
+      "games": 48,
+      "wins": 2,
+      "draws": 4,
+      "scoreRate": 0.08333333333333333,
+      "asPlayerScoreRate": 0.10416666666666667,
+      "asCpuScoreRate": 0.0625,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.020833333333333332
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.14583333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0,
+        "focus-wave7-legends": 0.0625,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 6.3% across the matrix.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 93.8% across the matrix.",
+          "value": 0.9375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 62.5%.",
+          "value": 0.625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/focus-counterplay": {
+      "games": 48,
+      "wins": 6,
+      "draws": 2,
+      "scoreRate": 0.14583333333333334,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.0625
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/control-coherent": {
+      "games": 48,
+      "wins": 13,
+      "draws": 3,
+      "scoreRate": 0.3020833333333333,
+      "asPlayerScoreRate": 0.16666666666666666,
+      "asCpuScoreRate": 0.4375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3125
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.1875,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/dark-splash": {
+      "games": 48,
+      "wins": 23,
+      "draws": 4,
+      "scoreRate": 0.5208333333333334,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.7083333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.5416666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.6875,
+        "focus-wave7-legends": 0.5,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 25.0%.",
+          "value": 0.25,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "wifey",
+          "message": "Wifey was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/echo-splash": {
+      "games": 48,
+      "wins": 17,
+      "draws": 1,
+      "scoreRate": 0.3645833333333333,
+      "asPlayerScoreRate": 0.16666666666666666,
+      "asCpuScoreRate": 0.5625,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4166666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.375,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.4375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 18.8%.",
+          "value": 0.1875,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "first-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 0,
+      "draws": 21,
+      "scoreRate": 0.21875,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "bustdown",
+          "message": "Bust-Down Watch's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-detective": {
+      "games": 48,
+      "wins": 0,
+      "draws": 28,
+      "scoreRate": 0.2916666666666667,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.2916666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.5,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 0,
+      "draws": 23,
+      "scoreRate": 0.23958333333333334,
+      "asPlayerScoreRate": 0.22916666666666666,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.25
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.375,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.09375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 90.6% across the matrix.",
+          "value": 0.90625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 9.4% across the matrix.",
+          "value": 0.09375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 0,
+      "draws": 18,
+      "scoreRate": 0.1875,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.1875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/control-coherent": {
+      "games": 48,
+      "wins": 0,
+      "draws": 39,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.3958333333333333,
+      "asCpuScoreRate": 0.4166666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4583333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.4375,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/dark-splash": {
+      "games": 48,
+      "wins": 2,
+      "draws": 27,
+      "scoreRate": 0.3229166666666667,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.3541666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3333333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/echo-splash": {
+      "games": 48,
+      "wins": 2,
+      "draws": 35,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.375,
+      "asCpuScoreRate": 0.4375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.53125,
+        "focus-wave7-legends": 0.3125,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        }
+      ]
+    },
+    "seeded-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 9,
+      "draws": 3,
+      "scoreRate": 0.21875,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2708333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/focus-detective": {
+      "games": 48,
+      "wins": 15,
+      "draws": 6,
+      "scoreRate": 0.375,
+      "asPlayerScoreRate": 0.2708333333333333,
+      "asCpuScoreRate": 0.4791666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.25
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.34375,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "cognac",
+          "message": "Cognac Bottle's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "tinman",
+          "message": "Tin Man's observed ability events succeeded 29.2% of the time.",
+          "value": 0.2916666666666667,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 15,
+      "draws": 5,
+      "scoreRate": 0.3645833333333333,
+      "asPlayerScoreRate": 0.4375,
+      "asCpuScoreRate": 0.2916666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.375
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.15625,
+        "focus-wave7-legends": 0.59375,
+        "focus-air-bond": 0.34375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 15.6% across the matrix.",
+          "value": 0.15625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 84.4% across the matrix.",
+          "value": 0.84375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 59.4%.",
+          "value": 0.59375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 65.6%.",
+          "value": 0.65625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 12,
+      "draws": 5,
+      "scoreRate": 0.3020833333333333,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.3958333333333333,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3958333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.1875,
+        "focus-wave7-legends": 0.40625,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "gothkid",
+          "message": "Goth Kid's observed ability events succeeded 26.3% of the time.",
+          "value": 0.2631578947368421,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "og",
+          "message": "OG Uncle was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/control-coherent": {
+      "games": 48,
+      "wins": 17,
+      "draws": 5,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.5208333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4791666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.34375,
+        "focus-wave7-legends": 0.46875,
+        "focus-air-bond": 0.40625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "counter",
+          "message": "Counter was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 15.6%.",
+          "value": 0.15625,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/dark-splash": {
+      "games": 48,
+      "wins": 24,
+      "draws": 2,
+      "scoreRate": 0.5208333333333334,
+      "asPlayerScoreRate": 0.3958333333333333,
+      "asCpuScoreRate": 0.6458333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.4583333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.5625,
+        "focus-air-bond": 0.5625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/echo-splash": {
+      "games": 48,
+      "wins": 24,
+      "draws": 4,
+      "scoreRate": 0.5416666666666666,
+      "asPlayerScoreRate": 0.5,
+      "asCpuScoreRate": 0.5833333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.4375
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.6458333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.28125,
+        "focus-wave7-legends": 0.59375,
+        "focus-air-bond": 0.75
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        }
+      ]
+    }
+  },
+  "candidate-nerd3": {
+    "greedy/focus-cellblock": {
+      "games": 48,
+      "wins": 5,
+      "draws": 3,
+      "scoreRate": 0.13541666666666666,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.08333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.1875
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "greedy/focus-detective": {
+      "games": 48,
+      "wins": 7,
+      "draws": 2,
+      "scoreRate": 0.16666666666666666,
+      "asPlayerScoreRate": 0.020833333333333332,
+      "asCpuScoreRate": 0.3125,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.1875
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.14583333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.3125,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.0625
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 25.0%.",
+          "value": 0.25,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nightmedic",
+          "message": "Night Shift Medic was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nightmedic",
+          "message": "Night Shift Medic was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 93.8% across the matrix.",
+          "value": 0.9375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 6.3% across the matrix.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        }
+      ]
+    },
+    "greedy/focus-demario-luigion": {
+      "games": 48,
+      "wins": 2,
+      "draws": 4,
+      "scoreRate": 0.08333333333333333,
+      "asPlayerScoreRate": 0.10416666666666667,
+      "asCpuScoreRate": 0.0625,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.020833333333333332
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.14583333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0,
+        "focus-wave7-legends": 0.0625,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 6.3% across the matrix.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 93.8% across the matrix.",
+          "value": 0.9375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 62.5%.",
+          "value": 0.625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/focus-counterplay": {
+      "games": 48,
+      "wins": 6,
+      "draws": 2,
+      "scoreRate": 0.14583333333333334,
+      "asPlayerScoreRate": 0.041666666666666664,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.0625
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0,
+        "focus-air-bond": 0.21875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "greedy/control-coherent": {
+      "games": 48,
+      "wins": 14,
+      "draws": 3,
+      "scoreRate": 0.3229166666666667,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.4375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.1875,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/dark-splash": {
+      "games": 48,
+      "wins": 24,
+      "draws": 3,
+      "scoreRate": 0.53125,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.7291666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.5625
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.71875,
+        "focus-wave7-legends": 0.5,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 6.3% of appearances.",
+          "value": 0.0625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "nerd",
+          "message": "Closet Nerd was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 25.0%.",
+          "value": 0.25,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "redpill",
+          "message": "Red Pill was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "wifey",
+          "message": "Wifey was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "greedy/echo-splash": {
+      "games": 48,
+      "wins": 17,
+      "draws": 2,
+      "scoreRate": 0.375,
+      "asPlayerScoreRate": 0.22916666666666666,
+      "asCpuScoreRate": 0.5208333333333334,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2708333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4791666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.375,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.46875
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 0.0% of appearances.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 21.9%.",
+          "value": 0.21875,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "first-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 0,
+      "draws": 21,
+      "scoreRate": 0.21875,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.22916666666666666,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "bustdown",
+          "message": "Bust-Down Watch's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-detective": {
+      "games": 48,
+      "wins": 0,
+      "draws": 28,
+      "scoreRate": 0.2916666666666667,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.2916666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2916666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.5,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 0,
+      "draws": 23,
+      "scoreRate": 0.23958333333333334,
+      "asPlayerScoreRate": 0.22916666666666666,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.22916666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.25
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.375,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.09375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 90.6% across the matrix.",
+          "value": 0.90625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 9.4% across the matrix.",
+          "value": 0.09375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 0,
+      "draws": 18,
+      "scoreRate": 0.1875,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.1875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.125,
+        "focus-air-bond": 0
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 12.5% across the matrix.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 87.5% across the matrix.",
+          "value": 0.875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 100.0% across the matrix.",
+          "value": 1,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 0.0% across the matrix.",
+          "value": 0,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "first-legal/control-coherent": {
+      "games": 48,
+      "wins": 0,
+      "draws": 34,
+      "scoreRate": 0.3541666666666667,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.4375,
+        "focus-wave7-legends": 0.375,
+        "focus-air-bond": 0.25
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "bustdown",
+          "message": "Bust-Down Watch's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/dark-splash": {
+      "games": 48,
+      "wins": 2,
+      "draws": 30,
+      "scoreRate": 0.3541666666666667,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.5,
+        "focus-wave7-legends": 0.28125,
+        "focus-air-bond": 0.28125
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 28.1% across the matrix.",
+          "value": 0.28125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 71.9% across the matrix.",
+          "value": 0.71875,
+          "threshold": 0.35
+        }
+      ]
+    },
+    "first-legal/echo-splash": {
+      "games": 48,
+      "wins": 2,
+      "draws": 31,
+      "scoreRate": 0.3645833333333333,
+      "asPlayerScoreRate": 0.3333333333333333,
+      "asCpuScoreRate": 0.3958333333333333,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3125
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4166666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.53125,
+        "focus-wave7-legends": 0.3125,
+        "focus-air-bond": 0.25
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        }
+      ]
+    },
+    "seeded-legal/focus-cellblock": {
+      "games": 48,
+      "wins": 9,
+      "draws": 3,
+      "scoreRate": 0.21875,
+      "asPlayerScoreRate": 0.1875,
+      "asCpuScoreRate": 0.25,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.16666666666666666
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.2708333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.21875,
+        "focus-wave7-legends": 0.25,
+        "focus-air-bond": 0.1875
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 25.0% across the matrix.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 75.0% across the matrix.",
+          "value": 0.75,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-cellblock",
+          "message": "Cellblock Lane Sequence scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/focus-detective": {
+      "games": 48,
+      "wins": 15,
+      "draws": 6,
+      "scoreRate": 0.375,
+      "asPlayerScoreRate": 0.2708333333333333,
+      "asCpuScoreRate": 0.4791666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.25
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.5
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.34375,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "cognac",
+          "message": "Cognac Bottle's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "tinman",
+          "message": "Tin Man's observed ability events succeeded 29.2% of the time.",
+          "value": 0.2916666666666667,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-detective",
+          "message": "Sherlock and Watson scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/focus-demario-luigion": {
+      "games": 48,
+      "wins": 15,
+      "draws": 5,
+      "scoreRate": 0.3645833333333333,
+      "asPlayerScoreRate": 0.4375,
+      "asCpuScoreRate": 0.2916666666666667,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.375
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.15625,
+        "focus-wave7-legends": 0.59375,
+        "focus-air-bond": 0.34375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 15.6% across the matrix.",
+          "value": 0.15625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 84.4% across the matrix.",
+          "value": 0.84375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 29.4% of the time.",
+          "value": 0.29411764705882354,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 59.4%.",
+          "value": 0.59375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 65.6% across the matrix.",
+          "value": 0.65625,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-demario-luigion",
+          "message": "Demario and Luigion scored 34.4% across the matrix.",
+          "value": 0.34375,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 65.6%.",
+          "value": 0.65625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/focus-counterplay": {
+      "games": 48,
+      "wins": 12,
+      "draws": 5,
+      "scoreRate": 0.3020833333333333,
+      "asPlayerScoreRate": 0.20833333333333334,
+      "asCpuScoreRate": 0.3958333333333333,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.20833333333333334
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.3958333333333333
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.1875,
+        "focus-wave7-legends": 0.40625,
+        "focus-air-bond": 0.3125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 37.5%.",
+          "value": 0.375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "gothkid",
+          "message": "Goth Kid's observed ability events succeeded 26.3% of the time.",
+          "value": 0.2631578947368421,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "og",
+          "message": "OG Uncle was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-counterplay",
+          "message": "Counterplay scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "rastamon",
+          "message": "Rastamon's observed ability events succeeded 0.0% of the time.",
+          "value": 0,
+          "threshold": 0.3
+        }
+      ]
+    },
+    "seeded-legal/control-coherent": {
+      "games": 48,
+      "wins": 15,
+      "draws": 5,
+      "scoreRate": 0.3645833333333333,
+      "asPlayerScoreRate": 0.2916666666666667,
+      "asCpuScoreRate": 0.4375,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3541666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.375
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.1875,
+        "focus-wave7-legends": 0.53125,
+        "focus-air-bond": 0.375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 18.8% across the matrix.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-fire-guap",
+          "message": "Fire and GUAP scored 81.3% across the matrix.",
+          "value": 0.8125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "counter",
+          "message": "Counter was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 34.4%.",
+          "value": 0.34375,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "control-coherent",
+          "message": "Coherent Counterplay scored 37.5% across the matrix.",
+          "value": 0.375,
+          "threshold": 0.4
+        },
+        {
+          "severity": "review",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 62.5% across the matrix.",
+          "value": 0.625,
+          "threshold": 0.4
+        }
+      ]
+    },
+    "seeded-legal/dark-splash": {
+      "games": 48,
+      "wins": 18,
+      "draws": 3,
+      "scoreRate": 0.40625,
+      "asPlayerScoreRate": 0.25,
+      "asCpuScoreRate": 0.5625,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.3333333333333333
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.4791666666666667
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.46875,
+        "focus-wave7-legends": 0.3125,
+        "focus-air-bond": 0.4375
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 27.8% of the time.",
+          "value": 0.2777777777777778,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "baby",
+          "message": "Baby Momma was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "bbldemon",
+          "message": "BBL Demon was played in 18.8% of appearances.",
+          "value": 0.1875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 12.5% of appearances.",
+          "value": 0.125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "dark-splash",
+          "message": "Dark control splash scored 31.3% across the matrix.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-wave7-legends",
+          "message": "Wave 7 Legends scored 68.8% across the matrix.",
+          "value": 0.6875,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 43.8%.",
+          "value": 0.4375,
+          "threshold": 0.55
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 31.3%.",
+          "value": 0.3125,
+          "threshold": 0.58
+        }
+      ]
+    },
+    "seeded-legal/echo-splash": {
+      "games": 48,
+      "wins": 26,
+      "draws": 5,
+      "scoreRate": 0.59375,
+      "asPlayerScoreRate": 0.5,
+      "asCpuScoreRate": 0.6875,
+      "failedMatches": 0,
+      "byTier": {
+        "0": {
+          "games": 24,
+          "scoreRate": 0.4791666666666667
+        },
+        "3": {
+          "games": 24,
+          "scoreRate": 0.7083333333333334
+        }
+      },
+      "byOpponent": {
+        "focus-fire-guap": 0.40625,
+        "focus-wave7-legends": 0.59375,
+        "focus-air-bond": 0.78125
+      },
+      "flags": [
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 28.1%.",
+          "value": 0.28125,
+          "threshold": 0.58
+        },
+        {
+          "severity": "review",
+          "code": "low-ability-success",
+          "subject": "dancecaptain",
+          "message": "Dance Circle Captain's observed ability events succeeded 25.0% of the time.",
+          "value": 0.25,
+          "threshold": 0.3
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "guap",
+          "message": "GUAP was played in 31.3% of appearances.",
+          "value": 0.3125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "review",
+          "code": "low-play-rate",
+          "subject": "hooper",
+          "message": "Hooper was played in 25.0% of appearances.",
+          "value": 0.25,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "seat-advantage",
+          "subject": "player-seat",
+          "message": "The player seat scored 40.6%.",
+          "value": 0.40625,
+          "threshold": 0.58
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "echo-splash",
+          "message": "Nerd / setup echo splash scored 78.1% across the matrix.",
+          "value": 0.78125,
+          "threshold": 0.35
+        },
+        {
+          "severity": "blocker",
+          "code": "deck-win-band",
+          "subject": "focus-air-bond",
+          "message": "Air Bond scored 21.9% across the matrix.",
+          "value": 0.21875,
+          "threshold": 0.35
+        }
+      ]
+    }
+  }
+}

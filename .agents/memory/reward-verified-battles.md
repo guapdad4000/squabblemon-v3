@@ -3,7 +3,7 @@ name: Reward-verified battles
 description: Why rewarded Squabblemon results must be replayed through one shared gameplay authority.
 ---
 
-Rewarded matches must submit the player's exact six-move transcript. The server replays it with the same deterministic engine as the browser and derives the outcome, districts, and reward from that replay.
+Rewarded matches must submit the player's exact action transcript, including multiple plays and explicit turn endings. The server replays it with the same deterministic engine as the browser and derives the outcome, districts, and reward from that replay.
 
 **Why:** Trusting a client-reported win lets authenticated callers forge progression. Maintaining separate browser and server rules also creates drift that can reject legitimate matches or credit the wrong result.
 

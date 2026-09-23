@@ -12,6 +12,8 @@ import { DeckCarousel } from '../../components/DeckCarousel';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
+import { GangBackdrop } from '../../components/GangBackdrop';
+import '../../styles/gang-backdrop.css';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
@@ -46,6 +48,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   };
 
   return <ArsenalScreen className="decks-spectacle world-decor-host" label="Your gangs">
+    <GangBackdrop />
     <PageDecor theme="crew" />
     <div className="decks-spectacle__hero">
       <header className="decks-spectacle__header">

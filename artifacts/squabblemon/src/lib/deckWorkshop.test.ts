@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
-import { ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, decks } from '../data';
+import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
+import { ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, engineIdsToCatalogIds, decks } from '../data';
 import { createMatchFromEngineCards, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
 
 test('a full mixed deck keeps the replaced slot and moves its cover without duplicates', () => {
@@ -41,7 +41,7 @@ test('custom deck transcript replays the issued roster even if the saved deck ch
 test('workshop teaches each affected archetype without creating or replacing decks', () => {
   assert.deepEqual(
     workshopSuggestions.map(lesson => lesson.cardId),
-    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario'],
+    ['landlord', 'dorothy', 'alice', 'sherlock', 'guap', 'bottle-girl', 'inmate-crafty', 'demario', 'counter'],
   );
   for (const lesson of workshopSuggestions) {
     assert.ok(lesson.title.length > 0);
@@ -49,4 +49,39 @@ test('workshop teaches each affected archetype without creating or replacing dec
     assert.ok(lesson.testCrew.length >= 4);
     assert.ok(lesson.testCrew.includes(lesson.cardId));
   }
+});
+
+test('the four revised lessons expose complete legal balance-lab crews', () => {
+  const lessons = Object.fromEntries(workshopSuggestions.map(lesson => [lesson.cardId, lesson]));
+  const expected = {
+    'inmate-crafty': recommendedWorkshopCrews.cellblock,
+    sherlock: recommendedWorkshopCrews.detectives,
+    demario: recommendedWorkshopCrews.mushroom,
+    counter: recommendedWorkshopCrews.counterplay,
+  } as const;
+  for (const [cardId, engineCardIds] of Object.entries(expected)) {
+    assert.equal(engineCardIds.length, 10);
+    assert.equal(new Set(engineCardIds).size, 10);
+    assert.deepEqual(lessons[cardId].testCrew, engineIdsToCatalogIds([...engineCardIds]));
+    assert.deepEqual(catalogIdsToEngineIds(lessons[cardId].testCrew), [...engineCardIds]);
+  }
+});
+
+test('revised workshop copy explains the dependable setup and bounded payoff', () => {
+  const detail = (cardId: string) => workshopSuggestions.find(lesson => lesson.cardId === cardId)!.detail;
+  assert.match(detail('inmate-crafty'), /real support card first/i);
+  assert.match(detail('inmate-crafty'), /2\/3 Crafty/);
+  assert.match(detail('inmate-crafty'), /\+2 locally and \+1 across districts/);
+  assert.match(detail('sherlock'), /actual Sherlock cancellation/i);
+  assert.match(detail('sherlock'), /weakest other character \+2/i);
+  assert.match(detail('sherlock'), /Watson is a 2\/3/i);
+  assert.match(detail('sherlock'), /repairs up to 3 actual damage/i);
+  assert.match(detail('sherlock'), /Protects that ally or a fallback ally, and Protects Sherlock anywhere/i);
+  assert.match(detail('demario'), /2\/2 Demario/);
+  assert.match(detail('demario'), /Normal or Powered Luigion consumes it once for \+2/);
+  assert.match(detail('demario'), /SQUABBLE is optional for the powered jump/i);
+  assert.doesNotMatch(detail('demario'), /adds only the powered jump/i);
+  assert.match(detail('counter'), /Silence and Weaken enablers/i);
+  assert.match(detail('counter'), /first new debuff/i);
+  assert.doesNotMatch(detail('counter'), /Closet Nerd (?:costs|is) 3/i);
 });

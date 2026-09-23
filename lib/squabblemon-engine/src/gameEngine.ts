@@ -106,7 +106,7 @@ export type CardInstance = Card & {
   idolId?: string;
   fanRound?: number;
   waveTrainingUsed?: boolean;
-  /** A powered form can consume only one Mushroom, even if its reveal is echoed. */
+  /** A Luigion deployment can consume only one Mushroom, never from an echo. */
   luigionMushroomUsed?: boolean;
   waveOnce?: Partial<Record<'alice' | 'bonnetgirl' | 'undercova' | 'oz', boolean>>;
   waveRounds?: Partial<Record<'tinman' | 'lion' | 'ronald' | 'trapvamp' | 'squabblecook', number>>;
@@ -1551,6 +1551,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
   if (Object.hasOwn(cellblockWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     let succeeded = false;
+    let resolutionNote: string | undefined;
     const buff = (target: CardInstance, amount: number) => {
       targetIds.add(target.instanceId);
       m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount,
@@ -1562,6 +1563,13 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     } else if (source.cardId === 'inmate-boyfriend') {
       const target = lowest(allies);
       if (target) buff(target, 2);
+      const remote = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
+        && c.lane !== l && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'
+        && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId)));
+      if (remote) buff(remote, 1);
+      if (target || remote) resolutionNote = 'Looking Out resolved.'
+        + (target ? ` ${target.name} here gained +2 Hands.` : '')
+        + (remote ? ` ${remote.name} in another district gained +1 Hand.` : '');
     } else if (source.cardId === 'inmate-informant') {
       const target = highest(inLane(m, enemy, l));
       if (target) {
@@ -1594,13 +1602,14 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       }
       if (losing) buff(source, 1);
     }
-    note(succeeded ? `${source.ability} resolved.` : `${source.ability}: condition not met, effect blocked, or already at cap.`);
+    note(succeeded ? resolutionNote ?? `${source.ability} resolved.` : `${source.ability}: condition not met, effect blocked, or already at cap.`);
     if (!echoed && succeeded) m = trainWaveAbility(m, source.instanceId);
     return !echoed ? { ...m, lastRevealedCardId: source.cardId } : m;
   }
   if (Object.hasOwn(neighborhoodWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     let succeeded = false;
+    let resolutionNote: string | undefined;
     if (source.cardId === 'hair-stylist' || source.cardId === 'stylist') {
       const target = lowest(allies);
       if (target) {
@@ -1628,7 +1637,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       succeeded = true;
     } else if (source.cardId === 'luigion') {
       const powered = source.id === LUIGION_POWERED.id || source.name === LUIGION_POWERED.name;
-      const mushroom = powered && !echoed && !source.luigionMushroomUsed
+      const mushroom = !echoed && !source.luigionMushroomUsed
         ? lowest(allies.filter(c => c.cardId === 'demario-mushroom')) : undefined;
       if (mushroom) {
         targetIds.add(mushroom.instanceId);
@@ -1637,9 +1646,14 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         m = fairytaleDeparture(m, mushroom);
         m = modify(m, source.instanceId, c => ({ ...c, luigionMushroomUsed: true }));
       }
-      const otherCharacter = lowest(allies.filter(c => c.kind === 'character'
-        && c.instanceId !== source.instanceId && c !== source && c.cardId !== 'luigion'));
-      const bonus = 1 + (mushroom ? 2 : otherCharacter ? 0 : 1);
+      const otherCharacter = lowest(allies.filter(c => !c.hazard && (c.kind ?? 'character') === 'character'
+        && c.instanceId !== source.instanceId));
+      // Keep the powered burst ceiling: its Mushroom replaces the solo fallback.
+      const bonus = powered ? 1 + (mushroom ? 2 : otherCharacter ? 0 : 1)
+        : 1 + (otherCharacter ? 0 : 1) + (mushroom ? 2 : 0);
+      resolutionNote = `${source.ability}: gained +${bonus - (mushroom ? 2 : 0)} Hands.`
+        + (mushroom ? ' Consumed a local friendly Mushroom for +2 Hands.' : '')
+        + (otherCharacter ? ` ${otherCharacter.name} gained +1 Hand.` : '');
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus,
         lastEffectNote: `Power-Up: +${bonus} Hands${mushroom ? '; consumed a local friendly Mushroom' : ''}.` }));
       if (otherCharacter) {
@@ -1656,7 +1670,12 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
           m = move(m, findCard(m, source.instanceId) ?? source, destination, 'Powered Luigion jumped to the weakest open district.');
           if (findCard(m, source.instanceId)?.lane === destination) {
             m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Powered Luigion jumped: +1 Hand.' }));
+            resolutionNote += ' Jumped to the weakest open district and gained +1 Hand.';
+          } else {
+            resolutionNote += ' Jump was blocked; no jump bonus.';
           }
+        } else {
+          resolutionNote += ' No other open district; no jump bonus.';
         }
       }
     } else if (source.cardId === 'black-cowboy' && inLane(m, enemy, l).length < 4) {
@@ -1667,7 +1686,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         succeeded = findCard(m, target.instanceId)?.lane === l;
       }
     }
-    note(succeeded ? `${source.ability} resolved.` : `${source.ability} found no legal target or space.`);
+    note(succeeded ? resolutionNote ?? `${source.ability} resolved.` : `${source.ability} found no legal target or space.`);
     if (succeeded) m = trainWaveAbility(m, source.instanceId);
     return !echoed ? { ...m, lastRevealedCardId: source.cardId } : m;
   }
@@ -2693,6 +2712,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     m = { ...m, districtRuntime: { ...runtime, plays: { ...runtime.plays, [owner]: plays }, roundPlays: { ...runtime.roundPlays, [owner]: roundPlays } } };
   }
   let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, powerModifier: card.powerModifier + (squabble ? card.basePower : 0), lastEffectNote: squabble ? 'SQUABBLE doubled base Hands.' : `Played for ${cost} Motion.` };
+  if (card.cardId === 'luigion') placed = { ...placed, luigionMushroomUsed: false };
   if (card.cardId === 'luigion' && squabble) placed = { ...placed, ...LUIGION_POWERED };
   if (card.cardId === 'homelessguy') placed = { ...placed, wildInvestment: investment, wildEmptyWallet: match[motionKey] === cost };
   m = { ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] };
@@ -2752,7 +2772,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     // played character.  Resolve it here, exactly once, before On Reveal; echoes
     // never pass through placement and therefore cannot consume it.
     if (!revealed.hazard && (revealed.kind ?? 'character') === 'character'
-      && !(revealed.cardId === 'luigion' && revealed.id === LUIGION_POWERED.id)) {
+      && revealed.cardId !== 'luigion') {
       const mushroom = inLane(m, owner, targetLane).find(c => c.instanceId !== instanceId && c.cardId === 'demario-mushroom');
       if (mushroom) {
         const beforeMushroom = m;
@@ -2761,7 +2781,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
         m = fairytaleDeparture(m, mushroom);
         m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Mushroom Delivery: consumed Mushroom, +1 Hand.' }));
         m = addEvent(beforeMushroom, m, { type: 'ability', sourceId: mushroom.instanceId, owner, lane: targetLane,
-          targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery empowered the next friendly character by +1 Hand.' });
+          targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery: the next friendly character consumed a Mushroom for +1 Hand.' });
       }
     }
     const trap = (m.districtTraps ?? []).find(t => t.kind === 'stakeout' && t.owner !== owner && t.lane === targetLane && t.expiresAfterRound >= m.round);
@@ -2771,8 +2791,19 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
       m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
       m = modify(m, instanceId, c => ({ ...c, lastEffectNote: 'Stakeout canceled this entrance.' }));
       const detective = m.boards.flat().find(c => c.instanceId === trap.source.instanceId);
-      if (detective && activeAbility(detective)) m = modify(m, detective.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Stakeout canceled an entrance: +2 Hands.' }));
-      m = addEvent(beforeTrap, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner, targetIds: [instanceId], note: 'Stakeout canceled ' + revealed.name + '’s entrance.' });
+      const rewardedIds: string[] = [];
+      if (detective && activeAbility(detective)) {
+        const ally = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === trap.owner
+          && c.instanceId !== detective.instanceId && (c.kind ?? 'character') === 'character'));
+        for (const target of [detective, ...(ally ? [ally] : [])]) {
+          rewardedIds.push(target.instanceId);
+          m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
+            lastEffectNote: 'Stakeout canceled an entrance: +2 Hands.' }));
+        }
+      }
+      m = addEvent(beforeTrap, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner,
+        targetIds: [instanceId, ...rewardedIds], note: 'Stakeout canceled ' + revealed.name + '’s entrance.'
+          + (rewardedIds.length ? ` ${rewardedIds.length === 2 ? 'Sherlock and the weakest other friendly character gained' : 'Sherlock gained'} +2 Hands.` : '') });
     } else m = resolveAbility(m, revealed);
   }
   m = undercovaReaction(m, match, instanceId, targetLane, owner);

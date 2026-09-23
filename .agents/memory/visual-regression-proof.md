@@ -23,6 +23,12 @@ Verify setup-screen reachability inside the real route shell at the reported vie
 
 **How to apply:** Assert the primary action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content, then select a crew and enter the actual first turn with a valid match-start response. Check both width and height breakpoints.
 
+Prefer one vertical scroll owner for a screen with persistent foreground artwork.
+
+**Why:** Independently scrolling the route, poster board, and poster list made the bounty screen feel unpredictable despite passing scroll-to-click checks. The user explicitly rejected the extra scrollbars.
+
+**How to apply:** Count genuinely overflowing elements and verify wheel and keyboard scrolling. For foreground art over a scene, use a transparent, non-interactive overlay with enough trailing content padding for the last item to scroll fully above it. An opaque fixed panel can make the list look cut off even when scrolling technically works; the user rejected that arrangement too.
+
 For effects attached to illustrated objects, verify the rendered transform and occlusion as well as the intended origin coordinates.
 
 **Why:** A beam's coordinate attributes can match its lens perfectly while opaque artwork above it hides the visible start, making it appear disconnected.

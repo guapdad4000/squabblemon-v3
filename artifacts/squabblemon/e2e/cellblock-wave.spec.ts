@@ -8,6 +8,7 @@ const cards = [
   { id: 'inmate-contraband', name: 'Inmate Contraband', rarity: 'Uncommon' },
   { id: 'lebron-james', name: 'Regular guy named LeBron James', rarity: 'Mythical' },
 ] as const;
+const appPath = (path: string) => `${process.env.SQUABBLEMON_PROXY_ROOT ?? '/squabblemon'}${path}`;
 
 function bootstrap(): PlayerBootstrap {
   const ownedCardIds = cards.map(card => card.id);
@@ -90,8 +91,7 @@ async function expectLoadedPortrait(container: Locator, id: string) {
 }
 
 test('real Collection and detail inspectors map all five cellblock portraits and metadata', async ({ page }, testInfo) => {
-  await authenticate(page);
-  await page.goto('/squabblemon/game/collection');
+  await page.goto(appPath('/e2e/crew-collection.fixture.html'));
   const search = page.getByPlaceholder('Find a card or ability…');
 
   for (const card of cards) {
@@ -112,6 +112,14 @@ test('real Collection and detail inspectors map all five cellblock portraits and
     if (card.id === 'lebron-james') {
       await expect(inspector.getByText('Mythical', { exact: true }).first()).toBeVisible();
       await expect(inspector).toContainText('fictional regular guy');
+    }
+    if (card.id === 'inmate-crafty') {
+      await expect(inspector).toContainText('friendly support card is here');
+      await expect(inspector.locator('.dossier-stat').filter({ hasText: 'Hands' }).locator('.dossier-stat__value')).toHaveText('3');
+    }
+    if (card.id === 'inmate-boyfriend') {
+      await expect(inspector).toContainText(/another district/i);
+      await expect(inspector).toContainText(/inmate/i);
     }
     await page.getByTestId('button-close-inspector').click();
   }
@@ -134,7 +142,7 @@ test('real Collection and detail inspectors map all five cellblock portraits and
 });
 
 test('all five cellblock cards enter a real Battle board and remain inspectable', async ({ page }, testInfo) => {
-  await page.goto('/squabblemon/e2e/cellblock-wave.fixture.html');
+  await page.goto(appPath('/e2e/cellblock-wave.fixture.html'));
   const lanes = [0, 0, 1, 1, 2];
 
   for (const [index, card] of cards.entries()) {
@@ -144,9 +152,9 @@ test('all five cellblock cards enter a real Battle board and remain inspectable'
 
     const played = page.getByTestId('battle-arena')
       .locator(`[data-card-zone="board"][data-card-id="${card.id}"]`);
-    await expect(played).toHaveCount(1);
-    await expectLoadedPortrait(played, card.id);
-    await played.click();
+    await expect(played).toHaveCount(card.id === 'inmate-contraband' ? 2 : 1);
+    await expectLoadedPortrait(played.last(), card.id);
+    await played.last().click();
     const inspector = page.getByRole('dialog', { name: `${card.name} battle details` });
     await expect(inspector).toBeVisible();
     await expect(inspector.getByText(card.rarity, { exact: true }).first()).toBeVisible();
@@ -154,7 +162,13 @@ test('all five cellblock cards enter a real Battle board and remain inspectable'
     await page.getByTestId('button-close-inspector').click();
   }
 
-  await expect(page.getByTestId('cellblock-board-count')).toHaveAttribute('data-count', '5');
+  await expect(page.getByTestId('cellblock-board-count')).toHaveAttribute('data-count', '6');
+  await expect(page.getByTestId('cellblock-sequencing-state')).toHaveAttribute('data-crafty-power', '2');
+  await expect(page.getByTestId('cellblock-sequencing-state')).toHaveAttribute('data-spread-inmate-power', '1');
+  await expect(page.getByTestId('cellblock-sequencing-state')).toHaveAttribute(
+    'data-boyfriend-targets',
+    /player:cellblock-wave-setup:21:inmate-contraband/,
+  );
   await page.getByTestId('battle-arena')
     .locator('[data-card-zone="board"][data-card-id="lebron-james"]')
     .click();

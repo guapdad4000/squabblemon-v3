@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { balanceLabExitCode, runBalanceLabCli } from './balance-lab';
+import { BASELINE_COMMIT, COMPARISON_AXES, CONTROL_CREW } from './four-crew-balance';
+import { aggregateCrewEvidence } from './four-crew-summary';
 import {
   countBalanceMatrixMatches,
   createBalanceMatrixConfig,
@@ -42,6 +44,24 @@ test('the CLI gate fails on blocker flags but ignores review-only reports', () =
   assert.equal(balanceLabExitCode({ flags: [] }), 0);
   assert.equal(balanceLabExitCode({ flags: [{ severity: 'review' }] }), 0);
   assert.equal(balanceLabExitCode({ flags: [{ severity: 'blocker' }] }), 2);
+});
+
+test('four-crew evidence preserves the historical shell and adds a legal explicit control recommendation', () => {
+  assert.match(BASELINE_COMMIT, /^[0-9a-f]{40}$/);
+  const all = createDefaultBalanceDecks();
+  const original = all.find(deck => deck.id === 'focus-counterplay')!;
+  const coherent = all.find(deck => deck.id === 'focus-counterplay-coherent')!;
+  assert.deepEqual(original.cardIds.slice(0, 6), ['counter', 'stud', 'pinaynurse', 'wifey', 'rastamon', 'gothkid']);
+  assert.deepEqual(coherent.cardIds, CONTROL_CREW);
+  assert.equal(new Set(CONTROL_CREW).size, 10);
+  assert.equal(countBalanceMatrixMatches({
+    id: 'controlled', decks: [original, coherent], districtSeeds: COMPARISON_AXES.seeds,
+    rotations: COMPARISON_AXES.rotations, tiers: COMPARISON_AXES.tiers, includeMirrors: false,
+  }), 16);
+  // Identical role/order seed keeps the same slot permutation after composition changes.
+  const permutation = (ids: readonly string[]) => seededDeckRotation(ids, 'fixed:a:focus-counterplay', 5).map(id => ids.indexOf(id));
+  assert.deepEqual(permutation(original.cardIds), permutation(coherent.cardIds));
+  assert.deepEqual(aggregateCrewEvidence([]), {});
 });
 
 test('ability success classification rejects real no-effect engine outcomes', () => {

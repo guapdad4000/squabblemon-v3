@@ -1,0 +1,550 @@
+.bounty-hunter-page {
+  --bounty-gun-height: clamp(260px, 38dvh, 340px);
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #111412;
+  position: relative;
+  isolation: isolate; /* Ensures z-index: -1 children stay above the background */
+  padding-bottom: 0;
+}
+
+/* One scroll owner for the hero, tabs and every poster. */
+.bounty-hunter__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #ad9475 #171613;
+  scroll-padding-block: 16px calc(var(--bounty-gun-height) + 24px);
+}
+
+.bounty-hunter-page[data-tab="mastery"] .bounty-hunter__scroll {
+  scroll-padding-bottom: 16px;
+}
+
+.bounty-hunter__hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.bounty-hunter__backdrop-container {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  mask-image: linear-gradient(black 50%, transparent);
+  -webkit-mask-image: linear-gradient(black 50%, transparent);
+}
+
+.bounty-hunter__backdrop {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  filter: saturate(0.8) contrast(1.1);
+}
+
+.bounty-hunter__hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 1040px;
+  width: 100%;
+}
+
+.bounty-hunter__logo {
+  max-width: 100%;
+  width: 320px;
+  height: auto;
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+}
+
+.bounty-hunter__ready {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(12, 14, 12, 0.75);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e5b869;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border: 1px solid rgba(229, 184, 105, 0.3);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.bounty-hunter__scroll > .studio-tabs {
+  position: relative;
+  z-index: 5;
+  max-width: 1040px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0 20px;
+}
+
+/* The wood-backed posters flow normally inside the single page scroller. */
+.bounty-hunter__board {
+  position: relative;
+  width: calc(100% - 32px);
+  max-width: 1040px;
+  margin: 20px auto 24px;
+  padding-bottom: calc(var(--bounty-gun-height) + 24px);
+  border-radius: 6px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.05);
+  isolation: isolate;
+  
+  display: block;
+  overflow: visible;
+}
+
+.bounty-hunter__wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.bounty-hunter__posters {
+  min-height: 0;
+  overflow: visible;
+  padding: 24px;
+  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+  align-content: start; /* Don't stretch rows vertically */
+}
+
+/* The only vertical scrollbar on this screen. */
+.bounty-hunter__scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.bounty-hunter__scroll::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+.bounty-hunter__scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+.bounty-hunter__scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.bounty-poster {
+  position: relative;
+  background: #f4ebd8;
+  color: #2c2925;
+  min-width: 0;
+  padding: 18px 14px 14px;
+  border-radius: 2px;
+  box-shadow: 4px 8px 24px rgba(0,0,0,0.6), inset 0 0 8px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  transform: rotate(-1.5deg);
+  transition: transform 0.2s, opacity 0.3s, filter 0.3s;
+}
+
+.bounty-poster:nth-child(even) {
+  transform: rotate(2deg);
+}
+.bounty-poster:nth-child(3n) {
+  transform: rotate(-1deg);
+}
+.bounty-poster:hover {
+  transform: scale(1.02) rotate(0deg);
+  z-index: 10;
+}
+
+.bounty-poster::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 9px;
+  background: radial-gradient(circle at 35% 35%, #888, #222);
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+}
+
+.bounty-poster[data-status='claimed'] {
+  opacity: 0.7;
+  filter: grayscale(0.4) brightness(0.9);
+}
+
+.bounty-poster__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid rgba(44, 41, 37, 0.15);
+  padding-bottom: 8px;
+  margin-top: 4px;
+  gap: 6px;
+}
+
+.bounty-poster__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bounty-poster h2 {
+  font-family: var(--font-display, Impact, sans-serif);
+  font-size: 19px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.05;
+  color: #1a1815;
+}
+
+.bounty-poster .studio-eyebrow {
+  color: #7a6a4f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.bounty-poster__progress {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bounty-poster .studio-progress {
+  width: 32px;
+  height: 32px;
+  color: #8c2a2a;
+  font-size: 9px;
+}
+.bounty-poster .studio-progress::before {
+  background: conic-gradient(currentColor calc(var(--progress) * 1turn), rgba(0,0,0,0.1) 0);
+}
+.bounty-poster__progress-text {
+  color: #2c2925;
+  font-weight: 700;
+}
+
+.bounty-poster p {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #3d3934;
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+.bounty-poster__reward {
+  background: rgba(140, 42, 42, 0.08);
+  border: 1px solid rgba(140, 42, 42, 0.15);
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.bounty-poster__reward .studio-icon,
+.bounty-poster__reward svg {
+  color: #8c2a2a;
+  width: 20px;
+  height: 20px;
+}
+.bounty-poster__reward strong {
+  font-family: var(--font-display, Impact, sans-serif);
+  font-size: 24px;
+  color: #8c2a2a;
+  line-height: 1;
+}
+.bounty-poster__reward-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8c2a2a;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.bounty-poster__action {
+  margin-top: 4px;
+}
+
+.bounty-poster .studio-action {
+  width: 100%;
+  background: #1a1815;
+  color: #f4ebd8;
+  border: none;
+  min-height: 44px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 10px 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.bounty-poster .studio-action:hover:enabled {
+  background: #2c2925;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+.bounty-poster .studio-action:active:enabled {
+  transform: translateY(1px);
+}
+.bounty-poster .studio-action:disabled {
+  background: #7a6a4f;
+  color: rgba(244,235,216,0.5);
+  box-shadow: none;
+}
+/* Ensure claim buttons have clear focus visibility */
+.bounty-poster .studio-action:focus-visible {
+  outline: 3px solid #8c2a2a;
+  outline-offset: 4px;
+}
+
+.bounty-poster__status {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 800;
+  color: #7a6a4f;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 0;
+  border: 3px solid rgba(122,106,79,0.2);
+  border-radius: 4px;
+  transform: rotate(-2deg);
+}
+.bounty-poster[data-status='claimed'] .bounty-poster__status {
+  color: #8c2a2a;
+  border-color: rgba(140,42,42,0.3);
+  transform: rotate(-3deg) scale(1.05);
+}
+
+.bounty-impact {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -15px;
+  width: 96px;
+  height: 96px;
+  pointer-events: none;
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
+.bounty-impact--fresh {
+  animation: impact-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes impact-pop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(2.5); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(0.9); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.bounty-hunter__empty {
+  grid-column: 1 / -1;
+  padding: 80px 20px;
+  text-align: center;
+  background: rgba(12, 14, 12, 0.85);
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  color: #d1c7b3;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.bounty-hunter__empty > svg {
+  margin: auto;
+  color: #e5b869;
+  width: 56px;
+  height: 56px;
+  opacity: 0.9;
+}
+.bounty-hunter__empty h2 {
+  font-family: var(--font-display, Impact, sans-serif);
+  font-size: 36px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin: 24px 0 16px;
+  color: #f4ebd8;
+}
+.bounty-hunter__empty p {
+  font-size: 15px;
+  max-width: 460px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.bounty-hunter__empty .studio-text-action {
+  color: #e5b869;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 13px;
+}
+
+.bounty-hunter__error-bar {
+  grid-column: 1 / -1;
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 4px;
+  padding: 16px 24px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Transparent foreground art, not a second panel that cuts off the scroll area.
+   The board's trailing space lets its final row scroll completely above the gun. */
+.bounty-hunter__pov {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  flex: none; /* Do not shrink */
+  height: var(--bounty-gun-height);
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Bottom-center layout */
+  align-items: flex-end;
+  pointer-events: none; /* Let clicks pass to anything below */
+  z-index: 10;
+  overflow: hidden;
+  isolation: isolate;
+  
+  background: transparent;
+}
+
+.bounty-hunter__pov-inner {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.bounty-hunter__pistol {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%; /* Bind to the inner container height */
+  object-fit: contain; /* Prevent negative escapes */
+  object-position: bottom center;
+  transform-origin: bottom center;
+  transition: opacity 0.1s;
+}
+
+.bounty-hunter__pistol--fired {
+  opacity: 0;
+}
+
+.bounty-hunter__pov[data-phase="firing"] .bounty-hunter__pistol--idle {
+  opacity: 0;
+}
+.bounty-hunter__pov[data-phase="firing"] .bounty-hunter__pistol--fired {
+  opacity: 1;
+  animation: pistol-recoil 0.15s ease-out forwards;
+}
+
+.bounty-hunter__pov[data-phase="impact"] .bounty-hunter__pistol--idle {
+  opacity: 1;
+  animation: pistol-settle 0.4s ease-out forwards;
+}
+.bounty-hunter__pov[data-phase="impact"] .bounty-hunter__pistol--fired {
+  opacity: 0;
+}
+
+/* Constrained recoil keeping art inside bounds */
+@keyframes pistol-recoil {
+  0% { transform: translateY(0) scale(1) rotate(0); filter: brightness(1.2); }
+  30% { transform: translateY(-15px) scale(1.02) rotate(2deg); filter: brightness(1.4); }
+  100% { transform: translateY(-5px) scale(1) rotate(1deg); filter: brightness(1); }
+}
+
+@keyframes pistol-settle {
+  0% { transform: translateY(-5px) scale(1) rotate(1deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+/* Reduced motion handling: disable recoil & impact animations */
+@media (prefers-reduced-motion: reduce) {
+  .bounty-hunter__pov[data-phase="firing"] .bounty-hunter__pistol--fired {
+    animation: none !important;
+  }
+  .bounty-hunter__pov[data-phase="impact"] .bounty-hunter__pistol--idle {
+    animation: none !important;
+  }
+  .bounty-impact {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+}
+html[data-reduce-motion="true"] .bounty-hunter__pov[data-phase="firing"] .bounty-hunter__pistol--fired,
+html[data-reduce-motion="true"] .bounty-hunter__pov[data-phase="impact"] .bounty-hunter__pistol--idle,
+html[data-reduce-motion="true"] .bounty-impact,
+.bounty-hunter-page[data-reduced-motion="true"] .bounty-hunter__pistol,
+.bounty-hunter-page[data-reduced-motion="true"] .bounty-impact {
+  animation: none !important;
+}
+
+@media (max-width: 768px) {
+  .bounty-hunter-page {
+    --bounty-gun-height: clamp(220px, 35dvh, 300px);
+  }
+  .bounty-hunter__board {
+    margin: 16px auto 24px;
+  }
+  .bounty-hunter__posters {
+    padding: 18px 12px;
+    gap: 16px 12px;
+    grid-template-columns: repeat(2, minmax(0, 220px));
+  }
+  .bounty-poster {
+    padding: 16px 10px 10px;
+    gap: 8px;
+  }
+  .bounty-poster h2 {
+    font-size: 17px;
+  }
+  .bounty-poster .studio-progress {
+    width: 28px;
+    height: 28px;
+  }
+  .bounty-hunter__logo {
+    width: 210px;
+  }
+  .bounty-hunter__pov {
+    height: var(--bounty-gun-height);
+  }
+  .bounty-hunter__pov-inner {
+    max-width: 100%;
+  }
+}

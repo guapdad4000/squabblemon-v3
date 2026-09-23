@@ -1,5 +1,10 @@
 # Task 118 balance changelog and archetype map
 
+**Historical record:** Task 126 subsequently changes the Cellblock, detective and
+Mushroom setup rules and adds an explicit Dark-control recommendation. Its
+[final values and controlled evidence](balance-four-crews.md) supersede those
+specific entries below; Task 118's other archetype changes remain out of scope.
+
 This is the authored before/after record for the balance-lab patch. “Before” means the
 pre-patch rule recorded in the task brief; “after” is the current engine definition. Card
 IDs are engine IDs (the IDs used by the balance lab), not display names.

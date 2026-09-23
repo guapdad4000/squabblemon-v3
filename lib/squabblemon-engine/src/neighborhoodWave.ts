@@ -3,8 +3,8 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 export const NEIGHBORHOOD_WAVE = [
   ['hair-stylist', 'Hair Stylist', 'Uncommon', 'Air', 2, 2, 'Blowout', 'On Reveal: Cleanse your weakest other ally here and give it +1 Hand.', 'Support'],
   ['stylist', 'Stylist', 'Rare', 'Light', 3, 3, 'Fresh Fit', 'On Reveal: Give your weakest other ally here +1 Hand and Protect.', 'Support'],
-  ['demario', 'Demario', 'Rare', 'Plant', 3, 3, 'Mushroom Delivery', 'On Reveal: Summon a 1-Hand Mushroom here if you have fewer than 4 friendly cards here. The next other friendly character played here consumes one Mushroom for +1 Hand; Powered Luigion gets +2.', 'Support'],
-  ['luigion', 'Luigion', 'Rare', 'Normal', 2, 2, 'Power-Up', 'On Reveal: Gain +1 Hand, then give your weakest other friendly character here +1 Hand; if alone, gain a second +1. When played with Squabble, transform into Powered Luigion, consume at most one friendly Demario Mushroom here for +2, then jump to the weakest other open district and gain +1 Hand if the move succeeds.', 'Growth'],
+  ['demario', 'Demario', 'Rare', 'Plant', 2, 2, 'Mushroom Delivery', 'On Reveal: Summon a 1-Hand Mushroom here if you have fewer than 4 friendly cards here. The next other friendly character played here consumes one Mushroom for +1 Hand; normal or Powered Luigion gets +2 on reveal. Echoes never consume Mushrooms.', 'Support'],
+  ['luigion', 'Luigion', 'Rare', 'Normal', 2, 2, 'Power-Up', 'On Reveal: Gain +1 Hand, then give your weakest other friendly character here +1 Hand; if none, gain a second +1. Consume at most one local friendly Mushroom for +2 Hands per deployment, never on echoes. Squabble transforms into Powered Luigion: the Mushroom replaces the solo +1, then jump to your weakest other open district for +1 Hand if the move succeeds.', 'Growth'],
   ['black-cowboy', 'Black Cowboy', 'Epic', 'Earth', 3, 3, 'Lasso', 'On Reveal: Pull the weakest enemy from another district here. Protection, immunity and movement locks can stop this. Requires fewer than 4 enemies here.', 'Movement'],
 ] as const;
 
@@ -27,11 +27,11 @@ export const neighborhoodWaveCards: Record<string, Card> = Object.fromEntries(NE
 export const LUIGION_POWERED = {
   id: 'luigion-powered', name: 'Powered Luigion',
   ability: 'Powered Up',
-  effect: 'Squabble doubled base Hands. On Reveal: Gain +1 Hand if another friendly character is here. Consumes at most one friendly Demario Mushroom here for +2 Hands.',
+  effect: 'Squabble doubled base Hands. On Reveal: Gain +1 Hand and give your weakest other friendly character here +1. Consume one local friendly Mushroom for +2; if no Mushroom or other character, gain another +1. Then jump to your weakest other open district for +1 if successful. Echoes never consume Mushrooms or jump.',
 } as const;
 export const DEMARIO_MUSHROOM: Card = {
   id: 'demario-mushroom', name: 'Demario Mushroom', type: 'Plant', cost: 0, power: 1,
   kind: 'token', ability: 'Local Power-Up', artworkLayout: 'portrait',
-  effect: 'Battle-only summon. A friendly Luigion played with Squabble in this district may consume this Mushroom for +2 Hands.',
+  effect: 'Battle-only summon. The next friendly character played here consumes one Mushroom for +1 Hand. Normal or Powered Luigion consumes it on reveal for +2 instead. Echoes never consume Mushrooms.',
   abilityUpgrades: [],
 };

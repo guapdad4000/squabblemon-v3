@@ -85,3 +85,6 @@ Thumbs.db
 
 # Temporary real-account campaign manifests
 /.campaign-e2e/
+
+# Resumable balance scratch files; completed evidence reports remain tracked
+/scripts/results/**/*-checkpoint.json

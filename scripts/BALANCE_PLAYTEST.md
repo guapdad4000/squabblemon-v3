@@ -4,6 +4,37 @@
 
 The current redacted automated aggregate is recorded in [BALANCE_BASELINE.md](./BALANCE_BASELINE.md). Raw JSON and human row-level notes remain in ignored or access-controlled storage. Task 118 adds Earth, detective, Wiz, Wonderland, Fire/GUAP, Poison, Cellblock, and Demario/Luigion shells; these are recommended comparison crews, not new starters or replacements for saved crews.
 
+Task 126's anonymous deterministic aggregates and reproducible comparison commands are
+in [the four-crew evidence record](../docs/balance-four-crews.md). Those aggregate
+JSON files contain no human rows or account data. The human gate below is unchanged.
+
+### Focused four-crew observations (still pending)
+
+Use [the four complete recommendations](../docs/four-crew-guide.md), not edited
+player-saved decks. Counterplay composition must be compared separately from any
+Nerd cost experiment. Keep the opponent, draw order, training tier and first seat
+fixed within a paired session; reverse first seat in the next pair.
+
+- **Cellblock:** Can the player identify a support-kind item rather than a
+  Support-role character, play it before Crafty, and predict Boyfriend's other-lane
+  inmate reward? Record whether the four-slot district forces an interesting choice.
+- **Detectives:** Can the opponent see and avoid the trap? Does an actual
+  cancellation's self/ally reward make sense in the effect log and replay?
+  Ask which ally Watson can heal and distinguish healing from fallback Protection.
+- **Demario/Luigion:** Does opening with Demario feel useful? Ask the player to
+  predict the normal versus powered token bonus before deploying, then identify the
+  consumed local token and remaining space. Record whether normal Luigion is worth
+  playing without SQUABBLE; do not coach them to gamble.
+- **Dark control:** Does the explicit crew supply Silence/Weaken often enough to
+  activate Counter/Gamer without hiding their once-per-round limits? Record
+  Protection counterplay and whether the optional Nerd discount crowds out
+  alternative enablers or makes copy/echo turns oppressive.
+
+Record unaided comprehension, failed setups, successful setups, district swings,
+turns where setup cannot be afforded, perceived counterplay and unfair-combo reports.
+Keep failures and seat/policy disagreements visible; do not convert the bot scores
+into claimed human win rates or mark this protocol passed without real sessions.
+
 ## Minimum sessions
 
 | Session | Minimum sample | Build and account | Target time |

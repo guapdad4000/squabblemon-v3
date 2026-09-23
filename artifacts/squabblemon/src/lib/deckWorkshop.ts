@@ -1,4 +1,4 @@
-import { catalogCardById } from '../data';
+import { catalogCardByEngineId, catalogCardById } from '../data';
 import type { Match } from '../gameEngine';
 
 export type DeckDraft = { name: string; cardIds: string[]; heroCardId: string; recipeId: string | null };
@@ -10,15 +10,30 @@ export function replaceDeckCard(draft: DeckDraft, index: number, cardId: string)
   return { ...draft, cardIds: draft.cardIds.map((id, slot) => slot === index ? cardId : id), heroCardId: draft.heroCardId === previous ? cardId : draft.heroCardId };
 }
 
+/**
+ * Complete practice crews used by the balance lab. These are recommendations only:
+ * opening the workshop never replaces a starter or a player's saved crew.
+ */
+export const recommendedWorkshopCrews = {
+  cellblock: ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james', 'bustdown', 'cognac', 'rastamon', 'wifey', 'stud'],
+  detectives: ['sherlock', 'watson', 'crossingguard', 'nightmedic', 'wifey', 'counter', 'oz', 'rastamon', 'bustdown', 'tinman'],
+  mushroom: ['demario', 'luigion', 'rastamon', 'vibe', 'plug', 'bustdown', 'soulfood', 'black-cowboy', 'hair-stylist', 'stylist'],
+  counterplay: ['counter', 'gamer', 'gothkid', 'nerd', 'redpill', 'buddy', 'wifey', 'pinaynurse', 'plug', 'bustdown'],
+} as const;
+
+const catalogCrew = (engineCardIds: readonly string[]): string[] =>
+  engineCardIds.map(cardId => catalogCardByEngineId[cardId].catalogId);
+
 export const workshopSuggestions = [
   { cardId: 'landlord', title: 'Build an Earth tax crew', detail: 'Landlord is an affordable opener: tax the first enemy arrival here each round, then pair him with Earth supports and wide finishers.', testCrew: ['landlord', 'asphaltapostle', 'mansamusa', 'johnhenry'] },
   { cardId: 'dorothy', title: 'Echo movement value', detail: 'The Wiz wants open districts: move a small ally with Dorothy, then let Oz repeat a successful entrance instead of stacking one lane.', testCrew: ['dorothy', 'scarecrow', 'tinman', 'oz'] },
   { cardId: 'alice', title: 'Turn returns into tempo', detail: 'Alice leaves the board once, then returns with a Hands boost and a cheaper redeployment. Cheshire turns each return into lasting board value.', testCrew: ['alice', 'cheshire', 'watson', 'vibe'] },
-  { cardId: 'sherlock', title: 'Predict and protect', detail: 'Sherlock marks the strongest other district; Watson protects the detective and repairs an injured ally so a cancelled entrance becomes a swing.', testCrew: ['sherlock', 'watson', 'church', 'counter'] },
+  { cardId: 'sherlock', title: 'Predict, cancel, protect', detail: 'An actual Sherlock cancellation gives him +2 Hands and your weakest other character +2. Watson is a 2/3 who repairs up to 3 actual damage, Protects that ally or a fallback ally, and Protects Sherlock anywhere.', testCrew: catalogCrew(recommendedWorkshopCrews.detectives) },
   { cardId: 'guap', title: 'Finish with Fire', detail: 'Build friendly characters across the map before GUAP: FINNAM! charges from the whole board and pressures every opposing district.', testCrew: ['guap', 'folks', 'hooper', 'baby'] },
   { cardId: 'bottle-girl', title: 'Chain Poison entries', detail: 'Bottle Girl rewards a later play and discounts your next Poison character. Follow with entry punishment from Cologne Criminal or Nail Tech.', testCrew: ['bottle-girl', 'colognecriminal', 'nail-tech', 'sneaker'] },
-  { cardId: 'inmate-crafty', title: 'Sequence Cellblock lanes', detail: 'Establish a lane with a real support and character, then use Crafty, Boyfriend, Informant, and Contraband for bounded local payoffs.', testCrew: ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'] },
-  { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'Demario creates one visible Mushroom for the next friendly character. Luigion works alone or with an ally; SQUABBLE adds the optional powered movement payoff.', testCrew: ['demario', 'luigion', 'rastamon', 'plug'] },
+  { cardId: 'inmate-crafty', title: 'Support first, inmates wide', detail: 'Play a real support card first, then follow with 2/3 Crafty for +2 Hands. Spread inmates so Boyfriend can give +2 locally and +1 across districts.', testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
+  { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'The 2/2 Demario opens with one local Mushroom. Normal or Powered Luigion consumes it once for +2; SQUABBLE is optional for the powered jump.', testCrew: catalogCrew(recommendedWorkshopCrews.mushroom) },
+  { cardId: 'counter', title: 'Trigger Dark control', detail: 'Use Silence and Weaken enablers such as Closet Nerd, BUDDY, and Red Pill. Each round, the first new debuff activates Counter and Gamer’s Dark payoff.', testCrew: catalogCrew(recommendedWorkshopCrews.counterplay) },
 ] as const;
 
 export function summarizeDeckTest(match: Match, cardId: string): string {

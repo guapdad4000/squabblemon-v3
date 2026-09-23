@@ -10,6 +10,8 @@ import { ArsenalScreen, FocusViewButton } from './venue/ArsenalScreen';
 import { replaceDeckCard, workshopSuggestions, type DeckDraft } from '../lib/deckWorkshop';
 import '../styles/deck-workshop.css';
 import { trackEvent } from '../lib/analytics';
+import { GangBackdrop } from './GangBackdrop';
+import '../styles/gang-backdrop.css';
 
 export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave, onTest, lesson = false }: {
   initial: DeckDraft; ownedCardIds: string[]; equippedVariants: Record<string, string>;
@@ -64,6 +66,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
     finally { setBusy(false); }
   }
   return <ArsenalScreen className="deck-workbench" label={lesson ? 'Build your first gang' : 'Deck builder'}>
+    <GangBackdrop />
     <header className="deck-workbench__header">
       {lesson && <DrFadePortrait pose="right" className="deck-workbench__coach-art" />}
       <div className="deck-workbench__title">

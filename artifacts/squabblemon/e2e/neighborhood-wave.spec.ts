@@ -8,6 +8,7 @@ const cards = [
   { catalogId: 'luigion', engineId: 'luigion', name: 'Luigion', artId: 'luigion' },
   { catalogId: 'black-cowboy', engineId: 'black-cowboy', name: 'Black Cowboy', artId: 'black-cowboy' },
 ] as const;
+const appPath = (path: string) => `${process.env.SQUABBLEMON_PROXY_ROOT ?? '/squabblemon'}${path}`;
 
 function bootstrap(): PlayerBootstrap {
   const ownedCardIds = cards.map(card => card.catalogId);
@@ -90,8 +91,7 @@ async function expectLoadedUserArt(card: Locator, artId: string) {
 }
 
 test('real Collection cards and inspectors load all five neighborhood portraits', async ({ page }, testInfo) => {
-  await authenticate(page);
-  await page.goto('/squabblemon/game/collection');
+  await page.goto(appPath('/e2e/crew-collection.fixture.html'));
   const search = page.getByPlaceholder('Find a card or ability…');
 
   for (const card of cards) {
@@ -103,6 +103,15 @@ test('real Collection cards and inspectors load all five neighborhood portraits'
     const inspector = page.getByRole('dialog', { name: `${card.name} card details` });
     await expect(inspector).toBeVisible();
     await expectLoadedUserArt(inspector.getByTestId('card-inspector'), card.artId);
+    if (card.engineId === 'demario') {
+      await expect(inspector.locator('.dossier-stat').filter({ hasText: 'Motion' }).locator('.dossier-stat__value')).toHaveText('2');
+      await expect(inspector.locator('.dossier-stat').filter({ hasText: 'Hands' }).locator('.dossier-stat__value')).toHaveText('2');
+      await expect(inspector).toContainText('1-Hand Mushroom');
+    }
+    if (card.engineId === 'luigion') {
+      await expect(inspector).toContainText(/consume at most one local friendly Mushroom/i);
+      await expect(inspector).toContainText(/\+2/);
+    }
     await page.getByTestId('button-close-inspector').click();
   }
 
@@ -120,8 +129,26 @@ test('real Collection cards and inspectors load all five neighborhood portraits'
   });
 });
 
+test('normal Luigion consumes one local Mushroom for the same +2 award without transforming', async ({ page }) => {
+  await page.goto(appPath('/e2e/neighborhood-wave.fixture.html'));
+  await page.locator('[data-card-zone="hand"][data-card-id="demario"]').click();
+  await page.getByTestId('lane-0').click();
+  await page.getByTestId('button-lock').click();
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-demario-cost', '2');
+  await expect(page.locator('[data-card-zone="board"][data-card-id="demario-mushroom"]')).toHaveCount(1);
+
+  await page.locator('[data-card-zone="hand"][data-card-id="luigion"]').click();
+  await page.getByTestId('lane-0').click();
+  await page.getByTestId('button-lock').click();
+
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-normal', 'true');
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-powered', 'false');
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-normal-hands', '5');
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-mushrooms', '0');
+});
+
 test('Demario summons a Mushroom and Squabble transforms Luigion with authoritative art', async ({ page }, testInfo) => {
-  await page.goto('/squabblemon/e2e/neighborhood-wave.fixture.html');
+  await page.goto(appPath('/e2e/neighborhood-wave.fixture.html'));
 
   await page.locator('[data-card-zone="hand"][data-card-id="demario"]').click();
   await page.getByTestId('lane-0').click();
@@ -141,7 +168,9 @@ test('Demario summons a Mushroom and Squabble transforms Luigion with authoritat
   await expect(mushroom).toHaveCount(0);
   await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-powered', 'true');
   await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-mushrooms', '0');
-  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-powered-hands', '7');
+  // Captured pre-patch engine replay proves this exact sequence has always ended at
+  // 8: doubled base 4 + reveal 1 + Mushroom 2 + successful jump 1.
+  await expect(page.getByTestId('neighborhood-wave-state')).toHaveAttribute('data-powered-hands', '8');
 
   const projected = page.getByTestId('online-powered-projection').locator('[data-card-id="luigion-powered"]');
   await expect(projected).toHaveCount(1);
@@ -149,7 +178,7 @@ test('Demario summons a Mushroom and Squabble transforms Luigion with authoritat
   await expect(page.getByTestId('online-powered-projection')).toHaveAttribute('data-projected-name', 'Powered Luigion');
   await expect(page.getByTestId('online-powered-projection')).toHaveAttribute(
     'data-projected-effect',
-    /Squabble doubled base Hands.*Consumes at most one friendly Demario Mushroom/,
+    /Squabble doubled base Hands.*Consume one local friendly Mushroom for \+2.*Echoes never consume Mushrooms or jump/,
   );
   await expect(projected).toContainText('Powered Luigion');
 

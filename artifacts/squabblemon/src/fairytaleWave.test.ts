@@ -267,3 +267,71 @@ test('the same fairytale rules survive six-round authoritative online games for 
     assert(view.boards.flat().every(c=>c.artworkId));
   }
 });
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: Stakeout pays only on cancellation and snapshots both rewards at every training tier`, () => {
+    const enemy = owner === 'player' ? 'cpu' : 'player';
+    for (let tier = 0; tier <= 3; tier++) {
+      const m = blank(), a = unit('rastamon', owner, 1, 1), b = unit('rastamon', owner, 2, 2);
+      m.boards = [[], [a, unit('hooper', enemy, 1)], [b]];
+      m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot(owner === 'player' ? ['sherlock'] : [], owner === 'cpu' ? ['sherlock'] : [],
+        { [owner]: { sherlock: { level: [1, 2, 5, 8][tier], xp: 2800, moveTier: tier } } });
+      const { source, after: set } = cast(m, 'sherlock', owner);
+      assert.equal(find(set, source).powerModifier, tier);
+      assert.equal(find(set, a).powerModifier, 0);
+      const before = JSON.stringify(set), hit = cast(set, 'cornball', enemy, 1);
+      assert.equal(JSON.stringify(set), before);
+      assert.deepEqual(cast(JSON.parse(before), 'cornball', enemy, 1).after, hit.after);
+      assert.equal(find(hit.after, source).powerModifier, tier + 2);
+      assert.equal(find(hit.after, a).powerModifier, 2); // stable ID breaks equal-Hands tie
+      assert.equal(find(hit.after, b).powerModifier, 0);
+      assert.equal(find(hit.after, a).statuses.burnStacks, 0); // entrance canceled
+      assert.equal(hit.after.effectLog.filter(e => e.abilityMetadata).length, tier);
+      const event = hit.after.effectLog.find(e => e.note.startsWith('Stakeout canceled Cornball'))!;
+      assert.deepEqual(new Set([event.source!.cardInstanceId, ...event.targets.map(t => t.cardInstanceId)]), new Set([hit.source.instanceId, source.instanceId, a.instanceId]));
+      assert.equal(event.replay.before.boards.flat().find(c => c.instanceId === a.instanceId)!.powerModifier, 0);
+      assert.equal(event.replay.after.boards.flat().find(c => c.instanceId === a.instanceId)!.powerModifier, 2);
+      const again = cast({ ...hit.after, playerMotion: 9, cpuMotion: 9 }, 'cornball', enemy, 1).after;
+      assert.equal(find(again, source).powerModifier, tier + 2);
+      assert.equal(again.districtTraps?.length, 0);
+    }
+  });
+  test(`${owner}: absent or disabled Sherlock still cancels but grants neither reward; expiry and avoidance never pay`, () => {
+    const enemy = owner === 'player' ? 'cpu' : 'player';
+    for (const status of ['silenced', 'frozen', 'weakened', 'absent'] as const) {
+      const m = blank(), ally = unit('rastamon', owner, 2); m.boards[2] = [ally];
+      const placed = cast(m, 'sherlock', owner), set = placed.after, lane = set.districtTraps![0].lane;
+      set.boards[0] = status === 'absent' ? [] : set.boards[0].map(c => ({ ...c, statuses: { ...c.statuses, [status]: true } }));
+      const hit = cast(set, 'cornball', enemy, lane).after;
+      assert.equal(find(hit, ally).powerModifier, 0);
+      assert.equal(find(hit, placed.source)?.powerModifier ?? 0, 0);
+      assert.equal(hit.districtTraps?.length, 0);
+    }
+    const placed = cast(blank(), 'sherlock', owner), lane = placed.after.districtTraps![0].lane;
+    const avoided = cast(placed.after, 'cornball', enemy, ((lane + 1) % 3) as Lane).after;
+    assert.equal(find(avoided, placed.source).powerModifier, 0);
+    const expired = advance(advance(avoided));
+    assert(!getCharacterDistrictMarks(expired).some(mark => mark.text.includes('Stakeout')));
+    assert.equal(find(expired, placed.source).powerModifier, 0);
+  });
+  test(`${owner}: Stakeout excludes tokens, support, hazards and enemies from its reward, and Watson retains the three-Hand heal cap`, () => {
+    const enemy = owner === 'player' ? 'cpu' : 'player', m = blank();
+    m.boards[2] = [
+      { ...unit('bonnetgirl', owner, 2, 1), kind: 'token' },
+      { ...unit('bonnetgirl', owner, 2, 2), kind: 'support' },
+      { ...unit('bonnetgirl', owner, 2, 3), hazard: true },
+      unit('bonnetgirl', enemy, 2, 4),
+    ];
+    const placed = cast(m, 'sherlock', owner);
+    const after = cast(placed.after, 'cornball', enemy, placed.after.districtTraps![0].lane).after;
+    assert.equal(find(after, placed.source).powerModifier, 2);
+    assert(after.boards[2].every(c => c.powerModifier === 0));
+    const injured = unit('hooper', owner, 0); injured.powerModifier = -4; injured.recoverableDamage = 4;
+    const heal = blank(); heal.boards[0] = [injured];
+    const treated = cast(heal, 'watson', owner).after;
+    assert.equal(find(treated, injured).recoverableDamage, 1);
+    assert.equal(find(treated, injured).powerModifier, -1);
+    assert(find(treated, injured).statuses.protected);
+    assert.equal(cards.watson.power, 3); assert.equal(cards.watson.cost, 2);
+  });
+}

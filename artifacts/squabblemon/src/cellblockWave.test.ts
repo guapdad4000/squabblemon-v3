@@ -137,3 +137,45 @@ test('six rounds do not create passive growth or repeat upgrade payments', () =>
     assert.equal(m.effectLog.filter(e => e.abilityMetadata).length, 3);
   }
 });
+
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: Looking Out independently rewards a remote inmate, with deterministic targets and one training payment`, () => {
+    for (let tier = 0; tier <= 3; tier++) for (const local of [false, true]) {
+      const m = blank(), a = unit('inmate-informant', owner, 1, 1), b = unit('inmate-informant', owner, 2, 2);
+      m.boards[1] = [a]; m.boards[2] = [b];
+      if (local) m.boards[0] = [unit(supportId, owner)];
+      const before = JSON.stringify(m), after = cast(m, 'inmate-boyfriend', owner, tier);
+      assert.equal(JSON.stringify(m), before);
+      assert.deepEqual(cast(JSON.parse(before), 'inmate-boyfriend', owner, tier), after);
+      assert.equal(after.boards[1][0].powerModifier, 1);
+      assert.equal(after.boards[2][0].powerModifier, 0);
+      assert.equal(find(after, 'inmate-boyfriend').powerModifier, tier);
+      assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
+      const event = after.effectLog.find(e => e.note.startsWith('Looking Out resolved.'))!;
+      assert(event.targets.some(t => t.cardInstanceId === a.instanceId));
+      if (local) assert.equal(find(after, supportId).powerModifier, 2);
+    }
+  });
+  test(`${owner}: remote Looking Out rejects wrong identities, owners, kinds and disabled sources`, () => {
+    const enemy = owner === 'player' ? 'cpu' : 'player';
+    for (const invalid of [
+      unit('lebron-james', owner, 1), unit('inmate-crafty', enemy, 1),
+      { ...unit('inmate-crafty', owner, 1), kind: 'token' as const },
+      { ...unit('inmate-crafty', owner, 1), kind: 'support' as const },
+      { ...unit('inmate-crafty', owner, 1), hazard: true as const },
+    ]) {
+      const m = blank(); m.boards[1] = [invalid];
+      const after = cast(m, 'inmate-boyfriend', owner, 3);
+      assert.equal(after.boards[1][0].powerModifier, 0);
+      assert.equal(find(after, 'inmate-boyfriend').powerModifier, 0);
+    }
+    for (const status of ['silenced', 'frozen', 'weakened'] as const) {
+      const m = blank(); m.boards[1] = [unit('inmate-crafty', owner, 1)];
+      assert.equal(cast(m, 'inmate-boyfriend', owner, 3, status).boards[1][0].powerModifier, 0);
+    }
+    const roleOnly = blank(); roleOnly.boards[0] = [unit('lebron-james', owner)];
+    assert.equal(find(cast(roleOnly, 'inmate-crafty', owner, 3), 'inmate-crafty').powerModifier, 0);
+    assert.equal(cards['inmate-crafty'].cost, 2);
+    assert.equal(cards['inmate-crafty'].power, 3);
+  });
+}

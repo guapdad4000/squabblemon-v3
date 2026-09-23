@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 const origin=process.env.WAVE_ORIGIN ?? 'http://127.0.0.1:4197';
-const browser=await chromium.launch({channel:'msedge',headless:true});
+const browser=await chromium.launch({headless:true});
 const errors=[];
 try {
   for(const [width,height] of [[1280,900],[390,844],[320,740],[844,390]]) for(const online of [false,true]) {
