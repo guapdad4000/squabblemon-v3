@@ -11,11 +11,12 @@ status alone: verify the exact deployment's migration metadata and branch.
 
 Owner approvals are recorded in source. Production checkout flags remain
 false and the live webhook disabled. Hosted test checkout and one authentic
-500-Clout fulfillment succeeded; targeted replay evidence awaits parent
-confirmation. Do not merge or activate before that confirmation. The tested
+500-Clout fulfillment succeeded; targeted replay HTTP-200 and unchanged-ledger
+evidence is confirmed and staged production release is authorized. The tested
 automatic-tax amount was zero; positive-tax and actual non-US network coverage
-must not be claimed. The policy effective date remains null until the actual
-authorized live-launch plan is executed.
+must not be claimed. The policy effective date is `2026-09-23`; verify the new
+production identity and native migrations before enabling checkout and the live
+webhook. Do not create a live Checkout session or charge during release checks.
 
 The Corner Store payment path is intentionally disabled until its approvals and secrets are complete. It has no public operator route. The restricted `payment-ops` CLI is the only diagnostic, reconciliation, and test-catalog seeding entry point. Do not run it against Stripe or a database as part of setup or deployment.
 

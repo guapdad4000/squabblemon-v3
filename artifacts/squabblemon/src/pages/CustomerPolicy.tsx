@@ -6,7 +6,7 @@ const SUPPORT_EMAIL = 'Guapshipping@gmail.com';
 const MERCHANT_NAME = 'It’s a check inc';
 // Set only as part of the authorized live-launch release, never from a test
 // checkout or from the date this draft was prepared.
-export const POLICY_EFFECTIVE_DATE: string | null = null;
+export const POLICY_EFFECTIVE_DATE: string | null = '2026-09-23';
 const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Squabblemon Clout purchase support')}`;
 
 function usePolicyMetadata(title: string, description: string) {
@@ -110,7 +110,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export function SupportPage() {
   usePolicyMetadata(
     'Squabblemon Purchase Support',
-    'Owner-approved, pre-launch support information for Squabblemon Clout purchases.',
+    'Support information for Squabblemon Clout purchases.',
   );
 
   return (
@@ -148,7 +148,7 @@ export function SupportPage() {
       </Section>
 
       <Section title="Purchase availability">
-        <p>Clout purchases are intended only for people aged 18 or older located in the United States. New checkout requires your age and location declarations. Hosted checkout also restricts new purchases using US IP geolocation. These controls are not proof of age or physical location, and hosted launch verification remains pending.</p>
+        <p>Clout purchases are intended only for people aged 18 or older located in the United States. New checkout requires your age and location declarations. Hosted checkout also restricts new purchases using US IP geolocation. These controls are not proof of age or physical location.</p>
       </Section>
     </PolicyShell>
   );
@@ -171,11 +171,11 @@ export function RefundPolicyPage() {
       <Section title="Clout purchases">
         <p>Clout is virtual currency for use within Squabblemon. It is not cash and cannot be withdrawn, transferred to another player, or exchanged for money.</p>
         <p>The store displays the bundle’s base price. Applicable tax is calculated during Stripe-hosted checkout, and Stripe displays the final total before payment. Squabblemon does not collect your full card details. Clout is added to the signed-in account only after payment is verified. Closing checkout or returning to the game does not itself confirm payment.</p>
-        <p>Purchases are intended only for people aged 18 or older located in the United States. New checkout requires age and location declarations and hosted US IP geolocation. These are not proof of age or physical location; hosted launch verification remains pending.</p>
+        <p>Purchases are intended only for people aged 18 or older located in the United States. New checkout requires age and location declarations and hosted US IP geolocation. These are not proof of age or physical location.</p>
       </Section>
 
       <Section title="14-day voluntary request window">
-        <p>When live purchases launch, we will accept refund requests made within <strong className="text-white">14 days of purchase</strong> for an <strong className="text-white">unused Clout bundle</strong>. This voluntary request window does not limit any rights or remedies available under applicable law.</p>
+        <p>{POLICY_EFFECTIVE_DATE ? 'We accept' : 'When live purchases launch, we will accept'} refund requests made within <strong className="text-white">14 days of purchase</strong> for an <strong className="text-white">unused Clout bundle</strong>. This voluntary request window does not limit any rights or remedies available under applicable law.</p>
         <p>Duplicate charges, incorrect charges, undelivered purchases, and suspected unauthorized purchases will be investigated and corrected as appropriate.</p>
       </Section>
 

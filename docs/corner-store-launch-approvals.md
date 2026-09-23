@@ -8,12 +8,12 @@ unused-Clout refund terms, and staffed support. Live account tax configuration
 and California registration were independently checked; approved classification
 is `txcd_10000000`. This is not independent legal approval or verified age.
 
-Production `PAYMENTS_ENABLED` and `PAYMENTS_LIVE_ENABLED` remain false. The live
-webhook exists but remains disabled. Do not merge or activate until the parent
-confirms targeted authentic webhook replay HTTP-200 evidence, then validates
-the production identity and native migrations. Record the actual policy launch
-date in `POLICY_EFFECTIVE_DATE` only with the authorized launch plan; it remains
-null and public policy pages correctly say not yet effective.
+Production release and staged live activation are authorized after the parent
+confirmed targeted authentic webhook replay HTTP-200 evidence and stable
+wallet/ledger counts. Production flags and the live webhook remain disabled
+until the new production identity and native migrations pass verification.
+`POLICY_EFFECTIVE_DATE` is `2026-09-23`, the authorized current UTC launch date.
+No live Checkout session or charge is part of release verification.
 
 The isolated candidate preserves published story, progression, economy, and
 wallet locking. Hosted test evidence proves one automatic-tax Pocket checkout

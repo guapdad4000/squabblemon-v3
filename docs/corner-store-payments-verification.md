@@ -9,19 +9,47 @@ total 299), authentic signed completion, and exactly one durable 500-Clout
 credit reflected in the wallet/header. Cancellation, re-authentication,
 refresh, adult-declaration denial, and forged-country-header tests passed.
 
-Replays were reported acknowledged with HTTP 200 and stable ledgers; exact
-target-event HTTP-200 evidence is still being finalized. Parent confirmation
-of that evidence is required before production merge/activation. No positive
-tax amount or actual non-US network was exercised by this hosted flow; do not
-describe those as hosted coverage. No live charge was made.
+The Stripe-origin replay requested at **2026-09-23 21:40:16.761 UTC** is
+correlated with the exact preview deployment's Netlify function record at
+**21:40:17.280 UTC**: `POST /api/payments/webhook`, `res.statusCode=200`.
+This destination record is separate from Stripe's retry-API HTTP-200
+acknowledgement. The Netlify adapter's request logger labels the record
+`request aborted`; the reported status evidence is its explicit response
+status field, not an interpretation of that label. The wallet remained 500,
+with one completion event and one fulfillment totaling 500 Clout.
+
+An additional Stripe-origin replay was acknowledged at 21:44:09.994 UTC;
+its immediate bounded log query did not contain a new delivery record, so it
+is not counted as additional destination-response evidence. The ledger
+remained unchanged. No locally constructed signature, reconstructed payload,
+or direct fulfillment/reconciliation call was used.
+
+Function records were read through Netlify's authenticated historical-log
+REST API, filtered by exact branch, deployment ID, and UTC interval, using
+the protocol documented in the
+[Netlify CLI's log API implementation](https://github.com/netlify/cli/blob/main/src/commands/logs/log-api.ts).
+No CLI login or credential export was used.
+
+A second disposable development Clerk account authenticated normally and
+received **404** when requesting the first account's paid order; its own
+order-history endpoint returned **200** with no orders. That second account
+was then deleted without creating a payment or eligibility fixture. The
+paid account and its payment/event/fulfillment audit remain intact.
+
+This is real hosted test-mode evidence, separate from the mocked browser
+suite and locally signed adapter tests below. No positive tax amount or
+actual non-US network was exercised; do not describe those as hosted
+coverage. No live charge was made.
 
 Both native payment migrations are applied on exact database branch ID
 `preview/corner-store-payments-141`; production still has only the initial
 migration. The payment-only candidate leaves published story/progression/
 economy and existing profile locks unchanged. Source owner approvals are now
 recorded, but both production checkout flags remain false and the live
-webhook remains disabled. Public policy effective date remains unset pending
-the actual authorized launch.
+webhook remains disabled during production release checks. The parent confirmed
+the replay evidence and authorized staged activation. Public policy effective
+date is `2026-09-23`, the current UTC launch date. Final production deployment,
+migration, webhook, and enablement evidence must be recorded after verification.
 
 ## Historical development evidence
 
