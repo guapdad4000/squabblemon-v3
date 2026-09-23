@@ -9,7 +9,9 @@
     "start": "node --enable-source-maps ./dist/index.mjs",
     "test": "node ../../scripts/test-api-database.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:db": "node ../../scripts/require-db-tests.mjs"
+    "test:db": "node ../../scripts/require-db-tests.mjs",
+    "test:payments": "node ../../scripts/test-payments-database.mjs",
+    "payments:ops": "tsx src/tools/payment-ops.ts"
   },
   "dependencies": {
     "@clerk/express": "^2.1.66",

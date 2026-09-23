@@ -29,12 +29,18 @@ import type {
   EquipVariantInput,
   GetPlayerShop200,
   HealthStatus,
+  ListPaymentOrdersParams,
   MatchCompleteInput,
   MatchCompletion,
   MatchStartInput,
   OnboardingProgressInput,
   OpenPackInput,
   OpenPackResult,
+  PaymentCatalog,
+  PaymentCheckout,
+  PaymentCheckoutInput,
+  PaymentHistory,
+  PaymentOrder,
   PlayerBootstrap,
   PlayerMatch,
   PlayerProfileUpdate,
@@ -1892,5 +1898,386 @@ export const useRedeemPlayerPromoCode = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getRedeemPlayerPromoCodeMutationOptions(options));
+    }
+
+export const getGetPaymentCatalogUrl = () => {
+
+
+
+
+  return `/api/player/payments/catalog`
+}
+
+/**
+ * @summary Get the current real-money payment catalog
+ */
+export const getPaymentCatalog = async ( options?: RequestInit): Promise<PaymentCatalog> => {
+
+  return customFetch<PaymentCatalog>(getGetPaymentCatalogUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPaymentCatalogQueryKey = () => {
+    return [
+    `/api/player/payments/catalog`
+    ] as const;
+    }
+
+
+export const getGetPaymentCatalogQueryOptions = <TData = Awaited<ReturnType<typeof getPaymentCatalog>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPaymentCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPaymentCatalogQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPaymentCatalog>>> = ({ signal }) => getPaymentCatalog({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPaymentCatalog>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPaymentCatalogQueryResult = NonNullable<Awaited<ReturnType<typeof getPaymentCatalog>>>
+export type GetPaymentCatalogQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get the current real-money payment catalog
+ */
+
+export function useGetPaymentCatalog<TData = Awaited<ReturnType<typeof getPaymentCatalog>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPaymentCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPaymentCatalogQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreatePaymentCheckoutUrl = () => {
+
+
+
+
+  return `/api/player/payments/checkout`
+}
+
+/**
+ * @summary Create a checkout session for a catalog offer
+ */
+export const createPaymentCheckout = async (paymentCheckoutInput: PaymentCheckoutInput, options?: RequestInit): Promise<PaymentCheckout> => {
+
+  return customFetch<PaymentCheckout>(getCreatePaymentCheckoutUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(paymentCheckoutInput)
+  }
+);}
+
+
+
+
+
+export const getCreatePaymentCheckoutMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPaymentCheckout>>, TError,{data: BodyType<PaymentCheckoutInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPaymentCheckout>>, TError,{data: BodyType<PaymentCheckoutInput>}, TContext> => {
+
+const mutationKey = ['createPaymentCheckout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPaymentCheckout>>, {data: BodyType<PaymentCheckoutInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPaymentCheckout(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePaymentCheckoutMutationResult = NonNullable<Awaited<ReturnType<typeof createPaymentCheckout>>>
+    export type CreatePaymentCheckoutMutationBody = BodyType<PaymentCheckoutInput>
+    export type CreatePaymentCheckoutMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a checkout session for a catalog offer
+ */
+export const useCreatePaymentCheckout = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPaymentCheckout>>, TError,{data: BodyType<PaymentCheckoutInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPaymentCheckout>>,
+        TError,
+        {data: BodyType<PaymentCheckoutInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePaymentCheckoutMutationOptions(options));
+    }
+
+export const getListPaymentOrdersUrl = (params?: ListPaymentOrdersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/player/payments/orders?${stringifiedParams}` : `/api/player/payments/orders`
+}
+
+/**
+ * @summary List the authenticated player's payment orders
+ */
+export const listPaymentOrders = async (params?: ListPaymentOrdersParams, options?: RequestInit): Promise<PaymentHistory> => {
+
+  return customFetch<PaymentHistory>(getListPaymentOrdersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListPaymentOrdersQueryKey = (params?: ListPaymentOrdersParams,) => {
+    return [
+    `/api/player/payments/orders`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPaymentOrdersQueryOptions = <TData = Awaited<ReturnType<typeof listPaymentOrders>>, TError = ErrorType<void>>(params?: ListPaymentOrdersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPaymentOrders>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPaymentOrdersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPaymentOrders>>> = ({ signal }) => listPaymentOrders(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPaymentOrders>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPaymentOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof listPaymentOrders>>>
+export type ListPaymentOrdersQueryError = ErrorType<void>
+
+
+/**
+ * @summary List the authenticated player's payment orders
+ */
+
+export function useListPaymentOrders<TData = Awaited<ReturnType<typeof listPaymentOrders>>, TError = ErrorType<void>>(
+ params?: ListPaymentOrdersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPaymentOrders>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListPaymentOrdersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPaymentOrderUrl = (orderId: string,) => {
+
+
+
+
+  return `/api/player/payments/orders/${orderId}`
+}
+
+/**
+ * @summary Get one of the authenticated player's payment orders
+ */
+export const getPaymentOrder = async (orderId: string, options?: RequestInit): Promise<PaymentOrder> => {
+
+  return customFetch<PaymentOrder>(getGetPaymentOrderUrl(orderId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPaymentOrderQueryKey = (orderId: string,) => {
+    return [
+    `/api/player/payments/orders/${orderId}`
+    ] as const;
+    }
+
+
+export const getGetPaymentOrderQueryOptions = <TData = Awaited<ReturnType<typeof getPaymentOrder>>, TError = ErrorType<void>>(orderId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPaymentOrder>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPaymentOrderQueryKey(orderId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPaymentOrder>>> = ({ signal }) => getPaymentOrder(orderId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: orderId !== null && orderId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPaymentOrder>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPaymentOrderQueryResult = NonNullable<Awaited<ReturnType<typeof getPaymentOrder>>>
+export type GetPaymentOrderQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get one of the authenticated player's payment orders
+ */
+
+export function useGetPaymentOrder<TData = Awaited<ReturnType<typeof getPaymentOrder>>, TError = ErrorType<void>>(
+ orderId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPaymentOrder>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPaymentOrderQueryOptions(orderId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReceivePaymentWebhookUrl = () => {
+
+
+
+
+  return `/api/payments/webhook`
+}
+
+/**
+ * Unauthenticated endpoint for Stripe. The Stripe-Signature header must be verified against the unmodified raw request body before parsing or processing the event. This endpoint intentionally does not define a request object shape. Redelivered events are acknowledged without regranting rewards.
+ * @summary Receive a signed Stripe webhook
+ */
+export const receivePaymentWebhook = async ( options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getReceivePaymentWebhookUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getReceivePaymentWebhookMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof receivePaymentWebhook>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof receivePaymentWebhook>>, TError,void, TContext> => {
+
+const mutationKey = ['receivePaymentWebhook'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof receivePaymentWebhook>>, void> = () => {
+
+
+          return  receivePaymentWebhook(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReceivePaymentWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof receivePaymentWebhook>>>
+
+    export type ReceivePaymentWebhookMutationError = ErrorType<void>
+
+    /**
+ * @summary Receive a signed Stripe webhook
+ */
+export const useReceivePaymentWebhook = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof receivePaymentWebhook>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof receivePaymentWebhook>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getReceivePaymentWebhookMutationOptions(options));
     }
 

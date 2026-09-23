@@ -12,6 +12,7 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 
 import { campaignLogProps, requestId } from "./lib/requestContext";
+import { paymentWebhook } from "./routes/payments";
 
 function productionAuthMiddleware(): RequestHandler {
   return clerkMiddleware((req) => ({
@@ -48,6 +49,8 @@ export function createApp(
     },
     }),
   );
+  // Only this endpoint bypasses player auth/origin middleware; Stripe verifies raw signed bytes.
+  app.post('/api/payments/webhook', express.raw({ type: 'application/json', limit: '256kb' }), paymentWebhook);
   app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
   app.use(
     cors((req, callback) => {

@@ -26,3 +26,20 @@ for (const [path, status] of [
   assert.equal(response.status, status, `${path}: ${await response.text()}`);
 }
 console.log('Release API bundle: health and anonymous-access checks passed.');
+
+// Account configuration must not prevent Stripe from settling previously paid
+// orders. Only the exact signed-webhook endpoint bypasses this preflight.
+delete process.env.CLERK_SECRET_KEY;
+delete process.env.CLERK_PUBLISHABLE_KEY;
+for (const [path, method, status] of [
+  ['/api/payments/webhook', 'POST', 400],
+  ['/api/payments/webhook', 'GET', 503],
+  ['/api/player/payments/checkout', 'POST', 503],
+  ['/api/payments/webhook/other', 'POST', 503],
+]) {
+  const response = await handler(new Request(`https://squabble.today${path}`, {
+    method, ...(method === 'POST' ? { headers: { 'content-type': 'application/json' }, body: '{}' } : {}),
+  }), { ip: '127.0.0.1', deploy: { context: 'staging', id: 'release-build-smoke' } });
+  assert.equal(response.status, status, `Auth configuration boundary: ${path}: ${await response.text()}`);
+}
+console.log('Release API bundle: only the exact raw payment webhook bypasses Clerk configuration.');

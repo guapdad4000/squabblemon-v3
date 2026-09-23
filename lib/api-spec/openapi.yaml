@@ -565,8 +565,275 @@ paths:
           description: Authentication required
         '409':
           description: Finish Rookie Road before redeeming
+  /player/payments/catalog:
+    get:
+      operationId: getPaymentCatalog
+      tags: [player]
+      summary: Get the current real-money payment catalog
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Payment catalog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCatalog"
+        "400":
+          description: Invalid payment request
+        "401":
+          description: Authentication required
+        "403":
+          description: Payments are not available for this player
+        "404":
+          description: Payment catalog not found
+        "409":
+          description: Payment state conflict
+        "429":
+          description: Too many payment requests
+        "503":
+          description: Payment provider unavailable
+  /player/payments/checkout:
+    post:
+      operationId: createPaymentCheckout
+      tags: [player]
+      summary: Create a checkout session for a catalog offer
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentCheckoutInput"
+      responses:
+        "200":
+          description: Checkout session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentCheckout"
+        "400":
+          description: Invalid offer or idempotency key
+        "401":
+          description: Authentication required
+        "403":
+          description: Payments are not available for this player
+        "404":
+          description: Offer not found
+        "409":
+          description: Idempotency key conflicts with an existing checkout
+        "429":
+          description: Too many payment requests
+        "503":
+          description: Payment provider unavailable
+  /player/payments/orders:
+    get:
+      operationId: listPaymentOrders
+      tags: [player]
+      summary: List the authenticated player's payment orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment order history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentHistory"
+        "400":
+          description: Invalid cursor
+        "401":
+          description: Authentication required
+        "403":
+          description: Payment history is not available for this player
+        "404":
+          description: Payment history not found
+        "409":
+          description: Payment state conflict
+        "429":
+          description: Too many payment requests
+        "503":
+          description: Payment provider unavailable
+  /player/payments/orders/{orderId}:
+    get:
+      operationId: getPaymentOrder
+      tags: [player]
+      summary: Get one of the authenticated player's payment orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentOrder"
+        "400":
+          description: Invalid order ID
+        "401":
+          description: Authentication required
+        "403":
+          description: This order does not belong to the authenticated player
+        "404":
+          description: Payment order not found
+        "409":
+          description: Payment state conflict
+        "429":
+          description: Too many payment requests
+        "503":
+          description: Payment provider unavailable
+  /payments/webhook:
+    post:
+      operationId: receivePaymentWebhook
+      summary: Receive a signed Stripe webhook
+      description: >-
+        Unauthenticated endpoint for Stripe. The Stripe-Signature header
+        must be verified against the unmodified raw request body before parsing
+        or processing the event. This endpoint intentionally does not define a
+        request object shape. Redelivered events are acknowledged without regranting rewards.
+      parameters:
+        - name: Stripe-Signature
+          in: header
+          required: true
+          description: Stripe signature for the unmodified raw request body.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Webhook accepted, including already processed events
+        "400":
+          description: Invalid webhook payload or missing/invalid signature
+        "503":
+          description: Payment provider processing unavailable
 components:
   schemas:
+    PaymentCheckoutInput:
+      type: object
+      additionalProperties: false
+      required: [offerId, idempotencyKey]
+      properties:
+        adultConfirmed:
+          type: boolean
+          description: Must be true for a new checkout. Self-attestation of age 18 or older, not verified age. Optional only for retries of existing orders.
+        unitedStatesConfirmed:
+          type: boolean
+          description: Must be true for a new checkout. Self-declaration of US location, not verified geography. Optional only for retries of existing orders.
+        offerId:
+          type: string
+          enum: [clout-pocket, clout-stack, clout-bag]
+        idempotencyKey:
+          type: string
+          format: uuid
+    PaymentCatalog:
+      type: object
+      required: [version, taxMode, mode, enabled, message, supportUrl, refundPolicyUrl, offers]
+      properties:
+        taxMode:
+          type: string
+          enum: [none, automatic]
+        version:
+          type: string
+        mode:
+          type: string
+          enum: [disabled, test, live]
+        enabled:
+          type: boolean
+        message:
+          type: string
+        supportUrl:
+          type: [string, "null"]
+        refundPolicyUrl:
+          type: [string, "null"]
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentOffer"
+    PaymentOffer:
+      type: object
+      required: [id, name, amountMinor, currency, clout, enabled]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        amountMinor:
+          type: integer
+        currency:
+          type: string
+        clout:
+          type: integer
+        enabled:
+          type: boolean
+    PaymentCheckout:
+      type: object
+      required: [order, checkoutUrl]
+      properties:
+        order:
+          $ref: "#/components/schemas/PaymentOrder"
+        checkoutUrl:
+          type: [string, "null"]
+    PaymentHistory:
+      type: object
+      required: [orders, nextCursor]
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentOrder"
+        nextCursor:
+          type: [string, "null"]
+    PaymentOrder:
+      type: object
+      required: [id, offerId, offerName, mode, currency, amountMinor, taxMode, taxAmountMinor, totalAmountMinor, clout, status, createdAt, fulfilledAt, refundedAmountMinor, checkoutUrl]
+      properties:
+        taxMode:
+          type: string
+          enum: [none, automatic]
+        taxAmountMinor:
+          type: [integer, "null"]
+        totalAmountMinor:
+          type: [integer, "null"]
+        id:
+          type: string
+        offerId:
+          type: string
+        offerName:
+          type: string
+        mode:
+          type: string
+          enum: [test, live]
+        currency:
+          type: string
+        amountMinor:
+          type: integer
+        clout:
+          type: integer
+        status:
+          type: string
+          enum: [pending, processing, fulfilled, failed, expired, refunded, disputed]
+        createdAt:
+          type: string
+          format: date-time
+        fulfilledAt:
+          type: [string, "null"]
+          format: date-time
+        refundedAmountMinor:
+          type: integer
+        checkoutUrl:
+          type: [string, "null"]
     PromoCodeInput:
       type: object
       additionalProperties: false

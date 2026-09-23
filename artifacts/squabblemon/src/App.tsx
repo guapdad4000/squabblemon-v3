@@ -21,6 +21,8 @@ const GameSoundtrack = lazy(() => import('./components/GameSoundtrack'));
 const MoveStudio = lazy(() => import('./pages/MoveStudio'));
 const StoryStudio = lazy(() => import('./pages/StoryStudio'));
 const HowToPlay = lazy(() => import('./pages/HowToPlay'));
+const SupportPage = lazy(() => import('./pages/CustomerPolicy').then(module => ({default: module.SupportPage})));
+const RefundPolicyPage = lazy(() => import('./pages/CustomerPolicy').then(module => ({default: module.RefundPolicyPage})));
 const GuestPlayLoop = lazy(() =>
   import('./components/PlayLoop').then((module) => ({
     default: function GuestPlayRoute() {
@@ -151,6 +153,8 @@ function ClerkProviderWithRoutes() {
               <Route path="/sign-up/*?" component={SignUpPage} />
               <Route path="/play/guest" component={GuestPlayLoop} />
               <Route path="/how-to-play" component={HowToPlay} />
+              <Route path="/support" component={SupportPage} />
+              <Route path="/refund-policy" component={RefundPolicyPage} />
               <Route path="/moves" component={MoveStudio} />
               <Route path="/story-studio" component={StoryStudio} />
               <Route path="/game/*?" component={GameApp} />
