@@ -539,7 +539,7 @@ test(`real Shop route stays wheel and keyboard reachable at ${viewport.width}x${
     await page.mouse.wheel(0, -10000);
     await expect.poll(() => stage.evaluate(element => element.scrollTop)).toBe(0);
     await page.screenshot({ path: `e2e/screenshots/payment-store-route-${viewport.width}.png` });
-    for (const name of ['Gotcha', 'Training', 'Fade Market']) {
+    for (const name of ['Recruit', 'Training', 'Fade Market']) {
       const button = shopTabs.getByRole('button', { name });
       const geometry = await button.evaluate(element => {
         const rect = element.getBoundingClientRect();

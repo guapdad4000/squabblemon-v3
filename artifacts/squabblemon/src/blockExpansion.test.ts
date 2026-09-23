@@ -5,6 +5,15 @@ import { cardCatalog, cards, validateCardAbilityUpgrades } from './data';
 import { createCardInstance, createMatch, createMatchFromEngineCards, createDistrictSnapshot, playCard, playTurnCard, pass, revealCpuTurn, nextRound, canAffordSelection, verifyMatchTranscript, DISTRICT_CATALOG, type Match, type Owner, type Lane, type PlayerMove } from './gameEngine';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
+const packRngFor = (rarity: string, tierIndex = 0) => {
+  const rarityThreshold: Record<string, number> = {
+    SuperCommon: 0, Common: 4000, Uncommon: 6000, Rare: 8500,
+    Epic: 9700, Legendary: 9900, Mythical: 9980,
+  };
+  let call = 0;
+  return () => call++ === 0 ? rarityThreshold[rarity] : call === 2 ? tierIndex : 0;
+};
+
 const unit = (id: string, owner: Owner, index: number, lane: Lane = 0) => ({ ...createCardInstance(id, owner, 'expansion', index), lane });
 function setup(id: string, owner: Owner = 'player') {
   const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
@@ -27,7 +36,7 @@ test('the expansion uses the current six-tier rarity ladder with pack access and
     assert.equal(card.name, name); assert.equal(card.artworkId, artworkId); assert.equal(card.rarity, rarity);
     assert.equal(cards[id].abilityUpgrades.length, 3);
     const owned = cardCatalog.filter(c => c.engineId !== id).map(c => c.catalogId);
-    const pack = generateStreetPack({ownedCardIds:owned, discoveredCardIds:owned, ownedVariants:[], pity:0}, () => 0);
+    const pack = generateStreetPack({ownedCardIds:owned, discoveredCardIds:owned, ownedVariants:[], pity:0}, packRngFor(rarity));
     assert.equal(pack.rewards[0].cardId, artworkId); assert.equal(pack.rewards[0].isNew, true);
   }
   assert(cards.leroy && cards.ogdominican && cards.bigzoey);

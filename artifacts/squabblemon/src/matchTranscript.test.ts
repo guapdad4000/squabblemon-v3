@@ -10,8 +10,10 @@ import {
   getMatchWinner,
   nextRound,
   pass,
+  replayMatchPrefix,
   playCard,
   revealCpu,
+  revealCpuTurn,
   verifyMatchTranscript,
   type Lane,
   type PlayerMove,
@@ -29,6 +31,12 @@ import {
   type Match,
   type StoryEncounterSnapshot,
 } from "@workspace/squabblemon-engine/gameEngine";
+
+test("a valid transcript prefix replays to the same canonical decision state", () => {
+  const initial = createMatch("block", "slide");
+  const prefix = [{ cardInstanceId: null, lane: null, squabble: false, endTurn: true }];
+  assert.deepEqual(replayMatchPrefix(initial, prefix), nextRound(revealCpuTurn(pass(initial, "player"))));
+});
 import {
   getStoryBattle,
   storyContent,
@@ -377,7 +385,7 @@ test("Chapters Three through Eight apply the authored pacing and reward tiers", 
       assert.deepEqual(
         streetXp.map(({ amount }) => amount),
         [battle.optional ? 125 : xpByBattleType[battle.battleType]],
-        `${battle.id} should use its battle tier's Street XP reward`,
+        `${battle.id} should use its battle tier's Account XP reward`,
       );
     }
   }

@@ -30,6 +30,7 @@ import {
   normalizeCardProgress,
   type CardProgressionMap,
 } from "@workspace/squabblemon-engine/cardProgression";
+import { MISSION_TEMPLATES } from "@workspace/squabblemon-engine/economy";
 
 /** Legacy launch roster IDs. Existing ownership is preserved; new accounts earn these. */
 export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
@@ -40,48 +41,6 @@ export const CITY_NEVER_SLEEPS_CATALOG_IDS = [
   if (!card) throw new Error(`Missing City Never Sleeps catalog card: ${engineId}`);
   return card.catalogId;
 });
-
-const missionTemplates = [
-  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice fade.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win practice with a moved ally in a district you hold.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested gang. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
-  {
-    missionKey: "rookie-road",
-    cadence: "onboarding",
-    title: "Finish Rookie Road",
-    description: "Complete the guided fade and choose your first gang.",
-    goal: 1,
-    rewardCurrency: "packTickets",
-    rewardAmount: 1,
-  },
-  {
-    missionKey: "daily-show-up",
-    cadence: "daily",
-    title: "Show Up",
-    description: "Finish one fade today.",
-    goal: 1,
-    rewardCurrency: "softCurrency",
-    rewardAmount: 100,
-  },
-  {
-    missionKey: "daily-take-room",
-    cadence: "daily",
-    title: "Take A Room",
-    description: "Win one fade today.",
-    goal: 1,
-    rewardCurrency: "softCurrency",
-    rewardAmount: 150,
-  },
-  {
-    missionKey: "weekly-main-character",
-    cadence: "weekly",
-    title: "Main Character Week",
-    description: "Finish five fades this week. No streak required.",
-    goal: 5,
-    rewardCurrency: "packTickets",
-    rewardAmount: 2,
-  },
-] as const;
 
 function nextDailyReset(): Date {
   const reset = new Date();
@@ -109,7 +68,7 @@ export async function ensurePlayer(clerkUserId: string): Promise<void> {
     .values({ clerkUserId })
     .onConflictDoNothing();
 
-  for (const template of missionTemplates) {
+  for (const template of MISSION_TEMPLATES) {
     await db
       .insert(playerMissionsTable)
       .values({
@@ -247,7 +206,7 @@ export function serializePackOpening(opening: PlayerPackOpeningRecord) {
   // Derive pullCount from the persisted odds version so the UI can render the
   // upgraded ten-pull presentation for ten-pull openings without a schema
   // migration. Single-pack openings keep pullCount=1.
-  const pullCount = opening.oddsVersion === "street-pack-ten-v1" ? 10 : 1;
+  const pullCount = opening.oddsVersion.startsWith("street-pack-ten-") ? 10 : 1;
   return {
     id: opening.id,
     oddsVersion: opening.oddsVersion,

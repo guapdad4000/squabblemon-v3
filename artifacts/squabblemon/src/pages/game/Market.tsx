@@ -13,12 +13,14 @@ import {
 import {
   SHOP_OFFERS,
   MOVE_TRAINING_COSTS,
+  battleEarnings,
   planShopPurchase,
   type ShopItemId,
   type ShopReceipt,
   type ShopRequest,
 } from '@workspace/squabblemon-engine/economy';
 import { normalizeCardProgress, cardProgressDetails } from '@workspace/squabblemon-engine/cardProgression';
+import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { cardCatalog, catalogCardById, getCardImage, getAssetUrl, CARD_RARITY_DEFINITIONS } from '../../data';
 import { ArrowRight, Check } from 'lucide-react';
 import '../../styles/studio.css';
@@ -71,6 +73,9 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
     (offer.id === 'move-training' ? (MOVE_TRAINING_COSTS[progress.moveTier ?? 0] ?? 0) : offer.price);
   const currency = offer.currency === 'softCurrency' ? 'Clout' : 'Style Shards';
   const preview = e2eAuthEnabled && profile.id === 'e2e-player';
+  const winEarnings = battleEarnings('win');
+  const drawEarnings = battleEarnings('draw');
+  const lossEarnings = battleEarnings('loss');
 
   async function buy() {
     if (lock.current || (!quote && !pending)) return;
@@ -206,7 +211,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             )}
             <strong>{item.name}</strong>
             <span>
-              {item.id === 'move-training' ? '150–900' : item.price}{' '}
+              {item.id === 'move-training' ? `${MOVE_TRAINING_COSTS[0]}–${MOVE_TRAINING_COSTS.at(-1)}` : item.price}{' '}
               {item.currency === 'softCurrency' ? 'Clout' : 'Shards'}
             </span>
             <i />
@@ -352,7 +357,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           <ol>
             <li>
               <b>Play</b>
-              <span>Verified wins earn 40 Clout; draws 30; losses 20. Played characters earn 20–30 XP.</span>
+               <span>Verified wins earn {winEarnings.softCurrency} Clout; draws {drawEarnings.softCurrency}; losses {lossEarnings.softCurrency}. Participating owned characters earn their own XP separately.</span>
             </li>
             <li>
               <b>Train</b>
@@ -370,8 +375,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             </li>
           </ol>
           <p>
-            Tickets also come from Rookie Road, weekly bounties, and first perfect story clears. Duplicate pulls become
-            Style Shards for cosmetic finishes.
+             Tickets also come from Rookie Road, weekly bounties, and eligible story rewards. Duplicate card pulls become
+             {STREET_PACK_RULES.duplicateStyleShards} Style Shards for cosmetic finishes.
           </p>
           <Link className="studio-text-action" href="/game/decks">
             Build your gang

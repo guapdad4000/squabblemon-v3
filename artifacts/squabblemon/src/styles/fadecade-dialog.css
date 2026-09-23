@@ -1,0 +1,244 @@
+/* Fadecade Dialog styles */
+.fadecade-dialog-overlay {
+  background: rgba(0, 0, 0, 0.85);
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.fadecade-dialog-overlay[data-state="open"] {
+  animation: fadecade-fade-in 0.2s ease-out;
+}
+.fadecade-dialog-overlay[data-state="closed"] {
+  animation: fadecade-fade-out 0.2s ease-in;
+}
+
+.fadecade-dialog-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  width: calc(100vw - max(20px, env(safe-area-inset-left)) - max(20px, env(safe-area-inset-right)));
+  max-width: 680px;
+  max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px);
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.8));
+}
+
+.fadecade-dialog-content[data-state="open"] {
+  animation: fadecade-zoom-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fadecade-dialog-content[data-state="closed"] {
+  animation: fadecade-zoom-out 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fadecade-dialog-artwork-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px);
+  position: relative;
+  background: #15172a;
+  border: 4px solid #1a1e28;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 2px #222, 0 10px 30px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+
+/* Kind Accents */
+.fadecade-dialog-content--road .fadecade-dialog-artwork-shell { border-color: #e5bb3b; box-shadow: inset 0 0 0 2px #fff6c0; }
+.fadecade-dialog-content--daily .fadecade-dialog-artwork-shell { border-color: #4ade80; box-shadow: inset 0 0 0 2px #bbf7d0; }
+.fadecade-dialog-content--weekly .fadecade-dialog-artwork-shell { border-color: #60a5fa; box-shadow: inset 0 0 0 2px #bfdbfe; }
+.fadecade-dialog-content--training .fadecade-dialog-artwork-shell { border-color: #f87171; box-shadow: inset 0 0 0 2px #fecaca; }
+.fadecade-dialog-content--events .fadecade-dialog-artwork-shell { border-color: #c084fc; box-shadow: inset 0 0 0 2px #e0e7ff; }
+
+/* Header with Artwork */
+.fadecade-dialog-art-header {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+  background: radial-gradient(circle, #5f456530 1px, transparent 1.5px) 0 0 / 7px 7px, #0b0c18;
+}
+
+.fadecade-dialog-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.fadecade-dialog-header-ink {
+  position: absolute;
+  top: var(--safe-top);
+  height: var(--safe-height);
+  left: var(--safe-left);
+  width: var(--safe-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #000;
+}
+
+.fadecade-dialog-eyebrow {
+  font: 900 italic clamp(12px, 2.8vw, 23px)/1 var(--font-display, sans-serif);
+  color: #222;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fadecade-dialog-title {
+  font: 900 italic clamp(20px, 3.5vw, 27px) var(--font-display, sans-serif);
+  text-transform: uppercase;
+  color: #ffe449;
+  margin: 0;
+  line-height: 1;
+}
+
+.fadecade-dialog-close {
+  position: relative;
+  z-index: 10;
+  color: #fff;
+  background: #e23b3b;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
+  padding: 4px 8px;
+  min-height: 44px;
+  min-width: 64px;
+  flex-shrink: 0;
+  font: 900 12px var(--font-display, sans-serif);
+  cursor: pointer;
+  border-radius: 2px;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.fadecade-dialog-close:hover {
+  background: #ff5252;
+}
+
+.fadecade-dialog-close:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 #000;
+}
+
+.fadecade-dialog-close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Scrollable Body */
+.fadecade-dialog-scroll-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px;
+  background: radial-gradient(circle, #ffffff07 1px, transparent 1.5px) 0 0 / 6px 6px, linear-gradient(135deg, #17192d, #090c1b);
+}
+
+.fadecade-dialog-inner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Footer with Artwork */
+.fadecade-dialog-art-footer {
+  position: relative;
+  flex-shrink: 0;
+  background: #0b0c18;
+}
+
+.fadecade-dialog-footer-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.fadecade-dialog-footer-ink {
+  position: absolute;
+  top: var(--safe-top);
+  height: var(--safe-height);
+  left: var(--safe-left);
+  width: var(--safe-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+}
+
+.fadecade-dialog-footer-ink span {
+  font: 900 clamp(11px, 2.5vw, 16px)/1 var(--font-display, sans-serif);
+  text-transform: uppercase;
+}
+
+@keyframes fadecade-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadecade-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes fadecade-zoom-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes fadecade-zoom-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+}
+
+@media (max-width: 480px) {
+  .fadecade-dialog-content {
+    width: calc(100vw - max(8px, env(safe-area-inset-left)) - max(8px, env(safe-area-inset-right)));
+  }
+  .fadecade-dialog-artwork-shell {
+    border-width: 3px;
+  }
+  .fadecade-dialog-scroll-body {
+    padding: 16px;
+  }
+}
+
+.fadecade-dialog-titlebar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 18px; border-bottom: 3px solid #06070e;
+  background: repeating-linear-gradient(115deg, #ffe4490c 0 2px, transparent 2px 14px), #17192d;
+  flex-shrink: 0;
+}
+.fadecade-dialog-scroll-body .fadecade-panel {
+  padding: 0; margin: 0; border: 0; background: transparent; box-shadow: none;
+}
+.fadecade-dialog-scroll-body .cabinet-btn {
+  box-shadow: 3px 3px 0 #03040a; border: 2px solid #050611; min-height: 44px;
+}
+.fadecade-dialog-scroll-body .cabinet-btn--outline { border-color: #ffda40; }
+.fadecade-dialog-scroll-body .bounty-item {
+  background: #ffffff06; border-left: 3px solid #ffda40; padding: 14px; margin: 0 0 14px;
+}
+.fadecade-dialog-art-header[data-art-missing="true"] .fadecade-dialog-header-ink,
+.fadecade-dialog-art-footer[data-art-missing="true"] .fadecade-dialog-footer-ink { background: #ffe449; }
+.fadecade-confirm {
+  border: 2px solid #e64951; border-left-width: 6px; padding: 16px; background: #321624;
+}
+.fadecade-confirm h3 { color: #ffe449; font: 900 italic 22px var(--font-display); margin: 0 0 8px; }
+.fadecade-confirm p { font-size: 14px; margin-bottom: 14px; }
+.fadecade-dialog-content[data-reduced-motion="true"],
+.fadecade-dialog-overlay[data-reduced-motion="true"] { animation: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fadecade-dialog-overlay[data-state="open"],
+  .fadecade-dialog-overlay[data-state="closed"],
+  .fadecade-dialog-content[data-state="open"],
+  .fadecade-dialog-content[data-state="closed"] {
+    animation: none !important;
+  }
+}

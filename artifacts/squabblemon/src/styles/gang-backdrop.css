@@ -32,7 +32,8 @@
 }
 
 .decks-spectacle,
-.deck-workbench {
+.deck-workbench,
+.deck-editor-screen {
   position: relative;
 }
 
@@ -51,7 +52,8 @@
  * higher-specificity stage rule is present.
  */
 .arsenal-screen.decks-spectacle.world-decor-host > .gang-backdrop,
-.arsenal-screen.deck-workbench > .gang-backdrop {
+.arsenal-screen.deck-workbench > .gang-backdrop,
+.deck-editor-screen.world-decor-host > .gang-backdrop {
   position: absolute !important;
   inset: 0;
   z-index: 0 !important;

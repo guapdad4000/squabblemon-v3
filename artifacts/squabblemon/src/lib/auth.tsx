@@ -13,7 +13,16 @@ const afterSignInKey = 'squabblemon_after_sign_in';
 
 function getAfterSignIn(): string {
   const intended = sessionStorage.getItem(afterSignInKey);
-  return intended?.startsWith('/game') ? intended : '/game';
+  if (!intended) return '/game';
+  try {
+    const parsed = new URL(intended, window.location.origin);
+    const isGamePath = parsed.pathname === '/game' || parsed.pathname.startsWith('/game/');
+    return parsed.origin === window.location.origin && isGamePath
+      ? `${parsed.pathname}${parsed.search}${parsed.hash}`
+      : '/game';
+  } catch {
+    return '/game';
+  }
 }
 
 function consumeAfterSignIn(): string {

@@ -9,11 +9,11 @@ Treat the current GitHub branch as the release parent, rather than assuming the 
 
 **How to apply:** Fetch the remote, compare actual file content, and preserve remote history. If ancestry differs, create a release commit from the remote parent with only the verified changes; compare the resulting application content with the tested workspace and use a non-forced reference update.
 
-Command-line Git authentication and the connected GitHub integration can have different credential health.
+Use Replit's connected GitHub API for this project's release operations; do not require CLI login as the deployment-access prerequisite.
 
-**Why:** Git transport rejected authentication while the authenticated integration could read and update the repository normally.
+**Why:** The owner explicitly confirmed this API-based workflow. Command-line Git authentication and the connected integration can also have different credential health.
 
-**How to apply:** Use the integration's credential-injecting API when it is healthy; do not extract its OAuth credentials into shell commands or assume it needs reconnecting because Git transport failed.
+**How to apply:** Use the integration's credential-injecting API to inspect and update the release branch and inspect deployment statuses. Distinguish GitHub-triggered Netlify deployment from separate permission to manage Netlify environment settings. Do not extract OAuth credentials into shell commands or assume the integration needs reconnecting because CLI authentication is absent.
 
 Use file-backed JSON for complete Git tree comparisons. Do not rely on tab separators or large shell output surviving tool transport, and sanity-check an unexpectedly empty diff.
 

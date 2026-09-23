@@ -11,6 +11,7 @@ import { FirstDeckWorkshop } from './FirstDeckWorkshop';
 import { PlayLoop } from '../../components/PlayLoop';
 import { Link, useLocation } from 'wouter';
 import { DrFadePortrait, DR_FADE_LESSONS } from '../../components/DrFade';
+import { WELCOME_REWARD } from '@workspace/squabblemon-engine/economy';
 
 export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const step = bootstrap.profile.onboardingStep;
@@ -154,8 +155,8 @@ function CrewStep({ onComplete }: { onComplete: (id: string) => void }) {
     <img src={getCardImage('dr-fade')} alt="Dr. Fade" />
     <span className="venue-kicker">ROOKIE ROAD / YOUR COLLECTION</span>
     <h1>Make it your gang.</h1>
-    <p>You’ve learned the fade. Now choose who you bring. Your first collection includes 21 cards, including Legendary Dr. Fade, to mix, match, and make your own.</p>
-    <p>We’ll put ten on the table to get you started. Every slot is editable, and your cover character is your choice.</p>
+    <p>You’ve learned the fade. Now choose who you bring. Your first collection includes a complete ten-card gang, including Legendary Dr. Fade, to mix, match, and make your own.</p>
+    <p>Every slot is editable, and your cover character is your choice.</p>
     <nav><button className="venue-button venue-button--gold" onClick={() => onComplete(ROOKIE_FOUNDATION_ID)}>Open my card collection</button></nav>
   </div></section>;
 }
@@ -175,9 +176,9 @@ function RewardStep({ onComplete }: { onComplete: () => void }) {
         <p className="text-white/60 mb-5">Your cards are yours to mix and match. This guaranteed drop is saved once, then Rookie Road is complete.</p>
         <div className="grid grid-cols-3 gap-2 mb-8">
           {[
-            ['+100', 'XP'],
-            ['+250', 'Clout'],
-            ['+1', 'Pack ticket'],
+            [`+${WELCOME_REWARD.accountXp}`, 'XP'],
+            [`+${WELCOME_REWARD.softCurrency}`, 'Clout'],
+            [`+${WELCOME_REWARD.packTickets}`, 'Pack ticket'],
           ].map(([amount, label]) => (
             <div key={label} className="bg-black/55 border border-white/10 px-2 py-3">
               <div className="font-display font-black text-xl text-primary">{amount}</div>

@@ -8,6 +8,150 @@
 import * as zod from 'zod';
 
 
+export const startChallengeRunBodyDeckIdMax = 80;
+
+
+
+export const StartChallengeRunBody = zod.object({
+  "deckId": zod.string().max(startChallengeRunBodyDeckIdMax).optional()
+})
+
+export const StartChallengeRunResponse = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+
+
+export const ListChallengeRunsResponseItem = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+export const ListChallengeRunsResponse = zod.array(ListChallengeRunsResponseItem)
+
+
+export const RecordChallengeActionParams = zod.object({
+  "runId": zod.coerce.string().uuid()
+})
+
+export const RecordChallengeActionBody = zod.object({
+  "matchId": zod.string().uuid(),
+  "moves": zod.array(zod.unknown()),
+  "outcome": zod.enum(['win', 'loss', 'draw']),
+  "nextMatchId": zod.string().uuid().optional()
+})
+
+export const RecordChallengeActionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+
+
+export const CheckpointChallengeRunParams = zod.object({
+  "runId": zod.coerce.string().uuid()
+})
+
+export const CheckpointChallengeRunBody = zod.object({
+  "moves": zod.array(zod.unknown())
+})
+
+export const CheckpointChallengeRunResponse = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+
+
+export const SettleChallengeRunParams = zod.object({
+  "runId": zod.coerce.string().uuid()
+})
+
+export const SettleChallengeRunResponse = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+
+
+export const AbandonChallengeRunParams = zod.object({
+  "runId": zod.coerce.string().uuid()
+})
+
+export const AbandonChallengeRunResponse = zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['active', 'settled', 'abandoned']),
+  "seed": zod.number(),
+  "encounterIndex": zod.number(),
+  "score": zod.number(),
+  "wins": zod.number(),
+  "entryDate": zod.coerce.date(),
+  "entryNumber": zod.union([zod.literal(1),zod.literal(2)]),
+  "crew": zod.record(zod.string(), zod.unknown()),
+  "encounter": zod.record(zod.string(), zod.unknown()),
+  "checkpoints": zod.array(zod.record(zod.string(), zod.unknown())),
+  "recovery": zod.record(zod.string(), zod.unknown()).nullish(),
+  "createdAt": zod.coerce.date(),
+  "completedAt": zod.coerce.date().nullable()
+})
+
+
 /**
  * @summary Health check
  */
@@ -1611,7 +1755,8 @@ export const startPlayerMatchBodyDraftPicksMax = 10;
 export const StartPlayerMatchBody = zod.object({
   "mode": zod.enum(['practice', 'tutorial', 'story']),
   "playerDeckId": zod.string().max(startPlayerMatchBodyPlayerDeckIdMax),
-  "rivalDeckId": zod.string().max(startPlayerMatchBodyRivalDeckIdMax),
+  "rivalDeckId": zod.string().max(startPlayerMatchBodyRivalDeckIdMax).optional(),
+  "challengeRunId": zod.string().uuid().optional(),
   "storyNodeId": zod.string().max(startPlayerMatchBodyStoryNodeIdMax).optional(),
   "activity": zod.string().max(startPlayerMatchBodyActivityMax).optional(),
   "draftWeek": zod.string().max(startPlayerMatchBodyDraftWeekMax).optional(),
@@ -1634,6 +1779,7 @@ export const StartPlayerMatchResponse = zod.object({
   "mode": zod.string(),
   "playerDeckId": zod.string(),
   "rivalDeckId": zod.string(),
+  "challengeRunId": zod.string().uuid().nullish(),
   "status": zod.enum(['active', 'complete']),
   "createdAt": zod.coerce.date(),
   "storyNodeId": zod.string().nullable(),
@@ -1654,7 +1800,8 @@ export const StartPlayerMatchResponse = zod.object({
   "level": zod.number().min(1),
   "upgradeIds": zod.array(zod.string())
 }))
-})
+}),
+  "checkpoint": zod.record(zod.string(), zod.unknown()).nullish()
 })
 
 

@@ -1,0 +1,42 @@
+{
+  "flag-left.webp": {
+    "width": 677,
+    "height": 1075,
+    "textArea": {
+      "x": 26,
+      "y": 32,
+      "width": 52,
+      "height": 35
+    }
+  },
+  "flag-right.webp": {
+    "width": 676,
+    "height": 1075,
+    "textArea": {
+      "x": 22,
+      "y": 32,
+      "width": 52,
+      "height": 35
+    }
+  },
+  "stats-banner.webp": {
+    "width": 2172,
+    "height": 565,
+    "textArea": {
+      "x": 27,
+      "y": 29,
+      "width": 46,
+      "height": 36
+    }
+  },
+  "footer-banner.webp": {
+    "width": 2172,
+    "height": 365,
+    "textArea": {
+      "x": 23,
+      "y": 34,
+      "width": 54,
+      "height": 32
+    }
+  }
+}

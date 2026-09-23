@@ -19,9 +19,9 @@ Use production-sized reward batches in layout fixtures, not shortened samples.
 
 Verify setup-screen reachability inside the real route shell at the reported viewport, not only in an isolated component at a wider size.
 
-**Why:** An isolated wide-screen Story selector looked fixed while the real viewport-constrained shell still clipped the start action at an intermediate width. Automated locator clicks can also scroll an overflow-hidden ancestor that a user's wheel cannot scroll, hiding the bug.
+**Why:** An isolated wide-screen Story selector looked fixed while the real viewport-constrained shell still clipped the start action at an intermediate width. Payment-store checks similarly passed in a minimum-height scaffold that omitted the actual flex parent. Automated locator clicks can also scroll an overflow-hidden ancestor that a user's wheel cannot scroll, hiding the bug.
 
-**How to apply:** Assert the primary action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content, then select a crew and enter the actual first turn with a valid match-start response. Check both width and height breakpoints.
+**How to apply:** Match the real route's height constraints, intermediate parents, and navigation—not just its component names. Assert the final action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content. Check both width and height breakpoints; for battle setup, select a crew and enter the actual first turn with a valid match-start response.
 
 Prefer one vertical scroll owner for a screen with persistent foreground artwork.
 
@@ -34,3 +34,15 @@ For effects attached to illustrated objects, verify the rendered transform and o
 **Why:** A beam's coordinate attributes can match its lens perfectly while opaque artwork above it hides the visible start, making it appear disconnected.
 
 **How to apply:** Test the transformed effect geometry independently of diagnostic attributes, inspect stacking against the source illustration, and confirm the visible join in a screenshot.
+
+Isolate Vite dependency caches when running a browser-test server with different routing or auth flags alongside the managed preview.
+
+**Why:** A test server using different configuration invalidated the preview's optimized dependency hashes, causing HTTP 504 module responses and a blank fixture until the preview restarted. This can look like an application regression.
+
+**How to apply:** Prefer an existing real-component fixture on the running preview for narrow CSS checks. Give separately configured test servers their own cache directory; do not run them concurrently against the preview's cache.
+
+Check both edges of the final item between sticky controls and floating actions, especially on short screens.
+
+**Why:** A final card cleared the bottom action buttons but was almost entirely behind the sticky search on landscape phones. Bottom-only geometry assertions passed while the screenshot exposed the problem.
+
+**How to apply:** Assert the whole item fits below the sticky controls and above the footer, then inspect its screenshot. A successful action hit-test does not prove the content between the controls is readable.

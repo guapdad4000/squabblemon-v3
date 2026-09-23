@@ -12,7 +12,8 @@ export interface MatchStartInput {
   /** @maxLength 80 */
   playerDeckId: string;
   /** @maxLength 32 */
-  rivalDeckId: string;
+  rivalDeckId?: string;
+  challengeRunId?: string;
   /** @maxLength 80 */
   storyNodeId?: string;
   /** @maxLength 24 */

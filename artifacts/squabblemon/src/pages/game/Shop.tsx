@@ -3,10 +3,9 @@ import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
 import { CharacterUnlock } from '../../components/CharacterUnlock';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
+import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { PropArt } from '../../components/venue/PropArt';
 import { GameGlyph } from '../../components/venue/GameGlyph';
-import { ProgressRing } from '../../components/venue/ProgressRing';
-import { PageDecor } from '../../components/venue/PageDecor';
 import { CombatSprite } from '../../components/BattleArt';
 import { useLocation, useSearch } from 'wouter';
 import { Market } from './Market';
@@ -21,7 +20,6 @@ import {
   type PlayerBootstrap,
 } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowRight, Check, History, Info, Volume2, VolumeX, X } from 'lucide-react';
 import { cardCatalog, catalogCardById, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
 import { CardView } from '../../components/CardView';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
@@ -36,10 +34,13 @@ import {
 } from '../../lib/packJournal';
 import { playSoundEffect, playVoiceLine, stopSoundEffect, type SoundEffect, type VoiceLine } from '../../lib/sfx';
 import { loadFeedbackPreferences } from '../../battleFeedback';
+import { ArrowRight, Check, History, Info, Volume2, VolumeX, X, Star } from 'lucide-react';
 
 type Phase = 'idle' | 'requesting' | 'punching' | 'tenPunching' | 'knockout' | 'tenKnockout' | 'reveal' | 'summary';
 type Payment = 'softCurrency' | 'ticket';
 type PullSize = 1 | 10;
+const isTenPullOpening = (opening: Pick<PackOpening, 'oddsVersion' | 'pullCount'> | null | undefined) =>
+  opening?.pullCount === 10 || /^street-pack-ten-v[12]$/.test(opening?.oddsVersion ?? '');
 
 // Every opening is a three-beat fight: jab, hook, finisher. A ten-pull still
 // lands three strikes per input, so its scene can hit harder without becoming
@@ -183,7 +184,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     loadPackOpening(sessionStorage, bootstrap.profile.id)?.rewards?.length ? 'summary' : 'idle',
   );
   const [pullSize, setPullSize] = useState<PullSize>(() =>
-    opening?.pullCount === 10 ? 10 : pending?.pullCount ?? 1,
+    isTenPullOpening(opening) ? 10 : pending?.pullCount ?? 1,
   );
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
@@ -203,9 +204,9 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     name: `${bootstrap.packConfig.name} · 10×`,
     oddsVersion: bootstrap.packConfig.oddsVersion,
     pullCount: 10,
-    ticketCost: Math.max(1, bootstrap.packConfig.ticketCost * 9),
-    softCurrencyCost: Math.max(1, bootstrap.packConfig.softCurrencyCost * 9),
-    rewardsPerPull: bootstrap.packConfig.rewardsPerPack,
+    ticketCost: STREET_PACK_RULES.ten.ticketCost,
+    softCurrencyCost: STREET_PACK_RULES.ten.softCurrencyCost,
+    rewardsPerPull: STREET_PACK_RULES.single.rewards,
     rarePityBonusPerPull: 1,
   };
   const rewards = Array.isArray(opening?.rewards) ? opening.rewards : [];
@@ -231,6 +232,11 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const currentReward = arrangedRewards[revealIndex];
   const currentRarity = rewardRarity(currentReward);
   const ceremony = RARITY_CEREMONY[currentRarity] ?? RARITY_CEREMONY.currency;
+  const unownedGameplayCards = cardCatalog.filter(card => !bootstrap.profile.ownedCardIds.includes(card.catalogId)).length;
+  const unownedCosmeticVariants = cardCatalog.reduce(
+    (count, card) => count + card.variantSlots.filter(variant => !bootstrap.profile.ownedVariants.includes(variant.id)).length,
+    0,
+  );
 
   useEffect(() => {
     mounted.current = true;
@@ -356,7 +362,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         }));
         result = {
           id: nextRequest.idempotencyKey,
-          oddsVersion: requestedSize === 10 ? 'street-pack-ten-v1' : 'preview',
+          oddsVersion: requestedSize === 10 ? 'street-pack-ten-v2' : 'preview',
           paymentMethod: payment,
           cost,
           pullCount: requestedSize,
@@ -383,6 +389,10 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         result = response.opening;
         queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), response.bootstrap);
       }
+      const guaranteeWasHit =
+        requestedSize === 1 &&
+        result.pityBefore >= Math.max(0, bootstrap.packConfig.pityLimit - 1);
+      if (guaranteeWasHit) playSoundEffect('story-star', sound, 0.9);
       // Keep the awarded reveal resumable across refreshes; retries use the same payment intent.
       savePackOpening(sessionStorage, bootstrap.profile.id, result);
       if (!mounted.current) return;
@@ -471,7 +481,6 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       data-round={isPunching ? beatIndex + 1 : undefined}
       data-omen={omenRarity.toLowerCase()}
     >
-      <PageDecor theme="market" />
       <div className="gym__arena" ref={arena}>
         <LayeredVenue scene="gatcha-bg" />
         <SceneFrame
@@ -490,41 +499,28 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         />
         <div className="gym__vignette" />
       </div>
-      <header className="gacha-stage__heading">
-        <span className="studio-eyebrow">
-          <GameGlyph name="pack" /> The pack gym · Street edition
-        </span>
-        <h1>
-          {isPunching && isTenPull ? (
-            <>
-              Ten on the
-              <br />
-              <em>bag.</em>
-            </>
-          ) : (
-            <>
-              Your next
-              <br />
-              <em>heavy hitter.</em>
-            </>
-          )}
-        </h1>
-        <p>
-          {isPunching && isTenPull ? (
-            <>
-              Combo the bag.
-              <br />
-              Sixty cards in one KO.
-            </>
-          ) : (
-            <>
-              Step up. Break the bag.
-              <br />
-              Meet your next gang member.
-            </>
-          )}
-        </p>
-      </header>
+      {isPunching && (
+        <header className="gacha-stage__heading">
+          <span className="studio-eyebrow">
+            <GameGlyph name="pack" /> The pack gym · Street edition
+          </span>
+          <h1>
+            {isTenPull ? (
+              <>
+                Ten on the
+                <br />
+                <em>bag.</em>
+              </>
+            ) : (
+              <>
+                Unload the
+                <br />
+                <em>combo.</em>
+              </>
+            )}
+          </h1>
+        </header>
+      )}
       <button
         className="studio-icon gacha-stage__sound"
         aria-label={sound ? 'Mute gym sound' : 'Enable gym sound'}
@@ -534,88 +530,72 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       >
         {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
       </button>
-      <aside className="gym__offer" aria-label="Open a pack">
-        <div className="gacha-stage__pack">
-          <PropArt id="foil-pack" />
-          <div>
-            <span className="studio-eyebrow">{isTenPull ? 'The upgraded drop' : 'The drop'}</span>
-            <h2>
-              {preview
-                ? isTenPull
-                  ? 'Street pack · 10x'
-                  : 'Street pack'
-                : isTenPull
-                  ? tenPullConfig.name
-                  : bootstrap.packConfig.name}
-            </h2>
-            <p>
-              {isTenPull
-                ? `${tenPullConfig.rewardsPerPull} rewards. One KO. Rare+ guaranteed.`
-                : bootstrap.packConfig.rewardsPerPack === 6
-                  ? '5 card pulls + 1 bonus. Same street price.'
-                  : `${bootstrap.packConfig.rewardsPerPack} rewards. One knockout.`}
-            </p>
-          </div>
-        </div>
-        {preview ? (
-          <p className="gacha-stage__preview">Preview drop · Sample rewards. Nothing saved to an account.</p>
-        ) : (
-          <div className="gacha-stage__guarantee">
-            <ProgressRing
-              value={bootstrap.profile.packPity}
-              max={bootstrap.packConfig.pityLimit}
-              label="Pack guarantee progress"
-            />
-            <div>
-              <strong>{isTenPull ? '10-Pull guarantee · Rare+' : 'Guarantee tracker'}</strong>
-              <span>
-                {isTenPull
-                  ? 'At least one Rare+ in every ten-pull haul.'
-                  : `${bootstrap.profile.packPity} of ${bootstrap.packConfig.pityLimit} · `}
-                {!isTenPull && (
-                  <button onClick={() => showInfo('odds')}>View drop rates</button>
-                )}
-              </span>
+      <aside className="fight-bill gym__offer" aria-label="Open a pack">
+        <div className="fight-bill__inner">
+          <header className="fight-bill__header">
+            <div className="fight-bill__stars-row">
+              <Star size={14} fill="currentColor" strokeWidth={0} />
+              <Star size={14} fill="currentColor" strokeWidth={0} />
+              <Star size={14} fill="currentColor" strokeWidth={0} />
+              <div className="fight-bill__stars-spacer" />
+              <nav className="fight-bill__utility" aria-label="Gacha information">
+                <button aria-label="Drop rates" onClick={() => showInfo('odds')}>RATES</button>
+                <span aria-hidden="true">◆</span>
+                <button aria-label="Your openings" onClick={() => showInfo('history')}>HISTORY</button>
+              </nav>
             </div>
-          </div>
-        )}
-        <p className="gacha-stage__duplicates">
-          <GameGlyph name="shards" /> Duplicates become Style Shards.
-        </p>
-        <div className="gym__actions">
-          {isPunching ? (
-            <div className="gacha-stage__secured">
-              <Check size={16} />
-              <span>
-                {preview ? 'Preview loaded.' : 'Your rewards are secured.'}
-                <small>Hit the bag three times to reveal {isTenPull ? 'the ten-pull' : 'your pack'}.</small>
-              </span>
+
+            <div className="fight-bill__title">
+              <svg viewBox="0 0 100 100" className="fight-bill__burst-svg" fill="currentColor">
+                <path d="M100 20 L0 0 L70 35 L-10 50 L70 65 L0 100 L100 80 Z" />
+              </svg>
+              <h2>
+                <span className="fight-bill__title-top">FADE</span>
+                <span className="fight-bill__title-bottom">RECRUITMENT</span>
+              </h2>
+              <svg viewBox="0 0 100 100" className="fight-bill__burst-svg" fill="currentColor">
+                <path d="M0 20 L100 0 L30 35 L110 50 L30 65 L100 100 L0 80 Z" />
+              </svg>
             </div>
-          ) : (
-            <>
-              <div className="gacha-stage__pull-switch" role="group" aria-label="Pull size">
-                <button
-                  type="button"
-                  aria-pressed={!isTenPull}
-                  disabled={phase !== 'idle' || Boolean(pending)}
-                  onClick={() => setPullSize(1)}
-                >
-                  <b>1</b> pull
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={isTenPull}
-                  disabled={phase !== 'idle' || Boolean(pending)}
-                  onClick={() => setPullSize(10)}
-                >
-                  <b>10</b> pull <small>Rare+</small>
-                </button>
+
+            <div className="fight-bill__band">
+              <div className="fight-bill__band-stars">
+                <Star size={16} fill="currentColor" strokeWidth={0} />
+                <Star size={16} fill="currentColor" strokeWidth={0} />
+                <Star size={16} fill="currentColor" strokeWidth={0} />
               </div>
-              <div className="gacha-stage__ticket-choices">
-                {(['ticket', 'softCurrency'] as const).map((method) => {
-                  const ticket = method === 'ticket';
-                  const cost = ticket ? selectedTier.ticketCost : selectedTier.softCurrencyCost;
-                  const balance = ticket ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
+              <h3>FIGHT NIGHT</h3>
+              <div className="fight-bill__band-stars">
+                <Star size={16} fill="currentColor" strokeWidth={0} />
+                <Star size={16} fill="currentColor" strokeWidth={0} />
+                <Star size={16} fill="currentColor" strokeWidth={0} />
+              </div>
+            </div>
+
+            <div className="fight-bill__season">
+              <div className="fight-bill__season-lines" />
+              <h4>
+                {preview
+                  ? (isTenPull ? 'STREET PACK · 10X' : 'PREVIEW DROP')
+                  : (isTenPull ? tenPullConfig.name.toUpperCase() : bootstrap.packConfig.name.toUpperCase())}
+              </h4>
+              <div className="fight-bill__season-lines" />
+            </div>
+          </header>
+
+          <div className="fight-bill__grid">
+            {/* LEFT COLUMN: TICKET */}
+            <div className="fight-bill__col fight-bill__col--side">
+              <div className="fight-bill__col-stars">
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+              </div>
+              <div className="fight-bill__action-wrap">
+                {(() => {
+                  const method = 'ticket';
+                  const cost = selectedTier.ticketCost;
+                  const balance = bootstrap.profile.packTickets;
                   const affordable = balance >= cost;
                   const pendingSize = pending?.pullCount ?? 1;
                   if (pending && (pending.paymentMethod !== method || pendingSize !== pullSize)) return null;
@@ -623,52 +603,150 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     ? `Securing ${isTenPull ? 'ten pulls' : 'your pull'}`
                     : pending
                       ? isTenPull ? 'Retry this 10-pull' : 'Retry this opening'
-                      : `Open${isTenPull ? ' 10×' : ''} · ${cost} ${ticket ? (cost === 1 ? 'ticket' : 'tickets') : 'Clout'}`;
+                      : `Open${isTenPull ? ' 10×' : ''} · ${cost} ${cost === 1 ? 'ticket' : 'tickets'}`;
                   return (
                     <button
                       type="button"
-                      className={`gacha-stage__ticket-choice gacha-stage__ticket-choice--${ticket ? 'fight' : 'clout'}`}
-                      key={method}
+                      className="fight-bill__pay-btn gacha-stage__ticket-choice gacha-stage__ticket-choice--fight"
                       aria-label={actionLabel}
                       disabled={phase !== 'idle' || (!affordable && !pending)}
                       onClick={() => void handleOpen(method, pullSize)}
                     >
-                      <img
-                        src={`${PUBLIC_BASE}assets/rewards/${ticket ? 'fight-ticket' : 'clout-ticket'}.webp`}
-                        alt=""
-                        aria-hidden="true"
-                      />
-                      <span>
-                        <em>{ticket ? 'Fight ticket' : 'Clout pass'}</em>
-                        <strong>{ticket ? `${cost} ticket${cost === 1 ? '' : 's'}` : `${cost.toLocaleString()} Clout`}</strong>
-                        <small>{balance.toLocaleString()} owned</small>
-                      </span>
+                      <img src={`${PUBLIC_BASE}assets/rewards/fight-ticket.webp`} alt="" aria-hidden="true" />
+                      <div className="fight-bill__pay-info">
+                        <strong>{cost} TICKET{cost === 1 ? '' : 'S'}</strong>
+                        <small>{balance.toLocaleString()} OWNED</small>
+                      </div>
+                      <div className="fight-bill__pay-action">
+                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : 'ADMIT ONE'}
+                      </div>
                     </button>
                   );
-                })}
+                })()}
               </div>
-              <small className="gym__payment-note">
-                {pending
-                  ? 'Your secured opening is ready to recover.'
-                  : isTenPull
-                    ? 'Ten pulls · at least one Rare+ guaranteed.'
-                    : 'One pull · duplicates convert to Style Shards.'}
-              </small>
-            </>
+              <div className="fight-bill__col-stars">
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+              </div>
+            </div>
+
+            {/* MIDDLE COLUMN: SELECTOR & GUARANTEE */}
+            <div className="fight-bill__col fight-bill__col--mid">
+              <div className="fight-bill__mid-box fight-bill__switch gacha-stage__pull-switch" role="group" aria-label="Pull size">
+                 <button
+                  type="button"
+                  aria-pressed={!isTenPull}
+                  disabled={phase !== 'idle' || Boolean(pending)}
+                  onClick={() => setPullSize(1)}
+                 >
+                   1 PULL
+                 </button>
+                 <button
+                  type="button"
+                  aria-pressed={isTenPull}
+                  disabled={phase !== 'idle' || Boolean(pending)}
+                  onClick={() => setPullSize(10)}
+                 >
+                   10 PULL
+                 </button>
+              </div>
+
+              <div className="fight-bill__mid-box fight-bill__guarantee">
+                 {preview ? (
+                   <p className="fight-bill__preview-text">PREVIEW DROP<br/>SAMPLE REWARDS</p>
+                 ) : (
+                   <div className="fight-bill__guarantee-content">
+                     <strong>GUARANTEE</strong>
+                     <span
+                       className="fight-bill__guarantee-bell"
+                       role="progressbar"
+                       aria-label="Pack guarantee progress"
+                       aria-valuemin={0}
+                       aria-valuemax={bootstrap.packConfig.pityLimit}
+                       aria-valuenow={bootstrap.profile.packPity}
+                       data-ready={bootstrap.profile.packPity >= bootstrap.packConfig.pityLimit - 1}
+                     >
+                       <span className="fight-bill__bell-handle" aria-hidden="true" />
+                       <span className="fight-bill__bell-body">
+                         {bootstrap.profile.packPity}/{bootstrap.packConfig.pityLimit}
+                       </span>
+                       <span className="fight-bill__bell-clapper" aria-hidden="true" />
+                     </span>
+                     <span>
+                       {isTenPull
+                         ? '1 RARE+ PER 10-PULL'
+                         : unownedCosmeticVariants === 0
+                           ? 'ALL FEATURED STYLES OWNED'
+                           : `${bootstrap.profile.packPity} / ${bootstrap.packConfig.pityLimit}`}
+                     </span>
+                   </div>
+                 )}
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: CLOUT */}
+            <div className="fight-bill__col fight-bill__col--side">
+              <div className="fight-bill__col-stars">
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+              </div>
+              <div className="fight-bill__action-wrap">
+                {(() => {
+                  const method = 'softCurrency';
+                  const cost = selectedTier.softCurrencyCost;
+                  const balance = bootstrap.profile.softCurrency;
+                  const affordable = balance >= cost;
+                  const pendingSize = pending?.pullCount ?? 1;
+                  if (pending && (pending.paymentMethod !== method || pendingSize !== pullSize)) return null;
+                  const actionLabel = phase === 'requesting'
+                    ? `Securing ${isTenPull ? 'ten pulls' : 'your pull'}`
+                    : pending
+                      ? isTenPull ? 'Retry this 10-pull' : 'Retry this opening'
+                      : `Open${isTenPull ? ' 10×' : ''} · ${cost.toLocaleString()} Clout`;
+                  return (
+                    <button
+                      type="button"
+                      className="fight-bill__pay-btn gacha-stage__ticket-choice gacha-stage__ticket-choice--clout"
+                      aria-label={actionLabel}
+                      disabled={phase !== 'idle' || (!affordable && !pending)}
+                      onClick={() => void handleOpen(method, pullSize)}
+                    >
+                      <img src={`${PUBLIC_BASE}assets/rewards/clout-ticket.webp`} alt="" aria-hidden="true" />
+                      <div className="fight-bill__pay-info">
+                        <strong>{cost.toLocaleString()} CLOUT</strong>
+                        <small>{balance.toLocaleString()} OWNED</small>
+                      </div>
+                      <div className="fight-bill__pay-action">
+                        {phase === 'requesting' ? 'SECURING' : pending ? 'RETRY' : 'ADMIT ONE'}
+                      </div>
+                    </button>
+                  );
+                })()}
+              </div>
+              <div className="fight-bill__col-stars">
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+              </div>
+            </div>
+          </div>
+
+          {error && (
+            <p className="fight-bill__error" role="alert">
+              {error}
+            </p>
           )}
-        </div>
-        {error && (
-          <p className="studio-notice" role="alert">
-            {error}
-          </p>
-        )}
-        <div className="gym__links">
-          <button className="studio-text-action" onClick={() => showInfo('odds')}>
-            <Info size={15} /> Drop rates
-          </button>
-          <button className="studio-text-action" onClick={() => showInfo('history')}>
-            <History size={15} /> Your openings
-          </button>
+
+          {isPunching && (
+             <div className="fight-bill__secured-overlay">
+               <Check size={40} strokeWidth={4} />
+               <strong>{preview ? 'PREVIEW LOADED' : 'REWARDS SECURED'}</strong>
+               <span>HIT THE BAG 3 TIMES TO REVEAL {isTenPull ? 'THE TEN-PULL' : 'YOUR PACK'}.</span>
+             </div>
+          )}
+
         </div>
       </aside>
       {isPunching && (
@@ -913,7 +991,16 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               </p>
             ) : (
               <>
-                <p>Punches are for the presentation. Your rewards are decided by the pack system when you open.</p>
+                <p>Punches are for the presentation. Your rewards are decided and saved by the server when you open.</p>
+                <p data-testid="text-pack-collection-state">
+                  {unownedGameplayCards > 0
+                    ? `${unownedGameplayCards} gameplay cards remain. The first two card slots protect missing cards when the rolled rarity still has one; they do not silently jump rarity tiers.`
+                    : `You own every gameplay card. Card repeats convert to ${STREET_PACK_RULES.duplicateStyleShards} Style Shards.`}
+                  {' '}
+                  {unownedCosmeticVariants > 0
+                    ? `${unownedCosmeticVariants} featured cosmetic variants remain.`
+                    : `You own every featured cosmetic variant, so a featured-style result converts to ${STREET_PACK_RULES.bonus.exhaustedStyleClout} Clout and cosmetic pity resets.`}
+                </p>
                 <div className="gym-odds">
                   {bootstrap.packConfig.odds.map((odd, i) => (
                     <div key={i}>
@@ -937,7 +1024,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <article key={item.id}>
                 <span>{new Date(item.createdAt).toLocaleString()}</span>
                 <strong>
-                  {item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
+                  {isTenPullOpening(item) ? '10× · ' : ''}{item.cost} {item.paymentMethod === 'ticket' ? 'ticket(s)' : 'Clout'}
                 </strong>
                 <p>{item.rewards.map((r) => r.name ?? resourceName(r)).join(' · ')}</p>
               </article>
@@ -974,7 +1061,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <nav className="market-tabs" aria-label="Shop departments">
         <button aria-pressed={tab === 'packs'} onClick={() => selectTab('packs')}>
           <GameGlyph name="pack" />
-          Gotcha
+          Recruit
         </button>
         <button aria-pressed={tab === 'market'} onClick={() => selectTab('market')}>
           <GameGlyph name="motion" />

@@ -1,12 +1,12 @@
 import { PageHeading } from '../../components/venue/PageHeading';
-import { ArsenalScreen, FocusViewButton } from '../../components/venue/ArsenalScreen';
+import { ArsenalScreen } from '../../components/venue/ArsenalScreen';
 import { ChevronDown, Layers, Plus } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { PlayerBootstrap, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { useDeckPersistence } from '../../lib/useDeckPersistence';
 import { useQueryClient } from '@tanstack/react-query';
 import { starterRecipes, validateSavedDeck } from '../../data';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
@@ -14,6 +14,7 @@ import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 import { GangBackdrop } from '../../components/GangBackdrop';
 import '../../styles/gang-backdrop.css';
+import { deckEditorPath, readDeckListContext, saveDeckListContext } from '../../lib/deckJourney';
 
 export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
@@ -22,17 +23,37 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const queryClient = useQueryClient();
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const restoredContext = useRef(readDeckListContext(bootstrap.profile.id, typeof window === 'undefined' ? null : window.sessionStorage));
+  const selectedDeckRef = useRef('');
   const savedDeckIds = bootstrap.profile.savedDecks.map(deck => deck.id);
   const starterDeckIds = starterRecipes.map(recipe => recipe.id);
   const [selectedDeckId, setSelectedDeckId] = usePersistentDeckSelection(
     bootstrap.profile.id,
     [...savedDeckIds, ...starterDeckIds.filter(id => !savedDeckIds.includes(id))],
+    restoredContext.current?.selectedDeckId,
   );
   const atCapacity = bootstrap.profile.savedDecks.length >= bootstrap.profile.deckSlots;
+  selectedDeckRef.current = selectedDeckId;
   useEffect(() => {
     welcomeVoice.current = playVoiceLine('decks-welcome', loadFeedbackPreferences().audioEnabled);
     return () => stopSoundEffect(welcomeVoice.current);
   }, []);
+
+  useLayoutEffect(() => {
+    const stage = document.querySelector<HTMLElement>('.game-route-stage');
+    if (!stage) return;
+    stage.scrollTop = restoredContext.current?.scrollTop ?? 0;
+    const frame = requestAnimationFrame(() => {
+      stage.querySelector<HTMLElement>('[data-testid="deck-carousel"] [aria-hidden="false"] [data-testid="deck-cover"]')?.focus({ preventScroll: true });
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      saveDeckListContext(bootstrap.profile.id, {
+        selectedDeckId: selectedDeckRef.current,
+        scrollTop: stage.scrollTop,
+      }, window.sessionStorage);
+    };
+  }, [bootstrap.profile.id]);
 
   const handleCreateNew = async () => {
     if (creating || atCapacity) return;
@@ -41,7 +62,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       const newId = crypto.randomUUID();
       const res = await saveDeck.mutateAsync({ deckId: newId, data: { name: 'New Deck', cardIds: [], heroCardId: '', recipeId: null } });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
-      setLocation(`/game/decks/${newId}`);
+      setLocation(deckEditorPath(newId));
     } catch (e) {
       console.error(e); setError('Failed to create deck. Try again.'); setCreating(false);
     }
@@ -91,7 +112,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             }))}
             selectedId={savedDeckIds.includes(selectedDeckId) ? selectedDeckId : savedDeckIds[0]}
             onSelect={setSelectedDeckId}
-            onOpen={id => setLocation(`/game/decks/${id}`)}
+            onOpen={id => setLocation(deckEditorPath(id))}
             label="Your saved decks"
           />
         )}
@@ -113,7 +134,7 @@ export function Decks({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           }))}
           selectedId={starterDeckIds.includes(selectedDeckId) ? selectedDeckId : starterDeckIds[0]}
           onSelect={setSelectedDeckId}
-          onOpen={id => setLocation(`/game/decks/${id}`)}
+          onOpen={id => setLocation(deckEditorPath(id))}
           label="Learning examples"
           openLabel="Build from example"
         />

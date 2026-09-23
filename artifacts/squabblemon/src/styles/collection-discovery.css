@@ -1,0 +1,35 @@
+.collection-card-grid>button[data-collection-discovery-new="true"]{isolation:isolate}
+.collection-discovery__badge{
+  position:absolute;
+  z-index:4;
+   top:-18px;
+   right:8px;
+  padding:3px 6px;
+  border:1px solid rgb(248 215 139 / 58%);
+  border-radius:999px;
+  background:#201b10e8;
+  box-shadow:0 1px 4px #0009;
+  color:#f6d98e;
+  font:800 8px/1 var(--font-mono);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.collection-card-grid>button[data-collection-discovery-active="true"]::after{
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:-7px;
+  border-radius:12px;
+  box-shadow:0 0 22px 7px rgb(235 193 103 / 34%);
+  pointer-events:none;
+  animation:collection-discovery-glow .85s ease-in-out;
+}
+@keyframes collection-discovery-glow{
+  0%,100%{opacity:.42}
+  45%{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .collection-card-grid>button[data-collection-discovery-active="true"]::after{animation:none}
+}
+html[data-reduce-motion=true] .collection-card-grid>button[data-collection-discovery-active="true"]::after{animation:none}

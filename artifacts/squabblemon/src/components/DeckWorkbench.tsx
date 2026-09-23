@@ -1,23 +1,27 @@
 import { crewInsights } from '@workspace/squabblemon-engine/insights';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CoachSpotlight } from './CoachSpotlight';
 import { DrFadePortrait } from './DrFade';
-import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Crown, Pencil, Plus, Save, Search, Swords, Trash2, Undo2, X, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChartNoAxesColumn, Check, ChevronDown, Crown, Pencil, Plus, Save, Search, Trash2, Undo2, X, Zap } from 'lucide-react';
 import { DECK_SIZE, catalogCardById, getCardImage, validateSavedDeck } from '../data';
 import { CardView } from './CardView';
 import { CardPressTarget } from './CardInspection';
-import { ArsenalScreen, FocusViewButton } from './venue/ArsenalScreen';
+import { ArsenalScreen } from './venue/ArsenalScreen';
 import { replaceDeckCard, workshopSuggestions, type DeckDraft } from '../lib/deckWorkshop';
 import '../styles/deck-workshop.css';
 import { trackEvent } from '../lib/analytics';
 import { GangBackdrop } from './GangBackdrop';
 import '../styles/gang-backdrop.css';
+import { GameGlyph } from './venue/GameGlyph';
 
-export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave, onTest, lesson = false }: {
+export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave, onTest, onDraftChange, onDirtyChange, lesson = false, onDelete, deleting = false, externalError = '', showBackdrop = true, subtitle }: {
   initial: DeckDraft; ownedCardIds: string[]; equippedVariants: Record<string, string>;
-  onSave: (draft: DeckDraft) => Promise<void>; onTest: (draft: DeckDraft, focusCardId: string) => Promise<void>; lesson?: boolean;
+  onSave: (draft: DeckDraft) => Promise<void>; onTest: (draft: DeckDraft, focusCardId: string) => Promise<void>;
+  onDraftChange?: (draft: DeckDraft) => void; onDirtyChange?: (dirty: boolean) => void; lesson?: boolean;
+  onDelete?: () => Promise<void>; deleting?: boolean; externalError?: string; showBackdrop?: boolean; subtitle?: string;
 }) {
   const [draft, setDraft] = useState<DeckDraft>(() => ({ ...initial, cardIds: [...initial.cardIds] }));
+  const [savedDraft, setSavedDraft] = useState<DeckDraft>(() => ({ ...initial, cardIds: [...initial.cardIds] }));
   const [undo, setUndo] = useState<DeckDraft | null>(null);
   const [slot, setSlot] = useState<number | null>(null);
   const [search, setSearch] = useState('');
@@ -28,11 +32,52 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const [error, setError] = useState('');
   const [focusCard, setFocusCard] = useState(lesson ? initial.cardIds.find(id => workshopSuggestions.some(idea => idea.cardId === id)) ?? initial.heroCardId : initial.heroCardId);
   const searchInput = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLFieldSetElement>(null);
+  const cardScrollRef = useRef<HTMLDivElement>(null);
+  const browseRef = useRef<HTMLDivElement>(null);
+  const actionsRef = useRef<HTMLElement>(null);
   const insights = crewInsights(draft.cardIds);
   const legality = validateSavedDeck(draft.cardIds, ownedCardIds, draft.heroCardId);
   const owned = ownedCardIds.map(id => catalogCardById[id]).filter(Boolean);
   const visible = owned.filter(card => `${card.name} ${card.effect} ${card.type}`.toLowerCase().includes(search.toLowerCase())).sort((a,b) => a.cost - b.cost || a.name.localeCompare(b.name));
   const selected = slot === null ? null : catalogCardById[draft.cardIds[slot]];
+  const dirty = draft.name !== savedDraft.name
+    || draft.heroCardId !== savedDraft.heroCardId
+    || draft.recipeId !== savedDraft.recipeId
+    || draft.cardIds.length !== savedDraft.cardIds.length
+    || draft.cardIds.some((id, index) => id !== savedDraft.cardIds[index]);
+
+  useEffect(() => { onDraftChange?.(draft); }, [draft, onDraftChange]);
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
+  useEffect(() => {
+    const footer = actionsRef.current;
+    const stage = footer?.closest<HTMLElement>('.deck-workbench');
+    if (!footer || !stage) return;
+    // Notices, errors, and narrow screens can all change the floating footer's height.
+    const measure = () => stage.style.setProperty('--deck-actions-clearance', `calc(${Math.ceil(footer.getBoundingClientRect().height)}px + var(--deck-actions-gap, 20px))`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    const body = bodyRef.current, scroller = cardScrollRef.current, browse = browseRef.current;
+    if (!body || !scroller || !browse) return;
+    let frame = 0;
+    // Short landscape screens scroll the lineup too. Clip cards at the bottom
+    // of the sticky controls rather than showing fragments behind the paper.
+    const measure = () => {
+      const clipped = getComputedStyle(scroller).overflowY === 'visible'
+        ? Math.max(0, browse.getBoundingClientRect().bottom - scroller.getBoundingClientRect().top) : 0;
+      scroller.style.setProperty('--deck-grid-clip-top', `${clipped}px`);
+    };
+    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure); };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(body); observer.observe(scroller); observer.observe(browse);
+    body.addEventListener('scroll', schedule, { passive: true });
+    measure();
+    return () => { observer.disconnect(); body.removeEventListener('scroll', schedule); cancelAnimationFrame(frame); };
+  }, []);
 
   function choose(cardId: string) {
     if (draft.cardIds.includes(cardId)) { setSlot(draft.cardIds.indexOf(cardId)); return; }
@@ -60,13 +105,13 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
     try {
       const next = { ...draft, name: draft.name.trim() || 'My Gang' };
       if (test) await onTest(next, next.cardIds.includes(focusCard) ? focusCard : next.heroCardId);
-      else { await onSave(next); setNotice('Deck saved. Your lineup is ready.'); }
+      else { await onSave(next); setDraft(next); setSavedDraft({ ...next, cardIds: [...next.cardIds] }); setNotice('Deck saved. Your lineup is ready.'); }
       trackEvent(test ? 'deck_test_started' : 'deck_saved', { lesson, cards: next.cardIds.length });
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not save your deck. Please retry.'); }
     finally { setBusy(false); }
   }
   return <ArsenalScreen className="deck-workbench" label={lesson ? 'Build your first gang' : 'Deck builder'}>
-    <GangBackdrop />
+    {showBackdrop && <GangBackdrop />}
     <header className="deck-workbench__header">
       {lesson && <DrFadePortrait pose="right" className="deck-workbench__coach-art" />}
       <div className="deck-workbench__title">
@@ -76,11 +121,13 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
           <input aria-label="Deck name" maxLength={40} disabled={busy} value={draft.name} onChange={e => setDraft({ ...draft, name: e.target.value })} />
           <Pencil size={14} aria-hidden="true" />
         </label>
-        {lesson && <p>Change one card. See what happens on the street.</p>}
+        {(lesson || subtitle) && <p>{lesson ? 'Change one card. See what happens on the street.' : subtitle}</p>}
       </div>
-      <div className="deck-workbench__header-tools"><span className="deck-workbench__count"><strong>{draft.cardIds.length}</strong>/ {DECK_SIZE}</span><FocusViewButton /></div>
+      <div className="deck-workbench__header-tools"><span className="deck-workbench__count"><strong>{draft.cardIds.length}</strong>/ {DECK_SIZE}</span>
+        {onDelete && <button type="button" className="arsenal-icon arsenal-danger" title="Delete deck" aria-label="Delete deck" disabled={busy || deleting} onClick={() => void onDelete()}><Trash2 size={16} aria-hidden="true" /></button>}
+      </div>
     </header>
-    <fieldset disabled={busy} className="deck-workbench__body">
+    <fieldset ref={bodyRef} disabled={busy} className="deck-workbench__body">
       <legend className="sr-only">Gang lineup and collection</legend>
       <div className="deck-workbench__lineup">
         <div className="deck-workbench__roster" data-testid="deck-roster-grid" aria-label="Your ten card lineup">
@@ -129,24 +176,33 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
             <img src={getCardImage(idea.cardId)} alt="" /><div><strong>{idea.title}</strong><span>{catalogCardById[idea.cardId].name}</span><p>{idea.detail}</p></div>
           </button>)}
         </div></details>}
-        <div className="deck-workbench__browse"><h2>Recruit from collection <small>{visible.length} / {owned.length}</small></h2>
+        <div ref={browseRef} className="deck-workbench__browse"><h2>Recruit from collection <small>{visible.length} / {owned.length}</small></h2>
           <label className="arsenal-search"><Search aria-hidden="true" /><span className="sr-only">Browse your collection</span><input ref={searchInput} aria-label="Browse your collection" type="search" placeholder="Name, ability, or type…" value={search} onChange={e => setSearch(e.target.value)} /></label>
         </div>
+        <div ref={cardScrollRef} className="deck-workbench__card-scroll">
         <div className="deck-workbench__collection" data-testid="deck-collection-grid">{visible.map(card => <CardPressTarget onInspect={lesson ? () => {} : undefined} data-guide-recruit={card.catalogId} card={card} variantId={equippedVariants[card.catalogId]} key={card.catalogId} onClick={() => choose(card.catalogId)} aria-label={`${draft.cardIds.includes(card.catalogId) ? 'Select' : 'Add'} ${card.name}`}>
           <CardView card={card} variantId={equippedVariants[card.catalogId]} isBoard fillContainer presentationOnly disableLayout />
           {draft.cardIds.includes(card.catalogId) && <span className="deck-workbench__in-crew" title="In your gang"><Check size={14} aria-hidden="true" /><span className="sr-only">In your gang</span></span>}
         </CardPressTarget>)}</div>
         {!visible.length && <div className="arsenal-empty"><Search size={24} /><p>No matching cards. Try another name or ability.</p><button className="arsenal-link" onClick={() => setSearch('')}>Clear search</button></div>}
         {!legality.valid && <ul className="deck-workbench__issues">{legality.issues.map(issue => <li key={issue}>{issue}</li>)}</ul>}
+        </div>
       </div>
     </fieldset>
-    <footer className="deck-workbench__actions">
+    <footer ref={actionsRef} className="deck-workbench__actions">
       <div className="deck-workbench__notice"><span role="status">{notice || (selected ? 'Choose a recruit to replace this card.' : 'Tap to edit your lineup. Hold any card for details.')}</span>
         {undo && <button type="button" className="arsenal-link" disabled={busy} onClick={() => { setDraft(undo); setUndo(null); setSlot(null); setNotice('Last change undone.'); }}><Undo2 size={13} />Undo last change</button>}
-        {error && <p role="alert">{error}</p>}
+        {(error || externalError) && <p role="alert">{error || externalError}</p>}
       </div>
-      <button className="arsenal-link" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />{busy ? 'Saving…' : 'Save deck'}</button>
-      <button data-guide-save="true" className="arsenal-action" disabled={busy || !legality.valid} onClick={() => void persist(true)}><Swords size={17} aria-hidden="true" />{busy ? 'Saving…' : lesson ? 'Save & start lesson' : 'Save & test gang'}</button>
+      <div className="deck-workbench__action-buttons">
+        {lesson ? <>
+          <button className="arsenal-link deck-workbench__test" disabled={busy} onClick={() => void persist(false)}><Save size={16} aria-hidden="true" />Save deck</button>
+          <button data-guide-save="true" className="arsenal-action deck-workbench__save" disabled={busy || !legality.valid} onClick={() => void persist(true)}><GameGlyph name="fight" />{busy ? 'Saving…' : 'Save & start lesson'}</button>
+        </> : <>
+          <button className="arsenal-link deck-workbench__test" disabled={busy || !legality.valid} title="Save changes and test this deck" onClick={() => void persist(true)}><GameGlyph name="fight" />Test deck</button>
+          <button data-guide-save="true" className="arsenal-action deck-workbench__save" disabled={busy} onClick={() => void persist(false)}><Save size={19} aria-hidden="true" />{busy ? 'Saving…' : 'Save deck'}</button>
+        </>}
+      </div>
     </footer>
     {lesson && !busy && <CoachSpotlight target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : '[data-guide-save="true"]'} step={'YOUR GANG ' + (guideStep + 1) + ' / 3'} title={guideStep === 0 ? 'Ten cards make a deck.' : guideStep === 1 ? 'Choose a new recruit.' : 'Your gang is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideStep === 0 ? 'These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.' : guideStep === 1 ? 'Tap ' + catalogCardById[recruit ?? '']?.name + '. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.' : 'You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.'}</CoachSpotlight>}
   </ArsenalScreen>;

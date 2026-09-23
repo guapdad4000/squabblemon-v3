@@ -1,0 +1,55 @@
+.fadecade-feature{width:100%;max-width:700px;margin:0 auto 36px}
+.fadecade-feature .machine-flagship{margin:0 auto;max-width:480px}
+.fadecade-attract{height:100%;position:relative}
+.fadecade-attract__hud{position:absolute;inset:auto 0 0;display:flex;flex-direction:column;gap:8px;align-items:center;padding:12px;background:linear-gradient(transparent,#050609 25%)}
+.fadecade-attract__hud>span{font:700 11px var(--font-mono);letter-spacing:.07em;color:#fbdf68}
+.fadecade-attract__hud>span b{display:block;text-align:center;margin-top:3px;color:#fff}
+.fadecade-attract__hud .cabinet-btn{min-height:44px;font-size:14px;padding:8px 26px}
+.fadecade-meter{max-width:490px;margin:4px auto 0;display:flex;justify-content:space-between;gap:8px;padding:12px 10px;border-block:1px solid #edc44066;background:#090b11e8;box-shadow:0 7px 25px #0008}
+.fadecade-meter>span{font:600 10px var(--font-mono);color:#a9b9c6;letter-spacing:.06em}
+.fadecade-meter b{display:block;color:#ffe17b;font-size:14px;margin-top:5px}
+.fadecade-road-panel{width:100%;scroll-margin-top:20px;margin:24px auto 0;padding:22px;background:#10131cee;border:1px solid #626b7866;border-top:3px solid #e5bb3b;box-shadow:0 16px 55px #0008;outline:none}
+.fadecade-road-panel__heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.fadecade-road-panel h2{font:900 italic clamp(22px,4vw,32px)/1.05 var(--font-display);text-transform:uppercase;margin:5px 0 0}
+.fadecade-eyebrow{font:700 10px var(--font-mono);letter-spacing:.18em;color:#f5c84c}
+.fadecade-close{color:#c7d1dc;border:1px solid #58626c;background:#111925;padding:10px 14px;min-height:44px;font:700 12px var(--font-mono)}
+.fadecade-road-view{position:relative;height:270px;overflow:hidden;isolation:isolate;background:#24272b;border:1px solid #69706b44}
+.fadecade-road-view.is-compact{height:100%;border:0}
+.fadecade-road-asphalt{position:absolute;inset:-100px 24% -100px -12%;background-size:245px auto;background-repeat:repeat;filter:brightness(.68)}
+.fadecade-road-shoulder{position:absolute;inset:0 0 0 72%;background-size:145px auto;filter:brightness(.62);box-shadow:-8px 0 20px #0005}
+.fadecade-road-view::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 18px 35px #0009,inset 0 -18px 35px #0009}
+.fadecade-road-milestones{position:absolute;top:calc(50% - var(--road-offset));right:8%;display:flex;flex-direction:column;gap:0}
+.fadecade-road-node{height:86px;display:flex;gap:10px;align-items:center;color:#aaa;font:600 10px var(--font-mono);text-shadow:1px 2px #000}
+.fadecade-road-node b{display:grid;place-items:center;width:32px;height:32px;border:2px solid #b4aaa0;background:#292c31;color:#d9d9d9;transform:rotate(-5deg);font-size:15px}
+.fadecade-road-node.is-current{color:#ffe467}.fadecade-road-node.is-current b{border-color:#ffe16b;color:#fff6c0;box-shadow:0 0 18px #e5b12866}
+.fadecade-road-node.is-cleared{color:#9bddc0}.fadecade-road-node.is-cleared b{border-color:#5ca987;color:#a6e6c9}
+.fadecade-road-node.is-boss b{border-color:#ed645e;color:#ffc9b8;background:#532023}
+.fadecade-road-actor{position:absolute;left:36%;top:50%;transform:translate(-50%,-50%);z-index:2;filter:drop-shadow(4px 8px 4px #000b)}
+.is-compact .fadecade-road-actor{top:35%;left:48%}
+.fadecade-sprite{width:62px;aspect-ratio:233/383;background-repeat:no-repeat;background-position:center;background-size:contain}
+.fadecade-sprite--walk{background-size:1600% 100%;background-position:0 0;animation:fadecade-run-frames .75s steps(15) infinite}
+.fadecade-sprite--fight{width:120px;aspect-ratio:492/432;background-size:600% 100%;background-position:0 0;animation:fadecade-fight-frames .65s steps(5) infinite}
+.fadecade-sprite--clear{width:112px;aspect-ratio:279/310;background-size:600% 100%;background-position:0 0;animation:fadecade-fight-frames .6s steps(5) forwards}
+.fadecade-sprite--defeat{width:120px;aspect-ratio:1023/910}
+.fadecade-sprite-loader{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.fadecade-sprite-fallback{display:grid;place-items:center;width:52px;height:52px;border:2px solid #ffe467;border-radius:50%;background:#252834;color:#ffe467;font:800 13px var(--font-mono)}
+.fadecade-road-view[data-phase=walk] .fadecade-road-actor{animation:fadecade-walk-down 1s ease-in-out both}
+.fadecade-road-overlay{position:absolute;inset:12px 12px auto;display:flex;justify-content:space-between;color:#ffdd70;font:700 10px var(--font-mono);letter-spacing:.09em;text-shadow:1px 2px #000}
+.fadecade-road-status{display:flex;flex-direction:column;gap:5px;padding:16px 0}
+.fadecade-road-status strong{font:800 18px var(--font-display);text-transform:uppercase;color:#fff}
+.fadecade-road-status span,.fadecade-road-status p{font-size:13px;color:#c2cbd4;line-height:1.5}
+.fadecade-road-status p{margin:0;color:#ffe17b}
+.fadecade-crew-label{display:block;font:600 13px var(--font-mono);color:#e2e8ef;margin-bottom:12px}
+.fadecade-crew-label select{margin-top:7px}
+.fadecade-road-rules{font-size:13px;color:#bfc4cd;line-height:1.6;margin:12px 0}
+.fadecade-road-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.fadecade-road-actions .cabinet-btn{font-size:14px;min-height:46px;padding:12px 20px}
+.fadecade-road-policy{display:block;font-size:12px;color:#9ca9b9;line-height:1.5}
+.fadecade-error{padding:12px;margin:12px 0;color:#ffd1cc;border-left:3px solid #e2685a;background:#361d22;font-size:13px}
+.fadecade-error button{display:block;min-height:44px;text-decoration:underline;margin-top:6px}
+@keyframes fadecade-run-frames{to{background-position:100% 0}}
+@keyframes fadecade-fight-frames{to{background-position:100% 0}}
+@keyframes fadecade-walk-down{from{transform:translate(-50%,calc(-50% - 78px))}to{transform:translate(-50%,-50%)}}
+@media(max-width:420px){.fadecade-road-panel{padding:14px}.fadecade-meter{padding-inline:8px}.fadecade-meter>span{font-size:9px;letter-spacing:0}.fadecade-meter b{font-size:12px}.fadecade-attract__hud{gap:5px;padding:7px}.fadecade-attract__hud>span{font-size:9px}.fadecade-attract__hud .cabinet-btn{font-size:12px;min-height:44px;padding:6px 18px}.fadecade-road-milestones{right:4%}.fadecade-road-node span{font-size:9px}.fadecade-road-view:not(.is-compact) .fadecade-road-actor{left:30%}.is-compact .fadecade-sprite{width:42px}}
+@media(prefers-reduced-motion:reduce){.fadecade-road-view *{animation:none!important;transition:none!important}}
+.fadecade-road-view[data-reduced-motion=true] *{animation:none!important;transition:none!important}

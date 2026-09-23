@@ -4,6 +4,7 @@ import test from "node:test";
 import { and, eq } from "drizzle-orm";
 import {
   db,
+  challengeRunsTable,
   playerMatchesTable,
   playerMissionsTable,
   playerProfilesTable,
@@ -21,6 +22,7 @@ import {
   type Match,
 } from "@workspace/squabblemon-engine/gameEngine";
 import { createCardProgressionSnapshot } from "./cardProgression";
+import { encounterFor } from "@workspace/squabblemon-engine/challenge";
 
 function matchWithPlayedPlayerCard(): Match {
   const initial = createMatch("block", "slide");
@@ -108,6 +110,7 @@ test("simultaneous fade completions return one persisted reward and credit it on
       mode: "practice",
       playerDeckId: "block",
       rivalDeckId: "slide",
+      playerCardProgressionSnapshot: createCardProgressionSnapshot([], [], {}),
     })
     .returning();
 
@@ -143,6 +146,7 @@ test("simultaneous fade completions return one persisted reward and credit it on
   const profile = await profileFor(clerkUserId);
   assert.equal(profile.xp, results[0].match.rewardXp);
   assert.equal(profile.softCurrency, results[0].match.rewardSoftCurrency);
+  assert.equal(profile.softCurrency, 80);
   assert.equal((await missionFor(clerkUserId, "daily-show-up")).progress, 1);
   assert.equal((await missionFor(clerkUserId, "weekly-main-character")).progress, 1);
 });
@@ -205,6 +209,89 @@ test("simultaneous completions grant participating card XP once and persist the 
   assert.deepEqual(profile.cardProgression[playedCardId], { xp: 120, level: 2, moveTier: 0 });
 });
 
+test("challenge draw pays nothing and a later verified win advances the same road once", async (t) => {
+  const clerkUserId = `challenge-reward-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    onboardingStep: "complete",
+  });
+  const drawMatchId = randomUUID();
+  const [run] = await db.insert(challengeRunsTable).values({
+    clerkUserId,
+    seed: 77,
+    entryDate: "2026-09-23",
+    entryNumber: 1,
+    crewSnapshot: { deckId: "block", cards: [], capturedAt: new Date().toISOString(), rulesVersion: 1 },
+    encounterSnapshot: encounterFor(77, 0, drawMatchId),
+    checkpoints: [],
+    transcripts: [],
+  }).returning();
+  await db.insert(playerMatchesTable).values({
+    id: drawMatchId,
+    clerkUserId,
+    challengeRunId: run.id,
+    mode: "practice",
+    playerDeckId: "block",
+    rivalDeckId: "slide",
+  });
+
+  const draw = await completeStandardMatchReward({
+    clerkUserId,
+    matchId: drawMatchId,
+    outcome: "draw",
+    districtsWon: 1,
+    verifiedMatch: createMatch("block", "slide"),
+    moves: [{ cardInstanceId: null, lane: null, squabble: false }],
+    challengeRunId: run.id,
+  });
+  assert.equal(draw.completed, true);
+  assert.deepEqual(
+    [draw.match.rewardXp, draw.match.rewardStreetRep, draw.match.rewardSoftCurrency, draw.match.rewardPackTickets],
+    [0, 0, 0, 0],
+  );
+  let [persistedRun] = await db.select().from(challengeRunsTable).where(eq(challengeRunsTable.id, run.id));
+  assert.equal(persistedRun.status, "active");
+  assert.equal(persistedRun.encounterIndex, 0);
+  assert.equal((persistedRun.encounterSnapshot as { playerMatchId?: string }).playerMatchId, "");
+
+  const winMatchId = randomUUID();
+  await db.update(challengeRunsTable).set({
+    encounterSnapshot: encounterFor(77, 0, winMatchId),
+  }).where(eq(challengeRunsTable.id, run.id));
+  await db.insert(playerMatchesTable).values({
+    id: winMatchId,
+    clerkUserId,
+    challengeRunId: run.id,
+    mode: "practice",
+    playerDeckId: "block",
+    rivalDeckId: "slide",
+  });
+  const winInput = {
+    clerkUserId,
+    matchId: winMatchId,
+    outcome: "win" as const,
+    districtsWon: 2,
+    verifiedMatch: createMatch("block", "slide"),
+    moves: [{ cardInstanceId: null, lane: null, squabble: false }],
+    challengeRunId: run.id,
+  };
+  const [win, duplicate] = await Promise.all([
+    completeStandardMatchReward(winInput),
+    completeStandardMatchReward(winInput),
+  ]);
+  assert.equal([win, duplicate].filter(result => result.completed).length, 1);
+  [persistedRun] = await db.select().from(challengeRunsTable).where(eq(challengeRunsTable.id, run.id));
+  assert.equal(persistedRun.status, "active");
+  assert.equal(persistedRun.wins, 1);
+  assert.equal(persistedRun.encounterIndex, 1);
+  assert.equal((persistedRun.encounterSnapshot as { index: number }).index, 1);
+  assert.deepEqual(
+    (persistedRun.transcripts as Array<{ outcome: string }>).map(item => item.outcome),
+    ["draw", "win"],
+  );
+});
+
 test("a legacy active fade rebuilds its snapshot from the server-owned roster", async (t) => {
   const clerkUserId = `card-xp-legacy-${randomUUID()}`;
   cleanup(t, clerkUserId);
@@ -242,6 +329,7 @@ test("a legacy active fade rebuilds its snapshot from the server-owned roster", 
     xp: 20,
     level: 1,
   }]);
+  assert.equal(result.match.rewardSoftCurrency, 20);
 });
 
 test("starter and mission retries each apply one profile credit", async (t) => {

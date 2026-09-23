@@ -20,6 +20,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ChallengeAction,
+  ChallengeCheckpointInput,
+  ChallengeRun,
+  ChallengeStartInput,
   ClaimExperimentCardBody,
   CollectionRoadClaimResult,
   CosmeticLoadout,
@@ -84,6 +88,404 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getStartChallengeRunUrl = () => {
+
+
+
+
+  return `/api/player/challenges/runs`
+}
+
+export const startChallengeRun = async (challengeStartInput?: ChallengeStartInput, options?: RequestInit): Promise<ChallengeRun> => {
+
+  return customFetch<ChallengeRun>(getStartChallengeRunUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(challengeStartInput)
+  }
+);}
+
+
+
+
+
+export const getStartChallengeRunMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof startChallengeRun>>, TError,{data?: BodyType<ChallengeStartInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof startChallengeRun>>, TError,{data?: BodyType<ChallengeStartInput>}, TContext> => {
+
+const mutationKey = ['startChallengeRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof startChallengeRun>>, {data?: BodyType<ChallengeStartInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  startChallengeRun(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StartChallengeRunMutationResult = NonNullable<Awaited<ReturnType<typeof startChallengeRun>>>
+    export type StartChallengeRunMutationBody = BodyType<ChallengeStartInput> | undefined
+    export type StartChallengeRunMutationError = ErrorType<void>
+
+    export const useStartChallengeRun = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof startChallengeRun>>, TError,{data?: BodyType<ChallengeStartInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof startChallengeRun>>,
+        TError,
+        {data?: BodyType<ChallengeStartInput>},
+        TContext
+      > => {
+      return useMutation(getStartChallengeRunMutationOptions(options));
+    }
+
+export const getListChallengeRunsUrl = () => {
+
+
+
+
+  return `/api/player/challenges/runs`
+}
+
+export const listChallengeRuns = async ( options?: RequestInit): Promise<ChallengeRun[]> => {
+
+  return customFetch<ChallengeRun[]>(getListChallengeRunsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListChallengeRunsQueryKey = () => {
+    return [
+    `/api/player/challenges/runs`
+    ] as const;
+    }
+
+
+export const getListChallengeRunsQueryOptions = <TData = Awaited<ReturnType<typeof listChallengeRuns>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChallengeRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListChallengeRunsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listChallengeRuns>>> = ({ signal }) => listChallengeRuns({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listChallengeRuns>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListChallengeRunsQueryResult = NonNullable<Awaited<ReturnType<typeof listChallengeRuns>>>
+export type ListChallengeRunsQueryError = ErrorType<unknown>
+
+
+
+export function useListChallengeRuns<TData = Awaited<ReturnType<typeof listChallengeRuns>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listChallengeRuns>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListChallengeRunsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRecordChallengeActionUrl = (runId: string,) => {
+
+
+
+
+  return `/api/player/challenges/runs/${runId}/actions`
+}
+
+export const recordChallengeAction = async (runId: string,
+    challengeAction: ChallengeAction, options?: RequestInit): Promise<ChallengeRun> => {
+
+  return customFetch<ChallengeRun>(getRecordChallengeActionUrl(runId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(challengeAction)
+  }
+);}
+
+
+
+
+
+export const getRecordChallengeActionMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordChallengeAction>>, TError,{runId: string;data: BodyType<ChallengeAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordChallengeAction>>, TError,{runId: string;data: BodyType<ChallengeAction>}, TContext> => {
+
+const mutationKey = ['recordChallengeAction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordChallengeAction>>, {runId: string;data: BodyType<ChallengeAction>}> = (props) => {
+          const {runId,data} = props ?? {};
+
+          return  recordChallengeAction(runId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordChallengeActionMutationResult = NonNullable<Awaited<ReturnType<typeof recordChallengeAction>>>
+    export type RecordChallengeActionMutationBody = BodyType<ChallengeAction>
+    export type RecordChallengeActionMutationError = ErrorType<void>
+
+    export const useRecordChallengeAction = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordChallengeAction>>, TError,{runId: string;data: BodyType<ChallengeAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordChallengeAction>>,
+        TError,
+        {runId: string;data: BodyType<ChallengeAction>},
+        TContext
+      > => {
+      return useMutation(getRecordChallengeActionMutationOptions(options));
+    }
+
+export const getCheckpointChallengeRunUrl = (runId: string,) => {
+
+
+
+
+  return `/api/player/challenges/runs/${runId}/checkpoint`
+}
+
+export const checkpointChallengeRun = async (runId: string,
+    challengeCheckpointInput: ChallengeCheckpointInput, options?: RequestInit): Promise<ChallengeRun> => {
+
+  return customFetch<ChallengeRun>(getCheckpointChallengeRunUrl(runId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(challengeCheckpointInput)
+  }
+);}
+
+
+
+
+
+export const getCheckpointChallengeRunMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof checkpointChallengeRun>>, TError,{runId: string;data: BodyType<ChallengeCheckpointInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof checkpointChallengeRun>>, TError,{runId: string;data: BodyType<ChallengeCheckpointInput>}, TContext> => {
+
+const mutationKey = ['checkpointChallengeRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof checkpointChallengeRun>>, {runId: string;data: BodyType<ChallengeCheckpointInput>}> = (props) => {
+          const {runId,data} = props ?? {};
+
+          return  checkpointChallengeRun(runId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CheckpointChallengeRunMutationResult = NonNullable<Awaited<ReturnType<typeof checkpointChallengeRun>>>
+    export type CheckpointChallengeRunMutationBody = BodyType<ChallengeCheckpointInput>
+    export type CheckpointChallengeRunMutationError = ErrorType<void>
+
+    export const useCheckpointChallengeRun = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof checkpointChallengeRun>>, TError,{runId: string;data: BodyType<ChallengeCheckpointInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof checkpointChallengeRun>>,
+        TError,
+        {runId: string;data: BodyType<ChallengeCheckpointInput>},
+        TContext
+      > => {
+      return useMutation(getCheckpointChallengeRunMutationOptions(options));
+    }
+
+export const getSettleChallengeRunUrl = (runId: string,) => {
+
+
+
+
+  return `/api/player/challenges/runs/${runId}/settle`
+}
+
+export const settleChallengeRun = async (runId: string, options?: RequestInit): Promise<ChallengeRun> => {
+
+  return customFetch<ChallengeRun>(getSettleChallengeRunUrl(runId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getSettleChallengeRunMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settleChallengeRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof settleChallengeRun>>, TError,{runId: string}, TContext> => {
+
+const mutationKey = ['settleChallengeRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof settleChallengeRun>>, {runId: string}> = (props) => {
+          const {runId} = props ?? {};
+
+          return  settleChallengeRun(runId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SettleChallengeRunMutationResult = NonNullable<Awaited<ReturnType<typeof settleChallengeRun>>>
+
+    export type SettleChallengeRunMutationError = ErrorType<unknown>
+
+    export const useSettleChallengeRun = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof settleChallengeRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof settleChallengeRun>>,
+        TError,
+        {runId: string},
+        TContext
+      > => {
+      return useMutation(getSettleChallengeRunMutationOptions(options));
+    }
+
+export const getAbandonChallengeRunUrl = (runId: string,) => {
+
+
+
+
+  return `/api/player/challenges/runs/${runId}/abandon`
+}
+
+export const abandonChallengeRun = async (runId: string, options?: RequestInit): Promise<ChallengeRun> => {
+
+  return customFetch<ChallengeRun>(getAbandonChallengeRunUrl(runId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getAbandonChallengeRunMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonChallengeRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof abandonChallengeRun>>, TError,{runId: string}, TContext> => {
+
+const mutationKey = ['abandonChallengeRun'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof abandonChallengeRun>>, {runId: string}> = (props) => {
+          const {runId} = props ?? {};
+
+          return  abandonChallengeRun(runId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AbandonChallengeRunMutationResult = NonNullable<Awaited<ReturnType<typeof abandonChallengeRun>>>
+
+    export type AbandonChallengeRunMutationError = ErrorType<unknown>
+
+    export const useAbandonChallengeRun = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonChallengeRun>>, TError,{runId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof abandonChallengeRun>>,
+        TError,
+        {runId: string},
+        TContext
+      > => {
+      return useMutation(getAbandonChallengeRunMutationOptions(options));
+    }
 
 export const getHealthCheckUrl = () => {
 

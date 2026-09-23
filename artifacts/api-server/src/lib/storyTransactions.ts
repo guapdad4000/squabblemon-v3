@@ -24,6 +24,10 @@ import {
 } from "@workspace/squabblemon-engine/story";
 import { getPlayerBootstrap } from "./playerState";
 import {
+  ACCOUNT_XP_PER_LEVEL,
+  STORY_DUPLICATE_STYLE_SHARDS,
+} from "@workspace/squabblemon-engine/economy";
+import {
   getPlayerStoryCampaign,
   requireAvailableStoryNode,
   storyNodeChapter,
@@ -120,13 +124,13 @@ function describeClaim(
   const duplicateShards = reward.duplicateShards ?? 0;
   let description = `${reward.amount} ${reward.id}`;
   if (reward.kind === "currency" && reward.id === "street-xp") {
-    description = `+${reward.amount} Street XP`;
+    description = `+${reward.amount} Account XP`;
   } else if (reward.kind === "currency" && reward.id === "clout") {
     description = `+${reward.amount} Clout · Training fund`;
   } else if (reward.kind === "card") {
     const card = catalogCardById[reward.id] ?? catalogCardByEngineId[reward.id];
     description = duplicateShards
-      ? `${card?.name ?? reward.id} duplicate converted to 25 Style Shards`
+      ? `${card?.name ?? reward.id} duplicate converted to ${duplicateShards} Style Shards`
       : `${card?.name ?? reward.id} unlocked`;
   } else if (reward.kind === "chapter-key") {
     description = "Chapter key unlocked";
@@ -194,7 +198,7 @@ export async function grantStoryRewards(
       if (!profile) throw new StoryRequestError(404, "Player profile not found");
       cardProfile = profile;
       duplicateShards = profile.ownedCardIds.includes(rewardCard.catalogId)
-        ? 25
+        ? STORY_DUPLICATE_STYLE_SHARDS
         : 0;
     }
     const base: PlayerStoryReward = {
@@ -216,10 +220,10 @@ export async function grantStoryRewards(
         .update(playerProfilesTable)
         .set({
           xp: sql`${playerProfilesTable.xp} + ${configured.amount}`,
-          level: sql`1 + floor((${playerProfilesTable.xp} + ${configured.amount}) / 250)`,
+          level: sql`1 + floor((${playerProfilesTable.xp} + ${configured.amount}) / ${ACCOUNT_XP_PER_LEVEL})`,
         })
         .where(eq(playerProfilesTable.clerkUserId, userId));
-      description = `+${configured.amount} Street XP`;
+      description = `+${configured.amount} Account XP`;
     } else if (configured.kind === "currency" && configured.id === "clout") {
       await tx.update(playerProfilesTable)
         .set({ softCurrency: sql`${playerProfilesTable.softCurrency} + ${configured.amount}` })
@@ -231,7 +235,9 @@ export async function grantStoryRewards(
       const owned = new Set(profile.ownedCardIds);
       const discovered = new Set(profile.discoveredCardIds);
       discovered.add(card.catalogId);
-      if (owned.has(card.catalogId)) duplicateShards = 25;
+      if (owned.has(card.catalogId)) {
+        duplicateShards = STORY_DUPLICATE_STYLE_SHARDS;
+      }
       else owned.add(card.catalogId);
       await tx
         .update(playerProfilesTable)
@@ -243,7 +249,7 @@ export async function grantStoryRewards(
         })
         .where(eq(playerProfilesTable.clerkUserId, userId));
       description = duplicateShards
-        ? `${card.name} duplicate converted to 25 Style Shards`
+        ? `${card.name} duplicate converted to ${duplicateShards} Style Shards`
         : `${card.name} unlocked`;
     } else if (configured.kind === "pack-ticket") {
       await tx

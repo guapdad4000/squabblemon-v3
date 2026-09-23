@@ -5,6 +5,7 @@ import { useLocation, useSearch } from 'wouter';
 import { activeMusicMode, soundtrackForRoute } from '../musicModes';
 import { attachMusicPlayer, publishMusic, useMusicBanks, getMusicBanks, saveMusicBank, useBattleMusicMode, type MusicBank } from '../musicStore';
 import { getAssetUrl } from '../lib/assets';
+import { getGameAudioContext } from '../gameAudioContext';
 
 export default function GameSoundtrack() {
   const [preferences] = useFeedbackPreferences();
@@ -32,10 +33,8 @@ export default function GameSoundtrack() {
       assetUrl: getAssetUrl,
       publish: publishMusic,
       save: value => saveMusicBank(activeBank.current, value),
-      createContext: () => {
-        const Context = window.AudioContext ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-        return Context ? new Context() : undefined;
-      },
+      createContext: getGameAudioContext,
+      sharedContext: true,
     });
     player.current = current;
     attachMusicPlayer(current);

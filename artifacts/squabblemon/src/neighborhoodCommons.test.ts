@@ -5,6 +5,15 @@ import { createCardInstance, createMatch, nextRound, playCard, playTurnCard, typ
 import { neighborhoodCommonIds } from '../../../lib/squabblemon-engine/src/commonCards';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
+const packRngFor = (rarity: string, tierIndex = 0) => {
+  const rarityThreshold: Record<string, number> = {
+    SuperCommon: 0, Common: 4000, Uncommon: 6000, Rare: 8500,
+    Epic: 9700, Legendary: 9900, Mythical: 9980,
+  };
+  let call = 0;
+  return () => call++ === 0 ? rarityThreshold[rarity] : call === 2 ? tierIndex : 0;
+};
+
 const instance = (id: string, owner: 'player' | 'cpu', index: number) => ({
   ...createCardInstance(id, owner, 'commons-test', index), lane: 0 as const,
 });
@@ -23,7 +32,7 @@ test('all eleven neighborhood cards are Common, upgradeable, and individually ob
     assert.equal(card.rarity, 'Common');
     assert(card.acquisitionSources.includes('Street Packs'));
     const owned = cardCatalog.filter(c => c.engineId !== id).map(c => c.catalogId);
-    const pack = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, () => 0);
+    const pack = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, packRngFor(card.rarity));
     assert.equal(pack.rewards[0].cardId, card.catalogId);
     assert.equal(pack.rewards[0].isNew, true);
   }

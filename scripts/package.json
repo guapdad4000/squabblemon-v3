@@ -6,7 +6,7 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test ./src/balanceLab.test.ts",
+    "test": "node --import tsx --test ./src/balanceLab.test.ts ./src/challenge.test.ts ./src/challengeApiRoutes.test.ts ./src/challengesHub.test.ts && node --test ./fadecade-art.test.mjs",
     "balance:smoke": "tsx ./src/balance-lab.ts --smoke",
     "balance:full": "tsx ./src/balance-lab.ts --full"
   },

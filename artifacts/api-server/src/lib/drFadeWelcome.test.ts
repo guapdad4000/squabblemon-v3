@@ -5,7 +5,7 @@ import { db, playerProfilesTable, playerStoryRewardClaimsTable } from '@workspac
 import { eq } from 'drizzle-orm';
 import { ROOKIE_DECK_ID, ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS } from '@workspace/squabblemon-engine/data';
 import { getStoryNode } from '@workspace/squabblemon-engine/story';
-import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
+import { MOVE_TRAINING_COSTS, SHOP_OFFERS, planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
 import { getPlayerBootstrap } from './playerState';
 import { grantFirstCollection, lockPlayerProfile } from './playerRewardTransactions';
 import { grantStoryRewards } from './storyTransactions';
@@ -42,21 +42,24 @@ test('returning players receive the mentor without changing existing decks, owne
 });
 test('chapter training funds grant once and the first fund can buy Dr. Fade first upgrade without duplicate pulls',async t=>{
   const id=await player(t,{ownedCardIds:['dr-fade']});
+  const trainingFund=(nodeId:string)=>getStoryNode(nodeId)!.rewards.find(r=>r.kind==='currency'&&r.id==='clout')!.amount;
   const award=async(nodeId:string,chapterId:string)=>db.transaction(async tx=>{
     await lockPlayerProfile(tx,id);
     const rewards=getStoryNode(nodeId)!.rewards.filter(r=>r.kind==='currency'&&r.id==='clout');
     return grantStoryRewards(tx,id,chapterId,nodeId,rewards);
   });
   const first=await Promise.all([award('block-crowned','block-party'),award('block-crowned','block-party')]);
-  assert.equal(first.flat().length,1); assert.match(first.flat()[0].description,/250 Clout/);
+  const firstFund=trainingFund('block-crowned');
+  assert.equal(first.flat().length,1); assert.match(first.flat()[0].description,new RegExp(`${firstFund} Clout`));
   const [profile]=await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,id));
-  assert.equal(profile.softCurrency,250);
+  assert.equal(profile.softCurrency,firstFund);
   const trained=planShopPurchase(profile as ShopWallet,{itemId:'training',cardId:'dr-fade'});
   const coached=planShopPurchase(trained.wallet,{itemId:'move-training',cardId:'dr-fade'});
-  assert.equal(coached.wallet.softCurrency,0);assert.equal(coached.wallet.cardProgression['dr-fade'].moveTier,1);
+  const practiceCost=SHOP_OFFERS.find(offer=>offer.id==='training')!.price;
+  assert.equal(coached.wallet.softCurrency,firstFund-practiceCost-MOVE_TRAINING_COSTS[0]);assert.equal(coached.wallet.cardProgression['dr-fade'].moveTier,1);
   const second=await Promise.all([award('red-tapes-let-her-grieve','red-side-tapes'),award('red-tapes-let-her-grieve','red-side-tapes')]);
   assert.equal(second.flat().length,1);
   const [after]=await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId,id));
-  assert.equal(after.softCurrency,750);
+  assert.equal(after.softCurrency,firstFund+trainingFund('red-tapes-let-her-grieve'));
   assert.equal((await db.select().from(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId,id))).length,2);
 });

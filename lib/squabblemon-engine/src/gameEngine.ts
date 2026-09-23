@@ -7,6 +7,7 @@ import { characterWaveCards } from './characterWave';
 import { fairytaleCards } from './fairytaleWave';
 import { neighborhoodWaveCards, DEMARIO_MUSHROOM, LUIGION_POWERED } from './neighborhoodWave';
 import { cellblockWaveCards } from './cellblockWave';
+import { afterHoursWaveCards } from './afterHoursWave';
 export { createDistrictSnapshot, validateDistrictSnapshot, DISTRICT_CATALOG } from './districts';
 export type { DistrictSnapshot, DistrictId, DistrictDisplay } from './districts';
 import {
@@ -142,7 +143,7 @@ export type ReplayState = Pick<Match,
   'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerMotion' | 'cpuMotion' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
-  'districtTraps' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
+  'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
 >;
 
 export type TimedEffect = {
@@ -172,9 +173,11 @@ type LeaderKind = 'church' | 'nightmedic' | 'piratedj' | 'promoter' | 'gamer' | 
   | 'streetapostle' | 'fangirl' | 'asphaltapostle' | 'passportbro';
 type LeaderReaction = { kind: LeaderKind; owner: Owner; sourceInstanceId: string; targetInstanceId: string; amount?: number; triggerLane?: Lane };
 export type LingeringScent = { owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; triggeredRound?: number };
-export type DistrictTrap = { kind: 'stakeout' | 'dmv'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
+export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
 export type Match = {
   districtTraps?: DistrictTrap[];
+  /** One shared Turn It Around trigger per friendly district each round. */
+  janitorReversals?: { owner: Owner; lane: Lane; round: number; sourceInstanceId: string; targetInstanceId: string }[];
   lastMovedAlly?: Partial<Record<Owner, { instanceId: string; round: number }>>;
   /** Successful board moves in the current round; unlike CardInstance.moved this expires each round. */
   roundMovedIds?: Record<Owner, string[]>;
@@ -555,8 +558,21 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
 const dmvTax = (m: Match, owner: Owner, lane: Lane) => (m.districtTraps ?? []).some(t => t.kind === "dmv" && t.owner !== owner && t.lane === lane && t.expiresAfterRound >= m.round);
 export type CharacterDistrictMark = { owner: Owner; lane: Lane; text: string };
 export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[] {
+  const janitorMarks = ([0, 1, 2] as Lane[]).flatMap(targetLane =>
+    (['player', 'cpu'] as Owner[]).flatMap(owner => {
+      const janitor = inLane(match, owner, targetLane)
+        .filter(card => abilityCardId(card) === 'janitor' && activeAbility(card))
+        .sort((a, b) => a.instanceId.localeCompare(b.instanceId))[0];
+      if (!janitor) return [];
+      const spent = (match.janitorReversals ?? []).some(item =>
+        item.owner === owner && item.lane === targetLane && item.round === match.round);
+      return [{ owner, lane: targetLane, text: `Turn It Around · ${spent ? 'spent this round' : 'first hostile effect becomes +2 Hands'}` }];
+    }));
   return [
-    ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round).map(t => ({ owner: t.owner, lane: t.lane, text: (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled' : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
+    ...janitorMarks,
+    ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round).map(t => ({ owner: t.owner, lane: t.lane,
+      text: t.kind === 'wiseman' ? 'Wiseman prediction · next enemy character here takes −2 Hands and Weaken'
+        : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled' : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
     ...(match.lingeringScents ?? []).filter(s => s.expiresAfterRound >= match.round).map(s => ({
       owner: s.owner, lane: s.lane, text: 'Scent · ' + (s.triggeredRound === match.round ? 'spent this round' : 'next enemy: 2 Burn') + ' · through R' + s.expiresAfterRound,
     })),
@@ -842,6 +858,15 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
     const currentBurning = result.boards.flat().find(c => c.instanceId === card.instanceId);
     if (!currentBurning) continue;
     const damage = currentBurning.statuses.uncounterable ? 0 : currentBurning.statuses.burnStacks;
+    const janitorReversal = damage > 0 && currentBurning.burnSource
+      ? reverseWithJanitor(result, currentBurning, currentBurning.burnSource.owner, c => ({
+        ...c, statuses: { ...c.statuses, burnStacks: 0 }, burnSource: undefined,
+        lastEffectNote: 'Turn It Around: enemy Burn negated; +2 Hands.',
+      })) : null;
+    if (janitorReversal) {
+      result = janitorReversal;
+      continue;
+    }
     result = modify(result, card.instanceId, c => ({ ...c,
       powerModifier: c.powerModifier - damage, statuses: { ...c.statuses, burnStacks: 0 },
       lastEffectNote: 'BURN: −' + damage + ' Hands at round end.',
@@ -1053,16 +1078,59 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   if (guard && !bypassWifeyGuard) return queueLeaderReaction(modify(m, guard.instanceId, c => ({
     ...c, statuses: { ...c.statuses, blocked: true }, lastEffectNote: 'Side Eye blocked a targeted effect.',
   })), 'church', target.instanceId, m);
-  const after = apply(m, target);
+  const attempted = apply(m, target);
+  const attemptedTarget = findCard(attempted, target.instanceId);
+  const harmfulStatus = attemptedTarget && (
+    (!target.statuses.frozen && attemptedTarget.statuses.frozen)
+    || (!target.statuses.silenced && attemptedTarget.statuses.silenced)
+    || (!target.statuses.weakened && attemptedTarget.statuses.weakened)
+    || (!target.statuses.locked && attemptedTarget.statuses.locked)
+    || attemptedTarget.statuses.burnStacks > target.statuses.burnStacks
+  );
+  const harmful = !attemptedTarget || attemptedTarget.powerModifier < target.powerModifier || harmfulStatus;
+  if (harmful) {
+    const reversed = reverseWithJanitor(m, target, source.owner);
+    if (reversed) return reversed;
+  }
+  const after = attempted;
   return abilityCardId(source) === 'thefeds' ? after : recordDamage(m, after, source, target);
 };
+/** Focused reversal shared by targeted hostile packages and enemy-sourced Burn ticks. */
+function reverseWithJanitor(
+  m: Match, target: CardInstance, sourceOwner: Owner,
+  afterReward: (card: CardInstance) => CardInstance = card => card,
+): Match | null {
+  if (sourceOwner === target.owner || target.lane === null) return null;
+  const targetLane = target.lane;
+  const janitor = inLane(m, target.owner, targetLane)
+    .filter(card => abilityCardId(card) === 'janitor' && activeAbility(card))
+    .sort((a, b) => a.instanceId.localeCompare(b.instanceId))[0];
+  if (!janitor || (m.janitorReversals ?? [])
+    .some(item => item.owner === target.owner && item.lane === targetLane && item.round === m.round)) return null;
+  const beforeReverse = m;
+  let reversed: Match = {
+    ...m,
+    janitorReversals: [...(m.janitorReversals ?? []), {
+      owner: target.owner, lane: targetLane, round: m.round,
+      sourceInstanceId: janitor.instanceId, targetInstanceId: target.instanceId,
+    }],
+  };
+  reversed = modify(reversed, target.instanceId, card => afterReward({
+    ...card, powerModifier: card.powerModifier + 2,
+    lastEffectNote: 'Turn It Around: hostile effect negated; +2 Hands.',
+  }));
+  reversed = trainWaveAbility(reversed, janitor.instanceId);
+  return addEvent(beforeReverse, reversed, { type: 'ability', sourceId: janitor.instanceId, owner: janitor.owner,
+    lane: targetLane, targetIds: [target.instanceId],
+    note: `Turn It Around negated the first hostile effect in district ${targetLane + 1} this round; ${target.name} gained +2 Hands.` });
+}
 const targetEnemy = (m: Match, source: CardInstance, target: CardInstance, apply: (c: CardInstance) => CardInstance, bypassWifeyGuard = false): Match =>
   hostileEffect(m, source, target, (before, actual) =>
     queueDisruptionReactions(before, modify(before, actual.instanceId, apply), source, actual.instanceId), bypassWifeyGuard);
 
 const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id);
-  if (!card || !(Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   let result = modify(m, id, c => ({ ...c, waveTrainingUsed: true }));
   for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, card.owner, card.cardId)) {
     const before = result;
@@ -1545,9 +1613,99 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       const previous = findCard(before, id), current = findCard(m, id);
       return previous && current && previous.lane !== current.lane;
     });
-    m = addEvent(before, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
+    // Delayed counters may already have emitted their own authoritative transition.
+    // A wrapper note starts from the settled state so replay frames never repeat it.
+    const eventBefore = m.effectLog.length > before.effectLog.length ? m : before;
+    m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
   if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  if (Object.hasOwn(afterHoursWaveCards, source.cardId)) {
+    const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
+    let succeeded = false;
+    const addHands = (target: CardInstance, amount: number, text: string) => {
+      targetIds.add(target.instanceId);
+      m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: text }));
+      succeeded = true;
+    };
+    const openDestinations = () => ([0, 1, 2] as Lane[])
+      .filter(destination => destination !== l && !getStoryLockedLanes(m, source.owner).includes(destination)
+        && inLane(m, source.owner, destination).length < 4)
+      .sort((a, b) => getLaneScoreForMatch(m, inLane(m, source.owner, a), a, source.owner)
+        - getLaneScoreForMatch(m, inLane(m, source.owner, b), b, source.owner) || a - b);
+    if (source.cardId === 'sugarfoot') {
+      const target = highest(inLane(m, enemy, l));
+      if (target) {
+        targetIds.add(target.instanceId);
+        let landed = false;
+        let hitAlreadyWeakened = false;
+        m = hostileEffect(m, source, target, (state, actual) => {
+          landed = true;
+          hitAlreadyWeakened = actual.statuses.weakened;
+          return queueDisruptionReactions(state, modify(state, actual.instanceId, c => ({
+            ...c, statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Sweet Weakness: Weakened.',
+          })), source, actual.instanceId);
+        }, false, false, true);
+        if (landed && findCard(m, target.instanceId)?.lastEffectNote !== 'Turn It Around: hostile effect negated; +2 Hands.') {
+          succeeded = true;
+          if (hitAlreadyWeakened) addHands(findCard(m, source.instanceId)!, 1, 'Sweet Weakness: already Weakened, +1 Hand.');
+        }
+      }
+    } else if (source.cardId === 'yn-gokarter') {
+      const destination = openDestinations()[0];
+      if (destination !== undefined) {
+        m = move(m, findCard(m, source.instanceId)!, destination, 'Victory Lap: moved to the weakest open district.');
+        if (findCard(m, source.instanceId)?.lane === destination) {
+          succeeded = true;
+          const target = lowest(inLane(m, source.owner, destination).filter(c => c.instanceId !== source.instanceId));
+          if (target) addHands(target, 1, 'Victory Lap: +1 Hand.');
+        }
+      }
+    } else if (source.cardId === 'yn-atv-lord') {
+      const target = lowest(allies);
+      const destination = openDestinations()[0];
+      if (target && destination !== undefined) {
+        targetIds.add(target.instanceId);
+        m = move(m, target, destination, 'Trail Guide: moved to the weakest open district.');
+        if (findCard(m, target.instanceId)?.lane === destination) {
+          addHands(findCard(m, target.instanceId)!, 1, 'Trail Guide: successful move, +1 Hand.');
+        }
+      }
+    } else if (source.cardId === 'homeless-wiseman') {
+      const destination = ([0, 1, 2] as Lane[])
+        .filter(candidate => !getStoryLockedLanes(m, enemy).includes(candidate) && inLane(m, enemy, candidate).length < 4)
+        .sort((a, b) => getLaneScoreForMatch(m, inLane(m, enemy, a), a, enemy)
+          - getLaneScoreForMatch(m, inLane(m, enemy, b), b, enemy) || a - b)[0];
+      if (destination !== undefined) {
+        m = { ...m, districtTraps: [
+          ...(m.districtTraps ?? []).filter(trap => !(trap.kind === 'wiseman' && trap.owner === source.owner
+            && trap.lane === destination && trap.source.instanceId === source.instanceId)),
+          { kind: 'wiseman', owner: source.owner, lane: destination, source: findCard(m, source.instanceId) ?? source, expiresAfterRound: m.round + 1 },
+        ] };
+        succeeded = true;
+      }
+    } else if (source.cardId === 'juneteenth-chair-guy') {
+      const target = highest(inLane(m, enemy, l));
+      if (target) {
+        targetIds.add(target.instanceId);
+        const old = target.powerModifier;
+        m = targetEnemyPowerReduction(m, source, target, 2, 'Fold-Out Justice: -2 Hands.');
+        const current = findCard(m, target.instanceId);
+        succeeded ||= !current || current.powerModifier < old;
+      }
+      const ally = lowest(allies);
+      if (ally) {
+        targetIds.add(ally.instanceId);
+        const wasProtected = ally.statuses.protected;
+        m = grantProtection(m, source, ally.instanceId);
+        succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
+      }
+    } else if (source.cardId === 'squabble-house-manager') {
+      if (inLane(m, enemy, l).length) addHands(findCard(m, source.instanceId)!, 1, 'Home Advantage: enemy here, +1 Hand.');
+    }
+    note(succeeded ? `${source.ability} resolved.` : `${source.ability} found no legal target, open district, or removable status.`);
+    if (succeeded) m = trainWaveAbility(m, source.instanceId);
+    return !echoed ? { ...m, lastRevealedCardId: source.cardId } : m;
+  }
   if (Object.hasOwn(cellblockWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     let succeeded = false;
@@ -2784,9 +2942,35 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
           targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery: the next friendly character consumed a Mushroom for +1 Hand.' });
       }
     }
+    const wisemanTrap = (m.districtTraps ?? []).find(t => t.kind === 'wiseman' && t.owner !== owner
+      && t.lane === targetLane && t.expiresAfterRound >= m.round);
+    if (wisemanTrap && !revealed.hazard && (revealed.kind ?? 'character') === 'character') {
+      const beforeTrap = m;
+      m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== wisemanTrap) };
+      m = addEvent(beforeTrap, m, { type: 'ability', sourceId: wisemanTrap.source.instanceId, owner: wisemanTrap.owner,
+        lane: targetLane, targetIds: [instanceId],
+        note: `Read The Block consumed its public prediction trap on ${revealed.name}.` });
+      const beforeTrapHit = m;
+      const eventCountBeforeHit = m.effectLog.length;
+      m = hostileEffect(m, wisemanTrap.source, revealed, (state, actual) => {
+        let result = reduceHands(state, actual, 2, 'Read The Block: predicted character took -2 Hands.');
+        const survivor = findCard(result, actual.instanceId);
+        if (survivor) result = queueDisruptionReactions(state, modify(result, survivor.instanceId, c => ({
+          ...c, statuses: { ...c.statuses, weakened: true },
+          lastEffectNote: 'Read The Block: -2 Hands and Weakened.',
+        })), wisemanTrap.source, actual.instanceId);
+        return result;
+      }, false, false, true);
+      if (m.effectLog.length === eventCountBeforeHit) {
+        m = addEvent(beforeTrapHit, m, { type: 'ability', sourceId: wisemanTrap.source.instanceId, owner: wisemanTrap.owner,
+          lane: targetLane, targetIds: [instanceId],
+          note: `Read The Block hit ${revealed.name}: -2 Hands and Weaken (Protection or immunity may block it).` });
+      }
+    }
+    const survivingReveal = findCard(m, instanceId);
     const trap = (m.districtTraps ?? []).find(t => t.kind === 'stakeout' && t.owner !== owner && t.lane === targetLane && t.expiresAfterRound >= m.round);
-    const entrance = hasEntrance(revealed);
-    if (trap && entrance) {
+    const entrance = survivingReveal ? hasEntrance(survivingReveal) : false;
+    if (trap && survivingReveal && entrance) {
       const beforeTrap = m;
       m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
       m = modify(m, instanceId, c => ({ ...c, lastEffectNote: 'Stakeout canceled this entrance.' }));
@@ -2804,7 +2988,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
       m = addEvent(beforeTrap, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner,
         targetIds: [instanceId, ...rewardedIds], note: 'Stakeout canceled ' + revealed.name + '’s entrance.'
           + (rewardedIds.length ? ` ${rewardedIds.length === 2 ? 'Sherlock and the weakest other friendly character gained' : 'Sherlock gained'} +2 Hands.` : '') });
-    } else m = resolveAbility(m, revealed);
+    } else if (survivingReveal) m = resolveAbility(m, survivingReveal);
   }
   m = undercovaReaction(m, match, instanceId, targetLane, owner);
   m = applyDistrictDeparture(m, owner, instanceId, targetLane);
@@ -3095,7 +3279,7 @@ export type PlayerMove = {
   /** Optional extra Motion for Homeless Guy; validated by the authoritative engine. */
   investment?: number;
 };
-type TranscriptMove = Omit<PlayerMove, 'lane'> & { lane: number | null };
+export type TranscriptMove = Omit<PlayerMove, 'lane'> & { lane: number | null };
 export const MAX_MATCH_MOVES = 64;
 
 /** Pick a legal teaching move. Spread winning Hands across the districts. */
@@ -3189,13 +3373,14 @@ export function validateTurnRules(moves: readonly TranscriptMove[], version: 1 |
   }
 }
 
-function replayPlayerMoves(initial: Match, moves: readonly TranscriptMove[]): Match {
+/** Replay a committed transcript prefix without requiring the match to be complete.
+ * This is the only safe way to reconstruct an interrupted online encounter: the
+ * serialized client Match is never authoritative. */
+export function replayMatchPrefix(initial: Match, moves: readonly TranscriptMove[]): Match {
   const roundLimit = getMatchRoundLimit(initial);
-  const roundLabel = roundLimit === DEFAULT_MATCH_ROUND_LIMIT ? "six" : String(roundLimit);
-  if (moves.length < roundLimit || moves.length > MAX_MATCH_MOVES) throw new Error(`A match needs ${roundLabel} round endings and at most 64 actions`);
+  if (moves.length > MAX_MATCH_MOVES) throw new Error("A transcript may contain at most 64 actions");
   const multiCardTurns = moves.some(move => move.endTurn !== undefined);
   validateTurnRules(moves, multiCardTurns ? 2 : 1);
-  if (!multiCardTurns && moves.length !== roundLimit) throw new Error(`A legacy match transcript needs ${roundLabel} moves`);
   let match = initial;
   for (const move of moves) {
     if (match.phase !== 'player') throw new Error('Transcript contains actions after the fade ended');
@@ -3214,6 +3399,13 @@ function replayPlayerMoves(initial: Match, moves: readonly TranscriptMove[]): Ma
       match = nextRound(match);
     }
   }
+  return match;
+}
+function replayPlayerMoves(initial: Match, moves: readonly TranscriptMove[]): Match {
+  const roundLimit = getMatchRoundLimit(initial);
+  const roundLabel = roundLimit === DEFAULT_MATCH_ROUND_LIMIT ? "six" : String(roundLimit);
+  if (moves.length < roundLimit) throw new Error(`A match needs ${roundLabel} round endings`);
+  const match = replayMatchPrefix(initial, moves);
   if (match.phase !== 'complete') throw new Error(`Transcript did not complete ${roundLabel} rounds`);
   return match;
 }
@@ -3335,6 +3527,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   pendingLeaderReactions: m.pendingLeaderReactions,
   lingeringScents: m.lingeringScents ?? [],
   districtTraps: m.districtTraps ?? [],
+  janitorReversals: m.janitorReversals ?? [],
   lastMovedAlly: m.lastMovedAlly ?? {},
   roundMovedIds: m.roundMovedIds ?? { player: [], cpu: [] },
   cheshireRounds: m.cheshireRounds ?? {},

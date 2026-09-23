@@ -8,6 +8,7 @@ import {
   type PlayerPackOpeningRecord,
 } from "@workspace/db";
 import { catalogCardById } from "@workspace/squabblemon-engine/data";
+import { MAX_DECK_SLOTS } from "@workspace/squabblemon-engine/economy";
 import {
   type CollectionRoadDefinition,
   generateStreetPack,
@@ -244,7 +245,7 @@ export async function claimCollectionRoadForPlayer(
     if (milestone.reward.cardId) {
       discovered.add(milestone.reward.cardId);
       if (owned.has(milestone.reward.cardId)) {
-        reward.duplicateShards = 25;
+        reward.duplicateShards = 5;
       } else {
         owned.add(milestone.reward.cardId);
       }
@@ -263,7 +264,7 @@ export async function claimCollectionRoadForPlayer(
           (milestone.reward.styleShards ?? 0) +
           (reward.duplicateShards ?? 0),
         deckSlots:
-          profile.deckSlots + (milestone.reward.deckSlots ?? 0),
+          Math.min(MAX_DECK_SLOTS, profile.deckSlots + (milestone.reward.deckSlots ?? 0)),
       })
       .where(eq(playerProfilesTable.clerkUserId, userId));
     const [claim] = await tx

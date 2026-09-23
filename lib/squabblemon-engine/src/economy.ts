@@ -2,15 +2,35 @@ import { catalogCardById } from './data';
 import { CHARACTER_STYLE_OFFERS, cosmeticId, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
 
-export const ECONOMY_VERSION = 'block-economy-v1';
-export const TICKETS_PER_MAJOR_STORY_NODE = 10;
-export const MOVE_TRAINING_COSTS = [150, 400, 900] as const;
+export const LEGACY_ECONOMY_VERSION = 'block-economy-v1';
+export const ECONOMY_VERSION = 'block-economy-v2';
+export type EconomyVersion = typeof LEGACY_ECONOMY_VERSION | typeof ECONOMY_VERSION;
+export const ACCOUNT_XP_PER_LEVEL = 250;
+export const TICKETS_PER_MAJOR_STORY_NODE = 2;
+/** Finite story card rewards retain their original issued duplicate promise. */
+export const STORY_DUPLICATE_STYLE_SHARDS = 25;
+export const MOVE_TRAINING_COSTS = [100, 250, 500] as const;
+export const WELCOME_REWARD = Object.freeze({
+  accountXp: 100,
+  softCurrency: 250,
+  packTickets: 1,
+  streetRep: 5,
+});
+export const MISSION_TEMPLATES = [
+  { missionKey: 'weekly-cleanse', cadence: 'weekly', title: 'Clear the Air', description: 'Cleanse a friendly card in a verified practice fade.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-movement', cadence: 'weekly', title: 'Make Room', description: 'Win practice with a moved ally in a district you hold.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'weekly-experiment', cadence: 'weekly', title: 'Try Something New', description: 'Finish practice after changing at least one card from your last tested gang. Drafts do not count.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'rookie-road', cadence: 'onboarding', title: 'Finish Rookie Road', description: 'Complete the guided fade and choose your first gang.', goal: 1, rewardCurrency: 'packTickets', rewardAmount: 1 },
+  { missionKey: 'daily-show-up', cadence: 'daily', title: 'Show Up', description: 'Finish one fade today.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 100 },
+  { missionKey: 'daily-take-room', cadence: 'daily', title: 'Take A Room', description: 'Win one fade today.', goal: 1, rewardCurrency: 'softCurrency', rewardAmount: 150 },
+  { missionKey: 'weekly-main-character', cadence: 'weekly', title: 'Main Character Week', description: 'Finish five fades this week. No streak required.', goal: 5, rewardCurrency: 'packTickets', rewardAmount: 2 },
+] as const;
 export const MAX_DECK_SLOTS = 12;
 export const SHOP_OFFERS = [
   ...CHARACTER_STYLE_OFFERS,
   { id: 'training', name: 'Practice Session', description: '+100 XP for one owned character.', price: 100, currency: 'softCurrency', needsCard: true },
   { id: 'training-intensive', name: 'Intensive Training', description: '+250 XP for one owned character.', price: 225, currency: 'softCurrency', needsCard: true },
-  { id: 'move-training', name: 'Move Coaching', description: 'Activate the next move tier. Requires character level 2, 5, or 8.', price: 150, currency: 'softCurrency', needsCard: true },
+  { id: 'move-training', name: 'Move Coaching', description: 'Activate the next move tier. Requires character level 2, 5, or 8.', price: MOVE_TRAINING_COSTS[0], currency: 'softCurrency', needsCard: true },
   { id: 'ticket', name: 'Street Pack Ticket', description: 'One ticket for one Street Pack.', price: 200, currency: 'softCurrency', needsCard: false },
   { id: 'deck-slot', name: 'Extra Gang Slot', description: 'Save one more custom deck. Maximum 12 slots.', price: 350, currency: 'softCurrency', needsCard: false },
   { id: 'common-recruit', name: 'Neighborhood Recruit', description: 'Choose one unowned Common. A guaranteed character, with no random roll.', price: 400, currency: 'softCurrency', needsCard: true },
@@ -27,10 +47,24 @@ export type ShopWallet = {
 export type ShopReceipt = { itemId: ShopItemId; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string };
 export class ShopRuleError extends Error {}
 
-export function battleEarnings(outcome: 'win' | 'loss' | 'draw') {
-  return outcome === 'win' ? { xp: 50, streetRep: 8, softCurrency: 40, packTickets: 0 }
-    : outcome === 'draw' ? { xp: 35, streetRep: 4, softCurrency: 30, packTickets: 0 }
-    : { xp: 25, streetRep: 2, softCurrency: 20, packTickets: 0 };
+export function accountLevelFromXp(xp: number): number {
+  return 1 + Math.floor(Math.max(0, xp) / ACCOUNT_XP_PER_LEVEL);
+}
+
+export function economyVersionFromSnapshot(snapshot: unknown): EconomyVersion {
+  return snapshot && typeof snapshot === 'object' &&
+    (snapshot as { economyVersion?: unknown }).economyVersion === ECONOMY_VERSION
+    ? ECONOMY_VERSION
+    : LEGACY_ECONOMY_VERSION;
+}
+
+export function battleEarnings(outcome: 'win' | 'loss' | 'draw', version: EconomyVersion = ECONOMY_VERSION) {
+  const softCurrency = version === LEGACY_ECONOMY_VERSION
+    ? (outcome === 'win' ? 40 : outcome === 'draw' ? 30 : 20)
+    : (outcome === 'win' ? 80 : outcome === 'draw' ? 60 : 40);
+  return outcome === 'win' ? { xp: 50, streetRep: 8, softCurrency, packTickets: 0 }
+    : outcome === 'draw' ? { xp: 35, streetRep: 4, softCurrency, packTickets: 0 }
+    : { xp: 25, streetRep: 2, softCurrency, packTickets: 0 };
 }
 
 /** Pure authoritative purchase plan, shared by UI quotes and the locked server transaction. */

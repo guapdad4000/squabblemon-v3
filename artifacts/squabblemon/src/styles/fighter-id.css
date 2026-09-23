@@ -1,0 +1,862 @@
+/* src/styles/fighter-id.css */
+
+/* Scope parent to avoid double-scroll in the game shell */
+.game-route-stage:has(.fighter-id-stage) {
+  overflow: hidden;
+  height: 100%;
+  padding: 0;
+}
+
+.fighter-id-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    url("../../public/brand/decorations/fighter-dossier.webp") center/cover no-repeat,
+    #111;
+  position: relative;
+  isolation: isolate;
+  color: #1a1611;
+}
+
+.fighter-id-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* crop checkerboard corners */
+  background: url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
+  mix-blend-mode: multiply;
+}
+
+.fighter-id-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, transparent 20%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.fighter-id-stage .fighter-id-container {
+  flex: 1;
+  min-height: 0; /* Important for nested flex scrolling */
+  display: flex;
+  flex-direction: column;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+  padding: max(1rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+  position: relative;
+}
+
+/* Tabs */
+.fighter-id-stage .fighter-tabs {
+  flex: none;
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: -6px;
+  position: relative;
+  z-index: 10;
+  padding: 0 0.5rem;
+  justify-content: space-between;
+}
+
+.fighter-id-stage .fighter-tab {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: #e3d5b1 url("../../public/assets/inspector/torn-paper-strip.jpg") center/145% 220%;
+  color: #3d3121;
+  font-family: var(--font-marker);
+  font-size: clamp(0.7rem, 4vw, 1.25rem);
+  padding: 0.75rem 0.1rem 1rem;
+  transform: translateY(6px) rotate(-1deg);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.2s, color 0.2s, filter 0.2s;
+  clip-path: polygon(2% 0, 98% 2%, 100% 100%, 0 100%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 44px; /* Touch target */
+}
+
+.fighter-id-stage .fighter-tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.1);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.fighter-id-stage .fighter-tab:hover {
+  transform: translateY(2px) rotate(-1deg);
+  filter: brightness(1.05);
+}
+
+.fighter-id-stage .fighter-tab[aria-selected="true"] {
+  transform: translateY(0) rotate(0);
+  background: #f1e4c2 url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  color: #1a1611;
+  z-index: 12;
+  box-shadow: 0 -6px 16px rgba(0,0,0,0.6);
+}
+
+.fighter-id-stage .fighter-tab:focus-visible {
+  outline: 3px solid #785316;
+  outline-offset: -5px;
+}
+
+/* Single scrolling panel */
+.fighter-id-stage .fighter-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: #f1e4c2;
+  position: relative;
+  z-index: 11;
+  padding: clamp(1rem, 4vw, 3rem) clamp(0.75rem, 3vw, 3rem);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(100,80,40,0.15);
+  border-radius: 2px;
+  /* hide scrollbar */
+  scrollbar-width: none;
+}
+.fighter-id-stage .fighter-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.fighter-id-stage .fighter-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  opacity: 0.4;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.fighter-id-stage .fighter-panel::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: clamp(1rem, 4vw, 3rem);
+  width: 1.5px;
+  background: rgba(192, 57, 43, 0.4);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fighter-id-stage .fighter-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography & Sections */
+.fighter-id-stage .panel-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  color: #1a1611;
+  text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+}
+
+.fighter-id-stage .panel-section {
+  margin-bottom: 2rem;
+}
+
+.fighter-id-stage .panel-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #665544;
+  border-bottom: 2px dashed rgba(0,0,0,0.1);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Flex Wrap Wrappers */
+.fighter-id-stage .fighter-id-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.fighter-id-stage .settings-sound {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Street Sign Buttons */
+.fighter-id-stage .street-sign-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: var(--color-primary);
+  border: 2px solid #111;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  box-shadow: 4px 4px 0 var(--color-primary);
+  transition: transform 0.1s, box-shadow 0.1s;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: clamp(0.85rem, 3vw, 1rem);
+  line-height: 1;
+  position: relative;
+}
+.fighter-id-stage .street-sign-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.fighter-id-stage .street-sign-btn:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-primary);
+}
+.fighter-id-stage .street-sign-btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--color-primary);
+}
+.fighter-id-stage .street-sign-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--color-primary);
+}
+.fighter-id-stage .street-sign-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.fighter-id-stage .street-sign-btn--secondary {
+  background: #f1e4c2;
+  color: #111;
+  border-color: #111;
+  box-shadow: 4px 4px 0 #111;
+}
+.fighter-id-stage .street-sign-btn--secondary:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 #111;
+}
+
+.fighter-id-stage .street-sign-btn--danger {
+  background: #111;
+  color: #ff4444;
+  box-shadow: 4px 4px 0 #ff4444;
+}
+.fighter-id-stage .street-sign-btn--danger:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 #ff4444;
+}
+
+/* ID Card (Overview) */
+.fighter-id-stage .id-card {
+  display: flex;
+  flex-direction: row; /* Horizontal compact on phones */
+  gap: 0.75rem;
+  background: #fff;
+  padding: 0.75rem;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  transform: rotate(-1.5deg);
+  margin-bottom: 1.5rem;
+  max-width: 100%;
+  position: relative;
+}
+.fighter-id-stage .id-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.fighter-id-stage .id-card__tape {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 100px;
+  height: 22px;
+  background: rgba(241, 196, 64, 0.8);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+.fighter-id-stage .id-card__tape::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+@media(min-width: 600px) {
+  .fighter-id-stage .id-card {
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+/* Dominant Portrait */
+.fighter-id-stage .id-card__photo {
+  width: 38%; /* ~35-40% width for compact horizontal */
+  max-width: 240px;
+  aspect-ratio: 63/88;
+  background: #111;
+  border: clamp(3px, 1.5vw, 6px) solid #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  position: relative;
+  flex-shrink: 0;
+  margin: 0;
+}
+@media(min-width: 600px) {
+  .fighter-id-stage .id-card__photo {
+    width: 45%;
+  }
+}
+
+.fighter-id-stage .id-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0; /* Allow long words to wrap */
+}
+
+.fighter-id-stage .id-card__label {
+  display: block; /* Ensure stats don't run together */
+  font-family: var(--font-mono);
+  font-size: clamp(0.55rem, 2.5vw, 0.7rem);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #665544;
+  margin-bottom: 0.15rem;
+}
+
+.fighter-id-stage h1.id-card__name,
+.fighter-id-stage .identity-draft-preview-info .id-card__name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(1.35rem, 7vw, 3.5rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #111;
+  margin-bottom: 0.25rem;
+  /* Crucial for 24-char unbroken names on small screens */
+  overflow-wrap: break-word;
+  word-break: break-all;
+  hyphens: auto;
+}
+
+.fighter-id-stage .id-card__character {
+  display: block;
+  font-family: var(--font-marker);
+  font-size: clamp(0.95rem, 4vw, 1.6rem);
+  color: #c0392b;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.fighter-id-stage .id-card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  border-top: 2px dashed #ddd;
+  padding-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.fighter-id-stage .id-card__stat-val {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: #111;
+}
+
+.fighter-id-stage .id-card__stats > div:first-child .id-card__stat-val {
+  width: fit-content;
+  padding: 0.15rem 0.25rem;
+  background: #efd086;
+  border-bottom: 2px solid #9d6e23;
+  font-size: clamp(0.82rem, 2.6vw, 1.3rem);
+  white-space: nowrap;
+}
+
+.fighter-id-stage .id-card__stamp {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  width: max(60px, 20%);
+  aspect-ratio: 1;
+  background: url("../../public/assets/inspector/classified-stamp.jpg") center/120% 120% no-repeat;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+
+/* Edit Identity area inside card */
+.fighter-id-stage .id-card .fighter-id-actions {
+  margin-top: auto;
+  border-top: 2px dashed #ddd;
+  padding-top: 0.75rem;
+}
+.fighter-id-stage .id-card .fighter-id-actions .street-sign-btn {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+/* Portrait Component */
+.fighter-id-stage .fighter-portrait {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.fighter-id-stage .fighter-portrait img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transition: opacity 0.2s;
+}
+
+.fighter-id-stage .fighter-portrait__fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.25rem;
+  color: #fff0c6;
+  text-align: center;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+
+/* Identity Editor Draft Preview */
+.fighter-id-stage .identity-draft-preview {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.5);
+  border: 2px dashed rgba(0,0,0,0.2);
+}
+
+.fighter-id-stage .identity-draft-preview .fighter-portrait {
+  width: 35%;
+  max-width: 120px;
+  aspect-ratio: 63/88;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  height: auto;
+}
+
+.fighter-id-stage .identity-draft-preview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Avatar Grid (No nested scrolling) */
+.fighter-id-stage .avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
+  background: rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.fighter-id-stage .avatar-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.fighter-id-stage .avatar-choice .fighter-portrait {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 63/88;
+  border: 2px solid transparent;
+  transition: transform 0.1s;
+}
+
+.fighter-id-stage .avatar-choice:hover .fighter-portrait {
+  transform: scale(1.05);
+}
+
+.fighter-id-stage .avatar-choice[aria-pressed="true"] .fighter-portrait {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px #000;
+}
+
+.fighter-id-stage .avatar-choice:focus-visible,
+.fighter-id-stage .fighter-panel:focus-visible {
+  outline: 3px solid #785316;
+  outline-offset: -3px;
+}
+
+/* Sized within button, truncated */
+.fighter-id-stage .avatar-choice span {
+  display: block;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  line-height: 1.2;
+  color: #111;
+  font-weight: bold;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* New Split Component Classes */
+.fighter-id-stage .profile-xp {
+  display: block;
+  width: 100%;
+  height: 1.25rem;
+  border: 2px solid #1a1611;
+  background: rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+  appearance: none;
+  -webkit-appearance: none;
+}
+.fighter-id-stage .profile-xp::-webkit-progress-bar {
+  background: transparent;
+}
+.fighter-id-stage .profile-xp::-webkit-progress-value {
+  background: var(--color-primary);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(0,0,0,0.15) 8px,
+    rgba(0,0,0,0.15) 16px
+  );
+  border-right: 2px solid #1a1611;
+}
+.fighter-id-stage .profile-xp::-moz-progress-bar {
+  background: var(--color-primary);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(0,0,0,0.15) 8px,
+    rgba(0,0,0,0.15) 16px
+  );
+  border-right: 2px solid #1a1611;
+}
+
+.fighter-id-stage .profile-xp-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1a1611;
+  margin-bottom: 0.4rem;
+}
+
+.fighter-id-stage .profile-collection-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 2px dashed rgba(0,0,0,0.15);
+  color: #1a1611;
+}
+
+.fighter-id-stage .profile-collection-line strong {
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.fighter-id-stage .profile-xp-label {
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.fighter-id-stage .profile-progress-note {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0.5rem 0 1rem;
+}
+
+.fighter-id-stage .profile-style-details {
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  border-left: 4px solid rgba(0,0,0,0.3);
+  padding-left: 1rem;
+  color: #1a1611;
+  background: rgba(0,0,0,0.03);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.fighter-id-stage .profile-style-details p {
+  margin: 0 0 0.25rem 0;
+}
+.fighter-id-stage .profile-style-details p:last-child {
+  margin: 0;
+}
+.fighter-id-stage .profile-style-details strong {
+  opacity: 0.6;
+  text-transform: uppercase;
+  margin-right: 0.25rem;
+}
+
+.fighter-id-stage .profile-notice {
+  background: rgba(0,0,0,0.05);
+  border: 2px dashed rgba(0,0,0,0.2);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(26, 22, 17, 0.7);
+  margin-bottom: 1.5rem;
+}
+.fighter-id-stage .profile-notice-title,
+.fighter-id-stage .profile-notice strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: #1a1611;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+/* Style Default Fallback */
+.fighter-id-stage .profile-style-default {
+  display: flex;
+  flex-direction: column;
+  background: #e3d5b1 url("../../public/assets/inspector/paper-grain.jpg") center/125% 125%;
+  padding: 1.5rem;
+  border: 2px solid #8c7b65;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+@media(min-width: 500px) {
+  .fighter-id-stage .profile-style-default {
+    flex-direction: row;
+    text-align: left;
+  }
+}
+
+.fighter-id-stage .profile-style-default .fighter-portrait {
+  width: 38%;
+  max-width: 140px;
+  aspect-ratio: 63/88;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  height: auto;
+}
+.fighter-id-stage .profile-style-default-info {
+  flex: 1;
+}
+
+.fighter-id-stage .profile-style-default > div:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fighter-id-stage .profile-style-details dt {
+  font-weight: 700;
+}
+
+.fighter-id-stage .profile-style-details dd {
+  margin-bottom: 0.5rem;
+}
+
+/* Badges */
+.fighter-id-stage .badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.fighter-id-stage .badge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.5);
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+}
+.fighter-id-stage .badge-icon {
+  width: 2rem;
+  height: 2rem;
+  background: #c0392b;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: bold;
+  font-family: var(--font-mono);
+}
+.fighter-id-stage .badge-info {
+  display: flex;
+  flex-direction: column;
+}
+.fighter-id-stage .badge-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.fighter-id-stage .badge-desc {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #665544;
+}
+
+/* Form inputs */
+.fighter-id-stage .paper-input {
+  width: 100%;
+  background: rgba(255,255,255,0.7);
+  border: 2px solid #333;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-display);
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #111;
+  outline: none;
+  box-shadow: inset 2px 2px 6px rgba(0,0,0,0.05);
+  min-height: 44px;
+}
+.fighter-id-stage .paper-input:focus {
+  border-color: var(--color-primary);
+  background: #fff;
+}
+
+.fighter-id-stage .paper-checkbox {
+  appearance: none;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #333;
+  background: rgba(255,255,255,0.7);
+  cursor: pointer;
+  position: relative;
+}
+.fighter-id-stage .paper-checkbox:checked {
+  background: #111;
+}
+.fighter-id-stage .paper-checkbox:checked::after {
+  content: "✕";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.fighter-id-stage .paper-checkbox:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* Keep identity and its action visible on short landscape screens. */
+@media (min-width: 600px) and (max-height: 500px) {
+  .fighter-id-stage .fighter-id-container { padding-top: 4px; padding-bottom: 4px; }
+  .fighter-id-stage .fighter-tab { padding: 8px 4px; font-size: 1rem; }
+  .fighter-id-stage .fighter-panel { padding: 12px 20px 20px; }
+  .fighter-id-stage .profile-overview > .panel-section-title {
+    font-size: 0.6rem;
+    margin-bottom: 12px;
+    padding-bottom: 4px;
+  }
+  .fighter-id-stage .id-card { padding: 8px; gap: 16px; transform: rotate(-0.5deg); }
+  .fighter-id-stage .id-card__photo { width: 105px; height: 148px; align-self: center; }
+  .fighter-id-stage .id-card__info {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+    gap: 2px 12px;
+    align-content: center;
+  }
+  .fighter-id-stage .id-card__info > .id-card__label,
+  .fighter-id-stage .id-card__name,
+  .fighter-id-stage .id-card__character { grid-column: 1 / -1; }
+  .fighter-id-stage h1.id-card__name { font-size: 1.8rem; }
+  .fighter-id-stage .id-card__character { font-size: 0.9rem; margin-bottom: 4px; }
+  .fighter-id-stage .id-card__stats { margin: 0; padding-top: 4px; gap: 12px; }
+  .fighter-id-stage .id-card__label { font-size: 0.6rem; }
+  .fighter-id-stage .id-card__stat-val { font-size: 1rem; }
+  .fighter-id-stage .id-card__info > .street-sign-btn { align-self: end; padding: 8px; }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .fighter-id-stage,
+  .fighter-id-stage * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html[data-reduce-motion="true"] .fighter-id-stage,
+html[data-reduce-motion="true"] .fighter-id-stage * {
+  animation: none !important;
+  transition: none !important;
+}

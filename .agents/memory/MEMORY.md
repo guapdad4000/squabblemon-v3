@@ -1,6 +1,7 @@
 - [Squabblemon visual bar](squabblemon-visual-bar.md) — Screens must be illustration-led and world-driven; typography-first dark layouts read as demo software.
 - [Browser presentation timers](browser-presentation-timers.md) — Wrap native browser timer functions before injecting them into cancellable timelines.
 - [Battle feedback lifecycle](battle-feedback-lifecycle.md) — Sound and haptic cues share presentation generation IDs; skips and cancellation must never run an independent cue clock.
+- [Battle audio mixing](battle-audio-mixing.md) — Music and synthesized cues share an output context but keep independent gains and lifecycles; hardware mixing still needs phone checks.
 - [Reward-verified battles](reward-verified-battles.md) — Rewarded matches replay exact player moves with the shared deterministic engine; never trust client-reported outcomes.
 - [Profile economy lock](profile-economy-lock.md) — Inventory normalization and mutation must share the profile row lock or concurrent reads can erase rewards.
 - [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full presentation lifecycles in an optimized profiling build, not synthetic snapshots or animation startup.
@@ -15,7 +16,14 @@
 - [Visual regression proof](visual-regression-proof.md) — Require mounted real components, final-action clicks, decoration bounds, and screenshots; geometry logs alone missed prior regressions.
 - [Git release history](git-release-history.md) — Workspace checkpoints can diverge from GitHub release ancestry; preserve remote history and release only verified content.
 - [Post-merge workflow ownership](post-merge-workflows.md) — A failed workflow can still have a stale process holding its port after reconciliation.
+- [Startup loading truth](startup-loading-truth.md) — Loading UI follows real app/account/profile/route gates; optional video must never delay core startup.
 - [Speech playback verification](speech-playback-verification.md) — Diagnose the encoded clip before changing lifecycle; preserve internal pauses and distinguish natural-end pause events from interruptions.
 - [Story save evolution](story-save-evolution.md) — Presentation grouping must not rename progression/reward identities or invalidate positional dialogue history.
 - [iPad keyed battle video](ipad-keyed-battle-video.md) — VP9 video layers can expose encoded matte colors on iPad; verify transparency from rendered pixels.
 - [Long-running verification](long-running-verification.md) — Use explicit background tasks; shell detachment alone may be cleaned up before evidence is written.
+- [Guarded browser traversal](guarded-browser-traversal.md) — Dirty-route guards must cover router pushes and indexed Back/Forward traversal; never assume every popstate is Back.
+- [New-card guidance](new-card-guidance.md) — Collection-only highlights, no tour panel; a missing viewing history must not mark the entire inventory new.
+- [Character combat identities](character-combat-identities.md) — Preserve user-approved reversal, prediction/trap, and cheap-brawler roles when balancing the new characters.
+- [Progression rollout boundaries](progression-rollout.md) — Preserve finite story promises; exclude promotional wallets from organic pacing and use immutable audit baselines.
+- [Payment verification fidelity](payment-verification-fidelity.md) — Native PostgreSQL proves wallet locking; synthetic signatures and real Stripe webhook delivery are separate evidence.
+- [Netlify migration proof](netlify-migration-proof.md) — A ready monorepo deploy can omit migrations; verify applied versions on the exact database branch.

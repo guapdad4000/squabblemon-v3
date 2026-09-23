@@ -4,6 +4,7 @@ import { cardCatalog } from "@workspace/squabblemon-engine/data";
 import { and, eq, isNull, isNotNull, lte, sql } from "drizzle-orm";
 import {
   db,
+  challengeRunsTable,
   playerMatchesTable,
   playerMissionsTable,
   playerProfilesTable,
@@ -11,8 +12,9 @@ import {
   type PlayerMissionRecord,
 } from "@workspace/db";
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
-import { battleEarnings } from '@workspace/squabblemon-engine/economy';
-import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS, ROOKIE_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, ROOKIE_MENTOR_ID } from "@workspace/squabblemon-engine/data";
+import { ACCOUNT_XP_PER_LEVEL, WELCOME_REWARD, battleEarnings, economyVersionFromSnapshot } from '@workspace/squabblemon-engine/economy';
+import { checkpointFor, encounterFor } from '@workspace/squabblemon-engine/challenge';
+import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, ROOKIE_MENTOR_ID } from "@workspace/squabblemon-engine/data";
 import {
   applyCardXp,
   createCardProgressionSnapshot,
@@ -93,7 +95,7 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
     await lockPlayerProfile(tx, clerkUserId);
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
     if (!profile || !["crew", "tutorial"].includes(profile.onboardingStep)) return;
-    const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
+    const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_MENTOR_CORE_IDS])];
     const savedDecks = [...profile.savedDecks];
     if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Gang", cardIds: [...ROOKIE_MENTOR_CORE_IDS], heroCardId: ROOKIE_MENTOR_ID, recipeId: null });
     await tx.update(playerProfilesTable).set({
@@ -123,11 +125,11 @@ export async function claimStarterReward(
       .set({
         starterRewardClaimed: true,
         onboardingStep: "complete",
-        softCurrency: sql`${playerProfilesTable.softCurrency} + 250`,
-        packTickets: sql`${playerProfilesTable.packTickets} + 1`,
-        xp: sql`${playerProfilesTable.xp} + 100`,
-        level: sql`1 + floor((${playerProfilesTable.xp} + 100) / 250)`,
-        streetRep: sql`${playerProfilesTable.streetRep} + 5`,
+        softCurrency: sql`${playerProfilesTable.softCurrency} + ${WELCOME_REWARD.softCurrency}`,
+        packTickets: sql`${playerProfilesTable.packTickets} + ${WELCOME_REWARD.packTickets}`,
+        xp: sql`${playerProfilesTable.xp} + ${WELCOME_REWARD.accountXp}`,
+        level: sql`1 + floor((${playerProfilesTable.xp} + ${WELCOME_REWARD.accountXp}) / ${ACCOUNT_XP_PER_LEVEL})`,
+        streetRep: sql`${playerProfilesTable.streetRep} + ${WELCOME_REWARD.streetRep}`,
       })
       .where(
         and(
@@ -205,8 +207,10 @@ export async function completeStandardMatchReward(input: {
   outcome: RewardOutcome;
   districtsWon: number;
   verifiedMatch: Match;
+  moves?: readonly unknown[];
+  challengeRunId?: string | null;
 }): Promise<{ completed: boolean; match: PlayerMatchRecord; cardXpRewards: CardXpReward[] }> {
-  const amounts = battleEarnings(input.outcome);
+  const challengeDraw = Boolean(input.challengeRunId && input.outcome === "draw");
   return db.transaction(async (tx) => {
     await lockPlayerProfile(tx, input.clerkUserId);
     await resetExpiredMissionsInTransaction(tx, input.clerkUserId, new Date());
@@ -215,7 +219,9 @@ export async function completeStandardMatchReward(input: {
       .from(playerProfilesTable)
       .where(eq(playerProfilesTable.clerkUserId, input.clerkUserId));
     if (!profile) throw new PlayerRewardError("Player profile not found", 404);
-    const participantCardIds = participatingCatalogCardIds(input.verifiedMatch).filter(id => profile.ownedCardIds.includes(id));
+    const participantCardIds = challengeDraw
+      ? []
+      : participatingCatalogCardIds(input.verifiedMatch).filter(id => profile.ownedCardIds.includes(id));
     const [storedMatch] = await tx
       .select({
         playerDeckId: playerMatchesTable.playerDeckId,
@@ -229,6 +235,9 @@ export async function completeStandardMatchReward(input: {
         ),
       );
     if (!storedMatch) throw new PlayerRewardError("Fade not found", 404);
+    const amounts = challengeDraw
+      ? { xp: 0, streetRep: 0, softCurrency: 0, packTickets: 0 }
+      : battleEarnings(input.outcome, economyVersionFromSnapshot(storedMatch.snapshot));
     // Pre-upgrade snapshots were an array. They remain reward-safe by
     // rebuilding only from the server-owned recipe and current profile; never
     // access `.cards` on the legacy JSON shape.
@@ -304,18 +313,56 @@ export async function completeStandardMatchReward(input: {
       )
       .returning();
     if (updated) {
-      await advanceBattleMissions(tx, input.clerkUserId, input.outcome);
-      const facts = battleAchievements(input.verifiedMatch);
-      for (const key of [facts.cleansed && 'weekly-cleanse', facts.movementWin && 'weekly-movement', facts.changedCrew && input.verifiedMatch.storyEncounter?.activity?.kind !== 'draft' && 'weekly-experiment'].filter(Boolean)) {
-        await tx.update(playerMissionsTable).set({ progress: sql`least(${playerMissionsTable.goal}, ${playerMissionsTable.progress} + 1)` })
-          .where(and(eq(playerMissionsTable.clerkUserId, input.clerkUserId), eq(playerMissionsTable.missionKey, key as string), isNull(playerMissionsTable.claimedAt)));
+      if (!challengeDraw) {
+        await advanceBattleMissions(tx, input.clerkUserId, input.outcome);
+        const facts = battleAchievements(input.verifiedMatch);
+        for (const key of [facts.cleansed && 'weekly-cleanse', facts.movementWin && 'weekly-movement', facts.changedCrew && input.verifiedMatch.storyEncounter?.activity?.kind !== 'draft' && 'weekly-experiment'].filter(Boolean)) {
+          await tx.update(playerMissionsTable).set({ progress: sql`least(${playerMissionsTable.goal}, ${playerMissionsTable.progress} + 1)` })
+            .where(and(eq(playerMissionsTable.clerkUserId, input.clerkUserId), eq(playerMissionsTable.missionKey, key as string), isNull(playerMissionsTable.claimedAt)));
+        }
       }
-      const career = advanceCareer(profile.storyProgress.gameplay, input.verifiedMatch, profile.ownedCardIds, profile.unlockedCosmeticIds);
+      const career = challengeDraw
+        ? { progress: profile.storyProgress.gameplay, cosmetics: profile.unlockedCosmeticIds }
+        : advanceCareer(profile.storyProgress.gameplay, input.verifiedMatch, profile.ownedCardIds, profile.unlockedCosmeticIds);
+      if (input.challengeRunId) {
+        const [run] = await tx.select().from(challengeRunsTable)
+          .where(and(
+            eq(challengeRunsTable.id, input.challengeRunId),
+            eq(challengeRunsTable.clerkUserId, input.clerkUserId),
+          ))
+          .for("update");
+        if (!run) throw new PlayerRewardError("Challenge run no longer exists", 409);
+        const encounter = run.encounterSnapshot as { playerMatchId?: string };
+        if (run.status === "active" && encounter.playerMatchId === input.matchId) {
+          const won = input.outcome === "win";
+          const draw = input.outcome === "draw";
+          const moves = structuredClone(input.moves ?? []);
+          await tx.update(challengeRunsTable).set({
+            status: won || draw ? "active" : "settled",
+            wins: won ? run.wins + 1 : run.wins,
+            encounterIndex: won ? run.encounterIndex + 1 : run.encounterIndex,
+            encounterSnapshot: won
+              ? encounterFor(run.seed, run.encounterIndex + 1)
+              : { ...encounter, playerMatchId: "" },
+            transcripts: [
+              ...(run.transcripts as Array<Record<string, unknown>>),
+              {
+                matchId: input.matchId,
+                outcome: input.outcome,
+                moves,
+                checkpoint: checkpointFor(input.matchId, moves),
+              },
+            ],
+            updatedAt: new Date(),
+            completedAt: won || draw ? run.completedAt : new Date(),
+          }).where(eq(challengeRunsTable.id, run.id));
+        }
+      }
       await tx
         .update(playerProfilesTable)
         .set({
           xp: sql`${playerProfilesTable.xp} + ${amounts.xp}`,
-          level: sql`1 + floor((${playerProfilesTable.xp} + ${amounts.xp}) / 250)`,
+          level: sql`1 + floor((${playerProfilesTable.xp} + ${amounts.xp}) / ${ACCOUNT_XP_PER_LEVEL})`,
           streetRep: sql`${playerProfilesTable.streetRep} + ${amounts.streetRep}`,
           softCurrency: sql`${playerProfilesTable.softCurrency} + ${amounts.softCurrency}`,
           packTickets: sql`${playerProfilesTable.packTickets} + ${amounts.packTickets}`,

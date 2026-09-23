@@ -773,7 +773,7 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
 .card-inspector-shell .card-inspector-layout {
   display: grid;
   grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(24px, 4vw, 56px);
 }
 .card-inspector-shell .polaroid {

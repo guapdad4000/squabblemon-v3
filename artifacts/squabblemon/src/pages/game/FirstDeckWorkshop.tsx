@@ -7,6 +7,7 @@ import { PlayLoop } from '../../components/PlayLoop';
 import { summarizeDeckTest, type DeckDraft } from '../../lib/deckWorkshop';
 import type { Match } from '../../gameEngine';
 import { trackEvent } from '../../lib/analytics';
+import { WELCOME_REWARD } from '@workspace/squabblemon-engine/economy';
 
 export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: PlayerBootstrap; onComplete: () => void }) {
   const save = useSavePlayerDeck();
@@ -30,7 +31,7 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
     <span className="venue-kicker">ROOKIE ROAD / LESSON COMPLETE</span><h1>You built this gang.</h1>
     <p>{result ? summarizeDeckTest(result, focus) : 'Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.'}</p>
     <p>Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.</p>
-    <p>Welcome reward: 100 XP · 250 Clout · 1 pack ticket</p>
+    <p data-testid="text-rookie-reward">Welcome claim: {WELCOME_REWARD.accountXp} account XP · {WELCOME_REWARD.softCurrency} Clout · {WELCOME_REWARD.packTickets} Street Pack ticket. Your {ROOKIE_CORE_IDS.length}-card starter gang is already yours.</p>
     <nav><button className="venue-button" onClick={() => setReview(false)}>Back to my deck</button><button className="venue-button venue-button--gold" onClick={onComplete}>Claim reward & enter Chapter One</button></nav>
   </div></section>;
   return <div className="rookie-workshop">

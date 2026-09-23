@@ -6,11 +6,14 @@ import { and, eq } from "drizzle-orm";
 import type { RequestHandler } from "express";
 import {
   db,
+  challengeRunsTable,
   playerMatchesTable,
   playerMissionsTable,
   playerProfilesTable,
 } from "@workspace/db";
+import { starterRecipes } from "@workspace/squabblemon-engine/data";
 import { createApp } from "../app";
+import { createCardProgressionSnapshot } from "./cardProgression";
 
 const clerkAuthBrand = Symbol.for("@clerk/express.auth");
 
@@ -66,6 +69,21 @@ async function postJson(url: string, body?: unknown) {
   return json;
 }
 
+async function patchProfile(
+  baseUrl: string,
+  body: unknown,
+  expectedStatus = 200,
+) {
+  const response = await fetch(`${baseUrl}/player/profile`, {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = (await response.json()) as Record<string, any>;
+  assert.equal(response.status, expectedStatus, JSON.stringify(json));
+  return json;
+}
+
 async function profileFor(clerkUserId: string) {
   const [profile] = await db
     .select()
@@ -94,12 +112,234 @@ function cleanup(t: test.TestContext, clerkUserId: string) {
   });
 }
 
-test("concurrent HTTP fade completions return one persisted reward and apply it once", async (t) => {
-  const clerkUserId = `route-match-${randomUUID()}`;
+test("HTTP challenge match start rejects story and tutorial modes without binding the run", async (t) => {
+  const clerkUserId = `challenge-mode-${randomUUID()}`;
   cleanup(t, clerkUserId);
   await db.insert(playerProfilesTable).values({
     clerkUserId,
     onboardingStep: "complete",
+  });
+  const [run] = await db.insert(challengeRunsTable).values({
+    clerkUserId,
+    seed: 99,
+    entryDate: "2026-09-23",
+    entryNumber: 1,
+    crewSnapshot: { deckId: "block", cards: [], capturedAt: new Date().toISOString(), rulesVersion: 1 },
+    encounterSnapshot: { index: 0, seed: 99, boss: false, rivalDeckId: "slide", playerMatchId: "" },
+    checkpoints: [],
+    transcripts: [],
+  }).returning();
+
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    for (const mode of ["story", "tutorial"]) {
+      const response = await fetch(`${baseUrl}/player/matches`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          mode,
+          playerDeckId: "block",
+          rivalDeckId: "slide",
+          challengeRunId: run.id,
+          ...(mode === "story" ? { storyNodeId: "welcome-to-the-block" } : {}),
+        }),
+      });
+      assert.equal(response.status, 400);
+      assert.match(JSON.stringify(await response.json()), /practice battle mode/);
+    }
+  });
+
+  const bound = await db.select().from(playerMatchesTable)
+    .where(eq(playerMatchesTable.challengeRunId, run.id));
+  assert.equal(bound.length, 0);
+});
+
+test("HTTP profile update persists an owned catalog character avatar and preserves rewards and cosmetics", async (t) => {
+  const clerkUserId = `route-avatar-owned-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    displayName: "Before",
+    avatarKey: "cornball",
+    onboardingStep: "complete",
+    xp: 375,
+    level: 2,
+    streetRep: 19,
+    softCurrency: 480,
+    packTickets: 3,
+    styleShards: 90,
+    ownedCardIds: ["cornball", "rastamon"],
+    ownedVariants: ["rastamon:tagged"],
+    equippedVariants: { rastamon: "rastamon:tagged" },
+    unlockedCosmeticIds: ["badge:after-hours", "mastery:cornball"],
+    settings: {
+      reducedMotion: false,
+      turnTimerEnabled: true,
+      cosmetics: {
+        bannerCardId: "cornball",
+        bannerFinish: "silver",
+        stickers: ["cornball:smile"],
+      },
+    },
+  });
+
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    const response = await patchProfile(baseUrl, {
+      avatarKey: "rastamon",
+      displayName: "After",
+      reducedMotion: true,
+    });
+    assert.equal(response.profile.avatarKey, "rastamon");
+    assert.equal(response.profile.displayName, "After");
+
+    const profile = await profileFor(clerkUserId);
+    assert.equal(profile.avatarKey, "rastamon");
+    assert.equal(profile.displayName, "After");
+    assert.deepEqual(profile.settings, {
+      reducedMotion: true,
+      turnTimerEnabled: true,
+      cosmetics: {
+        bannerCardId: "cornball",
+        bannerFinish: "silver",
+        stickers: ["cornball:smile"],
+      },
+    });
+    assert.deepEqual(profile.unlockedCosmeticIds, [
+      "badge:after-hours",
+      "mastery:cornball",
+    ]);
+    assert.deepEqual(profile.ownedVariants, ["rastamon:tagged"]);
+    assert.deepEqual(profile.equippedVariants, {
+      rastamon: "rastamon:tagged",
+    });
+    assert.deepEqual(
+      {
+        xp: profile.xp,
+        level: profile.level,
+        streetRep: profile.streetRep,
+        softCurrency: profile.softCurrency,
+        packTickets: profile.packTickets,
+        styleShards: profile.styleShards,
+      },
+      {
+        xp: 375,
+        level: 2,
+        streetRep: 19,
+        softCurrency: 480,
+        packTickets: 3,
+        styleShards: 90,
+      },
+    );
+  });
+});
+
+test("HTTP profile update rejects unknown and unowned avatar selections without partial writes", async (t) => {
+  const clerkUserId = `route-avatar-rejected-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    displayName: "Untouched",
+    avatarKey: "cornball",
+    onboardingStep: "complete",
+    softCurrency: 275,
+    ownedCardIds: ["cornball"],
+    unlockedCosmeticIds: ["badge:street-draft"],
+    settings: {
+      reducedMotion: false,
+      turnTimerEnabled: true,
+      cosmetics: { bannerCardId: "cornball" },
+    },
+  });
+
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    const unknown = await patchProfile(
+      baseUrl,
+      {
+        avatarKey: "constructor",
+        displayName: "Should Not Save",
+        reducedMotion: true,
+      },
+      400,
+    );
+    assert.match(unknown.error, /valid character avatar/i);
+
+    let profile = await profileFor(clerkUserId);
+    assert.equal(profile.avatarKey, "cornball");
+    assert.equal(profile.displayName, "Untouched");
+    assert.equal(profile.settings.reducedMotion, false);
+
+    const unowned = await patchProfile(
+      baseUrl,
+      {
+        avatarKey: "rastamon",
+        displayName: "Still Should Not Save",
+        turnTimerEnabled: false,
+      },
+      400,
+    );
+    assert.match(unowned.error, /unlock this character/i);
+
+    profile = await profileFor(clerkUserId);
+    assert.equal(profile.avatarKey, "cornball");
+    assert.equal(profile.displayName, "Untouched");
+    assert.deepEqual(profile.settings, {
+      reducedMotion: false,
+      turnTimerEnabled: true,
+      cosmetics: { bannerCardId: "cornball" },
+    });
+    assert.equal(profile.softCurrency, 275);
+    assert.deepEqual(profile.unlockedCosmeticIds, ["badge:street-draft"]);
+  });
+});
+
+test("HTTP profile update permits unrelated changes when a legacy avatar is unchanged or omitted", async (t) => {
+  const clerkUserId = `route-avatar-legacy-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    displayName: "Legacy",
+    avatarKey: "retired-launch-avatar",
+    onboardingStep: "complete",
+    ownedCardIds: ["cornball"],
+    settings: {
+      reducedMotion: false,
+      turnTimerEnabled: true,
+      cosmetics: { stickers: ["cornball:star"] },
+    },
+  });
+
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    const unchanged = await patchProfile(baseUrl, {
+      avatarKey: "retired-launch-avatar",
+      displayName: "Legacy Kept",
+    });
+    assert.equal(unchanged.profile.avatarKey, "retired-launch-avatar");
+    assert.equal(unchanged.profile.displayName, "Legacy Kept");
+
+    const omitted = await patchProfile(baseUrl, {
+      turnTimerEnabled: false,
+    });
+    assert.equal(omitted.profile.avatarKey, "retired-launch-avatar");
+
+    const profile = await profileFor(clerkUserId);
+    assert.equal(profile.avatarKey, "retired-launch-avatar");
+    assert.equal(profile.displayName, "Legacy Kept");
+    assert.deepEqual(profile.settings, {
+      reducedMotion: false,
+      turnTimerEnabled: false,
+      cosmetics: { stickers: ["cornball:star"] },
+    });
+  });
+});
+
+test("concurrent HTTP fade completions return one persisted reward and apply it once", async (t) => {
+  const clerkUserId = `route-match-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const playerRecipe = starterRecipes.find((recipe) => recipe.id === "block")!;
+  const rivalRecipe = starterRecipes.find((recipe) => recipe.id === "slide")!;
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    onboardingStep: "complete",
+    ownedCardIds: playerRecipe.catalogCardIds,
   });
   const [match] = await db
     .insert(playerMatchesTable)
@@ -108,6 +348,13 @@ test("concurrent HTTP fade completions return one persisted reward and apply it 
       mode: "practice",
       playerDeckId: "block",
       rivalDeckId: "slide",
+      playerCardProgressionSnapshot: createCardProgressionSnapshot(
+        playerRecipe.cards,
+        playerRecipe.catalogCardIds,
+        {},
+        false,
+        rivalRecipe.cards,
+      ),
     })
     .returning();
   const moves = Array.from({ length: 6 }, () => ({

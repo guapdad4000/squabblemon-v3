@@ -33,6 +33,7 @@ import {
   type StoryNode,
   type StoryReward,
 } from '@workspace/squabblemon-engine/story';
+import { STORY_DUPLICATE_STYLE_SHARDS } from '@workspace/squabblemon-engine/economy';
 import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
 import { getMatchRoundLimit, getStoryModifierSummaries } from '../../gameEngine';
 import { StoryStage } from '../../components/story/StoryStage';
@@ -74,7 +75,7 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
 }
 
 function rewardLabel(reward: StoryReward | StoryGrantedReward) {
-  if (reward.kind === 'card') return `${cards[reward.id]?.name ?? reward.id} card`;
+  if (reward.kind === 'card') return `${cards[reward.id]?.name ?? reward.id} card · duplicate: ${'duplicateShards' in reward && reward.duplicateShards ? reward.duplicateShards : STORY_DUPLICATE_STYLE_SHARDS} Style Shards`;
   if (reward.kind === 'chapter-key') return 'Next chapter key';
   if (reward.kind === 'pack-ticket')
     return reward.amount === 10
@@ -82,7 +83,7 @@ function rewardLabel(reward: StoryReward | StoryGrantedReward) {
       : `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
   if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
   if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} unlocked`;
-  return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Street XP`;
+  return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Account XP`;
 }
 
 export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {

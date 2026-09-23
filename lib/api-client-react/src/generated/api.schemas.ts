@@ -125,6 +125,74 @@ export interface PaymentHistory {
   nextCursor: string | null;
 }
 
+export interface ChallengeStartInput {
+  /** @maxLength 80 */
+  deckId?: string;
+}
+
+export type ChallengeActionOutcome = typeof ChallengeActionOutcome[keyof typeof ChallengeActionOutcome];
+
+
+export const ChallengeActionOutcome = {
+  win: 'win',
+  loss: 'loss',
+  draw: 'draw',
+} as const;
+
+export interface ChallengeAction {
+  matchId: string;
+  moves: unknown[];
+  outcome: ChallengeActionOutcome;
+  nextMatchId?: string;
+}
+
+export type ChallengeRunStatus = typeof ChallengeRunStatus[keyof typeof ChallengeRunStatus];
+
+
+export const ChallengeRunStatus = {
+  active: 'active',
+  settled: 'settled',
+  abandoned: 'abandoned',
+} as const;
+
+export type ChallengeRunEntryNumber = typeof ChallengeRunEntryNumber[keyof typeof ChallengeRunEntryNumber];
+
+
+export const ChallengeRunEntryNumber = {
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+} as const;
+
+export type ChallengeRunCrew = { [key: string]: unknown };
+
+export type ChallengeRunEncounter = { [key: string]: unknown };
+
+export type ChallengeRunCheckpointsItem = { [key: string]: unknown };
+
+/**
+ * @nullable
+ */
+export type ChallengeRunRecovery = { [key: string]: unknown } | null;
+
+export interface ChallengeRun {
+  id: string;
+  status: ChallengeRunStatus;
+  seed: number;
+  encounterIndex: number;
+  score: number;
+  wins: number;
+  entryDate: string;
+  entryNumber: ChallengeRunEntryNumber;
+  crew: ChallengeRunCrew;
+  encounter: ChallengeRunEncounter;
+  checkpoints: ChallengeRunCheckpointsItem[];
+  /** @nullable */
+  recovery?: ChallengeRunRecovery;
+  createdAt: string;
+  /** @nullable */
+  completedAt: string | null;
+}
+
 export interface PromoCodeInput {
   /**
      * @minLength 1
@@ -654,7 +722,8 @@ export interface MatchStartInput {
   /** @maxLength 80 */
   playerDeckId: string;
   /** @maxLength 32 */
-  rivalDeckId: string;
+  rivalDeckId?: string;
+  challengeRunId?: string;
   /** @maxLength 80 */
   storyNodeId?: string;
   /** @maxLength 24 */
@@ -687,6 +756,11 @@ export type PlayerMatchEncounterSnapshot = { [key: string]: unknown } | null;
  */
 export type PlayerMatchDistrictSnapshot = { [key: string]: unknown };
 
+/**
+ * @nullable
+ */
+export type PlayerMatchCheckpoint = { [key: string]: unknown } | null;
+
 export type AbilityUpgradeSnapshotVersion = typeof AbilityUpgradeSnapshotVersion[keyof typeof AbilityUpgradeSnapshotVersion];
 
 
@@ -718,6 +792,8 @@ export interface PlayerMatch {
   mode: string;
   playerDeckId: string;
   rivalDeckId: string;
+  /** @nullable */
+  challengeRunId?: string | null;
   status: PlayerMatchStatus;
   createdAt: string;
   /** @nullable */
@@ -729,6 +805,12 @@ export interface PlayerMatch {
   /** Immutable server-issued district definitions for this match. */
   districtSnapshot?: PlayerMatchDistrictSnapshot;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
+  /** @nullable */
+  checkpoint?: PlayerMatchCheckpoint;
+}
+
+export interface ChallengeCheckpointInput {
+  moves: unknown[];
 }
 
 export interface MatchMove {

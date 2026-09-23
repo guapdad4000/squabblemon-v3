@@ -7,6 +7,7 @@ import {
   validateSavedDeck,
 } from '../../data';
 import { useMemo } from 'react';
+import { deckEditorPath, decksPath } from '../../lib/deckJourney';
 
 export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const params = useParams();
@@ -65,8 +66,8 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             ))}
           </ul>
         )}
-        <button onClick={() => setLocation(deckId ? `/game/decks/${deckId}` : '/game/decks')} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm">
-          Return
+        <button onClick={() => setLocation(deckData && deckId ? deckEditorPath(deckId) : decksPath(), { replace: true })} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm">
+          {deckData ? 'Return to deck builder' : 'Back to my decks'}
         </button>
       </div>
     );
@@ -76,7 +77,7 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <PlayLoop
       mode={e2eAuthEnabled && bootstrap.profile.id === 'e2e-player' ? 'guest' : 'practice'}
       initialDeckId={deckId}
-      onExit={() => setLocation(`/game/decks/${deckId}`)}
+      onExit={() => setLocation(deckEditorPath(deckId || ''), { replace: true })}
       hideLobby={true}
       turnTimerEnabled={false}
       customPlayerDeck={deckData || undefined}

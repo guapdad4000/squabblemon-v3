@@ -19,7 +19,6 @@ export function MusicControls({ compact = false, variant = 'default', className 
   const canPause = music.playing && feedback.audioEnabled;
   const status = !feedback.audioEnabled ? 'Game sound muted' : music.error ?? (music.blocked ? 'Tap play to start the music' : !music.enabled ? 'Music paused' : music.playing ? 'Now playing' : 'Ready when you are');
   function play() {
-    if (!feedback.audioEnabled) saveFeedback(value => ({ ...value, audioEnabled: true }));
     musicActions.play();
   }
 

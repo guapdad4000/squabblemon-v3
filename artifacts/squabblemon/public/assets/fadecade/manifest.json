@@ -1,0 +1,686 @@
+{
+  "generatedBy": "scripts/prepare-fadecade-art.mjs",
+  "sourceRunnerUploadsDeduplicated": true,
+  "images": {
+    "room.webp": {
+      "width": 1672,
+      "height": 941
+    },
+    "daily.webp": {
+      "width": 675,
+      "height": 499
+    },
+    "weekly.webp": {
+      "width": 674,
+      "height": 496
+    },
+    "girl-fade.webp": {
+      "width": 691,
+      "height": 489
+    },
+    "funk-punk.webp": {
+      "width": 683,
+      "height": 488
+    },
+    "flagship.webp": {
+      "width": 1092,
+      "height": 1308
+    },
+    "logo.webp": {
+      "width": 2168,
+      "height": 721
+    },
+    "fighter-defeat.webp": {
+      "width": 1023,
+      "height": 910
+    },
+    "fight.webp": {
+      "width": 2952,
+      "height": 432
+    },
+    "clear.webp": {
+      "width": 1674,
+      "height": 310
+    },
+    "runner.webp": {
+      "width": 3728,
+      "height": 383
+    },
+    "runner-01.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-02.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-03.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-04.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-05.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-06.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-07.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-08.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-09.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-10.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-11.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-12.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-13.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-14.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-15.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "runner-16.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "idle.webp": {
+      "width": 233,
+      "height": 383
+    },
+    "road.webp": {
+      "width": 196,
+      "height": 195
+    },
+    "road-tile-02.webp": {
+      "width": 197,
+      "height": 195
+    },
+    "road-tile-03.webp": {
+      "width": 196,
+      "height": 195
+    },
+    "road-tile-04.webp": {
+      "width": 197,
+      "height": 195
+    },
+    "road-tile-05.webp": {
+      "width": 196,
+      "height": 195
+    },
+    "road-tile-06.webp": {
+      "width": 197,
+      "height": 195
+    },
+    "road-tile-07.webp": {
+      "width": 196,
+      "height": 195
+    },
+    "road-tile-08.webp": {
+      "width": 196,
+      "height": 195
+    },
+    "road-tile-09.webp": {
+      "width": 196,
+      "height": 192
+    },
+    "road-tile-10.webp": {
+      "width": 197,
+      "height": 192
+    },
+    "road-tile-11.webp": {
+      "width": 196,
+      "height": 192
+    },
+    "road-tile-12.webp": {
+      "width": 197,
+      "height": 192
+    },
+    "road-tile-13.webp": {
+      "width": 196,
+      "height": 192
+    },
+    "road-tile-14.webp": {
+      "width": 197,
+      "height": 192
+    },
+    "road-tile-15.webp": {
+      "width": 196,
+      "height": 192
+    },
+    "road-tile-16.webp": {
+      "width": 196,
+      "height": 192
+    },
+    "sidewalk.webp": {
+      "width": 196,
+      "height": 194
+    },
+    "road-tile-18.webp": {
+      "width": 197,
+      "height": 194
+    },
+    "road-tile-19.webp": {
+      "width": 196,
+      "height": 194
+    },
+    "road-tile-20.webp": {
+      "width": 197,
+      "height": 194
+    },
+    "road-tile-21.webp": {
+      "width": 196,
+      "height": 194
+    },
+    "road-tile-22.webp": {
+      "width": 197,
+      "height": 194
+    },
+    "road-tile-23.webp": {
+      "width": 196,
+      "height": 194
+    },
+    "road-tile-24.webp": {
+      "width": 196,
+      "height": 194
+    },
+    "crossing.webp": {
+      "width": 196,
+      "height": 309
+    },
+    "road-tile-26.webp": {
+      "width": 197,
+      "height": 309
+    },
+    "road-tile-27.webp": {
+      "width": 196,
+      "height": 309
+    },
+    "road-tile-28.webp": {
+      "width": 197,
+      "height": 309
+    },
+    "road-tile-29.webp": {
+      "width": 196,
+      "height": 309
+    },
+    "road-tile-30.webp": {
+      "width": 197,
+      "height": 309
+    },
+    "road-tile-31.webp": {
+      "width": 196,
+      "height": 309
+    },
+    "road-tile-32.webp": {
+      "width": 196,
+      "height": 309
+    },
+    "flag-left.webp": {
+      "width": 677,
+      "height": 1075
+    },
+    "flag-right.webp": {
+      "width": 676,
+      "height": 1075
+    },
+    "stats-banner.webp": {
+      "width": 2172,
+      "height": 565
+    },
+    "footer-banner.webp": {
+      "width": 2172,
+      "height": 365
+    }
+  },
+  "atlases": {
+    "fight.webp": {
+      "width": 2952,
+      "height": 432,
+      "frameCount": 6,
+      "frameWidth": 492,
+      "frameHeight": 432
+    },
+    "clear.webp": {
+      "width": 1674,
+      "height": 310,
+      "frameCount": 6,
+      "frameWidth": 279,
+      "frameHeight": 310
+    },
+    "runner.webp": {
+      "width": 3728,
+      "height": 383,
+      "frameCount": 16,
+      "frameWidth": 233,
+      "frameHeight": 383
+    }
+  },
+  "covers": {
+    "daily.webp": {
+      "innerScreenBoundsPercent": {
+        "x": 16.74,
+        "y": 28.66,
+        "width": 68,
+        "height": 51.7
+      },
+      "screenApertureTransparent": true
+    },
+    "weekly.webp": {
+      "innerScreenBoundsPercent": {
+        "x": 16.91,
+        "y": 27.62,
+        "width": 67.8,
+        "height": 51.61
+      },
+      "screenApertureTransparent": true
+    },
+    "girl-fade.webp": {
+      "innerScreenBoundsPercent": {
+        "x": 17.51,
+        "y": 27.2,
+        "width": 66.43,
+        "height": 52.15
+      },
+      "screenApertureTransparent": true
+    },
+    "funk-punk.webp": {
+      "innerScreenBoundsPercent": {
+        "x": 17.28,
+        "y": 28.48,
+        "width": 66.76,
+        "height": 51.64
+      },
+      "screenApertureTransparent": true
+    },
+    "flagship.webp": {
+      "innerScreenBoundsPercent": {
+        "x": 12.82,
+        "y": 39.53,
+        "width": 74.91,
+        "height": 37.92
+      },
+      "screenApertureTransparent": true
+    }
+  },
+  "roadTiles": [
+    {
+      "file": "road.webp",
+      "row": 1,
+      "column": 1,
+      "sourceCrop": {
+        "left": 12,
+        "top": 12,
+        "width": 196,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-02.webp",
+      "row": 1,
+      "column": 2,
+      "sourceCrop": {
+        "left": 219,
+        "top": 12,
+        "width": 197,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-03.webp",
+      "row": 1,
+      "column": 3,
+      "sourceCrop": {
+        "left": 427,
+        "top": 12,
+        "width": 196,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-04.webp",
+      "row": 1,
+      "column": 4,
+      "sourceCrop": {
+        "left": 634,
+        "top": 12,
+        "width": 197,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-05.webp",
+      "row": 1,
+      "column": 5,
+      "sourceCrop": {
+        "left": 842,
+        "top": 12,
+        "width": 196,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-06.webp",
+      "row": 1,
+      "column": 6,
+      "sourceCrop": {
+        "left": 1049,
+        "top": 12,
+        "width": 197,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-07.webp",
+      "row": 1,
+      "column": 7,
+      "sourceCrop": {
+        "left": 1257,
+        "top": 12,
+        "width": 196,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-08.webp",
+      "row": 1,
+      "column": 8,
+      "sourceCrop": {
+        "left": 1464,
+        "top": 12,
+        "width": 196,
+        "height": 195
+      }
+    },
+    {
+      "file": "road-tile-09.webp",
+      "row": 2,
+      "column": 1,
+      "sourceCrop": {
+        "left": 12,
+        "top": 215,
+        "width": 196,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-10.webp",
+      "row": 2,
+      "column": 2,
+      "sourceCrop": {
+        "left": 219,
+        "top": 215,
+        "width": 197,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-11.webp",
+      "row": 2,
+      "column": 3,
+      "sourceCrop": {
+        "left": 427,
+        "top": 215,
+        "width": 196,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-12.webp",
+      "row": 2,
+      "column": 4,
+      "sourceCrop": {
+        "left": 634,
+        "top": 215,
+        "width": 197,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-13.webp",
+      "row": 2,
+      "column": 5,
+      "sourceCrop": {
+        "left": 842,
+        "top": 215,
+        "width": 196,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-14.webp",
+      "row": 2,
+      "column": 6,
+      "sourceCrop": {
+        "left": 1049,
+        "top": 215,
+        "width": 197,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-15.webp",
+      "row": 2,
+      "column": 7,
+      "sourceCrop": {
+        "left": 1257,
+        "top": 215,
+        "width": 196,
+        "height": 192
+      }
+    },
+    {
+      "file": "road-tile-16.webp",
+      "row": 2,
+      "column": 8,
+      "sourceCrop": {
+        "left": 1464,
+        "top": 215,
+        "width": 196,
+        "height": 192
+      }
+    },
+    {
+      "file": "sidewalk.webp",
+      "row": 3,
+      "column": 1,
+      "sourceCrop": {
+        "left": 12,
+        "top": 417,
+        "width": 196,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-18.webp",
+      "row": 3,
+      "column": 2,
+      "sourceCrop": {
+        "left": 219,
+        "top": 417,
+        "width": 197,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-19.webp",
+      "row": 3,
+      "column": 3,
+      "sourceCrop": {
+        "left": 427,
+        "top": 417,
+        "width": 196,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-20.webp",
+      "row": 3,
+      "column": 4,
+      "sourceCrop": {
+        "left": 634,
+        "top": 417,
+        "width": 197,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-21.webp",
+      "row": 3,
+      "column": 5,
+      "sourceCrop": {
+        "left": 842,
+        "top": 417,
+        "width": 196,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-22.webp",
+      "row": 3,
+      "column": 6,
+      "sourceCrop": {
+        "left": 1049,
+        "top": 417,
+        "width": 197,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-23.webp",
+      "row": 3,
+      "column": 7,
+      "sourceCrop": {
+        "left": 1257,
+        "top": 417,
+        "width": 196,
+        "height": 194
+      }
+    },
+    {
+      "file": "road-tile-24.webp",
+      "row": 3,
+      "column": 8,
+      "sourceCrop": {
+        "left": 1464,
+        "top": 417,
+        "width": 196,
+        "height": 194
+      }
+    },
+    {
+      "file": "crossing.webp",
+      "row": 4,
+      "column": 1,
+      "sourceCrop": {
+        "left": 12,
+        "top": 620,
+        "width": 196,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-26.webp",
+      "row": 4,
+      "column": 2,
+      "sourceCrop": {
+        "left": 219,
+        "top": 620,
+        "width": 197,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-27.webp",
+      "row": 4,
+      "column": 3,
+      "sourceCrop": {
+        "left": 427,
+        "top": 620,
+        "width": 196,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-28.webp",
+      "row": 4,
+      "column": 4,
+      "sourceCrop": {
+        "left": 634,
+        "top": 620,
+        "width": 197,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-29.webp",
+      "row": 4,
+      "column": 5,
+      "sourceCrop": {
+        "left": 842,
+        "top": 620,
+        "width": 196,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-30.webp",
+      "row": 4,
+      "column": 6,
+      "sourceCrop": {
+        "left": 1049,
+        "top": 620,
+        "width": 197,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-31.webp",
+      "row": 4,
+      "column": 7,
+      "sourceCrop": {
+        "left": 1257,
+        "top": 620,
+        "width": 196,
+        "height": 309
+      }
+    },
+    {
+      "file": "road-tile-32.webp",
+      "row": 4,
+      "column": 8,
+      "sourceCrop": {
+        "left": 1464,
+        "top": 620,
+        "width": 196,
+        "height": 309
+      }
+    }
+  ]
+}

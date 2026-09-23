@@ -19,6 +19,7 @@ export const playerMatchesTable = pgTable("player_matches", {
       onDelete: "cascade",
     }),
   mode: text("mode").notNull(),
+  challengeRunId: uuid("challenge_run_id"),
   playerDeckId: text("player_deck_id").notNull(),
   rivalDeckId: text("rival_deck_id").notNull(),
   storyNodeId: text("story_node_id"),
@@ -32,6 +33,7 @@ export const playerMatchesTable = pgTable("player_matches", {
     .$type<{
       turnRulesVersion?: 1 | 2;
       balanceRulesVersion?: number;
+      economyVersion?: string;
       districtSnapshot?: Record<string, unknown>;
       version: number;
       cards: Array<{ cardId: string; xp: number; level: number }>;

@@ -10,19 +10,17 @@ try {
   await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
   await page.goto(origin + '/game/shop?view=corner');
   await page.getByRole('button', { name: 'Fade Market', exact: true }).click();
-  await page.getByRole('button', { name: '$2.99 · Demo', exact: true }).click();
-  await page.getByRole('button', { name: 'Complete demo purchase' }).click();
-  await page.getByRole('button', { name: 'Keep going' }).click();
+  await page.getByText('Preview mode · Checkout and resume are disabled.').waitFor();
   await page.getByRole('button', { name: 'Packs', exact: true }).click();
-  await page.getByRole('button', { name: '400 Clout', exact: true }).click();
-  await page.getByRole('button', { name: 'Complete demo purchase' }).click();
-  await page.getByRole('button', { name: 'Keep going' }).click();
+  await page.getByText('SHOWCASE PACK · PREVIEW').first().waitFor();
+  await page.getByRole('button', { name: 'View', exact: true }).first().click();
+  const preview = page.getByRole('dialog');
+  await preview.getByText('Showcase preview only. This item is not currently for sale.').waitFor();
+  assert.equal(await preview.getByRole('button', { name: /checkout|purchase|buy/i }).count(), 0);
   await page.reload();
   await page.getByRole('button', { name: 'Fade Market', exact: true }).click();
-  const wallet = await page.evaluate(() => JSON.parse(localStorage.getItem('squabblemon:corner-demo:v1:e2e-player')));
-  assert.equal(wallet.clout, 100);
-  assert.equal(wallet.receipts.length, 2);
-  assert.match(await page.locator('.city-header__balance').innerText(), /500/);
+  assert.equal(await page.evaluate(() => localStorage.getItem('squabblemon:corner-demo:v1:e2e-player')), null);
+  assert.match(await page.locator('.city-header__balance').innerText(), /0/);
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `Overflow at ${width}px`);
@@ -44,7 +42,7 @@ try {
     }
   }
   assert.deepEqual(errors, []);
-  console.log('UI flows passed: demo checkout, persistence, account isolation, responsive layout, reduced motion, result actions, versus entry.');
+  console.log('UI flows passed: payment preview isolation, responsive layout, reduced motion, result actions, versus entry.');
 } finally {
   await browser.close();
 }

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
-import { cardCatalog, ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS } from '../src/data';
+import { cardCatalog, ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS } from '../src/data';
+import { STREET_PACK_DISCLOSURES, STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 
 process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = '1';
 const origin = process.env.GACHA_ORIGIN ?? 'http://127.0.0.1:4193/game';
@@ -23,7 +24,7 @@ async function run(width: number, height: number) {
   let cloutBalance = 500;
   const openings = new Map<string, any>();
   const requests: any[] = [];
-  const owned = [...ROOKIE_FOUNDATION_IDS];
+  const owned = [...ROOKIE_MENTOR_CORE_IDS];
   const duplicateCard = cardCatalog.find((card) => card.catalogId === owned.find(id => cardCatalog.find(c => c.catalogId === id)?.rarity === 'Common'))!;
   function bootstrap() {
     return {
@@ -86,11 +87,11 @@ async function run(width: number, height: number) {
         id: 'street-pack',
         name: 'Street Pack',
         oddsVersion: 'fixture',
-        softCurrencyCost: 200,
-        ticketCost: 1,
-        rewardsPerPack: 6,
-        pityLimit: 10,
-        odds: [{ label: 'Fixture card', detail: 'Test data only', chance: 100 }],
+        softCurrencyCost: STREET_PACK_RULES.single.softCurrencyCost,
+        ticketCost: STREET_PACK_RULES.single.ticketCost,
+        rewardsPerPack: STREET_PACK_RULES.single.rewards,
+        pityLimit: STREET_PACK_RULES.pityLimit,
+        odds: STREET_PACK_DISCLOSURES,
       },
     };
   }
@@ -195,8 +196,8 @@ async function run(width: number, height: number) {
         let opening = openings.get(body.idempotencyKey);
         if (!opening) {
           const openingCost = body.pullCount === 10
-            ? body.paymentMethod === 'ticket' ? 9 : 1800
-            : body.paymentMethod === 'ticket' ? 1 : 200;
+            ? body.paymentMethod === 'ticket' ? STREET_PACK_RULES.ten.ticketCost : STREET_PACK_RULES.ten.softCurrencyCost
+            : body.paymentMethod === 'ticket' ? STREET_PACK_RULES.single.ticketCost : STREET_PACK_RULES.single.softCurrencyCost;
           if (body.paymentMethod === 'ticket') ticketBalance -= openingCost;
           else cloutBalance -= openingCost;
           const cardReward = (card: (typeof cardCatalog)[number]) => ({
@@ -215,7 +216,7 @@ async function run(width: number, height: number) {
             name: 'Duplicate converted',
             rarity: duplicateCard.rarity,
             isNew: false,
-            amount: 25,
+            amount: STREET_PACK_RULES.duplicateStyleShards,
           };
           const rewards = body.pullCount === 10
             ? [
@@ -250,8 +251,8 @@ async function run(width: number, height: number) {
     });
 
     await goto();
-    assert.deepEqual(await page.locator('.market-tabs button').allTextContents(), ['Gotcha', 'Training', 'Fade Market']);
-    assert.equal(await page.getByRole('button', { name: 'Gotcha', exact: true }).getAttribute('aria-pressed'), 'true');
+    assert.deepEqual(await page.locator('.market-tabs button').allTextContents(), ['Recruit', 'Training', 'Fade Market']);
+    assert.equal(await page.getByRole('button', { name: 'Recruit', exact: true }).getAttribute('aria-pressed'), 'true');
     await page.locator('.venue-scene.is-ready').waitFor();
     await page.waitForTimeout(700);
     await shot('stage');
@@ -318,7 +319,7 @@ async function run(width: number, height: number) {
       .filter({ has: page.locator('.gym-reward__conversion') }).click();
     const conversion = page.locator('.gym-reward__conversion');
     await conversion.waitFor();
-    assert.match(await conversion.innerText(), /Already on your gang[\s\S]*\+25 Style Shards/i);
+    assert.match(await conversion.innerText(), new RegExp(`Already on your gang[\\s\\S]*\\+${STREET_PACK_RULES.duplicateStyleShards} Style Shards`, 'i'));
     assert.equal(await page.locator('.gym-reward--duplicate .collector-card').count(), 1);
     await page.getByRole('button', { name: 'Reveal all', exact: true }).click();
     await page.reload({ waitUntil: 'domcontentloaded' });
@@ -345,7 +346,7 @@ async function run(width: number, height: number) {
     await page.getByRole('heading', { name: 'The crowd gets louder.', exact: true }).waitFor();
     await page.getByRole('button', { name: 'Close rewards', exact: true }).click();
     await page.getByRole('button', { name: /^10 pull/i }).click();
-    await page.getByRole('button', { name: 'Open 10× · 9 tickets', exact: true }).click();
+    await page.getByRole('button', { name: `Open 10× · ${STREET_PACK_RULES.ten.ticketCost} tickets`, exact: true }).click();
     await page.locator('.gacha-stage[data-phase="tenPunching"]').waitFor();
     await page.getByRole('button', { name: /^Triple jab/ }).click();
     await page.getByRole('button', { name: /^Triple hook/ }).waitFor();

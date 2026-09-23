@@ -45,7 +45,7 @@ test("concurrent retries spend one ticket and persist one pack opening", async (
 
   assert.equal(results[0].opening.id, results[1].opening.id);
   assert.equal(results[0].opening.rewards.length, 6);
-  assert.equal(results[0].opening.oddsVersion, 'street-pack-v5');
+  assert.equal(results[0].opening.oddsVersion, 'street-pack-v6');
   assert.deepEqual(results[0].opening, results[1].opening);
   assert.equal(new Set(results[0].opening.rewards.slice(0,5).map(reward => reward.cardId)).size,5);
   assert.deepEqual(
@@ -199,6 +199,51 @@ test("concurrent Collection Road retries grant one claim", async (t) => {
     1,
   );
 });
+
+test("Collection Road duplicates grant 5 shards", async (t) => {
+  const clerkUserId = `road-duplicate-${randomUUID()}`;
+  const milestone = COLLECTION_ROAD[0];
+  const startingCards = [
+    milestone.reward.cardId!,
+    ...cardCatalog.filter(card => card.catalogId !== milestone.reward.cardId)
+      .slice(0, milestone.threshold - 1).map(card => card.catalogId),
+  ];
+  await db.insert(playerProfilesTable).values({
+    clerkUserId, onboardingStep: "complete", ownedCardIds: startingCards,
+    discoveredCardIds: startingCards, collectionProgress: startingCards.length,
+  });
+  t.after(async () => {
+    await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  });
+
+  const result = await claimCollectionRoadForPlayer(clerkUserId, milestone);
+  const [profile] = await db.select({ styleShards: playerProfilesTable.styleShards })
+    .from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(result.reward.duplicateShards, 5);
+  assert.equal(profile.styleShards, 5);
+});
+
+test("Collection Road never raises deck slots above 12", async (t) => {
+  const clerkUserId = `road-slot-cap-${randomUUID()}`;
+  const milestone = COLLECTION_ROAD.find(item => item.id === "full-roster")!;
+  await db.insert(playerProfilesTable).values({
+    clerkUserId, onboardingStep: "complete", ownedCardIds: allCardIdsForRoad(),
+    discoveredCardIds: allCardIdsForRoad(), collectionProgress: cardCatalog.length,
+    deckSlots: 11,
+  });
+  t.after(async () => {
+    await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  });
+
+  await claimCollectionRoadForPlayer(clerkUserId, milestone);
+  const [profile] = await db.select({ deckSlots: playerProfilesTable.deckSlots })
+    .from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+  assert.equal(profile.deckSlots, 12);
+});
+
+function allCardIdsForRoad() {
+  return cardCatalog.map(card => card.catalogId);
+}
 
 test("a concurrent bootstrap read cannot erase a pack reward", async (t) => {
   const clerkUserId = `pack-bootstrap-race-${randomUUID()}`;

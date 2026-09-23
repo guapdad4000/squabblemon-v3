@@ -222,10 +222,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
           </button>
           <button
             aria-pressed={!showEvents}
-            onClick={() => {
-              setShowEvents(false);
-              chooseMode('auto');
-            }}
+            onClick={() => navigate('/game/challenges')}
           >
             Challenges
           </button>

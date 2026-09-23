@@ -5,6 +5,8 @@ const port = 4179;
 export default defineConfig({
   testDir: '.',
   testMatch: '*.spec.ts',
+  // These journeys have isolated production-preview harnesses.
+  testIgnore: ['fighter-id.spec.ts', 'fadecade.spec.ts'],
   fullyParallel: false,
   workers: 1,
   use: {

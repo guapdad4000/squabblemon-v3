@@ -5,6 +5,7 @@ import type {
   StoryReward, StoryStarObjective, StoryTeaching,
 } from "./story";
 import { seasonTwoScripts, type SeasonTwoBattleBeat, type SeasonTwoSpeech } from "./seasonTwoDialogue";
+import { TICKETS_PER_MAJOR_STORY_NODE } from "./economy";
 
 const PORTRAITS: Readonly<Record<string, string>> = {
   "Ganger Blue": "ganger-blue", "Ganger Red": "ganger-red", "Cracked Head": "cracked-head",
@@ -152,7 +153,7 @@ export const seasonTwoChapters: readonly StoryChapter[] = seasonTwoScripts.map((
     mapPosition: { x: 94, y: 8 }, prerequisites: [prior], optional: false,
     rewards: [
       xp(125),
-      { kind: "pack-ticket", id: "street-pack-ticket", amount: chapterIndex === 7 ? 3 : 1 },
+      { kind: "pack-ticket", id: "street-pack-ticket", amount: TICKETS_PER_MAJOR_STORY_NODE },
       ...(chapterIndex < 7 ? [{ kind: "chapter-key" as const, id: `story-key:${seasonTwoScripts[chapterIndex + 1].id}`, amount: 1 }] : []),
     ],
     teaching: teaching(["The match result and the real-world agreement remain separate."], ["story resolution"], ["cornball"]),

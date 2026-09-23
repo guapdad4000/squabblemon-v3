@@ -163,7 +163,7 @@ test('new cards can complete a deterministic six-round fade and server replay', 
 test('Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs', () => {
   assert(!cardCatalog.some(c => c.type === 'Rock' || c.elementalBond === 'Rock'));
   const earth = cardCatalog.filter(c => c.type === 'Earth' && (c.kind ?? 'character') === 'character');
-  assert.equal(earth.length, 17);
+  assert.equal(earth.length, 18);
   for (const [id, catalogId, rarity, cost, power] of [
     ['concrete', 'concrete', 'SuperCommon', 1, 1],
     ['landlord', 'landlord', 'Legendary', 2, 3],

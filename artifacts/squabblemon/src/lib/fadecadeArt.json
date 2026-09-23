@@ -1,0 +1,7 @@
+{
+  "daily.webp": { "width": 675, "height": 499, "screen": { "x": 16.74, "y": 28.66, "width": 68, "height": 51.7 } },
+  "weekly.webp": { "width": 674, "height": 496, "screen": { "x": 16.91, "y": 27.62, "width": 67.8, "height": 51.61 } },
+  "girl-fade.webp": { "width": 691, "height": 489, "screen": { "x": 17.51, "y": 27.2, "width": 66.43, "height": 52.15 } },
+  "funk-punk.webp": { "width": 683, "height": 488, "screen": { "x": 17.28, "y": 28.48, "width": 66.76, "height": 51.64 } },
+  "flagship.webp": { "width": 1092, "height": 1308, "screen": { "x": 12.82, "y": 39.53, "width": 74.91, "height": 37.92 } }
+}

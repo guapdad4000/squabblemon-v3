@@ -13,6 +13,8 @@ const testDirectory = join(root, "artifacts", "api-server", "src", "lib");
 const tests = readdirSync(testDirectory)
   .filter(name => name.endsWith(".test.ts"))
   .map(name => `src/lib/${name}`);
+// Payment database regressions require independent native PostgreSQL connections.
+// Run them separately with scripts/test-payments-database.mjs, never PGlite.
 if (!tests.some(name => name.endsWith("newAccountCampaignRoutes.test.ts"))) {
   throw new Error("The full campaign database suite is missing.");
 }

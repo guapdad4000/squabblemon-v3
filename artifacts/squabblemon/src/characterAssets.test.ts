@@ -212,6 +212,13 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'inmate-informant',
     'inmate-contraband',
     'lebron-james',
+    'sugarfoot',
+    'yn-gokarter',
+    'yn-atv-lord',
+    'janitor',
+    'homeless-wiseman',
+    'juneteenth-chair-guy',
+    'squabble-house-manager',
     'kyle',
     'stockz',
   ]);

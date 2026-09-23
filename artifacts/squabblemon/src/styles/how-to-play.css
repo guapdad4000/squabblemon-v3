@@ -43,10 +43,11 @@
 .guide-hero-facts { position:relative; z-index:5; grid-column:1/-1; display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid #f5d44b45; padding:24px 0; align-self:end; gap:20px; }
 .guide-hero-facts > span { display:flex; align-items:center; gap:15px; font-size:11px; color:#bfc3b5; }
 .guide-hero-facts b { color:var(--guide-yellow); font:700 35px 'Clash Display',sans-serif; }
-.guide-chapter-nav { position:sticky; top:0; z-index:20; display:flex; justify-content:center; gap:5px; padding:10px 3%; border-bottom:1px solid #ffffff1f; background:#151813f5; backdrop-filter:blur(12px); overflow-x:auto; }
-.guide-chapter-nav a { display:flex; gap:9px; padding:14px 15px; white-space:nowrap; font-size:11px; font-weight:600; }
-.guide-chapter-nav span { font:9px 'Space Mono',monospace; color:#828b76; align-self:center; }
-.guide-chapter-nav a:hover { color:var(--guide-yellow); background:#ffffff07; }
+.guide-chapter-nav { position:sticky; top:0; z-index:20; display:flex; justify-content:center; gap:16px; padding:10px 3%; border-bottom:0; background:transparent; backdrop-filter:none; overflow-x:auto; }
+.guide-chapter-nav a { display:flex; gap:9px; padding:15px 24px; white-space:nowrap; font-size:11px; font-weight:800; color:#1a1a1a; background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat; filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%)); transform:rotate(-1deg); transition:transform .2s,filter .2s; }
+@media (prefers-reduced-motion: reduce) { .guide-chapter-nav a { transition: none; transform: none; } }
+.guide-chapter-nav span { font:9px 'Space Mono',monospace; color:#555; align-self:center; }
+.guide-chapter-nav a:hover { color:#111; transform:rotate(0deg) scale(1.02); filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 62%)) brightness(1.05); }
 .guide-section { padding:90px max(5.5%,calc((100% - 1280px)/2)); }
 .guide-section-intro { display:grid; grid-template-columns:1.2fr 1fr; align-items:end; gap:80px; margin-bottom:45px; }
 .guide-section-title h2 { font-size:clamp(38px,4.25vw,60px); margin-top:17px; }
@@ -300,7 +301,7 @@
   .guide-hero-tag { top:0; font-size:8px; } .guide-hero-stamp { width:80px; height:80px; font-size:16px; bottom:10px; right:-3px; } .guide-hero-stamp span { font-size:7px; }
   .guide-hero-stamp b { font-size:13px; }
   .guide-hero-facts { grid-template-columns:repeat(2,1fr); gap:14px; padding:20px 0; width:100%; } .guide-hero-facts > span { font-size:9px; gap:10px; } .guide-hero-facts b { font-size:30px; }
-  .guide-chapter-nav { padding:5px 10px; gap:0; } .guide-chapter-nav a { padding:14px 12px; font-size:10px; gap:6px; } .guide-chapter-nav span { font-size:8px; }
+  .guide-chapter-nav { padding:10px; gap:8px; } .guide-chapter-nav a { padding:10px 14px; font-size:10px; gap:6px; } .guide-chapter-nav span { font-size:8px; }
   .guide-section { padding:55px 22px; } .how-to-play section[id] { scroll-margin-top:62px; }
   .guide-section-intro { grid-template-columns:1fr; gap:20px; margin-bottom:30px; } .guide-section-title h2 { font-size:40px; line-height:1.04; } .guide-section-intro p { font-size:13px; }
   .guide-eyebrow { font-size:9px; letter-spacing:.1em; }

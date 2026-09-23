@@ -1,6 +1,6 @@
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useStartPlayerMatch, useCompletePlayerMatch, getGetPlayerBootstrapQueryKey, getGetPlayerStoryQueryKey, MatchReward, type MatchMove, type StoryMatchMetadata } from '@workspace/api-client-react';
+import { useStartPlayerMatch, useCompletePlayerMatch, useCheckpointChallengeRun, getGetPlayerBootstrapQueryKey, getGetPlayerStoryQueryKey, MatchReward, type MatchMove, type StoryMatchMetadata } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { LayoutGroup, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
@@ -16,7 +16,7 @@ import { PresentationTimeline } from '../presentationTimeline';
 import { readMoveOverrides, specialMoveForEvent, planSpecialMoveBeat, markSpecialMovePlayed } from '../specialMoves';
 import { broadcastDelay, changedDistrictControl, isReducedMotionRequested, type DistrictOwner } from '../broadcastPresentation';
 import { BattleFeedback } from '../battleFeedback';
-import { createDistrictSnapshot, validateDistrictSnapshot, getMatchDistricts, type DistrictSnapshot, canAffordSelection, chooseCpuPlay, createMatch, createMatchFromEngineCards, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type AbilityUpgradeSnapshot, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
+import { createDistrictSnapshot, validateDistrictSnapshot, getMatchDistricts, replayMatchPrefix, type DistrictSnapshot, canAffordSelection, chooseCpuPlay, createMatch, createMatchFromEngineCards, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type AbilityUpgradeSnapshot, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatment';
 import { settleHiddenBattlePresentation } from '../battleVisibility';
@@ -94,7 +94,7 @@ export const shouldRunTurnTimer = (
   requested: boolean,
 ) => mode !== 'tutorial' && requested;
 
-export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, equippedVariants, cardProgression = {}, activity, draftWeek, draftPicks }: { activity?: string; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
+export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, draftWeek, draftPicks }: { activity?: string; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
   const effectiveTurnTimerEnabled = shouldRunTurnTimer(mode, turnTimerEnabled);
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [reviewBoard, setReviewBoard] = useState(false);
@@ -108,7 +108,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const [isUnsavedTraining, setIsUnsavedTraining] = useState(mode === 'guest');
   const [battleStartEffectVisible, setBattleStartEffectVisible] = useState(false);
   const [storyMetadata, setStoryMetadata] = useState<StoryMatchMetadata | null>(null), [startError, setStartError] = useState<string | null>(null);
-  const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), queryClient = useQueryClient();
+  const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), checkpointChallengeRun = useCheckpointChallengeRun(), queryClient = useQueryClient();
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null), [selectedLane, setSelectedLane] = useState<number | null>(null), [squabble, setSquabble] = useState(false);
   const timeline = useRef(new PresentationTimeline()), autoStartRef = useRef(false), playerMovesRef = useRef<MatchMove[]>([]), locked = useRef(false), fastForwardRef = useRef(false), skipTransitionRef = useRef(false);
   const decisionStartedAtRef = useRef(Date.now());
@@ -192,8 +192,8 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false, resetClock = true) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round} · DECISION IN 1`); if (!immediate && !await waitForBeat(1100, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); if (resetClock) setTimerSeconds(TURN_SECONDS); locked.current = false; fastForwardRef.current = false; setSquabbleCinematicLane(null); }, [waitForBeat]);
   const runIntro = useCallback(async () => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(1); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
-  const beginMatch = useCallback((initial: Match) => {
-    cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); setTutorialPlaysByRound({}); tutorialStepRef.current = null; seenMechanicsRef.current = null; setMechanicLesson(null); playerMovesRef.current = []; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); playedSpecialMovesRef.current.clear(); setBattleStartEffectVisible(true); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
+  const beginMatch = useCallback((initial: Match, committedMoves: MatchMove[] = []) => {
+    cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); setTutorialPlaysByRound({}); tutorialStepRef.current = null; seenMechanicsRef.current = null; setMechanicLesson(null); playerMovesRef.current = [...committedMoves]; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); playedSpecialMovesRef.current.clear(); setBattleStartEffectVisible(true); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
     // Chapter dialogue is presented on the 2D stage before this real match.
     void runIntro();
   }, [cancelTimers, resetPresentation, runIntro, setVisualFrame]);
@@ -229,17 +229,21 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     feedback.current.unlockAudio();
     setServerMatchId(null); setStartError(null); setIsUnsavedTraining(mode === 'guest');
     if (mode !== 'guest') try {
-      const res = await startPlayerMatch.mutateAsync({ data: { mode: mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice', playerDeckId: deckId, rivalDeckId: rival, storyNodeId, activity, draftWeek, draftPicks } });
+      const res = await startPlayerMatch.mutateAsync({ data: { mode: mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice', playerDeckId: deckId, rivalDeckId: rival, storyNodeId, challengeRunId, activity, draftWeek, draftPicks } });
       setServerMatchId(res.id);
       setRival(res.rivalDeckId);
-      beginMatch(createCanonicalMatch(
+      const canonical = createCanonicalMatch(
         mode === 'tutorial' ? 'tutorial' : mode === 'story' ? 'story' : 'practice',
         deckId,
         res.rivalDeckId,
         res.abilityUpgradeSnapshot,
         res.encounterSnapshot as unknown as StoryEncounterSnapshot | null,
         validateDistrictSnapshot(res.districtSnapshot),
-      ));
+      );
+      const committedMoves = challengeRunId && res.checkpoint?.moves
+        ? res.checkpoint.moves as MatchMove[] : [];
+      const hydrated = committedMoves.length ? replayMatchPrefix(canonical, committedMoves) : canonical;
+      beginMatch(hydrated, committedMoves);
       return;
     } catch (error) {
       if (mode === 'story' || mode === 'tutorial' || customPlayerDeck) { setServerMatchId(null); setStartError(error instanceof Error ? error.message : 'The encounter could not be started.'); return; }
@@ -251,7 +255,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     } catch (error) {
       setStartError(error instanceof Error ? error.message : 'The practice fade could not be started.');
     }
-  }, [beginMatch, customPlayerDeck, deckId, mode, rival, startLocalMatch, startPlayerMatch, storyNodeId, activity, draftWeek, draftPicks]);
+  }, [beginMatch, challengeRunId, customPlayerDeck, deckId, mode, rival, startLocalMatch, startPlayerMatch, storyNodeId, activity, draftWeek, draftPicks]);
   useEffect(() => { if (hideLobby && !match && !autoStartRef.current) { autoStartRef.current = true; void start(); } }, [hideLobby, match, start]);
 
   const finishMatchSession = useCallback(async (_finalMatch: Match) => {
@@ -260,7 +264,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       if (mode !== 'tutorial') queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), (old: any) => old ? { ...old, profile: res.profile, missions: res.missions, nextAction: res.nextAction } : old);
       if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
       else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
-      setServerReward(res.reward); setStoryMetadata(res.story); setServerRewardError(false); onVerifiedComplete?.(_finalMatch);
+      setServerReward(res.reward); setStoryMetadata(res.story); setServerRewardError(false); onVerifiedComplete?.(_finalMatch, serverMatchId);
     } catch { setServerRewardError(true); }
     else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     setReviewBoard(false);
@@ -372,15 +376,30 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     }
     feedback.current.unlockAudio(); locked.current = true; cancelTimers();
     const id = timeline.current.id;
+    const previousMatch = match;
     if (playsCard) feedback.current.cue('lock', false);
     let next: Match;
     try {
       next = playsCard
         ? playTurnCard(match, 'player', cardId!, targetLane as Lane, armed, drop?.investment)
         : pass(match, 'player');
-      playerMovesRef.current.push(playsCard
+      const committedMove: MatchMove = playsCard
         ? { cardInstanceId: cardId, lane: targetLane as Lane, squabble: armed, endTurn: false, ...(drop?.investment ? { investment: drop.investment } : {}) }
-        : { cardInstanceId: null, lane: null, squabble: false, endTurn: true });
+        : { cardInstanceId: null, lane: null, squabble: false, endTurn: true };
+      const candidateMoves = [...playerMovesRef.current, committedMove];
+      // Arcade runs have no optimistic consequences: the server must commit
+      // every player decision before it is animated or exposed.
+      if (challengeRunId) {
+        try {
+          await checkpointChallengeRun.mutateAsync({ runId: challengeRunId, data: { moves: candidateMoves } });
+        } catch {
+          setMatch(previousMatch); setVisualFrame(previousMatch);
+          setPhaseMessage('CONNECTION LOST · RETRY YOUR MOVE');
+          setPresentationPhase('player-ready'); locked.current = false;
+          return;
+        }
+      }
+      playerMovesRef.current.push(committedMove);
       trackBattleTurnCommitted(match, playsCard ? 'lock_in' : 'pass', automatic, playsCard && armed, decisionStartedAtRef.current, playsCard ? targetLane as Lane : null);
       setMatch(next);
       if (playsCard && mode === 'tutorial') {
@@ -400,6 +419,17 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       if (automatic && playsCard) {
         const afterPlay = next;
         next = pass(afterPlay, 'player');
+        const candidateMoves = [...playerMovesRef.current, { cardInstanceId: null, lane: null, squabble: false, endTurn: true } as MatchMove];
+        if (challengeRunId) {
+          try {
+            await checkpointChallengeRun.mutateAsync({ runId: challengeRunId, data: { moves: candidateMoves } });
+          } catch {
+            setMatch(previousMatch); setVisualFrame(previousMatch);
+            setPhaseMessage('CONNECTION LOST · RETRY YOUR MOVE');
+            setPresentationPhase('player-ready'); locked.current = false;
+            return;
+          }
+        }
         playerMovesRef.current.push({ cardInstanceId: null, lane: null, squabble: false, endTurn: true });
         setMatch(next);
         if (!await presentEvents(next, afterPlay.nextEventSequence, id)) return;
@@ -413,7 +443,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     setVisualFrame(next); setPresentationScores(null);
     if (next.phase === 'player') void enterPlayerTurn(next.round, true, false);
     else await runRival(next, id);
-  }, [cancelTimers, enterPlayerTurn, match, mode, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, setVisualFrame, squabble, tutorialPlaysByRound, waitForBeat]);
+  }, [cancelTimers, challengeRunId, checkpointChallengeRun, enterPlayerTurn, match, mode, presentationPhase, presentEvents, runRival, selectedInstanceId, selectedLane, setVisualFrame, squabble, tutorialPlaysByRound, waitForBeat]);
   const showReplayFrame = useCallback((event: EffectLogEntry, step: 'before' | 'after') => {
     if (!match || presentationPhase !== 'player-ready') return;
     if (!replayLiveFrame.current) { replayLiveFrame.current = visualMatchRef.current; replayLiveTimer.current = timerSeconds; }
@@ -506,7 +536,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     )}
     {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} /></LayoutGroup>}
     {screen === 'result' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="result-stage__return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
-    <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
+    <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen challenge={Boolean(challengeRunId)} tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
   </div>;
 }
 /*

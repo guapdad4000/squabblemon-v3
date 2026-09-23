@@ -213,6 +213,7 @@ test('Rookie Road survives refreshes, claims once, and clears account cache on s
   await expect(page.getByText('Claimed')).toBeVisible();
 
   await page.goto('/squabblemon/game/settings');
+  await page.getByRole('tab', { name: 'Settings', exact: true }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await expect(page.getByRole('link', { name: 'Sign Up' })).toBeVisible();
   api.resetAccount();
@@ -254,7 +255,7 @@ test('direct game links render and sign-in returns players to their intended des
     ['/squabblemon/game/decks', 'Decks'],
     ['/squabblemon/game/missions', 'Missions'],
     ['/squabblemon/game/shop', 'Street Shop'],
-    ['/squabblemon/game/settings', 'Settings'],
+    ['/squabblemon/game/settings', 'ROOKIE'],
   ] as const;
 
   for (const [path, heading] of destinations) {

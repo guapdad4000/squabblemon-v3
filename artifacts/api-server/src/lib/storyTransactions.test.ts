@@ -339,7 +339,7 @@ test("concurrent story reward completion grants immutable rewards once", async (
     .where(eq(playerProfilesTable.clerkUserId, userId));
   assert.equal(claims.value, 5);
   assert.equal(profile.softCurrency, 250);
-  assert.equal(profile.packTickets, 10);
+  assert.equal(profile.packTickets, 2);
   assert.equal(profile.ownedCardIds.includes("closet-nerd"), true);
   assert.deepEqual(profile.unlockedCosmeticIds.sort(), ["block-party-crowned", "story-key:chapter-two"]);
   const [actions] = await db
@@ -465,7 +465,7 @@ test("stored story fade result reconstructs byte-equivalent retry metadata", asy
     id: "street-xp",
     amount: 50,
     duplicateShards: 0,
-    description: "+50 Street XP",
+    description: "+50 Account XP",
   };
   const [match] = await db
     .insert(playerMatchesTable)

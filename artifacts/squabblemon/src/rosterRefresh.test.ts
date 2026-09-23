@@ -6,6 +6,15 @@ import { createCardInstance, createMatchFromEngineCards, getLegalCardCost, nextR
 import { resolveSpecialMove } from './specialMoves';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
+const packRngFor = (rarity: string, tierIndex = 0) => {
+  const rarityThreshold: Record<string, number> = {
+    SuperCommon: 0, Common: 4000, Uncommon: 6000, Rare: 8500,
+    Epic: 9700, Legendary: 9900, Mythical: 9980,
+  };
+  let call = 0;
+  return () => call++ === 0 ? rarityThreshold[rarity] : call === 2 ? tierIndex : 0;
+};
+
 const refreshed = ['rastamon', 'gamer', 'bikelife', 'bossbabe', 'oink', 'barber', 'bottle', 'sneaker', 'church', 'wifey', 'scammer'];
 const added = ['youngbull', 'transplant', 'tayaty', 'edgar', 'nguyen', 'manman', 'pinaynurse', 'honestthot', 'earthy', 'abuela', 'icecream'];
 const crew = completeEngineCrew(['bossbabe', 'scammer', 'cornball', 'hooper', 'nguyen', 'abuela', 'icecream']);
@@ -28,7 +37,7 @@ test('all eleven refreshes and eleven new cards resolve through collection, deck
   for (const id of ['bossbabe', 'scammer', ...added]) {
     const entry = catalogCardByEngineId[id];
     const owned = cardCatalog.filter(c => c.engineId !== id).map(c => c.catalogId);
-    const pack = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, () => 0);
+    const pack = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, packRngFor(entry.rarity));
     assert.equal(pack.rewards[0].cardId, entry.catalogId, `${id} is obtainable`);
   }
   assert.equal(resolveSpecialMove('boss-babe')?.id, 'char16');

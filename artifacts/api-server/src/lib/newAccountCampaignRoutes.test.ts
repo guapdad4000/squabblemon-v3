@@ -21,6 +21,7 @@ import {
   createStoryMatch,
 } from "@workspace/squabblemon-engine/gameEngine";
 import { storyContent, type StoryNode } from "@workspace/squabblemon-engine/story";
+import { WELCOME_REWARD } from "@workspace/squabblemon-engine/economy";
 import playerRouter from "../routes/player";
 import storyRouter from "../routes/story";
 import collectionRouter from "../routes/collection";
@@ -43,7 +44,6 @@ test("new account completes every campaign node through HTTP with isolated, idem
   timeout: 240_000,
 }, async t => {
   const campaignCrew = [...ROOKIE_MENTOR_CORE_IDS];
-  campaignCrew[5] = "nail-tech"; // The same required first swap as Dr. Fade’s UI lesson.
   const runId = randomUUID();
   const playerId = `campaign-e2e-${runId}`;
   const controlId = `campaign-control-${runId}`;
@@ -132,7 +132,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
 
   const collection = await playerRequest("/player/onboarding", { action: "choose-starter", starterDeckId: ROOKIE_FOUNDATION_ID });
   assert.equal(collection.body.profile.onboardingStep, "tutorial");
-  assert.equal(collection.body.profile.ownedCardIds.length, 21);
+  assert.equal(collection.body.profile.ownedCardIds.length, ROOKIE_MENTOR_CORE_IDS.length);
   const savedDeck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
     name: "My First Gang", cardIds: campaignCrew, heroCardId: "dr-fade", recipeId: null,
   }, "PUT");
@@ -192,8 +192,8 @@ test("new account completes every campaign node through HTTP with isolated, idem
   assert(rewards.every(result => result.status === 200));
   const afterReward = (await playerRequest("/player/bootstrap")).body.profile;
   assert.equal(afterReward.onboardingStep, "complete");
-  assert.equal(afterReward.softCurrency - beforeReward.softCurrency, 250);
-  assert.equal(afterReward.packTickets - beforeReward.packTickets, 1);
+  assert.equal(afterReward.softCurrency - beforeReward.softCurrency, WELCOME_REWARD.softCurrency);
+  assert.equal(afterReward.packTickets - beforeReward.packTickets, WELCOME_REWARD.packTickets);
 
   const lockedFinale = storyContent.chapters.at(-1)!.nodes.find(node => node.kind !== "battle")!;
   const locked = await playerRequest(`/player/story/nodes/${lockedFinale.id}/complete`, {

@@ -107,23 +107,31 @@
   filter: drop-shadow(0 3px 8px #000);
 }
 .online-room-panel {
-  background: linear-gradient(120deg, #29231bf5, #151618f5);
-  border: 1px solid #b4905066;
-  border-top: 3px solid #d1ac66;
-  padding: 28px;
-  box-shadow: 0 16px 60px #0006;
+  background: transparent url('../assets/paper/taped-panel.webp') center/100% 100% no-repeat;
+  border: 0;
+  padding: 48px 46px;
+  filter: drop-shadow(8px 10px 8px rgb(0 0 0 / 68%));
+  color: #1a1a1a;
+  position: relative;
+  transform: rotate(0.5deg);
 }
 .online-room-panel h2,
-.online-recent h2 {
-  font-size: 26px;
-  font-weight: 900;
+.online-room-panel h3 {
+  font-family: var(--font-hand);
+  font-size: 36px;
+  font-weight: 700;
   margin: 10px 0;
+  text-transform: uppercase;
+  color: #c0392b;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+  transform: rotate(-1.5deg);
 }
 .online-room-panel p {
-  color: #d5cdbf;
+  color: #333;
   font-size: 14px;
   line-height: 1.6;
   margin: 16px 0;
+  font-weight: 500;
 }
 .online-primary,
 .online-secondary,
@@ -234,9 +242,10 @@
 }
 .online-room-options form label {
   display: block;
-  color: #c8b58f;
+  color: #555;
   font-size: 12px;
   margin-bottom: 8px;
+  font-weight: 700;
 }
 .online-room-options form > div {
   display: flex;
@@ -254,22 +263,25 @@
 }
 .online-room-code {
   padding: 18px;
-  border: 1px dashed #c59e5c88;
+  border: 2px dashed #c0392b;
   text-align: center;
   margin: 16px 0;
-  background: #0c0e1266;
+  background: rgba(255,255,255,0.6);
+  transform: rotate(-1deg);
 }
 .online-room-code span {
   display: block;
   font-size: 10px;
   letter-spacing: 0.2em;
-  color: #d9bc85;
+  color: #555;
+  font-weight: 700;
 }
 .online-room-code strong {
   font-size: clamp(22px, 4vw, 35px);
   letter-spacing: 0.14em;
   font-family: monospace;
   user-select: all;
+  color: #111;
 }
 .online-room-members {
   display: flex;
@@ -290,8 +302,9 @@
 }
 .online-room-members span {
   font-size: 11px;
-  color: #d0b577;
+  color: #555;
   margin-top: 5px;
+  font-weight: 700;
 }
 .online-rules {
   display: flex;
@@ -304,28 +317,30 @@
 .online-rules > span {
   font-size: 10px;
   letter-spacing: 0.1em;
-  color: #debc7b;
+  color: #111;
   font-weight: 900;
 }
 .online-rules p {
   font-size: 12px;
   line-height: 1.6;
-  color: #b2ada4;
+  color: #444;
   max-width: 700px;
 }
 .online-recent a {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid #a88d5233;
+  border-bottom: 1px dashed rgba(0,0,0,0.2);
   padding: 16px 0;
   font-size: 13px;
+  color: #111;
+  font-weight: 600;
 }
 .online-recent a span {
-  color: #d5b476;
+  color: #c0392b;
 }
 .online-recent > p {
-  color: #aaa;
+  color: #555;
 }
 .online-notice,
 .online-connection {
@@ -1084,7 +1099,7 @@
 .fight-night .online-lobby__fighters { height:440px; }
 .fight-night__versus {position:absolute;left:43%;top:42%;z-index:3;font:900 italic 68px var(--font-display);color:#f5d099;transform:rotate(-10deg);text-shadow:3px 4px 0 #702532,0 6px 20px #000;}
 .fight-night__ticket { display:flex; align-items:center; justify-content:space-around; gap:15px; position:relative; padding:17px 20px;margin:0 0 25px; color:#271b20;background:#efd4a1;border-block:2px dashed #8f5f4c;transform:rotate(-1deg);font:800 11px var(--font-mono); }
-.fight-night .online-room-panel { background:linear-gradient(120deg,#29212aed,#141521f2);border-color:#ac796b60;border-top:3px solid #e3b676; }
+.fight-night .online-room-panel { background-color:transparent; }
 .fight-night .online-primary { border-radius:0;transform:skew(-5deg);background:#ebbb6c;box-shadow:3px 4px 0 #6a3644; }
 .fight-night .online-room-options { gap:20px; }
 @media(max-width:700px) {

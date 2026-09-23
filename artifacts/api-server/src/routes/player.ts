@@ -3,7 +3,7 @@ import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
 import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
 import { getAuth } from "@clerk/express";
-import { battleEarnings } from '@workspace/squabblemon-engine/economy';
+import { ACCOUNT_XP_PER_LEVEL, battleEarnings, economyVersionFromSnapshot } from '@workspace/squabblemon-engine/economy';
 import { and, eq, isNull, isNotNull, desc, sql } from "drizzle-orm";
 import { Router, type IRouter, type Request, type Response } from "express";
 import {
@@ -26,6 +26,7 @@ import {
   playerMissionsTable,
   playerProfilesTable,
   playerStoryNodesTable,
+  challengeRunsTable,
 } from "@workspace/db";
 import {
   createStoryMatch,
@@ -36,7 +37,7 @@ import {
   verifyMatchTranscript,
   verifyStoryMatchTranscript,
 } from "@workspace/squabblemon-engine/gameEngine";
-import { starterRecipes, catalogIdsToEngineIds, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID } from "@workspace/squabblemon-engine/data";
+import { starterRecipes, catalogCardById, catalogIdsToEngineIds, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID } from "@workspace/squabblemon-engine/data";
 import { storyContent } from "@workspace/squabblemon-engine/story";
 import {
   ensurePlayer,
@@ -75,6 +76,7 @@ import {
 import {
   createCardProgressionSnapshot,
   applyCardXp, participatingCatalogCardIds,
+  normalizeCatalogCardId,
   parseCardProgressionSnapshot,
   type CardProgressionSnapshot,
 } from "../lib/cardProgression";
@@ -186,20 +188,41 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
   }
 
   await getPlayerBootstrap(userId);
-  await db.transaction(async tx => {
+  const avatarError = await db.transaction(async tx => {
     await lockPlayerProfile(tx, userId);
     const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
-    if (!current) return;
+    if (!current) return null;
+    const requestedAvatarKey = parsed.data.avatarKey;
+    if (requestedAvatarKey !== undefined && requestedAvatarKey !== current.avatarKey) {
+      const requestedAvatar = Object.hasOwn(catalogCardById, requestedAvatarKey)
+        ? catalogCardById[requestedAvatarKey]
+        : undefined;
+      if (
+        !requestedAvatar ||
+        requestedAvatar.kind === "support" ||
+        requestedAvatar.kind === "token"
+      ) {
+        return "Choose a valid character avatar";
+      }
+      if (!current.ownedCardIds.includes(requestedAvatar.catalogId)) {
+        return "Unlock this character before choosing their avatar";
+      }
+    }
     await tx.update(playerProfilesTable).set({
       ...(parsed.data.displayName ? { displayName: parsed.data.displayName.trim() } : {}),
-      ...(parsed.data.avatarKey ? { avatarKey: parsed.data.avatarKey } : {}),
+      ...(requestedAvatarKey !== undefined ? { avatarKey: requestedAvatarKey } : {}),
       settings: {
         ...current.settings,
         reducedMotion: parsed.data.reducedMotion ?? current.settings.reducedMotion,
         turnTimerEnabled: parsed.data.turnTimerEnabled ?? current.settings.turnTimerEnabled,
       },
     }).where(eq(playerProfilesTable.clerkUserId, userId));
+    return null;
   });
+  if (avatarError) {
+    res.status(400).json({ error: avatarError });
+    return;
+  }
 
   res.json(
     UpdatePlayerProfileResponse.parse(await getPlayerBootstrap(userId)),
@@ -339,7 +362,55 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  if (parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId]) {
+  const challengeRunId = parsed.data.challengeRunId ?? null;
+  if (challengeRunId && parsed.data.mode !== "practice") {
+    res.status(400).json({ error: "Challenge runs require practice battle mode" });
+    return;
+  }
+  const challengeRun = challengeRunId
+    ? (await db.select().from(challengeRunsTable).where(and(
+      eq(challengeRunsTable.id, challengeRunId),
+      eq(challengeRunsTable.clerkUserId, userId),
+      eq(challengeRunsTable.status, "active"),
+    )).limit(1))[0]
+    : null;
+  if (challengeRunId && !challengeRun) {
+    res.status(409).json({ error: "Challenge run is not active" });
+    return;
+  }
+  if (challengeRun) {
+    const cards = (challengeRun.crewSnapshot as { cards?: Array<{ cardId: string }> }).cards ?? [];
+    if (cards.length !== 10) {
+      res.status(409).json({ error: "Challenge run has an invalid crew snapshot" });
+      return;
+    }
+    const boundMatchId = (challengeRun.encounterSnapshot as { playerMatchId?: string }).playerMatchId;
+    if (boundMatchId) {
+      const [existing] = await db.select().from(playerMatchesTable).where(and(
+        eq(playerMatchesTable.id, boundMatchId),
+        eq(playerMatchesTable.clerkUserId, userId),
+      )).limit(1);
+      if (!existing) {
+        res.status(409).json({ error: "Challenge encounter binding is missing" });
+        return;
+      }
+      const checkpoint = (challengeRun.checkpoints as Array<Record<string, unknown>>)
+        .find(item => item.matchId === boundMatchId) ?? null;
+      res.status(200).json({
+        id: existing.id, challengeRunId: existing.challengeRunId, mode: existing.mode,
+        playerDeckId: existing.playerDeckId, rivalDeckId: existing.rivalDeckId,
+        storyNodeId: existing.storyNodeId, contentVersion: existing.storyContentVersion,
+        encounterSnapshot: existing.storyEncounterSnapshot,
+        status: existing.completedAt ? "complete" : "active",
+        createdAt: existing.createdAt.toISOString(),
+        abilityUpgradeSnapshot: (existing.playerCardProgressionSnapshot as { abilityUpgradeSnapshot: unknown }).abilityUpgradeSnapshot,
+        districtSnapshot: (existing.playerCardProgressionSnapshot as { districtSnapshot?: unknown }).districtSnapshot,
+        checkpoint,
+      });
+      return;
+    }
+  }
+  if (!challengeRun && parsed.data.mode !== "story" && !deckCards[parsed.data.rivalDeckId ?? ""]) {
     res.status(400).json({ error: "Unknown gang" });
     return;
   }
@@ -353,9 +424,12 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: 'Draft picks are invalid or this week has changed. Start the draft again.' }); return;
   }
   const state = await getPlayerBootstrap(userId);
-  const savedDeck = state.profile.savedDecks.find(deck => deck.id === parsed.data.playerDeckId);
-  const recipe = starterRecipes.find(item => item.id === parsed.data.playerDeckId);
-  if (!recipe && !savedDeck && !drafting) { res.status(400).json({ error: "Unknown player deck" }); return; }
+  const issuedDeckId = challengeRun
+    ? (challengeRun.crewSnapshot as { deckId?: string }).deckId ?? parsed.data.playerDeckId
+    : parsed.data.playerDeckId;
+  const savedDeck = state.profile.savedDecks.find(deck => deck.id === issuedDeckId);
+  const recipe = starterRecipes.find(item => item.id === issuedDeckId);
+  if (!recipe && !savedDeck && !drafting && !challengeRun) { res.status(400).json({ error: "Unknown player deck" }); return; }
   const allowed =
     (parsed.data.mode === "tutorial" &&
       state.profile.onboardingStep === "tutorial") ||
@@ -367,10 +441,10 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Finish the current Rookie Road step first" });
     return;
   }
-  if (parsed.data.mode !== "tutorial" && !drafting) {
+  if (parsed.data.mode !== "tutorial" && !drafting && !challengeRun) {
     if (
       !(parsed.data.mode === "story" ? canUseStoryDeck : canUseRewardedDeck)(
-        parsed.data.playerDeckId,
+        issuedDeckId,
         state.profile.savedDecks,
         state.profile.ownedCardIds,
       )
@@ -386,7 +460,9 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   let storyEncounterSnapshot: StoryEncounterSnapshot | null = null;
   let storyProgressionSnapshot: StoryMatchProgressionSnapshot | null = null;
   if (parsed.data.mode === "tutorial" && !recipe && savedDeck?.id !== ROOKIE_DECK_ID) { res.status(400).json({ error: "Use the guided tutorial gang" }); return; }
-  const rosterCardIds = drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards;
+  const rosterCardIds = challengeRun
+    ? (challengeRun.crewSnapshot as { cards: Array<{ cardId: string }> }).cards.map(card => card.cardId)
+    : (drafting ? parsed.data.draftPicks! : savedDeck ? catalogIdsToEngineIds(savedDeck.cardIds) : recipe?.cards);
   if (!rosterCardIds) {
     res.status(400).json({ error: "Unknown player gang" });
     return;
@@ -396,14 +472,14 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   const [previous] = parsed.data.mode === 'practice' ? await db.select().from(playerMatchesTable)
     .where(and(eq(playerMatchesTable.clerkUserId, userId), eq(playerMatchesTable.mode, 'practice'), isNotNull(playerMatchesTable.completedAt)))
     .orderBy(desc(playerMatchesTable.completedAt)).limit(1) : [];
-  const seed = districtSeedForMatch(
-    parsed.data.mode,
-    randomUUID(),
-    parsed.data.storyNodeId,
-  );
+  const seed = challengeRun
+    ? `challenge-${(challengeRun.encounterSnapshot as { seed: number }).seed}`
+    : districtSeedForMatch(parsed.data.mode, randomUUID(), parsed.data.storyNodeId);
   const districtSnapshot = parsed.data.mode === 'tutorial' ? rookieDistricts() : createDistrictSnapshot(seed);
   let rivalDeckId =
-    parsed.data.mode === "practice"
+    challengeRun
+      ? (challengeRun.encounterSnapshot as { rivalDeckId: string }).rivalDeckId
+      : parsed.data.mode === "practice"
       ? selectTrainingRival(
           parsed.data.playerDeckId,
           rosterCardIds,
@@ -411,6 +487,10 @@ router.post("/player/matches", async (req, res): Promise<void> => {
           seed, previous?.rivalDeckId,
         )
       : parsed.data.rivalDeckId;
+  if (!rivalDeckId) {
+    res.status(400).json({ error: "Unknown rival gang" });
+    return;
+  }
   if (parsed.data.mode === "story") {
     if (!parsed.data.storyNodeId) {
       res.status(400).json({ error: "Story mode requires a story node" });
@@ -470,10 +550,25 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     return;
   }
   try {
+    const frozenProgression = challengeRun
+      ? Object.fromEntries(
+          (challengeRun.crewSnapshot as {
+            cards: Array<{ cardId: string; xp?: number; level: number; moveTier?: number }>;
+          }).cards.map(card => {
+            const catalogId = normalizeCatalogCardId(card.cardId);
+            if (!catalogId) throw new Error(`Unknown challenge card ${card.cardId}`);
+            return [catalogId, {
+              xp: card.xp ?? 0,
+              level: card.level,
+              ...(card.moveTier !== undefined ? { moveTier: card.moveTier } : {}),
+            }];
+          }),
+        )
+      : state.profile.cardProgression;
     playerCardProgressionSnapshot = createCardProgressionSnapshot(
       playerEngineCardIds ?? rosterCardIds,
       state.profile.ownedCardIds,
-      storyEncounterSnapshot?.activity?.normalized ? {} : state.profile.cardProgression,
+      storyEncounterSnapshot?.activity?.normalized ? {} : frozenProgression,
       parsed.data.mode === "tutorial" || drafting,
       [...rivalRosterCardIds],
     );
@@ -481,12 +576,32 @@ router.post("/player/matches", async (req, res): Promise<void> => {
     res.status(403).json({ error: "Fade roster contains an unowned or invalid card" });
     return;
   }
-  const [match] = await db
-    .insert(playerMatchesTable)
-    .values({
+  const { match, created } = await db.transaction(async (tx) => {
+    let lockedRun = challengeRun;
+    if (challengeRunId) {
+      lockedRun = (await tx.select().from(challengeRunsTable).where(and(
+        eq(challengeRunsTable.id, challengeRunId),
+        eq(challengeRunsTable.clerkUserId, userId),
+        eq(challengeRunsTable.status, "active"),
+      )).for("update"))[0];
+      if (!lockedRun) {
+        throw new Error("Challenge run is not active");
+      }
+      const existingMatchId = (lockedRun.encounterSnapshot as { playerMatchId?: string }).playerMatchId;
+      if (existingMatchId) {
+        const [existing] = await tx.select().from(playerMatchesTable).where(and(
+          eq(playerMatchesTable.id, existingMatchId),
+          eq(playerMatchesTable.clerkUserId, userId),
+        )).limit(1);
+        if (!existing) throw new Error("Challenge encounter binding is missing");
+        return { match: existing, created: false };
+      }
+    }
+    const [created] = await tx.insert(playerMatchesTable).values({
       clerkUserId: userId,
       mode: parsed.data.mode,
-      playerDeckId: parsed.data.playerDeckId,
+      challengeRunId,
+      playerDeckId: issuedDeckId,
       rivalDeckId,
       storyNodeId,
       storyContentVersion,
@@ -496,11 +611,23 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       storyProgressionSnapshot,
       playerEngineCardIds,
       playerCardProgressionSnapshot: { ...playerCardProgressionSnapshot, turnRulesVersion: 2, districtSnapshot: { ...districtSnapshot } },
-    })
-    .returning();
-  res.status(201).json(
+    }).returning();
+    if (lockedRun) {
+      await tx.update(challengeRunsTable).set({
+        encounterSnapshot: { ...(lockedRun.encounterSnapshot as Record<string, unknown>), playerMatchId: created.id },
+        updatedAt: new Date(),
+      }).where(eq(challengeRunsTable.id, lockedRun.id));
+    }
+    return { match: created, created: true };
+  });
+  const persistedSnapshot = match.playerCardProgressionSnapshot as {
+    abilityUpgradeSnapshot?: unknown;
+    districtSnapshot?: unknown;
+  } | null;
+  res.status(created ? 201 : 200).json(
     StartPlayerMatchResponse.parse({
       id: match.id,
+      challengeRunId: match.challengeRunId,
       mode: match.mode,
       playerDeckId: match.playerDeckId,
       rivalDeckId: match.rivalDeckId,
@@ -508,8 +635,8 @@ router.post("/player/matches", async (req, res): Promise<void> => {
       contentVersion: match.storyContentVersion,
       encounterSnapshot: match.storyEncounterSnapshot,
       abilityUpgradeSnapshot:
-        playerCardProgressionSnapshot.abilityUpgradeSnapshot,
-      districtSnapshot,
+        persistedSnapshot?.abilityUpgradeSnapshot ?? playerCardProgressionSnapshot.abilityUpgradeSnapshot,
+      districtSnapshot: persistedSnapshot?.districtSnapshot ?? districtSnapshot,
       status: "active",
       createdAt: match.createdAt.toISOString(),
     }),
@@ -682,7 +809,10 @@ router.post(
       return;
     }
 
-    const amounts = battleEarnings(verifiedOutcome);
+    const amounts = battleEarnings(
+      verifiedOutcome,
+      economyVersionFromSnapshot(match.playerCardProgressionSnapshot),
+    );
     const computedReward =
       match.completedAt
         ? {
@@ -705,6 +835,8 @@ router.post(
         outcome: verifiedOutcome,
         districtsWon,
         verifiedMatch: verifiedMatch!,
+        moves: parsed.data.moves,
+        challengeRunId: match.challengeRunId,
       });
       alreadyCompleted = !result.completed;
     } else if (!alreadyCompleted) {
@@ -742,7 +874,7 @@ router.post(
           await tx.update(playerProfilesTable).set({
             softCurrency: sql`${playerProfilesTable.softCurrency} + ${computedReward.softCurrency}`,
             xp: sql`${playerProfilesTable.xp} + ${computedReward.xp}`,
-            level: sql`1 + floor((${playerProfilesTable.xp} + ${computedReward.xp}) / 250)`,
+            level: sql`1 + floor((${playerProfilesTable.xp} + ${computedReward.xp}) / ${ACCOUNT_XP_PER_LEVEL})`,
             streetRep: sql`${playerProfilesTable.streetRep} + ${computedReward.streetRep}`,
             cardProgression: earned.progression,
           }).where(eq(playerProfilesTable.clerkUserId, userId));
@@ -768,7 +900,7 @@ router.post(
             .update(playerProfilesTable)
             .set({
               xp: sql`${playerProfilesTable.xp} + ${computedReward.xp}`,
-              level: sql`1 + floor((${playerProfilesTable.xp} + ${computedReward.xp}) / 250)`,
+              level: sql`1 + floor((${playerProfilesTable.xp} + ${computedReward.xp}) / ${ACCOUNT_XP_PER_LEVEL})`,
               streetRep: sql`${playerProfilesTable.streetRep} + ${computedReward.streetRep}`,
               softCurrency: sql`${playerProfilesTable.softCurrency} + ${computedReward.softCurrency}`,
               packTickets: sql`${playerProfilesTable.packTickets} + ${computedReward.packTickets}`,

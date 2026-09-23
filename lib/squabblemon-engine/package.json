@@ -7,6 +7,7 @@
     "./rookie": "./src/rookie.ts",
     "./multiplayer": "./src/multiplayer.ts",
     "./economy": "./src/economy.ts",
+    "./packRules": "./src/packRules.ts",
     ".": "./src/gameEngine.ts",
     "./data": "./src/data.ts",
     "./gameEngine": "./src/gameEngine.ts",
@@ -20,5 +21,6 @@
     "./districts": "./src/districts.ts",
     "./balanceLab": "./src/balanceLab.ts",
     "./cosmetics": "./src/cosmetics.ts"
+    ,"./challenge": "./src/challenge.ts"
   }
 }

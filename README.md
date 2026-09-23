@@ -10,6 +10,8 @@ The story engine is [`lib/squabblemon-engine/src/story.ts`](lib/squabblemon-engi
 
 ## Repository and deployment
 
+Payment setup, approval gates, webhook limitations, and restricted operator procedures are documented in [Corner Store payments operations](docs/corner-store-payments.md).
+
 - GitHub source: [`guapdad4000/squabblemon-v3`](https://github.com/guapdad4000/squabblemon-v3), branch `main`.
 - Netlify project: [`squabblemon-triple-lane`](https://app.netlify.com/projects/squabblemon-triple-lane), project ID `572e48d3-6f4d-427f-9a9b-df5e195ea47c`.
 - Live site: [`squabble.today`](https://squabble.today).

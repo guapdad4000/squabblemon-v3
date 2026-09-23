@@ -16,6 +16,7 @@ import { loadFeedbackPreferences } from '../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../lib/sfx';
 
 export function ResultScreen({
+  challenge,
   tutorial,
   onRestart,
   onChangeDeck,
@@ -90,7 +91,27 @@ export function ResultScreen({
 
   const actions = (
         <nav className="result-stage__actions" aria-label="After the battle">
-          {isStory ? (
+          {challenge ? (
+            <>
+              {isDraw && (
+                <button
+                  className="studio-action studio-action--gold"
+                  data-testid="button-restart-match"
+                  onClick={onRestart}
+                >
+                  Retry this stop
+                  <RotateCcw size={15} />
+                </button>
+              )}
+              <button
+                className={`studio-action ${!isDraw ? 'studio-action--gold' : ''}`}
+                onClick={onGoHome}
+              >
+                {isVictory ? 'Return to the road' : isDraw ? 'Back to the road' : 'View run summary'}
+                <ArrowRight size={15} />
+              </button>
+            </>
+          ) : isStory ? (
             <>
               {storyMetadata?.outcome !== 'win' && (
                 <button

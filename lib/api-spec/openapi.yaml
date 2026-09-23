@@ -12,7 +12,63 @@ tags:
     description: Health operations
   - name: player
     description: Authenticated player progression
+  - name: challenge
+    description: Deterministic endless reward challenges
 paths:
+  /player/challenges/runs:
+    post:
+      operationId: startChallengeRun
+      tags: [challenge]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChallengeStartInput'
+      responses:
+        '201': { description: Challenge run, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeRun' } } } }
+        '401': { description: Authentication required }
+        '409': { description: Active run already exists }
+    get:
+      operationId: listChallengeRuns
+      tags: [challenge]
+      responses:
+        '200': { description: Challenge history, content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ChallengeRun' } } } } }
+  /player/challenges/runs/{runId}/actions:
+    post:
+      operationId: recordChallengeAction
+      tags: [challenge]
+      parameters: [{ in: path, name: runId, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeAction' } } } }
+      responses:
+        '200': { description: Updated run, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeRun' } } } }
+        '400': { description: Invalid checkpoint or choice }
+  /player/challenges/runs/{runId}/checkpoint:
+    post:
+      operationId: checkpointChallengeRun
+      tags: [challenge]
+      parameters: [{ in: path, name: runId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChallengeCheckpointInput'
+      responses:
+        '200': { description: Saved checkpoint, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeRun' } } } }
+        '400': { description: Invalid or non-prefix checkpoint }
+  /player/challenges/runs/{runId}/settle:
+    post:
+      operationId: settleChallengeRun
+      tags: [challenge]
+      parameters: [{ in: path, name: runId, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Settled run, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeRun' } } } } }
+  /player/challenges/runs/{runId}/abandon:
+    post:
+      operationId: abandonChallengeRun
+      tags: [challenge]
+      parameters: [{ in: path, name: runId, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Abandoned run, content: { application/json: { schema: { $ref: '#/components/schemas/ChallengeRun' } } } } }
   /healthz:
     get:
       operationId: healthCheck
@@ -719,6 +775,10 @@ paths:
         "503":
           description: Payment provider processing unavailable
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     PaymentCheckoutInput:
       type: object
@@ -834,6 +894,40 @@ components:
           type: integer
         checkoutUrl:
           type: [string, "null"]
+    ChallengeStartInput:
+      type: object
+      additionalProperties: false
+      properties:
+        deckId: { type: string, maxLength: 80 }
+    ChallengeAction:
+      type: object
+      additionalProperties: false
+      properties:
+        matchId: { type: string, format: uuid }
+        moves: { type: array, items: {} }
+        outcome: { type: string, enum: [win, loss, draw] }
+        nextMatchId: { type: string, format: uuid }
+      required: [matchId, moves, outcome]
+    ChallengeRun:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [active, settled, abandoned] }
+        seed: { type: integer }
+        encounterIndex: { type: integer }
+        score: { type: integer }
+        wins: { type: integer }
+        entryDate: { type: string, format: date }
+        entryNumber: { type: integer, enum: [1, 2] }
+        crew: { type: object, additionalProperties: true }
+        encounter: { type: object, additionalProperties: true }
+        checkpoints: { type: array, items: { type: object, additionalProperties: true } }
+        recovery:
+          type: [object, "null"]
+          additionalProperties: true
+        createdAt: { type: string, format: date-time }
+        completedAt: { type: [string, 'null'], format: date-time }
+      required: [id, status, seed, encounterIndex, score, wins, entryDate, entryNumber, crew, encounter, checkpoints, createdAt, completedAt]
     PromoCodeInput:
       type: object
       additionalProperties: false
@@ -1467,6 +1561,9 @@ components:
         rivalDeckId:
           type: string
           maxLength: 32
+        challengeRunId:
+          type: string
+          format: uuid
         storyNodeId:
           type: string
           maxLength: 80
@@ -1483,7 +1580,7 @@ components:
           items:
             type: string
             maxLength: 64
-      required: [mode, playerDeckId, rivalDeckId]
+      required: [mode, playerDeckId]
       additionalProperties: false
     PlayerMatch:
       type: object
@@ -1497,6 +1594,9 @@ components:
           type: string
         rivalDeckId:
           type: string
+        challengeRunId:
+          type: [string, "null"]
+          format: uuid
         status:
           type: string
           enum: [active, complete]
@@ -1516,7 +1616,18 @@ components:
           description: Immutable server-issued district definitions for this match.
         abilityUpgradeSnapshot:
           $ref: "#/components/schemas/AbilityUpgradeSnapshot"
+        checkpoint:
+          type: [object, "null"]
+          additionalProperties: true
       required: [id, mode, playerDeckId, rivalDeckId, status, createdAt, storyNodeId, contentVersion, encounterSnapshot, abilityUpgradeSnapshot]
+    ChallengeCheckpointInput:
+      type: object
+      additionalProperties: false
+      properties:
+        moves:
+          type: array
+          items: {}
+      required: [moves]
     AbilityUpgradeSnapshot:
       type: object
       additionalProperties: false

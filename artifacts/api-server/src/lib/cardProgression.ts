@@ -14,6 +14,11 @@ import {
 } from "@workspace/squabblemon-engine/abilityUpgrades";
 import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
+import {
+  ECONOMY_VERSION,
+  economyVersionFromSnapshot,
+  type EconomyVersion,
+} from "@workspace/squabblemon-engine/economy";
 
 export const CARD_UPGRADE_SNAPSHOT_VERSION = ABILITY_UPGRADE_SNAPSHOT_VERSION;
 
@@ -33,6 +38,7 @@ export type CardProgressionSnapshot = {
   version: typeof CARD_UPGRADE_SNAPSHOT_VERSION;
   /** The card rules used to issue and verify this reward-bearing fade. */
   balanceRulesVersion: typeof CARD_BALANCE_VERSION;
+  economyVersion: EconomyVersion;
   cards: CardProgressionSnapshotEntry[];
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
@@ -74,6 +80,7 @@ export function createCardProgressionSnapshot(
   progression: CardProgressionMap,
   allowUnowned = false,
   cpuCardIds: string[] = [],
+  economyVersion: EconomyVersion = ECONOMY_VERSION,
 ): CardProgressionSnapshot {
   const owned = new Set(ownedCardIds);
   const normalized = cardIds.map(normalizeCatalogCardId);
@@ -107,6 +114,7 @@ export function createCardProgressionSnapshot(
   return {
     version: CARD_UPGRADE_SNAPSHOT_VERSION,
     balanceRulesVersion: CARD_BALANCE_VERSION,
+    economyVersion,
     cards,
     abilityUpgradeSnapshot: {
       version: CARD_UPGRADE_SNAPSHOT_VERSION,
@@ -138,6 +146,7 @@ export function parseCardProgressionSnapshot(
     throw new Error("Fade upgrade snapshot is missing");
   }
   const snapshot = value as CardProgressionSnapshot;
+  const economyVersion = economyVersionFromSnapshot(snapshot);
   const entries = snapshot.cards.map((entry) => {
     if (
       !entry ||
@@ -181,6 +190,7 @@ export function parseCardProgressionSnapshot(
     Object.fromEntries(entries.map((entry) => [entry.cardId, entry])),
     false,
     [...expectedCpuCards],
+    economyVersion,
   );
   // JSONB reorders object keys. Compare explicit fields, never serialized objects.
   const canonicalUpgrades = (entries: AbilityUpgradeSnapshot['player']) => entries.map(entry => [entry.cardId, entry.level, entry.moveTier ?? entry.upgradeIds.length, entry.upgradeIds]);
@@ -193,6 +203,7 @@ export function parseCardProgressionSnapshot(
   return {
     version: CARD_UPGRADE_SNAPSHOT_VERSION,
     balanceRulesVersion: CARD_BALANCE_VERSION,
+    economyVersion,
     cards: entries,
     abilityUpgradeSnapshot: structuredClone(expected.abilityUpgradeSnapshot),
   };

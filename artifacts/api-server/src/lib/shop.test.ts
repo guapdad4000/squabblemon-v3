@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { randomUUID } from 'node:crypto';
-import { battleEarnings, planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
+import { accountLevelFromXp, battleEarnings, LEGACY_ECONOMY_VERSION, planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
 import { normalizeCardProgress } from '@workspace/squabblemon-engine/cardProgression';
 import { createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { createCardProgressionSnapshot, parseCardProgressionSnapshot, applyCardXp } from './cardProgression';
@@ -10,12 +10,21 @@ const wallet = (overrides: Partial<ShopWallet> = {}): ShopWallet => ({ softCurre
   ownedCardIds: ['cornball'], discoveredCardIds: ['cornball'], ownedVariants: [], collectionProgress: 1,
   cardProgression: { cornball: { xp: 0, level: 1, moveTier: 0 } }, ...overrides });
 
+test('account XP level helper is stable at every level boundary', () => {
+  assert.equal(accountLevelFromXp(-1), 1);
+  assert.equal(accountLevelFromXp(0), 1);
+  assert.equal(accountLevelFromXp(249), 1);
+  assert.equal(accountLevelFromXp(250), 2);
+  assert.equal(accountLevelFromXp(499), 2);
+  assert.equal(accountLevelFromXp(500), 3);
+});
+
 test('starter Clout covers training and first move coaching; buying never mutates the input', () => {
   const initial = wallet({ softCurrency: 250 });
   const trained = planShopPurchase(initial, { itemId: 'training', cardId: 'cornball' });
   assert.deepEqual(trained.wallet.cardProgression.cornball, { xp: 100, level: 2, moveTier: 0 });
   const coached = planShopPurchase(trained.wallet, { itemId: 'move-training', cardId: 'cornball' });
-  assert.equal(coached.wallet.softCurrency, 0);
+  assert.equal(coached.wallet.softCurrency, 50);
   assert.equal(coached.wallet.cardProgression.cornball.moveTier, 1);
   assert.equal(initial.softCurrency, 250);
   assert.equal(initial.cardProgression.cornball.xp, 0);
@@ -31,10 +40,10 @@ test('training respects XP cap, proportionate pricing, ownership, and funds', ()
   assert.throws(() => planShopPurchase(wallet(), { itemId: 'training', cardId: 'young-bull' }), /Unlock/);
 });
 
-test('move tiers require levels, charge 150/400/900, and preserve legacy-earned tiers', () => {
+test('move tiers require levels, charge 100/250/500, and preserve legacy-earned tiers', () => {
   assert.throws(() => planShopPurchase(wallet(), { itemId: 'move-training', cardId: 'cornball' }), /level 2/);
   let w = wallet({ cardProgression: { cornball: { xp: 2800, level: 8, moveTier: 0 } } });
-  for (const [index, cost] of [150, 400, 900].entries()) {
+  for (const [index, cost] of [100, 250, 500].entries()) {
     const result = planShopPurchase(w, { itemId: 'move-training', cardId: 'cornball' });
     assert.equal(result.receipt.cost, cost); assert.equal(result.wallet.cardProgression.cornball.moveTier, index + 1); w = result.wallet;
   }
@@ -71,7 +80,8 @@ test('XP does not activate unpurchased moves and an active fade retains its star
 });
 
 test('verified battle earnings cover wins, draws and losses without generating repeatable tickets', () => {
-  assert.deepEqual(['win', 'draw', 'loss'].map(outcome => battleEarnings(outcome as 'win').softCurrency), [40, 30, 20]);
+  assert.deepEqual(['win', 'draw', 'loss'].map(outcome => battleEarnings(outcome as 'win').softCurrency), [80, 60, 40]);
+  assert.deepEqual(['win', 'draw', 'loss'].map(outcome => battleEarnings(outcome as 'win', LEGACY_ECONOMY_VERSION).softCurrency), [40, 30, 20]);
   assert.equal(battleEarnings('win').packTickets, 0);
 });
 

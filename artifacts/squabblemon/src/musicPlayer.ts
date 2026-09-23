@@ -25,6 +25,7 @@ type Options = {
   publish: (snapshot: MusicSnapshot) => void;
   save?: (preferences: MusicPreferences) => void;
   createContext?: () => AudioContext | undefined;
+  sharedContext?: boolean;
 };
 
 // One media element for the whole game. Battle cue timing remains independent.
@@ -44,6 +45,7 @@ export class MusicPlayer {
   private loadedIndex = -1;
   private format: 'ogg' | 'aac' = 'ogg';
   private failures = new Set<number>();
+  private stopping = false;
 
   constructor(private audio: HTMLAudioElement, private options: Options) {
     this.tracks = options.tracks ?? soundtrack;
@@ -137,7 +139,15 @@ export class MusicPlayer {
     if (!this.allowed) { this.stop(); return; }
     this.update({ playing: true, blocked: false });
   };
-  private onPause = () => { if (!this.disposed) this.update({ playing: false }); };
+  private onPause = () => {
+    if (this.disposed || !this.audio.paused) return;
+    this.update({ playing: false });
+    // Mobile browsers may interrupt a media element when another clip starts.
+    // Retry only unexpected pauses; never undo a user pause or a route transition.
+    if (!this.stopping && this.allowed && !this.audio.ended) queueMicrotask(() => {
+      if (this.allowed && !this.state.blocked && this.audio.paused && !this.pending) this.sync();
+    });
+  };
   private onError = () => {
     if (this.disposed || this.loadedIndex < 0 || this.state.error) return;
     this.stop();
@@ -173,7 +183,7 @@ export class MusicPlayer {
       this.audio.volume = 1;
       gain.gain.setValueAtTime(0, context.currentTime);
     } catch {
-      void context?.close().catch(() => undefined);
+      if (!this.options.sharedContext) void context?.close().catch(() => undefined);
       // A browser without media-source support can still use native playback.
     }
   }
@@ -186,7 +196,14 @@ export class MusicPlayer {
 
   private sync() {
     if (!this.allowed) { this.stop(); return; }
-    if (this.pending || (!this.audio.paused && this.state.playing && (!this.context || this.context.state === 'running'))) return;
+    if (this.pending) return;
+    if (!this.audio.paused) {
+      if (this.context?.state === 'suspended') void this.context.resume()
+        .then(() => { if (this.allowed && !this.audio.paused) this.update({ playing: true, blocked: this.context?.state !== 'running' }); })
+        .catch(() => undefined);
+      if (!this.state.playing) this.update({ playing: true, blocked: this.context?.state === 'suspended' });
+      return;
+    }
     if (this.loadedIndex !== this.state.trackIndex) {
       this.format = this.audio.canPlayType('audio/ogg; codecs="vorbis"') ? 'ogg' : 'aac';
       this.loadedIndex = this.state.trackIndex;
@@ -198,16 +215,16 @@ export class MusicPlayer {
     this.pending = true;
     // Both calls happen within the gesture, before awaiting, for mobile browsers.
     try {
-      const resume = this.context && this.context.state !== 'running' ? this.context.resume() : Promise.resolve();
+      const resume = this.context && this.context.state !== 'running' ? this.context.resume().catch(() => undefined) : Promise.resolve();
       const play = this.audio.play();
       void Promise.all([resume, play]).then(() => {
         if (generation !== this.generation) { if (!this.allowed) this.audio.pause(); return; }
         this.pending = false;
-        this.update({ playing: !this.audio.paused, blocked: false });
+        this.update({ playing: !this.audio.paused, blocked: this.context?.state === 'suspended' });
       }).catch((error: unknown) => {
         if (generation !== this.generation) return;
         this.pending = false;
-        this.audio.pause();
+        this.pauseAudio();
         if (error instanceof Error && error.name === 'NotSupportedError') this.onError();
         else this.update({ playing: false, blocked: true });
       });
@@ -220,8 +237,14 @@ export class MusicPlayer {
   private stop() {
     this.generation += 1;
     this.pending = false;
-    this.audio.pause();
+    this.pauseAudio();
     if (this.state.playing) this.update({ playing: false });
+  }
+
+  private pauseAudio() {
+    this.stopping = true;
+    this.audio.pause();
+    this.stopping = false;
   }
 
   dispose() {
@@ -235,6 +258,6 @@ export class MusicPlayer {
     this.audio.load();
     this.source?.disconnect();
     this.gain?.disconnect();
-    void this.context?.close().catch(() => undefined);
+    if (!this.options.sharedContext) void this.context?.close().catch(() => undefined);
   }
 }

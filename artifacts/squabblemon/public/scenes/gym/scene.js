@@ -160,92 +160,45 @@ const AudioEngine={
     function createPunchingBagTexture() {
       const canvas = document.createElement("canvas");
       canvas.width = 2048;
-      canvas.height = 2048;
+      canvas.height = 1080;
       const ctx = canvas.getContext("2d");
-
-      const leatherGrad = ctx.createLinearGradient(0, 0, 2048, 0);
-      leatherGrad.addColorStop(0, "#78350f");
-      leatherGrad.addColorStop(0.15, "#a16207");
-      leatherGrad.addColorStop(0.28, "#d97706");
-      leatherGrad.addColorStop(0.5, "#b45309");
-      leatherGrad.addColorStop(0.72, "#d97706");
-      leatherGrad.addColorStop(0.85, "#a16207");
-      leatherGrad.addColorStop(1, "#78350f");
-      ctx.fillStyle = leatherGrad;
-      ctx.fillRect(0, 0, 2048, 2048);
-
-      for (let i = 0; i < 9000; i++) {
-        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255, 237, 213, 0.03)" : "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(Math.random() * 2048, Math.random() * 2048, 3, 3);
-      }
-
-      for (let x = 0; x <= 2048; x += 512) {
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.75)";
-        ctx.lineWidth = 16;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, 2048);
-        ctx.stroke();
-
-        ctx.strokeStyle = "rgba(254, 243, 199, 0.55)";
-        ctx.lineWidth = 5;
-        ctx.setLineDash([14, 14]);
-        ctx.beginPath();
-        ctx.moveTo(x - 14, 0);
-        ctx.lineTo(x - 14, 2048);
-        ctx.moveTo(x + 14, 0);
-        ctx.lineTo(x + 14, 2048);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      ctx.fillStyle = "#121215";
-      ctx.fillRect(0, 1620, 2048, 428);
-      ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 20;
-      ctx.strokeRect(0, 1620, 2048, 428);
-
-      ctx.fillStyle = "#121215";
-      ctx.fillRect(0, 0, 2048, 260);
-      ctx.strokeRect(0, 0, 2048, 260);
-
-      for (let x = 256; x < 2048; x += 512) {
-        ctx.fillStyle = "#27272a";
-        ctx.fillRect(x - 55, 170, 110, 150);
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 8;
-        ctx.strokeRect(x - 55, 170, 110, 150);
-
-        ctx.fillStyle = "#f4f4f5";
-        ctx.beginPath();
-        ctx.arc(x, 245, 16, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-
-      drawEmblem(ctx, 512, 920, 2.15, true);
-      drawEmblem(ctx, 1536, 920, 2.15, true);
-
-      ctx.save();
-      ctx.font = "900 100px Arial, sans-serif";
-      ctx.textAlign = "center";
-      ctx.lineWidth = 24;
-      ctx.strokeStyle = "#000000";
-
-      ctx.strokeText("SQUABBLEMON", 512, 1390, 670);
-      ctx.fillStyle = "#fef08a";
-      ctx.fillText("SQUABBLEMON", 512, 1390, 670);
-
-      ctx.strokeText("SQUABBLEMON", 1536, 1390, 670);
-      ctx.fillText("SQUABBLEMON", 1536, 1390, 670);
-      ctx.restore();
+      ctx.fillStyle = "#08090b";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const texture = new THREE.CanvasTexture(canvas);
-      texture.anisotropy = 8; texture.colorSpace = THREE.SRGBColorSpace; texture.wrapS = THREE.RepeatWrapping; texture.offset.x = .25;
+      texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.offset.x = .5;
       bagSurfaceCanvas = canvas;
       bagSurfaceCtx = ctx;
       bagSurfaceTexture = texture;
       bagBasePixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      const wrap = new Image();
+      wrap.decoding = "async";
+      wrap.onload = () => {
+        // The production panel includes dark presentation bands above and below
+        // the printable artwork. Crop those bands so the wrap reaches both ends
+        // of the bag instead of leaving an unbranded cap and base.
+        const cropY = Math.round(wrap.naturalHeight * 0.095);
+        const cropHeight = wrap.naturalHeight - cropY * 2;
+        ctx.drawImage(
+          wrap,
+          0,
+          cropY,
+          wrap.naturalWidth,
+          cropHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+        bagBasePixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        texture.needsUpdate = true;
+      };
+      wrap.onerror = () => emit({type:"error",message:"The bag wrap could not be loaded."});
+      wrap.src = new URL("../../assets/gacha/squabblemon-bag-wrap.webp", location.href).href;
       return texture;
     }
 
@@ -269,40 +222,6 @@ const AudioEngine={
 
       return new THREE.CanvasTexture(canvas);
     }
-
-    function createGymFloorTexture() {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1024;
-      canvas.height = 1024;
-      const ctx = canvas.getContext("2d");
-
-      ctx.fillStyle = "#0f1016";
-      ctx.fillRect(0, 0, 1024, 1024);
-
-      for (let i = 0; i < 5000; i++) {
-        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.3)";
-        ctx.fillRect(Math.random() * 1024, Math.random() * 1024, 4, 4);
-      }
-
-      ctx.strokeStyle = "rgba(234, 179, 8, 0.3)";
-      ctx.lineWidth = 10;
-      ctx.beginPath();
-      ctx.arc(512, 512, 400, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(512, 512, 290, 0, Math.PI * 2);
-      ctx.stroke();
-
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      return texture;
-    }
-
-
     let scene, camera, renderer;
     let gymGroup, bagAssembly, heavyBagMesh;
     let bagOriginalPositions, bagVertexDents;
@@ -310,7 +229,7 @@ const AudioEngine={
     let gloveGhosts = [];
     let cardMeshStack = [];
     let sharedCardBackTexture;
-    let spotLight, rimCyan, rimGold, gymFloorMaterial, heavyBagMaterial;
+    let spotLight, rimCyan, rimGold, heavyBagMaterial;
     let bagSurfaceCanvas, bagSurfaceCtx, bagSurfaceTexture, bagBasePixels;
 
     function createAnimeOutline(geometry, thickness = 0.05) {
@@ -386,7 +305,6 @@ const AudioEngine={
       scene.add(rimGold);
 
       
-
       buildGymEnvironment();
       buildHeavyBag();
       buildGloves();
@@ -413,20 +331,6 @@ const AudioEngine={
     function buildGymEnvironment() {
       gymGroup = new THREE.Group();
       scene.add(gymGroup);
-
-      const floorGeo = new THREE.CircleGeometry(10, 32);
-      const floorTex = createGymFloorTexture();
-      gymFloorMaterial = new THREE.MeshStandardMaterial({
-        map: floorTex,
-        roughness: 0.85,
-        metalness: 0.1,
-        emissive: 0x070604,
-        emissiveIntensity: 0.2
-      });
-      const floor = new THREE.Mesh(floorGeo, gymFloorMaterial);
-      floor.rotation.x = -Math.PI * 0.5;
-      floor.position.y = -3.4;
-      gymGroup.add(floor);
 
       const mountGeo = new THREE.CylinderGeometry(0.42, 0.55, 0.35, 16);
       const mountMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.85, roughness: 0.25 });
@@ -461,10 +365,10 @@ const AudioEngine={
       const bagTex = createPunchingBagTexture();
       heavyBagMaterial = new THREE.MeshStandardMaterial({
         map: bagTex,
-        roughness: 0.38,
-        metalness: 0.22,
-        emissive: 0x140700,
-        emissiveIntensity: 0.08
+        roughness: 0.56,
+        metalness: 0.08,
+        emissive: 0x090200,
+        emissiveIntensity: 0.1
       });
 
       heavyBagMesh = new THREE.Mesh(bagGeo, heavyBagMaterial);
@@ -821,8 +725,6 @@ const AudioEngine={
       if (spotLight) spotLight.intensity = rarity === "Mythical" ? 125 : rarity === "Legendary" ? 112 : 95;
       if (rimCyan) rimCyan.intensity = rarity === "Mythical" ? 4.8 : rarity === "Legendary" ? 3.7 : 2.6;
       if (rimGold) rimGold.intensity = rarity === "Mythical" ? 4.1 : rarity === "Legendary" ? 4.4 : 2.8;
-      gymFloorMaterial?.emissive.setHex(colors.floor);
-      if (gymFloorMaterial) gymFloorMaterial.emissiveIntensity = rarity === "Mythical" ? 0.9 : 0.45;
       heavyBagMaterial?.emissive.setHex(colors.floor);
       if (heavyBagMaterial) heavyBagMaterial.emissiveIntensity = rarity === "Mythical" ? 0.38 : 0.16;
     }
@@ -836,8 +738,8 @@ const AudioEngine={
         [[-160,-35],[-92,12],[-125,57],[-24,84],[64,48],[148,98]]
       ];
       for (let level = 0; level < stage; level++) {
-        for (const centerX of [512, 1536]) {
-          const centerY = 780 + level * 205;
+        for (const centerX of [bagSurfaceCanvas.width * .5]) {
+          const centerY = bagSurfaceCanvas.height * (.46 + level * .12);
           const points = tears[level];
           bagSurfaceCtx.save();
           bagSurfaceCtx.translate(centerX, centerY);
@@ -980,14 +882,17 @@ addEventListener('message',e=>{
  if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='squabblemon-scene')return;
  const d=e.data;
  if(d.type==='settings'){reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;AudioEngine.enabled=Boolean(d.sound);}
- if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:3;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;paintBagDamage(0);applyOmen(d.omen);armed=true;}
+  if(d.type==='arm'){punchHits=0;targetKoHits=Number.isInteger(d.targetHits)&&d.targetHits>0?d.targetHits:3;hitsPerPunch=Number.isInteger(d.hitsPerPunch)&&d.hitsPerPunch>0?d.hitsPerPunch:1;isGachaTriggered=false;paintBagDamage(0);applyOmen(d.omen);armed=true;if(camera){camera.position.z=camera.aspect<.75?14.8:12.9;camera.updateProjectionMatrix();}}
  if(d.type==='punch'&&!reduced)deliverPunch(d.intensity);
- if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=3;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};paintBagDamage(0);applyOmen("Common");}
+  if(d.type==='reset'){armed=false;punchHits=0;targetKoHits=3;hitsPerPunch=1;isGachaTriggered=false;bagVelocity={x:0,z:0};paintBagDamage(0);applyOmen("Common");if(camera){camera.position.z=camera.aspect<.75?11.6:10.2;camera.updateProjectionMatrix();}}
 });
     function onWindowResize() {
       if (!renderer || !camera) return;
       const size = getContainerSize();
-      camera.aspect = size.w / size.h; camera.position.z = size.w / size.h < .75 ? 11.6 : 10.2;
+      camera.aspect = size.w / size.h;
+      camera.position.z = armed
+        ? (camera.aspect < .75 ? 14.8 : 12.9)
+        : (camera.aspect < .75 ? 11.6 : 10.2);
       camera.updateProjectionMatrix();
       renderer.setSize(size.w, size.h);
       resizeSpeedlines();

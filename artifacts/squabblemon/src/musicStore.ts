@@ -28,7 +28,11 @@ const subscribeBanks = (fn: () => void) => { bankListeners.add(fn); return () =>
 export const useMusicBanks = () => useSyncExternalStore(subscribeBanks, getMusicBanks, getMusicBanks);
 export function updateMusicBank(bank: MusicBank, patch: Partial<MusicPreferences>) { saveMusicBank(bank, { ...banks[bank], ...patch }); }
 export type BattleMusicOverride = 'boss' | 'victory' | 'defeat';
+export type ScopedMusicMode = 'fadecade' | 'battle';
 let battleMode: BattleMusicOverride | null = null;
+let scopedMode: ScopedMusicMode | null = null;
 const modeListeners = new Set<() => void>();
 export function setBattleMusicMode(mode: BattleMusicOverride | null) { battleMode = mode; modeListeners.forEach(fn => fn()); }
-export const useBattleMusicMode = () => useSyncExternalStore(fn => { modeListeners.add(fn); return () => { modeListeners.delete(fn); }; }, () => battleMode, () => null);
+export function setScopedMusicMode(mode: ScopedMusicMode | null) { scopedMode = mode; modeListeners.forEach(fn => fn()); }
+export const getActiveMusicOverride = () => battleMode ?? scopedMode;
+export const useBattleMusicMode = () => useSyncExternalStore(fn => { modeListeners.add(fn); return () => { modeListeners.delete(fn); }; }, getActiveMusicOverride, () => null);

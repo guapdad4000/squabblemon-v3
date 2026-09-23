@@ -8,6 +8,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 import { PublicEntry } from './pages/PublicEntry';
 import { LoadingScreen } from './components/LoadingScreen';
 import { basePath, stripBase } from './lib/routing';
+import { guardDeckRouteNavigation } from './lib/deckExitGuard';
 import { AppAuthProvider, useAppAuth, useAppClerk } from './lib/auth';
 
 const SignInPage = lazy(() =>
@@ -21,8 +22,12 @@ const GameSoundtrack = lazy(() => import('./components/GameSoundtrack'));
 const MoveStudio = lazy(() => import('./pages/MoveStudio'));
 const StoryStudio = lazy(() => import('./pages/StoryStudio'));
 const HowToPlay = lazy(() => import('./pages/HowToPlay'));
-const SupportPage = lazy(() => import('./pages/CustomerPolicy').then(module => ({default: module.SupportPage})));
-const RefundPolicyPage = lazy(() => import('./pages/CustomerPolicy').then(module => ({default: module.RefundPolicyPage})));
+const SupportPage = lazy(() =>
+  import('./pages/CustomerPolicy').then((module) => ({ default: module.SupportPage })),
+);
+const RefundPolicyPage = lazy(() =>
+  import('./pages/CustomerPolicy').then((module) => ({ default: module.RefundPolicyPage })),
+);
 const GuestPlayLoop = lazy(() =>
   import('./components/PlayLoop').then((module) => ({
     default: function GuestPlayRoute() {
@@ -109,7 +114,7 @@ function ClerkQueryClientCacheInvalidator() {
 
 function PublicRedirect() {
   const { isLoaded, isSignedIn } = useAppAuth();
-  if (!isLoaded) return <LoadingScreen />;
+  if (!isLoaded) return <LoadingScreen phase="account" />;
   if (isSignedIn) return <Redirect to="/game" />;
   return <PublicEntry />;
 }
@@ -146,7 +151,7 @@ function ClerkProviderWithRoutes() {
         <ClerkQueryClientCacheInvalidator />
         <MotionConfig reducedMotion="user">
           {inGame && <Suspense fallback={null}><GameSoundtrack /></Suspense>}
-          <Suspense fallback={<LoadingScreen />}>
+          <Suspense fallback={<LoadingScreen phase="scene" />}>
             <Switch>
               <Route path="/" component={PublicRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
@@ -169,7 +174,7 @@ function ClerkProviderWithRoutes() {
 
 export default function App() {
   return (
-    <WouterRouter base={basePath}>
+    <WouterRouter base={basePath} aroundNav={guardDeckRouteNavigation}>
       <ClerkProviderWithRoutes />
     </WouterRouter>
   );

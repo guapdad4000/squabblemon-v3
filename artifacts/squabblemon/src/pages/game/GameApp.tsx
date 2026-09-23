@@ -15,9 +15,8 @@ import {
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameNav } from '../../components/venue/GameNav';
 import { useEffect, type ReactNode } from 'react';
-import { Redirect, Route, Switch, useSearch, useLocation } from 'wouter';
-
 import { cardCatalog, starterRecipes } from '../../data';
+import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Collection } from './Collection';
 import { DeckEditor } from './DeckEditor';
 import { Decks } from './Decks';
@@ -30,6 +29,8 @@ import { Settings } from './Settings';
 import { Shop } from './Shop';
 import { Story } from './Story';
 import { Multiplayer } from './Multiplayer';
+import { ChallengesHub } from './ChallengesHub';
+import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 
 
 function BootstrapError({
@@ -94,6 +95,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <Onboarding bootstrap={bootstrap} />
       </Route>
       <Route path="/game/play"><ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
+      <Route path="/game/challenges"><ImmersiveGameRoute bootstrap={bootstrap}><ChallengesHub bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/online/:code">{params => <ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer key={params.code} code={params.code.toUpperCase()} bootstrap={bootstrap} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>
@@ -223,10 +225,10 @@ function getE2EBootstrap(): PlayerBootstrap {
       id: 'e2e-pack',
       name: 'Practice Pack',
       oddsVersion: 'e2e',
-      softCurrencyCost: 200,
-      ticketCost: 1,
-      rewardsPerPack: 6,
-      pityLimit: 10,
+      softCurrencyCost: STREET_PACK_RULES.single.softCurrencyCost,
+      ticketCost: STREET_PACK_RULES.single.ticketCost,
+      rewardsPerPack: STREET_PACK_RULES.single.rewards,
+      pityLimit: STREET_PACK_RULES.pityLimit,
       odds: [],
     },
     tenPullConfig: {
@@ -234,9 +236,9 @@ function getE2EBootstrap(): PlayerBootstrap {
       name: 'Practice Ten Pull',
       oddsVersion: 'e2e',
       pullCount: 10,
-      ticketCost: 9,
-      softCurrencyCost: 1800,
-      rewardsPerPull: 6,
+      ticketCost: STREET_PACK_RULES.ten.ticketCost,
+      softCurrencyCost: STREET_PACK_RULES.ten.softCurrencyCost,
+      rewardsPerPull: STREET_PACK_RULES.single.rewards,
       rarePityBonusPerPull: 1,
     },
     collectionRoad: [],
@@ -264,7 +266,8 @@ export default function GameApp() {
     }
   }, [isLoaded, isSignedIn, location, search, setLocation]);
 
-  if (!isLoaded || !isSignedIn || isLoading) return <LoadingScreen />;
+  if (!isLoaded || !isSignedIn) return <LoadingScreen phase="account" />;
+  if (isLoading) return <LoadingScreen phase="player" />;
 
   // The API may return 200 OK with the Vite SPA fallback (HTML) when the
   // server isn't running, so customFetch hands us a string instead of a

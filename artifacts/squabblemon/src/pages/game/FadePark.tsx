@@ -17,11 +17,11 @@ import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 import { setBattleMusicMode } from '../../musicStore';
 
-export function FightTabs({ friends = false, searching = false }: { friends?: boolean; searching?: boolean }) {
+export function FightTabs({ friends = false, searching = false, challenges = false }: { friends?: boolean; searching?: boolean; challenges?: boolean }) {
   return <nav className="fight-tabs" aria-label="Fight modes">
-    <Link to="/game/online" aria-current={!friends ? 'page' : undefined}><Swords size={15} />Fade Park<span>Ranked</span></Link>
+    <Link to="/game/online" aria-current={!friends && !challenges ? 'page' : undefined}><Swords size={15} />Fade Park<span>Ranked</span></Link>
     {searching ? <span className="fight-tabs-disabled" title="Cancel your search to open friend fades"><Users size={15} />Friend fades</span> : <Link to="/game/online?tab=friends" aria-current={friends ? 'page' : undefined}><Users size={15} />Friend fades<span>Private</span></Link>}
-    <Link to="/game/play"><Trophy size={15} />Challenges<span>Solo</span></Link>
+    <Link to="/game/challenges" aria-current={challenges ? 'page' : undefined}><Trophy size={15} />Challenges<span>Solo</span></Link>
   </nav>;
 }
 

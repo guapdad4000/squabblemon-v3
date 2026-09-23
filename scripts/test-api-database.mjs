@@ -12,6 +12,11 @@ process.chdir(workspaceRoot);
 
 const rankedBrowser = process.argv[2] === 'fade-park';
 const cosmeticsBrowser = process.argv[2] === 'cosmetics';
+const paymentsOnly = process.argv[2] === 'payments';
+if (paymentsOnly) {
+  await import("./test-payments-database.mjs");
+  process.exit(process.exitCode ?? 0);
+}
 const providedUrl = process.env.DATABASE_URL?.trim();
 let databaseUrl = providedUrl;
 const pnpmCli = process.env.npm_execpath;

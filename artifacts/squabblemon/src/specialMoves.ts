@@ -9,7 +9,16 @@ export type MoveClip = {
   startSeconds: number; durationMs: number; playbackRate: number;
 };
 export const moveClips = catalog.clips as Record<string, MoveClip>;
-export const moveAssignments: Record<string, string | null> = catalog.assignments;
+export const moveAssignments: Record<string, string | null> = {
+  ...catalog.assignments,
+  sugarfoot: null,
+  'yn-gokarter': null,
+  'yn-atv-lord': null,
+  janitor: null,
+  'homeless-wiseman': null,
+  'juneteenth-chair-guy': null,
+  'squabble-house-manager': null,
+};
 export const MOVE_STORAGE_KEY = 'squabblemon.special-moves.v1';
 export type MoveOverrides = Record<string, string | null>;
 

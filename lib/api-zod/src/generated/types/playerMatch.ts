@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { AbilityUpgradeSnapshot } from './abilityUpgradeSnapshot';
+import type { PlayerMatchCheckpoint } from './playerMatchCheckpoint';
 import type { PlayerMatchDistrictSnapshot } from './playerMatchDistrictSnapshot';
 import type { PlayerMatchEncounterSnapshot } from './playerMatchEncounterSnapshot';
 import type { PlayerMatchStatus } from './playerMatchStatus';
@@ -16,6 +17,8 @@ export interface PlayerMatch {
   mode: string;
   playerDeckId: string;
   rivalDeckId: string;
+  /** @nullable */
+  challengeRunId?: string | null;
   status: PlayerMatchStatus;
   createdAt: Date;
   /** @nullable */
@@ -27,4 +30,6 @@ export interface PlayerMatch {
   /** Immutable server-issued district definitions for this match. */
   districtSnapshot?: PlayerMatchDistrictSnapshot;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
+  /** @nullable */
+  checkpoint?: PlayerMatchCheckpoint;
 }

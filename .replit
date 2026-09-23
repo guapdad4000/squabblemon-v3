@@ -22,3 +22,14 @@ timeoutMs = 20000
 [nix]
 channel = "stable-25_05"
 packages = ["glib", "nss", "nspr", "atk", "cups", "dbus", "libdrm", "expat", "libxkbcommon", "pango", "cairo", "alsa-lib", "xorg.libX11", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "xorg.libxcb", "mesa", "libgbm"]
+
+[userenv]
+
+[userenv.development]
+PAYMENTS_ENABLED = "true"
+PAYMENTS_MODE = "test"
+PAYMENTS_REPLIT_TEST_PROXY = "true"
+STRIPE_TEST_PRICE_BAG = "price_1UIp53PS2xQPaVHPurUCQ4bq"
+STRIPE_TEST_PRICE_POCKET = "price_1UIp4tPS2xQPaVHP5ZbxrTX2"
+STRIPE_TEST_PRICE_STACK = "price_1UIp4yPS2xQPaVHPkMfmwext"
+PAYMENTS_PUBLIC_ORIGIN = "https://f6c7bc74-707e-448e-afb9-8d74dab3ccfc-00-3eijq9aocbxwh-0jtj7op8.spock.replit.dev"

@@ -4,6 +4,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { MusicPlayer, MUSIC_STORAGE_KEY, readMusicPreferences, soundtrack, type MusicSnapshot } from './musicPlayer';
+import { BattleFeedback } from './battleFeedback';
 
 class FakeAudio extends EventTarget {
   src = ''; preload = ''; volume = 1; paused = true; currentTime = 0;
@@ -128,6 +129,56 @@ test('autoplay denial can be recovered by the next gesture without an unhandled 
   assert.equal(s.state.blocked, false); assert.equal(s.state.playing, true); s.player.dispose();
 });
 
+test('synthesized battle cues cannot control the selected soundtrack', async () => {
+  const s = setup();
+  s.player.unlock(); await settle();
+  s.audio.currentTime = 38;
+  const src = s.audio.src, plays = s.audio.plays, pauses = s.audio.pauses;
+  const context = {
+    state: 'running', currentTime: 0, destination: {},
+    createGain: () => ({ gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() { return this; }, disconnect() {} }),
+    createOscillator: () => ({ type: 'sine', frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect(gain: unknown) { return gain; }, start() {}, stop() {}, disconnect() {}, onended: null }),
+  };
+  const feedback = new BattleFeedback({ audioEnabled: true, hapticsEnabled: false },
+    () => class { constructor() { return context; } } as unknown as typeof AudioContext);
+  feedback.cue('squabble', false, false);
+  feedback.cue('fire', false, false);
+  feedback.reset();
+  assert.equal(s.audio.src, src);
+  assert.equal(s.audio.currentTime, 38);
+  assert.equal(s.audio.plays, plays);
+  assert.equal(s.audio.pauses, pauses);
+  s.player.setVolume(0);
+  feedback.cue('lock', false, false);
+  assert.equal(s.audio.paused, false, 'music-only volume does not cancel cues');
+  s.player.dispose();
+});
+
+test('unexpected media interruption recovers in place, but deliberate pauses and blocked playback do not loop', async () => {
+  const s = setup(); s.player.unlock(); await settle();
+  const src = s.audio.src;
+  s.audio.currentTime = 24;
+  const plays = s.audio.plays;
+  s.audio.paused = true;
+  s.audio.dispatchEvent(new Event('pause'));
+  await settle();
+  assert.equal(s.audio.plays, plays + 1);
+  assert.equal(s.audio.src, src);
+  assert.equal(s.audio.currentTime, 24);
+  s.audio.playResult = () => Promise.reject(new DOMException('gesture required', 'NotAllowedError'));
+  s.audio.paused = true;
+  s.audio.dispatchEvent(new Event('pause'));
+  await settle();
+  assert.equal(s.state.blocked, true);
+  const blockedPlays = s.audio.plays;
+  await settle();
+  assert.equal(s.audio.plays, blockedPlays);
+  s.player.setEnabled(false);
+  s.player.unlock(); await settle();
+  assert.equal(s.audio.plays, blockedPlays);
+  s.player.dispose();
+});
+
 test('disposal removes listeners and unloads media so later events cannot restart it', async () => {
   const s = setup(); s.player.unlock(); await settle(); s.player.dispose();
   const plays = s.audio.plays;
@@ -210,6 +261,25 @@ test('routes choose ranked battle, story, boss, training, gacha, and background 
   assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', null), 'story');
 });
 
+test('Fadecade uses its dedicated track and transient battle results take priority', async () => {
+  const { fadecadeSoundtrack, soundtrackForRoute } = await import('./musicModes');
+  const { getActiveMusicOverride, setBattleMusicMode, setScopedMusicMode } = await import('./musicStore');
+  assert.deepEqual(fadecadeSoundtrack.map(track => track.id), ['fadecade-oakland-chrome-and-curls']);
+  assert.equal(soundtrackForRoute('/game/challenges', 'fadecade'), fadecadeSoundtrack);
+  setScopedMusicMode('fadecade');
+  assert.equal(getActiveMusicOverride(), 'fadecade');
+  setScopedMusicMode('battle');
+  assert.equal(getActiveMusicOverride(), 'battle', 'starting a Fadecade fight selects battle music');
+  setBattleMusicMode('victory');
+  assert.equal(getActiveMusicOverride(), 'victory', 'result music takes priority over the scoped fight');
+  setBattleMusicMode(null);
+  assert.equal(getActiveMusicOverride(), 'battle', 'closing a result restores the scoped fight');
+  setScopedMusicMode('fadecade');
+  assert.equal(getActiveMusicOverride(), 'fadecade', 'returning to the hub restores its dedicated track');
+  setScopedMusicMode(null);
+  assert.equal(getActiveMusicOverride(), null, 'leaving Fadecade restores route music');
+});
+
 test('catalog preserves the original records and adds each unique uploaded battle track once', () => {
   assert.deepEqual(soundtrack.slice(0, 6).map(track => track.id), [
     'wax-killa-breaks', 'grime-of-the-temple', 'chop-block', 'shaolin-scratches', 'saber-chop', 'shaolin-static',
@@ -281,10 +351,10 @@ test('every original catalog ID remains selectable and playable in the battle qu
   }
 });
 
-test('catalog, result, and transparent DJ assets ship in web formats without the source WAV', async () => {
+test('catalog, result, Fadecade, and transparent DJ assets ship in web formats without the source WAV', async () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'public');
-  const { outcomeSoundtracks } = await import('./musicModes');
-  const tracks = [...soundtrack, ...outcomeSoundtracks.victory, ...outcomeSoundtracks.defeat];
+  const { fadecadeSoundtrack, outcomeSoundtracks } = await import('./musicModes');
+  const tracks = [...soundtrack, ...outcomeSoundtracks.victory, ...outcomeSoundtracks.defeat, ...fadecadeSoundtrack];
   for (const track of tracks) {
     for (const path of [track.ogg, track.aac]) assert(statSync(join(root, path)).size > 1_000);
   }

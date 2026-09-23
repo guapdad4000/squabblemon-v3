@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import test from 'node:test';
-import { ROOKIE_DECK_ID, ROOKIE_FOUNDATION_ID, ROOKIE_FOUNDATION_IDS } from '@workspace/squabblemon-engine/data';
+import { ROOKIE_DECK_ID, ROOKIE_FOUNDATION_ID, ROOKIE_MENTOR_CORE_IDS } from '@workspace/squabblemon-engine/data';
 
 test('foundation grants survive concurrent bootstrap normalization and repeat requests', { skip: !process.env.DATABASE_URL }, async t => {
   const { db, playerProfilesTable } = await import('@workspace/db');
@@ -15,7 +15,8 @@ test('foundation grants survive concurrent bootstrap normalization and repeat re
   await Promise.all([grantFirstCollection(clerkUserId), getPlayerBootstrap(clerkUserId), grantFirstCollection(clerkUserId)]);
   const state = await getPlayerBootstrap(clerkUserId);
   assert.equal(state.profile.starterDeckId, ROOKIE_FOUNDATION_ID);
-  assert.ok(ROOKIE_FOUNDATION_IDS.every(id => state.profile.ownedCardIds.includes(id)));
+  assert.ok(ROOKIE_MENTOR_CORE_IDS.every(id => state.profile.ownedCardIds.includes(id)));
+  assert.equal(state.profile.ownedCardIds.length, ROOKIE_MENTOR_CORE_IDS.length + 1);
   assert.ok(state.profile.ownedCardIds.includes('closet-nerd'));
   assert.equal(state.profile.savedDecks.filter(deck => deck.id === ROOKIE_DECK_ID).length, 1);
   assert.ok(state.profile.savedDecks.some(deck => deck.id === 'existing'));

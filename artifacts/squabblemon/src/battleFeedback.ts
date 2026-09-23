@@ -1,5 +1,6 @@
 import { eventIntensity } from './battleChoreography';
 import type { EffectLogEntry } from './gameEngine';
+import { getGameAudioContext } from './gameAudioContext';
 
 export type BattleCue = 'play' | 'reveal' | 'move' | 'status' | 'power-up' | 'power-down' | 'claim' | 'pass' | 'select' | 'lock' | 'fire' | 'ice' | 'shield' | 'squabble';
 
@@ -55,6 +56,8 @@ export function cueForBattleEvent(event: EffectLogEntry): BattleCue {
 }
 
 type AudioContextConstructor = typeof AudioContext;
+const browserAudioContext = (): AudioContextConstructor | undefined =>
+  window.AudioContext ?? (window as typeof window & { webkitAudioContext?: AudioContextConstructor }).webkitAudioContext;
 
 export class BattleFeedback {
   private context: AudioContext | null = null;
@@ -64,8 +67,7 @@ export class BattleFeedback {
 
   constructor(
     private preferences: FeedbackPreferences,
-    private readonly getAudioContext: () => AudioContextConstructor | undefined = () =>
-      window.AudioContext ?? (window as typeof window & { webkitAudioContext?: AudioContextConstructor }).webkitAudioContext,
+    private readonly getAudioContext: () => AudioContextConstructor | undefined = browserAudioContext,
     private readonly vibrate: (pattern: number | number[]) => boolean = pattern => navigator.vibrate?.(pattern) ?? false,
   ) {}
 
@@ -120,10 +122,12 @@ export class BattleFeedback {
   }
 
   private getOrCreateContext() {
+    if (this.context && this.context.state !== 'closed') return this.context;
+    if (this.getAudioContext === browserAudioContext) return this.context = getGameAudioContext() ?? null;
     const Context = this.getAudioContext();
     if (!Context) return null;
     try {
-      return this.context ??= new Context();
+      return this.context = new Context();
     } catch {
       return null;
     }

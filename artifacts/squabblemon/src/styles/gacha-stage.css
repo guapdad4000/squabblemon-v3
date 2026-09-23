@@ -1,9 +1,9 @@
 /* The room is the backdrop; pack details and controls float in the foreground. */
 .trading-post .market-tabs {
   align-items: center;
-  gap: 28px;
-  padding: 5px clamp(22px, 5vw, 80px) 0;
-  background: #101513;
+  gap: 16px;
+  padding: 12px clamp(22px, 5vw, 80px) 10px;
+  background: transparent;
 }
 .trading-post .market-tabs button {
   display: flex;
@@ -82,156 +82,531 @@
   top: 30px;
   z-index: 2;
 }
-.gacha-stage .gym__offer {
+/* --- FIGHT BILL RECRUITMENT POSTER --- */
+.fight-bill {
   grid-column: 1;
   grid-row: 2;
+  align-self: start;
   position: relative;
-  display: block;
-  background: none;
-  border: 0;
-  box-shadow: none;
-  padding: 0;
-  overflow: visible;
   z-index: 1;
+  background-color: #f4ead5;
+  color: #1a1a1a;
+  padding: 8px;
+  font-family: var(--font-display);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 0 50px rgba(180,150,110,0.2);
+  transform: rotate(-1.5deg);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at center, transparent 30%, rgba(133, 114, 85, 0.25) 100%);
+  border-radius: 2px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
 }
-.gacha-stage__pack {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  margin-bottom: 12px;
+
+.fight-bill::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 4px solid #1a1a1a;
+  pointer-events: none;
 }
-.gacha-stage__pack > .venue-prop {
-  width: 77px;
-  height: 94px;
-  filter: drop-shadow(0 8px 12px #0008);
-  transform: rotate(-7deg);
+.fight-bill::after {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  border: 1.5px solid #1a1a1a;
+  pointer-events: none;
 }
-.gacha-stage .gym__offer h2 {
-  font: 800 29px/1.1 var(--font-display);
-  letter-spacing: -0.01em;
-  word-spacing: 0.1em;
-  text-transform: uppercase;
-  margin: 5px 0 7px;
-  max-width: none;
-}
-.gacha-stage__pack p {
-  font-size: 11px;
-  line-height: 1.5;
-  color: #b6c0ad;
-}
-.gacha-stage__preview {
-  color: #a5afa0;
-  font: 400 9px/1.6 var(--font-sans);
-  max-width: 300px;
-}
-.gacha-stage__guarantee {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 14px 0 8px;
-}
-.gacha-stage__guarantee .studio-progress {
-  width: 43px;
-  height: 43px;
-  font-size: 10px;
-}
-.gacha-stage__guarantee strong {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  color: #e6dfca;
-}
-.gacha-stage__guarantee > div > span {
-  display: block;
-  margin-top: 5px;
-  font-size: 9px;
-  color: #a7b29e;
-}
-.gacha-stage__guarantee button {
-  color: #dfc996;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.gacha-stage__duplicates {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  font-size: 10px;
-  color: #adb9a5;
-}
-.gacha-stage__duplicates .game-glyph {
-  --glyph-size: 23px;
-}
-.gacha-stage .gym__actions {
+
+.fight-bill__inner {
+  position: relative;
+  z-index: 2;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  margin: 17px 0 0;
-  padding: 0;
+  height: 100%;
 }
-.gacha-stage .gym__actions > .studio-eyebrow {
-  font-size: 8px;
-  margin-bottom: 1px;
-}
-.gacha-stage__payment {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+
+.fight-bill__header {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  margin-bottom: 12px;
 }
-.gacha-stage__payment .studio-action {
-  justify-content: flex-start;
-  min-width: 0;
-  gap: 9px;
-  padding: 11px 19px;
-  font-size: 11px;
+
+.fight-bill__stars-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 6px;
 }
-.gacha-stage__payment .studio-action > svg:last-child {
-  margin-left: auto;
+.fight-bill__stars-row svg {
+  color: #1a1a1a;
+}
+.fight-bill__stars-spacer {
+  flex: 1;
+}
+.fight-bill__utility {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 900 8px/1 var(--font-sans);
+  letter-spacing: .08em;
+}
+.fight-bill__utility button {
+  min-height: 24px;
+  padding: 2px;
+  color: #1a1a1a;
+}
+.fight-bill__utility button:hover {
+  text-decoration: underline;
+}
+
+.fight-bill__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.fight-bill__burst-svg {
+  width: clamp(24px, 6vw, 40px);
+  height: clamp(36px, 9vw, 60px);
+  color: #1a1a1a;
   flex: none;
 }
-.gacha-stage__payment .game-glyph {
-  --glyph-size: 25px;
-}
-.gacha-stage__payment > small {
-  color: #adb6a4;
-  font-size: 9px;
-  min-width: 82px;
-}
-.gacha-stage .gym__payment-note {
-  text-align: left;
-  color: #8f9a8c;
-  font-size: 8px;
-  line-height: 1.6;
-}
-.gacha-stage .gym__links {
-  margin: 9px 0 0;
-  padding: 0;
-  justify-content: flex-start;
-  gap: 25px;
-  border: 0;
-}
-.gacha-stage .gym__links button {
-  font: 500 10px/1.5 var(--font-sans);
-  color: #d6c498;
-  padding: 6px 0;
-  min-height: 40px;
-}
-.gacha-stage__secured {
+
+.fight-bill__title h2 {
   display: flex;
-  gap: 9px;
+  flex-direction: column;
   align-items: center;
-  color: #ebd29a;
-  font-size: 12px;
-  min-height: 60px;
+  line-height: 0.85;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin: 0;
 }
-.gacha-stage__secured small {
-  display: block;
-  margin-top: 5px;
-  color: #afbca4;
+.fight-bill__title-top {
+  font-size: clamp(40px, 9vw, 60px);
+  letter-spacing: -0.02em;
+}
+.fight-bill__title-bottom {
+  font-size: clamp(24px, 5.5vw, 36px);
+  letter-spacing: -0.03em;
+}
+
+.fight-bill__band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-top: 4px solid #1a1a1a;
+  border-bottom: 4px solid #1a1a1a;
+  padding: 4px 0;
+  margin: 6px 0;
+  gap: 12px;
+}
+.fight-bill__band h3 {
+  font-size: clamp(20px, 4.5vw, 28px);
+  font-weight: 900;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.fight-bill__band-stars {
+  display: flex;
+  gap: 4px;
+  color: #1a1a1a;
+}
+
+.fight-bill__season {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.fight-bill__season h4 {
+  font-size: clamp(14px, 3.5vw, 18px);
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  white-space: nowrap;
+}
+.fight-bill__season-lines {
+  flex: 1;
+  height: 8px;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+  position: relative;
+}
+.fight-bill__season-lines::before {
+  content: '★★★';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f4ead5;
+  padding: 0 4px;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #1a1a1a;
+}
+
+.fight-bill__grid {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr 1fr;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 8px;
+  flex: none;
+  min-height: 230px;
+}
+
+.fight-bill__col {
+  border: 3px solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+
+.fight-bill__col--side {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fight-bill__col-stars {
+  display: flex;
+  gap: 4px;
+  color: #1a1a1a;
+}
+
+.fight-bill__col--mid {
+  border: none;
+  padding: 0;
+  gap: 6px;
+}
+
+.fight-bill__mid-box {
+  border: 3px solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.fight-bill__switch {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fight-bill__switch button {
+  width: 100%;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 900;
+  color: #1a1a1a;
+  background: transparent;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.fight-bill__switch button[aria-pressed="true"] {
+  background: #1a1a1a;
+  color: #f4ead5;
+}
+.fight-bill__switch button:hover:not(:disabled) {
+  border-color: #1a1a1a;
+}
+
+.fight-bill__guarantee-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.fight-bill__guarantee-content strong {
+  font-size: 11px;
+  font-weight: 900;
+  color: #1a1a1a;
+}
+.fight-bill__guarantee-content span {
+  font-size: 9px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+.fight-bill__guarantee-bell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 50px;
+  color: #1a1a1a;
+  transform-origin: 50% 8%;
+}
+.fight-bill__bell-handle {
+  position: absolute;
+  top: 0;
+  width: 17px;
+  height: 10px;
+  border: 3px solid currentColor;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+}
+.fight-bill__bell-body {
+  position: absolute;
+  top: 7px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 36px;
+  padding-top: 5px;
+  border: 3px solid currentColor;
+  border-radius: 23px 23px 7px 7px;
+  background: #f4ead5;
+  font: 900 10px/1 var(--font-display);
+  box-shadow: inset 0 -5px #1a1a1a12;
+}
+.fight-bill__bell-body::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  bottom: -5px;
+  height: 5px;
+  border: 3px solid currentColor;
+  border-radius: 5px;
+  background: #f4ead5;
+}
+.fight-bill__bell-clapper {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: currentColor;
+  transform-origin: 50% -7px;
+}
+.fight-bill__guarantee-bell[data-ready='true'] {
+  animation: guarantee-bell-ring 750ms ease-in-out infinite;
+}
+.fight-bill__guarantee-bell[data-ready='true'] .fight-bill__bell-clapper {
+  animation: guarantee-clapper-ring 375ms ease-in-out infinite alternate;
+}
+@keyframes guarantee-bell-ring {
+  0%, 100% { rotate: 0deg; }
+  20% { rotate: -9deg; }
+  40% { rotate: 8deg; }
+  60% { rotate: -5deg; }
+  80% { rotate: 4deg; }
+}
+@keyframes guarantee-clapper-ring {
+  from { rotate: -18deg; }
+  to { rotate: 18deg; }
+}
+
+.fight-bill__preview-text {
   font-size: 10px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.2;
 }
+
+.fight-bill__action-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.fight-bill__pay-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: transparent;
+  transition: transform 0.1s, filter 0.1s;
+}
+.fight-bill__pay-btn img {
+  width: 140%;
+  max-width: 150px;
+  height: 118px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)) contrast(1.1);
+  transform: rotate(-3deg);
+  transition: transform 0.2s;
+  margin-inline: -20%;
+  position: relative;
+  z-index: 2;
+}
+.fight-bill__pay-btn:hover:not(:disabled) img {
+  transform: rotate(-1deg) scale(1.05);
+}
+.fight-bill__pay-btn:active:not(:disabled) img {
+  transform: rotate(-4deg) scale(0.95);
+}
+.fight-bill__pay-btn:disabled {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.fight-bill__pay-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.fight-bill__pay-info strong {
+  font-size: clamp(12px, 3.5vw, 15px);
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.fight-bill__pay-info small {
+  font-size: 8px;
+  font-weight: 800;
+  color: #1a1a1a;
+  font-family: var(--font-sans);
+}
+
+.fight-bill__pay-action {
+  background: #1a1a1a;
+  color: #f4ead5;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 6px;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+  transition: background 0.2s, color 0.2s;
+}
+.fight-bill__pay-btn:hover:not(:disabled) .fight-bill__pay-action {
+  background: #c33;
+  color: #fff;
+}
+
+.fight-bill__footer {
+  margin-top: auto;
+}
+.fight-bill__footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+  padding: 4px 0;
+  margin-bottom: 6px;
+}
+.fight-bill__footer-links button, .fight-bill__footer-links span {
+  font-size: 9px;
+  font-weight: 900;
+  color: #1a1a1a;
+  font-family: var(--font-sans);
+}
+.fight-bill__footer-links button:hover {
+  text-decoration: underline;
+}
+.fight-bill__dot {
+  width: 4px;
+  height: 4px;
+  background-color: #1a1a1a;
+  transform: rotate(45deg);
+}
+
+.fight-bill__secured-overlay {
+  position: absolute;
+  inset: 12px;
+  background: rgba(244, 234, 213, 0.96);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border: 4px dashed #1a1a1a;
+  text-align: center;
+  gap: 12px;
+  color: #1a1a1a;
+  padding: 20px;
+}
+.fight-bill__secured-overlay strong {
+  font-size: clamp(24px, 7vw, 36px);
+  font-weight: 900;
+  line-height: 1;
+}
+.fight-bill__secured-overlay span {
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  max-width: 250px;
+}
+
+/* Once the opening starts, the purchase poster becomes a compact receipt so
+   the bag, hit cue, and ringside controls remain unobstructed. */
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill {
+  align-self: start;
+  justify-self: start;
+  width: 180px;
+  margin: 0;
+  padding: 5px;
+  transform: rotate(-1deg);
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__inner {
+  padding: 5px;
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__header,
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__grid,
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__error {
+  display: none;
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__secured-overlay {
+  position: relative;
+  inset: auto;
+  min-height: 76px;
+  padding: 8px;
+  gap: 3px;
+  border-width: 2px;
+  backdrop-filter: none;
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__secured-overlay svg {
+  width: 17px;
+  height: 17px;
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__secured-overlay strong {
+  font-size: 15px;
+}
+.gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill__secured-overlay span {
+  font-size: 8px;
+  line-height: 1.25;
+}
+
+.fight-bill__error {
+  background: #1a1a1a;
+  color: #ff4a4a;
+  padding: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 8px;
+  border: 2px solid #ff4a4a;
+}
+
 .gacha-stage__ringside {
   grid-column: 2;
   grid-row: 2;
@@ -617,7 +992,7 @@
 @media (max-width: 700px) {
   .trading-post .market-tabs {
     padding-inline: 20px;
-    gap: 27px;
+    gap: 12px;
   }
   .gym.gacha-stage {
     display: flex;
@@ -679,43 +1054,73 @@
       linear-gradient(0deg, #101513 0%, #101513d9 12%, transparent 35%),
       radial-gradient(ellipse at 50% 42%, transparent 38%, #07100d66 100%);
   }
-  .gacha-stage .gym__offer {
-    position: relative;
-    z-index: 2;
-    padding: 20px 20px max(24px, env(safe-area-inset-bottom));
-    margin: 0;
-    background: linear-gradient(180deg, transparent, #101513 15%);
-    overflow: visible;
+  .fight-bill {
+    width: min(330px, calc(100% - 32px));
+    padding: 8px;
+    margin: 0 auto max(24px, env(safe-area-inset-bottom));
+    transform: rotate(0);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    background-color: #f2e8d5;
   }
-  .gacha-stage__pack {
-    gap: 15px;
-    margin-bottom: 12px;
+  .fight-bill__title-top {
+    font-size: 27px;
   }
-  .gacha-stage__pack > .venue-prop {
-    width: 65px;
+  .fight-bill__title-bottom {
+    font-size: 15px;
+  }
+  .fight-bill__band h3 {
+    font-size: 14px;
+  }
+  .fight-bill__pay-btn img {
+    width: 150%;
+    max-width: 118px;
     height: 82px;
+    margin: -8px -25% -6px;
   }
-  .gacha-stage .gym__offer h2 {
-    font-size: 26px;
+  .fight-bill__inner {
+    padding: 7px;
   }
-  .gacha-stage__payment {
-    grid-template-columns: 1fr auto;
-    gap: 9px;
+  .fight-bill__header {
+    margin-bottom: 4px;
   }
-  .gacha-stage__payment > small {
-    font-size: 8px;
-    min-width: 72px;
+  .fight-bill__stars-row {
+    margin-bottom: 2px;
   }
-  .gacha-stage__payment .studio-action {
-    font-size: 10px;
-    gap: 7px;
-    padding: 11px 15px;
-    min-height: 48px;
+  .fight-bill__title {
+    margin: 0;
   }
-  .gacha-stage__payment .game-glyph {
-    --glyph-size: 22px;
+  .fight-bill__burst-svg {
+    width: 19px;
+    height: 27px;
   }
-  .gacha-stage .gym__payment-note {
+  .fight-bill__band {
+    margin: 2px 0;
+    padding: 2px 0;
+  }
+  .fight-bill__season {
+    display: none;
+  }
+  .fight-bill__season h4 {
+    font-size: 12px;
+  }
+  .fight-bill__grid {
+    margin-bottom: 3px;
+    min-height: 184px;
+  }
+  .fight-bill__action-wrap {
+    padding: 2px 0;
+  }
+  .fight-bill__pay-btn {
+    gap: 2px;
+  }
+  .fight-bill__pay-info strong {
+    font-size: 11px;
+  }
+  .fight-bill__pay-info small {
+    font-size: 7px;
+  }
+  .fight-bill__pay-action {
+    padding: 4px 3px;
     font-size: 8px;
   }
   .gacha-stage__ringside {
@@ -743,8 +1148,14 @@
     margin-top: 0;
     padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
-  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .gym__offer {
-    display: none; /* Hide offer during punching to save space */
+  .gacha-stage:is([data-phase='punching'], [data-phase='tenPunching']) .fight-bill {
+    display: block;
+    position: absolute;
+    top: 92px;
+    right: 12px;
+    left: auto;
+    width: 158px;
+    margin: 0;
   }
   .gacha-stage__punch-actions {
     gap: 8px;
@@ -844,25 +1255,20 @@
   .gacha-stage .gym__vignette {
     background: linear-gradient(90deg, #101513 0%, #101513bb 12%, transparent 42%), linear-gradient(0deg, #101513 0%, transparent 38%);
   }
-  .gacha-stage .gym__offer {
+  .fight-bill {
     grid-column: 1;
     grid-row: 2;
     min-height: 0;
     overflow-y: auto;
-    padding: 0 8px 8px 0;
     scrollbar-width: thin;
+    padding: 6px;
   }
-  .gacha-stage__pack { margin: 0 0 6px; }
-  .gacha-stage .gym__offer h2 { font-size: 19px; margin: 2px 0 4px; }
-  .gacha-stage__pack p { font-size: 9px; }
-  .gacha-stage__guarantee { margin: 6px 0 4px; }
-  .gacha-stage .gym__actions { margin-top: 8px; gap: 7px; }
-  .gacha-stage__payments { gap: 7px; }
-  .gacha-stage__payment { grid-template-columns: 1fr; gap: 3px; }
-  .gacha-stage__payment .studio-action { min-height: 40px; padding: 8px 12px; }
-  .gacha-stage__payment > small { min-width: 0; padding-left: 8px; }
-  .gacha-stage .gym__links { margin-top: 2px; gap: 18px; }
-  .gacha-stage .gym__links button { min-height: 32px; padding: 3px 0; }
+  .fight-bill__title-top { font-size: 32px; }
+  .fight-bill__title-bottom { font-size: 18px; }
+  .fight-bill__band h3 { font-size: 16px; }
+  .fight-bill__pay-btn img { max-width: 50px; height: 60px; }
+  .fight-bill__season { margin-bottom: 4px; }
+  .fight-bill__grid { gap: 4px; margin-bottom: 4px; }
   .gacha-stage__ringside {
     grid-column: 2;
     grid-row: 2;
@@ -1487,7 +1893,9 @@
   .gacha-results__spotlight,
   .gacha-results__smoke,
   .gacha-results .gym-reward,
-  .gym-reward__conversion { animation: none !important; }
+  .gym-reward__conversion,
+  .fight-bill__guarantee-bell,
+  .fight-bill__bell-clapper { animation: none !important; }
 }
 html[data-reduce-motion='true'] :is(
   .gacha-stage__strike--finisher,
@@ -1496,7 +1904,9 @@ html[data-reduce-motion='true'] :is(
   .gacha-results__spotlight,
   .gacha-results__smoke,
   .gacha-results .gym-reward,
-  .gym-reward__conversion
+  .gym-reward__conversion,
+  .fight-bill__guarantee-bell,
+  .fight-bill__bell-clapper
 ) { animation: none !important; }
 
 /* Streamlined ticket counter: the artwork is the purchase surface, while pull
@@ -1506,214 +1916,7 @@ html[data-reduce-motion='true'] :is(
     min-height: max(620px, calc(100svh - 114px));
     padding-top: 290px;
   }
-  .gym.gacha-stage .gym__offer {
-    width: calc(100% - 24px);
-    margin: auto 12px 12px;
-    padding: 12px 14px max(12px, env(safe-area-inset-bottom));
-    border-radius: 3px 18px 3px 3px;
-    background: #111b17ed;
-  }
-  .gym.gacha-stage .gacha-stage__pack {
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .gym.gacha-stage .gacha-stage__pack > .venue-prop {
-    width: 30px;
-    height: 40px;
-  }
-  .gym.gacha-stage .gym__offer h2 {
-    margin: 2px 0;
-    font-size: 20px;
-  }
-  .gym.gacha-stage .gacha-stage__pack p { margin: 2px 0; font-size: 10px; }
-  .gym.gacha-stage .gacha-stage__guarantee {
-    gap: 8px;
-    margin: 6px 0;
-    font-size: 10px;
-  }
-  .gym.gacha-stage .gacha-stage__guarantee > :first-child {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
-  }
-  .gym.gacha-stage .gacha-stage__duplicates {
-    margin: 4px 0;
-    font-size: 9px;
-    line-height: 1.3;
-  }
-  .gym.gacha-stage .gacha-stage__duplicates .game-glyph { --glyph-size: 18px; }
-  .gym.gacha-stage .gym__actions { margin-top: 5px; gap: 5px; }
-  .gym.gacha-stage .gacha-stage__pull-switch button { min-height: 36px; padding-bottom: 5px; }
-  .gym.gacha-stage .gacha-stage__ticket-choices { width: 100%; gap: 8px; }
-  .gym.gacha-stage .gacha-stage__ticket-choice {
-    grid-template-columns: 46px minmax(0, 1fr);
-    align-items: center;
-    padding: 5px 3px;
-    border: 1px solid #d9ca9c35;
-    min-height: 62px;
-    border-radius: 3px;
-  }
-  .gym.gacha-stage .gacha-stage__ticket-choice img {
-    width: 46px;
-    height: 44px;
-    transform: rotate(-3deg);
-  }
-  .gym.gacha-stage .gacha-stage__ticket-choice > span { margin-top: 0; gap: 3px; }
-  .gym.gacha-stage .gacha-stage__ticket-choice strong { font-size: 12px; }
-  .gym.gacha-stage .gym__payment-note { margin: 2px 0; font-size: 8px; }
-  .gym.gacha-stage .gym__links { margin-top: 4px; gap: 16px; }
-  .gym.gacha-stage .gym__links button { min-height: 36px; font-size: 9px; }
   .gym.gacha-stage .gacha-stage__heading h1 { font-size: 30px; margin: 10px 0 6px; }
-}
-.gacha-stage .gym__actions {
-  gap: 8px;
-  margin-top: 13px;
-}
-.gacha-stage__pull-switch {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  width: max-content;
-  border-bottom: 1px solid #d9ca9c24;
-}
-.gacha-stage__pull-switch button {
-  position: relative;
-  appearance: none;
-  border: 0;
-  background: none;
-  color: #8f9a8c;
-  min-height: 34px;
-  padding: 0 0 9px;
-  font: 700 9px/1 var(--font-sans);
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.gacha-stage__pull-switch button::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 -1px;
-  height: 2px;
-  background: #e8cb91;
-  scale: 0 1;
-  transform-origin: left;
-  transition: scale 180ms ease;
-}
-.gacha-stage__pull-switch button[aria-pressed='true'] {
-  color: #f2dfb2;
-}
-.gacha-stage__pull-switch button[aria-pressed='true']::after {
-  scale: 1 1;
-}
-.gacha-stage__pull-switch button:disabled {
-  cursor: default;
-}
-.gacha-stage__pull-switch b {
-  font: 900 15px/1 var(--font-display);
-}
-.gacha-stage__pull-switch small {
-  margin-left: 5px;
-  color: #ddb96c;
-  font-size: 7px;
-}
-.gacha-stage__ticket-choices {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: end;
-  gap: 8px;
-  width: min(360px, 100%);
-}
-.gacha-stage__ticket-choice {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  justify-items: center;
-  min-width: 0;
-  padding: 2px 4px 5px;
-  border: 0;
-  background: none;
-  color: #e7dec6;
-  text-align: center;
-  cursor: pointer;
-}
-.gacha-stage__ticket-choice::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 19% 12% 25%;
-  border-radius: 50%;
-  background: radial-gradient(circle, #e8cb9130, transparent 68%);
-  filter: blur(10px);
-  opacity: .62;
-  transition: opacity 180ms ease, scale 180ms ease;
-}
-.gacha-stage__ticket-choice--clout::before {
-  background: radial-gradient(circle, #76d5bd2e, transparent 68%);
-}
-.gacha-stage__ticket-choice img {
-  display: block;
-  width: 100%;
-  height: 148px;
-  object-fit: contain;
-  filter: drop-shadow(0 13px 13px #0009);
-  transform: rotate(-3deg) scale(1.02);
-  transition: transform 180ms ease, filter 180ms ease;
-}
-.gacha-stage__ticket-choice--clout img {
-  transform: rotate(3deg) scale(1.02);
-}
-.gacha-stage__ticket-choice > span {
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-  margin-top: -3px;
-}
-.gacha-stage__ticket-choice em {
-  color: #aab4a2;
-  font: 700 7px/1 var(--font-sans);
-  font-style: normal;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-}
-.gacha-stage__ticket-choice strong {
-  color: #f0ddad;
-  font: 800 15px/1.15 var(--font-display);
-  letter-spacing: .03em;
-  text-transform: uppercase;
-}
-.gacha-stage__ticket-choice--clout strong {
-  color: #bbdfd3;
-}
-.gacha-stage__ticket-choice small {
-  color: #849083;
-  font: 500 8px/1.25 var(--font-sans);
-}
-.gacha-stage__ticket-choice:hover:not(:disabled)::before,
-.gacha-stage__ticket-choice:focus-visible::before {
-  opacity: 1;
-  scale: 1.12;
-}
-.gacha-stage__ticket-choice:hover:not(:disabled) img,
-.gacha-stage__ticket-choice:focus-visible img {
-  transform: translateY(-5px) rotate(-1deg) scale(1.07);
-  filter: drop-shadow(0 17px 18px #000c) brightness(1.08);
-}
-.gacha-stage__ticket-choice--clout:hover:not(:disabled) img,
-.gacha-stage__ticket-choice--clout:focus-visible img {
-  transform: translateY(-5px) rotate(1deg) scale(1.07);
-}
-.gacha-stage__ticket-choice:focus-visible {
-  outline: 1px solid #e8cb91b8;
-  outline-offset: 3px;
-}
-.gacha-stage__ticket-choice:disabled {
-  cursor: not-allowed;
-  opacity: .42;
-  filter: grayscale(.55);
-}
-.gacha-stage .gym__payment-note {
-  width: min(360px, 100%);
-  text-align: center;
 }
 
 /* The bag is the main control. The cue points at the interactive 3D scene;
@@ -1915,7 +2118,9 @@ html[data-reduce-motion='true'] :is(
     gap: 3px;
   }
   .gacha-stage__ticket-choice img {
+    width: 86px;
     height: 112px;
+    margin-inline: -14px;
   }
   .gacha-stage__ticket-choice strong {
     font-size: 13px;
@@ -1942,11 +2147,16 @@ html[data-reduce-motion='true'] :is(
   .gacha-stage__secondary-actions {
     gap: 13px;
   }
+  .gacha-stage .gym__links {
+    display: none;
+  }
 }
 
 @media (max-width: 390px) {
   .gacha-stage__ticket-choice img {
-    height: 96px;
+    width: 76px;
+    height: 100px;
+    margin-inline: -11px;
   }
   .gacha-stage__ticket-choice em {
     font-size: 6px;

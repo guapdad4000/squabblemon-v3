@@ -22,7 +22,8 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const claimMission = useClaimPlayerMission(),
     queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null),
-    [tab, setTab] = useState<'bounties' | 'mastery'>('bounties');
+    [tab, setTab] = useState<'bounties' | 'mastery'>(() =>
+      new URLSearchParams(window.location.search).get('view') === 'mastery' ? 'mastery' : 'bounties');
 
   const [claimState, setClaimState] = useState<{ id: string; phase: BountyPhase } | null>(null);
 
