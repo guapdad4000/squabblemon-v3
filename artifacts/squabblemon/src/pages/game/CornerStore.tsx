@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { motion } from 'framer-motion';
@@ -8,6 +8,8 @@ import { CORNER_OFFERS, checkoutDemo, readDemoWallet, type StoreOffer } from '..
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '../../components/ui/dialog';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
 import { rewardReceipts } from '../../lib/rewardReceipts';
+import { loadFeedbackPreferences } from '../../battleFeedback';
+import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 import '../../styles/ui-polish.css';
 
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -18,6 +20,11 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [error, setError] = useState('');
   const transaction = useRef('');
   const lock = useRef(false);
+  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    welcomeVoice.current = playVoiceLine('market-welcome', loadFeedbackPreferences().audioEnabled);
+    return () => stopSoundEffect(welcomeVoice.current);
+  }, []);
   const owned = (offer: StoreOffer) => offer.kind === 'style' && wallet.receipts.some(r => r.offerId === offer.id);
   function choose(offer: StoreOffer) { transaction.current = crypto.randomUUID(); setError(''); setSelected(offer); }
   function purchase() {

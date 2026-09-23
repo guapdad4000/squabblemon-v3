@@ -9,7 +9,7 @@
 /* Result marks, glow, and the ranked fist-clash impact pass. */
 .park-result.park-result--illustrated{box-shadow:0 28px 90px #000c,0 24px 42px #f3ca576b}
 .park-result.park-result--illustrated.outcome-loss{box-shadow:0 28px 90px #000c,0 24px 42px #d832326e}
-.park-result-outcome-mark{position:absolute!important;z-index:3!important;left:14px!important;top:20px!important;width:90px!important;height:90px!important;margin:0!important;object-fit:contain!important;filter:drop-shadow(0 8px 10px #000a)!important}
+.park-result-outcome-mark{position:absolute!important;z-index:3!important;left:10px!important;top:8px!important;width:140px!important;height:140px!important;margin:0!important;object-fit:contain!important;filter:drop-shadow(0 10px 14px #000b)!important}
 .versus-crack{left:43%;width:14%;filter:contrast(1.8) brightness(.32) drop-shadow(0 0 3px #000) drop-shadow(0 0 12px #080808)}
 .versus-impact{position:absolute;inset:0;z-index:3;pointer-events:none}
 .versus-impact i{position:absolute;left:50%;top:42%;width:4px;height:31%;background:#090909;clip-path:polygon(40% 0,100% 0,58% 43%,100% 43%,0 100%,32% 54%,0 54%);transform-origin:top center;opacity:0;animation:versus-bolt .38s .48s ease-out both}
@@ -30,3 +30,5 @@
 @media(prefers-reduced-motion:reduce){.match-poster--park .versus-park,.versus-impact i,.versus-impact b{animation:none!important}}
 html[data-reduce-motion="true"] .match-poster--park .versus-park,html[data-reduce-motion="true"] .versus-impact i,html[data-reduce-motion="true"] .versus-impact b{animation:none!important}
 @media(max-width:500px){.versus-logo{top:43%;width:clamp(104px,34vw,145px)}}
+@media(max-width:500px){.park-result-outcome-mark{width:118px!important;height:118px!important;left:7px!important;top:8px!important}}
+@media(max-height:650px){.park-result-outcome-mark{width:92px!important;height:92px!important;top:2px!important}}

@@ -7,7 +7,7 @@ type Layer = { name: string; x: number; y: number; width: number; height: number
 type Scene = { width: number; height: number; layers: Layer[] };
 
 /** Original centered art remains visible even if the optional cutouts fail to load. */
-export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' }) {
+export function LayeredVenue({ scene }: { scene: 'fade-market' | 'gatcha-bg' | 'training-club' }) {
   const root = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<Scene | null>(null);
   const reduced = useReducedMotion();

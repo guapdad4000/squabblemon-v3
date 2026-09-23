@@ -1,0 +1,8 @@
+{
+  "width": 1792,
+  "height": 1008,
+  "layers": [
+    { "name": "reveal-midground.webp", "x": 0, "y": 0, "width": 1792, "height": 1008, "depth": 0.36 },
+    { "name": "reveal-foreground.webp", "x": 0, "y": 0, "width": 1792, "height": 1008, "depth": 0.88 }
+  ]
+}

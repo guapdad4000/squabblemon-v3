@@ -124,9 +124,13 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
   const fallback = starterRecipes.filter(
     (recipe) => validateSavedDeck(recipe.catalogCardIds, bootstrap.profile.ownedCardIds, recipe.hero).valid,
   );
+  const storyStarter =
+    storyNodeId && fallback.length === 0
+      ? starterRecipes.find((recipe) => recipe.id === bootstrap.profile.starterDeckId) ?? starterRecipes[0]
+      : null;
   const crews = [
     ...saved,
-    ...fallback
+    ...(storyStarter ? [storyStarter] : fallback)
       .filter(recipe => !saved.some(deck => deck.id === recipe.id))
       .map(recipe => ({
         id: recipe.id,
@@ -211,15 +215,6 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
         <nav className="studio-tabs activity-stage__tabs" aria-label="Battle categories">
           <button onClick={() => navigate('/game/online')}>Online · Friend fade</button>
           <button
-            aria-pressed={!showEvents}
-            onClick={() => {
-              setShowEvents(false);
-              chooseMode('auto');
-            }}
-          >
-            Training challenges
-          </button>
-          <button
             aria-pressed={showEvents}
             onClick={() => {
               setShowEvents(true);
@@ -227,6 +222,15 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
             }}
           >
             Events & equal footing
+          </button>
+          <button
+            aria-pressed={!showEvents}
+            onClick={() => {
+              setShowEvents(false);
+              chooseMode('auto');
+            }}
+          >
+            Challenges
           </button>
         </nav>
       )}

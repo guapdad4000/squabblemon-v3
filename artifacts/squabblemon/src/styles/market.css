@@ -559,7 +559,12 @@
 
 
 /* A worn athletic club: warm paper, painted type, and a featured trainer. */
-.training-studio { background-attachment:local; padding-bottom:50px; }
+.training-studio { position:relative; isolation:isolate; background:#111715; padding-bottom:50px; }
+.training-studio > :not(.training-studio__venue) { position:relative; z-index:2; }
+.market.world-decor-host > .training-studio__venue { position:fixed; z-index:0; inset:var(--city-header-height,56px) 0 0; overflow:hidden; pointer-events:none; opacity:.96; }
+.training-studio__venue::after { content:''; position:absolute; z-index:2; inset:0; background:linear-gradient(110deg,#101710b8,#1017104d 58%,#1017108f),linear-gradient(0deg,#0b100dbd,transparent 48%); }
+.training-studio__venue .layered-venue__base { filter:saturate(.92) contrast(1.07) brightness(.88); }
+.training-studio__venue .layered-venue__cutout { filter:drop-shadow(0 16px 20px #0008); }
 .training-studio__board { display:flex; align-items:center; justify-content:space-between; gap:12px; max-width:1140px; margin:0 auto 24px; padding:10px 0; border-bottom:1px solid #b5c2a63d; font:700 8px var(--font-mono); letter-spacing:.12em; color:#9bbfb0; }
 .training-studio__board > span:first-child { border:1px solid #d6bf7977; padding:6px 9px; color:#efce81; transform:rotate(-3deg); }
 .training-studio .market-hero { min-height:230px; border-bottom:1px solid #ced19c30; }

@@ -43,7 +43,7 @@ import {
   getPlayerBootstrap,
   hasVerifiedTutorialMatch,
 } from "../lib/playerState";
-import { canUseRewardedDeck } from "../lib/matchAuthorization";
+import { canUseRewardedDeck, canUseStoryDeck } from "../lib/matchAuthorization";
 import { districtSeedForMatch } from "../lib/matchDistrictSeed";
 import { completedTutorialMilestones, getTutorialMilestones } from "../lib/tutorialMilestones";
 import {
@@ -368,7 +368,7 @@ router.post("/player/matches", async (req, res): Promise<void> => {
   }
   if (parsed.data.mode !== "tutorial" && !drafting) {
     if (
-      !canUseRewardedDeck(
+      !(parsed.data.mode === "story" ? canUseStoryDeck : canUseRewardedDeck)(
         parsed.data.playerDeckId,
         state.profile.savedDecks,
         state.profile.ownedCardIds,

@@ -1,7 +1,7 @@
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -23,10 +23,11 @@ import { cardCatalog, catalogCardById, getCardImage, getAssetUrl, CARD_RARITY_DE
 import { ArrowRight, Check } from 'lucide-react';
 import '../../styles/studio.css';
 import { PropArt } from '../../components/venue/PropArt';
+import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { clearShopRequest, readShopRequest, saveShopRequest } from '../../lib/shopJournal';
 import { e2eAuthEnabled } from '../../lib/auth';
 import { loadFeedbackPreferences } from '../../battleFeedback';
-import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
+import { playVoiceLine } from '../../lib/sfx';
 
 export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; openPacks: () => void }) {
   const { profile } = bootstrap;
@@ -42,11 +43,6 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   const [receipt, setReceipt] = useState<ShopReceipt | null>(null);
   const [error, setError] = useState<string | null>(null);
   const lock = useRef(false);
-  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => {
-    welcomeVoice.current = playVoiceLine('market-welcome', loadFeedbackPreferences().audioEnabled);
-    return () => stopSoundEffect(welcomeVoice.current);
-  }, []);
   const offer = SHOP_OFFERS.find((item) => item.id === (pending?.itemId ?? selectedId))!;
   const choices = cardCatalog.filter((card) =>
     offer.id === 'common-recruit'
@@ -148,10 +144,10 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   return (
     <div
       className="studio-page market training-studio world-decor-host"
-      style={{
-        backgroundImage: `linear-gradient(110deg,#101710f5,#101710b8),url('${getAssetUrl('/assets/layered/training-hall.webp')}')`,
-      }}
     >
+      <div className="training-studio__venue" aria-hidden="true">
+        <LayeredVenue scene="training-club" />
+      </div>
       <PageDecor theme="market" />
       <div className="training-studio__board" aria-hidden="true"><span>OPEN LATE</span><b>01 / PUT IN WORK</b><span>OAKLAND ATHLETIC CLUB</span></div>
       <header className="market-hero">

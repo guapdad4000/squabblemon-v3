@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { starterRecipes, ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS } from "@workspace/squabblemon-engine/data";
-import { canUseRewardedRecipe, canUseRewardedDeck } from "./matchAuthorization";
+import { canUseRewardedRecipe, canUseRewardedDeck, canUseStoryDeck } from "./matchAuthorization";
 
 test("rewarded practice accepts only gangs whose ten cards are owned", () => {
   const recipe = starterRecipes[0];
@@ -27,4 +27,12 @@ test('custom fades require a legal owned saved roster, including mixed gangs', (
   assert.equal(canUseRewardedDeck('personal', [{ ...deck, cardIds: deck.cardIds.slice(0,6) }], ROOKIE_FOUNDATION_IDS), false);
   assert.equal(canUseRewardedDeck('personal', [{ ...deck, heroCardId: 'closet-nerd' }], ROOKIE_FOUNDATION_IDS), false);
   assert.equal(canUseRewardedDeck('personal', [{ ...deck, cardIds: Array(10).fill('cornball') }], ROOKIE_FOUNDATION_IDS), false);
+});
+
+test('story can recover with a canonical starter but never an arbitrary invalid gang', () => {
+  const recipe = starterRecipes[0];
+  const invalidSaved = { id: 'personal', cardIds: [...ROOKIE_CORE_IDS], heroCardId: ROOKIE_CORE_IDS[0] };
+  assert.equal(canUseStoryDeck(recipe.id, [], []), true);
+  assert.equal(canUseStoryDeck('not-a-real-crew', [], []), false);
+  assert.equal(canUseStoryDeck(invalidSaved.id, [invalidSaved], []), false);
 });
