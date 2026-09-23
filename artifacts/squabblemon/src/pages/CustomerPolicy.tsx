@@ -4,6 +4,9 @@ import { Link } from 'wouter';
 
 const SUPPORT_EMAIL = 'Guapshipping@gmail.com';
 const MERCHANT_NAME = 'It’s a check inc';
+// Set only as part of the authorized live-launch release, never from a test
+// checkout or from the date this draft was prepared.
+export const POLICY_EFFECTIVE_DATE: string | null = null;
 const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Squabblemon Clout purchase support')}`;
 
 function usePolicyMetadata(title: string, description: string) {
@@ -66,7 +69,9 @@ function PolicyShell({ children, eyebrow, title, description }: {
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-white/65 md:text-base">{description}</p>
           <div data-testid="status-policy-draft" className="mt-6 inline-flex items-center gap-2 border border-amber-300/30 bg-amber-300/10 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-amber-200">
-            <ShieldCheck size={15} aria-hidden="true" /> Owner-approved for launch · Not yet effective
+            <ShieldCheck size={15} aria-hidden="true" /> {POLICY_EFFECTIVE_DATE
+              ? `Effective ${POLICY_EFFECTIVE_DATE}`
+              : 'Owner-approved for launch · Not yet effective'}
           </div>
         </section>
 
@@ -159,7 +164,9 @@ export function RefundPolicyPage() {
     <PolicyShell
       eyebrow="Corner Store customer policy"
       title="Clout refunds"
-      description="Owner-approved voluntary refund terms, effective when live Clout purchases launch. Live purchases have not launched; no effective date has been set. All rights provided by applicable law remain unchanged."
+      description={POLICY_EFFECTIVE_DATE
+        ? `Voluntary refund terms effective ${POLICY_EFFECTIVE_DATE}. All rights provided by applicable law remain unchanged.`
+        : 'Owner-approved voluntary refund terms, effective when live Clout purchases launch. Live purchases have not launched; no effective date has been set. All rights provided by applicable law remain unchanged.'}
     >
       <Section title="Clout purchases">
         <p>Clout is virtual currency for use within Squabblemon. It is not cash and cannot be withdrawn, transferred to another player, or exchanged for money.</p>

@@ -1,5 +1,30 @@
 # Corner Store payment verification
 
+## Current isolated hosted preview evidence
+
+On ready deploy `6ab4426b8743f80008889427`, the hosted-test worker reported an
+authentic Clerk test-account flow on the isolated preview database, a real
+Stripe-hosted Pocket payment (base 299 cents, automatic tax complete, tax 0,
+total 299), authentic signed completion, and exactly one durable 500-Clout
+credit reflected in the wallet/header. Cancellation, re-authentication,
+refresh, adult-declaration denial, and forged-country-header tests passed.
+
+Replays were reported acknowledged with HTTP 200 and stable ledgers; exact
+target-event HTTP-200 evidence is still being finalized. Parent confirmation
+of that evidence is required before production merge/activation. No positive
+tax amount or actual non-US network was exercised by this hosted flow; do not
+describe those as hosted coverage. No live charge was made.
+
+Both native payment migrations are applied on exact database branch ID
+`preview/corner-store-payments-141`; production still has only the initial
+migration. The payment-only candidate leaves published story/progression/
+economy and existing profile locks unchanged. Source owner approvals are now
+recorded, but both production checkout flags remain false and the live
+webhook remains disabled. Public policy effective date remains unset pending
+the actual authorized launch.
+
+## Historical development evidence
+
 ## Result
 
 The implementation and a real Stripe test purchase are verified. Development checkout is enabled only in Stripe test mode; the source-controlled live approval flags remain false. No live charge or production deployment was made.

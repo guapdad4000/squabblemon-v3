@@ -50,9 +50,9 @@ test('automatic prices require explicit exclusive tax and exact configured produ
   }
 });
 
-test('approved catalog uses integer USD amounts and no live approval', () => {
+test('owner-approved catalog uses integer USD amounts but source approval alone cannot enable live checkout', () => {
   assert.deepEqual(OFFERS.map(o => [o.clout, o.amountMinor, o.currency]), [[500, 299, 'usd'], [1500, 799, 'usd'], [4000, 1999, 'usd']]);
-  assert.equal(LIVE_APPROVAL.approved, false);
+  assert.equal(LIVE_APPROVAL.approved, true);
   const old = { mode: process.env.PAYMENTS_MODE, enabled: process.env.PAYMENTS_ENABLED };
   try {
     process.env.PAYMENTS_MODE = 'live';

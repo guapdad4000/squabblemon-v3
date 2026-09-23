@@ -7,13 +7,16 @@ export const OFFERS = [
   { id: 'clout-stack', name: 'The stack', clout: 1500, amountMinor: 799, currency: 'usd', env: 'STACK' },
   { id: 'clout-bag', name: 'Full bag', clout: 4000, amountMinor: 1999, currency: 'usd', env: 'BAG' },
 ] as const;
-// A reviewed source change is required, not just an environment toggle.
+// Owner approvals are recorded in docs/corner-store-launch-approvals.md.
+// These source approvals do not activate purchases: verified production identity
+// and BOTH environment gates remain required. Do not enable either gate until
+// the hosted replay evidence and actual policy launch date are confirmed.
 export const LIVE_APPROVAL = {
-  approved: false as boolean,
-  merchantEligible: false as boolean,
-  pricingApproved: false as boolean,
-  regionsApproved: false as boolean,
-  refundHandlingApproved: false as boolean,
+  approved: true as boolean,
+  merchantEligible: true as boolean,
+  pricingApproved: true as boolean,
+  regionsApproved: true as boolean,
+  refundHandlingApproved: true as boolean,
   taxMode: 'automatic' as string,
 };
 export class PaymentError extends Error {

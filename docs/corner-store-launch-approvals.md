@@ -1,5 +1,30 @@
 # Corner Store live-launch approvals
 
+## Current payment-only release gate
+
+Owner approvals are now recorded in source for USD $2.99/$7.99/$19.99 base prices,
+US-only 18+ purchases, merchant eligibility (owner attestation), the 14-day
+unused-Clout refund terms, and staffed support. Live account tax configuration
+and California registration were independently checked; approved classification
+is `txcd_10000000`. This is not independent legal approval or verified age.
+
+Production `PAYMENTS_ENABLED` and `PAYMENTS_LIVE_ENABLED` remain false. The live
+webhook exists but remains disabled. Do not merge or activate until the parent
+confirms targeted authentic webhook replay HTTP-200 evidence, then validates
+the production identity and native migrations. Record the actual policy launch
+date in `POLICY_EFFECTIVE_DATE` only with the authorized launch plan; it remains
+null and public policy pages correctly say not yet effective.
+
+The isolated candidate preserves published story, progression, economy, and
+wallet locking. Hosted test evidence proves one automatic-tax Pocket checkout
+at 299 cents plus zero tax and exactly one 500-Clout credit. It does not prove
+a positive-tax transaction or an actual non-US network rejection. Forged
+country headers and explicit adult denial were tested; these are not proof of
+physical location or age. Earlier preparation findings below are historical
+and are superseded by this current gate where they differ.
+
+## Historical preparation record
+
 Status: owner requested the remaining launch steps. Live activation remains disabled until the intended live Stripe account, checkout tax treatment, Netlify payment configuration, and hosted test flow are verified.
 
 ## Owner decisions received

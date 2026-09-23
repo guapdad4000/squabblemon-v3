@@ -1,5 +1,22 @@
 # Corner Store payments operations
 
+## Current release preparation
+
+The payment-only PR preserves the published story, progression, economy, and
+wallet-locking implementation. Netlify native migrations are packaged at both
+repository-root and monorepo package internal directories by
+`scripts/stage-netlify-migrations.mjs`; Netlify applies them before publication.
+Do not replace this with manual SQL or claim migration success from build
+status alone: verify the exact deployment's migration metadata and branch.
+
+Owner approvals are recorded in source. Production checkout flags remain
+false and the live webhook disabled. Hosted test checkout and one authentic
+500-Clout fulfillment succeeded; targeted replay evidence awaits parent
+confirmation. Do not merge or activate before that confirmation. The tested
+automatic-tax amount was zero; positive-tax and actual non-US network coverage
+must not be claimed. The policy effective date remains null until the actual
+authorized live-launch plan is executed.
+
 The Corner Store payment path is intentionally disabled until its approvals and secrets are complete. It has no public operator route. The restricted `payment-ops` CLI is the only diagnostic, reconciliation, and test-catalog seeding entry point. Do not run it against Stripe or a database as part of setup or deployment.
 
 ## Setup order
