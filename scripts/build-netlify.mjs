@@ -57,6 +57,7 @@ function run(args, env, cwd) {
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const env = releaseEnvironment(process.env);
+  run(['scripts/check-netlify-migrations.mjs'],env);
   run(['node_modules/typescript/bin/tsc','--build','lib/squabblemon-engine','lib/db','lib/api-zod','lib/api-client-react'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/api-server/tsconfig.json','--noEmit'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/squabblemon/tsconfig.json','--noEmit'],env);

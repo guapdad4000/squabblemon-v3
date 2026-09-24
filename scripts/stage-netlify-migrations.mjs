@@ -1,12 +1,14 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { checkNetlifyMigrationCoverage } from './check-netlify-migrations.mjs';
 
 // Netlify Build stages migrations under PACKAGE_PATH, whereas deployment
 // collectors may resolve the internal directory from the repository build root.
 // Stage identical native artifacts at both locations. Netlify, not this script,
 // validates migration history and executes SQL before publishing the deploy.
 export function stageNetlifyMigrations(root = process.cwd()) {
+  checkNetlifyMigrationCoverage(root);
   const source = path.join(root, 'netlify/database/migrations');
   const names = readdirSync(source).sort();
   const versions = new Set();

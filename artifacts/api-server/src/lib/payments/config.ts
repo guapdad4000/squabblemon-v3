@@ -50,10 +50,14 @@ export function assertCheckoutEnabled(): PaymentMode {
   const mode = paymentMode();
   const runtime = currentDeploymentContext();
   if (process.env.PAYMENTS_ENABLED !== 'true') throw new PaymentError(503, 'Checkout is currently unavailable. Existing payments can still settle.');
+  // netlify.toml variables never reach function runtime and NETLIFY is a
+  // reserved key, so production identity comes from the per-invocation deploy
+  // context Netlify supplies (context/deployId/request origin), never headers.
   if (mode === 'live' && !(LIVE_APPROVAL.approved && LIVE_APPROVAL.merchantEligible && LIVE_APPROVAL.pricingApproved &&
     LIVE_APPROVAL.regionsApproved && LIVE_APPROVAL.refundHandlingApproved && LIVE_APPROVAL.taxMode === 'automatic' &&
-    process.env.NETLIFY === 'true' && runtime?.context === 'production' && Boolean(runtime.deployId) && runtime.origin === trustedOrigin() &&
-    (!process.env.CONTEXT || process.env.CONTEXT === 'production') && process.env.APP_ENV === 'production' &&
+    runtime?.context === 'production' && Boolean(runtime.deployId) && runtime.origin === trustedOrigin() &&
+    (!process.env.CONTEXT || process.env.CONTEXT === 'production') &&
+    (!process.env.APP_ENV || process.env.APP_ENV === 'production') &&
     process.env.PAYMENTS_LIVE_ENABLED === 'true' && process.env.PAYMENTS_SUPPORT_URL && process.env.PAYMENTS_REFUND_POLICY_URL)) {
     throw new PaymentError(503, 'Live payments await merchant and policy approval.');
   }
