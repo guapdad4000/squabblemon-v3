@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 256" fill="none">
+  <title>Stockz Clout Exchange: six original arcade symbols</title>
+  <defs>
+    <symbol id="durg" viewBox="0 0 128 128">
+      <g stroke="#12243b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M64 76C83 83 85 102 110 111L116 96C99 90 96 78 93 69" fill="#4b79e8"/>
+        <path d="M53 77C39 89 44 111 27 118L20 102C30 94 24 82 34 74" fill="#3660bf"/>
+        <path d="M26 57C24 31 43 16 65 17C91 18 103 39 102 62L96 78C76 91 44 85 27 75Z" fill="#6c9cff"/>
+        <path d="M67 18C83 34 77 53 80 76L96 78L102 61C101 38 89 22 67 18Z" fill="#456aca" stroke="none"/>
+        <path d="M26 58C44 64 76 67 103 59L99 74C70 85 42 82 26 73Z" fill="#88e5e5"/>
+        <path d="M59 19C56 30 58 42 59 58" stroke="#c2e2ff"/>
+        <path d="M35 38C39 29 43 27 47 25" stroke="#d6edff"/>
+        <path d="M97 66L111 61L115 72L105 78L100 75Z" fill="#5e8ff0"/>
+        <path d="M39 86L36 101M96 86L104 94" stroke="#9bbeff"/>
+      </g>
+      <path d="M84 32L86 39L93 40L87 44L88 51L82 46L76 49L78 42L73 37L80 37Z" fill="#eefbff"/>
+    </symbol>
+    <symbol id="snkr" viewBox="0 0 128 128">
+      <g stroke="#12243b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M19 87L21 63L32 29L55 34L59 52L84 68L109 76L116 89L109 101L36 107L13 99L13 89Z" fill="#f4f9ff"/>
+        <path d="M22 62L31 31L53 34L57 51L45 58L42 80L27 89L19 83Z" fill="#ea5a73"/>
+        <path d="M59 55L77 66L89 76L81 87L63 88L47 80L50 64Z" fill="#92b8ef"/>
+        <path d="M83 78L98 81L109 80L115 88L109 94L87 95L78 90Z" fill="#e1e9fa"/>
+        <path d="M14 88L32 96L110 89L115 89L111 101L36 108L13 100Z" fill="#6688d6"/>
+        <path d="M16 91L34 99L109 92" stroke="#e5f4ff"/>
+        <path d="M38 33L45 36L46 46L35 49Z" fill="#b43954"/>
+        <path d="M54 58L63 56M61 65L70 62M69 72L78 69" stroke="#fff"/>
+        <path d="M28 70L34 56M92 83L103 85" stroke="#fff"/>
+        <path d="M32 103L32 107M50 100L51 106M71 97L72 104M94 95L95 102" stroke-width="2"/>
+      </g>
+    </symbol>
+    <symbol id="bode" viewBox="0 0 128 128">
+      <g stroke="#12243b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M19 44H109V108H19Z" fill="#dae9ed"/>
+        <path d="M19 88H109V107H19Z" fill="#79a2b6" stroke="none"/>
+        <path d="M23 16H104V39H23Z" fill="#315478"/>
+        <path d="M29 22H98V32H29Z" fill="#9af0d9" stroke="none"/>
+        <path d="M21 38H106L117 57H10Z" fill="#f4fcff"/>
+        <path d="M26 39H40L34 57H19ZM56 39H70V57H53ZM86 39H100L109 57H90Z" fill="#ee6480" stroke="none"/>
+        <path d="M10 57H117V66Q109 76 100 66Q91 76 82 66Q73 76 64 66Q55 76 46 66Q37 76 28 66Q18 76 10 66Z" fill="#88e3cb"/>
+        <path d="M26 76H57V97H26Z" fill="#305670"/>
+        <path d="M70 75H98V108H70Z" fill="#244459"/>
+        <path d="M74 80H93V99H74Z" fill="#79cbc9" stroke="none"/>
+        <path d="M35 79L29 92M48 79L39 95" stroke="#83b9cb" stroke-width="3"/>
+        <path d="M89 88V93" stroke="#e6ffff" stroke-width="3"/>
+        <path d="M13 108H115V115H13Z" fill="#b9d0da"/>
+      </g>
+    </symbol>
+    <symbol id="clout" viewBox="0 0 128 128">
+      <g stroke="#12243b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M16 85Q16 72 45 72Q74 72 74 85V106Q45 121 16 106Z" fill="#d99138"/>
+        <ellipse cx="45" cy="85" rx="29" ry="12" fill="#ffe4a2"/>
+        <path d="M21 96Q45 106 69 96M23 105L23 110M36 108V114M51 108V114M64 104V110" stroke="#91652e" stroke-width="2"/>
+        <path d="M67 11L96 18L114 41L110 71L87 93L57 89L34 66L37 35Z" fill="#e5a73f"/>
+        <path d="M65 9L93 16L107 39L102 67L80 84L52 78L35 56L41 30Z" fill="#ffdf8c"/>
+        <path d="M63 22L85 27L95 43L90 62L75 72L56 68L46 53L51 35Z" fill="#e4ac4c" stroke-width="3"/>
+        <path d="M52 57L63 43L71 48L85 33M76 32L88 30L89 43" stroke="#fff6ca" stroke-width="5"/>
+        <path d="M97 88L101 96L110 97L103 103L105 112L97 108L89 113L90 103L84 98L94 96Z" fill="#8af4d0" stroke-width="3"/>
+      </g>
+    </symbol>
+    <symbol id="bell" viewBox="0 0 128 128">
+      <g stroke="#12243b" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M60 25V17H72V26" fill="#a7d7e6"/>
+        <path d="M54 13Q66 7 78 13V21H54Z" fill="#ee6378"/>
+        <path d="M24 78C28 44 40 26 65 26C91 26 102 45 106 78Z" fill="#ffdf8c"/>
+        <path d="M69 27C75 44 87 47 85 78H105C102 49 91 28 69 27Z" fill="#e6aa4a" stroke="none"/>
+        <path d="M38 61Q44 40 53 37" stroke="#fffae4" stroke-width="7"/>
+        <path d="M18 78H112V89H18Z" fill="#f5fbff"/>
+        <path d="M12 88H116V103H12Z" fill="#537bcc"/>
+        <path d="M21 103V111H35V103M94 103V111H108V103" fill="#1f3c62"/>
+        <path d="M30 95H99" stroke="#94befe" stroke-width="3"/>
+        <path d="M13 43L20 50M108 38L116 32M64 47V64L77 71" stroke-width="3"/>
+      </g>
+    </symbol>
+    <symbol id="burst" viewBox="0 0 128 128">
+      <path d="M66 6L76 36L110 15L94 49L124 60L94 73L109 106L78 92L65 124L51 94L16 114L34 78L5 65L34 52L17 20L51 35Z" fill="#8ff6d6" stroke="#12243b" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M66 29L73 51L96 40L84 60L106 66L83 72L93 94L73 84L65 106L58 85L35 98L46 74L24 65L47 58L36 36L57 49Z" fill="#effff7"/>
+      <path d="M68 46L78 56L77 72L63 82L50 72L48 58L59 48Z" fill="#ffe299" stroke="#12243b" stroke-width="3"/>
+    </symbol>
+  </defs>
+  <use href="#durg" x="0" y="0" width="128" height="128"/>
+  <use href="#snkr" x="128" y="0" width="128" height="128"/>
+  <use href="#bode" x="256" y="0" width="128" height="128"/>
+  <use href="#clout" x="0" y="128" width="128" height="128"/>
+  <use href="#bell" x="128" y="128" width="128" height="128"/>
+  <use href="#burst" x="256" y="128" width="128" height="128"/>
+</svg>

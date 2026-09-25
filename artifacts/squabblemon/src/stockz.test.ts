@@ -1,3 +1,4 @@
+import './components/fadecade/stockzArcade.test';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, catalogCardById, validateCardAbilityUpgrades } from '@workspace/squabblemon-engine/data';
