@@ -1,0 +1,12 @@
+/* Hide scroll chrome consistently, including lazy-loaded panels and dialogs.
+   Keep overflow behavior intact so wheel, touch, and keyboard scrolling work. */
+* {
+  scrollbar-width: none !important;
+  scrollbar-gutter: auto !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.app-scrollbar { display: none !important; }

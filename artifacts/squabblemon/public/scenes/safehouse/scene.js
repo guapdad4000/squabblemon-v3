@@ -104,7 +104,11 @@ const bag=new T.Group();bagPivot.add(bag);bag.position.y=-1.75;
 cyl(.42,.42,1.75,oxblood,0,0,0,bag);const cap1=ball(0,.86,0,.42,oxblood,bag);cap1.scale.y=.28;const cap2=ball(0,-.86,0,.42,oxblood,bag);cap2.scale.y=.28;
 for(const y of [-.72,.72]){const band=mesh(new T.TorusGeometry(.424,.027,6,48),black,0,y,0,bag);band.rotation.x=Math.PI/2;}
 
-const badgeCanvas=document.createElement('canvas');badgeCanvas.width=256;badgeCanvas.height=320;const bg=badgeCanvas.getContext('2d');bg.fillStyle='#151918';bg.fillRect(0,0,256,320);bg.strokeStyle='#cfb477';bg.lineWidth=8;bg.strokeRect(14,14,228,292);bg.fillStyle='#d6b97b';bg.textAlign='center';bg.font='bold 90px sans-serif';bg.fillText('4000',128,142);bg.font='bold 27px monospace';bg.fillText('SQUABBLE',128,207);bg.font='18px monospace';bg.fillText('BUILT DIFFERENT',128,253);const badgeTex=new T.CanvasTexture(badgeCanvas);badgeTex.colorSpace=T.SRGBColorSpace;mesh(new T.PlaneGeometry(.39,.5),new T.MeshStandardMaterial({map:badgeTex,roughness:.7}),0,.1,.428,bag);
+// Wrap the official crest around the leather so it stays flush as the bag swings.
+const bagLogo=new T.TextureLoader().load('../../brand/squabblemon-crest.webp');
+bagLogo.colorSpace=T.SRGBColorSpace;bagLogo.anisotropy=8;
+const bagBadge=mesh(new T.CylinderGeometry(.434,.434,.62,32,1,true,-.72,1.44),new T.MeshStandardMaterial({map:bagLogo,roughness:.78,alphaTest:.3}),0,.1,0,bag);
+bagBadge.castShadow=false;
 // Phone on a slim brass side table, tilted face up and readable in close-up.
 const phoneTable=new T.Group();phoneTable.position.set(2.5,0,3.05);scene.add(phoneTable);cyl(.52,.52,.06,gold,0,.71,0,phoneTable);for(const a of [0,2.1,4.2])box(.045,.67,.045,brass,Math.sin(a)*.31,.35,Math.cos(a)*.31,phoneTable);
 const phone=new T.Group();phone.position.set(2.5,.78,3.05);phone.rotation.y=-.25;phone.rotation.x=-Math.PI/2;scene.add(phone);

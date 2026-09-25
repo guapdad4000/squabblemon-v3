@@ -34,7 +34,7 @@ import { Story } from './Story';
 import { Multiplayer } from './Multiplayer';
 import { ChallengesHub } from './ChallengesHub';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
-
+import '../../styles/paper-tabs.css';
 
 function BootstrapError({
   onRetry,

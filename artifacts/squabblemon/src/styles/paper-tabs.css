@@ -1,0 +1,105 @@
+/* Section navigation floats over each venue; only the individual paper tabs have a surface. */
+:is(.trading-post, .arsenal-screen, .fade-park, .fadecade-hub, .fight-night) {
+  --paper-tabs-inset: 12px;
+}
+
+:is(.park-topbar, .fadecade-hub__topline, .fight-night .online-lobby__nav) {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: var(--paper-tabs-inset) 12px;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  min-height: 0;
+  z-index: 40;
+}
+
+.fade-park { padding-top: 0; }
+.park-topbar > .fight-tabs,
+.fadecade-hub__topline > .fight-tabs,
+.fight-night .online-lobby__nav > .fight-tabs {
+  flex: 0 1 auto;
+  margin: 0 auto;
+}
+.fight-night .online-lobby__nav > a:last-child {
+  position: absolute;
+  right: 20px;
+}
+.fight-night .fight-tabs a { color: #242119; }
+
+.trading-post { position: relative; isolation: isolate; }
+.trading-post > .market-tabs {
+  align-self: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-block: var(--paper-tabs-inset);
+  overflow: visible;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+.trading-post > .daily-clout-pack { position: relative; z-index: 2; }
+.trading-post > .gym.gacha-stage { background: transparent; }
+.trading-post .gacha-stage .gym__arena {
+  position: fixed;
+  inset: 62px 0 0;
+  height: auto;
+}
+.trading-post .corner-store { isolation: auto; background: transparent; }
+.trading-post .corner-store > .layered-venue,
+.trading-post .corner-store::after { position: fixed; inset: 62px 0 0; height: auto; }
+.trading-post .corner-store > .layered-venue { z-index: -2; max-height: none; }
+
+.arsenal-screen > .arsenal-paper-tabs,
+.arsenal-screen.world-decor-host > .arsenal-paper-tabs {
+  position: relative;
+  z-index: 40;
+  padding-top: var(--paper-tabs-inset);
+  justify-content: center;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-align: center;
+}
+/* Continue the collection artwork behind its floating navigation. */
+.arsenal-screen.collection-stage > .collection-stage__hero {
+  margin-top: -124px;
+  padding-top: 124px;
+}
+.collection-stage__header > .collection-tabs {
+  align-self: center;
+  justify-content: center;
+  flex: none;
+  margin: 0 auto 20px;
+  padding: 6px 8px;
+  overflow: visible;
+  background: none;
+}
+
+/* Land across the torn edge, with more tape touching the paper. */
+.trading-post .market-tabs button[aria-pressed='true']::before,
+.collection-stage .collection-tabs button[aria-pressed='true']::before { top: 3px; }
+
+@media (max-width: 700px) {
+  .fight-night .online-lobby__nav > a:last-child { display: none; }
+  .park-topbar, .fadecade-hub__topline, .fight-night .online-lobby__nav {
+    padding-inline: 0;
+    flex-wrap: nowrap;
+  }
+}
+@media (max-width: 600px) {
+  .trading-post .gacha-stage .gym__arena,
+  .trading-post .corner-store > .layered-venue,
+  .trading-post .corner-store::after { top: 56px; }
+}

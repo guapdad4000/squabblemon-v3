@@ -1,7 +1,7 @@
-.game-back-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex-shrink:0;min-width:64px;min-height:44px;padding:5px 8px;border:0;background:transparent;color:#ff2424;cursor:pointer}
-.game-back-button img{width:44px;height:24px;object-fit:contain;filter:drop-shadow(0 2px 2px #0009);transition:transform .15s}
+.game-back-button{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;min-width:44px;min-height:44px;padding:5px 3px 5px 8px;border:0;background:transparent;color:#ff2424;cursor:pointer}
+.game-back-button img{width:34px;height:20px;object-fit:fill;filter:drop-shadow(0 2px 2px #0009);transition:transform .15s}
 .game-back-button span{color:#ff2424;font:800 10px var(--font-sans,sans-serif);text-transform:uppercase}
 .game-back-button:hover img{transform:translateX(-3px)}
 .game-back-button:focus-visible{outline:2px solid #f5ce6b;outline-offset:2px;border-radius:3px}
-@media(max-width:480px){.city-header .game-back-button{min-width:44px;padding:4px}.city-header .game-back-button span{display:none}.city-header .game-back-button img{width:36px}}
+@media(max-width:480px){.city-header .game-back-button{min-width:44px;padding:4px}.city-header .game-back-button span{display:none}.city-header .game-back-button img{width:28px}}
 @media(prefers-reduced-motion:reduce){.game-back-button img{transition:none}}

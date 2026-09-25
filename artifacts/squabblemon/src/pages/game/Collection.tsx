@@ -73,6 +73,10 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="collection-stage__hero" style={{ backgroundImage: `url(${sunsetBg})` }}>
         <div className="collection-stage__hero-overlay" aria-hidden="true" />
         <div className="collection-stage__header">
+          <nav className="collection-tabs" aria-label="Collection views">
+            <button data-testid="button-view-catalog" type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
+            <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>Collection Road</button>
+          </nav>
           <div className="collection-hero__top">
             <div className="collection-hero__titles">
               <span className="collection-hero__eyebrow">THE ARSENAL / CARD ARCHIVE</span>
@@ -85,10 +89,6 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <span data-testid="text-collection-owned" className="collection-hero__stat-value">{owned.size} / {cardCatalog.length}</span>
               <span className="collection-hero__stat-label">CARDS OWNED</span>
             </div>
-            <nav className="collection-tabs" aria-label="Collection views">
-              <button data-testid="button-view-catalog" type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
-              <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>Collection Road</button>
-            </nav>
           </div>
         </div>
       </div>

@@ -90,7 +90,6 @@ export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: 
       <header className="fadecade-hub__topline">
 
         <FightTabs challenges />
-        <div style={{ width: 100 }} /> {/* Layout balance spacer */}
       </header>
 
       <div className="fadecade-content">

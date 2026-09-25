@@ -1059,7 +1059,6 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
   return (
     <div className="trading-post">
-      <DailyCloutPack playerId={bootstrap.profile.id} />
       <nav className="market-tabs" aria-label="Shop departments">
         <button aria-pressed={tab === 'packs'} onClick={() => selectTab('packs')}>
           <GameGlyph name="pack" />
@@ -1071,6 +1070,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </button>
         <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
+      <DailyCloutPack playerId={bootstrap.profile.id} />
       {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
         <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (
