@@ -16,8 +16,9 @@ import {
   type PaymentOffer,
   type PaymentOrder
 } from '@workspace/api-client-react';
-import { motion } from 'framer-motion';
-import { ShoppingBag, ArrowUpRight, RefreshCw, ArrowRight, CheckCircle, XCircle, Clock, Loader2, AlertCircle } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { MarketPurchaseSuccess } from '../../components/MarketPurchaseSuccess';
+import { ShoppingBag, ArrowUpRight, RefreshCw, ArrowRight, XCircle, Clock, Loader2, AlertCircle } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { CORNER_OFFERS, type StoreOffer, getOrCreatePendingCheckout, clearPendingCheckout, formatCurrency, isTerminalOrderStatus, isValidOrderId, orderStatusDetail, safeHttpsUrl, safeStripeCheckoutUrl } from '../../lib/cornerStore';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '../../components/ui/dialog';
@@ -25,6 +26,7 @@ import { AnimatedNumber } from '../../components/AnimatedNumber';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 import '../../styles/ui-polish.css';
+import '../../styles/market-shelves.css';
 import { useLocation, useSearch } from 'wouter';
 import { e2eAuthEnabled } from '../../lib/auth';
 import { appPath } from '../../lib/routing';
@@ -65,7 +67,7 @@ function OrderAmount({ order, compact = false }: { order: PaymentOrder; compact?
     : 'No completed payment total';
 
   return (
-    <span data-testid={`text-order-amount-${order.id}`} className={compact ? '' : 'block space-y-1'}>
+    <span data-testid={`text-order-amount-${order.id}`} data-total-confirmed={Boolean(total)} className={compact ? '' : 'block space-y-1'}>
       {total
         ? <>
             <strong className="text-white">{total}</strong>
@@ -161,11 +163,11 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
   
   return (
     <Dialog open={true} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent data-testid="corner-order-status" className="corner-checkout bg-black border-2 border-white/10 rounded-xl overflow-hidden p-0 max-w-sm">
+      <DialogContent data-testid="corner-order-status" className={`corner-checkout bg-black border-2 border-white/10 rounded-xl overflow-hidden p-0 max-w-sm ${order?.status === 'fulfilled' ? 'market-receipt-dialog' : ''}`}>
         <div className="p-6">
-          <DialogTitle className="font-display italic uppercase text-2xl text-center mb-1">Order Status</DialogTitle>
-          <DialogDescription className="text-center font-sans text-sm text-white/60 mb-6">
-            {terminal ? 'Order finalized.' : 'Checking your purchase...'}
+          <DialogTitle className={order?.status === 'fulfilled' ? 'sr-only' : 'font-display italic uppercase text-2xl text-center mb-1'}>Order Status</DialogTitle>
+          <DialogDescription className={order?.status === 'fulfilled' ? 'sr-only' : 'text-center font-sans text-sm text-white/60 mb-6'}>
+            {order?.status === 'fulfilled' ? 'Your purchase is ready.' : terminal ? 'Order finalized.' : 'Checking your purchase...'}
           </DialogDescription>
           
           {!validOrderId && <p role="alert" className="text-red-400 py-6 text-center">This purchase reference is invalid.</p>}
@@ -174,10 +176,14 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
           
           {order && (
             <div className="flex flex-col gap-6">
+              {order.status === 'fulfilled' ? <MarketPurchaseSuccess
+                art={CORNER_OFFERS.find(offer => offer.id === order.offerId)?.art ?? 'assets/rewards/clout-bag.webp'}
+                name={`${order.clout.toLocaleString()} Clout`} order={order} reducedMotion={bootstrap.profile.settings.reducedMotion}>
+                <OrderAmount order={order} />
+              </MarketPurchaseSuccess> : (
               <div className="text-center">
                 <div className="mb-4 flex justify-center">
-                   {order.status === 'fulfilled' ? <CheckCircle size={48} className="text-green-500" /> : 
-                    order.status === 'failed' || order.status === 'refunded' || order.status === 'disputed' ? <XCircle size={48} className="text-red-500" /> : 
+                   {order.status === 'failed' || order.status === 'refunded' || order.status === 'disputed' ? <XCircle size={48} className="text-red-500" /> :
                    order.status === 'expired' ? <Clock size={48} className="text-yellow-500" /> : 
                    <Loader2 size={48} className="animate-spin text-blue-500" />}
                 </div>
@@ -185,20 +191,19 @@ function OrderStatusModal({ orderId, bootstrap, checkoutEnabled, onClose }: { or
                   {order.status}
                 </h3>
                 <p className="text-sm text-white/60 mt-2 font-sans">
-                  {order.status === 'pending' || order.status === 'processing' 
-                    ? orderStatusDetail(order.status, order.clout, order.fulfilledAt)
-                    : orderStatusDetail(order.status, order.clout, order.fulfilledAt)}
+                  {orderStatusDetail(order.status, order.clout, order.fulfilledAt)}
                 </p>
               </div>
+              )}
                {journalError && <p role="alert" className="text-red-400 text-sm">{journalError}</p>}
               
-              <div className="bg-white/5 p-3 rounded flex justify-between items-center border border-white/10">
+              {order.status !== 'fulfilled' && <><div className="bg-white/5 p-3 rounded flex justify-between items-center border border-white/10">
                 <span className="text-white/50 font-mono text-[10px] uppercase tracking-widest">ID</span>
                 <span className="font-mono text-[10px] text-white/80 truncate max-w-[200px]">{order.id}</span>
               </div>
               <div className="bg-white/5 p-3 rounded border border-white/10 text-sm text-white/60">
                 <OrderAmount order={order} />
-              </div>
+              </div></>}
 
               {order.status === 'pending' && resumeUrl && (
                 checkoutEnabled
@@ -325,6 +330,9 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
 }
 
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const systemReducedMotion = useReducedMotion();
+  const reducedMotion = bootstrap.profile.settings.reducedMotion || systemReducedMotion;
+  const [baggedOffer, setBaggedOffer] = useState<{ art: string; name: string; order: PaymentOrder } | null>(null);
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
@@ -397,6 +405,11 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         queryClient.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
         queryClient.invalidateQueries({ queryKey: getListPaymentOrdersQueryKey() });
         clearPendingCheckout(sessionStorage, bootstrap.profile.id, catalogOffer.id);
+        setBaggedOffer({
+          art: CORNER_OFFERS.find(offer => offer.id === res.order.offerId)?.art ?? 'assets/rewards/clout-bag.webp',
+          name: `${res.order.clout.toLocaleString()} Clout`,
+          order: res.order,
+        });
         setSelected(null);
       } else if (isTerminalOrderStatus(res.order.status)) {
         clearPendingCheckout(sessionStorage, bootstrap.profile.id, catalogOffer.id);
@@ -414,13 +427,15 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
 
   return (
-    <main className="corner-store">
+    <main className="corner-store" data-reduce-motion={reducedMotion}>
       <LayeredVenue scene="fade-market" />
       <div className="corner-store__scroll">
         <header className="corner-store__heading">
+          <div className="corner-store__hero-copy">
           <span>OPEN LATE · GOOD COMPANY</span>
-          <h1>Fade<br /><em>Market.</em></h1>
+          <h1>Fade<br /> <em>Market.</em></h1>
           <p>A little Clout. A new look. Your next favorite.</p>
+          </div><span className="corner-store__open-sign">Come on in.<small>GOOD STUFF INSIDE</small></span>
         </header>
         
         <section className="corner-store__counter">
@@ -461,38 +476,53 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           ))}
         </nav>
         
-        <div className="corner-store__products">
-          {CORNER_OFFERS.filter(o => o.kind === department).map(offer => {
+        <div className="bodega-shelf-heading"><span>Fresh on the shelf</span><small>TAKE A LOOK AROUND ↔</small></div>
+        <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={department} className="corner-store__products" role="region" aria-label={`${department} shelf`} tabIndex={0}
+          initial={reducedMotion ? false : { opacity: 0, x: 45 }} animate={{ opacity: 1, x: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -45 }}
+          transition={{ duration: reducedMotion ? 0 : .22 }}>
+
+          {CORNER_OFFERS.filter(o => o.kind === department).map((offer, index) => {
             const catalogOffer = catalog?.offers.find(o => o.id === offer.id);
             const isSupported = offer.kind === 'clout';
             const available = !!catalogOffer && catalogOffer.enabled && checkoutEnabled;
             const priceDisplay = catalogOffer ? catalogPriceLabel(catalogOffer.amountMinor, catalogOffer.currency, catalog as TaxAwareCatalog | undefined) : 'Unavailable';
+            const priceParts = catalogOffer ? new Intl.NumberFormat('en-US', { style: 'currency', currency: catalogOffer.currency }).formatToParts(catalogOffer.amountMinor / 100) : null;
+            const priceDigits = priceParts?.filter(part => part.type === 'integer' || part.type === 'group').reduce((count, part) => count + part.value.length, 0) ?? 1;
             
             return (
-              <motion.article key={offer.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="corner-product">
-                <img src={getAssetUrl(offer.art)} alt="" />
-                <div>
-                  <small>{offer.kind === 'pack' ? 'SHOWCASE PACK · PREVIEW' : offer.kind === 'style' ? 'ARTWORK ONLY' : 'MARKET PICK'}</small>
+              <motion.article key={offer.id} initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : index * .06 }} className={`corner-product ${department === 'shards' || department === 'style' ? 'corner-product--crate' : ''}`}>
+                <div className="corner-product__display">
+                  <span className="bodega-led" aria-hidden="true" /><span className="bodega-light-cone" aria-hidden="true" />
+                  <span className="bodega-cubby-back" aria-hidden="true" />
+                  <img src={getAssetUrl(offer.art)} alt="" />
+                  <span className="bodega-shelf-number" aria-hidden="true">0{index + 1}</span>
+                </div>
+                <div className="corner-product__label">
+                  <span className="market-paper-watermark" aria-hidden="true"><img src={getAssetUrl('assets/market/fade-market-ascii-logo.svg')} alt="" draggable={false} /></span>
+                  <div className="market-tag__header"><span>FADE MARKET</span><span>SHELF / 0{index + 1}</span></div>
+                  <span className="market-tag__category">{offer.kind === 'pack' ? 'SHOWCASE PACK · PREVIEW' : offer.kind === 'style' ? 'ARTWORK ONLY' : 'MARKET PICK'}</span>
                   <h2>{isSupported ? (catalogOffer?.name ?? 'Unavailable bundle') : offer.name}<ItemDot id={`offer:${offer.id}`} /></h2>
                   <p>{isSupported ? (catalogOffer ? `${catalogOffer.clout.toLocaleString()} Clout for your account.` : 'Catalog details are unavailable.') : offer.description}</p>
                   {offer.cards && <p className="corner-product__contents">{offer.cards.length} {offer.kind === 'style' ? 'alternate illustration' : 'featured cards'}</p>}
                   
                   <button 
+                    className={isSupported ? 'market-tag__buy' : undefined}
                     disabled={isSupported && (!available || catalogLoading)} 
                     onClick={() => choose(offer)}
                   >
-                    {!isSupported ? 'View' : (
-                      <>
-                        {priceDisplay}
-                        <ArrowUpRight size={16} />
-                      </>
-                    )}
+                    {isSupported ? <>
+                      <span className="market-tag__price"><strong className={priceParts ? 'market-tag__split-price' : undefined} style={priceParts ? { fontSize: `${94 / (.6 + .39 * priceDigits)}cqi` } : undefined}>{priceParts ? priceParts.map((part, partIndex) => <span key={partIndex} className={`market-tag__price-part--${part.type}`}>{part.value}</span>) : 'Unavailable'}</strong><small>{catalogOffer ? priceDisplay.slice(formatCurrency(catalogOffer.amountMinor, catalogOffer.currency).length) : ''}</small></span>
+                      <span className="market-tag__action" aria-hidden="true">PICK UP<ArrowUpRight size={18} /></span>
+                    </> : <><span className="market-tag__preview">View <small>SHOWCASE ONLY</small></span><ArrowUpRight size={20} aria-hidden="true" /></>}
                   </button>
+                  <div className="market-tag__footer"><span className="market-print-bars" aria-hidden="true" /><span>{offer.id.toUpperCase()}</span></div>
                 </div>
               </motion.article>
             );
           })}
-        </div>
+        </motion.div>
+        </AnimatePresence>
         
         <details className="corner-store__shelf bg-black/60 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden transition-all duration-300 open:pb-4" open={historyOpen} onToggle={e => setHistoryOpen(e.currentTarget.open)}>
           <summary className="flex items-center gap-2 p-3 font-sans font-bold text-sm cursor-pointer hover:bg-white/5 transition-colors select-none">
@@ -513,20 +543,17 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </div>
 
       <Dialog open={!!selected} onOpenChange={open => { if (!open) setSelected(null); }}>
-        <DialogContent data-notification-id={selected ? `offer:${selected.id}` : undefined} className="corner-checkout">
+        <DialogContent data-notification-id={selected ? `offer:${selected.id}` : undefined} className="corner-checkout corner-checkout--simple">
           {selected && (
             <>
-               <DialogTitle>{catalog?.offers.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
-              <DialogDescription>
-                {selected.kind === 'clout' ? 'Secure checkout via Stripe.' : 'Previewing upcoming market item.'}
-              </DialogDescription>
-              
-              <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" />
-               <p>{selected.kind === 'clout'
-                 ? catalog?.offers.find(offer => offer.id === selected.id)
-                   ? `${catalog.offers.find(offer => offer.id === selected.id)!.clout.toLocaleString()} Clout for your account.`
-                   : 'Catalog details are unavailable.'
-                 : selected.description}</p>
+              <div className="corner-checkout__summary">
+                <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" />
+                <div><span className="corner-checkout__eyebrow">FADE MARKET · AT THE COUNTER</span>
+                  <DialogTitle>{catalog?.offers.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
+                  <DialogDescription>{selected.kind === 'clout' ? 'Secure checkout via Stripe.' : 'Showcase preview · not currently for sale.'}</DialogDescription>
+                  <p>{selected.kind === 'clout' ? `${catalog?.offers.find(offer => offer.id === selected.id)?.clout.toLocaleString() ?? '—'} Clout for your account.` : selected.description}</p>
+                </div>
+              </div>
               
               {selected.cards && (
                 <div className="corner-checkout__contents">
@@ -558,7 +585,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           ? 'No additional tax is configured for this quote.'
                           : 'Tax status is unavailable. Stripe shows the final total before you pay.'}
                     </p>
-                    <p className="text-sm text-white/60">Current balance: {bootstrap.profile.softCurrency.toLocaleString()} Clout<br/>After purchase: {(bootstrap.profile.softCurrency + cOffer.clout).toLocaleString()} Clout</p>
+                    <details className="corner-checkout__details"><summary>Balance after purchase</summary><p className="text-sm text-white/60">Current balance: {bootstrap.profile.softCurrency.toLocaleString()} Clout<br/>After purchase: {(bootstrap.profile.softCurrency + cOffer.clout).toLocaleString()} Clout</p></details>
                     
                     <label className="flex items-center gap-3 py-2 text-sm"><input type="checkbox" checked={adultConfirmed} onChange={event => setAdultConfirmed(event.target.checked)} /> I am at least 18 years old.</label>
                     <label className="flex items-center gap-3 py-2 text-sm"><input type="checkbox" checked={unitedStatesConfirmed} onChange={event => setUnitedStatesConfirmed(event.target.checked)} /> I am located in the United States.</label>
@@ -605,6 +632,14 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </DialogContent>
       </Dialog>
       
+      <Dialog open={!!baggedOffer} onOpenChange={open => { if (!open) setBaggedOffer(null); }}>
+        <DialogContent className="corner-checkout corner-checkout--bagged market-receipt-dialog">
+          <DialogTitle className="sr-only">Purchase complete</DialogTitle>
+          <DialogDescription className="sr-only">Your confirmed purchase has been added to your account.</DialogDescription>
+          {baggedOffer && <MarketPurchaseSuccess art={baggedOffer.art} name={baggedOffer.name} order={baggedOffer.order} reducedMotion={bootstrap.profile.settings.reducedMotion}><OrderAmount order={baggedOffer.order} /></MarketPurchaseSuccess>}
+          <button className="studio-action studio-action--gold" onClick={() => setBaggedOffer(null)}>Keep browsing</button>
+        </DialogContent>
+      </Dialog>
       {returnOrderId && (
         <OrderStatusModal 
           orderId={returnOrderId} 
