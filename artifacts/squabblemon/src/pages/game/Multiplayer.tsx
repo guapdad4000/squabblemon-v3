@@ -1,4 +1,5 @@
 import { StreetSelect } from '../../components/ui/street-select';
+import { FighterPortrait } from '../../components/profile/FighterPortrait';
 import { FadePark, FightTabs } from './FadePark';
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -290,12 +291,7 @@ export function Multiplayer({
             <div className="online-room-members">
               {(["player", "cpu"] as const).map((seat) => (
                 <div key={seat}>
-                  <img
-                    src={getCardImage(
-                      room.members[seat]?.hero ?? "ganger-blue",
-                    )}
-                    alt=""
-                  />
+                  <FighterPortrait cardId={room.members[seat]?.hero ?? 'ganger-blue'} avatarKey={room.members[seat]?.avatarKey} name={room.members[seat]?.name ?? 'Waiting for your friend'} />
                   <strong>
                     {room.members[seat]?.name ?? "Waiting for your friend"}
                   </strong>

@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect } from 'react';
-import { getAssetUrl, getCardImage } from '../lib/assets';
+import { getAssetUrl } from '../lib/assets';
+import { FighterPortrait } from './profile/FighterPortrait';
 import { playSoundEffect, stopSoundEffect } from '../lib/sfx';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { KeyedVideo } from './KeyedVideo';
@@ -8,7 +9,7 @@ import '../styles/ui-polish.css';
 import '../styles/pvp-art.css';
 
 export function MatchArrival({ player, rival, label = 'Match found', onContinue }: {
-  player: { name: string; hero: string }; rival: { name: string; hero: string };
+  player: { name: string; hero: string; avatarKey?: string }; rival: { name: string; hero: string; avatarKey?: string };
   label?: string; onContinue: () => void;
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
@@ -40,7 +41,7 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
     <div className="match-poster__fighters">
       {[player, rival].map((fighter, i) => <motion.div className={'match-poster__fighter side-' + i} key={i}
         initial={reduced ? false : { x: i ? 90 : -90, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: .45 }}>
-        <img src={getCardImage(fighter.hero)} alt="" /><span>{i ? 'CHALLENGER' : 'YOUR CORNER'}</span><h2>{fighter.name}</h2>
+        <FighterPortrait cardId={fighter.hero} avatarKey={fighter.avatarKey} name={fighter.name} /><span>{i ? 'CHALLENGER' : 'YOUR CORNER'}</span><h2>{fighter.name}</h2>
       </motion.div>)}
     </div>
     <footer><p>3 DISTRICTS <i /> 6 ROUNDS <i /> ONE FADE</p><button autoFocus onClick={onContinue}>Step into the field <span aria-hidden="true">↗</span></button><small>The match clock keeps running. Tap to enter.</small></footer>

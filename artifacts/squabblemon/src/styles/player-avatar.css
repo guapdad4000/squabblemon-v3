@@ -1,0 +1,144 @@
+.fighter-portrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.fighter-portrait > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+.fighter-portrait.fighter-portrait--sticker {
+  background: transparent;
+}
+.fighter-portrait--sticker .character-sticker {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  flex: none;
+  margin: 0;
+  transform: none;
+  filter: drop-shadow(0 3px 2px #0004);
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+}
+.fighter-portrait--sticker img.character-sticker--image {
+  object-fit: contain;
+  object-position: center;
+  padding: 5%;
+}
+.pvp-avatar {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  background: #eee3c8;
+  border: 2px solid #e6cc91;
+  transform: rotate(-3deg);
+  box-shadow: 2px 3px 0 #0006;
+}
+.pvp-avatar--you {
+  width: 38px;
+  height: 38px;
+  transform: rotate(3deg);
+}
+.pvp-player-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-right: auto;
+}
+.pvp-player-identity > span {
+  min-width: 0;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 800 11px var(--font-display);
+  text-transform: uppercase;
+  color: #f4dfac;
+}
+.pvp-player-identity small {
+  display: block;
+  margin-bottom: 3px;
+  font: 600 7px var(--font-mono);
+  letter-spacing: 0.12em;
+  color: #c2b795;
+}
+.match-poster__fighter > .fighter-portrait {
+  width: clamp(110px, 20vw, 240px);
+  height: clamp(130px, 25vw, 270px);
+  margin: 0 auto 10px;
+  overflow: visible;
+}
+.match-poster__fighter .fighter-portrait > img {
+  object-fit: contain;
+  filter: drop-shadow(0 8px 8px #0008);
+}
+.match-poster--park .match-poster__fighter > .fighter-portrait {
+  grid-row: 1 / 3;
+  width: 46px;
+  height: 46px;
+  margin: 0;
+  overflow: hidden;
+}
+@media (max-width: 500px) {
+  .match-poster.match-poster--park .match-poster__fighters {
+    inset: auto 12px 210px;
+    height: auto;
+    margin: 0;
+  }
+  .match-poster--park .match-poster__fighter > .fighter-portrait {
+    grid-row: auto;
+    width: 64px;
+    height: 64px;
+  }
+}
+.online-room-members .fighter-portrait {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 8px;
+}
+@media (max-width: 600px) {
+  .pvp-avatar {
+    width: 34px;
+    height: 34px;
+  }
+  .pvp-avatar--you {
+    width: 30px;
+    height: 30px;
+  }
+}
+@media (max-width: 600px) {
+  .battle-arena.battle-hud .battle-header--pvp {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 7px 14px;
+    padding: 9px 12px 5px;
+  }
+  .battle-arena.battle-hud .battle-header--pvp .battle-rival {
+    display: flex;
+    gap: 9px;
+  }
+  .battle-arena.battle-hud
+    .battle-header--pvp
+    .battle-rival-copy
+    .font-display {
+    max-width: none;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .battle-arena.battle-hud .battle-header--pvp .battle-match-meta {
+    grid-column: 1/-1;
+    gap: 8px;
+  }
+  .battle-header--pvp .pvp-player-identity {
+    flex: 1;
+  }
+}

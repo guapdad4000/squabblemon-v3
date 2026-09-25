@@ -63,6 +63,7 @@ async function loadMember(
   return {
     userId,
     name: profile.displayName,
+    avatarKey: profile.avatarKey,
     ready: false,
     deck: {
       id: deckId,

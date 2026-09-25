@@ -51,6 +51,7 @@ export function Settings({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
   return <main className="fighter-id-stage" aria-label="Fighter ID">
     <div className="fighter-id-container">
+      <header className="profile-file-header"><div><span>THE BLOCK KNOWS</span><strong>Your reputation.</strong></div><span className="profile-file-header__note">Make it personal.</span></header>
       <div className="fighter-tabs" role="tablist" aria-label="Fighter ID sections">
         {tabs.map((tab, index) => <button key={tab} type="button" role="tab" className="fighter-tab"
           id={`fighter-tab-${tab}`} aria-controls={`fighter-panel-${tab}`} aria-selected={activeTab === tab}

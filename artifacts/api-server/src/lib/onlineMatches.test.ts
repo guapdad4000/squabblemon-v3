@@ -32,6 +32,7 @@ test(
       users.map((id, index) => ({
         clerkUserId: id,
         displayName: `Rival ${index}`,
+        avatarKey: index === 0 ? 'sticker:kyle:point' : 'sticker:stockz:portrait',
         onboardingStep: "complete",
         ownedCardIds: cardCatalog.map((c) => c.catalogId),
         savedDecks: [
@@ -145,6 +146,10 @@ test(
       409,
     );
     let view = (await request(users[0], `/${code}`)).body;
+    assert.ok(view.members.player);
+    assert.ok(view.members.cpu);
+    assert.equal(view.members.player.avatarKey, 'sticker:kyle:point');
+    assert.equal(view.members.cpu.avatarKey, 'sticker:stockz:portrait');
     const readyA = await action(users[0], view, { type: "ready" });
     assert.equal(readyA.status, 200);
     const readyB = await action(users[1], view, { type: "ready" });

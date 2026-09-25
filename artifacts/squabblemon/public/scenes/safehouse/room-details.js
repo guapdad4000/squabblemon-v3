@@ -104,10 +104,10 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const profileCanvas = document.createElement('canvas'); profileCanvas.width = 384; profileCanvas.height = 480;
   const profileTexture = new T.CanvasTexture(profileCanvas); profileTexture.colorSpace = T.SRGBColorSpace;
   let profileImage = null;
-  const drawProfile = (image, name = 'YOUR PROFILE') => {
+  const drawProfile = (image, name = 'YOUR PROFILE', cell) => {
     const g = profileCanvas.getContext('2d'); g.fillStyle = '#151a1b'; g.fillRect(0, 0, 384, 480);
     g.fillStyle = '#d8c9a6'; g.fillRect(12, 12, 360, 456); g.fillStyle = '#202a2b'; g.fillRect(24, 24, 336, 432);
-    if (image) { const scale = Math.min(322 / image.width, 356 / image.height); g.drawImage(image, (384 - image.width * scale) / 2, 34, image.width * scale, image.height * scale); }
+    if (image) { const cropped = Number.isInteger(cell) && cell >= 0 && cell < 4; const w = image.width / (cropped ? 2 : 1), h = image.height / (cropped ? 2 : 1); const scale = Math.min(322 / w, 356 / h); g.drawImage(image, cropped ? (cell % 2) * w : 0, cropped ? Math.floor(cell / 2) * h : 0, w, h, (384 - w * scale) / 2, 34 + (356 - h * scale) / 2, w * scale, h * scale); }
     g.fillStyle = '#efe1be'; g.fillRect(24, 398, 336, 58); g.fillStyle = '#1b2221'; g.textAlign = 'center'; g.font = '900 24px sans-serif'; g.fillText(name.toUpperCase(), 192, 435, 310); profileTexture.needsUpdate = true;
   };
   drawProfile(null);
@@ -116,7 +116,7 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const setProfile = value => {
     if (!value?.image) { drawProfile(null, value?.name); return; }
     if (profileImage) profileImage.onload = null;
-    profileImage = new Image(); profileImage.onload = () => { if (!disposed) drawProfile(profileImage, value.name); }; profileImage.src = value.image;
+    profileImage = new Image(); profileImage.onload = () => { if (!disposed) drawProfile(profileImage, value.name, value.cell); }; profileImage.src = value.image;
   };
 
   // A working listening corner for the player's own soundtrack.

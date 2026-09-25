@@ -68,6 +68,8 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
     covered: new Set(room.boards.flat().filter(c => c.covered).map(c => c.instanceId)), lockedLanes: room.lockedLanes ?? [],
     history: room.events.map(event => ({ ...event, owner: owner(event.owner), cardId: event.cardId ?? '', round: event.round ?? room.round })),
     turnSeconds: TURN_SECONDS, rivalHandCount: room.rivalHandCount,
+    playerIdentity: room.members[room.seat] ?? undefined,
+    rivalIdentity: room.members[rival] ?? undefined,
     mode: room.ranked ? room.ranked.opponent === 'bot' ? 'Park bot' : 'Ranked' : 'Friend fade',
   } };
 }

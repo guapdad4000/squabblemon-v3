@@ -42,6 +42,27 @@ test("card balance and online room versions reject incompatible in-progress fade
   );
 });
 
+test('both players receive saved sticker avatars through ready, reconnect and rematch', () => {
+  let room = fixture();
+  room.members.player.avatarKey = 'sticker:kyle:point';
+  room.members.cpu!.avatarKey = 'sticker:stockz:portrait';
+  const check = () => {
+    for (const seat of ['player', 'cpu'] as const) {
+      const view = onlineRoomView(room, 'AVATAR-TEST', room.members[seat]!.userId, 10);
+      assert.equal(view.members.player!.avatarKey, 'sticker:kyle:point');
+      assert.equal(view.members.cpu!.avatarKey, 'sticker:stockz:portrait');
+      assert.equal('userId' in view.members.player!, false);
+    }
+  };
+  check();
+  room = JSON.parse(JSON.stringify(room));
+  check();
+  room = applyOnlineCommand(room, 'player', { type: 'surrender' }, 11);
+  room = applyOnlineCommand(room, 'player', { type: 'rematch' }, 12);
+  room = applyOnlineCommand(room, 'cpu', { type: 'rematch' }, 13);
+  check();
+});
+
 test("six rounds alternate the first human, preserve multi-card turns, and never auto-play a CPU", () => {
   let room = fixture();
   for (let round = 1; round <= 6; round++) {
