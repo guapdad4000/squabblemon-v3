@@ -8,7 +8,7 @@ import '../../styles/inventory.css';
 export function Inventory({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { profile } = bootstrap;
   return <main className="inventory-room">
-    <Link href="/game" className="studio-text-action">← Back to the safehouse</Link>
+
     <div className="inventory-room__layout">
       <div className="inventory-room__art"><img src={getAssetUrl('assets/rewards/clout-bag.webp')} alt="Your black and gold inventory bag" /></div>
       <section><span className="studio-eyebrow">YOUR STASH / READY WHEN YOU ARE</span><h1>In the bag.</h1>

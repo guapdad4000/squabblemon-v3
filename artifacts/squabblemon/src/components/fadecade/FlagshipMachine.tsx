@@ -1,3 +1,4 @@
+import { useViewMemory } from '../../lib/navigationMemory';
 import { useEffect, useRef, useState } from 'react';
 import { useStartChallengeRun, useAbandonChallengeRun, type ChallengeRun, type PlayerBootstrap } from '@workspace/api-client-react';
 import { catalogCardByEngineId, decks, type Deck } from '../../data';
@@ -35,7 +36,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
   onBattle: (config: BattleConfig) => void; roadReturn?: RoadReturn | null;
 }) {
   const [crewId, setCrewId] = useState(legalCrews[0]?.id ?? '');
-  const [open, setOpen] = useState(Boolean(roadReturn));
+  const [open, setOpen] = useViewMemory(`road-open:${bootstrap.profile.id}`, Boolean(roadReturn));
   const [error, setError] = useState<string | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [now, setNow] = useState(Date.now);

@@ -58,7 +58,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     };
   }, [dirty, requestExit]);
 
-  if (!initial) return <div className="p-6 text-white"><p>Deck not found.</p><button className="venue-button" onClick={() => setLocation(decksPath(), { replace: true })}>Back to my decks</button></div>;
+  if (!initial) return <div className="p-6 text-white"><p>Deck not found.</p></div>;
   return <div className="deck-editor-screen world-decor-host">
     <GangBackdrop />
     <PageDecor theme="crew" />

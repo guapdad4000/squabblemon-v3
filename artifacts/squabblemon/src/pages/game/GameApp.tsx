@@ -1,3 +1,4 @@
+import { useNavigationScroll } from '../../lib/navigationMemory';
 import { PlayerLevelCelebration } from '../../components/AccountRewards';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
@@ -80,6 +81,7 @@ function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstra
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  useNavigationScroll();
   useEffect(() => { rewardReceipts.reset(); return () => rewardReceipts.reset(); }, [bootstrap.profile.id]);
   const [location, setLocation] = useLocation();
 

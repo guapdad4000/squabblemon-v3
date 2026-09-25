@@ -1,7 +1,9 @@
+import { GameBackButton } from '../../components/venue/GameBackButton';
+import { useViewMemory } from '../../lib/navigationMemory';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { Briefcase, ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
+import { Briefcase, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { AccountRewards } from '../../components/AccountRewards';
 import { PageDecor } from '../../components/venue/PageDecor';
@@ -85,7 +87,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   // Readiness and anchor projection are separate scene events; the guided tour
   // fallback must hold until markers have actually been placed on screen.
   const [markersPlaced, setMarkersPlaced] = useState(false);
-  const [view, setView] = useState<Station | 'room'>('room');
+  const [view, setView] = useViewMemory<Station | 'room'>(`home-view:${bootstrap.profile.id}`, 'room');
   const [growthOpen, setGrowthOpen] = useState(false);
   const [mailOpen, setMailOpen] = useState(false);
   const mail = useSafehouseMail(bootstrap.profile.id);
@@ -227,7 +229,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       </nav>
       <div className="safehouse-room-bottom">
         {station && station.id !== 'mail' ? <section className="safehouse-room-detail" aria-live="polite" aria-label={station.label}>
-          <button type="button" className="room-back" ref={backButton} onClick={() => explore('room')}><ArrowLeft size={14} /> Back to the room</button>
+          <GameBackButton className="room-back" buttonRef={backButton} onClick={() => explore('room')} label="Back to the room" />
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">

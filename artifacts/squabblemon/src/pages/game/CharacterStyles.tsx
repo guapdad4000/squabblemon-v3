@@ -1,3 +1,4 @@
+import { useViewMemory } from '../../lib/navigationMemory';
 import { useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,7 +21,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const { profile } = bootstrap;
   const set = styleSetFor(cardId), card = catalogCardById[cardId];
   const client = useQueryClient();
-  const [tab, setTab] = useState<'stickers' | 'banner' | 'scene'>('stickers');
+  const [tab, setTab] = useViewMemory<'stickers' | 'banner' | 'scene'>(`style-tab:${profile.id}:${cardId}`, 'stickers');
   const [finish, setFinish] = useState<'base' | 'silver'>('base');
   const [stickers, setStickers] = useState<string[]>(profile.settings.cosmetics?.stickers ?? []);
   const [pending, setPending] = useState<ShopRequest | null>(() => readShopRequest(sessionStorage, profile.id));
@@ -28,7 +29,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const [playing, setPlaying] = useState(false), [reveal, setReveal] = useState(false);
   const flight = useRef(false);
   const preview = e2eAuthEnabled && profile.id === 'e2e-player';
-  if (!set || !card) return <main className="character-styles"><Link href="/game/inventory">← Back to the bag</Link><h1>This collection is still in the works.</h1></main>;
+  if (!set || !card) return <main className="character-styles"><h1>This collection is still in the works.</h1></main>;
   const owned = profile.ownedCardIds.includes(cardId);
   const equipped = profile.settings.cosmetics ?? {};
   const offerId: CharacterStyleOfferId = tab === 'stickers' ? 'character-stickers' : tab === 'scene' ? 'character-backdrop' : 'character-banner-finish';
@@ -72,7 +73,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   }
   function toggleSticker(id: string) { setStickers(current => current.includes(id) ? current.filter(value => value !== id) : current.length < 3 ? [...current, id] : current); }
   return <main className="character-styles" data-testid="character-styles">
-    <header className="character-styles__header"><div><Link href="/game/style" className="style-link">← All collections</Link><p className="style-kicker">SIGNATURE COLLECTION / {set.series}</p><h1>{card.name}<i>Make it yours.</i></h1></div><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Style Shards</span></div></header>
+    <header className="character-styles__header"><div><p className="style-kicker">SIGNATURE COLLECTION / {set.series}</p><h1>{card.name}<i>Make it yours.</i></h1></div><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Style Shards</span></div></header>
     {preview && <p className="style-notice">Local preview · Purchases and selections stay in this preview.</p>}
     <CharacterBanner cardId={cardId} finish={tab === 'banner' ? finish : equipped.bannerCardId === cardId ? equipped.bannerFinish : 'base'} stickers={stickers} displayName={profile.displayName} />
     <div className="character-styles__subline"><span>{set.title}</span><div><button className="style-link" type="button" onClick={() => setReveal(value => !value)}>{reveal ? 'Close reveal' : 'Replay unlock reveal'}</button>{clip && <button type="button" className="style-link" disabled={!owned} onClick={() => setPlaying(value => !value)}>{playing ? 'Close special' : 'Watch special'}</button>}</div></div>

@@ -225,7 +225,7 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
           >
             Squabblemon Cinema
           </h1>
-          <Link href="/game" className="theater-exit" aria-label="Return to safehouse">Back to block</Link>
+
 
           {([-1, 1] as const).map((direction) => {
             const target = seasons[selectedIndex + direction];

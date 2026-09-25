@@ -1,3 +1,4 @@
+import { useViewMemory } from '../../lib/navigationMemory';
 import { Link } from 'wouter';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { ArsenalScreen } from '../../components/venue/ArsenalScreen';
@@ -20,7 +21,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const discoveryRootRef = useRef<HTMLElement>(null);
   const collectionScrollRef = useRef<HTMLDivElement>(null);
   const collectionGridRef = useRef<HTMLDivElement>(null);
-  const [tab, setTab] = useState<'cards' | 'road'>('cards');
+  const [tab, setTab] = useViewMemory<'cards' | 'road'>(`collection-tab:${bootstrap.profile.id}`, 'cards');
   const [inspectId, setInspectId] = useState<string | null>(null);
   const [claimError, setClaimError] = useState('');
 

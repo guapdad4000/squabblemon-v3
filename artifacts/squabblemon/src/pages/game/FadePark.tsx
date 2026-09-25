@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, ArrowUpRight, Swords, Trophy, Users, Radio } from 'lucide-react';
+import { ArrowUpRight, Swords, Trophy, Users, Radio } from 'lucide-react';
 import { type PlayerBootstrap } from '@workspace/api-client-react';
 import { getAssetUrl, getCardImage, starterRecipes, validateSavedDeck, cardCatalog } from '../../data';
 import { DeckCarousel } from '../../components/DeckCarousel';
@@ -123,7 +123,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="park-layer park-layer--shade fade-park-shade" />
       <div className="park-layer park-layer--dust" />
     </div>
-    <header className="park-topbar"><Link to="/game" className="park-back" aria-label="Back to home"><ArrowLeft size={19} /></Link><FightTabs searching={searching} /></header>
+    <header className="park-topbar"><FightTabs searching={searching} /></header>
     <div className="park-content">
       <section className="park-intro"><span className="park-eyebrow"><Radio size={13} /> Oakland · Bay Area & beyond</span><h1>FADE<br /><em>PARK.</em></h1><p>Your gang. An open challenge.<br />Pull up and claim your rank.</p><div className="park-ground-rules"><span>3 districts</span><span>6 rounds</span><span>Your next rival</span></div></section>
       <div className="park-board-wrapper park-layer--board">

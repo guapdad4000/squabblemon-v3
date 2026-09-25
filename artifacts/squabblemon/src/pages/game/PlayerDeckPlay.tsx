@@ -1,9 +1,9 @@
+import { useGameBack } from '../../components/venue/GameBackButton';
 import { DECK_SIZE } from '../../data';
 import { GameGlyph, type GameGlyphName } from '../../components/venue/GameGlyph';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import {
-  ArrowLeft,
   ArrowRight,
   Check,
   Crown,
@@ -112,6 +112,7 @@ const presentations = {
 } as const;
 
 export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBootstrap; storyNodeId?: string }) {
+  const goBack = useGameBack();
   const [, navigate] = useLocation();
   const [selected, setSelected] = useState<Deck | null>(null);
   const [activity, setActivity] = useState<ActivityId>('auto');
@@ -184,7 +185,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
         turnTimerEnabled={bootstrap.profile.settings.turnTimerEnabled}
         equippedVariants={bootstrap.profile.equippedVariants}
         cardProgression={bootstrap.profile.cardProgression}
-        onExit={() => (storyNodeId ? navigate(`/game/story?node=${storyNodeId}`) : setSelected(null))}
+        onExit={() => (storyNodeId ? goBack() : setSelected(null))}
       />
     );
   const fightButton = (
@@ -195,13 +196,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
   const setup = (
     <>
       <header className="activity-stage__header">
-        <button
-          className="studio-icon"
-          aria-label="Back"
-          onClick={() => navigate(storyNodeId ? '/game/story' : '/game')}
-        >
-          <ArrowLeft size={19} />
-        </button>
+
         <span className="studio-eyebrow">{storyNodeId ? 'Chapter battle' : 'The block circuit'}</span>
         <button className="studio-text-action" onClick={() => navigate('/game/missions')}>
           <GameGlyph name="mastery" />

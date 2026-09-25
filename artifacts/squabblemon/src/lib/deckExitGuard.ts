@@ -1,3 +1,4 @@
+import { rememberHistoryLocation } from './navigationMemory';
 type ExitGuard = (proceed: () => void, stay: () => void) => void;
 type Navigate = (to: string, options?: { replace?: boolean; state?: unknown; transition?: boolean }) => void;
 
@@ -16,12 +17,21 @@ if (typeof window !== 'undefined') {
   if (!Number.isFinite(initialIndex)) {
     originalReplaceState({ ...history.state, [HISTORY_INDEX]: currentIndex }, '', window.location.href);
   }
+  rememberHistoryLocation(currentIndex);
   history.pushState = (state, unused, url) => {
+    if (url && new URL(url, window.location.href).href === window.location.href) {
+      originalReplaceState({ ...state, [HISTORY_INDEX]: currentIndex }, unused, url);
+      rememberHistoryLocation(currentIndex);
+      return;
+    }
+    rememberHistoryLocation(currentIndex);
     currentIndex += 1;
     originalPushState({ ...state, [HISTORY_INDEX]: currentIndex }, unused, url);
+    rememberHistoryLocation(currentIndex);
   };
   history.replaceState = (state, unused, url) => {
     originalReplaceState({ ...state, [HISTORY_INDEX]: currentIndex }, unused, url);
+    rememberHistoryLocation(currentIndex);
   };
 
   window.addEventListener('popstate', (event) => {

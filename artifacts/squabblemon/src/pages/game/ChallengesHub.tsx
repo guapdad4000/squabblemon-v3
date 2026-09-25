@@ -1,6 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useLocation } from 'wouter';
-import { ArrowLeft } from 'lucide-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { useListChallengeRuns } from '@workspace/api-client-react';
 import { starterRecipes, validateSavedDeck, type Deck } from '../../data';
@@ -29,7 +27,6 @@ export type BattleConfig = {
 };
 
 export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: PlayerBootstrap; trainingOnly?: boolean }) {
-  const [, navigate] = useLocation();
   const [battleConfig, setBattleConfig] = useState<BattleConfig | null>(null);
   useFadecadeMusic(!battleConfig);
   const [roadReturn, setRoadReturn] = useState<RoadReturn | undefined>();
@@ -91,9 +88,7 @@ export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: 
       <img className="fadecade-room-bg" src={getAssetUrl('assets/fadecade/room.webp?v=1790163409738')} alt="" role="presentation" draggable={false} />
 
       <header className="fadecade-hub__topline">
-        <button type="button" className="fadecade-hub__back" onClick={() => navigate('/game/online')}>
-          <ArrowLeft size={16} /> Exit
-        </button>
+
         <FightTabs challenges />
         <div style={{ width: 100 }} /> {/* Layout balance spacer */}
       </header>

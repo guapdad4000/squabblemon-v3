@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
-import { ArrowLeft, Check, Copy, Swords, Users } from "lucide-react";
+import { Check, Copy, Swords, Users } from "lucide-react";
 import {
   getAssetUrl,
   getCardImage,
@@ -191,9 +191,7 @@ export function Multiplayer({
         alt=""
       />
       <header className="online-lobby__nav">
-        <Link to="/game" className="online-icon" aria-label="Back to safehouse">
-          <ArrowLeft size={20} />
-        </Link>
+
         <FightTabs friends />
         <Link to="/game/training">Training Circuit</Link>
       </header>

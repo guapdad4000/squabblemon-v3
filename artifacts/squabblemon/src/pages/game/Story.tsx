@@ -1,8 +1,10 @@
+import { GameBackButton } from '../../components/venue/GameBackButton';
+import { useViewMemory } from '../../lib/navigationMemory';
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
+import { Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
@@ -93,7 +95,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
+  const [activeChapterId, setActiveChapterId] = useViewMemory<string | null>(`story-chapter:${bootstrap.profile.id}`, null);
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [rewardsOpen, setRewardsOpen] = useState(false);
 
@@ -220,7 +222,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </svg>
       <PageDecor theme="story" />
       <header className="story-atlas__header">
-        <button type="button" onClick={() => setLocation('/game/story')} className="text-white/70 text-xs font-mono uppercase tracking-widest absolute top-2 left-4 z-10 hover:text-white">&larr; Browse presentations</button>
+
         <ChapterTickets chapters={campaign.chapters.filter(c => !activeSeasonId || getStorySeason(activeSeasonId)?.chapterIds.includes(c.id))} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
         <h1 className="story-title">{currentChapter?.title}</h1>
       </header>
@@ -801,9 +803,7 @@ function BattleBriefing({
         </div>
 
         <div className="story-briefing__actions">
-          <button type="button" onClick={onClose} className="story-briefing__btn story-briefing__btn--back">
-            <ArrowLeft size={24} /> Fall Back
-          </button>
+          <GameBackButton onClick={onClose} className="story-briefing__btn story-briefing__btn--back" label="Back to map" />
           <button type="button" onClick={onStart} className={`story-briefing__btn story-briefing__btn--start ${isBoss ? 'boss' : ''}`}>
             {cleared ? 'Replay Encounter' : 'Engage Target'}
           </button>

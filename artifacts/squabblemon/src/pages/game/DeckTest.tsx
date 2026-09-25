@@ -1,4 +1,5 @@
-import { useLocation, useParams } from 'wouter';
+import { useGameBack } from '../../components/venue/GameBackButton';
+import { useParams } from 'wouter';
 import { PlayerBootstrap } from '@workspace/api-client-react';
 import { PlayLoop } from '../../components/PlayLoop';
 import { e2eAuthEnabled } from '../../lib/auth';
@@ -7,11 +8,10 @@ import {
   validateSavedDeck,
 } from '../../data';
 import { useMemo } from 'react';
-import { deckEditorPath, decksPath } from '../../lib/deckJourney';
 
 export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const goBack = useGameBack();
   const params = useParams();
-  const [, setLocation] = useLocation();
   const deckId = params.deckId;
 
   const recipe = starterRecipes.find(r => r.id === deckId);
@@ -66,9 +66,7 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             ))}
           </ul>
         )}
-        <button onClick={() => setLocation(deckData && deckId ? deckEditorPath(deckId) : decksPath(), { replace: true })} className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm">
-          {deckData ? 'Return to deck builder' : 'Back to my decks'}
-        </button>
+
       </div>
     );
   }
@@ -77,7 +75,7 @@ export function DeckTest({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <PlayLoop
       mode={e2eAuthEnabled && bootstrap.profile.id === 'e2e-player' ? 'guest' : 'practice'}
       initialDeckId={deckId}
-      onExit={() => setLocation(deckEditorPath(deckId || ''), { replace: true })}
+      onExit={goBack}
       hideLobby={true}
       turnTimerEnabled={false}
       customPlayerDeck={deckData || undefined}
