@@ -1,4 +1,3 @@
-import { DailyCloutPack } from '../../components/Notifications';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
@@ -1070,7 +1069,6 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </button>
         <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
-      <DailyCloutPack playerId={bootstrap.profile.id} />
       {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
         <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (

@@ -2,9 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { useLocation } from 'wouter';
-import { Bell } from 'lucide-react';
+import { ArrowUpRight, Bell, Check } from 'lucide-react';
 import { useSafehouseMail } from './SafehouseMail';
-import { GameGlyph } from './venue/GameGlyph';
+import { getAssetUrl } from '../lib/assets';
 import { cardCatalog } from '../data';
 import { CHARACTER_STYLE_SETS } from '@workspace/squabblemon-engine/cosmetics';
 import { CORNER_OFFERS } from '../lib/cornerStore';
@@ -89,10 +89,45 @@ export function NotificationInbox() {
       {notices.some(n => !n.sticky) && <button className="notification-clear" onClick={() => notices.filter(n => !n.sticky).forEach(n => seen(n.id))}>Mark new items as seen</button>}
     </dialog></>;
 }
-export function DailyCloutPack({ playerId }: { playerId: string }) {
+export function DailyCloutPack({ playerId, onClaimed }: { playerId: string; onClaimed?: (reward: { amount: number; date: string }) => void }) {
   const query = useDailyClout(playerId), client = useQueryClient();
-  const claim = useMutation({ mutationFn: () => customFetch<{ claimed: boolean; status: Daily }>('/api/player/shop/daily-clout/claim', { method: 'POST' }), onSuccess: result => { client.setQueryData(['daily-clout', playerId], result.status); void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() }); } });
-  return <section className="daily-clout-pack" data-notification-id={query.data ? `daily:${query.data.date}` : undefined}><GameGlyph name="cloutStack"/><div><strong>Daily pocket change</strong><span>50 Clout. On the house.</span><small>{query.data ? `Resets ${new Date(query.data.resetsAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · daily` : 'Checking your daily pack…'}</small></div><button disabled={!query.data?.available || claim.isPending} onClick={() => claim.mutate()}>{claim.isPending ? 'Claiming…' : query.data?.available ? 'Claim free' : query.data ? 'Claimed' : 'Unavailable'}{query.data?.available && <span className="attention-mark">!</span>}</button>{(claim.isError || query.isError) && <p role="alert">Couldn’t load or confirm your pack. <button onClick={() => void query.refetch()}>Retry</button></p>}</section>;
+  const claim = useMutation({
+    mutationFn: () => customFetch<{ claimed: boolean; amount: number; status: Daily }>('/api/player/shop/daily-clout/claim', { method: 'POST' }),
+    onSuccess: result => {
+      client.setQueryData(['daily-clout', playerId], result.status);
+      void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+      if (result.claimed) onClaimed?.({ amount: result.amount, date: result.status.date });
+    },
+  });
+  const claimed = query.data?.available === false;
+  const claimLabel = claim.isPending ? 'Claiming…' : query.data?.available ? 'Claim free' : claimed ? 'Claimed' : 'Unavailable';
+  const resetsAt = query.data?.resetsAt ? new Date(query.data.resetsAt) : null;
+  const resetLabel = resetsAt && !Number.isNaN(resetsAt.getTime())
+    ? `Resets ${resetsAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · daily`
+    : query.isError ? 'Daily pack unavailable' : 'Checking your daily pack…';
+  return <article className="corner-product corner-product--daily" data-testid="daily-clout-pack" aria-label="Daily free pack" data-notification-id={query.data?.date ? `daily:${query.data.date}` : undefined}>
+    <div className="corner-product__display">
+      <span className="bodega-led" aria-hidden="true" /><span className="bodega-light-cone" aria-hidden="true" />
+      <span className="bodega-cubby-back" aria-hidden="true" />
+      <img src={getAssetUrl('assets/rewards/clout-token.webp')} alt="" />
+      <span className="market-daily__seal">On the house<small>EVERY DAY</small></span>
+      <span className="bodega-shelf-number" aria-hidden="true">DAILY</span>
+    </div>
+    <div className="corner-product__label">
+      <span className="market-paper-watermark" aria-hidden="true"><img src={getAssetUrl('assets/market/fade-market-ascii-logo.svg')} alt="" draggable={false} /></span>
+      <div className="market-tag__header"><span>FADE MARKET</span><span>DAILY / FREE</span></div>
+      <span className="market-tag__category">A LITTLE SOMETHING FOR YOU</span>
+      <h2>Daily free pack{query.data?.available && <span className="attention-mark attention-mark--dot" role="img" aria-label="Ready to claim" />}</h2>
+      <p>{query.data?.amount ?? 50} Clout. On the house.</p>
+      <small className="market-daily__reset">{resetLabel}</small>
+      <button className="market-tag__buy market-tag__claim" aria-label={claimLabel} disabled={!query.data?.available || claim.isPending} onClick={() => claim.mutate()}>
+        <span className="market-tag__price"><strong className="market-tag__free-price" aria-hidden="true">FREE</strong><small>ONE PER DAY</small></span>
+        <span className="market-tag__action" aria-hidden="true">{claimLabel}{claimed ? <Check size={18} /> : <ArrowUpRight size={18} />}</span>
+      </button>
+      {(claim.isError || query.isError) && <p className="market-daily__error" role="alert">Couldn’t load or confirm your pack. <button onClick={() => void query.refetch()}>Retry</button></p>}
+      <div className="market-tag__footer"><span className="market-print-bars" aria-hidden="true" /><span>DAILY-CLOUT</span></div>
+    </div>
+  </article>;
 }
 
 export function ItemDot({ id }: { id: string }) {

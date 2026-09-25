@@ -19,13 +19,15 @@ try {
     await page.routeWebSocket('**', socket => socket.close());
     const errors = [], requests = [];
     page.on('pageerror', error => errors.push(error.message));
-    let fulfilled = false;
+    let fulfilled = false, dailyClaimed = false, dailyClaims = 0;
+    const dailyStatus = () => ({ available: !dailyClaimed, amount: 50, date: '2026-09-25', attemptsRemaining: 2, resetsAt: '2026-09-26T00:00:00Z' });
     await page.route('**/api/player/**', route => {
       const path = new URL(route.request().url()).pathname;
-      if (path.endsWith('/bootstrap')) return route.fulfill({ json: profileBootstrap({ softCurrency: fulfilled ? 1750 : 1250 }) });
+      if (path.endsWith('/bootstrap')) return route.fulfill({ json: profileBootstrap({ softCurrency: 1250 + (fulfilled ? 500 : 0) + (dailyClaimed ? 50 : 0) }) });
       if (path.endsWith('/catalog')) return route.fulfill({ json: { version: 'market-review', taxMode: 'automatic', mode: 'test', enabled: true, supportUrl: '', refundPolicyUrl: '', offers } });
       if (path.endsWith('/orders')) return route.fulfill({ json: { orders: [], nextCursor: null } });
-      if (path.endsWith('/daily-clout')) return route.fulfill({ json: { available: false, amount: 50, resetsAt: '2026-09-26T00:00:00Z' } });
+      if (path.endsWith('/daily-clout')) return route.fulfill({ json: dailyStatus() });
+      if (path.endsWith('/daily-clout/claim')) { dailyClaimed = true; dailyClaims++; return route.fulfill({ json: { claimed: true, amount: 50, status: dailyStatus() } }); }
       if (path.endsWith('/checkout')) {
         requests.push(route.request().postDataJSON()); fulfilled = true;
         return route.fulfill({ json: { checkoutUrl: null, order: { id: ORDER_ID, offerId: 'clout-pocket', offerName: 'Pocket Clout', status: 'fulfilled', clout: 500, amountMinor: 299, currency: 'usd', taxMode: 'automatic', taxAmountMinor: 24, totalAmountMinor: 323, refundedAmountMinor: 0, fulfilledAt: '2026-09-25T12:00:00Z' } } });
@@ -33,9 +35,12 @@ try {
       return route.fulfill({ json: {} });
     });
     await page.goto('/e2e/payment-store.fixture.html');
-    await expect(page.locator('.corner-product')).toHaveCount(3);
+    await expect(page.locator('.corner-product')).toHaveCount(4);
+    await expect(page.getByRole('region', { name: 'clout shelf' }).getByTestId('daily-clout-pack')).toBeVisible();
+    await expect(page.locator('.daily-clout-pack')).toHaveCount(0);
     await page.locator('.corner-product__display img').first().evaluate(img => img.decode());
     await page.evaluate(() => document.fonts.load('700 27px "Market Hand"'));
+    expect(await page.locator('.corner-product__label').evaluateAll(labels => labels.every(label => label.scrollWidth <= label.clientWidth + 1))).toBe(true);
     await page.locator('.game-route-stage').evaluate(el => el.scrollTop = 250);
     await page.screenshot({ path: `${out}/${name}-wood-shelves.png` });
     const boxes = await page.locator('.corner-product__display').evaluateAll(items => items.map(el => { const r = el.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; }));
@@ -45,8 +50,33 @@ try {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (width > 800) {
       await page.locator('.corner-store__products').screenshot({ path: `${out}/${name}-price-cards.png` });
-      await page.locator('.corner-product__label').first().screenshot({ path: `${out}/${name}-price-card-detail.png` });
+      await page.locator('.corner-product__label').nth(1).screenshot({ path: `${out}/${name}-price-card-detail.png` });
     }
+    await page.getByTestId('daily-clout-pack').screenshot({ path: `${out}/${name}-daily-free-pack.png` });
+    await page.getByRole('button', { name: 'Claim free', exact: true }).click();
+    const freeReceipt = page.getByTestId('market-purchase-success');
+    await expect(page.getByRole('dialog')).toHaveAccessibleName('Daily pack claimed');
+    await expect(freeReceipt).toHaveAttribute('data-receipt-kind', 'daily');
+    await expect(freeReceipt).toContainText('50 Clout is in your account.');
+    await expect(freeReceipt.locator('.market-receipt__seal')).toContainText('FREE');
+    await expect(freeReceipt.locator('.market-receipt__record')).not.toContainText('ORDER /');
+    await page.locator('.market-thank-you-bag').evaluate(img => img.decode());
+    await expect.poll(() => page.locator('.market-bag-item').evaluate(el => Number(getComputedStyle(el).opacity))).toBeGreaterThan(.5);
+    await page.screenshot({ path: `${out}/${name}-daily-bagging.png` });
+    await expect(page.locator('.market-bag-item')).toHaveCSS('opacity', '0');
+    await page.getByRole('dialog').screenshot({ path: `${out}/${name}-daily-receipt.png` });
+    expect(requests).toHaveLength(0);
+    await page.getByRole('button', { name: 'Keep browsing' }).click();
+    await expect(page.getByRole('button', { name: 'Claimed', exact: true })).toBeDisabled();
+    expect(dailyClaims).toBe(1);
+    await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('1,300');
+    const shopTabs = page.getByRole('navigation', { name: 'Shop departments' });
+    for (const tab of ['Training', 'Recruit']) {
+      await shopTabs.getByRole('button', { name: tab, exact: true }).click();
+      await expect(page.getByTestId('daily-clout-pack')).toHaveCount(0);
+    }
+    await shopTabs.getByRole('button', { name: 'Fade Market', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Claimed', exact: true })).toBeDisabled();
     if (width < 800) {
       const row = page.locator('.corner-store__products');
       await row.focus(); await page.keyboard.press('End');
@@ -57,6 +87,7 @@ try {
     const styleLabel = labels.getByRole('button', { name: 'Card styles' });
     if (width < 800) await styleLabel.tap(); else await styleLabel.click();
     await expect(page.getByRole('region', { name: 'style shelf' })).toBeVisible();
+    await expect(page.getByTestId('daily-clout-pack')).toHaveCount(0);
     await expect(page.locator('.corner-product--crate')).toHaveCount(2);
     await page.locator('.corner-product--crate img').first().evaluate(img => img.decode());
     await expect(page.locator('.corner-product--crate').last()).toHaveCSS('opacity', '1');
@@ -67,16 +98,20 @@ try {
     await expect(page.getByRole('dialog')).toContainText('Showcase preview');
     await expect(page.getByRole('button', { name: 'Proceed to Checkout' })).toHaveCount(0);
     await page.keyboard.press('Escape');
-    for (const label of ['Packs', 'Shards', 'Packs', 'Clout']) await labels.getByRole('button', { name: label, exact: true }).click();
+    for (const label of ['Packs', 'Shards', 'Packs']) {
+      await labels.getByRole('button', { name: label, exact: true }).click();
+      await expect(page.getByTestId('daily-clout-pack')).toHaveCount(0);
+    }
+    await labels.getByRole('button', { name: 'Clout', exact: true }).click();
     await expect(page.getByRole('region', { name: 'clout shelf' })).toBeVisible();
-    await expect(page.locator('.corner-product')).toHaveCount(3);
+    await expect(page.locator('.corner-product')).toHaveCount(4);
     await expect(page.getByRole('region', { name: 'clout shelf' })).toHaveCSS('opacity', '1');
     await expect(page.locator('.corner-product').last()).toHaveCSS('opacity', '1');
     if (width < 800) {
       await page.locator('.game-route-stage').evaluate(el => el.scrollTop = 490);
       await page.screenshot({ path: `${out}/${name}-shelf-detail.png` });
     }
-    await page.locator('.corner-product button').first().click();
+    await page.locator('.corner-product:not(.corner-product--daily) button').first().click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('$2.99');
     await expect(dialog.getByRole('button', { name: 'Proceed to Checkout' })).toBeDisabled();
@@ -104,6 +139,6 @@ try {
     expect(requests[0].offerId).toBe('clout-pocket');
     expect(errors).toEqual([]);
     await page.close();
-    console.log(`${name}: horizontal square shelves, crate switch, rapid switching, preview, confirmation and fulfilled bagging passed.`);
+    console.log(`${name}: daily pack placement and claim, shop/shelf tabs, horizontal displays, preview, confirmation and fulfilled bagging passed.`);
   }
 } finally { await browser.close(); }

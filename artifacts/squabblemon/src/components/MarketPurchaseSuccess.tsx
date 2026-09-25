@@ -3,29 +3,31 @@ import { useState, type ReactNode } from 'react';
 import type { PaymentOrder } from '@workspace/api-client-react';
 import { getAssetUrl } from '../lib/assets';
 
-export function MarketPurchaseSuccess({ art, name, order, children, reducedMotion = false }: {
-  art: string; name: string; order: PaymentOrder; children: ReactNode; reducedMotion?: boolean;
-}) {
+export type MarketReceiptSource = { order: PaymentOrder; daily?: never } | { daily: { date: string }; order?: never };
+
+export function MarketPurchaseSuccess({ art, name, order, daily, children, reducedMotion = false }: {
+  art: string; name: string; children: ReactNode; reducedMotion?: boolean;
+} & MarketReceiptSource) {
   const systemReducedMotion = useReducedMotion();
   const still = reducedMotion || systemReducedMotion;
   const [itemLoaded, setItemLoaded] = useState(false);
   const [bagLoaded, setBagLoaded] = useState(false);
   const ready = itemLoaded && bagLoaded;
-  const fulfilledDate = order.fulfilledAt ? new Date(order.fulfilledAt) : null;
+  const fulfilledDate = daily ? new Date(`${daily.date}T00:00:00Z`) : order.fulfilledAt ? new Date(order.fulfilledAt) : null;
   const dateLabel = fulfilledDate && !Number.isNaN(fulfilledDate.getTime())
-    ? new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(fulfilledDate)
+    ? new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: daily ? 'UTC' : undefined }).format(fulfilledDate)
     : null;
-  return <div className="market-bag-success" data-testid="market-purchase-success" data-reduced={still} role="status">
+  return <div className="market-bag-success" data-testid="market-purchase-success" data-reduced={still} data-receipt-kind={daily ? 'daily' : 'purchase'} role="status">
     <span className="market-paper-watermark" aria-hidden="true"><img src={getAssetUrl('assets/market/fade-market-ascii-logo.svg')} alt="" draggable={false} /></span>
     <header className="market-receipt__masthead">
       <span>YOUR NEIGHBORHOOD CONNECTION</span>
       <strong>FADE <em>MARKET</em><i aria-hidden="true">✦</i></strong>
       <p>OPEN LATE. GOOD COMPANY.</p>
     </header>
-    <div className="market-receipt__register"><span>FM / DIGITAL GOODS</span><span>CUSTOMER COPY</span></div>
+    <div className="market-receipt__register"><span>{daily ? 'FM / DAILY GIFT' : 'FM / DIGITAL GOODS'}</span><span>CUSTOMER COPY</span></div>
     <div className="market-bag-scene" aria-hidden="true">
       <div className="market-bag-halo" />
-      <span className="market-receipt__seal"><small>FADE MARKET</small><b>PAID</b><small>& PACKED</small></span>
+      <span className="market-receipt__seal"><small>FADE MARKET</small><b>{daily ? 'FREE' : 'PAID'}</b><small>& PACKED</small></span>
       <motion.img className="market-bag-item" src={getAssetUrl(art)} alt="" onLoad={() => setItemLoaded(true)}
         initial={still ? false : { y: -100, rotate: -16, scale: .8, opacity: 0 }}
         animate={still ? { y: -25, scale: .7, opacity: 1 } : ready ? { y: [-100, -65, 82], rotate: [-16, 8, 0], scale: [.8, 1, .5], opacity: [0, 1, 0] } : { y: -100, opacity: 0 }}
@@ -39,8 +41,8 @@ export function MarketPurchaseSuccess({ art, name, order, children, reducedMotio
     <p className="market-receipt__confirmation">{name} is in your account.</p>
     <div className="market-receipt__totals">{children}</div>
     <div className="market-receipt__record">
-      <span>{dateLabel ?? 'PURCHASE COMPLETE'}</span><span>STATUS: FULFILLED</span>
-      <span className="market-receipt__order">ORDER / {order.id}</span>
+      <span>{dateLabel ?? (daily ? 'DAILY PACK CLAIMED' : 'PURCHASE COMPLETE')}</span><span>{daily ? 'STATUS: CLAIMED' : 'STATUS: FULFILLED'}</span>
+      <span className="market-receipt__order">{daily ? `DAILY / ${daily.date}` : `ORDER / ${order.id}`}</span>
     </div>
     <footer className="market-receipt__footer">
       <strong>Thank you. Fade again!</strong>

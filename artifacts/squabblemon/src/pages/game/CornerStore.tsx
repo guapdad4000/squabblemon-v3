@@ -1,4 +1,4 @@
-import { ItemDot } from '../../components/Notifications';
+import { DailyCloutPack, ItemDot } from '../../components/Notifications';
 import { useEffect, useRef, useState } from 'react';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import {
@@ -17,7 +17,7 @@ import {
   type PaymentOrder
 } from '@workspace/api-client-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { MarketPurchaseSuccess } from '../../components/MarketPurchaseSuccess';
+import { MarketPurchaseSuccess, type MarketReceiptSource } from '../../components/MarketPurchaseSuccess';
 import { ShoppingBag, ArrowUpRight, RefreshCw, ArrowRight, XCircle, Clock, Loader2, AlertCircle } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { CORNER_OFFERS, type StoreOffer, getOrCreatePendingCheckout, clearPendingCheckout, formatCurrency, isTerminalOrderStatus, isValidOrderId, orderStatusDetail, safeHttpsUrl, safeStripeCheckoutUrl } from '../../lib/cornerStore';
@@ -332,7 +332,7 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const systemReducedMotion = useReducedMotion();
   const reducedMotion = bootstrap.profile.settings.reducedMotion || systemReducedMotion;
-  const [baggedOffer, setBaggedOffer] = useState<{ art: string; name: string; order: PaymentOrder } | null>(null);
+  const [baggedOffer, setBaggedOffer] = useState<({ art: string; name: string } & MarketReceiptSource) | null>(null);
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
@@ -369,7 +369,12 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     setSelected(offer); 
   }
 
-  useEffect(() => { const id = new URLSearchParams(search).get('offer'); const offer = CORNER_OFFERS.find(item => item.id === id); if (offer) choose(offer); }, [search]);
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    if (params.get('notification')?.startsWith('daily:')) setDepartment('clout');
+    const offer = CORNER_OFFERS.find(item => item.id === params.get('offer'));
+    if (offer) choose(offer);
+  }, [search]);
 
   async function purchase(catalogOffer: PaymentOffer) {
     if (lock.current) return;
@@ -478,10 +483,13 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         
         <div className="bodega-shelf-heading"><span>Fresh on the shelf</span><small>TAKE A LOOK AROUND ↔</small></div>
         <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={department} className="corner-store__products" role="region" aria-label={`${department} shelf`} tabIndex={0}
+        <motion.div key={department} className={`corner-store__products ${department === 'clout' ? 'corner-store__products--clout' : ''}`} role="region" aria-label={`${department} shelf`} tabIndex={0}
           initial={reducedMotion ? false : { opacity: 0, x: 45 }} animate={{ opacity: 1, x: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -45 }}
           transition={{ duration: reducedMotion ? 0 : .22 }}>
 
+          {department === 'clout' && <DailyCloutPack playerId={bootstrap.profile.id} onClaimed={reward => setBaggedOffer({
+            art: 'assets/rewards/clout-token.webp', name: `${reward.amount.toLocaleString()} Clout`, daily: { date: reward.date },
+          })} />}
           {CORNER_OFFERS.filter(o => o.kind === department).map((offer, index) => {
             const catalogOffer = catalog?.offers.find(o => o.id === offer.id);
             const isSupported = offer.kind === 'clout';
@@ -634,9 +642,11 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       
       <Dialog open={!!baggedOffer} onOpenChange={open => { if (!open) setBaggedOffer(null); }}>
         <DialogContent className="corner-checkout corner-checkout--bagged market-receipt-dialog">
-          <DialogTitle className="sr-only">Purchase complete</DialogTitle>
-          <DialogDescription className="sr-only">Your confirmed purchase has been added to your account.</DialogDescription>
-          {baggedOffer && <MarketPurchaseSuccess art={baggedOffer.art} name={baggedOffer.name} order={baggedOffer.order} reducedMotion={bootstrap.profile.settings.reducedMotion}><OrderAmount order={baggedOffer.order} /></MarketPurchaseSuccess>}
+          <DialogTitle className="sr-only">{baggedOffer?.daily ? 'Daily pack claimed' : 'Purchase complete'}</DialogTitle>
+          <DialogDescription className="sr-only">{baggedOffer?.daily ? 'Your free daily Clout has been added to your account.' : 'Your confirmed purchase has been added to your account.'}</DialogDescription>
+          {baggedOffer && <MarketPurchaseSuccess {...baggedOffer} reducedMotion={bootstrap.profile.settings.reducedMotion}>
+            {baggedOffer.order ? <OrderAmount order={baggedOffer.order} /> : <div className="market-receipt__gift-total"><span>Daily free pack</span><strong>On the house</strong></div>}
+          </MarketPurchaseSuccess>}
           <button className="studio-action studio-action--gold" onClick={() => setBaggedOffer(null)}>Keep browsing</button>
         </DialogContent>
       </Dialog>
