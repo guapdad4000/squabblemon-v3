@@ -34,16 +34,16 @@
 @media(max-width:1000px) {
   .fade-phone { right: auto; left: 0; width: 100%; }
   .fade-phone__cord--desktop { display: none; }
-  .fade-phone__cord--mobile { display: block; left: 0; top: 117px; width: calc(50% - 60px); height: calc(100% - 117px); }
+  .fade-phone__cord--mobile { display: block; left: 0; top: 107px; width: calc(50% + 80px); height: calc(100% - 107px); }
   .fade-phone__cord--mobile path { vector-effect: non-scaling-stroke; }
   .fade-phone[data-lifted=true] .fade-phone__mobile-lead { d: path('M160 -8 C156 24 12 2 12 30'); }
   .fade-finder { left: 50%; top: 0; bottom: auto; width: 208px; height: 120px; transform: translateX(-50%); }
-  .fade-phone__receiver { width: calc(112px * 254 / 900); height: 112px; left: 14px; bottom: 0; }
-  .fade-phone__receiver img { width: 112px; }
+  .fade-phone__receiver { width: 180px; height: calc(180px * 254 / 900); left: 14px; bottom: 12px; }
+  .fade-phone__receiver img { width: 180px; transform: none; }
   .fade-phone__lettering { display: none; }
   .fade-phone[data-lifted=true] .fade-phone__receiver { transform: translateY(-8px); }
-  .fade-phone__label { display: block; left: 68px; right: 0; top: 35px; font-size: 15px; line-height: 1.1; }
-  .fade-phone__hint { left: 68px; right: 0; top: 71px; font-size: 9px; }
+  .fade-phone__label { display: block; left: 0; right: 0; top: 8px; font-size: 15px; line-height: 1.1; }
+  .fade-phone__hint { left: 0; right: 0; top: 30px; font-size: 9px; }
 }
 @media(prefers-reduced-motion:reduce) {
   .fade-phone .fade-finder .fade-phone__receiver::before { animation: none !important; opacity: .6; }

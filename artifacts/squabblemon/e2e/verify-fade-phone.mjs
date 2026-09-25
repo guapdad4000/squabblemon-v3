@@ -93,9 +93,9 @@ try {
     });
     assert.equal(layout.overflow, false, `overflow at ${width}`);
     assert(layout.title.y - layout.tabs.bottom < 50, `title is not at the top at ${width}`);
-    assert(Math.abs(layout.image.height/layout.image.width-layout.ratio) < .01, 'handset proportions changed');
+    assert(Math.abs((width > 1000 ? layout.image.height/layout.image.width : layout.image.width/layout.image.height)-layout.ratio) < .01, 'handset proportions changed');
     assert(layout.phone.x >= 0 && layout.phone.right <= width, `phone outside screen at ${width}`);
-    assert(layout.image.height > layout.image.width * 3, 'receiver must stand vertically');
+    assert(width > 1000 ? layout.image.height > layout.image.width * 3 : layout.image.width > layout.image.height * 3, 'receiver orientation must match the viewport');
     if (width > 1000) assert(layout.image.right < layout.deck.x, 'desktop receiver must sit beside the picker');
     else {
       assert(layout.phone.bottom <= layout.deck.y, 'mobile phone must sit above the picker');
