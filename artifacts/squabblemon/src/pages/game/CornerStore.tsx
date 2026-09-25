@@ -1,3 +1,4 @@
+import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useEffect, useRef, useState } from 'react';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import {
@@ -324,6 +325,7 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
 }
 
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const { seen } = useNotifications();
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
@@ -353,7 +355,8 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     return () => stopSoundEffect(welcomeVoice.current);
   }, []);
 
-  function choose(offer: StoreOffer) { 
+  function choose(offer: StoreOffer) {
+    seen(`offer:${offer.id}`);
     setAdultConfirmed(false);
     setUnitedStatesConfirmed(false);
     setCheckoutError(''); 
@@ -470,7 +473,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <img src={getAssetUrl(offer.art)} alt="" />
                 <div>
                   <small>{offer.kind === 'pack' ? 'SHOWCASE PACK · PREVIEW' : offer.kind === 'style' ? 'ARTWORK ONLY' : 'MARKET PICK'}</small>
-                  <h2>{isSupported ? (catalogOffer?.name ?? 'Unavailable bundle') : offer.name}</h2>
+                  <h2>{isSupported ? (catalogOffer?.name ?? 'Unavailable bundle') : offer.name}<ItemDot id={`offer:${offer.id}`} /></h2>
                   <p>{isSupported ? (catalogOffer ? `${catalogOffer.clout.toLocaleString()} Clout for your account.` : 'Catalog details are unavailable.') : offer.description}</p>
                   {offer.cards && <p className="corner-product__contents">{offer.cards.length} {offer.kind === 'style' ? 'alternate illustration' : 'featured cards'}</p>}
                   

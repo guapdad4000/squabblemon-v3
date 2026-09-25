@@ -1,3 +1,4 @@
+import { Attention } from '../Notifications';
 import { MusicControls } from '../MusicControls';
 import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
@@ -67,7 +68,7 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       aria-current={selected ? 'page' : undefined} title={`${route.label} · ${route.detail}`}
       onClick={() => navigate(route.path)}>
       <span className="fan-nav__pose"><span key={selected ? tap : 'rest'} className="fan-nav__object"><NavArt name={route.art} /></span></span>
-      <span className="fan-nav__label">{route.label}</span>
+      <span className="fan-nav__label">{route.label}<Attention section={route.art === 'collection' ? 'cards' : route.art} /></span>
     </button>;
   }
 
@@ -186,7 +187,7 @@ export function CinemaNavSheet({
                 aria-label={`${route.label} · ${route.detail}`} aria-current={selected ? 'page' : undefined}
                 title={`${route.label} · ${route.detail}`} onClick={() => choose(route.path)}>
                 <span className="express-sign__post" aria-hidden="true" />
-                <span className="express-sign__board"><span className="express-sign__bolt" aria-hidden="true" /><strong>{route.label}</strong><span className="express-sign__arrow" aria-hidden="true">{index % 2 ? '›' : '‹'}</span></span>
+                <span className="express-sign__board"><span className="express-sign__bolt" aria-hidden="true" /><strong>{route.label}<Attention section={route.art === 'collection' ? 'cards' : route.art} /></strong><span className="express-sign__arrow" aria-hidden="true">{index % 2 ? '›' : '‹'}</span></span>
                 {selected && <span className="express-sign__here">You are here</span>}
               </button>;
             })}

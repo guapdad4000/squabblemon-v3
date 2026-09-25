@@ -1,3 +1,5 @@
+import { useSearch } from 'wouter';
+import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { useViewMemory } from '../../lib/navigationMemory';
@@ -91,6 +93,12 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const [view, setView] = useViewMemory<Station | 'room'>(`home-view:${bootstrap.profile.id}`, 'room');
   const [growthOpen, setGrowthOpen] = useState(false);
   const [mailOpen, setMailOpen] = useState(false);
+  const noticeSearch = useSearch();
+  useEffect(() => {
+    const notice = new URLSearchParams(noticeSearch).get('notice');
+    if (notice === 'mail') { setView('mail'); setMailOpen(true); }
+    if (notice === 'growth') setGrowthOpen(true);
+  }, [noticeSearch]);
   const mail = useSafehouseMail(bootstrap.profile.id);
   const unreadMail = (mail.data?.messages ?? []).filter(item => !item.readAt).length;
   const [night, setNight] = useState(() => {
@@ -211,7 +219,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'day'}>
       <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
-      <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span>{claimed > 0 && <b>{claimed}</b>}</Link>
+      <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen} />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
         onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
@@ -228,7 +236,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
           aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
-          <item.icon size={16} aria-hidden="true" /><span>{item.short}</span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}
+          <item.icon size={16} aria-hidden="true" /><span>{item.short}<Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} /></span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}
         </button>)}
       </nav>
       <div className="safehouse-room-bottom">

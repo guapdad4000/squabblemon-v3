@@ -1,3 +1,4 @@
+import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { Link } from 'wouter';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
@@ -16,6 +17,7 @@ import '../../styles/collection-discovery.css';
 import '../../styles/collection.css';
 
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  const { seen: markNoticeSeen } = useNotifications();
   const queryClient = useQueryClient();
   const claimMilestone = useClaimCollectionRoadMilestone();
   const discoveryRootRef = useRef<HTMLElement>(null);
@@ -102,7 +104,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                return (
                  <CardPressTarget
                    card={card}
-                   onInspect={() => setInspectId(card.catalogId)}
+                   onInspect={() => { markNoticeSeen(`card:${card.catalogId}`); setInspectId(card.catalogId); }}
                    key={card.catalogId}
                    data-testid="collection-card-control"
                    data-collection-card-state={!show ? 'undiscovered' : isOwned ? 'owned' : 'locked'}
@@ -110,12 +112,13 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                    data-collection-discovery-new={isNew ? 'true' : undefined}
                    data-collection-discovery-active={isActive ? 'true' : undefined}
                    disabled={!show}
-                   onClick={() => setInspectId(card.catalogId)}
+                   onClick={() => { markNoticeSeen(`card:${card.catalogId}`); setInspectId(card.catalogId); }}
                    aria-label={show ? `${card.name}. ${CARD_RARITY_DEFINITIONS[card.rarity].label} rarity${isOwned ? '' : '. Locked'}${isNew ? '. New card' : ''}` : 'Undiscovered card'}
                  >
                    {show ? (
                      <>
                        <CardView card={card} variantId={bootstrap.profile.equippedVariants[card.catalogId]} progress={bootstrap.profile.cardProgression[card.catalogId]} unavailable={!isOwned} isBoard fillContainer presentationOnly disableLayout />
+                       <ItemDot id={`card:${card.catalogId}`} />
                        {isNew && <span className="collection-discovery__badge" aria-hidden="true">New</span>}
                        {!isOwned && <LockKeyhole className="collection-card-grid__lock" size={20} aria-hidden="true" />}
                      </>

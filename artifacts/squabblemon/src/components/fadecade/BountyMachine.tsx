@@ -1,3 +1,4 @@
+import { ItemDot } from '../Notifications';
 import { useState } from 'react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { useClaimPlayerMission, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
@@ -74,7 +75,7 @@ export function BountyMachine({ bootstrap, cadence }: { bootstrap: PlayerBootstr
           ) : (
             missions.map(m => (
               <div key={m.id} className="bounty-item" data-status={m.status}>
-                <span className="bounty-title" title={m.title}>{m.title}</span>
+                <span className="bounty-title" title={m.title}>{m.title}<ItemDot id={`mission:${m.id}:${m.resetAt ?? 'permanent'}`} /></span>
                 <p className="fadecade-bounty-description">{m.description}</p>
                 <span className="challenge-reward">{m.rewardAmount} {m.rewardCurrency === 'softCurrency' ? 'Clout' : 'Tickets'}</span>
                 <div className="bounty-track" role="progressbar" aria-label={m.title} aria-valuemin={0} aria-valuemax={Math.max(1, m.goal)} aria-valuenow={Math.max(0, Math.min(m.progress, m.goal))}>

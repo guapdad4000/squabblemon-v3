@@ -1,3 +1,4 @@
+import { DailyCloutPack } from '../../components/Notifications';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
@@ -1058,6 +1059,7 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
   return (
     <div className="trading-post">
+      <DailyCloutPack playerId={bootstrap.profile.id} />
       <nav className="market-tabs" aria-label="Shop departments">
         <button aria-pressed={tab === 'packs'} onClick={() => selectTab('packs')}>
           <GameGlyph name="pack" />

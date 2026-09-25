@@ -1,3 +1,4 @@
+import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
 import { PlayerLevelCelebration } from '../../components/AccountRewards';
 import { CityHeader } from '../../components/venue/CityHeader';
@@ -92,6 +93,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   return (
     <CosmeticProvider profile={bootstrap.profile}>
+    <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardReveal />
     <PlayerLevelCelebration profile={bootstrap.profile} />
     <Switch>
@@ -136,6 +138,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </Route>
       <Route component={() => <Redirect to="/game" />} />
     </Switch>
+    </NotificationProvider>
     </CosmeticProvider>
   );
 }
