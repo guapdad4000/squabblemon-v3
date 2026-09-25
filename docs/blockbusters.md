@@ -1,6 +1,6 @@
 # Block Party roster and Blockbusters — first playable rules
 
-The catalog has 202 collectible cards: 182 characters, 10 existing supports, and 10 Blockbusters. This release adds 18 characters and replaces the existing Live Streamer portrait. Supplied character backdrops are preserved. Artwork provenance is in `artifacts/squabblemon/reference/blockbuster-artwork.json`.
+The catalog has 202 collectible cards: 182 characters, 10 existing supports, and 10 Blockbusters. This release adds 18 characters and replaces the existing Live Streamer portrait. Character artwork uses transparent cutouts; Blockbuster posters retain their illustrated backgrounds. Artwork provenance is in `artifacts/squabblemon/reference/blockbuster-artwork.json`.
 
 Confirmed names: Ahki, Dr. Umah, ATL Scammer. The poster titled “The Block Spin” supplies the repeat-damage event.
 

@@ -1,4 +1,4 @@
-import { BLOCKBUSTERS, BLOCKBUSTER_CHARACTERS } from '../../../lib/squabblemon-engine/src/blockbusterWave';
+import { BLOCKBUSTERS } from '../../../lib/squabblemon-engine/src/blockbusterWave';
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
@@ -236,7 +236,6 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'crosswind',
     'slipstream',
     'cloudbreak',
-    ...BLOCKBUSTER_CHARACTERS.map(([id]) => id),
     ...BLOCKBUSTERS.map(([id]) => id),
     'kyle',
     'stockz',

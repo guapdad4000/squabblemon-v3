@@ -317,7 +317,6 @@ export const blockbusterWaveCards: Record<string, Card> = {
           ability,
           effect: `On Reveal: ${effect}`,
           kind: "character" as const,
-          artworkLayout: "portrait" as const,
           roles: ["Block Party"],
           abilityUpgrades: growth(id, ability),
         },

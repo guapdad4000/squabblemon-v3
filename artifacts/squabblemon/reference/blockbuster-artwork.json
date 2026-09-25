@@ -3,67 +3,89 @@
     "id": "miami-surgeon",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_11_16 PM.png",
     "asset": "assets/characters/miami-surgeon.webp",
-    "bytes": 195582
+    "bytes": 280178,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-76dea4be-2eff-4c8d-9abc-dff88577d3c7.png"
   },
   {
     "id": "roommate",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_11_08 PM (9).png",
     "asset": "assets/characters/roommate.webp",
-    "bytes": 231454
+    "bytes": 293372,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-0e96718b-2911-4005-a8d5-3dbcbb1cd7ef.png"
   },
   {
     "id": "ahki",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_11_08 PM (8).png",
     "asset": "assets/characters/ahki.webp",
-    "bytes": 253948
+    "bytes": 329104,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-2f153033-92fe-45ee-9d52-fa333359de39.png"
   },
   {
     "id": "mr-trick",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_11_08 PM (7).png",
     "asset": "assets/characters/mr-trick.webp",
-    "bytes": 229246
+    "bytes": 302984,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-b8b25fa8-86b7-4d0c-91fb-32f7fcc6b90c.png"
   },
   {
     "id": "dr-umah",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_11_08 PM (5).png",
     "asset": "assets/characters/dr-umah.webp",
-    "bytes": 251180
+    "bytes": 320178,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-8d08ee29-92e3-4fa5-86c2-24db54c5c7ed.png"
   },
   {
     "id": "atl-scammer",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_11 PM (6).png",
     "asset": "assets/characters/atl-scammer.webp",
-    "bytes": 189376
+    "bytes": 236796,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-df310b84-f89f-4425-a8ed-fc68fc467113.png"
   },
   {
     "id": "hater",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 05_26_55 PM (7).png",
     "asset": "assets/characters/hater.webp",
-    "bytes": 229822
+    "bytes": 289378,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-98921f1d-2ea6-495b-8ac2-7615aafb06ec.png"
   },
   {
     "id": "teacher",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 05_26_55 PM (5).png",
     "asset": "assets/characters/teacher.webp",
-    "bytes": 226800
+    "bytes": 367486,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-55438093-9285-4fb2-9dee-b44504b30a77.png"
   },
   {
     "id": "tattoo-artist",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 05_26_55 PM (4).png",
     "asset": "assets/characters/tattoo-artist.webp",
-    "bytes": 253658
+    "bytes": 352956,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-9cbf2576-9a80-46d7-a057-6090454fe3db.png"
   },
   {
     "id": "og-skater",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 05_26_54 PM (3).png",
     "asset": "assets/characters/og-skater.webp",
-    "bytes": 346456
+    "bytes": 429422,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-f09f4118-240a-44e7-a8e4-bd47645ac596.png"
   },
   {
     "id": "inmate-kingpin",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 05_26_54 PM (1).png",
     "asset": "assets/characters/inmate-kingpin.webp",
-    "bytes": 373172
+    "bytes": 439784,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-f9f2d3cd-360c-4f62-ae54-381600efab22.png"
   },
   {
     "id": "live-streamer-male",
@@ -81,37 +103,49 @@
     "id": "redneck",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_06 PM (3).png",
     "asset": "assets/characters/redneck.webp",
-    "bytes": 205510
+    "bytes": 273646,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-50f6bd8f-d081-454e-8d42-46daa3b80ae3.png"
   },
   {
     "id": "redneck-evil",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_06 PM (4).png",
     "asset": "assets/characters/redneck-evil.webp",
-    "bytes": 347640
+    "bytes": 451662,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-6d947959-68b6-4249-be25-73808c6ec023.png"
   },
   {
     "id": "bouncer",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_06 PM (7).png",
     "asset": "assets/characters/bouncer.webp",
-    "bytes": 164674
+    "bytes": 216692,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-f2de7fd7-5c39-4cf5-a425-5f003584492d.png"
   },
   {
     "id": "lawyer",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_11 PM (1).png",
     "asset": "assets/characters/lawyer.webp",
-    "bytes": 196170
+    "bytes": 243010,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-ffbef009-9e93-4bb9-8fa8-0b81db46c4a2.png"
   },
   {
     "id": "nigerian-father",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_06 PM (8).png",
     "asset": "assets/characters/nigerian-father.webp",
-    "bytes": 231422
+    "bytes": 288486,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-32b5da5b-d12c-4f78-9471-e05f5cd3d82f.png"
   },
   {
     "id": "rent-a-cop",
     "source": "/home/falcon/Downloads/ChatGPT Image Sep 24, 2026, 10_09_06 PM (6).png",
     "asset": "assets/characters/rent-a-cop.webp",
-    "bytes": 223426
+    "bytes": 282126,
+    "backgroundRemoved": true,
+    "editedSource": "/home/falcon/.codex/generated_images/01a0d5d7-edc3-7363-9fdb-8d2acb68289a/exec-f540c654-dc0d-42c5-a802-52148a53b643.png"
   },
   {
     "id": "the-babyshower",
