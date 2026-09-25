@@ -37,7 +37,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 0.9;
   renderer.domElement.className = 'deck-box__canvas';
   host.appendChild(renderer.domElement);
 
@@ -270,11 +270,11 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   const environment = pmrem.fromScene(room, 0.04);
   scene.environment = environment.texture;
   pmrem.dispose();
-  scene.add(new THREE.AmbientLight('#cbdbe7', 1.3));
-  const key = new THREE.DirectionalLight('#fff0d2', 2);
+  scene.add(new THREE.AmbientLight('#cbdbe7', 0.9));
+  const key = new THREE.DirectionalLight('#fff0d2', 1.6);
   key.position.set(-3, 4, 5);
   scene.add(key);
-  const fill = new THREE.DirectionalLight('#b5d9ed', 1.4);
+  const fill = new THREE.DirectionalLight('#b5d9ed', 0.9);
   fill.position.set(4, 0, 3);
   scene.add(fill);
 

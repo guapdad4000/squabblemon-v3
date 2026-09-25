@@ -5,7 +5,7 @@ import { playInteractionSound, type InteractionSound } from '../../lib/interacti
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { Briefcase, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
+import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { AccountRewards } from '../../components/AccountRewards';
 import { PageDecor } from '../../components/venue/PageDecor';
@@ -225,9 +225,6 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
             aria-label={night ? 'Switch to daylight' : 'Switch to late night'} aria-pressed={night}>
             {night ? <Moon size={16} /> : <Sun size={16} />}<span>{night ? 'Late night' : 'Daylight'}</span>
           </button>
-          <Link href="/game/inventory" className="room-tool"><Briefcase size={16} /><span>Bag</span></Link>
-          <MusicControls compact />
-          <button type="button" className="room-tool room-tool--reset" aria-label="Reset room camera" onClick={() => explore('room')}><RotateCcw size={16} /></button>
         </div>
       </header>
       <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
