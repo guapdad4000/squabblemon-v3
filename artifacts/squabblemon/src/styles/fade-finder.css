@@ -1,0 +1,12 @@
+.fade-finder{display:block;position:relative;width:178px;max-width:100%;padding:0;margin:4px auto 0;border:0;border-radius:50%;background:transparent;color:#f8d382;cursor:pointer;-webkit-tap-highlight-color:transparent;isolation:isolate}
+.fade-finder__emblem{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 5px 6px #0008);transition:transform .2s ease,filter .2s ease;transform-origin:48% 48%}
+.fade-finder__lettering{font:900 19px var(--font-display,sans-serif);letter-spacing:2.8px}
+.fade-finder:not(:disabled):hover .fade-finder__emblem{transform:translateY(-3px) rotate(-5deg);filter:drop-shadow(0 7px 12px #dfad4340)}
+.fade-finder:not(:disabled):active .fade-finder__emblem{transform:translateY(1px) scale(.96)}
+.fade-finder:focus-visible{outline:2px solid #ffe4aa;outline-offset:5px}
+.fade-finder:disabled{cursor:default;opacity:.5}
+.fade-finder__status{display:block;font:700 10px/1.4 var(--font-sans,sans-serif);color:#ffe5b3;text-align:center;margin:-5px -15px 5px}
+@media(max-width:600px){.fade-finder{width:154px;margin-top:0}}
+@media(prefers-reduced-motion:reduce){.fade-finder__emblem{transition:none}.fade-finder:not(:disabled):hover .fade-finder__emblem,.fade-finder:not(:disabled):active .fade-finder__emblem{transform:none}}
+.fade-finder[data-reduced-motion=true] .fade-finder__emblem{transition:none}
+.fade-finder[data-reduced-motion=true]:is(:hover,:active) .fade-finder__emblem{transform:none}

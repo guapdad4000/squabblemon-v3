@@ -1,7 +1,6 @@
 import { RankTrophy, RPToken, RankLadder } from '../../components/RankArtwork';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
-import { GameGlyph } from '../../components/venue/GameGlyph';
-import { Search } from 'lucide-react';
+import { FadeFinderButton } from '../../components/FadeFinderButton';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -166,7 +165,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   openLabel="Edit gang"
                 />
               </div>
-              <button className="park-find" data-testid="find-ranked-fade" disabled={busy || query.isPending || query.isError} onClick={() => void search()}><span className="fade-finder-icon" aria-hidden="true"><GameGlyph name="fight" /><Search /></span><span>{busy ? 'Entering the park…' : query.isPending ? 'Connecting…' : 'Find a fade'}</span><ArrowUpRight size={22} /></button>
+              <FadeFinderButton reduced={profile.settings.reducedMotion} busy={busy} loading={query.isPending} unavailable={query.isError} onSearch={() => void search()} />
             </> : <div className="park-empty"><h3>Bring your first gang.</h3><p>Save ten different cards you own, then meet us here.</p><Link className="park-find" to="/game/decks">Build your gang <ArrowUpRight size={22} /></Link></div>}
             <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>
           </>}
