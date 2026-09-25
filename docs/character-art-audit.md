@@ -4,12 +4,12 @@ All 202 collectible cards resolve to existing local artwork files. A visual audi
 
 | Element | Characters needing original artwork |
 | --- | --- |
-| Water | Riptide Bruiser, Stillwater Medic, Monsoon Anchor, Rainmaker |
-| Electric | Battery Back, Circuit Captain, Wiretap, Livewire |
-| Plant | Sprout, Root Nurse, Canopy Keeper, Garden Wall |
-| Air | Gust, Crosswind, Slipstream, Cloudbreak |
+| Water | Gator Boy, Hot Tub Hottie, Gas Station Sushi Chef, Energy Drink Freak |
+| Electric | Game Developer, Electrician Foreman, E.V. Enthusiast, Dominican Phone Salesman |
+| Plant | OG Vegan, Matcha Freak, Performative Male, A Spare Gus |
+| Air | Big City Pigeon, Baby Crying on an Airplane, The Flight Plug, Airheaded Model |
 
-These are the Elemental Bond wave in `lib/squabblemon-engine/src/elementalBondWave.ts`. The files exist, but do not contain finished character art. No replacement artwork has been invented for them.
+Renamed to the user’s September 25 roster. Original artwork remains pending; see `docs/elemental-character-redesign.md` for the art briefs and move designs. These are the Elemental Bond wave in `lib/squabblemon-engine/src/elementalBondWave.ts`. The files exist, but do not contain finished character art. No replacement artwork has been invented for them.
 
 The latest 18 new characters and replacement Live Streamer illustration all have supplied artwork. Seventeen supplied images needed background extraction; the male and female streamers already had transparency. Blockbuster posters intentionally retain their backgrounds.
 

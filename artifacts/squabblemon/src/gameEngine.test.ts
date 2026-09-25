@@ -730,7 +730,7 @@ test('new elemental abilities replay deterministically and matchup bonuses apply
   }, 'player', wiretap.instanceId, 0);
   assert(wiretapMatch.discountTokens.some(token => token.sourceInstanceId === wiretap.instanceId && token.eligibility === 'another-district'));
   const wiretapEvent = wiretapMatch.effectLog.find(event => event.cardId === 'wiretap' && event.type === 'ability');
-  assert.match(wiretapEvent?.note ?? '', /Open Frequency resolved\./);
+  assert.match(wiretapEvent?.note ?? '', /Actually, It Charges Free resolved\./);
   assert.doesNotMatch(wiretapEvent?.note ?? '', /condition not met/);
 });
 

@@ -2728,48 +2728,70 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         lastEffectNote: `${source.ability}: cleansed, +1 Hands.`,
       }));
     };
+    const reduce = (target: CardInstance | undefined, amount: number) => {
+      if (!target) return false;
+      targetIds.add(target.instanceId);
+      const oldModifier = target.powerModifier;
+      const reduction = amount + elementalMatchupBonus(source.type, target.type);
+      m = targetEnemyPowerReduction(m, source, target, -reduction, `${source.ability}: -${reduction} Hands.`);
+      const current = findCard(m, target.instanceId);
+      return !current || current.powerModifier < oldModifier;
+    };
+    const travel = (card: CardInstance) => {
+      targetIds.add(card.instanceId);
+      const destination = lowestFriendlyLane(m, source.owner, l);
+      m = move(m, card, destination, `${source.ability}: moved to the weakest other district.`);
+      return findCard(m, card.instanceId)?.lane === destination;
+    };
+    const weaken = (target: CardInstance | undefined) => {
+      if (!target) return;
+      targetIds.add(target.instanceId);
+      m = applyWeaken(m, source, target, `${source.ability}: Weakened.`);
+    };
     if (id === 'riptidebruiser') {
-      const target = highest(enemies);
-      if (target) {
-        targetIds.add(target.instanceId);
-        const reduction = 1 + elementalMatchupBonus(source.type, target.type);
-        m = targetEnemyPowerReduction(m, source, target, -reduction, `${source.ability}: -${reduction} Hands.`);
-      }
-    } else if (id === 'stillwatermedic' || id === 'rootnurse') {
-      cleanse(lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced)));
-    } else if (id === 'rainmaker' || id === 'cloudbreak') {
-      buff(lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.kind !== 'support' && c.instanceId !== source.instanceId)), 2);
+      if (reduce(highest(enemies), 1)) buff(findCard(m, source.instanceId), 1);
+    } else if (id === 'stillwatermedic') {
+      const target = lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced));
+      cleanse(target);
+      if (target) buff(findCard(m, source.instanceId), 1);
+    } else if (id === 'monsoonanchor') {
+      weaken(highest(enemies));
+    } else if (id === 'rootnurse') {
+      const remaining = source.owner === 'player' ? m.playerMotion : m.cpuMotion;
+      if (remaining >= 4) buff(findCard(m, source.instanceId), 2);
+      else cleanse(lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced)));
+    } else if (id === 'rainmaker') {
+      targetIds.add(source.instanceId);
+      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier - 2,
+        lastEffectNote: `${source.ability}: -2 Hands from the crash.` }));
+      m = refundMotion(m, source.owner, 3);
     } else if (id === 'batteryback') {
-      if (m.boards.flat().some(c => !c.hazard && c.owner === source.owner && c.kind !== 'support' && c.lane !== l)) {
-        m = refundMotion(m, source.owner, 1);
-      }
+      const broken = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
+        && c.kind !== 'support' && c.lane !== l && c.powerModifier < 0));
+      if (broken) { buff(broken, 1); m = refundMotion(m, source.owner, 1); }
     } else if (id === 'wiretap') {
       m = addDiscountToken(m, source.owner, source, 'another-district');
-    } else if (id === 'livewire' || id === 'gust') {
-      const destination = lowestFriendlyLane(m, source.owner, l);
-      m = move(m, source, destination, `${source.ability}: moved to the weakest other district.`);
-      if (findCard(m, source.instanceId)?.lane === destination && id === 'livewire') buff(findCard(m, source.instanceId), 1);
+      if (!allies.length) m = refundMotion(m, source.owner, 1);
+    } else if (id === 'livewire') {
+      if (travel(source)) {
+        const moved = findCard(m, source.instanceId)!;
+        buff(moved, 1);
+        m = addDiscountToken(m, source.owner, moved, 'another-district');
+      }
+    } else if (id === 'gust') {
+      if (travel(source)) reduce(lowest(inLane(m, enemy, findCard(m, source.instanceId)!.lane!)), 1);
     } else if (id === 'sprout') {
-      if (allies.length) buff(findCard(m, source.instanceId), 1);
+      const plant = lowest(allies.filter(c => c.type === 'Plant'));
+      if (plant) { buff(plant, 1); buff(findCard(m, source.instanceId), 1); }
     } else if (id === 'gardenwall') {
-      const target = lowest(allies);
-      buff(target, 2);
-      if (target && !target.statuses.protected) {
-        m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, protected: true } }));
-        m = { ...m, timedEffects: [...m.timedEffects, {
-          id: `gardenwall:${source.instanceId}:${target.instanceId}`,
-          kind: 'church-protection', sourceInstanceId: source.instanceId, targetInstanceId: target.instanceId,
-          owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7, expiration: 'match-complete',
-        }] };
-      }
+      reduce(highest(m.boards.flat().filter(c => !c.hazard && c.owner === enemy && c.lane !== l)), 2);
+      buff(lowest(allies), 1);
     } else if (id === 'crosswind') {
+      weaken(highest(enemies));
       const traveler = lowest(allies);
-      if (traveler) {
-        targetIds.add(traveler.instanceId);
-        const destination = lowestFriendlyLane(m, source.owner, l);
-        m = move(m, traveler, destination, `${source.ability}: moved an ally to the weakest other district.`);
-        if (findCard(m, traveler.instanceId)?.lane === destination) buff(findCard(m, traveler.instanceId), 1);
-      }
+      if (traveler) travel(traveler);
+    } else if (id === 'cloudbreak') {
+      if (travel(source)) buff(lowest(inLane(m, source.owner, l).filter(c => c.kind !== 'support')), 2);
     }
     const succeeded = [...targetIds].some(key => {
       const old = findCard(before, key), current = findCard(m, key);

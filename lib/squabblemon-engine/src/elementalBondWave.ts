@@ -2,25 +2,22 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** First draftable identity wave for Water, Electric, Plant, and Air. */
 export const ELEMENTAL_BOND_WAVE = [
-  ['riptidebruiser', 'riptide-bruiser', 'Riptide Bruiser', 'Common', 'Water', 1, 2, 'Breaker Wave', 'On Reveal: Give the highest-Hands enemy here -1 Hands.', 'Pressure'],
-  ['stillwatermedic', 'stillwater-medic', 'Stillwater Medic', 'Uncommon', 'Water', 2, 2, 'Clear Waters', 'On Reveal: Cleanse your lowest-Hands frozen or silenced ally here. If cleansed, give it +1 Hands.', 'Support'],
-  ['monsoonanchor', 'monsoon-anchor', 'Monsoon Anchor', 'Rare', 'Water', 3, 3, 'Water Bond', 'Ongoing: While Monsoon Anchor is in your hand, your other Water characters gain +1 Hand at round end.', 'Sustain', 'Water'],
-  ['rainmaker', 'rainmaker', 'Rainmaker', 'Epic', 'Water', 4, 4, 'Healing Rain', 'On Reveal: Give your lowest-Hands other ally across the board +2 Hands.', 'Support'],
-
-  ['batteryback', 'battery-back', 'Battery Back', 'Common', 'Electric', 1, 2, 'Spare Charge', 'On Reveal: If you have an ally in another district, restore 1 Motion, up to 9.', 'Tempo'],
-  ['circuitcaptain', 'circuit-captain', 'Circuit Captain', 'Epic', 'Electric', 4, 4, 'Electric Bond', 'Ongoing: While Circuit Captain is in your hand, your other Electric characters gain +1 Hand at round end.', 'Tempo', 'Electric'],
-  ['wiretap', 'wiretap', 'Wiretap', 'Rare', 'Electric', 2, 2, 'Open Frequency', 'On Reveal: Your next card in another district costs 1 less Motion.', 'Tempo'],
-  ['livewire', 'livewire', 'Livewire', 'Uncommon', 'Electric', 3, 2, 'Cross-City Current', 'On Reveal: Move to your weakest other district. If the move succeeds, gain +1 Hands.', 'Movement'],
-
-  ['sprout', 'sprout', 'Sprout', 'Common', 'Plant', 1, 2, 'First Growth', 'On Reveal: If another friendly character is here, gain +1 Hands.', 'Growth'],
-  ['rootnurse', 'root-nurse', 'Root Nurse', 'Uncommon', 'Plant', 2, 2, 'Root Remedy', 'On Reveal: Cleanse your lowest-Hands frozen or silenced ally here. If cleansed, give it +1 Hands.', 'Support'],
-  ['canopykeeper', 'canopy-keeper', 'Canopy Keeper', 'Rare', 'Plant', 3, 3, 'Plant Bond', 'Ongoing: While Canopy Keeper is in your hand, your other Plant characters gain +1 Hand at round end.', 'Growth', 'Plant'],
-  ['gardenwall', 'garden-wall', 'Garden Wall', 'Epic', 'Plant', 4, 4, 'Sheltering Shade', 'On Reveal: Give your lowest-Hands other ally here +2 Hands and Protect it from one targeted hostile ability.', 'Support'],
-
-  ['gust', 'gust', 'Gust', 'Common', 'Air', 1, 2, 'Catch a Breeze', 'On Reveal: Move to your weakest other district.', 'Movement'],
-  ['crosswind', 'crosswind', 'Crosswind', 'Uncommon', 'Air', 2, 2, 'Shift the Scene', 'On Reveal: Move your lowest-Hands other ally here to your weakest other district. If it moves, give it +1 Hands.', 'Movement'],
-  ['slipstream', 'slipstream', 'Slipstream', 'Rare', 'Air', 3, 3, 'Air Bond', 'Ongoing: While Slipstream is in your hand, your other Air characters gain +1 Hand at round end.', 'Movement', 'Air'],
-  ['cloudbreak', 'cloudbreak', 'Cloudbreak', 'Epic', 'Air', 4, 4, 'Clear Skies', 'On Reveal: Give your lowest-Hands other ally across the board +2 Hands.', 'Support'],
+  ["riptidebruiser", "riptide-bruiser", "Gator Boy", "Common", "Water", 1, 2, "Emotional Support Gator", "On Reveal: Give the highest-Hands enemy here -1 Hands. If its Hands fall, gain +1 Hand.", "Pressure"],
+  ["stillwatermedic", "stillwater-medic", "Hot Tub Hottie", "Uncommon", "Water", 2, 2, "Soak Your Problems", "On Reveal: Cleanse your lowest-Hands frozen or silenced ally here and give it +1 Hand. If cleansed, gain +1 Hand.", "Support"],
+  ["monsoonanchor", "monsoon-anchor", "Gas Station Sushi Chef", "Rare", "Water", 3, 3, "Trust the Cooler", "Ongoing: While in your hand, your other Water characters gain +1 Hand at round end. On Reveal: Weaken the strongest enemy here.", "Disruption", "Water"],
+  ["rainmaker", "rainmaker", "Energy Drink Freak", "Epic", "Water", 4, 4, "Fourth Can, No Plan", "On Reveal: Lose 2 Hands, then restore 3 Motion, up to 9.", "Tempo"],
+  ["batteryback", "battery-back", "Game Developer", "Common", "Electric", 1, 2, "Works on My Machine", "On Reveal: Repair your lowest-Hands ally in another district with a negative Hands modifier: give it +1 Hand and restore 1 Motion, up to 9.", "Support"],
+  ["circuitcaptain", "circuit-captain", "Electrician Foreman", "Epic", "Electric", 4, 4, "Everybody on the Clock", "Ongoing: While in your hand, your other Electric characters gain +1 Hand at round end.", "Tempo", "Electric"],
+  ["wiretap", "wiretap", "E.V. Enthusiast", "Rare", "Electric", 2, 2, "Actually, It Charges Free", "On Reveal: Your next card in another district costs 1 less Motion. If you have no other character here, restore 1 Motion, up to 9.", "Tempo"],
+  ["livewire", "livewire", "Dominican Phone Salesman", "Uncommon", "Electric", 3, 2, "Switch Carriers", "On Reveal: Move to your weakest other district. If you move, gain +1 Hand and your next card in a different district from your new location costs 1 less Motion.", "Movement"],
+  ["sprout", "sprout", "OG Vegan", "Common", "Plant", 1, 1, "I Brought My Own Plate", "On Reveal: Give your lowest-Hands other Plant ally here +1 Hand. If one is here, also gain +1 Hand.", "Growth"],
+  ["rootnurse", "root-nurse", "Matcha Freak", "Uncommon", "Plant", 2, 2, "Ceremonial Grade Crashout", "On Reveal: If you have at least 4 Motion left after playing this card, gain +2 Hands. Otherwise, cleanse your lowest-Hands frozen or silenced ally here and give it +1 Hand.", "Growth"],
+  ["canopykeeper", "canopy-keeper", "Performative Male", "Rare", "Plant", 3, 3, "Feminist Literature, Unopened", "Ongoing: While in your hand, your other Plant characters gain +1 Hand at round end.", "Growth", "Plant"],
+  ["gardenwall", "garden-wall", "A Spare Gus", "Epic", "Plant", 4, 4, "Personal Space Is Seasonal", "On Reveal: Give the strongest enemy in another district -2 Hands, then give your weakest other ally here +1 Hand.", "Pressure"],
+  ["gust", "gust", "Big City Pigeon", "Common", "Air", 1, 2, "Run Your Breadcrumbs", "On Reveal: Move to your weakest other district. If you move, give the weakest enemy there -1 Hand.", "Movement"],
+  ["crosswind", "crosswind", "Baby Crying on an Airplane", "Uncommon", "Air", 2, 2, "No Quiet Section", "On Reveal: Weaken the strongest enemy here. Move your weakest other ally here to your weakest other district.", "Disruption"],
+  ["slipstream", "slipstream", "The Flight Plug", "Rare", "Air", 3, 3, "Cousin at the Gate", "Ongoing: While in your hand, your other Air characters gain +1 Hand at round end.", "Movement", "Air"],
+  ["cloudbreak", "cloudbreak", "Airheaded Model", "Epic", "Air", 4, 4, "Wrong Gate, Great Lighting", "On Reveal: Move to your weakest other district. If you move, give your weakest ally left in the original district +2 Hands.", "Movement"],
 ] as const;
 
 export const elementalBondWaveUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(
