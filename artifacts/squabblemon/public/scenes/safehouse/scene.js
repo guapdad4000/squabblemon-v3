@@ -1,4 +1,5 @@
-import { dressBags, addGardenDecor, createArcadeDisplay } from './room-upgrades.js';
+import { createArcadeCabinet } from './arcade-cabinet.js';
+import { dressBags, addGardenDecor } from './room-upgrades.js';
 import { addTailoredPillows } from './tailored-pillows.js';
 import { createMailDoor } from './mail-door.js';
 import { createGrowthCorner } from './growth-corner.js';
@@ -142,18 +143,7 @@ const points=new Float32Array(150*3);for(let i=0;i<points.length;i+=3){points[i]
 const inventoryBag=new T.Group();inventoryBag.position.set(1.75,0,1.75);inventoryBag.rotation.y=-.3;scene.add(inventoryBag);
 // Fadecade sits at the opposite end of the couch, facing into the room.
 const arcade=new T.Group();arcade.position.set(3.95,0,3.3);arcade.rotation.y=-Math.PI/2;scene.add(arcade);
-box(.92,1.5,.85,black,0,.76,0,arcade);
-box(1.05,.26,.85,wood,0,1.55,.08,arcade);
-box(.96,.9,.54,black,0,2.03,-.13,arcade);
-const arcadeDisplay=createArcadeDisplay(arcade);
-const arcadeLogo=new T.TextureLoader().load('../../assets/fadecade/logo.webp');arcadeLogo.colorSpace=T.SRGBColorSpace;
-mesh(new T.PlaneGeometry(.83,.28),new T.MeshBasicMaterial({map:arcadeLogo,transparent:true}),0,2.57,.17,arcade);
-box(1.06,.35,.63,black,0,2.59,-.1,arcade);
-// Marquee art sits just in front of its backing.
-arcade.children[arcade.children.length-2].position.z=.225;
-cyl(.025,.025,.2,brass,-.23,1.82,.32,arcade);ball(-.23,1.93,.32,.07,leather,arcade);
-for(const [x,z] of [[.12,.25],[.27,.3],[.16,.42]])cyl(.055,.055,.035,glow,x,1.705,z,arcade);
-box(.15,.17,.02,brass,0,.86,.435,arcade);box(.08,.018,.025,black,0,.9,.451,arcade);
+const arcadeDisplay=createArcadeCabinet(arcade);
 dressBags({inventoryBag,bag});
 const roomDetails=dressSafehouse({scene,couch,brass,wood,black,ivory,plaster});
 const batching=batchStaticMeshes(scene,[mailDoor.root,growthCorner,inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
@@ -161,7 +151,7 @@ const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[scree
 const roomPose=()=>innerWidth/innerHeight<.95?[.16,.48,12.1,.15,1.3,-.15]:[-.09,.23,10.7,.1,1.52,-.45];
 // A front three-quarter approach makes the shared spherical easing curve around the table.
 // Keep the focus attached to the cabinet so placement and camera destination cannot drift apart.
-const arcadePose=()=>{const portrait=innerWidth/innerHeight<.95;return[-.82,.15,portrait?4.2:3.9,arcade.position.x,portrait?1.85:1.6,arcade.position.z];};
+const arcadePose=()=>{const portrait=innerWidth/innerHeight<.95;return[-.82,.15,portrait?4.6:4.4,arcade.position.x,portrait?1.85:1.72,arcade.position.z];};
 const initialPose=roomPose();const target=new T.Vector3(...initialPose.slice(3));let yaw=initialPose[0]+.12,pitch=initialPose[1],radius=initialPose[2]+.7,desired={yaw:initialPose[0],pitch,radius:initialPose[2],target:target.clone()};
 let frameShift=0,desiredFrameShift=0;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
