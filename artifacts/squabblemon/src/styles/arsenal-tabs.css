@@ -11,39 +11,29 @@
 }
 .arsenal-paper-tabs a {
   flex: 1;
-  padding: 13px 20px 18px;
-  background: #b9af97;
+  min-width: 0;
+  padding: 30px 20px 18px;
+  background: transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;
   color: #24221e;
   font: 800 clamp(16px, 3vw, 23px)/1.1 var(--font-display, sans-serif);
   text-transform: uppercase;
-  filter: drop-shadow(0 4px 3px #0005);
-  clip-path: polygon(
-    0 3%,
-    98% 0,
-    100% 86%,
-    96% 93%,
-    91% 87%,
-    86% 100%,
-    80% 91%,
-    74% 98%,
-    65% 91%,
-    58% 99%,
-    50% 89%,
-    44% 97%,
-    36% 90%,
-    28% 99%,
-    20% 91%,
-    13% 97%,
-    6% 90%,
-    0 96%
-  );
+  filter: brightness(.88) drop-shadow(0 4px 3px #0005);
   transition:
-    background 0.15s,
+    filter 0.15s,
     transform 0.15s;
 }
+.arsenal-paper-tabs a:nth-child(2) {
+  background-image: url('../assets/paper/ripped-strip-alt.webp');
+}
 .arsenal-paper-tabs a[aria-current="page"] {
-  background: #f0e4bd;
+  filter: drop-shadow(0 4px 3px #0005);
   transform: rotate(-1deg);
+}
+.arsenal-paper-tabs strong { display: block; font: inherit; }
+.arsenal-paper-tabs a[aria-current="page"] strong {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 .arsenal-paper-tabs a:focus-visible {
   outline: 3px solid #ffc760;
@@ -58,7 +48,7 @@
 }
 @media (max-width: 420px) {
   .arsenal-paper-tabs a {
-    padding: 12px 10px 18px;
+    padding: 30px 12px 16px;
   }
   .arsenal-paper-tabs span {
     font-size: 9px;

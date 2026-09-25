@@ -22,12 +22,12 @@
 .game-shell--fan .safehouse { min-height: 730px; }
 .fan-nav {
   position: fixed; z-index: 40; bottom: 0; left: 50%;
-  width: min(960px, calc(100% - 48px)); height: 170px;
+  width: min(760px, calc(100% - 48px)); height: 170px;
   transform: translateX(-50%); pointer-events: none;
   background: none; border: 0; box-shadow: none;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-.fan-nav__spread { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); align-items: end; height: 100%; }
+.fan-nav__spread { display: grid; grid-template-columns: repeat(var(--fan-count), minmax(0, 1fr)); align-items: end; height: 100%; }
 .fan-nav__spread--compact { display: none; }
 .fan-nav__ray {
   position: relative; height: 180px; min-width: 0; padding: 0;
@@ -86,7 +86,7 @@
   .game-shell--fan { --fan-clearance: calc(130px + env(safe-area-inset-bottom, 0px)); }
   .fan-nav { width: min(560px, calc(100% - 24px)); height: calc(132px + env(safe-area-inset-bottom, 0px)); }
   .fan-nav__spread--desktop { display: none; }
-  .fan-nav__spread--compact { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .fan-nav__spread--compact { display: grid; }
   .fan-nav__ray { height: 132px; }
   .fan-nav__pose { height: 112px; left: -15%; width: 130%; bottom: 14px; }
   .fan-nav__label { bottom: 9px; font-size: 10px; }

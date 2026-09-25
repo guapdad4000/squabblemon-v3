@@ -4,7 +4,7 @@ export function DrFadeReferee() {
   return (
     <img
       className="dr-fade-referee"
-      src={getAssetUrl("assets/progression/dr-fade-referee.webp")}
+      src={getAssetUrl("assets/progression/dr-fade-referee-striped.webp")}
       alt="Dr. Fade, your referee"
       draggable={false}
     />

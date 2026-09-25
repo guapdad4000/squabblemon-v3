@@ -1,0 +1,13 @@
+# Dr. Fade referee portrait
+
+Created with the built-in imagegen tool from the user-supplied Dr. Fade portrait.
+The original generation remains in Codex generated images; the game uses
+`public/assets/progression/dr-fade-referee-striped.webp` with transparent alpha.
+
+## Uniform edit prompt
+
+Use case: identity-preserve. Edit target: the supplied Dr. Fade game character cutout. Keep his exact face, glasses, braided swept-back hair, skin tone, friendly confident expression, muscular build, pointing pose, fingerless gloves, warm gold rim lighting, and polished illustrated game-art style. Replace the vest, necktie, white dress shirt and orange straps with a proper black-and-white vertically striped referee shirt with short sleeves and a neat black collar. Add a clear embroidered chest badge featuring a single clenched fist emblem, with a small gold border; no lettering. Fix the malformed whistle: his raised gloved hand naturally holds ONE small realistic silver referee whistle between thumb and index finger. Give it a compact rounded pea-whistle body, a short coherent mouthpiece, a visible sound slot, and a small attachment ring connected to the black neck lanyard. It must read clearly as a whistle, not a tube, tool, or multiple objects. Preserve the downward-pointing other arm and hand. Frame the complete original waist-up silhouette with all fingertips and hair in frame. Genuine transparent alpha background, clean edges, no black background, no checkerboard, no added scene, no words or watermark. This is the replacement referee portrait used at the upper left of game menus.
+
+## Final whistle refinement
+
+Use case: precise-object-edit. Edit ONLY the small silver object held in the raised hand of this Dr. Fade referee portrait. Replace that awkward double-port object with one unmistakable CLASSIC METAL PEA WHISTLE shown in side profile: a single round silver barrel body, one short flat rectangular mouthpiece extending from it, and a dark rectangular air slot on top. The mouthpiece points toward his face. His thumb and index finger gently pinch the round barrel, below the slot. A small round attachment eye at the back connects to his existing black neck cord. No double barrels, no pipe fitting, no USB-port geometry, no extra whistle, no extra fingers. Make the silhouette mechanically coherent and recognizable at a small size. Preserve every other feature of the provided image exactly, especially the black-and-white striped shirt, gold clenched-fist badge, black collar, face, glasses, braids, pose, gloves, pointing finger, lighting, framing and illustration style. Genuine transparent alpha background and clean edges; no text.

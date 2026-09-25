@@ -76,7 +76,7 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
 
   return <>
-    <nav className="fan-nav" aria-label="Game navigation">
+    <nav className="fan-nav" aria-label="Game navigation" style={{ '--fan-count': routes.length } as CSSProperties}>
       <div className="fan-nav__spread fan-nav__spread--desktop">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
       <div className="fan-nav__spread fan-nav__spread--compact">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
     </nav>
