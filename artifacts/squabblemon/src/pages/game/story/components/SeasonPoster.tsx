@@ -14,6 +14,11 @@ type SeasonPosterProps = {
 const SEASON_ASSETS: Record<string, { bg: string; characters: string[] }> = {
   'season-1': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/cornball.webp', 'assets/characters/block-party-titan.webp'] },
   'season-2': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/ganger-red.webp', 'assets/characters/ganger-blue.webp'] },
+  'special-oz': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/dorothy.webp', 'assets/characters/oz.webp'] },
+  'special-alice': { bg: 'assets/layered/blue-arcade.webp', characters: ['assets/characters/alice.webp', 'assets/characters/queen-of-hearts.webp'] },
+  'special-yasuke': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/yasuke.webp'] },
+  'special-cellblock': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/inmate-crafty.webp', 'assets/characters/inmate-boyfriend.webp'] },
+  'special-leon': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/homeless-guy.webp', 'assets/characters/delivery-demon.webp'] },
   'special-sherlock': { bg: 'assets/layered/blue-arcade.webp', characters: ['assets/characters/sherlock.webp', 'assets/characters/watson.webp'] },
 };
 

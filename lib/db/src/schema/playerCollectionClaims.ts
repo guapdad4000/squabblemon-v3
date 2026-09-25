@@ -11,6 +11,9 @@ import { z } from "zod/v4";
 import { playerProfilesTable } from "./playerProfiles";
 
 export type CollectionRoadRewardRecord = {
+  accountReward?: { key: string; title: string; softCurrency: number; packTickets: number; styleShards: number; streak?: number; date?: string };
+  stockzBet?: { id: string; ticker: string; direction: 'up' | 'down'; stake: number; openPrice: number; closePrice: number; startedAt: string; closesAt: string; date: string };
+  stockzSettlement?: { betId: string; payout: number };
   /** Promo receipts use a permanent per-account key, independent of request retries. */
   promoCode?: { code: string; packTickets: number; softCurrency: number; styleShards: number; cardIds?: string[] };
   /** Namespaced shop receipts share the existing immutable, per-player claim ledger. */

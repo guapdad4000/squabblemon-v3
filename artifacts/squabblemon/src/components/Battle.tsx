@@ -1,3 +1,4 @@
+import { DrFadeReferee } from './DrFadeReferee';
 import '../styles/ui-polish.css';
 import { setBattleMusicMode } from '../musicStore';
 import { MusicControls } from './MusicControls';
@@ -216,11 +217,11 @@ function MechanicLessonOverlay({ lesson, onDismiss }: { lesson: MechanicLesson; 
         initial={{ y: 18, scale: 0.97 }}
         animate={{ y: 0, scale: 1 }}
         exit={{ y: 12, scale: 0.98 }}
-        className="relative grid w-full max-w-xl grid-cols-[76px_1fr] gap-4 overflow-hidden border border-primary/45 bg-[#07101bf2] p-5 shadow-[0_24px_90px_#000]"
+        className="referee-clipboard relative grid w-full max-w-xl grid-cols-[76px_1fr] gap-4 overflow-hidden border border-primary/45 bg-[#07101bf2] p-5 shadow-[0_24px_90px_#000]"
       >
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
         <div className="relative h-24 overflow-hidden border-b-2 border-primary/70">
-          <DrFadePortrait className="absolute left-1/2 top-[-8px] h-40 w-32 max-w-none -translate-x-1/2 object-contain" />
+          <DrFadeReferee />
         </div>
         <div className="min-w-0">
           <div className="font-mono text-[9px] uppercase tracking-[.22em] text-primary">Dr. Fade · First sighting</div>
@@ -529,7 +530,7 @@ export function Battle({
       <div className="battle-round" aria-label={`Round ${m.round} of ${roundLimit}`}><span>Round <b>{String(m.round).padStart(2, '0')}</b><small> / {String(roundLimit).padStart(2, '0')}</small></span><div className="battle-round__steps" aria-hidden="true">{Array.from({ length: roundLimit }, (_, index) => <i key={index} className={index + 1 < m.round ? 'is-complete' : index + 1 === m.round ? 'is-current' : ''} />)}</div></div>
       <div className="battle-match-meta">
         <MusicControls compact />
-        <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel">
+        <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">
             <div className="text-[8px] font-mono text-purple-400 uppercase tracking-widest">Passive: {passive.name}</div>

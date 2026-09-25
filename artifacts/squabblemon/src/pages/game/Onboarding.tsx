@@ -1,4 +1,4 @@
-import { revealProfileRewards } from '../../lib/rewardReceipts';
+import { revealProfileRewards, rewardReceipts } from '../../lib/rewardReceipts';
 import { useState } from 'react';
 import { GuidedFirstSession } from './GuidedFirstSession';
 import { motion } from 'framer-motion';
@@ -25,6 +25,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await advance.mutateAsync({ data: payload });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
+      if (payload.action === 'complete-tutorial') rewardReceipts.show({ id: `${res.profile.id}:rookie-graduation`, title: 'You earned your corner.', achievement: true, items: [{ label: 'Rookie Road complete', glyph: 'mastery' }, { label: 'Dr. Fade is in your corner', image: getCardImage('dr-fade') }] });
       if (payload.action === 'claim-reward') { revealProfileRewards(bootstrap, res, 'onboarding', 'Your first haul'); setLocation('/game/story'); }
     } catch (e) {
       console.error(e);

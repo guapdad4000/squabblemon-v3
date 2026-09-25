@@ -343,7 +343,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             Earn in story
             <ArrowRight size={13} />
           </Link>
-          <Link href="/game/play">
+          <Link href="/game/training">
             Play a fade
             <ArrowRight size={13} />
           </Link>

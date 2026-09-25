@@ -153,6 +153,8 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <CareerBoard bootstrap={bootstrap} />
         </div>
       ) : (
+        <div className="bounty-ledger-layout">
+        <aside className="bounty-ledger" aria-label="Your bounty stats"><span>YOUR RECORD</span><h2>Work speaks.</h2><dl><div><dt>Collected this cycle</dt><dd>{bootstrap.missions.filter(m => m.status === 'claimed').length}</dd></div><div><dt>Ready to collect</dt><dd>{ready}</dd></div><div><dt>Street reputation</dt><dd>{bootstrap.profile.streetRep.toLocaleString()}</dd></div><div><dt>Achievements earned</dt><dd>{bootstrap.profile.unlockedCosmeticIds.filter(id => /^(badge|mastery):/.test(id)).length}</dd></div></dl></aside>
         <section className="bounty-hunter__board" aria-label="Bounty posters">
           <img className="bounty-hunter__wall" src={getAssetUrl('assets/bounty-hunter/wall.webp')} alt="" />
 
@@ -172,7 +174,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                     ? 'Bounties load with your connected account. A practice fight is always open.'
                     : 'Your next set of bounties will appear here soon.'}
                 </p>
-                <Link className="studio-text-action" href="/game/play">
+                <Link className="studio-text-action" href="/game/training">
                   Hit the training circuit
                   <ArrowRight size={14} />
                 </Link>
@@ -244,6 +246,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             })}
           </div>
         </section>
+        </div>
       )}
       </div>
       {tab === 'bounties' && (

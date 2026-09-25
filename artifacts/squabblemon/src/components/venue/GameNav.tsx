@@ -12,12 +12,9 @@ import './cinema-nav.css';
 const routes = [
   { path: '/game', label: 'Safehouse', detail: 'Home court', art: 'safehouse', primary: true, glyph: 'compass' },
   { path: '/game/story', label: 'The streets', detail: 'Story mode', art: 'streets', primary: true, glyph: 'map' },
-  { path: '/game/collection', label: 'Collection', detail: 'Your arsenal', art: 'collection', primary: false, glyph: 'layers' },
+  { path: '/game/collection', label: 'Cards & gangs', detail: 'Collection and decks', art: 'collection', primary: false, glyph: 'layers' },
   { path: '/game/online', label: 'Fight', detail: 'Fade Park & friend fades', art: 'fight', primary: true, glyph: 'crossed' },
-  { path: '/game/decks', label: 'Your gang', detail: 'Build a lineup', art: 'crew', primary: false, glyph: 'users' },
-  { path: '/game/missions', label: 'Bounties', detail: 'Work the city', art: 'bounties', primary: false, glyph: 'scroll' },
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
-  { path: '/game/settings', label: 'Profile', detail: 'Make it yours', art: 'profile', primary: false, glyph: 'wallet' },
 ] as const;
 
 function pathnameFor(location: string) {
@@ -54,28 +51,12 @@ function NavArt({ name }: { name: typeof routes[number]['art'] }) {
 export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, setLocation] = useLocation();
   const pathname = pathnameFor(location);
-  const menu = useRef<HTMLDialogElement>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [tap, setTap] = useState(0);
-  const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
+  const active = (path: string) => pathname === path || (path === '/game/collection' && pathname.startsWith('/game/decks')) || (path !== '/game' && pathname.startsWith(`${path}/`));
   const rewards = bootstrap.missions.filter(m => m.status === 'claimable').length;
-  const secondaryActive = routes.find(route => !route.primary && active(route.path));
-
-  useEffect(() => {
-    menu.current?.close();
-    setMenuOpen(false);
-  }, [location]);
-
   function navigate(path: string) {
-    menu.current?.close();
-    setMenuOpen(false);
     setTap(value => value + 1);
     setLocation(path);
-  }
-
-  function openMenu() {
-    menu.current?.showModal();
-    setMenuOpen(true);
   }
 
   function renderRay(route: typeof routes[number], index: number, count: number) {
@@ -87,7 +68,6 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       onClick={() => navigate(route.path)}>
       <span className="fan-nav__pose"><span key={selected ? tap : 'rest'} className="fan-nav__object"><NavArt name={route.art} /></span></span>
       <span className="fan-nav__label">{route.label}</span>
-      {route.art === 'bounties' && rewards > 0 && <span className="fan-nav__badge" aria-label={`${rewards} rewards ready`}>{rewards}</span>}
     </button>;
   }
 
@@ -98,29 +78,8 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <>
     <nav className="fan-nav" aria-label="Game navigation">
       <div className="fan-nav__spread fan-nav__spread--desktop">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
-      <div className="fan-nav__spread fan-nav__spread--compact">
-        {routes.filter(route => route.primary).map((route, index) => renderRay(route, index, 5))}
-        <button type="button" className={`fan-nav__ray fan-nav__more ${secondaryActive || menuOpen ? 'is-active' : ''}`}
-          style={fanPosition(4, 5)} aria-label="More destinations" aria-haspopup="dialog" aria-expanded={menuOpen}
-          aria-controls="fan-territory-menu" onClick={openMenu}>
-          <span className="fan-nav__pose"><span className="fan-nav__object"><NavArt name={secondaryActive?.art ?? 'profile'} /></span></span>
-          <span className="fan-nav__label">{secondaryActive?.label ?? 'More'}</span>
-          {rewards > 0 && <span className="fan-nav__badge" aria-label={`${rewards} rewards ready`}>{rewards}</span>}
-        </button>
-      </div>
+      <div className="fan-nav__spread fan-nav__spread--compact">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
     </nav>
-    <dialog id="fan-territory-menu" className="fan-menu" ref={menu} aria-labelledby="fan-menu-title"
-      onClose={() => setMenuOpen(false)} onClick={event => { if (event.target === menu.current) menu.current.close(); }}>
-      <header className="fan-menu__header"><div><span className="venue-kicker">KNOW YOUR CITY</span><h2 id="fan-menu-title">Your territory</h2></div>
-        <button className="venue-icon-button" aria-label="Close menu" onClick={() => menu.current?.close()}><X size={20} /></button></header>
-      <div className="px-5 pb-3"><MusicControls /></div>
-      <div className="fan-menu__objects">{routes.filter(route => !route.primary).map(route =>
-        <button key={route.path} type="button" className={`fan-menu__choice ${active(route.path) ? 'is-active' : ''}`}
-          aria-current={active(route.path) ? 'page' : undefined} onClick={() => navigate(route.path)}>
-          <NavArt name={route.art} /><strong>{route.label}</strong><small>{route.detail}</small>
-          {route.art === 'bounties' && rewards > 0 && <span className="fan-menu__reward">{rewards} ready to claim</span>}
-        </button>)}</div>
-    </dialog>
   </>;
 }
 
@@ -139,7 +98,7 @@ export function CinemaNavSheet({
   const [storyOverlayPresent, setStoryOverlayPresent] = useState(false);
   const [battleNavigationSlot, setBattleNavigationSlot] = useState<HTMLElement | null>(null);
   const pathname = pathnameFor(location);
-  const active = (path: string) => pathname === path || (path !== '/game' && pathname.startsWith(`${path}/`));
+  const active = (path: string) => pathname === path || (path === '/game/collection' && pathname.startsWith('/game/decks')) || (path !== '/game' && pathname.startsWith(`${path}/`));
 
   useEffect(() => {
     sheetRef.current?.close();
@@ -229,7 +188,6 @@ export function CinemaNavSheet({
                 <span className="express-sign__post" aria-hidden="true" />
                 <span className="express-sign__board"><span className="express-sign__bolt" aria-hidden="true" /><strong>{route.label}</strong><span className="express-sign__arrow" aria-hidden="true">{index % 2 ? '›' : '‹'}</span></span>
                 {selected && <span className="express-sign__here">You are here</span>}
-                {route.art === 'bounties' && rewards > 0 && <span className="express-sign__reward" aria-label={`${rewards} rewards ready`}>{rewards}</span>}
               </button>;
             })}
           </div>

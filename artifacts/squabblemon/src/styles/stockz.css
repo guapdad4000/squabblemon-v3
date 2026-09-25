@@ -1,0 +1,137 @@
+.stockz-machine {
+  min-width: 0;
+}
+.stockz-cabinet {
+  margin: 35px 10px 5px;
+  padding: 25px 18px;
+  background: linear-gradient(135deg, #182e24, #050d0b);
+  border: 10px ridge #5d6252;
+  border-radius: 18px 18px 4px 4px;
+  box-shadow:
+    0 12px 0 #141b18,
+    0 24px 30px #0008;
+  text-align: center;
+  color: #a9f0ad;
+}
+.stockz-cabinet > span {
+  font: 9px monospace;
+  letter-spacing: 0.2em;
+}
+.stockz-cabinet h3 {
+  font: bold italic 42px/1.2 sans-serif;
+  margin: 8px 0;
+}
+.stockz-cabinet h3 span {
+  color: #ead393;
+}
+.stockz-cabinet svg {
+  width: 100%;
+  height: 60px;
+}
+.stockz-cabinet path {
+  fill: none;
+  stroke: #85d493;
+  stroke-width: 2;
+}
+.stockz-panel > p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.stockz-panel small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+.stockz-balance {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+.stockz-balance span {
+  font-weight: 400;
+}
+.stockz-panel fieldset {
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+}
+.stockz-panel legend {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.stockz-companies {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.stockz-companies button {
+  padding: 12px 5px;
+  border: 1px solid #8c9d7044;
+  background: #16261e;
+  color: #f1e6c9;
+  min-width: 0;
+}
+.stockz-companies :is(strong, span, b) {
+  display: block;
+}
+.stockz-companies span {
+  font-size: 10px;
+  line-height: 1.3;
+  min-height: 26px;
+  margin: 5px 0;
+}
+.stockz-companies b {
+  color: #ace3b2;
+}
+.stockz-choices {
+  display: flex;
+  gap: 8px;
+}
+.stockz-choices button {
+  flex: 1;
+  border: 1px solid #6b7455;
+  padding: 12px;
+  background: #24332b;
+  color: #f1e6c9;
+}
+.stockz-panel button[aria-pressed="true"] {
+  outline: 2px solid #b8d498;
+  background: #3a583f;
+}
+.stockz-panel label {
+  display: block;
+  font-size: 12px;
+}
+.stockz-panel > .cabinet-btn {
+  margin-top: 15px;
+}
+.stockz-active {
+  text-align: center;
+  padding: 25px;
+  background: #16261e;
+  color: #c3e8bb;
+}
+.stockz-active > strong {
+  font: 900 44px monospace;
+  display: block;
+  margin: 18px;
+}
+.stockz-history {
+  margin-top: 24px;
+}
+.stockz-history h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.stockz-history p {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #9eaa7633;
+  font-size: 11px;
+}

@@ -6,6 +6,7 @@ import { replayMatchPrefix, createStoryMatch, type TranscriptMove } from "@works
 import { encounterFor, abandonChallenge, type ChallengeRun } from "@workspace/squabblemon-engine/challenge";
 import { catalogIdsToEngineIds, starterRecipes } from "@workspace/squabblemon-engine/data";
 import { randomInt } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { createCardProgressionSnapshot, normalizeCatalogCardId } from "../lib/cardProgression";
 
 const router: IRouter = Router();
@@ -104,7 +105,9 @@ router.post("/player/challenges/runs/:runId/checkpoint", async (req, res) => {
         .find(item => item.matchId === encounter.playerMatchId);
       const previousMoves = Array.isArray(previous?.moves) ? previous.moves : [];
       if (moves.length < previousMoves.length ||
-          previousMoves.some((move, index) => JSON.stringify(move) !== JSON.stringify(moves[index]))) {
+          // PostgreSQL JSONB normalizes object key order. Compare the move data,
+          // never its serialized property order, when extending a saved round.
+          previousMoves.some((move, index) => !isDeepStrictEqual(move, moves[index]))) {
         throw new Error("Checkpoint must extend the existing transcript prefix");
       }
       const [match] = await tx.select().from(playerMatchesTable).where(and(eq(playerMatchesTable.id, encounter.playerMatchId), eq(playerMatchesTable.clerkUserId, clerkUserId))).limit(1);

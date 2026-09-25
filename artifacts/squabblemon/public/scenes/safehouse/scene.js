@@ -141,22 +141,37 @@ for(const x of [-.38,.38]){box(.065,.59,.7,brass,x,.34,0,inventoryBag);const han
 box(.8,.025,.025,gold,0,.64,.03,inventoryBag);
 const inventoryTexture=new T.TextureLoader().load('../../assets/rewards/clout-bag.webp');inventoryTexture.colorSpace=T.SRGBColorSpace;
 const inventoryBadge=mesh(new T.PlaneGeometry(.48,.43),new T.MeshBasicMaterial({map:inventoryTexture,transparent:true,depthWrite:false}),0,.36,.345,inventoryBag);inventoryBadge.castShadow=false;
+// A real cabinet in the room, with a glowing screen and physical controls.
+const arcade=new T.Group();arcade.position.set(-2.1,0,-3.8);arcade.rotation.y=.28;scene.add(arcade);
+box(.92,1.5,.85,black,0,.76,0,arcade);
+box(1.05,.26,.85,wood,0,1.55,.08,arcade);
+box(.96,.9,.54,black,0,2.03,-.13,arcade);
+const arcadeScreen=mesh(new T.PlaneGeometry(.76,.58),new T.MeshBasicMaterial({color:'#82d9c0'}),0,2.05,.151,arcade);
+const arcadeLogo=new T.TextureLoader().load('../../assets/fadecade/logo.webp');arcadeLogo.colorSpace=T.SRGBColorSpace;
+mesh(new T.PlaneGeometry(.83,.28),new T.MeshBasicMaterial({map:arcadeLogo,transparent:true}),0,2.57,.17,arcade);
+box(1.06,.35,.63,black,0,2.59,-.1,arcade);
+// Marquee art sits just in front of its backing.
+arcade.children[arcade.children.length-2].position.z=.225;
+for(const x of [-.3,.3])box(.035,2.78,.035,gold,x,1.39,.45,arcade);
+cyl(.025,.025,.2,brass,-.23,1.82,.32,arcade);ball(-.23,1.93,.32,.07,leather,arcade);
+for(const [x,z] of [[.12,.25],[.27,.3],[.16,.42]])cyl(.055,.055,.035,glow,x,1.705,z,arcade);
+box(.15,.17,.02,brass,0,.86,.435,arcade);box(.08,.018,.025,black,0,.9,.451,arcade);
 const roomDetails=dressSafehouse({scene,couch,brass,wood,black,ivory,plaster});
-const batching=batchStaticMeshes(scene,[inventoryBag,tv,bagPivot,cards,phone,roomDetails.vinyl,...roomDetails.dynamicObjects]);
+const batching=batchStaticMeshes(scene,[inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
 const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[screenMat]});
 const roomPose=()=>innerWidth/innerHeight<.95?[.16,.48,12.1,.15,1.3,-.15]:[-.09,.23,10.7,.1,1.52,-.45];
 const initialPose=roomPose();const target=new T.Vector3(...initialPose.slice(3));let yaw=initialPose[0]+.12,pitch=initialPose[1],radius=initialPose[2]+.7,desired={yaw:initialPose[0],pitch,radius:initialPose[2],target:target.clone()};
 let frameShift=0,desiredFrameShift=0;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const el=renderer.domElement;const pointers=new Map();let pinch=0,px=0,py=0,downX=0,downY=0,moved=false,multi=false;let selected='room';let bagImpulse=0,bagStarted=0;
-const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'}];
+const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'},{object:arcade,key:'arcade'}];
 function pick(e){pointer.set(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(scene.children,true).find(h=>h.object.visible&&!h.object.material?.transparent&&h.object.type==='Mesh');if(!hit)return null;for(const item of interactive){let p=hit.object;while(p){if(p===item.object)return item.key;p=p.parent;}}return null;}
 el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});downX=px=e.clientX;downY=py=e.clientY;moved=false;if(pointers.size>1)multi=true;});
 el.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId)){el.style.cursor=pick(e)?'pointer':'grab';return;}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(Math.hypot(e.clientX-downX,e.clientY-downY)>6)moved=true;if(pointers.size===2){const [a,b]=[...pointers.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)desired.radius=T.MathUtils.clamp(desired.radius+(pinch-d)*.016,1.1,17);pinch=d;return;}desired.yaw=T.MathUtils.clamp(desired.yaw-(e.clientX-px)*.003,-1.12,1.3);desired.pitch=T.MathUtils.clamp(desired.pitch+(e.clientY-py)*.003,.06,1.2);px=e.clientX;py=e.clientY;});
 function release(e){if(e.type==='pointerup'&&e.isTrusted)emit({type:'interact'});if(e.type==='pointerup'&&!moved&&!multi){const key=pick(e);if(key){view(key);if(key==='training')punch();}}pointers.delete(e.pointerId);pinch=0;if(!pointers.size)multi=false;const p=[...pointers.values()][0];if(p){px=p.x;py=p.y;}}
 el.addEventListener('pointerup',release);el.addEventListener('pointercancel',release);el.addEventListener('wheel',e=>{e.preventDefault();desired.radius=T.MathUtils.clamp(desired.radius+e.deltaY*.006,1.1,17);},{passive:false});
-function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory'].includes(name))return;emit({type:'view',view:name});selected=name;desiredFrameShift=name==='room'?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
-const v={inventory:[.25,.65,innerWidth<600?3.8:3.1,2.05,.45,1.3],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[.52,.13,innerWidth<600?4.6:4.1,-3.05,1.45,-1.55],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.38,.66,innerWidth<600?3.6:3.1,-3.25,1.03,2.15]}[name];if(!v)return;desired={yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))};}
+function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory','arcade'].includes(name))return;emit({type:'view',view:name});selected=name;desiredFrameShift=name==='room'?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
+const v={arcade:[.15,.15,4.7,-2.1,1.5,-3.8],inventory:[.25,.65,innerWidth<600?3.8:3.1,2.05,.45,1.3],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[.52,.13,innerWidth<600?4.6:4.1,-3.05,1.45,-1.55],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.38,.66,innerWidth<600?3.6:3.1,-3.25,1.03,2.15]}[name];if(!v)return;desired={yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))};}
 function punch(){bagImpulse=Math.min(.28,bagImpulse+.17);bagStarted=performance.now();document.querySelector('#action-status').textContent='Punch landed';}
 document.querySelectorAll('button[data-view]').forEach(b=>b.onclick=()=>view(b.dataset.view));document.querySelector('#reset').onclick=()=>view('room');document.querySelector('#punch').onclick=punch;document.querySelector('#close-story').onclick=()=>view('room');
 let night=true;
@@ -169,7 +184,7 @@ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.fov=i
 document.querySelector('#loading').remove();let lastTime=0;let contextLost=false;el.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;emit({type:'error'});const notice=document.createElement('div');notice.id='loading';notice.textContent='The room paused. Refresh to step back inside.';host.append(notice);});
 let lastAnchorUpdate=0;
 const anchorPoint=new T.Vector3();
-function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='story'?1.75:item.key==='training'?.45:item.key==='music'?1.24:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});emit({type:'anchors',anchors});}
+function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='arcade'?2:item.key==='story'?1.75:item.key==='training'?.45:item.key==='music'?1.24:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});emit({type:'anchors',anchors});}
 function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden)return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*radius,target.y+Math.sin(pitch)*radius,target.z+Math.cos(yaw)*Math.cos(pitch)*radius);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
 if(!reduced){dust.position.y=Math.sin(t*.00015)*.09;const age=(t-bagStarted)/1000;bagPivot.rotation.z=Math.sin(age*5.5)*bagImpulse*Math.exp(-age*1.35)+Math.sin(t*.0007)*.004;bagPivot.rotation.x=Math.sin(age*4)*bagImpulse*.3*Math.exp(-age*1.35);}
 if(roomDetails.update(t/1000,dt,reduced,camera.position.y))renderer.shadowMap.needsUpdate=true;if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();publishAnchors(t);}
@@ -194,4 +209,3 @@ addEventListener('error',()=>emit({type:'error'}));
 requestAnimationFrame(()=>emit({type:'ready'}));
 
 addEventListener('pagehide',()=>{contextLost=true;crewGeneration++;roomDetails.dispose();art.dispose();scene.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});scene.environment?.dispose();renderer.dispose();});
-

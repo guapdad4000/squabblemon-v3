@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, type PlayerBootstrap } from '@workspace/api-client-react';
 import { Briefcase, ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2 } from 'lucide-react';
+import { getAssetUrl } from '../../lib/assets';
+import { AccountRewards } from '../../components/AccountRewards';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { MusicControls } from '../../components/MusicControls';
 import { useMusic, musicActions } from '../../musicStore';
@@ -15,9 +17,10 @@ import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
+  { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
   { id: 'story', label: 'The television', short: 'Story', icon: Tv, title: 'The block is waiting.', detail: 'Pick up your story where you left it.', action: 'Hit the streets', href: '/game/story' },
-  { id: 'training', label: 'The heavy bag', short: 'Train', icon: Dumbbell, title: 'Stay ready.', detail: 'Get your reps in. Then put your gang to work.', action: 'Start training', href: '/game/play' },
+  { id: 'training', label: 'The heavy bag', short: 'Train', icon: Dumbbell, title: 'Stay ready.', detail: 'Get your reps in. Then put your gang to work.', action: 'Start training', href: '/game/training' },
   { id: 'cards', label: 'Your gang cards', short: 'Gang', icon: Layers, title: 'Every legend starts here.', detail: 'Build the lineup that runs your block.', action: 'Build your gang', href: '/game/decks' },
   { id: 'phone', label: 'The phone', short: 'Fight', icon: Smartphone, title: 'Call somebody out.', detail: 'Your friend. Your gang. A score to settle.', action: 'Challenge a friend', href: '/game/online' },
   { id: 'music', label: 'The turntable', short: 'Records', icon: Disc3, title: 'Oakland Chrome and Curls.', detail: 'Original music by Treblo. Made for the block.', action: '', href: '' },
@@ -172,6 +175,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     <div className="safehouse venue-page studio-page safehouse-stage safehouse-stage--hero world-decor-host"
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'golden'}>
       <PageDecor theme="safehouse" />
+      <AccountRewards bootstrap={bootstrap} />
+      <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span>{claimed > 0 && <b>{claimed}</b>}</Link>
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
         onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
@@ -205,7 +210,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           </div>
         </section> : <div className="safehouse-room-welcome">
           <div><span className="room-eyebrow">YOUR CORNER OF THE CITY</span><p>Kick back. Build your gang. Run it back.</p></div>
-          <Link href="/game/play" className="room-action">Run the block<ArrowRight size={15} /></Link>
+          <Link href="/game/story" className="room-action">Run the streets<ArrowRight size={15} /></Link>
         </div>}
         <div className="safehouse-room-hint"><span><Move size={11} /> Drag to look <i /> Pinch or scroll to zoom</span>
           {claimed > 0 ? <Link href="/game/missions">{claimed} {claimed === 1 ? 'bounty' : 'bounties'} ready <ArrowRight size={11} /></Link> : <span><MousePointer2 size={11} /> Tap an object to explore</span>}

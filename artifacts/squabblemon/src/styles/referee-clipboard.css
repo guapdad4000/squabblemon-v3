@@ -1,0 +1,106 @@
+.referee-clipboard {
+  position: relative;
+  border: 10px solid #695036 !important;
+  border-radius: 15px !important;
+  background:
+    repeating-linear-gradient(0deg, #fff0 0 28px, #83734c18 29px 30px), #e9dfc4 !important;
+  color: #2c302b !important;
+  box-shadow: 0 22px 100px #0009 !important;
+  padding-top: 60px !important;
+  clip-path: none !important;
+}
+.referee-clipboard:before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 30px;
+  width: 120px;
+  border: 3px solid #34393b;
+  border-radius: 7px;
+  background: linear-gradient(#9fa4a3, #d7d8cf 35%, #777c78 70%, #a6aaa3);
+  box-shadow: 0 4px 5px #0004;
+  z-index: 1;
+}
+.dr-fade-referee {
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  object-position: left top;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 5px 3px #0004);
+  animation: referee-float 4s ease-in-out infinite;
+}
+.referee-clipboard :is(h1, h2, h3, p, li, dt, dd, label) {
+  color: inherit;
+}
+.referee-clipboard .text-primary {
+  color: #436348;
+}
+.referee-clipboard .bg-black\/60 {
+  background: #ffffff55;
+}
+.referee-clipboard .border-white\/10 {
+  border-color: #5a593b33;
+}
+.referee-clipboard .studio-eyebrow {
+  color: #47623c;
+}
+.referee-clipboard :is(button, a):focus-visible {
+  outline: 3px solid #537b45;
+  outline-offset: 3px;
+}
+@keyframes referee-float {
+  50% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dr-fade-referee {
+    animation: none;
+  }
+}
+html[data-reduce-motion="true"] .dr-fade-referee {
+  animation: none;
+}
+
+.referee-clipboard [class*="bg-black/"] {
+  background-color: #ffffff55;
+}
+.referee-clipboard button[aria-label="Close field manual"] {
+  color: #2c302b;
+  border-color: #5a593b66;
+}
+.referee-clipboard > [class*="justify-between"] {
+  padding-left: 85px;
+}
+
+.battle-arena.battle-hud .battle-tools__panel.referee-clipboard {
+  position: absolute;
+  width: 244px;
+  max-height: calc(100dvh - 100px);
+  overflow-y: auto;
+  padding: 110px 12px 12px !important;
+}
+.battle-arena.battle-hud
+  .battle-tools__panel.referee-clipboard
+  > .dr-fade-referee {
+  width: 100px;
+}
+.battle-tools__panel.referee-clipboard .battle-utility {
+  color: #2c302b;
+}
+.battle-tools__panel.referee-clipboard .battle-popover {
+  background: #e9dfc4;
+  color: #2c302b;
+}
+.battle-tools__panel.referee-clipboard
+  .battle-popover
+  :is(span, dd, dt, button) {
+  color: inherit;
+}

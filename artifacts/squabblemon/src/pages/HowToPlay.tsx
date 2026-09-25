@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import { ArrowDown, ArrowRight, BookOpen, Check, ChevronRight, Layers3, Sparkles, Swords, Ticket, Zap } from 'lucide-react';
 import { CARD_RARITIES, CARD_RARITY_DEFINITIONS, cardCatalog, catalogCardById, ROOKIE_MENTOR_CORE_IDS } from '../data';
 import { CARD_LEVEL_CAP, totalXpForCardLevel } from '@workspace/squabblemon-engine/cardProgression';
-import { MOVE_TRAINING_COSTS, SHOP_OFFERS, STORY_DUPLICATE_STYLE_SHARDS, WELCOME_REWARD, battleEarnings } from '@workspace/squabblemon-engine/economy';
+import { MAX_DECK_SLOTS, MOVE_TRAINING_COSTS, SHOP_OFFERS, STORY_DUPLICATE_STYLE_SHARDS, WELCOME_REWARD, battleEarnings } from '@workspace/squabblemon-engine/economy';
 import { STREET_PACK_DISCLOSURES, STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import { CARD_FINISH, getCardWallpaper } from '../lib/cardFinish';
@@ -12,12 +12,14 @@ import '../styles/how-to-play.css';
 
 const chapters = [
   ['the-loop', 'The loop'], ['your-crew', 'Characters'], ['the-battle', 'Battle'],
-  ['street-packs', 'Gacha'], ['card-upgrades', 'Upgrades'], ['your-wallet', 'Rewards'], ['first-session', 'Start here'],
+  ['street-packs', 'Gacha'], ['card-upgrades', 'Upgrades'], ['your-wallet', 'Rewards'], ['around-the-block', 'Modes'], ['first-session', 'Start here'],
 ] as const;
 const featured = [
   { id: 'young-bull', role: 'Pressure', tip: 'Play into an occupied enemy district to turn a cheap card into a threat.' },
   { id: 'snow-bunny', role: 'Control', tip: 'Target a district with a big enemy. Freeze can remove its scoring Hands until it is cleansed.' },
-  { id: 'abuela', role: 'Support', tip: 'Give her someone to feed. Play another friendly card here first.' },
+  { id: 'tin-man', role: 'Protection', tip: 'The first other ally entering his district each round gains Protection, by playing or moving.' },
+  { id: 'alice', role: 'Return', tip: 'Before the final round, Alice returns to your hand once. Her next deployment costs less and gains Hands.' },
+  { id: 'scarecrow', role: 'Movement', tip: 'Swap with your weakest ally in another open district. When both can move, both gain a Hand.' },
   { id: 'plug', role: 'Tempo', tip: 'Set up in one district, then spend the discount in another.' },
   { id: 'hooper', role: 'Comeback', tip: 'Check the score before dropping Hooper. His ability wants you to be losing here.' },
   { id: 'og-uncle', role: 'Finisher', tip: 'Watch the entire board. His bonus depends on the opponent having more cards in play.' },
@@ -175,9 +177,20 @@ export default function HowToPlay() {
         <div className="guide-bounty-strip"><span>DON’T LEAVE REWARDS ON THE TABLE.</span><p>Check <Link href="/game/missions">Bounties</Link> and <Link href="/game/collection">Collection Road</Link> after playing. Ready rewards still need to be claimed.</p></div>
       </section>
 
+      <section className="guide-section" id="around-the-block" aria-labelledby="modes-heading">
+        <div className="guide-section-intro"><SectionTitle number="07" label="Your next destination"><span id="modes-heading">Find your<br /><em>kind of fade.</em></span></SectionTitle><p>Cards & gangs brings Collection and Decks together with paper tabs. Build a ten-card gang, choose its hero, and unlock up to {MAX_DECK_SLOTS} saved deck slots.</p></div>
+        <div className="guide-wallet-grid">
+          <article><h3>Training Circuit</h3><p>The heavy bag opens the current Training Circuit. Pick your gang and practice pressure, movement, control, support, freeze recovery, or equal footing.</p><Link href="/game/training">Get your reps →</Link></article>
+          <article><h3>Friendly Fade’s & Fade Park</h3><p>Share a room code for a private fade, or find a ranked rival at Fade Park. Ranked matches use base move tiers; friendly fades do not change rank. The cigarette track burns toward your next rank.</p><Link href="/game/online">Find a fade →</Link></article>
+          <article><h3>The Fadecade</h3><p>Straight to the Back saves each move in an endurance run, with a boss every fifth opponent. Two entries a day; one loss ends the run. Stockz lets you stake earned Clout on fictional stocks: five trades daily, a 50/50 up-or-down call, and a correct call returns twice the stake. No cash value.</p><Link href="/game/challenges">Enter the arcade →</Link></article>
+          <article><h3>Stories & puzzles</h3><p>Play the original seasons, six Sherlock chapters, The Wizard of Oz, Alice in Wonderland, Yasuke, the Cellblock library, and Leon’s chapter. Arrange clues with drag, tap controls, or arrow keys. Hints and puzzle skips keep the story moving.</p><Link href="/game/story">Hit the streets →</Link></article>
+        </div>
+        <div className="guide-inline-note"><Sparkles size={22} /><p><strong>Showing up pays.</strong> Claim daily check-ins from the Safehouse. Seven consecutive days award increasing Clout, with 2 tickets and 25 Style Shards on day seven. Missing a day restarts the streak. New players have a first-week welcome bonus, and everyone has a first check-in bonus. Every ten player levels adds 250 Clout, 1 ticket, and 50 Style Shards to your check-in rewards.</p></div>
+        <p className="guide-small-note">Bounties live behind the floating wanted-poster icon on the Safehouse. Your level at the top opens your profile. Daily resets use 00:00 UTC.</p>
+      </section>
       <section className="guide-section guide-first-session" id="first-session" aria-labelledby="start-heading">
         <div className="guide-first-art"><img src={getCardImage('dr-fade')} alt="Dr. Fade, your guide to the block" loading="lazy" /><span>DR. FADE’S<br /><b>ROOKIE ROAD</b></span></div>
-        <div className="guide-first-copy"><SectionTitle number="07" label="Your first session"><span id="start-heading">You’re up,<br /><em>rookie.</em></span></SectionTitle>
+        <div className="guide-first-copy"><SectionTitle number="08" label="Your first session"><span id="start-heading">You’re up,<br /><em>rookie.</em></span></SectionTitle>
           <ol><li><b>Meet Dr. Fade.</b><p>Create an account and follow Rookie Road to receive your foundation.</p></li><li><b>Save your ten.</b><p>Build a legal gang. Keep cheap options and a plan for two districts.</p></li><li><b>Finish practice. Claim the welcome reward.</b><p>Your {WELCOME_REWARD.softCurrency} welcome Clout can cover a 100-XP Practice Session and the first {MOVE_TRAINING_COSTS[0]}-Clout move coaching for one new character.</p></li><li><b>Take it back to the streets.</b><p>Play story, claim ready bounties, and try your new move. Save for a pack or choose a Common when you know what your gang needs.</p></li></ol>
           <div className="guide-start-actions"><Link href="/game" className="guide-button guide-button--yellow">Build my gang <ArrowRight size={18} /></Link><Link href="/play/guest" className="guide-text-link">Try guest practice <ArrowRight size={16} /></Link></div>
         </div>

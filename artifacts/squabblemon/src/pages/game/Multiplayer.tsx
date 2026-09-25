@@ -181,7 +181,7 @@ export function Multiplayer({
     );
   if (!code && !friends) return <FadePark bootstrap={bootstrap} />;
   return (
-    <main className="online-lobby fight-night" aria-label="Fight night lobby" tabIndex={-1}>
+    <main className="online-lobby fight-night" aria-label="Friendly Fade’s lobby" tabIndex={-1}>
       <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
       <img
         className="online-lobby__venue"
@@ -193,7 +193,7 @@ export function Multiplayer({
           <ArrowLeft size={20} />
         </Link>
         <FightTabs friends />
-        <Link to="/game/play">Solo training</Link>
+        <Link to="/game/training">Training Circuit</Link>
       </header>
       <div className="online-lobby__content">
         <div className="fight-night__tools">
@@ -207,9 +207,9 @@ export function Multiplayer({
               <Users size={16} /> BRING SOMEONE WHO TALKS BACK
             </span>
             <h1>
-              Fight
+              Friendly
               <br />
-              <em>night.</em>
+              <em>Fade’s.</em>
             </h1>
             <p>Your gang. Their problem. Take two districts and own the night.</p>
           </div>

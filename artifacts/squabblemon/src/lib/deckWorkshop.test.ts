@@ -13,7 +13,8 @@ test('a full mixed deck keeps the replaced slot and moves its cover without dupl
   assert.equal(original.cardIds[5], 'rastamon');
   assert.equal(replaceDeckCard(changed, 5, changed.cardIds[0]), changed);
   assert.equal(replaceDeckCard(changed, -1, 'landlord'), changed);
-  assert.equal(new Set(ROOKIE_FOUNDATION_IDS).size, 21);
+  assert.equal(new Set(ROOKIE_FOUNDATION_IDS).size, 24);
+  for (const id of ['alice', 'tin-man', 'scarecrow', 'dr-fade']) assert(ROOKIE_FOUNDATION_IDS.includes(id));
 });
 
 test('custom deck transcript replays the issued roster even if the saved deck changes', () => {

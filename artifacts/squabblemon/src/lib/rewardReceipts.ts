@@ -2,7 +2,7 @@ import type { PlayerBootstrap } from '@workspace/api-client-react';
 import type { GameGlyphName } from '../components/venue/GameGlyph';
 import { catalogCardById, getCardImage } from '../data';
 export type RewardItem = { label: string; amount?: number; glyph?: GameGlyphName; image?: string };
-export type RewardReceipt = { id: string; title: string; items: RewardItem[]; preview?: boolean };
+export type RewardReceipt = { id: string; title: string; items: RewardItem[]; preview?: boolean; level?: number; achievement?: boolean };
 const listeners = new Set<() => void>();
 let queue: RewardReceipt[] = [];
 const seen = new Set<string>();

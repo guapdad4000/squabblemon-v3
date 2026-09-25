@@ -9,6 +9,9 @@ import multiplayerRouter from './multiplayer';
 import challengeRouter from "./challenge";
 import paymentsRouter from './payments';
 
+import stockzRouter from './stockz';
+import accountRewardsRouter from './accountRewards';
+
 const router: IRouter = Router();
 
 router.use(healthRouter);
@@ -20,5 +23,7 @@ router.use(promoCodesRouter);
 router.use(multiplayerRouter);
 router.use(challengeRouter);
 router.use(paymentsRouter);
+router.use(accountRewardsRouter);
+router.use(stockzRouter);
 
 export default router;

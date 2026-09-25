@@ -182,7 +182,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           Connect your account to continue your campaign. In the meantime, sharpen your gang in a practice fight.
         </p>
         <Link
-          href="/game/play"
+          href="/game/training"
           className="mx-auto mt-2 bg-primary text-black px-5 py-3 font-display font-black italic uppercase text-sm"
         >
           Run a CPU Fight

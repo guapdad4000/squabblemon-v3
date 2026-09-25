@@ -54,7 +54,7 @@ export function musicModeForRoute(path: string): MusicMode {
     return 'gacha';
   }
   if (/^\/game\/online(?:\/|$)/.test(path)) return 'battle';
-  if (path === '/play/guest' || path === '/game/play' || /\/decks\/[^/]+\/test/.test(path)) return 'training';
+  if (path === '/play/guest' || (path === '/game/play' || path === '/game/training') || /\/decks\/[^/]+\/test/.test(path)) return 'training';
   return 'background';
 }
 export function soundtrackForRoute(path: string, mode: MusicMode): readonly SoundtrackTrack[] {

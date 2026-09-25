@@ -1,3 +1,4 @@
+import { DrFadeReferee } from './DrFadeReferee';
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import React from 'react';
 import { createPortal } from 'react-dom';
@@ -173,7 +174,8 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
         {/* ============================================================
             RIGHT — Paper dossier (the resume)
             ============================================================ */}
-        <div className={`dossier-paper relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''}`}>
+        <div className={`dossier-paper referee-clipboard relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''}`}>
+          <DrFadeReferee />
           <span className="dossier-stripe" aria-hidden="true" />
           <span className="dossier-mark" aria-hidden="true" />
 

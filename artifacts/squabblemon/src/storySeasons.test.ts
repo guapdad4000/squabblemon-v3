@@ -27,9 +27,9 @@ test("season expansion preserves every legacy progression, encounter and reward 
 });
 
 test("each chapter has exactly one presentation and every advertised chapter exists", () => {
-  assert.equal(storySeasons.length, 3);
+  assert.equal(storySeasons.length, 8);
   assert.equal(storySeasons.find(season => season.id === "season-2")?.chapterIds.length, 8);
-  assert.equal(storySeasons.find(season => season.kind === "special")?.chapterIds.length, 3);
+  assert.equal(storySeasons.find(season => season.id === "special-sherlock")?.chapterIds.length, 6);
   const memberships = storySeasons.flatMap(season => season.chapterIds);
   assert.equal(new Set(memberships).size, memberships.length);
   assert.deepEqual([...memberships].sort(), storyContent.chapters.map(chapter => chapter.id).sort());

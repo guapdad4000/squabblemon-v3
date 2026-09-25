@@ -512,8 +512,8 @@ export const ROOKIE_DECK_ID = "my-first-crew";
 export const ROOKIE_CORE_IDS = ["cornball", "plug", "snow-bunny", "wifey", "hooper", "rastamon", "all-jokes-roaster", "bus-pass", "soul-food", "cognac-bottle"];
 export const ROOKIE_MENTOR_ID = "dr-fade";
 // Existing saved lineups retain their slots; only new crews use the mentor lineup.
-export const ROOKIE_MENTOR_CORE_IDS = ROOKIE_CORE_IDS.map(id => id === "hooper" ? ROOKIE_MENTOR_ID : id);
-export const ROOKIE_FOUNDATION_IDS = [ROOKIE_MENTOR_ID, ...ROOKIE_CORE_IDS, ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)];
+export const ROOKIE_MENTOR_CORE_IDS = ["cornball", "plug", "alice", "wifey", ROOKIE_MENTOR_ID, "rastamon", "scarecrow", "bus-pass", "soul-food", "cognac-bottle"];
+export const ROOKIE_FOUNDATION_IDS = [...new Set([ROOKIE_MENTOR_ID, ...ROOKIE_CORE_IDS, ...ROOKIE_MENTOR_CORE_IDS, "tin-man", ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)])];
 
 export function catalogIdsToEngineIds(catalogIds: string[]): string[] {
   return catalogIds.map((catalogId) => {

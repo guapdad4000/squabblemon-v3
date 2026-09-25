@@ -1,0 +1,119 @@
+.account-check-in {
+  position: absolute;
+  left: 12px;
+  top: 78px;
+  z-index: 20;
+  border: 0;
+  border-left: 2px solid #e8c374;
+  padding: 8px 10px;
+  background: #101916cc;
+  color: #f5e3b8;
+  text-align: left;
+  backdrop-filter: blur(8px);
+}
+.account-check-in span,
+.account-check-in b {
+  display: block;
+  font: 9px/1.5 monospace;
+  text-transform: uppercase;
+}
+.account-check-in strong {
+  font: 900 22px/1.3 sans-serif;
+}
+.account-check-in b {
+  color: #99d5a4;
+}
+.check-in-dialog {
+  max-width: 620px;
+  width: calc(100% - 24px);
+  max-height: calc(100dvh - 24px);
+  padding: 28px;
+  overflow: auto;
+  margin: auto;
+}
+.check-in-dialog::backdrop {
+  background: #000b;
+  backdrop-filter: blur(8px);
+}
+.check-in-dialog h2 {
+  font-size: clamp(30px, 6vw, 46px);
+  font-weight: 900;
+  margin: 4px 0 12px;
+}
+.check-in-dialog > p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.check-in-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-size: 28px;
+  padding: 4px 12px;
+}
+.login-streak-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 0;
+  margin: 24px 0;
+  list-style: none;
+}
+.login-streak-days li {
+  background: #d4c6a2;
+  padding: 10px 3px;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+}
+.login-streak-days li[data-current="true"] {
+  background: #b9d2a9;
+  border-color: #355f39;
+}
+.login-streak-days span,
+.login-streak-days small {
+  display: block;
+  font: 9px/1.4 monospace;
+}
+.login-streak-days strong {
+  font-size: 18px;
+}
+.check-in-pending {
+  list-style: none;
+  padding: 0;
+}
+.check-in-pending li {
+  padding: 10px 0;
+  border-bottom: 1px solid #2222;
+}
+.check-in-pending b,
+.check-in-pending span {
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.check-in-pending span {
+  font-family: monospace;
+  font-size: 11px;
+}
+.check-in-footnote {
+  font-size: 11px !important;
+  margin-top: 18px;
+}
+.check-in-dialog .studio-eyebrow {
+  display: block;
+  margin-left: 85px;
+}
+.check-in-dialog h2 {
+  margin-left: 85px;
+}
+@media (max-width: 440px) {
+  .check-in-dialog {
+    padding: 15px;
+  }
+  .login-streak-days {
+    gap: 3px;
+  }
+  .login-streak-days small {
+    font-size: 8px;
+  }
+}

@@ -7,10 +7,10 @@ import type { Deck } from '../../data';
 
 const TRAINING_MODE_IDS: ActivityId[] = ['auto', 'fair', 'pressure', 'control', 'movement', 'support', 'freeze', 'cheap'];
 
-export function TrainingMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; onBattle: (c: BattleConfig) => void }) {
+export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }: { initiallyOpen?: boolean; legalCrews: Deck[]; onBattle: (c: BattleConfig) => void }) {
   const [mode, setMode] = useState<ActivityId>('auto');
   const [crewId, setCrewId] = useState(legalCrews[0]?.id);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
 
   const selectedActivity = activities.find(a => a.id === mode)!;
   const availableActivities = activities.filter(a => TRAINING_MODE_IDS.includes(a.id));

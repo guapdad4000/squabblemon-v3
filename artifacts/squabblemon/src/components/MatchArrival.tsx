@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import { playSoundEffect, stopSoundEffect } from '../lib/sfx';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
+import { KeyedVideo } from './KeyedVideo';
 import '../styles/ui-polish.css';
 import '../styles/pvp-art.css';
 
@@ -33,7 +34,7 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
       {['left', 'right'].map((side,i) => <motion.img key={side} className={'versus-arm ' + side} src={getAssetUrl('assets/pvp/versus/arm-' + side + '.webp')} alt="" initial={reduced ? false : { x: i ? '100%' : '-100%' }} animate={{ x: 0 }} transition={{ duration: .35, delay: .15, ease: 'easeIn' }} />)}
       <motion.img className="versus-crack" src={getAssetUrl('assets/pvp/versus/crack.webp')} alt="" initial={reduced ? false : { clipPath: 'inset(50% 0 50% 0)' }} animate={{ clipPath: 'inset(0% 0 0% 0)' }} transition={{ delay: .5, duration: .25 }} />
       <div className="versus-impact"><i /><i /><i /><i /><b /></div>
-      <video className="versus-logo" src={getAssetUrl('assets/pvp/versus/versus-logo.webm')} autoPlay loop muted playsInline aria-hidden="true" />
+      <KeyedVideo className="versus-logo" src={getAssetUrl('assets/pvp/versus/versus-logo.webm')} mode="green" loop maxWidth={480} />
     </div>
     <div className="match-poster__billing"><span>SQUABBLEMON PRESENTS</span><strong>{label}</strong><span>THE MAIN EVENT</span></div>
     <div className="match-poster__fighters">

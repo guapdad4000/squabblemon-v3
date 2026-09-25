@@ -12,6 +12,8 @@ import {
 } from "@workspace/db";
 import {
   ROOKIE_MENTOR_CORE_IDS,
+  ROOKIE_CORE_IDS,
+  ROOKIE_FOUNDATION_IDS,
   ROOKIE_DECK_ID,
   ROOKIE_FOUNDATION_ID,
   catalogIdsToEngineIds,
@@ -132,7 +134,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
 
   const collection = await playerRequest("/player/onboarding", { action: "choose-starter", starterDeckId: ROOKIE_FOUNDATION_ID });
   assert.equal(collection.body.profile.onboardingStep, "tutorial");
-  assert.equal(collection.body.profile.ownedCardIds.length, ROOKIE_MENTOR_CORE_IDS.length);
+  assert.equal(collection.body.profile.ownedCardIds.length, ROOKIE_FOUNDATION_IDS.length);
   const savedDeck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
     name: "My First Gang", cardIds: campaignCrew, heroCardId: "dr-fade", recipeId: null,
   }, "PUT");
@@ -202,6 +204,15 @@ test("new account completes every campaign node through HTTP with isolated, idem
   });
   assert.equal(locked.status, 409);
 
+  // The updated tutorial uses the new roster. Exercise a real deck change with
+  // the rest of the free collection before the full campaign marathon.
+  campaignCrew.splice(0, campaignCrew.length, ...ROOKIE_CORE_IDS.map(id => id === "hooper" ? "dr-fade" : id));
+  const campaignDeck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
+    name: "Campaign Gang", cardIds: campaignCrew, heroCardId: "dr-fade", recipeId: null,
+  }, "PUT");
+  assert.equal(campaignDeck.status, 200, JSON.stringify(campaignDeck.body));
+  assert(campaignDeck.body.profile.savedDecks.find((deck: { id: string }) => deck.id === ROOKIE_DECK_ID).valid);
+
   let intentionalLossTested = false;
   let actionConflictTested = false;
   let completed = 0;
@@ -225,7 +236,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
   }
 
   async function completeNode(node: StoryNode) {
-    const dialogueKey = `dialogue-${node.id}-${runId}`;
+    const dialogueKey = randomUUID();
     const dialogueSeen = [`seen:${node.id}`];
     const dialogue = await playerRequest(`/player/story/nodes/${node.id}/dialogue`, {
       idempotencyKey: dialogueKey,
@@ -239,7 +250,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
     assert.equal(dialogueRetry.status, 200);
 
     if (node.kind !== "battle") {
-      const key = `complete-${node.id}-${runId}`;
+      const key = randomUUID();
       const completionPath = node.puzzle
         ? "/player/story/puzzle"
         : `/player/story/nodes/${node.id}/complete`;
@@ -256,7 +267,7 @@ test("new account completes every campaign node through HTTP with isolated, idem
           };
       if (node.puzzle) {
         const ordinary = await playerRequest(`/player/story/nodes/${node.id}/complete`, {
-          idempotencyKey: `ordinary-puzzle-${node.id}-${runId}`,
+          idempotencyKey: randomUUID(),
           dialogueSeen,
         });
         assert.equal(ordinary.status, 400);

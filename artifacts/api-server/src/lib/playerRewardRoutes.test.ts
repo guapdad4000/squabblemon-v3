@@ -11,7 +11,8 @@ import {
   playerMissionsTable,
   playerProfilesTable,
 } from "@workspace/db";
-import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import { starterRecipes, catalogIdsToEngineIds } from "@workspace/squabblemon-engine/data";
+import { createStoryMatch, replayMatchPrefix, canAffordSelection, type TranscriptMove } from "@workspace/squabblemon-engine/gameEngine";
 import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import { createApp } from "../app";
 import { createCardProgressionSnapshot } from "./cardProgression";
@@ -112,6 +113,44 @@ function cleanup(t: test.TestContext, clerkUserId: string) {
       .where(eq(playerProfilesTable.clerkUserId, clerkUserId));
   });
 }
+
+test("Straight to the Back extends JSONB checkpoints through round two and rejects changed history", async (t) => {
+  const clerkUserId = `challenge-round-two-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const recipe = starterRecipes[0];
+  await db.insert(playerProfilesTable).values({
+    clerkUserId, onboardingStep: "complete", starterDeckId: recipe.id,
+    ownedCardIds: recipe.catalogCardIds,
+  });
+  await withPlayerApi(clerkUserId, async baseUrl => {
+    const runResponse = await fetch(`${baseUrl}/player/challenges/runs`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ deckId: recipe.id }) });
+    const run = await runResponse.json() as any;
+    assert.equal(runResponse.status, 201, JSON.stringify(run));
+    const startResponse = await fetch(`${baseUrl}/player/matches`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ mode: "practice", playerDeckId: recipe.id, challengeRunId: run.id }) });
+    const issued = await startResponse.json() as any;
+    assert.equal(startResponse.status, 201, JSON.stringify(issued));
+    const initial = createStoryMatch(issued.encounterSnapshot, catalogIdsToEngineIds(recipe.catalogCardIds), recipe.id, issued.abilityUpgradeSnapshot, issued.districtSnapshot);
+    const moves: TranscriptMove[] = [{ cardInstanceId: null, lane: null, squabble: false, endTurn: true }];
+    const url = `${baseUrl}/player/challenges/runs/${run.id}/checkpoint`;
+    await postJson(url, { moves });
+    const roundTwo = replayMatchPrefix(initial, moves);
+    assert.equal(roundTwo.round, 2);
+    const card = roundTwo.playerHand.find(card => canAffordSelection(roundTwo, 'player', card.instanceId, 0));
+    assert.ok(card, 'Round two has an affordable card');
+    moves.push({ cardInstanceId: card.instanceId, lane: 0, squabble: false, endTurn: false });
+    await postJson(url, { moves });
+    moves.push({ cardInstanceId: null, lane: null, squabble: false, endTurn: true });
+    await postJson(url, { moves });
+    assert.equal(replayMatchPrefix(initial, moves).round, 3);
+    // Retrying an already accepted save is safe, regardless of key order.
+    await postJson(url, { moves: moves.map(move => Object.fromEntries(Object.entries(move).reverse())) });
+    const changed = structuredClone(moves);
+    changed[0].squabble = true;
+    const rejected = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ moves: changed }) });
+    assert.equal(rejected.status, 400);
+    assert.match(JSON.stringify(await rejected.json()), /extend the existing transcript/);
+  });
+});
 
 test("HTTP challenge match start rejects story and tutorial modes without binding the run", async (t) => {
   const clerkUserId = `challenge-mode-${randomUUID()}`;

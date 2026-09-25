@@ -9,6 +9,7 @@ import { FightTabs } from './FadePark';
 import { getAssetUrl } from '../../lib/assets';
 import { FlagshipMachine, type RoadReturn } from '../../components/fadecade/FlagshipMachine';
 import { BountyMachine } from '../../components/fadecade/BountyMachine';
+import { StockzMachine } from '../../components/fadecade/StockzMachine';
 import { TrainingMachine } from '../../components/fadecade/TrainingMachine';
 import { EventsMachine } from '../../components/fadecade/EventsMachine';
 import { ChromeBanner } from '../../components/fadecade/FadecadeChrome';
@@ -27,7 +28,7 @@ export type BattleConfig = {
   draftPicks?: string[];
 };
 
-export function ChallengesHub({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: PlayerBootstrap; trainingOnly?: boolean }) {
   const [, navigate] = useLocation();
   const [battleConfig, setBattleConfig] = useState<BattleConfig | null>(null);
   useFadecadeMusic(!battleConfig);
@@ -101,19 +102,20 @@ export function ChallengesHub({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <img src={getAssetUrl('assets/fadecade/logo.webp')} alt="The Fadecade" className="fadecade-logo" draggable={false} />
 
         <div className="fadecade-layout">
-          <FlagshipMachine
+          {!trainingOnly && <FlagshipMachine
             bootstrap={bootstrap}
             legalCrews={legalCrews}
             runsQuery={runsQuery}
             onBattle={launchBattle}
             roadReturn={roadReturn}
-          />
+          />}
 
           <div className="fadecade-row">
-            <BountyMachine bootstrap={bootstrap} cadence="daily" />
-            <BountyMachine bootstrap={bootstrap} cadence="weekly" />
-            <TrainingMachine legalCrews={legalCrews} onBattle={launchBattle} />
-            <EventsMachine legalCrews={legalCrews} onBattle={launchBattle} />
+            {!trainingOnly && <BountyMachine bootstrap={bootstrap} cadence="daily" />}
+            {!trainingOnly && <BountyMachine bootstrap={bootstrap} cadence="weekly" />}
+            <TrainingMachine legalCrews={legalCrews} onBattle={launchBattle} initiallyOpen={trainingOnly} />
+            {!trainingOnly && <StockzMachine bootstrap={bootstrap} />}
+            {!trainingOnly && <EventsMachine legalCrews={legalCrews} onBattle={launchBattle} />}
           </div>
         </div>
 

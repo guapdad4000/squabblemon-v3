@@ -37,9 +37,10 @@ const scenario: FixtureScenario =
   requestedScenario === 'puzzle-complete'
     ? requestedScenario
     : 'theater';
+const requestedPuzzle = params.get('puzzleNode');
 const puzzleNode = storyContent.chapters
   .flatMap((chapter) => chapter.nodes)
-  .find((node) => node.puzzle);
+  .find((node) => node.puzzle && (!requestedPuzzle || node.id === requestedPuzzle));
 if (!puzzleNode) throw new Error('The real story registry has no puzzle node.');
 
 if (scenario === 'season-two') params.set('season', 'season-2');
@@ -140,7 +141,7 @@ function createCampaign(): StoryCampaign {
       const isPuzzleChapter = chapter.id === puzzleChapter.id;
       const cleared =
         (scenario === 'existing-save' && isFirstChapter && nodeIndex < 2) ||
-        (unlockSeasonTwo && chapter.order <= 8) ||
+        (unlockSeasonTwo && chapter.order < puzzleChapter.order) ||
         (unlockSeasonTwo && isPuzzleChapter && nodeIndex < firstS2PuzzleIndex) ||
         (completePuzzle && node.id === puzzleNode.id);
       const available =

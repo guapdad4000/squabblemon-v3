@@ -19,7 +19,7 @@ const homeLessons = [
   { target: '.safehouse-room-detail__body', title: 'One chapter at a time.', body: 'Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.', next: 'Find my gang' },
   { target: '.room-back', title: 'Back to your room.', body: 'Tap Back to the room. Your cards live right here in the Safehouse too.' },
   { target: '[aria-label="Explore your gang cards"]', title: 'These are your gang cards.', body: 'Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.' },
-  { target: '.safehouse-room-actions', title: 'Let’s build your first deck.', body: 'I have twenty-one free cards for you, including my Legendary card. We’ll start with ten, make one swap together, and save your gang.' },
+  { target: '.safehouse-room-actions', title: 'Let’s build your first deck.', body: 'I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.' },
 ];
 export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { bootstrap: PlayerBootstrap; onCollect: () => void; onComplete: () => void }) {
   const [stage, setStage] = useState<'welcome' | 'home' | 'legendary' | 'deck' | 'battle'>(bootstrap.profile.starterDeckId === ROOKIE_FOUNDATION_ID ? 'legendary' : 'welcome');

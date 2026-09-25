@@ -55,7 +55,7 @@ test('move tiers require levels, charge 100/250/500, and preserve legacy-earned 
 test('tickets, slots, recruitment and styles use the correct currency and reject repeat ownership', () => {
   assert.equal(planShopPurchase(wallet(), { itemId: 'ticket' }).wallet.packTickets, 1);
   assert.equal(planShopPurchase(wallet(), { itemId: 'deck-slot' }).wallet.deckSlots, 5);
-  assert.throws(() => planShopPurchase(wallet({ deckSlots: 12 }), { itemId: 'deck-slot' }), /12/);
+  assert.throws(() => planShopPurchase(wallet({ deckSlots: 24 }), { itemId: 'deck-slot' }), /24/);
   const recruited = planShopPurchase(wallet(), { itemId: 'common-recruit', cardId: 'young-bull' }).wallet;
   assert(recruited.ownedCardIds.includes('young-bull')); assert(recruited.discoveredCardIds.includes('young-bull'));
   assert.equal(recruited.cardProgression['young-bull'].moveTier, 0);

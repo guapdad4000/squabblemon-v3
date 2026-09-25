@@ -223,13 +223,13 @@ test("Collection Road duplicates grant 5 shards", async (t) => {
   assert.equal(profile.styleShards, 5);
 });
 
-test("Collection Road never raises deck slots above 12", async (t) => {
+test("Collection Road never raises deck slots above 24", async (t) => {
   const clerkUserId = `road-slot-cap-${randomUUID()}`;
   const milestone = COLLECTION_ROAD.find(item => item.id === "full-roster")!;
   await db.insert(playerProfilesTable).values({
     clerkUserId, onboardingStep: "complete", ownedCardIds: allCardIdsForRoad(),
     discoveredCardIds: allCardIdsForRoad(), collectionProgress: cardCatalog.length,
-    deckSlots: 11,
+    deckSlots: 23,
   });
   t.after(async () => {
     await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
@@ -238,7 +238,7 @@ test("Collection Road never raises deck slots above 12", async (t) => {
   await claimCollectionRoadForPlayer(clerkUserId, milestone);
   const [profile] = await db.select({ deckSlots: playerProfilesTable.deckSlots })
     .from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
-  assert.equal(profile.deckSlots, 12);
+  assert.equal(profile.deckSlots, 24);
 });
 
 function allCardIdsForRoad() {

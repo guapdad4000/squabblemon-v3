@@ -1,3 +1,4 @@
+import { DrFadeReferee } from './DrFadeReferee';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -32,7 +33,7 @@ export function RulesModal({ onClose }: any) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-3xl overflow-y-auto bg-[#0a0a0a]/95 border border-primary/35 p-6 md:p-10 shadow-2xl"
+        className="referee-clipboard relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-3xl overflow-y-auto bg-[#0a0a0a]/95 border border-primary/35 p-6 md:p-10 shadow-2xl"
         style={{ clipPath: 'polygon(0 0, calc(100% - 38px) 0, 100% 38px, 100% 100%, 38px 100%, 0 calc(100% - 38px))' }}
         onClick={e => e.stopPropagation()}
         onKeyDown={event => {
@@ -48,6 +49,7 @@ export function RulesModal({ onClose }: any) {
           }
         }}
       >
+        <DrFadeReferee />
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
         <div className="flex justify-between items-center mb-5 md:mb-8">
           <div className="font-mono text-primary text-[10px] md:text-xs tracking-widest uppercase">Field Manual // 01</div>

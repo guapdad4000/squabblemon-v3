@@ -20,7 +20,7 @@ import { setBattleMusicMode } from '../../musicStore';
 export function FightTabs({ friends = false, searching = false, challenges = false }: { friends?: boolean; searching?: boolean; challenges?: boolean }) {
   return <nav className="fight-tabs" aria-label="Fight modes">
     <Link to="/game/online" aria-current={!friends && !challenges ? 'page' : undefined}><Swords size={15} />Fade Park<span>Ranked</span></Link>
-    {searching ? <span className="fight-tabs-disabled" title="Cancel your search to open friend fades"><Users size={15} />Friend fades</span> : <Link to="/game/online?tab=friends" aria-current={friends ? 'page' : undefined}><Users size={15} />Friend fades<span>Private</span></Link>}
+    {searching ? <span className="fight-tabs-disabled" title="Cancel your search to open friend fades"><Users size={15} />Friendly Fade’s</span> : <Link to="/game/online?tab=friends" aria-current={friends ? 'page' : undefined}><Users size={15} />Friendly Fade’s<span>Private</span></Link>}
     <Link to="/game/challenges" aria-current={challenges ? 'page' : undefined}><Trophy size={15} />Challenges<span>Solo</span></Link>
   </nav>;
 }
@@ -129,7 +129,7 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="park-board-wrapper park-layer--board">
         <section className="park-ticket" aria-label="Find a ranked match">
           <div className="park-rank"><RankTrophy tier={progress.tier} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><RPToken /><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
-          <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${progress.progress}%` }} /></div>
+          <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}><span className="rank-cigarette" style={{ width: `${Math.max(0, 100 - progress.progress)}%` }}><i className="rank-ember"><b /><b /></i></span><span className="rank-filter" /></div>
           <div className="park-rank-caption"><span>{progress.nextAt ? `${progress.nextAt - stats.points} RP to ${progress.nextTier}` : 'Top tier. Keep your spot.'}</span><span>{stats.wins} W · {stats.losses} L · {stats.draws} D</span></div>
           {error || query.isError ? <div className="park-notice" role="alert"><p>{error ?? onlineErrorMessage(query.error)}</p><button onClick={() => { setError(null); void query.refetch(); }}>Reconnect</button></div> : null}
           {searching ? <div className="park-search" data-testid="ranked-search">
