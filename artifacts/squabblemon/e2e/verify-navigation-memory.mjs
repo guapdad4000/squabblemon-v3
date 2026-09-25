@@ -26,8 +26,7 @@ try {
     await route('/game/inventory'); // origin survives refresh
     await back.click();
     await route('/game');
-    assert.equal(await page.locator('.safehouse-stage').getAttribute('data-view'), 'inventory');
-    await page.getByRole('button',{name:'Back to the room',exact:true}).click();
+    assert.equal(await page.locator('.safehouse-stage').getAttribute('data-view'), 'room');
     await page.getByRole('button',{name:'Explore the arcade machine',exact:true}).click({force:true});
     await page.getByRole('link',{name:'Enter the Fadecade',exact:true}).click();
     await route('/game/challenges');
@@ -36,7 +35,7 @@ try {
     await page.screenshot({path:`screenshots/navigation-${name}.png`});
     await back.click();
     await route('/game');
-    assert.equal(await page.locator('.safehouse-stage').getAttribute('data-view'),'arcade');
+    assert.equal(await page.locator('.safehouse-stage').getAttribute('data-view'),'room');
     await page.getByRole('button',{name:'Open game navigation',exact:true}).click();
     await page.getByRole('button',{name:'Cards & gangs · Collection and decks',exact:true}).click();
     await route('/game/collection');
@@ -46,7 +45,7 @@ try {
     await back.click();
     await route('/game/collection');
     assert.equal(await page.getByTestId('button-view-collection-road').getAttribute('aria-pressed'),'true');
-    console.log('PASS',name,'direct fallback, reload history, nested routes, station memory, single Challenges back, collection tab');
+    console.log('PASS',name,'direct fallback, reload history, nested routes, clean Safehouse return, single Challenges back, collection tab');
     await page.close();
   }
 } finally { await browser.close(); }
