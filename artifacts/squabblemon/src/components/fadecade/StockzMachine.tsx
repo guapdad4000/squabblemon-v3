@@ -1,3 +1,4 @@
+import { ArcadeCabinet } from './MachineScreen';
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -77,25 +78,33 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
   return (
     <div className="fadecade-machine-group stockz-machine">
-      <div className="stockz-cabinet">
-        <span>THE CLOUT EXCHANGE</span>
-        <h3>
-          STOCKZ<span>↗</span>
-        </h3>
-        <svg viewBox="0 0 250 60" aria-hidden="true">
-          <path d="M0 50L30 39 48 46 75 18 95 30 116 12 144 27 170 11 191 17 220 3 250 12" />
-        </svg>
-        <button className="cabinet-btn" onClick={() => setOpen(true)}>
-          Play Stockz
-        </button>
-      </div>
+      <ArcadeCabinet artUrl="assets/fadecade/stockz-screen.webp" aspectRatio={1458 / 1079}
+        aperture={{ left: '17%', top: '30%', width: '66%', height: '50%' }}
+        testId="fadecade-stockz" className="machine-small stockz-screen">
+        <div className="stockz-attract">
+          <div className="stockz-attract-heading"><span>MARKET PREVIEW</span><strong>UP OR DOWN?</strong></div>
+          <svg className="stockz-attract-chart" viewBox="0 0 300 85" preserveAspectRatio="none" aria-hidden="true">
+            <path className="stockz-chart-grid" d="M0 20H300M0 42H300M0 64H300M40 0V85M95 0V85M150 0V85M205 0V85M260 0V85" />
+            <path className="stockz-chart-area" d="M0 72L25 60 49 66 75 36 99 46 125 24 153 40 177 29 202 44 229 17 253 26 277 9 300 18V85H0Z" />
+            <g className="stockz-chart-candles">
+              <path d="M25 47V76M75 23V58M125 11V43M177 17V53M229 6V34M277 0V28" />
+              <path className="stockz-chart-down" d="M49 50V77M99 31V58M153 27V55M202 28V59M253 13V40" />
+            </g>
+            <path className="stockz-chart-line" d="M0 72L25 60 49 66 75 36 99 46 125 24 153 40 177 29 202 44 229 17 253 26 277 9 300 18" />
+            <circle className="stockz-chart-dot" cx="277" cy="9" r="4" />
+          </svg>
+          <button className="cabinet-btn" aria-expanded={open} aria-controls="stockz-setup" onClick={() => setOpen(true)}>
+            Play Stockz <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </ArcadeCabinet>
       <FadecadeDialog
         open={open}
         onOpenChange={setOpen}
         title="Stockz · Clout Exchange"
         kind="events"
       >
-        <div className="stockz-panel">
+        <div className="stockz-panel" id="stockz-setup">
           <p>
             Pick a fictional stock. Call up or down at the closing bell. A
             correct call returns 2× your stake, including the stake; a miss

@@ -135,3 +135,25 @@
   border-bottom: 1px solid #9eaa7633;
   font-size: 11px;
 }
+
+/* Match the other illustrated, front-facing Fadecade screens. */
+.stockz-screen .arcade-cabinet__art {
+  clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,17% 30%,17% 80%,83% 80%,83% 30%,17% 30%);
+}
+.stockz-attract { display:flex; flex-direction:column; height:100%; min-height:0; gap:6px; padding:8px 10px; background:radial-gradient(ellipse at top,#16362f,#060d1b 80%); }
+.stockz-attract-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#8df696; }
+.stockz-attract-heading>span { font:800 clamp(6px,1.8cqw,9px)/1.2 var(--font-mono); letter-spacing:.08em; }
+.stockz-attract-heading strong { font:900 italic clamp(10px,3cqw,15px)/1.2 var(--font-display); color:#ffe875; white-space:nowrap; }
+.stockz-attract-chart { flex:1; width:100%; min-height:0; overflow:visible; }
+.stockz-chart-grid { stroke:#59d97a22; stroke-width:1; fill:none; }
+.stockz-chart-area { fill:#31b75a19; }
+.stockz-chart-candles { stroke:#64de8599; stroke-width:5; }
+.stockz-chart-candles .stockz-chart-down { stroke:#ee756299; }
+.stockz-chart-line { fill:none; stroke:#e8f77c; stroke-width:2; stroke-linejoin:round; stroke-dasharray:400; stroke-dashoffset:400; animation:stockz-trace 2s ease-out forwards; filter:drop-shadow(0 0 3px #98ff7499); }
+.stockz-chart-dot { fill:#fff8a9; filter:drop-shadow(0 0 4px #8dff60); animation:stockz-glow 2.4s ease-in-out infinite; }
+.stockz-attract>.cabinet-btn { flex:none; display:flex; justify-content:center; align-items:center; gap:12px; background:#ffe449; min-height:44px; padding:6px 10px; border-color:#ffe991; box-shadow:inset 0 -3px #97752366; font-size:clamp(10px,2.7cqw,13px); }
+.stockz-attract>.cabinet-btn span { font-size:20px; }
+@keyframes stockz-trace { to { stroke-dashoffset:0; } }
+@keyframes stockz-glow { 50% { opacity:.5; } }
+@media(prefers-reduced-motion:reduce) { .stockz-chart-line,.stockz-chart-dot { animation:none; stroke-dashoffset:0; } }
+.fadecade-hub[data-reduce-motion=true] .stockz-chart-line,.fadecade-hub[data-reduce-motion=true] .stockz-chart-dot { animation:none; stroke-dashoffset:0; }
