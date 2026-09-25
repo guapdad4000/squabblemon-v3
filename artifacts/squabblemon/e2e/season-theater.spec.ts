@@ -392,13 +392,13 @@ test.describe('story puzzle journey', () => {
       await expect(puzzle).toBeVisible();
       const back = page.getByRole('button', { name: 'Back' });
       await hitTestable(back);
-      await expect(page.getByRole('heading', { name: 'Put the Evidence in Order' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'The launch was already loaded' })).toBeVisible();
       const options = page.getByRole('option');
-      await expect(options).toHaveCount(3);
+      await expect(options).toHaveCount(5);
       await page.getByRole('button', { name: /Reveal Hint 1/ }).click();
-      await expect(page.getByText('Start with the earliest printed or recorded time.')).toBeVisible();
+      await expect(page.getByText('Subtract twenty minutes from both dispatch entries.')).toBeVisible();
 
-      const lastDown = page.getByRole('button', { name: 'Move Delivery order down' });
+      const lastDown = page.getByRole('button', { name: 'Move Public promise — Wednesday 20:00 down' });
       await lastDown.click();
       const submit = page.getByRole('button', { name: 'Submit evidence' });
       await userScrollToAction(page, submit);
@@ -415,15 +415,23 @@ test.describe('story puzzle journey', () => {
       expect(await page.evaluate(() =>
         (window as typeof window & { __seasonPuzzleRequests?: number }).__seasonPuzzleRequests)).toBe(1);
 
-      const lastOption = options.nth(2);
-      await lastOption.focus();
-      await page.keyboard.press('ArrowUp');
-      await expect(options.nth(1)).toBeFocused();
+      const answer = ['owner-notice', 'delivery-order', 'truck-loaded', 'livestream-promise', 'gate-scan'];
+      for (let target = 0; target < answer.length; target++) {
+        const order = await options.evaluateAll(nodes => nodes.map(node => (node as HTMLElement).dataset.puzzlePiece));
+        const current = order.indexOf(answer[target]);
+        await options.nth(current).focus();
+        for (let step = current; step > target; step--) {
+          await page.keyboard.press('ArrowUp');
+          await expect(options.nth(step - 1)).toHaveAttribute('data-puzzle-piece', answer[target]);
+          await expect(options.nth(step - 1)).toBeFocused();
+        }
+        await expect(options.nth(target)).toHaveAttribute('data-puzzle-piece', answer[target]);
+      }
       await userScrollToAction(page, submit);
       await hitTestable(submit);
       await submit.click();
       await expect(page.getByText('Added to collection')).toBeVisible();
-      await expect(page.getByText('+40 Street XP').first()).toBeVisible();
+      await expect(page.getByText(/\+40 (?:Street|Account) XP/).first()).toBeVisible();
       await expect(page.getByText('Story rewards')).toBeVisible();
       await page.screenshot({
         path: `${screenshots}/season-puzzle-reward-${viewport.name}.png`,
@@ -438,7 +446,7 @@ test.describe('story puzzle journey', () => {
 
       await page.goto(`${fixture}?scenario=puzzle`, { waitUntil: 'networkidle' });
       await expect(page.getByText('Location secured')).toBeVisible();
-      await expect(page.getByRole('heading', { name: 'Put the Evidence in Order' })).toHaveCount(0);
+      await expect(page.getByRole('heading', { name: 'The launch was already loaded' })).toHaveCount(0);
     });
   }
 
@@ -452,6 +460,6 @@ test.describe('story puzzle journey', () => {
       (window as typeof window & { __seasonPuzzleLastBody?: Record<string, unknown> }).__seasonPuzzleLastBody);
     expect(puzzleBody).toMatchObject({ skip: true });
     expect(puzzleBody).not.toHaveProperty('order');
-    await expect(page.getByText('+40 Street XP')).toHaveCount(2);
+    await expect(page.getByText(/\+40 (?:Street|Account) XP/)).toHaveCount(2);
   });
 });

@@ -251,7 +251,7 @@ export function validateStoryContent(content: StoryContent): StoryContent {
 }
 const screenplay = chapterOneDialogue as Record<string, Partial<Record<'pre' | 'post' | 'main', StoryDialogueLine[]>>>;
 export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:script-v3:${section}:${index}`;
-export const storyContent = validateStoryContent({ version: 7, chapters: [...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyContent = validateStoryContent({ version: 8, chapters: [...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'

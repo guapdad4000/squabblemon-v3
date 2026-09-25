@@ -1,0 +1,43 @@
+# Story editorial and puzzle audit
+
+Scope: Season Two (eight chapters), the original Sherlock trilogy, and all ten recent expansion chapters: 21 chapters total. Season One stays as shipped. This is an editorial assessment, not a claim that audience reactions have been measured.
+
+## Main findings and repairs
+
+- **The expansions flattened their own premises.** A stolen tomorrow, an impossible train, and a sponsor exploiting Yasuke repeatedly ended in orderly forms and a friendly exhibition. Rewrote all 90 expansion scene dialogue sets, including battle lead-ins and aftermaths. Each match now names the disputed slot, access mechanism, or prize that moves the investigation forward.
+- **Characters spoke in interchangeable lessons.** Replaced most abstract concluding speeches with action, a consequence, or a callback. Cornball is an overconfident nuisance; Watson catches practical contradictions; Sherlock is precise and dry; Dorothy is an exhausted commuter; Alice gets sharper as the bill gets worse; Cheshire dodges social consequences; Yasuke speaks sparingly; Leon owns the plan. Black cultural voice comes through cadence, relationships, setting, and specific observations rather than one dialect template for everyone.
+- **Puzzles frequently repeated their own answer.** Reworked all 23 expansion puzzles, the Sherlock reel timeline, and three Season Two puzzles. Initial arrangements are unsolved. Expansion puzzles now have different deterministic shuffles rather than one reusable inverse permutation. Hints move from method to useful partial result. Retained the existing accessible reorder controls and explicit skip path.
+- **Deductions jumped past their evidence.** An empty parcel did not establish double billing; an uncut camera did not prove nobody could steal something; a clock correction did not prove who forged an invoice. New dialogue distinguishes a lead from proof, adds parcel serials, signed handoffs, raw recordings, and the moment a suspect learned the truth.
+- **Some rules contradicted themselves.** Alice's entire bottle now explicitly makes her tiny from any starting size. Oz's crossing has five operations, not a claimed four. Studio Three's clue points below its desk, not underneath an entire room. The inmate date swap is deliberate and explained instead of an unexplained Tuesday/Thursday discrepancy.
+- **Challenges reused the same checklist.** Expansion stars now distinguish outside-lane control, restraint without SQUABBLE, two-Motion reserve under a shortage, and all-three-lane boss control. Standard rivals start at two Motion and bosses at three against the player's three; the prior one-Motion start made every opponent unusually weak. Tutorial encounters are unchanged.
+
+## Chapter notes
+
+| Chapters | Diagnosis | Revision and payoff |
+| --- | --- | --- |
+| Season Two 9–11 | Strong ensemble and props, but characters kept explaining what matches cannot decide. | Trimmed meta disclaimers and moral summaries. Kept the inflatable R, improvised throne, fundraiser arithmetic, repair deadlines, and parenting commitments. Five-record dispatch puzzle now exposes equipment moving before the promise. |
+| Season Two 12–13 | LeBron appliance joke works; narration interrupted the cast. Repair puzzle was already sorted. | Kept the mistaken-identity escalation. Replaced abstract consent speeches with direct character requests. Five physical repair states require visual-causal reasoning from written evidence. |
+| Season Two 14–16 | Sale “option” ambiguously allowed competing offers; final signature could mean two people; ending summarized its lesson several times. | Defined a non-exclusive reservation, identified the remaining owner countersignature, expanded packet custody puzzle, and let the deposit receipt, keys, and work assignments finish the story. |
+| Sherlock I–III | Nice prop comedy; case receipt alone did not clear the courier; timeline opened solved and one relation was missing. | Added loading photo, clock offsets, film protruding from the loose panel, raw footage request, and a full unsolved chronology. Kept IDs and reward identities. |
+| Thirteenth Bell | Train impossibility resolved with an arbitrary empty package. | Tomorrow-dated invoice scam, Passenger the cart, conflicting clocks, two bills with one serial, van footage and rail manifest. Cart apology pays off the opening mistake. |
+| Dead Air | Anonymous committee confession arrived without identifying the sender; room clue pointed to an impossible hiding place. | Four original recordings, a staff engineer's scheduled splice, 11:03 matching the removed credit point, twelve ignored texts, below-desk key. Streamer restores names and shares the new merch proceeds. |
+| Negative Space | Mirror trick interesting; public explanation puzzle just sorted named essay sections. Promoter repeated an earlier mistake without acknowledgment. | Cast calls out the relapse but verifies evidence. Corrected device clocks establish knowledge, sale, moved light, then false theft claim. Refund ledger and the paid tournament close the money loop. |
+| Yellow Line | Too many motivational affirmations and arbitrary friendly fights. | A broken transit system monetizes every control. Brain certificate, sponsored bridge kiosk, duplicated departure slot, and package tiers escalate one scam. |
+| Behind the Curtain | Reveal lacked bite; two repair-order puzzles repeated each other. | Painted refund door, power-strip “cloud,” four shuffled claimant windows, tram clock offsets, final control lock and fee-waiver joke. Crew does the actual work while Oz finally stops talking. |
+| Borrowed Hour | Time theft lacked a clear business model; size rules inconsistent. | Queen lends an hour, charges time to stay and repay it, then hides the spring. Cat fears the social-media subtweet more than the wall. Exact size rules, cup deductions, and hour-debt arithmetic make the puzzle evidence consequential. |
+| Full Stop | Too much therapeutic dialogue; punctuation puzzle claimed to change punctuation but only ordered a sentence. | Signed napkin recovered by torn-edge codes, wet-ink chronology, clerk exhibits, dismissed retroactive charge. Queen's final match decides the invitation wording, not whether people are allowed to leave. |
+| Yasuke | Champion becomes a generic public-services spokesperson. | Unauthorized VIP sword lessons and a deleted access clause give his restraint a target. Sponsor copy identified by cumulative marks; final rival is Bouncer, not an unexplained Yasuke duplicate. “Scissors” callback punctures the publicity machine. |
+| Library Hour | No antagonist; harmless calendar mix-up produced little momentum. | Kingpin sells seats under five aliases, pastes a false date, and uses books to track reservations. Crafty's crew connects stamps, books, and noodle payments, then takes the first-hour roster. Reading scene stays humane without an explanatory sermon. |
+| Leon | Protagonist repeatedly explains the social meaning of his circumstances. | Leon introduces himself, leads a flood route, beats the dry-bay contest, bypasses landlord's envelope ransom, and reaches his own appointment. Deadlines and travel times are feasible. “Check the key before the DJ” provides an earned, modest ending. |
+
+## Validation
+
+- Shared content validation, chapter links, asset paths, preserved reward identities, and battle replay checks.
+- Independent puzzle checks derive six timelines from printed clocks, enumerate connected socket/custody paths and several combined-clue arrangements, simulate Alice's size/key states, and calculate Leon's travel schedule.
+- Browser verification exercises real puzzle rendering, wrong-answer rejection, keyboard reorder, hints, completion, and skip on phone and desktop with fixture API responses. This does not substitute for a production account/database run.
+
+- Passed 18 targeted content/puzzle/asset tests, five browser journeys across desktop/tablet/phone sizes, library and frontend typechecks, and the production build with entry-bundle budget validation. Inspected Leon’s longest instructions at 375 × 667 without horizontal overflow.
+
+## Production limits still visible
+
+All puzzles still use the movable-card interface. These are more varied reasoning tasks, not newly built dice, inventory, map, or audio minigames. The shared evidence illustration and repeated clash cinematic remain; unique sets and cinematics would add substantially more atmosphere. Alley Runner in the earlier Sherlock trilogy still borrows Ganger Blue's portrait. Comedy and the increased rival budget should get a human read/playtest; neither “funny” nor final balance can be certified by a unit test.
