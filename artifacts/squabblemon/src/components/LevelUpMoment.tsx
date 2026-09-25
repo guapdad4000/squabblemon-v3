@@ -62,7 +62,7 @@ export function LevelUpMoment({
           {Array.from({ length: 8 }, (_, index) => (
             <img
               key={index}
-              src={getAssetUrl("assets/progression/boot-ray.webp")}
+              src={getAssetUrl("assets/progression/boot-ray-v2.webp")}
               style={{ "--angle": `${index * 45 + 22}deg` } as CSSProperties}
               alt=""
             />
