@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { Link } from 'wouter';
+import { Link, useSearch } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
 import { STARTER_MYTHIC, type StarterMythicStatus } from '@workspace/squabblemon-engine/starterMythic';
@@ -26,6 +26,8 @@ export function StarterMythic({ bootstrap, placement, autoShow = false }: { boot
     setOpen(false); setReceipt(null); setError('');
     return () => { activePlayer.current = ''; };
   }, [bootstrap.profile.id]);
+  const search = useSearch();
+  useEffect(() => { if (placement === 'banner' && new URLSearchParams(search).get('mythic') === 'open') setOpen(true); }, [search, placement]);
   useEffect(() => {
     if (open) {
       opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;

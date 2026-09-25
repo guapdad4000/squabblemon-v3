@@ -1,4 +1,4 @@
-import { ItemDot, useNotifications } from '../../components/Notifications';
+import { ItemDot } from '../../components/Notifications';
 import { useEffect, useRef, useState } from 'react';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import {
@@ -325,7 +325,6 @@ function PurchaseHistory({ checkoutEnabled, onInspect }: { checkoutEnabled: bool
 }
 
 export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const { seen } = useNotifications();
   const [location, setLocation] = useLocation();
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
@@ -356,12 +355,13 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }, []);
 
   function choose(offer: StoreOffer) {
-    seen(`offer:${offer.id}`);
     setAdultConfirmed(false);
     setUnitedStatesConfirmed(false);
     setCheckoutError(''); 
     setSelected(offer); 
   }
+
+  useEffect(() => { const id = new URLSearchParams(search).get('offer'); const offer = CORNER_OFFERS.find(item => item.id === id); if (offer) choose(offer); }, [search]);
 
   async function purchase(catalogOffer: PaymentOffer) {
     if (lock.current) return;
@@ -513,7 +513,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </div>
 
       <Dialog open={!!selected} onOpenChange={open => { if (!open) setSelected(null); }}>
-        <DialogContent className="corner-checkout">
+        <DialogContent data-notification-id={selected ? `offer:${selected.id}` : undefined} className="corner-checkout">
           {selected && (
             <>
                <DialogTitle>{catalog?.offers.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>

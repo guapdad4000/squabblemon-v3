@@ -4,6 +4,16 @@
 .notification-inbox{width:min(440px,calc(100vw - 24px));max-height:80dvh;margin:auto;padding:20px;border:1px solid #a78a54;border-radius:12px;background:#14221f;color:#f5dfb2;overflow:auto}.notification-inbox::backdrop{background:#000a}.notification-inbox header{display:flex;justify-content:space-between;align-items:center}.notification-inbox h2{font-size:24px}.notification-inbox p{font-size:12px;margin:10px 0 18px;color:#c6c3b6}.notification-inbox header button{font-size:28px;min-width:44px}.notification-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 2px;border-bottom:1px solid #ffffff15;font-size:13px}.notification-item>span:nth-child(2){flex:1}.notification-item small{display:block;font-size:9px;text-transform:uppercase;color:#acbcb2}.notification-clear{margin-top:16px;font-size:12px;text-decoration:underline;min-height:44px}
 .daily-clout-pack{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px auto;padding:14px 18px;width:min(720px,calc(100% - 24px));border:1px solid #d5b26766;border-radius:10px;background:#12231fea;color:#f6e3b7}.daily-clout-pack .game-glyph{--glyph-size:46px}.daily-clout-pack>div{flex:1}.daily-clout-pack strong,.daily-clout-pack span,.daily-clout-pack small{display:block}.daily-clout-pack small{font-size:10px;opacity:.7}.daily-clout-pack>button{min-height:44px;padding:8px 12px;background:#eac775;color:#17201b;border-radius:6px;font-weight:800}.daily-clout-pack>button:disabled{opacity:.55}.daily-clout-pack>p{width:100%;font-size:12px}.daily-clout-pack .attention-mark{display:inline-flex!important}
 @media(max-width:400px){.city-header{gap:3px!important}.notification-bell{width:22px}.city-header__identity strong{max-width:65px}}
-.collection-card-grid .attention-mark--dot{position:absolute;top:9px;right:9px;z-index:4;box-shadow:0 0 0 2px #131b17}
+.collection-card-grid .attention-mark--dot{position:absolute;top:5px;right:50%;z-index:20;width:8px;height:8px;box-shadow:0 0 0 2px #131b17}
 .notification-bell:focus-visible,.notification-inbox button:focus-visible,.daily-clout-pack button:focus-visible{outline:2px solid #f5d27e;outline-offset:3px}
 @media(max-width:480px){.daily-clout-pack{display:grid;grid-template-columns:40px 1fr;gap:8px 12px}.daily-clout-pack>button{grid-column:1/-1}.daily-clout-pack strong{font-size:15px}.daily-clout-pack span{font-size:12px}.daily-clout-pack>p{grid-column:1/-1}}
+
+/* Clear destination feedback without motion or shifting the card grid. */
+[data-notification-focus="true"] {
+  outline: 4px solid #fff2a8 !important;
+  outline-offset: -4px;
+  box-shadow: 0 0 0 4px #e6a923, 0 0 26px 5px #ffc83d99 !important;
+  scroll-margin: 90px 12px;
+}
+
+.collection-card-grid > [data-notification-focus="true"] { position: relative; z-index: 2; }

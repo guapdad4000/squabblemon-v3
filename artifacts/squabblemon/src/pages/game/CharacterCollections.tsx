@@ -10,7 +10,7 @@ import { getAssetUrl, getCardImage } from '../../lib/assets';
 import '../../styles/character-styles.css';
 
 export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const { notices, seen } = useNotifications();
+  const { notices } = useNotifications();
   const { profile } = bootstrap;
   const [query, setQuery] = useViewMemory(`styles-search:${profile.id}`, '');
   const [filter, setFilter] = useViewMemory<'all' | 'owned' | 'Mythical' | 'Legendary' | 'Epic'>(`styles-filter:${profile.id}`, 'all');
@@ -24,7 +24,7 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
     <div className="style-library__tools"><label><span>Find a character</span><input type="search" aria-label="Search signature collections" placeholder="Search collections…" value={query} onChange={event => setQuery(event.target.value)}/></label><nav aria-label="Filter collections">{(['all','owned','Mythical','Legendary','Epic'] as const).map(value => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{value === 'all' ? 'All packs' : value === 'owned' ? 'My characters' : value === 'Legendary' ? 'Legendaries' : value === 'Epic' ? CARD_RARITY_DEFINITIONS.Epic.label : 'Mythicals'}</button>)}</nav></div>
     <p className="style-kicker">{visible.length} COLLECTION{visible.length === 1 ? '' : 'S'} / BANNERS, STICKERS & DECK COVERS</p>
     <section className="style-library__grid" aria-label="Signature collections">
-      {visible.map(set => {const card=catalogCardById[set.cardId],owned=profile.ownedCardIds.includes(set.cardId),count=CHARACTER_STYLE_OFFERS.filter(offer=>ownsStyle(profile,set.cardId,offer.id)).length;return <Link key={set.cardId} href={'/game/style/'+set.cardId} onClick={() => notices.filter(n => (n.id.startsWith(`style:style:${set.cardId}:`) || n.id === `banner:${set.cardId}`)).forEach(n => seen(n.id))} className="style-library__card" aria-label={'Open '+card.name+' collection'}>
+      {visible.map(set => {const card=catalogCardById[set.cardId],owned=profile.ownedCardIds.includes(set.cardId),count=CHARACTER_STYLE_OFFERS.filter(offer=>ownsStyle(profile,set.cardId,offer.id)).length;return <Link key={set.cardId} href={'/game/style/'+set.cardId} className="style-library__card" aria-label={'Open '+card.name+' collection'}>
         <div className={"style-library__portrait" + (set.banner ? " style-library__portrait--banner" : "")}>{set.banner ? <img className="style-library__banner" src={getAssetUrl(set.banner)} alt={card.name + " banner"} loading="lazy" decoding="async"/> : <><img className="style-library__scene" src={getAssetUrl(set.background)} alt="" loading="lazy"/><img className="style-library__fighter" src={getCardImage(set.cardId)} alt="" loading="lazy"/></>}<span>{set.series} / {CARD_RARITY_DEFINITIONS[card.rarity].label}</span></div>
         <div className="style-library__caption"><h2>{card.name}{notices.filter(n => (n.id.startsWith(`style:style:${set.cardId}:`) || n.id === `banner:${set.cardId}`)).map(n => <ItemDot key={n.id} id={n.id} />)}</h2><p>{set.tagline}</p><div className="style-library__stickers">{set.stickers.slice(0, 4).map(sticker=><CharacterSticker key={sticker.id} id={sticker.id} decorative/>)}</div><small>{set.stickers.length} STICKERS · {owned ? count === 3 ? 'COMPLETE COLLECTION' : count+' / 3 UNLOCKS · BANNER INCLUDED' : 'PREVIEW · CHARACTER REQUIRED'}<span aria-hidden="true">↗</span></small></div>
       </Link>})}

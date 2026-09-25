@@ -46,7 +46,7 @@ export function useNavigationScroll() {
   useLayoutEffect(() => {
     const key = 'scroll:' + history.state?.[INDEX];
     const saved = readMemory<Array<[number, number]>>(key, []);
-    let restoring = true;
+    let restoring = !new URLSearchParams(search).has('notification');
     let observer: MutationObserver | undefined;
     const elements = () => [document.scrollingElement!, ...document.querySelectorAll<HTMLElement>(owners)];
     const restore = () => {

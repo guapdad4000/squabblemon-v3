@@ -41,7 +41,7 @@ function scoutNote(card: any): string {
   return `${ability} — note for the next squad run.`;
 }
 
-export function CardInspector({ card, onClose, bootstrap, variantId, match, useCachedProfile = false }: any) {
+export function CardInspector({ card, onClose, bootstrap, variantId, initialPreviewVariant, match, useCachedProfile = false }: any) {
   const reduceMotion = useReducedMotion() || (typeof window !== 'undefined' && cardMotionReduced());
   card = match?.boards?.flat().find((current: CardInstance) => current.instanceId === card.instanceId) ?? card;
   const isInstance = 'instanceId' in card;
@@ -65,7 +65,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
 
   const isCardOwned = bootstrap && catalogCard && bootstrap.profile.ownedCardIds.includes(catalogCard.catalogId);
   const equippedVariant = (catalogCard ? bootstrap?.profile.equippedVariants[catalogCard.catalogId] : undefined) ?? variantId;
-  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(null);
+  const [preview, setPreview] = React.useState<{ cardId: string; variant: string | null } | null>(initialPreviewVariant ? { cardId: card.id, variant: initialPreviewVariant } : null);
   const displayedVariant = preview && preview.cardId === card.id ? preview.variant : equippedVariant;
   const previewKind = getVariantKind(displayedVariant);
   const isPreview = (displayedVariant ?? null) !== (equippedVariant ?? null);
@@ -110,7 +110,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
   const variantSlots = catalogCard?.variantSlots ?? [];
 
   const inspector = (
-    <div ref={panel} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
+    <div ref={panel} data-notification-id={initialPreviewVariant ? `style:${initialPreviewVariant}` : undefined} role="dialog" aria-modal="true" aria-label={card.name + (match ? ' battle details' : ' card details')} className={'card-inspector-shell bg-black/95 backdrop-blur-xl ' + (match ? 'battle-inspector' : 'collection-inspector fighter-resume world-decor-host')} onClick={onClose} onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
       if (event.key === 'Tab') {
         const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])].filter(element => element.getClientRects().length > 0);

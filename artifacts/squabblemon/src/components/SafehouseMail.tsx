@@ -1,3 +1,4 @@
+import { useSearch } from 'wouter';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customFetch, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
@@ -33,6 +34,17 @@ export function SafehouseMail({ playerId, open, onClose }: { playerId: string; o
     if (open) { dialog.current?.showModal(); void query.refetch(); }
     else dialog.current?.close();
   }, [open]);
+  const search = useSearch();
+  const openedLetter = useRef('');
+  useEffect(() => {
+    if (!open) { openedLetter.current = ''; return; }
+    const id = new URLSearchParams(search).get('letter');
+    const target = letters.find(m => m.id === id);
+    if (!target || openedLetter.current === search) return;
+    openedLetter.current = search;
+    setSelected(target.id); setReceipt('');
+    if (!target.readAt) action.mutate({ id: target.id, kind: 'read' });
+  }, [open, search, query.data]);
   const unread = letters.filter(m => !m.readAt).length;
   return <dialog ref={dialog} className="mail-delivery" aria-labelledby="mail-title" onCancel={event => { event.preventDefault(); onClose(); }}>
     <button className="mail-close" type="button" onClick={onClose} aria-label="Close mail">×</button>
@@ -43,7 +55,7 @@ export function SafehouseMail({ playerId, open, onClose }: { playerId: string; o
       {query.isError && <p role="alert">Couldn’t load your mail. Refresh to try again.</p>}
       {!query.isPending && !query.isError && !letters.length && <div className="mail-empty"><b>All quiet on the doorstep.</b><p>Updates, gifts, and special deliveries will arrive here. No codes needed.</p></div>}
       {letters.length > 0 && <div className="mail-content"><nav aria-label="Letters">{letters.map(m => <button key={m.id} aria-pressed={selected === m.id} disabled={action.isPending} onClick={() => { setSelected(m.id); setReceipt(''); action.reset(); if (!m.readAt) action.mutate({ id: m.id, kind: 'read' }); }}><span>{!m.readAt && <i aria-label="Unread" />}{m.title}</span><small>{m.sender}{Object.values(m.gift).some(n => n > 0) ? m.claimedAt ? ' · Claimed' : ' · Gift inside' : ''}</small></button>)}</nav>
-      {letter ? <article><img className="mail-letter-mascot" src={getAssetUrl('assets/characters/the-mailman-chibi.png')} alt="" aria-hidden="true" /><span className="mail-from">FROM {letter.sender} · {new Date(letter.sentAt).toLocaleDateString()}</span><h4>{letter.title}</h4><p className="mail-body">{letter.body}</p>
+      {letter ? <article data-notification-id={`mail:${letter.id}`}><img className="mail-letter-mascot" src={getAssetUrl('assets/characters/the-mailman-chibi.png')} alt="" aria-hidden="true" /><span className="mail-from">FROM {letter.sender} · {new Date(letter.sentAt).toLocaleDateString()}</span><h4>{letter.title}</h4><p className="mail-body">{letter.body}</p>
         {Object.values(letter.gift).some(n => n > 0) && <div className="mail-gift"><strong>Inside your package</strong><ul>{letter.gift.softCurrency > 0 && <li>{letter.gift.softCurrency.toLocaleString()} Clout</li>}{letter.gift.packTickets > 0 && <li>{letter.gift.packTickets} Pack Tickets</li>}{letter.gift.styleShards > 0 && <li>{letter.gift.styleShards} Style Shards</li>}</ul><button disabled={!!letter.claimedAt || action.isPending} onClick={() => action.mutate({ id: letter.id, kind: 'claim' })}>{letter.claimedAt ? 'Gift claimed ✓' : action.isPending ? 'Saving…' : 'Claim your gift'}</button></div>}
       </article> : <article><h4>Something for you.</h4><p>Open a letter to read it and collect any gifts inside.</p></article>}</div>}
       {action.isError && <div role="alert">Couldn’t save that delivery. <button disabled={action.isPending} onClick={() => action.variables && action.mutate(action.variables)}>Retry</button></div>}

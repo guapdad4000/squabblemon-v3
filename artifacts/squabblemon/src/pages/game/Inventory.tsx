@@ -14,7 +14,7 @@ export function Inventory({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="inventory-room__art"><img src={getAssetUrl('assets/rewards/clout-bag.webp')} alt="Your black and gold inventory bag" /></div>
       <section><span className="studio-eyebrow">YOUR STASH / READY WHEN YOU ARE</span><h1>In the bag.</h1>
         {profile.id === 'e2e-player' && <p>Local preview inventory</p>}
-        <div className="inventory-room__wallet">
+        <div className="inventory-room__wallet" data-notification-section="bag">
           {([{glyph:'cloutStack', label:'Clout', value:profile.softCurrency, href:'/game/shop?view=training'}, {glyph:'ticket',label:'Tickets',value:profile.packTickets,href:'/game/shop?view=packs'}, {glyph:'shards',label:'Style Shards',value:profile.styleShards,href:'/game/collection'}, {glyph:'rep',label:'Street Rep',value:profile.streetRep,href:'/game/settings'}] as const).map(item => <Link key={item.label} href={item.href}><GameGlyph name={item.glyph}/><strong>{item.value.toLocaleString()}</strong><span>{item.label}</span></Link>)}
         </div>
         <div className="inventory-room__links"><Link href="/game/collection">{profile.ownedCardIds.length} cards · Open collection →<Attention section="cards" micro /></Link><Link href="/game/settings">{profile.unlockedCosmeticIds.length} cosmetics · Profile →<Attention section="style" micro /></Link><Link href="/game/missions">Claim your bounties →<Attention section="missions" micro /></Link></div>

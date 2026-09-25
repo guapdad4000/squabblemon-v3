@@ -1,9 +1,9 @@
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
-import { Link } from 'wouter';
+import { Link, useSearch } from 'wouter';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { ArsenalScreen } from '../../components/venue/ArsenalScreen';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, LockKeyhole } from 'lucide-react';
 import { PlayerBootstrap, useClaimCollectionRoadMilestone, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,7 +24,13 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const collectionScrollRef = useRef<HTMLDivElement>(null);
   const collectionGridRef = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useViewMemory<'cards' | 'road'>(`collection-tab:${bootstrap.profile.id}`, 'cards');
+  const search = useSearch();
+  const requestedCard = new URLSearchParams(search).get('card');
+  useEffect(() => { if (requestedCard) setTab('cards'); }, [search]);
   const [inspectId, setInspectId] = useState<string | null>(null);
+  const variantParam = new URLSearchParams(search).get('variant');
+  const requestedVariant = variantParam && bootstrap.profile.ownedVariants.includes(variantParam) && cardCatalog.find(c => c.catalogId === requestedCard)?.variantSlots.some(v => v.id === variantParam) ? variantParam : null;
+  useEffect(() => { if (requestedCard && requestedVariant) setInspectId(requestedCard); }, [search, requestedCard, requestedVariant]);
   const [claimError, setClaimError] = useState('');
 
   const owned = new Set(bootstrap.profile.ownedCardIds);
@@ -37,7 +43,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     rootRef: discoveryRootRef,
     scrollRef: collectionScrollRef,
     gridRef: collectionGridRef,
-    disabled: tab !== 'cards',
+    disabled: tab !== 'cards' || !!requestedCard,
     reducedMotion: bootstrap.profile.settings.reducedMotion,
   });
 
@@ -104,15 +110,16 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                return (
                  <CardPressTarget
                    card={card}
-                   onInspect={() => { markNoticeSeen(`card:${card.catalogId}`); setInspectId(card.catalogId); }}
+                   onInspect={() => { setInspectId(card.catalogId); }}
                    key={card.catalogId}
                    data-testid="collection-card-control"
                    data-collection-card-state={!show ? 'undiscovered' : isOwned ? 'owned' : 'locked'}
                    data-collection-discovery-card-id={card.catalogId}
+                   data-notification-id={isOwned ? `card:${card.catalogId}` : undefined}
                    data-collection-discovery-new={isNew ? 'true' : undefined}
                    data-collection-discovery-active={isActive ? 'true' : undefined}
                    disabled={!show}
-                   onClick={() => { markNoticeSeen(`card:${card.catalogId}`); setInspectId(card.catalogId); }}
+                   onClick={() => { setInspectId(card.catalogId); }}
                    aria-label={show ? `${card.name}. ${CARD_RARITY_DEFINITIONS[card.rarity].label} rarity${isOwned ? '' : '. Locked'}${isNew ? '. New card' : ''}` : 'Undiscovered card'}
                  >
                    {show ? (
@@ -166,7 +173,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </div>
         )}
       </div>
-      {inspectedCard && <CardInspector card={inspectedCard} onClose={() => setInspectId(null)} match={null} bootstrap={bootstrap} />}
+      {inspectedCard && <CardInspector key={inspectId + (requestedVariant ?? '')} initialPreviewVariant={inspectId === requestedCard ? requestedVariant : undefined} card={inspectedCard} onClose={() => { if (inspectId) markNoticeSeen(`card:${inspectId}`); setInspectId(null); }} match={null} bootstrap={bootstrap} />}
     </ArsenalScreen>
   );
 }

@@ -1,4 +1,5 @@
 import { chromium, expect } from '@playwright/test';
+const base = process.env.TEST_BASE_URL ?? 'http://127.0.0.1:4198';
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox'] });
 const page = await browser.newPage();
 let claimed = false, claims = 0, date = '2026-09-25';
@@ -12,7 +13,7 @@ await page.route('**/api/**', route => {
 try {
  for (const width of [1440, 768, 390, 320]) {
   await page.setViewportSize({ width, height: 900 });
-  await page.goto('http://127.0.0.1:4198/e2e/notifications.fixture.html');
+  await page.goto(base+'/e2e/notifications.fixture.html');
   await expect(page.getByRole('button', { name: 'Claim free' })).toBeEnabled();
   const sizes = await page.locator('.city-header').evaluate(el => ({ width: el.clientWidth, content: el.scrollWidth }));
   expect(sizes.content).toBeLessThanOrEqual(sizes.width);
@@ -40,7 +41,7 @@ try {
  await page.getByRole('button',{name:/Notifications,/}).click();
  await expect(page.getByRole('button',{name:/Straight to the Back/})).toBeVisible();
  await expect(page.getByRole('button',{name:/Your free 50 Clout is ready/})).toBeVisible();
- await page.goto('http://127.0.0.1:4198/e2e/notifications.fixture.html?player=second-player');
+ await page.goto(base+'/e2e/notifications.fixture.html?player=second-player');
  await expect(page.getByRole('button',{name:'Inspect Kyle'}).locator('.attention-mark')).toHaveCount(1);
  console.log('PASS: responsive header, persistent item reads, sticky rewards/mail, accessible dialog dismissal, daily claim state.');
 } finally { await browser.close(); }
