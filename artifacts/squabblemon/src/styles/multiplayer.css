@@ -1181,3 +1181,306 @@ body:has(.fight-night) .city-line-toggle { top:10px;right:16px;bottom:auto;min-h
   .fight-night__tools { padding-top:8px; }
   .fight-night .online-lobby__content { gap:16px; }
 }
+
+/* Friendly Fade: an anime night spot with controls that read like controls. */
+.fight-night {
+  --fade-ink: #071016;
+  --fade-panel: #f3ead7;
+  --fade-gold: #f4bd63;
+  --fade-teal: #72d9cf;
+  background: var(--fade-ink);
+  scrollbar-color: #d29a4d #071016;
+}
+.fight-night .online-lobby__venue {
+  opacity: .78;
+  filter: saturate(.92) contrast(1.05);
+  object-position: center top;
+}
+.fight-night::before {
+  background:
+    linear-gradient(180deg, #05101866 0%, #051018a6 44%, #051018f7 82%),
+    linear-gradient(90deg, #02090ee6 0%, #0610162b 52%, #02090e8f 100%);
+}
+.fight-night__lights { opacity: .28; }
+.fight-night .online-lobby__nav {
+  background: linear-gradient(180deg, #071016f5, #071016b8 76%, transparent);
+  backdrop-filter: blur(10px);
+}
+.fight-night .online-lobby__content {
+  max-width: 1320px;
+  gap: clamp(18px, 2.5vw, 32px);
+  padding-top: 10px;
+}
+.fight-night__poster {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #bdebe23d;
+  border-radius: 24px 7px 24px 7px;
+  background: linear-gradient(110deg, #061118eb 5%, #071116bd 55%, #07111652);
+  box-shadow: 0 24px 60px #0009, inset 0 1px #ffffff1f;
+}
+.fight-night__poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(#f4d18b19 1px, transparent 1px);
+  background-size: 5px 5px;
+  mix-blend-mode: screen;
+  opacity: .35;
+}
+.fight-night .online-lobby__hero {
+  min-height: 420px;
+  padding: clamp(28px, 4vw, 56px);
+  grid-template-columns: minmax(0, .9fr) minmax(280px, 1.1fr);
+}
+.fight-night__copy { position: relative; z-index: 4; align-self: center; }
+.fight-night .online-eyebrow {
+  color: #95e6dd;
+  font: 800 11px/1.4 var(--font-mono);
+  letter-spacing: .13em;
+}
+.fight-night .online-lobby__hero h1 {
+  margin: 20px 0 16px;
+  font-size: clamp(62px, 7.2vw, 108px);
+  line-height: .78;
+  letter-spacing: -.055em;
+  color: #fff7e7;
+  text-shadow: 5px 6px 0 #153d43, 0 16px 45px #000;
+}
+.fight-night .online-lobby__hero h1 em { color: var(--fade-gold); }
+.fight-night .online-lobby__hero p {
+  max-width: 390px;
+  margin: 0 0 22px;
+  color: #e9e4d8;
+  font-size: 15px;
+  line-height: 1.55;
+  text-shadow: 0 2px 8px #000;
+}
+.fight-night__stage-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #71d8cd73;
+  border-radius: 4px 14px 4px 4px;
+  background: #071b20d9;
+  color: var(--fade-gold);
+  box-shadow: 4px 5px 0 #02090d80;
+}
+.fight-night__stage-label span { display: grid; gap: 2px; font-weight: 850; }
+.fight-night__stage-label small { color: #88c6c1; font: 700 8px var(--font-mono); letter-spacing: .16em; }
+.fight-night .online-lobby__fighters {
+  height: 385px;
+  align-self: end;
+  overflow: visible;
+  isolation: isolate;
+}
+.fight-night .online-lobby__fighters::before {
+  content: "";
+  position: absolute;
+  inset: 18% 6% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, #eaae4f44, #2bb6b41f 45%, transparent 70%);
+  filter: blur(2px);
+}
+.fight-night .online-lobby__fighters img { width: 72%; filter: drop-shadow(0 14px 18px #000); }
+.fight-night .online-lobby__fighters img:first-child { left: -2%; }
+.fight-night .online-lobby__fighters img:nth-child(2) { right: -7%; opacity: .86; }
+.fight-night__versus { left: 45%; top: 48%; font-size: 54px; color: #fff3cf; }
+.fight-night__ticket {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  padding: 14px clamp(14px, 3vw, 34px);
+  border: 0;
+  border-top: 1px solid #b9e1d454;
+  color: #d9ece7;
+  background: #061319e8;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+.fight-night__ticket b { color: var(--fade-gold); }
+.fight-night .online-room-panel {
+  min-width: 0;
+  padding: clamp(22px, 3vw, 38px);
+  border: 1px solid #fff8e6;
+  border-radius: 7px 26px 7px 7px;
+  background: linear-gradient(145deg, #fff8e9 0%, var(--fade-panel) 72%, #e9dcc2 100%);
+  color: #101c1c;
+  filter: none;
+  transform: none;
+  box-shadow: 0 24px 60px #0009, inset 0 -1px #b69a6a;
+}
+.fight-night .online-room-panel::after {
+  content: "";
+  position: absolute;
+  width: 76px;
+  height: 20px;
+  right: 24px;
+  top: -8px;
+  background: #f3bd65c7;
+  transform: rotate(2deg);
+  clip-path: polygon(4% 0, 98% 7%, 94% 100%, 0 88%);
+  opacity: .85;
+}
+.fight-night__panel-heading { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid #274b4938; }
+.fight-night__panel-heading span {
+  display: block;
+  color: #376d69;
+  font: 850 10px var(--font-mono);
+  letter-spacing: .18em;
+}
+.fight-night__panel-heading strong {
+  display: block;
+  margin-top: 5px;
+  color: #122221;
+  font: 900 clamp(26px, 3vw, 38px)/1 var(--font-display);
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+}
+.fight-night .online-crew-label { margin: 0 0 10px; color: #20302f; font-size: 15px; }
+.fight-night .online-room-panel select,
+.fight-night .online-room-panel input {
+  border: 2px solid #244844;
+  border-radius: 5px;
+  background: #0a181b;
+  color: #fff6df;
+  min-height: 52px;
+  box-shadow: inset 0 0 0 1px #ffffff0d;
+}
+.fight-night .online-room-panel select:focus-visible,
+.fight-night .online-room-panel input:focus-visible { outline: 3px solid #e3a745; outline-offset: 2px; }
+.fight-night .online-lineup {
+  height: 128px;
+  margin: 18px 0 22px;
+  border: 1px solid #24484438;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #1d3a3840, #c59b4d24), radial-gradient(ellipse at bottom, #b37e2d45, transparent 70%);
+}
+.fight-night .online-primary,
+.fight-night .online-secondary {
+  border-radius: 5px;
+  transform: none;
+  min-height: 52px;
+  font-weight: 900;
+}
+.fight-night .online-primary {
+  border: 1px solid #7c5422;
+  background: linear-gradient(180deg, #ffd483, #e8a94a);
+  color: #14201f;
+  box-shadow: 0 4px 0 #6c4520, 0 8px 18px #523c2230;
+}
+.fight-night .online-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 #6c4520, 0 10px 20px #523c2240; }
+.fight-night .online-secondary { background: #102326; color: #fff1d2; border-color: #496c67; }
+.fight-night .online-room-options form label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #36504d;
+  font-size: 12px;
+}
+.fight-night .online-room-code { background: #fffdf4; }
+.fight-night .online-room-panel p,
+.fight-night .online-room-members span { color: #3f514f; }
+.fight-night .online-rules {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 20px 24px;
+  border: 1px solid #8bd2c92e;
+  border-radius: 8px;
+  background: #061319db;
+  text-align: left;
+}
+.fight-night .online-rules > span {
+  padding: 7px 10px;
+  border: 1px solid #83d5cb47;
+  border-radius: 999px;
+  color: #f5c578;
+  white-space: nowrap;
+}
+.fight-night .online-rules p { max-width: none; margin: 0 0 0 auto; color: #c3d1cd; }
+.fight-night .online-recent {
+  padding: clamp(22px, 3vw, 34px);
+  border-top: 1px solid #76ccc138;
+  background: linear-gradient(180deg, #07161be0, #061014f2);
+}
+.online-recent__heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+.online-recent__heading span { color: var(--fade-teal); font: 800 9px var(--font-mono); letter-spacing: .2em; }
+.online-recent__heading h2 { margin: 4px 0 0; font: 900 clamp(28px, 4vw, 42px)/1 var(--font-display); text-transform: uppercase; color: #fff2d7; }
+.online-recent__heading p { margin: 0; color: #9db4af; }
+.online-recent__empty,
+.online-recent__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.online-recent__preview,
+.online-recent__room {
+  min-height: 190px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid #d5e9df4a;
+  border-radius: 5px 18px 5px 5px;
+  background-position: center;
+  background-size: cover;
+  color: #fff5dd;
+  box-shadow: inset 0 -90px 70px #02080be8, 0 10px 25px #0005;
+}
+.online-recent__preview::before,
+.online-recent__room::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, #031014e8 100%); }
+.online-recent__preview > *,
+.online-recent__room > * { position: relative; z-index: 1; }
+.online-recent__preview span,
+.online-recent__status { color: #83ddd3; font: 800 9px var(--font-mono); letter-spacing: .13em; text-transform: uppercase; }
+.online-recent__preview strong,
+.online-recent__room > strong { margin-top: 5px; font: 900 24px/1 var(--font-display); text-transform: uppercase; }
+.online-recent__preview--roof,
+.online-recent__room--0 { background-image: url('/assets/fight-night/rooms/rooftop-court.webp'); }
+.online-recent__preview--wash,
+.online-recent__room--1 { background-image: url('/assets/fight-night/rooms/laundromat-table.webp'); }
+.online-recent__preview--rail,
+.online-recent__room--2 { background-image: url('/assets/fight-night/rooms/train-platform.webp'); }
+.fight-night .online-recent__room { justify-content: end; border-bottom: 1px solid #d5e9df4a; color: #fff5dd; }
+.fight-night .online-recent__room > span:last-child { display: flex; align-items: center; gap: 6px; margin-top: 12px; color: #f4c36d; }
+.fight-night .online-recent__room:hover { transform: translateY(-3px); border-color: #f4c36d; }
+
+@media(min-width:960px), (min-width:760px) and (max-height:600px) {
+  .fight-night .online-lobby__content { grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr); }
+  .fight-night__poster { position: sticky; top: 86px; }
+}
+@media(max-width:760px) {
+  .fight-night__lights { width: 100%; overflow: clip; contain: paint; }
+  .fight-night .online-lobby__nav > a:last-child { display: none; }
+  .fight-night .online-lobby__content { padding-inline: 12px; }
+  .fight-night__tools { display: none; }
+  .fight-night .online-lobby__hero { min-height: 360px; grid-template-columns: minmax(0, 1fr) minmax(120px, .58fr); padding: 24px 18px 0; }
+  .fight-night .online-lobby__hero h1 { font-size: clamp(54px, 17vw, 82px); margin-block: 18px 14px; }
+  .fight-night .online-lobby__hero p { max-width: 240px; font-size: 13px; }
+  .fight-night .online-lobby__fighters { height: 310px; margin-left: -42px; width: calc(100% + 42px); overflow: hidden; contain: paint; }
+  .fight-night .online-lobby__fighters img { width: 94%; }
+  .fight-night .online-lobby__fighters img:first-child { left: -18%; }
+  .fight-night .online-lobby__fighters img:nth-child(2) { right: -42%; opacity: .62; }
+  .fight-night__versus { left: 35%; font-size: 38px; }
+  .fight-night__stage-label { padding: 8px 10px; font-size: 12px; }
+  .fight-night__ticket { font-size: 8px; }
+  .fight-night .online-rules { align-items: flex-start; padding: 16px; }
+  .fight-night .online-rules p { flex-basis: 100%; margin: 4px 0 0; }
+  .online-recent__empty,
+  .online-recent__grid { grid-template-columns: 1fr; }
+  .online-recent__preview,
+  .online-recent__room { min-height: 170px; }
+}
+@media(max-width:430px) {
+  .fight-night .online-lobby__hero { min-height: 330px; grid-template-columns: minmax(0, 1fr) 36%; }
+  .fight-night .online-lobby__hero h1 { font-size: clamp(50px, 16vw, 68px); }
+  .fight-night .online-lobby__hero p { max-width: 215px; font-size: 12px; }
+  .fight-night .online-lobby__fighters { height: 270px; margin-left: -56px; width: calc(100% + 56px); }
+  .fight-night .online-lobby__fighters img { width: 110%; }
+  .fight-night__stage-label { max-width: 195px; }
+  .fight-night__ticket { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .fight-night .online-room-panel { padding: 24px 16px; }
+  .fight-night .online-room-options form > div { grid-template-columns: minmax(0, 1fr); }
+  .online-recent__heading { align-items: flex-start; flex-direction: column; gap: 5px; }
+}

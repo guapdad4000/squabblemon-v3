@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
-import { Check, Copy, Swords, Users } from "lucide-react";
+import { ArrowUpRight, Check, Copy, KeyRound, MapPin, Swords, Users } from "lucide-react";
 import {
   getAssetUrl,
   getCardImage,
@@ -188,7 +188,7 @@ export function Multiplayer({
       <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
       <img
         className="online-lobby__venue"
-        src={getAssetUrl("assets/venues/red-fence-night-court.webp")}
+        src={getAssetUrl("assets/fight-night/rooms/rooftop-court.webp")}
         alt=""
       />
       <header className="online-lobby__nav">
@@ -202,17 +202,20 @@ export function Multiplayer({
         </div>
         <div className="fight-night__poster">
         <section className="online-lobby__hero">
-          <span className="fight-night__billing" aria-hidden="true">SQUABBLEMON PRESENTS</span>
-          <div>
+          <div className="fight-night__copy">
             <span className="online-eyebrow">
-              <Users size={16} /> BRING SOMEONE WHO TALKS BACK
+              <Users size={16} /> PRIVATE 1V1 · NO RANK ON THE LINE
             </span>
             <h1>
               Friendly
               <br />
-              <em>Fade’s.</em>
+              <em>Fade.</em>
             </h1>
-            <p>Your gang. Their problem. Take two districts and own the night.</p>
+            <p>Bring your crew, send the code, and settle it somewhere worth remembering.</p>
+            <div className="fight-night__stage-label">
+              <MapPin size={16} />
+              <span><small>TONIGHT'S STAGE</small>Moonline Rooftop</span>
+            </div>
           </div>
           <div className="online-lobby__fighters" aria-hidden="true">
             <img src={getCardImage(chosen?.hero ?? "ganger-red")} alt="" />
@@ -220,7 +223,7 @@ export function Multiplayer({
             <span className="fight-night__versus">VS</span>
           </div>
         </section>
-        <div className="fight-night__ticket"><span>LIVE 1V1</span><b>06 ROUNDS</b><span>03 DISTRICTS</span><b>ONE WINNER</b></div>
+        <div className="fight-night__ticket"><span>PRIVATE 1V1</span><b>6 ROUNDS</b><span>3 DISTRICTS</span><b>NO RANK LOSS</b></div>
         </div>
         {errorBanner && (
           <p className="online-notice" role="alert">
@@ -259,6 +262,10 @@ export function Multiplayer({
           </section>
         ) : room ? (
           <section className="online-room-panel" data-testid="online-room">
+            <div className="fight-night__panel-heading">
+              <span>PRIVATE ROOM</span>
+              <strong>Moonline Rooftop</strong>
+            </div>
             <div className="online-room-title">
               <div>
                 <span className="online-eyebrow">YOUR PRIVATE ROOM</span>
@@ -331,9 +338,10 @@ export function Multiplayer({
           </section>
         ) : (
           <section className="online-room-panel">
-            <span className="online-eyebrow">
-              {joinable ? `JOIN ROOM ${code}` : "CHOOSE YOUR GANG"}
-            </span>
+            <div className="fight-night__panel-heading">
+              <span>{joinable ? `INVITE ${code}` : "CHALLENGE DESK"}</span>
+              <strong>{joinable ? "Join the room" : "Set the matchup"}</strong>
+            </div>
             {crews.length ? (
               <>
                 <label className="online-crew-label" htmlFor="online-crew">
@@ -368,11 +376,12 @@ export function Multiplayer({
                   <div className="online-room-options">
                     <button
                       className="online-primary"
+                      aria-label="Create friend fade"
                       disabled={working}
                       onClick={() => void openRoom()}
                     >
                       <Swords size={18} />
-                      {working ? "Connecting…" : "Create friend fade"}
+                      {working ? "Opening the room…" : "Open a private room"}
                     </button>
                     <form
                       onSubmit={(event) => {
@@ -380,7 +389,7 @@ export function Multiplayer({
                         void openRoom(true);
                       }}
                     >
-                      <label htmlFor="online-code">Have a room code?</label>
+                      <label htmlFor="online-code"><KeyRound size={14} /> Have a room code?</label>
                       <div>
                         <input
                           id="online-code"
@@ -395,9 +404,10 @@ export function Multiplayer({
                         />
                         <button
                           className="online-secondary"
+                          aria-label="Join room"
                           disabled={working || !enteredCode}
                         >
-                          Join room
+                          Enter
                         </button>
                       </div>
                     </form>
@@ -416,18 +426,20 @@ export function Multiplayer({
           </section>
         )}
         <div className="online-rules">
-          <span>BASE CARD STRENGTH</span>
+          <span>BASE STRENGTH</span>
           <span>ONE SQUABBLE EACH</span>
-          <span>75 SECONDS PER TURN</span>
+          <span>75 SEC TURNS</span>
           <p>
-            Play cards openly during your turn. Unplayed cards stay private. A
-            missed turn deadline forfeits the fade. Friendly fades award no
-            currency or rank.
+            Cards hit the table face-up. Your hand stays private. Miss the timer
+            and you forfeit the fade. No currency or rank changes hands.
           </p>
         </div>
         {!code && (
           <section className="online-recent">
-            <h2>Your rooms</h2>
+            <div className="online-recent__heading">
+              <div><span>THE SPOTS</span><h2>Your rooms</h2></div>
+              <p>Every rivalry deserves a scene.</p>
+            </div>
             {rooms.isError ? (
               <p>
                 Could not load your rooms.{" "}
@@ -436,21 +448,29 @@ export function Multiplayer({
             ) : rooms.isPending ? (
               <p>Loading rooms…</p>
             ) : !rooms.data?.rooms.length ? (
-              <p>Your next rivalry starts here.</p>
+              <div className="online-recent__empty">
+                <article className="online-recent__preview online-recent__preview--roof">
+                  <span>Tonight</span><strong>Moonline Rooftop</strong>
+                </article>
+                <article className="online-recent__preview online-recent__preview--wash">
+                  <span>After hours</span><strong>Spin Cycle</strong>
+                </article>
+                <article className="online-recent__preview online-recent__preview--rail">
+                  <span>Last train</span><strong>Highline Table</strong>
+                </article>
+              </div>
             ) : (
-              rooms.data.rooms.map((item) => (
-                <Link key={item.code} to={`/game/online/${item.code}`}>
-                  <strong>{item.rival}</strong>
-                  <span>
-                    {item.status === "active"
-                      ? "Resume battle"
-                      : item.status === "waiting"
-                        ? "Enter room"
-                        : "View result"}{" "}
-                    · {item.code}
-                  </span>
-                </Link>
-              ))
+              <div className="online-recent__grid">
+                {rooms.data.rooms.map((item, index) => (
+                  <Link className={`online-recent__room online-recent__room--${index % 3}`} key={item.code} to={`/game/online/${item.code}`}>
+                    <span className="online-recent__status">
+                      {item.status === "active" ? "LIVE NOW" : item.status === "waiting" ? "OPEN ROOM" : "FINAL"}
+                    </span>
+                    <strong>{item.rival}</strong>
+                    <span>{item.code} <ArrowUpRight size={15} /></span>
+                  </Link>
+                ))}
+              </div>
             )}
           </section>
         )}
