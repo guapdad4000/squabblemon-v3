@@ -121,6 +121,16 @@ export type CardInstance = Card & {
   smileBomb?: { sourceInstanceId: string; sourceOwner: Owner; detonatesAtRound: number };
   /** One FINNAM! resolution per owner per round, including echoes. */
   guapRound?: number;
+  /** Buddy's battle-only form persists on the instance, including in replay frames. */
+  buddyForm?: 'earth' | 'squabble-earth';
+  /** Monotonic summon/play order; movement never changes which card arrived last. */
+  arrivalOrder?: number;
+  /** Round-end resolution for the normal form's delayed growth. */
+  buddyGrowthAtRound?: number;
+  /** Buddy Bud metadata; tokens are engine-created and never part of a deck. */
+  buddyBud?: { readonly sourceInstanceId: string; readonly sproutsAtRound: number; readonly sprouted: boolean };
+  /** The transformed form's active-through round; effects expire at its start. */
+  buddyEarthExpiresAtRound?: number;
 };
 
 export type EffectKind = 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
@@ -142,14 +152,17 @@ export type EffectLogEntry = {
 };
 export type ReplayState = Pick<Match,
   'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerMotion' | 'cpuMotion' |
+  'nextArrivalOrder' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
   'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
 >;
 
 export type TimedEffect = {
-  id: string; kind: 'wifey-protection' | 'church-protection' | 'nail-mitigation' | 'salon-protection'; sourceInstanceId: string; owner: Owner; lane: Lane;
+  id: string; kind: 'wifey-protection' | 'church-protection' | 'nail-mitigation' | 'salon-protection' | 'buddy-earth-buff' | 'buddy-earth-debuff'; sourceInstanceId: string; owner: Owner; lane: Lane;
   targetInstanceId?: string; startsAtRound: number; expiresAtRound: number; expiration: 'round-start' | 'match-complete';
+  /** Signed Hands change to undo at expiration for Buddy's temporary Earth form. */
+  amount?: number;
 };
 export type DiscountToken = {
   id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character';
@@ -198,6 +211,8 @@ export type Match = {
   round: number; phase: Phase; playerDeck: string; cpuDeck: string; playerHand: CardInstance[]; cpuHand: CardInstance[];
   playerCardIds: string[]; cpuCardIds: string[];
   boards: [CardInstance[], CardInstance[], CardInstance[]]; playerMotion: number; cpuMotion: number;
+  /** Stable order for new arrivals, independent of lane moves or board-array order. */
+  nextArrivalOrder?: number;
   playerDrawIndex: number; cpuDrawIndex: number; squabbleUsed: boolean; plugDiscountLane: Record<Owner, Lane | null>;
   cheapBuffsUsed: Record<Owner, number>; effectLog: EffectLogEntry[]; nextEventSequence: number; timedEffects: TimedEffect[];
   discountTokens: DiscountToken[]; nextDiscountOrder: number; landlordTaxUsed: Record<Owner, Record<Lane, boolean>>;
@@ -269,7 +284,7 @@ export function createMatchFromEngineCards(
     playerHand: playerCardIds.slice(0, playerHandSize).map((id, i) => createCardInstance(id, "player", playerDeck, i)),
     cpuHand: cpuCardIds.slice(0, cpuHandSize).map((id, i) => createCardInstance(id, "cpu", cpuDeck, i)),
     playerCardIds: [...playerCardIds], cpuCardIds: [...cpuCardIds],
-    boards: [[], [], []],
+    boards: [[], [], []], nextArrivalOrder: 1,
     playerMotion: Math.min(MAX_MOTION, Math.max(0, storyEncounter?.modifiers?.startingMotion?.player ?? 2)),
     cpuMotion: Math.min(MAX_MOTION, Math.max(0, storyEncounter?.modifiers?.startingMotion?.cpu ?? 2)),
     playerDrawIndex: playerHandSize, cpuDrawIndex: cpuHandSize,
@@ -539,17 +554,22 @@ const districtTax = (match: Match, owner: Owner, targetLane: Lane): number => {
 export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): number {
   const legacyDiscount = (match.discountTokens ?? []).length === 0
     && match.plugDiscountLane[owner] !== null && match.plugDiscountLane[owner] !== targetLane;
-  const discount = discountFor(match, owner, card, targetLane) || legacyDiscount;
+  const buddyLaneDiscount = inLane(match, owner, targetLane).some(buddy =>
+    buddy.cardId === 'buddy' && buddy.buddyForm !== 'squabble-earth' && activeAbility(buddy));
+  const discount = discountFor(match, owner, card, targetLane) || legacyDiscount || buddyLaneDiscount;
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   return Math.max(discountFor(match, owner, card, targetLane)?.eligibility === "homecoming" ? 1 : 0, card.cost - (discount ? 1 : districtDiscount(match, owner, card, targetLane))) + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
 }
 export function getCardCostExplanation(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): string {
   const token = discountFor(match, owner, card, targetLane);
   const legacy = !token && (match.discountTokens ?? []).length === 0 && match.plugDiscountLane[owner] !== null && match.plugDiscountLane[owner] !== targetLane;
+  const buddyLaneDiscount = inLane(match, owner, targetLane).some(buddy =>
+    buddy.cardId === 'buddy' && buddy.buddyForm !== 'squabble-earth' && activeAbility(buddy));
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const parts = [`${card.cost} base`];
   if (token || legacy) parts.push("−1 discount");
-  if (!token && !legacy && districtDiscount(match, owner, card, targetLane)) parts.push(match.districtSnapshot?.locations[targetLane].effect.kind === 'dive-discount' ? "−1 Dive Bar discount" : "−1 Bodega opening discount");
+  else if (buddyLaneDiscount) parts.push("−1 BUDDY district discount");
+  else if (districtDiscount(match, owner, card, targetLane)) parts.push(match.districtSnapshot?.locations[targetLane].effect.kind === 'dive-discount' ? "−1 Dive Bar discount" : "−1 Bodega opening discount");
   if (token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
   if (taxed) parts.push("+1 Rent Due tax");
@@ -618,6 +638,10 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
 
 const findCard = (m: Match, id: string): CardInstance | undefined =>
   [...m.playerHand, ...m.cpuHand, ...m.boards.flat()].find((c) => c.instanceId === id);
+const nextArrivalOrder = (m: Match): number => Math.max(
+  m.nextArrivalOrder ?? 1,
+  ...m.boards.flat().map(card => (card.arrivalOrder ?? 0) + 1),
+);
 const inLane = (m: Match, owner: Owner, target: Lane) => m.boards[target].filter((c) => !c.hazard && c.owner === owner);
 const highest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0];
 const lowest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(a) - getEffectiveCardPower(b) || a.instanceId.localeCompare(b.instanceId))[0];
@@ -1013,6 +1037,7 @@ const summonCard = (
   artworkId = template.id,
 ): Match => {
   const instanceId = `summon:${owner}:${source.instanceId}:${m.round}:${tokenId}:${m.nextEventSequence}:${m.boards.flat().length}`;
+  const arrivalOrder = nextArrivalOrder(m);
   const instance: CardInstance = {
     ...template,
     cardId: tokenId,
@@ -1022,16 +1047,29 @@ const summonCard = (
     deck: `summon:${source.cardId}`,
     lane,
     playedRound: m.round,
+    arrivalOrder,
     basePower: template.power,
     powerModifier: 0,
     moved: false,
     statuses: { ...emptyStatuses(), uncounterable },
     lastEffectNote: `Summoned by ${source.name}.`,
   };
-  return {
+  let result: Match = {
     ...m,
+    nextArrivalOrder: arrivalOrder + 1,
     boards: m.boards.map((items, i) => i === lane ? [...items, instance] : items) as Match['boards'],
   };
+  if (!instance.hazard && (instance.kind ?? 'character') !== 'support') {
+    const activeBuddies = result.boards.flat().filter(buddy => buddy.instanceId !== instanceId
+      && buddy.cardId === 'buddy' && buddy.buddyForm === 'squabble-earth'
+      && (buddy.buddyEarthExpiresAtRound ?? 0) > result.round
+      && !buddy.statuses.silenced && !buddy.statuses.frozen && !buddy.statuses.weakened);
+    for (const buddy of activeBuddies) {
+      const arrival = findCard(result, instanceId);
+      if (arrival) result = applyBuddyEarthToTarget(result, buddy, arrival);
+    }
+  }
+  return result;
 };
 const addDiscountToken = (m: Match, owner: Owner, source: CardInstance, eligibility: DiscountToken["eligibility"]): Match => {
   const order = m.nextDiscountOrder ?? 1;
@@ -1957,30 +1995,16 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
   }
   else if (source.cardId === 'snow') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, frozen: true }, lastEffectNote: 'Cold Shoulder: frozen.' })); note('Cold Shoulder froze the highest enemy.'); } else note('Cold Shoulder found no enemy.'); }
   else if (source.cardId === 'buddy') {
-    const enemies = inLane(m, enemy, l);
-    const isMythical = (card: CardInstance) => catalogCardByEngineId[card.cardId]?.rarity === 'Mythical';
-    const target = highest(enemies.filter(isMythical)) ?? highest(enemies);
-    if (target) {
-      targetIds.add(target.instanceId);
-      let hitLanded = false, mythicalHit = false;
-      m = hostileEffect(m, source, target, (state, actual) => {
-        const mythical = isMythical(actual);
-        let after = reduceHands(state, actual, mythical ? 5 : 2,
-          mythical ? 'Myth Buster: -5 Hands and Silence.' : 'Myth Buster: -2 Hands.');
-        const survivor = findCard(after, actual.instanceId);
-        hitLanded = !survivor || survivor.powerModifier < actual.powerModifier;
-        mythicalHit = mythical && hitLanded;
-        if (mythicalHit) {
-          if (survivor) after = queueDisruptionReactions(after, modify(after, actual.instanceId, c => ({
-            ...c, statuses: { ...c.statuses, silenced: true },
-          })), source, actual.instanceId);
-          after = modify(after, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
-            lastEffectNote: 'Myth Buster: +2 Hands for hitting a Mythical.' }));
-        }
-        return after;
-      }, false, false, true);
-      note(hitLanded ? mythicalHit ? 'Myth Buster hit a Mythical: -5 Hands, Silence, BUDDY +2.' : 'Myth Buster: -2 Hands.' : 'Myth Buster was blocked.');
-    } else note('Myth Buster found no enemy here.');
+    if (echoed) {
+      note('Buddy Buds and Earth Squabble do not repeat through echoes.');
+    } else if (source.buddyForm === 'squabble-earth') {
+      m = applyBuddyEarthToBoard(m, source);
+      note('Earth Squabble: enemies lose 1 Hand and friendly Earth cards gain 2 Hands for two rounds.',
+        'timed', { unit: 'round', startsAtRound: m.round, expiresAtRound: source.buddyEarthExpiresAtRound ?? m.round + 2, expiration: 'round-start' });
+    } else {
+      m = plantBuddyBuds(m, source);
+      note(findCard(m, source.instanceId)?.lastEffectNote ?? 'Buddy Buds could not find an eligible district.');
+    }
   }
   else if (source.cardId === 'folks') {
     for (const target of m.boards.flat().filter(c => !c.hazard && c.owner === enemy)) {
@@ -2762,7 +2786,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       || m.discountTokens.length > before.discountTokens.length
     : match.districtSnapshot && ['bikelife', 'vibe', 'carmeet', 'delivery'].includes(source.cardId)
     ? movementSucceeded
-    : source.cardId === "plug" || source.cardId === "streamer" || source.cardId === "gamer" || source.cardId === "bossbabe" || source.cardId === "stockz"
+    : source.cardId === "plug" || source.cardId === "streamer" || source.cardId === "gamer" || source.cardId === "bossbabe" || source.cardId === "stockz" || source.cardId === "buddy"
     ? true
     : mechanicallyChanged(source.instanceId)
       || successfulChangedTargetIds.length > 0 || m.discountTokens.length > before.discountTokens.length
@@ -2926,8 +2950,10 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     || (!usedToken && discountLane !== null && discountLane !== targetLane);
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const taxState = match.landlordTaxUsed ?? { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } };
+  const arrivalOrder = nextArrivalOrder(match);
   let m: Match = {
     ...match,
+    nextArrivalOrder: arrivalOrder + 1,
     [handKey]: match[handKey].filter((c) => c.instanceId !== instanceId),
     [motionKey]: match[motionKey] - cost,
     plugDiscountLane: { ...match.plugDiscountLane, [owner]: usedPlugDiscount ? null : discountLane },
@@ -2944,11 +2970,26 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     plays[targetLane]++; roundPlays[targetLane]++;
     m = { ...m, districtRuntime: { ...runtime, plays: { ...runtime.plays, [owner]: plays }, roundPlays: { ...runtime.roundPlays, [owner]: roundPlays } } };
   }
-  let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, powerModifier: card.powerModifier + (squabble ? card.basePower : 0), lastEffectNote: squabble ? 'SQUABBLE doubled base Hands.' : `Played for ${cost} Motion.` };
+  let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, arrivalOrder,
+    powerModifier: card.powerModifier + (squabble ? card.basePower : 0),
+    ...(card.cardId === 'buddy' ? {
+      buddyForm: squabble ? 'squabble-earth' as const : 'earth' as const,
+      ...(squabble ? { buddyEarthExpiresAtRound: m.round + 2 } : {}),
+    } : {}),
+    lastEffectNote: squabble ? 'SQUABBLE doubled base Hands.' : `Played for ${cost} Motion.` };
   if (card.cardId === 'luigion') placed = { ...placed, luigionMushroomUsed: false };
   if (card.cardId === 'luigion' && squabble) placed = { ...placed, ...LUIGION_POWERED };
   if (card.cardId === 'homelessguy') placed = { ...placed, wildInvestment: investment, wildEmptyWallet: match[motionKey] === cost };
   m = { ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] };
+  {
+    const activeBuddies = m.boards.flat().filter(buddy => buddy.instanceId !== instanceId && buddy.cardId === 'buddy'
+      && buddy.buddyForm === 'squabble-earth' && (buddy.buddyEarthExpiresAtRound ?? 0) > m.round
+      && !buddy.statuses.silenced && !buddy.statuses.frozen && !buddy.statuses.weakened);
+    for (const buddy of activeBuddies) {
+      const arrival = findCard(m, instanceId);
+      if (arrival) m = applyBuddyEarthToTarget(m, buddy, arrival);
+    }
+  }
   if (taxed) {
     const landlord = m.boards[targetLane].find(c => c.owner !== owner && abilityCardId(c) === 'landlord' && activeAbility(c));
     if (landlord) m = modify(m, landlord.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Rent Due was paid: +1 Hand.' }));
@@ -3221,6 +3262,155 @@ const smileBombSeed = (match: Match, id: string, draw: number) =>
   JSON.stringify([id, draw, match.round, match.nextEventSequence, match.districtSnapshot,
     match.boards.map(lane => lane.map(card => [card.instanceId, card.basePower + card.powerModifier]))]);
 
+const buddySeed = (match: Match, source: CardInstance) => JSON.stringify([
+  'buddy-buds', source.instanceId, match.round,
+  match.boards.map(lane => lane.map(card => card.instanceId).sort()),
+  match.districtSnapshot,
+]);
+
+const buddyTimedEffect = (match: Match, source: CardInstance, target: CardInstance, amount: number): Match => {
+  const expiresAtRound = source.buddyEarthExpiresAtRound ?? match.round + 2;
+  const effect: TimedEffect = {
+    id: `buddy-earth:${source.instanceId}:${target.instanceId}:${match.round}:${amount}`,
+    kind: amount > 0 ? 'buddy-earth-buff' : 'buddy-earth-debuff',
+    sourceInstanceId: source.instanceId,
+    targetInstanceId: target.instanceId,
+    owner: source.owner,
+    lane: target.lane ?? source.lane!,
+    startsAtRound: match.round,
+    expiresAtRound,
+    expiration: 'round-start',
+    amount,
+  };
+  return { ...match, timedEffects: [...match.timedEffects.filter(item => item.id !== effect.id), effect] };
+};
+
+const applyBuddyEarthToTarget = (match: Match, source: CardInstance, target: CardInstance): Match => {
+  if (target.hazard || target.owner === source.owner && canonicalElement(target.type) !== 'Earth') return match;
+  if (target.owner === source.owner) {
+    const before = findCard(match, target.instanceId);
+    if (!before) return match;
+    const after = modify(match, target.instanceId, card => ({
+      ...card, powerModifier: card.powerModifier + 2, lastEffectNote: 'Earth Squabble: +2 Hands for two rounds.',
+    }));
+    return buddyTimedEffect(after, source, findCard(after, target.instanceId)!, 2);
+  }
+  const before = findCard(match, target.instanceId);
+  if (!before) return match;
+  const after = targetEnemyPowerReduction(match, source, before, -1, 'Earth Squabble: -1 Hand for two rounds.');
+  const changed = findCard(after, target.instanceId);
+  if (!changed || changed.powerModifier >= before.powerModifier) return after;
+  return buddyTimedEffect(after, source, changed, -1);
+};
+
+const applyBuddyEarthToBoard = (match: Match, source: CardInstance): Match => {
+  let result = match;
+  const targets = result.boards.flat().sort((a, b) => a.instanceId.localeCompare(b.instanceId));
+  for (const target of targets) {
+    const currentSource = findCard(result, source.instanceId);
+    const currentTarget = findCard(result, target.instanceId);
+    if (currentSource && currentTarget) result = applyBuddyEarthToTarget(result, currentSource, currentTarget);
+  }
+  return result;
+};
+
+const plantBuddyBuds = (match: Match, source: CardInstance): Match => {
+  const sproutsAtRound = match.round + 2;
+  const seed = buddySeed(match, source);
+  let result = modify(match, source.instanceId, card => ({
+    ...card, buddyForm: 'earth', buddyGrowthAtRound: sproutsAtRound,
+    lastEffectNote: `Buddy Buds: +3 Hands and Buds sprout after two rounds (Round ${sproutsAtRound}).`,
+  }));
+  // A Bud can sprout on the final round's start and reward cards already there,
+  // but one scheduled beyond the match limit would never have a payoff.
+  if (sproutsAtRound > getMatchRoundLimit(match)) return modify(result, source.instanceId, card => ({
+    ...card, lastEffectNote: `Buddy Bud planting skipped: they would sprout after the match ends (delayed +3 Hands in Round ${sproutsAtRound}).`,
+  }));
+  const eligible = ([0, 1, 2] as Lane[]).filter(laneIndex =>
+    !getStoryLockedLanes(result, source.owner).includes(laneIndex) && inLane(result, source.owner, laneIndex).length < 4);
+  if (!eligible.length) return modify(result, source.instanceId, card => ({
+    ...card, lastEffectNote: `Buddy Bud planting skipped: all districts are full or locked (delayed +3 Hands in Round ${sproutsAtRound}).`,
+  }));
+  const wanted = Math.min(eligible.length, 2 + seededIndex(`${seed}:count`, 2));
+  const selected: Lane[] = [];
+  let remaining = [...eligible];
+  while (selected.length < wanted) {
+    const index = seededIndex(`${seed}:lane:${selected.length}`, remaining.length);
+    selected.push(remaining[index]);
+    remaining = remaining.filter((_, candidate) => candidate !== index);
+  }
+  for (const laneIndex of selected) {
+    const template = createCardInstance('rastamon', source.owner, 'buddy-bud', 0);
+    const arrivalOrder = nextArrivalOrder(result);
+    const bud: CardInstance = {
+      ...template, id: 'buddy-bud', cardId: 'buddy-bud', name: 'Buddy Bud', type: 'Plant',
+      cost: 0, power: 0, basePower: 0, powerModifier: 0, ability: 'Buddy Bud',
+      effect: `Sprouts in Round ${sproutsAtRound}; the last eligible friendly character here gains +3 Hands.`,
+      abilityUpgrades: [], kind: 'token', hazard: true, lane: laneIndex, playedRound: match.round, arrivalOrder,
+      instanceId: `${source.instanceId}:bud:${match.round}:${laneIndex}`,
+      buddyBud: { sourceInstanceId: source.instanceId, sproutsAtRound, sprouted: false },
+      lastEffectNote: `Dormant Buddy Bud · sprouts in Round ${sproutsAtRound}.`,
+    };
+    result = { ...result, nextArrivalOrder: arrivalOrder + 1, boards: result.boards.map((cardsInLane, index) =>
+      index === laneIndex ? [...cardsInLane, bud] : cardsInLane) as Match['boards'] };
+  }
+  return modify(result, source.instanceId, card => ({
+    ...card, lastEffectNote: `Buddy Buds: planted ${selected.length} Bud${selected.length === 1 ? '' : 's'}; they sprout in Round ${sproutsAtRound}.`,
+  }));
+};
+
+const sproutBuddyBuds = (match: Match): Match => {
+  let result = match;
+  for (const bud of match.boards.flat().filter(card => card.buddyBud && !card.buddyBud.sprouted
+    && card.buddyBud.sproutsAtRound <= match.round)) {
+    const currentBud = findCard(result, bud.instanceId);
+    if (!currentBud || currentBud.lane === null) continue;
+    const eligibleRecipients = result.boards[currentBud.lane].filter(card =>
+      card.owner === currentBud.owner && !card.hazard && card.instanceId !== currentBud.instanceId
+      && (card.kind ?? 'character') !== 'support');
+    const recipient = eligibleRecipients.reduce<CardInstance | undefined>((last, card) =>
+      !last || (card.arrivalOrder ?? -1) >= (last.arrivalOrder ?? -1) ? card : last, undefined);
+    const beforeSprout = result;
+    result = modify(result, bud.instanceId, card => ({
+      ...card,
+      buddyBud: { ...card.buddyBud!, sprouted: true },
+      effect: 'Sprouted Buddy Bud: the last eligible friendly character in this district gains +3 Hands.',
+      lastEffectNote: recipient
+        ? `Buddy Bud sprouted · ${recipient.name} is the last eligible recipient.`
+        : 'Buddy Bud sprouted without an eligible friendly recipient.',
+    }));
+    if (recipient) {
+      result = modify(result, recipient.instanceId, card => ({
+        ...card, powerModifier: card.powerModifier + 3,
+        lastEffectNote: 'Buddy Bud sprouted: +3 Hands as the last eligible character in this district.',
+      }));
+      result = { ...result, boards: result.boards.map(cardsInLane =>
+        cardsInLane.filter(card => card.instanceId !== bud.instanceId)) as Match['boards'] };
+      result = addEvent(beforeSprout, result, { type: 'ability', sourceId: bud.buddyBud!.sourceInstanceId,
+        owner: bud.owner, lane: bud.lane!, targetIds: [recipient.instanceId, bud.instanceId],
+        note: `Buddy Bud sprouted and gave ${recipient.name} +3 Hands as the last eligible character in the district.` });
+    }
+  }
+  return result;
+};
+
+const resolveBuddyGrowthAtRoundStart = (match: Match): Match => {
+  let result = match;
+  for (const buddy of match.boards.flat().filter(card => card.cardId === 'buddy'
+    && card.buddyForm === 'earth' && card.buddyGrowthAtRound !== undefined
+    && card.buddyGrowthAtRound <= match.round)) {
+    const beforeGrowth = result;
+    result = modify(result, buddy.instanceId, card => ({
+      ...card, powerModifier: card.powerModifier + 3, buddyGrowthAtRound: undefined,
+      lastEffectNote: 'Buddy Buds: delayed growth +3 Hands at the start of this round.',
+    }));
+    result = addEvent(beforeGrowth, result, { type: 'ability', sourceId: buddy.instanceId, owner: buddy.owner,
+      lane: buddy.lane ?? undefined, targetIds: [buddy.instanceId],
+      note: `Buddy Buds: BUDDY gained +3 Hands at the start of Round ${match.round}, after two rounds.` });
+  }
+  return result;
+};
+
 function detonateSmileBombs(match: Match): Match {
   let m = match;
   // A stable order also gives multiple KYLEs independent, reproducible kill credit.
@@ -3293,17 +3483,29 @@ export function nextRound(match: Match): Match {
   };
   for (const effect of expiring) {
     const beforeExpiration = m.nextEventSequence === match.nextEventSequence ? match : m;
-    let afterExpiration = modify(m, effect.sourceInstanceId, (card) => ({
-      ...card,
-      statuses: { ...card.statuses, protected: m.timedEffects.some(active => active.kind === 'salon-protection' && active.targetInstanceId === card.instanceId), blocked: false },
-    }));
+    let afterExpiration = m;
+    if (effect.kind === 'buddy-earth-buff' || effect.kind === 'buddy-earth-debuff') {
+      const target = effect.targetInstanceId ? findCard(m, effect.targetInstanceId) : undefined;
+      if (target) afterExpiration = modify(m, target.instanceId, card => ({
+        ...card, powerModifier: card.powerModifier - (effect.amount ?? 0),
+        lastEffectNote: 'Earth Squabble expired after two rounds.',
+      }));
+    } else {
+      afterExpiration = modify(m, effect.sourceInstanceId, (card) => ({
+        ...card,
+        statuses: { ...card.statuses, protected: m.timedEffects.some(active => active.kind === 'salon-protection' && active.targetInstanceId === card.instanceId), blocked: false },
+      }));
+    }
     afterExpiration = {
       ...afterExpiration,
       timedEffects: afterExpiration.timedEffects.filter((active) => active.id !== effect.id),
     };
     m = addEvent(beforeExpiration, afterExpiration, {
       type: 'expiration', sourceId: effect.sourceInstanceId, owner: effect.owner, targetIds: [effect.sourceInstanceId],
-      note: 'Side Eye protection expired at the round boundary.', kind: 'blocked',
+      note: effect.kind === 'buddy-earth-buff' || effect.kind === 'buddy-earth-debuff'
+        ? 'Earth Squabble Hands modifier expired after two rounds.'
+        : 'Side Eye protection expired at the round boundary.',
+      kind: effect.kind === 'buddy-earth-buff' || effect.kind === 'buddy-earth-debuff' ? 'ability' : 'blocked',
     });
   }
   const beforeRoundStart = expiring.length ? m : match;
@@ -3314,6 +3516,8 @@ export function nextRound(match: Match): Match {
     playerDrawIndex: m.playerDrawIndex + (p ? 1 : 0),
     cpuDrawIndex: m.cpuDrawIndex + (c ? 1 : 0),
   };
+  m = resolveBuddyGrowthAtRoundStart(m);
+  m = sproutBuddyBuds(m);
   const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && !card.statuses.silenced && !card.statuses.frozen);
   for (const guard of guards) {
     m = modify(m, guard.instanceId, (card) => ({ ...card, statuses: { ...card.statuses, protected: true, blocked: false }, lastEffectNote: 'Side Eye refreshed for this round.' }));
@@ -3582,6 +3786,10 @@ const cardState = (card: CardInstance | undefined): CardEventState | null => car
   cardInstanceId: card.instanceId, cardId: card.cardId, owner: card.owner, lane: card.lane,
   power: getEffectiveCardPower(card), basePower: card.basePower, powerModifier: card.powerModifier,
   moved: card.moved, statuses: { ...card.statuses }, lastEffectNote: card.lastEffectNote,
+  ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
+  ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
+  ...(card.buddyEarthExpiresAtRound !== undefined ? { buddyEarthExpiresAtRound: card.buddyEarthExpiresAtRound } : {}),
+  ...(card.buddyBud ? { buddyBud: { ...card.buddyBud } } : {}),
 }) : null;
 
 type EventInput = {
@@ -3614,6 +3822,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   boards: m.boards,
   playerMotion: m.playerMotion,
   cpuMotion: m.cpuMotion,
+  nextArrivalOrder: m.nextArrivalOrder ?? nextArrivalOrder(m),
   playerDrawIndex: m.playerDrawIndex,
   cpuDrawIndex: m.cpuDrawIndex,
   squabbleUsed: m.squabbleUsed,
@@ -3672,6 +3881,10 @@ export type CardEventState = {
   cardInstanceId: string; cardId: string; owner: Owner; lane: Lane | null;
   power: number; basePower: number; powerModifier: number; moved: boolean;
   statuses: Statuses; lastEffectNote: string;
+  buddyForm?: 'earth' | 'squabble-earth';
+  buddyGrowthAtRound?: number;
+  buddyEarthExpiresAtRound?: number;
+  buddyBud?: { readonly sourceInstanceId: string; readonly sproutsAtRound: number; readonly sprouted: boolean };
 };
 
 const scores = (m: Match): ScoreState[] => getDistrictResults(m).map(({ lane: district, player, cpu }) => ({ lane: district, player, cpu }));

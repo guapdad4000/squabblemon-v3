@@ -484,6 +484,7 @@ export function Battle({
   const effectLanded = presentedEffect?.impact ?? (phase === 'player-impact' || phase === 'rival-impact' || (phase === 'effects' && presentationScores === presentedEffect?.scores.after));
   const actor = presentedEffect ? allVisibleCards.find(card => card.instanceId === (presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId)) ?? cards[presentedEffect.cardId] : null;
   const effectProps = (card: any) => ({
+    currentRound: m.round,
     inspectionLayout: reducedMotion ? undefined : 'battle-inspect-' + card.instanceId,
     className: `${previewTargets.includes(card.instanceId) ? 'preview-target' : ''} ${activeEffectId === card.instanceId && (phase === 'rival-reveal' || phase === 'player-reveal') && presentedEffect?.type === 'play' ? (card.cost >= 4 ? 'card-reveal-flip major-reveal' : 'card-reveal-flip') : ''} ${presentedEffect && (activeEffectId === card.instanceId || presentedEffect.targetIds.includes(card.instanceId)) ? (effectLanded ? 'beat-impact' : 'beat-windup') : ''}`,
     highlighted: activeEffectId === card.instanceId,

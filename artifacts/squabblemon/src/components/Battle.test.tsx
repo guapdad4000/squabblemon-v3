@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { cards, catalogCardById, decks, districts, getCardImage } from '../data';
+import characterRevisions from '../characterRevisions.json';
 import { createStoryMatch, type StoryEncounterSnapshot } from '@workspace/squabblemon-engine/gameEngine';
 import { getStoryBattle } from '@workspace/squabblemon-engine/story';
 import { Battle, createBattleDecisionHandlers, getRecentBattleActions, tryLockInteraction } from './Battle';
@@ -139,6 +140,60 @@ test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
     assert.match(html, new RegExp(`data-card-status="${status}"`));
   }
   assert.match(html, /aria-label="[^"]*Burning: 2 burn stacks\. Weakened\. Locked\. Boosted\./);
+});
+
+test('Buddy keeps plant collectible art and uses rock art for its Squabbled battle instance', () => {
+  assert.equal(getCardImage('buddy'), `/assets/characters/buddy.webp?v=${characterRevisions.buddy}`);
+  const baseMatch = createMatch('block', 'combo');
+  const squabbleBuddy = createCardInstance('buddy', 'player', 'buddy-ui-test', 0);
+  const squabbledMatch = playCard({
+    ...baseMatch,
+    phase: 'player',
+    playerMotion: 9,
+    playerHand: [squabbleBuddy],
+    cpuHand: [],
+  }, 'player', squabbleBuddy.instanceId, 1, true);
+  const transformed = squabbledMatch.boards.flat().find(card => card.instanceId === squabbleBuddy.instanceId)!;
+  assert.equal(transformed.buddyForm, 'squabble-earth');
+  const rockHtml = renderToStaticMarkup(<CardView card={transformed} isBoard presentationOnly currentRound={squabbledMatch.round} />);
+  assert.ok(rockHtml.includes(`/assets/characters/buddy-squabble.webp?v=${characterRevisions['buddy-squabble']}`));
+  assert.match(rockHtml, /data-buddy-form="squabble"/);
+  assert.match(rockHtml, /SQUABBLE · EARTH · 2T/);
+  const reloadedMatch = JSON.parse(JSON.stringify(squabbledMatch)) as Match;
+  const reloadedBuddy = reloadedMatch.boards.flat().find(card => card.instanceId === squabbleBuddy.instanceId)!;
+  assert.equal(reloadedBuddy.buddyForm, 'squabble-earth');
+  assert.match(renderToStaticMarkup(<CardView card={reloadedBuddy} isBoard presentationOnly currentRound={reloadedMatch.round} />), /buddy-squabble\.webp/);
+  const buddyPlayEvent = squabbledMatch.effectLog.find(event => event.cardInstanceId === squabbleBuddy.instanceId && event.type === 'play')!;
+  const replayFrame = buildReplayFrame(squabbledMatch, buddyPlayEvent, 'after');
+  const replayBuddy = replayFrame.boards.flat().find(card => card.instanceId === squabbleBuddy.instanceId)!;
+  assert.equal(replayBuddy.buddyForm, 'squabble-earth');
+  assert.match(renderToStaticMarkup(<CardView card={replayBuddy} isBoard presentationOnly currentRound={replayFrame.round} />), /buddy-squabble\.webp/);
+
+  const plantBuddy = createCardInstance('buddy', 'player', 'buddy-ui-test', 1);
+  const plantedMatch = playCard({
+    ...baseMatch,
+    phase: 'player',
+    playerMotion: 9,
+    playerHand: [plantBuddy],
+    cpuHand: [],
+  }, 'player', plantBuddy.instanceId, 1);
+  const planted = plantedMatch.boards.flat().find(card => card.instanceId === plantBuddy.instanceId)!;
+  assert.equal(planted.buddyForm, 'earth');
+  const plantHtml = renderToStaticMarkup(<CardView card={planted} isBoard presentationOnly currentRound={plantedMatch.round} />);
+  assert.match(plantHtml, /assets\/characters\/buddy\.webp/);
+  assert.match(plantHtml, /PLANT · −1 MOTION · \+3 IN 2T/);
+
+  const bud = plantedMatch.boards.flat().find(card => card.buddyBud)!;
+  assert.ok(bud, 'normal Buddy On Reveal plants battle-only Bud instances');
+  const budHtml = renderToStaticMarkup(<CardView card={bud} isBoard presentationOnly currentRound={plantedMatch.round} />);
+  assert.match(budHtml, /BUD PLANTED · 2T · \+3 LAST SUMMON/);
+  assert.match(budHtml, /R3/);
+  assert.match(budHtml, /last eligible friendly card summoned here/);
+  assert.doesNotMatch(budHtml, /Explodes|random enemy here/);
+  const budReplayEvent = plantedMatch.effectLog.find(event => event.cardInstanceId === plantBuddy.instanceId && event.type === 'ability' && event.note.includes('Buddy Buds: planted'))!;
+  const budReplay = buildReplayFrame(plantedMatch, budReplayEvent, 'after').boards.flat().find(card => card.buddyBud);
+  assert.ok(budReplay?.buddyBud, 'replay snapshots retain Buddy Bud form and maturity state');
+  assert.match(renderToStaticMarkup(<CardView card={budReplay} isBoard presentationOnly currentRound={plantedMatch.round} />), /BUD PLANTED · 2T · \+3 LAST SUMMON/);
 });
 
 test('reward growth resolves catalog card ids and links newly eligible move training', () => {
@@ -824,6 +879,7 @@ test('summons render in multiplayer and can be inspected without becoming collec
         cardId: token.cardId, artworkId: token.id, instanceId: token.instanceId, owner: token.owner, lane: token.lane,
         power: token.basePower + token.powerModifier, basePower: token.basePower, powerModifier: token.powerModifier,
         statuses: token.statuses, covered: false, moved: token.moved, costs: [0, 0, 0],
+        kind: token.kind, type: token.type, hazard: !!token.hazard,
       });
       assert.equal(publicCard.kind, 'token');
       assert.equal(publicCard.id, token.id);
@@ -911,6 +967,70 @@ test('online projection flips guest perspective and preserves authoritative cost
   assert.match(html, /battlefield-grid/); assert.match(html, /battle-hand-tray/);
   assert.match(html, /Play card · 0 Motion/); assert.match(html, /aria-valuemax="75"/);
   assert.doesNotMatch(html, /data-testid="preview-lane/); assert.doesNotMatch(html, /online-arena/);
+});
+
+test('online Buddy cards and Buds survive both-seat room reconnect projection', async () => {
+  const { onlineBattleProjection } = await import('./MultiplayerBattle');
+  const { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, onlineRoomView } = await import('@workspace/squabblemon-engine/multiplayer');
+  const member = (id: string, deck = decks[0]) => ({ userId: id, name: id, ready: false, deck });
+  let room = createOnlineRoom(member('buddy-host'), 'cpu', Date.now());
+  room = joinOnlineRoom(room, member('buddy-guest', decks[1]), Date.now());
+  room = applyOnlineCommand(room, 'player', { type: 'ready' }, Date.now());
+  room = applyOnlineCommand(room, 'cpu', { type: 'ready' }, Date.now());
+
+  const plantBuddy = createCardInstance('buddy', 'player', 'online-buddy', 0);
+  const rockBuddy = createCardInstance('buddy', 'cpu', 'online-buddy', 1);
+  let plantMatch: Match = {
+    ...createMatch('block', 'slide'),
+    phase: 'player',
+    playerMotion: 9,
+    playerHand: [plantBuddy],
+  };
+  plantMatch = playCard(plantMatch, 'player', plantBuddy.instanceId, 0);
+  const rockMatch = playCard({
+    ...createMatch('block', 'slide'),
+    phase: 'cpu-reveal',
+    cpuMotion: 9,
+    cpuHand: [rockBuddy],
+    squabbleByOwner: { player: false, cpu: false },
+  }, 'cpu', rockBuddy.instanceId, 2, true);
+  const engineMatch: Match = {
+    ...plantMatch,
+    boards: plantMatch.boards.map((cardsInLane, lane) => [...cardsInLane, ...rockMatch.boards[lane]]) as Match['boards'],
+  };
+  room = { ...room, match: engineMatch };
+
+  for (const [userId, seat] of [['buddy-host', 'player'], ['buddy-guest', 'cpu']] as const) {
+    const roomView = onlineRoomView(room, 'BUDDY1234567', userId, Date.now());
+    const publicCards = roomView.boards.flat();
+    assert.equal(publicCards.find(card => card.instanceId === plantBuddy.instanceId)?.buddyForm, 'earth');
+    assert.equal(publicCards.find(card => card.instanceId === plantBuddy.instanceId)?.buddyGrowthAtRound, 3);
+    assert.equal(publicCards.find(card => card.instanceId === rockBuddy.instanceId)?.buddyForm, 'squabble-earth');
+    assert.equal(publicCards.find(card => card.instanceId === rockBuddy.instanceId)?.buddyEarthExpiresAtRound, 3);
+    assert.ok(publicCards.some(card => card.buddyBud?.sproutsAtRound === 3));
+    // JSON round-tripping mirrors the room payload received after a reconnect.
+    const reconnectView = JSON.parse(JSON.stringify(roomView));
+    const projected = onlineBattleProjection(reconnectView);
+    const buddyCards = projected.match.boards.flat().filter(card => card.cardId === 'buddy');
+    const projectedPlant = buddyCards.find(card => card.instanceId === plantBuddy.instanceId)!;
+    const projectedRock = buddyCards.find(card => card.instanceId === rockBuddy.instanceId)!;
+    assert.equal(projectedPlant.owner, seat === 'player' ? 'player' : 'cpu');
+    assert.equal(projectedPlant.buddyForm, 'earth');
+    assert.equal(projectedRock.owner, seat === 'player' ? 'cpu' : 'player');
+    assert.equal(projectedRock.buddyForm, 'squabble-earth');
+    const buds = projected.match.boards.flat().filter(card => card.cardId === 'buddy-bud');
+    assert.ok(buds.length > 0);
+    assert.ok(buds.every(card => card.buddyBud?.sproutsAtRound === 3));
+
+    const html = renderToStaticMarkup(<>{projected.match.boards.flat().map(card =>
+      <CardView key={card.instanceId} card={card} isBoard presentationOnly currentRound={projected.match.round} />)}</>);
+    assert.match(html, /data-buddy-form="squabble"/);
+    assert.match(html, /SQUABBLE · EARTH · 2T/);
+    assert.match(html, /BUD PLANTED · 2T · \+3 LAST SUMMON/);
+    assert.match(html, /buddy-squabble\.webp\?v=/);
+    assert.match(html, /data-card-id="buddy-bud"/);
+    assert.doesNotMatch(html, /Explodes|random enemy here/);
+  }
 });
 
 test('older Shiesty clone snapshots still resolve the revisioned character portrait', () => {

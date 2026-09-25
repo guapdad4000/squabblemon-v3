@@ -31,6 +31,8 @@ test('existing Epic leaders retain their costs, IDs and base kits; Ashlee is Pla
   assert.equal(cards.ashlee.type, 'Plant'); assert.match(cards.ashlee.effect, /Plant allies in all three/);
   assert.equal(cards.ashlee.cost, 5); assert.equal(cards.ashlee.power, 3);
   assert.equal(cards.buddy.cost, 3); assert.equal(cards.folks.cost, 4);
+  assert.equal(cards.buddy.type, 'Earth');
+  assert.equal(cards.buddy.elementalBond, undefined, 'Buddy is an Earth character, not an elemental-bond engine');
 });
 for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the second Electric character for ' + owner, () => {
   const m = blank(), dj = unit('piratedj', owner, 2, 1); m.boards[2] = [dj];
@@ -114,7 +116,7 @@ test('Promoter also sees district rides and settles before the next player actio
 for (const owner of ['player', 'cpu'] as const) test('Gamer and Counter reward actual disruption for ' + owner, () => {
   const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
   const m = blank(), gamer = unit('gamer', owner, 2, 1, 5), counter = unit('counter', owner, 2, 2, 6);
-  const ally = unit('buddy', owner, 1, 3, 1), foe = unit('hooper', enemy, 0, 4);
+  const ally = unit('nerd', owner, 1, 3, 1), foe = unit('hooper', enemy, 0, 4);
   m.boards = [[foe], [ally], [gamer, counter]];
   const first = cast(m, 'subwaymagician', owner).after;
   assert.equal(find(first, foe).statuses.weakened, true);
@@ -138,14 +140,14 @@ test('blocked, repeated, friendly-district and already-present statuses never fa
     assert.equal(after.leaderRounds?.player?.counter, undefined);
   }
 });
-test('Buddy Mythical Silence triggers Dark leaders only when it lands on a survivor', () => {
-  for (const condition of ['landed', 'shielded', 'knockout'] as const) {
-    const m = blank(), gamer = unit('gamer', 'player', 2, 1, 1);
-    const enemy = unit('leroy', 'cpu', 0, 2, condition === 'knockout' ? 3 : 10);
-    m.boards = [[enemy], [], [gamer]]; if (condition === 'shielded') shield(m, enemy);
-    const { after } = cast(m, 'buddy');
-    assert.equal(find(after, gamer).powerModifier, condition === 'landed' ? 2 : 0);
-  }
+test('normal Buddy Buds do not invoke the retired Mythical disruption kit', () => {
+  const m = blank(), gamer = unit('gamer', 'player', 2, 1, 1);
+  const enemy = unit('leroy', 'cpu', 0, 2, 10);
+  m.boards = [[enemy], [], [gamer]];
+  const { after } = cast(m, 'buddy');
+  assert.equal(find(after, gamer).powerModifier, 0);
+  assert.equal(find(after, enemy).powerModifier, 0);
+  assert.equal(find(after, enemy).statuses.silenced, false);
 });
 for (const status of ['silenced', 'frozen', 'weakened'] as const) test('disabled Gamer and Counter cannot react: ' + status, () => {
   const m = blank(), gamer = unit('gamer', 'player', 2, 1), counter = unit('counter', 'player', 2, 2);

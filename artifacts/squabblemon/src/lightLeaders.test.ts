@@ -45,12 +45,12 @@ for (const owner of ['player', 'cpu'] as const) for (const kind of ['church-prot
     if (kind === 'wifey') {
       const guard = unit('wifey', owner, 0, 3, 2); guard.statuses.protected = true; m.boards[0].push(guard);
     } else shield(m, target, kind);
-    m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot(['buddy'], ['buddy'], { [enemy]: { buddy: { xp: 2800, level: 8, moveTier: 3 } } });
+    m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot(['folks'], ['folks'], { [enemy]: { folks: { xp: 2800, level: 8, moveTier: 3 } } });
     const original = JSON.stringify(m);
-    const { after, source } = cast(m, 'buddy', enemy);
+    const { after, source } = cast(m, 'folks', enemy);
     assert.equal(find(after, target).powerModifier, 2);
     assert.equal(find(after, target).statuses.silenced, false);
-    assert.equal(find(after, source).powerModifier, 0, 'blocked attacker earns neither hit bonus nor training bonus');
+    assert.equal(find(after, source).powerModifier, 2, 'Folks retains its own trained reward; the protection reward belongs to the Light target');
     assert.equal(after.leaderRounds?.[owner]?.church, 4);
     assert.equal(after.pendingLeaderReactions?.length, 0);
     const reward = after.effectLog.find(e => e.note.includes('a protection block gave'));
@@ -78,7 +78,7 @@ test('Auntie caps board-wide multi-hit reactions at one and refreshes next round
   assert.equal(find(after, other).statuses.burnStacks, 0);
   const advanced = nextRound({ ...after, phase: 'resolved', playerHand: [], cpuHand: [] });
   shield(advanced, find(advanced, target));
-  const again = cast(advanced, 'buddy', enemy, 0, 1).after;
+  const again = cast(advanced, 'folks', enemy, 0, 1).after;
   assert.equal(find(again, target).powerModifier, 4);
   assert.equal(again.leaderRounds?.player?.church, 5);
 });
@@ -93,7 +93,7 @@ for (const reason of ['silenced', 'frozen', 'weakened', 'absent', 'hand', 'non-l
     if (reason === 'hazard') target.hazard = true;
     if (reason === 'immune') target.statuses.uncounterable = true;
     shield(m, target, reason === 'mitigation' ? 'nail-mitigation' : 'church-protection');
-    const { after } = cast(m, 'buddy', enemy);
+    const { after } = cast(m, 'folks', enemy);
     assert.equal(after.leaderRounds?.player?.church, undefined);
     assert(!after.effectLog.some(e => e.note.includes('a protection block gave')));
   });
@@ -102,10 +102,10 @@ test('Scammer copies share the per-side cap; a copied Auntie works by itself', (
   const { m, target, leader, enemy } = defense();
   const copy = { ...unit('scammer', 'player', 1, 3), copiedAbilityCardId: 'church' };
   m.boards[1] = [copy]; shield(m, target);
-  const both = cast(m, 'buddy', enemy).after;
+  const both = cast(m, 'folks', enemy).after;
   assert.equal(find(both, target).powerModifier, 2);
   const alone = { ...m, boards: [[target], [copy], []] } as Match;
-  const copied = cast(alone, 'buddy', enemy).after;
+  const copied = cast(alone, 'folks', enemy).after;
   assert.equal(find(copied, target).powerModifier, 2);
   assert.equal(copied.effectLog.find(e => e.note.includes('a protection block gave'))?.cardInstanceId, copy.instanceId);
   assert.equal(find(both, leader).powerModifier, 0);
@@ -198,8 +198,8 @@ test('Medic is once per round, survives JSON saves and copy changes, and refresh
 test('both leader rewards agree in AI search and replayable matches', () => {
   const { m, target, enemy } = defense();
   const medic = unit('nightmedic', 'player', 1, 3); m.boards[1] = [medic]; shield(m, target);
-  const visible = cast(m, 'buddy', enemy).after;
-  const search = cast(suppressMatchPresentationEvents(m), 'buddy', enemy).after;
+  const visible = cast(m, 'folks', enemy).after;
+  const search = cast(suppressMatchPresentationEvents(m), 'folks', enemy).after;
   assert.deepEqual(search.boards, visible.boards);
   assert.deepEqual(search.leaderRounds, visible.leaderRounds);
   assert.equal(search.effectLog.length, 0);

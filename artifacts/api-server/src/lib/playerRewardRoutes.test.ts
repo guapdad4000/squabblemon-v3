@@ -12,6 +12,7 @@ import {
   playerProfilesTable,
 } from "@workspace/db";
 import { starterRecipes } from "@workspace/squabblemon-engine/data";
+import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import { createApp } from "../app";
 import { createCardProgressionSnapshot } from "./cardProgression";
 
@@ -387,6 +388,62 @@ test("concurrent HTTP fade completions return one persisted reward and apply it 
     const profile = await profileFor(clerkUserId);
     assert.equal(profile.xp, persisted.rewardXp);
     assert.equal(profile.softCurrency, persisted.rewardSoftCurrency);
+  });
+});
+
+test("pending rewarded fades issued under old card rules are rejected without granting rewards", async (t) => {
+  const clerkUserId = `route-stale-balance-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const playerRecipe = starterRecipes.find((recipe) => recipe.id === "block")!;
+  const rivalRecipe = starterRecipes.find((recipe) => recipe.id === "slide")!;
+  await db.insert(playerProfilesTable).values({
+    clerkUserId,
+    onboardingStep: "complete",
+    ownedCardIds: playerRecipe.catalogCardIds,
+  });
+  const currentSnapshot = createCardProgressionSnapshot(
+    playerRecipe.cards,
+    playerRecipe.catalogCardIds,
+    {},
+    false,
+    rivalRecipe.cards,
+  );
+  const [match] = await db.insert(playerMatchesTable).values({
+    clerkUserId,
+    mode: "practice",
+    playerDeckId: "block",
+    rivalDeckId: "slide",
+    playerCardProgressionSnapshot: {
+      ...currentSnapshot,
+      balanceRulesVersion: CARD_BALANCE_VERSION - 1,
+    },
+  }).returning();
+  const originalProfile = await profileFor(clerkUserId);
+  const moves = Array.from({ length: 6 }, () => ({
+    cardInstanceId: null,
+    lane: null,
+    squabble: false,
+  }));
+
+  await withPlayerApi(clerkUserId, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/player/matches/${match.id}/complete`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ moves }),
+    });
+    const body = (await response.json()) as Record<string, any>;
+    assert.equal(response.status, 409);
+    assert.match(body.error, /older card balance.*start a new fade/i);
+
+    const [persisted] = await db.select().from(playerMatchesTable)
+      .where(eq(playerMatchesTable.id, match.id));
+    assert.equal(persisted.completedAt, null);
+    assert.equal(persisted.rewardXp, null);
+    assert.equal(persisted.rewardSoftCurrency, null);
+    const unchangedProfile = await profileFor(clerkUserId);
+    assert.equal(unchangedProfile.xp, originalProfile.xp);
+    assert.equal(unchangedProfile.softCurrency, originalProfile.softCurrency);
+    assert.equal(unchangedProfile.packTickets, originalProfile.packTickets);
   });
 });
 

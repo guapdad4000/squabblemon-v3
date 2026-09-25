@@ -158,3 +158,6 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
 .card-rarity-epic .collector-foil-pattern{background-size:160px 180px;opacity:.65}
 
 @media (pointer:coarse){.collector-finish-controls button{min-height:44px}}
+.buddy-form-cue{display:block;padding:2px 3px;border:1px solid #a7d77c99;border-radius:2px;background:#10210ee8;color:#e4ffd1;font:900 5px/1.2 var(--font-mono,monospace);letter-spacing:.025em;text-align:center;text-shadow:0 1px #000;pointer-events:auto}
+.buddy-form-cue--squabble{border-color:#d9a35f;color:#ffe2a8;background:#291708eb}
+.battle-board-card .buddy-form-cue{font-size:clamp(4px,1.25vw,6px);padding:2px 1px;letter-spacing:0}

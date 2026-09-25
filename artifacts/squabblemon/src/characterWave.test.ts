@@ -289,15 +289,15 @@ test('online projections expose Scent and Package markers without exposing engin
     assert(!JSON.stringify(view).includes('lingeringScents'));
   }
 });
-test('Fanboy redirects Buddy’s whole ability; the protected Mythical cannot award a hunt bonus', () => {
+test('Fanboy redirects Folks’ Burn away from the protected Mythical', () => {
   const m = blank(), idol = unit('homelessguy', 'player', 0), girl = unit('fangirl', 'player', 1);
   idol.powerModifier = 8; m.boards = [[idol], [girl], []];
   const guard = cast(m, 'grownfanboy', 'player', 1);
-  const attacked = cast(guard.after, 'buddy', 'cpu', 0);
+  const attacked = cast(guard.after, 'folks', 'cpu', 0);
   assert.equal(find(attacked.after, idol).powerModifier, 8);
   assert.equal(find(attacked.after, idol).statuses.silenced, false);
   assert.equal(find(attacked.after, attacked.source).powerModifier, 0);
-  assert.equal(find(attacked.after, guard.source).powerModifier, 0, 'normal recipient takes 2, then Fangirl adds 2');
+  assert.equal(find(attacked.after, guard.source).powerModifier, 2, 'Fangirl rewards the redirected Burn without a Hands penalty');
 });
 
 test('Scent replay starts with no mark and shows the newly created mark after reveal', () => {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { styleSetFor, stickerById } from '@workspace/squabblemon-engine/cosmetics';
-import { catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
+import { getBuddyBannerImage, catalogCardById, CARD_RARITY_DEFINITIONS } from '../data';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import '../styles/character-styles.css';
 
@@ -27,9 +27,10 @@ export function CharacterBanner({ cardId, finish = 'base', stickers = [], displa
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); };
   }, [animated, cardId]);
   if (!set || !card) return null;
-  return <div ref={root} className={'character-banner' + (compact ? ' character-banner--compact' : '') + (set.banner ? ' character-banner--artwork' : '')} data-finish={finish} data-long-name={card.name.length > 11} data-animated={animated && running} style={{ '--style-accent': set.accent } as CSSProperties} aria-label={card.name + ' character banner'}>
-    {set.banner ? <>
-      <img className="character-banner__artwork" src={getAssetUrl(set.banner)} alt={card.name + ' signature banner'} decoding="async" />
+  const bannerArtwork = cardId === 'buddy' ? getBuddyBannerImage() : set.banner ? getAssetUrl(set.banner) : undefined;
+  return <div ref={root} className={'character-banner' + (compact ? ' character-banner--compact' : '') + (bannerArtwork ? ' character-banner--artwork' : '')} data-finish={finish} data-long-name={card.name.length > 11} data-animated={animated && running} style={{ '--style-accent': set.accent } as CSSProperties} aria-label={card.name + ' character banner'}>
+    {bannerArtwork ? <>
+      <img className="character-banner__artwork" src={bannerArtwork} alt={cardId === 'buddy' ? 'Buddy in his plant and rock Earth forms' : card.name + ' signature banner'} decoding="async" />
       {displayName && <span className="character-banner__identity">{displayName}</span>}
     </> : <><img className="character-banner__scene" src={getAssetUrl(set.background)} alt="" decoding="async" />
     <div className="character-banner__shade" />

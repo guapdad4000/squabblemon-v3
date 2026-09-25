@@ -8,6 +8,7 @@ import {
   joinOnlineRoom,
   onlineRoomView,
   ROOM_LIFETIME_MS,
+  ONLINE_RULES_VERSION,
   type OnlineRoom,
   type Seat,
 } from "../../../lib/squabblemon-engine/src/multiplayer";
@@ -32,9 +33,11 @@ function fixture(opening: Seat = "player") {
 }
 test("card balance and online room versions reject incompatible in-progress fades safely", () => {
   const room = fixture();
-  assert.equal(room.rulesVersion >= CARD_BALANCE_VERSION, true);
+  assert.equal(room.rulesVersion, ONLINE_RULES_VERSION);
+  assert.equal(CARD_BALANCE_VERSION, 5);
+  assert.doesNotThrow(() => applyOnlineCommand(room, "player", { type: "end-turn" }, 3));
   assert.throws(
-    () => applyOnlineCommand({ ...room, rulesVersion: room.rulesVersion - 1 }, "player", { type: "end-turn" }, 3),
+    () => applyOnlineCommand({ ...room, rulesVersion: ONLINE_RULES_VERSION - 1 }, "player", { type: "end-turn" }, 3),
     /older rules version|new room/,
   );
 });
@@ -86,6 +89,55 @@ test("both seats can Squabble exactly once, including the guest playing first", 
   assert(
     room.match!.effectLog.some((e) => e.replay.after.squabbleByOwner?.cpu),
   );
+});
+test("Buddy forms, Bud timing and hazard metadata are public to both seats and survive reconnect", () => {
+  const member = (userId: string, base: (typeof decks)[number]) => ({
+    userId,
+    name: userId,
+    ready: false,
+    deck: {
+      id: `buddy-${base.id}`,
+      name: base.name,
+      cards: ["buddy", ...base.cards.filter(id => id !== "buddy")].slice(0, 10),
+      hero: base.hero,
+    },
+  });
+  let room = createOnlineRoom(member("buddy-player", decks[0]), "player", 0);
+  room = joinOnlineRoom(room, member("buddy-cpu", decks[1]), 0);
+  room = applyOnlineCommand(room, "player", { type: "ready" }, 1);
+  room = applyOnlineCommand(room, "cpu", { type: "ready" }, 2);
+
+  room = applyOnlineCommand(room, "player", { type: "end-turn" }, 3);
+  room = applyOnlineCommand(room, "cpu", { type: "end-turn" }, 4);
+  const cpuBuddy = room.match!.cpuHand.find(card => card.cardId === "buddy")!;
+  room = applyOnlineCommand(room, "cpu", {
+    type: "play", instanceId: cpuBuddy.instanceId, lane: 0, squabble: true,
+  }, 5);
+  room = applyOnlineCommand(room, "cpu", { type: "end-turn" }, 6);
+  const playerBuddy = room.match!.playerHand.find(card => card.cardId === "buddy")!;
+  room = applyOnlineCommand(room, "player", {
+    type: "play", instanceId: playerBuddy.instanceId, lane: 1, squabble: false,
+  }, 7);
+
+  assert.equal(cards["buddy-bud"], undefined, "Bud remains absent from the collectible catalog");
+  const restored = JSON.parse(JSON.stringify(room)) as OnlineRoom;
+  for (const [userId, seat] of [["buddy-player", "player"], ["buddy-cpu", "cpu"]] as const) {
+    const live = onlineRoomView(room, "BUDDYROOM", userId, 8);
+    const reconnected = onlineRoomView(restored, "BUDDYROOM", userId, 8);
+    assert.deepEqual(reconnected.boards, live.boards, `${seat} sees identical public state after reconnect`);
+    const normal = live.boards.flat().find(card => card.cardId === "buddy" && card.owner === "player")!;
+    const transformed = live.boards.flat().find(card => card.cardId === "buddy" && card.owner === "cpu")!;
+    assert.equal(normal.buddyForm, "earth");
+    assert.equal(normal.buddyGrowthAtRound, 4);
+    assert.equal(transformed.buddyForm, "squabble-earth");
+    assert.equal(transformed.buddyEarthExpiresAtRound, 4);
+    const bud = live.boards.flat().find(card => card.buddyBud)!;
+    assert.equal(bud.kind, "token");
+    assert.equal(bud.hazard, true);
+    assert.equal(bud.buddyBud?.sproutsAtRound, 4);
+    assert.equal(bud.buddyBud?.sprouted, false);
+    assert.equal(typeof bud.arrivalOrder, "number");
+  }
 });
 test("wrong turns, wrong hands, overspending and repeated used cards are rejected", () => {
   let room = fixture();

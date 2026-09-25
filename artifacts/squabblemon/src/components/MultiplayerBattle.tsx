@@ -3,7 +3,7 @@ import { ParkResult } from './ParkResult';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { cards } from '../data';
+import { cards, type Card } from '../data';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
 import { Battle, type OnlineBattlePresentation } from './Battle';
@@ -15,17 +15,34 @@ import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
 import { setBattleMusicMode } from '../musicStore';
 
-const definition = (id: string) => cards[id] ?? SUMMON_TEMPLATES[id as keyof typeof SUMMON_TEMPLATES];
-export const asCard = (card: PublicCard): CardInstance => ({
-  ...definition(card.cardId), ...card, ...card.form, id: card.artworkId ?? definition(card.cardId).id,
-  deck: 'online', playedRound: null, lastEffectNote: '',
-});
+type BuddyPublicState = Pick<CardInstance, 'buddyForm' | 'buddyGrowthAtRound' | 'buddyEarthExpiresAtRound' | 'buddyBud'>;
+type OnlinePublicCard = PublicCard & Partial<BuddyPublicState>;
+
+const buddyBudDefinition: Card = {
+  id: 'buddy-bud', name: 'Buddy Bud', type: 'Plant', cost: 0, power: 0,
+  ability: 'Buddy Bud', effect: 'Gives +3 Hands to the last eligible friendly card summoned in this district when it sprouts.',
+  abilityUpgrades: [], kind: 'token', hazard: true,
+};
+const definition = (id: string): Card => {
+  if (id === 'buddy-bud') return buddyBudDefinition;
+  const card = cards[id] ?? SUMMON_TEMPLATES[id as keyof typeof SUMMON_TEMPLATES];
+  if (!card) throw new Error(`Unknown public multiplayer card: ${id}`);
+  return card;
+};
+export const asCard = (card: OnlinePublicCard): CardInstance => {
+  const base = definition(card.cardId);
+  return {
+    ...base, ...card, ...card.form, id: card.artworkId ?? base.id,
+    hazard: card.hazard ? true : undefined,
+    deck: 'online', playedRound: null, lastEffectNote: '',
+  };
+};
 
 /** A display-only projection. Never simulate online actions or invent an opponent hand. */
 export function onlineBattleProjection(room: OnlineRoomView): { match: Match; presentation: Omit<OnlineBattlePresentation, 'status' | 'clockRunning' | 'yourTurn'> } {
   const rival = otherSeat(room.seat);
   const owner = (seat: Seat) => seat === room.seat ? 'player' as const : 'cpu' as const;
-  const card = (c: PublicCard): CardInstance => ({ ...asCard(c), owner: owner(c.owner),
+  const card = (c: PublicCard): CardInstance => ({ ...asCard(c as OnlinePublicCard), owner: owner(c.owner),
     ...(c.smileBomb ? { smileBomb: { ...c.smileBomb, sourceOwner: owner(c.smileBomb.sourceOwner) } } : {}) });
   const scores = room.scores.map(score => ({ ...score, player: score[room.seat], cpu: score[rival],
     winner: score.winner === 'draw' ? 'draw' as const : owner(score.winner) }));

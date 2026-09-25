@@ -25,13 +25,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 4;
+export const ONLINE_RULES_VERSION = 5;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 4;
+export const CARD_BALANCE_VERSION = 5;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -308,6 +308,16 @@ export type PublicCard = {
   artworkId?: string;
   /** Public battle form presentation; never changes collection identity. */
   form?: { name: string; ability: string; effect: string };
+  /** Buddy's battle-only state; Buddy Buds are tokens, never collectible cards. */
+  buddyForm?: CardInstance['buddyForm'];
+  buddyGrowthAtRound?: number;
+  buddyBud?: CardInstance['buddyBud'];
+  buddyEarthExpiresAtRound?: number;
+  /** Stable summon/play order survives lane movement and reconnects. */
+  arrivalOrder?: number;
+  kind?: CardInstance['kind'];
+  type: CardInstance['type'];
+  hazard: boolean;
   smileBomb?: CardInstance['smileBomb'];
   bankedMotion?: number;
   aliceReady?: boolean;
@@ -376,6 +386,14 @@ export function onlineRoomView(
     artworkId: card.id,
     ...(card.cardId === 'luigion' && card.id === 'luigion-powered'
       ? { form: { name: card.name, ability: card.ability, effect: card.effect } } : {}),
+    ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
+    ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
+    ...(card.buddyBud ? { buddyBud: { ...card.buddyBud } } : {}),
+    ...(card.buddyEarthExpiresAtRound !== undefined ? { buddyEarthExpiresAtRound: card.buddyEarthExpiresAtRound } : {}),
+    ...(card.arrivalOrder !== undefined ? { arrivalOrder: card.arrivalOrder } : {}),
+    kind: card.kind ?? 'character',
+    type: card.type,
+    hazard: !!card.hazard,
     ...(card.cardId === 'powerhouse' ? { bankedMotion: card.bankedMotion ?? 0 } : {}),
     ...(card.aliceReady ? { aliceReady: true } : {}),
     ...(card.idolId ? { idolId: card.idolId } : {}),

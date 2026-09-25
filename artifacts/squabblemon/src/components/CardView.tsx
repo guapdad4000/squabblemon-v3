@@ -9,7 +9,7 @@ import { CardProgress } from './CardProgress';
 import type { CardProgress as CardProgressValue } from '@workspace/squabblemon-engine/cardProgression';
 import { CardRarityTreatment, getCardRarity, getRarityClass } from './CardRarityTreatment';
 import { CardUpgradeCue } from './CardUpgrades';
-import { Card, getCardImage } from '../data';
+import { Card, getCardImage, getBuddySquabbleImage } from '../data';
 import { canonicalElement, cardEntryAccent } from '@workspace/squabblemon-engine/data';
 import { CARD_RARITY_DEFINITIONS } from '../data';
 import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
@@ -52,6 +52,8 @@ interface CardViewProps {
   scoreStance?: 'leading' | 'trailing' | 'tied';
   /** Show the per-card portrait pop animation on first hand-draw render. */
   portraitPop?: boolean;
+  /** Current match round, used to show Buddy's temporary form countdown. */
+  currentRound?: number;
 }
 
 function CardViewComponent({
@@ -60,19 +62,54 @@ function CardViewComponent({
   effectRole, effectKind, disableLayout, unavailable, inspectionLayout,
   disabledReason, variantId, progress, isInspector,
   fillContainer, presentationOnly, dragEnabled = false, covered = false,
-  entryBurst, scoreStance, portraitPop, backgroundUrl,
+  entryBurst, scoreStance, portraitPop, backgroundUrl, currentRound,
 }: CardViewProps) {
   const inspection = useCardInspection(card, inspectable ?? (!presentationOnly && !isInspector), onInspect, variantId);
   const equippedScene = useCardScene(card.id);
   const isInstance = 'instanceId' in card;
   const instance = isInstance ? card as CardInstance : null;
+  const isBuddyBud = !!instance?.buddyBud || instance?.cardId === 'buddy-bud' || card.id === 'buddy-bud';
+  const buddyRockForm = instance?.cardId === 'buddy' && instance.buddyForm === 'squabble-earth';
+  const buddyTurnsRemaining = buddyRockForm && instance.buddyEarthExpiresAtRound !== undefined && currentRound !== undefined
+    ? Math.max(0, instance.buddyEarthExpiresAtRound - currentRound)
+    : null;
+  const buddyGrowthTurns = instance?.buddyGrowthAtRound !== undefined && currentRound !== undefined
+    ? Math.max(0, instance.buddyGrowthAtRound - currentRound)
+    : null;
+  const buddyCue = instance?.cardId === 'buddy'
+    ? buddyRockForm
+      ? `SQUABBLE · EARTH${buddyTurnsRemaining === null ? '' : buddyTurnsRemaining ? ` · ${buddyTurnsRemaining}T` : ' · ENDED'}`
+      : `PLANT · −1 MOTION${buddyGrowthTurns === null ? '' : buddyGrowthTurns ? ` · +3 IN ${buddyGrowthTurns}T` : ' · +3 READY'}`
+    : '';
+  const buddyDescription = buddyCue
+    ? buddyRockForm
+      ? `Squabble form: enemies lose 1 Hand and friendly Earth cards gain 2 Hands${buddyTurnsRemaining === null ? ' for two turns' : buddyTurnsRemaining ? ` · ${buddyTurnsRemaining} turn${buddyTurnsRemaining === 1 ? '' : 's'} remaining` : ' · the two-turn effect has expired'}.`
+      : `Plant form: costs 1 less Motion in this lane. ${buddyGrowthTurns === null ? 'After two rounds Buddy gains 3 Hands and plants two or three Buddy Buds.' : buddyGrowthTurns ? `Buddy gains 3 Hands and the planted Buds sprout in ${buddyGrowthTurns} turn${buddyGrowthTurns === 1 ? '' : 's'}.` : 'Buddy has gained 3 Hands and the planted Buds are sprouting.'} Each sprouted Bud gives +3 Hands to the last eligible friendly card summoned in its district.`
+    : '';
+  const buddyBudTurns = instance?.buddyBud && currentRound !== undefined
+    ? Math.max(0, instance.buddyBud.sproutsAtRound - currentRound)
+    : null;
+  const buddyBudCue = isBuddyBud
+    ? instance?.buddyBud?.sprouted
+      ? 'SPROUTED · NO TARGET'
+      : `BUD PLANTED${buddyBudTurns === null ? '' : ` · ${buddyBudTurns}T`} · +3 LAST SUMMON`
+    : '';
+  const buddyBudDescription = isBuddyBud
+    ? instance?.buddyBud?.sprouted
+      ? 'Buddy Bud sprouted, but no eligible friendly character was available; it granted no Hands.'
+      : `Buddy Bud planted in this district${instance?.buddyBud && buddyBudTurns !== null ? `; matures in ${buddyBudTurns} turn${buddyBudTurns === 1 ? '' : 's'} (round ${instance.buddyBud.sproutsAtRound})` : instance?.buddyBud ? `; matures in round ${instance.buddyBud.sproutsAtRound}` : ''}. Gives +3 Hands to the last eligible friendly card summoned here when it sprouts.`
+    : '';
 
   const chargeLabel = instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
     : instance?.aliceReady ? 'Next play: +3 Hands' : '';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
-  const fuseDescription = card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
+  const fuseDescription = isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
   const displayPower = card.hazard ? 0 : effectivePower ?? card.power;
   const displayCost = cost ?? card.cost;
+  const motionLabel = isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
+  const motionValue = isBuddyBud && instance?.buddyBud
+    ? `R${instance.buddyBud.sproutsAtRound}`
+    : card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost;
 
   const isFrozen = instance?.statuses?.frozen;
   const isSilenced = instance?.statuses?.silenced;
@@ -85,6 +122,8 @@ function CardViewComponent({
   const isMoved = instance?.moved;
   const boardStatusLabel = [
     chargeLabel,
+    buddyDescription,
+    buddyBudDescription,
     covered ? 'Covered.' : isProtected ? 'Protected.' : '',
     isBlocked ? 'Blocked.' : '',
     isSilenced ? 'Silenced.' : '',
@@ -143,6 +182,7 @@ function CardViewComponent({
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
       data-card-kind={card.kind ?? 'character'}
+      data-buddy-form={buddyCue ? (buddyRockForm ? 'squabble' : 'plant') : undefined}
       data-bomb-round={fuseRound}
       data-frozen={isFrozen ? true : undefined}
       data-card-finish={cardFinishLabel(rarity, variantKind)}
@@ -203,7 +243,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={getCardImage(card.id, variantId)}
+                src={isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : getCardImage(card.id, variantId)}
                 alt=""
                  draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
@@ -213,13 +253,13 @@ function CardViewComponent({
 
           <div className="card-stat-pair absolute top-0 inset-x-0 flex justify-between z-20 pointer-events-none">
             <div className="bg-primary text-black px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-r border-b border-black/30" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)' }}>
-              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{card.hazard ? 'Explodes' : 'Motion'}</span>}
-              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost}</span>
+              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{motionLabel}</span>}
+              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{motionValue}</span>
             </div>
 
             <div className={`px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${powerModifier > 0 ? 'bg-green-400 text-black' : powerModifier < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
-              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">Hands</span>}
-              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{displayPower}</span>
+              {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{isBuddyBud ? 'Payoff' : 'Hands'}</span>}
+              <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{isBuddyBud ? '+3' : displayPower}</span>
               {powerModifier !== 0 && isBoard && (
                 <span className="text-[5px] font-mono font-bold block -mt-0.5 tracking-tighter">
                   {powerModifier > 0 ? `+${powerModifier}` : powerModifier}
@@ -229,6 +269,11 @@ function CardViewComponent({
           </div>
 
           {chargeLabel && <span className="absolute top-[24%] inset-x-1 z-20 rounded bg-black/85 px-1 py-0.5 text-center font-mono text-[7px] font-bold text-cyan-100" data-testid="card-charge">{chargeLabel}</span>}
+          {(buddyCue || buddyBudCue) && !isInspector && <span
+            className={`buddy-form-cue absolute left-1 right-1 top-[25%] z-20 ${buddyRockForm ? 'buddy-form-cue--squabble' : ''} ${isBuddyBud ? 'buddy-form-cue--bud' : ''}`}
+            data-testid="buddy-form-cue"
+            title={isBuddyBud ? buddyBudDescription : buddyDescription}
+          >{isBuddyBud ? buddyBudCue : buddyCue}</span>}
           {isBoard && (
             <div className="card-status-stack absolute top-[28px] right-1 z-20 pointer-events-none" aria-hidden="true">
               {covered && <div data-card-status="covered" title="Covered" className="card-status bg-amber-200 text-black ring-1 ring-amber-500"><Shield size={8} strokeWidth={3} /></div>}
@@ -324,7 +369,8 @@ function cardViewPropsEqual(previous: CardViewProps, next: CardViewProps) {
     && previous.backgroundUrl === next.backgroundUrl
     && previous.entryBurst === next.entryBurst
     && previous.scoreStance === next.scoreStance
-    && previous.portraitPop === next.portraitPop;
+    && previous.portraitPop === next.portraitPop
+    && previous.currentRound === next.currentRound;
 }
 
 export const CardView = React.memo(CardViewComponent, cardViewPropsEqual);
