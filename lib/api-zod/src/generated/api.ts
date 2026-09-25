@@ -1831,7 +1831,7 @@ export const CompletePlayerMatchBody = zod.object({
   "lane": zod.number().min(completePlayerMatchBodyMovesItemLaneMin).max(completePlayerMatchBodyMovesItemLaneMax).nullable(),
   "squabble": zod.boolean(),
   "endTurn": zod.boolean().optional().describe('False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches.'),
-  "investment": zod.number().min(completePlayerMatchBodyMovesItemInvestmentMin).max(completePlayerMatchBodyMovesItemInvestmentMax).optional().describe('Extra Motion chosen for Homeless Guy. Defaults to zero; the engine validates affordability.')
+  "investment": zod.number().min(completePlayerMatchBodyMovesItemInvestmentMin).max(completePlayerMatchBodyMovesItemInvestmentMax).optional().describe('Card choice: Homeless Guy extra Motion (0–4), Dice Game wager (1–3; zero defaults to 1), or Concert mode (0 boost, 1 reduce). The engine validates affordability and card-specific bounds.')
 })).min(1).max(completePlayerMatchBodyMovesMax)
 })
 

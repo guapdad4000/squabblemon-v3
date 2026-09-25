@@ -70,7 +70,7 @@ test('new district state is replayed before/after and a full solo transcript ver
 
 test('all 21 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition', () => {
   assert.equal(FAIRYTALE_WAVE.length, 21); assert.equal(FAIRYTALE_ALTERNATE_ART.length, 8);
-  assert.equal(cardCatalog.filter(c => c.kind !== 'support').length, 164);
+  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 182);
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
     assert.equal(cards[id].name, name); assert.equal(cards[id].cost, cost); assert.equal(cards[id].power, power);
     assert.equal(catalogCardById[art].rarity, rarity);

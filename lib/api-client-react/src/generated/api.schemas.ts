@@ -826,7 +826,7 @@ export interface MatchMove {
   /** False plays a card and keeps the turn open. True ends the turn. Omitted only for legacy matches. */
   endTurn?: boolean;
   /**
-     * Extra Motion chosen for Homeless Guy. Defaults to zero; the engine validates affordability.
+     * Card choice: Homeless Guy extra Motion (0–4), Dice Game wager (1–3; zero defaults to 1), or Concert mode (0 boost, 1 reduce). The engine validates affordability and card-specific bounds.
      * @minimum 0
      * @maximum 4
      */

@@ -15,7 +15,8 @@ export function RulesModal({ onClose }: any) {
   const rules = [
     "Drag a card from your hand into a district to play it immediately. Swipe sideways to browse your hand. You can also tap a card, choose a district, and press Play card. Keep playing while you have Motion, then End Turn.",
     "Both gangs start with 2 Motion. Each new round refills to its round number plus up to 1 unspent Motion, capped at 9. Plug can discount your next card in another district.",
-    "Each card resolves immediately and stays on the board. After you end your turn, the Rival can also play multiple cards with its remaining Motion.",
+    "Characters and support cards resolve immediately and stay on the board. Blockbusters are lane events: choose a lane, resolve the effect, then discard the event. After you end your turn, the Rival can also play multiple cards with its remaining Motion.",
+    "Blockbusters use the same ten-card deck. Concert lets you choose +1 or −1 Hands for both crews. Dice Game wagers 1–3 Motion per side and compares the best two of three D6. After Party extends the fight to seven rounds once. Blockbusters cannot use SQUABBLE.",
     "Abilities resolve immediately. Hands changes, movement, freeze, silence, protection, and blocked effects stay visible on the affected cards.",
     "Frozen cards add 0 Hands until cleansed. Silenced cards keep their Hands but cannot fire their ability.",
     "Each fade draws three of sixteen locations. Rules can help or hurt: Dive Bar lowers costs and Hands; Corrupt Church charges extra Motion for a buff. Location penalties cannot lower a card below 0 Hands. Read each mat before playing.",

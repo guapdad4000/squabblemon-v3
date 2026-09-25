@@ -102,14 +102,15 @@ function CardViewComponent({
 
   const chargeLabel = instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
     : instance?.aliceReady ? 'Next play: +3 Hands' : '';
+  const isBurntPlate = instance?.cardId === 'burnt-plate';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
-  const fuseDescription = isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
+  const fuseDescription = isBurntPlate ? ' At each round end, gives a random friendly character here 1 Burn. Persists and adds no lane Hands.' : isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
   const displayPower = card.hazard ? 0 : effectivePower ?? card.power;
   const displayCost = cost ?? card.cost;
-  const motionLabel = isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
+  const motionLabel = isBurntPlate ? 'Each round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
     ? `R${instance.buddyBud.sproutsAtRound}`
-    : card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost;
+    : isBurntPlate ? 'Burn' : card.hazard ? fuseRound ? `R${fuseRound}` : 'Next' : displayCost;
 
   const isFrozen = instance?.statuses?.frozen;
   const isSilenced = instance?.statuses?.silenced;
@@ -295,7 +296,7 @@ function CardViewComponent({
                 <span aria-hidden="true" className="collector-tier-cue">{CARD_RARITY_DEFINITIONS[rarity].cue} </span>{card.kind === 'token' ? 'Summon' : CARD_RARITY_DEFINITIONS[rarity].label}
               </span>
               <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest text-[var(--rarity-color)] leading-none bg-black/40 px-1 py-0.5">
-                {card.kind === 'support' ? `Support · ${canonicalElement(card.type)}` : canonicalElement(card.type)}
+                {card.kind === 'blockbuster' ? 'Blockbuster · Lane Event' : card.kind === 'support' ? `Support · ${canonicalElement(card.type)}` : canonicalElement(card.type)}
               </span>
               {variantKind && (
                 <span className="font-mono uppercase text-[4.5px] md:text-[6px] tracking-widest px-1 py-0.5 bg-black/80 text-[var(--rarity-color)] border border-white/20 leading-none shadow-sm ml-auto">

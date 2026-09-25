@@ -25,6 +25,7 @@ const buddyBudDefinition: Card = {
 };
 const definition = (id: string): Card => {
   if (id === 'buddy-bud') return buddyBudDefinition;
+  if (id === 'burnt-plate') return { ...buddyBudDefinition, id: 'the-cookout', name: 'Burnt Plate', type: 'Fire', ability: 'Still Smoking', effect: 'At each round end, give a random friendly character here 1 Burn.' };
   const card = cards[id] ?? SUMMON_TEMPLATES[id as keyof typeof SUMMON_TEMPLATES];
   if (!card) throw new Error(`Unknown public multiplayer card: ${id}`);
   return card;
@@ -47,6 +48,8 @@ export function onlineBattleProjection(room: OnlineRoomView): { match: Match; pr
   const scores = room.scores.map(score => ({ ...score, player: score[room.seat], cpu: score[rival],
     winner: score.winner === 'draw' ? 'draw' as const : owner(score.winner) }));
   const match: Match = {
+    afterParty: room.roundLimit === 7,
+    diceResult: room.diceResult ? { ...room.diceResult, player: room.diceResult[room.seat], cpu: room.diceResult[rival], winner: room.diceResult.winner === "draw" ? "draw" : owner(room.diceResult.winner) } : undefined,
     round: room.round, phase: room.status === 'complete' ? 'complete' : room.activeSeat === room.seat ? 'player' : 'cpu-reveal',
     playerDeck: room.ownDeck.id, cpuDeck: 'online-rival', playerCardIds: room.ownDeck.cards, cpuCardIds: [],
     playerHand: room.hand.map(card), cpuHand: [], boards: room.boards.map(lane => lane.map(card)) as Match['boards'],

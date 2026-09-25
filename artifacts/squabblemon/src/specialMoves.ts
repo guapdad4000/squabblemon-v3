@@ -11,6 +11,7 @@ export type MoveClip = {
 export const moveClips = catalog.clips as Record<string, MoveClip>;
 export const moveAssignments: Record<string, string | null> = {
   ...catalog.assignments,
+  ...Object.fromEntries(Object.values(cards).filter(card => card.roles?.includes('Block Party') || card.kind === 'blockbuster').map(card => [card.id, null])),
   sugarfoot: null,
   'yn-gokarter': null,
   'yn-atv-lord': null,

@@ -1,3 +1,6 @@
+export { blockbusterExtraCost } from './blockbusterRules';
+import { blockbusterWaveCards } from './blockbusterWave';
+import { resolveBlockbusterWave, blockbusterExtraCost, type LaneDamage, type DiceResult, type BlockbusterTools } from './blockbusterRules';
 import { canonicalElement, cards, catalogCardByEngineId, catalogIdsToEngineIds, decks, DECK_SIZE, MAX_MOTION, districts as legacyDistricts, type Card, type Deck } from './data';
 import { validateDistrictSnapshot, type DistrictSnapshot, type DistrictDisplay } from './districts';
 import { expansionCards } from './blockExpansion';
@@ -152,7 +155,7 @@ export type EffectLogEntry = {
 };
 export type ReplayState = Pick<Match,
   'round' | 'phase' | 'playerHand' | 'cpuHand' | 'boards' | 'playerMotion' | 'cpuMotion' |
-  'nextArrivalOrder' |
+  'nextArrivalOrder' | 'afterParty' | 'laneDamage' | 'diceResult' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
   'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
@@ -189,6 +192,10 @@ type LeaderReaction = { kind: LeaderKind; owner: Owner; sourceInstanceId: string
 export type LingeringScent = { owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; triggeredRound?: number };
 export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
 export type Match = {
+  afterParty?: boolean;
+  laneDamage?: LaneDamage[];
+  repeatingLaneDamage?: boolean;
+  diceResult?: DiceResult;
   districtTraps?: DistrictTrap[];
   /** One shared Turn It Around trigger per friendly district each round. */
   janitorReversals?: { owner: Owner; lane: Lane; round: number; sourceInstanceId: string; targetInstanceId: string }[];
@@ -293,6 +300,7 @@ export function createMatchFromEngineCards(
     landlordTaxUsed: { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } },
     sneakerTriggered: { player: false, cpu: false },
     lastRevealedCardId: null,
+    laneDamage: [],
     roundMovedIds: { player: [], cpu: [] },
     entranceHistory: [],
     guapRounds: {},
@@ -421,7 +429,7 @@ export function getMatchDistricts(match?: Match | null, owner: Owner = 'player')
     if (effect.kind === 'salon-protection') status = runtime.roundPlays[owner][i] ? 'Your appointment used this round' : 'Your first-play protection ready';
     if (effect.kind === 'crew-cleanse') status = runtime.roundPlays[owner][i] ? 'Your cleanup used this round' : 'Your gang cleanup ready';
     if (effect.kind === 'champion-only') status = 'Only one champion scores per side';
-    if (effect.kind === 'round-growth') status = match.round < 6 ? 'Next round: every card here grows +1' : 'Final harvest complete';
+    if (effect.kind === 'round-growth') status = match.round < getMatchRoundLimit(match) ? 'Next round: every card here grows +1' : 'Final harvest complete';
     if (effect.kind === 'pawn-sacrifice') status = runtime.roundPlays[owner][i] ? 'Your trade used this round' : 'Your next play trades your weakest ally';
     if (effect.kind === 'broadcast') status = inLane(match, owner, i as Lane).length === effect.requiredAllies ? 'ON AIR · +3 to both other lanes' : 'Exactly 2 allies needed to broadcast';
     if (effect.kind === 'silence-arrival') status = 'Direct plays enter Silenced';
@@ -450,6 +458,7 @@ export function getDistrictResults(match: Match) {
   });
 }
 export function getMatchRoundLimit(value?: Match | StoryEncounterSnapshot | null): number {
+  if (value && "round" in value && value.afterParty) return 7;
   const snapshot = value && "round" in value ? value.storyEncounter : value;
   const configured = snapshot?.roundLimit;
   return Number.isInteger(configured) && configured! >= 1 && configured! <= DEFAULT_MATCH_ROUND_LIMIT
@@ -605,7 +614,8 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
 export const getDiscountedCardCost = getLegalCardCost;
 export function canAffordSelection(match: Match, owner: Owner, instanceId: string, targetLane: Lane): boolean {
   const card = (owner === "player" ? match.playerHand : match.cpuHand).find((c) => c.instanceId === instanceId);
-  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane) && getLegalCardCost(match, owner, card, targetLane) <= (owner === "player" ? match.playerMotion : match.cpuMotion);
+  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane) && getLegalCardCost(match, owner, card, targetLane) + (card.cardId === 'the-dice-game' ? 1 : 0) <= (owner === "player" ? match.playerMotion : match.cpuMotion)
+    && (card.cardId !== 'the-dice-game' || (owner === 'player' ? match.cpuMotion : match.playerMotion) >= 1);
 }
 
 const activeAbility = (card: CardInstance) => !card.hazard && !card.statuses.silenced && !card.statuses.frozen && !card.statuses.weakened;
@@ -618,6 +628,11 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
     after = { ...after, recoverableDamage: (before.recoverableDamage ?? 0) + Math.min(-delta, Math.max(0, before.basePower + before.powerModifier)) };
   }
   let result = { ...m, boards: m.boards.map(items => items.map(c => c.instanceId === id ? after : c)) as Match['boards'] };
+  if (delta < 0 && before.lane !== null && !before.hazard && !m.repeatingLaneDamage) {
+    result = { ...result, laneDamage: [...(m.laneDamage ?? []).filter(d => d.round === m.round), {
+      round: m.round, lane: before.lane, instanceId: id, amount: Math.min(-delta, Math.max(0, before.basePower + before.powerModifier)),
+    }].filter(d => d.amount > 0) };
+  }
   if (delta <= 0 || before.lane === null || before.hazard) return result;
   for (const fan of m.boards.flat().filter(c => c.owner === before.owner && abilityCardId(c) === 'fangirl'
     && c.idolId === id && c.fanRound !== m.round && activeAbility(c))) {
@@ -1658,6 +1673,14 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
   if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  if (Object.hasOwn(blockbusterWaveCards, source.cardId)) {
+    const result = resolveBlockbusterWave(m, source, 0, blockbusterTools());
+    m = result.match;
+    result.targets.forEach(id => targetIds.add(id));
+    note(result.note);
+    return echoed ? m : { ...m, lastRevealedCardId: source.cardId,
+      entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] };
+  }
   if (Object.hasOwn(afterHoursWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     let succeeded = false;
@@ -2941,9 +2964,12 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (squabble && (match.squabbleByOwner ? match.squabbleByOwner[owner] : owner !== 'player' || match.squabbleUsed)) throw new Error('SQUABBLE is unavailable');
   const cost = getLegalCardCost(match, owner, card, targetLane);
   if (match[motionKey] < cost) throw new Error('Not enough Motion');
-  if (!Number.isInteger(investment) || investment < 0 || investment > 4
-    || (investment > 0 && (card.cardId !== 'homelessguy' || !activeAbility(card)))
-    || investment > match[motionKey] - cost) throw new Error('Invalid extra Motion investment');
+  const isDice = card.cardId === 'the-dice-game', isConcert = card.cardId === 'the-concert';
+  if (!Number.isInteger(investment) || investment < 0 || investment > (isDice ? 3 : isConcert ? 1 : 4)
+    || (investment > 0 && !isDice && !isConcert && (card.cardId !== 'homelessguy' || !activeAbility(card)))
+    || blockbusterExtraCost(card.cardId, investment) > match[motionKey] - cost) throw new Error('Invalid extra Motion investment');
+  if (isDice && (match[owner === 'player' ? 'cpuMotion' : 'playerMotion'] < (investment || 1))) throw new Error('Both sides need enough Motion for this wager');
+  if (card.kind === 'blockbuster' && squabble) throw new Error('Blockbusters cannot use SQUABBLE');
   const discountLane = match.plugDiscountLane[owner];
   const usedToken = discountFor(match, owner, card, targetLane);
   const usedPlugDiscount = (!!usedToken && findCard(match, usedToken.sourceInstanceId)?.cardId === "plug")
@@ -2963,6 +2989,18 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     squabbleUsed: match.squabbleUsed || (owner === 'player' && squabble),
     ...(match.squabbleByOwner ? { squabbleByOwner: { ...match.squabbleByOwner, [owner]: match.squabbleByOwner[owner] || squabble } } : {}),
   };
+  if (card.kind === 'blockbuster') {
+    const source = { ...card, lane: targetLane, playedRound: m.round };
+    const staged = { ...m, boards: m.boards.map((cs,i) => i === targetLane ? [...cs,source] : cs) as Match['boards'] };
+    m = addEvent(match, staged, { type: 'play', sourceId: instanceId, owner, lane: targetLane, note: `${card.name}: lane event played for ${cost} Motion.` });
+    const beforeEffect = m;
+    const resolved = resolveBlockbusterWave(m, source, investment, blockbusterTools());
+    m = { ...resolved.match, boards: resolved.match.boards.map(cs => cs.filter(c => c.instanceId !== instanceId)) as Match['boards'],
+      phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
+    m = settleLeaderReactions(m);
+    return applyStoryEffects(addEvent(beforeEffect, m, { type: 'ability', sourceId: instanceId, owner, lane: targetLane,
+      targetIds: resolved.targets, note: resolved.note, kind: 'ability' }));
+  }
   if (m.districtRuntime) {
     const runtime = m.districtRuntime;
     const plays = [...runtime.plays[owner]] as [number, number, number];
@@ -3454,7 +3492,7 @@ function detonateSmileBombs(match: Match): Match {
 export function nextRound(match: Match): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
-  const roundEnded = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(match))));
+  const roundEnded = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(applyBurntPlates(match)))));
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
@@ -3468,6 +3506,7 @@ export function nextRound(match: Match): Match {
   let m: Match = {
     ...roundEnded,
     lastRevealedCardId: null,
+    laneDamage: [],
     roundMovedIds: { player: [], cpu: [] },
     round: next,
     phase: 'player',
@@ -3490,6 +3529,8 @@ export function nextRound(match: Match): Match {
         ...card, powerModifier: card.powerModifier - (effect.amount ?? 0),
         lastEffectNote: 'Earth Squabble expired after two rounds.',
       }));
+      // Expiring a temporary buff is not damage for Block Spin.
+      afterExpiration = { ...afterExpiration, laneDamage: m.laneDamage };
     } else {
       afterExpiration = modify(m, effect.sourceInstanceId, (card) => ({
         ...card,
@@ -3555,7 +3596,7 @@ export type PlayerMove = {
   squabble: boolean;
   /** Explicit on new matches; absent only on legacy one-card turns. */
   endTurn?: boolean;
-  /** Optional extra Motion for Homeless Guy; validated by the authoritative engine. */
+  /** Numeric card choice: Homeless Guy investment, Dice Game wager, or Concert mode. */
   investment?: number;
 };
 export type TranscriptMove = Omit<PlayerMove, 'lane'> & { lane: number | null };
@@ -3803,6 +3844,9 @@ export type ResourceState = { playerMotion: number; cpuMotion: number };
 const resources = (m: Match): ResourceState => ({ playerMotion: m.playerMotion, cpuMotion: m.cpuMotion });
 
 const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
+  afterParty: m.afterParty,
+  laneDamage: m.laneDamage ?? [],
+  diceResult: m.diceResult,
   districtSnapshot: m.districtSnapshot,
   districtRuntime: m.districtRuntime,
   leaderRounds: m.leaderRounds,
@@ -3888,3 +3932,23 @@ export type CardEventState = {
 };
 
 const scores = (m: Match): ScoreState[] => getDistrictResults(m).map(({ lane: district, player, cpu }) => ({ lane: district, player, cpu }));
+
+function blockbusterTools(): BlockbusterTools {
+  return { modify, protect: grantProtection, enemyMove: forceEnemyMove, hit: targetEnemyPowerReduction, reduce: reduceHands, move, cleanse: cleanseAlly,
+    status: (m, source, target, status, note) => hostileEffect(m, source, target, (state, actual) => modify(state, actual.instanceId,
+      c => ({ ...c, statuses: { ...c.statuses, [status]: true }, lastEffectNote: note })), false, false, true),
+    burn: (m, source, target) => targetEnemyBurnAndPowerReduction(m, source, target, 1, 2, 'Chain Reaction: -2 Hands and 1 Burn.'),
+    create: createCardInstance, locked: getStoryLockedLanes, power: getEffectiveCardPower, random: seededIndex };
+}
+function applyBurntPlates(match: Match): Match {
+  let m = match;
+  for (const plate of match.boards.flat().filter(c => c.cardId === 'burnt-plate')) {
+    const crew = m.boards[plate.lane!].filter(c => !c.hazard && (c.kind ?? 'character') === 'character' && c.owner === plate.owner);
+    if (!crew.length) continue;
+    const target = crew[seededIndex(`${plate.instanceId}:${m.round}:burn`,crew.length)];
+    const before = m;
+    if (!target.statuses.uncounterable) m = modify(m,target.instanceId,c => ({ ...c,statuses:{...c.statuses,burnStacks:c.statuses.burnStacks+1},lastEffectNote:'Burnt Plate: +1 Burn.' }));
+    m = addEvent(before,m,{type:'ability',sourceId:plate.instanceId,owner:plate.owner,lane:plate.lane!,targetIds:[target.instanceId],kind:'fire',note:'Burnt Plate: recurring 1 Burn to a random friendly character here.'});
+  }
+  return m;
+}

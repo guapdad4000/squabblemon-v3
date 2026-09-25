@@ -12,6 +12,7 @@ import {
   getLegalCardCost,
   getStoryLockedLanes,
   getMatchWinner,
+  getMatchRoundLimit,
   nextRound,
   pass,
   playTurnCard,
@@ -362,6 +363,8 @@ export type OnlineRoomView = {
   deadline: number | null;
   serverTime: number;
   round: number;
+  roundLimit?: number;
+  diceResult?: Match['diceResult'];
   motion: Record<Seat, number>;
   hand: PublicCard[];
   rivalHandCount: number;
@@ -443,6 +446,8 @@ export function onlineRoomView(
     deadline: room.deadline,
     serverTime: now,
     round: match?.round ?? 1,
+    roundLimit: getMatchRoundLimit(match),
+    diceResult: match?.diceResult,
     motion: { player: match?.playerMotion ?? 2, cpu: match?.cpuMotion ?? 2 },
     hand: match
       ? (seat === "player" ? match.playerHand : match.cpuHand).map(showCard)

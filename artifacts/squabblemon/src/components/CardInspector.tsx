@@ -272,9 +272,9 @@ export function CardInspector({ card, onClose, bootstrap, variantId, match, useC
           {/* Tags row */}
           {catalogCard && (
             <div className="flex flex-wrap gap-2 mb-3">
-              {catalogCard.kind === 'support' && (
+              {(catalogCard.kind === 'support' || catalogCard.kind === 'blockbuster') && (
                 <span className="font-mono text-[9px] uppercase tracking-widest border px-2 py-1 bg-white/70" style={{ borderColor: 'var(--resume-ink-soft)', color: 'var(--resume-ink)' }}>
-                  Support card
+                  {catalogCard.kind === 'blockbuster' ? 'Blockbuster · Lane Event' : 'Support card'}
                 </span>
               )}
               {crewTags.map((tag: string) => (
