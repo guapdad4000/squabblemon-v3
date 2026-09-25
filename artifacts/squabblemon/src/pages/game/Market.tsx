@@ -170,10 +170,14 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           : id.includes('style')
             ? ('style-hanger' as const)
             : ('deck-stack' as const);
-  const trainingArt: Partial<Record<ShopItemId, string>> = {
+  const categoryArt: Partial<Record<ShopItemId, string>> = {
     training: 'assets/training/inmate-quick-poster.webp',
     'training-intensive': 'assets/training/inmate-intensive-poster.webp',
     'move-training': 'assets/training/inmate-moves-poster.webp',
+    'deck-slot': 'assets/training/inmate-gang-slot-icon.webp',
+    'common-recruit': 'assets/training/inmate-recruit-icon.webp',
+    'tagged-style': 'assets/training/inmate-tagged-icon.webp',
+    'chrome-style': 'assets/training/inmate-chrome-icon.webp',
   };
   return (
     <div
@@ -218,7 +222,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
       )}
       <Link href="/game/style" className="market-style-link">Signature collections · Stickers, banners & card scenes →</Link>
       <nav className="market-offers" aria-label="Shop items">
-        {SHOP_OFFERS.filter((item) => !item.id.startsWith('character-')).map((item) => (
+        {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && !item.id.startsWith('character-')).map((item) => (
           <button
             key={item.id}
             disabled={!!pending || working}
@@ -229,8 +233,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
               setError(null);
             }}
           >
-            {trainingArt[item.id] ? (
-              <img className="market-offer-art" src={getAssetUrl(trainingArt[item.id]!)} alt="" />
+            {categoryArt[item.id] ? (
+              <img className="market-offer-art" src={getAssetUrl(categoryArt[item.id]!)} alt="" />
             ) : (
               <PropArt id={propFor(item.id)} />
             )}
@@ -248,6 +252,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           <div className="market-showcase__light" />
           {offer.needsCard && card ? (
             <img key={card.id} src={getCardImage(card.id)} alt="" />
+          ) : categoryArt[offer.id] ? (
+            <img src={getAssetUrl(categoryArt[offer.id]!)} alt="" />
           ) : (
             <PropArt id={propFor(offer.id)} />
           )}

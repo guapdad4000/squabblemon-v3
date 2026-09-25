@@ -44,6 +44,14 @@ try {
   await page.goto(`${base}/game/shop?view=training`, { waitUntil: 'domcontentloaded' });
   await expect(checkout).toBeVisible();
   await page.evaluate(() => Promise.all([...document.images].map(img => img.decode().catch(() => {}))));
+  const categories = page.getByRole('navigation', { name: 'Shop items' });
+  await expect(categories.getByRole('button')).toHaveCount(7);
+  await expect(categories.getByRole('button', { name: /Street Pack Ticket/ })).toHaveCount(0);
+  await expect(categories.locator('.market-offer-art')).toHaveCount(7);
+  for (const icon of await categories.locator('.market-offer-art').all()) {
+    await expect(icon).toHaveJSProperty('naturalWidth', 256);
+    await expect(icon).toHaveAttribute('src', /inmate-/);
+  }
   for (const [name, width, height] of [['desktop', 1440, 900], ['phone', 390, 844], ['small-phone', 320, 740], ['landscape', 844, 390]]) {
     await page.setViewportSize({ width, height });
     await page.locator('.market').evaluate(el => el.scrollTop = 0);
@@ -59,6 +67,13 @@ try {
     report.layouts.push({ name, ...size });
   }
   await page.setViewportSize({ width: 390, height: 844 });
+  for (const name of ['Extra Gang Slot', 'Neighborhood Recruit', 'Tagged Finish', 'Chrome Finish']) {
+    await select(name);
+    await expect(checkout.locator('h2')).toHaveText(name);
+  }
+  await page.locator('.market').evaluate(el => el.scrollTop = 0);
+  await page.screenshot({ path: `${out}/phone-finish-categories.png` });
+  await select('Quick Training');
   let start = Date.now();
   await action.click();
   await expect(session).toBeVisible();
@@ -134,6 +149,26 @@ try {
     expect(Date.now() - start).toBeLessThan(1500);
     report.checks.push(`${mode} reduced motion uses a static pose and skips the presentation delay.`);
   }
+  expect(errors).toEqual([]);
+  // Removing the ticket tile must not strand a purchase saved before the redesign.
+  const ticketRequest = { itemId: 'ticket', idempotencyKey: '2c0a1290-566a-4e6f-a33b-50ddcf3dd2c2' };
+  await page.evaluate(({ id, request }) => {
+    sessionStorage.setItem(`squabblemon.shop.pending.v1:${id}`, JSON.stringify(request));
+  }, { id: current.profile.id, request: ticketRequest });
+  await page.reload();
+  await expect(action).toHaveText(/Recover purchase/);
+  await expect(categories.getByRole('button', { name: /Street Pack Ticket/ })).toHaveCount(0);
+  const ticketsBefore = current.profile.packTickets;
+  await action.click();
+  await expect(checkout.getByText('Purchase complete', { exact: true })).toBeVisible();
+  expect(requests.at(-1)).toEqual(ticketRequest);
+  expect(current.profile.packTickets).toBe(ticketsBefore + 1);
+  await page.getByRole('dialog').getByRole('button', { name: 'Keep going' }).click();
+  await checkout.getByRole('button', { name: 'Open your pack' }).click();
+  await expect(page).toHaveURL(/view=packs/);
+  await expect(page.locator('.gacha-stage__ticket-choice--fight')).toBeVisible();
+  await expect(page.locator('.gacha-stage__ticket-choice--clout')).toBeVisible();
+  report.checks.push('Seven inmate category icons; ticket tile removed; existing ticket recovery and Recruit payments still work.');
   expect(errors).toEqual([]);
   report.requests = requests.length;
   await writeFile(`${out}/report.json`, JSON.stringify(report, null, 2));
