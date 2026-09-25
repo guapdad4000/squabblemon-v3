@@ -2,7 +2,7 @@ import { StreetSelect } from '../../components/ui/street-select';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -32,6 +32,14 @@ import { e2eAuthEnabled } from '../../lib/auth';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine } from '../../lib/sfx';
 import { useEventVoice } from '../../lib/useEventVoice';
+import '../../styles/training-studio.css';
+
+const trainingNames: Partial<Record<ShopItemId, string>> = {
+  training: 'Quick Training',
+  'move-training': 'Move Training',
+};
+
+const isTraining = (id: ShopItemId) => ['training', 'training-intensive', 'move-training'].includes(id);
 
 export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; openPacks: () => void }) {
   useEventVoice('training-welcome');
@@ -47,7 +55,14 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
   const [working, setWorking] = useState(false);
   const [receipt, setReceipt] = useState<ShopReceipt | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [session, setSession] = useState<{ move: boolean; character: string; reducedMotion: boolean } | null>(null);
   const lock = useRef(false);
+  useEffect(() => {
+    for (const mode of ['quick', 'moves']) {
+      const image = new Image();
+      image.src = getAssetUrl(`assets/training/inmate-${mode}-sheet.webp`);
+    }
+  }, []);
   const offer = SHOP_OFFERS.find((item) => item.id === (pending?.itemId ?? selectedId))!;
   const choices = cardCatalog.filter((card) =>
     offer.id === 'common-recruit'
@@ -86,6 +101,10 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
     setWorking(true);
     setError(null);
     setReceipt(null);
+    const startedAt = performance.now();
+    const reducedMotion = profile.settings.reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const training = isTraining(offer.id);
+    if (training) setSession({ move: offer.id === 'move-training', character: card?.name ?? 'Your character', reducedMotion });
     try {
       const request = pending ?? {
         ...input,
@@ -109,6 +128,12 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(request),
         });
+      // The request starts immediately; a confirmed rep gets a short visual payoff.
+      // Errors bypass the presentation delay and retries keep the original request key.
+      if (training && !reducedMotion) {
+        const remaining = Math.max(0, 2400 - (performance.now() - startedAt));
+        if (remaining) await new Promise(resolve => window.setTimeout(resolve, remaining));
+      }
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
       const purchaseTake = request.idempotencyKey.charCodeAt(0) % 2 ? 'purchase-a' : 'purchase-b';
       playVoiceLine(purchaseTake, loadFeedbackPreferences().audioEnabled);
@@ -131,6 +156,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
     } finally {
       lock.current = false;
       setWorking(false);
+      setSession(null);
     }
   }
 
@@ -145,9 +171,9 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             ? ('style-hanger' as const)
             : ('deck-stack' as const);
   const trainingArt: Partial<Record<ShopItemId, string>> = {
-    training: 'assets/training/practice-session.png',
-    'training-intensive': 'assets/training/intensive-training.png',
-    'move-training': 'assets/training/move-coaching.png',
+    training: 'assets/training/inmate-quick-poster.webp',
+    'training-intensive': 'assets/training/inmate-intensive-poster.webp',
+    'move-training': 'assets/training/inmate-moves-poster.webp',
   };
   return (
     <div
@@ -161,12 +187,8 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
       <header className="market-hero">
         <div>
           <span className="studio-eyebrow">DR. FADE’S · TRAINING CLUB</span>
-          <h1>
-            Earn your
-            <br />
-            <em>reputation.</em>
-          </h1>
-          <p>A sharper gang. A fresh recruit. Your next big pull.</p>
+          <h1>Put in <em>work.</em></h1>
+          <p>Get your reps. Level up. Learn a new move.</p>
         </div>
         <picture className="market-hero__fade-art">
           <img src={getAssetUrl('assets/training/dr-fade-coach.png')} alt="Dr. Fade coaching at the training club" draggable={false} />
@@ -212,7 +234,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             ) : (
               <PropArt id={propFor(item.id)} />
             )}
-            <strong>{item.name}</strong>
+            <strong>{trainingNames[item.id] ?? item.name}</strong>
             <span>
               {item.id === 'move-training' ? `${MOVE_TRAINING_COSTS[0]}–${MOVE_TRAINING_COSTS.at(-1)}` : item.price}{' '}
               {item.currency === 'softCurrency' ? 'Clout' : 'Shards'}
@@ -238,7 +260,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
         </div>
         <section className="market-checkout" aria-labelledby="purchase-title">
           <span className="studio-eyebrow">Make your next move</span>
-          <h2 id="purchase-title">{offer.name}</h2>
+          <h2 id="purchase-title">{trainingNames[offer.id] ?? offer.name}</h2>
           <p>{offer.description}</p>
           {offer.needsCard && (
             <>
@@ -296,7 +318,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             </>
           )}
           {quote && <p className="market-preview">{quote.receipt.summary}</p>}
-          {pending && (
+          {pending && !working && (
             <p role="status" className="market-notice">
               An earlier purchase needs confirmation. Retry it before starting another.
             </p>
@@ -307,7 +329,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             disabled={working || (!quote && !pending)}
             onClick={() => void buy()}
           >
-            {working ? 'Confirming…' : pending ? 'Recover purchase' : `Buy · ${cost} ${currency}`}
+            {working ? (session ? 'Training…' : 'Confirming…') : pending ? 'Recover purchase' : `${isTraining(offer.id) ? 'Train' : 'Buy'} · ${cost} ${currency}`}
             <ArrowRight size={16} />
           </button>
           {error && (
@@ -319,7 +341,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
             <div className="market-receipt" role="status">
               <Check size={18} />
               <div>
-                <strong>{preview ? 'Preview purchase complete' : 'Purchase complete'}</strong>
+                <strong>{isTraining(receipt.itemId) ? (receipt.itemId === 'move-training' ? 'New move learned!' : 'Reps complete!') : preview ? 'Preview purchase complete' : 'Purchase complete'}</strong>
                 <p>{receipt.summary}</p>
                 <small>
                   Spent {receipt.cost} {receipt.currency === 'softCurrency' ? 'Clout' : 'Style Shards'}.
@@ -336,6 +358,20 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
                   </Link>
                 )}
               </div>
+            </div>
+          )}
+          {session && (
+            <div className="training-session" role="status" data-reduced-motion={session.reducedMotion}>
+              <span className="studio-eyebrow">{session.move ? 'MOVE TRAINING' : 'GETTING THE REPS IN'}</span>
+              <div
+                className={`training-session__sprite training-session__sprite--${session.move ? 'moves' : 'quick'}`}
+                style={{ backgroundImage: `url(${getAssetUrl(`assets/training/inmate-${session.move ? 'moves' : 'quick'}-sheet.webp`)})` }}
+                aria-hidden="true"
+              />
+              <strong>{session.character} is training…</strong>
+              <p>{session.move ? 'Float like a butterfly. Swing like rent is due.' : 'Tiny weights. Extremely serious business.'}</p>
+              <span className="training-session__meter" aria-hidden="true"><i /></span>
+              <small>Finishing the set & confirming your progress</small>
             </div>
           )}
         </section>
