@@ -507,6 +507,26 @@
   width: clamp(78px, 13%, 168px);
   transform: translate(-50%, -50%);
 }
+/* Match the first letter painted into each landscape background. These
+   percentages belong to the uncropped artwork, not the viewport or action bar. */
+@media (min-width: 640px) and (min-aspect-ratio: 1001/1000) {
+  .result-art--win .result-art__outcome-mark {
+    top: 27%; left: 72%; width: 13%; max-width: none;
+    transform: translate(-50%, -50%) rotate(-7deg) skewX(-8deg);
+  }
+  .result-art--loss .result-art__outcome-mark {
+    top: 33%; left: 12%; width: 17%; max-width: none;
+    transform: translate(-50%, -50%) rotate(-9deg);
+  }
+}
+@media (min-width: 640px) and (max-width: 1100px) and (min-aspect-ratio: 1001/1000) {
+  .result-art--win .result-art__outcome-mark {
+    top: 33%; left: 9.5%; width: 17%;
+  }
+  .result-art--loss .result-art__outcome-mark {
+    top: 33%; left: 77%; width: 15%;
+  }
+}
 .result-art__story-stars {
   position: absolute;
   z-index: 6;
