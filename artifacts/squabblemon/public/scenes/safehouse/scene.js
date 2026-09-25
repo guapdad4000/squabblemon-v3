@@ -76,8 +76,8 @@ for(let y=0;y<704;y+=4){g.fillStyle='rgba(0,0,0,.14)';g.fillRect(0,y,1024,1);}co
 function updateStoryPanel(){document.querySelector('#save-kind').textContent=story.demo?'DEMO SAVE':'CAMPAIGN';document.querySelector('#chapter-label').textContent='CHAPTER '+String(story.chapter).padStart(2,'0')+' / '+String(story.totalChapters).padStart(2,'0');document.querySelector('#story-title').textContent=story.title;document.querySelector('#objective').textContent=story.objective;document.querySelector('#story-percent').textContent=campaignPercent(story)+'%';document.querySelector('#story-progress').value=campaignPercent(story);document.querySelector('#chapters-cleared').textContent=story.completedChapters+' of '+story.totalChapters+' chapters cleared';document.querySelector('#block-wins').textContent=story.wins+' / '+story.targetWins+' block wins';}
 window.Squabblemon={setStoryProgress(value){story=normalizeStory(value);drawStory();},getStoryProgress(){return {...story};}};
 drawStory();
-// Speakers sit beside the TV and angle slightly toward the room.
-for(const z of [-2.98,.68]){const s=new T.Group();scene.add(s);s.position.set(-4.03,0,z);s.rotation.y=Math.PI/2;box(.68,1.85,.58,black,0,.94,0,s);for(const [y,r]of [[.55,.24],[1.2,.24],[1.61,.09]]){const rim=cyl(r,r,.05,gold,0,y,.31,s);rim.rotation.x=Math.PI/2;const cone=cyl(r*.83,r*.7,.08,black,0,y,.35,s);cone.rotation.x=Math.PI/2;ball(0,y,.4,r*.26,black,s);}}
+// Speakers sit beside the TV with their drivers recessed into the cabinet face.
+for(const z of [-2.98,.68]){const s=new T.Group();scene.add(s);s.position.set(-4.03,0,z);s.rotation.y=Math.PI/2;box(.68,1.85,.58,black,0,.94,0,s);for(const [y,r]of [[.55,.24],[1.2,.24],[1.61,.09]]){const rim=cyl(r,r,.035,gold,0,y,.298,s);rim.rotation.x=Math.PI/2;const cone=cyl(r*.83,r*.68,.045,black,0,y,.292,s);cone.rotation.x=Math.PI/2;const cap=ball(0,y,.308,r*.22,black,s);cap.scale.z=.18;}}
 // The black panel remains; the refrigerator, low cabinet and wooden surround are gone.
 box(3.55,3.35,.05,black,0,2.25,-4.87);
 const glow=new T.MeshBasicMaterial({color:'#d8e6e4'});
