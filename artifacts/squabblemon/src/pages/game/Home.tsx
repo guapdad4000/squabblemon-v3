@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, type PlayerBootstrap } from '@workspace/api-client-react';
-import { Briefcase, ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2 } from 'lucide-react';
+import { Briefcase, ArrowLeft, ArrowRight, Moon, Sun, RotateCcw, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { AccountRewards } from '../../components/AccountRewards';
 import { PageDecor } from '../../components/venue/PageDecor';
@@ -17,6 +17,7 @@ import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
+  { id: 'growth', label: 'Buddy’s plants', short: 'Growth Lab', icon: Sprout, title: 'Buddy’s Growth Lab', detail: 'Helping you get them hands holistically.', action: 'Enter Growth Lab', href: '' },
   { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
   { id: 'story', label: 'The television', short: 'Story', icon: Tv, title: 'The block is waiting.', detail: 'Pick up your story where you left it.', action: 'Hit the streets', href: '/game/story' },
@@ -82,6 +83,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   // fallback must hold until markers have actually been placed on screen.
   const [markersPlaced, setMarkersPlaced] = useState(false);
   const [view, setView] = useState<Station | 'room'>('room');
+  const [growthOpen, setGrowthOpen] = useState(false);
   const [night, setNight] = useState(() => {
     try { return localStorage.getItem('squabblemon_safehouse_lighting') !== 'golden'; } catch { return true; }
   });
@@ -175,7 +177,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     <div className="safehouse venue-page studio-page safehouse-stage safehouse-stage--hero world-decor-host"
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'golden'}>
       <PageDecor theme="safehouse" />
-      <AccountRewards bootstrap={bootstrap} />
+      <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span>{claimed > 0 && <b>{claimed}</b>}</Link>
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
         onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
@@ -201,10 +203,10 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <div className="safehouse-room-bottom">
         {station ? <section className="safehouse-room-detail" aria-live="polite" aria-label={station.label}>
           <button type="button" className="room-back" ref={backButton} onClick={() => explore('room')}><ArrowLeft size={14} /> Back to the room</button>
-          <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.title}</h2>
+          <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => sendScene(frame, { type: 'punch' })}>Hit the bag</button>}
             </div>
           </div>

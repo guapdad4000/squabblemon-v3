@@ -37,12 +37,54 @@ export type AccountRewardStatus = {
   claimedToday: boolean;
   nextResetAt: string;
   pending: AccountRewardGrant[];
+  growth: GrowthLabStatus;
 };
+export const GROWTH_GARDEN_SIZE = 7;
+export const GROWTH_GARDEN_REWARD: AccountReward = { softCurrency: 350, packTickets: 1, styleShards: 25 };
+export const GROWTH_TASKS = [
+  { key: 'login', title: 'Show your plants some love', detail: 'Collect your daily check-in.', action: 'Check in' },
+  { key: 'daily-show-up', title: 'Put down roots', detail: 'Finish one fade today.', action: 'Play a fade' },
+  { key: 'daily-take-room', title: 'Find your sunshine', detail: 'Win one fade today.', action: 'Play a fade' },
+] as const;
+export type GrowthLabMission = { missionKey: string; progress: number; goal: number; resetAt: Date | string | null };
+export type GrowthLabStatus = {
+  tasks: { key: string; progress: number; goal: number; complete: boolean }[];
+  water: number;
+  ready: boolean;
+  wateredToday: boolean;
+  totalPlants: number;
+  plantsInGarden: number;
+  gardenNumber: number;
+  completedGardens: number;
+};
+/** Only server receipts and unexpired, verified mission progress grow the garden. */
+export function growthLabStatus(receipts: AccountRewardGrant[], missions: GrowthLabMission[], now = new Date()): GrowthLabStatus {
+  const date = now.toISOString().slice(0, 10);
+  const keys = new Set(receipts.filter(r => !r.date || r.date <= date).map(r => r.key));
+  const wateredToday = keys.has(`growth:water:${date}`);
+  const tasks = GROWTH_TASKS.map(task => {
+    const mission = missions.find(m => m.missionKey === task.key);
+    const goal = Math.max(1, mission?.goal ?? 1);
+    const current = mission?.resetAt && new Date(mission.resetAt).getTime() > now.getTime();
+    const progress = task.key === 'login' ? Number(keys.has(`login:${date}`)) : current ? Math.max(0, Math.min(goal, mission.progress)) : 0;
+    return { key: task.key, progress, goal, complete: progress >= goal };
+  });
+  const totalPlants = [...keys].filter(key => key.startsWith('growth:water:')).length;
+  return {
+    tasks, wateredToday, totalPlants,
+    water: wateredToday ? 0 : tasks.reduce((sum, task) => sum + task.progress / task.goal, 0) / tasks.length,
+    ready: !wateredToday && tasks.every(task => task.complete),
+    plantsInGarden: totalPlants ? (totalPlants - 1) % GROWTH_GARDEN_SIZE + 1 : 0,
+    gardenNumber: Math.floor(Math.max(0, totalPlants - 1) / GROWTH_GARDEN_SIZE) + 1,
+    completedGardens: Math.floor(totalPlants / GROWTH_GARDEN_SIZE),
+  };
+}
 export function accountRewardStatus(
   level: number,
   createdAt: Date,
   receipts: AccountRewardGrant[],
   now = new Date(),
+  missions: GrowthLabMission[] = [],
 ): AccountRewardStatus {
   const date = now.toISOString().slice(0, 10);
   const yesterday = new Date(now.getTime() - 86400000)
@@ -100,6 +142,7 @@ export function accountRewardStatus(
     claimedToday,
     nextResetAt: nextResetAt.toISOString(),
     pending,
+    growth: growthLabStatus(receipts, missions, now),
   };
 }
 export const STOCKZ_TICKERS = [

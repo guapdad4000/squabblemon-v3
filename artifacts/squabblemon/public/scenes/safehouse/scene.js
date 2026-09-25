@@ -1,3 +1,4 @@
+import { createGrowthCorner } from './growth-corner.js';
 import * as T from '../shared/three.module.js';
 import {demoStory,normalizeStory,campaignPercent} from './story.js';
 import {installFightingGameStyle} from './art-direction.js';
@@ -39,7 +40,7 @@ cyl(1.27,1.22,.14,gold,.1,.87,.7);cyl(.58,.73,.68,gold,.1,.44,.7);cyl(.86,.86,.0
 const dotMat=new T.MeshStandardMaterial({color:'#191b19'});for(let i=0;i<8;i++){const d=new T.Group();scene.add(d);d.position.set(-.6+rand()*1.1,.965,.3+rand()*.6);d.rotation.y=rand()*Math.PI;box(.13,.045,.26,ivory,0,0,0,d);box(.12,.002,.008,brass,0,.024,0,d);for(let j=0;j<2;j++){const n=1+Math.floor(rand()*4);for(let k=0;k<n;k++){const dot=cyl(.009,.009,.003,dotMat,((k%2)-.5)*.045,.026,(j-.5)*.125+(Math.floor(k/2)-.5)*.04,d);}}}
 const money=new T.MeshStandardMaterial({color:'#8b9675'});for(let i=0;i<3;i++){const m=box(.37,.065,.18,money,-.73+i*.055,1+i*.065,1.25);box(.07,.068,.185,ivory,-.73+i*.055,1+i*.065,1.25);}cyl(.12,.09,.2,gold,.78,1.05,.65);
 // The story-mode CRT is angled toward the player.
-const tv=new T.Group();scene.add(tv);tv.position.set(-3.05,0,-1.55);tv.rotation.y=.52;
+const tv=new T.Group();scene.add(tv);tv.position.set(-3.05,0,-3.65);tv.rotation.y=.25;
 box(2.45,.53,1.04,wood,0,.34,0,tv);for(const x of [-1.03,1.03])for(const z of [-.38,.38])cyl(.045,.035,.19,brass,x,.095,z,tv);
 for(let i=0;i<9;i++)box(.105,.27,.65,i%3?black:ivory,-1+i*.18,.33,.08,tv);
 soft(2.24,1.57,.94,black,0,1.41,0,tv);soft(1.87,1.32,.11,brass,-.09,1.44,.475,tv);soft(1.78,1.23,.08,black,-.09,1.44,.54,tv);
@@ -65,7 +66,7 @@ function updateStoryPanel(){document.querySelector('#save-kind').textContent=sto
 window.Squabblemon={setStoryProgress(value){story=normalizeStory(value);drawStory();},getStoryProgress(){return {...story};}};
 drawStory();
 // Floor speakers, actual recessed cones.
-for(const z of [-3.65,.4]){const s=new T.Group();scene.add(s);s.position.set(-3.5,0,z);s.rotation.y=.7;box(.68,1.85,.58,black,0,.94,0,s);for(const [y,r]of [[.55,.24],[1.2,.24],[1.61,.09]]){const rim=cyl(r,r,.05,gold,0,y,.31,s);rim.rotation.x=Math.PI/2;const cone=cyl(r*.83,r*.7,.08,black,0,y,.35,s);cone.rotation.x=Math.PI/2;ball(0,y,.4,r*.26,black,s);}}
+for(const z of [.78,3.32]){const s=new T.Group();scene.add(s);s.position.set(-3.83,0,z);s.rotation.y=.38;box(.68,1.85,.58,black,0,.94,0,s);for(const [y,r]of [[.55,.24],[1.2,.24],[1.61,.09]]){const rim=cyl(r,r,.05,gold,0,y,.31,s);rim.rotation.x=Math.PI/2;const cone=cyl(r*.83,r*.7,.08,black,0,y,.35,s);cone.rotation.x=Math.PI/2;ball(0,y,.4,r*.26,black,s);}}
 // Kitchen nook suggested through a framed opening on the back wall.
 box(2.9,3.15,.05,black,-.35,1.57,-4.87);for(const x of [-1.86,1.16])box(.15,3.3,.2,wood,x,1.65,-4.72);box(3.16,.17,.2,wood,-.35,3.26,-4.72);box(.93,2.25,.7,ivory,-1.17,1.15,-4.33);box(.96,.045,.025,black,-1.17,1.65,-3.96);box(.045,.42,.08,brass,-.81,1.3,-3.91);box(1.4,.9,.62,new T.MeshStandardMaterial({color:'#414e43'}),.37,.46,-4.35);box(1.45,.07,.7,ivory,.37,.95,-4.32);box(1.43,.55,.32,wood,.36,2.45,-4.62);
 // Framed gold records, crown medallion.
@@ -76,9 +77,8 @@ const pendant=new T.Group();pendant.position.set(.2,3.93,-1.1);scene.add(pendant
 cyl(.008,.008,.43,gold,0,.4,0,pendant);cyl(.36,.43,.3,gold,0,0,0,pendant);
 for(let i=0;i<8;i++){let a=i*Math.PI/4;const spike=mesh(new T.ConeGeometry(.09,.26,4),gold,Math.cos(a)*.34,.28,Math.sin(a)*.34,pendant);spike.rotation.y=-a;}
 const glow=new T.MeshBasicMaterial({color:'#ffdb85'});cyl(.34,.34,.02,glow,0,-.16,0,pendant);
-// Side table, plant with three-dimensional leaves.
-box(.86,.08,.76,wood,3.3,.65,-3.3);for(const x of [2.95,3.65])for(const z of [-3.6,-3])box(.055,.63,.055,gold,x,.3,z);cyl(.22,.16,.38,brass,3.3,.88,-3.3);
-for(let i=0;i<14;i++){const a=i*2.4;const l=mesh(new T.SphereGeometry(1,10,6),new T.MeshStandardMaterial({color:i%2?'#3d5532':'#667146',roughness:.8}),3.3+Math.sin(a)*.23,1.31+rand()*.24,-3.3+Math.cos(a)*.23);l.scale.set(.1,.48,.065);l.rotation.set(Math.cos(a)*.65,0,Math.sin(a)*.65);}
+// A lush, tappable plant corner is the entrance to Buddy’s Growth Lab.
+const growthCorner=createGrowthCorner({wood,brass});scene.add(growthCorner);
 // Foreground crate and records.
 box(.9,.63,.8,wood,-2.9,.32,3.5);for(let i=0;i<8;i++){const sleeve=box(.7,.65,.045,i%2?black:leather,-2.9,.62,3.22+i*.07);sleeve.rotation.x=-.14;}for(let i=0;i<4;i++)box(.93,.035,.015,black,-2.9,.12+i*.13,3.91);
 // Small-scale grain, real plank joints and dark contact beneath furniture.
@@ -86,7 +86,7 @@ function grainMap(){const c=document.createElement('canvas');c.width=c.height=25
 const grain=grainMap();leather.bumpMap=grain;leather.bumpScale=.012;leather.roughnessMap=null;plaster.bumpMap=plaster.map;plaster.bumpScale=.018;wood.bumpMap=wood.map;wood.bumpScale=.012;
 const seam=new T.MeshStandardMaterial({color:'#30271e',roughness:1});for(let z=-4.85;z<5;z+=.46){box(8.95,.008,.009,seam,0,-.029,z);for(let x=-4.5+rand()*1.4;x<4.5;x+=1.8+rand())box(.009,.008,.45,seam,x,-.029,z+.23);}
 const sc=document.createElement('canvas');sc.width=sc.height=128;const sg=sc.getContext('2d');const gradient=sg.createRadialGradient(64,64,5,64,64,64);gradient.addColorStop(0,'#000b');gradient.addColorStop(.45,'#0005');gradient.addColorStop(1,'#0000');sg.fillStyle=gradient;sg.fillRect(0,0,128,128);const contact=new T.CanvasTexture(sc);
-for(const [x,z,w,h] of [[.1,.7,3.6,3.6],[3.25,.25,2.3,5],[-3.05,-1.55,3.1,2],[1.35,-2.65,1.9,1.9]]){const shadow=mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:contact,transparent:true,depthWrite:false}),x,.027,z);shadow.rotation.x=-Math.PI/2;shadow.castShadow=false;}
+for(const [x,z,w,h] of [[.1,.7,3.6,3.6],[3.25,.25,2.3,5],[-3.05,-3.65,3.1,2],[1.35,-2.65,1.9,1.9]]){const shadow=mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:contact,transparent:true,depthWrite:false}),x,.027,z);shadow.rotation.x=-Math.PI/2;shadow.castShadow=false;}
 // Soft diamond tufting replaces the slab-like sofa back.
 const tuftGeo=new T.PlaneGeometry(3.55,.82,96,32);const pa=tuftGeo.attributes.position;
 for(let i=0;i<pa.count;i++){const x=pa.getX(i),y=pa.getY(i);const a=Math.cos(x*Math.PI/.3+y*Math.PI/.28);const b=Math.cos(x*Math.PI/.3-y*Math.PI/.28);pa.setZ(i,.085*Math.pow(Math.abs(a*b),.55));}tuftGeo.computeVertexNormals();mesh(tuftGeo,leather,0,1.13,-.425,couch);
@@ -142,7 +142,7 @@ box(.8,.025,.025,gold,0,.64,.03,inventoryBag);
 const inventoryTexture=new T.TextureLoader().load('../../assets/rewards/clout-bag.webp');inventoryTexture.colorSpace=T.SRGBColorSpace;
 const inventoryBadge=mesh(new T.PlaneGeometry(.48,.43),new T.MeshBasicMaterial({map:inventoryTexture,transparent:true,depthWrite:false}),0,.36,.345,inventoryBag);inventoryBadge.castShadow=false;
 // A real cabinet in the room, with a glowing screen and physical controls.
-const arcade=new T.Group();arcade.position.set(-2.1,0,-3.8);arcade.rotation.y=.28;scene.add(arcade);
+const arcade=new T.Group();arcade.position.set(3.95,0,-3.3);arcade.rotation.y=-Math.PI/2;scene.add(arcade);
 box(.92,1.5,.85,black,0,.76,0,arcade);
 box(1.05,.26,.85,wood,0,1.55,.08,arcade);
 box(.96,.9,.54,black,0,2.03,-.13,arcade);
@@ -157,21 +157,22 @@ cyl(.025,.025,.2,brass,-.23,1.82,.32,arcade);ball(-.23,1.93,.32,.07,leather,arca
 for(const [x,z] of [[.12,.25],[.27,.3],[.16,.42]])cyl(.055,.055,.035,glow,x,1.705,z,arcade);
 box(.15,.17,.02,brass,0,.86,.435,arcade);box(.08,.018,.025,black,0,.9,.451,arcade);
 const roomDetails=dressSafehouse({scene,couch,brass,wood,black,ivory,plaster});
-const batching=batchStaticMeshes(scene,[inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
+const batching=batchStaticMeshes(scene,[growthCorner,inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
 const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[screenMat]});
 const roomPose=()=>innerWidth/innerHeight<.95?[.16,.48,12.1,.15,1.3,-.15]:[-.09,.23,10.7,.1,1.52,-.45];
+const arcadePose=()=>{const portrait=innerWidth/innerHeight<.95;return[-.82,.15,portrait?4.2:3.9,arcade.position.x,portrait?1.85:1.6,arcade.position.z];};
 const initialPose=roomPose();const target=new T.Vector3(...initialPose.slice(3));let yaw=initialPose[0]+.12,pitch=initialPose[1],radius=initialPose[2]+.7,desired={yaw:initialPose[0],pitch,radius:initialPose[2],target:target.clone()};
 let frameShift=0,desiredFrameShift=0;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const el=renderer.domElement;const pointers=new Map();let pinch=0,px=0,py=0,downX=0,downY=0,moved=false,multi=false;let selected='room';let bagImpulse=0,bagStarted=0;
-const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'},{object:arcade,key:'arcade'}];
+const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:growthCorner,key:'growth'},{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'},{object:arcade,key:'arcade'}];
 function pick(e){pointer.set(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(scene.children,true).find(h=>h.object.visible&&!h.object.material?.transparent&&h.object.type==='Mesh');if(!hit)return null;for(const item of interactive){let p=hit.object;while(p){if(p===item.object)return item.key;p=p.parent;}}return null;}
 el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});downX=px=e.clientX;downY=py=e.clientY;moved=false;if(pointers.size>1)multi=true;});
 el.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId)){el.style.cursor=pick(e)?'pointer':'grab';return;}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(Math.hypot(e.clientX-downX,e.clientY-downY)>6)moved=true;if(pointers.size===2){const [a,b]=[...pointers.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)desired.radius=T.MathUtils.clamp(desired.radius+(pinch-d)*.016,1.1,17);pinch=d;return;}desired.yaw=T.MathUtils.clamp(desired.yaw-(e.clientX-px)*.003,-1.12,1.3);desired.pitch=T.MathUtils.clamp(desired.pitch+(e.clientY-py)*.003,.06,1.2);px=e.clientX;py=e.clientY;});
 function release(e){if(e.type==='pointerup'&&e.isTrusted)emit({type:'interact'});if(e.type==='pointerup'&&!moved&&!multi){const key=pick(e);if(key){view(key);if(key==='training')punch();}}pointers.delete(e.pointerId);pinch=0;if(!pointers.size)multi=false;const p=[...pointers.values()][0];if(p){px=p.x;py=p.y;}}
 el.addEventListener('pointerup',release);el.addEventListener('pointercancel',release);el.addEventListener('wheel',e=>{e.preventDefault();desired.radius=T.MathUtils.clamp(desired.radius+e.deltaY*.006,1.1,17);},{passive:false});
-function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory','arcade'].includes(name))return;emit({type:'view',view:name});selected=name;desiredFrameShift=name==='room'?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
-const v={arcade:[.15,.15,4.7,-2.1,1.5,-3.8],inventory:[.25,.65,innerWidth<600?3.8:3.1,2.05,.45,1.3],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[.52,.13,innerWidth<600?4.6:4.1,-3.05,1.45,-1.55],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.38,.66,innerWidth<600?3.6:3.1,-3.25,1.03,2.15]}[name];if(!v)return;desired={yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))};}
+function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory','arcade','growth'].includes(name))return;emit({type:'view',view:name});selected=name;desiredFrameShift=name==='room'?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
+const v={growth:[-.72,.28,innerWidth/innerHeight<.95?3.6:3.45,growthCorner.position.x,innerWidth/innerHeight<.95?1.3:1.08,growthCorner.position.z],arcade:arcadePose(),inventory:[.25,.65,innerWidth<600?3.8:3.1,2.05,.45,1.3],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[.25,.13,innerWidth<600?4.6:4.1,tv.position.x,1.45,tv.position.z],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.38,.66,innerWidth<600?3.6:3.1,-3.25,1.03,2.15]}[name];if(!v)return;desired={yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))};}
 function punch(){bagImpulse=Math.min(.28,bagImpulse+.17);bagStarted=performance.now();document.querySelector('#action-status').textContent='Punch landed';}
 document.querySelectorAll('button[data-view]').forEach(b=>b.onclick=()=>view(b.dataset.view));document.querySelector('#reset').onclick=()=>view('room');document.querySelector('#punch').onclick=punch;document.querySelector('#close-story').onclick=()=>view('room');
 let night=true;
@@ -184,7 +185,7 @@ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.fov=i
 document.querySelector('#loading').remove();let lastTime=0;let contextLost=false;el.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;emit({type:'error'});const notice=document.createElement('div');notice.id='loading';notice.textContent='The room paused. Refresh to step back inside.';host.append(notice);});
 let lastAnchorUpdate=0;
 const anchorPoint=new T.Vector3();
-function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='arcade'?2:item.key==='story'?1.75:item.key==='training'?.45:item.key==='music'?1.24:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});emit({type:'anchors',anchors});}
+function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='growth'?1.28:item.key==='arcade'?2:item.key==='story'?1.75:item.key==='training'?.45:item.key==='music'?1.24:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});emit({type:'anchors',anchors});}
 function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden)return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*radius,target.y+Math.sin(pitch)*radius,target.z+Math.cos(yaw)*Math.cos(pitch)*radius);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
 if(!reduced){dust.position.y=Math.sin(t*.00015)*.09;const age=(t-bagStarted)/1000;bagPivot.rotation.z=Math.sin(age*5.5)*bagImpulse*Math.exp(-age*1.35)+Math.sin(t*.0007)*.004;bagPivot.rotation.x=Math.sin(age*4)*bagImpulse*.3*Math.exp(-age*1.35);}
 if(roomDetails.update(t/1000,dt,reduced,camera.position.y))renderer.shadowMap.needsUpdate=true;if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();publishAnchors(t);}
