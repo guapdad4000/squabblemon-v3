@@ -43,6 +43,12 @@
 }
 .city-header .city-header__identity small { color: #d5c6a7; }
 .city-header .city-header__level { text-shadow: none; }
+.city-header__wallet { display: flex; align-items: center; gap: 14px; flex: none; }
+.city-header__wallet .city-header__balance { white-space: nowrap; }
+.city-header__shards { color: #c7efff; }
 @media (max-width: 600px) {
   .city-header::before { bottom: -26px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .city-header__wallet { flex-direction: column; align-items: flex-start; gap: 0; }
+  .city-header__wallet .city-header__balance { min-height: 24px; }
+  .city-header__wallet .game-glyph { --glyph-size: 19px; }
 }
