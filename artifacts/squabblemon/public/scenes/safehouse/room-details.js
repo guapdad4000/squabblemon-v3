@@ -194,18 +194,15 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
     setMusic(value) { playing = Boolean(value); led.emissiveIntensity = playing ? 2 : .3; },
     setProfile,
     setNight(night) { cityMaterial.map = cityTextures[night ? 1 : 0]; windowLight.color.set(night ? '#c1a98b' : '#edbc86'); windowLight.intensity = night ? 8 : 8; backLight.color.set('#d9b78e'); backLight.intensity = night ? 5 : 4; fanLight.intensity = night ? 22 : 25; poolMaterial.opacity = night ? .22 : .14; rainMaterial.uniforms.strength.value = night ? 1 : .35; },
-    update(time, dt, reduced, cameraHeight) {
-      const ceilingVisible = innerWidth / innerHeight >= .95 && cameraHeight < 4.53;
-      const ceilingChanged = ceiling.visible !== ceilingVisible;
-      ceiling.visible = ceilingVisible;
-      if (reduced) return ceilingChanged;
+    update(time, dt, reduced) {
+      if (reduced) return false;
       rainMaterial.uniforms.time.value = time;
       rotor.rotation.y += dt * .45;
       if (playing) record.rotation.y -= dt * 3.49;
       const points = steamGeometry.attributes.position;
       for (let i = 0; i < points.count; i++) { const height = ((time * .1 + i * .023) % .4); points.setXYZ(i, .48 + Math.sin(time + i * .3) * height * .09, 1.18 + height, 1.5 + Math.cos(time * .6 + i) * height * .07); }
       points.needsUpdate = true;
-      return ceilingChanged;
+      return false;
     },
     dispose() { disposed = true; if (profileImage) profileImage.onload = null; cityTextures.forEach(texture => texture.dispose()); }
   };
