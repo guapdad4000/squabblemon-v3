@@ -22,6 +22,7 @@
     "./balanceLab": "./src/balanceLab.ts",
     "./cosmetics": "./src/cosmetics.ts",
     "./challenge": "./src/challenge.ts",
-    "./accountRewards": "./src/accountRewards.ts"
+    "./accountRewards": "./src/accountRewards.ts",
+    "./starterMythic": "./src/starterMythic.ts"
   }
 }

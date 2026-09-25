@@ -1,3 +1,5 @@
+import { StarterMythic } from '../../components/StarterMythic';
+import { availableCareerChoices, readCareer } from '@workspace/squabblemon-engine/career';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { CareerBoard } from './CareerBoard';
@@ -138,15 +140,10 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </div>
       </header>
 
-      <nav className="studio-tabs" aria-label="Progression categories">
-        <button aria-pressed={tab === 'bounties'} onClick={() => { if (!claimLock.current) setTab('bounties'); }} disabled={claimLock.current}>
-          Bounties
-          {ready > 0 && <span className="hustle-stage__count">{ready}</span>}
-        </button>
-        <button aria-pressed={tab === 'mastery'} onClick={() => { if (!claimLock.current) setTab('mastery'); }} disabled={claimLock.current}>
-          Experiments & mastery
-        </button>
-      </nav>
+      <button type="button" className="bounty-mastery-strip" aria-expanded={tab === 'mastery'} onClick={() => { if (!claimLock.current) setTab(tab === 'mastery' ? 'bounties' : 'mastery'); }} disabled={!!claimState}>
+        <GameGlyph name="mastery" /><b>{tab === 'mastery' ? 'Back to Bounties' : 'Mastery'}</b>
+        <small>{availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay))} rewards ready</small><span>{tab === 'mastery' ? '←' : 'View →'}</span>
+      </button>
 
       {tab === 'mastery' ? (
         <div style={{ marginTop: 24, position: 'relative', zIndex: 10 }}>
@@ -248,6 +245,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </section>
         </div>
       )}
+      {tab === 'bounties' && <StarterMythic bootstrap={bootstrap} placement="banner" />}
       </div>
       {tab === 'bounties' && (
           <div className="bounty-hunter__pov" data-phase={claimState?.phase || 'idle'} data-testid="bounty-pistol" aria-hidden="true">

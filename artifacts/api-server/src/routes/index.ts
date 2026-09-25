@@ -11,6 +11,7 @@ import paymentsRouter from './payments';
 
 import stockzRouter from './stockz';
 import accountRewardsRouter from './accountRewards';
+import starterMythicRouter from './starterMythic';
 import mailRouter from './mail';
 
 const router: IRouter = Router();
@@ -25,6 +26,7 @@ router.use(multiplayerRouter);
 router.use(challengeRouter);
 router.use(paymentsRouter);
 router.use(accountRewardsRouter);
+router.use(starterMythicRouter);
 router.use(mailRouter);
 router.use(stockzRouter);
 

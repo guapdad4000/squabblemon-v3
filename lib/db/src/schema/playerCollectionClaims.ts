@@ -18,6 +18,7 @@ export type CollectionRoadRewardRecord = {
   promoCode?: { code: string; packTickets: number; softCurrency: number; styleShards: number; cardIds?: string[] };
   /** Namespaced shop receipts share the existing immutable, per-player claim ledger. */
   shopPurchase?: { itemId: string; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string };
+  starterMythic?: { cardId: string; softCurrency: number; packTickets: number; duplicateShards: number };
   cardId?: string;
   softCurrency?: number;
   styleShards?: number;
