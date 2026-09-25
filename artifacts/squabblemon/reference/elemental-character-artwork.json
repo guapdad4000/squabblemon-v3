@@ -1,0 +1,148 @@
+{
+  "records": [
+    {
+      "artworkId": "riptide-bruiser",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (1).png",
+      "sourceSha256": "0543d7cf86955096755547ccbba4eee52d9598a7f9cf1bc790ca47c71f4923bb",
+      "asset": "assets/characters/riptide-bruiser.webp",
+      "sha256": "8330227a0b1c976d2f8c984d75e2ab0f0169454f18e05c113037ddd40a8c1878",
+      "bytes": 273772,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "stillwater-medic",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (2).png",
+      "sourceSha256": "5c4d5badddaeda976242bc7aaeeda4769870b629cae82298f5400b2eaf615224",
+      "asset": "assets/characters/stillwater-medic.webp",
+      "sha256": "611f3aa962a17165dff416cd5ddf6e83d19315469085218ab892a43e208c063d",
+      "bytes": 222106,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "monsoon-anchor",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (3).png",
+      "sourceSha256": "69c45c43b5f487e55cb0b23a783b4e1cb27864fc5e6b901d14a6469596bd9127",
+      "asset": "assets/characters/monsoon-anchor.webp",
+      "sha256": "912b598638521cc776f86f494b782539f00299f332417539e79d9f4d938cc944",
+      "bytes": 189854,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "wiretap",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (4).png",
+      "sourceSha256": "a2d62682bdd4b0c9a7990cfd677bcd62ac042f2d6173d31feccf1d158c003ac4",
+      "asset": "assets/characters/wiretap.webp",
+      "sha256": "9ac9c277f105bd1f5342f5134bb1d1f95fce37c286b6fc1ed66d299ebf1a302f",
+      "bytes": 159954,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "rainmaker",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (5).png",
+      "sourceSha256": "d17f3afd6f7952fe41787dd5f00236b996dd80ea54a3bb8d218066320c7d62f9",
+      "asset": "assets/characters/rainmaker.webp",
+      "sha256": "5151b871f8fff5ce9c9e65dd83451e72aaea75bd37427a09ff9554538ee0709e",
+      "bytes": 372398,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "livewire",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_42 AM (6).png",
+      "sourceSha256": "ac9369c6e2a72eedda573af377441df74e4f88880743c9fd7cdffe09273f145c",
+      "asset": "assets/characters/livewire.webp",
+      "sha256": "b5028628d0489a6e84d9fb0c8a63c36d66bde296dd97a641058f713731b2e132",
+      "bytes": 179424,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "battery-back",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (7).png",
+      "sourceSha256": "0a6177d1570a900c8df43b63365824d6928ea6f0aa420b8b5edf23d3ab447b42",
+      "asset": "assets/characters/battery-back.webp",
+      "sha256": "9e9df8e24166f628675abc2f91c723a4f30e2ed1501aee0a9ce29bd26be19841",
+      "bytes": 152258,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "sprout",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (8).png",
+      "sourceSha256": "4f9b1765a79a78717445e4f4f86a24d31a10f9b2b48257e85d212ebebf0c59fb",
+      "asset": "assets/characters/sprout.webp",
+      "sha256": "9c299b47ebcf4b6a0914510c46a1020e7f01bd5b1664b7ed08e994a2b532ef1f",
+      "bytes": 163318,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "circuit-captain",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (9).png",
+      "sourceSha256": "15175eca954ace65dcd9245b4b5a6f3643114a6d1bede82bd4e8410c873818af",
+      "asset": "assets/characters/circuit-captain.webp",
+      "sha256": "0dc5c6afac47e7dd135dc3e763a7836c5e0771b22c6723e2b75bfe7c946edfec",
+      "bytes": 187496,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "canopy-keeper",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (10).png",
+      "sourceSha256": "cd3b54a905896f7031038b3945f6e2a2a2c3e7d7535e53a35a0fd197f3878162",
+      "asset": "assets/characters/canopy-keeper.webp",
+      "sha256": "4bdba35f893f76d02cca7a82d053f367cbf63127c10374df8f518cd42b8298c5",
+      "bytes": 179670,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "root-nurse",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (11).png",
+      "sourceSha256": "5f7ae860085d723dd43c4a8a2a32a1041a16b5350da6ba328d5b7d63e82dc803",
+      "asset": "assets/characters/root-nurse.webp",
+      "sha256": "3743d3d9fd7c39b2d83554c18e3e284733569276b4b1da9f7d256a737415411c",
+      "bytes": 216136,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "garden-wall",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (12).png",
+      "sourceSha256": "50525314bed2939c41c43b5f3c84b573a90128fbbc36fb705af0befe9e3a0e8a",
+      "asset": "assets/characters/garden-wall.webp",
+      "sha256": "1da52182f4bf2cf91de45b5d2e71921202018071f7d7c23d38dbfe79583e1d4c",
+      "bytes": 173572,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "gust",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_43 AM (13).png",
+      "sourceSha256": "acdc4d1e77181d2d6b98c618e0c1e619c3aef78b248edbcdba420449a585f22c",
+      "asset": "assets/characters/gust.webp",
+      "sha256": "ebc10724b1de10d31cd0995b5536fa91bd426789c20421d1dfabc8d0e3045615",
+      "bytes": 161826,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "crosswind",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_44 AM (14).png",
+      "sourceSha256": "9834a3a6dd460deec32e5e8a6c895cb1c79c0c323cf87618ef78446f1a5cde96",
+      "asset": "assets/characters/crosswind.webp",
+      "sha256": "0b7618adab06c4ebff3ca14d55f3f01646338be44797f03dbf8d311344dda7fd",
+      "bytes": 184904,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "slipstream",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_44 AM (15).png",
+      "sourceSha256": "d3cb5ad50ff2291969f93beb8db0932c77ceeee15ea645262cbd134b6e8dcdb0",
+      "asset": "assets/characters/slipstream.webp",
+      "sha256": "aeb01be5476b342b54ce0ff68de621d869e3c8a47303d4045f1c7510cb6b8389",
+      "bytes": 183378,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    },
+    {
+      "artworkId": "cloudbreak",
+      "source": "/home/falcon/Downloads/ChatGPT Image Sep 25, 2026, 02_54_44 AM (16).png",
+      "sourceSha256": "39d1dbe2076650f025b86c50a317d43a33933e583f9142575ed9dab7620c4f40",
+      "asset": "assets/characters/cloudbreak.webp",
+      "sha256": "335bc6f4382e684a21c114bcce5c3dea4d01090af0f986c843554cc7c3d48ad8",
+      "bytes": 131820,
+      "processing": "WebP encoding, proportional resize only; original alpha preserved"
+    }
+  ]
+}

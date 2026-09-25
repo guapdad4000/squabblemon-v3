@@ -1,6 +1,6 @@
 # Elemental character redesign
 
-The existing 16 Elemental Bond placeholders are renamed in the order supplied by the user, four per element. Engine IDs, catalog IDs, artwork paths, rarities, ownership, and upgrade identities remain stable. OG Vegan has 1 base Hand to budget her two-sided Plant buff. No finished illustrations were supplied with this request; existing placeholders remain until original art is added.
+The existing 16 Elemental Bond placeholders are renamed in the order supplied by the user, four per element. Engine IDs, catalog IDs, artwork paths, rarities, ownership, and upgrade identities remain stable. OG Vegan has 1 base Hand to budget her two-sided Plant buff. All 16 supplied illustrations are now installed with their original transparent alpha. Source mapping is recorded in `artifacts/squabblemon/reference/elemental-character-artwork.json`.
 
 | Former name | New name | Element | Move | Gameplay |
 | --- | --- | --- | --- | --- |
