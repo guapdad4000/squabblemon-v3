@@ -18,6 +18,8 @@ const routes = [
   { path: '/game/shop', label: 'Shop', detail: 'Train, recruit, pull', art: 'shop', primary: true, glyph: 'bag' },
 ] as const;
 
+const safehouseDestinations = routes.filter(route => route.path !== '/game');
+
 function pathnameFor(location: string) {
   const pathname = location.split(/[?#]/, 1)[0] || '/game';
   return pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
@@ -77,9 +79,9 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }
 
   return <>
-    <nav className="fan-nav" aria-label="Game navigation" style={{ '--fan-count': routes.length } as CSSProperties}>
-      <div className="fan-nav__spread fan-nav__spread--desktop">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
-      <div className="fan-nav__spread fan-nav__spread--compact">{routes.map((route, index) => renderRay(route, index, routes.length))}</div>
+    <nav className="fan-nav" aria-label="Game navigation" style={{ '--fan-count': safehouseDestinations.length } as CSSProperties}>
+      <div className="fan-nav__spread fan-nav__spread--desktop">{safehouseDestinations.map((route, index) => renderRay(route, index, safehouseDestinations.length))}</div>
+      <div className="fan-nav__spread fan-nav__spread--compact">{safehouseDestinations.map((route, index) => renderRay(route, index, safehouseDestinations.length))}</div>
     </nav>
   </>;
 }
