@@ -2,7 +2,6 @@ import { useSearch } from 'wouter';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { GameBackButton } from '../../components/venue/GameBackButton';
-import { useViewMemory } from '../../lib/navigationMemory';
 import { playInteractionSound, type InteractionSound } from '../../lib/interactionAudio';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
@@ -90,7 +89,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   // Readiness and anchor projection are separate scene events; the guided tour
   // fallback must hold until markers have actually been placed on screen.
   const [markersPlaced, setMarkersPlaced] = useState(false);
-  const [view, setView] = useViewMemory<Station | 'room'>(`home-view:${bootstrap.profile.id}`, 'room');
+  const [view, setView] = useState<Station | 'room'>('room');
   const [growthOpen, setGrowthOpen] = useState(false);
   const [mailOpen, setMailOpen] = useState(false);
   const noticeSearch = useSearch();
