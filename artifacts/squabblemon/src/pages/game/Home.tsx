@@ -1,5 +1,6 @@
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { useViewMemory } from '../../lib/navigationMemory';
+import { playInteractionSound, type InteractionSound } from '../../lib/interactionAudio';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -136,6 +137,12 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     const previous = previousView.current;
     previousView.current = view;
     if (previous === view) return;
+    const sounds: Partial<Record<Station | 'room', InteractionSound>> = {
+      mail: 'door-knock', growth: 'crystal', arcade: 'arcade-beep',
+      inventory: 'bag-open', story: 'film', training: 'machine',
+      cards: 'cards-spread', phone: 'phone-ring', profile: 'ui-beep',
+    };
+    if (sounds[view]) playInteractionSound(sounds[view]!);
     if (view !== 'room') backButton.current?.focus({ preventScroll: true });
     else if (previous !== 'room') markers.current.get(previous)?.focus({ preventScroll: true });
   }, [view]);
@@ -234,7 +241,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
               {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
-              {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => sendScene(frame, { type: 'punch' })}>Hit the bag</button>}
+              {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { playInteractionSound('bag-hit'); sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
             </div>
           </div>
         </section> : null}

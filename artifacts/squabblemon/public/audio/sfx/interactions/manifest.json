@@ -1,0 +1,140 @@
+[
+  {
+    "id": "door-chime",
+    "source": "Chime_of_a_ring_came_#1-1790332449281.wav",
+    "sourceDuration": 4.0,
+    "maxDuration": 1.4
+  },
+  {
+    "id": "door-knock",
+    "source": "knock_on_the_door_#4-1790332337564.wav",
+    "sourceDuration": 1.0,
+    "maxDuration": 1.0
+  },
+  {
+    "id": "cards-spread",
+    "source": "deck_of_cards_spread_#4-1790332292277.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 0.9
+  },
+  {
+    "id": "bag-hit",
+    "source": "heavy_bag_hit_#3-1790332060707.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 0.65
+  },
+  {
+    "id": "phone-ring",
+    "source": "MACHMisc-cell_phone_ringing-Elevenlabs.wav",
+    "sourceDuration": 6.48,
+    "maxDuration": 1.5
+  },
+  {
+    "id": "watering",
+    "source": "watering_plants_#4-1790332017914.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 2.0
+  },
+  {
+    "id": "bag-open",
+    "source": "unzipping_a_bag_and__#1-1790331929269.wav",
+    "sourceDuration": 1.0,
+    "maxDuration": 1.0
+  },
+  {
+    "id": "arcade-beep",
+    "source": "arcade_machine_beep__#4-1790331870617.wav",
+    "sourceDuration": 1.0,
+    "maxDuration": 0.65
+  },
+  {
+    "id": "film",
+    "source": "MACHMech-A_vintage_35_mm_film-Elevenlabs.wav",
+    "sourceDuration": 0.6,
+    "maxDuration": 0.6
+  },
+  {
+    "id": "ui-beep",
+    "source": "MACHMisc-beep-Elevenlabs.wav",
+    "sourceDuration": 4.0,
+    "maxDuration": 0.35
+  },
+  {
+    "id": "machine",
+    "source": "MACHInd-Industrial_machine_p-Elevenlabs.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 1.2
+  },
+  {
+    "id": "crowd",
+    "source": "HMNMisc-audience_ahh-Elevenlabs.wav",
+    "sourceDuration": 2.48,
+    "maxDuration": 1.1
+  },
+  {
+    "id": "prison",
+    "source": "HMNMisc-Prison_noise,_man_hi-Elevenlabs.wav",
+    "sourceDuration": 15.48,
+    "maxDuration": 1.3
+  },
+  {
+    "id": "magic-swoosh",
+    "source": "MAGMisc-magic_swoosh_with_ba-Elevenlabs.wav",
+    "sourceDuration": 1.08,
+    "maxDuration": 0.9
+  },
+  {
+    "id": "magic-reveal",
+    "source": "MAGShim-Create_a_polished_mo-Elevenlabs.wav",
+    "sourceDuration": 2.4,
+    "maxDuration": 1.5
+  },
+  {
+    "id": "water-splash",
+    "source": "MAGElem-Magical_water_splash-Elevenlabs.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 1.1
+  },
+  {
+    "id": "magic-aura",
+    "source": "MAGShim-Continuous_magical_a-Elevenlabs.wav",
+    "sourceDuration": 5.0,
+    "maxDuration": 1.5
+  },
+  {
+    "id": "magic-poof",
+    "source": "MAGPoof-Prompt_Magic_poof_tr-Elevenlabs.wav",
+    "sourceDuration": 3.2,
+    "maxDuration": 0.75
+  },
+  {
+    "id": "fireball",
+    "source": "MAGElem-A_blazing_fireball_l-Elevenlabs.wav",
+    "sourceDuration": 1.26,
+    "maxDuration": 1.0
+  },
+  {
+    "id": "crystal",
+    "source": "MAGShim-A_soft,_magical_crys-Elevenlabs.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 1.2
+  },
+  {
+    "id": "low-spell",
+    "source": "MAGSpel-A_subtle,_low-freque-Elevenlabs.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 1.2
+  },
+  {
+    "id": "treasure",
+    "source": "MAGPoof-Magical_treasure_che-Elevenlabs.wav",
+    "sourceDuration": 2.0,
+    "maxDuration": 1.6
+  },
+  {
+    "id": "intro",
+    "source": "DSGNBram-Cinematic_intro_soun-Elevenlabs.wav",
+    "sourceDuration": 7.0,
+    "maxDuration": 1.8
+  }
+]

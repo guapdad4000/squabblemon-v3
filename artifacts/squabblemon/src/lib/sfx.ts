@@ -1,3 +1,4 @@
+import { playInteractionSound, type InteractionSound } from './interactionAudio';
 import { FEEDBACK_CHANGE_EVENT, type FeedbackPreferences } from '../battleFeedback';
 
 const PUBLIC_BASE = (import.meta.env?.BASE_URL ?? '/').replace(/\/?$/, '/');
@@ -68,6 +69,15 @@ export function playSoundEffect(
   volume = 0.8,
 ): HTMLAudioElement | null {
   if (!enabled || typeof Audio === 'undefined') return null;
+  const interaction: Partial<Record<SoundEffect, InteractionSound>> = {
+    'district-lost': 'prison', 'district-takeover-a': 'crowd', 'district-takeover-b': 'water-splash',
+    'gacha-common': 'magic-poof', 'gacha-rare-a': 'crystal', 'gacha-rare-b': 'magic-swoosh',
+    'gacha-epic': 'magic-reveal', 'gacha-legendary': 'treasure', 'story-star': 'crystal',
+    'match-found': 'door-chime', 'match-search': 'low-spell', 'pack-break': 'magic-poof',
+    'pack-tear': 'magic-swoosh', 'pack-ten': 'treasure', 'squabble-charge': 'low-spell',
+    'vs-impact-a': 'intro', 'vs-impact-b': 'fireball', 'vs-impact-c': 'fireball',
+  };
+  if (interaction[name]) return playInteractionSound(interaction[name]!, enabled);
   const audio = new Audio(`${PUBLIC_BASE}audio/sfx/generated/${name}.${preferredExtension()}`);
   audio.volume = Math.max(0, Math.min(1, volume));
   return playClip(audio);

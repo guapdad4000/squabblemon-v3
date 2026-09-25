@@ -1,3 +1,4 @@
+import { playInteractionSound, stopInteractionSound } from '../lib/interactionAudio';
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'wouter';
 import { Check, ArrowUpRight, Droplets, Leaf, Gift } from 'lucide-react';
@@ -138,6 +139,13 @@ export function BuddyGrowthLab({ bootstrap, open, onOpenChange }: { bootstrap: P
   const visiblePlants = animation ? animation.phase === 'growing' ? animation.after : animation.before : growth?.plantsInGarden ?? 0;
   const fill = animation ? animation.phase === 'filling' ? 1 : 0 : growth?.water ?? 0;
   const resetMinutes = status ? Math.max(0, Math.ceil((Date.parse(status.nextResetAt) - clock) / 60000)) : 0;
+  useEffect(() => {
+    if (!open || !animation) return;
+    if (animation.phase === 'watering') playInteractionSound('watering');
+    if (animation.phase === 'growing') playInteractionSound('magic-aura');
+    return stopInteractionSound;
+  }, [open, animation?.phase]);
+
   return <dialog ref={dialog} className="growth-dialog" aria-labelledby="growth-title" onCancel={() => onOpenChange(false)} onClose={() => onOpenChange(false)} data-reduced-motion={reduced}>
     <div className="growth-lab-shell" data-phase={animation?.phase ?? 'idle'}>
         <div className="growth-garden" aria-hidden="true">{Array.from({ length: visiblePlants }, (_, index) => <BuddyPlant key={index} index={index} fresh={animation?.phase === 'growing' && index === animation.after - 1} />)}</div>
