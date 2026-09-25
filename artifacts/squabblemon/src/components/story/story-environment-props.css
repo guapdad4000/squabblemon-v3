@@ -1,0 +1,14 @@
+.story-environment-prop{position:absolute;left:-2%;bottom:29%;width:clamp(70px,12vw,175px);max-height:28%;object-fit:contain;pointer-events:none;z-index:1;filter:brightness(.7) drop-shadow(0 8px 12px #0008);animation:story-prop-drift 24s ease-in-out infinite alternate}
+.story-environment-prop--overhead{top:1%;bottom:auto;left:0;width:100%;max-height:16%;object-fit:contain;filter:brightness(.85);opacity:.7}
+@keyframes story-prop-drift{from{transform:translate3d(-3px,2px,0)}to{transform:translate3d(5px,-3px,0)}}
+.story-stage--still .story-environment-prop{animation:none}
+@media(prefers-reduced-motion:reduce){.story-environment-prop{animation:none}}
+@media(max-width:640px){.story-environment-prop{display:none}}
+
+/* The route must stretch before its absolute dialogue overlay can fill it. */
+.game-shell:has(.story-stage){display:flex;flex-direction:column}
+.game-shell:has(.story-stage) .game-shell__content{display:flex;flex-direction:column;flex:1;min-height:0}
+.game-shell:has(.story-stage) .game-route-stage{display:flex;flex-direction:column;flex:1;min-height:0}
+.story-stage--environment .story-stage__beam{display:none}
+
+.game-shell:has(.story-stage) .story-atlas{flex:1;min-height:0}

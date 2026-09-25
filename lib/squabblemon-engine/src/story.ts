@@ -1,3 +1,4 @@
+import { withStoryEnvironments } from "./storyEnvironments";
 import { cards, DECK_SIZE, completeEngineCrew } from "./data";
 import chapterOneDialogue from "./chapterOneDialogue";
 import { sequelChapters } from "./seasonChapters";
@@ -251,13 +252,13 @@ export function validateStoryContent(content: StoryContent): StoryContent {
 }
 const screenplay = chapterOneDialogue as Record<string, Partial<Record<'pre' | 'post' | 'main', StoryDialogueLine[]>>>;
 export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:script-v3:${section}:${index}`;
-export const storyContent = validateStoryContent({ version: 8, chapters: [...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyContent = validateStoryContent({ version: 9, chapters: withStoryEnvironments([...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'
     ? { ...node, preDialogue: dialogue.pre ?? node.preDialogue, postDialogue: dialogue.post ?? node.postDialogue }
     : { ...node, scenes: dialogue.main ?? node.scenes };
-}) }, ...sequelChapters]), ...seasonTwoChapters, ...specialPresentationChapters, ...extendedStoryChapters] });
+}) }, ...sequelChapters]), ...seasonTwoChapters, ...specialPresentationChapters, ...extendedStoryChapters]) });
 export const getStoryChapter = (chapterId: string) => storyContent.chapters.find((chapter) => chapter.id === chapterId);
 export const getStoryNode = (nodeId: string) => storyContent.chapters.flatMap((chapter) => chapter.nodes).find((node) => node.id === nodeId);
 

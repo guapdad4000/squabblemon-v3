@@ -1,3 +1,4 @@
+import { StoryEnvironmentProp } from './StoryEnvironmentProp';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
@@ -186,9 +187,10 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const shouting = /[A-Z]{4,}|!/.test(line.text);
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
-    <section className={`story-stage ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
+    <section className={`story-stage ${scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
       <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(scene.backdropAssetId)}")` }} />
       <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
+      <StoryEnvironmentProp background={scene.backdropAssetId} />
       <div className="story-stage__light" />
       <div className="story-stage__dust" aria-hidden="true" />
       <header className="story-stage__header">

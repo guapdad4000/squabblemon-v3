@@ -1,0 +1,329 @@
+{
+  "source": "/home/falcon/Downloads/Squabblemon-Environments-Complete.zip",
+  "records": [
+    {
+      "source": "backgrounds/01-after-hours-block-party.png",
+      "asset": "assets/story/environments/backgrounds/01-after-hours-block-party.webp",
+      "sha256": "3c4ca42f6f62abb37c73b0dbabc9f8b0532044c512ff7f7a7d38867f46ff6069",
+      "bytes": 438632
+    },
+    {
+      "source": "backgrounds/02-bootleg-film-archive.png",
+      "asset": "assets/story/environments/backgrounds/02-bootleg-film-archive.webp",
+      "sha256": "c4ac35415eaefd79a183438d248184d8b3062be686e160b25e3dc8a09ea358f6",
+      "bytes": 272834
+    },
+    {
+      "source": "backgrounds/03-promoters-back-office.png",
+      "asset": "assets/story/environments/backgrounds/03-promoters-back-office.webp",
+      "sha256": "26c6e75d656f24d6d39abfb247a2db2343501d2d4e23200e8ea7b59127101f85",
+      "bytes": 278432
+    },
+    {
+      "source": "backgrounds/04-impossible-midnight-station.png",
+      "asset": "assets/story/environments/backgrounds/04-impossible-midnight-station.webp",
+      "sha256": "a4f4e6176afec41acc1722e3d58bf252e94dd73a72af6f21d8bc8b7d44be77da",
+      "bytes": 353206
+    },
+    {
+      "source": "backgrounds/05-railway-loading-alley.png",
+      "asset": "assets/story/environments/backgrounds/05-railway-loading-alley.webp",
+      "sha256": "b33270fb12753a36fd92e767377c22cdca46b7e71a86ec93fef96d26884ba5f0",
+      "bytes": 439644
+    },
+    {
+      "source": "backgrounds/06-lost-luggage-cage.png",
+      "asset": "assets/story/environments/backgrounds/06-lost-luggage-cage.webp",
+      "sha256": "1a89391d6d453d7000d807d5ce094febde5c9b5bd5fd3cbfc2a891f20270a8bf",
+      "bytes": 334452
+    },
+    {
+      "source": "backgrounds/07-community-radio-booth.png",
+      "asset": "assets/story/environments/backgrounds/07-community-radio-booth.webp",
+      "sha256": "24f41bc2b667ea58b77ce15e595674ad82958b3a03674650d1f8059b980db5ee",
+      "bytes": 314096
+    },
+    {
+      "source": "backgrounds/08-transmitter-cupboard.png",
+      "asset": "assets/story/environments/backgrounds/08-transmitter-cupboard.webp",
+      "sha256": "18068692177afef3118b768e23e35305280b4cbe257f5cae3705197f84c15382",
+      "bytes": 271644
+    },
+    {
+      "source": "backgrounds/09-radio-rooftop.png",
+      "asset": "assets/story/environments/backgrounds/09-radio-rooftop.webp",
+      "sha256": "de16b3fb1064a74ff6626f9031e16ceea70d63ce99cebe50687f45104acd04bc",
+      "bytes": 357184
+    },
+    {
+      "source": "backgrounds/10-neighborhood-trophy-gallery.png",
+      "asset": "assets/story/environments/backgrounds/10-neighborhood-trophy-gallery.webp",
+      "sha256": "63f47b6eccf48de9a9fd6aa100f482f3e2d8879d74b2da01c8a55cab34d3278c",
+      "bytes": 323932
+    },
+    {
+      "source": "backgrounds/11-gallery-maintenance-corridor.png",
+      "asset": "assets/story/environments/backgrounds/11-gallery-maintenance-corridor.webp",
+      "sha256": "0aa1cfe5e2d753b40170f8d51dc4edca2507b3cd88a966d479e734c994393b3b",
+      "bytes": 237772
+    },
+    {
+      "source": "backgrounds/12-yellow-line-bus-terminal.png",
+      "asset": "assets/story/environments/backgrounds/12-yellow-line-bus-terminal.webp",
+      "sha256": "28182dd8c068011ec19ac4062005bd7dfb603a2a709de908e76633e586d00584",
+      "bytes": 374686
+    },
+    {
+      "source": "backgrounds/13-sponsored-toll-bridge.png",
+      "asset": "assets/story/environments/backgrounds/13-sponsored-toll-bridge.webp",
+      "sha256": "499216f2d588d282e1c2fab2d0b5a9a86aa9c7b440642d1bd463f01cf4d85470",
+      "bytes": 462638
+    },
+    {
+      "source": "backgrounds/14-emerald-customer-service-hall.png",
+      "asset": "assets/story/environments/backgrounds/14-emerald-customer-service-hall.webp",
+      "sha256": "fc68ac9c7c1274b0111592ef0b228ab55d97bc910ab52b91437674d793f1c459",
+      "bytes": 370754
+    },
+    {
+      "source": "backgrounds/15-behind-ozs-curtain.png",
+      "asset": "assets/story/environments/backgrounds/15-behind-ozs-curtain.webp",
+      "sha256": "610e7d96a7c2bb279a7c47049a13582d2a3de1bcfc1819c4ec9b1449b0679208",
+      "bytes": 329044
+    },
+    {
+      "source": "backgrounds/16-rooftop-tram-departure.png",
+      "asset": "assets/story/environments/backgrounds/16-rooftop-tram-departure.webp",
+      "sha256": "1b167bb53f689a29bf3f98b88762eb9e77e3ccb6c6ed6ed6fc6e23a110c6fe79",
+      "bytes": 409708
+    },
+    {
+      "source": "backgrounds/17-the-hour-lending-shop.png",
+      "asset": "assets/story/environments/backgrounds/17-the-hour-lending-shop.webp",
+      "sha256": "a5304d8755b74e3f8b303f498213cb90b2afaf769ddd3cffd8114bf8c6b93ebc",
+      "bytes": 352278
+    },
+    {
+      "source": "backgrounds/18-borrowed-hour-tea-garden.png",
+      "asset": "assets/story/environments/backgrounds/18-borrowed-hour-tea-garden.webp",
+      "sha256": "eeb4949e8dffaae51fb747a1d66b40f9d3c1520c032a32c67910ab2cec3db884",
+      "bytes": 487292
+    },
+    {
+      "source": "backgrounds/19-hallway-of-wrong-sized-doors.png",
+      "asset": "assets/story/environments/backgrounds/19-hallway-of-wrong-sized-doors.webp",
+      "sha256": "64eb1dfb762545cf0afc38494c9d80d4b9da13d3f3e785600d424375b5a8bfc8",
+      "bytes": 319748
+    },
+    {
+      "source": "backgrounds/20-the-queens-petty-court.png",
+      "asset": "assets/story/environments/backgrounds/20-the-queens-petty-court.webp",
+      "sha256": "805a8a26d7c62305497ff50b96ec152d0324637b4a7ac058952e42aa18a4fbda",
+      "bytes": 361722
+    },
+    {
+      "source": "backgrounds/21-the-missing-spring-clocktower.png",
+      "asset": "assets/story/environments/backgrounds/21-the-missing-spring-clocktower.webp",
+      "sha256": "ef2101959bfabdcaa2da006588411e2d0a3c06c5d05a593dfe97fb8a11770303",
+      "bytes": 358652
+    },
+    {
+      "source": "backgrounds/22-festival-courtyard.png",
+      "asset": "assets/story/environments/backgrounds/22-festival-courtyard.webp",
+      "sha256": "86a9af2d489107b5e2fdbf11c713a0a03b8f849a5cb4389bc4949bec1dfecfa0",
+      "bytes": 406222
+    },
+    {
+      "source": "backgrounds/23-vip-sword-lesson-pavilion.png",
+      "asset": "assets/story/environments/backgrounds/23-vip-sword-lesson-pavilion.webp",
+      "sha256": "78bb7676784844a8c327129ac62b956b7fd38318961980599c7cbced6fd72aa7",
+      "bytes": 408176
+    },
+    {
+      "source": "backgrounds/24-lantern-practice-ground.png",
+      "asset": "assets/story/environments/backgrounds/24-lantern-practice-ground.webp",
+      "sha256": "e082b94b1ff449d9fcd0b9ce8d089bb4e5038653ccb9ea284da045d71c6eeb60",
+      "bytes": 367266
+    },
+    {
+      "source": "backgrounds/25-cellblock-library.png",
+      "asset": "assets/story/environments/backgrounds/25-cellblock-library.webp",
+      "sha256": "0d2048da5888f85dbbca767ac64204050fb238232f837012cf84890308b188ce",
+      "bytes": 352106
+    },
+    {
+      "source": "backgrounds/26-kingpins-reservation-desk.png",
+      "asset": "assets/story/environments/backgrounds/26-kingpins-reservation-desk.webp",
+      "sha256": "101c3d12715fae09b3350dbdd829a35003f370d512ada10ddc543075d417e311",
+      "bytes": 245872
+    },
+    {
+      "source": "backgrounds/27-library-hour-showdown.png",
+      "asset": "assets/story/environments/backgrounds/27-library-hour-showdown.webp",
+      "sha256": "5e214c3d403fe7f4625ffb2902a894db7d6bd6aac9bbc4d18ba66fb3bb857208",
+      "bytes": 382530
+    },
+    {
+      "source": "backgrounds/28-rain-flooded-supply-route.png",
+      "asset": "assets/story/environments/backgrounds/28-rain-flooded-supply-route.webp",
+      "sha256": "e43158aad710f335d04c66b460e43185c247af155f888ffffd93dcebc7c6842d",
+      "bytes": 326584
+    },
+    {
+      "source": "backgrounds/29-community-kitchen-loading-bay.png",
+      "asset": "assets/story/environments/backgrounds/29-community-kitchen-loading-bay.webp",
+      "sha256": "d706e2812682f43dda049a3b432ea275c26bc1218910c9dc63ebf32ff837a30e",
+      "bytes": 308630
+    },
+    {
+      "source": "backgrounds/30-landlords-lobby.png",
+      "asset": "assets/story/environments/backgrounds/30-landlords-lobby.webp",
+      "sha256": "7e2c8517f353d7d52e6b876b66d772a4e0d9be0825bbb701d1121a2db176f86a",
+      "bytes": 315376
+    },
+    {
+      "source": "backgrounds/31-housing-appointment-office.png",
+      "asset": "assets/story/environments/backgrounds/31-housing-appointment-office.webp",
+      "sha256": "7990ef6280a00a96fde5bf7b2e55a86a5dbd1290feab2b4413ef73234eed060c",
+      "bytes": 235346
+    },
+    {
+      "source": "backgrounds/32-leons-new-room.png",
+      "asset": "assets/story/environments/backgrounds/32-leons-new-room.webp",
+      "sha256": "ef8e1a76e4c2e76fd7fc58439ab80817d8899f1589ca9a990bce67e130d1600b",
+      "bytes": 228940
+    },
+    {
+      "source": "backgrounds/33-the-morning-after-rooftop.png",
+      "asset": "assets/story/environments/backgrounds/33-the-morning-after-rooftop.webp",
+      "sha256": "8d0c4accf110c98f9a74e6c4c0d2e0eeb4294a010337dae624baaf5314242552",
+      "bytes": 378496
+    },
+    {
+      "source": "backgrounds/34-rent-party-courtyard.png",
+      "asset": "assets/story/environments/backgrounds/34-rent-party-courtyard.webp",
+      "sha256": "8173d2cac6f2bc10d368d435eb77076710ce2510089e8d0c43f0113d2fa4c28c",
+      "bytes": 425040
+    },
+    {
+      "source": "backgrounds/35-community-space-under-repair.png",
+      "asset": "assets/story/environments/backgrounds/35-community-space-under-repair.webp",
+      "sha256": "700f236a54d4fd25eb67ec531e02381c479efa9a8ca6b2568f014e851a7ab290",
+      "bytes": 355012
+    },
+    {
+      "source": "backgrounds/36-museum-of-the-block.png",
+      "asset": "assets/story/environments/backgrounds/36-museum-of-the-block.webp",
+      "sha256": "86355594842cf08ac020dab0f5039d4fbb145e46e4ff22192673c2d982c5b9b7",
+      "bytes": 415152
+    },
+    {
+      "source": "backgrounds/37-premiere-night-entrance.png",
+      "asset": "assets/story/environments/backgrounds/37-premiere-night-entrance.webp",
+      "sha256": "8f2ab7431183f3d081cbaee1664921edf20d68b690164fe74e2702e9eb53e531",
+      "bytes": 359190
+    },
+    {
+      "source": "backgrounds/38-the-saved-gathering-place.png",
+      "asset": "assets/story/environments/backgrounds/38-the-saved-gathering-place.webp",
+      "sha256": "a9f8315fccbced3327850e24062ee5cdbc7843a283a0130d8bfaa32a8e74976f",
+      "bytes": 413506
+    },
+    {
+      "source": "props/book-cart.png",
+      "asset": "assets/story/environments/props/book-cart.webp",
+      "sha256": "a4fafad3b93315251ec434f5671d7d69276edbb7914085f419279e550bc833d5",
+      "bytes": 127022
+    },
+    {
+      "source": "props/clock.png",
+      "asset": "assets/story/environments/props/clock.webp",
+      "sha256": "e3c5d580a36c14500f93a3b75de77809d4580a4344045c88ac26ade7fdd00e22",
+      "bytes": 106616
+    },
+    {
+      "source": "props/evidence-boxes.png",
+      "asset": "assets/story/environments/props/evidence-boxes.webp",
+      "sha256": "2f57afdfed6dfbc8897d9c68a20569802010be2da489a039f0ba267199a22b82",
+      "bytes": 59568
+    },
+    {
+      "source": "props/folding-chair.png",
+      "asset": "assets/story/environments/props/folding-chair.webp",
+      "sha256": "8e43af365f4e99ad92a4451032625fe52fbfc17b731faaba20c0191492f18ec4",
+      "bytes": 92258
+    },
+    {
+      "source": "props/lantern.png",
+      "asset": "assets/story/environments/props/lantern.webp",
+      "sha256": "b8d1717cb5a478ce9ff111af02dbd8bec495d922828144e2e1e2f42599ff4d13",
+      "bytes": 84744
+    },
+    {
+      "source": "props/luggage.png",
+      "asset": "assets/story/environments/props/luggage.webp",
+      "sha256": "6b0c99aa0561c7b29b49747f7dd3fdb551da4de85df24d20390d8dece504729e",
+      "bytes": 141164
+    },
+    {
+      "source": "props/mailboxes.png",
+      "asset": "assets/story/environments/props/mailboxes.webp",
+      "sha256": "47d6dab3d35b898538ae5ce13d7a94cae5e8f782ae21855d6dd89843685a2a2c",
+      "bytes": 82320
+    },
+    {
+      "source": "props/microphone.png",
+      "asset": "assets/story/environments/props/microphone.webp",
+      "sha256": "6ae90027124544920d70c07296209038940a84b79293b93d6d8967fcd9b277c9",
+      "bytes": 93736
+    },
+    {
+      "source": "props/mirror.png",
+      "asset": "assets/story/environments/props/mirror.webp",
+      "sha256": "3494724909cb4e4e37a341460f81ce59a2a51319a36b9d65c9f09fac49718346",
+      "bytes": 69786
+    },
+    {
+      "source": "props/noodle-stack.png",
+      "asset": "assets/story/environments/props/noodle-stack.webp",
+      "sha256": "3b1951579b5d571ff54f6e9b2286a8009916b917da9a9b5cbc2c363cad7d7e33",
+      "bytes": 99578
+    },
+    {
+      "source": "props/patch-cables.png",
+      "asset": "assets/story/environments/props/patch-cables.webp",
+      "sha256": "4112ef9ccb7dfa40a72e498ec6dd7e880861d731596eb3e5dd9bab84d136cdfe",
+      "bytes": 62658
+    },
+    {
+      "source": "props/payment-kiosk.png",
+      "asset": "assets/story/environments/props/payment-kiosk.webp",
+      "sha256": "0c0e3467f85cb6822d96514b20f44544be3a002ed722af5d9e0d9ed9214f1cb8",
+      "bytes": 83232
+    },
+    {
+      "source": "props/projector.png",
+      "asset": "assets/story/environments/props/projector.webp",
+      "sha256": "0e83cfa9656d83c7deb1cc35d849de75379a2c952930f14a295132cc3293b5c2",
+      "bytes": 123300
+    },
+    {
+      "source": "props/string-lights.png",
+      "asset": "assets/story/environments/props/string-lights.webp",
+      "sha256": "05314cb165601324b814a0b4a78eb154f33243888fbc625817302b3155bdf494",
+      "bytes": 41742
+    },
+    {
+      "source": "props/teacup.png",
+      "asset": "assets/story/environments/props/teacup.webp",
+      "sha256": "7e98a3b76868e7fffcd9acf4dab75d5a9bb2b880429cd7ebbb4209a1123f3be0",
+      "bytes": 98870
+    },
+    {
+      "source": "props/trophy.png",
+      "asset": "assets/story/environments/props/trophy.webp",
+      "sha256": "9729d562da951f670ba331c922643a7c90bc4c6890e138452b1d218648df420c",
+      "bytes": 129534
+    }
+  ]
+}

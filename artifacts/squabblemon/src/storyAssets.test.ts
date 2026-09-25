@@ -64,3 +64,35 @@ test("every new chapter's rendered background, portrait, puzzle and poster exist
     assert.ok((await stat(fileURLToPath(new URL(asset, publicRoot)))).isFile(), `Missing story art: ${asset}`);
   }
 });
+test('authored environments cover every new story scene with all 38 supplied locations', async () => {
+  const environments = new Set<string>();
+  for (const chapter of storyContent.chapters.filter(chapter => chapter.order >= 9)) {
+    assert.match(chapter.mapAssetId, /^assets\/story\/environments\/backgrounds\//);
+    for (const node of chapter.nodes) {
+      const asset = node.cinematic.environmentAssetId;
+      assert.match(asset, /^assets\/story\/environments\/backgrounds\//, node.id);
+      if (node.kind === 'battle') assert.equal(node.battlefieldAssetId, asset);
+      environments.add(asset);
+    }
+  }
+  assert.equal(environments.size, 38);
+  for (const asset of environments) {
+    const buffer = await readFile(new URL(asset, publicRoot));
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.format, 'webp');
+    assert.ok(Math.abs(metadata.width! / metadata.height! - 16 / 9) < .01, asset);
+    assert.ok(buffer.length < 600_000, `${asset} exceeds 600 KB`);
+  }
+});
+
+test('all sixteen environment props retain transparent alpha', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../reference/story-environments.json', import.meta.url), 'utf8'));
+  const props = manifest.records.filter((r: { asset: string }) => r.asset.includes('/props/'));
+  assert.equal(props.length, 16);
+  for (const prop of props) {
+    const buffer = await readFile(new URL(prop.asset, publicRoot));
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.hasAlpha, true, prop.asset);
+    assert.equal((await sharp(buffer).stats()).isOpaque, false, prop.asset);
+  }
+});
