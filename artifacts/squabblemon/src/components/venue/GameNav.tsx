@@ -45,7 +45,7 @@ function fanPosition(index: number, count: number): CSSProperties {
 }
 
 function NavArt({ name }: { name: typeof routes[number]['art'] }) {
-  return <img src={getAssetUrl(`brand/navigation-painted/${name}.webp`)} alt="" draggable={false} width={512} height={512} />;
+  return <img src={getAssetUrl(`brand/navigation-painted/ab/${name}.webp`)} alt="" draggable={false} width={512} height={512} />;
 }
 
 export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {

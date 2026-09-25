@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { DrFadeWelcome } from '../../components/DrFadeWelcome';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetPlayerBootstrapQueryKey, useSavePlayerDeck, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -10,30 +10,18 @@ import { CoachSpotlight } from '../../components/CoachSpotlight';
 import { DeckWorkbench } from '../../components/DeckWorkbench';
 import { PlayLoop } from '../../components/PlayLoop';
 import type { DeckDraft } from '../../lib/deckWorkshop';
-import { loadFeedbackPreferences } from '../../battleFeedback';
-import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
+import { tutorialScript } from '../../lib/tutorialVoice';
+import { useTutorialVoice } from '../../lib/useTutorialVoice';
+import homeLessons from '../../lib/safehouseTour.json';
 
-const homeLessons = [
-  { target: '.safehouse-room-title', title: 'This is home.', body: 'Your Safehouse is where you return between fights. The objects in this room open the parts of your game.', next: 'Show me the story' },
-  { target: '[aria-label="Explore the television"]', title: 'The television opens your story.', body: 'Tap Story. This is your main adventure: dialogue, battles, new cards, and chapter rewards.' },
-  { target: '.safehouse-room-detail__body', title: 'One chapter at a time.', body: 'Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.', next: 'Find my gang' },
-  { target: '.room-back', title: 'Back to your room.', body: 'Tap Back to the room. Your cards live right here in the Safehouse too.' },
-  { target: '[aria-label="Explore your gang cards"]', title: 'These are your gang cards.', body: 'Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.' },
-  { target: '.safehouse-room-actions', title: 'Let’s build your first deck.', body: 'I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.' },
-];
 export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { bootstrap: PlayerBootstrap; onCollect: () => void; onComplete: () => void }) {
   const [stage, setStage] = useState<'welcome' | 'home' | 'legendary' | 'deck' | 'battle'>(bootstrap.profile.starterDeckId === ROOKIE_FOUNDATION_ID ? 'legendary' : 'welcome');
   const [lesson, setLesson] = useState(0);
   const [playing, setPlaying] = useState<DeckDraft | null>(null);
   const save = useSavePlayerDeck();
   const queryClient = useQueryClient();
-  const welcomeVoice = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => {
-    if (stage !== 'welcome') return;
-    welcomeVoice.current = playVoiceLine('app-welcome', loadFeedbackPreferences().audioEnabled);
-    return () => stopSoundEffect(welcomeVoice.current);
-  }, [stage]);
   const saved = bootstrap.profile.savedDecks.find(deck => deck.id === ROOKIE_DECK_ID);
+  useTutorialVoice(stage === 'welcome' && !saved ? tutorialScript('welcome', 'welcome-reassurance') : null);
   const persist = async (draft: DeckDraft) => {
     const res = await save.mutateAsync({ deckId: ROOKIE_DECK_ID, data: draft });
     queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
@@ -52,7 +40,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
     return <div className="rookie-home-tour">
       <Home bootstrap={bootstrap} onGuideComplete={onCollect} />
       <CoachSpotlight target={item.target} title={item.title} step={'HOME ' + (lesson + 1) + ' / ' + homeLessons.length}
-        onNext={item.next ? () => setLesson(lesson + 1) : undefined} nextLabel={item.next}
+        onNext={item.next ? () => setLesson(lesson + 1) : undefined} nextLabel={item.next ?? undefined}
         onTarget={!item.next && lesson < homeLessons.length - 1 ? () => setLesson(lesson + 1) : undefined}>{item.body}</CoachSpotlight>
     </div>;
   }

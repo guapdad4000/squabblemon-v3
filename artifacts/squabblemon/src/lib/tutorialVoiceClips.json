@@ -1,0 +1,177 @@
+[
+  {
+    "id": "welcome",
+    "text": "I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.",
+    "duration": 8.5
+  },
+  {
+    "id": "welcome-reassurance",
+    "text": "No timer. No purchases. We’ll learn by playing.",
+    "duration": 3.8
+  },
+  {
+    "id": "home-1",
+    "text": "Your Safehouse is where you return between fights. The objects in this room open the parts of your game.",
+    "duration": 5.9
+  },
+  {
+    "id": "home-2",
+    "text": "Tap Story. This is your main adventure: dialogue, battles, new cards, and chapter rewards.",
+    "duration": 7.3
+  },
+  {
+    "id": "home-3",
+    "text": "Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.",
+    "duration": 6.6
+  },
+  {
+    "id": "home-4",
+    "text": "Tap Back to the room. Your cards live right here in the Safehouse too.",
+    "duration": 4.7
+  },
+  {
+    "id": "home-5",
+    "text": "Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.",
+    "duration": 6.6
+  },
+  {
+    "id": "home-6",
+    "text": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
+    "duration": 9.7
+  },
+  {
+    "id": "legendary-catchphrase",
+    "text": "Watch close. You’re next.",
+    "duration": 2.091
+  },
+  {
+    "id": "legendary-explanation",
+    "text": "Play him for 4 Motion. He brings 6 Hands, hits the strongest enemy in his district for −2 Hands, and gives your weakest ally in another district +2 Hands.",
+    "duration": 9.3
+  },
+  {
+    "id": "legendary-squabble",
+    "text": "We’ll save him for your first SQUABBLE: 12 base Hands in one play. Follow the highlights and see it happen.",
+    "duration": 6.8
+  },
+  {
+    "id": "deck-1",
+    "text": "These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.",
+    "duration": 8.2
+  },
+  {
+    "id": "deck-2",
+    "text": "Tap Landlord. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
+    "duration": 9.3
+  },
+  {
+    "id": "deck-3",
+    "text": "You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.",
+    "duration": 6.2
+  },
+  {
+    "id": "r1_choose_card",
+    "text": "Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
+    "duration": 6.6
+  },
+  {
+    "id": "r1_choose_district",
+    "text": "Tap this district. You win by leading in two of the three districts at the end. Your first play here costs 1 less Motion (minimum 1). Discounts do not stack.",
+    "duration": 10.2
+  },
+  {
+    "id": "r1_play_card",
+    "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+    "duration": 5.1
+  },
+  {
+    "id": "r1_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "duration": 7.3
+  },
+  {
+    "id": "r2_choose_card",
+    "text": "Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.",
+    "duration": 6.6
+  },
+  {
+    "id": "r2_choose_district",
+    "text": "Tap this district. You win by leading in two of the three districts at the end. Spread your strength instead of putting everyone in one place.",
+    "duration": 7.7
+  },
+  {
+    "id": "r2_play_card",
+    "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+    "duration": 5.7
+  },
+  {
+    "id": "r2_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "duration": 7.4
+  },
+  {
+    "id": "r3_bank_motion",
+    "text": "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts.",
+    "duration": 8.0
+  },
+  {
+    "id": "r4_choose_card",
+    "text": "Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.",
+    "duration": 8.4
+  },
+  {
+    "id": "r4_arm_squabble",
+    "text": "Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.",
+    "duration": 7.1
+  },
+  {
+    "id": "r4_choose_district",
+    "text": "Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+    "duration": 7.5
+  },
+  {
+    "id": "r4_play_squabble",
+    "text": "Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.",
+    "duration": 7.8
+  },
+  {
+    "id": "r4_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "duration": 8.5
+  },
+  {
+    "id": "result-default",
+    "text": "You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.",
+    "duration": 6.6
+  },
+  {
+    "id": "lesson-complete",
+    "text": "Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.",
+    "duration": 8.0
+  },
+  {
+    "id": "lesson-complete-encouragement",
+    "text": "Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.",
+    "duration": 6.1
+  },
+  {
+    "id": "generic-recruit",
+    "text": "The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
+    "duration": 8.3
+  },
+  {
+    "id": "generic-card",
+    "text": "Hands is the strength it adds to your side.",
+    "duration": 2.507
+  },
+  {
+    "id": "generic-district",
+    "text": "Tap this district. You win by leading in two of the three districts at the end.",
+    "duration": 4.7
+  },
+  {
+    "id": "generic-fade-district",
+    "text": "Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+    "duration": 4.9
+  }
+]

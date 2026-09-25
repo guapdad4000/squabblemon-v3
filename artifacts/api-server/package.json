@@ -10,6 +10,8 @@
     "test": "node ../../scripts/test-api-database.mjs",
     "test:payments": "node ../../scripts/test-payments-database.mjs",
     "payments:ops": "tsx src/tools/payment-ops.ts",
+    "mail:ops": "tsx src/tools/mail-ops.ts",
+    "test:mail": "node ../../scripts/test-payments-database.mjs --mail",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:db": "node ../../scripts/require-db-tests.mjs"
   },

@@ -64,6 +64,20 @@ test('master mute, hidden tab, and leaving game pause and resume the same track'
   s.player.dispose();
 });
 
+test('narration ducks music without changing saved volume and restores the latest user setting', () => {
+  const s = setup();
+  s.player.setVolume(0.5);
+  s.player.setDucked(true);
+  assert.equal(s.audio.volume, 0.15);
+  assert.equal(s.state.volume, 0.5);
+  s.player.setVolume(0.8);
+  assert.equal(s.audio.volume, 0.24);
+  s.player.setDucked(false);
+  assert.equal(s.audio.volume, 0.8);
+  assert.equal(s.saved.length, 2, 'ducking is temporary, not a saved preference');
+  s.player.dispose();
+});
+
 test('a late play promise cannot resurrect music after a mute or disposal', async () => {
   const s = setup(); let finish!: () => void;
   s.audio.playResult = () => new Promise(resolve => { finish = resolve; });

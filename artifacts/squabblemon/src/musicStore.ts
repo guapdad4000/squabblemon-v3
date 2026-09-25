@@ -2,10 +2,12 @@ import { useSyncExternalStore } from 'react';
 import { defaultMusic, type MusicPlayer, type MusicSnapshot, type MusicPreferences, readMusicPreferences, MUSIC_STORAGE_KEY } from './musicPlayer';
 
 let player: MusicPlayer | null = null;
+let musicDucked = false;
 let snapshot = defaultMusic;
 const listeners = new Set<() => void>();
 export function publishMusic(next: MusicSnapshot) { snapshot = next; listeners.forEach(listener => listener()); }
-export function attachMusicPlayer(next: MusicPlayer | null) { player = next; }
+export function attachMusicPlayer(next: MusicPlayer | null) { player = next; player?.setDucked(musicDucked); }
+export function setMusicDucked(ducked: boolean) { musicDucked = ducked; player?.setDucked(ducked); }
 const subscribe = (listener: () => void) => { listeners.add(listener); return () => { listeners.delete(listener); }; };
 export const useMusic = () => useSyncExternalStore(subscribe, () => snapshot, () => defaultMusic);
 export const musicActions = {

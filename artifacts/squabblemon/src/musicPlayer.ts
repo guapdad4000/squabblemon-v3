@@ -38,6 +38,7 @@ export class MusicPlayer {
   private active = false;
   private visible = true;
   private masterEnabled = true;
+  private ducked = false;
   private unlocked = false;
   private disposed = false;
   private generation = 0;
@@ -116,6 +117,11 @@ export class MusicPlayer {
     this.applyVolume();
   }
 
+  setDucked(ducked: boolean) {
+    this.ducked = ducked;
+    this.applyVolume();
+  }
+
   selectTrack(index: number) {
     if (!Number.isInteger(index) || index < 0 || index >= this.tracks.length) return;
     this.failures.clear();
@@ -189,9 +195,10 @@ export class MusicPlayer {
   }
 
   private applyVolume() {
+    const volume = this.state.volume * (this.ducked ? 0.3 : 1);
     if (this.gain && this.context) {
-      this.gain.gain.setTargetAtTime(this.state.volume, this.context.currentTime, 0.12);
-    } else { this.audio.volume = this.state.volume; }
+      this.gain.gain.setTargetAtTime(volume, this.context.currentTime, 0.12);
+    } else { this.audio.volume = volume; }
   }
 
   private sync() {

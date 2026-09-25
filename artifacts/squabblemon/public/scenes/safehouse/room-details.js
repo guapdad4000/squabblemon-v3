@@ -1,3 +1,4 @@
+import { createGrowthCorner } from './growth-corner.js';
 import * as T from '../shared/three.module.js';
 
 // Authored room dressing. No external model downloads or additional render loops.
@@ -39,15 +40,15 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   box([2.65, .85, .08], walnut, [-.35, 3.95, -4.8]);
   const sign = add(new T.PlaneGeometry(2.5, .72), new T.MeshStandardMaterial({ map: placard('HOME COURT', 'OAKLAND / EST. AFTER HOURS'), emissive: '#e5ae61', emissiveIntensity: .12, roughness: .7 }), [-.35, 3.95, -4.74]);
   sign.castShadow = false;
-  // A sagging string of small practical lights gives the rear wall a warm edge.
-  const bulb = new T.MeshStandardMaterial({ color: '#ffe7a5', emissive: '#ffc16d', emissiveIntensity: 3 });
+  // Low neutral practical lights keep the rear wall readable without a gold cast.
+  const bulb = new T.MeshStandardMaterial({ color: '#dce6e6', emissive: '#b9d0d3', emissiveIntensity: 1.25 });
   tube([[-4.25, 4.2, -4.62], [-2, 3.73, -4.58], [0, 3.6, -4.56], [2, 3.78, -4.58], [4.22, 4.18, -4.62]], .012, black);
   for (let i = 0; i < 17; i++) {
     const x = -4.12 + i * .515, y = 3.6 + .033 * x * x;
     cylinder(.035, .08, brass, [x, y - .045, -4.58]);
     const b = add(new T.SphereGeometry(.052, 10, 8), bulb, [x, y - .12, -4.58]); b.castShadow = false;
   }
-  const backLight = new T.PointLight('#ffb66b', 10, 7, 2); backLight.position.set(-.8, 3.4, -4.1); root.add(backLight);
+  const backLight = new T.PointLight('#9fb8c1', 4, 7, 2); backLight.position.set(-.8, 3.4, -4.1); root.add(backLight);
 
   // City lights sit behind the window bars, with rain on the glass in front.
   const cityTextures = [false, true].map(night => canvasTexture(1024, 512, (g, w, h) => {
@@ -82,43 +83,78 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const poolMaterial = new T.MeshBasicMaterial({ map: poolTexture, transparent: true, opacity: .3, depthWrite: false, blending: T.AdditiveBlending });
   const pool = add(new T.PlaneGeometry(3.2, 5.7), poolMaterial, [2.9, .036, .1]); pool.rotation.x = -Math.PI / 2; pool.castShadow = false;
 
-  // Crew artwork is the game's own character art, framed as a neighbourhood poster.
-  const posterCanvas = document.createElement('canvas'); posterCanvas.width = 768; posterCanvas.height = 1024;
-  const posterTexture = new T.CanvasTexture(posterCanvas); posterTexture.colorSpace = T.SRGBColorSpace;
-  const drawPoster = image => {
-    const g = posterCanvas.getContext('2d'); g.fillStyle = '#c3a877'; g.fillRect(0, 0, 768, 1024);
-    g.fillStyle = '#293e37'; g.fillRect(28, 28, 712, 968); g.fillStyle = '#d8bd82'; g.font = '900 94px sans-serif'; g.textAlign = 'center'; g.fillText('THE BLOCK', 384, 140); g.font = '25px monospace'; g.fillText('BUILT US. WE BUILD IT BACK.', 384, 196);
-    if (image) { const scale = Math.min(690 / image.width, 650 / image.height); g.drawImage(image, (768 - image.width * scale) / 2, 244, image.width * scale, image.height * scale); }
-    g.fillStyle = '#d8bd82'; g.font = '900 42px sans-serif'; g.fillText('SQUABBLEMON', 384, 952); posterTexture.needsUpdate = true;
+  // A compact metal shelf under the back-wall panel holds the player's corner.
+  const steel = standard('#59646a', .42, .72);
+  const profileShelf = new T.Group(); profileShelf.name = 'profile-shelf'; profileShelf.position.set(0, 0, -4.66); root.add(profileShelf);
+  for (const x of [-1.28, 1.28]) box([.07, 1.35, .32], steel, [x, .68, 0], profileShelf);
+  for (const y of [.16, .68, 1.2]) box([2.72, .075, .42], steel, [0, y, 0], profileShelf);
+  for (const x of [-1.12, 1.12]) tube([[x, .18, -.12], [-x, 1.18, -.12]], .018, brass, profileShelf);
+  const bookColors = ['#6f232b', '#27433d', '#bd9a5a', '#28384b', '#8b5138'];
+  for (let i = 0; i < 9; i++) box([.13 + (i % 2) * .025, .36 + (i % 3) * .035, .25], standard(bookColors[i % bookColors.length]), [-1.03 + i * .19, .42, .03], profileShelf);
+  // Reuse the sculpted, veined-leaf plant from Buddy's garden at shelf scale.
+  const plant = new T.Group(); plant.position.set(-.88,1.24,.03);profileShelf.add(plant);
+  const shelfPlant=createGrowthCorner({wood,brass,shelf:true});shelfPlant.position.set(.084,-.49,.028);shelfPlant.scale.setScalar(.7);plant.add(shelfPlant);
+  // A small metal fist trophy represents the player's record.
+  const trophy = new T.Group(); trophy.position.set(0, 1.23, .04); profileShelf.add(trophy);
+  cylinder(.22, .08, black, [0, .04, 0], trophy, .28); cylinder(.09, .31, brass, [0, .22, 0], trophy);
+  box([.3, .32, .18], steel, [0, .47, 0], trophy);
+  for (let i = 0; i < 4; i++) box([.095, .2 + i * .018, .18], steel, [-.145 + i * .097, .69 + (i % 2) * .025, 0], trophy);
+  const thumb = box([.11, .27, .18], steel, [.19, .48, .02], trophy); thumb.rotation.z = -.55;
+  // The framed portrait updates to the selected profile character.
+  const profileCanvas = document.createElement('canvas'); profileCanvas.width = 384; profileCanvas.height = 480;
+  const profileTexture = new T.CanvasTexture(profileCanvas); profileTexture.colorSpace = T.SRGBColorSpace;
+  let profileImage = null;
+  const drawProfile = (image, name = 'YOUR PROFILE') => {
+    const g = profileCanvas.getContext('2d'); g.fillStyle = '#151a1b'; g.fillRect(0, 0, 384, 480);
+    g.fillStyle = '#d8c9a6'; g.fillRect(12, 12, 360, 456); g.fillStyle = '#202a2b'; g.fillRect(24, 24, 336, 432);
+    if (image) { const scale = Math.min(322 / image.width, 356 / image.height); g.drawImage(image, (384 - image.width * scale) / 2, 34, image.width * scale, image.height * scale); }
+    g.fillStyle = '#efe1be'; g.fillRect(24, 398, 336, 58); g.fillStyle = '#1b2221'; g.textAlign = 'center'; g.font = '900 24px sans-serif'; g.fillText(name.toUpperCase(), 192, 435, 310); profileTexture.needsUpdate = true;
   };
-  drawPoster(); const portrait = new Image(); portrait.onload = () => { if (!disposed) drawPoster(portrait); }; portrait.src = '../../assets/characters/ganger-blue.webp';
-  const posterGroup = new T.Group(); posterGroup.position.set(-4.32, 2.46, .32); posterGroup.rotation.y = Math.PI / 2; root.add(posterGroup);
-  box([1.87, 2.5, .07], walnut, [0, 0, 0], posterGroup);
-  add(new T.PlaneGeometry(1.75, 2.34), new T.MeshStandardMaterial({ map: posterTexture, roughness: .95 }), [0, 0, .045], posterGroup);
+  drawProfile(null);
+  box([.72, .9, .08], black, [.88, 1.7, 0], profileShelf);
+  const profilePortrait = add(new T.PlaneGeometry(.64, .8), new T.MeshStandardMaterial({ map: profileTexture, roughness: .88 }), [.88, 1.7, .05], profileShelf); profilePortrait.castShadow = false;
+  const setProfile = value => {
+    if (!value?.image) { drawProfile(null, value?.name); return; }
+    if (profileImage) profileImage.onload = null;
+    profileImage = new Image(); profileImage.onload = () => { if (!disposed) drawProfile(profileImage, value.name); }; profileImage.src = value.image;
+  };
 
   // A working listening corner for the player's own soundtrack.
-  const vinyl = new T.Group(); vinyl.name = 'record-player'; vinyl.position.set(-3.25, 0, 2.15); vinyl.rotation.y = .38; scene.add(vinyl);
-  box([1.5, .86, .84], walnut, [0, .5, 0], vinyl); box([1.56, .06, .9], wood, [0, .96, 0], vinyl);
-  for (const x of [-.66, .66]) for (const z of [-.3, .3]) cylinder(.028, .14, brass, [x, .08, z], vinyl);
-  box([1.28, .22, .045], black, [0, .45, .436], vinyl);
-  for (let i = 0; i < 16; i++) box([.037, .32, .022], i % 3 ? trim : paper, [-.57 + i * .07, .4, .47], vinyl);
-  box([1.28, .1, .69], black, [0, 1.045, 0], vinyl); box([1.24, .02, .65], brass, [0, 1.102, 0], vinyl);
-  const record = new T.Group(); record.position.set(-.16, 1.137, 0); vinyl.add(record);
+  const vinyl = new T.Group(); vinyl.name = 'record-player'; vinyl.position.set(-4.04, 0, 2.02); vinyl.rotation.y = Math.PI / 2; scene.add(vinyl);
+  const brushed = new T.MeshStandardMaterial({color:'#b2ada1',metalness:.8,roughness:.36});
+  box([1.52,.065,.84],walnut,[0,.24,0],vinyl);box([1.56,.065,.9],walnut,[0,.96,0],vinyl);
+  box([1.45,.66,.035],black,[0,.59,-.4],vinyl);
+  for(const x of [-.72,.72])box([.065,.69,.84],walnut,[x,.6,0],vinyl);
+  box([1.42,.045,.82],walnut,[0,.66,0],vinyl);box([.055,.36,.82],walnut,[.18,.45,0],vinyl);
+  for (const x of [-.66,.66])for(const z of [-.3,.3])cylinder(.028,.21,brushed,[x,.11,z],vinyl);
+  const spineColors=['#b09672','#783d36','#2e4c48','#c4b694','#333734'];
+  for(let i=0;i<16;i++){const spine=box([.043,.33,.56],standard(spineColors[i%5]),[-.65+i*.048,.44,.075],vinyl);spine.rotation.z=(i%3-1)*.02;box([.024,.008,.006],paper,[-.65+i*.048,.53,.358],vinyl);}
+  box([.36,.22,.6],black,[.43,.43,.04],vinyl);
+  for(let i=0;i<5;i++)box([.3,.012,.012],trim,[.43,.36+i*.035,.347],vinyl);
+  for(const x of [-.51,.51])for(const z of [-.23,.23])cylinder(.045,.045,black,[x,1.017,z],vinyl);
+  box([1.3,.09,.72],walnut,[0,1.072,0],vinyl);box([1.25,.014,.67],brushed,[0,1.124,0],vinyl);
+  cylinder(.313,.045,brushed,[-.16,1.15,0],vinyl);
+  for(let i=0;i<48;i++){const angle=i*Math.PI/24;box([.013,.009,.013],black,[-.16+Math.cos(angle)*.311,1.15,Math.sin(angle)*.311],vinyl);}
+  const record = new T.Group(); record.position.set(-.16, 1.18, 0); vinyl.add(record);
   cylinder(.29, .026, black, [0, 0, 0], record);
   const recordTexture = canvasTexture(512, 512, g => {
     g.fillStyle = '#0d1010'; g.fillRect(0, 0, 512, 512); g.strokeStyle = '#353c3a'; g.lineWidth = 1;
     for (let i = 82; i < 247; i += 5) { g.beginPath(); g.arc(256, 256, i, 0, Math.PI * 2); g.stroke(); }
     g.fillStyle = '#d5aa5e'; g.beginPath(); g.arc(256, 256, 78, 0, Math.PI * 2); g.fill();
-    g.fillStyle = '#252a25'; g.textAlign = 'center'; g.font = '900 27px sans-serif'; g.fillText('TREBLO', 256, 241); g.font = '12px monospace'; g.fillText('OAKLAND CHROME', 256, 269); g.fillText('AND CURLS', 256, 288);
+    g.fillStyle = '#252a25'; g.textAlign = 'center'; g.font = '900 24px sans-serif'; g.fillText('FADE TUNES', 256, 241); g.font = '12px monospace'; g.fillText('SQUABBLE CITY', 256, 269); g.fillText('AFTER HOURS', 256, 288);
   });
   const disc = add(new T.CircleGeometry(.285, 48), new T.MeshStandardMaterial({ map: recordTexture, metalness: .28, roughness: .5 }), [0, .015, 0], record); disc.rotation.x = -Math.PI / 2;
   cylinder(.008, .045, brass, [0, .025, 0], record);
-  cylinder(.07, .055, brass, [.42, 1.15, -.2], vinyl);
-  tube([[.42, 1.2, -.2], [.44, 1.2, .04], [.23, 1.16, .17]], .015, brass, vinyl); box([.07, .04, .095], ivory, [.21, 1.15, .19], vinyl);
-  const led = standard('#a3b998'); led.emissive = new T.Color('#bada8b'); led.emissiveIntensity = .3;
-  box([.09, .018, .04], led, [.45, 1.124, .24], vinyl);
-  // Album sleeve leaning against the wall next to the deck.
-  const sleeve = box([.59, .65, .035], new T.MeshStandardMaterial({ map: placard('TREBLO', 'OAKLAND CHROME AND CURLS'), roughness: .9 }), [.42, 1.42, -.3], vinyl); sleeve.rotation.x = -.16;
+  cylinder(.066,.072,black,[.43,1.174,-.21],vinyl);cylinder(.044,.065,brushed,[.43,1.23,-.21],vinyl);
+  tube([[.43,1.26,-.29],[.43,1.26,-.16],[.39,1.245,.04],[.25,1.23,.15]],.012,brushed,vinyl);
+  const counterweight=cylinder(.039,.07,brushed,[.43,1.26,-.29],vinyl);counterweight.rotation.x=Math.PI/2;
+  box([.06,.035,.085],black,[.235,1.212,.175],vinyl);box([.025,.015,.038],paper,[.235,1.189,.185],vinyl);
+  const led=standard('#d3a05f');led.emissive=new T.Color('#ffb653');led.emissiveIntensity=.3;
+  box([.04,.008,.015],led,[.49,1.135,.24],vinyl);
+  cylinder(.036,.012,black,[-.54,1.14,.25],vinyl);cylinder(.022,.014,brushed,[.43,1.14,.24],vinyl);
+  box([.035,.005,.2],black,[.55,1.135,.025],vinyl);box([.052,.017,.027],brushed,[.55,1.145,.035],vinyl);
+  const albumArt=canvasTexture(512,512,g=>{g.fillStyle='#d6bc88';g.fillRect(0,0,512,512);g.fillStyle='#792f32';g.fillRect(28,28,456,350);g.strokeStyle='#dfbe79';g.lineWidth=14;for(let i=0;i<6;i++){g.beginPath();g.arc(256,205,35+i*29,0,Math.PI*2);g.stroke();}g.fillStyle='#1f3534';g.fillRect(28,252,456,126);g.fillStyle='#eee0b8';g.font='bold 48px sans-serif';g.fillText('AFTER HOURS',42,306,428);g.font='21px monospace';g.fillText('FADE TUNES / VOL. 01',44,350);g.fillStyle='#492d25';g.font='bold 29px sans-serif';g.fillText('SQUABBLE CITY',32,438);});
+  const sleeve=box([.55,.57,.026],new T.MeshStandardMaterial({map:albumArt,roughness:.9}),[-.39,1.45,-.34],vinyl);sleeve.rotation.x=-.10;
 
   // Cloth, a mug, sneakers, and a marked-up local noticeboard soften the primitives.
   const clothTexture = canvasTexture(128, 128, g => { g.fillStyle = '#aa7246'; g.fillRect(0, 0, 128, 128); for (let i = 0; i < 128; i += 16) { g.fillStyle = '#283f38'; g.fillRect(i, 0, 6, 128); g.fillRect(0, i, 128, 4); } });
@@ -139,20 +175,21 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
     const upper = add(new T.SphereGeometry(1, 16, 8), shoeMaterial, [0, .015, -.01], shoe); upper.scale.set(.125, .11, .255);
     for (let j = 0; j < 4; j++) box([.16, .014, .018], ivory, [0, .12, -.03 + j * .045], shoe);
   }
-  const board = new T.Group(); board.position.set(3.84, 2.8, -4.77); root.add(board);
-  box([.74, 1.18, .075], walnut, [0, 0, 0], board); box([.65, 1.08, .04], standard('#8a6348'), [0, 0, .06], board);
-  for (let i = 0; i < 5; i++) { const note = box([.22, .26, .006], i % 2 ? paper : standard('#b7b69a'), [(i % 2 - .5) * .27, .34 - Math.floor(i / 2) * .31, .09], board); note.rotation.z = (i % 3 - 1) * .12; }
-  // Ceiling fan is deliberately slow, with motion disabled by the player's preference.
-  const fan = new T.Group(); fan.position.set(-2.65, 4.27, -.7); root.add(fan); cylinder(.07, .3, brass, [0, .13, 0], fan);
-  const rotor = new T.Group(); fan.add(rotor); cylinder(.2, .08, black, [0, -.06, 0], rotor);
-  for (let i = 0; i < 4; i++) { const blade = box([.3, .035, 1], walnut, [0, -.07, .56], rotor); blade.position.set(Math.sin(i * Math.PI / 2) * .56, -.07, Math.cos(i * Math.PI / 2) * .56); blade.rotation.y = i * Math.PI / 2; }
+  // Warm lamp light on the fan, with gentle fill to keep the corners readable.
+  const fan = new T.Group(); fan.position.set(.1, 4.28, .05); root.add(fan); cylinder(.07, .28, brass, [0, .14, 0], fan);
+  const rotor = new T.Group(); fan.add(rotor); cylinder(.2, .08, black, [0, -.04, 0], rotor);
+  for (let i = 0; i < 4; i++) { const blade = box([.3, .035, 1], walnut, [0, -.06, .56], rotor); blade.position.set(Math.sin(i * Math.PI / 2) * .56, -.06, Math.cos(i * Math.PI / 2) * .56); blade.rotation.y = i * Math.PI / 2; }
+  const fanGlow = standard('#efd0a0'); fanGlow.emissive = new T.Color('#ffb568'); fanGlow.emissiveIntensity = 1.6;
+  const fanBowl = add(new T.SphereGeometry(.34, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), fanGlow, [0, -.19, 0], fan); fanBowl.rotation.x = Math.PI;
+  const fanLight = new T.PointLight('#ffd29a', 34, 13, 1.65); fanLight.position.set(0, -.42, 0); fan.add(fanLight);
   let playing = false, disposed = false;
   return {
     status: () => ({ playing, recordAngle: record.rotation.y, fanAngle: rotor.rotation.y, ceilingVisible: ceiling.visible }),
-    vinyl, dynamicObjects: [record, rotor, ceiling],
+    vinyl, profileShelf, dynamicObjects: [record, rotor, ceiling, profileShelf],
     resize() { ceiling.visible = innerWidth / innerHeight >= .95; },
     setMusic(value) { playing = Boolean(value); led.emissiveIntensity = playing ? 2 : .3; },
-    setNight(night) { cityMaterial.map = cityTextures[night ? 1 : 0]; windowLight.color.set(night ? '#739fb9' : '#ffd292'); windowLight.intensity = night ? 34 : 9; backLight.intensity = night ? 10 : 3; poolMaterial.opacity = night ? .28 : .1; rainMaterial.uniforms.strength.value = night ? 1 : .35; },
+    setProfile,
+    setNight(night) { cityMaterial.map = cityTextures[night ? 1 : 0]; windowLight.color.set(night ? '#c1a98b' : '#edbc86'); windowLight.intensity = night ? 8 : 8; backLight.color.set('#d9b78e'); backLight.intensity = night ? 5 : 4; fanLight.intensity = night ? 22 : 25; poolMaterial.opacity = night ? .22 : .14; rainMaterial.uniforms.strength.value = night ? 1 : .35; },
     update(time, dt, reduced, cameraHeight) {
       const ceilingVisible = innerWidth / innerHeight >= .95 && cameraHeight < 4.53;
       const ceilingChanged = ceiling.visible !== ceilingVisible;
@@ -166,6 +203,6 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
       points.needsUpdate = true;
       return ceilingChanged;
     },
-    dispose() { disposed = true; portrait.onload = null; cityTextures.forEach(texture => texture.dispose()); }
+    dispose() { disposed = true; if (profileImage) profileImage.onload = null; cityTextures.forEach(texture => texture.dispose()); }
   };
 }

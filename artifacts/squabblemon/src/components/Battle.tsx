@@ -36,6 +36,7 @@ import type { MechanicLesson, TutorialGuidance } from './tutorialGuidance';
 import { CoachSpotlight } from './CoachSpotlight';
 import { playVoiceLine } from '../lib/sfx';
 import { useBattleAnnouncer } from '../lib/useBattleAnnouncer';
+import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -302,6 +303,7 @@ export function Battle({
   const activeTutorialGuidance = tutorialCoach && tutorialGuidance
     ? tutorialGuidance as TutorialGuidance
     : null;
+  useTutorialVoice(interactive && !mechanicLesson ? activeTutorialGuidance?.body : null, feedback?.audioEnabled ?? true);
   const tutorialEndTurnAllowed = !activeTutorialGuidance
     || activeTutorialGuidance.focus === 'end-turn'
     || activeTutorialGuidance.focus === 'free';
@@ -411,7 +413,7 @@ export function Battle({
     lockedDistricts: lockedLanes.length, decisionStartedAt,
     setSelectedInstanceId, setSelectedLane, setSquabble,
     beginSquabbleTransition: () => tutorialSquabbleAllowed && tryLockInteraction(squabbleTransitionRef),
-    onSquabbleArmed: () => playVoiceLine(m.round % 2 === 0 ? 'squabble-b' : 'squabble-a', feedback?.audioEnabled ?? true),
+    onSquabbleArmed: () => { if (!tutorialCoach) playVoiceLine(m.round % 2 === 0 ? 'squabble-b' : 'squabble-a', feedback?.audioEnabled ?? true); },
   });
   const drag = useBattleDrag({
     enabled: !tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed, contextKey: `${m.round}:${m.nextEventSequence}:${phase}`,
@@ -565,7 +567,7 @@ export function Battle({
         {timerEnabled && <div data-testid="turn-timer" data-timer-state={timerState} aria-label={clockRunning ? `${timerSeconds} seconds remaining, ${timerState}` : 'Decision timer paused'} aria-live="off" style={{ '--timer-progress': timerProgress } as React.CSSProperties} className={`turn-timer state-${timerState}`}><div className="turn-timer-copy"><span className="sr-only">Time</span><strong>{clockRunning ? timerSeconds : '—'}</strong></div><div role="progressbar" aria-label="Turn time remaining" aria-valuemin={0} aria-valuemax={online?.turnSeconds ?? 20} aria-valuenow={clockRunning ? timerSeconds : undefined} aria-valuetext={clockRunning ? `${timerSeconds} seconds remaining` : 'Paused'} className="turn-timer-track"><span style={{ transform: `scaleX(${timerProgress})` }} /></div>{interactive && (timerSeconds === 10 || timerSeconds === 5) && <span role="status" aria-live={timerSeconds === 5 ? 'assertive' : 'polite'} className="sr-only">{timerSeconds === 5 ? online ? 'Five seconds remaining. End your turn to avoid a forfeit.' : 'Five seconds remaining. Lock in now or your turn will be automatic.' : 'Ten seconds remaining.'}</span>}</div>}
       </div>
     </div>
-    {interactive && !mechanicLesson && activeTutorialGuidance?.target && <CoachSpotlight target={activeTutorialGuidance.target} title={activeTutorialGuidance.title} step={"ROUND " + m.round + " / 4"}>{activeTutorialGuidance.body}</CoachSpotlight>}
+    {interactive && !mechanicLesson && activeTutorialGuidance?.target && <CoachSpotlight narrate={false} target={activeTutorialGuidance.target} title={activeTutorialGuidance.title} step={"ROUND " + m.round + " / 4"}>{activeTutorialGuidance.body}</CoachSpotlight>}
     <div className={`battle-guidance relative z-30 shrink-0 w-full ${tutorialCoach ? 'battle-guidance--coached' : ''}`}>
       {tutorialCoach && <div className="dr-fade-coach-frame"><DrFadePortrait pose="right" className="dr-fade-coach" /></div>}
       <div className="min-w-0">

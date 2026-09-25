@@ -8,6 +8,7 @@ import { createRequire } from "node:module";
 import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const mailOnly = process.argv.includes('--mail');
 process.chdir(root);
 let ownedDirectory;
 let pgBin;
@@ -77,6 +78,7 @@ process.on("SIGTERM", interrupt);
 
 try {
   const provided = process.env.DATABASE_URL?.trim();
+  if (mailOnly && provided) throw new Error('Mail broadcast tests require a fresh owned cluster. Unset DATABASE_URL.');
   if (provided) {
     const target = assertCampaignDatabaseTarget(process.env);
     if (!target.local) throw new Error("Payment database tests refuse remote databases.");
@@ -104,7 +106,8 @@ try {
     console.log("Using fresh owned native PostgreSQL with independent connections; no external database is modified.");
   }
   const args = ["--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1",
-    "src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"];
+    ...(mailOnly ? ['src/lib/mail.test.ts'] : ["src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"])];
+  if (mailOnly) environment.MAIL_TEST_OWNED = '1';
   if (process.env.npm_execpath) {
     await run(process.execPath, [process.env.npm_execpath, ...args], "Payment database tests", true);
   } else {

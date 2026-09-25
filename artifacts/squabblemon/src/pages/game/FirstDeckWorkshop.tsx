@@ -8,6 +8,8 @@ import { summarizeDeckTest, type DeckDraft } from '../../lib/deckWorkshop';
 import type { Match } from '../../gameEngine';
 import { trackEvent } from '../../lib/analytics';
 import { WELCOME_REWARD } from '@workspace/squabblemon-engine/economy';
+import { tutorialScript } from '../../lib/tutorialVoice';
+import { useTutorialVoice } from '../../lib/useTutorialVoice';
 
 export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: PlayerBootstrap; onComplete: () => void }) {
   const save = useSavePlayerDeck();
@@ -18,6 +20,9 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
   const [result, setResult] = useState<Match | null>(null);
   const [review, setReview] = useState(bootstrap.nextAction.id === 'rookie-tested');
   const tested = !!result || bootstrap.nextAction.id === 'rookie-tested';
+  useTutorialVoice(!playing && review && tested
+    ? [result ? summarizeDeckTest(result, focus) : tutorialScript('lesson-complete'), tutorialScript('lesson-complete-encouragement')].join('\n')
+    : null);
   async function persist(draft: DeckDraft) {
     const res = await save.mutateAsync({ deckId: ROOKIE_DECK_ID, data: draft });
     queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);

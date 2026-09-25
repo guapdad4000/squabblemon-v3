@@ -13,6 +13,7 @@ import { trackEvent } from '../lib/analytics';
 import { GangBackdrop } from './GangBackdrop';
 import '../styles/gang-backdrop.css';
 import { GameGlyph } from './venue/GameGlyph';
+import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave, onTest, onDraftChange, onDirtyChange, lesson = false, onDelete, deleting = false, externalError = '', showBackdrop = true, subtitle }: {
   initial: DeckDraft; ownedCardIds: string[]; equippedVariants: Record<string, string>;
@@ -30,6 +31,12 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
+  const guideText = guideStep === 0
+    ? 'These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.'
+    : guideStep === 1
+      ? 'Tap ' + catalogCardById[recruit ?? '']?.name + '. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.'
+      : 'You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.';
+  useTutorialVoice(lesson && !busy && !error && !externalError ? guideText : null);
   const [focusCard, setFocusCard] = useState(lesson ? initial.cardIds.find(id => workshopSuggestions.some(idea => idea.cardId === id)) ?? initial.heroCardId : initial.heroCardId);
   const searchInput = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLFieldSetElement>(null);
@@ -204,6 +211,6 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
         </>}
       </div>
     </footer>
-    {lesson && !busy && <CoachSpotlight target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : '[data-guide-save="true"]'} step={'YOUR GANG ' + (guideStep + 1) + ' / 3'} title={guideStep === 0 ? 'Ten cards make a deck.' : guideStep === 1 ? 'Choose a new recruit.' : 'Your gang is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideStep === 0 ? 'These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.' : guideStep === 1 ? 'Tap ' + catalogCardById[recruit ?? '']?.name + '. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.' : 'You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.'}</CoachSpotlight>}
+    {lesson && !busy && <CoachSpotlight narrate={false} target={guideStep === 0 ? '[data-guide-slot="5"]' : guideStep === 1 ? '[data-guide-recruit="' + recruit + '"]' : '[data-guide-save="true"]'} step={'YOUR GANG ' + (guideStep + 1) + ' / 3'} title={guideStep === 0 ? 'Ten cards make a deck.' : guideStep === 1 ? 'Choose a new recruit.' : 'Your gang is ready.'}>{error && <strong>{error} Tap the highlighted save button to try again. </strong>}{guideText}</CoachSpotlight>}
   </ArsenalScreen>;
 }

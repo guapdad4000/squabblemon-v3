@@ -1,0 +1,252 @@
+{
+  "source": "ElevenLabs_2026-09-25T05_33_03_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp100_s50_sb75_se0_b_m2.mp3",
+  "sha256": "bc5b8806859d9069a06622e58e505c0deaf25294f3e64b89b33cf02ac5957ad7",
+  "notes": "31 supplied tutorial paragraphs plus four generic pickups from the same recording. Clip speed changes preserve pitch. Duplicate recordings retained in original order. Boundaries aligned to transcript and neighboring silence.",
+  "clips": [
+    {
+      "id": "welcome",
+      "text": "I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.",
+      "start": 0,
+      "end": 8.923,
+      "speed": 1.06
+    },
+    {
+      "id": "welcome-reassurance",
+      "text": "No timer. No purchases. We’ll learn by playing.",
+      "start": 9.587,
+      "end": 13.3,
+      "speed": 1.0
+    },
+    {
+      "id": "home-1",
+      "text": "Your Safehouse is where you return between fights. The objects in this room open the parts of your game.",
+      "start": 13.445,
+      "end": 19.688,
+      "speed": 1.06
+    },
+    {
+      "id": "home-2",
+      "text": "Tap Story. This is your main adventure: dialogue, battles, new cards, and chapter rewards.",
+      "start": 20.164,
+      "end": 27.865,
+      "speed": 1.06
+    },
+    {
+      "id": "home-3",
+      "text": "Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.",
+      "start": 28.219,
+      "end": 35.161,
+      "speed": 1.06
+    },
+    {
+      "id": "home-4",
+      "text": "Tap Back to the room. Your cards live right here in the Safehouse too.",
+      "start": 35.75,
+      "end": 40.439,
+      "speed": 1.0
+    },
+    {
+      "id": "home-5",
+      "text": "Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.",
+      "start": 40.943,
+      "end": 47.884,
+      "speed": 1.06
+    },
+    {
+      "id": "home-6",
+      "text": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
+      "start": 48.485,
+      "end": 59.339,
+      "speed": 1.12
+    },
+    {
+      "id": "legendary-catchphrase",
+      "text": "Watch close. You’re next.",
+      "start": 59.554,
+      "end": 61.65,
+      "speed": 1.0
+    },
+    {
+      "id": "legendary-explanation",
+      "text": "Play him for 4 Motion. He brings 6 Hands, hits the strongest enemy in his district for −2 Hands, and gives your weakest ally in another district +2 Hands.",
+      "start": 62.046,
+      "end": 72.398,
+      "speed": 1.12
+    },
+    {
+      "id": "legendary-squabble",
+      "text": "We’ll save him for your first SQUABBLE: 12 base Hands in one play. Follow the highlights and see it happen.",
+      "start": 73.145,
+      "end": 80.325,
+      "speed": 1.06
+    },
+    {
+      "id": "deck-1",
+      "text": "These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.",
+      "start": 80.744,
+      "end": 89.848,
+      "speed": 1.12
+    },
+    {
+      "id": "deck-2",
+      "text": "Tap Landlord. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
+      "start": 90.346,
+      "end": 100.708,
+      "speed": 1.12
+    },
+    {
+      "id": "deck-3",
+      "text": "You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.",
+      "start": 100.741,
+      "end": 106.862,
+      "speed": 1.0
+    },
+    {
+      "id": "r1_choose_card",
+      "text": "Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
+      "start": 107.286,
+      "end": 114.22,
+      "speed": 1.06
+    },
+    {
+      "id": "r1_choose_district",
+      "text": "Tap this district. You win by leading in two of the three districts at the end. Your first play here costs 1 less Motion (minimum 1). Discounts do not stack.",
+      "start": 114.483,
+      "end": 125.849,
+      "speed": 1.12
+    },
+    {
+      "id": "r1_play_card",
+      "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+      "start": 126.179,
+      "end": 131.273,
+      "speed": 1.0
+    },
+    {
+      "id": "r1_end_turn",
+      "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+      "start": 131.795,
+      "end": 139.443,
+      "speed": 1.06
+    },
+    {
+      "id": "r2_choose_card",
+      "text": "Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.",
+      "start": 140.002,
+      "end": 146.938,
+      "speed": 1.06
+    },
+    {
+      "id": "r2_choose_district",
+      "text": "Tap this district. You win by leading in two of the three districts at the end. Spread your strength instead of putting everyone in one place.",
+      "start": 147.326,
+      "end": 155.469,
+      "speed": 1.06
+    },
+    {
+      "id": "r2_play_card",
+      "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+      "start": 156.264,
+      "end": 161.95,
+      "speed": 1.0
+    },
+    {
+      "id": "r2_end_turn",
+      "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+      "start": 162.37,
+      "end": 170.123,
+      "speed": 1.06
+    },
+    {
+      "id": "r3_bank_motion",
+      "text": "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts.",
+      "start": 170.617,
+      "end": 179.045,
+      "speed": 1.06
+    },
+    {
+      "id": "r4_choose_card",
+      "text": "Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.",
+      "start": 179.188,
+      "end": 188.05,
+      "speed": 1.06
+    },
+    {
+      "id": "r4_arm_squabble",
+      "text": "Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.",
+      "start": 188.555,
+      "end": 195.991,
+      "speed": 1.06
+    },
+    {
+      "id": "r4_choose_district",
+      "text": "Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+      "start": 196.73,
+      "end": 204.587,
+      "speed": 1.06
+    },
+    {
+      "id": "r4_play_squabble",
+      "text": "Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.",
+      "start": 204.592,
+      "end": 212.8,
+      "speed": 1.06
+    },
+    {
+      "id": "r4_end_turn",
+      "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+      "start": 212.945,
+      "end": 221.862,
+      "speed": 1.06
+    },
+    {
+      "id": "result-default",
+      "text": "You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.",
+      "start": 222.444,
+      "end": 229.422,
+      "speed": 1.06
+    },
+    {
+      "id": "lesson-complete",
+      "text": "Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.",
+      "start": 229.425,
+      "end": 237.895,
+      "speed": 1.06
+    },
+    {
+      "id": "lesson-complete-encouragement",
+      "text": "Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.",
+      "start": 238.468,
+      "end": 244.871,
+      "speed": 1.06
+    },
+    {
+      "id": "generic-recruit",
+      "text": "The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
+      "start": 92.005,
+      "end": 100.708,
+      "speed": 1.06
+    },
+    {
+      "id": "generic-card",
+      "text": "Hands is the strength it adds to your side.",
+      "start": 111.705,
+      "end": 114.22,
+      "speed": 1
+    },
+    {
+      "id": "generic-district",
+      "text": "Tap this district. You win by leading in two of the three districts at the end.",
+      "start": 114.483,
+      "end": 119.18,
+      "speed": 1
+    },
+    {
+      "id": "generic-fade-district",
+      "text": "Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+      "start": 199.685,
+      "end": 204.587,
+      "speed": 1
+    }
+  ]
+}

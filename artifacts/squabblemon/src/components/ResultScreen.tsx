@@ -14,6 +14,7 @@ import '../styles/studio.css';
 import '../styles/result-stage.css';
 import { loadFeedbackPreferences } from '../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../lib/sfx';
+import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export function ResultScreen({
   challenge,
@@ -37,6 +38,7 @@ export function ResultScreen({
   const stageRef = useRef<HTMLDivElement>(null);
   const rebuild = () => isGuest ? onChangeDeck?.() : navigate('/game/decks');
   const m = match as Match;
+  useTutorialVoice(tutorial ? coachBattle(m) : null);
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
@@ -47,7 +49,7 @@ export function ResultScreen({
     if (isDraw) return;
     setBattleMusicMode(isVictory ? 'victory' : 'defeat');
     const key = `${m.playerDeck}:${m.round}:${winner}`;
-    if (resultVoiceKey.current !== key) {
+    if (!tutorial && resultVoiceKey.current !== key) {
       resultVoiceKey.current = key;
       resultVoice.current = playVoiceLine(
         isVictory ? (m.round % 2 === 0 ? 'win-b' : 'win-a') : 'loss',
@@ -58,7 +60,7 @@ export function ResultScreen({
       setBattleMusicMode(null);
       stopSoundEffect(resultVoice.current);
     };
-  }, [isDraw, isVictory]);
+  }, [isDraw, isVictory, tutorial]);
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;

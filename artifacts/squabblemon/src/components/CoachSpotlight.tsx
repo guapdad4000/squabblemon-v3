@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DrFadePortrait } from './DrFade';
+import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 type Rect = { top: number; left: number; width: number; height: number };
 /** The highlighted control remains the real app control; everything else waits. */
-export function CoachSpotlight({ target, title, children, step, onNext, nextLabel = 'Got it', onTarget }: {
+export function CoachSpotlight({ target, title, children, step, onNext, nextLabel = 'Got it', onTarget, narrate = true }: {
   target: string; title: string; children: React.ReactNode; step: string;
-  onNext?: () => void; nextLabel?: string; onTarget?: () => void;
+  onNext?: () => void; nextLabel?: string; onTarget?: () => void; narrate?: boolean;
 }) {
+  useTutorialVoice(typeof children === 'string' ? children : null, narrate);
   const [rect, setRect] = useState<Rect | null>(null);
   const panel = useRef<HTMLElement>(null);
   const callback = useRef(onTarget);

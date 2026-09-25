@@ -3,8 +3,11 @@ import { cards } from '../data';
 import './dr-fade-card.css';
 import { motion, useReducedMotion } from 'framer-motion';
 import { getAssetUrl } from '../lib/assets';
+import { tutorialScript } from '../lib/tutorialVoice';
+import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export function DrFadeWelcome({ onContinue }: { onContinue: () => void }) {
+  useTutorialVoice(tutorialScript('legendary-catchphrase', 'legendary-explanation', 'legendary-squabble'));
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   return <section className="dr-fade-welcome" data-testid="dr-fade-welcome" aria-labelledby="dr-fade-welcome-title">
     <div className="dr-fade-welcome__rays" aria-hidden="true" />

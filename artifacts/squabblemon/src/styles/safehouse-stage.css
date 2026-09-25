@@ -3,13 +3,13 @@
 .game-shell:has(.safehouse-stage) .venue-hud{display:none}
 .game-shell:has(.safehouse-stage) .game-route-stage{height:100dvh;overflow:hidden}
 .safehouse-stage .venue-scene{z-index:0}
-.safehouse-stage .safehouse__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#060d12b8,transparent 23%,transparent 51%,#070e0a96 73%,#070c0bef 100%)}
+.safehouse-stage .safehouse__shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#060d1266,transparent 23%,transparent 58%,#070e0a42 78%,#070c0b94 100%)}
 .safehouse-stage .page-decor{pointer-events:none}
 .safehouse-room-header{position:absolute;z-index:3;top:28px;left:34px;right:34px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none}
 .safehouse-room-title>span{display:flex;align-items:center;gap:8px;font:700 8px var(--font-mono,monospace);letter-spacing:.16em;color:#d4c1a0}
 .safehouse-room-title>span i{width:5px;height:5px;border-radius:50%;background:#c1d5a0;box-shadow:0 0 9px #d3e7b155}
 .safehouse-room-title h1{font:900 italic clamp(26px,3.1vw,46px)/1.1 var(--font-display,sans-serif);letter-spacing:-.035em;margin:8px 0 5px;text-transform:uppercase;color:#f6eddb;text-shadow:0 2px 18px #0008}
-.safehouse-room-title__hand{display:inline-block;font:400 1.13em/1 var(--font-marker,cursive);color:#ff7065;letter-spacing:-.045em;transform:rotate(-7deg) skewX(-7deg);margin:0 .055em 0 .025em;text-shadow:0 0 2px #fff1e8,0 0 7px #ff503f,0 0 16px #ff3929,0 0 28px #d31d15,1px 2px #581f1a;animation:safehouse-neon 4.8s steps(1,end) infinite}
+.safehouse-room-title__hand{display:inline-block;font:400 1.13em/1 var(--font-marker,cursive);color:#ca292b;letter-spacing:-.045em;transform:rotate(-7deg) skewX(-7deg);margin:0 .055em 0 .025em;text-shadow:0 0 2px #ffe3dd,0 0 7px #b51f24,0 0 16px #8d161d,0 0 28px #4c0b11,1px 2px #27070a;animation:safehouse-neon 4.8s steps(1,end) infinite}
 @keyframes safehouse-neon{0%,18%,20%,22%,100%{opacity:1}19%,21%{opacity:.72}}
 .safehouse-room-title__period{color:#e9b963}.safehouse-room-title p{font-size:11px;color:#d1cbbc9c;margin:0}
 .safehouse-room-tools{display:flex;align-items:center;flex-wrap:nowrap;gap:5px;pointer-events:auto}
@@ -18,8 +18,8 @@
 .safehouse-room-tools :is(.room-tool,.music-trigger) svg{filter:drop-shadow(0 0 5px #d7b76f4d)}
 .safehouse-room-tools :is(.room-tool,.music-trigger):hover{color:#ffe3a2;filter:drop-shadow(0 0 8px #e5bd6a99);transform:translateY(-1px)}
 .safehouse-room-markers{position:absolute;inset:140px 24px calc(var(--fan-clearance,170px) + 110px);z-index:2;pointer-events:none}.safehouse-room-markers[hidden]{display:none}
-.safehouse-room-markers button{position:absolute;visibility:hidden;transform:translate(-50%,-50%);min-height:44px;display:flex;align-items:center;gap:8px;padding:10px 14px;pointer-events:auto;cursor:pointer;color:#efd7a4;border:1px solid #e3c98d7d;border-radius:3px;background:#0d211cd6;box-shadow:0 3px 14px #0006;backdrop-filter:blur(3px);transition:background .2s,box-shadow .2s}
-.safehouse-room-markers button:hover,.safehouse-room-markers button:focus-visible{background:#bc9250;color:#121d16;box-shadow:0 0 0 4px #e1bb6d25}
+.safehouse-room-markers button{position:absolute;visibility:hidden;transform:translate(-50%,-50%);min-height:44px;display:flex;align-items:center;gap:8px;padding:10px 14px;pointer-events:auto;cursor:pointer;color:#302619;border:1px solid #f2d783;border-radius:3px;background:linear-gradient(135deg,#f0cc68,#cfa443);box-shadow:0 3px 14px #0008, inset 0 1px #fff1bd;backdrop-filter:blur(3px);transition:background .2s,box-shadow .2s}
+.safehouse-room-markers button:hover,.safehouse-room-markers button:focus-visible{background:linear-gradient(135deg,#ffe394,#e1b94f);color:#211b13;box-shadow:0 0 0 4px #f6cd643d,0 5px 18px #0008}
 .safehouse-room-markers button span{white-space:nowrap;font:800 italic 11px var(--font-display,sans-serif);text-transform:uppercase;letter-spacing:.025em}
 .safehouse-room-bottom{position:absolute;z-index:3;bottom:calc(var(--fan-clearance,170px) + 10px);left:34px;right:34px;max-width:760px;margin:0 auto;color:#eee5d1;pointer-events:none}
 .safehouse-room-bottom button,.safehouse-room-bottom a{pointer-events:auto}

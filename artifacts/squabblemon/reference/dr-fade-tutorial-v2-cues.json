@@ -1,0 +1,242 @@
+[
+  {
+    "order": 1,
+    "id": "welcome",
+    "text": "I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.",
+    "existingRecording": "welcome"
+  },
+  {
+    "order": 2,
+    "id": "welcome-reassurance",
+    "text": "No timer. No purchases. We’ll learn by playing.",
+    "existingRecording": "welcome-reassurance"
+  },
+  {
+    "order": 3,
+    "id": "home-1",
+    "text": "Your Safehouse is where you return between fights. The objects in this room open the parts of your game.",
+    "existingRecording": "home-1"
+  },
+  {
+    "order": 4,
+    "id": "home-story-left",
+    "text": "The TV, speakers, and console sit along the left wall, beside your record player. Tap Story. That’s your main adventure: dialogue, battles, new cards, and chapter rewards.",
+    "existingRecording": null
+  },
+  {
+    "order": 5,
+    "id": "home-3",
+    "text": "Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.",
+    "existingRecording": "home-3"
+  },
+  {
+    "order": 6,
+    "id": "home-back-to-room",
+    "text": "Tap Back to the room. Let’s get you familiar with the place before we build your gang.",
+    "existingRecording": null
+  },
+  {
+    "order": 7,
+    "id": "home-records",
+    "text": "That record player beside the TV is Fade Tunes. Open Records when you want to pick the soundtrack for your Safehouse.",
+    "existingRecording": null
+  },
+  {
+    "order": 8,
+    "id": "home-growth",
+    "text": "Buddy’s Growth Lab is tucked into the back-left corner. Check in there for your daily rewards and keep your streak growing.",
+    "existingRecording": null
+  },
+  {
+    "order": 9,
+    "id": "home-profile",
+    "text": "See that metal bookshelf under the blackboard? The portrait beside the little fist trophy opens your profile. That’s who you represent on the block.",
+    "existingRecording": null
+  },
+  {
+    "order": 10,
+    "id": "home-mail",
+    "text": "That big wooden door in the back-right corner is your mail. When it knocks, you have something unread. Open it and the Mailman brings your letters and gifts. Read each letter, then claim any gift inside. No codes needed.",
+    "existingRecording": null
+  },
+  {
+    "order": 11,
+    "id": "home-bag",
+    "text": "Your bag keeps track of your Clout, Pack Tickets, Style Shards, and collection. Fade Market is where you put those resources to work.",
+    "existingRecording": null
+  },
+  {
+    "order": 12,
+    "id": "home-training",
+    "text": "The hanging heavy bag opens Training. Come here to practice your plays and try out a gang before you take it into a fight.",
+    "existingRecording": null
+  },
+  {
+    "order": 13,
+    "id": "home-fadecade",
+    "text": "The Fadecade is at the other end of the couch. That arcade machine takes you to challenges like Straight to the Back and Stockz. Its screen says Play New Game when you’re starting fresh, or Continue when you have a run waiting.",
+    "existingRecording": null
+  },
+  {
+    "order": 14,
+    "id": "home-phone",
+    "text": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.",
+    "existingRecording": null
+  },
+  {
+    "order": 15,
+    "id": "home-bounties",
+    "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
+    "existingRecording": null
+  },
+  {
+    "order": 16,
+    "id": "home-5",
+    "text": "Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.",
+    "existingRecording": "home-5"
+  },
+  {
+    "order": 17,
+    "id": "home-6",
+    "text": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
+    "existingRecording": "home-6"
+  },
+  {
+    "order": 18,
+    "id": "legendary-catchphrase",
+    "text": "Watch close. You’re next.",
+    "existingRecording": "legendary-catchphrase"
+  },
+  {
+    "order": 19,
+    "id": "legendary-explanation",
+    "text": "Play him for 4 Motion. He brings 6 Hands, hits the strongest enemy in his district for −2 Hands, and gives your weakest ally in another district +2 Hands.",
+    "existingRecording": "legendary-explanation"
+  },
+  {
+    "order": 20,
+    "id": "legendary-squabble",
+    "text": "We’ll save him for your first SQUABBLE: 12 base Hands in one play. Follow the highlights and see it happen.",
+    "existingRecording": "legendary-squabble"
+  },
+  {
+    "order": 21,
+    "id": "deck-1",
+    "text": "These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.",
+    "existingRecording": "deck-1"
+  },
+  {
+    "order": 22,
+    "id": "deck-2",
+    "text": "Tap Landlord. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
+    "existingRecording": "deck-2"
+  },
+  {
+    "order": 23,
+    "id": "deck-3",
+    "text": "You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.",
+    "existingRecording": "deck-3"
+  },
+  {
+    "order": 24,
+    "id": "r1_choose_card",
+    "text": "Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
+    "existingRecording": "r1_choose_card"
+  },
+  {
+    "order": 25,
+    "id": "r1_choose_district",
+    "text": "Tap this district. You win by leading in two of the three districts at the end. Your first play here costs 1 less Motion (minimum 1). Discounts do not stack.",
+    "existingRecording": "r1_choose_district"
+  },
+  {
+    "order": 26,
+    "id": "r1_play_card",
+    "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+    "existingRecording": "r1_play_card"
+  },
+  {
+    "order": 27,
+    "id": "r1_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "existingRecording": "r1_end_turn"
+  },
+  {
+    "order": 28,
+    "id": "r2_choose_card",
+    "text": "Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.",
+    "existingRecording": "r2_choose_card"
+  },
+  {
+    "order": 29,
+    "id": "r2_choose_district",
+    "text": "Tap this district. You win by leading in two of the three districts at the end. Spread your strength instead of putting everyone in one place.",
+    "existingRecording": "r2_choose_district"
+  },
+  {
+    "order": 30,
+    "id": "r2_play_card",
+    "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
+    "existingRecording": "r1_play_card"
+  },
+  {
+    "order": 31,
+    "id": "r2_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "existingRecording": "r1_end_turn"
+  },
+  {
+    "order": 32,
+    "id": "r3_bank_motion",
+    "text": "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts.",
+    "existingRecording": "r3_bank_motion"
+  },
+  {
+    "order": 33,
+    "id": "r4_choose_card",
+    "text": "Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.",
+    "existingRecording": "r4_choose_card"
+  },
+  {
+    "order": 34,
+    "id": "r4_arm_squabble",
+    "text": "Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.",
+    "existingRecording": "r4_arm_squabble"
+  },
+  {
+    "order": 35,
+    "id": "r4_choose_district",
+    "text": "Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+    "existingRecording": "r4_choose_district"
+  },
+  {
+    "order": 36,
+    "id": "r4_play_squabble",
+    "text": "Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.",
+    "existingRecording": "r4_play_squabble"
+  },
+  {
+    "order": 37,
+    "id": "r4_end_turn",
+    "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
+    "existingRecording": "r1_end_turn"
+  },
+  {
+    "order": 38,
+    "id": "result-default",
+    "text": "You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.",
+    "existingRecording": "result-default"
+  },
+  {
+    "order": 39,
+    "id": "lesson-complete",
+    "text": "Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.",
+    "existingRecording": "lesson-complete"
+  },
+  {
+    "order": 40,
+    "id": "lesson-complete-encouragement",
+    "text": "Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.",
+    "existingRecording": "lesson-complete-encouragement"
+  }
+]
