@@ -1,4 +1,5 @@
 import { useViewMemory } from '../../lib/navigationMemory';
+import { useExtrasNotificationsSeen } from '../../lib/useExtrasNotificationsSeen';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useSearch } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +21,7 @@ import '../../styles/character-styles.css';
 export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: PlayerBootstrap; cardId?: string }) {
   const { profile } = bootstrap;
   const set = styleSetFor(cardId), card = catalogCardById[cardId];
+  useExtrasNotificationsSeen(cardId, Boolean(set && card));
   const client = useQueryClient();
   const [tab, setTab] = useViewMemory<'stickers' | 'banner' | 'scene'>(`style-tab:${profile.id}:${cardId}`, 'stickers');
   const [finish, setFinish] = useState<'base' | 'silver'>('base');

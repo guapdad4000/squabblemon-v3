@@ -1,5 +1,6 @@
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
+import { useExtrasNotificationsSeen } from '../../lib/useExtrasNotificationsSeen';
 import { Link } from 'wouter';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { CHARACTER_STYLE_SETS, CHARACTER_STYLE_OFFERS, ownsStyle } from '@workspace/squabblemon-engine/cosmetics';
@@ -10,6 +11,7 @@ import { getAssetUrl, getCardImage } from '../../lib/assets';
 import '../../styles/character-styles.css';
 
 export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+  useExtrasNotificationsSeen();
   const { notices } = useNotifications();
   const { profile } = bootstrap;
   const [query, setQuery] = useViewMemory(`styles-search:${profile.id}`, '');
