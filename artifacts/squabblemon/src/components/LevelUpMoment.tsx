@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useId, type CSSProperties } from "react";
 import { getAssetUrl } from "../lib/assets";
 import "../styles/level-up.css";
+import { useEventVoice } from "../lib/useEventVoice";
 
 export function LevelUpMoment({
   level,
@@ -12,6 +13,7 @@ export function LevelUpMoment({
   reduced: boolean;
   onContinue: () => void;
 }) {
+  useEventVoice("level-up", level);
   const x = useMotionValue(0),
     y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 80, damping: 24 }),

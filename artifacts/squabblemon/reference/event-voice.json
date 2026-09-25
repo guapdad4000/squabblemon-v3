@@ -1,0 +1,37 @@
+{
+  "source": "ElevenLabs_2026-09-25T05_20_58_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp100_s50_sb75_se0_b_m2.mp3",
+  "sha256": "c93db4999a53fd269aadfd9f9a15a6774cc1ed4ad4ee6e9c479fcb302193189b",
+  "alignment": "Local word transcription checked against silence boundaries; silence padded before and after speech. Original speed. Ogg Vorbis and AAC, mono 44.1 kHz, normalized to -16 LUFS / -1.5 dBTP.",
+  "clips": [
+    {
+      "id": "level-good-money",
+      "text": "GOOD MONEY",
+      "start": 0.13,
+      "end": 0.94
+    },
+    {
+      "id": "level-hands",
+      "text": "You just leveled up them hands, mud!",
+      "start": 1.53,
+      "end": 3.83
+    },
+    {
+      "id": "level-pressure",
+      "text": "APPLYING PRESSURE!",
+      "start": 4.42,
+      "end": 6.33
+    },
+    {
+      "id": "training-welcome",
+      "text": "Let's get some pain in, beloved",
+      "start": 6.96,
+      "end": 8.95
+    },
+    {
+      "id": "friendly-fade",
+      "text": "Friendly fade",
+      "start": 9.16,
+      "end": 10.43
+    }
+  ]
+}

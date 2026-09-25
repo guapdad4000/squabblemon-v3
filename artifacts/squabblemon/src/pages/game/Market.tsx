@@ -30,8 +30,10 @@ import { clearShopRequest, readShopRequest, saveShopRequest } from '../../lib/sh
 import { e2eAuthEnabled } from '../../lib/auth';
 import { loadFeedbackPreferences } from '../../battleFeedback';
 import { playVoiceLine } from '../../lib/sfx';
+import { useEventVoice } from '../../lib/useEventVoice';
 
 export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; openPacks: () => void }) {
+  useEventVoice('training-welcome');
   const { profile } = bootstrap;
   const client = useQueryClient();
   const [selectedId, select] = useState<ShopItemId>(() =>

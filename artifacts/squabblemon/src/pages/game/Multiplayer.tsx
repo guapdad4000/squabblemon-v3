@@ -22,6 +22,7 @@ import { MultiplayerBattle } from "../../components/MultiplayerBattle";
 import { InstallGame } from "../../components/InstallGame";
 import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
 import "../../styles/multiplayer.css";
+import { useEventVoice } from "../../lib/useEventVoice";
 
 export function Multiplayer({
   bootstrap,
@@ -32,6 +33,7 @@ export function Multiplayer({
 }) {
   const [, navigate] = useLocation();
   const friends = new URLSearchParams(useSearch()).get('tab') === 'friends';
+  useEventVoice(friends && !code ? 'friendly-fade' : null);
   const { profile } = bootstrap;
   const saved = profile.savedDecks.filter(
     (deck) =>
