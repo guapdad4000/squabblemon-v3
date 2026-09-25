@@ -70,15 +70,15 @@ export function BountyMachine({ bootstrap, cadence }: { bootstrap: PlayerBootstr
         <div className="fadecade-panel" id={`bounties-${cadence}`} data-testid={`panel-${cadence}`}>
           {error && <p role="alert" className="fadecade-error">{error}</p>}
           {missions.length === 0 ? (
-            <p className="cabinet-notice" style={{ margin: 0 }}>No bounties found.</p>
+            <p className="cabinet-notice" style={{ margin: 0 }}>No bounties on the board yet. Check back after the next refresh.</p>
           ) : (
             missions.map(m => (
-              <div key={m.id} className="bounty-item">
+              <div key={m.id} className="bounty-item" data-status={m.status}>
                 <span className="bounty-title" title={m.title}>{m.title}</span>
                 <p className="fadecade-bounty-description">{m.description}</p>
-                <span className="cabinet-notice">{m.rewardAmount} {m.rewardCurrency === 'softCurrency' ? 'Clout' : 'Tickets'}</span>
-                <div className="bounty-track">
-                  <div className="bounty-fill" style={{ width: `${Math.min(100, (m.progress / m.goal) * 100)}%` }} />
+                <span className="challenge-reward">{m.rewardAmount} {m.rewardCurrency === 'softCurrency' ? 'Clout' : 'Tickets'}</span>
+                <div className="bounty-track" role="progressbar" aria-label={m.title} aria-valuemin={0} aria-valuemax={Math.max(1, m.goal)} aria-valuenow={Math.max(0, Math.min(m.progress, m.goal))}>
+                  <div className="bounty-fill" style={{ width: `${Math.min(100, (Math.max(0, m.progress) / Math.max(1, m.goal)) * 100)}%` }} />
                 </div>
                 {m.status === 'claimable' ? (
                   <button
@@ -87,7 +87,7 @@ export function BountyMachine({ bootstrap, cadence }: { bootstrap: PlayerBootstr
                     onClick={() => void handleClaim(m.id)}
                     aria-label={`Claim ${m.title}`}
                   >
-                    {claimingId === m.id ? '...' : 'CLAIM'}
+                    {claimingId === m.id ? 'Collecting…' : 'COLLECT REWARD'}
                   </button>
                 ) : (
                   <span className="cabinet-notice" style={{ textAlign: 'left' }}>

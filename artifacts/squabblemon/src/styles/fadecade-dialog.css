@@ -242,3 +242,63 @@
     animation: none !important;
   }
 }
+
+/* Preserve the illustrated arcade chrome; give playable content more room. */
+.fadecade-dialog-art-header { max-width:440px; align-self:center; }
+.fadecade-dialog-art-footer { width:min(100%,430px); align-self:center; background:transparent; }
+.fadecade-dialog-eyebrow { font-size:clamp(12px,2.8vw,16px); }
+.fadecade-dialog-footer-ink span { font-size:clamp(10px,2.5vw,12px); }
+.fadecade-dialog-content--stockz .fadecade-dialog-artwork-shell { border-color:#a9d498; }
+.fadecade-dialog-close { display:flex; align-items:center; justify-content:center; gap:6px; }
+.fadecade-dialog-close span { font:400 22px/1 sans-serif; }
+.fadecade-dialog-scroll-body { scrollbar-width:thin; scrollbar-color:#f2cc4c #101221; }
+.fadecade-dialog-content :is(button,[role=combobox]):focus-visible { outline:3px solid #fff1b0; outline-offset:3px; }
+.challenge-field-label { font:800 10px var(--font-mono); letter-spacing:.1em; color:#ffe449; text-transform:uppercase; }
+.challenge-crew-preview { padding:12px; border:1px solid #ffe44955; border-bottom:3px solid #ffe449; background:#090c19; }
+.challenge-crew-preview>div:first-child { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.challenge-crew-preview span,.challenge-crew-preview small { font:700 8px var(--font-mono); color:#bfc6db; }
+.challenge-crew-preview strong { font:900 italic 13px var(--font-display); color:#ffe449; }
+.challenge-crew-preview small { margin-left:auto; }
+.challenge-crew-cards { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:4px; }
+.challenge-crew-cards img { width:100%; aspect-ratio:2/3; object-fit:contain; }
+.fadecade-dialog-scroll-body .bounty-item { border:1px solid #ffffff26; border-left:4px solid #ffe449; padding:16px; gap:10px; }
+.fadecade-dialog-scroll-body .bounty-item[data-status=claimable] { border-color:#4ade8080; box-shadow:inset 0 0 22px #4ade8009; }
+.fadecade-dialog-scroll-body .bounty-item[data-status=claimed] { opacity:.65; }
+.challenge-reward { align-self:flex-start; padding:6px 10px; border:1px solid #ffe44966; color:#ffe449; background:#ffe44910; font:800 11px var(--font-mono); }
+.fadecade-dialog-scroll-body .bounty-track { height:8px; border:1px solid #8b93a633; background:#060911; }
+.challenge-draft-progress { display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; color:#ffe449; }
+.challenge-draft-progress>span { font:800 10px var(--font-mono); letter-spacing:.1em; }
+.challenge-draft-progress strong { font:900 italic 24px var(--font-display); }
+.challenge-draft-progress small { font-size:13px; color:#a3acc3; }
+.challenge-draft-progress progress { grid-column:1/-1; width:100%; height:7px; accent-color:#ffe449; }
+.challenge-drafted { display:flex; gap:5px; overflow-x:auto; padding:6px 0; }
+.challenge-drafted img { width:38px; height:56px; object-fit:contain; flex:none; }
+.fadecade-dialog-scroll-body .draft-grid { gap:12px; }
+.fadecade-dialog-scroll-body .draft-card-btn { padding:4px; border:2px solid #ffffff2b; background:#060a16; box-shadow:3px 4px #0006; }
+.fadecade-dialog-scroll-body .draft-card-btn:hover { border-color:#ffe449; }
+.fadecade-dialog-scroll-body .draft-card-btn img { aspect-ratio:2/3; object-fit:contain; }
+.fadecade-dialog-scroll-body .fadecade-road-view { border:3px solid #080b14; outline:1px solid #ffe44944; }
+.fadecade-dialog-scroll-body .fadecade-road-progress progress { accent-color:#ffe449; height:7px; }
+.fadecade-dialog-scroll-body .stockz-balance { padding:14px; background:#102119; border:1px solid #a9d49855; }
+.fadecade-dialog-scroll-body .stockz-companies button,.fadecade-dialog-scroll-body .stockz-choices button { min-height:48px; }
+.fadecade-dialog-scroll-body .stockz-active { border:1px solid #a9d49866; }
+@media(max-width:480px) {
+ .fadecade-dialog-art-header { max-width:300px; }
+ .fadecade-dialog-art-footer { max-width:300px; }
+ .fadecade-dialog-titlebar { padding:12px; }
+ .fadecade-dialog-scroll-body { padding:14px; }
+ .challenge-crew-cards { grid-template-columns:repeat(5,minmax(0,1fr)); }
+ .fadecade-dialog-scroll-body .draft-grid { gap:6px; }
+ .fadecade-dialog-scroll-body .draft-card-btn { padding:2px; }
+ .stockz-balance,.stockz-history p { flex-wrap:wrap; }
+}
+@media(max-height:650px) {
+ .fadecade-dialog-art-header { max-width:230px; }
+ .fadecade-dialog-art-footer { max-width:230px; }
+ .fadecade-dialog-eyebrow,.fadecade-dialog-footer-ink span { font-size:9px; }
+}
+.draft-card-btn strong { display:block; color:#fff1c0; font:800 12px/1.3 var(--font-display); padding:8px 3px 4px; }
+.draft-card-btn>span { display:block; color:#b9c3d6; font:700 9px/1.5 var(--font-mono); padding:0 2px 7px; }
+@media(max-width:480px) { .draft-card-btn strong { font-size:10px; } .draft-card-btn>span { font-size:8px; } }
+.fadecade-dialog-art-footer { container-type:inline-size; }
+.fadecade-dialog-footer-ink span { font-size:clamp(6px,2.1cqw,9px); white-space:nowrap; }

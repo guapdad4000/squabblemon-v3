@@ -1,3 +1,4 @@
+import { CrewPreview } from './CrewPreview';
 import { useState } from 'react';
 import { ArcadeCabinet } from './MachineScreen';
 import { FadecadeDialog } from './FadecadeDialog';
@@ -46,6 +47,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }:
       >
         <div className="fadecade-panel" id="training-setup" data-testid="panel-training">
           {!legalCrews.length && <p role="status">Create a legal owned ten-card crew before starting practice.</p>}
+          <span className="challenge-field-label">01 / Choose your drill</span>
           <select
             className="cabinet-select"
             value={mode}
@@ -59,6 +61,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }:
             {selectedActivity.description}
           </p>
 
+          <span className="challenge-field-label">02 / Bring your crew</span>
           <select
             className="cabinet-select"
             value={crewId}
@@ -68,6 +71,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }:
             {legalCrews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
 
+          <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />
           <button
             className="cabinet-btn"
             style={{ marginTop: '0.5rem' }}

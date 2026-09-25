@@ -102,7 +102,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         open={open}
         onOpenChange={setOpen}
         title="Stockz · Clout Exchange"
-        kind="events"
+        kind="stockz"
       >
         <div className="stockz-panel" id="stockz-setup">
           <p>
@@ -194,7 +194,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                       className="cabinet-select"
                       disabled={busy}
                       value={stake}
-                      onChange={(e) => {
+                      onChange={e => {
                         setStake(Number(e.target.value));
                         requestId.current = null;
                       }}

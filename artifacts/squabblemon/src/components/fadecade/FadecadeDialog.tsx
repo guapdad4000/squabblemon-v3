@@ -9,7 +9,7 @@ export interface FadecadeDialogProps {
   onOpenChange: (v: boolean) => void;
   title: string;
   children: ReactNode;
-  kind?: 'road' | 'daily' | 'weekly' | 'training' | 'events';
+  kind?: 'road' | 'daily' | 'weekly' | 'training' | 'events' | 'stockz';
 }
 
 export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'road' }: FadecadeDialogProps) {
@@ -68,13 +68,14 @@ export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'ro
                   {kind === 'weekly' && 'WEEKLY BOUNTY'}
                   {kind === 'training' && 'TRAINING'}
                   {kind === 'events' && 'SPECIAL EVENT'}
+                  {kind === 'stockz' && 'THE CLOUT EXCHANGE'}
                 </span>
               </div>
             </header>
             <div className="fadecade-dialog-titlebar">
               <DialogPrimitive.Title className="fadecade-dialog-title">{title}</DialogPrimitive.Title>
               <DialogPrimitive.Close className="fadecade-dialog-close" aria-label="Close">
-                Close
+                <span aria-hidden="true">×</span> Close
               </DialogPrimitive.Close>
             </div>
             <div className="fadecade-dialog-scroll-body">
@@ -85,7 +86,7 @@ export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'ro
             <footer className="fadecade-dialog-art-footer" style={frameStyle('footer-banner.webp')} data-art-missing={missingFooter}>
               {!missingFooter && <img src={getAssetUrl('assets/fadecade/footer-banner.webp')} alt="" className="fadecade-dialog-footer-img" draggable={false} onError={() => setMissingFooter(true)} />}
               <div className="fadecade-dialog-footer-ink">
-                <span>{kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span>
+                <span>{kind === 'stockz' ? 'YOUR CALL. YOUR CLOUT.' : kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span>
               </div>
             </footer>
           </div>

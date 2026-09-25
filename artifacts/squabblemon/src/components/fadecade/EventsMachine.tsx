@@ -1,8 +1,9 @@
+import { CrewPreview } from './CrewPreview';
 import { useState } from 'react';
 import { ArcadeCabinet } from './MachineScreen';
 import { FadecadeDialog } from './FadecadeDialog';
 import { activities, type ActivityId, draftOffers, eventWeek, makeActivityEncounter } from '@workspace/squabblemon-engine/activities';
-import { getCardImage, type Deck, DECK_SIZE } from '../../data';
+import { getCardImage, catalogCardByEngineId, type Deck, DECK_SIZE } from '../../data';
 import type { BattleConfig } from '../../pages/game/ChallengesHub';
 
 export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; onBattle: (c: BattleConfig) => void }) {
@@ -53,6 +54,7 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
               className={`cabinet-btn ${tab === 'draft' ? '' : 'cabinet-btn--outline'}`}
               style={{ flex: 1 }}
               onClick={() => setTab('draft')}
+              aria-pressed={tab === 'draft'}
               aria-label="View Draft"
             >
               DRAFT
@@ -61,20 +63,24 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
               className={`cabinet-btn ${tab === 'events' ? '' : 'cabinet-btn--outline'}`}
               style={{ flex: 1 }}
               onClick={() => setTab('events')}
+              aria-pressed={tab === 'events'}
               aria-label="View Events"
             >
               EVENTS
             </button>
           </div>
 
+          {tab === 'draft' && picks.length > 0 && <div className="challenge-drafted" aria-label="Drafted cards">{picks.map((id, index) => <img key={`${id}-${index}`} src={getCardImage(catalogCardByEngineId[id]?.catalogId ?? id)} alt={`Pick ${index + 1}: ${catalogCardByEngineId[id]?.name ?? id}`} />)}</div>}
           {tab === 'draft' ? (
             picks.length < DECK_SIZE ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <span className="cabinet-notice">Pick {picks.length + 1} of {DECK_SIZE}</span>
+                <div className="challenge-draft-progress"><span>BUILD YOUR LINEUP</span><strong>Pick {picks.length + 1} <small>/ {DECK_SIZE}</small></strong><progress aria-label="Draft picks" max={DECK_SIZE} value={picks.length} /></div>
                 <div className="draft-grid" style={{ marginBottom: 'auto' }}>
                   {offers[picks.length].map(id => (
-                    <button key={id} className="draft-card-btn" onClick={() => setPicks([...picks, id])} aria-label={`Draft card ${id}`}>
-                      <img src={getCardImage(id)} alt="" />
+                    <button key={id} className="draft-card-btn" onClick={() => setPicks([...picks, id])} aria-label={`Draft ${catalogCardByEngineId[id]?.name ?? id}`}>
+                      <img src={getCardImage(catalogCardByEngineId[id]?.catalogId ?? id)} alt="" />
+                      <strong>{catalogCardByEngineId[id]?.name ?? id}</strong>
+                      <span>{catalogCardByEngineId[id]?.cost} Motion · {catalogCardByEngineId[id]?.power} Hands</span>
                     </button>
                   ))}
                 </div>
@@ -107,6 +113,7 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
             )
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <span className="challenge-field-label">01 / Choose the event</span>
               <select
                 className="cabinet-select"
                 value={eventMode}
@@ -120,6 +127,7 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
                 {eventMode === 'neighborhood' ? `Week ${week}: ${eventRule}` : eventRule || 'Defeat the boss.'}
               </p>
 
+              <span className="challenge-field-label">02 / Bring your crew</span>
               <select
                 className="cabinet-select"
                 value={crewId}
@@ -129,6 +137,7 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
                 {legalCrews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
 
+              <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />
               <button
                 className="cabinet-btn"
                 disabled={!legalCrews.some(crew => crew.id === crewId)}
