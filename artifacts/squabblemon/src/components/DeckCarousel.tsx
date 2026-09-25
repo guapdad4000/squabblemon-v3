@@ -2,6 +2,8 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { Check, ChevronLeft, ChevronRight, Layers, Pencil } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { catalogCardById, getCardImage } from '../data';
+import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
+import { getAssetUrl } from '../lib/assets';
 import '../styles/deck-carousel.css';
 
 export interface DeckCarouselItem {
@@ -41,6 +43,8 @@ function DeckBox({
   active: boolean;
 }) {
   const hostRef = useRef<HTMLSpanElement>(null);
+  const cover = styleSetFor(heroCardId)?.deckCover;
+  const image = cover ? getAssetUrl(cover) : heroCardId ? getCardImage(heroCardId) : null;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -68,7 +72,8 @@ function DeckBox({
           if (!disposed && nextGeneration === generation) {
             disposeScene = mountDeckBox(host, {
               name,
-              image: heroCardId ? getCardImage(heroCardId) : null,
+              image,
+              fullCover: !!cover,
             });
           }
         })
@@ -97,23 +102,23 @@ function DeckBox({
       mutation.disconnect();
       motion.removeEventListener('change', update);
     };
-  }, [active, name, heroCardId]);
+  }, [active, name, image, cover]);
 
   return (
     <span className="deck-box" ref={hostRef} aria-hidden="true">
       <span className="deck-box__shadow" />
       <span className="deck-box__print">
         <span className="deck-box__spine">SQUABBLEMON · THE LINEUP</span>
-        <span className="deck-box__face">
-          <span className="deck-box__brand">
+        <span className={'deck-box__face' + (cover ? ' deck-box__face--artwork' : '')}>
+          {!cover && <span className="deck-box__brand">
             SM
             <span>SQUABBLEMON</span>
-          </span>
-          {heroCardId && <img src={getCardImage(heroCardId)} alt="" loading={active ? 'eager' : 'lazy'} draggable={false} />}
-          <span className="deck-box__title">
+          </span>}
+          {image && <img src={image} alt="" loading={active ? 'eager' : 'lazy'} draggable={false} />}
+          {!cover && <span className="deck-box__title">
             {name}
             <small>COLLECT. BUILD. SQUABBLE.</small>
-          </span>
+          </span>}
         </span>
       </span>
     </span>

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 // This is the deck-box scene recovered from the previous production deployment.
 // Portrait ink stays matte; the frame, seal, spine, and lettering carry the foil.
-export function mountDeckBox(host: HTMLElement, { name, image }: { name: string; image: string | null }) {
+export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false }: { name: string; image: string | null; fullCover?: boolean }) {
   let renderer: THREE.WebGLRenderer;
   try {
     const canvas = document.createElement('canvas');
@@ -67,6 +67,16 @@ export function mountDeckBox(host: HTMLElement, { name, image }: { name: string;
     colorContext.fillRect(0, 0, 768, 1075);
     maskContext.fillStyle = '#111';
     maskContext.fillRect(0, 0, 768, 1075);
+    if (portrait && fullCover) {
+      // Fit the complete supplied print without cropping its character, lettering or border.
+      const scale = Math.min(768 / portrait.width, 1075 / portrait.height);
+      const width = portrait.width * scale, height = portrait.height * scale;
+      colorContext.drawImage(portrait, (768 - width) / 2, (1075 - height) / 2, width, height);
+      maskContext.fillStyle = '#ddd';
+      maskContext.fillRect(0, 0, 14, 1075);
+      maskContext.fillRect(754, 0, 14, 1075);
+      return { color, mask };
+    }
     colorContext.strokeStyle = '#9aaab112';
     colorContext.lineWidth = 1;
     for (let x = -1100; x < 850; x += 17) {

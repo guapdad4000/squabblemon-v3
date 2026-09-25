@@ -52,7 +52,7 @@ try {
  pass('320px and 390px screens have no horizontal overflow and usable sticker controls.');
  await page.setViewportSize({width:1440,height:1100});await page.getByRole('heading',{name:'KYLE Make it yours.'}).scrollIntoViewIfNeeded();
  await page.waitForFunction(()=>document.querySelector('.character-banner')?.getAttribute('data-animated')==='true');
- await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.character-banner__fighter').first().evaluate(el=>getComputedStyle(el).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.character-banner__sheen').first().evaluate(el=>getComputedStyle(el).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});
  pass('Banner respects reduced motion.');
  await page.evaluate(id=>sessionStorage.setItem('squabblemon:pack-reveal:'+id,JSON.stringify({id:'cosmetic-reveal-test',oddsVersion:'fixture',paymentMethod:'ticket',cost:1,pullCount:1,rewards:[{kind:'card',cardId:'kyle',variantId:null,name:'KYLE',rarity:'Legendary',isNew:true,amount:1}],pityBefore:0,pityAfter:0,createdAt:new Date().toISOString()})),saved.id);
  await page.goto(origin+'/game/shop?view=packs');await page.getByRole('dialog').first().waitFor();

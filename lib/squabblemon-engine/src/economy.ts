@@ -1,5 +1,5 @@
 import { catalogCardById } from './data';
-import { CHARACTER_STYLE_OFFERS, cosmeticId, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
+import { CHARACTER_STYLE_OFFERS, cosmeticId, hasCharacterStickers, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
 
 export const LEGACY_ECONOMY_VERSION = 'block-economy-v1';
@@ -113,7 +113,7 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     summary = `${card!.name} joined your collection.`;
   } else if (offer.id.startsWith('character-')) {
     const set = styleSetFor(card!.catalogId);
-    if (!set || (offer.id === 'character-stickers' && !set.stickerAtlas)) throw new ShopRuleError('This character collection is not ready yet.');
+    if (!set || (offer.id === 'character-stickers' && !hasCharacterStickers(set))) throw new ShopRuleError('This character collection is not ready yet.');
     const id = cosmeticId(card!.catalogId, offer.id as CharacterStyleOfferId);
     if (wallet.unlockedCosmeticIds?.includes(id)) throw new ShopRuleError('You already own this cosmetic.');
     next.unlockedCosmeticIds = [...(wallet.unlockedCosmeticIds ?? []), id];

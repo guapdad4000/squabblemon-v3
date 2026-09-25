@@ -13,7 +13,7 @@ export function CharacterUnlock({ cardId, children }: { cardId: string; children
   return <div className="character-unlock" data-intro={intro}>
     {intro ? <><span className="style-kicker">{catalogCardById[cardId]?.rarity === 'Mythical' ? 'A MYTHICAL JOINS YOUR GANG' : catalogCardById[cardId]?.rarity === 'Legendary' ? 'A LEGEND JOINS YOUR GANG' : 'A NEW FACE JOINS YOUR GANG'}</span><CharacterBanner cardId={cardId} /><button type="button" className="style-button" onClick={() => setIntro(false)}>Show my card · Skip intro</button></> : <>
       {children}
-      <div className="character-unlock__collection"><CharacterBanner cardId={cardId} compact animated={false} /><p><strong>Character banner unlocked.</strong> Equip it in your bag. Complete the look with the signature four-sticker pack.</p><div>{set.stickers.map(sticker => <CharacterSticker key={sticker.id} id={sticker.id} />)}</div><button type="button" className="style-link" onClick={() => setIntro(true)}>Replay character reveal</button></div>
+      <div className="character-unlock__collection"><CharacterBanner cardId={cardId} compact animated={false} /><p><strong>Character banner unlocked.</strong> Equip it in your bag. Complete the look with all {set.stickers.length} signature stickers.</p><div>{set.stickers.map(sticker => <CharacterSticker key={sticker.id} id={sticker.id} />)}</div><button type="button" className="style-link" onClick={() => setIntro(true)}>Replay character reveal</button></div>
     </>}
   </div>;
 }

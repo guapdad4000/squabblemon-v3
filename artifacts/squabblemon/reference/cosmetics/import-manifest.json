@@ -1,0 +1,3636 @@
+{
+  "sources": [
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "sha256": "6bb2ed21e0d64e270aa268d766112a13ca7038e3d026a8c0aba247f1b31fce6d"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "sha256": "ff38b2bfeb3bff142ee4146aa0b4c6c5aa070d0cebc0275d1bad635e9c67a3c4"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "sha256": "1b6dae43bdc23610e6711075c9e3cc1b949b1f838cbf96bed0841d98fe8977e2"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "sha256": "3d71e88bc6eb49e7676dae750407176ab999072818d129fd9362041b4624ecc6"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "sha256": "8910537e542bac7495fbc6a6b9df87f2af609b062420d27248fc72ab10f2b542"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "sha256": "556cd064429ba2ccd2ceea41b09a4f0bc5f6c75f08c6bec0a1ba718ac7f3def3"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "sha256": "0ec95ebd439e49543e8f9df1113cbf4630f1b74b5b6372024dfaa64f92408440"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "sha256": "cca58342c26f3b1e4b4be0c7d89c9a6a873fea1fc40929456b1b1a9b22896021"
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "sha256": "3746d390940779d2fe85eeaf18dcd7dc57493247034f38952d05149172f9cb75"
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "sha256": "02306848d07d63134a3c1b299996f9232df61749c0cb99efb5d1e25035b7147e"
+    }
+  ],
+  "images": [
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/ashlee-banner.png",
+      "sha256": "b57c93c2fcd357f168c6f384ce45893b98daa8660e46374206e9b93c7b016d92",
+      "sourceBytes": 3044820,
+      "asset": "assets/cosmetics/ashlee/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 316778
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/ashlee/deck-cover.png",
+      "sha256": "b0ddb6f14e79c63128f626e9baa17a045036543c02475581a1ad45c62b869e02",
+      "sourceBytes": 4028527,
+      "asset": "assets/cosmetics/ashlee/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 570232
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/ashlee/sticker-action.png",
+      "sha256": "a29807be0c8cc7db7ce6a9f7c5532ae21454f93f251e392ba2178493e5ae1851",
+      "sourceBytes": 3095490,
+      "asset": "assets/cosmetics/ashlee/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 143550
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/ashlee/sticker-emblem.png",
+      "sha256": "482ee1ab4c40e3d0b5e43e45ca99b118accc80e9f7f0d218e97d8e258e4f5d7e",
+      "sourceBytes": 2380152,
+      "asset": "assets/cosmetics/ashlee/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118294
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/ashlee/sticker-portrait.png",
+      "sha256": "227499a8cdba5550385be083bd0935976a390b34e33c0967cf150387cee8650e",
+      "sourceBytes": 2550446,
+      "asset": "assets/cosmetics/ashlee/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 113748
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/ashlee/sticker-reaction.png",
+      "sha256": "c712903192b3c626d7703c39996739d74332f9d4c978c7fb4927adf03e166316",
+      "sourceBytes": 2763595,
+      "asset": "assets/cosmetics/ashlee/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127050
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/asphalt-apostle-banner.png",
+      "sha256": "ce7a46ab634c0ddaa19344d4740d11fcde216e13d3333df50f32f3b9e0ae56bc",
+      "sourceBytes": 2976472,
+      "asset": "assets/cosmetics/asphalt-apostle/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 314578
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/asphalt-apostle/deck-cover.png",
+      "sha256": "f3143c13ca1037bee906eb527d70f098096fa5809f5e6674be98c218665911a8",
+      "sourceBytes": 3767877,
+      "asset": "assets/cosmetics/asphalt-apostle/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 515364
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/asphalt-apostle/sticker-action.png",
+      "sha256": "a3b99134d2bf7c3a1b193b93aab465d65f7ff55ac76c1ae5a07642190e1024b1",
+      "sourceBytes": 2767249,
+      "asset": "assets/cosmetics/asphalt-apostle/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124482
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/asphalt-apostle/sticker-emblem.png",
+      "sha256": "0af0aa75f03787d0dad0e81173aa076ff34c397fe252d2c7a2b4cd7136082491",
+      "sourceBytes": 2588828,
+      "asset": "assets/cosmetics/asphalt-apostle/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118426
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/asphalt-apostle/sticker-portrait.png",
+      "sha256": "3f074d477acda1fca7d61c75fc94da7d8db829ed7715e733bfe8e5470b2ded55",
+      "sourceBytes": 2256230,
+      "asset": "assets/cosmetics/asphalt-apostle/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98618
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/asphalt-apostle/sticker-reaction.png",
+      "sha256": "42c1edfa1472f0a0e73d37a47ca38e603632297aeba26c0b0fdeb1f35317359a",
+      "sourceBytes": 2774989,
+      "asset": "assets/cosmetics/asphalt-apostle/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127844
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/bbl-demon-banner.png",
+      "sha256": "957a0b34234a007dbea01428414c8da409c53b8c38b3089ceab9f642f8c3d97e",
+      "sourceBytes": 2806885,
+      "asset": "assets/cosmetics/bbl-demon/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 286368
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/bbl-demon/deck-cover.png",
+      "sha256": "4070950570cf88c11f8b9f425df4dc6650120fb417a022e9b7adf849540b5dbd",
+      "sourceBytes": 3540873,
+      "asset": "assets/cosmetics/bbl-demon/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 494484
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/bbl-demon/sticker-action.png",
+      "sha256": "4b8536f94f6d5d3d9de91057161ce3e4b32738018dd782130625e1ba8a0fb43d",
+      "sourceBytes": 2647809,
+      "asset": "assets/cosmetics/bbl-demon/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 128618
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/bbl-demon/sticker-emblem.png",
+      "sha256": "41805c16ccd49e0055c7ade5fbfaceeb6ae3db6a3d3a9c40597c01cb01f5f884",
+      "sourceBytes": 2089792,
+      "asset": "assets/cosmetics/bbl-demon/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 99962
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/bbl-demon/sticker-portrait.png",
+      "sha256": "ae9a8bb97e73d77aa799c100fade07ad70ae9314c2be53b8a60ef7423f982c80",
+      "sourceBytes": 2237623,
+      "asset": "assets/cosmetics/bbl-demon/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97034
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/bbl-demon/sticker-reaction.png",
+      "sha256": "e6e8e5151562616c39b8590b5ab579d283c20c0812a3995a277b623c9ff7fe75",
+      "sourceBytes": 2430915,
+      "asset": "assets/cosmetics/bbl-demon/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110256
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/big-zoey-banner.png",
+      "sha256": "b486e4a1bbcfd0a8bd9b6e2c9097fe29aa97df40ef2e038f1b6082e4131a1942",
+      "sourceBytes": 2527519,
+      "asset": "assets/cosmetics/big-zoey/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 238090
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/big-zoey/deck-cover.png",
+      "sha256": "95b9759c2e016c89607dfc332b1b6c3dd97bd6fcca41d52611553093f4b1cbac",
+      "sourceBytes": 3759704,
+      "asset": "assets/cosmetics/big-zoey/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 507554
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/big-zoey/sticker-action.png",
+      "sha256": "5b195dadfc98026ae29a42502a914c69bd034320373359d489f2509878b40a98",
+      "sourceBytes": 2802229,
+      "asset": "assets/cosmetics/big-zoey/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 130634
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/big-zoey/sticker-emblem.png",
+      "sha256": "94d34eebe2f2a0ea4e1e743224e2364d1fe6c1266c9faea52243fb12c90f1f5e",
+      "sourceBytes": 2531396,
+      "asset": "assets/cosmetics/big-zoey/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110044
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/big-zoey/sticker-portrait.png",
+      "sha256": "42faaf94c77f106294c3dc341b3ff083f5800eb9de8bf20f5fa5b5bf29e1ff0f",
+      "sourceBytes": 1834501,
+      "asset": "assets/cosmetics/big-zoey/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 73272
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/big-zoey/sticker-reaction.png",
+      "sha256": "3aae1392e5814b9d9b09df6b78c4c1a7dab3eacfbb4048c776446fbf623dc034",
+      "sourceBytes": 1905807,
+      "asset": "assets/cosmetics/big-zoey/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 82054
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/black-cowboy-banner.png",
+      "sha256": "470a1e7b1f0ca31bf880748aac5a8050101feba8b6a16780ff17d266e1dd9c09",
+      "sourceBytes": 3492975,
+      "asset": "assets/cosmetics/black-cowboy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 446132
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/black-cowboy/deck-cover.png",
+      "sha256": "01a064197eb2bad091c50631df831da99811d1e796b8d26fc3c7ccdf6e5097b4",
+      "sourceBytes": 3532497,
+      "asset": "assets/cosmetics/black-cowboy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 469822
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/black-cowboy/sticker-action.png",
+      "sha256": "966232309b38b0a96a247cbf0fd5d19b61971496beaeaa35390f0b3aa36df951",
+      "sourceBytes": 2751040,
+      "asset": "assets/cosmetics/black-cowboy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 151142
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/black-cowboy/sticker-emblem.png",
+      "sha256": "0beb3b6dc46e6112ddef83f129f2620f82334c9eea821b506d5dbcf926d6b85c",
+      "sourceBytes": 2183996,
+      "asset": "assets/cosmetics/black-cowboy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 108104
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/black-cowboy/sticker-portrait.png",
+      "sha256": "91f5c99adef444754af6dbc0a2f7e9f26f94236cfdfd66d3ca5f3b47b7dad469",
+      "sourceBytes": 2314557,
+      "asset": "assets/cosmetics/black-cowboy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97162
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/black-cowboy/sticker-reaction.png",
+      "sha256": "2e3d5f89c6e403ea6e79b50629bb74873bf8b3285af0a444eac80231084aaa6f",
+      "sourceBytes": 2394331,
+      "asset": "assets/cosmetics/black-cowboy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 107226
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/block-party-titan-banner.png",
+      "sha256": "9c1944bc910ed0b49e7fd7a77585bc4c1d7c6d2edd3be90675c47ed5d794e774",
+      "sourceBytes": 2708694,
+      "asset": "assets/cosmetics/block-party-titan/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 288574
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/block-party-titan/deck-cover.png",
+      "sha256": "a0c893c00b6c39e1429390924a00188d74f858081745673aad7c121041bb80cb",
+      "sourceBytes": 3228630,
+      "asset": "assets/cosmetics/block-party-titan/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 377526
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/block-party-titan/sticker-action.png",
+      "sha256": "5226a3741584a235adb286655d5892370ab5bcacb66d11c51678852e90c9e544",
+      "sourceBytes": 2756469,
+      "asset": "assets/cosmetics/block-party-titan/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122838
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/block-party-titan/sticker-emblem.png",
+      "sha256": "2e11a41339b81fc7b5c4959a3310e0d9a47117538dda8a0c2af704dda897b176",
+      "sourceBytes": 2421035,
+      "asset": "assets/cosmetics/block-party-titan/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 107330
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/block-party-titan/sticker-portrait.png",
+      "sha256": "7957c0e772f115955e071d22604a75e755ac6bd44e02e6ab90cb47d48b65f8ab",
+      "sourceBytes": 2355876,
+      "asset": "assets/cosmetics/block-party-titan/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 92432
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/block-party-titan/sticker-reaction.png",
+      "sha256": "4fc2ac1ac83029db2af238cd24c22b602aec9440d3cb94418a5906843623a8b4",
+      "sourceBytes": 2564082,
+      "asset": "assets/cosmetics/block-party-titan/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 107590
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/buddy-banner.png",
+      "sha256": "9baf849345a81616e904a28e53dd0e24553a0e6e1db3134b3e9b9384e107de5d",
+      "sourceBytes": 2880188,
+      "asset": "assets/cosmetics/buddy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 312152
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/buddy/deck-cover.png",
+      "sha256": "62a60787becd480ea97bee9e7d72f107e8bb008ec919b0072b9f74cdd916494d",
+      "sourceBytes": 3410597,
+      "asset": "assets/cosmetics/buddy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 376462
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/buddy/sticker-action.png",
+      "sha256": "730922c85b74237d894f624b0937433c9084c4061cd3d485847e966e4a8d4f1d",
+      "sourceBytes": 2768839,
+      "asset": "assets/cosmetics/buddy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 143922
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/buddy/sticker-emblem.png",
+      "sha256": "2db0cee9a30897f36d3b21deb2dcee398b555a52a7359a01e898530bc5f11f61",
+      "sourceBytes": 2359897,
+      "asset": "assets/cosmetics/buddy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115898
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/buddy/sticker-portrait.png",
+      "sha256": "a13baf75a5abaaec67cc3aa5cb636aa7f03c59bf9e5163a0abe20465827610ba",
+      "sourceBytes": 2624957,
+      "asset": "assets/cosmetics/buddy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 121814
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/buddy/sticker-reaction.png",
+      "sha256": "0d3631de16390f1e52e9df0e3387a3427b0bc83ff9df41abc19743fc3352bad4",
+      "sourceBytes": 2256128,
+      "asset": "assets/cosmetics/buddy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 100776
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/captain-jigga-banner.png",
+      "sha256": "c759a1415b44d0c44f4f4ec5a71de7544ba1ef931f71a5d7ea91e1e14fb2f344",
+      "sourceBytes": 2886933,
+      "asset": "assets/cosmetics/captain-jigga/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 316530
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/captain-jigga/deck-cover.png",
+      "sha256": "08b6d470d0c861fb38fca7b712ae2190fa33e7042ac553db661f9e5c4f0ddc7d",
+      "sourceBytes": 3657858,
+      "asset": "assets/cosmetics/captain-jigga/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 513104
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/captain-jigga/sticker-action.png",
+      "sha256": "cbfddd265eae32eee7b0ea1ea6ab112d551031dcc2a1668dcdceaa2fb03c9b94",
+      "sourceBytes": 3010319,
+      "asset": "assets/cosmetics/captain-jigga/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 161558
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/captain-jigga/sticker-emblem.png",
+      "sha256": "91076bf837de455628585a6c6a2a82985f60969b357ac6e6f556a8ef8d5332c4",
+      "sourceBytes": 2415614,
+      "asset": "assets/cosmetics/captain-jigga/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 120732
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/captain-jigga/sticker-portrait.png",
+      "sha256": "9dc947ebc3906e9c633c5f2d7a4b3588d580fab4a988a146c95cdc9b2984e510",
+      "sourceBytes": 2356300,
+      "asset": "assets/cosmetics/captain-jigga/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109556
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/captain-jigga/sticker-reaction.png",
+      "sha256": "8864569b51317e76a12319c0c5ca0abfd193f01fa4bbf511192326b8ef46fc08",
+      "sourceBytes": 2360629,
+      "asset": "assets/cosmetics/captain-jigga/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109182
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/cheshire-banner.png",
+      "sha256": "ad8bba35d35a27ebc3ad5127b8a3570b26832fce439153a45fa77f33f9a4d264",
+      "sourceBytes": 2510186,
+      "asset": "assets/cosmetics/cheshire/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 224462
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/cheshire/deck-cover.png",
+      "sha256": "1a8b63fcf247fdbffb8523d5a3257128cb2ef3e983a13f4eccb7fb781cdcb2f6",
+      "sourceBytes": 3672454,
+      "asset": "assets/cosmetics/cheshire/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 496842
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/cheshire/sticker-action.png",
+      "sha256": "2f27bf6e64272a2c1725f9f5969c9279e75d4da3111805d7110102cef9110981",
+      "sourceBytes": 2559398,
+      "asset": "assets/cosmetics/cheshire/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 139778
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/cheshire/sticker-emblem.png",
+      "sha256": "3c7c48ecaee0286dc573e791435f087b0643031a86b23823a5c2c6cb6b20dcad",
+      "sourceBytes": 2373088,
+      "asset": "assets/cosmetics/cheshire/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 125492
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/cheshire/sticker-portrait.png",
+      "sha256": "89c71bf45557d6b8f97a8bd3b1d5fe8c8fee211fd5c7aafa57771596c27c36c7",
+      "sourceBytes": 2036073,
+      "asset": "assets/cosmetics/cheshire/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 81128
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/cheshire/sticker-reaction.png",
+      "sha256": "af6838a69f348c876880caa14ab130e614ba3b42597715ce9941b8d103106810",
+      "sourceBytes": 2206078,
+      "asset": "assets/cosmetics/cheshire/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 91508
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/church-auntie-banner.png",
+      "sha256": "a2a2339994ce50c5664a83ca741b1bda6ec11a9c34beca6bedcca49ece2bc33d",
+      "sourceBytes": 2559585,
+      "asset": "assets/cosmetics/church-auntie/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 239070
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/church-auntie/deck-cover.png",
+      "sha256": "9967fee2c712d0dad45a11487b362d672e4616a2a1015c8643bf54f4ed559eb0",
+      "sourceBytes": 2942862,
+      "asset": "assets/cosmetics/church-auntie/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 306822
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/church-auntie/sticker-action.png",
+      "sha256": "c71112960cd509ea271f424c946ee34759e9a3347d81e170274e9d95c67441b0",
+      "sourceBytes": 2311163,
+      "asset": "assets/cosmetics/church-auntie/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 107034
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/church-auntie/sticker-emblem.png",
+      "sha256": "01bfe4646130c45625debb2cfbdfae3ab0711e4091a1b6d581f7ead9f63277f0",
+      "sourceBytes": 2228979,
+      "asset": "assets/cosmetics/church-auntie/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101690
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/church-auntie/sticker-portrait.png",
+      "sha256": "a76e51ccf6af3efb9c9b8b83ccc2c9ab6278c9cc0999bf46fec3edd9e5a95ca9",
+      "sourceBytes": 2343630,
+      "asset": "assets/cosmetics/church-auntie/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97584
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/church-auntie/sticker-reaction.png",
+      "sha256": "7262e4ceda68c98569693f8b9ff5bf4a9e666ad8ffe838b0583cbb846a564756",
+      "sourceBytes": 2358118,
+      "asset": "assets/cosmetics/church-auntie/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 95586
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/cologne-criminal-banner.png",
+      "sha256": "59cdd9c7be6c616e2652e0025db1d3635b2f20fb32bf151eaf8da3298c86bcbc",
+      "sourceBytes": 2794945,
+      "asset": "assets/cosmetics/cologne-criminal/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 258766
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/cologne-criminal/deck-cover.png",
+      "sha256": "cbed860471a8b755ca36170f761b085fe2345412ffa3db61c66f647731e56b69",
+      "sourceBytes": 3674626,
+      "asset": "assets/cosmetics/cologne-criminal/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 480610
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/cologne-criminal/sticker-action.png",
+      "sha256": "57ce979981713c24c5702fb2c8653c264735c895f789f99e7336721d17d6f8a5",
+      "sourceBytes": 2457843,
+      "asset": "assets/cosmetics/cologne-criminal/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118230
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/cologne-criminal/sticker-emblem.png",
+      "sha256": "7d0ef765007568a81d5842d5854535497e64750b46ba06388de6cbf27b9566c2",
+      "sourceBytes": 1851746,
+      "asset": "assets/cosmetics/cologne-criminal/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 82544
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/cologne-criminal/sticker-portrait.png",
+      "sha256": "48a4f7fc5400ab699c9592eb25b4abc760d3e44580a8f2eba4d5add39782aab6",
+      "sourceBytes": 2362685,
+      "asset": "assets/cosmetics/cologne-criminal/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101758
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/cologne-criminal/sticker-reaction.png",
+      "sha256": "737406106a59882fd209405ed3dd3966ae71dd52ce9acd086f3eecc491e54d6f",
+      "sourceBytes": 2487432,
+      "asset": "assets/cosmetics/cologne-criminal/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 108168
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/corrupt-pastor-banner.png",
+      "sha256": "952072d89af67369389809711d48a7e95f35794b5df06b1df123d8c086f9bd02",
+      "sourceBytes": 2812210,
+      "asset": "assets/cosmetics/corrupt-pastor/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 293028
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/corrupt-pastor/deck-cover.png",
+      "sha256": "75dac9d3d7b731255c4cc37c3c0c7da235dc33a357dda30b017fece7832fe120",
+      "sourceBytes": 3623038,
+      "asset": "assets/cosmetics/corrupt-pastor/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 501168
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/corrupt-pastor/sticker-action.png",
+      "sha256": "9fddce1da4057725ed9561f8bef5e6d9d5211e364116f5875bd45bca2548263b",
+      "sourceBytes": 2663598,
+      "asset": "assets/cosmetics/corrupt-pastor/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 119494
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/corrupt-pastor/sticker-emblem.png",
+      "sha256": "ca34b1951b093b001ba0fcd6d917b6c98d626f3b9e8d9a1f67fba1eebd456713",
+      "sourceBytes": 2514453,
+      "asset": "assets/cosmetics/corrupt-pastor/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 117082
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/corrupt-pastor/sticker-portrait.png",
+      "sha256": "f738d183a7bd443ffeace5f26185639188e87b44ea368742fc9332b14fcfe95f",
+      "sourceBytes": 2212003,
+      "asset": "assets/cosmetics/corrupt-pastor/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 95566
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/corrupt-pastor/sticker-reaction.png",
+      "sha256": "ce535f7f4b619f02772662cd0e265a5c96468b5c503d7b2f35519aa4e663be21",
+      "sourceBytes": 2445532,
+      "asset": "assets/cosmetics/corrupt-pastor/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110524
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/counter-banner.png",
+      "sha256": "ce72d3836aefc9957c70b2779288e863d0622efdaf9b4297cad998c9a44a297c",
+      "sourceBytes": 2566663,
+      "asset": "assets/cosmetics/counter/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 220268
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/counter/deck-cover.png",
+      "sha256": "9bb766a8c974c13175bed3bcdbc57f5e1278208c1878300002543335edbb830c",
+      "sourceBytes": 3873409,
+      "asset": "assets/cosmetics/counter/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 530684
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/counter/sticker-action.png",
+      "sha256": "b472798eb9adde00bf38a1535c73a2c38b813a41d080e6ed9469ee05546ca32d",
+      "sourceBytes": 2379297,
+      "asset": "assets/cosmetics/counter/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109148
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/counter/sticker-emblem.png",
+      "sha256": "5f8ebe46c4677886beb17df8246bf89b1a9cddcdcdc7bb8d79af4801c9fda097",
+      "sourceBytes": 2168350,
+      "asset": "assets/cosmetics/counter/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 93782
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/counter/sticker-portrait.png",
+      "sha256": "db07b301cb1c0d3cdd8696e02567499051f40a80ce964b0fa4eaae0b1845664b",
+      "sourceBytes": 1837033,
+      "asset": "assets/cosmetics/counter/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 72340
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/counter/sticker-reaction.png",
+      "sha256": "02974d87814ce4766940a71ecd756aa890e928f193296ee7198b6316f9feef1d",
+      "sourceBytes": 2351875,
+      "asset": "assets/cosmetics/counter/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 99640
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/dorothy-banner.png",
+      "sha256": "a360dcb70a57d38bc31c7e61d6869e798d0c99426f13ac5192fe0420efb74464",
+      "sourceBytes": 2774185,
+      "asset": "assets/cosmetics/dorothy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 263454
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/dorothy/deck-cover.png",
+      "sha256": "f7df1243e133c1dda603d3977438a35f99b6bd5e919812ab20be9b61eaf50598",
+      "sourceBytes": 3390092,
+      "asset": "assets/cosmetics/dorothy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 445444
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/dorothy/sticker-action.png",
+      "sha256": "5acbb6fdb2dbcfde43298c3059a6c3c2fad257a811cffd57937e37742ab08507",
+      "sourceBytes": 2120256,
+      "asset": "assets/cosmetics/dorothy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101020
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/dorothy/sticker-emblem.png",
+      "sha256": "e856694bccdf1171488f7d3169bc4505a63622fddb38b8b3dfcdcd6c84852e0a",
+      "sourceBytes": 2089020,
+      "asset": "assets/cosmetics/dorothy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97246
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/dorothy/sticker-portrait.png",
+      "sha256": "e50e113030ca004c4bda62399738ae7b5ab826bfc4b62159f5a001e8a8154544",
+      "sourceBytes": 2018358,
+      "asset": "assets/cosmetics/dorothy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 85340
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/dorothy/sticker-reaction.png",
+      "sha256": "5af5fb074abc8d7a36b2a5461022638a568930d73d3e6b2d19dd6c939dd93dcb",
+      "sourceBytes": 2437843,
+      "asset": "assets/cosmetics/dorothy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 121886
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/dr-fade-banner.png",
+      "sha256": "41cbbec687489853c4acabff8ee45ff0802b033f3f477af7d6b639b34a5234b6",
+      "sourceBytes": 2774573,
+      "asset": "assets/cosmetics/dr-fade/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 269274
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/dr-fade/deck-cover.png",
+      "sha256": "dc46768f75fced7ee22e6309abeb29bda1c63772c6302adea8b733f5b702487c",
+      "sourceBytes": 3595885,
+      "asset": "assets/cosmetics/dr-fade/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 482156
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/dr-fade/sticker-action.png",
+      "sha256": "8bc0ed8c3c286db25fba30d109929760e55a407ce94df876f92d928430d23877",
+      "sourceBytes": 2217507,
+      "asset": "assets/cosmetics/dr-fade/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 104214
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/dr-fade/sticker-emblem.png",
+      "sha256": "fad9421bbe8362cc3d675181a9569e8f248471f55b76e209c07ec183844d3951",
+      "sourceBytes": 2288964,
+      "asset": "assets/cosmetics/dr-fade/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 95274
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/dr-fade/sticker-portrait.png",
+      "sha256": "20ed9e424f7f633d38e7188d0f647d22d4ec4c3f7a5a6334c7fd76b59623b5c9",
+      "sourceBytes": 2101400,
+      "asset": "assets/cosmetics/dr-fade/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 81976
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/dr-fade/sticker-reaction.png",
+      "sha256": "da6ad071a4e7e18cf4044d7855744a99983fe20ade928e3c0548fa2d252912ad",
+      "sourceBytes": 2087998,
+      "asset": "assets/cosmetics/dr-fade/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 81158
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/dragonfly-jones-banner.png",
+      "sha256": "002071f61f27125887f4e949cac949c6151bae9b9bf83cae60cbbd95dc44e19d",
+      "sourceBytes": 2560425,
+      "asset": "assets/cosmetics/dragonfly-jones/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 256946
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/dragonfly-jones/deck-cover.png",
+      "sha256": "bb02e4a9bb689ec07de880ae04220a6d7a126e8519b03004fa2c5e8f0cb6d078",
+      "sourceBytes": 3761945,
+      "asset": "assets/cosmetics/dragonfly-jones/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 495906
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/dragonfly-jones/sticker-action.png",
+      "sha256": "da00727b18471951856774e0743d5de04d9a8328758f77fec983e222718bfac2",
+      "sourceBytes": 2443146,
+      "asset": "assets/cosmetics/dragonfly-jones/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 112512
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/dragonfly-jones/sticker-emblem.png",
+      "sha256": "415aa04c021c454cb302bf03e4fabfc368a1d02e57b83584eb7d2c9e80195470",
+      "sourceBytes": 2116101,
+      "asset": "assets/cosmetics/dragonfly-jones/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 91462
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/dragonfly-jones/sticker-portrait.png",
+      "sha256": "7f91763b7b4f33549f892221a4796b857c3d66b12f38cffe9a479c7036518131",
+      "sourceBytes": 2585822,
+      "asset": "assets/cosmetics/dragonfly-jones/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105504
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/dragonfly-jones/sticker-reaction.png",
+      "sha256": "2ee64d8e13f76e7f53144d0f46cd0eb3f830912d9769127b6de69c3fc5c05f70",
+      "sourceBytes": 2374373,
+      "asset": "assets/cosmetics/dragonfly-jones/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 95140
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/folks-banner.png",
+      "sha256": "1756b72420996574b120bb3870a2acf411b31f5fdb6ccac1b7d264a0503f5697",
+      "sourceBytes": 2722413,
+      "asset": "assets/cosmetics/folks/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 299066
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/folks/deck-cover.png",
+      "sha256": "bbcf4d274043c5e370947a8cc4fa0717bf3e99e361c4afbb4bb49e8f363fc155",
+      "sourceBytes": 3489536,
+      "asset": "assets/cosmetics/folks/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 410858
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/folks/sticker-action.png",
+      "sha256": "4f1d727767188a1fa1ac762852e5e17422d075fad7d07052866612b388d4fab5",
+      "sourceBytes": 2516913,
+      "asset": "assets/cosmetics/folks/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127338
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/folks/sticker-emblem.png",
+      "sha256": "555a164eef1926182d9976cc70c67e0b84496df262a2710487ec77a1fdfe5fb8",
+      "sourceBytes": 2435142,
+      "asset": "assets/cosmetics/folks/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122208
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/folks/sticker-portrait.png",
+      "sha256": "9187036df39951d98b5605b33f70724868605cfd9a175e4e68867126ebefb943",
+      "sourceBytes": 2561896,
+      "asset": "assets/cosmetics/folks/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 120976
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/folks/sticker-reaction.png",
+      "sha256": "f12230884b8a628a4e436581050bb7373cd4520fe847b36f02fbfec0a909ef4f",
+      "sourceBytes": 2244232,
+      "asset": "assets/cosmetics/folks/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 103562
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/foodz-banner.png",
+      "sha256": "299500e36068d5b96a22fd5295612f450c136d25fb88cbc0cc3e2f1ef04b2aea",
+      "sourceBytes": 2953269,
+      "asset": "assets/cosmetics/foodz/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 326166
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/foodz/deck-cover.png",
+      "sha256": "99a67ba4eb93a645a68c08e9fb92fe639f4d549b52f2d91e6bbbabcb6256ca1a",
+      "sourceBytes": 3783725,
+      "asset": "assets/cosmetics/foodz/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 522624
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/foodz/sticker-action.png",
+      "sha256": "77642496a1efe19ba2d3333bc01a3ab4dda4f27a28e25ccabebdcfd8eec1cffd",
+      "sourceBytes": 2205883,
+      "asset": "assets/cosmetics/foodz/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96188
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/foodz/sticker-emblem.png",
+      "sha256": "c693a3ed6ade613cb00075e7e69035f9696bf48ca2a407fc96f17daa7e94d266",
+      "sourceBytes": 2221948,
+      "asset": "assets/cosmetics/foodz/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110710
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/foodz/sticker-portrait.png",
+      "sha256": "90afc9dde33b4e98525796c16decc159f96e2015c29d57c76b70d8cde484500a",
+      "sourceBytes": 2390190,
+      "asset": "assets/cosmetics/foodz/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111226
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/foodz/sticker-reaction.png",
+      "sha256": "9575fd221ca8b46abee6e1db643c7279851c71d9719b7f6525f66e3a7fec9aa4",
+      "sourceBytes": 2552327,
+      "asset": "assets/cosmetics/foodz/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 117084
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/gamer-banner.png",
+      "sha256": "c138f2f7f952087f8e692cf69c4ac9e0667a42785f645fcc435158333a6a8a65",
+      "sourceBytes": 2696238,
+      "asset": "assets/cosmetics/gamer/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 255114
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Epic/gamer/deck-cover.png",
+      "sha256": "b187e6dd1832f3191260157e75bf23b31b283bc253df45ad1ac719d9ed7f6075",
+      "sourceBytes": 3586410,
+      "asset": "assets/cosmetics/gamer/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 474616
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Epic/gamer/sticker-action.png",
+      "sha256": "b10404dd7cb7cfa7ca5aa309764ad12840ae5cccf76614c22f55ab96611526b7",
+      "sourceBytes": 2384540,
+      "asset": "assets/cosmetics/gamer/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 113282
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Epic/gamer/sticker-emblem.png",
+      "sha256": "6ef47bf7a4bfe1715a8996b746bc6a5a092219bbd311762f91ca26f17b817f6a",
+      "sourceBytes": 2115205,
+      "asset": "assets/cosmetics/gamer/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 94178
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Epic/gamer/sticker-portrait.png",
+      "sha256": "d1b1b7006581ef23427ab24574730f1ccde9a4d0c71472595aca82d1711e1683",
+      "sourceBytes": 2031723,
+      "asset": "assets/cosmetics/gamer/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 85426
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Epic/gamer/sticker-reaction.png",
+      "sha256": "7666cef6ca420e37324e438c61d5f96dfa0aa918b4cc5506e265e2530b993a96",
+      "sourceBytes": 2276081,
+      "asset": "assets/cosmetics/gamer/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105480
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/god-of-hookah-banner.png",
+      "sha256": "d2d3c21282023b586fd3383f0c2afec54b1d0b27eaa87390b09a8483ebee1370",
+      "sourceBytes": 2827256,
+      "asset": "assets/cosmetics/god-of-hookah/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 292186
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/god-of-hookah/deck-cover.png",
+      "sha256": "75fca007ac548822b91532b635038466a7e98f772d42280028f41f278a34318e",
+      "sourceBytes": 3612454,
+      "asset": "assets/cosmetics/god-of-hookah/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 468154
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/god-of-hookah/sticker-action.png",
+      "sha256": "ac8b3f39a5658717f3f07d6370c7062f2e679e04d1655bfa6e42971f4ab630f0",
+      "sourceBytes": 2129725,
+      "asset": "assets/cosmetics/god-of-hookah/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101086
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/god-of-hookah/sticker-emblem.png",
+      "sha256": "56ab8d18a2f0b1b2c0ea8710c8c522eeb30450ef883a3cba4f2e5552f78b2e89",
+      "sourceBytes": 1890707,
+      "asset": "assets/cosmetics/god-of-hookah/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 90932
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/god-of-hookah/sticker-portrait.png",
+      "sha256": "bafbc6d450aa428b2d25b976ea20782497e4d48d7f65b25f066f783d8590d410",
+      "sourceBytes": 2182172,
+      "asset": "assets/cosmetics/god-of-hookah/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97100
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/god-of-hookah/sticker-reaction.png",
+      "sha256": "d3d54dbbcef255b21fc925ae1f54e017c7fe35d27054f1cd7cdd9e497fae3d6a",
+      "sourceBytes": 2209783,
+      "asset": "assets/cosmetics/god-of-hookah/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101320
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/grown-man-fanboy-banner.png",
+      "sha256": "d9113ac44ec8c98d0a9b18520b8b37941deb9a820af329e10912c2f8bbc5976b",
+      "sourceBytes": 2734822,
+      "asset": "assets/cosmetics/grown-man-fanboy/banner-v3.webp",
+      "width": 1600,
+      "height": 534,
+      "bytes": 258130
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/grown-man-fanboy/deck-cover.png",
+      "sha256": "760fbe05bbd6c6eaf8a3d02793b137c66f415d4baabf01723b2cf7f9864ef592",
+      "sourceBytes": 3593899,
+      "asset": "assets/cosmetics/grown-man-fanboy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 483392
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/grown-man-fanboy/sticker-action.png",
+      "sha256": "739d9d6ef11a383c25402767805e5e88fabf18af92891c473b8e0c8ff60eb01e",
+      "sourceBytes": 2275432,
+      "asset": "assets/cosmetics/grown-man-fanboy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101298
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/grown-man-fanboy/sticker-emblem.png",
+      "sha256": "2414653ffc3787e51cf15de47b67608c2797c0e81de7cce41ceeb0d6aaf676c9",
+      "sourceBytes": 1881673,
+      "asset": "assets/cosmetics/grown-man-fanboy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 79740
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/grown-man-fanboy/sticker-portrait.png",
+      "sha256": "6868a856dd3bf868474ac22376c099590e4628afbcec43af2bffa6c95af085ab",
+      "sourceBytes": 1981900,
+      "asset": "assets/cosmetics/grown-man-fanboy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 88054
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/grown-man-fanboy/sticker-reaction.png",
+      "sha256": "edaf2ceaada0f99d09478bbb34fb95adf7ae43ce37870146d4fb4565075c80a9",
+      "sourceBytes": 1833418,
+      "asset": "assets/cosmetics/grown-man-fanboy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 78462
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/guap-banner.png",
+      "sha256": "2423172189154947b89bb3f2e7b2312bb23c72ce0362c7772d97f7da5e18d510",
+      "sourceBytes": 2905907,
+      "asset": "assets/cosmetics/guap/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 311614
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Mythical/guap/deck-cover.png",
+      "sha256": "a67d2433393240a39401e92fd93af3d520fb02ed7c42f13548808c9a7e0c84f3",
+      "sourceBytes": 3465462,
+      "asset": "assets/cosmetics/guap/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 380086
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Mythical/guap/sticker-action.png",
+      "sha256": "1cfc1e71ab8c67219d6893bc875c3adb76f7750d8f1636d96e119e780b64f05e",
+      "sourceBytes": 2645092,
+      "asset": "assets/cosmetics/guap/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124088
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Mythical/guap/sticker-falcon.png",
+      "sha256": "ebd2888676c15177e38e1479c663a0da6087b76e35a68f0d2168d5e746029e82",
+      "sourceBytes": 2180719,
+      "asset": "assets/cosmetics/guap/sticker-falcon-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115624
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Mythical/guap/sticker-finnam.png",
+      "sha256": "49dbca907eeab574cd2c8f5f6b7df373b0e6d167a544fb610e52f9652653fadb",
+      "sourceBytes": 2452169,
+      "asset": "assets/cosmetics/guap/sticker-finnam-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115198
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Mythical/guap/sticker-portrait.png",
+      "sha256": "848eb62cc94d512e93dfab5d48d620c8c4d13fa62f8f0629c53eb6608a6017a3",
+      "sourceBytes": 1614690,
+      "asset": "assets/cosmetics/guap/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 68290
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/homeless-guy-banner.png",
+      "sha256": "adec9a1701d8fd92aac188aa18d2ec6a9100aeaaae98018f36533aca2e3340cc",
+      "sourceBytes": 2497004,
+      "asset": "assets/cosmetics/homeless-guy/banner-v3.webp",
+      "width": 1600,
+      "height": 538,
+      "bytes": 236760
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/homeless-guy/deck-cover.png",
+      "sha256": "3e1e44478d95816d8d5b1e55da3edabb28648150be1bd48a58741121765f8acd",
+      "sourceBytes": 3546618,
+      "asset": "assets/cosmetics/homeless-guy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 484012
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/homeless-guy/sticker-action.png",
+      "sha256": "b755eca76e5f4f489eaa4a3f19a6a569eef56498d26cc532150c7274602395dd",
+      "sourceBytes": 1580052,
+      "asset": "assets/cosmetics/homeless-guy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 76140
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/homeless-guy/sticker-emblem.png",
+      "sha256": "6fb1c03f766e910361c6d17b382a323ab976c5dae1370e304a7c67c685e25654",
+      "sourceBytes": 1986960,
+      "asset": "assets/cosmetics/homeless-guy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 93900
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/homeless-guy/sticker-portrait.png",
+      "sha256": "7542c3085966799f99cc6704f4440b68c5860e4e1bb9b22e2f9bbfa0b488da50",
+      "sourceBytes": 1912330,
+      "asset": "assets/cosmetics/homeless-guy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 81934
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/homeless-guy/sticker-reaction.png",
+      "sha256": "4db283c5a4f8a3d03f3a70ee8c5f54967091fb5dedcdf26c9f4dc9fe21035199",
+      "sourceBytes": 2046832,
+      "asset": "assets/cosmetics/homeless-guy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96012
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/homeless-legend-banner.png",
+      "sha256": "16f74715a3dfa026af523c39277719b1a47ad46b8ff274c971c97f08e67cb265",
+      "sourceBytes": 2683820,
+      "asset": "assets/cosmetics/homeless-legend/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 280048
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Legendary/homeless-legend/deck-cover.png",
+      "sha256": "17fff29958b5c3c9f55a4db8a714b4cd2f518d0ca8c8877c9b1e7321b4325642",
+      "sourceBytes": 3819815,
+      "asset": "assets/cosmetics/homeless-legend/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 524070
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Legendary/homeless-legend/sticker-action.png",
+      "sha256": "79fd3ef845ddffe351eef5a4d6ef18aa49792179afaa2a9d29255a4bf33497ab",
+      "sourceBytes": 2664171,
+      "asset": "assets/cosmetics/homeless-legend/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 136174
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Legendary/homeless-legend/sticker-emblem.png",
+      "sha256": "1586dbd54273bb590a237fde4d4c45ad2da3692d177ce56343a3df228bafddc5",
+      "sourceBytes": 2310007,
+      "asset": "assets/cosmetics/homeless-legend/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105874
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Legendary/homeless-legend/sticker-portrait.png",
+      "sha256": "075f809bf6aaa3e544a08c2da46fe03cdc720232a3d3dfdeb4c9a266288b258d",
+      "sourceBytes": 2053286,
+      "asset": "assets/cosmetics/homeless-legend/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96836
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Legendary/homeless-legend/sticker-reaction.png",
+      "sha256": "073859418383f162e77676729bcc606273cd9ece4c7b2ae3f1ef78c61e8946b2",
+      "sourceBytes": 2480901,
+      "asset": "assets/cosmetics/homeless-legend/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 117524
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/homeless-wiseman-banner.png",
+      "sha256": "134f891cf9dff4c5578d144168a19a6433e9b0fa0bf3d9f0cf150b4809b3717e",
+      "sourceBytes": 2890968,
+      "asset": "assets/cosmetics/homeless-wiseman/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 310050
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/homeless-wiseman/deck-cover.png",
+      "sha256": "d5c4eb42e61385ad405664c67e6737e3468df05f3068c3c3a60e5d8ebd4e5de2",
+      "sourceBytes": 3855670,
+      "asset": "assets/cosmetics/homeless-wiseman/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 530550
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/homeless-wiseman/sticker-action.png",
+      "sha256": "ea7a5528650f802e93ca56b2f32a15394704d2b69e3fba70a5792db534bcd36b",
+      "sourceBytes": 2727734,
+      "asset": "assets/cosmetics/homeless-wiseman/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129262
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/homeless-wiseman/sticker-emblem.png",
+      "sha256": "2802037c9667d25fc4e22368343ed4644c0461af42561202a554e21a8079ec8c",
+      "sourceBytes": 2322211,
+      "asset": "assets/cosmetics/homeless-wiseman/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 116018
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/homeless-wiseman/sticker-portrait.png",
+      "sha256": "46702639f658c55fa70408a86ac6d61934b0ddc0dae140b2e376509d0d982d07",
+      "sourceBytes": 2614011,
+      "asset": "assets/cosmetics/homeless-wiseman/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127022
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/homeless-wiseman/sticker-reaction.png",
+      "sha256": "113a9e3440968f047b64d2f309820e1eba03991034a789416f16cab03375fa6c",
+      "sourceBytes": 2758819,
+      "asset": "assets/cosmetics/homeless-wiseman/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 138218
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/john-henry-banner.png",
+      "sha256": "3e635039559fa389881e3434b93f01715d1cb475822dc7f33cb3d8e49de56497",
+      "sourceBytes": 2815876,
+      "asset": "assets/cosmetics/john-henry/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 293634
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/john-henry/deck-cover.png",
+      "sha256": "a09eaf41ece0553df47a1d9728113fff7d04f723985bc3c818f04c1a0ef2639d",
+      "sourceBytes": 3519962,
+      "asset": "assets/cosmetics/john-henry/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 410208
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/john-henry/sticker-action.png",
+      "sha256": "c29d29c186b2077bee9fab8a5528f5dfa6c6de1fe06f8d32c982a44f6f334658",
+      "sourceBytes": 2767845,
+      "asset": "assets/cosmetics/john-henry/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127064
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/john-henry/sticker-emblem.png",
+      "sha256": "79347f1cd48b35d402f24fd69407a8489ae15b084a8fd7e0033992f7ef5ca4a4",
+      "sourceBytes": 3042898,
+      "asset": "assets/cosmetics/john-henry/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 143160
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/john-henry/sticker-portrait.png",
+      "sha256": "ced6579d90288d577d3e8dc858a5a171e23ca8183f1dfdb87fb6a73b6742b1dd",
+      "sourceBytes": 2181443,
+      "asset": "assets/cosmetics/john-henry/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 90900
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Mythical/john-henry/sticker-reaction.png",
+      "sha256": "fa09db0a3d4db89f09592b53a7b8700686382afecea47f38674954538a572289",
+      "sourceBytes": 2674198,
+      "asset": "assets/cosmetics/john-henry/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115880
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/juneteenth-chair-guy-banner.png",
+      "sha256": "07e930ef0119eb02e2cf8bbd02797b27a767a9da5667ee0bb03fa8ad3996305a",
+      "sourceBytes": 2740838,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 308430
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Mythical/juneteenth-chair-guy/deck-cover.png",
+      "sha256": "2500f969ac828374014759a3ed6236f85e4cc48d520f651b4bb08a01e9ef71a1",
+      "sourceBytes": 3707778,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 532372
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Mythical/juneteenth-chair-guy/sticker-action.png",
+      "sha256": "90b00edb38253cf0c513c75be52b1f92d6f1cab571c4d20c7c06684dc7edc269",
+      "sourceBytes": 2473139,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129520
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Mythical/juneteenth-chair-guy/sticker-emblem.png",
+      "sha256": "6e8dfb67ea33c3e515c98925df023e31408280036ef214007bffd6bff01758f6",
+      "sourceBytes": 2131061,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105566
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Mythical/juneteenth-chair-guy/sticker-portrait.png",
+      "sha256": "cd8aa00a230364ec64299b4549728f9bf73f34edef9001ea2dcffbdf514fbff9",
+      "sourceBytes": 2521859,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118510
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Mythical/juneteenth-chair-guy/sticker-reaction.png",
+      "sha256": "6954844ea643e71511b135cc1943e375e700b2c15cd7645a0b3870242fab6f83",
+      "sourceBytes": 2526272,
+      "asset": "assets/cosmetics/juneteenth-chair-guy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124824
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/kyle-banner.png",
+      "sha256": "a1f1ed4fdefcd4180c77adb8528e03434a1cd38b57902e18c0ad4e1b791e93f7",
+      "sourceBytes": 2730533,
+      "asset": "assets/cosmetics/kyle/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 314978
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/kyle/deck-cover.png",
+      "sha256": "cbb79592f6ca0ea8ecd17dd6f996cb95d7cd3bf4ca307ab71f84edaadc978488",
+      "sourceBytes": 3799111,
+      "asset": "assets/cosmetics/kyle/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 558152
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/kyle/sticker-action.png",
+      "sha256": "fbcf44c26606a7faee36cdcc789105b28896dc0c85836f6044e3b15c586111fa",
+      "sourceBytes": 2450128,
+      "asset": "assets/cosmetics/kyle/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124310
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/kyle/sticker-emblem.png",
+      "sha256": "caa2f061bf0030728cfe99ded0614c1e5d5db461debcf63d83b8f7f0274c4c22",
+      "sourceBytes": 1691525,
+      "asset": "assets/cosmetics/kyle/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86832
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/kyle/sticker-portrait.png",
+      "sha256": "ef494e0ddb6809e5fd2ff5181f13580c741835907ea8ab6090de031072775861",
+      "sourceBytes": 2390870,
+      "asset": "assets/cosmetics/kyle/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124782
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/kyle/sticker-reaction.png",
+      "sha256": "7f512a3210a3737f877f6a1a9e4d607f206671a0dde71b529c7a20fe200329bc",
+      "sourceBytes": 2605854,
+      "asset": "assets/cosmetics/kyle/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 132810
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/landlord-banner.png",
+      "sha256": "545791f2a0180250e39e178623ca7f99af78736f10e97b9f19558d898b097732",
+      "sourceBytes": 3056037,
+      "asset": "assets/cosmetics/landlord/banner-v3.webp",
+      "width": 1600,
+      "height": 538,
+      "bytes": 320084
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/landlord/deck-cover.png",
+      "sha256": "4c9e15cf60e4020172cd335ab137bf16ef2527ab517b84b428ab69a57387b8a1",
+      "sourceBytes": 3596118,
+      "asset": "assets/cosmetics/landlord/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 456818
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/landlord/sticker-action.png",
+      "sha256": "36397bceec4e964c48610689ffde25b8a81d967cc13a49de0b716960736cc4d0",
+      "sourceBytes": 2985857,
+      "asset": "assets/cosmetics/landlord/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 125198
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/landlord/sticker-emblem.png",
+      "sha256": "b3d4d3590bf072d7328c553b5b1ce845bc7d8eafcc5c98fff33f24b23bc6791e",
+      "sourceBytes": 1852401,
+      "asset": "assets/cosmetics/landlord/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 83010
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/landlord/sticker-portrait.png",
+      "sha256": "fb62b5e7e10caa4f186e6161e362ea369f1ecc4ff14f3b6224b6c57bae7658c2",
+      "sourceBytes": 2389104,
+      "asset": "assets/cosmetics/landlord/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 94500
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/landlord/sticker-reaction.png",
+      "sha256": "83e9ec11855b82a9ce6e7676f88c92f614af86755796563cce558e93a707d5c1",
+      "sourceBytes": 2795240,
+      "asset": "assets/cosmetics/landlord/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102650
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/last-train-conductor-banner.png",
+      "sha256": "dbae54ef3dee1186c4b622f9f78200d6f75898628c70af62ab4db6b204a89932",
+      "sourceBytes": 2744665,
+      "asset": "assets/cosmetics/last-train-conductor/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 288518
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/last-train-conductor/deck-cover.png",
+      "sha256": "ba282e557dc5a226ee6adb26cead4ce8efcde80bc3b69cfc04ea72321d6f2ddb",
+      "sourceBytes": 3806790,
+      "asset": "assets/cosmetics/last-train-conductor/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 522496
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/last-train-conductor/sticker-action.png",
+      "sha256": "a2c6ae90ab48626b2627d22afb5ad029ff5cca5ab3a10f6f916d28c3530f0197",
+      "sourceBytes": 2503702,
+      "asset": "assets/cosmetics/last-train-conductor/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 126518
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/last-train-conductor/sticker-emblem.png",
+      "sha256": "e48ecccf810f97be8e9a9095ec93cf7b9bfa87b88656b9ae57abe0e09c598ea4",
+      "sourceBytes": 2108118,
+      "asset": "assets/cosmetics/last-train-conductor/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105348
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/last-train-conductor/sticker-portrait.png",
+      "sha256": "328f5c22d1c4f736a20ec3d81d4b7f97ee7165747c7af3b96d8c8a1b89e579d3",
+      "sourceBytes": 2321411,
+      "asset": "assets/cosmetics/last-train-conductor/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 100750
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/last-train-conductor/sticker-reaction.png",
+      "sha256": "aaa918b36d794e2192c28d5b156fd1828d0b4f8a5154b3098d74178e5da2bac6",
+      "sourceBytes": 2360563,
+      "asset": "assets/cosmetics/last-train-conductor/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 101174
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/leroy-banner.png",
+      "sha256": "3b70398d2a809ee345a9384784543989f06171de7e6c601745d9f39824f1e1cd",
+      "sourceBytes": 2751181,
+      "asset": "assets/cosmetics/leroy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 311906
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/leroy/deck-cover.png",
+      "sha256": "9975decf831f51bb1c2322f62836c8cd383f47713363068a2d113154cc414a1f",
+      "sourceBytes": 3603487,
+      "asset": "assets/cosmetics/leroy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 519224
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/leroy/sticker-action.png",
+      "sha256": "1f57b0ab7e3f86c04c4d3aef02187e74b910fa7a65541fb6b6fff101a2d92cce",
+      "sourceBytes": 2802801,
+      "asset": "assets/cosmetics/leroy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 151134
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/leroy/sticker-emblem.png",
+      "sha256": "34ddc7ef6d19af7af2e61eb407d06f4d60ca604d310cc9e25ccdea06dcf1cc1d",
+      "sourceBytes": 2473433,
+      "asset": "assets/cosmetics/leroy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 133974
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/leroy/sticker-portrait.png",
+      "sha256": "88d076ec21aaff65095cad188040ae1b7431670d46f9c84c57e7ee6b0a74c119",
+      "sourceBytes": 2408358,
+      "asset": "assets/cosmetics/leroy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118020
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/leroy/sticker-reaction.png",
+      "sha256": "20dd573ef1c171ba4963edbe6e105d93476178b2c6ea4d3913ac272234185e68",
+      "sourceBytes": 2165183,
+      "asset": "assets/cosmetics/leroy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98600
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/lion-banner.png",
+      "sha256": "9a249061941d2cd736f3272f895af3314031982858ade53abd30ef40ebb388a3",
+      "sourceBytes": 2840419,
+      "asset": "assets/cosmetics/lion/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 302746
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/lion/deck-cover.png",
+      "sha256": "317a69afaf1a12df6303766fab849cbad01c53e6a07a6706d906c00b02d3bee1",
+      "sourceBytes": 3731965,
+      "asset": "assets/cosmetics/lion/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 507954
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/lion/sticker-action.png",
+      "sha256": "0bc5535cc9c2eeedba05955194314aaed5988722254cbe3a7a6a2efe351cfd1e",
+      "sourceBytes": 2668318,
+      "asset": "assets/cosmetics/lion/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118208
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/lion/sticker-emblem.png",
+      "sha256": "084ecdedda087c109494febd65534f96409e73d3cea1c1f67ec25c7310f6fa07",
+      "sourceBytes": 2641820,
+      "asset": "assets/cosmetics/lion/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 123396
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/lion/sticker-portrait.png",
+      "sha256": "49f20dbaf0b31ff638df2c63179f0bed2767a8e04af11e2edd52dcf833081bcb",
+      "sourceBytes": 2460469,
+      "asset": "assets/cosmetics/lion/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109790
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Epic/lion/sticker-reaction.png",
+      "sha256": "15db0aef41e21caf75e10693a3d468a3a8da5f3ec1417851b8611487a366891b",
+      "sourceBytes": 2519752,
+      "asset": "assets/cosmetics/lion/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 114802
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/mansa-musa-banner.png",
+      "sha256": "6faab82c2ff0cc3cdc9b408f86bf435dd009e5cf6c989c4d7935c075f3109315",
+      "sourceBytes": 3128305,
+      "asset": "assets/cosmetics/mansa-musa/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 367598
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/mansa-musa/deck-cover.png",
+      "sha256": "e01c4a04bd67869cdddacc41f2763cd8e71ae5413509a24983acc59be0c523d3",
+      "sourceBytes": 3360085,
+      "asset": "assets/cosmetics/mansa-musa/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 394660
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/mansa-musa/sticker-action.png",
+      "sha256": "8ffae47033be0b5af0d04836597147c1eebe073dc1dd442313731e503986312e",
+      "sourceBytes": 3403992,
+      "asset": "assets/cosmetics/mansa-musa/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 163194
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/mansa-musa/sticker-emblem.png",
+      "sha256": "51940b63198e65d4f7705098885f7af2b617e4c44dcc5416aaa37e476a3e5917",
+      "sourceBytes": 2224504,
+      "asset": "assets/cosmetics/mansa-musa/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 106992
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/mansa-musa/sticker-portrait.png",
+      "sha256": "8b3dcf0ea5a35a3c5624af0c23b47597d53589e16d2ca5c8abec6550cff313e0",
+      "sourceBytes": 2678342,
+      "asset": "assets/cosmetics/mansa-musa/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124282
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/mansa-musa/sticker-reaction.png",
+      "sha256": "52a0f29c72f22f8bfb3ccb22dcedb1761181ffdd76972b53ce272438724606b0",
+      "sourceBytes": 2972861,
+      "asset": "assets/cosmetics/mansa-musa/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 143070
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/midnight-mayor-banner.png",
+      "sha256": "7038dba1ecff4056c0c6806d8a3df4c9d250212771bf9cbe3bbfe8acc9fcae5e",
+      "sourceBytes": 2640470,
+      "asset": "assets/cosmetics/midnight-mayor/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 261954
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/midnight-mayor/deck-cover.png",
+      "sha256": "3b80d084f49b045612d493ae4d02f50e4d7f1c645ceda1e76bba9fae56c87d24",
+      "sourceBytes": 2913350,
+      "asset": "assets/cosmetics/midnight-mayor/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 312576
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/midnight-mayor/sticker-action.png",
+      "sha256": "aa91b1604a182afb3ae0e9b97539609fc200e77e7de91441305681bf42b1fd56",
+      "sourceBytes": 2328947,
+      "asset": "assets/cosmetics/midnight-mayor/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109164
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/midnight-mayor/sticker-emblem.png",
+      "sha256": "c804ee69ce8dde30ed82d8eb03610ca9a5570c2459fe1e7f6a78427f19475bf4",
+      "sourceBytes": 2150329,
+      "asset": "assets/cosmetics/midnight-mayor/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110272
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/midnight-mayor/sticker-portrait.png",
+      "sha256": "d1e4582708dc071d9ca969b3d2cb8e25e53b7bbcdd2fd685568c70e003004343",
+      "sourceBytes": 2044990,
+      "asset": "assets/cosmetics/midnight-mayor/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 90896
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Mythical/midnight-mayor/sticker-reaction.png",
+      "sha256": "0217aae065e67735694fbaefe2e62c13cebc7bb44124d9a7c957c6f3d54cf340",
+      "sourceBytes": 2280785,
+      "asset": "assets/cosmetics/midnight-mayor/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102028
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/night-shift-medic-banner.png",
+      "sha256": "6e5eb9e658de7cae29c9fa258a79b73007685277703cf0c6889e2307440cb053",
+      "sourceBytes": 2479288,
+      "asset": "assets/cosmetics/night-shift-medic/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 231760
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Epic/night-shift-medic/deck-cover.png",
+      "sha256": "7bfe8ebe1d10cd11dd90022c61124a9388c1757a2c3d634f9fb9c2ab12780538",
+      "sourceBytes": 3413749,
+      "asset": "assets/cosmetics/night-shift-medic/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 441672
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Epic/night-shift-medic/sticker-action.png",
+      "sha256": "667f1c755ef793938236a8f0c4e5be38a9594877a44e7871bc35562532b127ce",
+      "sourceBytes": 2034909,
+      "asset": "assets/cosmetics/night-shift-medic/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 91736
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Epic/night-shift-medic/sticker-emblem.png",
+      "sha256": "088b37b996a8aaf07c6f9a631d7d84acf0c4066c95b9db2b125337527a08d99c",
+      "sourceBytes": 1961121,
+      "asset": "assets/cosmetics/night-shift-medic/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 84306
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Epic/night-shift-medic/sticker-portrait.png",
+      "sha256": "0e4cda9a567170e6890a38ac04e47616384026f3a8bd451b592752f92e5ae8d2",
+      "sourceBytes": 2124622,
+      "asset": "assets/cosmetics/night-shift-medic/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 89380
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Epic/night-shift-medic/sticker-reaction.png",
+      "sha256": "c715e9a4017782302b2fad5d807dda1d2b9daffc5cab41e6757414f972d6d9af",
+      "sourceBytes": 2095969,
+      "asset": "assets/cosmetics/night-shift-medic/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 92436
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/officer-oink-banner.png",
+      "sha256": "be6d0a7b44ef37cf7e2d441179d664b4e0c31514a0a49792d1ec3d553a481b7d",
+      "sourceBytes": 2645813,
+      "asset": "assets/cosmetics/officer-oink/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 278092
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/officer-oink/deck-cover.png",
+      "sha256": "228ea02b1bcfe16614f2de98287fe75b1aca557f1081cc83caa138e476e5a700",
+      "sourceBytes": 3437947,
+      "asset": "assets/cosmetics/officer-oink/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 480420
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/officer-oink/sticker-action.png",
+      "sha256": "7fbb84e22e3803973ad8c2eb300553cf3c41da993a289679926c683d7284c08e",
+      "sourceBytes": 2451452,
+      "asset": "assets/cosmetics/officer-oink/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 116386
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/officer-oink/sticker-emblem.png",
+      "sha256": "56925c35b77f16cd6d5f418b6e1e05d9e462936638f8020c327897bfb3d4ed8f",
+      "sourceBytes": 1799383,
+      "asset": "assets/cosmetics/officer-oink/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 89066
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/officer-oink/sticker-portrait.png",
+      "sha256": "86018e7dc69a0702228de3a5f3bdf4b221568f8ef196befe4279f0f0b55ba88d",
+      "sourceBytes": 1997904,
+      "asset": "assets/cosmetics/officer-oink/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 88712
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/officer-oink/sticker-reaction.png",
+      "sha256": "4e6e95fcbbc4ef1299bc20bd2eb37633cd8fca5985b7bcba20b4354062ec4fd0",
+      "sourceBytes": 2114431,
+      "asset": "assets/cosmetics/officer-oink/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98040
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/og-uncle-banner.png",
+      "sha256": "b6e082c58c11e8c9057a8ec2986ba8380d1f1f9f7f6c20b779105a604c4f58e3",
+      "sourceBytes": 2816338,
+      "asset": "assets/cosmetics/og-uncle/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 307048
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/og-uncle/deck-cover.png",
+      "sha256": "a5d43034395a9eef15fe9a8e56eca0d4ff3c63547e3ea6a3f732844130b1e292",
+      "sourceBytes": 3674656,
+      "asset": "assets/cosmetics/og-uncle/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 486940
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/og-uncle/sticker-action.png",
+      "sha256": "80b81dba9dbf9559c3855466d31323c16f53432aacb143cd97601fa178da9c6f",
+      "sourceBytes": 2544210,
+      "asset": "assets/cosmetics/og-uncle/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129106
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/og-uncle/sticker-emblem.png",
+      "sha256": "e5491c2caf41b3a8fba2505f9f1d02d151ea4e1511b6836dbce9a6613b7c7012",
+      "sourceBytes": 2388374,
+      "asset": "assets/cosmetics/og-uncle/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111240
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/og-uncle/sticker-portrait.png",
+      "sha256": "ce9b4b71e87a927c2ba612b37427eb703450ed9d7ae0e0fd89ebc47ce6473ced",
+      "sourceBytes": 2543789,
+      "asset": "assets/cosmetics/og-uncle/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 112968
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Mythical/og-uncle/sticker-reaction.png",
+      "sha256": "77990a49240733bea187f9c7181cc6dfac618bcbe8b4d334df15ad45deb011b7",
+      "sourceBytes": 2468324,
+      "asset": "assets/cosmetics/og-uncle/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 113074
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/oz-banner.png",
+      "sha256": "2d9fd56b9365c04cd1f3937ebd6cf7c29e7c3ae7c4721b1725f09ec74cacd2f5",
+      "sourceBytes": 2856285,
+      "asset": "assets/cosmetics/oz/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 284820
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/oz/deck-cover.png",
+      "sha256": "dfe074251956b9184627a09792257bd44248b8788e1f7251e6b56a73b2d337f8",
+      "sourceBytes": 3746309,
+      "asset": "assets/cosmetics/oz/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 495142
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/oz/sticker-action.png",
+      "sha256": "476555619bb7db834678c870543febeacad229877f40ebb15515e0a31fa9c927",
+      "sourceBytes": 2316136,
+      "asset": "assets/cosmetics/oz/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111162
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/oz/sticker-emblem.png",
+      "sha256": "24f1d4c9ab230d717c58b771d69ff91d7008e894c84894df9ae56f682f453bd5",
+      "sourceBytes": 2235213,
+      "asset": "assets/cosmetics/oz/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 91932
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/oz/sticker-portrait.png",
+      "sha256": "36ea0054a889acf0a26fda7730de524f256b24519ae9e4e3d80b20f16791b3f2",
+      "sourceBytes": 2672407,
+      "asset": "assets/cosmetics/oz/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122846
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/oz/sticker-reaction.png",
+      "sha256": "f0f3fdd40882104bc3fd39ea8d4ae3e54df84adfaf0d133514331ebcd7576a08",
+      "sourceBytes": 2661380,
+      "asset": "assets/cosmetics/oz/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 123636
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/p-tang-banner.png",
+      "sha256": "7005ceb1e047003681c7823aca311cceb34006b54b21e90408fcbd90c259715c",
+      "sourceBytes": 2777763,
+      "asset": "assets/cosmetics/p-tang/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 290728
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/p-tang/deck-cover.png",
+      "sha256": "42ecb197ff9b128c7e833c20e6cf96914c3a84bea9a85f2e372ba7dca024f72e",
+      "sourceBytes": 3613681,
+      "asset": "assets/cosmetics/p-tang/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 482962
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/p-tang/sticker-action.png",
+      "sha256": "65d9f680a88084e3b10e2e5f64d4da1e1ac39355ee8a29b65a6f2c667d40b500",
+      "sourceBytes": 2278353,
+      "asset": "assets/cosmetics/p-tang/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 112510
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/p-tang/sticker-emblem.png",
+      "sha256": "cebdb20deffa305f8d7d8af58cbbcd5460878ffb3cff28001bbbb5edecff0b42",
+      "sourceBytes": 2001040,
+      "asset": "assets/cosmetics/p-tang/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 108916
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/p-tang/sticker-portrait.png",
+      "sha256": "9ba35bcb9204386a5398c8d8f6cc6b1a0cca4cd201bf51239587770007f25419",
+      "sourceBytes": 2357673,
+      "asset": "assets/cosmetics/p-tang/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 106950
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/p-tang/sticker-reaction.png",
+      "sha256": "fc8868dc7c16e7968b5c7b7b57d2a8e405bdab8e84aa09bde652ee5456d76d6d",
+      "sourceBytes": 2455902,
+      "asset": "assets/cosmetics/p-tang/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 121232
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/passport-bro-banner.png",
+      "sha256": "6b18e0e4cb2f28b3dea1b3bdfe3ae67dde8661b824e4811a1ade9bf7120cff61",
+      "sourceBytes": 2820623,
+      "asset": "assets/cosmetics/passport-bro/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 288050
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/passport-bro/deck-cover.png",
+      "sha256": "566cbc6640f7a09c4e2c9006f13f04824afc00a9a5f8bf9350f5957c6be7367b",
+      "sourceBytes": 3696196,
+      "asset": "assets/cosmetics/passport-bro/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 542320
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/passport-bro/sticker-action.png",
+      "sha256": "770823339666d9a70030f7cb104a6427dbd64b0df4d1cc79e7ed23363c255c3a",
+      "sourceBytes": 2439853,
+      "asset": "assets/cosmetics/passport-bro/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122190
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/passport-bro/sticker-emblem.png",
+      "sha256": "3c794425607450d69561ece7e1632e451e5b8581668ff0e23b8acbdf1b333345",
+      "sourceBytes": 2137964,
+      "asset": "assets/cosmetics/passport-bro/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97638
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/passport-bro/sticker-portrait.png",
+      "sha256": "b14e11b5c8a7803697af9260ae89c626071bf78cb87cb1591a63794ad38b79be",
+      "sourceBytes": 2240265,
+      "asset": "assets/cosmetics/passport-bro/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96410
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/passport-bro/sticker-reaction.png",
+      "sha256": "e9df49c48ae33c329d2558571955f98c3f6e74c22095d78b2c401cfb1fdbec43",
+      "sourceBytes": 2270349,
+      "asset": "assets/cosmetics/passport-bro/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 104636
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/pirate-radio-dj-banner.png",
+      "sha256": "8813fdde69d38759567a18e6b7b06abd766c457aa05c3ee4cd895b1e72f95a27",
+      "sourceBytes": 2433923,
+      "asset": "assets/cosmetics/pirate-radio-dj/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 243380
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/pirate-radio-dj/deck-cover.png",
+      "sha256": "e3a97a25e4943766685138ac1bf94a4abe450a52f08f0e5c300e161dd2b5237c",
+      "sourceBytes": 3512224,
+      "asset": "assets/cosmetics/pirate-radio-dj/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 468678
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/pirate-radio-dj/sticker-action.png",
+      "sha256": "abcc34c9c0af1ee40a114d21a0a4c4f56b85a867d2873db7e634e08def69c695",
+      "sourceBytes": 1994720,
+      "asset": "assets/cosmetics/pirate-radio-dj/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96276
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/pirate-radio-dj/sticker-emblem.png",
+      "sha256": "bb0a0315a47997b910a7ed169abb56adee568783ca7618cef745690ade19e3ba",
+      "sourceBytes": 1982203,
+      "asset": "assets/cosmetics/pirate-radio-dj/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 87926
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/pirate-radio-dj/sticker-portrait.png",
+      "sha256": "790021a01a348a2d7c4517d1ec57b9a057da6511b6bc180e30326e5469b40329",
+      "sourceBytes": 2147355,
+      "asset": "assets/cosmetics/pirate-radio-dj/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 89594
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/pirate-radio-dj/sticker-reaction.png",
+      "sha256": "6c3a0b686685d22684802e356cdeab8df03150e14ea733b75a854a8a203f9acb",
+      "sourceBytes": 2113503,
+      "asset": "assets/cosmetics/pirate-radio-dj/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 87640
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/powerhouse-banner.png",
+      "sha256": "d612eb50e3bc7f530557a24a7c34efd94fc4ff5718d95b0c0614d2648734e76e",
+      "sourceBytes": 2500219,
+      "asset": "assets/cosmetics/powerhouse/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 223066
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Mythical/powerhouse/deck-cover.png",
+      "sha256": "6755f06ee34b0b69878ff7fa92e1c2de6630e2b9fe2b74882771ad20d9e6fc00",
+      "sourceBytes": 3759210,
+      "asset": "assets/cosmetics/powerhouse/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 510086
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Mythical/powerhouse/sticker-action.png",
+      "sha256": "12d46fe37c40c20036d05cafc90c7a43d497790ef6378fe0ad549c07872316bc",
+      "sourceBytes": 2006977,
+      "asset": "assets/cosmetics/powerhouse/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 91090
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Mythical/powerhouse/sticker-emblem.png",
+      "sha256": "cd187bce91b10253182a1d7dfe5a6011af2767dd1c2180600e0c0deb3646d3e3",
+      "sourceBytes": 2075181,
+      "asset": "assets/cosmetics/powerhouse/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 99298
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Mythical/powerhouse/sticker-reaction.png",
+      "sha256": "4991f2e3f07972cf0e90833bd028c9dbd9c51a385d346adc01dddbf6911f740f",
+      "sourceBytes": 2098312,
+      "asset": "assets/cosmetics/powerhouse/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86154
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/promoter-banner.png",
+      "sha256": "8b389ff5f532c9b8f50dc3e97008065d654c4eee7efd3a66d4b9855522226263",
+      "sourceBytes": 2689961,
+      "asset": "assets/cosmetics/promoter/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 246148
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/promoter/deck-cover.png",
+      "sha256": "f556ca0cf68ad362b41b4ee3e442de20464c2c568d3d6c288a1ec47a4041906a",
+      "sourceBytes": 3333133,
+      "asset": "assets/cosmetics/promoter/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 434674
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/promoter/sticker-action.png",
+      "sha256": "7426d300ec071ece0b1af20bbcf4052953f72e29043356384387aad7b55b9f5d",
+      "sourceBytes": 2229838,
+      "asset": "assets/cosmetics/promoter/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 116234
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/promoter/sticker-emblem.png",
+      "sha256": "c1deec3f6c1c5ba638e37b4068c69d3081a27a00986ecfc42994b73582c1341d",
+      "sourceBytes": 2093983,
+      "asset": "assets/cosmetics/promoter/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 92780
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/promoter/sticker-portrait.png",
+      "sha256": "5f291870ce1dab62dc197ff477e770489df5d0ed67c3340f6c36d31aac83e0ec",
+      "sourceBytes": 2041058,
+      "asset": "assets/cosmetics/promoter/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 87412
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Epic/promoter/sticker-reaction.png",
+      "sha256": "6f743bb3e59a206e7e5af18fd386260d44dd80e50258bbb6a9f96f66d5364cbf",
+      "sourceBytes": 2111107,
+      "asset": "assets/cosmetics/promoter/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 97996
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/queen-of-hearts-banner.png",
+      "sha256": "965981c16a6a09129d1031f9ed53b60d59286080a385e949d237d498de78c43e",
+      "sourceBytes": 2598597,
+      "asset": "assets/cosmetics/queen-of-hearts/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 267430
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/queen-of-hearts/deck-cover.png",
+      "sha256": "64648fb75bd17a03642691876f124c71b6d63b743ab0fa480ef73335aeefaf63",
+      "sourceBytes": 2908736,
+      "asset": "assets/cosmetics/queen-of-hearts/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 314288
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/queen-of-hearts/sticker-action.png",
+      "sha256": "4a55c21f75d5a47a28ca52ddef18e3a933a34b3a1549ea53e1ecd98ec16743ef",
+      "sourceBytes": 2317016,
+      "asset": "assets/cosmetics/queen-of-hearts/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109568
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/queen-of-hearts/sticker-emblem.png",
+      "sha256": "3b7862def7694daebb5f4545f391b67c0655b29dcd58a3f84802535cb05e807d",
+      "sourceBytes": 1775629,
+      "asset": "assets/cosmetics/queen-of-hearts/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 90676
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/queen-of-hearts/sticker-portrait.png",
+      "sha256": "987b03ac9092d03b9ad57098ab9396d8b5668266c15a874e5500d66584dfebb4",
+      "sourceBytes": 2271657,
+      "asset": "assets/cosmetics/queen-of-hearts/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 104166
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/queen-of-hearts/sticker-reaction.png",
+      "sha256": "15066e51702eabb68d508018728f5bc5a721eb7ee6e921e696ade1c368a56a9c",
+      "sourceBytes": 2448138,
+      "asset": "assets/cosmetics/queen-of-hearts/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 113264
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/red-pill-banner.png",
+      "sha256": "fa5df594199b084fda8082dbc11a4d7c991c403b4c94977ccaeadd14e8422750",
+      "sourceBytes": 2429950,
+      "asset": "assets/cosmetics/red-pill/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 227528
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/red-pill/deck-cover.png",
+      "sha256": "fc03c3164858345d762fc22ee2ddce3f04b6595c963260a656b41bebd561d827",
+      "sourceBytes": 3788305,
+      "asset": "assets/cosmetics/red-pill/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 510982
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/red-pill/sticker-action.png",
+      "sha256": "42d8a8f31f8d4d53d2433fccdb6dd715b5de3fa65a4abfb3b0982888966e4442",
+      "sourceBytes": 2276168,
+      "asset": "assets/cosmetics/red-pill/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 103374
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/red-pill/sticker-emblem.png",
+      "sha256": "f04cb48a986125bc5129d64a27454946d3f0d48750368549fea8e3b45789ac98",
+      "sourceBytes": 2211418,
+      "asset": "assets/cosmetics/red-pill/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 109276
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/red-pill/sticker-portrait.png",
+      "sha256": "b498bbf42f7794274ded92b5284ce78a0019d1b0a9bf9984b457ec8da9fb14da",
+      "sourceBytes": 2208343,
+      "asset": "assets/cosmetics/red-pill/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 94302
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/red-pill/sticker-reaction.png",
+      "sha256": "c3c74c8de0825b69c97376aa3582827255366cd24569787fa84e1e2fe7e150c1",
+      "sourceBytes": 2357344,
+      "asset": "assets/cosmetics/red-pill/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 103040
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/revolutionary-ronald-banner.png",
+      "sha256": "8f9c5ec189d37332faecdaeb1d528a258a1f16404641e5e6a4af9410e155a65f",
+      "sourceBytes": 2698827,
+      "asset": "assets/cosmetics/revolutionary-ronald/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 250936
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/revolutionary-ronald/deck-cover.png",
+      "sha256": "c1d13052b382bf243b4fa865515cfde30b5ced392c47f2de62b13245618c9848",
+      "sourceBytes": 3368469,
+      "asset": "assets/cosmetics/revolutionary-ronald/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 457858
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/revolutionary-ronald/sticker-action.png",
+      "sha256": "f50b51389a72fdfbb238c7f9ad9bc4579e6abe6ca171b66019af42028ef80c68",
+      "sourceBytes": 2673783,
+      "asset": "assets/cosmetics/revolutionary-ronald/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 124756
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/revolutionary-ronald/sticker-emblem.png",
+      "sha256": "4621c285dfd8243a0f2451abc3a9370602a24bb4bec3fed4cf456d5403eacfc9",
+      "sourceBytes": 2357685,
+      "asset": "assets/cosmetics/revolutionary-ronald/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111450
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/revolutionary-ronald/sticker-portrait.png",
+      "sha256": "e80aedd8568fb0b929bb05428b7b374b07cf974af2a8c3dd26e31413f7d6c681",
+      "sourceBytes": 2113110,
+      "asset": "assets/cosmetics/revolutionary-ronald/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86122
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/revolutionary-ronald/sticker-reaction.png",
+      "sha256": "b55aa3c950b740e07541e02b8fa4240588200140427212a25258ece887787994",
+      "sourceBytes": 2129995,
+      "asset": "assets/cosmetics/revolutionary-ronald/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 90010
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/seafood-assassin-banner.png",
+      "sha256": "396437cd9130a403507194e6a94f6626f12660a09c343529eed9301e549bba0a",
+      "sourceBytes": 2851475,
+      "asset": "assets/cosmetics/seafood-assassin/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 303734
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Legendary/seafood-assassin/deck-cover.png",
+      "sha256": "ed9021f1c3efed1a2585465970e68f1813c9b22557adcdc85dde12098556e7c8",
+      "sourceBytes": 3674506,
+      "asset": "assets/cosmetics/seafood-assassin/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 511074
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Legendary/seafood-assassin/sticker-action.png",
+      "sha256": "d36c26e1867b7f838c94bc8287559852efb57c803f5fd2276fa407bcdc55fe3f",
+      "sourceBytes": 2110446,
+      "asset": "assets/cosmetics/seafood-assassin/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 106166
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Legendary/seafood-assassin/sticker-emblem.png",
+      "sha256": "5d10e22c49de9987f395e9faf21af2acd5d5f189de9ab9b154a06cfc5550f8b1",
+      "sourceBytes": 1981922,
+      "asset": "assets/cosmetics/seafood-assassin/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96198
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Legendary/seafood-assassin/sticker-portrait.png",
+      "sha256": "8d0ef0658d93227730ee06bab08a46f9e62520b86591bab74bd6ec541cc7e890",
+      "sourceBytes": 2201164,
+      "asset": "assets/cosmetics/seafood-assassin/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98442
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Legendary/seafood-assassin/sticker-reaction.png",
+      "sha256": "29651f67d1b85de608ec0d148c311d0b4278e746471ef6dc1419d369c41f9781",
+      "sourceBytes": 2345042,
+      "asset": "assets/cosmetics/seafood-assassin/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 107054
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/sherlock-banner.png",
+      "sha256": "c06b3c07299c4b64847d42efbdca650fea55d97caba6d16b305c7a4e95bd2d34",
+      "sourceBytes": 2599682,
+      "asset": "assets/cosmetics/sherlock/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 235390
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/sherlock/deck-cover.png",
+      "sha256": "4c687f145b033d796ba09b755ac9e50ef494981c46abfb182d85dbd322016202",
+      "sourceBytes": 3120781,
+      "asset": "assets/cosmetics/sherlock/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 396384
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/sherlock/sticker-action.png",
+      "sha256": "bb71f4eef88b0ebbbac30d888a176608fbb141ed7ded4ec548cb100a9183de38",
+      "sourceBytes": 1925398,
+      "asset": "assets/cosmetics/sherlock/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 88080
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/sherlock/sticker-emblem.png",
+      "sha256": "bf4265735725205f31aa1b1ebbe35c1c678f01319cab46258880bdc054939cdb",
+      "sourceBytes": 2154778,
+      "asset": "assets/cosmetics/sherlock/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 92060
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/sherlock/sticker-portrait.png",
+      "sha256": "9cf26e4bcbbe46b48a3e442c680433e2149cb62cfa4c1595ea6c689a93091956",
+      "sourceBytes": 1950259,
+      "asset": "assets/cosmetics/sherlock/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 77760
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Epic/sherlock/sticker-reaction.png",
+      "sha256": "03d0408810ab7916aa7b4d895e74e065def4d2b991e1dbc205b4fdeac3ed1aa4",
+      "sourceBytes": 2050188,
+      "asset": "assets/cosmetics/sherlock/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86416
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/sho-nuff-banner.png",
+      "sha256": "d4534924f32b3b3424c9d772be4514f08ac2f9cc6aa251033a13b74bf207a683",
+      "sourceBytes": 2651624,
+      "asset": "assets/cosmetics/sho-nuff/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 277372
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/sho-nuff/deck-cover.png",
+      "sha256": "1bf414f9a04a6362c20da86c39b3497ec34ceffbbdd913b4a7b953e72925f532",
+      "sourceBytes": 3648880,
+      "asset": "assets/cosmetics/sho-nuff/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 506956
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/sho-nuff/sticker-action.png",
+      "sha256": "5e7a6d81cfa8c028abf5ce511fd70aa17da8a646ab688146a78bf1a5851535b6",
+      "sourceBytes": 2637149,
+      "asset": "assets/cosmetics/sho-nuff/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 131612
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/sho-nuff/sticker-emblem.png",
+      "sha256": "b932dfa2dcda33e2c453ac7cfa902a3eddd95f38c0c716662ba277144f94a613",
+      "sourceBytes": 2361778,
+      "asset": "assets/cosmetics/sho-nuff/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 117382
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/sho-nuff/sticker-portrait.png",
+      "sha256": "c6b811876df5f06c1f7439878dd259768ce1fb48ca6f4a0be6dc195f72f34dfd",
+      "sourceBytes": 2278454,
+      "asset": "assets/cosmetics/sho-nuff/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 104396
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Legendary/sho-nuff/sticker-reaction.png",
+      "sha256": "461be41c9b806cdc905fdfc23febac0c5e98fd9ab206ae7a5b1df6ac2fe17f9d",
+      "sourceBytes": 2561994,
+      "asset": "assets/cosmetics/sho-nuff/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122238
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/simmy-banner.png",
+      "sha256": "0b52db3cb9893e57c7608c9f2df0a0e7cde597036bcf894b078014a5bdb62299",
+      "sourceBytes": 2907014,
+      "asset": "assets/cosmetics/simmy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 309550
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/simmy/deck-cover.png",
+      "sha256": "066058d67fda83a013f79f24404e3c045de5fb12aa5729e82ae2ce8d4a1a7029",
+      "sourceBytes": 3763334,
+      "asset": "assets/cosmetics/simmy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 518734
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/simmy/sticker-action.png",
+      "sha256": "4a1cbc0749178b3fb8d9b455fe0d17986f3f3cadf2ce779e2fd3cde890b512f2",
+      "sourceBytes": 2951882,
+      "asset": "assets/cosmetics/simmy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 143904
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/simmy/sticker-emblem.png",
+      "sha256": "5646f0b3751a7886a2933e781349b5363559a54e8579e59c16b6e3a96cb1123b",
+      "sourceBytes": 2338909,
+      "asset": "assets/cosmetics/simmy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115166
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/simmy/sticker-portrait.png",
+      "sha256": "3af6e38d91049d5642e385bffec50879a95ff1b811ae293d25a73f598ff4b223",
+      "sourceBytes": 2666848,
+      "asset": "assets/cosmetics/simmy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122480
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/simmy/sticker-reaction.png",
+      "sha256": "8e1662e83d89348229a80f475613ec6f52af4d232d10a1a172922f362263549f",
+      "sourceBytes": 2800918,
+      "asset": "assets/cosmetics/simmy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 126910
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/sneaker-reseller-banner.png",
+      "sha256": "fbee5518fa043890b11ec85af76f530ccdb2ee77fb2af045aae4f9c99829d706",
+      "sourceBytes": 2662688,
+      "asset": "assets/cosmetics/sneaker-reseller/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 261492
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/sneaker-reseller/deck-cover.png",
+      "sha256": "93701541aae0373e20a0d097715b1e2132db81bb9255136ed179a89846cf13a2",
+      "sourceBytes": 3116633,
+      "asset": "assets/cosmetics/sneaker-reseller/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 357642
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/sneaker-reseller/sticker-action.png",
+      "sha256": "85b929b6cadd84b3c4671e2a70ffcea68cd41d4661b522804da20b510dde6864",
+      "sourceBytes": 2182342,
+      "asset": "assets/cosmetics/sneaker-reseller/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 93150
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/sneaker-reseller/sticker-emblem.png",
+      "sha256": "8ab74a0015dda2736e0611a22d05ed8ba1152e1570f466a6c31e6686aaba5d69",
+      "sourceBytes": 1954864,
+      "asset": "assets/cosmetics/sneaker-reseller/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86148
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/sneaker-reseller/sticker-portrait.png",
+      "sha256": "0260b98a5630686227ecaf776766ec7518a68f6393f505cf08c401bc708984ed",
+      "sourceBytes": 2242169,
+      "asset": "assets/cosmetics/sneaker-reseller/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 92214
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1B.zip",
+      "member": "Legendary/sneaker-reseller/sticker-reaction.png",
+      "sha256": "563e5f51c4062bbecbb2d5c0b8ff9f57e5206537b53945a26d669f4ed170d77b",
+      "sourceBytes": 2582810,
+      "asset": "assets/cosmetics/sneaker-reseller/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 106078
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/sports-prodigy-banner.png",
+      "sha256": "2c6398cf13d211ef9959c158261861e8374e84fc9c4c93f42e4e2dbca8535e36",
+      "sourceBytes": 2666484,
+      "asset": "assets/cosmetics/sports-prodigy/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 245970
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/sports-prodigy/deck-cover.png",
+      "sha256": "7f441b3a842416612c706fcd0e47ce05731782a444e0bb00d3a6086b85209716",
+      "sourceBytes": 3583593,
+      "asset": "assets/cosmetics/sports-prodigy/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 489788
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/sports-prodigy/sticker-action.png",
+      "sha256": "9bf87d1cb0b16272d6beea00451b2d4ec093d73e934181c36a9dcff434688a7b",
+      "sourceBytes": 1992299,
+      "asset": "assets/cosmetics/sports-prodigy/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98908
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/sports-prodigy/sticker-emblem.png",
+      "sha256": "fca1a155d5807421f157ab0398f7b4512393545a6e5c4528fdb8a875990d5fa6",
+      "sourceBytes": 2282488,
+      "asset": "assets/cosmetics/sports-prodigy/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110744
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/sports-prodigy/sticker-portrait.png",
+      "sha256": "8d55659903aa0768a8b2acbc0e2b221a2cb9a5c79768e5973db3be2ed7991642",
+      "sourceBytes": 2388208,
+      "asset": "assets/cosmetics/sports-prodigy/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102906
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1C.zip",
+      "member": "Legendary/sports-prodigy/sticker-reaction.png",
+      "sha256": "dfbc7c6c092521d1414a975fa394c7bdb22c2ec741008b5128da99f4c9e3edf8",
+      "sourceBytes": 2361052,
+      "asset": "assets/cosmetics/sports-prodigy/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96606
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/street-apostle-banner.png",
+      "sha256": "40fa90266ecf6069a891b7058a3ff287f20729f3205e650176a560d7002161b7",
+      "sourceBytes": 2769344,
+      "asset": "assets/cosmetics/street-apostle/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 280142
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/street-apostle/deck-cover.png",
+      "sha256": "4f4bdc7d31b9556d221372204b468deed9594dabc567c04e101b7b4071c7432d",
+      "sourceBytes": 3686526,
+      "asset": "assets/cosmetics/street-apostle/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 513456
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/street-apostle/sticker-action.png",
+      "sha256": "75d2d29bfd35221d83a8d8e798c5ac19f79054bae31368eb5f3d2a3af49f4527",
+      "sourceBytes": 2575685,
+      "asset": "assets/cosmetics/street-apostle/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 132386
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/street-apostle/sticker-emblem.png",
+      "sha256": "4633a8358356bd4ec581a4d53c654de46f28834798b9b3ea0eb0143b059bcd2e",
+      "sourceBytes": 1985951,
+      "asset": "assets/cosmetics/street-apostle/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 100464
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/street-apostle/sticker-portrait.png",
+      "sha256": "0b8327acc150f8fc2b2b88f2b16c7edbbc4a85d49f9c41a9f7c34125e1a66cbd",
+      "sourceBytes": 2178938,
+      "asset": "assets/cosmetics/street-apostle/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 96954
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2C.zip",
+      "member": "Epic/street-apostle/sticker-reaction.png",
+      "sha256": "a7ad483ffe3ed43c3cf470117c0cb6437af26926d6d980d2797f90068348198d",
+      "sourceBytes": 2621507,
+      "asset": "assets/cosmetics/street-apostle/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 134496
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/techbro-rich-banner.png",
+      "sha256": "1b7c49a816ec847daf3f076febdcce1d253ffa5e528e693f5357c10fd53305ad",
+      "sourceBytes": 2841904,
+      "asset": "assets/cosmetics/techbro-rich/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 291142
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/techbro-rich/deck-cover.png",
+      "sha256": "b0fc623b683a129547da7a2fad7bca98d5f224ace07fc9475376d66760ca5fca",
+      "sourceBytes": 3156431,
+      "asset": "assets/cosmetics/techbro-rich/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 350286
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/techbro-rich/sticker-action.png",
+      "sha256": "2b2f91759c39b258b74edf31a5a038486f53b3d11830f449b9b53f87b15d427f",
+      "sourceBytes": 2591924,
+      "asset": "assets/cosmetics/techbro-rich/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 118070
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/techbro-rich/sticker-emblem.png",
+      "sha256": "9172005df88dc7ee0c985c246912c6f0a52628cea3a320c9e261c5b846133793",
+      "sourceBytes": 2334909,
+      "asset": "assets/cosmetics/techbro-rich/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102794
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/techbro-rich/sticker-portrait.png",
+      "sha256": "b23ceff46bfec14a04a3a5e495e8436126a58702d6d628fa9a92c3f146d0d3c3",
+      "sourceBytes": 2165941,
+      "asset": "assets/cosmetics/techbro-rich/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 94814
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-1A.zip",
+      "member": "Legendary/techbro-rich/sticker-reaction.png",
+      "sha256": "db6a6afea2a9a4b5343f4bd09c053b548b8660d6eefcf178bea5004c91685018",
+      "sourceBytes": 2456903,
+      "asset": "assets/cosmetics/techbro-rich/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110136
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/the-feds-banner.png",
+      "sha256": "26ee313e96d258f2fcd4c71116ac7e9d4729512d76787465cff09e8bfe47581b",
+      "sourceBytes": 2418942,
+      "asset": "assets/cosmetics/the-feds/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 202778
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/the-feds/deck-cover.png",
+      "sha256": "47de9952668a66e312fc4b4186a368ce6191197f67e7677c35f2b5c18fc640de",
+      "sourceBytes": 3369968,
+      "asset": "assets/cosmetics/the-feds/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 440688
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/the-feds/sticker-action.png",
+      "sha256": "34eef19952dc8ecfb9938fcb813118ad7d67ddb03da80378b4f168c80cee138e",
+      "sourceBytes": 2123334,
+      "asset": "assets/cosmetics/the-feds/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 98524
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/the-feds/sticker-emblem.png",
+      "sha256": "d043d18cc7c3d0bc691e8397c711b6627377d40d2cf464ff986d7ef6b691ec14",
+      "sourceBytes": 2478623,
+      "asset": "assets/cosmetics/the-feds/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 105512
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/the-feds/sticker-portrait.png",
+      "sha256": "8ed3b3b20be614cc1dae875709f4b46104b5bd84bf1ca07488d7b89b941f176d",
+      "sourceBytes": 1753681,
+      "asset": "assets/cosmetics/the-feds/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 67812
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3B.zip",
+      "member": "Legendary/the-feds/sticker-reaction.png",
+      "sha256": "aab7442bce02f5e0f0ab0e1cc194020c86f2c8922379bea34738bac555d68cc4",
+      "sourceBytes": 2115005,
+      "asset": "assets/cosmetics/the-feds/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86234
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/the-mailman-banner.png",
+      "sha256": "2445154a5a41911c3e60ed5d0331e44306a227f284aa09355521e24a0d639a3c",
+      "sourceBytes": 2528206,
+      "asset": "assets/cosmetics/the-mailman/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 242652
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/the-mailman/deck-cover.png",
+      "sha256": "8faf6fbc8bc70feecfbfe96b06658aebd954744255627ce62228ddbd824ea0e0",
+      "sourceBytes": 3436353,
+      "asset": "assets/cosmetics/the-mailman/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 460354
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/the-mailman/sticker-action.png",
+      "sha256": "13cd496928c0bfc75249b8ea33d88c5e1230bfb07f1cec4d39d1b7e414d06751",
+      "sourceBytes": 2150524,
+      "asset": "assets/cosmetics/the-mailman/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111146
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/the-mailman/sticker-emblem.png",
+      "sha256": "d33a981d443a1aa5a2de05d803a837664138f4c600d39b1ce5e7748b636f7e3c",
+      "sourceBytes": 2086486,
+      "asset": "assets/cosmetics/the-mailman/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 94024
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/the-mailman/sticker-portrait.png",
+      "sha256": "5f2ff41beee9451590585c189642f8865c61d82681d3582b1345a152f8b7da3f",
+      "sourceBytes": 1976620,
+      "asset": "assets/cosmetics/the-mailman/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 85912
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3A.zip",
+      "member": "Mythical/the-mailman/sticker-reaction.png",
+      "sha256": "34652b02db6244a18e086884fe0ef31ce924987b4ab98cf5156ef9cb03e3d826",
+      "sourceBytes": 2159829,
+      "asset": "assets/cosmetics/the-mailman/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102262
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/trap-vamp-banner.png",
+      "sha256": "c6ff41d7656e4204664821c60797f7b688663f243e13e236480b1e6831ac20bc",
+      "sourceBytes": 2823794,
+      "asset": "assets/cosmetics/trap-vamp/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 273720
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/trap-vamp/deck-cover.png",
+      "sha256": "3d4655e5499cf158d30225ebbc3c97c185c668109234d2dc1bf6f7517f1e6165",
+      "sourceBytes": 3726008,
+      "asset": "assets/cosmetics/trap-vamp/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 507152
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/trap-vamp/sticker-action.png",
+      "sha256": "7ecf9953e5e08ba721d055d2af310136585bb8c134f8c2f300f78b3b7f12cdcd",
+      "sourceBytes": 2776355,
+      "asset": "assets/cosmetics/trap-vamp/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 145198
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/trap-vamp/sticker-emblem.png",
+      "sha256": "923eea8f3c6ccf1fbfce2b3b969643e52c8bc64dda73ac966e7657c7dcf270df",
+      "sourceBytes": 2269895,
+      "asset": "assets/cosmetics/trap-vamp/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115254
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/trap-vamp/sticker-portrait.png",
+      "sha256": "f059180a3226982bb6b43662eea0cc3e6357c20756a5112a821a145adb9f9882",
+      "sourceBytes": 2094478,
+      "asset": "assets/cosmetics/trap-vamp/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 85504
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Legendary/trap-vamp/sticker-reaction.png",
+      "sha256": "c9e537598eedeb16c32cd5acc462eb54806ff2e39e49ef60caefbe07ce55c103",
+      "sourceBytes": 2410207,
+      "asset": "assets/cosmetics/trap-vamp/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102808
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Legendary/tron-banner.png",
+      "sha256": "1da214501ae7ea8071bcc833bda9c3d67be9f3ab10673c87fbe6646b4c5fd52a",
+      "sourceBytes": 2542189,
+      "asset": "assets/cosmetics/tron/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 247032
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/tron/deck-cover.png",
+      "sha256": "354aa1f6445024897cd9a22332c61cbc1ad24ee88e07fe334886c376cbcfc0b8",
+      "sourceBytes": 3299617,
+      "asset": "assets/cosmetics/tron/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 368486
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/tron/sticker-action.png",
+      "sha256": "547219e819492ae4ac307ef548c6ace23e2c549acc2dde6afedaee4d1590749d",
+      "sourceBytes": 2614161,
+      "asset": "assets/cosmetics/tron/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127810
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/tron/sticker-emblem.png",
+      "sha256": "f67ef85de4769f8f0f8e01f5ba312f07381ff42f8da477d90e9c1d405651218b",
+      "sourceBytes": 2227613,
+      "asset": "assets/cosmetics/tron/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 121854
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/tron/sticker-portrait.png",
+      "sha256": "3f4912451c0b3a7be5103bedd5b3bbc0c35668ee7e867656c04bff0f8eae8e31",
+      "sourceBytes": 2383978,
+      "asset": "assets/cosmetics/tron/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 110130
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2B.zip",
+      "member": "Legendary/tron/sticker-reaction.png",
+      "sha256": "62d9fb71f26eaa7650b4dfc8f2187dc04c51ccb6079a3f11408c122fc40cd0ff",
+      "sourceBytes": 2535055,
+      "asset": "assets/cosmetics/tron/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 116540
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Mythical/yasuke-banner.png",
+      "sha256": "a3d8bf12945884abad7f0702e968186d29d13422e703e6ef0caddb993313d642",
+      "sourceBytes": 2915973,
+      "asset": "assets/cosmetics/yasuke/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 289798
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/yasuke/deck-cover.png",
+      "sha256": "ac6a7291678d35505f78777efb3481d1e62d2a7f79f5fadf340947cddb4af5a3",
+      "sourceBytes": 3972254,
+      "asset": "assets/cosmetics/yasuke/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 545292
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/yasuke/sticker-action.png",
+      "sha256": "bb7a87a16c4ab10ba30a4fc6e896b706a204a9ac18e62f8322fb487948355270",
+      "sourceBytes": 2676699,
+      "asset": "assets/cosmetics/yasuke/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 123444
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/yasuke/sticker-emblem.png",
+      "sha256": "a48f1a7d44a9f3539c959f74b14e6fc5ab9255e8e7d4df2e890a0b5a840f3f0d",
+      "sourceBytes": 2201218,
+      "asset": "assets/cosmetics/yasuke/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86954
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/yasuke/sticker-portrait.png",
+      "sha256": "dbdee4a06c1af48e6c3910c3fafdee99f1358fd249125dd4a815232841512056",
+      "sourceBytes": 2646278,
+      "asset": "assets/cosmetics/yasuke/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 114240
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-2A.zip",
+      "member": "Mythical/yasuke/sticker-reaction.png",
+      "sha256": "3ac64d9df5c6dca1f93a12d64f095320406e74417b0393678c1d416ee947acbc",
+      "sourceBytes": 2843495,
+      "asset": "assets/cosmetics/yasuke/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 122536
+    },
+    {
+      "pack": "Squabblemon-V3-Banners.zip",
+      "member": "Epic/yn-atv-lord-banner.png",
+      "sha256": "c8f4157ba5a214b1296640545e850a1f95bc3566b944981e6e3726a718f91599",
+      "sourceBytes": 2689722,
+      "asset": "assets/cosmetics/yn-atv-lord/banner-v3.webp",
+      "width": 1600,
+      "height": 533,
+      "bytes": 258984
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/yn-atv-lord/deck-cover.png",
+      "sha256": "e1eebcc91f4061badb84789ac4a42490e77eab8f8add8992a8d6d82bec794416",
+      "sourceBytes": 3767389,
+      "asset": "assets/cosmetics/yn-atv-lord/deck-cover-v3.webp",
+      "width": 768,
+      "height": 1152,
+      "bytes": 515242
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/yn-atv-lord/sticker-action.png",
+      "sha256": "94fcabcfcb87337c5aaef2808a385a40ab6b5140edc8b3599fa8904681518a3e",
+      "sourceBytes": 3018166,
+      "asset": "assets/cosmetics/yn-atv-lord/sticker-action-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 150754
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/yn-atv-lord/sticker-emblem.png",
+      "sha256": "d33e504e6f3dfa90807d98a8afb5d962fe9c6bfa5da1e675e7718f734c6385f2",
+      "sourceBytes": 2700586,
+      "asset": "assets/cosmetics/yn-atv-lord/sticker-emblem-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 123620
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/yn-atv-lord/sticker-portrait.png",
+      "sha256": "4913470fca981e4a9ecd93bab72e75e832f124e086d05c635622f1f9b9e3ebb3",
+      "sourceBytes": 2268920,
+      "asset": "assets/cosmetics/yn-atv-lord/sticker-portrait-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 99404
+    },
+    {
+      "pack": "Squabblemon-Stickers-Covers-3C.zip",
+      "member": "Epic/yn-atv-lord/sticker-reaction.png",
+      "sha256": "442067dec2091b6ee8c50f6fd3c8abfd057576e9ec67464de7167e348b338878",
+      "sourceBytes": 2527676,
+      "asset": "assets/cosmetics/yn-atv-lord/sticker-reaction-v3.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 116624
+    }
+  ]
+}

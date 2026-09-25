@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
-import { cosmeticId, validateCosmeticLoadout, CHARACTER_STYLE_SETS } from '@workspace/squabblemon-engine/cosmetics';
+import { cosmeticId, validateCosmeticLoadout, CHARACTER_STYLE_SETS, hasCharacterStickers } from '@workspace/squabblemon-engine/cosmetics';
 import { EquipPlayerCosmeticsBody } from '@workspace/api-zod';
 const wallet = (overrides: Partial<ShopWallet> = {}): ShopWallet => ({ softCurrency: 400, packTickets: 2, styleShards: 500, deckSlots: 4, ownedCardIds: ['kyle'], discoveredCardIds: ['kyle'], ownedVariants: [], unlockedCosmeticIds: ['badge:earned'], cardProgression: {}, collectionProgress: 1, ...overrides });
 test('character cosmetics debit only Style Shards, retain badges, and never change card strength', () => {
@@ -48,11 +48,12 @@ test('database: retry-safe purchase and equip persist across reload without over
   assert.equal(row.styleShards,0);assert.equal(row.settings.reducedMotion,true);assert.equal(row.settings.turnTimerEnabled,false);assert.deepEqual(row.settings.cosmetics?.stickers,['kyle:smile','kyle:star']);assert(row.unlockedCosmeticIds.includes('badge:earned'));
 });
 
-test('every completed collection has four unique stickers and isolated purchase ownership', () => {
+test('every completed collection has real unique stickers and isolated purchase ownership', () => {
   const ids=Object.keys(CHARACTER_STYLE_SETS),owner=wallet({ownedCardIds:ids,styleShards:100000});
   const stickerIds=new Set<string>(),series=new Set<string>();
   for(const [cardId,set] of Object.entries(CHARACTER_STYLE_SETS)) {
-    assert.equal(set.cardId,cardId);assert(set.stickerAtlas);assert.equal(set.stickers.length,4);assert.deepEqual(set.stickers.map(s=>s.cell),[0,1,2,3]);
+    assert.equal(set.cardId,cardId);assert(hasCharacterStickers(set));assert(set.stickers.length >= 3);
+    if (set.stickerAtlas) assert.deepEqual(set.stickers.filter(s=>!s.image).map(s=>s.cell),[0,1,2,3]);
     assert(!series.has(set.series));series.add(set.series);
     for(const sticker of set.stickers){assert(!stickerIds.has(sticker.id));stickerIds.add(sticker.id);assert(sticker.id.startsWith(cardId+':'));}
     let bought=planShopPurchase(owner,{itemId:'character-stickers',cardId}).wallet;
@@ -64,6 +65,12 @@ test('every completed collection has four unique stickers and isolated purchase 
     assert.equal(validateCosmeticLoadout(bought,{cardBackgrounds:{[cardId]:'blue-hour'}}),null);
     assert.match(validateCosmeticLoadout(bought,{cardBackgrounds:{[other]:'blue-hour'}})!,/Unlock/);
   }
+});
+test('new individual stickers mix with legacy stickers without repurchasing an owned pack', () => {
+ const owner = wallet({ownedCardIds:['kyle','powerhouse'],unlockedCosmeticIds:[cosmeticId('kyle','character-stickers'),cosmeticId('powerhouse','character-stickers')]});
+ assert.equal(validateCosmeticLoadout(owner,{bannerCardId:'powerhouse',stickers:['kyle:smile','kyle:v3-portrait','powerhouse:v3-action']}),null);
+ assert.match(validateCosmeticLoadout(owner,{bannerCardId:'powerhouse',stickers:['powerhouse:v3-portrait']})!,/Unlock/);
+ assert.match(validateCosmeticLoadout(owner,{bannerCardId:'kyle',stickers:['guap:v3-action']})!,/Unlock/);
 });
 test('owned sticker packs mix across banners while preserving per-character scenes', () => {
  let owner=wallet({ownedCardIds:['kyle','stockz','ashlee'],styleShards:1000});

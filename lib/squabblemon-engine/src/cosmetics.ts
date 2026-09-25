@@ -1,8 +1,10 @@
 import { cardCatalog, catalogCardById } from './data';
+import { CHARACTER_STYLE_ARTWORK } from './characterStyleArtwork';
+export { CHARACTER_STYLE_ARTWORK } from './characterStyleArtwork';
 
-export const CHARACTER_STYLE_VERSION = 'character-style-v2';
+export const CHARACTER_STYLE_VERSION = 'character-style-v3';
 export const CHARACTER_STYLE_OFFERS = [
-  { id: 'character-stickers', name: 'Signature Sticker Pack', description: 'All four character stickers. Choose up to three for your banner.', price: 100, currency: 'styleShards', needsCard: true },
+  { id: 'character-stickers', name: 'Signature Sticker Pack', description: 'Every sticker shown in this character collection. Choose up to three for your banner.', price: 100, currency: 'styleShards', needsCard: true },
   { id: 'character-backdrop', name: 'Signature Card Scene', description: 'A character-themed environment behind your card.', price: 60, currency: 'styleShards', needsCard: true },
   { id: 'character-banner-finish', name: 'Silver Lining Banner', description: 'Brushed silver edging and a soft light sweep for your character banner.', price: 120, currency: 'styleShards', needsCard: true },
 ] as const;
@@ -10,10 +12,11 @@ export type CharacterStyleOfferId = typeof CHARACTER_STYLE_OFFERS[number]['id'];
 export type CharacterStyleSet = {
   series: string; sceneName: string; sceneDescription: string; emblem: string; accent: string;
   cardId: string; title: string; tagline: string; background: string; stickerAtlas: string | null;
-  stickers: readonly { id: string; name: string; cell: number }[];
+  banner?: string; deckCover?: string;
+  stickers: readonly { id: string; name: string; cell?: number; image?: string }[];
 };
 /** Only art-complete collections may sell their sticker pack. Existing portrait and special are reused. */
-export const CHARACTER_STYLE_SETS: Record<string, CharacterStyleSet> = {
+const LEGACY_CHARACTER_STYLE_SETS: Record<string, CharacterStyleSet> = {
   kyle: { series: '001', sceneName: 'Blue Hour', sceneDescription: 'The rooftop court at blue hour.', emblem: 'K★', accent: '#92acc5', cardId: 'kyle', title: 'Good energy. Bad intentions.', tagline: 'Smile now. Boom later.',
     background: 'assets/cosmetics/kyle/blue-hour-v1.webp', stickerAtlas: 'assets/cosmetics/kyle/stickers-v2.webp',
     stickers: [
@@ -37,6 +40,32 @@ export const CHARACTER_STYLE_SETS: Record<string, CharacterStyleSet> = {
   "midnight-mayor": {"cardId":"midnight-mayor","series":"014","title":"The city stays awake.","tagline":"Own the night.","sceneName":"Midnight","sceneDescription":"Signs and silhouettes after dark.","emblem":"MM","accent":"#a4a0bb","background":"assets/locations/time-square.webp","stickerAtlas":"assets/cosmetics/midnight-mayor/stickers-v1.webp","stickers":[{"id":"midnight-mayor:portrait","name":"Night shift","cell":0},{"id":"midnight-mayor:signature","name":"Skyline crown","cell":1},{"id":"midnight-mayor:keepsake","name":"After hours","cell":2},{"id":"midnight-mayor:mark","name":"Keys to the city","cell":3}]},
   "block-party-titan": {"cardId":"block-party-titan","series":"015","title":"Bring the whole block.","tagline":"Turn the street into your stage.","sceneName":"Block Party","sceneDescription":"Warm speakers and late-night radio.","emblem":"BT","accent":"#bfa17e","background":"assets/locations/pirate-radio.webp","stickerAtlas":"assets/cosmetics/block-party-titan/stickers-v1.webp","stickers":[{"id":"block-party-titan:portrait","name":"Block royalty","cell":0},{"id":"block-party-titan:signature","name":"Sound system","cell":1},{"id":"block-party-titan:keepsake","name":"Heavy chain","cell":2},{"id":"block-party-titan:mark","name":"Party starter","cell":3}]},
 };
+// Keep all old sticker IDs, atlas cells, scenes and unlock IDs valid for saved loadouts.
+export const CHARACTER_STYLE_SETS: Record<string, CharacterStyleSet> = { ...LEGACY_CHARACTER_STYLE_SETS };
+let nextSeries = Object.keys(LEGACY_CHARACTER_STYLE_SETS).length + 1;
+for (const [cardId, art] of Object.entries(CHARACTER_STYLE_ARTWORK)) {
+  const card = catalogCardById[cardId];
+  const previous = LEGACY_CHARACTER_STYLE_SETS[cardId];
+  CHARACTER_STYLE_SETS[cardId] = {
+    ...(previous ?? {
+      cardId, series: String(nextSeries++).padStart(3, '0'),
+      title: `${card.name}. Your signature.`, tagline: 'Rep your favorite.',
+      sceneName: 'Spotlight', sceneDescription: 'Warm lights in the VIP section.',
+      emblem: card.name.split(/\s+/).map(word => word[0]).join('').slice(0, 2),
+      accent: card.rarity === 'Mythical' ? '#d4b471' : card.rarity === 'Legendary' ? '#b8a3cf' : '#92acc5',
+      background: 'assets/locations/vip-section.webp', stickerAtlas: null,
+    }),
+    banner: art.banner, deckCover: art.deckCover,
+    stickers: [
+      ...art.stickers.map(sticker => ({ ...sticker, name: `${card.name} · ${sticker.name}` })),
+      ...(previous?.stickers ?? []),
+    ],
+  };
+}
+export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolean {
+  return !!set?.stickers.length && set.stickers.every(sticker => !!sticker.image || (!!set.stickerAtlas && sticker.cell !== undefined));
+}
+const stickerIndex = new Map(Object.values(CHARACTER_STYLE_SETS).flatMap(set => set.stickers.map(sticker => [sticker.id, { set, sticker }] as const)));
 /** blue-hour remains the saved default-scene key for compatibility with existing KYLE purchases. */
 export type CosmeticLoadout = { bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[]; cardBackgrounds?: Record<string, 'blue-hour'> };
 export type CosmeticOwner = { ownedCardIds: string[]; unlockedCosmeticIds?: string[] };
@@ -46,8 +75,7 @@ export function ownsStyle(owner: CosmeticOwner, cardId: string, kind: CharacterS
 }
 export function styleSetFor(cardId: string | null | undefined) { return cardId && Object.hasOwn(CHARACTER_STYLE_SETS, cardId) ? CHARACTER_STYLE_SETS[cardId] : undefined; }
 export function stickerById(id: string) {
-  for (const set of Object.values(CHARACTER_STYLE_SETS)) { const sticker = set.stickers.find(item => item.id === id); if (sticker) return { set, sticker }; }
-  return undefined;
+  return stickerIndex.get(id);
 }
 export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoadout): string | null {
   if (input.bannerCardId && (!styleSetFor(input.bannerCardId) || !owner.ownedCardIds.includes(input.bannerCardId))) return 'Unlock this character before equipping their banner.';
@@ -56,7 +84,7 @@ export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoa
   if (input.stickers?.length && !input.bannerCardId) return 'Choose a banner before adding stickers.';
   for (const id of input.stickers ?? []) {
     const item = stickerById(id);
-    if (!item?.set.stickerAtlas || !ownsStyle(owner, item.set.cardId, 'character-stickers')) return 'Unlock this sticker pack first.';
+    if (!item || !hasCharacterStickers(item.set) || !ownsStyle(owner, item.set.cardId, 'character-stickers')) return 'Unlock this sticker pack first.';
   }
   for (const [cardId, scene] of Object.entries(input.cardBackgrounds ?? {})) {
     if (scene !== 'blue-hour' || !styleSetFor(cardId) || !ownsStyle(owner, cardId, 'character-backdrop')) return 'Unlock this card scene first.';
