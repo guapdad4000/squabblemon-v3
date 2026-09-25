@@ -8,7 +8,6 @@ import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, get
 import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { AccountRewards } from '../../components/AccountRewards';
-import { PageDecor } from '../../components/venue/PageDecor';
 import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
 import { useMusic, musicActions } from '../../musicStore';
@@ -210,7 +209,6 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   return (
     <div className="safehouse venue-page studio-page safehouse-stage safehouse-stage--hero world-decor-host"
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'day'}>
-      <PageDecor theme="safehouse" />
       <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span>{claimed > 0 && <b>{claimed}</b>}</Link>

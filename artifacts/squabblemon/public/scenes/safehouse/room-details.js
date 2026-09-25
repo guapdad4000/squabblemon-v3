@@ -180,8 +180,12 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const rotor = new T.Group(); fan.add(rotor); cylinder(.2, .08, black, [0, -.04, 0], rotor);
   for (let i = 0; i < 4; i++) { const blade = box([.3, .035, 1], walnut, [0, -.06, .56], rotor); blade.position.set(Math.sin(i * Math.PI / 2) * .56, -.06, Math.cos(i * Math.PI / 2) * .56); blade.rotation.y = i * Math.PI / 2; }
   const fanGlow = standard('#efd0a0'); fanGlow.emissive = new T.Color('#ffb568'); fanGlow.emissiveIntensity = 1.6;
-  const fanBowl = add(new T.SphereGeometry(.34, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), fanGlow, [0, -.19, 0], fan); fanBowl.rotation.x = Math.PI;
-  const fanLight = new T.PointLight('#ffd29a', 34, 13, 1.65); fanLight.position.set(0, -.42, 0); fan.add(fanLight);
+  // Suspend an upright bowl below the rotor: the blade sweep ends at -.0775,
+  // while the fixture starts at -.24, leaving clear space through a full turn.
+  cylinder(.075, .16, brass, [0, -.16, 0], fan);
+  cylinder(.35, .035, brass, [0, -.26, 0], fan);
+  add(new T.SphereGeometry(.34, 24, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), fanGlow, [0, -.28, 0], fan);
+  const fanLight = new T.PointLight('#ffd29a', 34, 13, 1.65); fanLight.position.set(0, -.66, 0); fan.add(fanLight);
   let playing = false, disposed = false;
   return {
     status: () => ({ playing, recordAngle: record.rotation.y, fanAngle: rotor.rotation.y, ceilingVisible: ceiling.visible }),
