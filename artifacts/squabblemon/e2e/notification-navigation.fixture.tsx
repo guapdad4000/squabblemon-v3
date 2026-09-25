@@ -13,7 +13,7 @@ import { SafehouseMail } from '../src/components/SafehouseMail';
 import { useNavigationScroll } from '../src/lib/navigationMemory';
 import { cardCatalog } from '../src/data';
 import '../src/index.css';
-const profile = profileBootstrap({ id: 'notification-navigation', ownedCardIds: cardCatalog.map(c => c.catalogId), discoveredCardIds: cardCatalog.map(c => c.catalogId), unlockedCosmeticIds: ['style:kyle:stickers'], ownedVariants: ['kyle:tagged'], packTickets: 3 });
+const profile = profileBootstrap({ id: 'notification-navigation', ownedCardIds: cardCatalog.map(c => c.catalogId), discoveredCardIds: cardCatalog.map(c => c.catalogId), unlockedCosmeticIds: ['style:kyle:stickers', 'side-alley-tagged-cardback', 'block-party-crowned', 'story-key:chapter-two', 'mastery:kyle', 'badge:after-hours', 'old-event-unlock'], ownedVariants: ['kyle:tagged'], packTickets: 3 });
 profile.profile.settings.reducedMotion = true;
 profile.missions = Array.from({length:20},(_,i)=>({id:`test-${i}`,title:`Specific bounty ${i}`,description:'Play the block',cadence:'daily',progress:0,goal:5,rewardCurrency:'soft',rewardAmount:50,status:'active',resetAt:'2026-09-26T00:00:00Z'})) as typeof profile.missions;
 function Content() {

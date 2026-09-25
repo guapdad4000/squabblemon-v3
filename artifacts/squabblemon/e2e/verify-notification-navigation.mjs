@@ -40,12 +40,12 @@ try {
   await page.reload(); await bell.click();
   await expect(page.locator('.notification-item').filter({hasText:target.split('\n').filter(Boolean).find(x=>x.includes('New card'))})).toHaveCount(0);
   // Exact letter opens and its server receipt removes the bell notice.
-  await page.getByRole('button',{name:/Open THIS letter/}).click();
+  await page.locator('.notification-item').filter({hasText:'Open THIS letter'}).click();
   await expect(page.getByText('The right letter')).toBeVisible();
   await expect.poll(()=>read).toBe(true);
   await page.getByRole('button',{name:'Close mail',exact:true}).click();
   await bell.click(); await expect(page.locator('.notification-item').filter({hasText:'Open THIS letter'})).toHaveCount(0);
-  await page.getByRole('button',{name:/New style · style:kyle:stickers/}).click();
+  await page.locator('.notification-item').filter({hasText:/New style · KYLE · Sticker pack/}).click();
   await expect(page.getByRole('button',{name:'01 / Sticker pack'})).toHaveAttribute('aria-pressed','true');
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').includes('style:style:kyle:stickers'))).toBe(true);
   // Repeat a bell link on the same collection route and acknowledge by clicking away.
@@ -66,17 +66,17 @@ try {
   await page.getByRole('button',{name:'Home',exact:true}).click();
   expect(await page.evaluate(id=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').includes(id),quickId)).toBe(false);
   await bell.click();
-  await page.getByRole('button',{name:/New finish · Kyle/i}).click();
+  await page.locator('.notification-item').filter({hasText:/New finish · Kyle/i}).click();
   await expect(page.getByRole('dialog',{name:/Kyle.*card details/i})).toBeVisible();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').includes('style:kyle:tagged'))).toBe(true);
   await page.getByRole('button',{name:'Close card details'}).click();
   await page.getByRole('button',{name:'Home',exact:true}).click();
-  await bell.click(); await page.getByRole('button',{name:/In the store · Down the rabbit hole/}).click();
+  await bell.click(); await page.locator('.notification-item').filter({hasText:'In the store · Down the rabbit hole'}).click();
   await expect(page.getByRole('dialog').getByRole('heading',{name:'Down the rabbit hole'})).toBeVisible();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').includes('offer:wonder-pack'))).toBe(true);
   await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'Home',exact:true}).click();
-  await bell.click(); await page.getByRole('button',{name:/Bounty available · Specific bounty 19/}).click();
+  await bell.click(); await page.locator('.notification-item').filter({hasText:'Bounty available · Specific bounty 19'}).click();
   await expect(page.locator('[data-mission-id="test-19"]')).toBeInViewport();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').some(id=>id.startsWith('mission:test-19:')))).toBe(true);
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('squabblemon:seen:v1:notification-navigation')||'[]').some(id=>id.startsWith('mission:test-0:')))).toBe(false);
@@ -88,10 +88,10 @@ try {
   const second = await context.newPage();
   await second.goto(base+'/e2e/notification-navigation.fixture.html');
   await second.getByRole('button',{name:/Notifications,/}).click();
-  await second.getByRole('button',{name:'Mark new items as seen'}).click();
+  await second.getByRole('button',{name:'Clear all',exact:true}).click();
   await bell.click();
   await expect(page.locator('.notification-item').filter({hasText:'New card ·'})).toHaveCount(0);
-  await expect(page.locator('.notification-item').filter({hasText:'Your free 50 Clout is ready'})).toHaveCount(1);
+  await expect(page.locator('.notification-item')).toHaveCount(0);
   await context.close();
  }
  expect(errors).toEqual([]);

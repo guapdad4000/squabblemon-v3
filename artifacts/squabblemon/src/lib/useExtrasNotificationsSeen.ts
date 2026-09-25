@@ -7,7 +7,7 @@ export function useExtrasNotificationsSeen(cardId?: string, enabled = true) {
   const unread = notices.filter(notice => !notice.sticky && notice.section === 'style'
     && (cardId
       ? notice.href.split('?')[0] === `/game/style/${cardId}`
-      : notice.href.startsWith('/game/style/'))).map(notice => notice.id).join('\n');
+      : notice.href.split('?')[0] === '/game/style' || notice.href.startsWith('/game/style/'))).map(notice => notice.id).join('\n');
 
   useEffect(() => {
     if (!enabled || !unread) return;
@@ -17,7 +17,7 @@ export function useExtrasNotificationsSeen(cardId?: string, enabled = true) {
       window.clearTimeout(timer);
       if (!visible()) return;
       timer = window.setTimeout(() => {
-        if (visible()) unread.split('\n').forEach(seen);
+        if (visible()) seen(unread.split('\n'));
       }, 700);
     };
     // A foreground return or closing the bell should resume the viewing interval.

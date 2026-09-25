@@ -1,7 +1,27 @@
 .attention-mark{display:inline-flex!important;align-items:center;justify-content:center;flex:none;width:13px;height:15px;margin-left:4px;border-radius:4px;background:#d92738;color:#fff!important;font:900 11px/1 sans-serif!important;letter-spacing:0;vertical-align:middle;box-shadow:0 0 0 1px #200b0b80;text-shadow:none;pointer-events:none}
 .attention-mark--dot{width:6px;height:6px;border-radius:50%;margin:0 4px}
 .notification-bell{position:relative;flex:none;display:grid;place-items:center;width:28px;min-height:36px;background:none;border:0;color:#f5dfb2}.notification-bell>.attention-mark{position:absolute;right:0;top:5px}
-.notification-inbox{width:min(440px,calc(100vw - 24px));max-height:80dvh;margin:auto;padding:20px;border:1px solid #a78a54;border-radius:12px;background:#14221f;color:#f5dfb2;overflow:auto}.notification-inbox::backdrop{background:#000a}.notification-inbox header{display:flex;justify-content:space-between;align-items:center}.notification-inbox h2{font-size:24px}.notification-inbox p{font-size:12px;margin:10px 0 18px;color:#c6c3b6}.notification-inbox header button{font-size:28px;min-width:44px}.notification-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 2px;border-bottom:1px solid #ffffff15;font-size:13px}.notification-item>span:nth-child(2){flex:1}.notification-item small{display:block;font-size:9px;text-transform:uppercase;color:#acbcb2}.notification-clear{margin-top:16px;font-size:12px;text-decoration:underline;min-height:44px}
+.notification-inbox{width:min(440px,calc(100vw - 24px));max-height:80dvh;margin:auto;padding:0;border:1px solid #a78a54;border-radius:12px;background:#14221f;color:#f5dfb2;overflow:hidden}
+.notification-inbox[open]{display:flex;flex-direction:column}
+.notification-inbox::backdrop{background:#000a}
+.notification-inbox__top{flex:none;padding:14px 18px 10px;border-bottom:1px solid #ffffff25}
+.notification-inbox header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.notification-inbox h2{font-size:24px}
+.notification-inbox p{font-size:12px;margin:6px 0 12px;color:#c6c3b6}
+.notification-inbox header button{display:grid;place-items:center;min-width:44px;min-height:44px}
+.notification-inbox__actions{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+.notification-clear{min-height:44px;padding:8px 16px;border-radius:6px;background:#eac775;color:#17201b;font-size:13px;font-weight:800}
+.notification-clear[aria-disabled="true"]{opacity:.5;cursor:default}
+.notification-inbox__list{min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 12px}
+.notification-row{display:flex;align-items:center;border-bottom:1px solid #ffffff15}
+.notification-row:last-child{border:0}
+.notification-item{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 2px;font-size:13px;min-height:52px}
+.notification-item>span:nth-child(2){flex:1;min-width:0;overflow-wrap:anywhere}
+.notification-item small{display:block;font-size:9px;text-transform:uppercase;color:#acbcb2}
+.notification-dismiss{display:grid;place-items:center;flex:none;width:44px;min-height:44px;margin-left:4px;border-radius:6px;color:#c6c3b6}
+.notification-dismiss:hover,.notification-item:hover{background:#ffffff0a}
+.notification-dismiss:hover{color:#fff2a8}
+
 .daily-clout-pack{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px auto;padding:14px 18px;width:min(720px,calc(100% - 24px));border:1px solid #d5b26766;border-radius:10px;background:#12231fea;color:#f6e3b7}.daily-clout-pack .game-glyph{--glyph-size:46px}.daily-clout-pack>div{flex:1}.daily-clout-pack strong,.daily-clout-pack span,.daily-clout-pack small{display:block}.daily-clout-pack small{font-size:10px;opacity:.7}.daily-clout-pack>button{min-height:44px;padding:8px 12px;background:#eac775;color:#17201b;border-radius:6px;font-weight:800}.daily-clout-pack>button:disabled{opacity:.55}.daily-clout-pack>p{width:100%;font-size:12px}.daily-clout-pack .attention-mark{display:inline-flex!important}
 @media(max-width:400px){.city-header{gap:3px!important}.notification-bell{width:22px}.city-header__identity strong{max-width:65px}}
 .collection-card-grid .attention-mark--dot{position:absolute;top:5px;right:50%;z-index:20;width:8px;height:8px;box-shadow:0 0 0 2px #131b17}
