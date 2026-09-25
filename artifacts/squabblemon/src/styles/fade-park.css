@@ -186,4 +186,61 @@ html[data-reduce-motion="true"] .park-layer { transform: none !important; transi
 html[data-reduce-motion="true"] .park-search-fighters { display: none; }
 html[data-reduce-motion="true"] .park-search-poster { opacity: .65; }
 
-.park-rank-track{position:relative;height:7px;margin:23px 2px 13px;background:#b3aa9633;overflow:visible;border-radius:2px}.park-rank-track .rank-cigarette{position:absolute;right:14px;top:0;max-width:calc(100% - 14px);height:7px;background:repeating-linear-gradient(90deg,#ebe4d2 0 5px,#dad1ba 6px);border-radius:2px;transition:width 1.2s ease}.park-rank-track .rank-filter{position:absolute;right:0;top:0;width:15px;height:7px;background:repeating-linear-gradient(0deg,#be8744 0 1px,#cba16a 2px);border-left:2px solid #ecdab7;border-radius:0 3px 3px 0}.park-rank-track .rank-ember{position:absolute;left:-2px;top:0;width:4px;height:7px;border-radius:3px;background:#d88851;box-shadow:-1px 0 5px #e8895866}.rank-ember b{position:absolute;bottom:6px;left:-1px;width:6px;height:15px;border-left:1px solid #d2d4cb66;border-radius:50%;animation:rank-smoke 3.4s ease-out infinite;opacity:0}.rank-ember b+b{left:-3px;animation-delay:1.7s}@keyframes rank-smoke{15%{opacity:.3}100%{opacity:0;transform:translate(-6px,-14px) rotate(-18deg)}}@media(prefers-reduced-motion:reduce){.rank-ember b{animation:none}.park-rank-track .rank-cigarette{transition:none}}html[data-reduce-motion=true] .rank-ember b{animation:none}
+/* A paper-wrapped rank meter: the ember travels toward the cork filter. */
+.park-rank-track {
+  position: relative;
+  height: 19px;
+  margin: 30px 4px 16px;
+  border-radius: 3px 6px 6px 3px;
+  background: linear-gradient(#0a100e66, #27282144);
+  box-shadow: 0 3px 0 #0b100e33, 0 7px 12px #08100b35;
+  overflow: visible;
+}
+.rank-burn-lane { position: absolute; inset: 0 43px 0 0; }
+.rank-ash {
+  position: absolute; inset: 2px auto 2px 0;
+  border-radius: 3px;
+  background: repeating-linear-gradient(104deg, transparent 0 7px, #b3aba052 8px 10px, #494b4599 11px 15px), linear-gradient(#88857966, #292d28aa 45%, #72716655);
+  mask-image: linear-gradient(90deg, transparent, #000 45%);
+  transition: width 1.2s ease;
+}
+.park-rank-track .rank-cigarette { position: absolute; right: 0; top: 0; height: 19px; transition: width 1.2s ease; }
+.rank-paper {
+  position: absolute; inset: 0; overflow: hidden;
+  background: repeating-linear-gradient(97deg, transparent 0 10px, #8579651c 11px, transparent 12px 19px), linear-gradient(#f9f1df, #e5ddc9 30%, #faf3e1 48%, #d6cbb4 88%, #9b9079);
+  border-top: 1px solid #fff9eccc;
+  border-bottom: 1px solid #8a7e6355;
+}
+.rank-paper::after { content: ''; position: absolute; inset: auto 0 3px; height: 1px; background: #a99c7933; }
+.rank-paper > span { position: absolute; right: 13px; top: 3px; white-space: nowrap; font: 800 8px/1.2 var(--font-mono); letter-spacing: .17em; color: #8d534acc; }
+.park-rank-track .rank-filter {
+  position: absolute; right: 0; top: 0; width: 43px; height: 19px;
+  border-left: 5px double #a76d34;
+  border-radius: 0 6px 6px 0;
+  background: radial-gradient(ellipse, #86522b88 0 1px, transparent 1.5px) 0 0 / 6px 5px, linear-gradient(#e5bd73, #c98c43 47%, #e4af61 65%, #8d572c);
+  box-shadow: inset 2px 0 #f8dc9e, inset -3px 0 3px #5c391e66, inset 0 1px #ffdf9a;
+}
+.rank-filter > span { position: absolute; right: 8px; top: 3px; color: #75452c; font: 900 italic 9px/1.2 var(--font-display); text-shadow: 0 1px #f7d28b77; }
+.park-rank-track .rank-ember {
+  position: absolute; z-index: 1; left: -5px; top: -1px; width: 9px; height: 21px;
+  background: radial-gradient(ellipse at 70% 45%, #fff0aa, #fba343 24%, #e14c25 53%, #543d32 78%);
+  border-radius: 40% 25% 28% 40%;
+  box-shadow: 0 0 6px #fb682cb0, -3px 0 16px #e45c3755;
+  animation: rank-ember-glow 3s ease-in-out infinite;
+}
+.rank-ember::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(24deg, #382c2999 0 2px, transparent 3px 6px); clip-path: polygon(0 0, 65% 0, 45% 12%, 80% 27%, 35% 46%, 70% 60%, 43% 77%, 80% 100%, 0 100%); }
+.rank-ember b { position: absolute; bottom: 16px; left: -2px; width: 13px; height: 27px; border-left: 2px solid #d5d7c8aa; border-radius: 48% 0 0 60%; filter: blur(.7px); transform-origin: bottom; animation: rank-smoke 4.2s ease-out infinite; opacity: 0; }
+.rank-ember b:nth-child(2) { left: 2px; height: 22px; animation-delay: -1.4s; }
+.rank-ember b:nth-child(3) { left: -4px; width: 18px; animation-delay: -2.8s; }
+@keyframes rank-smoke { 12% { opacity: .5; } 65% { opacity: .22; } 100% { opacity: 0; transform: translate(-13px, -24px) rotate(-22deg) scaleX(1.5); } }
+@keyframes rank-ember-glow { 50% { box-shadow: 0 0 8px #ff963bd0, -3px 0 21px #e45c3766; } }
+@media (prefers-reduced-motion: reduce) {
+  .park-rank-track .rank-ember, .rank-ember b { animation: none; }
+  .park-rank-track .rank-cigarette, .rank-ash { transition: none; }
+  .rank-ember b:first-child { opacity: .25; }
+}
+html[data-reduce-motion=true] .park-rank-track .rank-ember,
+html[data-reduce-motion=true] .rank-ember b { animation: none; }
+html[data-reduce-motion=true] .park-rank-track .rank-cigarette,
+html[data-reduce-motion=true] .rank-ash { transition: none; }
+html[data-reduce-motion=true] .rank-ember b:first-child { opacity: .25; }

@@ -129,7 +129,16 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <div className="park-board-wrapper park-layer--board">
         <section className="park-ticket" aria-label="Find a ranked match">
           <div className="park-rank"><RankTrophy tier={progress.tier} /><div><span className="park-eyebrow">Preseason · your rank</span><h2>{progress.tier}<strong><RPToken /><AnimatedNumber value={stats.points} /><small> RP</small></strong></h2></div></div>
-          <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}><span className="rank-cigarette" style={{ width: `${Math.max(0, 100 - progress.progress)}%` }}><i className="rank-ember"><b /><b /></i></span><span className="rank-filter" /></div>
+          <div className="park-rank-track" role="progressbar" aria-label="Progress to next rank" aria-valuenow={Math.round(progress.progress)} aria-valuemin={0} aria-valuemax={100}>
+            <span className="rank-burn-lane" aria-hidden="true">
+              <span className="rank-ash" style={{ width: `${progress.progress}%` }} />
+              <span className="rank-cigarette" style={{ width: `${Math.max(0, 100 - progress.progress)}%` }}>
+                <span className="rank-paper"><span>FADE PARK · RP</span></span>
+                <i className="rank-ember"><b /><b /><b /></i>
+              </span>
+            </span>
+            <span className="rank-filter" aria-hidden="true"><span>FP</span></span>
+          </div>
           <div className="park-rank-caption"><span>{progress.nextAt ? `${progress.nextAt - stats.points} RP to ${progress.nextTier}` : 'Top tier. Keep your spot.'}</span><span>{stats.wins} W · {stats.losses} L · {stats.draws} D</span></div>
           {error || query.isError ? <div className="park-notice" role="alert"><p>{error ?? onlineErrorMessage(query.error)}</p><button onClick={() => { setError(null); void query.refetch(); }}>Reconnect</button></div> : null}
           {searching ? <div className="park-search" data-testid="ranked-search">
