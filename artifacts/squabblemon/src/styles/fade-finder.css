@@ -1,12 +1,54 @@
-.fade-finder{display:block;position:relative;width:178px;max-width:100%;padding:0;margin:4px auto 0;border:0;border-radius:50%;background:transparent;color:#f8d382;cursor:pointer;-webkit-tap-highlight-color:transparent;isolation:isolate}
-.fade-finder__emblem{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 5px 6px #0008);transition:transform .2s ease,filter .2s ease;transform-origin:48% 48%}
-.fade-finder__lettering{font:900 19px var(--font-display,sans-serif);letter-spacing:2.8px}
-.fade-finder:not(:disabled):hover .fade-finder__emblem{transform:translateY(-3px) rotate(-5deg);filter:drop-shadow(0 7px 12px #dfad4340)}
-.fade-finder:not(:disabled):active .fade-finder__emblem{transform:translateY(1px) scale(.96)}
-.fade-finder:focus-visible{outline:2px solid #ffe4aa;outline-offset:5px}
-.fade-finder:disabled{cursor:default;opacity:.5}
-.fade-finder__status{display:block;font:700 10px/1.4 var(--font-sans,sans-serif);color:#ffe5b3;text-align:center;margin:-5px -15px 5px}
-@media(max-width:600px){.fade-finder{width:154px;margin-top:0}}
-@media(prefers-reduced-motion:reduce){.fade-finder__emblem{transition:none}.fade-finder:not(:disabled):hover .fade-finder__emblem,.fade-finder:not(:disabled):active .fade-finder__emblem{transform:none}}
-.fade-finder[data-reduced-motion=true] .fade-finder__emblem{transition:none}
-.fade-finder[data-reduced-motion=true]:is(:hover,:active) .fade-finder__emblem{transform:none}
+.fade-phone { position: absolute; right: 100%; top: 0; bottom: -16px; width: 128px; z-index: 3; pointer-events: none; }
+.fade-phone__cord { position: absolute; inset: auto 0 0; width: 100%; height: 90px; overflow: visible; fill: none; stroke: #131b15; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 #c5ba83) drop-shadow(0 3px 2px #0009); pointer-events: none; }
+.fade-phone__cord--mobile { display: none; }
+.fade-phone__lead,.fade-phone__mobile-lead { transition: d .65s cubic-bezier(.22,1,.36,1); }
+.fade-phone[data-lifted=true] .fade-phone__lead { d: path('M110 19 C109 55 80 48 78 61'); }
+.fade-phone__plug { stroke: #a68b51; stroke-width: 7; }
+.fade-finder { display: block; position: absolute; inset: 0 auto 0 0; width: 128px; padding: 0; border: 0; border-radius: 12px; background: transparent; color: #ffe7af; cursor: pointer; -webkit-tap-highlight-color: transparent; text-align: center; pointer-events: auto; }
+.fade-phone__receiver { display: block; position: absolute; width: calc(300px * 254 / 900); height: 300px; left: 28px; bottom: 40px; transition: transform .65s cubic-bezier(.22,1,.36,1),filter .2s; filter: drop-shadow(0 8px 6px #0009); pointer-events: none; }
+/* A rigid quarter-turn preserves the artwork's proportions. The speaker faces and socket point toward the picker on the right. */
+.fade-phone__receiver img { display: block; width: 300px; max-width: none; height: auto; transform: rotate(90deg) scaleY(-1); transform-origin: top left; }
+.fade-phone[data-lifted=true] .fade-phone__receiver { transform: translateY(-22px); }
+.fade-phone:not([data-lifted=true]) .fade-finder:not(:disabled):hover .fade-phone__receiver { filter: drop-shadow(0 8px 10px #ecc66a66); }
+/* Invite a call with a warm halo; quiet it once the receiver is picked up. */
+.fade-phone:not([data-lifted=true]) .fade-finder:not(:disabled) .fade-phone__receiver::before {
+  content: ''; position: absolute; z-index: -1; inset: -14px -24px;
+  background: radial-gradient(ellipse, #ffd87870 0%, #eeb64335 45%, transparent 73%);
+  filter: blur(7px); opacity: .6; animation: fade-phone-invite 2.8s ease-in-out infinite;
+}
+.fade-phone:not([data-lifted=true]) .fade-finder:not(:disabled) .fade-phone__receiver img {
+  filter: drop-shadow(0 0 3px #ffe4aacc) drop-shadow(0 0 11px #f0bd55a6);
+}
+.fade-phone:not([data-lifted=true]) .fade-finder:not(:disabled):is(:hover,:focus-visible) .fade-phone__receiver::before { animation: none; opacity: .95; }
+.fade-phone:not([data-lifted=true]) .fade-finder:not(:disabled):is(:hover,:focus-visible) .fade-phone__receiver img { filter: drop-shadow(0 0 4px #fff0c9) drop-shadow(0 0 16px #f5c766cc); }
+@keyframes fade-phone-invite { 0%,100% { opacity: .4; } 50% { opacity: .9; } }
+.fade-phone__lettering { position: absolute; left: -70px; top: 0; width: 200px; height: 300px; overflow: visible; fill: #ffe7af; filter: drop-shadow(0 2px 2px #000); font: 900 italic 18px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; }
+.fade-phone__lettering text { pointer-events: visiblePainted; }
+.fade-phone__label { display: none; position: absolute; left: -30px; right: 0; top: calc(100% + 8px); font: 900 italic 16px/1.05 var(--font-display); text-transform: uppercase; text-shadow: 0 2px 2px #000,0 0 15px #000; }
+.fade-phone__hint { position: absolute; left: -30px; right: 0; top: calc(100% + 8px); font: 600 10px/1.2 var(--font-sans); color: #fff3d7; text-shadow: 0 1px 5px #000; }
+.fade-finder:focus-visible { outline: 2px solid #ffe4aa; outline-offset: 5px; }
+.fade-finder:disabled { cursor: default; }
+.fade-phone:not([data-lifted=true]) .fade-finder:disabled { opacity: .55; }
+
+/* Compact call control above the full-width picker on phones and tablets. */
+@media(max-width:1000px) {
+  .fade-phone { right: auto; left: 0; width: 100%; }
+  .fade-phone__cord--desktop { display: none; }
+  .fade-phone__cord--mobile { display: block; left: 0; top: 117px; width: calc(50% - 60px); height: calc(100% - 117px); }
+  .fade-phone__cord--mobile path { vector-effect: non-scaling-stroke; }
+  .fade-phone[data-lifted=true] .fade-phone__mobile-lead { d: path('M160 -8 C156 24 12 2 12 30'); }
+  .fade-finder { left: 50%; top: 0; bottom: auto; width: 208px; height: 120px; transform: translateX(-50%); }
+  .fade-phone__receiver { width: calc(112px * 254 / 900); height: 112px; left: 14px; bottom: 0; }
+  .fade-phone__receiver img { width: 112px; }
+  .fade-phone__lettering { display: none; }
+  .fade-phone[data-lifted=true] .fade-phone__receiver { transform: translateY(-8px); }
+  .fade-phone__label { display: block; left: 68px; right: 0; top: 35px; font-size: 15px; line-height: 1.1; }
+  .fade-phone__hint { left: 68px; right: 0; top: 71px; font-size: 9px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .fade-phone .fade-finder .fade-phone__receiver::before { animation: none !important; opacity: .6; }
+  .fade-phone__receiver,.fade-phone__lead,.fade-phone__mobile-lead { transition: none; }
+}
+.fade-phone[data-reduced-motion=true] :is(.fade-phone__receiver,.fade-phone__lead,.fade-phone__mobile-lead) { transition: none; }
+
+.fade-phone[data-reduced-motion=true] .fade-finder .fade-phone__receiver::before { animation: none !important; opacity: .6; }

@@ -1,0 +1,15 @@
+# Fade Park phone receiver
+
+Source artwork generated with the built-in imagegen tool. The UI displays the receiver vertically beside the deck picker, with the speaker faces pointing right toward the component. A rigid quarter-turn and reflection preserve the source's 900 × 254 proportions; no perspective warp or stretching is applied. The 300px desktop receiver sits 15px from the picker, with its call label curved around the handle. On mobile a compact 112px upright receiver and label sit above the full-width picker. The entire desktop module moves 28–48px inward toward the screen center. The cord follows the bottom socket and connects at the panel's bottom edge. Explanatory copy floats centered beneath the panel. Vertical translation handles picking up and hanging up.
+
+Project asset: `artifacts/squabblemon/public/assets/fade-park/phone-receiver.webp`
+
+Style reference: `artifacts/squabblemon/public/assets/fade-park/catch-hands-sign.webp`
+
+Original generated output: `/home/falcon/.codex/generated_images/01a0d88e-cd40-7911-9a02-28a351624e91/exec-306277a1-ab6c-4ff6-aaad-8875a0c3213c.png`
+
+The alpha border was trimmed and the image resized proportionally to a 900-pixel-wide WebP (81,454 bytes). No image stretching is used.
+
+## Source artwork prompt (before the UI orientation change)
+
+Create the FINAL horizontal telephone receiver asset for Squabblemon, correcting the incorrect oversize-speaker proportions of previous attempts. The supplied street sign is a STYLE REFERENCE ONLY. Be extremely strict about physical geometry: a believable classic G-style landline/payphone handset, about 22 cm long overall; the two equally sized acoustic end caps are EACH only 4.8 cm in diameter (22% of total handset length), joined by a 12.4 cm long slim gently curved grip about 2.4 cm thick. This is one integrated molded handset, NOT a dumbbell, binoculars, two loudspeakers or a straight handlebar. The gently arched bridge and smooth inward-bending necks must have the recognizable silhouette of a real telephone receiver. Both ends must have the same scale and remain symmetrical with no perspective enlargement. Orient the whole handset completely SIDEWAYS, horizontally across a LANDSCAPE canvas with the end centers on a horizontal line. Use a restrained orthographic three-quarter front view with no foreshortening along its length. The caps face slightly downward so the speaker perforations are partly visible, not enormous face-on speaker circles. Paint the single object in this game's high quality illustrated prop style: dark forest green worn enamel, restrained scuffed brass edges, black inner grip, one or two small worn crown stickers. Keep details subordinate to believable handset shape. A small socket protrudes downward under the right end for the cord, but DO NOT draw any cord. Full isolated silhouette with 5% clear transparent margin. Actual alpha transparency, no black backdrop, checkerboard, ground shadow, text, hands or telephone base. Asset will be displayed at 210 px wide; correct anatomical proportions of the telephone are more important than ornate details.

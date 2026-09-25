@@ -1,36 +1,64 @@
-import { useId } from 'react';
-import { HandFist } from 'lucide-react';
+import { useEffect, useId } from 'react';
+import { getAssetUrl } from '../lib/assets';
+import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import '../styles/fade-finder.css';
 
-export function FadeFinderButton({ busy, loading, unavailable, reduced, onSearch }: {
-  busy: boolean; loading: boolean; unavailable: boolean; reduced: boolean; onSearch: () => void;
+// A separate, quiet ambience clip: it never touches the soundtrack player.
+function usePhoneRing(ringing: boolean) {
+  const [preferences] = useFeedbackPreferences();
+  useEffect(() => {
+    if (!ringing || !preferences.audioEnabled) return;
+    const audio = new Audio(getAssetUrl('audio/sfx/interactions/phone-ring.mp3'));
+    audio.volume = 0.22;
+    const ring = () => {
+      if (document.hidden || !audio.paused) return;
+      audio.currentTime = 0;
+      void audio.play().catch(() => {});
+    };
+    const visibility = () => { if (document.hidden) audio.pause(); else ring(); };
+    ring();
+    const interval = window.setInterval(ring, 4500);
+    document.addEventListener('visibilitychange', visibility);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', visibility);
+      audio.pause();
+    };
+  }, [ringing, preferences.audioEnabled]);
+}
+
+export function FadeFinderButton({ busy, searching, loading, unavailable, reduced, onSearch, onCancel }: {
+  busy: boolean; searching: boolean; loading: boolean; unavailable: boolean; reduced: boolean;
+  onSearch: () => void; onCancel: () => void;
 }) {
-  const id = useId().replaceAll(':', '');
-  const status = busy ? 'Entering the park…' : loading ? 'Connecting…' : unavailable ? 'Reconnect to find a fade' : '';
-  return <button className="fade-finder" type="button" data-testid="find-ranked-fade"
-    data-reduced-motion={reduced} aria-label={status || 'Find a fade'} aria-busy={busy || loading}
-    disabled={busy || loading || unavailable} onClick={onSearch}>
-    <svg className="fade-finder__emblem" viewBox="0 0 224 218" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id={`${id}-gold`} x1="0" y1="0" x2="1" y2="1">
-          <stop stopColor="#fff2c2" /><stop offset=".36" stopColor="#e9bc62" /><stop offset=".62" stopColor="#a7742c" /><stop offset=".82" stopColor="#f5d78e" /><stop offset="1" stopColor="#c18d3e" />
-        </linearGradient>
-        <radialGradient id={`${id}-glass`} cx=".3" cy=".24" r=".85"><stop stopColor="#365348" /><stop offset=".55" stopColor="#122d23" /><stop offset="1" stopColor="#07140f" /></radialGradient>
-        <path id={`${id}-arc`} d="M 22 105 A 82 82 0 0 1 186 105" />
-      </defs>
-      <text className="fade-finder__lettering" fill="#ffe3a4"><textPath href={`#${id}-arc`} startOffset="50%" textAnchor="middle">FIND A FADE</textPath></text>
-      <circle cx="25" cy="94" r="2.2" fill="#d4ab60" /><circle cx="183" cy="94" r="2.2" fill="#d4ab60" />
-      <path d="M 145 145 L 188 188" stroke="#07140f" strokeWidth="26" strokeLinecap="round" />
-      <path d="M 145 145 L 188 188" stroke={`url(#${id}-gold)`} strokeWidth="19" strokeLinecap="round" />
-      <path d="M 157 159 L 184 186" stroke="#213126" strokeWidth="10" strokeLinecap="round" />
-      <path d="M 159 157 L 186 184" stroke="#ffe4a8" strokeWidth="1.5" strokeLinecap="round" opacity=".7" />
-      <circle cx="104" cy="104" r="60" fill="#07140f" stroke="#856330" strokeWidth="1" />
-      <circle cx="104" cy="104" r="54" fill={`url(#${id}-glass)`} stroke={`url(#${id}-gold)`} strokeWidth="9" />
-      <circle cx="104" cy="104" r="47" fill="none" stroke="#e4c47e" strokeWidth="1" opacity=".5" />
-      <path d="M 68 85 A 41 41 0 0 1 105 63" fill="none" stroke="#fff3ce" strokeWidth="3" strokeLinecap="round" opacity=".55" />
-      <HandFist x="77" y="76" width="54" height="57" color="#f8d382" strokeWidth="1.8" />
-      <path d="M 102 142 L 106 142" stroke="#ddbb70" strokeWidth="2" strokeLinecap="round" />
+  const labelPathId = `fade-phone-label-${useId().replaceAll(':', '')}`;
+  const lifted = searching || busy;
+  usePhoneRing(lifted && !(searching && busy) && !unavailable);
+  const status = busy ? searching ? 'Hanging up…' : 'Dialing…'
+    : searching ? 'Hang up' : loading ? 'Connecting…' : unavailable ? 'Line disconnected' : 'Call for a fade';
+  return <div className="fade-phone" data-testid="fade-phone" data-lifted={lifted} data-reduced-motion={reduced}>
+    <svg className="fade-phone__cord fade-phone__cord--desktop" viewBox="0 0 128 90" aria-hidden="true" focusable="false">
+      <path className="fade-phone__lead" d="M110 41 C109 55 80 48 78 61" />
+      <path d="M78 61 C72 75 91 78 92 64 C93 51 77 55 84 72 C90 87 106 79 101 68 C96 58 88 74 101 84 C113 96 124 79 115 74 C105 68 105 87 118 89 L128 89" />
+      <path className="fade-phone__plug" d="M121 89 H128" />
     </svg>
-    {status && <span className="fade-finder__status" role="status">{status}</span>}
-  </button>;
+    <svg className="fade-phone__cord fade-phone__cord--mobile" viewBox="0 0 160 360" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path className="fade-phone__mobile-lead" d="M160 0 C156 24 12 2 12 30" />
+      <path d="M12 30 L12 294 C12 304 28 299 22 289 C16 280 3 295 13 309 C23 322 31 307 21 302 C11 296 2 316 14 328 C26 340 31 322 20 320 C8 318 3 341 14 349 C26 359 30 342 20 339 C7 335 9 358 0 359" />
+      <path className="fade-phone__plug" d="M0 359 H7" />
+    </svg>
+    <button className="fade-finder" type="button" data-testid={searching ? 'cancel-ranked-fade' : 'find-ranked-fade'}
+      aria-label={searching ? busy ? 'Hanging up…' : 'Hang up — cancel search' : status} aria-busy={busy || loading}
+      disabled={busy || loading || (!searching && unavailable)} onClick={searching ? onCancel : onSearch}>
+      <span className="fade-phone__receiver">
+        <img src={getAssetUrl('assets/fade-park/phone-receiver.webp')} width="900" height="254" alt="" draggable={false} />
+        <svg className="fade-phone__lettering" viewBox="-70 0 200 300" aria-hidden="true" focusable="false">
+          <defs><path id={labelPathId} d="M18 258 C-54 236 -54 64 18 42" /></defs>
+          <text><textPath href={`#${labelPathId}`} startOffset="50%" textAnchor="middle">{status}</textPath></text>
+        </svg>
+      </span>
+      <span className="fade-phone__label">{status}</span>
+      <span className="fade-phone__hint">{searching ? 'Cancel the call' : busy ? 'Finding your next rival' : 'Pick up. Pull up.'}</span>
+    </button>
+  </div>;
 }
