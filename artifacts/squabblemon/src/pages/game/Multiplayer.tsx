@@ -1,3 +1,4 @@
+import { StreetSelect } from '../../components/ui/street-select';
 import { FadePark, FightTabs } from './FadePark';
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -338,10 +339,10 @@ export function Multiplayer({
                 <label className="online-crew-label" htmlFor="online-crew">
                   Who are you bringing?
                 </label>
-                <select
+                <StreetSelect
                   id="online-crew"
                   value={chosen?.id ?? ""}
-                  onChange={(event) => setCrewId(event.target.value)}
+                  onValueChange={event => setCrewId(event)}
                   disabled={working}
                 >
                   {crews.map((crew) => (
@@ -349,7 +350,7 @@ export function Multiplayer({
                       {crew.name}
                     </option>
                   ))}
-                </select>
+                </StreetSelect>
                 <div className="online-lineup">
                   {chosen?.cardIds.map((id) => (
                     <img key={id} src={getCardImage(id)} alt="" />

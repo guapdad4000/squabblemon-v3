@@ -1,3 +1,4 @@
+import { selectStreetOption } from './street-select.helper.mjs';
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 
@@ -27,7 +28,7 @@ try {
   );
 
   await page.goto(`${origin}/e2e/deck-selection.fixture.html?mode=decks&account=account-a`);
-  await page.getByLabel('Jump to deck').first().selectOption('deck-two');
+  await selectStreetOption(page, page.getByLabel('Jump to deck').first(), 'deck-two');
   await page.waitForFunction(() => document.querySelector('[data-testid="deck-carousel"]')?.getAttribute('data-selected-deck') === 'deck-two');
   assert.equal(await selectedDeck(page), 'deck-two');
   await assertCentered(page, 'manual deck-builder selection');

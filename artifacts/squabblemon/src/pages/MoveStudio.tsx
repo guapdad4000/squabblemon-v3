@@ -1,3 +1,4 @@
+import { StreetSelect } from '../components/ui/street-select';
 import { useMemo, useState } from 'react';
 import { cards, getCardImage } from '../data';
 import { getAssetUrl } from '../lib/assets';
@@ -39,16 +40,16 @@ export default function MoveStudio() {
     <h1>Special move workshop</h1>
     <p>Every card keeps its battle effects. Try an animation on top, swap a rough clip, or choose the card effect on its own. These first assignments are provisional.</p>
     <div className="move-studio-layout"><section>
-      <label>Card<select aria-label="Card" value={cardId} onChange={event => {
-        const id = event.target.value; setCardId(id);
+      <label>Card<StreetSelect aria-label="Card" value={cardId} onValueChange={event => {
+        const id = event; setCardId(id);
         setClipId((Object.hasOwn(overrides, id) ? overrides[id] : moveAssignments[id]) ?? '');
         setReplay(value => value + 1); setStatus('Ready to review');
-      }}>{Object.entries(cards).map(([id, item]) => <option key={id} value={id}>{item.name}</option>)}</select></label>
+      }}>{Object.entries(cards).map(([id, item]) => <option key={id} value={id}>{item.name}</option>)}</StreetSelect></label>
       <p><strong>{card.ability}</strong><br />{card.effect}</p>
-      <label>Animation<select aria-label="Animation" value={clipId} onChange={event => { setClipId(event.target.value); setReplay(value => value + 1); setStatus('Unsaved preview'); }}>
+      <label>Animation<StreetSelect aria-label="Animation" value={clipId} onValueChange={event => { setClipId(event); setReplay(value => value + 1); setStatus('Unsaved preview'); }}>
         <option value="">Card effect only (no video)</option>
         {Object.entries(moveClips).map(([id, item]) => <option key={id} value={id}>{id} · {item.label} · {item.move}</option>)}
-      </select></label>
+      </StreetSelect></label>
       <button onClick={() => setReplay(value => value + 1)}>Replay preview</button>
       <button aria-pressed={audioEnabled} onClick={() => { setAudioEnabled(value => !value); if (!audioEnabled) setReplay(value => value + 1); }}>{audioEnabled ? 'Mute preview' : 'Play with sound'}</button>
       <button className="primary" onClick={save}>Use for this card</button>

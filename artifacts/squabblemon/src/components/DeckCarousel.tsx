@@ -1,3 +1,4 @@
+import { StreetSelect } from './ui/street-select';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Check, ChevronLeft, ChevronRight, Layers, Pencil } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef } from 'react';
@@ -289,13 +290,13 @@ export function DeckCarousel({
           <ChevronLeft size={18} />
         </button>
         <div className="deck-carousel__jump">
-          <select id={selectId} aria-label="Jump to deck" value={decks[selectedIndex].id} disabled={disabled} onChange={(event) => onSelect(event.target.value)}>
+          <StreetSelect id={selectId} aria-label="Jump to deck" value={decks[selectedIndex].id} disabled={disabled} onValueChange={event => onSelect(event)}>
             {decks.map((deck, index) => (
               <option value={deck.id} key={deck.id}>
                 {index + 1}. {deck.name}
               </option>
             ))}
-          </select>
+          </StreetSelect>
           <span aria-hidden="true">{decks.length > 1 ? 'SWIPE TO CHANGE · TAP DECK TO OPEN' : 'TAP YOUR DECK TO OPEN'}</span>
         </div>
         <button type="button" aria-label="Next deck" disabled={disabled || selectedIndex === decks.length - 1} onClick={() => selectIndex(selectedIndex + 1)}>

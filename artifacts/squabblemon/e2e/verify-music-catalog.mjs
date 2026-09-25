@@ -23,9 +23,10 @@ async function openControls(page) {
 
 async function chooseTrack(page, title) {
   const select = page.getByRole('combobox', { name: 'Choose music track' });
-  const option = select.locator('option').filter({ hasText: title });
+  await select.click();
+  const option = page.getByRole('option').filter({ hasText: title });
   assert.equal(await option.count(), 1, `${title} appears once in the active queue`);
-  await select.selectOption(await option.getAttribute('value'));
+  await option.click();
 }
 
 async function expectDecodedAndAdvancing(page, id) {
@@ -45,7 +46,10 @@ async function expectDecodedAndAdvancing(page, id) {
 }
 
 async function optionTitles(page) {
-  return page.getByRole('combobox', { name: 'Choose music track' }).locator('option').allTextContents();
+  await page.getByRole('combobox', { name: 'Choose music track' }).click();
+  const titles = await page.getByRole('option').allTextContents();
+  await page.keyboard.press('Escape');
+  return titles;
 }
 
 try {
@@ -69,13 +73,13 @@ try {
   let media = await audioState(page);
   assert.equal(media.paused, true, 'selecting a new battle track preserves pause');
   assert.equal(await page.getByRole('slider', { name: 'Music volume', exact: true }).inputValue(), '17');
-  assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).inputValue(), '0');
+  assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).getAttribute('data-value'), '0');
   await page.reload();
   await page.locator(audioSelector).waitFor({ state: 'attached' });
   await openControls(page);
   assert.equal((await audioState(page)).paused, true, 'pause survives a reload');
   assert.equal(await page.getByRole('slider', { name: 'Music volume', exact: true }).inputValue(), '17');
-  assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).inputValue(), '0', 'battle selection survives a reload');
+  assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).getAttribute('data-value'), '0', 'battle selection survives a reload');
   await page.getByRole('button', { name: 'Play music', exact: true }).click();
   await expectDecodedAndAdvancing(page, 'battle-music');
 

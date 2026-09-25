@@ -1,4 +1,5 @@
 import { ArcadeCabinet } from './MachineScreen';
+import { StreetSelect } from '../ui/street-select';
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -190,12 +191,12 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   </fieldset>
                   <label>
                     Stake
-                    <select
+                    <StreetSelect
                       className="cabinet-select"
                       disabled={busy}
                       value={stake}
-                      onChange={e => {
-                        setStake(Number(e.target.value));
+                      onValueChange={e => {
+                        setStake(Number(e));
                         requestId.current = null;
                       }}
                     >
@@ -204,7 +205,7 @@ export function StockzMachine({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                           {amount} Clout
                         </option>
                       ))}
-                    </select>
+                    </StreetSelect>
                   </label>
                   <button
                     className="cabinet-btn"

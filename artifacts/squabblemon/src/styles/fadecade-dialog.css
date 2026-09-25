@@ -251,7 +251,8 @@
 .fadecade-dialog-content--stockz .fadecade-dialog-artwork-shell { border-color:#a9d498; }
 .fadecade-dialog-close { display:flex; align-items:center; justify-content:center; gap:6px; }
 .fadecade-dialog-close span { font:400 22px/1 sans-serif; }
-.fadecade-dialog-scroll-body { scrollbar-width:thin; scrollbar-color:#f2cc4c #101221; }
+.fadecade-dialog-scroll-body, .fadecade-dialog-scroll-body * { scrollbar-width:none; }
+.fadecade-dialog-scroll-body::-webkit-scrollbar, .fadecade-dialog-scroll-body *::-webkit-scrollbar { display:none; }
 .fadecade-dialog-content :is(button,[role=combobox]):focus-visible { outline:3px solid #fff1b0; outline-offset:3px; }
 .challenge-field-label { font:800 10px var(--font-mono); letter-spacing:.1em; color:#ffe449; text-transform:uppercase; }
 .challenge-crew-preview { padding:12px; border:1px solid #ffe44955; border-bottom:3px solid #ffe449; background:#090c19; }

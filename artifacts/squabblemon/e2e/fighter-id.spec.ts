@@ -1,3 +1,4 @@
+import { selectStreetOption } from './street-select.helper.mjs';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import {
   AUTH_KEY,
@@ -256,8 +257,8 @@ test('settings soundtrack remains operable without leaving the panel', async ({ 
   await page.getByRole('tabpanel', { name: 'Settings' }).getByRole('button', { name: 'Music controls' }).click();
   const music = page.getByRole('dialog', { name: 'The Fade Tapes' });
   await expect(music).toBeVisible();
-  await music.getByLabel('Choose music track').selectOption('1');
-  await expect(music.getByLabel('Choose music track')).toHaveValue('1');
+  await selectStreetOption(page, music.getByLabel('Choose music track'), '1');
+  await expect(music.getByLabel('Choose music track')).toHaveAttribute('data-value', '1');
   await music.getByRole('button', { name: 'Close music controls' }).click();
   await expect(music).not.toBeVisible();
   await expect(tab(page, 'Settings')).toHaveAttribute('aria-selected', 'true');

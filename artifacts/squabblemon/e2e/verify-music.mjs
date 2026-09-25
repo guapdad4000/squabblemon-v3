@@ -1,3 +1,4 @@
+import { selectStreetOption } from './street-select.helper.mjs';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { readFile } from 'node:fs/promises';
@@ -38,7 +39,7 @@ try {
     const atPause = (await audioState(page)).time;
     await page.getByRole('button', { name: 'Next track', exact: true }).click();
     await paused(page);
-    assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).inputValue(), '1');
+    assert.equal(await page.getByRole('combobox', { name: 'Choose music track' }).getAttribute('data-value'), '1');
     await page.getByRole('slider', { name: 'Music volume' }).fill('17');
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('squabblemon_music_v1')).volume), 0.17);
     await page.getByRole('button', { name: 'Play music', exact: true }).click(); await playing(page);
@@ -47,26 +48,26 @@ try {
     await page.getByRole('button', { name: 'Enable all game sound' }).click(); await playing(page);
     if (name === 'desktop') {
       for (let index = 0; index < tracks.length; index++) {
-        await page.getByRole('combobox', { name: 'Choose music track' }).selectOption(String(index));
+        await selectStreetOption(page, page.getByRole('combobox', { name: 'Choose music track' }), String(index));
         await page.waitForFunction(({ selector, id }) => document.querySelector(selector)?.currentSrc.includes(id), { selector: audioSelector, id: tracks[index].id });
         await playing(page);
         const media = await audioState(page);
         assert.ok(Math.abs(media.duration - tracks[index].duration) < 1, `${tracks[index].title} decoded at the expected duration`);
       }
       await page.locator(audioSelector).evaluate(a => { a.currentTime = a.duration - 0.15; });
-      await page.getByRole('combobox', { name: 'Choose music track' }).selectOption('5');
+      await selectStreetOption(page, page.getByRole('combobox', { name: 'Choose music track' }), '5');
       await page.locator(audioSelector).evaluate(a => { a.currentTime = a.duration - 0.15; });
       await page.waitForFunction(selector => document.querySelector(selector)?.currentSrc.includes('wax-killa-breaks'), audioSelector);
       await playing(page);
       // Force actual media failures to verify the AAC retry, then decode every AAC file.
       for (let index = 0; index < tracks.length; index++) {
-        await page.getByRole('combobox', { name: 'Choose music track' }).selectOption(String(index));
+        await selectStreetOption(page, page.getByRole('combobox', { name: 'Choose music track' }), String(index));
         await playing(page);
         await page.locator(audioSelector).evaluate(a => a.dispatchEvent(new Event('error')));
         await page.waitForFunction(({ selector, id }) => document.querySelector(selector)?.currentSrc.endsWith(`${id}.m4a`), { selector: audioSelector, id: tracks[index].id });
         await playing(page);
       }
-      await page.getByRole('combobox', { name: 'Choose music track' }).selectOption('0'); await playing(page);
+      await selectStreetOption(page, page.getByRole('combobox', { name: 'Choose music track' }), '0'); await playing(page);
       const beforeHidden = (await audioState(page)).time;
       await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
       await paused(page);

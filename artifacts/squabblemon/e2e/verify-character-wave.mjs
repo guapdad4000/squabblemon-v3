@@ -1,3 +1,4 @@
+import { selectStreetOption } from './street-select.helper.mjs';
 import assert from 'node:assert/strict';
 import { chromium } from '@playwright/test';
 const origin = process.env.WAVE_ORIGIN ?? 'http://127.0.0.1:4197';
@@ -14,7 +15,7 @@ try {
       await card.click();
       await page.getByTestId('lane-0').click();
       const extra = page.getByLabel('Extra Motion', { exact: true });
-      await extra.selectOption('4');
+      await selectStreetOption(page, extra, '4');
       const confirm = page.getByTestId('button-lock');
       const label = await confirm.innerText();
       assert.match(label, /[67] MOTION/i);

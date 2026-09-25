@@ -1,3 +1,4 @@
+import { StreetSelect } from '../ui/street-select';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useEffect, useRef, useState } from 'react';
 import { useStartChallengeRun, useAbandonChallengeRun, type ChallengeRun, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -158,10 +159,10 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
           {active?.recovery && <p>Your committed moves are saved. Continue this exact fight.</p>}
         </div>
         {!active && <label className="fadecade-crew-label">Choose your ten-card crew
-          <select aria-label="Choose legal crew" className="cabinet-select" value={selected?.id ?? ''} onChange={event => setCrewId(event.target.value)} disabled={busy || !entries}>
+          <StreetSelect aria-label="Choose legal crew" className="cabinet-select" value={selected?.id ?? ''} onValueChange={event => setCrewId(event)} disabled={busy || !entries}>
             {!selected && <option value="">No legal owned crew available</option>}
             {legalCrews.map(crew => <option key={crew.id} value={crew.id}>{crew.name}</option>)}
-          </select>
+          </StreetSelect>
         </label>}
         <p className="fadecade-road-rules">One loss ends the run. Boss every fifth stop. Each stop is a fresh, player-controlled battle. Your ten cards and upgrades stay locked for the run.</p>
         <div className="fadecade-road-actions">

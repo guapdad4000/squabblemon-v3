@@ -1,4 +1,5 @@
 import { CrewPreview } from './CrewPreview';
+import { StreetSelect } from '../ui/street-select';
 import { useState } from 'react';
 import { ArcadeCabinet } from './MachineScreen';
 import { FadecadeDialog } from './FadecadeDialog';
@@ -114,28 +115,28 @@ export function EventsMachine({ legalCrews, onBattle }: { legalCrews: Deck[]; on
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <span className="challenge-field-label">01 / Choose the event</span>
-              <select
+              <StreetSelect
                 className="cabinet-select"
                 value={eventMode}
-                onChange={e => setEventMode(e.target.value as ActivityId)}
+                onValueChange={e => setEventMode(e as ActivityId)}
                 aria-label="Select Event"
               >
                 {activities.filter(activity => activity.id === 'neighborhood' || activity.id === 'boss').map(activity => <option key={activity.id} value={activity.id}>{activity.name}</option>)}
-              </select>
+              </StreetSelect>
 
               <p className="cabinet-notice" style={{ textTransform: 'none' }}>
                 {eventMode === 'neighborhood' ? `Week ${week}: ${eventRule}` : eventRule || 'Defeat the boss.'}
               </p>
 
               <span className="challenge-field-label">02 / Bring your crew</span>
-              <select
+              <StreetSelect
                 className="cabinet-select"
                 value={crewId}
-                onChange={e => setCrewId(e.target.value)}
+                onValueChange={e => setCrewId(e)}
                 aria-label="Select Crew"
               >
                 {legalCrews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
+              </StreetSelect>
 
               <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />
               <button

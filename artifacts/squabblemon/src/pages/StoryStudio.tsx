@@ -1,3 +1,4 @@
+import { StreetSelect } from '../components/ui/street-select';
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { storyContent, type StoryNode, type StoryDialogueLine } from '@workspace/squabblemon-engine/story';
@@ -26,12 +27,12 @@ export default function StoryStudio() {
   return <main className="story-studio-shell">
     <nav className="story-studio-controls" aria-label="Chapter preview controls">
       <Link className="story-studio-controls__campaign" href="/game/story">Play campaign ↗</Link><span className="story-studio-controls__note">Scene preview · no progress or rewards</span>
-      <select aria-label="Select chapter" value={chapterId} onChange={(event) => selectChapter(event.target.value)}>
+      <StreetSelect aria-label="Select chapter" value={chapterId} onValueChange={event => selectChapter(event)}>
         {storyContent.chapters.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
-      </select>
-      <select aria-label="Select scene" value={sceneIndex} onChange={(event) => select(Number(event.target.value))}>
+      </StreetSelect>
+      <StreetSelect aria-label="Select scene" value={sceneIndex} onValueChange={event => select(Number(event))}>
         {scenes.map((item, index) => <option key={`${item.node.id}:${item.section}`} value={index}>{item.node.title} · {item.section === 'pre' ? 'Before fight' : item.section === 'post' ? 'After victory' : 'Scene'}</option>)}
-      </select>
+      </StreetSelect>
     </nav>
     <div className="story-studio-stage">
       <StoryStage key={`${scene.node.id}:${scene.section}`} nodeId={scene.node.id} section={scene.section} line={scene.lines[lineIndex]} position={lineIndex + 1} total={scene.lines.length}

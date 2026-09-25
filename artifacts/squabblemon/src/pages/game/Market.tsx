@@ -1,3 +1,4 @@
+import { StreetSelect } from '../../components/ui/street-select';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
@@ -242,12 +243,12 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           {offer.needsCard && (
             <>
               <label htmlFor="shop-card">Choose character</label>
-              <select
+              <StreetSelect skin="paper"
                 id="shop-card"
                 value={selectedCardId}
                 disabled={!!pending || working}
-                onChange={(event) => {
-                  setCardId(event.target.value);
+                onValueChange={event => {
+                  setCardId(event);
                   setReceipt(null);
                   setError(null);
                 }}
@@ -262,7 +263,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
                     {item.name}
                   </option>
                 ))}
-              </select>
+              </StreetSelect>
               {card && offer.id !== 'common-recruit' && (
                 <div className="market-character">
                   <span>

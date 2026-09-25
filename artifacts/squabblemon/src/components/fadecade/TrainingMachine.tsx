@@ -1,4 +1,5 @@
 import { CrewPreview } from './CrewPreview';
+import { StreetSelect } from '../ui/street-select';
 import { useState } from 'react';
 import { ArcadeCabinet } from './MachineScreen';
 import { FadecadeDialog } from './FadecadeDialog';
@@ -48,28 +49,28 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }:
         <div className="fadecade-panel" id="training-setup" data-testid="panel-training">
           {!legalCrews.length && <p role="status">Create a legal owned ten-card crew before starting practice.</p>}
           <span className="challenge-field-label">01 / Choose your drill</span>
-          <select
+          <StreetSelect
             className="cabinet-select"
             value={mode}
-            onChange={e => setMode(e.target.value as ActivityId)}
+            onValueChange={e => setMode(e as ActivityId)}
             aria-label="Select Training Mode"
           >
             {availableActivities.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-          </select>
+          </StreetSelect>
 
           <p className="cabinet-notice" style={{ textTransform: 'none', margin: '0.5rem 0' }}>
             {selectedActivity.description}
           </p>
 
           <span className="challenge-field-label">02 / Bring your crew</span>
-          <select
+          <StreetSelect
             className="cabinet-select"
             value={crewId}
-            onChange={e => setCrewId(e.target.value)}
+            onValueChange={e => setCrewId(e)}
             aria-label="Select Crew"
           >
             {legalCrews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          </StreetSelect>
 
           <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />
           <button

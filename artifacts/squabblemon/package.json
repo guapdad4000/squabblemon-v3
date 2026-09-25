@@ -33,6 +33,7 @@
     "validate:brand": "node scripts/validate-brand-metadata.mjs",
     "validate:bundle": "node scripts/check-entry-bundle.mjs",
     "test:battle": "node --import ../../scripts/battle-test-css.mjs --import tsx --test src/components/Battle.test.tsx src/battleDestruction.test.ts src/gameEngine.test.ts src/districts.test.ts src/multiCardTurns.test.ts src/botBalance.test.ts src/gameplayUpgrade.test.ts src/neighborhoodCommons.test.ts src/superCommonCards.test.ts src/battleChoreography.test.ts src/battlePreview.test.ts src/battleFeedback.test.ts src/presentationTimeline.test.ts src/battleVisibility.test.ts",
+    "test:dropdowns": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node --import tsx e2e/verify-street-dropdowns.mjs",
     "test:navigation": "node --import tsx --test src/lib/navigationMemory.test.ts",
     "test:navigation-browser": "PW_TEST_SCREENSHOT_NO_FONTS_READY=1 node e2e/verify-navigation-memory.mjs && node e2e/verify-navigation-guards.mjs",
     "test:music": "node --import tsx --test src/musicPlayer.test.ts",

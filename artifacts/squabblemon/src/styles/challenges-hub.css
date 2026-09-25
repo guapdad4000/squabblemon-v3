@@ -366,3 +366,6 @@
   width: 100%;
   display: block;
 }
+/* Keep the arcade scrollable without browser scrollbar chrome. */
+:is(.game-route-stage,.immersive-shell):has(.fadecade-hub), .fadecade-hub, .fadecade-hub * { scrollbar-width:none; }
+:is(.game-route-stage,.immersive-shell):has(.fadecade-hub)::-webkit-scrollbar, .fadecade-hub::-webkit-scrollbar, .fadecade-hub *::-webkit-scrollbar { display:none; }

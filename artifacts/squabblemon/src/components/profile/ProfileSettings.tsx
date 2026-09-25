@@ -1,3 +1,4 @@
+import { StreetSelect } from '../ui/street-select';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
@@ -230,7 +231,7 @@ export function ProfileSettings({
         <div className="bg-red-50 p-4 border border-red-200">
           <p className="text-xs font-mono opacity-70 mb-4">Reset story campaign progression. Production builds will not see this.</p>
           <label htmlFor="profile-reset-node" className="block text-xs font-mono font-bold mb-1">Restart story at</label>
-          <div className="flex gap-2"><select id="profile-reset-node" value={resetNode} onChange={event => setResetNode(event.target.value)} disabled={mutationBusy} className="paper-input text-sm p-2 flex-1 min-w-0"><option value="">Start of Chapter One</option>{storyContent.chapters.flatMap(chapter => chapter.nodes.map(node => <option key={node.id} value={node.id}>{node.title}{node.optional ? ' (Mastery)' : ''}</option>))}</select><button type="button" onClick={handleReset} disabled={mutationBusy} className="street-sign-btn street-sign-btn--danger sm:shrink-0">{resetStory.isPending ? 'Resetting…' : 'Reset'}</button></div>
+          <div className="flex gap-2"><StreetSelect skin="paper" id="profile-reset-node" value={resetNode} onValueChange={event => setResetNode(event)} disabled={mutationBusy} className="paper-input text-sm p-2 flex-1 min-w-0"><option value="">Start of Chapter One</option>{storyContent.chapters.flatMap(chapter => chapter.nodes.map(node => <option key={node.id} value={node.id}>{node.title}{node.optional ? ' (Mastery)' : ''}</option>))}</StreetSelect><button type="button" onClick={handleReset} disabled={mutationBusy} className="street-sign-btn street-sign-btn--danger sm:shrink-0">{resetStory.isPending ? 'Resetting…' : 'Reset'}</button></div>
           {resetFeedback && <div role={resetFeedback.error ? 'alert' : 'status'} className={`mt-2 font-mono text-xs ${resetFeedback.error ? 'text-red-600' : 'text-green-700'}`}>{resetFeedback.text}</div>}
         </div>
       </section>}

@@ -1,0 +1,31 @@
+/* Painted street signs and worn paper share one readable, touch-friendly menu. */
+.street-select-trigger.street-select-trigger{position:relative;display:inline-flex;align-items:center;justify-content:space-between;gap:14px;min-height:44px;height:auto;width:100%;min-width:0;padding:11px 17px;border:1px solid #c8b778;border-radius:3px;background:linear-gradient(110deg,#203f35,#142d27);box-shadow:inset 0 0 0 3px #183128,inset 0 0 0 4px #c8b77870,0 3px 0 #090f0c,0 6px 14px #0004;color:#fff0bd;font:800 12px/1.4 var(--font-sans,sans-serif);text-align:left;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;isolation:isolate}
+.street-select-trigger::before{content:"";position:absolute;width:3px;height:3px;left:6px;top:50%;border-radius:50%;background:#d2c797;box-shadow:0 1px 1px #000;pointer-events:none}
+.street-select-trigger>svg{flex-shrink:0;color:inherit;transition:transform .15s}
+.street-select-trigger[data-state=open]>svg{transform:rotate(180deg)}
+.street-select-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.street-select-trigger.street-select-trigger--paper{border:0;border-radius:0;background:#e9dfc5 url('../../assets/paper/ripped-strip.webp') center/100% 100%;color:#27271d;box-shadow:0 3px 10px #0004;clip-path:polygon(1% 5%,12% 0,24% 4%,37% 0,53% 3%,68% 0,85% 4%,99% 0,100% 94%,88% 100%,71% 96%,55% 100%,35% 96%,17% 100%,0 95%)}
+.street-select-trigger--paper::before{display:none}
+.street-select-trigger:focus-visible{outline:3px solid #e6b84b;outline-offset:3px}
+.street-select-trigger:disabled{opacity:.48;cursor:not-allowed;filter:saturate(.4)}
+.street-select-content.street-select-content{z-index:1200;position:relative;width:var(--radix-select-trigger-width);min-width:min(220px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:min(360px,var(--radix-select-content-available-height));overflow:hidden;padding:8px 6px;background:#e9dfc5 url('../../../public/assets/inspector/paper-grain.jpg') center/160% 160%;border:1px solid #ae9565;border-radius:2px;color:#28291e;box-shadow:4px 6px 0 #171c1770,0 16px 42px #0008}
+.street-select-viewport{padding:2px;max-height:inherit;scrollbar-width:none}
+.street-select-viewport::-webkit-scrollbar{display:none}
+.street-select-item.street-select-item{position:relative;display:flex;align-items:center;min-height:44px;padding:10px 34px 10px 13px;border:1px solid transparent;border-radius:2px;color:#302e21;font:700 12px/1.45 var(--font-sans,sans-serif);cursor:pointer;outline:none;overflow-wrap:anywhere}
+.street-select-item[data-state=checked]{background:#234738;color:#fff0bf;border-color:#927e4c;box-shadow:inset 0 0 0 2px #244237,inset 0 0 0 3px #d9c68770;font-weight:900}
+.street-select-item[data-highlighted]{background:#f4cb66;color:#282317;border-color:#766333}
+.street-select-item[data-state=checked][data-highlighted]{background:#315d47;color:#fff6d6;border-color:#ebd395}
+.street-select-item[data-disabled]{opacity:.4;pointer-events:none}
+.street-select-check{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+.street-select-scroll{display:flex;align-items:center;justify-content:center;min-height:26px;color:#324b37;background:#e6d9b9}
+.street-select-group{padding:10px 12px 5px;color:#756346;font:800 10px var(--font-mono,monospace);text-transform:uppercase;letter-spacing:.1em}
+@media(prefers-reduced-motion:reduce){.street-select-trigger>svg{transition:none}}
+.street-action-menu.street-action-menu{z-index:1200;padding:7px;background:#e9dfc5 url('../../../public/assets/inspector/paper-grain.jpg') center/160% 160%;border:1px solid #ae9565;border-radius:2px;color:#28291e;box-shadow:4px 6px 0 #171c1770,0 16px 42px #0008;scrollbar-width:none}
+.street-action-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio]){min-height:44px;border-radius:2px;font:700 12px/1.4 var(--font-sans,sans-serif)}
+.street-action-menu :is([data-highlighted],[data-state=checked]){background:#234738;color:#fff0bf;outline:1px solid #b6a373;outline-offset:-3px}
+
+.street-select-trigger--paper:focus-visible{box-shadow:inset 0 0 0 3px #b7402f}
+.music-track .street-select-trigger{margin-top:5px}
+
+.street-action-menu::-webkit-scrollbar{display:none}
+.street-select-trigger>svg{width:17px!important;height:17px!important;stroke-width:2.5;opacity:1}

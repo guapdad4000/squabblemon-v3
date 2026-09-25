@@ -1,3 +1,4 @@
+import { StreetSelect } from './ui/street-select';
 import { useId, useRef, useState } from 'react';
 import { Music2, Pause, Play, SkipForward, Volume2, VolumeX, X } from 'lucide-react';
 import { soundtrack } from '../musicPlayer';
@@ -74,9 +75,9 @@ export function MusicControls({ compact = false, variant = 'default', className 
         </label>
         <p className="music-note">Round and turn calls. Set to 0% to silence the announcer; your music keeps playing.</p>
         <label className="music-track"><span>On the turntable <b>{music.trackIndex + 1} / {playlist.length}</b></span>
-          <select aria-label="Choose music track" value={music.trackIndex} onChange={event => musicActions.select(Number(event.target.value))}>
+          <StreetSelect skin="paper" aria-label="Choose music track" value={music.trackIndex} onValueChange={event => musicActions.select(Number(event))}>
             {playlist.map((song, index) => <option key={song.id} value={index}>{String(index + 1).padStart(2, '0')} · {song.title}</option>)}
-          </select>
+          </StreetSelect>
         </label>
         <div className="music-banks">{(['background', 'mode'] as const).map(bank => <fieldset key={bank}>
           <legend>{bank === 'background' ? 'Background playlist' : 'Battle, story & mode music'}</legend>
