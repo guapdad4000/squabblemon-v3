@@ -28,7 +28,8 @@ const welcomedPlayers = new Set<string>();
 // Keep the one set of room controls reachable when an object moves out of view.
 // Read geometry before writing positions, and use nearby free spots for overlapping labels.
 function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, markers: Map<string, HTMLButtonElement>, anchors: NonNullable<SceneMessage['anchors']>) {
-  if (layer.hidden) return;
+  if (layer.hidden) return 0;
+  resetRoomMarkers(markers);
   const area = layer.getBoundingClientRect();
   const scene = frame.getBoundingClientRect();
   const buttons = anchors.flatMap(anchor => {
@@ -56,13 +57,27 @@ function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, marke
     button.style.left = `${best.x}px`;
     button.style.top = `${best.y}px`;
     button.style.visibility = 'visible';
+    button.dataset.anchorPositioned = 'true';
   }
+  return Array.from(markers.values()).filter(button => button.dataset.anchorPositioned === 'true').length;
+}
+
+function resetRoomMarkers(markers: Map<string, HTMLButtonElement>) {
+  markers.forEach(button => {
+    delete button.dataset.anchorPositioned;
+    button.style.removeProperty('left');
+    button.style.removeProperty('top');
+    button.style.removeProperty('visibility');
+  });
 }
 
 export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstrap; onGuideComplete?: () => void }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const [sceneReady, setSceneReady] = useState(false);
+  // Readiness and anchor projection are separate scene events; the guided tour
+  // fallback must hold until markers have actually been placed on screen.
+  const [markersPlaced, setMarkersPlaced] = useState(false);
   const [view, setView] = useState<Station | 'room'>('room');
   const [night, setNight] = useState(() => {
     try { return localStorage.getItem('squabblemon_safehouse_lighting') !== 'golden'; } catch { return true; }
@@ -84,9 +99,10 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   function receive(message: SceneMessage) {
     if (message.type === 'interact' && music.enabled && !music.playing) musicActions.play();
     if (message.type === 'view' && (message.view === 'room' || stations.some(item => item.id === message.view))) setView(message.view as Station | 'room');
-    if (message.type === 'error') setSceneReady(false);
+    if (message.type === 'loading') { setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
+    if (message.type === 'error') { setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
     if (message.type === 'anchors' && markerLayer.current && frame.current) {
-      positionRoomMarkers(markerLayer.current, frame.current, markers.current, message.anchors ?? []);
+      if (!markerLayer.current.hidden) setMarkersPlaced(positionRoomMarkers(markerLayer.current, frame.current, markers.current, message.anchors ?? []) === markers.current.size);
     }
   }
   useEffect(() => {
@@ -157,7 +173,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'golden'}>
       <PageDecor theme="safehouse" />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
-        onMessage={receive} onReady={() => { setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
+        onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
       <header className="safehouse-room-header">
         <div className="safehouse-room-title"><span><i /> OAKLAND / HOME COURT</span><h1>The <span className="safehouse-room-title__hand">Safe</span>house<span className="safehouse-room-title__period">.</span></h1><p>The city can wait a minute.</p></div>
@@ -171,7 +187,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           <button type="button" className="room-tool room-tool--reset" aria-label="Reset room camera" onClick={() => explore('room')}><RotateCcw size={16} /></button>
         </div>
       </header>
-      <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !sceneReady)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
+      <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
           aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
           <item.icon size={16} aria-hidden="true" /><span>{item.short}</span>

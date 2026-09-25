@@ -205,6 +205,66 @@ test("timeout forfeits once and both players must consent to a rematch", () => {
   assert.equal(room.members.player.ready, false);
 });
 
+test("either active seat forfeits on timeout regardless of the district board", () => {
+  const active = fixture();
+  for (const timedOutSeat of ["player", "cpu"] as const) {
+    const expired = expireOnlineRoom(
+      { ...active, activeSeat: timedOutSeat },
+      active.deadline!,
+    );
+    assert.equal(expired.status, "complete");
+    assert.equal(expired.reason, "timeout");
+    assert.equal(expired.winner, timedOutSeat === "player" ? "cpu" : "player");
+    assert.equal(expired.match, active.match, "Timeout does not score or alter the final board");
+    const loserView = onlineRoomView(
+      expired,
+      "AB12CD34EF56",
+      timedOutSeat === "player" ? "a" : "b",
+      active.deadline!,
+    );
+    assert.equal(loserView.reason, "timeout");
+    assert.equal(loserView.winner, timedOutSeat === "player" ? "cpu" : "player");
+  }
+});
+
+test("normal district finishes and surrender retain their own result reasons", () => {
+  let room = fixture();
+  room = applyOnlineCommand(room, room.activeSeat, { type: "surrender" }, 3);
+  assert.equal(room.status, "complete");
+  assert.equal(room.reason, "surrender");
+  assert.equal(room.winner, "cpu");
+
+  room = fixture();
+  for (let turn = 0; turn < 12; turn += 1) {
+    room = applyOnlineCommand(room, room.activeSeat, { type: "end-turn" }, turn + 3);
+  }
+  assert.equal(room.status, "complete");
+  assert.equal(room.reason, "districts");
+  assert.equal(room.winner, "draw");
+
+  room = fixture();
+  while (room.match!.round < 6) {
+    room = applyOnlineCommand(room, room.activeSeat, { type: "end-turn" }, room.turnsEnded + 3);
+  }
+  const finalRound = room.match!;
+  room = {
+    ...room,
+    match: {
+      ...finalRound,
+      boards: [
+        finalRound.playerHand.slice(0, 2).map((card, i) => ({ ...card, lane: 0, playedRound: 1 + i })),
+        finalRound.playerHand.slice(2, 4).map((card, i) => ({ ...card, lane: 1, playedRound: 1 + i })),
+        finalRound.cpuHand.slice(0, 2).map((card, i) => ({ ...card, lane: 2, playedRound: 1 + i })),
+      ],
+    },
+  };
+  room = applyOnlineCommand(room, room.activeSeat, { type: "end-turn" }, room.turnsEnded + 3);
+  room = applyOnlineCommand(room, room.activeSeat, { type: "end-turn" }, room.turnsEnded + 3);
+  assert.equal(room.status, "complete");
+  assert.equal(room.reason, "districts");
+  assert.equal(room.winner, "player");
+});
+
 test("starting near the waiting-room expiry gives the active fade its full lifetime", () => {
   const active = fixture();
   const waiting: OnlineRoom = {

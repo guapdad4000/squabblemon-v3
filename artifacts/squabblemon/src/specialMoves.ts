@@ -18,6 +18,22 @@ export const moveAssignments: Record<string, string | null> = {
   'homeless-wiseman': null,
   'juneteenth-chair-guy': null,
   'squabble-house-manager': null,
+  riptidebruiser: null,
+  stillwatermedic: null,
+  monsoonanchor: null,
+  rainmaker: null,
+  batteryback: null,
+  circuitcaptain: null,
+  wiretap: null,
+  livewire: null,
+  sprout: null,
+  rootnurse: null,
+  canopykeeper: null,
+  gardenwall: null,
+  gust: null,
+  crosswind: null,
+  slipstream: null,
+  cloudbreak: null,
 };
 export const MOVE_STORAGE_KEY = 'squabblemon.special-moves.v1';
 export type MoveOverrides = Record<string, string | null>;

@@ -22,6 +22,7 @@ export function SceneFrame({ kind, frameRef, onMessage, onReady, poster }: {
   useEffect(() => {
     let ready = false;
     setStatus('loading');
+    handlers.current.onMessage?.({ type: 'loading' });
     const timeout = window.setTimeout(() => { if (!ready) { clearInterval(probe); setStatus('error'); handlers.current.onMessage?.({ type: 'error' }); } }, 15000);
     const probe = window.setInterval(() => { if (!ready) sendScene(frameRef, { type: 'ping' }); }, 600);
     const receive = (event: MessageEvent) => {

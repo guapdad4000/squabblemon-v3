@@ -138,7 +138,12 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     <Dialog open={room.status === 'complete' && !reviewBoard} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
-        description={room.reason === 'timeout' ? 'The turn clock expired.' : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'}>
+        description={room.reason === 'timeout'
+          ? room.winner === room.seat
+            ? "Your rival's turn clock expired. You win by forfeit."
+            : 'Your turn clock expired. You forfeited the fade.'
+          : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'}
+        timeoutResult={room.reason === 'timeout'}>
         {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => void act({ type: 'rematch' })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
         <button className="online-primary" onClick={onLeave}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>

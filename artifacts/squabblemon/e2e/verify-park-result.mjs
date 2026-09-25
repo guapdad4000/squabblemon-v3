@@ -10,7 +10,7 @@ const viewports = [
   { width: 844, height: 390 },
 ];
 const browserTypes = [['chromium', chromium]];
-if (existsSync(webkit.executablePath())) browserTypes.push(['webkit', webkit]);
+if (process.env.BROWSER !== 'chromium' && existsSync(webkit.executablePath())) browserTypes.push(['webkit', webkit]);
 
 for (const [browserName, browserType] of browserTypes) {
   const browser = await browserType.launch();
@@ -31,7 +31,7 @@ for (const [browserName, browserType] of browserTypes) {
       assert.ok(await title.isVisible(), 'Ranked draw header must be visible');
       assert.ok(await scene.isVisible(), 'Result artwork must be visible');
       assert.ok(await panel.getByTestId('ranked-result').getByText('+5 RP').isVisible(), 'Rank reward status must be preserved');
-      assert.ok(await scene.locator('img').evaluate(img => img.complete && img.naturalWidth > 0), 'Result character art must load');
+      assert.ok(await scene.locator('img:not(.park-result-outcome-mark)').evaluate(img => img.complete && img.naturalWidth > 0), 'Result character art must load');
 
       const geometry = await panel.evaluate(element => {
         const rect = element.getBoundingClientRect();
@@ -90,6 +90,29 @@ for (const [browserName, browserType] of browserTypes) {
       assert.equal(await page.evaluate(() => document.body.dataset.action), 'Online exit');
       await page.screenshot({ path: `screenshots/park-result-${browserName}-${viewport.width}x${viewport.height}.png` });
       await page.close();
+    }
+    for (const timeoutCase of [
+      { seat: 'player', reason: 'Your turn clock expired. You forfeited the fade.', districts: ['2', '1'], award: '-15 RP' },
+      { seat: 'cpu', reason: "Your rival's turn clock expired. You win by forfeit.", districts: ['1', '2'], award: '+25 RP' },
+    ]) {
+      for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
+        const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+        await page.goto(`${origin}/e2e/result-stage.fixture.html?flow=online&result=timeout&seat=${timeoutCase.seat}`);
+        const panel = page.getByTestId('park-result-dialog');
+        const reason = panel.getByTestId('timeout-result-reason');
+        await reason.waitFor();
+        assert.equal(await reason.innerText(), timeoutCase.reason, `${timeoutCase.seat} must see the correct timeout perspective`);
+        assert.equal(await panel.getByTestId('timeout-score-context').innerText(), 'District totals show the final board; the timeout decided the winner.');
+        const score = panel.locator('.park-result-score');
+        assert.deepEqual(await score.locator('b').allInnerTexts(), timeoutCase.districts, 'Final district totals remain visible, including a leading timed-out player');
+        assert.ok(await panel.getByTestId('ranked-result').getByText(timeoutCase.award).isVisible(), 'Timeout result preserves the ranked RP award');
+        for (const locator of [reason, score, panel.getByTestId('timeout-score-context'), panel.getByTestId('ranked-result')]) {
+          assert.ok(await locator.isVisible(), `Timeout explanation, board score, and RP must remain visible at ${viewport.width}px`);
+          const bounds = await locator.boundingBox();
+          assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= viewport.width && bounds.y >= 0 && bounds.y + bounds.height <= viewport.height, `Result content must fit the viewport at ${viewport.width}px`);
+        }
+        await page.close();
+      }
     }
   } finally {
     await browser.close();

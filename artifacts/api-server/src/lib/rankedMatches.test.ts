@@ -122,7 +122,12 @@ test('ranked routes: human pairing, retries, cancellation race, bot completion, 
   assert.equal(resumed.status, 'active'); assert.equal(resumed.activeSeat, 'player'); assert(resumed.deadline > Date.now());
   await changeState(resumed.code, r => ({ ...r, deadline: Date.now() - 1 }));
   resumed = await ok(users[5], `/${resumed.code}`);
-  assert.equal(resumed.reason, 'timeout'); assert.equal(resumed.ranked.result.outcome, 'loss');
+  assert.equal(resumed.reason, 'timeout');
+  const timeoutResult = resumed.ranked.result;
+  assert.equal(timeoutResult.outcome, 'loss');
+  assert.equal(timeoutResult.bot, true);
+  assert.equal(timeoutResult.delta, Math.max(0, timeoutResult.before - 6) - timeoutResult.before, 'A ranked bot timeout settles a loss, clamped at zero RP');
+  assert.equal(timeoutResult.after, Math.max(0, timeoutResult.before - 6));
   assert.equal((await ok(users[5], '/ranked')).stats.games, 1);
   if (process.env.FADE_PARK_BROWSER === '1') {
     const { verifyRankedBrowser } = await import(new URL('../../../squabblemon/e2e/verify-ranked-flow.ts', import.meta.url).href);

@@ -9,6 +9,7 @@ import { neighborhoodWaveCards, neighborhoodWaveRarities, neighborhoodWaveUpgrad
 import { cellblockWaveCards, cellblockWaveRarities, cellblockWaveUpgradeEffects } from './cellblockWave';
 import { fairytaleCards, fairytaleRarities, fairytaleUpgradeEffects, FAIRYTALE_ALTERNATE_ART } from './fairytaleWave';
 import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffects } from './afterHoursWave';
+import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
 
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
@@ -102,6 +103,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...cellblockWaveUpgradeEffects,
   ...fairytaleUpgradeEffects,
   ...afterHoursWaveUpgradeEffects,
+  ...elementalBondWaveUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   rastamon: [{ kind: "self-power", amount: 1, trigger: "base-success" }, { kind: "target-power", amount: 1, target: "friendly", trigger: "base-success" }, { kind: "self-power", amount: 1, trigger: "base-success" }],
@@ -250,6 +252,7 @@ export const cards: Record<string, Card> = {
   ...cellblockWaveCards,
   ...fairytaleCards,
   ...afterHoursWaveCards,
+  ...elementalBondWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
 };
@@ -285,6 +288,7 @@ export const decks: Deck[] = [
   { id: "crashout", name: "CRASHOUT SEASON", archetype: "Comeback", accent: "FLIP", plan: "Absorb early deficits, then flip contested districts with late Hands spikes.", cards: ["cornball", "rastamon", "snow", "wifey", "baby", "hooper", "roaster"], hero: "hooper" },
   { id: "vibes", name: "GOOD VIBES ONLY", archetype: "Sustain", accent: "CLEANSE", plan: "Cleanse, Protect, suppress hostile rules, and keep scaling pieces alive.", cards: ["rastamon", "wifey", "snow", "vibe", "hooper", "oink", "plug"], hero: "rastamon" },
   { id: "compound", name: "COMPOUND INTEREST", archetype: "Growth / Scaling", accent: "GROW", plan: "Invest early in engines and convert repeated buffs into late value.", cards: ["cornball", "plug", "streamer", "rastamon", "gamer", "techbro", "wifey"], hero: "gamer" },
+  { id: "voltage", name: "VOLTAGE IN MOTION", archetype: "Electric Tempo", accent: "CHARGE", plan: "Keep an Electric bond in hand, spread plays across districts, and turn clean sequencing into extra tempo.", cards: ["batteryback", "circuitcaptain", "wiretap", "livewire", "stockz", "bossbabe", "plug", "streamer", "techbro", "bikelife"], hero: "circuit-captain" },
 ].map(deck => ({ ...deck, cards: completeEngineCrew(deck.cards) }));
 
 export const rarityByEngineId = {
@@ -298,6 +302,7 @@ export const rarityByEngineId = {
   ...neighborhoodWaveRarities,
   ...cellblockWaveRarities,
   ...afterHoursWaveRarities,
+  ...elementalBondWaveRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
   tron: "Legendary",
@@ -371,6 +376,7 @@ export function validateCardCatalogRarities(
 
 const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, 'After Hours'])),
+  ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, 'Elemental Bonds'])),
   'inmate-crafty': 'Cellblock', 'inmate-boyfriend': 'Cellblock', 'inmate-informant': 'Cellblock', 'inmate-contraband': 'Cellblock',
   'lebron-james': 'Independent',
   'hair-stylist': 'Neighborhood Creatives', stylist: 'Neighborhood Creatives',
@@ -422,6 +428,7 @@ const factionByEngineId: Record<string, string> = {
 
 const sourceByEngineId: Record<string, string[]> = {
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, ['Street Packs']])),
+  ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(cellblockWaveCards).map(id => [id, ['Street Packs']])),
   buddy: ["Street Packs"],
   folks: ["Street Packs"],

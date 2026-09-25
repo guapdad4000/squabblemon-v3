@@ -30,7 +30,7 @@ const advance = (m: Match) => nextRound({ ...m, phase: 'resolved', playerHand: [
 test('all twelve retain collection, rarity, artwork, cosmetics and training IDs at the approved costs', () => {
   const costs = [3, 1, 3, 2, 3, 3, 3, 3, 4, 4, 4, 3];
   assert.equal(CHARACTER_WAVE.length, 12);
-  assert.equal(cardCatalog.filter(c => c.kind !== 'support').length, 148);
+  assert.equal(cardCatalog.filter(c => c.kind !== 'support').length, 164);
   CHARACTER_WAVE.forEach(([id, art, name, rarity], index) => {
     assert.equal(cards[id].name, name); assert.equal(cards[id].cost, costs[index]);
     assert.equal(catalogCardById[art].engineId, id); assert.equal(catalogCardById[art].rarity, rarity);

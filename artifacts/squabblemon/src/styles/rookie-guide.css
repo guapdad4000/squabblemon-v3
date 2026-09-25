@@ -26,6 +26,8 @@
 }
 @media(prefers-reduced-motion:reduce){.fade-tip,.fade-target{animation:none;transition:none}}
 .rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"]{position:absolute;inset:30% 18px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"] button{position:relative;left:auto;top:auto;transform:none}
+/* Without the 3D scene's anchor projection the markers stay visibility:hidden,
+   which soft-locks the tour behind the coach mask. Fallback shows real buttons. */
+.rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"] button:not([data-anchor-positioned="true"]){position:static;visibility:visible;transform:none}
 @media(max-height:500px){.fade-tip>.dr-fade-portrait{height:80px;width:64px}.fade-tip{padding:8px;max-width:430px}.fade-tip h2{font-size:17px}.fade-tip p{font-size:12px;margin:4px 0}.fade-tip .venue-button{min-height:32px}.rookie-tour__welcome{grid-template-columns:1fr .5fr}.rookie-tour__welcome>.dr-fade-portrait{grid-row:auto;height:70dvh}}
 .fade-spotlight{position:fixed;inset:0;pointer-events:none;z-index:10000}.fade-mask,.fade-tip{pointer-events:auto}

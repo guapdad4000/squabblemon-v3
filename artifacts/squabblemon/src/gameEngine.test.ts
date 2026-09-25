@@ -1,4 +1,4 @@
-import { completeEngineCrew } from '@workspace/squabblemon-engine/data';
+import { cardCatalog, completeEngineCrew, decks } from '@workspace/squabblemon-engine/data';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
@@ -7,6 +7,7 @@ import {
   createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot, type Match,
 } from './gameEngine';
 import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades } from './data';
+import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
 const custom = (id: string, owner: 'player' | 'cpu', index: number) => createCardInstance(id, owner, 'test', index);
 const playOne = (id: string, setup?: (m: Match) => Match) => {
@@ -602,6 +603,151 @@ test('all pure hand bonds activate trained tiers zero through three on character
       assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1 + tier, `${bondId} tier ${tier}`);
       if (bondId === 'honestthot') assert.equal(after.boards[0].find(card => card.instanceId === support.instanceId)?.powerModifier, 0);
     }
+  }
+});
+
+test('Elemental Bond Wave catalog entries retain collection identity and a mono-Electric featured crew', () => {
+  const wave = ['riptidebruiser', 'stillwatermedic', 'monsoonanchor', 'rainmaker', 'batteryback', 'circuitcaptain', 'wiretap', 'livewire',
+    'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'gust', 'crosswind', 'slipstream', 'cloudbreak'];
+  assert.equal(wave.length, 16);
+  for (const id of wave) {
+    const card = cards[id];
+    const catalog = cardCatalog.find(entry => entry.engineId === id);
+    assert(card, `missing engine card ${id}`);
+    assert(catalog, `missing catalog entry ${id}`);
+    assert.equal(catalog?.catalogId, card.id);
+    assert.equal(catalog?.acquisitionSources.includes('Street Packs'), true);
+    assert(card.entryVfx?.accent);
+    assert.equal(card.portraitAccent, card.entryVfx?.accent);
+    assert.equal(card.abilityUpgrades.length, 3);
+  }
+  for (const [bondId, element, rarity] of [
+    ['monsoonanchor', 'Water', 'Rare'], ['circuitcaptain', 'Electric', 'Epic'],
+    ['canopykeeper', 'Plant', 'Rare'], ['slipstream', 'Air', 'Rare'],
+  ] as const) {
+    const catalog = cardCatalog.find(entry => entry.engineId === bondId);
+    assert.equal(cards[bondId].elementalBond, element);
+    assert.equal(catalog?.rarity, rarity);
+  }
+  const featured = decks.find(deck => deck.id === 'voltage');
+  assert(featured);
+  assert.equal(featured?.cards.length, 10);
+  assert.equal(new Set(featured?.cards).size, 10);
+  assert(featured?.cards.every(id => cards[id]?.type === 'Electric'));
+});
+
+test('new elemental bonds stack with GUAP and their legacy elemental bonds', () => {
+  const bondIds = ['guap', 'icecream', 'monsoonanchor', 'piratedj', 'circuitcaptain', 'gardener', 'canopykeeper',
+    'honestthot', 'slipstream'] as const;
+  const hand = bondIds.map((id, index) => custom(id, 'player', 700 + index));
+  const water = { ...custom('monsoonanchor', 'player', 720), lane: 0 as const };
+  const electric = { ...custom('batteryback', 'player', 721), lane: 0 as const };
+  const plant = { ...custom('sprout', 'player', 722), lane: 0 as const };
+  const air = { ...custom('gust', 'player', 723), lane: 0 as const };
+  const fire = { ...custom('folks', 'player', 724), lane: 0 as const };
+  const match: Match = {
+    ...createMatch('vibes', 'vibes'), round: 2, phase: 'resolved', playerHand: hand,
+    boards: [[water, electric, plant, air, fire], [], []],
+  };
+  const after = nextRound(match);
+  const byId = new Map(after.boards.flat().map(card => [card.instanceId, card]));
+  assert.equal(byId.get(water.instanceId)?.powerModifier, 2, 'legacy and wave Water bonds stack');
+  assert.equal(byId.get(electric.instanceId)?.powerModifier, 2, 'legacy and wave Electric bonds stack');
+  assert.equal(byId.get(plant.instanceId)?.powerModifier, 2, 'legacy and wave Plant bonds stack');
+  assert.equal(byId.get(air.instanceId)?.powerModifier, 2, 'legacy and wave Air bonds stack');
+  assert.equal(byId.get(fire.instanceId)?.powerModifier, 1, 'GUAP stacks independently for Fire');
+});
+
+test('each new bond keeps the trained hand-bond upgrade path', () => {
+  const bondCases = [
+    ['monsoonanchor', 'riptidebruiser'], ['circuitcaptain', 'batteryback'],
+    ['canopykeeper', 'sprout'], ['slipstream', 'gust'],
+  ] as const;
+  for (const [index, [bondId, targetId]] of bondCases.entries()) {
+    assert(cards[bondId].effect.startsWith('Ongoing:'));
+    assert(cards[bondId].abilityUpgrades.every(upgrade => upgrade.description.includes('bonded ally')));
+    for (let tier = 0; tier <= 3; tier++) {
+      const bond = custom(bondId, 'player', 800 + index * 10 + tier);
+      const target = { ...custom(targetId, 'player', 900 + index * 10 + tier), lane: 0 as const };
+      const match: Match = {
+        ...createMatch('vibes', 'vibes'), round: 6, phase: 'resolved', playerHand: [bond],
+        boards: [[target], [], []],
+        abilityUpgradeSnapshot: createAbilityUpgradeSnapshot([bondId], [], {
+          player: { [bondId]: { xp: 2800, level: 8, moveTier: tier } },
+        }),
+      };
+      const after = nextRound(match);
+      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1 + tier, `${bondId} tier ${tier}`);
+    }
+  }
+});
+
+test('new elemental abilities replay deterministically and matchup bonuses apply to new Plant cards', () => {
+  const ids = ['riptidebruiser', 'stillwatermedic', 'monsoonanchor', 'rainmaker', 'batteryback', 'circuitcaptain', 'wiretap', 'livewire',
+    'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'gust', 'crosswind', 'slipstream', 'cloudbreak'];
+  const resolve = (id: string) => {
+    const ally = custom('cornball', 'player', 1000);
+    if (id === 'stillwatermedic' || id === 'rootnurse') ally.statuses.frozen = true;
+    const farAlly = { ...custom('cornball', 'player', 1001), lane: 1 as const };
+    const enemy = { ...custom('hooper', 'cpu', 1002), lane: 0 as const };
+    const source = custom(id, 'player', 1003);
+    const initial: Match = {
+      ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [source],
+      boards: [[ally, enemy], [farAlly], []],
+    };
+    const result = playCard(initial, 'player', source.instanceId, 0);
+    return JSON.stringify({
+      boards: result.boards.map(lane => lane.map(card => [card.cardId, card.lane, card.powerModifier, card.statuses])),
+      playerMotion: result.playerMotion, discounts: result.discountTokens.map(token => token.eligibility),
+      timedEffects: result.timedEffects.map(effect => effect.kind), events: result.effectLog.map(event => [event.kind, event.note]),
+    });
+  };
+  for (const id of ids) assert.equal(resolve(id), resolve(id), `${id} replay`);
+
+  const plant = { ...custom('gardenwall', 'cpu', 1010), lane: 0 as const };
+  const fireAbility = custom('folks', 'player', 1011);
+  const burned = playCard({
+    ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [fireAbility],
+    boards: [[plant], [], []],
+  }, 'player', fireAbility.instanceId, 0);
+  assert.equal(burned.boards[0].find(card => card.instanceId === plant.instanceId)?.statuses.burnStacks, 4,
+    'Fire receives its +1 matchup stack against a new Plant card');
+
+  const fireTarget = { ...custom('folks', 'cpu', 1012), lane: 0 as const };
+  const riptide = custom('riptidebruiser', 'player', 1013);
+  const riptideMatch = playCard({
+    ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [riptide],
+    boards: [[fireTarget], [], []],
+  }, 'player', riptide.instanceId, 0);
+  const reducedFire = riptideMatch.boards[0].find(card => card.instanceId === fireTarget.instanceId);
+  assert.equal(reducedFire?.powerModifier, -2,
+    'Water receives its +1 matchup reduction against Fire');
+  assert.match(reducedFire?.lastEffectNote ?? '', /-2 Hands/);
+
+  const wiretap = custom('wiretap', 'player', 1014);
+  const wiretapMatch = playCard({
+    ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [wiretap],
+  }, 'player', wiretap.instanceId, 0);
+  assert(wiretapMatch.discountTokens.some(token => token.sourceInstanceId === wiretap.instanceId && token.eligibility === 'another-district'));
+  const wiretapEvent = wiretapMatch.effectLog.find(event => event.cardId === 'wiretap' && event.type === 'ability');
+  assert.match(wiretapEvent?.note ?? '', /Open Frequency resolved\./);
+  assert.doesNotMatch(wiretapEvent?.note ?? '', /condition not met/);
+});
+
+test('every Elemental Bond Wave card is reachable from its normal rarity pack pool', () => {
+  const thresholds: Record<string, number> = {
+    SuperCommon: 0, Common: 4000, Uncommon: 6000, Rare: 8500,
+    Epic: 9700, Legendary: 9900, Mythical: 9980,
+  };
+  const waveIds = ['riptidebruiser', 'stillwatermedic', 'monsoonanchor', 'rainmaker', 'batteryback', 'circuitcaptain', 'wiretap', 'livewire',
+    'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'gust', 'crosswind', 'slipstream', 'cloudbreak'];
+  for (const id of waveIds) {
+    const entry = cardCatalog.find(card => card.engineId === id)!;
+    let call = 0;
+    const rng = () => call++ === 0 ? thresholds[entry.rarity] : 0;
+    const owned = cardCatalog.filter(card => card.catalogId !== entry.catalogId).map(card => card.catalogId);
+    const pack = generateStreetPack({ ownedCardIds: owned, discoveredCardIds: owned, ownedVariants: [], pity: 0 }, rng);
+    assert.equal(pack.rewards[0].cardId, entry.catalogId, `${id} is obtainable at ${entry.rarity}`);
   }
 });
 test('movement abilities are move events with authoritative lane snapshots', () => {

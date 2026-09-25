@@ -31,8 +31,17 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
     });
     const observer = new ResizeObserver(measure);
     observer.observe(document.body);
-    const mutations = new MutationObserver(measure);
-    mutations.observe(document.body, { childList: true, subtree: true });
+    // Style/class/hidden mutations move targets without touching childList —
+    // the safehouse markers slide into place via inline style after the scene
+    // projects them, and an unmeasured move leaves the mask covering the target.
+    // Skip our own overlay's mutations and coalesce to one measure a frame.
+    let mutationFrame = 0;
+    const mutations = new MutationObserver(records => {
+      if (!records.some(record => !(record.target instanceof HTMLElement && record.target.closest('.fade-spotlight')))) return;
+      if (mutationFrame) return;
+      mutationFrame = requestAnimationFrame(() => { mutationFrame = 0; measure(); });
+    });
+    mutations.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class', 'hidden'] });
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
     const allowed = (node: EventTarget | null) => node instanceof Node && ((interactiveTarget && element?.contains(node)) || panel.current?.contains(node));
@@ -61,7 +70,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
     document.addEventListener('pointerdown', guard, true);
     document.addEventListener('keydown', keys, true);
     return () => {
-      cancelAnimationFrame(frame); observer.disconnect(); mutations.disconnect();
+      cancelAnimationFrame(frame); cancelAnimationFrame(mutationFrame); observer.disconnect(); mutations.disconnect();
       window.removeEventListener('resize', measure); window.removeEventListener('scroll', measure, true);
       document.removeEventListener('click', clicked, true); document.removeEventListener('pointerdown', guard, true); document.removeEventListener('keydown', keys, true);
     };

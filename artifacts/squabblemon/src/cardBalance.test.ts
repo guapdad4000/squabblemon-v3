@@ -25,7 +25,7 @@ test('Mythicals span early and late Motion without inflated printed Hands', () =
 });
 
 test('every character fits the six-round Motion curve without an oversized free body', () => {
-  assert.equal(characters.length, 148);
+  assert.equal(characters.length, 164);
   assert(characters.filter(card => card.cost === 1).length >= 10, 'gangs need enough opening cards');
   assert(characters.filter(card => card.cost >= 4).length >= 15, 'gangs need mid- and late-round choices');
   for (const cost of [1, 2, 3, 4]) {
