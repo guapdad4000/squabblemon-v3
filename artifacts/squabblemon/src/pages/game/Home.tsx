@@ -1,4 +1,5 @@
 import { useSearch } from 'wouter';
+import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { GameBackButton } from '../../components/venue/GameBackButton';
@@ -130,6 +131,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const profileCard = catalogCardById[bootstrap.profile.avatarKey]
     ?? bootstrap.profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean)
     ?? catalogCardById.cornball;
+  const profileSticker = avatarSticker(bootstrap.profile.avatarKey);
   function explore(next: Station | 'room') { setView(next); sendScene(frame, { type: 'view', view: next }); }
   function receive(message: SceneMessage) {
     if (message.type === 'interact' && music.enabled && !music.playing) musicActions.play();
@@ -176,7 +178,9 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     sendScene(frame, { type: 'light', night });
     sendScene(frame, { type: 'music', playing: music.playing });
     sendScene(frame, { type: 'crew', cards: crew.map(card => ({ name: card.name, image: getCardImage(card.artworkId) })) });
-    sendScene(frame, { type: 'profile', name: bootstrap.profile.displayName, image: getCardImage(profileCard.artworkId) });
+    sendScene(frame, { type: 'profile', name: bootstrap.profile.displayName,
+      image: profileSticker ? getAssetUrl(profileSticker.sticker.image ?? profileSticker.set.stickerAtlas!) : getCardImage(profileCard.artworkId),
+      cell: profileSticker?.sticker.image ? undefined : profileSticker?.sticker.cell });
     sendScene(frame, {
       type: 'settings',
       reducedMotion: bootstrap.profile.settings.reducedMotion,
@@ -203,7 +207,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       },
     });
   };
-  useEffect(syncRoom, [campaign, bootstrap.profile.settings.reducedMotion, preview, bootstrap.profile.savedDecks, bootstrap.profile.ownedCardIds]);
+  useEffect(syncRoom, [campaign, bootstrap.profile.settings.reducedMotion, preview, bootstrap.profile.savedDecks, bootstrap.profile.ownedCardIds, bootstrap.profile.avatarKey, bootstrap.profile.displayName]);
   useEffect(() => {
     const reset = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !document.querySelector('dialog[open]')) { setView('room'); sendScene(frame, { type: 'view', view: 'room' }); }

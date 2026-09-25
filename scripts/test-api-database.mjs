@@ -11,6 +11,7 @@ const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(workspaceRoot);
 
 const dailyCloutOnly = process.argv[2] === 'daily-clout';
+const profileAvatarsOnly = process.argv[2] === 'profile-avatars';
 const starterMythicOnly = process.argv[2] === 'starter-mythic';
 const rankedBrowser = process.argv[2] === 'fade-park';
 const cosmeticsBrowser = process.argv[2] === 'cosmetics';
@@ -144,7 +145,7 @@ try {
 
   assertCampaignDatabaseTarget({ ...process.env, DATABASE_URL: databaseUrl });
   run(
-    dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
+    profileAvatarsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/playerRewardRoutes.test.ts', 'src/lib/onlineMatches.test.ts'] : dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
     {
       ...process.env,
       DATABASE_URL: databaseUrl,

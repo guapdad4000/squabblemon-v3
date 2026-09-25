@@ -15,7 +15,7 @@ export function ProfileStyle({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const hasBanner = !!(set && card && profile.ownedCardIds.includes(card.catalogId));
   const [failedBanner, setFailedBanner] = useState<string | null>(null);
   const systemReduced = useReducedMotion();
-  const { card: portrait } = profilePortrait(profile);
+  const portrait = profilePortrait(profile);
   const stickers = (cosmetics?.stickers ?? []).filter(id => !!stickerById(id)).slice(0, 3);
   return <div className="profile-style">
     <h1 className="panel-title">Signature Style</h1>
@@ -24,7 +24,7 @@ export function ProfileStyle({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <CharacterBanner cardId={bannerId!} finish={cosmetics?.bannerFinish} stickers={stickers} displayName={profile.displayName}
         animated={!systemReduced && !profile.settings.reducedMotion} />
     </div> : <div className="profile-style-default">
-      <FighterPortrait cardId={portrait.catalogId} name={portrait.name} />
+      <FighterPortrait cardId={portrait.card.catalogId} avatarKey={portrait.avatarKey} name={portrait.name} />
       <div><span className="id-card__label">Safehouse original</span><strong>{profile.displayName}</strong>
         <p>{hasBanner ? 'Banner artwork unavailable' : 'No banner equipped'}</p>
         <small>{hasBanner ? 'Your equipped selection is still saved. You can customize it below.' : 'Your Fighter ID is already yours. Choose a character banner from your signature collections.'}</small>

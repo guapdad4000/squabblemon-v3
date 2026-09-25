@@ -14,6 +14,7 @@ import {
 import { starterRecipes, catalogIdsToEngineIds } from "@workspace/squabblemon-engine/data";
 import { createStoryMatch, replayMatchPrefix, canAffordSelection, type TranscriptMove } from "@workspace/squabblemon-engine/gameEngine";
 import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
+import { STICKER_AVATARS, stickerAvatarKey } from '@workspace/squabblemon-engine/cosmetics';
 import { createApp } from "../app";
 import { createCardProgressionSnapshot } from "./cardProgression";
 
@@ -269,6 +270,25 @@ test("HTTP profile update persists an owned catalog character avatar and preserv
         styleShards: 90,
       },
     );
+  });
+});
+
+test('HTTP profile persists any catalog sticker avatar without buying its banner pack', async t => {
+  const clerkUserId = `route-sticker-avatar-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  await db.insert(playerProfilesTable).values({ clerkUserId, displayName: 'Sticker Fan', avatarKey: 'cornball', onboardingStep: 'complete', ownedCardIds: ['cornball'], unlockedCosmeticIds: [] });
+  const standalone = STICKER_AVATARS.find(item => item.set.cardId !== 'cornball' && item.sticker.image)!;
+  const atlas = STICKER_AVATARS.find(item => item.sticker.cell !== undefined)!;
+  await withPlayerApi(clerkUserId, async baseUrl => {
+    for (const item of [standalone, atlas]) {
+      const avatarKey = stickerAvatarKey(item.sticker.id);
+      const result = await patchProfile(baseUrl, { avatarKey });
+      assert.equal(result.profile.avatarKey, avatarKey);
+      assert.equal((await profileFor(clerkUserId)).avatarKey, avatarKey);
+      assert.deepEqual((await profileFor(clerkUserId)).unlockedCosmeticIds, []);
+    }
+    await patchProfile(baseUrl, { avatarKey: 'sticker:not-a-real-sticker', displayName: 'Should not save' }, 400);
+    assert.equal((await profileFor(clerkUserId)).displayName, 'Sticker Fan');
   });
 });
 

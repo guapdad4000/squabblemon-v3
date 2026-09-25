@@ -77,6 +77,15 @@ export function styleSetFor(cardId: string | null | undefined) { return cardId &
 export function stickerById(id: string) {
   return stickerIndex.get(id);
 }
+/** Avatar stickers are available to everyone; banner sticker packs remain separate. */
+export const STICKER_AVATARS = [...stickerIndex.values()].filter(({ set, sticker }) =>
+  Boolean(sticker.image || (set.stickerAtlas && sticker.cell !== undefined)));
+export const stickerAvatarKey = (id: string) => `sticker:${id}`;
+export function avatarSticker(key: string | undefined) {
+  if (!key?.startsWith('sticker:')) return undefined;
+  const found = stickerById(key.slice(8));
+  return found && (found.sticker.image || (found.set.stickerAtlas && found.sticker.cell !== undefined)) ? found : undefined;
+}
 export function validateCosmeticLoadout(owner: CosmeticOwner, input: CosmeticLoadout): string | null {
   if (input.bannerCardId && (!styleSetFor(input.bannerCardId) || !owner.ownedCardIds.includes(input.bannerCardId))) return 'Unlock this character before equipping their banner.';
   if (input.bannerFinish === 'silver' && (!input.bannerCardId || !ownsStyle(owner, input.bannerCardId, 'character-banner-finish'))) return 'Unlock Silver Lining for this character first.';

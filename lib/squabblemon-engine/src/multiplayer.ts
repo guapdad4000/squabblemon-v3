@@ -47,6 +47,7 @@ export type OnlineDeck = {
 export type OnlineMember = {
   userId: string;
   name: string;
+  avatarKey?: string;
   deck: OnlineDeck;
   ready: boolean;
 };
@@ -355,7 +356,7 @@ export type OnlineRoomView = {
   gameNumber: number;
   status: OnlineRoom["status"];
   seat: Seat;
-  members: Record<Seat, { name: string; hero: string; ready: boolean } | null>;
+  members: Record<Seat, { name: string; hero: string; avatarKey?: string; ready: boolean } | null>;
   ownDeck: OnlineDeck;
   revealedDecks: Record<Seat, OnlineDeck> | null;
   activeSeat: Seat;
@@ -417,7 +418,7 @@ export function onlineRoomView(
   });
   const publicMember = (member: OnlineMember | null) =>
     member
-      ? { name: member.name, hero: member.deck.hero, ready: member.ready }
+      ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, ready: member.ready }
       : null;
   return {
     ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),

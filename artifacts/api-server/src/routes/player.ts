@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/rookie";
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
 import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
@@ -193,7 +194,7 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
     const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
     if (!current) return null;
     const requestedAvatarKey = parsed.data.avatarKey;
-    if (requestedAvatarKey !== undefined && requestedAvatarKey !== current.avatarKey) {
+    if (requestedAvatarKey !== undefined && requestedAvatarKey !== current.avatarKey && !avatarSticker(requestedAvatarKey)) {
       const requestedAvatar = Object.hasOwn(catalogCardById, requestedAvatarKey)
         ? catalogCardById[requestedAvatarKey]
         : undefined;

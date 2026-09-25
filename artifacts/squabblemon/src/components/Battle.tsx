@@ -1,4 +1,5 @@
 import { StreetSelect } from './ui/street-select';
+import { FighterPortrait } from './profile/FighterPortrait';
 import { DiceGameOverlay } from './DiceGameOverlay';
 import { blockbusterExtraCost } from '../gameEngine';
 import { DrFadeReferee } from './DrFadeReferee';
@@ -41,6 +42,8 @@ import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
+  playerIdentity?: { name: string; hero: string; avatarKey?: string };
+  rivalIdentity?: { name: string; hero: string; avatarKey?: string };
   districts: ReturnType<typeof getMatchDistricts>;
   scores: ReturnType<typeof getDistrictResults>;
   costs: Record<string, [number, number, number]>;
@@ -542,10 +545,11 @@ export function Battle({
     {presentedEffect?.chain && presentedEffect.chain.total > 1 && actor && <div className="ability-chain-banner" data-testid="ability-chain" key={presentedEffect.chain.id}><span>CHAIN {presentedEffect.chain.index} / {presentedEffect.chain.total}</span><strong>{actor.name} · {presentedEffect.abilityMetadata?.upgradeName ?? actor.ability}</strong><div>{Array.from({ length: presentedEffect.chain.total }, (_, index) => <i key={index} className={index < presentedEffect.chain!.index ? 'is-fired' : ''} />)}</div></div>}
     {presentedEffect && actor && !['player-travel', 'rival-travel'].includes(phase) && ['play', 'ability', 'expiration'].includes(presentedEffect.type) && presentedEffect.kind !== 'story' && <BattleAttack key={presentedEffect.sequence} card={actor} effect={presentedEffect} impact={effectLanded} replaying={replaying} audioEnabled={feedback?.audioEnabled ?? false} playedSpecialMoves={playedSpecialMoves} />}
     {crewView && <BattleCrew name={districts[crewView.lane].name} crew={m.boards[crewView.lane].filter(card => card.owner === crewView.owner)} onClose={() => setCrewView(null)} onInspect={setInspect} />}
-    <div className="battle-header relative z-30 shrink-0">
-      <div className="battle-rival" title={rivalIntent.tell}><RivalTell hero={rivalDeck.hero} tell={rivalIntent.tell} thinking={phase === 'rival-thinking'} /><div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {rivalIntent.style}{online && ` · ${online.rivalHandCount} cards`}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div><div data-testid="rival-intent" className="hidden xl:block max-w-64 truncate text-[8px] text-white/55">{rivalIntent.tell}</div></div></div>
+    <div className={`battle-header ${online ? 'battle-header--pvp ' : ''}relative z-30 shrink-0`}>
+      <div className="battle-rival" title={online ? online.rivalIdentity?.name : rivalIntent.tell}>{online?.rivalIdentity ? <div className="pvp-avatar" data-testid="pvp-rival-avatar"><FighterPortrait cardId={online.rivalIdentity.hero} avatarKey={online.rivalIdentity.avatarKey} name={online.rivalIdentity.name} /></div> : <RivalTell hero={rivalDeck.hero} tell={rivalIntent.tell} thinking={phase === 'rival-thinking'} />}<div className="battle-rival-mark" aria-hidden="true">VS</div><div className="battle-rival-copy"><div className="text-[9px] font-mono tracking-widest text-accent uppercase truncate">Rival // {online ? `${online.rivalHandCount} cards` : rivalIntent.style}</div><div className="font-display font-black text-sm md:text-2xl uppercase leading-none truncate">{rivalDeck.name}</div>{!online && <div data-testid="rival-intent" className="hidden xl:block max-w-64 truncate text-[8px] text-white/55">{rivalIntent.tell}</div>}</div></div>
       <div className="battle-round" aria-label={`Round ${m.round} of ${roundLimit}`}><span>Round <b>{String(m.round).padStart(2, '0')}</b><small> / {String(roundLimit).padStart(2, '0')}</small></span><div className="battle-round__steps" aria-hidden="true">{Array.from({ length: roundLimit }, (_, index) => <i key={index} className={index + 1 < m.round ? 'is-complete' : index + 1 === m.round ? 'is-current' : ''} />)}</div></div>
       <div className="battle-match-meta">
+        {online?.playerIdentity && <div className="pvp-player-identity"><div className="pvp-avatar pvp-avatar--you" data-testid="pvp-player-avatar"><FighterPortrait cardId={online.playerIdentity.hero} avatarKey={online.playerIdentity.avatarKey} name={online.playerIdentity.name} /></div><span title={online.playerIdentity.name}><small>Your corner</small>{online.playerIdentity.name}</span></div>}
         <MusicControls compact />
         <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
         {passive && (

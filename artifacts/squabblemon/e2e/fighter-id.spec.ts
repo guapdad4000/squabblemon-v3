@@ -62,7 +62,7 @@ test('fresh and established fighter identities show only earned account truth', 
 
   await expect(page.getByRole('heading', { level: 1, name: 'NEW KID' })).toBeVisible();
   await expect(page.getByText('Level 1', { exact: true })).toBeVisible();
-  await expect(page.getByText(/0\s*\/\s*250 XP/i)).toBeVisible();
+  await expect(page.getByText(/0\s*\/\s*250 account XP/i)).toBeVisible();
   await expect(page.getByText(/No badges earned yet|Your first badge/i)).toBeVisible();
   await expect(page.getByText(/wins/i)).toHaveCount(0);
 
@@ -85,23 +85,25 @@ test('fresh and established fighter identities show only earned account truth', 
 
   await expect(page.getByRole('heading', { level: 1, name: 'TWENTYFOURCHARACTERNAME!' })).toBeVisible();
   await expect(page.getByText('Level 5', { exact: true })).toBeVisible();
-  await expect(page.getByText(/125\s*\/\s*250 XP/i)).toBeVisible();
+  await expect(page.getByText(/125\s*\/\s*250 account XP/i)).toBeVisible();
   await expect(page.getByText('KYLE', { exact: true })).toBeVisible();
-  await expect(page.getByText(/Mastered/i)).toBeVisible();
+  await expect(page.getByText(/Mastered ·/i)).toBeVisible();
   await expect(page.getByText(/After-hours champion/i)).toBeVisible();
   await expect(page.getByText(/Neighborhood champion/i)).toBeVisible();
   await expect(page.getByText(/7 wins|wins 7|total wins/i)).toHaveCount(0);
   await expect(page.locator('img[src*="legacy-profile-photo"]')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Keep applying pressure' }).click();
 
   await page.getByRole('button', { name: /Edit identity/i }).click();
   const portraitChoices = page.locator('.avatar-grid');
+  await page.getByRole('button', { name: /^Characters/ }).click();
   await expect(portraitChoices).toBeVisible();
   await expect(portraitChoices.getByRole('button')).toHaveCount(2);
   await expect(portraitChoices.getByRole('button', { name: /Kyle/i })).toBeVisible();
   await expect(portraitChoices.getByRole('button', { name: /Rastamon/i })).toBeVisible();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-  await page.getByRole('link', { name: 'Explore mastery & events →' }).click();
-  await expect(page.getByRole('button', { name: 'Experiments & mastery' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('link', { name: 'Explore mastery & events' }).click();
+  await expect(page).toHaveURL(/\/game\/missions\?view=mastery/);
   await expect(page.getByRole('heading', { name: 'The wall of fame' })).toBeVisible();
 });
 
@@ -112,6 +114,7 @@ test('profile draft cancel is local; save sends the exact contract and updates s
 
   const name = page.getByLabel(/Fighter tag/i);
   await name.fill('CANCELLED NAME');
+  await page.getByRole('button', { name: /^Characters/ }).click();
   await page.getByRole('button', { name: /Rastamon/i }).click();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'NEW KID' })).toBeVisible();
@@ -120,6 +123,7 @@ test('profile draft cancel is local; save sends the exact contract and updates s
 
   await page.getByRole('button', { name: /Edit identity/i }).click();
   await name.fill('SAVED FIGHTER');
+  await page.getByRole('button', { name: /^Characters/ }).click();
   await page.getByRole('button', { name: /Rastamon/i }).click();
   const save = page.getByRole('button', { name: /Confirm|Save profile/i });
   await save.click();
@@ -140,6 +144,7 @@ test('pending identity save locks the whole dossier and cannot submit twice', as
   await page.getByRole('button', { name: /Edit identity/i }).click();
   const input = page.getByLabel(/Fighter tag/i);
   await input.fill('ONE REQUEST');
+  await page.getByRole('button', { name: /^Characters/ }).click();
   await page.getByRole('button', { name: /Rastamon/i }).click();
   const save = page.locator('.identity-editor button[type="submit"]');
   await save.click();
@@ -198,11 +203,11 @@ test('phone identity editor shows selection, keeps a long draft in bounds and re
   await openProfile(page);
   await page.getByRole('button', { name: 'Edit Identity' }).click();
   await page.getByLabel(/Fighter tag/i).fill('TWENTYFOURCHARACTERNAME!');
+  await page.getByRole('button', { name: /^Characters/ }).click();
   const choice = page.getByRole('button', { name: 'Rastamon', exact: true });
   await choice.click();
   await expect(choice).toHaveAttribute('aria-pressed', 'true');
-  const portrait = choice.locator('.fighter-portrait');
-  expect(await portrait.evaluate(node => getComputedStyle(node).boxShadow)).not.toBe('none');
+  expect(await choice.evaluate(node => getComputedStyle(node).boxShadow)).not.toBe('none');
   const panel = page.locator('.fighter-panel');
   await panel.focus();
   await page.keyboard.press('End');
@@ -247,7 +252,7 @@ test('settings save preserves rewards, cosmetics and saved crew drafts', async (
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-reduce-motion', 'true');
   await tab(page, 'Style').click();
-  expect(await page.locator('.character-banner__fighter').evaluate(node => getComputedStyle(node).animationName)).toBe('none');
+  expect(await page.locator('.character-banner__fighter, .character-banner__artwork').evaluate(node => getComputedStyle(node).animationName)).toBe('none');
 });
 
 test('settings soundtrack remains operable without leaving the panel', async ({ page }) => {
@@ -384,6 +389,7 @@ test('responsive profile has one scroll owner, reachable hit-tested actions and 
     await page.setViewportSize(viewport);
     await openProfile(page);
     await expect(tab(page, 'Overview')).toHaveAttribute('aria-selected', 'true');
+    await page.getByRole('button', { name: 'Edit Identity' }).scrollIntoViewIfNeeded();
     await assertTarget(page.getByRole('button', { name: 'Edit Identity' }));
     await attachScreenshot(page, `fighter-id-overview-${viewport.name}`);
     await tab(page, 'Style').click();
@@ -435,7 +441,7 @@ test('system reduced motion is honored and final sign out clears auth', async ({
   await openProfile(page);
   await tab(page, 'Style').click();
   await expect(page.locator('.character-banner')).toBeVisible();
-  expect(await page.locator('.character-banner__fighter').evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
+  expect(await page.locator('.character-banner__fighter, .character-banner__artwork').evaluate((node) => getComputedStyle(node).animationName)).toBe('none');
   await tab(page, 'Settings').click();
   const signOut = page.getByRole('button', { name: 'Sign Out' });
   await signOut.scrollIntoViewIfNeeded();
