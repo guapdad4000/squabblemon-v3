@@ -66,12 +66,12 @@
 .collection-stage__header .venue-page-heading h1{font-size:clamp(27px,3.25vw,43px)}
 .collection-stage__header .venue-page-heading p{margin-top:3px;font-size:10px}
 .collection-tabs{display:flex;gap:16px;border-bottom:0;margin-top:10px;overflow-x:auto}
-.collection-tabs button{position:relative;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;min-height:52px;padding:10px 24px;color:#1a1a1a;font:900 italic 16px var(--font-display);text-transform:uppercase;filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));transform:rotate(-1deg);transition:transform .2s,filter .2s}
-@media (prefers-reduced-motion: reduce) { .collection-tabs button { transition: none; transform: none; } }
-.collection-tabs button:hover{transform:rotate(0deg) scale(1.02);filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 60%)) brightness(1.05)}
-.collection-tabs button[aria-pressed=true]{color:#111;transform:rotate(1deg) scale(1.05);filter:sepia(.3) saturate(1.45) drop-shadow(3px 5px 5px rgb(0 0 0 / 65%));z-index:2}
-.collection-tabs button[aria-pressed=true]::before{content:'';position:absolute;top:-4px;left:34%;right:34%;height:13px;background:#d1a85ed1;box-shadow:0 1px 2px #593e1b55;transform:rotate(-3deg)}
-.collection-tabs button[aria-pressed=true]:after{display:none}
+.collection-tabs :is(button, a){position:relative;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;min-height:52px;padding:10px 24px;color:#1a1a1a;font:900 italic 16px var(--font-display);text-transform:uppercase;filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));transform:rotate(-1deg);transition:transform .2s,filter .2s}
+@media (prefers-reduced-motion: reduce) { .collection-tabs :is(button, a) { transition: none; transform: none; } }
+.collection-tabs :is(button, a):hover{transform:rotate(0deg) scale(1.02);filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 60%)) brightness(1.05)}
+.collection-tabs :is(button, a)[aria-pressed=true]{color:#111;transform:rotate(1deg) scale(1.05);filter:sepia(.3) saturate(1.45) drop-shadow(3px 5px 5px rgb(0 0 0 / 65%));z-index:2}
+.collection-tabs :is(button, a)[aria-pressed=true]::before{content:'';position:absolute;top:-4px;left:34%;right:34%;height:13px;background:#d1a85ed1;box-shadow:0 1px 2px #593e1b55;transform:rotate(-3deg)}
+.collection-tabs :is(button, a)[aria-pressed=true]:after{display:none}
 .collection-stage__body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#a08a5555 transparent;padding-bottom:max(18px,var(--fan-clearance,0px))}
 .collection-toolbar{display:flex;align-items:center;gap:20px;padding:16px 0;flex-wrap:wrap}
 .collection-toolbar .arsenal-search{max-width:370px}
@@ -105,6 +105,6 @@
 .collection-milestone small{display:block;color:#e0c280;font-size:11px;margin-top:8px}
 .collection-milestone__state{font-size:11px;color:#919986;display:flex;gap:5px;align-items:center}
 @media(max-width:800px){.arsenal-archive__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arsenal-heading-row .venue-page-heading__art{width:90px;height:90px}.arsenal-heading-actions{gap:6px}.arsenal-action{padding:10px 16px;font-size:12px}}
-@media(max-width:540px){.arsenal-heading-row{gap:8px;flex-wrap:wrap}.arsenal-heading-row .venue-page-heading__art{display:none}.arsenal-heading-row .venue-page-heading h1{font-size:34px}.arsenal-heading-row .venue-page-heading p{font-size:11px}.arsenal-heading-actions{margin-left:auto}.arsenal-archive__grid{gap:24px 18px}.crew-portrait{min-height:215px;padding-bottom:20px}.crew-portrait__art{width:100%;height:88%}.crew-portrait h3{font-size:22px}.crew-portrait__meta{font-size:10px;gap:5px;flex-wrap:wrap}.crew-portrait__arrow{display:none}.collection-toolbar{gap:8px}.collection-toolbar .arsenal-search{flex-basis:65%}.collection-toolbar__count{margin-left:0;flex-basis:100%}.collection-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px;padding-inline:0}.collection-filter-row{gap:4px 14px}.collection-filter-row>span{width:100%}.collection-milestone{gap:12px}.collection-milestone h3{font-size:17px}.collection-tabs{gap:12px}.collection-tabs button{font-size:14px}}
+@media(max-width:540px){.arsenal-heading-row{gap:8px;flex-wrap:wrap}.arsenal-heading-row .venue-page-heading__art{display:none}.arsenal-heading-row .venue-page-heading h1{font-size:34px}.arsenal-heading-row .venue-page-heading p{font-size:11px}.arsenal-heading-actions{margin-left:auto}.arsenal-archive__grid{gap:24px 18px}.crew-portrait{min-height:215px;padding-bottom:20px}.crew-portrait__art{width:100%;height:88%}.crew-portrait h3{font-size:22px}.crew-portrait__meta{font-size:10px;gap:5px;flex-wrap:wrap}.crew-portrait__arrow{display:none}.collection-toolbar{gap:8px}.collection-toolbar .arsenal-search{flex-basis:65%}.collection-toolbar__count{margin-left:0;flex-basis:100%}.collection-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px;padding-inline:0}.collection-filter-row{gap:4px 14px}.collection-filter-row>span{width:100%}.collection-milestone{gap:12px}.collection-milestone h3{font-size:17px}.collection-tabs{gap:12px}.collection-tabs :is(button, a){font-size:14px}}
 @media(prefers-reduced-motion:reduce){.arsenal-screen *{transition:none!important;scroll-behavior:auto!important}}
 html[data-reduce-motion=true] .arsenal-screen *{transition:none!important;scroll-behavior:auto!important}

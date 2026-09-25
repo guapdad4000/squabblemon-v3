@@ -144,16 +144,16 @@
   margin-bottom: -1px;
 }
 
-.collection-stage__header .collection-tabs button {
+.collection-stage__header .collection-tabs :is(button, a) {
   filter: sepia(0.5) hue-rotate(-15deg) saturate(1.2) drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));
 }
 
-.collection-stage__header .collection-tabs button[aria-pressed=true] {
+.collection-stage__header .collection-tabs :is(button, a)[aria-pressed=true] {
   filter: sepia(0.6) hue-rotate(-15deg) saturate(1.8) drop-shadow(3px 5px 5px rgb(0 0 0 / 85%));
   color: #450a0a;
 }
 
-.collection-stage__header .collection-tabs button[aria-pressed=true]::before {
+.collection-stage__header .collection-tabs :is(button, a)[aria-pressed=true]::before {
   background: #ea580c;
   box-shadow: 0 1px 4px #7c2d12;
 }
@@ -251,7 +251,7 @@
     width: 100%;
     gap: 8px;
   }
-  .collection-stage__header .collection-tabs button {
+  .collection-stage__header .collection-tabs :is(button, a) {
     flex: 1;
     min-height: 44px;
     padding: 8px 10px;

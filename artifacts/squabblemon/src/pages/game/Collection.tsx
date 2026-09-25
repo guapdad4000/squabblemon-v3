@@ -76,13 +76,13 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <nav className="collection-tabs" aria-label="Collection views">
             <button data-testid="button-view-catalog" type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
             <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>Collection Road</button>
+            <Link data-testid="link-signature-collections" href="/game/style">The Extras</Link>
           </nav>
           <div className="collection-hero__top">
             <div className="collection-hero__titles">
               <span className="collection-hero__eyebrow">THE ARSENAL / CARD ARCHIVE</span>
               <h1 className="collection-hero__title">The collection.</h1>
             </div>
-            <Link data-testid="link-signature-collections" href="/game/style" className="collection-hero__link">Signature collections · Stickers & banners →</Link>
           </div>
           <div className="collection-hero__bottom">
             <div className="collection-hero__stats">
