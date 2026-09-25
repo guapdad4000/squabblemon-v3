@@ -3,7 +3,7 @@ import { storyContent, storySeasons } from '@workspace/squabblemon-engine/story'
 import { ChevronLeft, ChevronRight, LockKeyhole, Play } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { getAssetUrl } from '../../../data';
 import '../../../styles/theater.css';
 import { SeasonPoster } from './components/SeasonPoster';
@@ -48,6 +48,14 @@ function legacySeasons(campaign: StoryCampaign): StorySeasonProgress[] {
 }
 
 export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterProps) {
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    const exit = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape' && !document.querySelector('dialog[open]')) navigate('/game');
+    };
+    window.addEventListener('keydown', exit);
+    return () => window.removeEventListener('keydown', exit);
+  }, [navigate]);
   const posterRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const posterRailRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{
@@ -179,6 +187,9 @@ export function StoryTheater({ campaign, onSelectSeason, onContinue }: TheaterPr
       onPointerCancel={() => { dragRef.current = null; }}
       data-testid="region-story-theater"
     >
+      <Link href="/game" className="theater-exit" aria-label="Exit cinema to safehouse">
+        <ChevronLeft size={18} aria-hidden="true" /> Exit cinema
+      </Link>
       <div className="theater-hall">
         {/* Environment */}
         <div className="theater-bg" style={{ backgroundImage: `url(${getAssetUrl('assets/story/theater/cinema-hall.webp')})` }} />
