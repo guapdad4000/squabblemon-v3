@@ -4,10 +4,12 @@ import { soundtrack } from '../musicPlayer';
 import { musicActions, useMusic, useMusicBanks, updateMusicBank } from '../musicStore';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { getAssetUrl } from '../data';
+import { setAnnouncerVolume, useAnnouncerVolume } from '../lib/battleAnnouncerVolume';
 import './music-controls.css';
 
 export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '' }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string }) {
   const music = useMusic();
+  const announcerVolume = useAnnouncerVolume();
   const banks = useMusicBanks();
   const playlist = music.playlist ?? soundtrack;
   const [feedback, saveFeedback] = useFeedbackPreferences();
@@ -65,6 +67,12 @@ export function MusicControls({ compact = false, variant = 'default', className 
             aria-label="Music volume" aria-valuetext={`${Math.round(music.volume * 100)} percent`}
             onChange={event => musicActions.volume(Number(event.target.value) / 100)} />
         </label>
+        <label className="music-volume"><span>Battle announcer <b>{Math.round(announcerVolume * 100)}%</b></span>
+          <input type="range" min="0" max="100" step="1" value={Math.round(announcerVolume * 100)}
+            aria-label="Battle announcer volume" aria-valuetext={`${Math.round(announcerVolume * 100)} percent`}
+            onChange={event => setAnnouncerVolume(Number(event.target.value) / 100)} />
+        </label>
+        <p className="music-note">Round and turn calls. Set to 0% to silence the announcer; your music keeps playing.</p>
         <label className="music-track"><span>On the turntable <b>{music.trackIndex + 1} / {playlist.length}</b></span>
           <select aria-label="Choose music track" value={music.trackIndex} onChange={event => musicActions.select(Number(event.target.value))}>
             {playlist.map((song, index) => <option key={song.id} value={index}>{String(index + 1).padStart(2, '0')} · {song.title}</option>)}

@@ -33,6 +33,7 @@ import { LocationNode, LocationWallpaper } from './LocationArtwork';
 import type { MechanicLesson, TutorialGuidance } from './tutorialGuidance';
 import { CoachSpotlight } from './CoachSpotlight';
 import { playVoiceLine } from '../lib/sfx';
+import { useBattleAnnouncer } from '../lib/useBattleAnnouncer';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -46,6 +47,7 @@ export type OnlineBattlePresentation = {
   turnSeconds: number;
   clockRunning: boolean;
   yourTurn: boolean;
+  announcementsReady?: boolean;
   mode: string;
   status: string;
   rivalHandCount: number;
@@ -286,6 +288,13 @@ export function Battle({
   const feedback = feedbackPreferences as FeedbackPreferences | undefined;
   const replaying = !!replay;
   const interactive = !replaying && phase === 'player-ready' && m.phase === 'player';
+  useBattleAnnouncer({
+    round: m.round,
+    roundLimit,
+    active: !replaying && m.phase !== 'complete' && (!online || online.announcementsReady !== false),
+    roundReady: online ? online.announcementsReady !== false : phase === 'round-intro' || interactive,
+    yourTurn: interactive && !mechanicLesson,
+  });
   const activeTutorialGuidance = tutorialCoach && tutorialGuidance
     ? tutorialGuidance as TutorialGuidance
     : null;

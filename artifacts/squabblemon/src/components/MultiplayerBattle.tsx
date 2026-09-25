@@ -137,7 +137,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
     )}
     <LayoutGroup><Battle match={projected.match} deck={room.ownDeck} rivalDeck={{ id: 'online-rival', name: rival.name, hero: rival.hero, cards: [] }}
-      online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected }}
+      online={{ ...projected.presentation, status, yourTurn: myTurn, clockRunning: room.status === 'active' && connected, announcementsReady: !arrival && connected }}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}
       squabble={squabble} setSquabble={setSquabble} setInspect={setInspect}
       commit={() => selected && lane !== null && void act({ type: 'play', instanceId: selected, lane, squabble })}

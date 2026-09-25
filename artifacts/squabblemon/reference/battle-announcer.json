@@ -1,0 +1,92 @@
+{
+  "sources": [
+    {
+      "filename": "ElevenLabs_2026-09-25T06_17_32_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp100_s50_sb75_se0_b_m2.mp3",
+      "sha256": "aa8aa0e4511c888c878ee5d5cb5fc7adac063dee834c8082066c267ba89462f2"
+    },
+    {
+      "filename": "ElevenLabs_2026-09-25T06_19_56_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp89_s50_sb75_se0_b_m2.mp3",
+      "sha256": "d9633d47a74115149d6d48271003d111921bb36212dc7931d3fe0d8fda75b03c"
+    }
+  ],
+  "note": "Only the numbered rounds and your-turn lines are used from source 0. Its final line is discarded. The standalone source 1 supplies the final-round cue for the actual last round of every match. Natural pace preserved; speech normalized to -16 LUFS.",
+  "clips": [
+    {
+      "id": "round-1",
+      "text": "Round 1.",
+      "source": 0,
+      "start": 0.1,
+      "end": 0.92
+    },
+    {
+      "id": "your-turn-1",
+      "text": "Your turn.",
+      "source": 0,
+      "start": 0.99,
+      "end": 1.91
+    },
+    {
+      "id": "round-2",
+      "text": "Round 2.",
+      "source": 0,
+      "start": 2.39,
+      "end": 3.29
+    },
+    {
+      "id": "your-turn-2",
+      "text": "Your turn.",
+      "source": 0,
+      "start": 3.48,
+      "end": 4.45
+    },
+    {
+      "id": "round-3",
+      "text": "Round 3.",
+      "source": 0,
+      "start": 4.68,
+      "end": 5.59
+    },
+    {
+      "id": "your-turn-3",
+      "text": "Your turn.",
+      "source": 0,
+      "start": 5.94,
+      "end": 6.87
+    },
+    {
+      "id": "round-4",
+      "text": "Round 4.",
+      "source": 0,
+      "start": 7.26,
+      "end": 8.3
+    },
+    {
+      "id": "your-turn-4",
+      "text": "Your turn.",
+      "source": 0,
+      "start": 8.69,
+      "end": 9.65
+    },
+    {
+      "id": "round-5",
+      "text": "Round 5.",
+      "source": 0,
+      "start": 10.02,
+      "end": 11.1
+    },
+    {
+      "id": "your-turn-5",
+      "text": "Your turn.",
+      "source": 0,
+      "start": 11.2,
+      "end": 12.22
+    },
+    {
+      "id": "final-round",
+      "text": "Final round, time to lock in gang.",
+      "source": 1,
+      "start": 0.08,
+      "end": 2.94
+    }
+  ]
+}
