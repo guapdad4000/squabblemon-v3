@@ -11,15 +11,15 @@ type SeasonPosterProps = {
   onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void;
 };
 
-const SEASON_ASSETS: Record<string, { bg: string; characters: string[] }> = {
-  'season-1': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/cornball.webp', 'assets/characters/block-party-titan.webp'] },
-  'season-2': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/ganger-red.webp', 'assets/characters/ganger-blue.webp'] },
-  'special-oz': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/dorothy.webp', 'assets/characters/oz.webp'] },
-  'special-alice': { bg: 'assets/layered/blue-arcade.webp', characters: ['assets/characters/alice.webp', 'assets/characters/queen-of-hearts.webp'] },
-  'special-yasuke': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/yasuke.webp'] },
-  'special-cellblock': { bg: 'assets/layered/red-alley.webp', characters: ['assets/characters/inmate-crafty.webp', 'assets/characters/inmate-boyfriend.webp'] },
-  'special-leon': { bg: 'assets/layered/morning-block.webp', characters: ['assets/characters/homeless-guy.webp', 'assets/characters/delivery-demon.webp'] },
-  'special-sherlock': { bg: 'assets/layered/blue-arcade.webp', characters: ['assets/characters/sherlock.webp', 'assets/characters/watson.webp'] },
+const SEASON_POSTERS: Record<string, string> = {
+  'season-1': 'assets/story/posters/block-crown.webp',
+  'season-2': 'assets/story/posters/blockbuster.webp',
+  'special-sherlock': 'assets/story/posters/missing-motion.webp',
+  'special-oz': 'assets/story/posters/yellow-line.webp',
+  'special-alice': 'assets/story/posters/borrowed-hour.webp',
+  'special-yasuke': 'assets/story/posters/banner-without-master.webp',
+  'special-cellblock': 'assets/story/posters/library-hour.webp',
+  'special-leon': 'assets/story/posters/place-to-return.webp',
 };
 
 export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
@@ -29,7 +29,7 @@ export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
   onFocus,
   onKeyDown,
 }, ref) => {
-  const assets = SEASON_ASSETS[season.id] ?? { bg: 'assets/layered/morning-block.webp', characters: [] };
+  const poster = SEASON_POSTERS[season.id] ?? 'assets/story/theater/season-one.webp';
 
   return (
     <button
@@ -45,11 +45,7 @@ export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({
       data-testid={`button-presentation-${season.id}`}
     >
       <div className="cinema-poster-art">
-        <div className="cinema-poster-bg" style={{ backgroundImage: `url(${getAssetUrl(assets.bg)})` }} />
-        {assets.characters.map((char, i) => (
-          <img key={i} src={getAssetUrl(char)} className={`cinema-poster-char char-${i}`} alt="" draggable={false} />
-        ))}
-        <div className="cinema-poster-vignette" />
+        <img className="cinema-poster-cover" src={getAssetUrl(poster)} alt="" draggable={false} />
       </div>
 
       <div className="cinema-poster-details">
