@@ -151,3 +151,11 @@ html[data-reduce-motion=true] .result-immersive__gloves { animation:none; }
 @media(max-height:500px) and (min-aspect-ratio:1/1) { .result-immersive__plaque { padding-top:54px; } }
 @media(max-height:500px) and (min-aspect-ratio:1/1) { .result-immersive { padding-top:36px; } .result-immersive__results { gap:4px; } }
 .result-immersive--loss .result-immersive__gloves { animation:none; }
+
+/* Quiet foreground rain for defeat; no celebratory particles. */
+.result-immersive__rain { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.result-immersive__rain i { position:absolute; top:-90px; left:var(--x); width:1px; height:65px; background:linear-gradient(transparent,#b6c4cd75); animation:result-rain-fall var(--duration) var(--delay) linear infinite; }
+.result-immersive__rain i:nth-child(3n) { height:40px; opacity:.45; }
+@keyframes result-rain-fall { from { transform:translate3d(0,-80px,0) rotate(12deg); } to { transform:translate3d(-16vw,115vh,0) rotate(12deg); } }
+@media(prefers-reduced-motion:reduce) { .result-immersive__rain { display:none; } }
+html[data-reduce-motion=true] .result-immersive__rain { display:none; }

@@ -30,6 +30,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
       <img draggable={false} src={asset(`${background}-wide`)} alt="" fetchPriority="high" />
     </picture>
     <div className="result-immersive__particles" aria-hidden="true">{victory && !reduced && Array.from({length: 22}, (_, i) => <i key={i} style={{'--x': `${(i * 37 + 7) % 100}%`, '--delay': `${-i * .7}s`, '--duration': `${7 + i % 5}s`, '--spin': `${i * 31}deg`} as CSSProperties} />)}</div>
+    {!victory && !draw && !reduced && <div className="result-immersive__rain" aria-hidden="true">{Array.from({length: 48}, (_, i) => <i key={i} style={{ '--x': `${(i * 37 + 3) % 100}%`, '--delay': `${-i * .17}s`, '--duration': `${.8 + (i % 7) * .12}s` } as CSSProperties} />)}</div>}
     <img className="result-immersive__brand" src={asset('v3/wordmark')} alt="Squabblemon" />
     {!draw && <button className="result-immersive__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>Scene {variant} / 2 <span aria-hidden="true">↔</span></button>}
     <div className="result-immersive__results">
