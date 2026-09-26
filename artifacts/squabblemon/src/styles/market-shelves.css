@@ -3,6 +3,7 @@
 .corner-store, .corner-checkout { --font-hand: 'Market Hand', cursive; --font-marker: 'Market Hand', cursive; }
 /* The market is a row of lit, open display cubbies below the storefront. */
 .corner-store { background: #171916; }
+.corner-store img, .corner-checkout img { -webkit-user-drag: none; -webkit-touch-callout: none; user-select: none; }
 .corner-store::after { background: linear-gradient(180deg, #11191436 0, #11191475 230px, #171916f5 440px, #171916 680px); }
 .corner-store .layered-venue { max-height: 590px; }
 .corner-store__scroll { display: block; max-width: 1280px; margin: 0 auto; padding: 30px clamp(20px, 4vw, 54px) 40px; }
@@ -114,6 +115,8 @@
   .bodega-shelf-heading small { font-size: 7px; letter-spacing: .04em; }
   .corner-store__products { margin-right: -18px; padding-right: 18px; }
   .corner-product { flex-basis: min(77vw, 310px); }
+  .corner-product--crate { flex-basis: min(58vw, 220px); }
+  .corner-product--crate .corner-product__display { aspect-ratio: 1.14; }
   .corner-product__label { padding: 18px 14px 14px; }
   .corner-checkout.corner-checkout--simple, .corner-checkout.corner-checkout--bagged { padding: 21px 18px; }
   .corner-checkout__summary { gap: 11px; }
@@ -262,3 +265,44 @@
 .market-paper-watermark > img { position: absolute; object-fit: contain; height: auto; transform: rotate(-12deg); }
 .corner-product__label > .market-paper-watermark > img { width: 72%; max-height: 88%; right: -1px; top: 27px; opacity: .12; }
 .market-bag-success > .market-paper-watermark > img { width: 94%; left: 3%; top: 37%; opacity: .105; }
+
+/* Phone storefront: keep the welcome, wallet and shelf within one glance. */
+@media (max-width: 540px) {
+  .corner-store__scroll { padding: 12px 14px 24px; }
+  .corner-store__heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; min-height: 0; padding: 0 0 12px; align-items: center; }
+  .corner-store__hero-copy { min-width: 0; }
+  .corner-store__hero-copy > span { font-size: 6px; letter-spacing: .07em; }
+  .corner-store__heading h1 { font-size: clamp(27px, 8.3vw, 42px); line-height: 1; margin: 7px 0 6px; white-space: nowrap; }
+  .corner-store__heading h1 br { display: none; }
+  .corner-store__heading h1 em { margin-left: .08em; }
+  .corner-store__heading h1 em::before { content: none; }
+  .corner-store__heading p { max-width: 240px; font-size: 10px; line-height: 1.4; margin: 0; }
+  .corner-store__heading .corner-store__open-sign { position: static; font-size: 16px; padding: 7px 6px; border-width: 1px; box-shadow: 2px 3px 0 #121915b3; transform: rotate(3deg); }
+  .corner-store__open-sign small { margin-top: 5px; font-size: 5px; letter-spacing: 0; }
+  .corner-store__wallet { padding: 5px 10px 5px 6px; gap: 7px; }
+  .corner-store__wallet > img { width: 26px; height: 26px; }
+  .corner-store__wallet strong { font-size: 18px; }
+  .corner-store__wallet small { font-size: 6px; }
+  .corner-store__notice { margin-block: 7px; padding: 6px 8px; font-size: 10px; line-height: 1.35; }
+  .corner-store__departments { display: grid; grid-template-columns: .8fr .8fr 1.35fr .85fr; gap: 7px; margin: 12px 0 10px; padding: 4px 2px; }
+  .corner-store__departments button { min-width: 0; min-height: 44px; padding: 6px 4px; font-size: 20px; }
+  .bodega-shelf-heading { padding-bottom: 7px; gap: 8px; }
+  .bodega-shelf-heading > span { font-size: 21px; }
+  .bodega-shelf-heading small { font-size: 6px; }
+  .corner-store__products { gap: 14px; margin-right: -14px; padding-right: 14px; }
+  .corner-product, .corner-product--crate { flex-basis: min(62vw, 232px); }
+  .corner-product__display, .corner-product--crate .corner-product__display { aspect-ratio: 1.22; border-width: 5px; border-radius: 3px; box-shadow: 0 0 0 1px #10231dcc, inset 0 8px 14px #0008, 0 4px 0 #18291f, 0 7px 12px #0004; }
+  .corner-product__display::before, .corner-product--crate .corner-product__display::before { inset: -5px; border-width: 5px; }
+  .corner-product__display::after { height: 6px; }
+  .corner-product__display > img { width: 78%; height: 82%; }
+  .bodega-led { height: 3px; top: 3px; }
+  .bodega-shelf-number { left: 6px; bottom: 10px; font-size: 8px; }
+  .corner-product__label { margin: 14px 2px 3px; padding: 0 12px 10px; }
+  .market-tag__header { padding-top: 10px; margin-bottom: 7px; font-size: 7px; }
+  .corner-product h2 { font-size: 25px; }
+  .corner-product p { font-size: 10px; }
+  .corner-product button { min-height: 52px; }
+  .market-tag__preview { font-size: 29px; }
+  .market-tag__footer { padding-top: 7px; gap: 5px; }
+  .market-print-bars { width: 65px; height: 14px; flex-shrink: 1; }
+}
