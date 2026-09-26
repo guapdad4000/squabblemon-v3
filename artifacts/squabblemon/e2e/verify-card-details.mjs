@@ -53,6 +53,63 @@ async function verifyDetails(page, name, mode, width, height, touch) {
   assert.ok(await dialog.locator('[data-testid=card-inspector] h4').evaluate(element => element.scrollWidth <= element.clientWidth + 1), 'Card name fits its artwork width');
   assert.equal(await dialog.locator('.collector-card img').evaluateAll(images => images.every(image => image.draggable === false)), true, 'Card artwork is not natively draggable');
   assert.equal(await dialog.locator('.collector-card').evaluateAll(cards => cards.every(card => getComputedStyle(card).userSelect === 'none')), true, 'Card artwork cannot be selected like webpage content');
+  const paper = dialog.locator('.dossier-paper');
+  const paperCheck = await paper.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const referee = element.querySelector('.dr-fade-referee').getBoundingClientRect();
+    const content = [...element.querySelectorAll('.dossier-banner,.dossier-name,.dossier-handle,.dossier-sticky,.dossier-stats,.dossier-notes,.dossier-section,.dossier-vitals')];
+    return {
+      refereeOverlaps: referee.top < rect.top && referee.bottom > rect.top,
+      refereeTop: referee.top, paperTop: rect.top, refereeBottom: referee.bottom,
+      outside: content.filter(node => {
+        if (!node.getClientRects().length) return false;
+        const box = node.getBoundingClientRect();
+        return box.left < rect.left - 2 || box.right > rect.right + 2 || box.top < rect.top - 2 || box.bottom > rect.bottom + 2;
+      }).map(node => ({className: node.className, rect: node.getBoundingClientRect().toJSON(), paper: rect.toJSON()})),
+      background: getComputedStyle(element).backgroundColor,
+      stamp: getComputedStyle(element.querySelector('.dossier-banner__stamp')).backgroundImage,
+      clip: getComputedStyle(element, '::before').content !== 'none',
+    };
+  });
+  assert.ok(paperCheck.refereeOverlaps && paperCheck.clip, `Referee and clip cross the paper edge: ${JSON.stringify(paperCheck)}`);
+  assert.deepEqual(paperCheck.outside, [], 'Resume content remains inside the paper');
+  assert.match(paperCheck.stamp, /classified-stamp\.png/, 'Transparent stamp is used');
+  if (mode === 'battle' && name === 'desktop') {
+    const ink = await page.evaluate(async () => {
+      const paths = ['classified-stamp.png', 'scout-stamp.png'];
+      return Promise.all(paths.map(async file => {
+        const image = new Image();
+        image.src = `${location.pathname.split('/e2e/')[0]}/assets/inspector/${file}`;
+        await image.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width; canvas.height = image.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let clear = 0, printed = 0;
+        for (let i = 3; i < data.length; i += 4) {
+          if (data[i] < 20) clear++;
+          if (data[i] > 180) printed++;
+        }
+        return { clear, printed };
+      }));
+    });
+    assert.ok(ink.every(stamp => stamp.clear > 1000 && stamp.printed > 1000), 'Both distressed stamps contain transparent paper and opaque ink');
+  }
+  // Stress unusually long live copy without changing the fixture's game data.
+  await paper.evaluate(element => {
+    element.querySelector('.dossier-name').textContent = 'ExtraordinaryUnbrokenFighterNameThatMustStayOnPaper';
+    element.querySelector('.dossier-sticky__title').textContent = 'ExtraordinaryUnbrokenSignatureAbility';
+    element.querySelector('.dossier-sticky__copy').textContent = 'A lengthy effect that stays on the clipboard. '.repeat(18);
+    element.querySelector('.dossier-notes').append(' A scout memo that keeps going.'.repeat(12));
+  });
+  assert.ok(await paper.evaluate(element => {
+    const paper = element.getBoundingClientRect();
+    return [...element.querySelectorAll('.dossier-name,.dossier-sticky__title,.dossier-sticky__copy,.dossier-notes')].every(node => {
+      const box = node.getBoundingClientRect();
+      return box.left >= paper.left - 2 && box.right <= paper.right + 2 && box.bottom <= paper.bottom + 2;
+    });
+  }), 'Long name, ability, effect, and notes remain on paper');
   await page.screenshot({ path: `../../screenshots/card-details-${mode}-${name}.jpg`, type: 'jpeg', quality: 85 });
   // Scrolling either the portrait page or desktop dossier must not move dismissal.
   await page.locator('.card-inspector-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });

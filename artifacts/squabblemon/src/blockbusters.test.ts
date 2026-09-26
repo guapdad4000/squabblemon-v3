@@ -380,31 +380,10 @@ test("damage blocked by Protection is not recorded for Block Spin", () => {
   );
 });
 
-test("Tattoo Artist and Lawyer grant a real consumable shield", () => {
-  for (const id of ["tattoo-artist", "lawyer"]) {
-    const m = blank();
-    m.boards[0] = [unit("player", 0)];
-    let a = cast(m, id),
-      target = a.boards[0][0];
-    assert(
-      a.timedEffects.some(
-        (e) =>
-          e.targetInstanceId === target.instanceId &&
-          e.kind === "church-protection",
-      ),
-    );
-    a = cast(a, "the-shootout", 0, 0, "cpu");
-    assert.equal(
-      a.boards[0].find((c) => c.instanceId === target.instanceId)
-        ?.powerModifier,
-      target.powerModifier,
-    );
-    assert(
-      !a.timedEffects.some(
-        (e) =>
-          e.targetInstanceId === target.instanceId &&
-          e.kind === "church-protection",
-      ),
-    );
+test("Tattoo Artist and Lawyer store distinct one-use protection contracts", () => {
+  for(const [id,kind] of [["tattoo-artist","ink"],["lawyer","appeal"]]) {
+    const m=blank();m.boards[0]=[unit("player",0)];const after=cast(m,id);
+    assert(after.creativeMarks?.some(x=>x.kind===kind&&x.targets.includes(m.boards[0][0].instanceId)));
+    assert(!after.timedEffects.some(x=>x.kind==='church-protection'));
   }
 });

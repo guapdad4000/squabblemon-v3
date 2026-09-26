@@ -1,7 +1,6 @@
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { getAssetUrl } from '../../lib/assets';
-import chrome from '../../lib/fadecadeChrome.json';
 import '../../styles/fadecade-dialog.css';
 
 export interface FadecadeDialogProps {
@@ -12,19 +11,22 @@ export interface FadecadeDialogProps {
   kind?: 'road' | 'daily' | 'weekly' | 'training' | 'events' | 'stockz';
 }
 
+const MACHINE_BORDERS: Record<NonNullable<FadecadeDialogProps['kind']>, string> = {
+  road: 'road-border-9slice.png',
+  daily: 'daily-border-9slice.png',
+  weekly: 'weekly-border-9slice.png',
+  training: 'training-border-9slice.png',
+  events: 'events-border-9slice.png',
+  stockz: 'stockz-border-9slice.png',
+};
+
 export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'road' }: FadecadeDialogProps) {
   const triggerRef = useRef<HTMLElement | null>(null);
-  const [missingHeader, setMissingHeader] = useState(false);
-  const [missingFooter, setMissingFooter] = useState(false);
   const reducedMotion = typeof document !== 'undefined' && document.querySelector('.fadecade-hub')?.getAttribute('data-reduce-motion') === 'true';
-  const frameStyle = (file: keyof typeof chrome): CSSProperties => {
-    const { width, height, textArea } = chrome[file];
-    return {
-      aspectRatio: `${width} / ${height}`,
-      '--safe-left': `${textArea.x}%`, '--safe-top': `${textArea.y}%`,
-      '--safe-width': `${textArea.width}%`, '--safe-height': `${textArea.height}%`,
-    } as CSSProperties;
-  };
+  const borderUrl = getAssetUrl(`assets/fadecade/frames/${MACHINE_BORDERS[kind]}`);
+  const borderStyle = {
+    '--machine-border': `url("${borderUrl}")`,
+  } as CSSProperties;
 
   useEffect(() => {
     if (!open) return;
@@ -58,37 +60,31 @@ export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'ro
             }
           }}
         >
-          <div className="fadecade-dialog-artwork-shell">
-            <header className="fadecade-dialog-art-header" style={frameStyle('stats-banner.webp')} data-art-missing={missingHeader}>
-              {!missingHeader && <img src={getAssetUrl('assets/fadecade/stats-banner.webp')} alt="" className="fadecade-dialog-banner-img" draggable={false} onError={() => setMissingHeader(true)} />}
-              <div className="fadecade-dialog-header-ink">
-                <span className="fadecade-dialog-eyebrow">
-                  {kind === 'road' && 'NO SHORTCUTS'}
-                  {kind === 'daily' && 'DAILY BOUNTY'}
-                  {kind === 'weekly' && 'WEEKLY BOUNTY'}
-                  {kind === 'training' && 'TRAINING'}
-                  {kind === 'events' && 'SPECIAL EVENT'}
-                  {kind === 'stockz' && 'THE CLOUT EXCHANGE'}
-                </span>
+          <div className="fadecade-dialog-artwork-shell" style={borderStyle}>
+            <img src={borderUrl} alt="" aria-hidden="true" hidden />
+            <div className="fadecade-dialog-console-screen">
+              <div className="fadecade-dialog-signal" aria-hidden="true"><i /><i /><i /><span>PLAYER READY</span></div>
+              <header className="fadecade-dialog-art-header">
+                <div className="fadecade-dialog-header-ink">
+                  <span className="fadecade-dialog-eyebrow">
+                    {kind === 'road' && 'NO SHORTCUTS'}
+                    {kind === 'daily' && 'DAILY BOUNTY'}
+                    {kind === 'weekly' && 'WEEKLY BOUNTY'}
+                    {kind === 'training' && 'TRAINING'}
+                    {kind === 'events' && 'SPECIAL EVENT'}
+                    {kind === 'stockz' && 'THE CLOUT EXCHANGE'}
+                  </span>
+                </div>
+              </header>
+              <div className="fadecade-dialog-titlebar">
+                <DialogPrimitive.Title className="fadecade-dialog-title">{title}</DialogPrimitive.Title>
+                <DialogPrimitive.Close className="fadecade-dialog-close" aria-label="Close"><span aria-hidden="true">×</span> Close</DialogPrimitive.Close>
               </div>
-            </header>
-            <div className="fadecade-dialog-titlebar">
-              <DialogPrimitive.Title className="fadecade-dialog-title">{title}</DialogPrimitive.Title>
-              <DialogPrimitive.Close className="fadecade-dialog-close" aria-label="Close">
-                <span aria-hidden="true">×</span> Close
-              </DialogPrimitive.Close>
+              <div className="fadecade-dialog-scroll-body"><div className="fadecade-dialog-inner-content">{children}</div></div>
+              <footer className="fadecade-dialog-art-footer">
+                <div className="fadecade-dialog-footer-ink"><span>{kind === 'stockz' ? 'YOUR CALL. YOUR CLOUT.' : kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span></div>
+              </footer>
             </div>
-            <div className="fadecade-dialog-scroll-body">
-              <div className="fadecade-dialog-inner-content">
-                {children}
-              </div>
-            </div>
-            <footer className="fadecade-dialog-art-footer" style={frameStyle('footer-banner.webp')} data-art-missing={missingFooter}>
-              {!missingFooter && <img src={getAssetUrl('assets/fadecade/footer-banner.webp')} alt="" className="fadecade-dialog-footer-img" draggable={false} onError={() => setMissingFooter(true)} />}
-              <div className="fadecade-dialog-footer-ink">
-                <span>{kind === 'stockz' ? 'YOUR CALL. YOUR CLOUT.' : kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span>
-              </div>
-            </footer>
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

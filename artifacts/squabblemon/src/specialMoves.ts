@@ -8,7 +8,10 @@ export type MoveClip = {
   chroma: 'cyan' | 'green' | 'none';
   startSeconds: number; durationMs: number; playbackRate: number;
 };
-export const moveClips = catalog.clips as Record<string, MoveClip>;
+export const moveClips = Object.fromEntries(Object.entries(catalog.clips).map(([id, clip]) => {
+  const engineId = Object.entries(catalog.assignments).find(([, assigned]) => assigned === id)?.[0];
+  return [id, { ...clip, ...(engineId && cards[engineId] ? { move: cards[engineId].ability } : {}) }];
+})) as Record<string, MoveClip>;
 export const moveAssignments: Record<string, string | null> = {
   ...catalog.assignments,
   ...Object.fromEntries(Object.values(cards).filter(card => card.roles?.includes('Block Party') || card.kind === 'blockbuster').map(card => [card.id, null])),

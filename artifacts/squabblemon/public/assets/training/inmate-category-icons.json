@@ -1,0 +1,36 @@
+{
+  "tool": "Built-in imagegen",
+  "format": "256 x 256 transparent WebP",
+  "icons": [
+    {
+      "file": "assets/training/inmate-gang-slot-icon.webp",
+      "references": [
+        "assets/training/inmate-quick-poster.webp",
+        "assets/training/inmate-moves-poster.webp"
+      ],
+      "prompt": "Create one finished transparent PNG game category icon, square 1024x1024. Genuine alpha-zero background outside the artwork; no scenery, gradient backdrop, frame, badge plate, checkerboard pixels, lettering or watermark. Match the provided chibi inmate sprite reference: punchy cel shading, thick near-black outline, lively adult caricature faces, 2.5-head proportions, orange prison jumpsuits, chunky feet, crisp saturated colors. Simplify details so the concept reads at 72px. One compact centered composition filling 88% of the square, entirely visible with clear transparent margin. The images are visual references for style and character identity, not images to reproduce as an entire sheet. Category: EXTRA GANG SLOT. Three chibi adult inmate friends squeezed shoulder to shoulder into a comic crew portrait: heavy-set Kingpin with locs and gold chain at center, green-cap Crafty on one side, short-haired inmate on the other. Show heads and bodies down to chunky shoes, simple overlap. One bold gold plus symbol beside the crew reads 'add another gang'. Comically self-important expressions. Orange, green-cap and gold accents; all characters share the same style as the provided references. The icon should read as a team plus sign."
+    },
+    {
+      "file": "assets/training/inmate-recruit-icon.webp",
+      "references": [
+        "assets/training/inmate-moves-poster.webp",
+        "assets/characters/inmate-informant.webp"
+      ],
+      "prompt": "Create one finished transparent PNG game category icon, square 1024x1024. Genuine alpha-zero background outside the artwork; no scenery, gradient backdrop, frame, badge plate, checkerboard pixels, lettering or watermark. Match the provided chibi inmate sprite reference: punchy cel shading, thick near-black outline, lively adult caricature faces, 2.5-head proportions, orange prison jumpsuits, chunky feet, crisp saturated colors. Simplify details so the concept reads at 72px. One compact centered composition filling 88% of the square, entirely visible with clear transparent margin. The images are visual references for style and character identity, not images to reproduce as an entire sheet. Category: NEIGHBORHOOD RECRUIT. Chibi version of the second reference's adult Inmate Informant, dark brown skin, long neat black locs tied behind him, orange open jumpsuit, black boots. Big friendly sly grin, one hand beckoning 'come join us', other hand carrying a compact folder with one small portrait silhouette and a prominent green plus symbol, no text. Full small body with oversized head. No phone. Keep the folder graphic very simple, so the icon reads 'new recruit'. Match the first reference's chibi proportions and graphic clarity."
+    },
+    {
+      "file": "assets/training/inmate-tagged-icon.webp",
+      "references": [
+        "assets/training/inmate-moves-poster.webp"
+      ],
+      "prompt": "Create one finished transparent PNG game category icon, square 1024x1024. Genuine alpha-zero background outside the artwork; no scenery, gradient backdrop, frame, badge plate, checkerboard pixels, lettering or watermark. Match the provided chibi inmate sprite reference: punchy cel shading, thick near-black outline, lively adult caricature faces, 2.5-head proportions, orange prison jumpsuits, chunky feet, crisp saturated colors. Simplify details so the concept reads at 72px. One compact centered composition filling 88% of the square, entirely visible with clear transparent margin. The images are visual references for style and character identity, not images to reproduce as an entire sheet. Category: TAGGED FINISH. The green-cap chibi adult Crafty inmate from the reference is an overconfident graffiti artist. Orange sleeveless jumpsuit and black boots, cheeky grin, brandishing a single oversized spray-paint can. One compact vivid cyan-magenta spray swoosh behind his shoulder and a few paint splashes on the orange outfit, all attached to the tight icon composition. No text, no letters, no weapons. Clearly read as a chibi inmate plus spray can, keep the face and can large."
+    },
+    {
+      "file": "assets/training/inmate-chrome-icon.webp",
+      "references": [
+        "assets/training/inmate-quick-poster.webp"
+      ],
+      "prompt": "Create one finished transparent PNG game category icon, square 1024x1024. Genuine alpha-zero background outside the artwork; no scenery, gradient backdrop, frame, badge plate, checkerboard pixels, lettering or watermark. Match the provided chibi inmate sprite reference: punchy cel shading, thick near-black outline, lively adult caricature faces, 2.5-head proportions, orange prison jumpsuits, chunky feet, crisp saturated colors. Simplify details so the concept reads at 72px. One compact centered composition filling 88% of the square, entirely visible with clear transparent margin. The images are visual references for style and character identity, not images to reproduce as an entire sheet. Category: CHROME FINISH. The heavy-set adult Kingpin inmate from the reference in a comically proud polished-chrome makeover: familiar locs, goatee, chunky chain and open jacket; face retains dark brown skin. His jacket and boots are reflective silver chrome with strong white glints and blue-gray cel-shaded reflections, orange trousers retain the inmate identity. Posing like a tiny fashion superstar, chin up, hands on hips, two large stylized diamond sparkles close beside him. Silver should be brilliant and readable against dark UI. No dumbbells, text or sunglasses hiding identity."
+    }
+  ]
+}

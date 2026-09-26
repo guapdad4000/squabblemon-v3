@@ -1,0 +1,52 @@
+import { chromium, expect } from '@playwright/test';
+import { CHARACTER_STYLE_SETS } from '@workspace/squabblemon-engine/cosmetics';
+import { mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const base=process.env.TEST_BASE_URL ?? 'http://localhost:4210';
+const out=fileURLToPath(new URL('../../deliverables/extras-studio-review/',import.meta.url));
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome'});
+const lockedId=Object.keys(CHARACTER_STYLE_SETS).find(id=>!['kyle','stockz'].includes(id));
+try {
+ for(const width of [1440,768,390,320]) {
+  const context=await browser.newContext({viewport:{width,height:1000}});
+  const html=await (await context.request.get(`${base}/e2e/extras-notifications.fixture.html`)).text();
+  await context.route('**/game**',route=>route.request().resourceType()==='document'?route.fulfill({contentType:'text/html',body:html}):route.continue());
+  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(`${base}/e2e/extras-notifications.fixture.html`);
+  await page.getByRole('button',{name:'The Extras',exact:true}).click();
+  await expect(page.locator('.extras-hero__art')).toBeVisible();
+  await page.locator('.extras-hero__art').evaluate(img=>img.decode());
+  await expect(page.locator('a.extras-pack')).toHaveCount(2);
+  expect(await page.locator('.extras-pack--locked').count()).toBeGreaterThan(0);
+  expect(await page.locator('.extras-pack--locked a,.extras-pack--locked button').count()).toBe(0);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:`${out}studio-${width}.png`});
+  await page.locator('.extras-pack').first().scrollIntoViewIfNeeded();
+  await page.evaluate(()=>window.scrollBy(0,-80));
+  await page.locator('.extras-pack:nth-child(-n+3) img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));
+  await page.screenshot({path:`${out}collections-${width}.png`});
+  const before=await page.locator('.extras-pack').count();
+  await page.getByRole('button',{name:'Show more collections',exact:true}).click();
+  expect(await page.locator('.extras-pack').count()).toBeGreaterThan(before);
+  await page.locator('.extras-pack--locked').first().click();
+  await expect(page.getByTestId('character-collections')).toBeVisible();
+  await page.getByRole('button',{name:'My characters',exact:true}).click();
+  await expect(page.locator('.extras-pack--locked')).toHaveCount(0);
+  await page.getByRole('searchbox').fill('zzzz-nobody');
+  await expect(page.getByRole('status')).toContainText('No looks on this rack');
+  await page.getByRole('button',{name:'Show all collections',exact:true}).click();
+  await expect(page.locator('a.extras-pack')).toHaveCount(2);
+  await page.locator('a.extras-pack').first().click();
+  await expect(page.getByTestId('character-styles')).toBeVisible();
+  await page.goto(`${base}/game/style/${lockedId}?tab=stickers`);
+  await expect(page.getByTestId('locked-character-style')).toBeVisible();
+  await expect(page.locator('.style-workbench')).toHaveCount(0);
+  await expect(page.locator('.style-tabs')).toHaveCount(0);
+  await page.getByRole('link',{name:'Back to The Extras'}).click();
+  await expect(page.getByTestId('character-collections')).toBeVisible();
+  expect(errors).toEqual([]);
+  console.log(`PASS ${width}: artwork, responsive layout, filters, owned collections, locked click and direct URL guards`);
+  await context.close();
+ }
+} finally {await browser.close();}

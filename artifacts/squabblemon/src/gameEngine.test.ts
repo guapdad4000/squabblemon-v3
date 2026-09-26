@@ -19,10 +19,11 @@ const playOne = (id: string, setup?: (m: Match) => Match) => {
 test("City Never Sleeps cards use deterministic reveal, protection, movement, and cost rules", () => {
   let m = createMatch("vibes", "vibes");
   const barber = custom("barber", "player", 1), ally = custom("delivery", "player", 2), enemy = custom("cornball", "cpu", 3);
+  ally.lane=0; enemy.lane=0;
   m = { ...m, playerMotion: 20, playerHand: [barber], boards: [[ally, enemy], [], []] };
   m = playCard(m, "player", barber.instanceId, 0);
-  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 2);
-  assert.equal(m.boards[0].some(card => card.instanceId === enemy.instanceId), false, 'lethal Line Up destroys the enemy');
+  assert.equal(m.boards[0].find(card => card.instanceId === ally.instanceId)?.powerModifier, 1);
+  assert.equal(m.boards[0].some(card => card.instanceId === enemy.instanceId), true, 'Line Up never trims base Hands');
 
   const bottle = custom("bottle", "player", 4);
   m = { ...m, phase: "player", playerMotion: 5, playerHand: [bottle] };
@@ -384,12 +385,12 @@ test('sustain and comeback abilities visibly cleanse and swing Hands', () => {
   const enemyA = { ...custom('wifey', 'cpu', 31), lane: 0 as const };
   const enemyB = { ...custom('baby', 'cpu', 32), lane: 0 as const };
   const mama = playOne('baby', m => ({ ...m, boards: [[enemyA, enemyB], [], []] }));
-  assert.equal(mama.boards[0].find(c => c.owner === 'player')?.powerModifier, 2);
+  assert.equal(mama.boards[0].find(c => c.owner === 'player')?.powerModifier, 0);
 
   const giant = { ...custom('oink', 'cpu', 33), lane: 0 as const, powerModifier: 8 };
   const comeback = playOne('hooper', m => ({ ...m, boards: [[giant], [], []] }));
-  assert.equal(comeback.boards[0].find(c => c.owner === 'player')?.powerModifier, 2);
-  assert.equal(comeback.boards[0].find(c => c.instanceId === giant.instanceId)?.powerModifier, 6);
+  assert.equal(comeback.boards[0].find(c => c.owner === 'player')?.powerModifier, 0);
+  assert.equal(comeback.boards[0].find(c => c.instanceId === giant.instanceId)?.powerModifier, 8);
 });
 
 test('movement and engine cards keep their persistent board changes', () => {
@@ -413,8 +414,8 @@ test('movement and engine cards keep their persistent board changes', () => {
   assert.equal(combo.boards[1].find(c => c.instanceId === remotePlug.instanceId)?.powerModifier, 1);
 
   const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6, boards: [[streamer], [], []] }));
-  assert.equal(flexed.playerMotion, 2);
-  assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 2);
+  assert.equal(flexed.playerMotion, 4);
+  assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 0);
 });
 
 test('Plug discount waits for a different district and is then consumed', () => {
@@ -517,7 +518,7 @@ test('Burn, Weaken, and Lock consume direct shields and respect Side Eye', () =>
   const cases = [
     { sourceId: 'youngbull', status: 'burnStacks' },
     { sourceId: 'redpill', status: 'weakened' },
-    { sourceId: 'mural', status: 'locked' },
+    { sourceId: 'thefeds', status: 'locked' },
   ] as const;
   const statusValue = (card: ReturnType<typeof custom>, status: typeof cases[number]['status']) =>
     status === 'burnStacks' ? card.statuses.burnStacks : card.statuses[status];
@@ -558,8 +559,8 @@ test('round-end statuses and hand bonds persist into the next round and final sc
     burned.statuses.burnStacks = 2;
     const boosted = { ...custom('cornball', 'player', 310 + round), lane: 0 as const };
     boosted.statuses.boosted = true;
-    const bonded = { ...custom('roaster', 'player', 320 + round), lane: 1 as const };
-    const bond = custom('honestthot', 'player', 330 + round);
+    const bonded = { ...custom('vibe', 'player', 320 + round), lane: 1 as const };
+    const bond = custom('monsoonanchor', 'player', 330 + round);
     const match: Match = {
       ...createMatch('vibes', 'vibes'), round, phase: 'resolved', playerHand: [bond],
       boards: [[burned, boosted], [bonded], []],
@@ -569,7 +570,7 @@ test('round-end statuses and hand bonds persist into the next round and final sc
 
   for (const round of [5, 6]) {
     const { match, burned, boosted, bonded, bond } = resolvedAt(round);
-    assert.equal(bond.elementalBond, 'Air');
+    assert.equal(bond.elementalBond, 'Water');
     const after = nextRound(match);
     assert.equal(after.phase, round === 6 ? 'complete' : 'player');
     assert.equal(after.boards.flat().find(card => card.instanceId === burned.instanceId)?.powerModifier, -2);
@@ -580,14 +581,14 @@ test('round-end statuses and hand bonds persist into the next round and final sc
   }
 });
 
-test('all pure hand bonds activate trained tiers zero through three on characters only', () => {
+test('former pure bonds retain upgrade IDs but do not grant trained growth from hand', () => {
   const bondCases = [
     ['honestthot', 'roaster'], ['abuela', 'pinaynurse'], ['icecream', 'vibe'],
     ['gardener', 'rastamon'], ['incel', 'gamer'], ['torta', 'manman'], ['concrete', 'landlord'],
   ] as const;
   for (const [caseIndex, [bondId, targetId]] of bondCases.entries()) {
-    assert(cards[bondId].effect.startsWith('Ongoing:'));
-    assert(cards[bondId].abilityUpgrades.every(upgrade => upgrade.description.includes('bonded ally')));
+    assert.equal(cards[bondId].elementalBond,undefined);
+    assert.deepEqual(cards[bondId].abilityUpgrades.map(u=>u.id),[1,2,3].map(n=>`${bondId}:upgrade:${n}`));
     for (let tier = 0; tier <= 3; tier++) {
       const bond = custom(bondId, 'player', 400 + caseIndex * 10 + tier);
       const target = { ...custom(targetId, 'player', 500 + caseIndex * 10 + tier), lane: 0 as const };
@@ -600,7 +601,7 @@ test('all pure hand bonds activate trained tiers zero through three on character
         }),
       };
       const after = nextRound(match);
-      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1 + tier, `${bondId} tier ${tier}`);
+      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 0, `${bondId} tier ${tier}`);
       if (bondId === 'honestthot') assert.equal(after.boards[0].find(card => card.instanceId === support.instanceId)?.powerModifier, 0);
     }
   }
@@ -626,7 +627,7 @@ test('Elemental Bond Wave catalog entries retain collection identity and a mono-
     ['canopykeeper', 'Plant', 'Rare'], ['slipstream', 'Air', 'Rare'],
   ] as const) {
     const catalog = cardCatalog.find(entry => entry.engineId === bondId);
-    assert.equal(cards[bondId].elementalBond, element);
+    assert.equal(cards[bondId].elementalBond, bondId === 'monsoonanchor' ? element : undefined);
     assert.equal(catalog?.rarity, rarity);
   }
   const featured = decks.find(deck => deck.id === 'voltage');
@@ -636,7 +637,7 @@ test('Elemental Bond Wave catalog entries retain collection identity and a mono-
   assert(featured?.cards.every(id => cards[id]?.type === 'Electric'));
 });
 
-test('new elemental bonds stack with GUAP and their legacy elemental bonds', () => {
+test('remaining dual-purpose bonds grant only their own element growth', () => {
   const bondIds = ['guap', 'icecream', 'monsoonanchor', 'piratedj', 'circuitcaptain', 'gardener', 'canopykeeper',
     'honestthot', 'slipstream'] as const;
   const hand = bondIds.map((id, index) => custom(id, 'player', 700 + index));
@@ -651,21 +652,21 @@ test('new elemental bonds stack with GUAP and their legacy elemental bonds', () 
   };
   const after = nextRound(match);
   const byId = new Map(after.boards.flat().map(card => [card.instanceId, card]));
-  assert.equal(byId.get(water.instanceId)?.powerModifier, 2, 'legacy and wave Water bonds stack');
-  assert.equal(byId.get(electric.instanceId)?.powerModifier, 2, 'legacy and wave Electric bonds stack');
-  assert.equal(byId.get(plant.instanceId)?.powerModifier, 2, 'legacy and wave Plant bonds stack');
-  assert.equal(byId.get(air.instanceId)?.powerModifier, 2, 'legacy and wave Air bonds stack');
+  assert.equal(byId.get(water.instanceId)?.powerModifier, 1, 'only Sushi Chef retains the Water bond');
+  assert.equal(byId.get(electric.instanceId)?.powerModifier, 1, 'only DJ retains the Electric bond');
+  assert.equal(byId.get(plant.instanceId)?.powerModifier, 0, 'Plant sources now need board actions');
+  assert.equal(byId.get(air.instanceId)?.powerModifier, 0, 'Air sources now need board actions');
   assert.equal(byId.get(fire.instanceId)?.powerModifier, 1, 'GUAP stacks independently for Fire');
 });
 
-test('each new bond keeps the trained hand-bond upgrade path', () => {
+test('only the remaining Water bond applies its trained hand-bond upgrade path', () => {
   const bondCases = [
     ['monsoonanchor', 'riptidebruiser'], ['circuitcaptain', 'batteryback'],
     ['canopykeeper', 'sprout'], ['slipstream', 'gust'],
   ] as const;
   for (const [index, [bondId, targetId]] of bondCases.entries()) {
-    assert(cards[bondId].effect.startsWith('Ongoing:'));
-    assert(cards[bondId].abilityUpgrades.every(upgrade => upgrade.description.includes('bonded ally')));
+    assert.equal(!!cards[bondId].elementalBond,bondId==='monsoonanchor');
+    assert.equal(cards[bondId].abilityUpgrades.length,3);
     for (let tier = 0; tier <= 3; tier++) {
       const bond = custom(bondId, 'player', 800 + index * 10 + tier);
       const target = { ...custom(targetId, 'player', 900 + index * 10 + tier), lane: 0 as const };
@@ -677,7 +678,7 @@ test('each new bond keeps the trained hand-bond upgrade path', () => {
         }),
       };
       const after = nextRound(match);
-      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, 1 + tier, `${bondId} tier ${tier}`);
+      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, bondId==='monsoonanchor' ? 1 + tier : 0, `${bondId} tier ${tier}`);
     }
   }
 });
@@ -842,4 +843,22 @@ test('Church Auntie buff adds immediate Hands, preserves existing shields, and r
   const ally={...custom('cornball','player',92),lane:0 as const};
   const silenced=playOne('church',m=>({...m,playerHand:m.playerHand.map(c=>({...c,statuses:{...c.statuses,silenced:true}})),boards:[[ally],[],[]]}));
   assert.equal(silenced.boards[0].find(c=>c.instanceId===ally.instanceId)!.powerModifier,0);
+});
+
+for (const owner of ['player', 'cpu'] as const) test(`Natural Cure fallback is local, needs another ally, and preserves the stronger cleanse for ${owner}`, () => {
+  for (const mode of ['healthy', 'frozen', 'solo', 'disabled'] as const) {
+    const source = custom('rastamon', owner, 91), ally = {...custom('cornball', owner, 92), lane: 0 as const};
+    ally.statuses.burnStacks = 2; ally.statuses.frozen = mode === 'frozen';
+    if (mode === 'disabled') source.statuses.silenced = true;
+    const m: Match = {...createMatch('block', 'block'), phase: owner === 'player' ? 'player' : 'cpu-reveal',
+      playerMotion: 9, cpuMotion: 9, playerHand: owner === 'player' ? [source] : [], cpuHand: owner === 'cpu' ? [source] : [],
+      boards: [mode === 'solo' ? [] : [ally], [], []]};
+    const before = JSON.stringify(m), after = playCard(m, owner, source.instanceId, 0);
+    assert.equal(JSON.stringify(m), before); assert.deepEqual(after, playCard(JSON.parse(before), owner, source.instanceId, 0));
+    assert.equal(after.boards[0].find(c => c.instanceId === source.instanceId)!.powerModifier, 0);
+    const helped = after.boards[0].find(c => c.instanceId === ally.instanceId);
+    if (mode === 'solo') assert.equal(helped, undefined);
+    else { assert.equal(helped!.powerModifier, mode === 'frozen' ? 2 : mode === 'disabled' ? 0 : 1);
+      assert.equal(helped!.statuses.burnStacks, mode === 'frozen' ? 0 : 2); }
+  }
 });

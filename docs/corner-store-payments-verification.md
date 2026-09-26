@@ -1,5 +1,66 @@
 # Corner Store payment verification
 
+
+## Post-deploy store smoke check
+
+The `deploy-succeeded` Netlify event function
+(`artifacts/api-server/src/netlify/functions/deploy-succeeded.mts`) runs
+automatically after every successful deploy. On production deploys it verifies
+the unauthenticated catalog request still returns 401, mints a short-lived
+Clerk session for the dedicated smoke-check user, and asserts
+`GET /api/player/payments/catalog` returns `enabled: true` with `mode: live`
+and every offer available. Any other result fails the function invocation and
+posts to `STORE_CHECK_ALERT_WEBHOOK` when configured, so the store cannot
+quietly disable checkout again. This guards the regression where the gate read
+build-only env vars (`NETLIFY`/`APP_ENV`) that Netlify functions never receive
+and the live store showed "Live payments await merchant and policy approval"
+while every flag looked correct. Preview deploys skip the live-mode assertion.
+
+`pnpm run test:store:smoke`
+(`artifacts/api-server/src/tools/store-smoke-check.ts`) re-runs the same check
+on demand against the deployed origin. Shared logic lives in
+`artifacts/api-server/src/lib/payments/storeSmokeCheck.ts`.
+
+Required environment (function scope): `STORE_CHECK_USER_ID` (dedicated
+smoke-check Clerk user) and the existing live `CLERK_SECRET_KEY`. The origin
+defaults to `PAYMENTS_PUBLIC_ORIGIN`; set `STORE_CHECK_ORIGIN` to override.
+Optional: `STORE_CHECK_ALERT_WEBHOOK` (HTTPS) for failure alerts and
+`STORE_CHECK_EXPECT_MODE` to override the mode assertion. Smoke sessions are
+revoked on every exit path; cleanup failures are logged, never hidden. The
+release gate (`scripts/build-netlify.mjs`) runs the check's unit suite and
+exercises the built `deploy-succeeded` bundle end-to-end with a mocked live
+catalog (`scripts/check-netlify-function.mjs`), so the guard itself cannot
+silently rot or be dropped from the release path.
+
+## Live production purchase evidence (2026-09-24)
+
+A real live $2.99 Pocket-change purchase completed end-to-end on
+https://squabble.today against production deploy `6ab49047ebca07000816114d`
+(commit `d3a00344`, database branch `production`).
+
+- **Stripe Checkout with automatic tax**: live session
+  `cs_live_a1tXe3vGez6krhg09PedQ5KOGkbFA5ZWa1tpbOl16sdKnkGSFedYw6rknu` (created
+  2026-09-24T03:29:38Z) shows `automatic_tax.enabled=true`, provider `stripe`,
+  status `complete`; base 299 cents, computed tax 0, total 299. As with the
+  hosted test evidence, this is a zero-tax transaction (California billing
+  address, `txcd_10000000`); a positive-tax transaction remains unexercised.
+- **Webhook 200**: Stripe's live `checkout.session.completed`
+  `evt_1UJ3M0Dx32cFaDaJInaVyb6m` (03:29:48Z) correlates with the production
+  function record `POST /api/payments/webhook` `res.statusCode=200` at
+  03:29:48.725Z, read through Netlify's authenticated historical-log API.
+- **Order settled**: production `payment_orders` row
+  `1790220578068-4d2af14c-0178-46ab-bdae-4e32f033d45e` is `live`/`fulfilled`,
+  amount 299, tax 0, total 299, session and payment-intent IDs matching Stripe,
+  `paid_at` 03:29:49Z.
+- **Exactly one correct credit**: exactly one `payment_events` row (the
+  completion event) and exactly one `payment_fulfillments` row of 500 Clout
+  exist for the order; the buyer's profile has exactly one fulfillment in
+  total. Stripe shows no refund or dispute on the charge.
+
+No credential values are recorded here. The live restricted key and Netlify
+access token stayed in their secret stores; database access used the Netlify
+API-issued branch connection string read-only.
+
 ## Current isolated hosted preview evidence
 
 On ready deploy `6ab4426b8743f80008889427`, the hosted-test worker reported an
@@ -13,9 +74,13 @@ The Stripe-origin replay requested at **2026-09-23 21:40:16.761 UTC** is
 correlated with the exact preview deployment's Netlify function record at
 **21:40:17.280 UTC**: `POST /api/payments/webhook`, `res.statusCode=200`.
 This destination record is separate from Stripe's retry-API HTTP-200
-acknowledgement. The Netlify adapter's request logger labels the record
-`request aborted`; the reported status evidence is its explicit response
-status field, not an interpretation of that label. The wallet remained 500,
+acknowledgement. At capture time, the Netlify adapter's request logger
+mislabeled every completed function response `request aborted` (its mock
+socket never sets `finished`/`writableEnded`, tripping pino-http's default
+heuristic); the status evidence above came from the explicit response status
+field. The request logger now reports completed function responses as
+`request completed`, so future records are unambiguous without that
+caveat. The wallet remained 500,
 with one completion event and one fulfillment totaling 500 Clout.
 
 An additional Stripe-origin replay was acknowledged at 21:44:09.994 UTC;

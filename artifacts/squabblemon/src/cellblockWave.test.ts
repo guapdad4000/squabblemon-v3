@@ -40,7 +40,7 @@ test('catalog, pack-only acquisition, rarity, three upgrade tiers and deck legal
   }
   assert.equal(cards['lebron-james'].name, 'Regular guy named LeBron James');
   assert.equal(cards['lebron-james'].type, 'Normal');
-  assert.equal(cards['lebron-james'].ability, 'Regular Guy');
+  assert.equal(cards['lebron-james'].ability, 'Definitely Not Him');
   assert.match(cards['lebron-james'].effect, /fictional regular guy/);
   assert.doesNotMatch(cards['lebron-james'].effect, /basketball|dunk|hoop|court/i);
   const ids = [...CELLBLOCK_WAVE.map(([id]) => id), ...cardCatalog.filter(c => !CELLBLOCK_WAVE.some(([id]) => c.catalogId === id)).slice(0, 5).map(c => c.catalogId)];
@@ -52,11 +52,11 @@ for (const owner of ['player', 'cpu'] as const) {
       const m = setup(owner), before = JSON.stringify(m), after = cast(m, id, owner, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), id, owner, tier), after);
-      assert.equal(find(after, id).powerModifier, tier + (id === 'inmate-crafty' ? 2 : id === 'lebron-james' ? 1 : 0));
+      assert.equal(find(after, id).powerModifier, tier + (id === 'inmate-crafty' ? 2 : 0));
       if (id === 'inmate-boyfriend') assert.equal(find(after, supportId).powerModifier, 2);
       if (id === 'inmate-informant') assert.equal(find(after, 'hooper').powerModifier, 18);
       if (id === 'inmate-contraband') assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
-      if (id === 'lebron-james') assert.equal(find(after, supportId).statuses.protected, true);
+      if (id === 'lebron-james') assert.equal(find(after, 'rastamon').statuses.protected, true);
       assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
       assert.ok(after.effectLog.some(e => e.replay.after.boards.flat().some(c => c.cardId === id)));
     }
@@ -100,7 +100,7 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(find(after, 'inmate-informant').powerModifier, 0);
     }
   });
-  test(`${owner}: Regular Guy cleanses all debuffs, preserves buffs, grants a working shield, and snapshots the losing condition`, () => {
+  test(`${owner}: Regular Guy cleanses all debuffs, preserves buffs, grants a working shield, and arms one shield-break retaliation`, () => {
     const m = blank(), target = unit('rastamon', owner), enemy = owner === 'player' ? 'cpu' : 'player';
     target.statuses = { ...target.statuses, frozen: true, silenced: true, weakened: true, locked: true, burnStacks: 3, boosted: true };
     target.powerModifier = 2; m.boards[0] = [target];
@@ -114,7 +114,7 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after, 'rastamon').powerModifier, 20);
     assert.equal(find(after, 'rastamon').statuses.protected, false);
     const solo = blank(); solo.boards[0] = [unit('hooper', enemy)]; find(solo, 'hooper').powerModifier = 10;
-    assert.equal(find(cast(solo, 'lebron-james', owner), 'lebron-james').powerModifier, 1);
+    assert.equal(find(cast(solo, 'lebron-james', owner), 'lebron-james').powerModifier, 0);
   });
 }
 test('weakest and strongest ties use stable instance IDs, not board order', () => {
@@ -147,7 +147,7 @@ for (const owner of ['player', 'cpu'] as const) {
       const before = JSON.stringify(m), after = cast(m, 'inmate-boyfriend', owner, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), 'inmate-boyfriend', owner, tier), after);
-      assert.equal(after.boards[1][0].powerModifier, 1);
+      assert.equal(after.boards[1][0].powerModifier, 2);
       assert.equal(after.boards[2][0].powerModifier, 0);
       assert.equal(find(after, 'inmate-boyfriend').powerModifier, tier);
       assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
@@ -179,3 +179,17 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(cards['inmate-crafty'].power, 3);
   });
 }
+for (const owner of ['player', 'cpu'] as const) test(`${owner}: Crafty requires a local friendly inmate or support`, () => {
+  for (const id of ['inmate-boyfriend', 'inmate-informant', 'inmate-contraband']) {
+    const m = blank(); m.boards[0] = [unit(id, owner)];
+    for (const tier of [0, 3]) assert.equal(find(cast(m, 'inmate-crafty', owner, tier), 'inmate-crafty').powerModifier, 2 + tier);
+  }
+  for (const kind of ['enemy', 'remote', 'token', 'hazard'] as const) {
+    const m = blank(), ally = unit('inmate-informant', owner);
+    if (kind === 'enemy') ally.owner = owner === 'player' ? 'cpu' : 'player';
+    if (kind === 'token') ally.kind = 'token';
+    if (kind === 'hazard') ally.hazard = true;
+    if (kind === 'remote') { ally.lane = 1; m.boards[1] = [ally]; } else m.boards[0] = [ally];
+    assert.equal(find(cast(m, 'inmate-crafty', owner, 3), 'inmate-crafty').powerModifier, 0);
+  }
+});

@@ -6,7 +6,7 @@ import { Link, useLocation } from 'wouter';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowUpRight, Swords, Trophy, Users, Radio } from 'lucide-react';
 import { type PlayerBootstrap } from '@workspace/api-client-react';
-import { getAssetUrl, getCardImage, starterRecipes, validateSavedDeck, cardCatalog } from '../../data';
+import { getAssetUrl, starterRecipes, validateSavedDeck } from '../../data';
 import { DeckCarousel } from '../../components/DeckCarousel';
 import { rankedStats, rankProgress, type OnlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
 import { cancelRanked, getRankedLobby, onlineErrorMessage, searchRanked, type RankedLobby } from '../../lib/multiplayer';
@@ -140,36 +140,46 @@ export function FadePark({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           </div>
           <div className="park-rank-caption"><span>{progress.nextAt ? `${progress.nextAt - stats.points} RP to ${progress.nextTier}` : 'Top tier. Keep your spot.'}</span><span>{stats.wins} W · {stats.losses} L · {stats.draws} D</span></div>
           {error || query.isError ? <div className="park-notice" role="alert"><p>{error ?? onlineErrorMessage(query.error)}</p><button onClick={() => { setError(null); void query.refetch(); }}>Reconnect</button></div> : null}
-          {searching ? <div className="park-search" data-testid="ranked-search">
-            <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /></div>
-            <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Looking for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
-            <p>Searching for another player. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
-            <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Checking search…' : 'Cancel search'}</button>
-          </div> : <>
-            {chosen ? <>
-              <div className="park-crew-carousel">
-                <DeckCarousel
-                  decks={crews.map(c => ({
-                    id: c.id,
-                    name: c.name,
-                    heroCardId: c.hero,
-                    cardIds: c.cards,
-                    subtitle: 'RANKED CREW',
-                    valid: true
-                  }))}
-                  selectedId={chosen.id}
-                  onSelect={setDeckId}
-                  onOpen={(id) => navigate(`/game/decks/${id}`)}
-                  disabled={busy}
-                  label="Your gang"
-                  openLabel="Edit gang"
-                />
+          {chosen ? <div className="park-dial-picker">
+            <div className="park-crew-carousel" data-searching={searching}>
+              <div className="park-deck-rest" aria-hidden={searching} inert={searching}>
+              <DeckCarousel
+                decks={crews.map(c => ({
+                  id: c.id,
+                  name: c.name,
+                  heroCardId: c.hero,
+                  cardIds: c.cards,
+                  subtitle: 'RANKED CREW',
+                  valid: true
+                }))}
+                selectedId={chosen.id}
+                onSelect={setDeckId}
+                onOpen={(id) => navigate(`/game/decks/${id}`)}
+                disabled={busy || searching}
+                label="Your gang"
+                openLabel="Edit gang"
+              />
               </div>
-              <FadeFinderButton reduced={profile.settings.reducedMotion} busy={busy} loading={query.isPending} unavailable={query.isError} onSearch={() => void search()} />
-            </> : <div className="park-empty"><h3>Bring your first gang.</h3><p>Save ten different cards you own, then meet us here.</p><Link className="park-find" to="/game/decks">Build your gang <ArrowUpRight size={22} /></Link></div>}
-            <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>
-          </>}
+              {searching && <div className="park-search park-search-overlay" data-testid="ranked-search">
+                <div className="park-search-art"><img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" /><img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="Dr. Fade and Guap warming up" /><img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" /></div>
+                <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
+                <p>Finding your next rival. Hang up the phone to cancel.</p>
+              </div>}
+            </div>
+            <FadeFinderButton reduced={profile.settings.reducedMotion} busy={busy} searching={searching}
+              loading={query.isPending} unavailable={!connected} onSearch={() => void search()} onCancel={() => void cancel()} />
+          </div> : <div className="park-empty"><h3>Bring your first gang.</h3><p>Save ten different cards you own, then meet us here.</p><Link className="park-find" to="/game/decks">Build your gang <ArrowUpRight size={22} /></Link></div>}
         </section>
+        {searching && !chosen ? <div className="park-search" data-testid="ranked-search">
+          <div className="park-search-art" aria-hidden="true">
+            <img className="park-search-poster" src={getAssetUrl('assets/fade-park/search-versus.png')} alt="" />
+            <img className="park-search-fighters" src={getAssetUrl('assets/fade-park/search.gif')} alt="" />
+            <img className="park-search-phone" src={getAssetUrl('assets/props/sticker-phone.webp')} alt="" />
+          </div>
+          <div className="park-search-status" role="status"><span className="park-pulse" /><h3>{connected ? 'Calling for a fade…' : 'Reconnecting…'}</h3><time>{String(Math.floor(elapsed / 60)).padStart(2, '0')}:{String(elapsed % 60).padStart(2, '0')}</time></div>
+          <p>Finding your next rival. Hang up the phone to cancel. A Park Bot steps in after a short wait, with reduced rank rewards.</p>
+          {!chosen && <button className="park-cancel" disabled={busy} onClick={() => void cancel()}>{busy ? 'Hanging up…' : 'Hang up — cancel search'}</button>}
+        </div> : !searching && <p className="park-smallprint">Players first. Park Bots fill quiet hours. Both count toward rank; bot wins earn 12 RP, player wins earn 25 RP.</p>}
         <div className="park-floating-info">
           <RankLadder />
           <details className="park-rules"><summary>How ranked fades work</summary><p>Same board, same rules. Win two of three districts after six rounds. Each turn lasts 75 seconds; running out of time forfeits the match.</p><p>Base card strength keeps the matchup fair. One SQUABBLE per player. Player wins +25 RP, losses −15; bot wins +12, losses −6. Draws earn +5 against players or +2 against bots. Rank points never fall below zero.</p><p>After ranked matches, search again for a new opponent. Private friend fades have rematches and do not affect rank.</p></details>

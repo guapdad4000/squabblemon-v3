@@ -35,7 +35,7 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
     && connection?.effectiveType !== '2g';
   const characterUrl = getAssetUrl(`assets/characters/${activeStage.character}.webp`);
   const posterUrl = getAssetUrl('brand/loading-scenes.webp');
-  const wordmarkUrl = getAssetUrl('brand/squabblemon-wordmark.webp');
+  const wordmarkUrl = getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp');
   const visualAssets = useMemo(
     () => [posterUrl, characterUrl, wordmarkUrl],
     [characterUrl, posterUrl, wordmarkUrl],

@@ -1,3 +1,4 @@
+import { useSearch } from 'wouter';
 import { StreetSelect } from '../ui/street-select';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useEffect, useRef, useState } from 'react';
@@ -44,6 +45,8 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
   const start = useStartChallengeRun();
   const abandon = useAbandonChallengeRun();
   const commandLock = useRef(false);
+  const search = useSearch();
+  useEffect(() => { if (new URLSearchParams(search).get('machine') === 'road') setOpen(true); }, [search]);
   const openButton = useRef<HTMLButtonElement>(null);
   const runs = runsQuery.data ?? [];
   const active = runs.find(run => run.status === 'active');
@@ -142,6 +145,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
     </ChromeBanner>
 
     <FadecadeDialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setConfirmEnd(false); }} title="Straight to the Back" kind="road">
+      {!loading && !runsQuery.isError && <p data-notification-section="challenges">{entries} attempts available today</p>}
       {loading ? <p role="status">Loading your saved road…</p> : runsQuery.isError ? <div role="alert">
         <p>Your road could not be loaded. Nothing will start until your saved progress is confirmed.</p>
         <button type="button" className="cabinet-btn" onClick={() => void runsQuery.refetch()}>Reload road</button>

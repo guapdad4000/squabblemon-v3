@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, decks, MAX_MOTION, catalogCardByEngineId, validateSavedDeck } from './data';
 import {
-  canAffordSelection, createAbilityUpgradeSnapshot,
+  canAffordSelection, createAbilityUpgradeSnapshot, createCardInstance, getCharacterDistrictMarks,
   createMatchFromEngineCards, createDistrictSnapshot, getEffectiveCardPower,
   nextRound, pass, playTurnCard, revealCpuTurn, verifyMatchTranscript,
   type Lane, type Owner, type PlayerMove,
@@ -39,8 +39,8 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 2);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 5);
-  assert.equal(ONLINE_RULES_VERSION, 5);
+  assert.equal(CARD_BALANCE_VERSION, 10);
+  assert.equal(ONLINE_RULES_VERSION, 10);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -149,7 +149,7 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 9;
     room = playOnline(room, owner, 'inmate-boyfriend', 0);
     const crafty = room.match!.boards.flat().find(card => card.cardId === 'inmate-crafty')!;
-    assert.equal(crafty.powerModifier, 1);
+    assert.equal(crafty.powerModifier, 2);
     room = playOnline(room, owner, 'sherlock', 0);
     const trap = room.match!.districtTraps![0];
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
@@ -162,5 +162,53 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     const changedFriend = event.targets.find(target => target.owner === owner
       && target.cardId !== 'sherlock' && target.after && target.before);
     assert.ok(changedFriend, 'the crew reward is included alongside the cancelled enemy');
+  });
+}
+for (const owner of ['player', 'cpu'] as const) {
+  test(`${owner}: Told You prediction and discount survive authoritative commands and public views`, () => {
+    const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
+    const ids = ['homeless-wiseman', 'ronald', 'cornball', 'plug', 'watson', 'bustdown', 'soulfood', 'gamer', 'counter', 'buddy'];
+    let room = roomFor(owner, ids, 0);
+    const prepare = (side: Owner, id: string) => {
+      room.activeSeat = side;
+      room.match!.phase = side === 'player' ? 'player' : 'cpu-reveal';
+      room.match![side === 'player' ? 'playerMotion' : 'cpuMotion'] = 9;
+      room.match![side === 'player' ? 'playerHand' : 'cpuHand'] = [createCardInstance(id, side)];
+    };
+    prepare(owner, 'homeless-wiseman');
+    room = playOnline(room, owner, 'homeless-wiseman', 2);
+    const lane = room.match!.districtTraps!.find(t => t.kind === 'wiseman')!.lane;
+    prepare(enemy, 'cornball');
+    room = playOnline(room, enemy, 'cornball', ((lane + 1) % 3) as Lane);
+    assert.ok(room.match!.discountTokens.some(t => t.eligibility === 'wiseman-prediction'));
+    for (const user of ['a', 'b']) {
+      assert.deepEqual(onlineRoomView(room, 'FIXTURE', user, 11).districtMarks, getCharacterDistrictMarks(room.match!));
+    }
+    prepare(owner, 'ronald');
+    room = playOnline(room, owner, 'ronald', lane);
+    assert.equal(room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
+    assert.ok(!room.match!.discountTokens.some(t => t.eligibility === 'wiseman-prediction'));
+  });
+}
+
+for (const owner of ['player','cpu'] as const) {
+  test(`${owner}: every creative rework and training tier agrees with the authoritative public view`, async () => {
+    const { CREATIVE_KITS } = await import('../../../lib/squabblemon-engine/src/creativeReworks');
+    for (const id of [...Object.keys(CREATIVE_KITS),'nerd']) for (const tier of [0,1,2,3]) {
+      const ids=[id,...['cornball','edgar','nguyen','plug','watson','bustdown','soulfood','gamer','counter','buddy'].filter(x=>x!==id)].slice(0,10);
+      let room=roomFor(owner,ids,tier);
+      room.match![owner==='player'?'playerMotion':'cpuMotion']=9;
+      room.match![owner==='player'?'playerHand':'cpuHand']=[createCardInstance(id,owner)];
+      const ally={...createCardInstance('edgar',owner,'fixture'),lane:0 as Lane};
+      const other={...createCardInstance('nguyen',owner,'fixture'),lane:0 as Lane};
+      const foe={...createCardInstance('og',owner==='player'?'cpu':'player','fixture'),lane:0 as Lane};
+      room.match!.boards=[[ally,other,foe],[],[]];
+      room=playOnline(room,owner,id,0);
+      for(const user of ['a','b']) {
+        const view=onlineRoomView(json(room),'FIXTURE',user,11);
+        assert.deepEqual(view.districtMarks,getCharacterDistrictMarks(room.match!));
+        assert.ok(!JSON.stringify(view).includes('creativeMarks'),'private source snapshots never leak into public projection');
+      }
+    }
   });
 }

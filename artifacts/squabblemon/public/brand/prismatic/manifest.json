@@ -1,0 +1,360 @@
+{
+  "primary": "logos/squabblemon-wordmark-standard-gold.webp",
+  "entries": [
+    {
+      "original": "5d281800-c570-4411-a6ff-5a4aadec39fa.png",
+      "sha256": "eb50d672d3d9f4d3db47992e78316c9779cf0ac1115dd90c8365c53f9c0ea9d5",
+      "master": "masters/marks/impact-standard-gold.png",
+      "exported": "marks/impact-standard-gold.webp"
+    },
+    {
+      "original": "368d448e-1a92-470c-9a67-73ee8fd66187.png",
+      "sha256": "c4c3391d98eb3454f0edf89786d8218e329670ab785ef26b136535393f732190",
+      "master": "masters/logos/squabblemon-lockup-standard-gold.png",
+      "exported": "logos/squabblemon-lockup-standard-gold.webp"
+    },
+    {
+      "original": "grok-image-da7442f3-a7ec-4adb-97d2-151043d6ddc4.jpg",
+      "sha256": "7f29627939cee767c7f5a805c84a858ccdf39bd968889b8045c645aa703efbc2",
+      "master": "masters/source/wordmark-standard-gold-white-background.jpg",
+      "exported": null
+    },
+    {
+      "original": "f5eb5014-4d47-4c7a-b37f-c77479943221.png",
+      "sha256": "3770992def3342fd6b679bd6f742b7c4091bec5250cc4acfc9fc047d31c4cd06",
+      "master": "masters/logos/squabblemon-wordmark-gold.png",
+      "exported": "logos/squabblemon-wordmark-gold.webp"
+    },
+    {
+      "original": "a115678e-7f13-4ef4-b4e7-d5c0adc132d2.png",
+      "sha256": "1030929d322e0609555e33a10197d6f4c2366a7c423fdc83847f2f6f8ab44238",
+      "master": "masters/logos/squabblemon-lockup-gold.png",
+      "exported": "logos/squabblemon-lockup-gold.webp"
+    },
+    {
+      "original": "faf17712-758f-42df-9d5b-2d3557b864bb.png",
+      "sha256": "d6338155e66d46078cd60395c5131565a603dc3d4641a3b7d1a4ec8dbb37f35f",
+      "master": "masters/marks/monogram-gold.png",
+      "exported": "marks/monogram-gold.webp"
+    },
+    {
+      "original": "53c9f340-8191-49cb-87a9-fceb8a4ffdd3.png",
+      "sha256": "73210fa237be36634c28a777427f3251b9da66ec96af46690e4ee4b6f96a8f18",
+      "master": "masters/marks/impact-gold.png",
+      "exported": "marks/impact-gold.webp"
+    },
+    {
+      "original": "image-gen-1(20260926-045855).png",
+      "sha256": "1650e27b3e5da3bbdec81f7faae04c42d6964de1949c783d7d700fa5107650f0",
+      "master": "masters/logos/squabblemon-wordmark-rainbow.png",
+      "exported": "logos/squabblemon-wordmark-rainbow.webp"
+    },
+    {
+      "original": "image-gen-2(20260926-045856).png",
+      "sha256": "d8f3118aa4a60eb1434f5fe2e45b0eb3d3b51227d94877c56aa79e548b1694c7",
+      "master": "masters/marks/monogram-rainbow.png",
+      "exported": "marks/monogram-rainbow.webp"
+    },
+    {
+      "original": "image-gen-3(20260926-045856).png",
+      "sha256": "884f32d9c49c6d19f2af509b9bef10bc8e5e973343be78eeefbba6634faf4538",
+      "master": "masters/marks/impact-rainbow.png",
+      "exported": "marks/impact-rainbow.webp"
+    },
+    {
+      "original": "828540e1-7106-46c6-a211-b1a15562ea6b.png",
+      "sha256": "fdd99c4ee85a6178e5d4edd5d9e0e5c14675aa0317b1c94e2bb2ec7ae5e129be",
+      "master": "masters/materials/prism-rainbow.png",
+      "exported": "materials/prism-rainbow.webp"
+    },
+    {
+      "original": "c4444bca-f2a5-4fbd-be7f-e737d7ef7cc5.png",
+      "sha256": "71b89944c2edc9d89d4873948ae13f45dfc168b6e704d8b0d7de2a092699c99d",
+      "master": "masters/materials/prism-gold.png",
+      "exported": "materials/prism-gold.webp"
+    },
+    {
+      "original": "be5646f1-5674-4a3f-99a3-37a104cf6658.png",
+      "sha256": "d208e989ac6934f3f3faab9b9be33fc320fb9a55db09e6ef9a6005b270db1729",
+      "master": "masters/source/rail-gold-white-background.png",
+      "exported": null
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5.png",
+      "sha256": "07bd6b8dd27000bdd58e604d081beffadd0240b0a852b7fdacd66b55b5c24d0d",
+      "master": "masters/source/wordmark-white-original.png",
+      "exported": null
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5 (1).png",
+      "sha256": "e2c30c7bbc7a5acc879ed717da64bd92e5293750f546d4ab3b057fc33537bab6",
+      "master": "masters/source/wordmark-black-hires.png",
+      "exported": null
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5 (2).png",
+      "sha256": "423bfe5b3014d201d962546102b4f09fd5bbb08bc834b7df99d300bd5f25d6f3",
+      "master": "masters/source/wordmark-white-hires.png",
+      "exported": null
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3.png",
+      "sha256": "28b5ce8bdccf45a51fdbac943891837bb0efb03af5dd24a8be6fc4d89c7e21b0",
+      "master": "masters/source/lockup-white-original.png",
+      "exported": null
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (1).png",
+      "sha256": "9aee23929e7776430e9ad9392ce3cb37e4bf101fce74407b91578ea77437c8af",
+      "master": "masters/source/lockup-black-outline-hires.png",
+      "exported": null
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (2).png",
+      "sha256": "3c31d9197b1a2a6eb2685013721461bb412108568d62a74eeaa2720ccb930adf",
+      "master": "masters/source/lockup-white-outline-hires.png",
+      "exported": null
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (3).png",
+      "sha256": "93a9ee7c32e03b31d0e183e0e517d921859d26c38ecdeb3bace5511311759f46",
+      "master": "masters/source/lockup-black-filled-hires.png",
+      "exported": null
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (4).png",
+      "sha256": "5cc964401a75fc68e0c4d9a693c372527a949241bd37b330d3343cfe3f72a43a",
+      "master": "masters/source/lockup-white-filled-hires.png",
+      "exported": null
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44.png",
+      "sha256": "f6a0c06e8b4e70b48c5a781e8625a8bf04a4a5c143b451effdc029584e5ed074",
+      "master": "masters/source/monogram-white-original.png",
+      "exported": null
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44 (1).png",
+      "sha256": "d784a15ac83553b3357d3e5a40bae4b1ce2d4f0b5475cc9934195c31502f4831",
+      "master": "masters/source/monogram-white-outline-hires.png",
+      "exported": null
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44 (2).png",
+      "sha256": "36e00c772611f48e8abc734cfb884d98c018681831174b2c1d95d9e788fc6d65",
+      "master": "masters/source/monogram-black-hires.png",
+      "exported": null
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44 (3).png",
+      "sha256": "329c5e1a7c72feb15203fe6b4ecbe91b147865558b5ec52233064a19c7170d7c",
+      "master": "masters/source/monogram-white-filled-hires.png",
+      "exported": null
+    },
+    {
+      "original": "09214fdb-ed60-4b4a-b787-afe77b570c5e.png",
+      "sha256": "e4d8b3428c21b8665ca3600d63fb74f33b0ffb79fcf59db00141962f63458ba0",
+      "master": "masters/marks/impact-white-distressed.png",
+      "exported": "marks/impact-white-distressed.webp"
+    },
+    {
+      "original": "09214fdb-ed60-4b4a-b787-afe77b570c5e (1).png",
+      "sha256": "ca2697bb346a2a0fc2c3906c59d5fd11da412b8f90431df522cd0e7f669e90ad",
+      "master": "masters/marks/impact-black.png",
+      "exported": "marks/impact-black.webp"
+    },
+    {
+      "original": "09214fdb-ed60-4b4a-b787-afe77b570c5e (2).png",
+      "sha256": "ca2697bb346a2a0fc2c3906c59d5fd11da412b8f90431df522cd0e7f669e90ad",
+      "duplicateOf": "09214fdb-ed60-4b4a-b787-afe77b570c5e (1).png"
+    },
+    {
+      "original": "download",
+      "sha256": "d83c155c77b71af61dfb8bdcbf684738e76f23e2c5fbb74f5a66251720903905",
+      "master": "masters/source/lockup-black-padded.png",
+      "exported": null
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5.svg",
+      "sha256": "4f6ccde3be2dddb8a72a75fd5a20487d5078a9829b11bf9830191b44355c40eb",
+      "master": "masters/vectors/wordmark-two-tone.svg",
+      "exported": "vectors/wordmark-two-tone.svg"
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5 (1).svg",
+      "sha256": "2b7ca238f85ccdc169e3b27870574ccbe4cf1d8a21f58bb9068eaaf4fe195c18",
+      "master": "masters/vectors/wordmark-black.svg",
+      "exported": "vectors/wordmark-black.svg"
+    },
+    {
+      "original": "1a285f30-e34b-4635-8a7b-89288291aef5 (2).svg",
+      "sha256": "4f6ccde3be2dddb8a72a75fd5a20487d5078a9829b11bf9830191b44355c40eb",
+      "duplicateOf": "1a285f30-e34b-4635-8a7b-89288291aef5.svg"
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3.svg",
+      "sha256": "87b2bd18eee1b43043eeaa539d6b3f584b4ff67a74c439c2781b55497bff0ed7",
+      "master": "masters/vectors/lockup-near-black.svg",
+      "exported": "vectors/lockup-near-black.svg"
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (1).svg",
+      "sha256": "3a69215cc12f973bd6d2a03ea29832b606cb4f2d46be315b1c8ebe618ab50281",
+      "master": "masters/vectors/lockup-white.svg",
+      "exported": "vectors/lockup-white.svg"
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (2).svg",
+      "sha256": "66240033d3d8642e3982197f87c7ee5ed2948fe545eeb093335b24303aabef7a",
+      "master": "masters/vectors/lockup-black.svg",
+      "exported": "vectors/lockup-black.svg"
+    },
+    {
+      "original": "5cfd5f51-311d-43ea-ad66-529c92c9d5d3 (3).svg",
+      "sha256": "7f76e83b91dd4f6ed3bff616d9604006a6cd8ec7792c27de8363de77b027bf8d",
+      "master": "masters/vectors/lockup-two-tone.svg",
+      "exported": "vectors/lockup-two-tone.svg"
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44.svg",
+      "sha256": "973563c6f240f73f86070aa5ee48bd54087b1d73c9fb2d5ef95c59413757a961",
+      "master": "masters/vectors/monogram-white.svg",
+      "exported": "vectors/monogram-white.svg"
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44 (1).svg",
+      "sha256": "86f9e28504c504ccfdef3201c14535d328e77fb28bdc4aca00fc5a97698f6a85",
+      "master": "masters/vectors/monogram-black.svg",
+      "exported": "vectors/monogram-black.svg"
+    },
+    {
+      "original": "aff04a89-03d1-4a3e-ad2c-fba36148bf44 (2).svg",
+      "sha256": "7cfb4284a840649e2257d045c7bde25b043cb8058e1e7a5e5e5329a80b19a1c4",
+      "master": "masters/vectors/monogram-two-tone.svg",
+      "exported": "vectors/monogram-two-tone.svg"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (1).svg",
+      "sha256": "1684adaf07d5ab16be897ab438737293f470dc7299d7189ae0e9d6ed9b032467",
+      "master": "masters/vectors/lockup-wide-black.svg",
+      "exported": "vectors/lockup-wide-black.svg"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75.svg",
+      "sha256": "b7d40d5b401e0b0d8942b310b3fdb165f3ab94a263a26ea64201dea4136aea7c",
+      "master": "masters/vectors/lockup-wide-white.svg",
+      "exported": "vectors/lockup-wide-white.svg"
+    },
+    {
+      "original": "bd8a8bfe-4169-494f-899c-ed07e37ed06e.png",
+      "sha256": "680fd6647b375e00441e7b1f344a4bcbf7906ae4a4560d4f5e954b18c0c6cec7",
+      "master": "masters/logos/squabblemon-lockup-wide-outline-white.png",
+      "exported": "logos/squabblemon-lockup-wide-outline-white.webp"
+    },
+    {
+      "original": "a3304380-49dd-4e8c-aaa9-b3b75e8c0074 (2).png",
+      "sha256": "79da9b858f1b29fa879302607fa02d44df66df78d22b126c03a193c25ae6851e",
+      "master": "masters/logos/squabblemon-wordmark-solid-white.png",
+      "exported": "logos/squabblemon-wordmark-solid-white.webp"
+    },
+    {
+      "original": "image-gen-3(20260926-053602).png",
+      "sha256": "e32f538035fcc40e677effcab041fcfdaf5c27190ee5e2ee6bfc4c3423d51686",
+      "master": "masters/logos/squabblemon-wordmark-solid-black.png",
+      "exported": "logos/squabblemon-wordmark-solid-black.webp"
+    },
+    {
+      "original": "ChatGPT Image Sep 25, 2026, 10_44_49 PM.png",
+      "sha256": "3289fa212750e02ef558bac1a7871dee0ab6cd4cd66ee05b1e1f5570f98c573c",
+      "master": "masters/sheets/squabblemon-black-brand-sheet.png",
+      "exported": "sheets/squabblemon-black-brand-sheet.webp"
+    },
+    {
+      "original": "e792598c-53ec-4378-bf49-ce2efde5b2f2.png",
+      "sha256": "5ad83b057279d61ca3537294f0f3856dd09a93724ca6c7df03b70f4bc754b01c",
+      "master": "masters/marks/impact-black-outline.png",
+      "exported": "marks/impact-black-outline.webp"
+    },
+    {
+      "original": "8e9111dc-4420-4aef-817e-1ae2a7c46e5c.png",
+      "sha256": "e32f538035fcc40e677effcab041fcfdaf5c27190ee5e2ee6bfc4c3423d51686",
+      "duplicateOf": "image-gen-3(20260926-053602).png"
+    },
+    {
+      "original": "sm.png",
+      "sha256": "3dfb520fe94263f9eaeee76a35b4a8831bd597b7d08626898a92406bc744513e",
+      "master": "masters/marks/monogram-black-solid.png",
+      "exported": "marks/monogram-black-solid.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (2).png",
+      "sha256": "404d5b582aafe81a9a94f3a581c593c37e5be2330e5bc9f8f839cf49c95e161d",
+      "master": "masters/logos/squabblemon-lockup-wide-black.png",
+      "exported": "logos/squabblemon-lockup-wide-black.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (1).png",
+      "sha256": "31483f5b82d6c8f6b1e3751d73cb005084f6ed7faa95c3a427a5926fc104f96d",
+      "master": "masters/logos/squabblemon-lockup-wide-white.png",
+      "exported": "logos/squabblemon-lockup-wide-white.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75.png",
+      "sha256": "ad1f95818f03963e7e2547573a49eeed51be4b06cc066ff895ec2ae93ee0cc88",
+      "master": "masters/source/lockup-wide-white-original.png",
+      "exported": null
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/frames/prism-gold-nine-slice.png",
+      "exported": "frames/prism-gold-nine-slice.webp"
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/frames/prism-gold-rail.png",
+      "exported": "frames/prism-gold-rail.webp"
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/logos/squabblemon-wordmark-standard-gold.png",
+      "exported": "logos/squabblemon-wordmark-standard-gold.webp"
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/sheets/squabblemon-bag-wrap-standard-gold.png",
+      "exported": "sheets/squabblemon-bag-wrap-standard-gold.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/corner-tl.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/corner-tr.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/corner-bl.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/corner-br.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/edge-top.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/edge-bottom.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/edge-left.webp"
+    },
+    {
+      "derivedFrom": "frames/prism-gold-nine-slice.webp",
+      "exported": "frames/edge-right.webp"
+    }
+  ]
+}

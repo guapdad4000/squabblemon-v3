@@ -606,7 +606,7 @@ export function Battle({
         {isConcert ? <><label htmlFor="concert-choice">Concert crowd</label><StreetSelect id="concert-choice" value={investment} onValueChange={event => setInvestmentChoice({ key: investmentKey, amount: Number(event) })}><option value={0}>Everyone +1 Hand</option><option value={1}>Everyone −1 Hand</option></StreetSelect></> : isDice ? <><label htmlFor="dice-wager">Wager Motion</label><StreetSelect id="dice-wager" value={investment || 1} onValueChange={event => setInvestmentChoice({ key: investmentKey, amount: Number(event) })}>{Array.from({length: Math.max(1,investmentLimit)},(_,i)=><option key={i+1} value={i+1}>{i+1} Motion each</option>)}</StreetSelect><span>Roll 3 D6 · best two win</span></> : baseSelectedCost === m.playerMotion ? <span>Nothing to Lose · last Motion: steal up to 2 Hands.</span> : <>
           <label htmlFor="wild-investment-choice">Extra Motion</label>
           <StreetSelect id="wild-investment-choice" value={investment} onValueChange={event => setInvestmentChoice({ key: investmentKey, amount: Number(event) })}>
-            {Array.from({ length: investmentLimit + 1 }, (_, amount) => <option key={amount} value={amount}>{amount} → +{amount} Hands</option>)}
+            {Array.from({ length: investmentLimit + 1 }, (_, amount) => <option key={amount} value={amount}>{amount} → +{amount > 0 ? amount + 1 : 0} Hands</option>)}
           </StreetSelect>
           <span>{selectedCost} total · {m.playerMotion - (selectedCost ?? 0)} left</span>
         </>}

@@ -54,9 +54,53 @@
 /* Custom editions are applied over the rarity's stock. */
 .collector-card.card-variant-tagged{--foil-light:#fff0b3;--foil-mid:#e9b952;--foil-dark:#511221;}
 .collector-card.card-variant-chrome{--foil-light:#f2fcff;--foil-mid:#9dcbd9;--foil-dark:#273642;}
+.collector-card.card-variant-prismatic{--foil-light:#f8ffff;--foil-mid:#83e8ff;--foil-dark:#21174f;--rarity-color:#cbfbff;--foil-strength:.58;}
 .collector-card.card-variant-tagged .card-variant-sheen{border:0;background:repeating-linear-gradient(137deg,transparent 0 20px,#ea355a 21px 25px,transparent 26px 39px,#edc869 40px 42px,transparent 43px 62px);mix-blend-mode:normal;opacity:.9;mask-image:linear-gradient(90deg,#000 0 3%,transparent 7% 93%,#000 97%),linear-gradient(#000 0 2%,transparent 8% 85%,#000 96%);}
 .collector-card.card-variant-chrome .card-variant-sheen{border:0;background:linear-gradient(118deg,#172b40 12%,#ecfaff 22%,#657c95 26%,#effaff 29%,#394b65 34%,transparent 40% 62%,#eaffff 73%,#738eac 76%,#fbfcff 80%,#253f59 88%);background-size:200% 200%;background-position:var(--foil-x) var(--foil-y);mix-blend-mode:screen;opacity:.85;mask-image:linear-gradient(90deg,#000 0 4%,transparent 10% 90%,#000 96%),linear-gradient(#000 0 4%,transparent 12% 83%,#000 94%);}
 .collector-card.card-variant-chrome .collector-foil{display:block;--foil-strength:.29;background-image:linear-gradient(115deg,#293d4c 8%,#97bfc8 18%,#effcff 25%,#609cd4 27%,#c4bdde 30%,#202e42 34%,#d6ebef 56%,#fff 62%,#376488 70%);}
+.collector-card.card-variant-prismatic .card-variant-sheen{
+  border:0; z-index:9; opacity:.48; mix-blend-mode:screen;
+  background:
+    radial-gradient(circle at var(--foil-x) var(--foil-y),#fff 0 1.2%,#c5ffffd9 2.1%,transparent 11%),
+    conic-gradient(from 118deg at var(--foil-x) var(--foil-y),#ff2f7d,#ffed70,#63ffbd,#65eaff,#7b7dff,#e46dff,#ff2f7d),
+    url('/brand/prismatic/materials/prism-rainbow.webp');
+  background-size:100% 100%,180% 180%,155% auto;
+  background-position:center,var(--foil-x) var(--foil-y),var(--foil-x) var(--foil-y);
+  filter:saturate(1.42) contrast(1.08);
+
+}
+.collector-card.card-variant-prismatic .card-variant-sheen::before,
+.collector-card.card-variant-prismatic .card-variant-sheen::after{content:"";position:absolute;inset:0;pointer-events:none;}
+.collector-card.card-variant-prismatic .card-variant-sheen::before{
+  background:
+    repeating-linear-gradient(117deg,transparent 0 7px,#fff9 7.5px 8px,transparent 8.5px 17px),
+    repeating-linear-gradient(27deg,transparent 0 13px,#69fff980 13.5px 14px,transparent 14.5px 29px);
+  background-position:var(--foil-x) var(--foil-y);
+  mix-blend-mode:overlay; opacity:.62;
+}
+.collector-card.card-variant-prismatic .card-variant-sheen::after{
+  inset:1.7%; border:1px solid #ecffff; border-radius:2px;
+  box-shadow:inset 0 0 0 1px #9b70ff,inset 0 0 13px #2bffff99,0 0 8px #c753ff7a;
+  background:radial-gradient(circle at 12% 18%,#fff 0 1px,transparent 1.8px),radial-gradient(circle at 86% 8%,#fff 0 1px,transparent 2px),radial-gradient(circle at 94% 72%,#fff 0 1.2px,transparent 2px),radial-gradient(circle at 9% 88%,#fff 0 1px,transparent 1.8px);
+}
+.collector-card.card-variant-prismatic .collector-foil,
+.collector-card.card-variant-prismatic .collector-foil-pattern,
+.collector-card.card-variant-prismatic .collector-foil-grain,
+.collector-card.card-variant-prismatic .collector-glare,
+.collector-card.card-variant-prismatic .collector-webgl{
+  /* The transparent portrait itself protects the art from foil. */
+  z-index:9;
+  -webkit-mask:none;
+  mask:none;
+}
+.collector-card.card-variant-prismatic .collector-foil{display:block;opacity:.34;background-image:linear-gradient(112deg,#ff257900 4%,#ff2579 14%,#ffe76b 24%,#63ffbd 34%,#63dcff 44%,#776bff 54%,#e85bff 64%,#fff 69%,#ff2579 74%,#ffe76b 84%,#63dcff 94%);background-size:260% 180%;}
+.collector-card.card-variant-prismatic .collector-foil-pattern{display:block;opacity:.48;background-image:url('/brand/prismatic/materials/prism-rainbow.webp');background-size:140% auto;mix-blend-mode:soft-light;}
+.collector-card.card-variant-prismatic .collector-foil-grain{opacity:.18;mix-blend-mode:overlay;}
+.collector-card.card-variant-prismatic .collector-glare{opacity:.46;background:linear-gradient(116deg,transparent 22%,#fff 29%,#8effffcc 31%,transparent 37%),radial-gradient(circle at var(--foil-x) var(--foil-y),#fff9,transparent 26%);background-size:270% 190%,100% 100%;background-position:var(--foil-x) var(--foil-y),center;}
+.collector-card.card-variant-prismatic .collector-engraving{border:1px solid #d9ffffcc;box-shadow:inset 0 0 0 1px #a267ff99,0 0 7px #62f5ff88;}
+.collector-card.card-variant-prismatic .collector-art-rim{border-color:#eaffff;box-shadow:inset 0 0 0 2px #28144baa,0 0 5px #8ffcff;}
+.collector-card.card-variant-prismatic .collector-edition-seal{color:#fff;text-shadow:0 0 4px #64f8ff,0 0 8px #af4fff;}
+.collector-card.card-variant-prismatic h4{color:#fff;text-shadow:0 1px #080317,1px 0 #00d9ff,-1px 0 #ff3bcc,0 0 9px #80f7ff80;}
 .collector-card.card-variant-tagged .collector-engraving{border:1px solid #d8b26488;box-shadow:inset 0 0 0 2px #16070b99;}
 .collector-card.card-variant-chrome .collector-engraving{border:1px solid #dbfaff88;box-shadow:inset 0 0 0 2px #04101b88,0 0 0 1px #486578;}
 .collector-card.card-variant-tagged h4{color:#ffe7ac;text-shadow:1px 1px #ae254d,2px 2px #000;}
@@ -144,6 +188,7 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
 .collector-finish-controls button[aria-pressed=true]{border-color:#f0d299;background:linear-gradient(120deg,#ead39a,#b98b42);color:#1c1912;box-shadow:inset 0 1px #fff8;}
 .collector-finish-controls button[data-finish=chrome][aria-pressed=true]{background:linear-gradient(120deg,#e8f6fc,#9cb5c7,#effaff);border-color:#d5edfa;}
 .collector-finish-controls button[data-finish=tagged][aria-pressed=true]{box-shadow:inset 3px 0 #c83350;}
+.collector-finish-controls button[data-finish=prismatic][aria-pressed=true]{background:linear-gradient(115deg,#ff5fa2,#fff289,#62ffd0,#79e8ff,#987aff,#f06dff);background-size:220% 100%;border-color:#efffff;color:#100625;text-shadow:0 1px #fff8;box-shadow:inset 0 0 0 1px #fff9,0 0 13px #78eaff80;}
 .collector-finish-controls button:focus-visible,.dossier-variant__preview:focus-visible{outline:2px solid #efd082;outline-offset:3px;}
 .collector-finish-controls small{display:block;margin-top:9px;font:8px var(--font-mono);color:#acaa9f;line-height:1.5;}
 .dossier-variant .dossier-variant__preview{display:block;width:min(100%,130px);align-self:center;padding:0;margin:0 0 6px;background:transparent!important;border:0;color:var(--resume-ink);letter-spacing:.06em;}
@@ -161,3 +206,31 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
 .buddy-form-cue{display:block;padding:2px 3px;border:1px solid #a7d77c99;border-radius:2px;background:#10210ee8;color:#e4ffd1;font:900 5px/1.2 var(--font-mono,monospace);letter-spacing:.025em;text-align:center;text-shadow:0 1px #000;pointer-events:auto}
 .buddy-form-cue--squabble{border-color:#d9a35f;color:#ffe2a8;background:#291708eb}
 .battle-board-card .buddy-form-cue{font-size:clamp(4px,1.25vw,6px);padding:2px 1px;letter-spacing:0}
+
+/* Scene cards use the complete illustration without character portrait scaling. */
+.collector-card[data-card-kind="blockbuster"] .collector-portrait {
+  inset:0; width:100%; height:100%; object-fit:contain; object-position:center;
+  transform:none; translate:none; filter:none;
+}
+.collector-card[data-card-kind="blockbuster"] .collector-wallpaper {
+  opacity:.5; filter:blur(8px); transform:scale(1.08);
+}
+.collector-card[data-card-kind="blockbuster"] .collector-card-copy {
+  background:linear-gradient(0deg,#060810ed,#060810a8 65%,transparent);
+}
+.collector-card[data-card-kind="blockbuster"] .collector-engraving,
+.collector-card[data-card-kind="blockbuster"] .collector-art-rim,
+.collector-card[data-card-kind="blockbuster"] .collector-edition-seal {display:none;}
+.collector-finish-controls nav {flex-wrap:wrap;}
+
+/* A simple foil-textured edge keeps the full illustration in view. */
+.collector-card.card-variant-prismatic .collector-frame {
+  padding:3px;
+  background-image:linear-gradient(125deg,#170d0055,#fff7,#15040044),url('/brand/prismatic/materials/prism-gold.webp');
+  background-size:200% 200%,cover;
+  background-position:var(--foil-x) var(--foil-y),center;
+}
+.collector-card--inspector.card-variant-prismatic .collector-frame { padding:6px; }
+.collector-card.card-variant-prismatic .collector-engraving { border:0; box-shadow:none; }
+.collector-card.card-variant-prismatic .collector-art-rim { border-color:#ffe49c66; box-shadow:none; }
+.collector-card.card-variant-prismatic .collector-edition-seal { color:#ffebb1; }

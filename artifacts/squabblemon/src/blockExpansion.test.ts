@@ -1,3 +1,4 @@
+import { CREATIVE_KITS } from '../../../lib/squabblemon-engine/src/creativeReworks';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { BLOCK_EXPANSION } from '../../../lib/squabblemon-engine/src/blockExpansion';
@@ -43,8 +44,9 @@ test('the expansion uses the current six-tier rarity ladder with pack access and
   assert(!cards.neondragon && !cards.rooftoprunner && !cards.echoqueen);
 });
 
-for (const owner of ['player','cpu'] as const) test(`all twenty reveal abilities resolve for ${owner}`, () => {
+for (const owner of ['player','cpu'] as const) test(`unchanged expansion reveal abilities resolve for ${owner}`, () => {
   for (const [id] of BLOCK_EXPANSION) {
+    if (CREATIVE_KITS[id]) continue; // New setup/payoff contracts are covered in creativeReworks.test.ts.
     const {m, source, low, other, foe} = setup(id, owner);
     if (id === 'bodegacat') m.boards[0] = [foe];
     if (id === 'laundry' || id === 'nightmedic') {
@@ -90,13 +92,11 @@ test('conditional expansion abilities do not award free Hands when their conditi
   assert.equal(playCard(m,'player',source.instanceId,0).playerMotion,7);
 });
 
-test('Mural Apprentice Locks when supported or gains a Hand when Lock cannot fire', () => {
-  const { m, source, low } = setup('mural');
-  const empty = { ...m, boards: [[low], [], []] } as Match;
-  const revealed = playCard(empty, 'player', source.instanceId, 0);
-  assert.equal(revealed.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier, 1);
-  const alone = { ...m, boards: [[], [], []] } as Match;
-  assert.equal(playCard(alone, 'player', source.instanceId, 0).boards[0][0].powerModifier, 1);
+test('Mural Apprentice leaves one visible paint mark even without an immediate recipient', () => {
+  const {m,source}=setup('mural');m.boards=[[],[],[]];
+  const after=playCard(m,'player',source.instanceId,0);
+  assert.equal(after.boards[0][0].powerModifier,0);
+  assert.equal(after.creativeMarks?.filter(x=>x.kind==='paint').length,1);
 });
 
 test('new roster gangs replay identical complete fades through authoritative reward verification', () => {

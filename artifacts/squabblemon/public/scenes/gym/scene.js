@@ -44,119 +44,6 @@ const AudioEngine={
     o.onended=()=>{o.disconnect();g.disconnect()}
   }
 };
-    function drawEmblem(ctx, cx, cy, scale = 1, showGloves = true) {
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(scale, scale);
-
-      if (showGloves) {
-        ctx.save();
-        ctx.translate(-195, -15);
-        ctx.rotate(-0.35);
-        drawMiniGlove(ctx);
-        ctx.restore();
-
-        ctx.save();
-        ctx.translate(195, -15);
-        ctx.scale(-1, 1);
-        ctx.rotate(-0.35);
-        drawMiniGlove(ctx);
-        ctx.restore();
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(-115, -70);
-      ctx.lineTo(-145, -155);
-      ctx.lineTo(-65, -120);
-      ctx.lineTo(0, -180);
-      ctx.lineTo(65, -120);
-      ctx.lineTo(145, -155);
-      ctx.lineTo(115, -70);
-      ctx.closePath();
-
-      const crownGrad = ctx.createLinearGradient(0, -180, 0, -70);
-      crownGrad.addColorStop(0, "#fef08a");
-      crownGrad.addColorStop(0.3, "#eab308");
-      crownGrad.addColorStop(0.7, "#a16207");
-      crownGrad.addColorStop(1, "#451a03");
-      ctx.fillStyle = crownGrad;
-      ctx.lineWidth = 18;
-      ctx.strokeStyle = "#000000";
-      ctx.stroke();
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(0, -75);
-      ctx.lineTo(140, -35);
-      ctx.lineTo(140, 85);
-      ctx.lineTo(0, 180);
-      ctx.lineTo(-140, 85);
-      ctx.lineTo(-140, -35);
-      ctx.closePath();
-
-      const shieldGrad = ctx.createLinearGradient(-140, -75, 140, 180);
-      shieldGrad.addColorStop(0, "#fde047");
-      shieldGrad.addColorStop(0.3, "#ca8a04");
-      shieldGrad.addColorStop(0.7, "#854d0e");
-      shieldGrad.addColorStop(1, "#361a03");
-      ctx.fillStyle = shieldGrad;
-      ctx.lineWidth = 20;
-      ctx.strokeStyle = "#000000";
-      ctx.stroke();
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(0, -56);
-      ctx.lineTo(118, -22);
-      ctx.lineTo(118, 70);
-      ctx.lineTo(0, 155);
-      ctx.lineTo(-118, 70);
-      ctx.lineTo(-118, -22);
-      ctx.closePath();
-      ctx.fillStyle = "#1c2e22";
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = "#000000";
-      ctx.stroke();
-      ctx.fill();
-
-      ctx.font = "900 120px 'Teko', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.lineWidth = 20;
-      ctx.strokeStyle = "#000000";
-      ctx.strokeText("SM", 0, 36);
-
-      const smGrad = ctx.createLinearGradient(0, -20, 0, 90);
-      smGrad.addColorStop(0, "#ffffff");
-      smGrad.addColorStop(0.3, "#fef08a");
-      smGrad.addColorStop(0.7, "#d97706");
-      smGrad.addColorStop(1, "#78350f");
-      ctx.fillStyle = smGrad;
-      ctx.fillText("SM", 0, 36);
-
-      ctx.restore();
-    }
-
-    function drawMiniGlove(ctx) {
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 95, 120, 0.2, 0, Math.PI * 2);
-      const gloveGrad = ctx.createLinearGradient(-60, -60, 60, 60);
-      gloveGrad.addColorStop(0, "#d97706");
-      gloveGrad.addColorStop(0.5, "#b45309");
-      gloveGrad.addColorStop(1, "#451a03");
-      ctx.fillStyle = gloveGrad;
-      ctx.lineWidth = 16;
-      ctx.strokeStyle = "#000000";
-      ctx.stroke();
-      ctx.fill();
-
-      ctx.fillStyle = "#18181b";
-      ctx.fillRect(-85, 95, 145, 60);
-      ctx.lineWidth = 12;
-      ctx.strokeStyle = "#000000";
-      ctx.strokeRect(-85, 95, 145, 60);
-    }
-
     function createPunchingBagTexture() {
       const canvas = document.createElement("canvas");
       canvas.width = 2048;
@@ -198,7 +85,7 @@ const AudioEngine={
         texture.needsUpdate = true;
       };
       wrap.onerror = () => emit({type:"error",message:"The bag wrap could not be loaded."});
-      wrap.src = new URL("../../assets/gacha/squabblemon-bag-wrap.webp", location.href).href;
+      wrap.src = new URL("../../brand/prismatic/sheets/squabblemon-bag-wrap-standard-gold.webp", location.href).href;
       return texture;
     }
 
@@ -208,19 +95,23 @@ const AudioEngine={
       canvas.height = 256;
       const ctx = canvas.getContext("2d");
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#080a11";
       ctx.fillRect(0, 0, 512, 256);
-      ctx.lineWidth = 24;
-      ctx.strokeStyle = "#000000";
-      ctx.strokeRect(12, 12, 488, 232);
-
-      ctx.font = "900 180px 'Teko', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "#000000";
-      ctx.fillText("SM", 256, 135);
-
-      return new THREE.CanvasTexture(canvas);
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = "#d4a438";
+      ctx.strokeRect(6, 6, 500, 244);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const emblem = new Image();
+      emblem.onload = () => {
+        if (disposed) return;
+        const scale = Math.min(224 / emblem.naturalWidth, 224 / emblem.naturalHeight);
+        const width = emblem.naturalWidth * scale, height = emblem.naturalHeight * scale;
+        ctx.drawImage(emblem, (512 - width) / 2, (256 - height) / 2, width, height);
+        texture.needsUpdate = true;
+      };
+      emblem.src = new URL('../../brand/prismatic/marks/impact-standard-gold.webp', import.meta.url).href;
+      return texture;
     }
     let scene, camera, renderer;
     let gymGroup, bagAssembly, heavyBagMesh;

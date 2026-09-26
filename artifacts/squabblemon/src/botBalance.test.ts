@@ -41,14 +41,14 @@ test('all training recipes contest multiple districts over six automatic rival t
   }
 });
 
-test('Motion pays only summon cost; board conditions and discounts work at zero remaining Motion', () => {
+test('Techbro borrows after paying deployment cost; discounts work at zero remaining Motion', () => {
   for (const owner of ['player', 'cpu'] as const) {
     const tech = card('techbro', owner, 0);
     const m: Match = { ...createMatch('block', 'block'), phase: owner === 'player' ? 'player' : 'cpu-reveal',
       playerMotion: 4, cpuMotion: 4, playerHand: [tech], cpuHand: [tech], boards: [[card('edgar', owner, 0)], [], []] };
     const result = playCard(m, owner, tech.instanceId, 0);
-    assert.equal(owner === 'player' ? result.playerMotion : result.cpuMotion, 0);
-    assert.equal(result.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 2);
+    assert.equal(owner === 'player' ? result.playerMotion : result.cpuMotion, 2);
+    assert.equal(result.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 0);
   }
   const bottle = card('bottle', 'player', 0);
   const m: Match = { ...createMatch('block', 'block'), playerMotion: 2, playerHand: [bottle] };
@@ -59,7 +59,7 @@ const upgraded = (id: string, boards: Match['boards']): Match => ({
   ...createMatch('block', 'block'), playerMotion: 6, playerHand: [card(id, 'player', 0)], boards,
   abilityUpgradeSnapshot: createAbilityUpgradeSnapshot([id], [], { player: { [id]: { xp: 2800, level: 8, moveTier: 3 } } }),
 });
-test('support tiers trigger once while hand-bond cards stay ongoing only', () => {
+test('support and former bond setup tiers trigger once', () => {
   let m = upgraded('earthy', [[card('edgar', 'player', 0)], [], []]);
   m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
   assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.powerModifier, 3);
@@ -70,7 +70,7 @@ test('support tiers trigger once while hand-bond cards stay ongoing only', () =>
   for (const id of ['abuela', 'icecream'] as const) {
     m = upgraded(id, [[card('edgar', 'player', 0)], [], []]);
     m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
-    assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 0);
+    assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 3);
     assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
     m = nextRound(pass(m, 'cpu'));
     assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
@@ -87,7 +87,7 @@ test('blocked cheap Burn does not earn success upgrades', () => {
 });
 
 test('Common upgrades require real effects, while Step Up and Act Up always succeed', () => {
-  for (const id of ['earthy', 'abuela', 'icecream', 'pinaynurse', 'honestthot', 'edgar', 'nguyen', 'manman']) {
+  for (const id of ['earthy', 'abuela', 'pinaynurse', 'edgar', 'nguyen', 'manman']) {
     const m = upgraded(id, [[], [], []]);
     const result = playCard(m, 'player', m.playerHand[0].instanceId, 0);
     assert.equal(result.boards[0][0].powerModifier, 0, id);
@@ -106,4 +106,14 @@ test('Common upgrades require real effects, while Step Up and Act Up always succ
   assert.equal(m.boards[0].find(c => c.cardId === 'pinaynurse')?.powerModifier, 3);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 2);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.statuses.frozen, false);
+});
+
+test('balance audit observer sees the settled final round without changing results', async () => {
+  const { simulateBalanceMatch, createDefaultBalanceDecks, seededLegalBalancePolicy } = await import('../../../lib/squabblemon-engine/src/balanceLab');
+  const decks = createDefaultBalanceDecks();
+  const input = { deckA: decks[0], deckB: decks[1], districtSeed: 'observer-regression', rotation: 0, tier: 0 as const, seat: 'a-player' as const, policy: seededLegalBalancePolicy };
+  let calls = 0;
+  const observed = simulateBalanceMatch({ ...input, observeComplete: m => { calls++; assert.equal(m.phase, 'complete'); assert(m.effectLog.length > 0); } });
+  assert.equal(calls, 1);
+  assert.deepEqual(observed, simulateBalanceMatch(input));
 });

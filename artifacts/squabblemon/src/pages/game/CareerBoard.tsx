@@ -153,7 +153,7 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         {Object.entries(progress.wins).map(([id, wins]) => {
           const card = catalogCardById[id] ?? catalogCardByEngineId[id];
           return (
-            <div className="career-stage__mastery" key={id} data-mastered={wins >= 5}>
+            <div data-notification-id={wins >= 5 ? `style:mastery:${id}` : undefined} className="career-stage__mastery" key={id} data-mastered={wins >= 5}>
               <div className="career-stage__portrait">
                 <img src={getCardImage(id)} alt="" />
                 <ProgressRing value={wins} max={5} label={`${card?.name ?? id} mastery`}>
@@ -172,7 +172,7 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       {!!badges.length && (
         <div className="career-stage__medals">
           {badges.map((id) => (
-            <div key={id}>
+            <div key={id} data-notification-id={`style:${id}`}>
               <GameGlyph name="mastery" />
               <strong>
                 {(

@@ -11,7 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link, useSearch } from 'wouter';
 import { getAssetUrl } from '../../lib/assets';
 import { ProgressRing } from '../../components/venue/ProgressRing';
 import '../../styles/studio.css';
@@ -27,6 +27,8 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     [tab, setTab] = useState<'bounties' | 'mastery'>(() =>
       new URLSearchParams(window.location.search).get('view') === 'mastery' ? 'mastery' : 'bounties');
 
+  const search = useSearch();
+  useEffect(() => { const params = new URLSearchParams(search); if (params.get('view') === 'mastery') setTab('mastery'); else if (params.has('mission') || params.has('mythic')) setTab('bounties'); }, [search]);
   const [claimState, setClaimState] = useState<{ id: string; phase: BountyPhase } | null>(null);
 
   const claimLock = useRef(false);
@@ -191,6 +193,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   data-status={m.status}
                   data-testid="bounty-poster"
                   data-mission-id={m.id}
+                  data-notification-id={`mission:${m.id}:${m.resetAt ?? 'permanent'}`}
                 >
                   {hasBulletHole && (
                     <img

@@ -34,7 +34,7 @@
 .park-topbar > .fight-tabs { margin-right: auto; }
 
 .park-content { max-width: 1350px; margin: 0 auto; min-height: calc(100dvh - 110px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); gap: clamp(20px, 4vw, 110px); align-items: center; padding: 40px 0 15px; }
-.park-intro { align-self: end; padding-bottom: 34px; text-shadow: 0 2px 24px #080e0e; }
+.park-intro { align-self: start; padding-bottom: 34px; text-shadow: 0 2px 24px #080e0e; }
 .park-eyebrow { display: flex; align-items: center; gap: 8px; font: 600 10px/1.5 var(--font-sans); letter-spacing: .16em; text-transform: uppercase; color: #f3d598; }
 .park-intro h1 { margin: 24px 0 22px; font: 900 clamp(80px, 10vw, 150px)/.76 var(--font-display); letter-spacing: -.055em; font-style: italic; }
 .park-intro h1 em { color: #f9d684; font-style: inherit; }
@@ -42,12 +42,13 @@
 .park-ground-rules { display: flex; gap: 18px; margin-top: 25px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f3e5c6a8; }
 .park-ground-rules span + span { border-left: 1px solid #ecd4a344; padding-left: 18px; }
 
-.park-board-wrapper { position: relative; z-index: 2; padding: 0; min-width: 0; }
+.park-board-wrapper { position: relative; left: clamp(-48px, -3vw, -28px); z-index: 2; padding: 0; min-width: 0; }
 .park-layer--board { transform: translate(calc((var(--mx, 0.5) - 0.5) * 1.5%), calc((var(--my, 0.5) - 0.5) * 1.5%)); transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1); }
 
-.park-ticket { background: linear-gradient(155deg,#172b26c0,#071510e5); backdrop-filter: blur(8px); border: 1px solid #ebd9a322; border-radius: 6px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); padding: 25px; min-width: 0; position: relative; z-index: 1; display: flex; flex-direction: column; }
+.park-ticket { background: linear-gradient(155deg,#172b26c0,#071510e5); backdrop-filter: blur(8px); border: 1px solid #ebd9a322; border-radius: 6px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); padding: 25px 25px 16px; min-width: 0; position: relative; z-index: 1; display: flex; flex-direction: column; }
 
-.park-crew-carousel { margin: 20px -25px 25px; }
+.park-dial-picker { position: relative; margin: 20px -25px 0; }
+.park-crew-carousel { margin: 0; }
 .fade-park .deck-carousel { margin: 0; width: 100%; background: #07110ed6; border-radius: 0; }
 .fade-park .deck-carousel__bar { padding: 10px 14px 0; }
 .fade-park .deck-carousel__slide { height: 224px; padding-inline: 2%; grid-template-columns: 46% 54%; }
@@ -79,7 +80,9 @@
 .park-find:disabled { opacity: .55; transform: none; }
 .park-edit { display: block; text-align: center; padding: 17px 0 8px; color: #ecd8acbd; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
 .park-smallprint,.park-search p,.park-rules p { font-size: 11px; line-height: 1.7; color: #d7decd99; }
-.park-smallprint { margin: 15px 0 0; }
+.park-smallprint { margin: 16px 12px 0; color: #fff1dccc; text-align: center; text-wrap: pretty; text-shadow: 0 1px 4px #000, 0 2px 12px #000; }
+.park-board-wrapper > .park-search { margin: 16px 12px 0; text-shadow: 0 1px 4px #000, 0 2px 12px #000; }
+.park-board-wrapper > .park-search p { color: #fff1dccc; text-align: center; text-wrap: pretty; }
 .park-rules { margin-top: 17px; padding-top: 15px; border-top: 1px solid #e2dfbd21; }
 .park-rules summary { cursor: pointer; font-size: 11px; color: #e3e5cebd; }
 .park-rules p { margin-top: 12px; }
@@ -95,9 +98,10 @@
 .park-notice { padding: 12px; background: #822b282d; border: 1px solid #eb8b5e55; border-radius: 8px; margin-bottom: 18px; font-size: 12px; }
 .park-notice button { text-decoration: underline; min-height: 34px; }
 
-.park-search-art { position: relative; height: 210px; margin: 0 -25px 12px; overflow: hidden; background: #08130f; }
-.park-search-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .25; mask-image: linear-gradient(transparent,#000 25%,#000 65%,transparent); }
-.park-search-fighters { position: relative; width: 100%; height: 100%; object-fit: contain; }
+.park-search-art { position: relative; height: 210px; margin: 0 0 12px; overflow: hidden; background: #08130f; border: 1px solid #f3d59855; border-radius: 8px; }
+.park-search-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .8; }
+.park-search-fighters { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 8px #000); }
+.park-search-phone { position: absolute; bottom: 4px; right: 5px; width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 2px 5px #000); }
 .park-search-status { display: flex; gap: 8px; align-items: center; }
 .park-search-status h3 { font-size: 15px; font-weight: 700; flex: 1; }
 .park-search-status time { font: 600 12px monospace; color: #f3d598; }
@@ -115,7 +119,7 @@
 .park-result-rank span { font-size: 12px; color: #555; }
 .park-result-return { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 50; background: #f7d58c; color: #111; border-radius: 20px; padding: 10px 22px; font-weight: 700; }
 
-@media(max-width:760px) {
+@media(max-width:1000px) {
   .fade-park { padding: max(15px,env(safe-area-inset-top)) 16px max(30px,env(safe-area-inset-bottom)); }
   .park-topbar { gap: 8px; } .park-topbar > :last-child:not(.fight-tabs) { display: none; }
   .park-back { width: 38px; height: 38px; }
@@ -129,12 +133,16 @@
   .park-intro p { font-size: 12px; } .park-intro p br { display: none; }
   .park-ground-rules { display: none; }
 
-  .park-board-wrapper { margin: 0; max-width: 100%; padding: 0; }
-  .park-ticket { padding: 20px; border-radius: 16px; } .park-rank-caption { margin-bottom: 18px; }
-  .park-crew-carousel { margin: 20px -20px 25px; }
+  .park-board-wrapper { left: 0; margin: 0; max-width: 100%; padding: 0; }
+  .park-ticket { padding: 20px 20px 16px; border-radius: 16px; } .park-rank-caption { margin-bottom: 18px; }
+  .park-dial-picker { margin: 0 -20px; padding: 132px 0 0; }
+  .park-crew-carousel { margin: 0; }
+  .fade-park .deck-carousel__copy h3 { font-size: 21px; }
+  .fade-park .deck-carousel__navigation { gap: 5px; padding-inline: 6px; }
+  .fade-park .deck-carousel__navigation > button { width: 32px; height: 38px; flex-basis: 32px; }
   .park-lineup { height: 49px; margin-bottom: 16px; }
   .park-find { min-height: 52px; padding: 12px 16px; font-size: 16px; }
-  .park-search-art { margin: 0 -20px 12px; height: 180px; }
+  .park-search-art { height: 180px; }
   .park-search-status h3 { font-size: 13px; }
   .fade-park-wallpaper { object-position: 44% top; }
   .fade-park-shade { background: none; }
@@ -143,11 +151,13 @@
 
 @media(max-width:359px) {
   .park-intro h1 { font-size: 32px; }
-  .park-board-wrapper { margin: 0; max-width: 100%; padding: 0; }
+  .park-board-wrapper { left: 0; margin: 0; max-width: 100%; padding: 0; }
   .park-ticket { padding: 16px; }
-  .park-crew-carousel { margin: 20px -16px 25px; }
+  .park-dial-picker { margin: 0 -16px; }
+  .fade-park .deck-carousel__copy h3 { font-size: 18px; }
+  .park-floating-info { flex-wrap: wrap; gap: 10px; }
   .park-rank-caption { font-size: 9px; }
-  .park-search-art { margin: 0 -16px 12px; }
+  .park-search-art { height: 150px; }
   .fight-tabs a,.fight-tabs-disabled { padding-inline: 7px; }
 }
 
@@ -182,9 +192,9 @@ html[data-reduce-motion="true"] .park-layer { transform: none !important; transi
   100% { transform: translateY(-8px) rotate(-1deg); }
 }
 
-@media(prefers-reduced-motion:reduce) { .park-search-fighters { display: none; } .park-search-poster { opacity: .65; } .park-dj .music-dj-art { animation: none; } }
+@media(prefers-reduced-motion:reduce) { .park-search-fighters { display: none; } .park-search-poster { opacity: 1; } .park-dj .music-dj-art { animation: none; } }
 html[data-reduce-motion="true"] .park-search-fighters { display: none; }
-html[data-reduce-motion="true"] .park-search-poster { opacity: .65; }
+html[data-reduce-motion="true"] .park-search-poster { opacity: 1; }
 
 /* A paper-wrapped rank meter: the ember travels toward the cork filter. */
 .park-rank-track {
@@ -244,3 +254,11 @@ html[data-reduce-motion=true] .rank-ember b { animation: none; }
 html[data-reduce-motion=true] .park-rank-track .rank-cigarette,
 html[data-reduce-motion=true] .rank-ash { transition: none; }
 html[data-reduce-motion=true] .rank-ember b:first-child { opacity: .25; }
+
+/* Preserve the selected deck's footprint while the search artwork plays over it. */
+.park-crew-carousel { position: relative; }
+.park-crew-carousel[data-searching=true] .park-deck-rest { visibility: hidden; }
+.park-search-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; background: #08130f; }
+.park-search-overlay .park-search-art { flex: 1; min-height: 0; height: auto; margin: 0; }
+.park-search-overlay .park-search-status { padding: 10px 12px 0; }
+.park-search-overlay p { margin: 8px 12px 12px; text-align: center; }

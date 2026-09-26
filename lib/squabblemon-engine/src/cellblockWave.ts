@@ -2,11 +2,11 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** Original fictional characters; catalog rarity never modifies combat stats. */
 export const CELLBLOCK_WAVE = [
-  ['inmate-crafty', 'Inmate Crafty', 'Uncommon', 'Normal', 2, 3, 'Make Do', 'On Reveal: If a friendly support card is here, gain +2 Hands.', 'Growth'],
-  ['inmate-boyfriend', 'Inmate Boyfriend', 'Rare', 'Light', 3, 3, 'Looking Out', 'On Reveal: Give your weakest other ally here +2 Hands. Also give your weakest friendly Cellblock character in another district +1 Hand.', 'Support'],
+  ['inmate-crafty', 'Inmate Crafty', 'Uncommon', 'Normal', 2, 3, 'Make Do', 'On Reveal: If another friendly inmate or a friendly support card is here, gain +2 Hands.', 'Growth'],
+  ['inmate-boyfriend', 'Inmate Boyfriend', 'Rare', 'Light', 3, 3, 'Looking Out', 'On Reveal: Give your weakest other ally here +2 Hands. Also give your weakest friendly Cellblock character in another district +2 Hands.', 'Support'],
   ['inmate-informant', 'Inmate Informant', 'Rare', 'Dark', 3, 3, 'Quiet Tip', 'On Reveal: Give the strongest enemy here -2 Hands. Protection and immunity can block this.', 'Disruption'],
   ['inmate-contraband', 'Inmate Contraband', 'Uncommon', 'Normal', 2, 2, 'Hidden Stash', 'On Reveal: If another friendly character is here, restore 1 Motion, up to the Motion cap.', 'Support'],
-  ['lebron-james', 'Regular guy named LeBron James', 'Mythical', 'Normal', 4, 4, 'Regular Guy', 'A fictional regular guy. On Reveal: Cleanse and Protect your weakest other ally here. If you are losing this district after arrival, also gain +1 Hand.', 'Support'],
+  ['lebron-james', 'Regular guy named LeBron James', 'Mythical', 'Normal', 4, 4, 'Regular Guy', 'A fictional regular guy. On Reveal: Cleanse and Protect your weakest other ally here. If you are losing this district after arrival, also gain +3 Hands.', 'Support'],
 ] as const;
 
 export const cellblockWaveUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(

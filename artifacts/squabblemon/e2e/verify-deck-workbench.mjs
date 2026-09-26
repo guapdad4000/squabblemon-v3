@@ -219,7 +219,7 @@ try {
     await context.close();
   }
 
-  for (const options of process.argv[2] && process.argv[2] !== 'collection' ? [] : [{ withPack: true }, { returning: true }, { withPack: true, reduce: true }]) {
+  for (const options of process.argv[2] && !['collection'].includes(process.argv[2]) ? [] : [{ withPack: true }, { returning: true }, { withPack: true, reduce: true }]) {
     const { context, page } = await setup(390, 844, { ...options, collection: true });
     if (options.reduce) {
       await page.waitForSelector('[data-collection-discovery-new=true]');
@@ -250,7 +250,7 @@ try {
     await context.close();
   }
 
-  for (const [name, width, height] of process.argv[2] && process.argv[2] !== 'collection' ? [] : [
+  for (const [name, width, height] of process.argv[2] && !['collection', 'layout'].includes(process.argv[2]) ? [] : [
     ['collection-desktop', 1280, 900], ['collection-phone', 390, 844],
   ]) {
     const { context, page, errors } = await setup(width, height, { collection: true, mixedStates: true });
@@ -261,6 +261,15 @@ try {
     assert.equal(await page.locator('[data-collection-card-state=undiscovered]').count(), 1, `${name}: undiscovered cards remain distinct`);
     const hero = await page.locator('.collection-stage__hero').boundingBox();
     assert.ok(hero.height >= 180 && hero.height < height * .55, `${name}: hero stays readable without crowding the catalog`);
+    const ownedCount = page.getByTestId('text-collection-owned');
+    assert.equal(await ownedCount.getAttribute('aria-label'), `${ids.length - 2} of ${ids.length} cards owned`, `${name}: the full count is accessible during animation`);
+    await page.waitForFunction(expected => document.querySelector('[data-testid="text-collection-owned"]')?.textContent?.trim() === expected, `${ids.length - 2} / ${ids.length}`);
+    const title = await page.locator('.collection-hero__title').evaluate(element => ({
+      content: element.scrollWidth,
+      available: element.clientWidth,
+      font: getComputedStyle(element).font,
+    }));
+    assert.ok(title.content <= title.available + 1, `${name}: collection heading fits without clipping (${title.content}px / ${title.available}px, ${title.font})`);
     assert.ok((await page.locator('.collection-stage__hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('collection-sunset-standoff'), `${name}: supplied wallpaper is installed`);
     const firstCard = page.getByTestId('collection-card-control').first();
     await firstCard.focus();
@@ -277,6 +286,12 @@ try {
     await page.screenshot({ path: fileURLToPath(new URL(`${name}.png`, output)), fullPage: false });
     assert.deepEqual(errors, []);
     console.log(`${name}: hero, full catalog, card states, inspector, road, focus, and responsive layout passed`);
+    await context.close();
+  }
+
+  if (process.argv[2] === 'layout') {
+    const { context, page } = await setup(390, 844, { collection: true, mixedStates: true, reduce: true });
+    assert.equal((await page.getByTestId('text-collection-owned').textContent())?.trim(), `${ids.length - 2} / ${ids.length}`, 'Reduced motion shows the final count immediately');
     await context.close();
   }
 

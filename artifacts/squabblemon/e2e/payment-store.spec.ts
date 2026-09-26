@@ -166,6 +166,7 @@ async function selectPocket(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket('**', socket => socket.close());
   await mockEmptyHistory(page);
 });
 
@@ -333,15 +334,17 @@ test('pending and processing never credit, fulfilled refetches bootstrap, and mo
   await expect(page.getByText(/Checkout was closed/)).toBeVisible();
   await expect(status).toContainText(/pending/i);
   await expect(status).toContainText('Final total not yet confirmed');
-  await expect(page.locator('.city-header__balance')).toContainText('100');
-  await expect(status).not.toContainText('Added 500 Clout');
+  await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('100');
+  await expect(status.getByTestId('market-purchase-success')).toHaveCount(0);
   serverStatus = 'processing';
   await expect(status).toContainText(/processing/i, { timeout: 7_000 });
-  await expect(page.locator('.city-header__balance')).toContainText('100');
-  await expect(status).not.toContainText('Added 500 Clout');
+  await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('100');
+  await expect(status.getByTestId('market-purchase-success')).toHaveCount(0);
   serverStatus = 'fulfilled';
-  await expect(status).toContainText(/fulfilled/i, { timeout: 7_000 });
-  await expect(page.locator('.city-header__balance')).toContainText('600');
+  await expect(status.getByTestId('market-purchase-success')).toBeVisible({ timeout: 7_000 });
+  await expect(status.getByTestId('market-purchase-success')).toHaveAttribute('data-reduced', 'true');
+  await expect(status).toContainText('500 Clout is in your account.');
+  await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('600');
   expect(bootstrapRequests()).toBeGreaterThanOrEqual(3);
   await status.getByRole('button', { name: /Return to Market/i }).click();
   await expect(page).not.toHaveURL(/order=/);
@@ -363,8 +366,8 @@ for (const reversal of ['refunded', 'disputed']) {
     await expect(status).toContainText(new RegExp(reversal, 'i'));
     await expect(status).toContainText('$13.33');
     if (reversal === 'refunded') await expect(status).toContainText('Refunded $13.33');
-    await expect(status).not.toContainText(/Added 500 Clout/i);
-    await expect(page.locator('.city-header__balance')).toContainText('100');
+    await expect(status.getByTestId('market-purchase-success')).toHaveCount(0);
+    await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('100');
   });
 }
 
@@ -443,7 +446,7 @@ test('legacy demo tampering is ignored and unsupported showcase remains inspecta
   await mockBootstrap(page);
   await mockCatalog(page);
   await openStore(page);
-  await expect(page.locator('.city-header__balance')).toContainText('100');
+  await expect(page.locator('.city-header__balance:not(.city-header__shards)')).toContainText('100');
   await expect(page.locator('body')).not.toContainText('999,999,999');
 
   await page.getByRole('button', { name: 'Packs', exact: true }).click();
@@ -501,6 +504,8 @@ test(`real Shop route stays wheel and keyboard reachable at ${viewport.width}x${
       }
       expect(await reachable(locator), `unreachable action at ${viewport.width}×${viewport.height}`).toBe(true);
     };
+    // The display now scrolls sideways on phones and tablets.
+    await lastBundleButton.scrollIntoViewIfNeeded();
     await wheelTo(lastBundleButton);
 
     await lastBundleButton.focus();

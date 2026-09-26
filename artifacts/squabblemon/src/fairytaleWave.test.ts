@@ -113,7 +113,7 @@ test('Scarecrow swaps atomically; movement hooks protect arrivals and reward Lio
   m.boards[1]=[ally,lion,tin];
   const {source,after}=cast(m,'scarecrow');
   assert.equal(find(after,source).lane,1); assert.equal(find(after,ally).lane,0);
-  assert.equal(find(after,source).powerModifier,1); assert.equal(find(after,ally).powerModifier,1);
+  assert.equal(find(after,source).powerModifier,2); assert.equal(find(after,ally).powerModifier,1);
   assert.equal(find(after,lion).powerModifier,2); assert(find(after,source).statuses.protected);
   const locked=blank(); const held=unit('bonnetgirl','player',1);held.statuses.locked=true;locked.boards[1]=[held];
   const fail=cast(locked,'scarecrow');
@@ -160,14 +160,17 @@ test('Sherlock visibly cancels one entrance, expires, and does not erase passive
   assert.equal(reveal.after.districtTraps?.length,0);assert(!find(reveal.after,passive.source).statuses.silenced);
   m=advance(advance(m));assert(!getCharacterDistrictMarks(m).some(t=>t.text.includes('Stakeout')));
 });
-test('DMV surcharge is shared by legal-cost validation, charges once, does not stack and expires', () => {
+test('DMV queue replaces the surcharge, does not stack, and expires', () => {
   let m=cast(blank(),'dmvworker').after;m.playerMotion=9;m=cast(m,'dmvworker').after;
-  const enemy=createCardInstance('bonnetgirl','cpu');
-  assert.equal(getLegalCardCost(m,'cpu',enemy,0),2);assert.equal(getLegalCardCost(m,'cpu',enemy,1),1);
-  assert.throws(()=>play({...m,cpuMotion:1},enemy),/Motion/);
-  const after=play(m,enemy);assert.equal(after.cpuMotion,7);assert.equal(getLegalCardCost(after,'cpu',enemy,0),1);
-  assert.equal(getLegalCardCost(advance(advance(m)),'cpu',enemy,0),1);
+  const enemy=createCardInstance('youngbull','cpu');
+  assert.equal(getLegalCardCost(m,'cpu',enemy,0),2);
+  assert.equal(m.creativeMarks?.filter(x=>x.kind==='queue').length,1);
+  const after=play(m,enemy);assert.equal(find(after,enemy).powerModifier,0);
+  assert(after.creativeMarks?.some(x=>x.kind==='delayed'));
+  assert.equal(find(advance(after),enemy).powerModifier,1);
+  assert(!advance(advance(m)).creativeMarks?.some(x=>x.kind==='queue'));
 });
+
 test('Watson restores actual damage only; Fresh Pot removes Burn and Freeze without unrelated buffs', () => {
   const m=blank(), ally=unit('hooper','player',0);ally.powerModifier=6;m.boards[0]=[ally];
   const damaged=cast(m,'ptang','cpu').after, victim=find(damaged,ally);
@@ -216,7 +219,7 @@ test('Bonnet Girl, Ronald and Trap Vamp react to actual damage with correct caps
   const m=blank(), victim=unit('hooper','cpu',0), bonnet=unit('bonnetgirl','cpu',0), ron=unit('ronald','cpu',0), ally=unit('hooper','cpu',2,2), vamp=unit('trapvamp','player',0);
   victim.powerModifier=8;m.boards=[[victim,bonnet,ron,vamp],[],[ally]];
   const hit=cast(m,'ptang').after;
-  assert.equal(find(hit,bonnet).powerModifier,2);assert.equal(find(hit,ally).powerModifier,1);assert.equal(find(hit,vamp).powerModifier,2);
+  assert.equal(find(hit,bonnet).powerModifier,2);assert.equal(find(hit,ally).lane,0);assert(find(hit,ally).statuses.protected);assert.equal(find(hit,vamp).powerModifier,2);
   const again=cast({...hit,playerMotion:9},'powerhouse').after;assert.equal(find(again,vamp).powerModifier,2);
 });
 test('Protection prevents damage reactions, and opposing cooks cannot retaliate indefinitely', () => {
@@ -335,3 +338,23 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(cards.watson.power, 3); assert.equal(cards.watson.cost, 2);
   });
 }
+
+for (const owner of ['player', 'cpu'] as const) test('Heart Starter gives one Hand even to a protected arrival and shares its round cap for ' + owner, () => {
+  const m = blank(), tin = unit('tinman', owner, 0);
+  m.boards[0] = [tin];
+  const entrant = createCardInstance('cornball', owner, 'protected-arrival');
+  entrant.statuses.protected = true;
+  const first = play(m, entrant);
+  assert.equal(find(first, entrant).powerModifier, 1);
+  const second = cast(first, 'cornball', owner);
+  assert.equal(find(second.after, second.source).powerModifier, 0);
+  const later = cast({...second.after, round: 4, playerMotion: 9, cpuMotion: 9}, 'cornball', owner);
+  assert.equal(find(later.after, later.source).powerModifier, 1);
+  for (const status of ['silenced', 'frozen', 'weakened'] as const) {
+    const disabled = blank(), leader = unit('tinman', owner, 0);
+    leader.statuses[status] = true; disabled.boards[0] = [leader];
+    const result = cast(disabled, 'cornball', owner);
+    assert.equal(find(result.after, result.source).powerModifier, 0);
+    assert(!find(result.after, result.source).statuses.protected);
+  }
+});

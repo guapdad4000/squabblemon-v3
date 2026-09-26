@@ -2,6 +2,7 @@ import React from 'react';
 import { catalogCardByEngineId, catalogCardById } from '../data';
 
 export type EquippedVariantMap = Record<string, string>;
+export type CardVariantKind = 'tagged' | 'chrome' | 'prismatic' | 'crazy' | 'alternate';
 
 export function getCatalogCardId(cardId: string): string {
   return catalogCardById[cardId]?.catalogId
@@ -16,9 +17,10 @@ export function getEquippedVariant(
   return equippedVariants?.[getCatalogCardId(cardId)];
 }
 
-export function getVariantKind(variantId?: string | null): 'tagged' | 'chrome' | 'crazy' | 'alternate' | null {
+export function getVariantKind(variantId?: string | null): CardVariantKind | null {
   if (variantId?.endsWith(':tagged')) return 'tagged';
   if (variantId?.endsWith(':chrome')) return 'chrome';
+  if (variantId?.endsWith(':prismatic')) return 'prismatic';
   if (variantId?.endsWith(':crazy')) return 'crazy';
   if (variantId?.endsWith(':alternate')) return 'alternate';
   return null;

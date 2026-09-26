@@ -33,8 +33,13 @@ function stockMaps(tier, variant) {
       ctx.beginPath();ctx.moveTo(x-6,y+15);ctx.lineTo(x+6,y+15);ctx.stroke();
     }
   }
-  if (variant === 'chrome') {
+  if (variant === 'chrome' || variant === 'prismatic') {
     for(let y=36;y<366;y+=18)for(const x of [38,346]){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+5,y+8);ctx.lineTo(x,y+16);ctx.lineTo(x-5,y+8);ctx.closePath();ctx.stroke();}
+  }
+  if (variant === 'prismatic') {
+    ctx.lineWidth=.55;
+    // Reverse holo: dense facets live on the border and lower stock while the portrait remains matte.
+    for(let y=374;y<520;y+=14)for(let x=14;x<374;x+=16){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+8,y-7);ctx.lineTo(x+16,y);ctx.lineTo(x+8,y+7);ctx.closePath();ctx.stroke();}
   }
   const rough=canvas(384,536), r=rough.getContext('2d');
   // Luminance, not destination-out: an opaque black mask must remain matte.
@@ -68,7 +73,7 @@ export function mountFoil(host, tier, variant) {
   const scene=new Scene(), camera=new OrthographicCamera(-1,1,1,-1,.1,10);camera.position.z=3;
   const geometry=new PlaneGeometry(2,2), pointer=new Vector2(.48,.68);
   const material=new ShaderMaterial({transparent:true,depthWrite:false,
-    uniforms:{pointer:{value:pointer},tier:{value:tier},edition:{value:variant==='chrome'?2:variant==='tagged'?1:0}},
+    uniforms:{pointer:{value:pointer},tier:{value:tier},edition:{value:variant==='prismatic'?3:variant==='chrome'?2:variant==='tagged'?1:0}},
     vertexShader: `varying vec2 p;void main(){p=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
     fragmentShader: `precision highp float;
       varying vec2 p;uniform vec2 pointer;uniform float tier;uniform float edition;
@@ -93,6 +98,7 @@ export function mountFoil(host, tier, variant) {
         if(stock>4.5){color=mix(vec3(.57,.26,.045),vec3(1.,.88,.53),film.r);color=mix(color,film,.09);structure=pow(.5+.5*sin(uv.x*640.+uv.y*90.),25.)*.15;strength=.36;}
         if(stock>5.5){color=mix(vec3(.41,.015,.1),vec3(1.,.22,.15),film.r);color=mix(color,vec3(1.,.68,.3),pow(film.g,7.)*.65);structure=pow(max(0.,1.-c.z*18.),4.)*.26;strength=.38;}
         if(edition>1.5){color=mix(vec3(.55,.68,.78),vec3(.9,.98,1.),film.r);color=mix(color,film,.14);structure+=pow(max(0.,1.-c.z*28.),4.)*.15;strength=.33;}
+        if(edition>2.5){color=mix(film,vec3(1.,.92,.62),pow(c.y,5.)*.28);structure+=pow(max(0.,1.-c.z*36.),3.)*.32;strength=.52;}
         if(edition>.5&&edition<1.5){color=mix(color,vec3(1.,.67,.2),.24);strength=max(strength,.23);}
         vec2 dust=hash(floor(uv*vec2(145.,145.)));float glint=pow(dust.x,70.)*pow(max(0.,cos(dust.y*35.+travel*28.)),28.);
         float alpha=(beam*strength+strip*.1+structure*beam+glint*beam*.55)*matte*face;
@@ -105,11 +111,11 @@ export function mountFoil(host, tier, variant) {
   const mask=texture(source.mask), rough=texture(source.rough), film=texture(source.film);
   const envSource=texture(studioMap());envSource.mapping=EquirectangularReflectionMapping;envSource.colorSpace=SRGBColorSpace;
   const pmrem=new PMREMGenerator(renderer), environment=pmrem.fromEquirectangular(envSource);pmrem.dispose();
-  const metal=new MeshPhysicalMaterial({color:variant==='chrome'?'#c5e4f4':variant==='tagged'?'#e9bd64':palettes[tier],alphaMap:mask,transparent:true,depthWrite:false,
+  const metal=new MeshPhysicalMaterial({color:variant==='prismatic'?'#dffcff':variant==='chrome'?'#c5e4f4':variant==='tagged'?'#e9bd64':palettes[tier],alphaMap:mask,transparent:true,depthWrite:false,
     metalness:1,roughness:.7,roughnessMap:rough,bumpMap:mask,bumpScale:.012,
-    iridescence:tier<2&&!variant?0:variant==='chrome'?.8:.45,iridescenceMap:mask,
-    iridescenceIOR:1.6,iridescenceThicknessMap:film,iridescenceThicknessRange:[280,640],
-    envMap:environment.texture,envMapIntensity:1.7,clearcoat:1,clearcoatRoughness:.16,opacity:.85});
+    iridescence:tier<2&&!variant?0:variant==='prismatic'?1:variant==='chrome'?.8:.45,iridescenceMap:mask,
+    iridescenceIOR:variant==='prismatic'?2.15:1.6,iridescenceThicknessMap:film,iridescenceThicknessRange:variant==='prismatic'?[180,880]:[280,640],
+    envMap:environment.texture,envMapIntensity:variant==='prismatic'?2.35:1.7,clearcoat:1,clearcoatRoughness:variant==='prismatic'?.08:.16,opacity:.85});
   const plate=new Mesh(geometry,metal);plate.position.z=.01;scene.add(plate);
   const key=new DirectionalLight('#fff2d7',3.5);key.position.set(-2,3,4);scene.add(key);
   const rim=new DirectionalLight('#d2eaff',2);rim.position.set(3,-1,3);scene.add(rim);

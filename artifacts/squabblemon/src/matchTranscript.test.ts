@@ -438,7 +438,7 @@ test("late campaign phase timing fits every shortened encounter and validates", 
 });
 
 test("early campaign balance content retains IDs, rewards, and authored encounter rules", () => {
-  assert.equal(storyContent.version, 7);
+  assert.equal(storyContent.version, 9);
   assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).length, 209);
   assert.equal(storyContent.chapters.flatMap((chapter) => chapter.nodes).filter((node) => node.kind === "battle").length, 101);
 

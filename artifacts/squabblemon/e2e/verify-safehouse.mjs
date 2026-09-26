@@ -64,7 +64,9 @@ try {
       await page.waitForTimeout(800);
       await page.mouse.move(width * .48, height * .36); await page.mouse.down();
       await page.mouse.move(width * .56, height * .55, { steps: 12 }); await page.mouse.up();
-      await frame.waitForFunction(() => window.Squabblemon.getSceneStatus().music.ceilingVisible === false);
+      await frame.waitForFunction(() => window.Squabblemon.getSceneStatus().camera.pitch > .6);
+      assert.equal(await frame.evaluate(() => window.Squabblemon.getSceneStatus().music.ceilingVisible), true);
+      assert.ok(await frame.evaluate(() => window.Squabblemon.getSceneStatus().camera.position[1] <= 4.29));
       await page.getByRole('button', { name: 'Reset room camera', exact: true }).click();
       await frame.waitForFunction(() => window.Squabblemon.getSceneStatus().music.ceilingVisible === true);
     }

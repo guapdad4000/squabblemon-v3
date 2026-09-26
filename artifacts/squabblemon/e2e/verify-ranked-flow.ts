@@ -55,7 +55,7 @@ createRoot(document.getElementById('root')!).render(<StrictMode><QueryClientProv
     await b.screenshot({ path: resolve(output, 'fade-park-320.png'), fullPage: true });
     await b.setViewportSize({ width: 390, height: 844 });
     await a.getByTestId('find-ranked-fade').click(); await a.getByTestId('ranked-search').waitFor();
-    await a.getByRole('button', { name: 'Cancel search', exact: true }).click();
+    await a.getByRole('button', { name: 'Hang up — cancel search', exact: true }).click();
     await a.getByTestId('find-ranked-fade').waitFor();
     await a.getByTestId('find-ranked-fade').click(); await a.getByTestId('ranked-search').waitFor();
     await b.getByTestId('find-ranked-fade').click();

@@ -45,7 +45,7 @@ for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the sec
   assert.equal(second.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
   assert.equal(find(second.after, second.source).powerModifier, 2, 'DJ bonus stacks with Streamer cheap-play bonus');
   const third = cast(second.after, 'techbro', owner, 2, 3);
-  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost);
+  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost + 2);
   assert.equal(third.after.electricPlays?.[owner]?.count, 3);
   assert.equal(third.after.leaderRounds?.[owner]?.piratedj, 3);
 });
@@ -224,3 +224,24 @@ test('new element reactions match AI search without presentation events', () => 
   assert.deepEqual(search.boards, visible.boards); assert.deepEqual(search.timedEffects, visible.timedEffects);
   assert.deepEqual(search.leaderRounds, visible.leaderRounds); assert.equal(search.effectLog.length, 0);
 });
+
+for (const owner of ['player', 'cpu'] as const) {
+  for (const id of ['bottle', 'piratedj', 'dancecaptain']) test('Guest List includes ' + id + ' and shares the Air movement cap for ' + owner, () => {
+    const m = blank(), leader = unit('promoter', owner, 2, 1);
+    const guest = unit(id, owner, 0, 2, 1);
+    m.boards = [[guest], [], [leader]];
+    const moved = cast(m, 'conductor', owner).after;
+    assert.notEqual(find(moved, guest).lane, 0);
+    assert.equal(find(moved, guest).powerModifier, 5, 'Conductor +3 and Guest List +2');
+    const air = cast(moved, 'ogdominican', owner, 0, 4);
+    assert.equal(find(air.after, air.source).powerModifier, 2, 'Air shares the already-spent trigger');
+    for (const status of ['silenced', 'frozen', 'weakened', 'locked'] as const) {
+      const blocked = blank(), boss = unit('promoter', owner, 2, 1), passenger = unit(id, owner, 0, 2, 1);
+      if (status === 'locked') passenger.statuses.locked = true;
+      else boss.statuses[status] = true;
+      blocked.boards = [[passenger], [], [boss]];
+      const after = cast(blocked, 'conductor', owner).after;
+      assert.equal(after.leaderRounds?.[owner]?.promoter, undefined);
+    }
+  });
+}

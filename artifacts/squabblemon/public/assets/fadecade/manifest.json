@@ -257,6 +257,34 @@
     "footer-banner.webp": {
       "width": 2172,
       "height": 365
+    },
+    "challenge-console-frame-v1.png": {
+      "width": 1586,
+      "height": 992
+    },
+    "frames/stockz-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
+    },
+    "frames/road-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
+    },
+    "frames/daily-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
+    },
+    "frames/weekly-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
+    },
+    "frames/training-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
+    },
+    "frames/events-border-9slice.png": {
+      "width": 1254,
+      "height": 1254
     }
   },
   "atlases": {

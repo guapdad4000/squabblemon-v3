@@ -1,0 +1,25 @@
+{
+  "tool": "Built-in imagegen",
+  "sourceCharacters": [
+    "assets/characters/inmate-kingpin.webp",
+    "assets/characters/inmate-crafty.webp"
+  ],
+  "prompts": [
+    {
+      "key": "quick",
+      "prompt": "Create a production game animation sprite sheet PNG with real transparent alpha background. EXACTLY 4 columns by 2 rows, eight equal square cells, no visible grid, no labels, no text, no watermark. Overall canvas 1536x1024 if supported; each of the 8 cells must occupy an exactly equal quarter width and half height. Each cell contains one full-body chibi adult character in a different animation pose, all same drawing size, same character model and outfit, feet planted on the same baseline near 88% cell height, generous transparent margins. Clean bold cel-shaded 2D fighting-game sprite aesthetic, thick dark outlines, vivid orange fabric, strong highlights, funny expressive faces, 2.5 heads tall, oversized head and tiny sturdy body. Character must be easily read at 140px high. No scenery, floor, gradients, glow, ground shadows, weapon or particles extending into adjacent cells. Reference image is for character identity, outfit, complexion and hairstyle. Eight frames in reading order form one looping workout motion. Use the referenced Inmate Kingpin: heavy-set adult with dark brown skin, short black locs, goatee, gold chains, orange open prison jacket, white undershirt, orange trousers and black chunky boots. Funny DOUBLE DUMBBELL CURL: the intimidating Kingpin struggles comically with two ridiculously tiny pink dumbbells. Frame1 arms low confident smirk; frame2 elbows slightly bent; frame3 half curl cheeks puff; frame4 dumbbells near shoulders straining; frame5 highest curl eyes squeezed comically, small tongue out; frame6 lowering halfway embarrassed; frame7 almost down relieved; frame8 back to low position near first pose. Fixed front three-quarter camera, same bodily anchor across all cells. Dumbbells visibly move with the hands."
+    },
+    {
+      "key": "moves",
+      "prompt": "Create a production game animation sprite sheet PNG with real transparent alpha background. EXACTLY 4 columns by 2 rows, eight equal square cells, no visible grid, no labels, no text, no watermark. Overall canvas 1536x1024 if supported; each of the 8 cells must occupy an exactly equal quarter width and half height. Each cell contains one full-body chibi adult character in a different animation pose, all same drawing size, same character model and outfit, feet planted on the same baseline near 88% cell height, generous transparent margins. Clean bold cel-shaded 2D fighting-game sprite aesthetic, thick dark outlines, vivid orange fabric, strong highlights, funny expressive faces, 2.5 heads tall, oversized head and tiny sturdy body. Character must be easily read at 140px high. No scenery, floor, gradients, glow, ground shadows, weapon or particles extending into adjacent cells. Reference image is for character identity, outfit, complexion and hairstyle. Eight frames in reading order form one looping workout motion. Use the referenced Inmate Crafty: lean muscular adult with dark brown skin, green baseball cap, sleeveless torn orange prison jumpsuit and black boots. REMOVE the weapon entirely; empty hands wrapped with white boxing tape. Funny SHADOWBOXING COMBO: confident boxer, tiny feet, absurdly big fists, concentrating way too hard. Frame1 guard up smirk; frame2 windup left; frame3 straight left jab; frame4 return to guard; frame5 windup right; frame6 exuberant right cross and cheeks puff; frame7 a comical deep duck; frame8 recover guard nearly same as frame1. Full body stays inside each cell. Fixed front three-quarter camera; cap stays green every frame."
+    }
+  ],
+  "editPrompt": "Remove all background to genuine transparent alpha PNG; preserve the existing eight character poses, positions and sizes.",
+  "frameWidth": 256,
+  "frameHeight": 256,
+  "frames": 8,
+  "layout": "8 columns by 1 row",
+  "frameDurationMs": 150,
+  "loopDurationMs": 1200,
+  "baseline": 244
+}

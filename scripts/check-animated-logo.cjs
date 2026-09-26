@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 
 (async () => {
-  const browser = await chromium.launch({ headless: true, channel: 'msedge' });
+  const browser = await chromium.launch({ headless: true, channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge' });
   try {
     for (const [name, width, height, reducedMotion] of [
       ['desktop', 1440, 1000, 'no-preference'],
@@ -14,7 +14,7 @@ const assert = require('node:assert/strict');
       await page.goto('http://127.0.0.1:4179/squabblemon/');
       await page.locator('.animated-logo').waitFor();
       await page.waitForFunction(() => [...document.querySelectorAll('.animated-logo img')].every(img => img.complete && img.naturalWidth > 0));
-      assert.equal(await page.locator('.animated-logo img').count(), 4);
+      assert.equal(await page.locator('.animated-logo img').count(), 1);
       assert.ok(await page.getByRole('link', { name: 'Sign In', exact: true }).isVisible());
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await page.waitForTimeout(1600);
@@ -31,7 +31,7 @@ const assert = require('node:assert/strict');
       await page.getByRole('link', { name: 'Sign In', exact: true }).click();
       await page.waitForURL('**/sign-in');
       assert.deepEqual(errors, []);
-      console.log(`${name}: four assets, sign-in navigation, layout, motion preference, and pause/resume passed`);
+      console.log(`${name}: new brand lockup, sign-in navigation, layout, motion preference, and pause/resume passed`);
       await page.close();
     }
   } finally { await browser.close(); }

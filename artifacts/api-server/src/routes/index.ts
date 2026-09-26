@@ -14,6 +14,7 @@ import stockzRouter from './stockz';
 import accountRewardsRouter from './accountRewards';
 import starterMythicRouter from './starterMythic';
 import mailRouter from './mail';
+import notificationsRouter from './notifications';
 
 const router: IRouter = Router();
 
@@ -30,6 +31,7 @@ router.use(paymentsRouter);
 router.use(accountRewardsRouter);
 router.use(starterMythicRouter);
 router.use(mailRouter);
+router.use(notificationsRouter);
 router.use(stockzRouter);
 
 export default router;

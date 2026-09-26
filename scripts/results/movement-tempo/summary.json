@@ -1,0 +1,206 @@
+{
+  "baseline-greedy": {
+    "earth-rides": {
+      "games": 112,
+      "score": 0.9553571428571429,
+      "tiers": {
+        "0": 0.9464285714285714,
+        "3": 0.9642857142857143
+      },
+      "seats": {
+        "a-player": 0.9107142857142857,
+        "b-player": 1.0
+      },
+      "tempoPerMatch": {
+        "plays": 7.776785714285714,
+        "freePlays": 0.0,
+        "paidMotion": 21.964285714285715,
+        "restoredMotion": 0.0,
+        "existingCardMoves": 1.4642857142857142
+      }
+    },
+    "starter-voltage": {
+      "games": 112,
+      "score": 0.7723214285714286,
+      "tiers": {
+        "0": 0.6339285714285714,
+        "3": 0.9107142857142857
+      },
+      "seats": {
+        "a-player": 0.6339285714285714,
+        "b-player": 0.9107142857142857
+      },
+      "tempoPerMatch": {
+        "plays": 9.803571428571429,
+        "freePlays": 0.8214285714285714,
+        "paidMotion": 21.357142857142858,
+        "restoredMotion": 0.3392857142857143,
+        "existingCardMoves": 0.0
+      }
+    }
+  },
+  "baseline-seeded": {
+    "earth-rides": {
+      "games": 112,
+      "score": 0.6339285714285714,
+      "tiers": {
+        "0": 0.7142857142857143,
+        "3": 0.5535714285714286
+      },
+      "seats": {
+        "a-player": 0.7232142857142857,
+        "b-player": 0.5446428571428571
+      },
+      "tempoPerMatch": {
+        "plays": 8.357142857142858,
+        "freePlays": 0.0,
+        "paidMotion": 21.232142857142858,
+        "restoredMotion": 0.0,
+        "existingCardMoves": 1.0625
+      }
+    },
+    "starter-voltage": {
+      "games": 112,
+      "score": 0.7678571428571429,
+      "tiers": {
+        "0": 0.6071428571428571,
+        "3": 0.9285714285714286
+      },
+      "seats": {
+        "a-player": 0.7053571428571429,
+        "b-player": 0.8303571428571429
+      },
+      "tempoPerMatch": {
+        "plays": 9.803571428571429,
+        "freePlays": 0.5446428571428571,
+        "paidMotion": 21.008928571428573,
+        "restoredMotion": 0.5357142857142857,
+        "existingCardMoves": 0.0
+      }
+    }
+  },
+  "candidate-greedy": {
+    "earth-rides": {
+      "games": 112,
+      "score": 0.9553571428571429,
+      "tiers": {
+        "0": 0.9464285714285714,
+        "3": 0.9642857142857143
+      },
+      "seats": {
+        "a-player": 0.9107142857142857,
+        "b-player": 1.0
+      },
+      "tempoPerMatch": {
+        "plays": 7.776785714285714,
+        "freePlays": 0.0,
+        "paidMotion": 21.964285714285715,
+        "restoredMotion": 0.0,
+        "existingCardMoves": 1.4642857142857142
+      }
+    },
+    "starter-voltage": {
+      "games": 112,
+      "score": 0.7723214285714286,
+      "tiers": {
+        "0": 0.6339285714285714,
+        "3": 0.9107142857142857
+      },
+      "seats": {
+        "a-player": 0.6339285714285714,
+        "b-player": 0.9107142857142857
+      },
+      "tempoPerMatch": {
+        "plays": 9.803571428571429,
+        "freePlays": 0.8214285714285714,
+        "paidMotion": 21.357142857142858,
+        "restoredMotion": 0.3392857142857143,
+        "existingCardMoves": 0.0
+      }
+    }
+  },
+  "earth-no-bonds-greedy": {
+    "earth-rides": {
+      "games": 112,
+      "score": 0.5133928571428571,
+      "tiers": {
+        "0": 0.6160714285714286,
+        "3": 0.4107142857142857
+      },
+      "seats": {
+        "a-player": 0.3125,
+        "b-player": 0.7142857142857143
+      },
+      "tempoPerMatch": {
+        "plays": 7.785714285714286,
+        "freePlays": 0.0,
+        "paidMotion": 21.9375,
+        "restoredMotion": 0.0,
+        "existingCardMoves": 1.5535714285714286
+      }
+    }
+  },
+  "electric-no-bond-greedy": {
+    "starter-voltage": {
+      "games": 112,
+      "score": 0.39285714285714285,
+      "tiers": {
+        "0": 0.29464285714285715,
+        "3": 0.49107142857142855
+      },
+      "seats": {
+        "a-player": 0.16964285714285715,
+        "b-player": 0.6160714285714286
+      },
+      "tempoPerMatch": {
+        "plays": 9.892857142857142,
+        "freePlays": 0.7857142857142857,
+        "paidMotion": 21.455357142857142,
+        "restoredMotion": 0.36607142857142855,
+        "existingCardMoves": 0.0
+      }
+    }
+  },
+  "ev-no-refund-greedy": {
+    "starter-voltage": {
+      "games": 112,
+      "score": 0.7410714285714286,
+      "tiers": {
+        "0": 0.5803571428571429,
+        "3": 0.9017857142857143
+      },
+      "seats": {
+        "a-player": 0.6071428571428571,
+        "b-player": 0.875
+      },
+      "tempoPerMatch": {
+        "plays": 9.705357142857142,
+        "freePlays": 0.8392857142857143,
+        "paidMotion": 21.178571428571427,
+        "restoredMotion": 0.03571428571428571,
+        "existingCardMoves": 0.0
+      }
+    }
+  },
+  "tin-protection-only-greedy": {
+    "earth-rides": {
+      "games": 112,
+      "score": 0.9464285714285714,
+      "tiers": {
+        "0": 0.9464285714285714,
+        "3": 0.9464285714285714
+      },
+      "seats": {
+        "a-player": 0.8928571428571429,
+        "b-player": 1.0
+      },
+      "tempoPerMatch": {
+        "plays": 7.776785714285714,
+        "freePlays": 0.0,
+        "paidMotion": 21.955357142857142,
+        "restoredMotion": 0.0,
+        "existingCardMoves": 1.4553571428571428
+      }
+    }
+  }
+}

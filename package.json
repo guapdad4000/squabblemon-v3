@@ -13,6 +13,7 @@
     "balance:full": "pnpm --filter @workspace/scripts balance:full",
     "test:campaign:db": "node scripts/test-api-database.mjs",
     "test:campaign:preflight": "node scripts/campaign-e2e-preflight.mjs",
+    "test:store:smoke": "pnpm --filter @workspace/api-server exec tsx src/tools/store-smoke-check.ts",
     "test:campaign:remote": "node scripts/campaign-remote.mjs",
     "test:campaign:cleanup": "pnpm --filter @workspace/api-server exec tsx ../../scripts/campaign-cleanup.mjs",
     "test:fade-park": "node scripts/test-api-database.mjs fade-park",

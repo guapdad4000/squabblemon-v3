@@ -86,6 +86,13 @@
   overflow: visible;
   background: none;
 }
+.collection-tabs > :is(button, a) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
 
 /* Land across the torn edge, with more tape touching the paper. */
 .trading-post .market-tabs button[aria-pressed='true']::before,

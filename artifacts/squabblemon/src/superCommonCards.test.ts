@@ -50,18 +50,18 @@ test('Shiesty YN deterministically repeats its 50% self-summon with an eight-cop
   assert.match(cards.shiesty.effect, /50% chance.*repeats.*8 extra/);
 });
 
-test('Torta and Concrete expose hand-bond metadata', () => {
+test('Torta and Concrete retain Earth identity without hand-bond metadata', () => {
   for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Earth']] as const) {
-    assert.equal(cards[id].elementalBond, element);
+    assert.equal(cards[id].elementalBond, undefined);
     assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', 'player')], [], []] })), id).powerModifier, 0);
   }
 });
 
-test('Torta grants its Earth bond while held in hand at round end', () => {
+test('Torta no longer buffs Earth allies from hand', () => {
   const earthAlly = instance('manman', 'player', 7);
   const holder = instance('torta', 'player', 8);
   const after = nextRound({ ...fresh(), phase: 'resolved', playerHand: [holder], boards: [[earthAlly], [], []] });
-  assert.equal(find(after, 'manman').powerModifier, 1);
+  assert.equal(find(after, 'manman').powerModifier, 0);
 });
 test('Water Boy restores exactly one Motion for either owner, and needs company', () => {
   for (const owner of ['player', 'cpu'] as const) {
@@ -163,7 +163,7 @@ test('new cards can complete a deterministic six-round fade and server replay', 
 test('Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs', () => {
   assert(!cardCatalog.some(c => c.type === 'Rock' || c.elementalBond === 'Rock'));
   const earth = cardCatalog.filter(c => c.type === 'Earth' && (c.kind ?? 'character') === 'character');
-  assert.equal(earth.length, 19);
+  assert.equal(earth.length, 23);
   assert(earth.some(c => c.engineId === 'buddy'), 'Earth cardinality includes Buddy’s new Earth identity');
   for (const [id, catalogId, rarity, cost, power] of [
     ['concrete', 'concrete', 'SuperCommon', 1, 1],
@@ -176,11 +176,11 @@ test('Rock merges into Earth without changing catalog, rarity, stats or upgrade 
     assert.equal(entry.cost, cost); assert.equal(entry.power, power);
     assert.deepEqual(entry.abilityUpgrades.map(u => u.id), [1, 2, 3].map(t => `${id}:upgrade:${t}`));
   }
-  assert.equal(cards.concrete.ability, 'Earth Bond');
-  assert.match(cards.concrete.effect, /other Earth characters/);
+  assert.equal(cards.concrete.ability, 'Set in Stone');
+  assert.match(cards.concrete.effect, /Anchor your weakest other Earth ally/);
 });
 
-for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete stack Earth bonds across districts for ' + owner, () => {
+for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete do not stack passive hand growth for ' + owner, () => {
   const enemy = owner === 'player' ? 'cpu' : 'player';
   const m: Match = { ...fresh(), phase: 'resolved', playerHand: [], cpuHand: [],
     [owner === 'player' ? 'playerHand' : 'cpuHand']: [instance('torta', owner, 20), instance('concrete', owner, 21)],
@@ -189,13 +189,13 @@ for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete stack E
       [{ ...instance('johnhenry', owner, 4), lane: 2 }, { ...instance('hooper', owner, 5), lane: 2 }]],
   };
   const before = JSON.stringify(m), after = nextRound(m);
-  for (const id of ['manman', 'landlord', 'johnhenry']) assert.equal(find(after, id).powerModifier, 2);
+  for (const id of ['manman', 'landlord', 'johnhenry']) assert.equal(find(after, id).powerModifier, 0);
   assert.equal(after.boards[0].find(c => c.owner === enemy)!.powerModifier, 0);
   assert.equal(find(after, 'hooper').powerModifier, 0);
   assert.equal(JSON.stringify(m), before, 'round resolution does not mutate the saved input');
 });
 
-test('a legacy Rock bond and old Rock ally share the Earth pool after JSON restore', () => {
+test('a legacy Rock snapshot cannot restore the removed Concrete bond', () => {
   const holder = { ...instance('concrete'), type: 'Rock', elementalBond: 'Rock' };
   const legacy = { ...instance('landlord', 'player', 2), type: 'Rock' };
   const m: Match = { ...fresh(), phase: 'resolved', playerHand: [holder], cpuHand: [],
@@ -204,9 +204,9 @@ test('a legacy Rock bond and old Rock ally share the Earth pool after JSON resto
       { player: { concrete: { xp: 4500, level: 10, moveTier: 3 } } }),
   };
   const after = nextRound(JSON.parse(JSON.stringify(m)));
-  assert.equal(find(after, 'manman').powerModifier + find(after, 'landlord').powerModifier, 5,
-    'both receive the bond and all three earned training boosts still apply');
-  assert.match(find(after, 'landlord').lastEffectNote ?? '', /Earth bond/);
+  assert.equal(find(after, 'manman').powerModifier + find(after, 'landlord').powerModifier, 0,
+    'removed hand bonds remain removed after JSON restore');
+  assert.equal(cards.landlord.type, 'Earth');
 });
 
 test('Earth and legacy Rock cannot count as two elements for district diversity', () => {

@@ -303,3 +303,245 @@
 @media(max-width:480px) { .draft-card-btn strong { font-size:10px; } .draft-card-btn>span { font-size:8px; } }
 .fadecade-dialog-art-footer { container-type:inline-size; }
 .fadecade-dialog-footer-ink span { font-size:clamp(6px,2.1cqw,9px); white-space:nowrap; }
+
+/* The challenge dialog is a playable cabinet face, not an app form. */
+.fadecade-dialog-content {
+  --machine-accent:#ffe449;
+  --machine-accent-rgb:255,228,73;
+  max-width:760px;
+}
+.fadecade-dialog-content--daily { --machine-accent:#4ade80; --machine-accent-rgb:74,222,128; }
+.fadecade-dialog-content--weekly { --machine-accent:#60a5fa; --machine-accent-rgb:96,165,250; }
+.fadecade-dialog-content--training { --machine-accent:#f87171; --machine-accent-rgb:248,113,113; }
+.fadecade-dialog-content--events { --machine-accent:#c084fc; --machine-accent-rgb:192,132,252; }
+.fadecade-dialog-content--stockz { --machine-accent:#a9d498; --machine-accent-rgb:169,212,152; }
+.fadecade-dialog-artwork-shell {
+  isolation:isolate;
+  padding:clamp(42px,7vw,68px) clamp(34px,7.5vw,70px) clamp(48px,8vw,76px);
+  background:transparent;
+  border:0!important;
+  border-radius:0;
+  box-shadow:none!important;
+  overflow:visible;
+}
+.fadecade-dialog-console-frame {
+  position:absolute;
+  inset:0;
+  z-index:4;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 18px 20px #000d) drop-shadow(0 0 18px rgba(var(--machine-accent-rgb),.28));
+}
+.fadecade-dialog-console-screen {
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+  border:3px solid #06070d;
+  outline:2px solid rgba(var(--machine-accent-rgb),.75);
+  background:#080b16;
+  box-shadow:inset 0 0 34px #000,0 0 20px rgba(var(--machine-accent-rgb),.22);
+  clip-path:polygon(2% 0,98% 0,100% 3%,100% 97%,98% 100%,2% 100%,0 97%,0 3%);
+}
+.fadecade-dialog-console-screen::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  opacity:.12;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#b8d7ff 4px);
+  mix-blend-mode:screen;
+}
+.fadecade-dialog-signal {
+  position:absolute;
+  z-index:12;
+  top:8px;
+  left:14px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#cbd5e1;
+  font:800 7px/1 var(--font-mono);
+  letter-spacing:.12em;
+}
+.fadecade-dialog-signal i { width:6px; aspect-ratio:1; border-radius:50%; background:#273047; box-shadow:0 0 0 1px #000; }
+.fadecade-dialog-signal i:first-child { background:var(--machine-accent); box-shadow:0 0 8px var(--machine-accent); }
+.fadecade-dialog-scroll-body {
+  background:
+    linear-gradient(90deg,rgba(var(--machine-accent-rgb),.08) 1px,transparent 1px) 0 0/28px 28px,
+    linear-gradient(rgba(var(--machine-accent-rgb),.06) 1px,transparent 1px) 0 0/28px 28px,
+    radial-gradient(circle at 50% 0,rgba(var(--machine-accent-rgb),.18),transparent 48%),
+    #080b16;
+}
+.fadecade-dialog-titlebar { background:repeating-linear-gradient(115deg,rgba(var(--machine-accent-rgb),.10) 0 2px,transparent 2px 14px),#111526; }
+.fadecade-dialog-title { color:var(--machine-accent); text-shadow:0 0 14px rgba(var(--machine-accent-rgb),.38); }
+.fadecade-dialog-scroll-body .cabinet-btn {
+  position:relative;
+  min-height:48px;
+  border:2px solid #050611;
+  box-shadow:0 4px 0 #03040a,0 0 0 2px var(--machine-accent);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  letter-spacing:.08em;
+}
+.fadecade-dialog-scroll-body .cabinet-btn--outline { border-color:var(--machine-accent); color:var(--machine-accent); }
+.challenge-field-label { display:flex; align-items:center; gap:8px; color:var(--machine-accent); }
+.challenge-field-label::after { content:""; flex:1; height:2px; background:linear-gradient(90deg,var(--machine-accent),transparent); }
+.fadecade-dialog-scroll-body :is(.cabinet-select,[role=combobox]) {
+  min-height:50px;
+  border:2px solid rgba(var(--machine-accent-rgb),.6);
+  background:linear-gradient(135deg,rgba(var(--machine-accent-rgb),.15),#080b16 62%);
+  box-shadow:inset 0 0 18px #0008,4px 4px 0 #0008;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.challenge-crew-preview {
+  border-color:rgba(var(--machine-accent-rgb),.45);
+  border-bottom-color:var(--machine-accent);
+  background:linear-gradient(145deg,rgba(var(--machine-accent-rgb),.12),#060913 64%);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+}
+.challenge-crew-preview strong { color:var(--machine-accent); }
+.fadecade-dialog-scroll-body .bounty-item {
+  position:relative;
+  border-left-color:var(--machine-accent);
+  background:linear-gradient(135deg,rgba(var(--machine-accent-rgb),.13),#080b16 55%);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+}
+.challenge-reward { color:var(--machine-accent); border-color:rgba(var(--machine-accent-rgb),.5); background:rgba(var(--machine-accent-rgb),.1); }
+.fadecade-dialog-scroll-body .draft-card-btn {
+  background:linear-gradient(#11182a,#060a16);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.fadecade-dialog-scroll-body .draft-card-btn:hover { border-color:var(--machine-accent); filter:drop-shadow(0 0 8px rgba(var(--machine-accent-rgb),.45)); }
+@media(max-width:480px) {
+  .fadecade-dialog-artwork-shell { padding:36px 22px 44px; }
+  .fadecade-dialog-signal { top:5px; left:8px; }
+  .fadecade-dialog-signal span { display:none; }
+  .fadecade-dialog-titlebar { gap:6px; padding-left:28px; }
+  .fadecade-dialog-title { min-width:0; font-size:clamp(14px,4.4vw,18px); }
+  .fadecade-dialog-close { min-width:52px; padding-inline:6px; font-size:10px; }
+}
+@media(max-height:650px) {
+  .fadecade-dialog-artwork-shell { padding-top:30px; padding-bottom:34px; }
+}
+
+/* Responsive machine identity system. The generated art is a true 9-slice:
+   corners remain intact while the four rails expand with live game content. */
+.fadecade-dialog-content {
+  max-width:880px;
+  --machine-panel:#080b16;
+  --machine-banner:
+    linear-gradient(90deg,rgba(var(--machine-accent-rgb),.26),transparent 36% 64%,rgba(var(--machine-accent-rgb),.26)),
+    repeating-linear-gradient(115deg,rgba(var(--machine-accent-rgb),.10) 0 2px,transparent 2px 13px),
+    #101522;
+}
+.fadecade-dialog-content--road {
+  --machine-accent:#f6b819; --machine-accent-rgb:246,184,25; --machine-panel:#10100d;
+  --machine-banner:linear-gradient(#171717cc,#171717cc),repeating-linear-gradient(90deg,#f6b819 0 38px,#1b1b1b 38px 56px);
+}
+.fadecade-dialog-content--daily {
+  --machine-accent:#39d87a; --machine-accent-rgb:57,216,122; --machine-panel:#07120c;
+  --machine-banner:radial-gradient(circle at 12% 50%,#f3c94c 0 4px,transparent 5px),repeating-linear-gradient(115deg,#126b3b55 0 12px,transparent 12px 24px),#092d1b;
+}
+.fadecade-dialog-content--weekly {
+  --machine-accent:#43c9ff; --machine-accent-rgb:67,201,255; --machine-panel:#070d1b;
+  --machine-banner:linear-gradient(135deg,#164fa255,transparent 32% 68%,#164fa255),repeating-linear-gradient(90deg,#0d1f42 0 20px,#102a58 20px 22px);
+}
+.fadecade-dialog-content--training {
+  --machine-accent:#f36b32; --machine-accent-rgb:243,107,50; --machine-panel:#130b09;
+  --machine-banner:repeating-linear-gradient(90deg,transparent 0 10px,#17100d 10px 14px),linear-gradient(#b73322,#6f1d17);
+}
+.fadecade-dialog-content--events {
+  --machine-accent:#f35bd3; --machine-accent-rgb:243,91,211; --machine-panel:#100817;
+  --machine-banner:radial-gradient(circle,#27d9e8 0 2px,transparent 3px) 0 0/17px 17px,linear-gradient(120deg,#5b167d,#161020 55%,#79165e);
+}
+.fadecade-dialog-content--stockz {
+  --machine-accent:#a9d498; --machine-accent-rgb:169,212,152; --machine-panel:#071009;
+  --machine-banner:
+    linear-gradient(90deg,transparent 0 7%,#a9d4981c 7% 7.3%,transparent 7.3% 93%,#a9d4981c 93% 93.3%,transparent 93.3%),
+    repeating-linear-gradient(0deg,#a9d49812 0 1px,transparent 1px 11px),
+    repeating-linear-gradient(90deg,#a9d4980d 0 1px,transparent 1px 18px),
+    #08140c;
+}
+.fadecade-dialog-artwork-shell {
+  padding:0;
+  border:clamp(34px,5.8vw,58px) solid transparent!important;
+  border-image-source:var(--machine-border)!important;
+  border-image-slice:190!important;
+  border-image-width:1!important;
+  border-image-outset:0!important;
+  border-image-repeat:stretch!important;
+  filter:drop-shadow(0 18px 20px #000d) drop-shadow(0 0 16px rgba(var(--machine-accent-rgb),.2));
+}
+.fadecade-dialog-console-screen {
+  background:var(--machine-panel);
+  border-color:#020504;
+  outline-color:rgba(var(--machine-accent-rgb),.72);
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);
+}
+.fadecade-dialog-art-header {
+  width:100%;
+  max-width:none;
+  min-height:clamp(48px,7vw,68px);
+  aspect-ratio:auto!important;
+  align-self:stretch;
+  display:grid;
+  background:var(--machine-banner);
+  border-bottom:2px solid rgba(var(--machine-accent-rgb),.62);
+  box-shadow:inset 0 -12px 22px #0006;
+}
+.fadecade-dialog-header-ink {
+  position:relative;
+  inset:auto;
+  width:100%;
+  height:100%;
+  min-height:inherit;
+  padding:12px 72px;
+  color:var(--machine-accent);
+}
+.fadecade-dialog-eyebrow {
+  color:var(--machine-accent);
+  font-size:clamp(13px,2.5vw,22px);
+  text-shadow:0 2px #000,0 0 16px rgba(var(--machine-accent-rgb),.5);
+}
+.fadecade-dialog-titlebar { border-bottom-color:rgba(var(--machine-accent-rgb),.55); }
+.fadecade-dialog-art-footer {
+  width:100%;
+  max-width:none;
+  min-height:34px;
+  align-self:stretch;
+  background:var(--machine-banner);
+  border-top:2px solid rgba(var(--machine-accent-rgb),.5);
+}
+.fadecade-dialog-footer-ink {
+  position:relative;
+  inset:auto;
+  width:100%;
+  height:34px;
+  color:var(--machine-accent);
+  text-shadow:0 1px #000;
+}
+.fadecade-dialog-footer-ink span { font-size:clamp(8px,1.8vw,11px); letter-spacing:.14em; }
+.fadecade-dialog-content--stockz .fadecade-dialog-close { background:#52684c; border-color:#a9d498; color:#edf5e9; box-shadow:2px 2px 0 #020604; }
+.fadecade-dialog-content--stockz .fadecade-dialog-close:hover { background:#657f5d; }
+.fadecade-dialog-content--daily .fadecade-dialog-close { background:#197a45; }
+.fadecade-dialog-content--weekly .fadecade-dialog-close { background:#145e9a; }
+.fadecade-dialog-content--training .fadecade-dialog-close { background:#a73821; }
+.fadecade-dialog-content--events .fadecade-dialog-close { background:#89236f; }
+@media(max-width:480px) {
+  .fadecade-dialog-artwork-shell { padding:0; border-width:25px!important; }
+  .fadecade-dialog-art-header { min-height:46px; }
+  .fadecade-dialog-header-ink { padding:9px 56px 9px 18px; }
+  .fadecade-dialog-titlebar { padding-left:14px; }
+}
+@media(max-height:650px) {
+  .fadecade-dialog-artwork-shell { padding:0; border-width:26px!important; }
+  .fadecade-dialog-art-header { min-height:38px; }
+  .fadecade-dialog-art-footer,.fadecade-dialog-footer-ink { min-height:25px; height:25px; }
+}

@@ -15,9 +15,9 @@ export function replaceDeckCard(draft: DeckDraft, index: number, cardId: string)
  * opening the workshop never replaces a starter or a player's saved crew.
  */
 export const recommendedWorkshopCrews = {
-  cellblock: ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james', 'bustdown', 'cognac', 'rastamon', 'wifey', 'stud'],
+  cellblock: ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband', 'lebron-james', 'bustdown', 'cognac', 'tinman', 'counter', 'roaster'],
   detectives: ['sherlock', 'watson', 'crossingguard', 'nightmedic', 'wifey', 'counter', 'oz', 'rastamon', 'bustdown', 'tinman'],
-  mushroom: ['demario', 'luigion', 'rastamon', 'vibe', 'plug', 'bustdown', 'soulfood', 'black-cowboy', 'hair-stylist', 'stylist'],
+  mushroom: ['demario', 'luigion', 'gardener', 'sprout', 'rootnurse', 'canopykeeper', 'gardenwall', 'hair-stylist', 'stylist', 'black-cowboy'],
   counterplay: ['counter', 'gamer', 'gothkid', 'nerd', 'redpill', 'buddy', 'wifey', 'pinaynurse', 'plug', 'bustdown'],
 } as const;
 
@@ -31,8 +31,8 @@ export const workshopSuggestions = [
   { cardId: 'sherlock', title: 'Predict, cancel, protect', detail: 'An actual Sherlock cancellation gives him +2 Hands and your weakest other character +2. Watson is a 2/3 who repairs up to 3 actual damage, Protects that ally or a fallback ally, and Protects Sherlock anywhere.', testCrew: catalogCrew(recommendedWorkshopCrews.detectives) },
   { cardId: 'guap', title: 'Finish with Fire', detail: 'Build friendly characters across the map before GUAP: FINNAM! charges from the whole board and pressures every opposing district.', testCrew: ['guap', 'folks', 'hooper', 'baby'] },
   { cardId: 'bottle-girl', title: 'Chain Poison entries', detail: 'Bottle Girl rewards a later play and discounts your next Poison character. Follow with entry punishment from Cologne Criminal or Nail Tech.', testCrew: ['bottle-girl', 'colognecriminal', 'nail-tech', 'sneaker'] },
-  { cardId: 'inmate-crafty', title: 'Support first, inmates wide', detail: 'Play a real support card first, then follow with 2/3 Crafty for +2 Hands. Spread inmates so Boyfriend can give +2 locally and +1 across districts.', testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
-  { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'The 2/2 Demario opens with one local Mushroom. Normal or Powered Luigion consumes it once for +2; SQUABBLE is optional for the powered jump.', testCrew: catalogCrew(recommendedWorkshopCrews.mushroom) },
+  { cardId: 'inmate-crafty', title: 'Inmates together, pressure wide', detail: 'Play another inmate or a real support card first, then follow with 2/3 Crafty for +2 Hands. Spread inmates so Boyfriend can give +2 locally and +2 across districts. Counter and Roaster add pressure.', testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
+  { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'Build Plant pressure around the 2/2 Demario and his local Mushroom. Keep Rooftop Gardener or Performative Male in hand to grow your other Plant characters. Normal or Powered Luigion consumes it once for +2; SQUABBLE is optional for the powered jump.', testCrew: catalogCrew(recommendedWorkshopCrews.mushroom) },
   { cardId: 'counter', title: 'Trigger Dark control', detail: 'Use Silence and Weaken enablers such as Closet Nerd, BUDDY, and Red Pill. Each round, the first new debuff activates Counter and Gamer’s Dark payoff.', testCrew: catalogCrew(recommendedWorkshopCrews.counterplay) },
 ] as const;
 

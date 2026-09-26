@@ -1,0 +1,76 @@
+/* Compact training desk. Keep the art fully colored even before selection. */
+.training-studio.market { padding: 10px clamp(16px, 4vw, 56px) 22px; }
+.market.training-studio .training-studio__board { margin-bottom: 0; padding: 4px 0; }
+.market.training-studio .training-studio__board > span:first-child { padding: 3px 7px; }
+.market.training-studio .market-hero { min-height: 108px; gap: 18px; }
+.market.training-studio .market-hero h1 { font-size: clamp(32px, 3.6vw, 50px); margin: 6px 0; }
+.market.training-studio .market-hero p { margin: 0; color: #dce3cd; }
+.market.training-studio .market-hero__fade-art { width: 116px; height: 112px; flex: none; }
+.market.training-studio .market-wallet { gap: 18px; }
+.market.training-studio .market-wallet strong { font-size: 21px; }
+.market.training-studio .market-wallet small { color: #d5debf; }
+.market.training-studio .market-style-link { display: block; max-width: 1140px; margin: 8px auto 0; font-size: 10px; color: #e6ca8b; }
+.market.training-studio .market-offers { margin-top: 8px; padding: 4px 0 10px; gap: 7px; }
+.market.training-studio .market-offers button { padding: 7px 5px; gap: 4px; color: #fff5d9; border-color: #9bad8270; background: #14241ff5; box-shadow: 0 3px 7px #0005; }
+.market.training-studio .market-offers button[aria-pressed='true'] { border: 2px solid #ffd16d; padding: 6px 4px; background: #425632; box-shadow: inset 0 0 0 1px #ffd16d40, 0 3px 12px #0007; }
+.market.training-studio .market-offers .market-offer-art,
+.market.training-studio .market-offers .venue-prop { width: 70px; height: 62px; opacity: 1; mix-blend-mode: normal; filter: saturate(1.12) contrast(1.06) drop-shadow(0 3px 3px #0009); transform: none; }
+.market.training-studio .market-offers .market-offer-art { object-fit: contain; border-radius: 6px; }
+.market.training-studio .market-offers strong { font-size: 11px; font-weight: 800; }
+.market.training-studio .market-offers span { color: #f1dca4; font-size: 10px; }
+.market.training-studio .market-offers button > i { display: none; }
+.market.training-studio .market-layout { grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr); max-width: 920px; gap: 28px; margin: 12px auto; }
+.market.training-studio .market-showcase > img,
+.market.training-studio .market-showcase > .venue-prop { height: 236px; }
+.market.training-studio .market-checkout { position: relative; overflow: hidden; padding: 16px 20px; }
+.market.training-studio .market-checkout h2 { font-size: 26px; margin: 4px 0; }
+.market.training-studio .market-checkout > p { line-height: 1.45; }
+.market.training-studio .market-checkout label { margin: 10px 0 5px; color: #e2e7d3; }
+.market.training-studio .market-character { margin: 10px 0 4px; gap: 4px 12px; }
+.market.training-studio .market-character details { margin-top: 0; }
+.market.training-studio .market-character summary { padding: 7px 0; }
+.market.training-studio .market-preview,
+.market.training-studio .market-notice { margin: 8px 0; }
+.market.training-studio .market-checkout > .studio-action { margin-top: 4px; min-height: 44px; }
+.market.training-studio .market-receipt { margin-top: 12px; padding-top: 10px; }
+.market.training-studio .market-footer { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 0 18px; margin-top: 10px; padding-top: 5px; }
+.market.training-studio .market-guide { margin: 0; }
+.market.training-studio .market-guide[open] { flex-basis: 100%; }
+.market.training-studio .market-footer > nav { gap: 20px; }
+.training-session { position: absolute; z-index: 3; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; background: radial-gradient(ellipse at 50% 45%, #455b2f, #14231b 75%); }
+.training-session__sprite { width: 180px; height: 180px; flex: none; background-size: 800% 100%; background-repeat: no-repeat; animation: inmate-workout 1.2s steps(8) infinite; filter: drop-shadow(0 6px 3px #0005); }
+.training-session > strong { color: #fff0c2; font-size: 17px; }
+.market.training-studio .training-session > p { max-width: 280px; margin: 5px 0 10px; color: #eff1de; font-size: 12px; }
+.training-session > small { color: #cddbb9; font-size: 10px; margin-top: 7px; }
+.training-session__meter { width: 130px; height: 4px; overflow: hidden; border-radius: 3px; background: #07130c; }
+.training-session__meter > i { display: block; height: 100%; width: 45%; background: #ffcd60; animation: training-meter 1.2s ease-in-out infinite alternate; }
+@keyframes inmate-workout { to { background-position: 114.285714% 0; } }
+@keyframes training-meter { from { transform: translateX(-100%); } to { transform: translateX(225%); } }
+.training-session[data-reduced-motion='true'] .training-session__sprite,
+.training-session[data-reduced-motion='true'] .training-session__meter > i { animation: none; }
+@media (max-width: 700px) {
+  .training-studio.market { padding: 8px 14px 18px; }
+  .market.training-studio .market-hero { grid-template-columns: minmax(0, 1fr) 66px; min-height: 0; gap: 2px 8px; }
+  .market.training-studio .market-hero > div:first-child { width: auto; padding: 6px 0 0; }
+  .market.training-studio .market-hero h1 { font-size: 34px; }
+  .market.training-studio .market-hero p { max-width: none; font-size: 10px; }
+  .market.training-studio .market-hero__fade-art { width: 66px; height: 78px; margin: 0; }
+  .market.training-studio .market-wallet { padding: 4px 0 8px; margin: 0; gap: 10px; }
+  .market.training-studio .market-wallet strong { font-size: 16px; }
+  .market.training-studio .market-offers button { flex: 0 0 106px; min-width: 0; }
+  .market.training-studio .market-layout { margin: 10px auto; gap: 12px; }
+  .market.training-studio .market-checkout { padding: 14px; }
+  .market.training-studio .market-footer > nav { gap: 16px; }
+}
+@media (max-width: 600px) {
+  .market.training-studio .market-showcase { z-index: 1; top: 8px; right: 8px; width: 68px; opacity: 1; border: 0; }
+  .market.training-studio .market-showcase > img,
+  .market.training-studio .market-showcase > .venue-prop { height: 84px; }
+  .market.training-studio .market-checkout h2 { font-size: 23px; min-height: 0; max-width: calc(100% - 64px); }
+  .market.training-studio .market-checkout > p:first-of-type { min-height: 28px; max-width: calc(100% - 64px); }
+  .market.training-studio .market-checkout > .studio-action { min-width: 0; }
+  .training-session__sprite { width: 164px; height: 164px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .training-session__sprite, .training-session__meter > i { animation: none; }
+}

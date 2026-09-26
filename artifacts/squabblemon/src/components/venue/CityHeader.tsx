@@ -5,6 +5,7 @@ import { GameBackButton } from './GameBackButton';
 import { CinemaNavSheet } from './GameNav';
 import { GameGlyph } from './GameGlyph';
 import { MusicControls } from '../MusicControls';
+import { getAssetUrl } from '../../lib/assets';
 import '../../styles/ui-polish.css';
 import './city-header.css';
 
@@ -14,7 +15,12 @@ export function CityHeader({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { profile } = bootstrap;
   const isSafehouse = location.replace(/\/+$/, '') === '/game';
   return <header className="city-header" aria-label="Player and navigation">
-    {!isSafehouse && <GameBackButton />}
+    {!isSafehouse && <div className="city-header__return">
+      <GameBackButton />
+      <Link href="/game" className="city-header__safehouse" aria-label="Go to Safehouse" title="Go to Safehouse">
+        <img src={getAssetUrl('brand/navigation/safehouse-key.webp')} alt="" draggable={false} />
+      </Link>
+    </div>}
     <Link href="/game/settings" className="city-header__identity"><span className="city-header__level" aria-label={'Level ' + profile.level}>{profile.level}</span><span><strong>{profile.displayName}</strong><small>LEVEL {profile.level} · {profile.streetRep.toLocaleString()} REP</small></span></Link>
     <div className="city-header__wallet">
       <Link href="/game/shop?view=corner" className="city-header__balance" title={profile.softCurrency.toLocaleString() + ' Clout'} aria-label={profile.softCurrency + ' Clout. Open Fade Market'}><GameGlyph name="clout" /><b>{profile.softCurrency.toLocaleString()}</b></Link>

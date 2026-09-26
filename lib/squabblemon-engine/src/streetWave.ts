@@ -2,7 +2,7 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** Original street characters plus the two creator Mythicals. */
 export const STREET_WAVE = [
-  ['homelessyn', 'homeless-yn', 'Homeless YN', 'Common', 'Earth', 2, 2, 'Still Standing', 'If enemies outnumber your other friendly cards here, gain +2 Hands.', 'Comeback'],
+  ['homelessyn', 'homeless-yn', 'Homeless YN', 'Common', 'Earth', 2, 2, 'Still Standing', 'If enemies outnumber your other friendly cards here, gain +3 Hands.', 'Comeback'],
   ["sportsprodigy","sports-prodigy","Sports Prodigy","Legendary","Electric",3,3,"Next Up","If you are losing this district, gain +2 Hands and give the highest-Hands enemy here -1 Hands.","Comeback"],
   ['fein', 'fein', 'Fein', 'Common', 'Poison', 1, 1, 'One More', 'On Reveal: If an enemy is here, gain +1 Hand. If 2 or more enemies are here, also apply 1 Burn to the highest-Hands enemy.', 'Pressure'],
   ['alchy', 'alchy', 'Alchy', 'Common', 'Water', 2, 3, 'Last Round', 'Ongoing: On round 4 or later, gain +1 Hands at round end. Gain an extra +1 if you are losing this district.', 'Closer'],

@@ -9,6 +9,18 @@ Treat the current GitHub branch as the release parent, rather than assuming the 
 
 **How to apply:** Fetch the remote, compare actual file content, and preserve remote history. If ancestry differs, create a release commit from the remote parent with only the verified changes; compare the resulting application content with the tested workspace and use a non-forced reference update.
 
+Verify the production provider's configured repository before choosing a release target; similarly named GitHub repositories are not interchangeable.
+
+**Why:** A successful push to a different, similarly named repository was mistakenly described as a live-site release. The live site continued serving the old version.
+
+**How to apply:** Confirm the provider-bound repository and branch from project documentation or deployment metadata, then verify the resulting provider deploy references the new commit before claiming the site updated.
+
+If production main advances during release preparation, rebuild the candidate from its new parent and merge overlapping files instead of publishing the old tree.
+
+**Why:** An independent cosmetics release landed while a gameplay update was being verified. Replacing an overlapping banner file from the local workspace would have silently removed the new cosmetics behavior.
+
+**How to apply:** Compare the selected candidate against the latest production branch, preserve remote-only changes in shared files, and check the final tree and non-forced reference update against the new parent. Tests run solely on a divergent local workspace do not cover merged integration code.
+
 Use Replit's connected GitHub API for this project's release operations; do not require CLI login as the deployment-access prerequisite.
 
 **Why:** The owner explicitly confirmed this API-based workflow. Command-line Git authentication and the connected integration can also have different credential health.
