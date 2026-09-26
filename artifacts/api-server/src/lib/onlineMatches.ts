@@ -64,6 +64,8 @@ async function loadMember(
     userId,
     name: profile.displayName,
     avatarKey: profile.avatarKey,
+    level: profile.level,
+    streetRep: profile.streetRep,
     ready: false,
     deck: {
       id: deckId,
@@ -381,7 +383,7 @@ async function matchWaitingRoom(tx: Tx, own: RoomRow, input: OnlineRoom, now: nu
     const recipe = starterRecipes[randomInt(starterRecipes.length)];
     const rookie = (await tx.select({ progress: playerProfilesTable.storyProgress }).from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, own.hostUserId)))[0];
     const beginner = rankedStats(rookie?.progress.fadePark).points < 100;
-    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: 'Park Bot', ready: false,
+    const bot: OnlineMember = { userId: `park-bot:${own.code}`, name: 'Park Bot', level: beginner ? 3 : 10, ready: false,
       deck: { id: 'park-bot', name: 'Park Regulars', hero: beginner ? 'hooper' : recipe.hero,
         cards: catalogIdsToEngineIds(beginner ? [...ROOKIE_CORE_IDS] : recipe.catalogCardIds) } };
     room = readyRanked({ ...room, ranked: { ...room.ranked!, bot: true, botNextAt: now + 900,

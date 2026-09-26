@@ -48,6 +48,8 @@ export type OnlineMember = {
   userId: string;
   name: string;
   avatarKey?: string;
+  level?: number;
+  streetRep?: number;
   deck: OnlineDeck;
   ready: boolean;
 };
@@ -356,7 +358,7 @@ export type OnlineRoomView = {
   gameNumber: number;
   status: OnlineRoom["status"];
   seat: Seat;
-  members: Record<Seat, { name: string; hero: string; avatarKey?: string; ready: boolean } | null>;
+  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; ready: boolean } | null>;
   ownDeck: OnlineDeck;
   revealedDecks: Record<Seat, OnlineDeck> | null;
   activeSeat: Seat;
@@ -416,9 +418,10 @@ export function onlineRoomView(
       getLegalCardCost(match!, card.owner, card, lane as Lane),
     ) as [number, number, number],
   });
-  const publicMember = (member: OnlineMember | null) =>
+  const publicMember = (member: OnlineMember | null, memberSeat: Seat) =>
     member
-      ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, ready: member.ready }
+      ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, level: member.level,
+          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ready: member.ready }
       : null;
   return {
     ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),
@@ -431,8 +434,8 @@ export function onlineRoomView(
     status: room.status,
     seat,
     members: {
-      player: publicMember(room.members.player),
-      cpu: publicMember(room.members.cpu),
+      player: publicMember(room.members.player, 'player'),
+      cpu: publicMember(room.members.cpu, 'cpu'),
     },
     ownDeck: room.members[seat]!.deck,
     revealedDecks:

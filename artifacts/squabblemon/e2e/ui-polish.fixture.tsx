@@ -87,7 +87,7 @@ createRoot(document.getElementById('root')!).render(
         </ParkResult>
       </Dialog>
     ) : mode === 'arrival' ? (
-      <MatchArrival player={{ name: 'GuapDad', hero: 'folks' }} rival={{ name: 'Park Bot', hero: 'big-boss' }} label="Park Bot found · ranked sparring" onContinue={action('enter')} />
+      <MatchArrival player={{ name: 'GuapDad', hero: 'folks', level: 24, rp: 1180 }} rival={{ name: 'Park Bot', hero: 'big-boss', level: 18, rp: 1040 }} label="Park Bot found · ranked sparring" onContinue={action('enter')} />
     ) : mode === 'music' ? (
       <div className="h-screen w-full bg-black p-10 flex items-start justify-center">
         <MusicControls variant="dj" />

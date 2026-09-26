@@ -31,6 +31,7 @@ export type SoundEffect =
   | 'pack-break'
   | 'pack-tear'
   | 'pack-ten'
+  | 'pvp-bass-drop'
   | 'squabble-charge'
   | 'story-star'
   | 'vs-impact-a'

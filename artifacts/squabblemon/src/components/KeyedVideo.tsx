@@ -11,10 +11,8 @@ function keyFrame(data: Uint8ClampedArray, mode: KeyMode) {
 
     if (mode === 'green') {
       const dominance = g - Math.max(r, b);
-      alpha = 1 - Math.max(0, Math.min(1, (dominance - 28) / 72));
-      if (alpha > 0 && alpha < 1) {
-        data[i + 1] = Math.round(g * alpha + Math.max(r, b) * (1 - alpha));
-      }
+      alpha = 1 - Math.max(0, Math.min(1, (dominance - 16) / 52));
+      if (alpha > 0) data[i + 1] = Math.min(g, Math.max(r, b) + 10);
     } else {
       // The dust clip is painted over a pale paper field rather than carrying
       // an alpha channel. Preserve its ink and shadows while removing that field.

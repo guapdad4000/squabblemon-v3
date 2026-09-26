@@ -36,3 +36,78 @@ html[data-reduce-motion="true"] .match-poster--park .versus-park,html[data-reduc
 @media(max-width:500px){.versus-logo{top:43%;width:clamp(104px,34vw,145px)}}
 @media(max-width:500px){.park-result-outcome-mark{width:118px!important;height:118px!important;left:7px!important;top:8px!important}}
 @media(max-height:650px){.park-result-outcome-mark{width:92px!important;height:92px!important;top:2px!important}}
+
+/* Daytime Fade Park PVP arrival — clean arcade poster treatment. */
+.match-poster.match-poster--park{
+  padding:0;
+  cursor:pointer;
+  background:#d8ecf5;
+  outline:none;
+}
+.match-poster.match-poster--park:focus-visible{box-shadow:inset 0 0 0 4px #fff,inset 0 0 0 8px #111}
+.versus-park{background:#9dd7f3}
+.versus-stage{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 51%;filter:saturate(.93) contrast(1.03)}
+.versus-stage-wash{position:absolute;inset:0;background:linear-gradient(90deg,#0b150d4f,transparent 24%,transparent 76%,#0b150d4f),linear-gradient(0deg,#0b150dc2 0,#0b150d20 29%,transparent 52%,#f7f1d90d)}
+.versus-street-sign{display:none}
+.versus-birds{position:absolute;z-index:2;left:55%;top:17%;width:25%;height:14%;animation:versus-birds-flight 3.8s .5s cubic-bezier(.2,.7,.2,1) both}
+.versus-birds i{position:absolute;width:22px;height:9px;background:#111820;clip-path:polygon(0 48%,24% 5%,48% 42%,53% 42%,76% 0,100% 47%,77% 31%,53% 69%,47% 69%,23% 34%);filter:drop-shadow(0 2px 1px #fff6)}
+.versus-birds i:nth-child(1){left:3%;top:50%;scale:.7}.versus-birds i:nth-child(2){left:29%;top:12%;scale:.48}.versus-birds i:nth-child(3){left:58%;top:62%;scale:.9}.versus-birds i:nth-child(4){left:83%;top:22%;scale:.6}
+.versus-arm{top:36%;width:min(51vw,760px);height:auto;object-fit:contain;z-index:4;filter:drop-shadow(0 12px 3px #08111b6b) drop-shadow(0 0 1px #fff)}
+.versus-arm.left{left:-2.8%}.versus-arm.right{right:-2.8%}
+.versus-impact-anchor{position:absolute;z-index:5;left:50%;top:43%;width:clamp(360px,54vw,720px);transform:translate(-50%,-50%);pointer-events:none}
+.versus-impact-frame{display:block;width:100%;height:auto;filter:brightness(0) drop-shadow(0 7px 1px #f7efd933)}
+.versus-title-anchor{position:absolute;z-index:7;left:50%;top:43%;transform:translate(-50%,-50%) rotate(-5deg);pointer-events:none}
+.versus-title{display:flex;align-items:center;justify-content:center;font:1000 italic clamp(138px,19vw,250px)/.72 var(--font-display);letter-spacing:-.18em;color:#fff7cd;-webkit-text-stroke:clamp(4px,.6vw,9px) #10131a;text-shadow:clamp(7px,1vw,15px) clamp(8px,1.1vw,17px) 0 #d7273d,0 0 30px #fff9}
+.versus-title b{font:inherit;color:#ffd63d;transform:translateY(.12em)}
+.versus-logo-anchor{position:absolute;z-index:7;left:50%;top:43%;width:clamp(210px,27vw,390px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 9px 3px #07111fa6)}
+.versus-logo-motion{width:100%;height:100%}
+.versus-logo-v2{display:block;width:100%;height:100%}
+.match-poster--park .match-poster__billing{position:absolute;z-index:9;left:0;right:0;top:0;margin:0;padding:max(14px,env(safe-area-inset-top)) clamp(16px,4vw,52px) 12px;border:0;border-bottom:3px solid #d6bd62;background:linear-gradient(90deg,#09120bf7,#1b2b1bdc 52%,#09120bf7);color:#fffdf1;box-shadow:0 6px 0 #0a100b8a}
+.match-poster--park .match-poster__billing strong{font-size:clamp(21px,3.1vw,38px);letter-spacing:.02em;text-shadow:3px 3px 0 #435a35}
+.match-poster--park .match-poster__billing span{color:#f7cc5b}
+.match-poster--park .match-poster__fighters{inset:auto clamp(12px,4vw,58px) 15%;height:auto;gap:clamp(34px,17vw,260px);z-index:8}
+.match-poster--park .match-poster__fighters:before{content:'';position:absolute;z-index:-1;left:calc(clamp(12px,4vw,58px) * -1);right:calc(clamp(12px,4vw,58px) * -1);top:50%;height:74%;transform:translateY(-45%) skewY(-.35deg);background:linear-gradient(90deg,#0a120cf2,#253622ef 50%,#0a120cf2);border-block:2px solid #718044;box-shadow:0 7px 0 #080c08b8}
+.match-poster--park .match-poster__fighter,.match-poster--park .match-poster__fighter.side-1{position:relative;display:grid;grid-template:1fr/76px minmax(0,1fr) 38px;align-items:stretch;width:min(42vw,520px);max-width:none;min-height:102px;padding:7px;background:linear-gradient(105deg,#fffdf1,#ece4cf 72%,#ddd1b4);border:2px solid #161a14;outline:1px solid #f8f0d8;clip-path:polygon(0 0,96% 0,100% 7%,100% 100%,4% 100%,0 93%);box-shadow:7px 8px 0 #070a07c7;transform:rotate(-1.15deg);text-align:left;overflow:visible;color:#11170f}
+.match-poster--park .match-poster__fighter:before{content:'';position:absolute;z-index:6;left:8px;top:-15px;width:15px;height:34px;border:3px solid #5c5f57;border-radius:8px;transform:rotate(-8deg);box-shadow:inset 0 0 0 2px #f8f1dd;background:transparent;pointer-events:none}
+.match-poster--park .match-poster__fighter:after{content:'';position:absolute;z-index:0;inset:0;background:repeating-linear-gradient(125deg,transparent 0 22px,#66714b0c 22px 24px),radial-gradient(circle at 14% 22%,#fff 0 1px,transparent 2px);background-size:auto,17px 17px;pointer-events:none}
+.match-poster--park .match-poster__fighter.side-1{grid-template-columns:38px minmax(0,1fr) 76px;margin-left:auto;background:linear-gradient(255deg,#fffdf1,#ece4cf 72%,#ddd1b4);clip-path:polygon(4% 0,100% 0,100% 93%,96% 100%,0 100%,0 7%);text-align:right;transform:rotate(1.15deg)}
+.match-poster--park .match-poster__fighter.side-1:before{left:auto;right:8px;transform:rotate(9deg)}
+.match-poster--park .match-poster__fighter>.fighter-portrait{position:relative;z-index:2;grid-column:1;grid-row:1;width:76px;height:88px;margin:0;overflow:hidden;background:#fff;border:2px solid #151a13;padding:3px;clip-path:none;box-shadow:3px 3px 0 #7f876e55;transform:rotate(-1deg)}
+.match-poster--park .match-poster__fighter.side-1>.fighter-portrait{grid-column:3;border:2px solid #151a13;clip-path:none;transform:rotate(1deg)}
+.match-poster--park .match-poster__fighter .fighter-portrait>img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(.9)}
+.fighter-card__copy{position:relative;z-index:2;min-width:0;align-self:center;padding:7px 11px 5px}.side-1 .fighter-card__copy{grid-column:2;grid-row:1}
+.fighter-card__corner{display:flex;align-items:center;gap:7px;color:#43513c;font:900 8px/1 var(--font-mono);letter-spacing:.15em}.side-1 .fighter-card__corner{justify-content:flex-end}
+.fighter-card__corner b{display:grid;place-items:center;width:23px;height:20px;background:#314427;color:#fff9d7;clip-path:polygon(0 0,100% 0,86% 100%,0 100%);font-size:10px;letter-spacing:0}.side-1 .fighter-card__corner b{order:2;clip-path:polygon(14% 0,100% 0,100% 100%,0 100%)}
+.match-poster--park .fighter-card__copy h2{margin:5px 0 4px;color:#121810;font-size:clamp(19px,2.5vw,31px);line-height:.92;text-shadow:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fighter-card__meta{display:flex;align-items:center;gap:9px;color:#4f5749;font:800 7px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase}.side-1 .fighter-card__meta{justify-content:flex-end}.fighter-card__meta em{padding:3px 5px;border:1px solid #536447;color:#2c3e27;font-style:normal;background:#dce3c0}.fighter-card__level{display:inline-flex;align-items:baseline;gap:3px;color:#22321f;letter-spacing:0}.fighter-card__level small{font:900 6px/1 var(--font-mono);letter-spacing:.08em}.fighter-card__level b{font:1000 italic 20px/.72 var(--font-display)}
+.fighter-card__player{position:relative;z-index:2;display:grid;place-items:center;color:#6f7964;font:900 italic 18px/1 var(--font-display);border-left:1px solid #65705c66;writing-mode:vertical-rl;transform:rotate(180deg)}
+.side-1 .fighter-card__player{grid-column:1;grid-row:1;border-left:0;border-right:1px solid #62704455}
+.match-poster--park footer{position:absolute;z-index:9;left:0;right:0;bottom:0;margin:0;padding:28px 16px max(12px,env(safe-area-inset-bottom));background:linear-gradient(transparent,#0a120cf0 55%);color:#fffdf1}
+.match-poster--park footer p{margin:0 0 7px}.match-poster--park footer small{display:block;color:#fff;font-weight:800;letter-spacing:.08em;text-transform:uppercase;text-shadow:2px 2px #07111f}
+@keyframes versus-birds-flight{from{transform:translate(-8vw,5vh);opacity:0}15%{opacity:1}to{transform:translate(12vw,-9vh);opacity:.9}}
+@keyframes pvp-poster-hit{0%,100%{transform:translate(0)}18%{transform:translate(-3px,2px)}38%{transform:translate(3px,-2px)}58%{transform:translate(-2px,1px)}78%{transform:translate(1px,-1px)}}
+.match-poster.match-poster--park{animation:pvp-poster-hit .34s .46s linear both}
+@media(max-width:500px){
+  .versus-stage{object-position:center center}
+  .versus-street-sign{display:block;position:absolute;z-index:3;right:-25%;top:6%;height:62%;width:auto;filter:drop-shadow(-8px 9px 5px #07111f61);pointer-events:none}
+  .versus-arm{top:36%;width:61vw}
+  .versus-arm.left{left:-12%}.versus-arm.right{right:-12%}
+  .versus-impact-anchor{top:43%;width:96vw}
+  .versus-logo-anchor{top:43%;width:clamp(185px,56vw,235px)}
+  .match-poster--park .match-poster__billing{padding:12px 10px 9px}.match-poster--park .match-poster__billing strong{font-size:18px}
+  .match-poster--park .match-poster__fighters{display:grid;grid-template-columns:1fr;inset:auto 10px 11%;gap:7px}
+  .match-poster--park .match-poster__fighter,.match-poster--park .match-poster__fighter.side-1{grid-template-columns:58px minmax(0,1fr) 30px;width:100%;min-height:76px;padding:4px;text-align:left}
+  .match-poster--park .match-poster__fighter.side-1{grid-template-columns:30px minmax(0,1fr) 58px;text-align:right}
+  .match-poster--park .match-poster__fighter>.fighter-portrait{display:grid;grid-column:1;width:58px;height:68px}
+  .match-poster--park .match-poster__fighter.side-1>.fighter-portrait{grid-column:3}
+  .match-poster--park .match-poster__fighter:before{left:6px}.match-poster--park .match-poster__fighter.side-1:before{left:auto;right:6px}
+  .fighter-card__copy{padding:4px 8px}.match-poster--park .fighter-card__copy h2{font-size:21px}.fighter-card__meta{font-size:6px}
+  .fighter-card__player{font-size:14px}
+  .match-poster--park footer{padding-bottom:max(10px,env(safe-area-inset-bottom))}.match-poster--park footer p{font-size:8px}
+}
+@media(max-height:650px){
+  .versus-arm{top:34%;width:49vw}.versus-impact-anchor,.versus-logo-anchor{top:41%}
+  .match-poster--park .match-poster__fighters{bottom:14%}.match-poster--park footer p{display:none}
+}
+@media(prefers-reduced-motion:reduce){.versus-birds,.match-poster.match-poster--park{animation:none}}
+html[data-reduce-motion="true"] .versus-birds,html[data-reduce-motion="true"] .match-poster.match-poster--park{animation:none}
