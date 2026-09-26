@@ -195,7 +195,10 @@ export function ResultScreen({
       data-testid="battle-result-screen"
     >
       <div className="result-stage__content">
-        <header className="result-stage__heading">
+        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
+          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
+          storyStars={isStory && storyMetadata ? earnedStars : undefined}
+          actions={actions} heading={<header className="result-stage__heading">
           <span className="studio-eyebrow">
             {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
             <span>•</span>
@@ -204,11 +207,7 @@ export function ResultScreen({
           <h2 data-testid="status-match-result">
             {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
           </h2>
-        </header>
-        <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
-          reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
-          storyStars={isStory && storyMetadata ? earnedStars : undefined}
-          actions={actions} onRegroup={onGoHome} onTrain={onRestart} onRebuild={rebuild} />
+        </header>}>
 
         <details className="result-stage__receipt-drawer">
           <summary>Match Details & Breakdown</summary>
@@ -290,6 +289,7 @@ export function ResultScreen({
         </aside>
           </div>
         </details>
+        </ResultArtwork>
       </div>
     </div>
   );

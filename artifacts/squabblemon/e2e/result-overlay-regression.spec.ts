@@ -1,5 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+const fixtureBase = process.env.RESULT_FIXTURE_BASE ?? '/squabblemon';
+
 type Bounds = NonNullable<Awaited<ReturnType<Locator['boundingBox']>>>;
 
 async function bounds(locator: Locator, label: string): Promise<Bounds> {
@@ -52,17 +54,18 @@ async function freezeAnimatedMarks(page: Page) {
 
 const resultCases = [
   { name: 'story-victory', state: 'story', stars: true },
+  { name: 'story-loss', state: 'story-loss', stars: true },
   { name: 'standard-victory', state: 'win', stars: false },
   { name: 'standard-loss', state: 'loss', stars: false },
 ] as const;
 
 for (const resultCase of resultCases) {
   test(`${resultCase.name} keeps result marks clear of rewards and controls`, async ({ page }) => {
-    await page.goto(`/squabblemon/e2e/result-stage.fixture.html?state=${resultCase.state}`);
+    await page.goto(`${fixtureBase}/e2e/result-stage.fixture.html?state=${resultCase.state}`);
     await waitForStableArtwork(page);
     await freezeAnimatedMarks(page);
 
-    const canvas = page.locator('.result-art__canvas');
+    const canvas = page.locator('.result-art');
     const mark = canvas.locator('.result-art__outcome-mark');
     const protectedRegions: Array<[Locator, string]> = [
       [canvas.locator('.result-art__plaque'), 'Battle Earnings'],
@@ -73,12 +76,16 @@ for (const resultCase of resultCases) {
 
     await expectNoOverlap(mark, 'result mark', protectedRegions);
     await expect(page.locator('.result-stage')).toHaveCSS('scrollbar-width', 'none');
-    await expect(page.locator('.result-art__image')).toHaveAttribute('draggable', 'false');
+    await expect(mark).toHaveAttribute('draggable', 'false');
+    await expect(page.locator('.result-art__canvas')).toHaveCSS('pointer-events', 'none');
 
     const stars = canvas.locator('.result-art__story-stars');
     if (resultCase.stars) {
-      await expect(stars).toHaveAttribute('aria-label', /^[1-3] of 3 story stars earned$/);
+      await expect(stars).toHaveAttribute('aria-label', /^[0-3] of 3 story stars earned$/);
       await expectNoOverlap(stars, 'story stars', protectedRegions);
+      const starBounds = await bounds(stars, 'stars');
+      const markBounds = await bounds(mark, 'W/L');
+      expect(markBounds.y).toBeGreaterThanOrEqual(starBounds.y + starBounds.height);
     } else {
       await expect(stars).toHaveCount(0);
     }
@@ -95,7 +102,7 @@ for (const resultCase of [
   { name: 'training-draw', state: 'draw', story: false },
 ] as const) {
   test(`${resultCase.name} uses the dedicated tie scene and preserves its actions`, async ({ page }) => {
-    await page.goto(`/squabblemon/e2e/result-stage.fixture.html?state=${resultCase.state}`);
+    await page.goto(`${fixtureBase}/e2e/result-stage.fixture.html?state=${resultCase.state}`);
     await waitForStableArtwork(page);
 
     const art = page.locator('.result-art');
@@ -126,7 +133,7 @@ for (const resultCase of [
 
 for (const outcome of ['win', 'loss', 'draw'] as const) {
   test(`ranked PvP ${outcome} keeps its mark clear of scores and dialog controls`, async ({ page }) => {
-    await page.goto(`/squabblemon/e2e/ui-polish.fixture.html?mode=ranked-${outcome}`);
+    await page.goto(`${fixtureBase}/e2e/ui-polish.fixture.html?mode=ranked-${outcome}`);
     await waitForStableArtwork(page);
     await freezeAnimatedMarks(page);
 
@@ -151,11 +158,11 @@ for (const outcome of ['win', 'loss', 'draw'] as const) {
 test('phone project renders the overlay fixtures with reduced motion', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-phone', 'Reduced motion is the phone release configuration.');
 
-  await page.goto('/squabblemon/e2e/result-stage.fixture.html?state=story');
+  await page.goto(`${fixtureBase}/e2e/result-stage.fixture.html?state=story`);
   await expect.poll(() => page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
   await expect(page.locator('.result-art__scores > div').first()).toHaveCSS('opacity', '1');
 
-  await page.goto('/squabblemon/e2e/result-stage.fixture.html?state=draw');
+  await page.goto(`${fixtureBase}/e2e/result-stage.fixture.html?state=draw`);
   await waitForStableArtwork(page);
   await expect(page.locator('.result-art__draw-mark')).toBeVisible();
   await expect(page.locator('.result-art__scores > div').first()).toHaveCSS('opacity', '1');

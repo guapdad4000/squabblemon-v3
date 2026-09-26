@@ -15,15 +15,15 @@ function Fixture(){
  const [reviewBoard,setReviewBoard]=useState(false);
  const match:Match={...createMatch('block','slide'),phase:'complete',round:6};
  const isDraw=state==='draw'||state==='story-draw';
- const owner=state==='loss'?'cpu':'player';
+ const owner=(state==='loss'||state==='story-loss')?'cpu':'player';
  if(!isDraw)match.boards=[['hooper','cornball'],['wifey'],['rastamon']].map((ids,lane)=>ids.map((id,i)=>({...createCardInstance(id,owner,'fixture',i),lane,playedRound:1}))) as Match['boards'];
- if(state==='story'||state==='story-draw')match.storyEncounter=getStoryBattle('welcome-to-the-block')!.encounter;
+ if(state.startsWith('story'))match.storyEncounter=getStoryBattle('welcome-to-the-block')!.encounter;
  const reward={id:'visual',softCurrency:40,xp:50,streetRep:8,packTickets:0,cardXp:[{cardId:'cornball',xpGained:30,previousLevel:1,level:2,xp:130,moveTier:0},{cardId:'hooper',xpGained:30,previousLevel:3,level:3,xp:400,moveTier:0}],storyRewards:state==='story'?[{rewardKey:'first',description:'First-clear Street Pack Ticket'}]:[]};
  const action=(name:string)=>()=>{document.title=name;document.body.dataset.action=name;};
  return <div data-testid="transformed-result-parent" style={{height:'100dvh',transform:'translateZ(0)',overflow:'auto'}}>
    <div data-testid="final-board" style={{height:'180dvh',paddingTop:'70dvh',background:'linear-gradient(#17221d,#493b27)',color:'white',textAlign:'center'}}>Final board inspection</div>
    {reviewBoard && createPortal(<button className="result-stage__return" onClick={()=>setReviewBoard(false)}>View result</button>,document.body)}
-   {!reviewBoard && <ResultScreen match={match} districts={districts} reward={error || state==='pending'?undefined:reward} rewardError={error?'Offline':null} onRetryReward={()=>setError(false)} rewardPending={state==='pending'} isGuest={state==='guest'} equippedVariants={{cornball:'cornball:chrome'}} storyMetadata={state==='story'?{outcome:'win',stars:3,firstClear:true}:state==='story-draw'?{outcome:'draw',stars:0,firstClear:false}:undefined} onInspectBoard={()=>setReviewBoard(true)} onRestart={action('Restart requested')} onChangeDeck={action('Gang change requested')} onGoHome={action('Home requested')}/>}
+   {!reviewBoard && <ResultScreen match={match} districts={districts} reward={error || state==='pending'?undefined:reward} rewardError={error?'Offline':null} onRetryReward={()=>setError(false)} rewardPending={state==='pending'} isGuest={state==='guest'} equippedVariants={{cornball:'cornball:chrome'}} storyMetadata={state==='story-loss'?{outcome:'loss',stars:0,firstClear:false}:state==='story'?{outcome:'win',stars:3,firstClear:true}:state==='story-draw'?{outcome:'draw',stars:0,firstClear:false}:undefined} onInspectBoard={()=>setReviewBoard(true)} onRestart={action('Restart requested')} onChangeDeck={action('Gang change requested')} onGoHome={action('Home requested')}/>}
  </div>;
 }
 function OnlineFixture(){
