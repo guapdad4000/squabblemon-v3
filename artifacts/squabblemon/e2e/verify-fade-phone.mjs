@@ -105,7 +105,14 @@ try {
     await call.click();
     await page.getByTestId('ranked-search').waitFor();
     assert.equal(await page.getByTestId('fade-phone').getAttribute('data-lifted'), 'true');
-    assert(await page.getByTestId('deck-carousel').isVisible());
+    assert.equal(await page.getByTestId('deck-carousel').isVisible(), false);
+    const searchBox = await page.getByTestId('ranked-search').boundingBox();
+    assert(Math.abs(searchBox.height - layout.deck.height) < 1, 'search must preserve the deck height');
+    const deckSlot = await page.locator('.park-crew-carousel').boundingBox();
+    assert(Math.abs(searchBox.y - deckSlot.y) < 1, 'search must stay in the deck slot');
+    await page.locator('.park-search-fighters').evaluate(image => image.decode());
+    await page.locator('.park-search-poster').evaluate(image => image.decode());
+    assert.equal(await page.locator('.fade-phone__receiver').evaluate(el => getComputedStyle(el).animationName), 'fade-phone-ring');
     await page.waitForFunction(() => window.__phoneClips.some(audio => Number(audio.dataset.plays) > 0));
     await page.waitForTimeout(700);
     if (width === 1440 || width === 390) await page.screenshot({ path: `${output}calling-${width}.png`, fullPage: true });
@@ -138,6 +145,9 @@ try {
     await page.mouse.move(0, 0);
     await page.waitForTimeout(750);
     assert.equal(await page.getByTestId('fade-phone').getAttribute('data-lifted'), 'false');
+    assert(await page.getByTestId('deck-carousel').isVisible());
+    assert.equal(await page.getByTestId('ranked-search').count(), 0);
+    assert.equal(await page.locator('.fade-phone__receiver').evaluate(el => getComputedStyle(el).animationName), 'none');
     assert.equal(await page.locator('.fade-phone__receiver').evaluate(el => getComputedStyle(el).transform), 'none');
     await allRingsStopped(page);
     const plays = await page.evaluate(() => window.__phoneClips.reduce((n,a)=>n+Number(a.dataset.plays??0),0));

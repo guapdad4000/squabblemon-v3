@@ -253,3 +253,11 @@ html[data-reduce-motion=true] .rank-ember b { animation: none; }
 html[data-reduce-motion=true] .park-rank-track .rank-cigarette,
 html[data-reduce-motion=true] .rank-ash { transition: none; }
 html[data-reduce-motion=true] .rank-ember b:first-child { opacity: .25; }
+
+/* Preserve the selected deck's footprint while the search artwork plays over it. */
+.park-crew-carousel { position: relative; }
+.park-crew-carousel[data-searching=true] .park-deck-rest { visibility: hidden; }
+.park-search-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; background: #08130f; }
+.park-search-overlay .park-search-art { flex: 1; min-height: 0; height: auto; margin: 0; }
+.park-search-overlay .park-search-status { padding: 10px 12px 0; }
+.park-search-overlay p { margin: 8px 12px 12px; text-align: center; }

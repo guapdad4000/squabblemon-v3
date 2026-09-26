@@ -33,10 +33,11 @@ export function FadeFinderButton({ busy, searching, loading, unavailable, reduce
 }) {
   const labelPathId = `fade-phone-label-${useId().replaceAll(':', '')}`;
   const lifted = searching || busy;
-  usePhoneRing(lifted && !(searching && busy) && !unavailable);
+  const ringing = lifted && !(searching && busy) && !unavailable;
+  usePhoneRing(ringing);
   const status = busy ? searching ? 'Hanging up…' : 'Dialing…'
     : searching ? 'Hang up' : loading ? 'Connecting…' : unavailable ? 'Line disconnected' : 'Call for a fade';
-  return <div className="fade-phone" data-testid="fade-phone" data-lifted={lifted} data-reduced-motion={reduced}>
+  return <div className="fade-phone" data-testid="fade-phone" data-lifted={lifted} data-ringing={ringing} data-reduced-motion={reduced}>
     <svg className="fade-phone__cord fade-phone__cord--desktop" viewBox="0 0 128 90" aria-hidden="true" focusable="false">
       <path className="fade-phone__lead" d="M110 41 C109 55 80 48 78 61" />
       <path d="M78 61 C72 75 91 78 92 64 C93 51 77 55 84 72 C90 87 106 79 101 68 C96 58 88 74 101 84 C113 96 124 79 115 74 C105 68 105 87 118 89 L128 89" />

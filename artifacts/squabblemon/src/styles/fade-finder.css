@@ -52,3 +52,13 @@
 .fade-phone[data-reduced-motion=true] :is(.fade-phone__receiver,.fade-phone__lead,.fade-phone__mobile-lead) { transition: none; }
 
 .fade-phone[data-reduced-motion=true] .fade-finder .fade-phone__receiver::before { animation: none !important; opacity: .6; }
+
+/* A short shake on each 4.5-second ring cycle; lift remains a separate transform. */
+.fade-phone[data-ringing=true] .fade-phone__receiver { animation: fade-phone-ring 4.5s linear infinite; }
+@keyframes fade-phone-ring {
+  0%, 4%, 8%, 12%, 16%, 20%, 24%, 28% { rotate: -3deg; }
+  2%, 6%, 10%, 14%, 18%, 22%, 26%, 30% { rotate: 3deg; }
+  34%, 100% { rotate: 0deg; }
+}
+@media(prefers-reduced-motion:reduce) { .fade-phone[data-ringing=true] .fade-phone__receiver { animation: none; } }
+.fade-phone[data-reduced-motion=true] .fade-phone__receiver { animation: none; }
