@@ -1,3 +1,4 @@
+import { isActiveOngoing } from './rosterBalance';
 import type { CardInstance, Match, Lane, Owner } from "./gameEngine";
 import type { AbilityUpgradeSnapshot } from "./abilityUpgrades";
 import { snapshotUpgradesForCard } from "./abilityUpgrades";
@@ -218,7 +219,7 @@ export function resolveBlockbusterWave(
       break;
     case "teacher":
     case "rent-a-cop": {
-      const c = strongest(enemies(), t);
+      const c = (source.cardId === "teacher" ? strongest(enemies().filter(isActiveOngoing), t) : undefined) ?? strongest(enemies(), t);
       if (c) {
         targets.add(c.instanceId);
         m = t.status(
@@ -272,7 +273,7 @@ export function resolveBlockbusterWave(
       for (const c of allies().filter((c) => t.power(c) <= 3)) buff(c, 2);
       break;
     case "bouncer": {
-      const c = weakest(enemies(), t);
+      const c = strongest(enemies().filter(isActiveOngoing), t) ?? strongest(enemies(), t);
       if (c) {
         const to = destination(c);
         if (to !== undefined) {
@@ -284,14 +285,9 @@ export function resolveBlockbusterWave(
       break;
     }
     case "the-shootout": {
-      const pool = [...fighters(m, l)].sort((a, b) =>
-        a.instanceId.localeCompare(b.instanceId),
-      );
-      for (let n = 0; n < 5 && pool.length; n++) {
-        const [c] = pool.splice(t.random(seed + ":shot:" + n, pool.length), 1);
-        hit(c, 1);
-      }
-      note = `Crossfire: ${targets.size} random characters targeted for -1 Hand each.`;
+      for (const target of enemies()) hit(target, 2);
+      hit(strongest(allies(), t), 1);
+      note = "Crossfire: 2 damage to every local enemy; 1 to your strongest local character.";
       break;
     }
     case "the-block-spin": {
@@ -332,7 +328,7 @@ export function resolveBlockbusterWave(
           t,
         );
       if (sacrifice && recipient) {
-        const amount = t.power(sacrifice);
+        const amount = t.power(sacrifice) + 2;
         targets.add(sacrifice.instanceId);
         m = {
           ...m,
@@ -407,8 +403,9 @@ export function resolveBlockbusterWave(
       for (const c of fighters(m).filter((c) => c.lane !== l)) travel(c, l);
       break;
     case "the-cookout": {
-      for (let i = 0; i < 2; i++) {
-        const to = t.random(seed + ":food:" + i, 3) as Lane;
+      const occupied = lanes.filter(lane => fighters(m, lane).some(c => c.owner === owner));
+      for (let i = 0; i < 2 && occupied.length; i++) {
+        const to = occupied[t.random(seed + ":food:" + i, occupied.length)];
         const food = {
           ...t.create("soulfood", owner, "cookout", m.nextEventSequence + i),
           instanceId: source.instanceId + ":food:" + i,
@@ -431,7 +428,7 @@ export function resolveBlockbusterWave(
         restore(recipient);
         buff(recipient, 1);
       }
-      const to = t.random(seed + ":burnt", 3) as Lane;
+      const to = occupied.length ? occupied[t.random(seed + ":burnt", occupied.length)] : l;
       const plate: CardInstance = {
         ...source,
         id: "the-cookout",
@@ -447,9 +444,9 @@ export function resolveBlockbusterWave(
         lane: to,
         ability: "Still Smoking",
         effect:
-          "At each round end, give a random friendly character here 1 Burn.",
+          "At this round end, give a random friendly character here 1 Burn, then remove this plate.",
         abilityUpgrades: [],
-        lastEffectNote: "Still Smoking: recurring friendly Burn.",
+        lastEffectNote: "Still Smoking: one Burn penalty, then cleared.",
       };
       m = {
         ...m,
@@ -460,7 +457,7 @@ export function resolveBlockbusterWave(
       targets.add(plate.instanceId);
       succeeded = true;
       note =
-        "Cookout: two Soul Food deliveries and one persistent Burnt Plate landed in random friendly lanes.";
+        "Cookout: meals delivered to occupied friendly districts; the Burnt Plate clears at round end.";
       break;
     }
     case "the-babyshower": {

@@ -43,8 +43,8 @@ test('Common self boosts honor their printed conditions', () => {
   const cases = [
     ['youngbull', [], [instance('cornball', 'cpu', 1)], 1],
     ['transplant', [], [], 1],
-    ['edgar', [instance('cornball', 'player', 1)], [], 1],
-    ['manman', [instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], 2],
+    ['edgar', [instance('cornball', 'player', 1)], [], 2],
+    ['manman', [instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], 3],
   ] as const;
   for (const [id, allies, enemies, amount] of cases) {
     const m = reveal(id, m => ({ ...m, boards: [[...allies, ...enemies], [], []] }));
@@ -66,7 +66,8 @@ test('Grounded buffs one ally, former bonds set up board effects, and Nurse clea
   for (const [id, bond] of [['abuela', 'Light'], ['icecream', 'Water']] as const) {
     m = reveal(id, match => ({ ...match, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], []] }));
     assert.equal(cards[id].elementalBond, undefined);
-    assert(m.boards[0].every(card => card.powerModifier === 0));
+    assert.equal(m.boards[0][0].powerModifier, id === 'icecream' ? 2 : 0);
+    assert(m.boards[0].slice(1).every(card => card.powerModifier === 0));
   }
   const ally = instance('cornball', 'player', 1);
   ally.statuses = { ...ally.statuses, frozen: true, silenced: true };

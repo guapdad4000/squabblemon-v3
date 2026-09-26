@@ -56,7 +56,7 @@ for (const owner of ['player', 'cpu'] as const) {
         assert.equal(find(after, 'rastamon').statuses.silenced, false);
         assert.equal(find(after, 'rastamon').powerModifier, 1);
       }
-      if (id === 'stylist') { assert.equal(find(after, 'rastamon').statuses.protected, true); assert.equal(find(after, 'rastamon').powerModifier, 2); }
+      if (id === 'stylist') { assert.equal(find(after, 'rastamon').statuses.protected, true); assert.equal(find(after, 'rastamon').powerModifier, 1); }
       if (id === 'demario') assert.equal(find(after, 'demario-mushroom').basePower, 1);
       if (id === 'black-cowboy') assert.equal(find(after, 'hooper').lane, 0);
     }

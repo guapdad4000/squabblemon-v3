@@ -1,3 +1,4 @@
+import { isActiveOngoing } from './rosterBalance';
 import { creativeStatusApplied, creativePreventDamage, creativeCanCross, REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
 export { blockbusterExtraCost } from './blockbusterRules';
 import { blockbusterWaveCards } from './blockbusterWave';
@@ -126,7 +127,7 @@ export type CardInstance = Card & {
   /** A Luigion deployment can consume only one Mushroom, never from an echo. */
   luigionMushroomUsed?: boolean;
   waveOnce?: Partial<Record<'alice' | 'bonnetgirl' | 'undercova' | 'oz', boolean>>;
-  waveRounds?: Partial<Record<'tinman' | 'lion' | 'ronald' | 'trapvamp' | 'squabblecook', number>>;
+  waveRounds?: Partial<Record<'tinman' | 'lion' | 'ronald' | 'trapvamp' | 'squabblecook' | 'godofhookah', number>>;
   aliceReady?: boolean;
   bankedMotion?: number;
   burnSource?: { instanceId: string; owner: Owner };
@@ -949,7 +950,9 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       powerModifier: c.powerModifier - damage, statuses: { ...c.statuses, burnStacks: 0 },
       lastEffectNote: 'BURN: −' + damage + ' Hands at round end.',
     })));
-    if (damage > 0 && card.basePower + card.powerModifier > 0) {
+    const afterBurn = findCard(result, card.instanceId);
+    if (damage > 0 && currentBurning.basePower + currentBurning.powerModifier > 0
+      && (!afterBurn || afterBurn.basePower + afterBurn.powerModifier < currentBurning.basePower + currentBurning.powerModifier)) {
       const enemy = card.owner === 'player' ? 'cpu' : 'player';
       (burnedLanes[enemy] ??= new Set()).add(card.lane!);
     }
@@ -963,7 +966,19 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
     for (const origin of burnedLanes[source.owner] ?? []) {
       const destination = ((origin + 1) % 3) as Lane;
       const target = lowest(inLane(result, enemy, destination).filter(c => !burningAtStart.has(c.instanceId) && c.statuses.burnStacks === 0));
-      if (!target) continue;
+      if (!target) {
+        const adjacent = inLane(result, enemy, destination);
+        const live = findCard(result, source.instanceId);
+        if (adjacent.length && adjacent.every(c => burningAtStart.has(c.instanceId) || c.statuses.burnStacks > 0)
+          && live && activeAbility(live) && live.waveRounds?.godofhookah !== result.round) {
+          const before = result;
+          result = waveRound(result, live.instanceId, 'godofhookah');
+          result = modify(result, live.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1 }));
+          result = trainWaveAbility(result, live.instanceId);
+          result = addEvent(before, result, { type: 'ability', sourceId: live.instanceId, owner: live.owner, targetIds: [live.instanceId], note: 'Pass the Hose: adjacent enemies already burning; +1 Hand, once this round.' });
+        }
+        continue;
+      }
       const before = result;
       result = applyBurn(result, source, target, 1, 'Pass the Hose: 1 Burn; ticks next round.');
       if ((findCard(result, target.instanceId)?.statuses.burnStacks ?? 0) > 0) result = trainWaveAbility(result, source.instanceId);
@@ -1550,7 +1565,11 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       if (sherlock.instanceId !== source.instanceId) { targets.push(sherlock.instanceId); m = grantProtection(m, source, sherlock.instanceId); }
     }
   } else if (id === 'thefeds') {
-    const target = highest(inLane(m, enemy, l));
+    const removable = (c: CardInstance) => Math.max(0, c.basePower + c.powerModifier - c.power);
+    const candidates = inLane(m, enemy, l);
+    const target = candidates.some(c => removable(c) > 0)
+      ? [...candidates].sort((a,b) => removable(b) - removable(a) || getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0]
+      : highest(candidates);
     if (target) {
       targets.push(target.instanceId);
       m = hostileEffect(m, source, target, (state, actual) => {
@@ -2013,14 +2032,16 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else note("Ratio'd Receipts found no enemy.");
   }
   else if (source.cardId === 'nerd') {
-    const t = highest(inLane(m, enemy, l));
+    const candidates = inLane(m, enemy, l);
+    const t = highest(candidates.filter(isActiveOngoing)) ?? highest(candidates);
     if(t) {
       targetIds.add(t.instanceId);
       m=targetEnemy(m,source,t,c=>({...c,statuses:{...c.statuses,silenced:true},lastEffectNote:'Unaware: silenced.'}),true);
-      const disabled=activeAbility(t)&&(t.effect.includes('Ongoing:')||['wifey','bossbabe'].includes(abilityCardId(t)))&&findCard(m,t.instanceId)?.statuses.silenced;
+      const disabled=isActiveOngoing(t)&&findCard(m,t.instanceId)?.statuses.silenced;
+      if (disabled) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1 }));
       const revealed=disabled?[...(enemy==='player'?m.playerHand:m.cpuHand)].sort((a,b)=>a.instanceId.localeCompare(b.instanceId))[0]:undefined;
       if(revealed)targetIds.add(revealed.instanceId);
-      note('Unaware targeted the highest enemy through Side Eye.'+(revealed?' Read the source: revealed '+revealed.name+' ('+revealed.cost+' Motion).':''));
+      note('Unaware prioritized an active Ongoing enemy through Side Eye.'+(revealed?' Read the source: revealed '+revealed.name+' ('+revealed.cost+' Motion).':''));
     } else note('Unaware found no enemy.');
   }
   else if (source.cardId === 'cornball') {
@@ -2046,16 +2067,23 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   }
   else if (source.cardId === 'bossbabe') note('Network Boost watches the first two plays in other districts.');
   else if (source.cardId === 'scammer') {
-    const target = highest(inLane(m, enemy, l));
+    const candidates = inLane(m, enemy, l);
+    const ongoing = highest(candidates.filter(isActiveOngoing));
+    const target = ongoing ?? highest(candidates);
     if (target) {
       targetIds.add(target.instanceId);
-      const printed = cards[target.cardId] ?? target;
+      const copiedId = abilityCardId(target);
+      const printed = cards[copiedId] ?? target;
       m = modify(m, source.instanceId, card => ({ ...card,
-        basePower: Math.min(7, target.basePower), copiedAbilityCardId: target.cardId,
-        ability: printed.ability, effect: printed.effect,
-        lastEffectNote: `Imposter copied ${target.name}'s base Hands and ${printed.ability}. On Reveal does not repeat.`,
+        basePower: Math.min(7, target.basePower),
+        powerModifier: card.powerModifier + (ongoing ? 0 : 1),
+        copiedAbilityCardId: ongoing ? copiedId : undefined,
+        ability: ongoing ? printed.ability : source.ability,
+        effect: ongoing ? printed.effect : source.effect,
+        lastEffectNote: ongoing ? `Imposter copied ${target.name}'s base Hands and ongoing kit; no entrance fired.`
+          : `Imposter copied ${target.name}'s base Hands and gained +1 Hand; no ability copied.`,
       }));
-      note(`Imposter copied ${target.name}'s base Hands and ${printed.ability}. On Reveal does not repeat.`);
+      note(findCard(m, source.instanceId)!.lastEffectNote);
     } else note('Imposter found no enemy to copy.');
   }
   else if (source.cardId === 'streamer') {
@@ -2225,10 +2253,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       : source.cardId === 'shiesty' ? m.boards.flat().length > before.boards.flat().length
       : source.cardId === 'torta' ? allies.length > 0
       : source.cardId === 'transplant' ? allies.length === 0
-      : source.cardId === 'edgar' ? allies.some(c => c.cost <= 2)
+      : source.cardId === 'edgar' ? allies.some(c => c.kind !== 'support' && c.cost <= 2)
       : source.cardId === 'nguyen' ? m.boards.flat().some(c => !c.hazard && c.owner === source.owner && c.lane !== l)
-      : allies.length >= 2;
-    const amount = source.cardId === 'manman' ? 2 : 1;
+      : allies.filter(c => c.kind !== 'support').length >= 2;
+    const amount = source.cardId === 'manman' ? 3 : source.cardId === 'edgar' ? 2 : 1;
     if (succeeds) {
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
       if (source.cardId === 'youngbull') {
@@ -2271,6 +2299,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       ? Math.min(MAX_MOTION - m[key], 3)
       : Math.min(MAX_MOTION - m[key], Math.min(3, eligible));
     m = refundMotion(m, source.owner, gain);
+    if (source.cardId === 'charger' && eligible >= 3) {
+      const electric = lowest(inLane(m, source.owner, l).filter(c => (c.kind ?? 'character') === 'character' && c.type === 'Electric'));
+      if (electric) { targetIds.add(electric.instanceId); m = grantProtection(m, source, electric.instanceId); }
+    }
     note(source.cardId === 'energydrink'
       ? `Second Wind restored ${gain} Motion (maximum ${MAX_MOTION}).`
       : `Refund restored ${gain} Motion (${eligible} friendly characters here).`);
@@ -2324,7 +2356,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'cognac' || c.kind !== 'support'));
     const target = lowest(allies);
     const targets = target ? [target] : [];
-    const amount = source.cardId === 'cognac' ? 2 : 1;
+    const amount = source.cardId === 'cognac' ? (target?.type === 'Fire' ? 3 : 2) : 1;
     for (const ally of targets) {
       targetIds.add(ally.instanceId);
       m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
@@ -2345,9 +2377,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   else if (['bodegacat', 'dogwalker', 'dancecaptain', 'midnightmayor'].includes(source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
     const succeeds = source.cardId === 'bodegacat' ? allies.length === 0
-      : source.cardId === 'dogwalker' ? allies.length >= 2
+      : source.cardId === 'dogwalker' ? allies.filter(c => c.kind !== 'support').length >= 2
       : source.cardId === 'dancecaptain' ? m.boards.every(board => board.some(c => c.owner === source.owner)) : true;
-    const amount = source.cardId === 'dogwalker' ? 2 : source.cardId === 'dancecaptain' ? 3
+    const amount = source.cardId === 'dogwalker' ? 3 : source.cardId === 'dancecaptain' ? 3
       : source.cardId === 'midnightmayor' ? Math.min(3, new Set(inLane(m, source.owner, l).map(c => canonicalElement(c.type))).size) : 1;
     if (succeeds) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
     note(succeeds ? `${source.ability}: +${amount} Hands.` : `${source.ability}: condition not met.`);
@@ -2939,7 +2971,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const traveler = lowest(allies);
       if (traveler) travel(traveler);
     } else if (id === 'cloudbreak') {
-      if (travel(source)) buff(lowest(inLane(m, source.owner, l).filter(c => c.kind !== 'support')), 2);
+      if (travel(source)) {
+        const left = lowest(inLane(m, source.owner, l).filter(c => (c.kind ?? 'character') === 'character'));
+        if (left) { buff(left, 2); m = grantProtection(m, source, left.instanceId); }
+      }
     }
     const succeeded = [...targetIds].some(key => {
       const old = findCard(before, key), current = findCard(m, key);
@@ -4129,11 +4164,12 @@ function applyBurntPlates(match: Match): Match {
   let m = match;
   for (const plate of match.boards.flat().filter(c => c.cardId === 'burnt-plate')) {
     const crew = m.boards[plate.lane!].filter(c => !c.hazard && (c.kind ?? 'character') === 'character' && c.owner === plate.owner);
+    m = { ...m, boards: m.boards.map(cs => cs.filter(c => c.instanceId !== plate.instanceId)) as Match['boards'] };
     if (!crew.length) continue;
     const target = crew[seededIndex(`${plate.instanceId}:${m.round}:burn`,crew.length)];
     const before = m;
     if (!target.statuses.uncounterable) m = modify(m,target.instanceId,c => ({ ...c,statuses:{...c.statuses,burnStacks:c.statuses.burnStacks+1},lastEffectNote:'Burnt Plate: +1 Burn.' }));
-    m = addEvent(before,m,{type:'ability',sourceId:plate.instanceId,owner:plate.owner,lane:plate.lane!,targetIds:[target.instanceId],kind:'fire',note:'Burnt Plate: recurring 1 Burn to a random friendly character here.'});
+    m = addEvent(before,m,{type:'ability',sourceId:plate.instanceId,owner:plate.owner,lane:plate.lane!,targetIds:[target.instanceId],kind:'fire',note:'Burnt Plate: one 1-Burn penalty; plate cleared.'});
   }
   return m;
 }

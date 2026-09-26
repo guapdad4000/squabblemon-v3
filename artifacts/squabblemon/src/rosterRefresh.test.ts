@@ -78,18 +78,18 @@ test('silenced or frozen Boss Bae cannot trigger Network Boost', () => {
   }
 });
 
-test('Imposter copies capped base Hands and printed ability without firing an On Reveal or replacing artwork', () => {
+test('Imposter falls back to capped base Hands plus one without copying an entrance or replacing artwork', () => {
   const target = { ...boardCard('oink'), basePower: 10, powerModifier: 3 };
   const m = play({ ...start(), boards: [[target], [], []] }, 'scammer');
   const scammer = m.boards[0].find(c => c.cardId === 'scammer')!;
   assert.equal(scammer.basePower, 7);
-  assert.equal(scammer.powerModifier, 0);
-  assert.equal(scammer.copiedAbilityCardId, 'oink');
-  assert.equal(scammer.ability, cards.oink.ability);
+  assert.equal(scammer.powerModifier, 1);
+  assert.equal(scammer.copiedAbilityCardId, undefined);
+  assert.equal(scammer.ability, cards.scammer.ability);
   assert.equal(scammer.id, 'scammer');
   assert.equal(m.boards[0][0].powerModifier, 3);
   assert.equal(m.effectLog.filter(e => e.type === 'ability').length, 1);
-  assert.equal(m.effectLog.at(-1)?.replay.after.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'oink');
+  assert.equal(m.effectLog.at(-1)?.replay.after.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, undefined);
   assert.equal(play(start(), 'scammer').boards[0][0].copiedAbilityCardId, undefined);
 });
 
@@ -112,7 +112,7 @@ test('copied Landlord and Wifey remain ongoing while Sneaker On Reveal stays dor
   assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'landlord');
   assert.equal(getLegalCardCost(m, 'cpu', createCardInstance('cornball', 'cpu'), 0), 2);
   m = play({ ...start(), boards: [[boardCard('sneaker')], [], []] }, 'scammer');
-  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, 'sneaker');
+  assert.equal(m.boards[0].find(c => c.cardId === 'scammer')?.copiedAbilityCardId, undefined);
   const threat = createCardInstance('hooper', 'cpu', 'incoming');
   m = playCard({ ...m, phase: 'cpu-reveal', cpuHand: [threat] }, 'cpu', threat.instanceId, 1);
   assert.equal(m.discountTokens.find(t => t.owner === 'player'), undefined);
