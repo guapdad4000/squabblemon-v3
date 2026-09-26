@@ -4,14 +4,15 @@ import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { playInteractionSound, type InteractionSound } from '../../lib/interactionAudio';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
-import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound } from 'lucide-react';
+import { Briefcase, ArrowRight, Moon, Sun, Tv, Dumbbell, Layers, Smartphone, Disc3, Move, MousePointer2, Sprout, UserRound, CalendarDays } from 'lucide-react';
 import { getAssetUrl } from '../../lib/assets';
 import { AccountRewards } from '../../components/AccountRewards';
 import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
+import { hasUnreadBulletin, SafehouseBulletinBoard } from '../../components/SafehouseBulletinBoard';
 import { useMusic, musicActions } from '../../musicStore';
 import { catalogCardById, getCardImage } from '../../data';
 import { soundtrack } from '../../musicPlayer';
@@ -24,6 +25,7 @@ import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
   { id: 'mail', label: 'The mail door', short: 'Mail', icon: Briefcase, title: 'Special delivery.', detail: 'Letters, updates, and gifts from your people.', action: 'Open your mail', href: '' },
+  { id: 'events', label: 'The bulletin board', short: 'Events', icon: CalendarDays, title: 'What’s happening on the block?', detail: 'Live events, upcoming dates, roadmaps, and messages from the dev room.', action: 'Read the board', href: '' },
   { id: 'growth', label: 'Buddy’s plants', short: 'Growth Lab', icon: Sprout, title: 'Buddy’s Growth Lab', detail: 'Helping you get them hands holistically.', action: 'Enter Growth Lab', href: '' },
   { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
@@ -95,11 +97,15 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const [view, setView] = useState<Station | 'room'>('room');
   const [growthOpen, setGrowthOpen] = useState(false);
   const [mailOpen, setMailOpen] = useState(false);
+  const [bulletinOpen, setBulletinOpen] = useState(false);
+  const [bulletinUnread, setBulletinUnread] = useState(hasUnreadBulletin);
+  const markBulletinViewed = useCallback(() => setBulletinUnread(false), []);
   const noticeSearch = useSearch();
   useEffect(() => {
     const notice = new URLSearchParams(noticeSearch).get('notice');
     if (notice === 'mail') { setView('mail'); setMailOpen(true); }
     if (notice === 'growth') setGrowthOpen(true);
+    if (notice === 'events') { setView('events'); setBulletinOpen(true); }
   }, [noticeSearch]);
   const mail = useSafehouseMail(bootstrap.profile.id);
   const unreadMail = (mail.data?.messages ?? []).filter(item => !item.readAt).length;
@@ -144,7 +150,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     return () => clearTimeout(timer);
   }, [view, bootstrap.profile.settings.reducedMotion]);
   useEffect(() => { sendScene(frame, { type: 'mail', unread: unreadMail }); }, [unreadMail]);
-  useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen }); }, [mailOpen]);
+  useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen || bulletinOpen }); }, [mailOpen, bulletinOpen]);
+  useEffect(() => { sendScene(frame, { type: 'bulletin', unread: bulletinUnread }); }, [bulletinUnread]);
   const crew = (bootstrap.profile.savedDecks[0]?.cardIds ?? bootstrap.profile.ownedCardIds).slice(0, 3).map(id => catalogCardById[id]).filter(Boolean);
   const profileCard = catalogCardById[bootstrap.profile.avatarKey]
     ?? bootstrap.profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean)
@@ -168,6 +175,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     if (previous === view) return;
     const sounds: Partial<Record<Station | 'room', InteractionSound>> = {
       mail: 'door-knock', growth: 'crystal', arcade: 'arcade-beep',
+      events: 'ui-beep',
       inventory: 'bag-open', story: 'film',
       cards: 'cards-spread', phone: 'phone-ring', profile: 'ui-beep',
     };
@@ -194,7 +202,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const syncRoom = () => {
     sendScene(frame, { type: 'arcade', ...arcadeProgress });
     sendScene(frame, { type: 'mail', unread: unreadMail });
-    sendScene(frame, { type: 'mail-overlay', open: mailOpen });
+    sendScene(frame, { type: 'mail-overlay', open: mailOpen || bulletinOpen });
+    sendScene(frame, { type: 'bulletin', unread: bulletinUnread });
     sendScene(frame, { type: 'light', night });
     sendScene(frame, { type: 'music', playing: music.playing });
     sendScene(frame, { type: 'crew', cards: crew.map(card => ({ name: card.name, image: getCardImage(card.artworkId) })) });
@@ -242,8 +251,9 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'day'}>
       <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
+      <SafehouseBulletinBoard open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
-      <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen} />
+      <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.webp`}
         onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
@@ -259,7 +269,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
           aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
-          <item.icon size={16} aria-hidden="true" /><span>{item.short}<Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} /></span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}
+          <item.icon size={16} aria-hidden="true" /><span>{item.short}{item.id !== 'events' && <Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} />}</span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}{item.id === 'events' && bulletinUnread && <b className="mail-count" aria-label="New bulletin posts">NEW</b>}
         </button>)}
       </nav>
       <div className="safehouse-room-bottom">
@@ -268,7 +278,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           <div className="safehouse-room-detail__body"><div><span className="room-eyebrow">{station.label}</span><h2>{station.id === 'growth' ? <>Buddy’s <em className="buddy-growth-word">Growth</em> Lab</> : station.title}</h2>
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
-              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
+              {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'events' ? <button type="button" className="room-action" onClick={() => setBulletinOpen(true)}>Read the board<ArrowRight size={15} /></button> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
               {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
             </div>
           </div>

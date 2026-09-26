@@ -2,6 +2,7 @@ import { createArcadeCabinet } from './arcade-cabinet.js';
 import { dressBags, addGardenDecor } from './room-upgrades.js';
 import { addTailoredPillows } from './tailored-pillows.js';
 import { createMailDoor } from './mail-door.js';
+import { createBulletinBoard } from './bulletin-board.js';
 import { createGrowthCorner } from './growth-corner.js';
 import * as T from '../shared/three.module.js';
 import {demoStory,normalizeStory,campaignPercent} from './story.js';
@@ -85,6 +86,7 @@ const glow=new T.MeshBasicMaterial({color:'#d8e6e4'});
 // A lush, tappable plant corner is the entrance to Buddy’s Growth Lab.
 const growthCorner=createGrowthCorner({wood,brass});growthCorner.position.set(-3.52,0,-4.12);scene.add(growthCorner);addGardenDecor(scene);
 const mailDoor=createMailDoor();scene.add(mailDoor.root);
+const bulletinBoard=createBulletinBoard();scene.add(bulletinBoard.root);
 // Foreground crate and records.
 box(.9,.63,.8,wood,-2.9,.32,3.5);for(let i=0;i<8;i++){const sleeve=box(.7,.65,.045,i%2?black:leather,-2.9,.62,3.22+i*.07);sleeve.rotation.x=-.14;}for(let i=0;i<4;i++)box(.93,.035,.015,black,-2.9,.12+i*.13,3.91);
 // Small-scale grain, real plank joints and dark contact beneath furniture.
@@ -151,7 +153,7 @@ const arcade=new T.Group();arcade.position.set(3.95,0,3.3);arcade.rotation.y=-Ma
 const arcadeDisplay=createArcadeCabinet(arcade);
 dressBags({inventoryBag,bag});
 const roomDetails=dressSafehouse({scene,couch,brass,wood,black,ivory,plaster});
-const batching=batchStaticMeshes(scene,[mailDoor.root,growthCorner,inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
+const batching=batchStaticMeshes(scene,[mailDoor.root,bulletinBoard.root,growthCorner,inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
 const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[screenMat]});
 const roomPose=()=>innerWidth/innerHeight<.95?[.16,.48,12.1,.15,1.3,-.15]:[-.09,.23,10.7,.1,1.52,-.45];
 // A front three-quarter approach makes the shared spherical easing curve around the table.
@@ -162,14 +164,14 @@ let frameShift=0,desiredFrameShift=0;
 let reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const el=renderer.domElement;const pointers=new Map();let pinch=0,px=0,py=0,downX=0,downY=0,moved=false,multi=false;let selected='room';let bagImpulse=0,bagStarted=0;
 function moveCamera(yawDelta=0,pitchDelta=0,zoomDelta=0){desired.yaw+=yawDelta;desired.pitch+=pitchDelta;desired.radius+=zoomDelta;clampCameraOrbit(desired,roomPose()[2]);}
-const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:mailDoor.root,key:'mail'},{object:growthCorner,key:'growth'},{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'},{object:arcade,key:'arcade'},{object:roomDetails.profileShelf,key:'profile'}];
+const raycaster=new T.Raycaster(),pointer=new T.Vector2();const interactive=[{object:mailDoor.root,key:'mail'},{object:bulletinBoard.root,key:'events'},{object:growthCorner,key:'growth'},{object:inventoryBag,key:'inventory'},{object:tv,key:'story'},{object:bag,key:'training'},{object:cards,key:'cards'},{object:phone,key:'phone'},{object:roomDetails.vinyl,key:'music'},{object:arcade,key:'arcade'},{object:roomDetails.profileShelf,key:'profile'}];
 function pick(e){pointer.set(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(scene.children,true).find(h=>h.object.visible&&!h.object.material?.transparent&&h.object.type==='Mesh');if(!hit)return null;for(const item of interactive){let p=hit.object;while(p){if(p===item.object)return item.key;p=p.parent;}}return null;}
 el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});downX=px=e.clientX;downY=py=e.clientY;moved=false;if(pointers.size>1)multi=true;});
 el.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId)){el.style.cursor=pick(e)?'pointer':'grab';return;}pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(Math.hypot(e.clientX-downX,e.clientY-downY)>6)moved=true;if(pointers.size===2){const [a,b]=[...pointers.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)moveCamera(0,0,(pinch-d)*.016);pinch=d;return;}moveCamera(-(e.clientX-px)*.003,(e.clientY-py)*.003);px=e.clientX;py=e.clientY;});
 function release(e){if(e.type==='pointerup'&&e.isTrusted)emit({type:'interact'});if(e.type==='pointerup'&&!moved&&!multi){const key=pick(e);if(key){view(key);if(key==='training')punch();}}pointers.delete(e.pointerId);pinch=0;if(!pointers.size)multi=false;const p=[...pointers.values()][0];if(p){px=p.x;py=p.y;}}
 el.addEventListener('pointerup',release);el.addEventListener('pointercancel',release);el.addEventListener('wheel',e=>{e.preventDefault();moveCamera(0,0,e.deltaY*.006);},{passive:false});
-function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory','arcade','growth','profile','mail'].includes(name))return;emit({type:'view',view:name});previousAnchors=null;selected=name;bagPivot.visible=name!=='mail';renderer.shadowMap.needsUpdate=true;mailDoor.setOpen(name==='mail');desiredFrameShift=(name==='room'||name==='mail')?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
-const v={mail:[-1.5,.12,innerWidth<600?6.2:5.3,4.1,1.8,-3.6],growth:[.65,.2,innerWidth/innerHeight<.95?4.8:4.5,growthCorner.position.x,1.95,growthCorner.position.z],arcade:arcadePose(),inventory:[.25,.65,innerWidth<600?3.8:3.1,inventoryBag.position.x,.45,inventoryBag.position.z],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[1.18,.16,innerWidth<600?4.5:4,tv.position.x,1.65,tv.position.z],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.78,.46,innerWidth<600?3.6:3.1,roomDetails.vinyl.position.x,1.03,roomDetails.vinyl.position.z],profile:[0,.24,innerWidth<600?3.7:3.2,roomDetails.profileShelf.position.x,1.55,roomDetails.profileShelf.position.z]}[name];if(!v)return;desired=clampCameraOrbit({yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))},roomPose()[2]);}
+function view(name){if(!['room','table','lounge','story','training','cards','phone','music','inventory','arcade','growth','profile','mail','events'].includes(name))return;emit({type:'view',view:name});previousAnchors=null;selected=name;bagPivot.visible=name!=='mail';renderer.shadowMap.needsUpdate=true;mailDoor.setOpen(name==='mail');desiredFrameShift=(name==='room'||name==='mail')?0:innerHeight*(innerWidth/innerHeight<.95?.14:.10);document.body.dataset.view=name;document.querySelectorAll('button[data-view]').forEach(b=>{const on=b.dataset.view===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});document.querySelector('#story-panel').hidden=name!=='story';document.querySelector('#punch').hidden=name!=='training';
+const v={mail:[-1.5,.12,innerWidth<600?6.2:5.3,4.1,1.8,-3.6],events:[-1.44,.17,innerWidth<600?4.2:3.4,bulletinBoard.root.position.x,1.9,bulletinBoard.root.position.z],growth:[.65,.2,innerWidth/innerHeight<.95?4.8:4.5,growthCorner.position.x,1.95,growthCorner.position.z],arcade:arcadePose(),inventory:[.25,.65,innerWidth<600?3.8:3.1,inventoryBag.position.x,.45,inventoryBag.position.z],room:roomPose(),table:[.05,.66,4.8,.1,.75,.7],lounge:[-.48,.25,6.2,2.1,1,0],story:[1.18,.16,innerWidth<600?4.5:4,tv.position.x,1.65,tv.position.z],training:[.12,.14,innerWidth<600?5.4:4.8,1.35,2,-2.65],cards:[.03,1.05,innerWidth<600?2.5:1.85,.45,.96,1.4],phone:[-.15,1.15,innerWidth<600?2.4:1.75,2.5,.78,3.05],music:[.78,.46,innerWidth<600?3.6:3.1,roomDetails.vinyl.position.x,1.03,roomDetails.vinyl.position.z],profile:[0,.24,innerWidth<600?3.7:3.2,roomDetails.profileShelf.position.x,1.55,roomDetails.profileShelf.position.z]}[name];if(!v)return;desired=clampCameraOrbit({yaw:v[0],pitch:v[1],radius:v[2],target:new T.Vector3(...v.slice(3))},roomPose()[2]);}
 function punch(){emit({type:'bag-hit'});bagImpulse=Math.min(.28,bagImpulse+.17);bagStarted=performance.now();document.querySelector('#action-status').textContent='Punch landed';}
 document.querySelectorAll('button[data-view]').forEach(b=>b.onclick=()=>view(b.dataset.view));document.querySelector('#reset').onclick=()=>view('room');document.querySelector('#punch').onclick=punch;document.querySelector('#close-story').onclick=()=>view('room');
 let night=true;
@@ -187,7 +189,7 @@ function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;las
 function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden||(mailOverlay&&t>mailPauseAt))return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);clampCameraOrbit(desired,roomPose()[2]);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);positionRoomCamera({yaw,pitch,radius,target},camera.position,innerWidth/innerHeight>=.95);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
 if(!reduced){dust.position.y=Math.sin(t*.00015)*.09;const age=(t-bagStarted)/1000;bagPivot.rotation.z=Math.sin(age*5.5)*bagImpulse*Math.exp(-age*1.35)+Math.sin(t*.0007)*.004;bagPivot.rotation.x=Math.sin(age*4)*bagImpulse*.3*Math.exp(-age*1.35);}
 if(mailDoor.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;
-if(roomDetails.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();if(!sceneReady){sceneReady=true;document.querySelector('#loading')?.remove();emit({type:'ready'});}publishAnchors(t);}
+if(roomDetails.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;bulletinBoard.update(t/1000,reduced);if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();if(!sceneReady){sceneReady=true;document.querySelector('#loading')?.remove();emit({type:'ready'});}publishAnchors(t);}
 // Keep the loading state through shader compilation and the first drawn frame.
 void art.prepare().catch(()=>{}).then(()=>{if(!contextLost)requestAnimationFrame(animate);});
 
@@ -203,12 +205,13 @@ addEventListener('message',e=>{
   if(d.type==='music')roomDetails.setMusic(d.playing);
   if(d.type==='crew')updateCrewCards(d.cards);
   if(d.type==='mail')mailDoor.setUnread(d.unread);
+  if(d.type==='bulletin')bulletinBoard.setUnread(d.unread);
   if(d.type==='mail-overlay'){mailOverlay=Boolean(d.open);mailPauseAt=performance.now()+900;}
   if(d.type==='profile')roomDetails.setProfile(d);
   if(d.type==='punch')punch();
   if(d.type==='settings')reduced=Boolean(d.reducedMotion)||matchMedia('(prefers-reduced-motion: reduce)').matches;
 });
-window.Squabblemon.getSceneStatus=()=>({view:selected,arcade:arcadeDisplay.status(),mail:mailDoor.status(),night,reduced,batching,crewCards:crewLoaded,music:roomDetails.status(),camera:{yaw,pitch,radius,position:camera.position.toArray(),target:target.toArray()},drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles});
+window.Squabblemon.getSceneStatus=()=>({view:selected,arcade:arcadeDisplay.status(),mail:mailDoor.status(),bulletin:bulletinBoard.status(),night,reduced,batching,crewCards:crewLoaded,music:roomDetails.status(),camera:{yaw,pitch,radius,position:camera.position.toArray(),target:target.toArray()},drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles});
 renderer.info.autoReset=false;
 addEventListener('error',()=>emit({type:'error'}));
 
