@@ -192,3 +192,5 @@ html[data-reduce-motion=true] .result-immersive__splashes { display:none; }
 }
 @media(prefers-reduced-motion:reduce) { .result-immersive__fade-rain { display:none; } }
 html[data-reduce-motion=true] .result-immersive__fade-rain { display:none; }
+
+.result-immersive__brand { object-fit:contain; filter:drop-shadow(0 2px 4px #0009); }
