@@ -15,11 +15,15 @@ try {
 for(const [viewport,width,height] of [['desktop',1440,1000],['phone',390,844],['short-phone',360,640]]) {
  const page=await browser.newPage({baseURL:process.env.REVIEW_BASE_URL??'http://localhost:4199',viewport:{width,height},reducedMotion:'reduce'});
  await page.routeWebSocket('**',s=>s.close());const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const machineBorders=new Set();
  const api=await openFadecade(page,{activeRun:true});await page.route('**/api/player/stockz',r=>r.fulfill({json:{active:null,roundsToday:2,recent:[]}}));
  await expect(page.locator('.fadecade-hub')).toBeVisible();await page.screenshot({path:`${out}/${viewport}-hub.png`});
  for(const [key,name] of [['road',''],['daily','Open daily bounties'],['weekly','Open weekly bounties'],['training','Open training circuit'],['events','Open street events'],['stockz','Play Stockz']]) {
   const opener=key==='road'?page.locator('[data-testid="fadecade-flagship"] button'):page.getByRole('button',{name,exact:true});
   await opener.click();const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();
+  const border=await dialog.locator('.fadecade-dialog-artwork-shell').evaluate(el=>getComputedStyle(el).borderImageSource);
+  expect(border,`${viewport}/${key} custom machine border`).toContain(`${key}-border-9slice.png`);machineBorders.add(border);
+  await expect(dialog.locator('.fadecade-dialog-console-frame')).toHaveCount(0);
   const box=await dialog.boundingBox();if(box.x<0||box.y<0||box.x+box.width>width+1||box.y+box.height>height+1)throw Error(`${viewport}/${key} outside viewport`);
   expect(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
   if(key==='training') {
@@ -41,6 +45,6 @@ for(const [viewport,width,height] of [['desktop',1440,1000],['phone',390,844],['
   const broken=await dialog.locator('img').evaluateAll(a=>a.filter(i=>i.complete&&i.naturalWidth===0).map(i=>i.src));expect(broken,`${viewport}/${key} broken images`).toEqual([]);
   await page.keyboard.press('Escape');await expect(dialog).toBeHidden();await expect(opener).toBeFocused();
  }
- expect(api.requests.starts).toHaveLength(0);expect(api.requests.abandons).toBe(0);expect(errors).toEqual([]);console.log(`${viewport}: six popups, eight drills, ten-pick draft + undo, two events, road confirmation, Stockz selection and keyboard focus passed.`);await page.close();
+ expect(machineBorders.size,'every challenge has distinct scalable machine art').toBe(6);expect(api.requests.starts).toHaveLength(0);expect(api.requests.abandons).toBe(0);expect(errors).toEqual([]);console.log(`${viewport}: six custom 9-slice machines, eight drills, ten-pick draft + undo, two events, road confirmation, Stockz selection and keyboard focus passed.`);await page.close();
 }
 } finally {await browser.close();}
