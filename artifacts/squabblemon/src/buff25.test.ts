@@ -78,10 +78,10 @@ for (const owner of ["player", "cpu"] as const) {
       m = cast(m, "og", owner, 1).after;
       assert(kinds(m).includes("coach"));
       m = cast(m, "cornball", owner).after;
-      assert.equal(find(m, trainee.source)?.powerModifier, 1);
+      assert.equal(find(m, trainee.source)?.powerModifier, 2);
       assert(!kinds(m).includes("coach"));
       m = cast(m, "cornball", owner, 2).after;
-      assert.equal(find(m, trainee.source)?.powerModifier, 1);
+      assert.equal(find(m, trainee.source)?.powerModifier, 2);
     }
   });
   test(`${owner}: Cashier pays now or cashes out at actual final round`, () => {
@@ -183,17 +183,17 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "og", enemy).after;
     assert.equal(find(m, athlete.source)?.powerModifier, 4);
   });
-  test(`${owner}: Mayor leaves one arrival key, and ATL pays theft or fallback`, () => {
+  test(`${owner}: Mayor protects the qualifying mover immediately, and ATL pays theft or fallback`, () => {
     let m = blank();
     m.boards = [[unit("cornball", owner, 0)], [], []];
     m = cast(m, "midnightmayor", owner).after;
     m = cast(m, "break", owner).after;
-    const key = m.creativeMarks!.find((x) => x.kind === "key")!;
-    assert(key);
-    const guest = cast(m, "og", owner, key.lane);
-    m = guest.after;
-    assert(find(m, guest.source)?.statuses.protected);
+    const mover = m.boards.flat().find(c => c.cardId === "cornball")!;
+    assert.equal(mover.lane, 1);
+    assert(mover.statuses.protected);
     assert(!kinds(m).includes("key"));
+    assert(!kinds(m).includes("nomination"));
+    assert.equal(m.discountTokens.length, 1);
     m = cast(blank(), "atl-scammer", owner).after;
     m = end(end(m));
     assert.equal(m.discountTokens.length, 1);
@@ -501,7 +501,7 @@ for (const owner of ["player", "cpu"] as const) {
 }
 for (const owner of ["player", "cpu"] as const) {
   const enemy: Owner = owner === "player" ? "cpu" : "player";
-  test(`${owner}: STUD cannot grant escape Protection when neither district has two spaces`, () => {
+  test(`${owner}: STUD protects the surviving partner when neither district has two spaces`, () => {
     let m = blank();
     const ally = { ...unit("og", owner, 0), powerModifier: 4 };
     m.boards = [
@@ -513,6 +513,6 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(stud.after, "inmate-informant", enemy).after;
     assert.equal(find(m, ally)?.lane, 0);
     assert.equal(find(m, stud.source)?.lane, 0);
-    assert(!find(m, ally)?.statuses.protected);
+    assert(find(m, ally)?.statuses.protected);
   });
 }

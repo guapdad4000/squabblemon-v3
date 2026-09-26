@@ -56,7 +56,7 @@ for (const owner of ['player','cpu'] as const) test(`unchanged expansion reveal 
     const after = playCard(m, owner, source.instanceId, 0);
     const get = (c: typeof source) => after.boards.flat().find(a => a.instanceId === c.instanceId)!;
     const self = get(source), ally = get(low), second = get(other), enemy = get(foe);
-    const selfBoosts: Record<string,number> = {bodegacat:1,dogwalker:2,dancecaptain:3,midnightmayor:3,leroy:1};
+    const selfBoosts: Record<string,number> = {bodegacat:1,dogwalker:3,dancecaptain:3,midnightmayor:3,leroy:1};
     if (id in selfBoosts) assert.equal(self.powerModifier, selfBoosts[id], id);
     if (id === 'mural') { assert.equal(self.powerModifier, 0); assert.equal(enemy.statuses.locked, true); }
     if (id === 'crossingguard') { assert.equal(ally.statuses.protected,true); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, low.instanceId); }

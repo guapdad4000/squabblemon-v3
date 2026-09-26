@@ -317,7 +317,7 @@ test('Wifey blocks one targeted effect and movement cards visibly move', () => {
 
 test('Closet Nerd bypasses Side Eye, but a direct shield still absorbs its silence', () => {
   const wifey = { ...custom('wifey', 'cpu', 10), lane: 0 as const, statuses: { frozen: false, silenced: false, protected: true, blocked: false } };
-  const victim = { ...custom('snow', 'cpu', 11), lane: 0 as const, powerModifier: 5 };
+  const victim = { ...custom('stockz', 'cpu', 11), lane: 0 as const, powerModifier: 5 };
   const pierced = playOne('nerd', m => ({ ...m, boards: [[wifey, victim], [], []] }));
   assert.equal(pierced.boards[0].find(c => c.instanceId === victim.instanceId)?.statuses.silenced, true);
   assert.equal(pierced.boards[0].find(c => c.instanceId === wifey.instanceId)?.statuses.blocked, false);

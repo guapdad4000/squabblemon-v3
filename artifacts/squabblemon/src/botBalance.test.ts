@@ -71,9 +71,9 @@ test('support and former bond setup tiers trigger once', () => {
     m = upgraded(id, [[card('edgar', 'player', 0)], [], []]);
     m = playCard(m, 'player', m.playerHand[0].instanceId, 0);
     assert.equal(m.boards[0].find(c => c.cardId === id)?.powerModifier, 3);
-    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
+    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, id === 'icecream' ? 2 : 0);
     m = nextRound(pass(m, 'cpu'));
-    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 0);
+    assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, id === 'icecream' ? 2 : 0);
   }
 });
 test('blocked cheap Burn does not earn success upgrades', () => {

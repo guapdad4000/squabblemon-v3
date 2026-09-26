@@ -106,14 +106,16 @@ test("lane events leave no scoring body and cannot spend Squabble", () => {
     /SQUABBLE/,
   );
 });
-test("Shootout hits five distinct targets on both sides in the chosen lane only", () => {
+test("Shootout deals two to every local enemy and one to the strongest ally", () => {
   const m = blank();
   m.boards[0] = Array.from({ length: 6 }, (_, i) =>
     unit(i % 2 ? "cpu" : "player", 0, i),
   );
   m.boards[1] = [unit("cpu", 1, 10)];
   const a = cast(m, "the-shootout");
-  assert.equal(a.boards[0].filter((c) => c.powerModifier === -1).length, 5);
+  assert.equal(a.boards[0].filter((c) => c.owner === "cpu" && c.powerModifier === -2).length, 3);
+  assert.equal(a.boards[0].filter((c) => c.owner === "player" && c.powerModifier === -1).length, 1);
+  assert.equal(a.boards[0].filter((c) => c.owner === "player" && c.powerModifier === 0).length, 2);
   assert.equal(a.boards[1][0].powerModifier, 0);
 });
 test("Block Spin repeats prior reductions twice without recording its own repeats", () => {
@@ -142,7 +144,7 @@ test("Concert mode is validated and affects both crews", () => {
   );
   assert.throws(() => cast(m, "the-concert", 0, 2), /investment/);
 });
-test("Setup trades an ally and conserves its Hands without targeting the enemy", () => {
+test("Setup transfers current Hands plus two without targeting the enemy", () => {
   const m = blank();
   m.boards[0] = [
     unit("player", 0),
@@ -151,7 +153,7 @@ test("Setup trades an ally and conserves its Hands without targeting the enemy",
   ];
   const a = cast(m, "the-setup");
   assert.equal(a.boards[0].length, 2);
-  assert.equal(a.boards[0][0].powerModifier, 3);
+  assert.equal(a.boards[0][0].powerModifier, 5);
   assert.equal(a.boards[0][1].powerModifier, 0);
 });
 test("Sideshow empties the lane and Kickback gathers both crews; locked cards stay", () => {
@@ -206,7 +208,7 @@ test("After Party ends exactly at seven, survives replay frames, and never stack
   m = end(m);
   assert.equal(m.phase, "complete");
 });
-test("Cookout serves two foods and a persistent plate with repeated Burn", () => {
+test("Cookout serves two foods and a single-use Burnt Plate", () => {
   let m = blank();
   m.boards = ([0, 1, 2] as Lane[]).map((l) => [
     unit("player", l, l),
@@ -230,9 +232,9 @@ test("Cookout serves two foods and a persistent plate with repeated Burn", () =>
   assert.equal(
     m.boards.flat().find((c) => c.instanceId === victim.instanceId)
       ?.powerModifier,
-    power - 2,
+    power - 1,
   );
-  assert(m.boards.flat().some((c) => c.instanceId === plate.instanceId));
+  assert(!m.boards.flat().some((c) => c.instanceId === plate.instanceId));
 });
 test("human PvP validates Dice Game and publishes only resolved public dice and round limit", () => {
   const member = (id: string) => ({

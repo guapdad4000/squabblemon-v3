@@ -906,7 +906,13 @@ test('later copy, cheap ally buffs, and enemy targeting handle summoned cards', 
       playerMotion: 9, cpuMotion: 9,
     }, owner, played.instanceId, 0);
     assert.doesNotThrow(() => renderBattle(match));
-    if (id === 'scammer') assert.equal(match.boards[0].find(c => c.cardId === id)?.ability, tokens[0].ability);
+    if (id === 'scammer') {
+      const copy = match.boards[0].find(c => c.cardId === id)!;
+      assert.equal(copy.ability, played.ability);
+      assert.equal(copy.copiedAbilityCardId, undefined);
+      assert.equal(copy.basePower, tokens[0].basePower);
+      assert.equal(copy.powerModifier, 1);
+    }
     if (id === 'gothkid') assert.equal(match.boards[0].filter(c => c.kind === 'token' && c.statuses.silenced).length, 1);
     if (id === 'failedrapper') { assert.ok(match.boards[0].filter(c => c.kind === 'token').every(c => c.powerModifier === 0)); assert.ok(match.creativeMarks?.some(x=>x.kind==='verse')); }
   }

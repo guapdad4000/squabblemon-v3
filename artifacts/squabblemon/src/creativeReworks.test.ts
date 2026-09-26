@@ -310,7 +310,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(blank(), "rent-a-cop", owner).after;
     const rider = cast(m, "bikelife", enemy);
     assert(!kinds(rider.after).includes("warning"));
-    assert((find(rider.after, rider.source)?.powerModifier ?? -99) <= -1);
+    assert.equal(find(rider.after, rider.source)?.powerModifier, 0); // warning -1, successful ride +1
     m = blank();
     const earth = unit("landlord", owner, 1);
     m.boards = [[], [earth], []];
@@ -485,7 +485,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "divorceddad", owner).after;
     assert.equal(find(m, guest)?.lane, 0);
     m = end(end(m));
-    assert.equal(find(m, guest)?.lane, 1);
+    assert.equal(find(m, guest)?.lane, 0);
     assert(!kinds(m).includes("visit"));
     m = blank();
     const regular = unit("cornball", owner, 0);
@@ -588,7 +588,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "oz", owner, 1).after;
     assert(m.creativeMarks?.find((x) => x.kind === "coach")?.ready);
     m = cast(m, "cornball", owner, 0).after;
-    assert.equal(find(m, trainee)?.powerModifier, 1);
+    assert.equal(find(m, trainee)?.powerModifier, 2);
     assert(!kinds(m).includes("coach"));
   });
   test(`${owner}: Bounty needs an actual kill by the owner, not merely leaving the board`, () => {

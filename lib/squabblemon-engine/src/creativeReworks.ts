@@ -10,6 +10,10 @@ import type {
 
 /** Stable collection/upgrade IDs; this registry replaces printed kits, never ownership. */
 export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
+  stylist: [
+    "Fresh Fit",
+    "On Reveal: Give your weakest other ally here +1 Hand and Protection. Its next successful move refreshes its Protection once. One fitting per target.",
+  ],
   "hair-stylist": [
     "Blowout",
     "On Reveal: Cleanse your weakest other ally here and give it +1 Hand. If cleansed, its next successful move grants another +1 Hand, once.",
@@ -53,7 +57,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   chessregular: [
     "Fork",
-    "On Reveal: Mark the strongest enemy in each of two different districts through next round. The next enemy character placement saves marks in that district; give each remaining marked enemy -2 Hands. One Fork per side.",
+    "On Reveal: Mark the strongest enemy in up to two different districts through next round. With one mark, wait for an enemy placement in another district to complete the Fork. The next enemy placement after completion saves that district; other marked enemies lose 2 Hands. One Fork per side.",
   ],
   dmvworker: [
     "Take a Number",
@@ -65,7 +69,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   stud: [
     "Hold You Down",
-    "On Reveal: Bond to your weakest other ally here. Once per match while together, intercept its next targeted hostile ability, then move the surviving pair to your weakest other district with two spaces. Protect your partner if both escape.",
+    "On Reveal: Bond to your weakest other ally here. Once while together, intercept its next targeted hostile ability, then try to move the surviving pair to your weakest other district with two spaces. Protect the surviving partner whether the escape succeeds or is blocked.",
   ],
   stonersr: [
     "Pass It Around",
@@ -97,15 +101,15 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   failedrapper: [
     "One More Verse",
-    "On Reveal: Leave a Verse here through next round. The next different friendly character played here gains +2 Hands after its entrance. One Verse per district per side.",
+    "On Reveal: Leave a Verse here through next round. The next different friendly character entering by play or movement gains +2 Hands. Played characters collect after their entrance. One Verse per district per side.",
   ],
   busker: [
     "Pass the Hat",
-    "Ongoing: Two different other allies moving here earn two Tips for +3 Hands to your weakest other ally here. At most one payout per round; the same character cannot tip twice toward one payout.",
+    "Ongoing: The first distinct other ally moving here gives your weakest other local ally +1 Hand; the second gives +2. At most one two-visitor payout per round. A visitor cannot tip twice toward a payout.",
   ],
   dancecaptain: [
     "Follow My Lead",
-    "Ongoing: Once per round, the first friendly dancer move sets a destination. The next different friendly dancer arriving there gains +2 Hands. Dancers: Break, Bboy, Dance Circle Captain.",
+    "Ongoing: Once per round, the first friendly dancer move sets a destination. The next different friendly character moving there gains +2 Hands. Dancers: Break, Bboy, Dance Circle Captain.",
   ],
   break: [
     "Floor Sweep",
@@ -125,7 +129,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   divorceddad: [
     "My Weekend",
-    "On Reveal: Bring your weakest movable ally costing 2 or less from another district here if there is room; Protect it. At the end of next round, try to return it to its original district. One visit per side.",
+    "On Reveal: Bring your weakest movable ally costing 2 or less from another district here if there is room; Protect it. Through next round, its first successful move back to its original district gains +1 Hand. It never returns automatically. One visit per side.",
   ],
   bblnice: [
     "Good Company",
@@ -133,7 +137,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   bbldemon: [
     "Problem Energy",
-    "On Reveal: Mark the strongest enemy district with Drama through next round. Their next character played there gets -2 Hands; if played elsewhere, BBL Demon gains +2 Hands. One Drama per side.",
+    "On Reveal: Mark the strongest enemy district with Drama until the next enemy character placement or match end. Played there: that character gets -2 Hands. Played elsewhere: BBL Demon gains +2 Hands. One Drama per side.",
   ],
   barber: [
     "Line Up",
@@ -141,11 +145,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   cornercoach: [
     "Run It Back",
-    "On Reveal: Coach your weakest eligible ally here through next round. After its entrance fails, later other friendly character placements retry it until one succeeds. At most one successful retry; copying, summoning, refunds, choices and reworked entrances are excluded.",
+    "On Reveal: Coach your weakest eligible ally here through next round. Later friendly placements retry its failed entrance until one succeeds. Coachable: Edgar, Nguyen, Man-Man, Transplant, Bodega Cat, Dog Walker, Sports Prodigy, Homeless YN, Dragonfly Jones, OG Uncle, Barber Bro, Night Shift Medic, Squabble House Worker — Female, The Feds. No other kits qualify.",
   ],
   midnightmayor: [
     "Keys to the City",
-    "On Reveal: Nominate your weakest other district through next round. The next friendly move there opens a one-use local 1-Motion character discount, minimum 1, and leaves a key: the next different friendly arrival there gets Protection. One nomination per side.",
+    "On Reveal: Nominate your weakest other district through next round. The next friendly move there grants that mover Protection and opens one local 1-Motion character discount, minimum 1. One nomination per side.",
   ],
   hater: [
     "Must Be Nice",
@@ -161,15 +165,15 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   "rent-a-cop": [
     "Mall Rules",
-    "On Reveal: Post a warning here through next round. The next enemy character that moves into or out of this district gets -2 Hands after moving. One warning per district per side.",
+    "On Reveal: Post a warning here through next round. The next enemy character played here or moving into or out of this district takes 1 damage. One warning per district per side.",
   ],
   "redneck-evil": [
     "Chain Reaction",
-    "On Reveal: Apply 2 Burn to the strongest enemy here and prime it through next round. Its next Burn damage splashes 2 damage to the weakest other enemy here. One primer per target; splash cannot repeat.",
+    "On Reveal: Apply 2 Burn to the strongest enemy here and prime it through next round. Its next Burn damage, or its earlier defeat by your side, splashes 2 damage to the weakest other enemy in its district. One primer per target; splash cannot repeat.",
   ],
   "nigerian-father": [
     "High Expectations",
-    "On Reveal: Tutor your weakest other ally here with 3 or fewer Hands for +1 Hand. If it gains another net +2 Hands by the end of next round, it gains Protection and +2 Hands. One goal per side.",
+    "On Reveal: Tutor your weakest untutored other ally here for +1 Hand. If it gains another net +2 Hands by the end of next round, it gains Protection and +2 Hands. One goal per side; each character can be tutored once per match.",
   ],
   "inmate-kingpin": [
     "Run the Yard",
@@ -185,7 +189,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   ahki: [
     "The Usual",
-    "On Reveal: Remember your weakest other ally here and give it +1 Hand. Its next return to this district gains +2 Hands, once.",
+    "On Reveal: Remember your weakest other ally here and give it +1 Hand. Its first departure from this district grants +1 Hand; its first later return grants another +1. Each reward once.",
   ],
   firstaid: [
     "Emergency Kit",
@@ -201,7 +205,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   icecream: [
     "Neighborhood Route",
-    "On Reveal: Leave a Treat here. Ongoing: The first time you visit each district, leave one Treat. The next other friendly character arriving there gains +2 Hands. One Treat per district per side; each district once per truck.",
+    "On Reveal: Give your weakest other ally here a +2-Hand Treat, or leave it for the next friendly arrival if alone. Ongoing: First visit to each other district leaves one +2 Treat for a later friendly arrival. One Treat per district per side; each district once per truck.",
   ],
   torta: [
     "Hold Our Ground",
@@ -475,6 +479,7 @@ function discount(
 }
 export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
   const labels: Record<string, string> = {
+    fitting: "next successful move refreshes Protection",
     key: "next different friendly arrival: Protection",
     crossing: "next move ignores Lock",
     watch: "this ward breaks: +2",
@@ -498,23 +503,23 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     family: "first damage provokes retaliation",
     loan: "borrowed Motion; repayment due",
     debt: "next round Motion repayment",
-    verse: "next different character played here: +2",
+    verse: "next different character entering here: +2",
     floor: "next enemy entering is Weakened",
     route: "next friendly placement follows the route",
-    visit: "return home at expiry if space allows",
+    visit: "first move back home before expiry: +1",
     company: "share first positive gain each round, up to 2",
     drama: "enemy plays here: -2; elsewhere: Demon +2",
     coach: "failed entrance can be retried once",
     nomination: "next friendly move here opens a local discount",
     claim: "divert next enemy refund, up to 1",
     appeal: "delay next harmful status",
-    warning: "next enemy move through here: -2",
-    primer: "next Burn damage splashes 2",
+    warning: "next enemy play here or move through: -1",
+    primer: "next Burn damage or friendly defeat splashes 2",
     goal: "reach the tutored goal: Protection and +2",
     stash: "three distinct Inmates: +2 each",
     paint: "next different friendly element entering: +2",
     receipt: "next cheap play: immediate discount; final round +2",
-    loyalty: "leave and return: +2",
+    loyalty: "first departure +1; first return +1",
     kit: "next enemy damage: prevent up to 2",
     welcome: "next Air arrival: +2",
     treat: "next other friendly arrival: +2",
@@ -669,7 +674,7 @@ export function creativeReveal(
         )
         .filter((c): c is CardInstance => !!c)
         .slice(0, 2);
-      if (targets.length === 2) put("fork", targets);
+      if (targets.length) put("fork", targets, l, { ready: targets.length === 2 });
       break;
     }
     case "dmvworker":
@@ -700,6 +705,13 @@ export function creativeReveal(
       );
       break;
     }
+    case "stylist":
+      if (a[0]) {
+        give(a[0], 1);
+        cover(a[0]);
+        put("fitting", [a[0]], l, { expires: 99 }, "target");
+      }
+      break;
     case "hair-stylist": {
       const target = a[0];
       if (target) {
@@ -834,7 +846,7 @@ export function creativeReveal(
           t.score(m, rival(s.owner), y) - t.score(m, rival(s.owner), x) ||
           x - y,
       )[0];
-      put("drama", [], lane);
+      put("drama", [], lane, { expires: 99 });
       break;
     }
     case "barber": {
@@ -895,8 +907,9 @@ export function creativeReveal(
       }
       break;
     case "nigerian-father": {
-      const target = a.find((c) => t.power(c) <= 3);
+      const target = a.find((c) => !c.creativeUsed?.tutored);
       if (target) {
+        m = once(m, target, "tutored", t);
         give(target, 1);
         put("goal", [target], l, {
           amount: t.power(card(m, target.instanceId)!) + 2,
@@ -971,7 +984,8 @@ export function creativeReveal(
           ...c,
           creativeVisits: [...new Set([...(c.creativeVisits ?? []), l])],
         }));
-        put("treat", [], l, { expires: 99 }, "lane");
+        if (a[0]) give(a[0], 2);
+        else put("treat", [], l, { expires: 99 }, "lane");
       }
       break;
     case "torta": {
@@ -1051,6 +1065,7 @@ function arrival(
       eligible &&
       ((x.kind === "chill" && !(x.seen ?? []).includes(entrant.instanceId)) ||
         x.kind === "treat" ||
+        (x.kind === "verse" && moved) ||
         (x.kind === "paint" && entrant.type !== x.source.type) ||
         (x.kind === "welcome" && entrant.type === "Air"))
     ) {
@@ -1082,13 +1097,12 @@ function arrival(
         m = t.status(m, x.source, current, "weakened", "Floor Sweep");
     } else if (
       !friendly &&
-      moved &&
       x.kind === "warning" &&
-      (here || origin === x.lane)
+      (here || (moved && origin === x.lane))
     ) {
       m = remove(m, x.id);
       const current = card(m, entrant.instanceId);
-      if (current) m = t.hit(m, x.source, current, -2, "Mall Rules");
+      if (current) m = t.hit(m, x.source, current, -1, "Mall Rules");
     } else if (
       friendly &&
       eligible &&
@@ -1113,7 +1127,7 @@ function arrival(
     } else if (friendly && moved && here && x.kind === "nomination") {
       m = remove(m, x.id);
       m = discount(m, x.source, x.lane);
-      m = mark(m, x.source, "key", [entrant.instanceId], x.lane, {}, "lane");
+      m = t.protect(m, x.source, entrant.instanceId);
     } else if (friendly && eligible && !moved && here && x.kind === "route") {
       m = remove(m, x.id);
       const current = card(m, entrant.instanceId);
@@ -1195,6 +1209,8 @@ export function creativeMoved(
       x.targets.includes(id) &&
       [
         "ink",
+        "fitting",
+        "visit",
         "cycle",
         "boarding",
         "loyalty",
@@ -1206,10 +1222,18 @@ export function creativeMoved(
       ].includes(x.kind)
     ) {
       if (x.kind === "loyalty") {
-        if (current.lane !== x.lane) m = update(m, x.id, { ready: true });
-        else if (x.ready) {
+        if (current.lane !== x.lane && !x.ready) {
+          m = update(m, x.id, { ready: true });
+          m = buff(m, id, 1, t);
+        }
+        else if (x.ready && current.lane === x.lane) {
           m = remove(m, x.id);
-          m = buff(m, id, 2, t);
+          m = buff(m, id, 1, t);
+        }
+      } else if (x.kind === "visit") {
+        if (current.lane === x.origin) {
+          m = remove(m, x.id);
+          m = buff(m, id, 1, t);
         }
       } else if (x.kind === "duel") {
         if (active(card(m, x.source.instanceId))) {
@@ -1221,7 +1245,7 @@ export function creativeMoved(
         if (x.kind === "pending-appeal")
           m = discount(m, x.source, current.lane!);
         if (x.kind === "ink" || x.kind === "blowout") m = buff(m, id, 1, t);
-        if (x.kind === "ink" || x.kind === "boarding")
+        if (x.kind === "ink" || x.kind === "boarding" || x.kind === "fitting")
           m = t.protect(m, x.source, id);
         if (x.kind === "boarding") m = buff(m, id, 2, t);
         if (x.kind === "cycle") m = t.cleanse(m, id);
@@ -1274,16 +1298,13 @@ export function creativeMoved(
         creativeTipIds: tips >= 2 ? [] : [...(c.creativeTipIds ?? []), id],
         creativeCount: tips % 2,
       }));
-      if (tips >= 2) {
-        const target = sorted(allies(m, watcher), t)[0];
-        if (target) m = buff(m, target.instanceId, 3, t);
-      }
+      const target = sorted(allies(m, watcher), t)[0];
+      if (target) m = buff(m, target.instanceId, tips >= 2 ? 2 : 1, t);
     }
     if (
-      identity(watcher) === "dancecaptain" &&
-      ["break", "bboy", "dancecaptain"].includes(current.cardId)
+      identity(watcher) === "dancecaptain"
     ) {
-      if (watcher.creativeRound !== m.round)
+      if (watcher.creativeRound !== m.round && ["break", "bboy", "dancecaptain"].includes(identity(current)))
         m = t.modify(m, watcher.instanceId, (c) => ({
           ...c,
           creativeRound: m.round,
@@ -1292,6 +1313,7 @@ export function creativeMoved(
           creativeCount: 0,
         }));
       else if (
+        watcher.creativeRound === m.round &&
         watcher.creativeTarget !== id &&
         watcher.creativeLane === current.lane &&
         watcher.creativeCount !== 1
@@ -1382,6 +1404,10 @@ const COACH_SAFE = new Set([
   "homelessyn",
   "dragonflyjones",
   "og",
+  "barber",
+  "nightmedic",
+  "squabbleserver",
+  "thefeds",
 ]);
 export function creativeAfterPlay(
   before: Match,
@@ -1404,6 +1430,15 @@ export function creativeAfterPlay(
       friendly = x.owner === entrant.owner,
       here = x.lane === entrant.lane;
     if (!friendly && ["fork", "drama"].includes(x.kind)) {
+      if (x.kind === "fork" && !x.ready) {
+        const first = card(m, x.targets[0]);
+        if (first && entrant.lane !== first.lane) {
+          const second = sorted(board(m).filter(c => c.owner === entrant.owner && c.lane === entrant.lane), t, true)[0];
+          if (second) m = update(m, x.id, { targets: [first.instanceId, second.instanceId], ready: true });
+        }
+        if (m !== start) m = t.event(start, m, x.source, [id], "Fork: second district marked; waiting for the next enemy placement.");
+        continue;
+      }
       m = remove(m, x.id);
       if (x.kind === "fork")
         for (const targetId of x.targets) {
@@ -1641,7 +1676,7 @@ export function creativeDamage(
       if (attacker) m = t.hit(m, live!, attacker, -2, "Mama Bear");
       if (!surviving) m = buff(m, live!.instanceId, 2, t);
     }
-    if (x.kind === "primer" && targeted && burn) {
+    if (x.kind === "primer" && targeted && (burn || (!surviving && x.owner === source.owner))) {
       m = remove(m, x.id);
       const target = sorted(
         board(m).filter(
@@ -1778,16 +1813,12 @@ export function creativeFinishIntercept(
   m = remove(m, x.id);
   const self = card(m, stud.instanceId),
     ally = card(m, x.targets[0]);
-  if (self && ally) {
-    const to = open(m, self, t, 2).find((l) => t.canMove(m, ally, l));
-    if (to !== undefined) {
+  if (ally) {
+    const to = self ? open(m, self, t, 2).find((l) => t.canMove(m, ally, l)) : undefined;
+    if (to !== undefined && self) {
       m = t.movePair(m, self, ally, to, "Hold You Down");
-      if (
-        card(m, self.instanceId)?.lane === to &&
-        card(m, ally.instanceId)?.lane === to
-      )
-        m = t.protect(m, self, ally.instanceId);
     }
+    if (card(m, ally.instanceId)) m = t.protect(m, stud, ally.instanceId);
   }
   return t.event(
     start,
@@ -1959,12 +1990,7 @@ export function creativeRoundEnd(m: Match, t: CreativeTools): Match {
       }
       if (x.kind === "visit") {
         m = remove(m, x.id);
-        if (
-          target &&
-          x.origin !== undefined &&
-          open(m, target, t).includes(x.origin)
-        )
-          m = t.move(m, target, x.origin, "My Weekend: return home");
+        // The visit expires without moving its guest; homecoming is player-directed.
       }
       if (x.kind === "anchor") {
         m = remove(m, x.id);
