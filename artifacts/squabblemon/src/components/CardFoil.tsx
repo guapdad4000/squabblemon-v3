@@ -21,7 +21,7 @@ export function CardFoil({ tier, variant }: { tier: number; variant?: CardVarian
       element.dataset.foilRenderer = 'css';
       if (next) return;
       // Version the public module independently of the application chunks / service worker.
-      const url = new URL(getAssetUrl('scenes/cards/foil.js?v=atelier-2'), window.location.href).href;
+      const url = new URL(getAssetUrl('scenes/cards/foil.js?v=prism-silhouette-3'), window.location.href).href;
       import(/* @vite-ignore */ url).then(module => {
         if (!disposed && current === generation) cleanup = module.mountFoil(element, tier, variant);
       }).catch((error: unknown) => {

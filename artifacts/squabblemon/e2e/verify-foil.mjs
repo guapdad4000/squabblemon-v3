@@ -24,6 +24,12 @@ try{
  }
  pass('All seven tiers render; collection cards allocate no WebGL contexts.');
  await page.getByRole('button',{name:'Show Legendary',exact:true}).click();
+ const blockbusters=page.locator('[aria-label="Blockbuster full art"] .collector-portrait');
+ assert.ok(await blockbusters.count()>0);
+ for(const art of await blockbusters.all()) {
+  assert.ok(await art.evaluate(el=>{const s=getComputedStyle(el);return s.objectFit==='contain' && s.transform==='none' && Math.abs(el.clientHeight-el.parentElement.clientHeight)<2;}));
+ }
+ pass('Blockbuster illustrations occupy the entire card height without cropping or hover scaling.');
  const finishes=[];
  for(const edition of ['base','tagged','chrome','prismatic']){
   await page.getByRole('button',{name:edition,exact:true}).click();
@@ -42,8 +48,9 @@ try{
  const prism=page.locator('.foil-stage__portrait .collector-card');
  assert.equal(await prism.getAttribute('data-card-variant'),'prismatic');
  assert.equal(await prism.getAttribute('data-card-finish'),'Ultimate prism reverse holo');
- assert.notEqual(await prism.locator('.card-variant-sheen').evaluate(el=>getComputedStyle(el).maskImage),'none');
- pass('Base, Tagged, Chrome and Prismatic Reverse Holo have distinct finishes; the prism treatment uses a reverse mask and responsive rendered reflections.');
+ assert.equal(await prism.locator('.collector-foil').evaluate(el=>getComputedStyle(el).maskImage),'none');
+ assert.ok(await prism.evaluate(el=>Number(getComputedStyle(el.querySelector('.collector-foil')).zIndex)<Number(getComputedStyle(el.querySelector('.collector-portrait')).zIndex)));
+ pass('Base, Tagged, Chrome and Prismatic Reverse Holo have distinct finishes; the prism treatment sits behind the artwork silhouette and responsive rendered reflections.');
  const hero=page.locator('.foil-stage__portrait .collector-card');await hero.focus();await page.keyboard.press('ArrowLeft');assert.ok(await hero.evaluate(el=>el.style.getPropertyValue('--foil-x')));pass('Keyboard users can move the display light.');
  await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>!document.querySelector('.collector-webgl canvas'));assert.equal(await hero.locator('.collector-foil').evaluate(el=>getComputedStyle(el).display),'block');
  await page.emulateMedia({reducedMotion:'no-preference'});await page.locator('.collector-webgl[data-foil-renderer=webgl] canvas').waitFor();
