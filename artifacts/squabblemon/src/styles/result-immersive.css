@@ -168,3 +168,27 @@ html[data-reduce-motion=true] .result-immersive__rain { display:none; }
 @keyframes result-rain-splash { 0%,65%,100% { opacity:0; transform:translate(0,0) scale(.4); } 68% { opacity:.75; transform:translate(0,0) scale(1); } 78% { opacity:.55; transform:translate(var(--splash-drift),-12px) rotate(35deg) scale(.8); } 90% { opacity:0; transform:translate(var(--splash-drift),2px) rotate(65deg) scale(.3); } }
 @media(prefers-reduced-motion:reduce) { .result-immersive__splashes { display:none; } }
 html[data-reduce-motion=true] .result-immersive__splashes { display:none; }
+
+/* Atmospheric impacts around Fade; separate from the UI-attached splashes. */
+.result-immersive__fade-rain { position:absolute; inset:0; z-index:-1; pointer-events:none; }
+.result-immersive__fade-rain i { position:absolute; left:19%; top:39%; width:1px; height:1px; }
+.result-immersive__fade-rain i:nth-child(2) { left:30%; top:41%; }
+.result-immersive__fade-rain i:nth-child(3) { left:25%; top:28%; }
+.result-immersive__fade-rain i:nth-child(4) { left:15%; top:84%; }
+.result-immersive__fade-rain i:nth-child(5) { left:31%; top:88%; }
+.result-immersive__fade-rain i:nth-child(6) { left:24%; top:91%; }
+.result-immersive__fade-rain--2 i:first-child { left:20%; top:28%; }
+.result-immersive__fade-rain--2 i:nth-child(2) { left:28%; top:30%; }
+.result-immersive__fade-rain--2 i:nth-child(3) { left:24%; top:19%; }
+.result-immersive__fade-rain i::before,.result-immersive__fade-rain i::after { content:''; position:absolute; width:2px; height:6px; background:#c4d7e2; opacity:0; border-radius:50%; --splash-drift:-8px; animation:result-rain-splash var(--splash-duration) var(--splash-delay) linear infinite; }
+.result-immersive__fade-rain i::after { --splash-drift:8px; height:4px; }
+@media(max-aspect-ratio:1/1) {
+ .result-immersive__fade-rain i:first-child { left:35%; top:21%; }
+ .result-immersive__fade-rain i:nth-child(2) { left:61%; top:23%; }
+ .result-immersive__fade-rain i:nth-child(3) { left:48%; top:15%; }
+ .result-immersive__fade-rain i:nth-child(4) { left:31%; top:39%; }
+ .result-immersive__fade-rain i:nth-child(5) { left:62%; top:41%; }
+ .result-immersive__fade-rain i:nth-child(6) { left:47%; top:43%; }
+}
+@media(prefers-reduced-motion:reduce) { .result-immersive__fade-rain { display:none; } }
+html[data-reduce-motion=true] .result-immersive__fade-rain { display:none; }
