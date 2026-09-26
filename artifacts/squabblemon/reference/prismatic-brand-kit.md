@@ -4,15 +4,18 @@ The supplied gold wordmark is the primary logo. The gold impact lockup is the en
 
 ## Contents
 
-- `logos/`: primary gold wordmark, gold impact lockup, rainbow wordmark.
-- `marks/`: gold/rainbow SM and impact emblems; black and distressed white impact marks.
-- `vectors/`: distinct white, black, near-black and two-tone source vectors. Black artwork is intentional, not an empty export.
+- `logos/`: primary gold wordmark, gold impact lockup, rainbow wordmark, solid monochrome wordmarks, and wide impact lockups in black, white and white outline.
+- `marks/`: gold/rainbow SM and impact emblems; black and distressed white impact marks; solid black SM and outlined black impact variants.
+- `vectors/`: distinct white, black, near-black and two-tone source vectors, including the wide impact lockup in black and white. Black artwork is intentional, not an empty export.
+- `sheets/`: the supplied black brand sheet showing the wordmark, lockup, SM and impact emblem together.
 - `materials/`: gold and rainbow shard foil. These are opaque material tiles, not cutouts.
 - `frames/`: transparent generated nine-slice border, background-extracted rail, four corner caps and four edge strips.
-- `manifest.json`: all 36 upload names, checksums, canonical outputs, and the two exact duplicate relationships. 34 unique source masters are retained in the local brand kit.
-- `catalog.html`: portable catalog with light/dark transparency preview and flexible frame demonstrations.
+- `manifest.json`: all 48 upload names, checksums, canonical outputs, and the three exact duplicate relationships. 45 unique source masters are retained in the local brand kit.
+- `catalog.html`: portable catalog with light/dark transparency preview and flexible frame demonstrations. Black marks start on light swatches so they are visible immediately.
 
 The original artwork is preserved. Production WebP exports crop low-alpha canvas dust with an 8px safety gutter, retaining all meaningful spikes and art edges. Original high-resolution PNG/SVG sources live in `Downloads/Squabblemon Brand Kit/masters/`. Nothing was discarded merely because its filename or silhouette looked similar.
+
+The second batch adds 11 unique masters from 12 supplied files. `8e9111dc-4420-4aef-817e-1ae2a7c46e5c.png` is byte-identical to `image-gen-3(20260926-053602).png`; both names resolve to the retained solid black wordmark through the manifest. The SVGs remain native vectors, and the high-resolution PNG originals remain at their supplied resolution. The wide lockups and solid wordmarks are additional treatments; the primary gold logo is unchanged.
 
 ## Reuse
 

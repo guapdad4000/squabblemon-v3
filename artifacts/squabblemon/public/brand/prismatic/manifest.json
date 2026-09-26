@@ -216,6 +216,77 @@
       "exported": "vectors/monogram-two-tone.svg"
     },
     {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (1).svg",
+      "sha256": "1684adaf07d5ab16be897ab438737293f470dc7299d7189ae0e9d6ed9b032467",
+      "master": "masters/vectors/lockup-wide-black.svg",
+      "exported": "vectors/lockup-wide-black.svg"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75.svg",
+      "sha256": "b7d40d5b401e0b0d8942b310b3fdb165f3ab94a263a26ea64201dea4136aea7c",
+      "master": "masters/vectors/lockup-wide-white.svg",
+      "exported": "vectors/lockup-wide-white.svg"
+    },
+    {
+      "original": "bd8a8bfe-4169-494f-899c-ed07e37ed06e.png",
+      "sha256": "680fd6647b375e00441e7b1f344a4bcbf7906ae4a4560d4f5e954b18c0c6cec7",
+      "master": "masters/logos/squabblemon-lockup-wide-outline-white.png",
+      "exported": "logos/squabblemon-lockup-wide-outline-white.webp"
+    },
+    {
+      "original": "a3304380-49dd-4e8c-aaa9-b3b75e8c0074 (2).png",
+      "sha256": "79da9b858f1b29fa879302607fa02d44df66df78d22b126c03a193c25ae6851e",
+      "master": "masters/logos/squabblemon-wordmark-solid-white.png",
+      "exported": "logos/squabblemon-wordmark-solid-white.webp"
+    },
+    {
+      "original": "image-gen-3(20260926-053602).png",
+      "sha256": "e32f538035fcc40e677effcab041fcfdaf5c27190ee5e2ee6bfc4c3423d51686",
+      "master": "masters/logos/squabblemon-wordmark-solid-black.png",
+      "exported": "logos/squabblemon-wordmark-solid-black.webp"
+    },
+    {
+      "original": "ChatGPT Image Sep 25, 2026, 10_44_49 PM.png",
+      "sha256": "3289fa212750e02ef558bac1a7871dee0ab6cd4cd66ee05b1e1f5570f98c573c",
+      "master": "masters/sheets/squabblemon-black-brand-sheet.png",
+      "exported": "sheets/squabblemon-black-brand-sheet.webp"
+    },
+    {
+      "original": "e792598c-53ec-4378-bf49-ce2efde5b2f2.png",
+      "sha256": "5ad83b057279d61ca3537294f0f3856dd09a93724ca6c7df03b70f4bc754b01c",
+      "master": "masters/marks/impact-black-outline.png",
+      "exported": "marks/impact-black-outline.webp"
+    },
+    {
+      "original": "8e9111dc-4420-4aef-817e-1ae2a7c46e5c.png",
+      "sha256": "e32f538035fcc40e677effcab041fcfdaf5c27190ee5e2ee6bfc4c3423d51686",
+      "duplicateOf": "image-gen-3(20260926-053602).png"
+    },
+    {
+      "original": "sm.png",
+      "sha256": "3dfb520fe94263f9eaeee76a35b4a8831bd597b7d08626898a92406bc744513e",
+      "master": "masters/marks/monogram-black-solid.png",
+      "exported": "marks/monogram-black-solid.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (2).png",
+      "sha256": "404d5b582aafe81a9a94f3a581c593c37e5be2330e5bc9f8f839cf49c95e161d",
+      "master": "masters/logos/squabblemon-lockup-wide-black.png",
+      "exported": "logos/squabblemon-lockup-wide-black.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75 (1).png",
+      "sha256": "31483f5b82d6c8f6b1e3751d73cb005084f6ed7faa95c3a427a5926fc104f96d",
+      "master": "masters/logos/squabblemon-lockup-wide-white.png",
+      "exported": "logos/squabblemon-lockup-wide-white.webp"
+    },
+    {
+      "original": "494bd52e-3dc8-4c8c-92e0-1343be575a75.png",
+      "sha256": "ad1f95818f03963e7e2547573a49eeed51be4b06cc066ff895ec2ae93ee0cc88",
+      "master": "masters/source/lockup-wide-white-original.png",
+      "exported": null
+    },
+    {
       "generatedBy": "built-in imagegen",
       "master": "generated/frames/prism-gold-nine-slice.png",
       "exported": "frames/prism-gold-nine-slice.webp"
