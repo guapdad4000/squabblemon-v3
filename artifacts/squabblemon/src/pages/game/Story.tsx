@@ -77,14 +77,16 @@ function sceneEntries(node: StoryNode): SceneEntry[] {
 }
 
 function rewardLabel(reward: StoryReward | StoryGrantedReward) {
-  if (reward.kind === 'card') return `${cards[reward.id]?.name ?? reward.id} card · duplicate: ${'duplicateShards' in reward && reward.duplicateShards ? reward.duplicateShards : STORY_DUPLICATE_STYLE_SHARDS} Style Shards`;
+  if (reward.kind === 'card') return 'duplicateShards' in reward
+    ? reward.duplicateShards ? `${cards[reward.id]?.name ?? reward.id} duplicate · +${reward.duplicateShards} Style Shards` : `${cards[reward.id]?.name ?? reward.id} card added`
+    : `${cards[reward.id]?.name ?? reward.id} card · duplicates become ${STORY_DUPLICATE_STYLE_SHARDS} Style Shards`;
   if (reward.kind === 'chapter-key') return 'Next chapter key';
   if (reward.kind === 'pack-ticket')
     return reward.amount === 10
       ? '10× Street Pack Tickets · One upgraded ten-pull'
       : `${reward.amount}x Pack Ticket${reward.amount === 1 ? '' : 's'}`;
   if (reward.kind === 'cosmetic') return `Cosmetic: ${reward.id}`;
-  if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} unlocked`;
+  if (reward.kind === 'character-unlock') return `${STORY_CHARACTERS.find((character) => character.id === reward.id)?.name ?? reward.id} story character unlocked`;
   return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Account XP`;
 }
 
@@ -362,6 +364,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             role="dialog"
             aria-label="Chapter ticket rewards"
           >
+            <div className="story-atlas__rewards-art" style={{ backgroundImage: `linear-gradient(0deg, #080b10, #080b1020), url("${getAssetUrl(chapterContent.mapAssetId)}")` }} aria-hidden="true" />
             <div className="story-atlas__rewards-panel__head">
               <span className="story-atlas__rewards-panel__title">
                 <Ticket size={14} />
@@ -378,6 +381,15 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               </button>
             </div>
             <div className="story-atlas__rewards-panel__body">
+              <p className="story-reward-explainer">Battle rewards are saved after a verified win. Perfect clears add a ticket. Finish the reward scenes below to collect their separate rewards.</p>
+              {chapterContent.nodes.filter(node => node.kind !== 'battle' && node.rewards.length > 0).map(node => {
+                const progress = campaign.nodes.find(item => item.nodeId === node.id);
+                return <button key={node.id} className="story-reward-stop" disabled={progress?.status === 'locked'} onClick={() => { setLocation(`/game/story?node=${encodeURIComponent(node.id)}`); setRewardsOpen(false); }}>
+                  <span>{progress?.cleared ? 'Collected' : progress?.status === 'locked' ? 'Locked' : 'Finish scene to collect'}</span>
+                  <strong>{node.title}</strong><small>{node.rewards.map(rewardLabel).join(' · ')}</small>
+                </button>;
+              })}
+
               <ChapterTicketProgress
                 chapter={chapterContent}
                 nodeProgressById={Object.fromEntries(
@@ -435,6 +447,7 @@ export function NodeOverlay({
   const [showHistory, setShowHistory] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [grantedRewards, setGrantedRewards] = useState<StoryGrantedReward[]>([]);
+  const [deliveryStatus, setDeliveryStatus] = useState<string | null>(null);
   const [replayIndex, setReplayIndex] = useState<number | null>(null);
 
   const entries = useMemo(() => (storyNode ? sceneEntries(storyNode) : []), [storyNode]);
@@ -447,6 +460,8 @@ export function NodeOverlay({
   }, [entries, nodeProgress?.cleared, seen, storyNode]);
   const history = entries.filter((entry) => seen.has(entry.token));
   const replayEntries = entries.filter((entry) => entry.section !== 'post' || nodeProgress?.cleared);
+  const rewardChapter = getStoryChapter(nodeProgress?.chapterId ?? '');
+  const rewardArt = rewardChapter ? { chapterTitle: rewardChapter.title, backgroundAssetId: rewardChapter.mapAssetId, portraitAssetId: storyNode?.kind === 'battle' ? storyNode.postDialogue.at(-1)?.portraitAssetId : storyNode?.scenes.at(-1)?.portraitAssetId } : undefined;
   const isBattle = storyNode?.kind === 'battle';
   const hasPuzzle = !!storyNode?.puzzle;
   const isCleared = nodeProgress?.cleared;
@@ -482,6 +497,25 @@ export function NodeOverlay({
     if (bootstrap) queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), bootstrap);
   };
 
+  const recoverSceneRewards = async () => {
+    if (actionLock.current || isBattle || hasPuzzle) return;
+    actionLock.current = true;
+    setActionError(null);
+    try {
+      const result = await completeNode.mutateAsync({ nodeId, data: {
+        idempotencyKey: crypto.randomUUID(), dialogueSeen: entries.map(entry => entry.token),
+      } });
+      applyCampaign(result.campaign, result.bootstrap);
+      setGrantedRewards(result.rewards);
+      setDeliveryStatus(result.rewards.length ? 'Rewards saved to your account.' : 'These rewards were already saved to your account.');
+      rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: storyNode.title, story: rewardArt,
+        items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const })) });
+      setScreen('completed');
+    } catch {
+      setActionError('Rewards could not be saved. Try again; the same reward cannot be granted twice.');
+    } finally { actionLock.current = false; }
+  };
+
   const advanceDialogue = async (skipRemaining: boolean) => {
     if (actionLock.current) return;
     const current = pendingEntries[0];
@@ -500,7 +534,7 @@ export function NodeOverlay({
         });
         applyCampaign(result.campaign, result.bootstrap);
         setGrantedRewards(result.rewards);
-        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: storyNode.title, story: rewardArt, items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
         setScreen('completed');
         return;
       }
@@ -582,7 +616,7 @@ export function NodeOverlay({
           onCompleted={(result) => {
             applyCampaign(result.campaign, result.bootstrap);
             setGrantedRewards(result.rewards);
-            rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(r => r.id).join(',')}`, title: 'Story rewards', items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+            rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(r => r.id).join(',')}`, title: storyNode.title, story: rewardArt, items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
             setScreen('completed');
           }}
           onClose={onClose}
@@ -590,7 +624,7 @@ export function NodeOverlay({
       )}
 
       {replayIndex === null && screen === 'completed' && !isBattle && (
-        <div className="grid h-full place-items-center overflow-y-auto p-6 text-center">
+        <div className="story-reward-completion grid h-full place-items-center overflow-y-auto p-6 text-center" style={{ backgroundImage: `linear-gradient(0deg, #080b10f5, #080b1080), url("${getAssetUrl(rewardArt?.backgroundAssetId ?? storyNode.cinematic.environmentAssetId)}")` }}>
           <div className="max-w-md">
             <img
               src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')}
@@ -609,13 +643,16 @@ export function NodeOverlay({
             {!!storyNode.rewards.length && (
               <div className="mt-5 border border-primary/25 bg-primary/5 p-4 text-left">
                 <div className="font-mono text-[8px] uppercase tracking-widest text-primary">
-                  {grantedRewards.length ? 'Added to collection' : 'Node rewards'}
+                  {grantedRewards.length ? 'Rewards received' : isCleared ? 'Scene cleared · first-clear rewards' : 'Not collected yet'}
                 </div>
                 {(grantedRewards.length ? grantedRewards : storyNode.rewards).map((reward, index) => (
                   <div key={`${reward.id}-${index}`} className="mt-2 text-sm text-white/75">{rewardLabel(reward)}</div>
                 ))}
               </div>
             )}
+            {actionError && <p role="alert" className="mt-4 text-red-200">{actionError}</p>}
+            {deliveryStatus && <p role="status" className="mt-4 text-primary">{deliveryStatus}</p>}
+            {!hasPuzzle && <button type="button" disabled={pending} onClick={() => void recoverSceneRewards()} className="mt-5 min-h-12 bg-primary px-7 py-3 font-display font-black uppercase text-black">{pending ? 'Checking rewards…' : isCleared ? 'Check reward delivery' : 'Collect story rewards'}</button>}
             <div className="mt-6 flex justify-center gap-2 story-briefing__history">
               {historyButton}
               <button type="button" onClick={onClose} className="bg-primary px-7 py-3 font-display font-black italic uppercase text-black">

@@ -702,3 +702,5 @@
   .story-atlas__ornament--reel-tr,
   .story-atlas__ornament--reel-br { animation: none !important; }
 }
+
+.story-atlas__rewards-art{height:150px;flex-shrink:0;background-size:cover;background-position:center 40%;border-bottom:1px solid #d6b06b55}.story-reward-explainer{font-size:12px;line-height:1.6;color:#d4cec2;margin:0 0 14px}.story-reward-stop{display:grid;width:100%;gap:5px;text-align:left;padding:14px;margin-bottom:10px;background:#111b26;border:1px solid #c5a36c55;color:#faf0dc}.story-reward-stop span{font:700 10px monospace;text-transform:uppercase;letter-spacing:.1em;color:#ebc777}.story-reward-stop strong{font-size:17px}.story-reward-stop small{line-height:1.6;color:#d5d9df}.story-reward-stop:disabled{opacity:.5;cursor:not-allowed}

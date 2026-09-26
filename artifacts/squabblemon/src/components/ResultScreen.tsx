@@ -131,6 +131,7 @@ export function ResultScreen({
                   className="studio-action studio-action--gold"
                   data-testid="button-restart-match"
                   onClick={onRestart}
+                  disabled={rewardPending || !!rewardError || !reward}
                 >
                   Retry Encounter
                   <RotateCcw size={15} />
@@ -139,6 +140,7 @@ export function ResultScreen({
               <button
                 className={`studio-action ${storyMetadata?.outcome === 'win' ? 'studio-action--gold' : ''}`}
                 onClick={onGoHome}
+                disabled={rewardPending || !!rewardError || !reward}
               >
                 Continue Chapter
                 <ArrowRight size={15} />
@@ -200,6 +202,7 @@ export function ResultScreen({
         <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
           reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
           storyStars={isStory && storyMetadata ? earnedStars : undefined}
+          storyBackground={isStory ? m.storyEncounter?.cinematic?.environmentAssetId ?? m.storyEncounter?.battlefieldAssetId : undefined}
           actions={actions} heading={<header className="result-stage__heading">
           <span className="studio-eyebrow">
             {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
@@ -211,7 +214,8 @@ export function ResultScreen({
           </h2>
         </header>}>
 
-        {challenge && rewardError && retry}
+        {(challenge || isStory) && rewardError && retry}
+        {isStory && !rewardError && (rewardPending || !reward) && <p className="studio-notice" role="status">Saving your story progress and rewards…</p>}
         <details className="result-stage__receipt-drawer">
           <summary>Match Details & Breakdown</summary>
           <div className="result-stage__receipt">
@@ -243,7 +247,7 @@ export function ResultScreen({
                 </details>
               </>
             ) : rewardError ? (
-              challenge ? null : retry
+              null
             ) : (
               <p className="studio-notice" role="status">
                 Saving chapter outcome…

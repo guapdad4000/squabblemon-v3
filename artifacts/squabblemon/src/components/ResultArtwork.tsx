@@ -10,11 +10,11 @@ import { Star } from 'lucide-react';
 
 type DistrictResult = { player: number; cpu: number; winner: string };
 /** Scene art and live result panels scale independently across viewport shapes. */
-export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending, storyStars, actions, heading, children, onRegroup, onTrain, onRebuild }: {
+export function ResultArtwork({ victory, draw, results, districts, reward, isGuest, rewardError, rewardPending, storyStars, storyBackground, actions, heading, children, onRegroup, onTrain, onRebuild }: {
   actions?: ReactNode; heading?: ReactNode; children?: ReactNode; onRegroup?: () => void; onTrain?: () => void; onRebuild?: () => void;
   victory: boolean; draw: boolean; results: DistrictResult[]; districts: { name: string }[];
   reward?: MatchReward; isGuest?: boolean; rewardError?: unknown; rewardPending?: boolean;
-  storyStars?: number;
+  storyStars?: number; storyBackground?: string;
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
   const [scene, setScene] = useState(false);
@@ -26,14 +26,14 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
   const stateLabel = isGuest ? 'Offline training · no saved rewards' : rewardError ? 'Rewards not saved · retry below' : rewardPending || !reward ? 'Saving battle earnings…' : 'Battle earnings';
   return <section className={`result-immersive result-immersive--${outcome}`} data-result-outcome={outcome} style={{ "--result-panel": `url("${asset("v3/panel")}")` } as CSSProperties} aria-label={`${draw ? 'Tied' : victory ? 'Winning' : 'Losing'} battle outcome artwork`}>
     <picture className="result-immersive__background">
-      <source media="(max-aspect-ratio: 1/1)" srcSet={asset(`${background}-portrait`)} />
-      <img draggable={false} src={asset(`${background}-wide`)} alt="" fetchPriority="high" />
+      <source media="(max-aspect-ratio: 1/1)" srcSet={storyBackground ? getAssetUrl(storyBackground) : asset(`${background}-portrait`)} />
+      <img draggable={false} src={storyBackground ? getAssetUrl(storyBackground) : asset(`${background}-wide`)} alt="" fetchPriority="high" />
     </picture>
     <div className="result-immersive__particles" aria-hidden="true">{victory && !reduced && Array.from({length: 22}, (_, i) => <i key={i} style={{'--x': `${(i * 37 + 7) % 100}%`, '--delay': `${-i * .7}s`, '--duration': `${7 + i % 5}s`, '--spin': `${i * 31}deg`} as CSSProperties} />)}</div>
     {!victory && !draw && !reduced && <div className="result-immersive__rain" aria-hidden="true">{Array.from({length: 48}, (_, i) => <i key={i} style={{ '--x': `${(i * 37 + 3) % 100}%`, '--delay': `${-i * .17}s`, '--duration': `${.8 + (i % 7) * .12}s` } as CSSProperties} />)}</div>}
-    {!victory && !draw && !reduced && <div className={`result-immersive__fade-rain result-immersive__fade-rain--${variant}`} aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i key={i} style={{ '--splash-delay': `${-i * .41}s`, '--splash-duration': `${1.6 + i % 3 * .3}s` } as CSSProperties} />)}</div>}
+    {!victory && !draw && !reduced && !storyBackground && <div className={`result-immersive__fade-rain result-immersive__fade-rain--${variant}`} aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i key={i} style={{ '--splash-delay': `${-i * .41}s`, '--splash-duration': `${1.6 + i % 3 * .3}s` } as CSSProperties} />)}</div>}
     <img className="result-immersive__brand" src={asset('v3/wordmark')} alt="Squabblemon" />
-    {!draw && <button className="result-immersive__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>Scene {variant} / 2 <span aria-hidden="true">↔</span></button>}
+    {!draw && !storyBackground && <button className="result-immersive__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>Scene {variant} / 2 <span aria-hidden="true">↔</span></button>}
     <div key={`${outcome}-${variant}`} className={`result-immersive__results ${!reduced && !draw ? 'result-immersive__results--slam' : ''}`}>
       <div className="result-immersive__title">
         {!draw && <img draggable={false} className="result-immersive__mark" src={getAssetUrl(`assets/results/${victory ? 'win-w' : 'loss-l'}.gif`)} alt={victory ? 'Victory' : 'Defeat'} />}

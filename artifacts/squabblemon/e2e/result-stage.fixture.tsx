@@ -11,7 +11,7 @@ import '../src/index.css';
 import '../src/styles/multiplayer.css';
 function Fixture(){
  const state=new URLSearchParams(location.search).get('state') ?? 'win';
- const [error,setError]=useState(state==='error');
+ const [error,setError]=useState(state==='error'||state==='story-error');
  const [reviewBoard,setReviewBoard]=useState(false);
  const match:Match={...createMatch('block','slide'),phase:'complete',round:6};
  const isDraw=state==='draw'||state==='story-draw';
@@ -23,7 +23,7 @@ function Fixture(){
  return <div data-testid="transformed-result-parent" style={{height:'100dvh',transform:'translateZ(0)',overflow:'auto'}}>
    <div data-testid="final-board" style={{height:'180dvh',paddingTop:'70dvh',background:'linear-gradient(#17221d,#493b27)',color:'white',textAlign:'center'}}>Final board inspection</div>
    {reviewBoard && createPortal(<button className="result-stage__return" onClick={()=>setReviewBoard(false)}>View result</button>,document.body)}
-   {!reviewBoard && <ResultScreen match={match} districts={districts} reward={error || state==='pending'?undefined:reward} rewardError={error?'Offline':null} onRetryReward={()=>setError(false)} rewardPending={state==='pending'} isGuest={state==='guest'} equippedVariants={{cornball:'cornball:chrome'}} storyMetadata={state==='story-loss'?{outcome:'loss',stars:0,firstClear:false}:state==='story'?{outcome:'win',stars:3,firstClear:true}:state==='story-draw'?{outcome:'draw',stars:0,firstClear:false}:undefined} onInspectBoard={()=>setReviewBoard(true)} onRestart={action('Restart requested')} onChangeDeck={action('Gang change requested')} onGoHome={action('Home requested')}/>}
+   {!reviewBoard && <ResultScreen match={match} districts={districts} reward={error || (state==='pending'||state==='story-pending')?undefined:reward} rewardError={error?'Offline':null} onRetryReward={()=>setError(false)} rewardPending={(state==='pending'||state==='story-pending')} isGuest={state==='guest'} equippedVariants={{cornball:'cornball:chrome'}} storyMetadata={state==='story-loss'?{outcome:'loss',stars:0,firstClear:false}:state==='story'?{outcome:'win',stars:3,firstClear:true}:state==='story-draw'?{outcome:'draw',stars:0,firstClear:false}:undefined} onInspectBoard={()=>setReviewBoard(true)} onRestart={action('Restart requested')} onChangeDeck={action('Gang change requested')} onGoHome={action('Home requested')}/>}
  </div>;
 }
 function OnlineFixture(){

@@ -503,3 +503,21 @@ test("stored story fade result reconstructs byte-equivalent retry metadata", asy
   assert.equal(retryFlag, true);
   assert.equal(JSON.stringify(initialCanonical), JSON.stringify(retryCanonical));
 });
+
+test('saved closing dialogue can recover rewards and repeated delivery checks never mint twice', async (t) => {
+  const userId = await storyPlayer(t, 'story-reward-recovery');
+  await unlockCrown(userId);
+  const node = storyContent.chapters[0].nodes.find(node => node.id === 'block-crowned')!;
+  await saveStoryDialogue(userId, node.id, randomUUID(), ['saved-final-line']);
+  const first = await completeNonBattleStoryNode(userId, node.id, randomUUID(), []);
+  assert.equal(first.alreadyCompleted, false);
+  assert.equal(first.rewards.length, node.rewards.length);
+  const [credited] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  const retry = await completeNonBattleStoryNode(userId, node.id, randomUUID(), []);
+  assert.equal(retry.alreadyCompleted, true);
+  assert.deepEqual(retry.rewards, []);
+  const [after] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+  assert.deepEqual([after.packTickets, after.xp, after.softCurrency, after.styleShards], [credited.packTickets, credited.xp, credited.softCurrency, credited.styleShards]);
+  const [claims] = await db.select({value:count()}).from(playerStoryRewardClaimsTable).where(and(eq(playerStoryRewardClaimsTable.clerkUserId,userId),eq(playerStoryRewardClaimsTable.nodeId,node.id)));
+  assert.equal(claims.value,node.rewards.length);
+});
