@@ -127,6 +127,11 @@ async function run(width: number, height: number) {
   async function assertHaulGrid(expectedItems: number) {
     const grid = page.locator('.gacha-results[data-phase="summary"] .gym-results__grid');
     await grid.waitFor();
+    const inheritedPaperEdges = await page.locator('.gacha-results').evaluate((element) => ({
+      before: getComputedStyle(element, '::before').content,
+      after: getComputedStyle(element, '::after').content,
+    }));
+    assert.deepEqual(inheritedPaperEdges, { before: 'none', after: 'none' }, 'Full reveal must not inherit torn-paper dialog edges');
     assert.equal(await grid.evaluate((element) => getComputedStyle(element).display), 'grid', 'Full haul must use a grid');
     assert.equal(await grid.locator('.gym-results__item').count(), expectedItems);
     const geometry = await grid.evaluate((element) => {
