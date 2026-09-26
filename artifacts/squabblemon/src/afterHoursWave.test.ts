@@ -60,9 +60,9 @@ for (const owner of ['player', 'cpu'] as const) {
       const json = JSON.stringify(m), after = cast(m, id, owner, 3);
       assert.equal(JSON.stringify(m), json);
       assert.deepEqual(cast(JSON.parse(json), id, owner, 3), after);
-      const expectedPower = id === 'janitor' ? 0 : id === 'squabble-house-manager' ? 4 : 3;
+      const expectedPower = ['janitor','juneteenth-chair-guy'].includes(id) ? 0 : id === 'squabble-house-manager' ? 4 : 3;
       assert.equal(find(after, id).powerModifier, expectedPower);
-      assert.equal(after.effectLog.filter(event => event.abilityMetadata?.sourceCardId === id).length, id === 'janitor' ? 0 : 3);
+      assert.equal(after.effectLog.filter(event => event.abilityMetadata?.sourceCardId === id).length, ['janitor','juneteenth-chair-guy'].includes(id) ? 0 : 3);
       const replay = after.effectLog.at(-1)!.replay.after;
       assert.deepEqual(JSON.parse(JSON.stringify(replay)), replay);
     }
@@ -100,8 +100,8 @@ for (const owner of ['player', 'cpu'] as const) {
     const ally = unit('rastamon', owner), target = unit('techbro', enemy);
     target.powerModifier = 5; m.boards[0] = [ally, target];
     after = cast(m, 'juneteenth-chair-guy', owner);
-    assert.equal(find(after, 'techbro').powerModifier, 3);
-    assert.equal(find(after, 'rastamon').statuses.protected, true);
+    assert.equal(find(after, 'techbro').powerModifier, 5);
+    assert.equal(find(after, 'rastamon').statuses.protected, false); // Chair now waits to retaliate.
 
     m = blank();
     const protectedWeakest = unit('rastamon', owner, 0, 4), stronger = unit('techbro', owner, 0, 5);
@@ -132,7 +132,9 @@ for (const owner of ['player', 'cpu'] as const) {
     m.boards[0] = [rider];
     after = cast(m, 'yn-atv-lord', owner);
     assert.equal(find(after, 'rastamon').lane, 1);
-    assert.equal(find(after, 'rastamon').powerModifier, 1);
+    assert.equal(find(after, 'rastamon').powerModifier, 0);
+    assert.equal(find(after, 'rastamon').statuses.protected, true);
+    assert.equal(find(after, 'yn-atv-lord').lane, 1);
 
     m = blank();
     const locked = unit('rastamon', owner);
@@ -168,7 +170,7 @@ for (const owner of ['player', 'cpu'] as const) {
     after = nextRound({ ...after, phase: 'resolved', playerHand: [], cpuHand: [] });
     assert.match(getCharacterDistrictMarks(after).find(mark => mark.owner === owner && mark.lane === 0)!.text, /first hostile effect/);
     after = { ...after, [enemy === 'player' ? 'playerMotion' : 'cpuMotion']: 9 };
-    after = cast(after, 'juneteenth-chair-guy', enemy);
+    after = cast(after, 'inmate-informant', enemy);
     assert.equal(find(after, 'techbro').powerModifier, 4);
     assert.equal(after.janitorReversals?.filter(item => item.round === after.round).length, 1);
     assert.deepEqual(JSON.parse(JSON.stringify(after.effectLog.at(-1)!.replay.after)), after.effectLog.at(-1)!.replay.after);

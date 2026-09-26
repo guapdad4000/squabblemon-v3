@@ -225,7 +225,7 @@ test('Mailman creates one persistent Package; only the next Electric in that dis
   const delivered = cast(restored, 'techbro', 'player', 1);
   assert.equal(delivered.after.discountTokens.filter(t => t.eligibility === 'electric-delivery').length, 0);
   assert.equal(find(delivered.after, delivered.source).powerModifier, 2);
-  assert.equal(delivered.after.playerMotion, second.after.playerMotion - cards.techbro.cost + 1);
+  assert.equal(delivered.after.playerMotion, second.after.playerMotion - cards.techbro.cost + 1 + 2);
   assert(delivered.after.effectLog.some(e => e.replay.before.discountTokens.some(t => t.eligibility === 'electric-delivery')));
 });
 

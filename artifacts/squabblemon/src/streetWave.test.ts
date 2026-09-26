@@ -1,3 +1,4 @@
+import { CREATIVE_KITS } from '../../../lib/squabblemon-engine/src/creativeReworks';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, cardCatalog, completeEngineCrew } from './data';
@@ -18,8 +19,9 @@ function setup(id: string, owner: Owner) {
   return { source, ally, item, enemy, bigEnemy, remote, remoteTwo, match };
 }
 
-for (const owner of ['player', 'cpu'] as const) test(`all 21 street fighters resolve their printed effects for ${owner}`, () => {
+for (const owner of ['player', 'cpu'] as const) test(`unchanged street fighters resolve their printed effects for ${owner}`, () => {
   for (const [id] of STREET_WAVE) {
+    if (CREATIVE_KITS[id]) continue; // New setup/payoff contracts are covered in creativeReworks.test.ts.
     const { source, ally, item, enemy, bigEnemy, remote, remoteTwo, match } = setup(id, owner);
     ally.statuses.frozen = true; remote.statuses.silenced = true; remoteTwo.statuses.frozen = true;
     if (['homelessyn', 'divorceddad', 'incel'].includes(id)) match.boards[0] = [enemy, bigEnemy];
@@ -61,18 +63,20 @@ test('street fighters respect suppression, late-round conditions, and Motion cap
   assert.equal(playTurnCard(match, 'player', source.instanceId, 0).playerMotion, 9);
 });
 
-test('Red Pill rewards an already weakened target; STUD protects one hostile ability', () => {
+test('Red Pill rewards an already weakened target; STUD intercepts once and escapes with its ally', () => {
   const red = setup('redpill', 'player'); red.bigEnemy.statuses.weakened = true;
   const afterRed = playTurnCard(red.match, 'player', red.source.instanceId, 0);
   assert.equal(afterRed.boards[0].find(c => c.cardId === 'redpill')?.powerModifier, 2);
   assert.equal(afterRed.boards[0].find(c => c.instanceId === red.bigEnemy.instanceId)?.statuses.silenced, true);
   const { source, ally, match } = setup('stud', 'player'); match.boards = [[ally], [], []];
   let m = playTurnCard(match, 'player', source.instanceId, 0);
-  for (let n = 0; n < 2; n++) {
-    const hostile = unit('gothkid', 'cpu', 20 + n);
-    m = playTurnCard({ ...m, cpuHand: [hostile], cpuMotion: 9, phase: 'cpu-reveal' }, 'cpu', hostile.instanceId, 0);
-    assert.equal(m.boards[0].find(c => c.instanceId === ally.instanceId)?.statuses.silenced, n === 1);
-  }
+  const hostile=unit('gothkid','cpu',20);
+  m=playTurnCard({...m,cpuHand:[hostile],cpuMotion:9,phase:'cpu-reveal'},'cpu',hostile.instanceId,0);
+  const saved=m.boards.flat().find(c=>c.instanceId===ally.instanceId)!;
+  assert.equal(saved.statuses.silenced,false);
+  assert.notEqual(saved.lane,0);
+  assert.equal(m.boards.flat().find(c=>c.instanceId===source.instanceId)?.statuses.silenced,true);
+
 });
 
 test('Alchy trained tiers add one bounded round-end Hand each', () => {

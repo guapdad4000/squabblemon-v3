@@ -908,7 +908,7 @@ test('later copy, cheap ally buffs, and enemy targeting handle summoned cards', 
     assert.doesNotThrow(() => renderBattle(match));
     if (id === 'scammer') assert.equal(match.boards[0].find(c => c.cardId === id)?.ability, tokens[0].ability);
     if (id === 'gothkid') assert.equal(match.boards[0].filter(c => c.kind === 'token' && c.statuses.silenced).length, 1);
-    if (id === 'failedrapper') assert.ok(match.boards[0].filter(c => c.kind === 'token').every(c => c.powerModifier === 1));
+    if (id === 'failedrapper') { assert.ok(match.boards[0].filter(c => c.kind === 'token').every(c => c.powerModifier === 0)); assert.ok(match.creativeMarks?.some(x=>x.kind==='verse')); }
   }
 });
 

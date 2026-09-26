@@ -43,7 +43,7 @@ for (const owner of ['player', 'cpu'] as const) test(`six support effects respec
     const find = (key: string) => after.boards.flat().find(c => c.instanceId === key)!;
     const motion = owner === 'player' ? after.playerMotion : after.cpuMotion;
     if (id === 'energydrink' || id === 'charger') assert.equal(motion, MAX_MOTION);
-    if (id === 'firstaid') { assert.equal(find(ally.instanceId).statuses.frozen, false); assert.equal(find(second.instanceId).statuses.silenced, false); }
+    if (id === 'firstaid') { assert.equal(find(ally.instanceId).statuses.frozen, false); assert.equal(find(second.instanceId).statuses.silenced, true); assert(after.creativeMarks?.some(x=>x.kind==='kit'&&x.targets.includes(ally.instanceId))); }
     if (id === 'boombox') { assert.equal(find(ally.instanceId).powerModifier, 1); assert.equal(find(second.instanceId).powerModifier, 1); }
     if (id === 'subwaymap') { assert.equal(find(ally.instanceId).lane, 1); assert.equal(find(ally.instanceId).powerModifier, 1); }
     if (id === 'workboots') { assert.equal(find(ally.instanceId).statuses.protected, true); assert.equal(find(ally.instanceId).powerModifier, 2); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, ally.instanceId); }

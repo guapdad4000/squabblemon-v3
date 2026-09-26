@@ -45,7 +45,7 @@ for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the sec
   assert.equal(second.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
   assert.equal(find(second.after, second.source).powerModifier, 2, 'DJ bonus stacks with Streamer cheap-play bonus');
   const third = cast(second.after, 'techbro', owner, 2, 3);
-  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost);
+  assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost + 2);
   assert.equal(third.after.electricPlays?.[owner]?.count, 3);
   assert.equal(third.after.leaderRounds?.[owner]?.piratedj, 3);
 });

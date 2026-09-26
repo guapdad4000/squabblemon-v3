@@ -57,7 +57,7 @@ test('Common self boosts honor their printed conditions', () => {
   assert.equal(reveal('nguyen', m => ({ ...m, playerMotion: 2, boards: [[], [{ ...instance('cornball', 'player', 1), lane: 1 }], []] })).boards[0][0].powerModifier, 1);
 });
 
-test('Grounded buffs one ally, pure bonds stay ongoing, and Nurse cleanses statuses', () => {
+test('Grounded buffs one ally, former bonds set up board effects, and Nurse cleanses statuses', () => {
   let m = reveal('earthy', m => ({ ...m, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2), instance('cornball', 'cpu', 3)], [], []] }));
   assert.equal(m.boards[0][0].powerModifier, 1);
   assert.equal(m.boards[0][1].powerModifier, 0);
@@ -65,7 +65,7 @@ test('Grounded buffs one ally, pure bonds stay ongoing, and Nurse cleanses statu
   assert.equal(m.boards[0].find(c => c.cardId === 'earthy')?.powerModifier, 0);
   for (const [id, bond] of [['abuela', 'Light'], ['icecream', 'Water']] as const) {
     m = reveal(id, match => ({ ...match, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], []] }));
-    assert.equal(cards[id].elementalBond, bond);
+    assert.equal(cards[id].elementalBond, undefined);
     assert(m.boards[0].every(card => card.powerModifier === 0));
   }
   const ally = instance('cornball', 'player', 1);
@@ -86,10 +86,10 @@ test('Pinay Nurse cleanses and gives the lowest-Hands ally +2 Hands', () => {
   assert.equal(treated.powerModifier, 2);
 });
 
-test('Tayaty echoes the previous On Reveal while Honest Thot stays an Air hand bond', () => {
+test('Tayaty echoes the previous On Reveal while passive Incel leaves history intact', () => {
   const youngBull = instance('youngbull', 'player', 10);
   const tayaty = instance('tayaty', 'player', 11);
-  const ongoingBond = instance('honestthot', 'player', 13);
+  const ongoingBond = instance('incel', 'player', 13);
   const enemy = { ...instance('hooper', 'cpu', 12), basePower: 6 };
   let m: Match = { ...createMatch('vibes', 'vibes'), playerMotion: 20, playerHand: [youngBull, ongoingBond, tayaty], boards: [[enemy], [], []] };
   m = playTurnCard(m, 'player', youngBull.instanceId, 0);
@@ -103,7 +103,7 @@ test('Tayaty echoes the previous On Reveal while Honest Thot stays an Air hand b
   assert.equal(nextRound({ ...m, phase: 'resolved' }).lastRevealedCardId, null);
 
   const bond = reveal('honestthot', match => ({ ...match, boards: [[instance('hooper', 'cpu', 20)], [], []] }));
-  assert.equal(cards.honestthot.elementalBond, 'Air');
+  assert.equal(cards.honestthot.elementalBond, undefined);
   assert.equal(bond.boards[0][0].statuses.silenced, false);
 });
 

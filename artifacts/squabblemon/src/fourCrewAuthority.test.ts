@@ -39,8 +39,8 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 2);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 8);
-  assert.equal(ONLINE_RULES_VERSION, 8);
+  assert.equal(CARD_BALANCE_VERSION, 9);
+  assert.equal(ONLINE_RULES_VERSION, 9);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -188,5 +188,27 @@ for (const owner of ['player', 'cpu'] as const) {
     room = playOnline(room, owner, 'ronald', lane);
     assert.equal(room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
     assert.ok(!room.match!.discountTokens.some(t => t.eligibility === 'wiseman-prediction'));
+  });
+}
+
+for (const owner of ['player','cpu'] as const) {
+  test(`${owner}: every creative rework and training tier agrees with the authoritative public view`, async () => {
+    const { CREATIVE_KITS } = await import('../../../lib/squabblemon-engine/src/creativeReworks');
+    for (const id of Object.keys(CREATIVE_KITS)) for (const tier of [0,1,2,3]) {
+      const ids=[id,...['cornball','edgar','nguyen','plug','watson','bustdown','soulfood','gamer','counter','buddy'].filter(x=>x!==id)].slice(0,10);
+      let room=roomFor(owner,ids,tier);
+      room.match![owner==='player'?'playerMotion':'cpuMotion']=9;
+      room.match![owner==='player'?'playerHand':'cpuHand']=[createCardInstance(id,owner)];
+      const ally={...createCardInstance('edgar',owner,'fixture'),lane:0 as Lane};
+      const other={...createCardInstance('nguyen',owner,'fixture'),lane:0 as Lane};
+      const foe={...createCardInstance('og',owner==='player'?'cpu':'player','fixture'),lane:0 as Lane};
+      room.match!.boards=[[ally,other,foe],[],[]];
+      room=playOnline(room,owner,id,0);
+      for(const user of ['a','b']) {
+        const view=onlineRoomView(json(room),'FIXTURE',user,11);
+        assert.deepEqual(view.districtMarks,getCharacterDistrictMarks(room.match!));
+        assert.ok(!JSON.stringify(view).includes('creativeMarks'),'private source snapshots never leak into public projection');
+      }
+    }
   });
 }

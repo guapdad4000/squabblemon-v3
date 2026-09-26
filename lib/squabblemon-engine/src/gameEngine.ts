@@ -1,3 +1,4 @@
+import { REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
 export { blockbusterExtraCost } from './blockbusterRules';
 import { blockbusterWaveCards } from './blockbusterWave';
 import { resolveBlockbusterWave, blockbusterExtraCost, type LaneDamage, type DiceResult, type BlockbusterTools } from './blockbusterRules';
@@ -103,6 +104,14 @@ export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean;
 export type CardInstance = Card & {
   instanceId: string; cardId: string; owner: Owner; lane: Lane | null; playedRound: number | null;
   basePower: number; powerModifier: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
+  /** Bounded progress for the creative card kits. */
+  creativeUsed?: Record<string, boolean>;
+  creativeVisits?: Lane[];
+  creativeAhead?: boolean;
+  creativeRound?: number;
+  creativeCount?: number;
+  creativeTarget?: string;
+  creativeLane?: Lane;
   /** Imposter keeps Scammer's identity/artwork while adopting a printed passive. */
   copiedAbilityCardId?: string;
   networkBoosts?: number;
@@ -159,7 +168,7 @@ export type ReplayState = Pick<Match,
   'nextArrivalOrder' | 'afterParty' | 'laneDamage' | 'diceResult' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
-  'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
+  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
 >;
 
 export type TimedEffect = {
@@ -169,7 +178,8 @@ export type TimedEffect = {
   amount?: number;
 };
 export type DiscountToken = {
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction';
+  startsAtRound?: number;
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
   targetLane?: Lane;
   targetInstanceId?: string;
   sourceLane: Lane | null; createdOrder: number;
@@ -197,6 +207,7 @@ export type Match = {
   laneDamage?: LaneDamage[];
   repeatingLaneDamage?: boolean;
   diceResult?: DiceResult;
+  creativeMarks?: CreativeMark[];
   districtTraps?: DistrictTrap[];
   /** One shared Turn It Around trigger per friendly district each round. */
   janitorReversals?: { owner: Owner; lane: Lane; round: number; sourceInstanceId: string; targetInstanceId: string }[];
@@ -545,12 +556,12 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
   || (token.eligibility === "another-district" && token.sourceLane !== targetLane)
   || (token.eligibility === 'electric-delivery' && token.targetLane === targetLane
     && card.type === 'Electric' && (card.kind ?? 'character') === 'character' && !card.hazard)
-  || (token.eligibility === 'wiseman-prediction' && token.targetLane === targetLane
+  || ((token.eligibility === 'wiseman-prediction' || token.eligibility === 'creative-local') && token.targetLane === targetLane
     && (card.kind ?? 'character') === 'character' && !card.hazard)
   || (token.eligibility === 'poison-character'
     && card.type === 'Poison' && (card.kind ?? 'character') === 'character' && !card.hazard);
 const discountFor = (match: Match, owner: Owner, card: CardInstance, targetLane: Lane) =>
-  [...(match.discountTokens ?? [])].filter(token => token.expiresAfterRound === undefined || token.expiresAfterRound >= match.round)
+  [...(match.discountTokens ?? [])].filter(token => (token.startsAtRound === undefined || token.startsAtRound <= match.round) && (token.expiresAfterRound === undefined || token.expiresAfterRound >= match.round))
     .sort((a, b) => Number(b.eligibility === 'wiseman-prediction') - Number(a.eligibility === 'wiseman-prediction')
       || Number(b.eligibility === 'electric-delivery') - Number(a.eligibility === 'electric-delivery')
       || a.createdOrder - b.createdOrder || a.id.localeCompare(b.id))
@@ -572,7 +583,7 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
   const token = discountFor(match, owner, card, targetLane);
   const discount = token || legacyDiscount || buddyLaneDiscount;
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
-  const minimum = token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' ? 1 : 0;
+  const minimum = token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
   const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
     : districtDiscount(match, owner, card, targetLane);
   return Math.max(minimum, card.cost - reduction) + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
@@ -587,6 +598,7 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   if (token || legacy) parts.push(token?.eligibility === "wiseman-prediction" ? "−2 Told You discount" : "−1 discount");
   else if (buddyLaneDiscount) parts.push("−1 BUDDY district discount");
   else if (districtDiscount(match, owner, card, targetLane)) parts.push(match.districtSnapshot?.locations[targetLane].effect.kind === 'dive-discount' ? "−1 Dive Bar discount" : "−1 Bodega opening discount");
+  if (token?.eligibility === "creative-local") parts.push("Local pass minimum 1 Motion");
   if (token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
   if (token?.eligibility === "wiseman-prediction") parts.push("Told You minimum 1 Motion");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
@@ -609,6 +621,8 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
     }));
   return [
     ...janitorMarks,
+    ...creativeDistrictMarks(match),
+    ...match.discountTokens.filter(t => t.eligibility === 'creative-local' && t.targetLane !== undefined && (t.expiresAfterRound??99) >= match.round).map(t => ({owner:t.owner,lane:t.targetLane!,text:`Local pass · next character here −1 Motion (minimum 1) · R${t.startsAtRound}–${t.expiresAfterRound}`})),
     ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round).map(t => ({ owner: t.owner, lane: t.lane,
       text: t.kind === 'wiseman' ? 'Told You · next enemy character: here = Weaken; elsewhere = predictor gets −2 Motion here · through R' + t.expiresAfterRound
         : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled' : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
@@ -673,7 +687,7 @@ const nextArrivalOrder = (m: Match): number => Math.max(
 const inLane = (m: Match, owner: Owner, target: Lane) => m.boards[target].filter((c) => !c.hazard && c.owner === owner);
 const highest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0];
 const lowest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(a) - getEffectiveCardPower(b) || a.instanceId.localeCompare(b.instanceId))[0];
-const move = (m: Match, card: CardInstance, destination: Lane, note: string): Match => {
+const move = (m: Match, card: CardInstance, destination: Lane, note: string, deferArrival = false): Match => {
   if (card.hazard) return m;
   const sourceLane = card.lane ?? m.boards.findIndex((items) => items.some((candidate) => candidate.instanceId === card.instanceId)) as Lane;
   if (sourceLane === destination) return m;
@@ -703,9 +717,10 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string): Ma
       cpu: [...new Set([...(moved.roundMovedIds?.cpu ?? []), ...(card.owner === 'cpu' ? [card.instanceId] : [])])],
     },
   };
+  if (deferArrival) return moved;
   moved = fairytaleDeparture(moved, card);
   moved = fairytaleArrival(moved, card.instanceId);
-  return applyScentEntry(moved, card.instanceId);
+  return creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools());
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
 
@@ -819,7 +834,7 @@ const recordElectricPlay = (match: Match, card: CardInstance): Match => {
 
 const cleanseAlly = (match: Match, targetId: string, apply: (card: CardInstance) => CardInstance): Match => {
   const before = findCard(match, targetId);
-  const after = modify(match, targetId, apply);
+  const after = creativeCleansed(modify(match, targetId, apply), targetId);
   const cleansed = findCard(after, targetId);
   return before && cleansed && needsCleanse(before) && !needsCleanse(cleansed)
     ? queueLeaderReaction(after, 'nightmedic', targetId, match) : after;
@@ -931,7 +946,7 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
     // Ordinary Burn keeps the engine's existing zero-Hands rules. Built Different
     // must still catch a lethal Burn reduction and use its one survival.
     if (damage > 0 && abilityCardId(card) === 'homelesslegend') result = removeDestroyedCard(result, card.instanceId);
-    result = recordDamage(beforeBurn, result, card.burnSource ?? { instanceId: '', owner: card.owner === 'player' ? 'cpu' : 'player' }, currentBurning, !!card.burnSource);
+    result = recordDamage(beforeBurn, result, card.burnSource ?? { instanceId: '', owner: card.owner === 'player' ? 'cpu' : 'player' }, currentBurning, !!card.burnSource, true);
   }
   for (const source of smokeSources) {
     const enemy = source.owner === 'player' ? 'cpu' : 'player';
@@ -986,6 +1001,7 @@ const applyOngoingRoundEndHandEffects = (m: Match): Match => {
   let result = m;
   for (const hand of [result.playerHand, result.cpuHand] as const) {
     for (const card of hand) {
+      if (REPLACED_BONDS.has(card.cardId)) continue;
       const bond = card.elementalBond && canonicalElement(card.elementalBond);
       if (!bond) continue;
       const allies = result.boards.flat().filter(c => !c.hazard && c.owner === card.owner && c.kind !== 'support' && canonicalElement(c.type) === bond && c.instanceId !== card.instanceId);
@@ -1114,6 +1130,13 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   if (honorImmunity && target.statuses.uncounterable) return modify(m, target.instanceId, c => ({
     ...c, lastEffectNote: 'Uncounterable: hostile ability had no effect.',
   }));
+  if (!intercepted) {
+    const intercept = creativeIntercept(m, target, creativeTools());
+    if (intercept.interceptor) {
+      const hit = hostileEffect(intercept.match, source, intercept.interceptor, apply, bypassWifeyGuard, true, honorImmunity);
+      return creativeFinishIntercept(hit, intercept.interceptor, creativeTools());
+    }
+  }
   const fan = !intercepted && m.boards.flat().find(c => c.owner === target.owner && abilityCardId(c) === 'grownfanboy'
     && c.idolId === target.instanceId && c.instanceId !== target.instanceId && c.fanRound !== m.round && activeAbility(c));
   if (fan) {
@@ -1138,7 +1161,7 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
       protected: remaining.some(e => (e.targetInstanceId === target.instanceId && (e.kind === 'church-protection' || e.kind === 'salon-protection'))
         || (e.kind === 'wifey-protection' && e.sourceInstanceId === target.instanceId)) },
       lastEffectNote: shield.kind === 'salon-protection' ? 'NAIL SALON blocked a targeted hostile ability.' : 'Covered blocked a targeted hostile ability.' }));
-    return queueLeaderReaction({ ...cleared, timedEffects: remaining }, 'church', target.instanceId, m);
+    return creativeShieldBroken(queueLeaderReaction({ ...cleared, timedEffects: remaining }, 'church', target.instanceId, m), source, target, creativeTools());
   }
   const targetLane = target.lane ?? m.boards.findIndex(items => items.some(c => c.instanceId === target.instanceId)) as Lane;
   const guard = inLane(m, target.owner, targetLane).find(c => abilityCardId(c) === 'wifey' && c.statuses.protected && !c.statuses.silenced && !c.statuses.blocked);
@@ -1159,7 +1182,7 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
     const reversed = reverseWithJanitor(m, target, source.owner);
     if (reversed) return reversed;
   }
-  const after = attempted;
+  const after = creativeAppeal(m, attempted, target, source, creativeTools()) ?? attempted;
   return abilityCardId(source) === 'thefeds' ? after : recordDamage(m, after, source, target);
 };
 /** Focused reversal shared by targeted hostile packages and enemy-sourced Burn ticks. */
@@ -1248,6 +1271,8 @@ const targetEnemyBurnAndPowerReduction = (
 const forceEnemyMove = (m: Match, source: CardInstance, target: CardInstance, destination: Lane): Match =>
   hostileEffect(m, source, target, (state, actual) => forceMoveUnshielded(state, actual, destination), false, false, true);
 const forceMoveUnshielded = (state: Match, actual: CardInstance, destination: Lane): Match => {
+    const anchored = creativeAnchor(state, actual, creativeTools());
+    if (anchored) return anchored;
     if (actual.statuses.uncounterable || actual.statuses.locked || state.districtRuntime?.detainedCardIds.includes(actual.instanceId)
       || actual.lane === destination || getStoryLockedLanes(state, actual.owner).includes(destination)) {
       return modify(state, actual.instanceId, c => ({ ...c, lastEffectNote: 'Wrong Block: movement blocked.' }));
@@ -1326,10 +1351,11 @@ function refundMotion(m: Match, owner: Owner, amount: number): Match {
   const key = owner === 'player' ? 'playerMotion' : 'cpuMotion';
   const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
   const refunded = Math.max(0, Math.min(MAX_MOTION - m[key], amount));
-  return { ...m, [key]: m[key] + refunded, [hand]: m[hand].map(c => abilityCardId(c) === 'powerhouse' && activeAbility(c)
+  const refundedMatch = { ...m, [key]: m[key] + refunded, [hand]: m[hand].map(c => abilityCardId(c) === 'powerhouse' && activeAbility(c)
     ? { ...c, bankedMotion: Math.min(3, (c.bankedMotion ?? 0) + refunded), lastEffectNote: 'Overtime: ' + Math.min(3, (c.bankedMotion ?? 0) + refunded) + '/3 refunded Motion banked.' } : c) };
+  return creativeRefund(m, refundedMatch, owner, creativeTools());
 }
-function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'instanceId' | 'owner'>, victim: CardInstance, ability = true): Match {
+function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'instanceId' | 'owner'>, victim: CardInstance, ability = true, burn = false): Match {
   const current = after.boards.flat().find(c => c.instanceId === victim.instanceId);
   const amount = Math.max(0, Math.max(0, victim.basePower + victim.powerModifier) - Math.max(0, current ? current.basePower + current.powerModifier : 0));
   if (!amount) return after;
@@ -1371,7 +1397,7 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
       m = addEvent(start, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, targetIds: targets, note: watcher.ability + ' reacted to ' + amount + ' damage.' });
     }
   }
-  return m;
+  return creativeDamage(before, m, source, victim, creativeTools(), burn);
 }
 function returnToHand(m: Match, source: CardInstance, target: CardInstance, discount = false): Match {
   if (target.lane === null || (target.kind ?? 'character') !== 'character' || !m.boards.flat().some(c => c.instanceId === target.instanceId)) return m;
@@ -1663,7 +1689,11 @@ export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot)
   return summaries;
 }
 
-function resolveAbility(match: Match, source: CardInstance, { echoed = false }: { echoed?: boolean } = {}): Match {
+function resolveAbility(match: Match, source: CardInstance, options: {echoed?:boolean} = {}): Match {
+  const result=resolveAbilityBase(match,source,options);
+  return activeAbility(source)?creativeAbilityResolved(match,result,source,creativeTools()):result;
+}
+function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false }: { echoed?: boolean } = {}): Match {
   const before = match;
   const l = source.lane!, enemy = source.owner === 'player' ? 'cpu' : 'player', kind = source.type === 'Fire' ? 'fire' : source.type === 'Water' ? 'water' : 'ability';
   let m = match;
@@ -1691,6 +1721,9 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
     m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
   if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  const creative = creativeReveal(m, source, creativeTools(), echoed);
+  if (creative) return !echoed && source.effect.includes('On Reveal:') ? { ...creative, lastRevealedCardId: source.cardId,
+    entranceHistory: [...(creative.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : creative;
   if (Object.hasOwn(blockbusterWaveCards, source.cardId)) {
     const result = resolveBlockbusterWave(m, source, 0, blockbusterTools());
     m = result.match;
@@ -3106,6 +3139,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     m = { ...resolved.match, boards: resolved.match.boards.map(cs => cs.filter(c => c.instanceId !== instanceId)) as Match['boards'],
       phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
     m = settleLeaderReactions(m);
+    m = creativeAfterAction(match,m,creativeTools());
     return applyStoryEffects(addEvent(beforeEffect, m, { type: 'ability', sourceId: instanceId, owner, lane: targetLane,
       targetIds: resolved.targets, note: resolved.note, kind: 'ability' }));
   }
@@ -3255,7 +3289,12 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
       m = addEvent(beforeTrap, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner,
         targetIds: [instanceId, ...rewardedIds], note: 'Stakeout canceled ' + revealed.name + '’s entrance.'
           + (rewardedIds.length ? ` ${rewardedIds.length === 2 ? 'Sherlock and the weakest other friendly character gained' : 'Sherlock gained'} +2 Hands.` : '') });
-    } else if (survivingReveal) m = resolveAbility(m, survivingReveal);
+    } else if (survivingReveal) {
+      const queued = creativeBeforeEntrance(m, survivingReveal, creativeTools());
+      m = queued.match;
+      const live = findCard(m, survivingReveal.instanceId);
+      if (!queued.delayed && live) m = resolveAbility(m, live);
+    }
   }
   m = undercovaReaction(m, match, instanceId, targetLane, owner);
   m = applyDistrictDeparture(m, owner, instanceId, targetLane);
@@ -3263,6 +3302,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   const opponent = owner === "player" ? "cpu" : "player";
   // Sneaker moved from reactive trigger (Flip Season on 4+ cost plays) to proactive On Reveal Steal.
   // The reactive logic was removed; resolveAbility now handles Sneaker's branch directly.
+  m = creativeAfterPlay(match, m, instanceId, creativeTools(), placed);
   const finalized: Match = { ...m, phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
   const lastEventIndex = finalized.effectLog.length - 1;
   return applyStoryEffects({
@@ -3605,7 +3645,8 @@ function detonateSmileBombs(match: Match): Match {
 export function nextRound(match: Match): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
-  const roundEnded = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(applyBurntPlates(match)))));
+  const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(applyBurntPlates(match), creativeTools())))));
+  const roundEnded = settleLeaderReactions(creativeAfterAction(match,ordinaryRoundEnd,creativeTools()));
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
     return addEvent(match, complete, { type: 'match-complete', owner: 'player', note: 'The match is complete.' });
@@ -3625,8 +3666,8 @@ export function nextRound(match: Match): Match {
     phase: 'player',
     // One unspent Motion carries forward. Passing can set up a stronger next
     // round, but the cap prevents late turns from becoming automatic.
-    playerMotion: Math.min(MAX_MOTION, next + Math.min(1, match.playerMotion)),
-    cpuMotion: Math.min(MAX_MOTION, next + Math.min(1, match.cpuMotion)),
+    playerMotion: Math.min(MAX_MOTION, next + Math.min(1, roundEnded.playerMotion)),
+    cpuMotion: Math.min(MAX_MOTION, next + Math.min(1, roundEnded.cpuMotion)),
     landlordTaxUsed: { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } },
     boards: roundEnded.boards.map((items) => items.map((card) => ({
       ...card,
@@ -3670,6 +3711,7 @@ export function nextRound(match: Match): Match {
     playerDrawIndex: m.playerDrawIndex + (p ? 1 : 0),
     cpuDrawIndex: m.cpuDrawIndex + (c ? 1 : 0),
   };
+  m = creativeRoundStart(m, creativeTools());
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
   const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && activeAbility(card));
@@ -3966,6 +4008,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   electricPlays: m.electricPlays,
   pendingLeaderReactions: m.pendingLeaderReactions,
   lingeringScents: m.lingeringScents ?? [],
+  creativeMarks: m.creativeMarks ?? [],
   districtTraps: m.districtTraps ?? [],
   janitorReversals: m.janitorReversals ?? [],
   lastMovedAlly: m.lastMovedAlly ?? {},
@@ -4062,6 +4105,180 @@ function applyBurntPlates(match: Match): Match {
     const before = m;
     if (!target.statuses.uncounterable) m = modify(m,target.instanceId,c => ({ ...c,statuses:{...c.statuses,burnStacks:c.statuses.burnStacks+1},lastEffectNote:'Burnt Plate: +1 Burn.' }));
     m = addEvent(before,m,{type:'ability',sourceId:plate.instanceId,owner:plate.owner,lane:plate.lane!,targetIds:[target.instanceId],kind:'fire',note:'Burnt Plate: recurring 1 Burn to a random friendly character here.'});
+  }
+  return m;
+}
+
+function creativeTools(): CreativeTools {
+  return {
+    trim: (m, source, target, amount) =>
+      hostileEffect(
+        m,
+        { ...source, cardId: "thefeds", copiedAbilityCardId: undefined },
+        target,
+        (state, actual) =>
+          modifyWithoutDamage(state, actual, (c) => ({
+            ...c,
+            powerModifier:
+              c.powerModifier - Math.min(amount, Math.max(0, c.powerModifier)),
+            lastEffectNote: source.ability + ": bonus Hands removed.",
+          })),
+        false,
+        false,
+        true,
+      ),
+    power: getEffectiveCardPower,
+    modify,
+    protect: grantProtection,
+    hit: targetEnemyPowerReduction,
+    status: (m, source, target, key, note) =>
+      hostileEffect(
+        m,
+        source,
+        target,
+        (state, actual) =>
+          queueDisruptionReactions(
+            state,
+            modify(state, actual.instanceId, (c) => ({
+              ...c,
+              statuses: { ...c.statuses, [key]: true },
+              lastEffectNote: note,
+            })),
+            source,
+            actual.instanceId,
+          ),
+        false,
+        false,
+        true,
+      ),
+    burn: applyBurn,
+    cleanse: (m, id) =>
+      cleanseAlly(m, id, (c) => ({
+        ...c,
+        statuses: cleanseStatuses(c.statuses),
+      })),
+    move,
+    movePair: creativeMovePair,
+    enemyMove: forceEnemyMove,
+    canMove: canMoveTo,
+    score: (m, owner, lane) =>
+      getLaneScoreForMatch(m, inLane(m, owner, lane), lane, owner),
+    reveal: (m, source) => resolveAbility(m, source),
+    train: trainCreativeAbility,
+    refund: refundMotion,
+    roundLimit: getMatchRoundLimit,
+    disruption: queueDisruptionReactions,
+    event: (before, after, source, targets, note) =>
+      addEvent(
+        after.effectLog.length > before.effectLog.length ? after : before,
+        after,
+        {
+          type: "ability",
+          kind:
+            source.type === "Fire"
+              ? "fire"
+              : source.type === "Water"
+                ? "water"
+                : "ability",
+          sourceId: source.instanceId,
+          owner: source.owner,
+          lane: source.lane ?? 0,
+          targetIds: targets,
+          note,
+        },
+      ),
+  };
+}
+function trainCreativeAbility(m: Match, id: string): Match {
+  const source = findCard(m, id);
+  if (
+    !source ||
+    !CREATIVE_KITS[source.cardId] ||
+    source.lane === null ||
+    source.creativeUsed?.training
+  )
+    return m;
+  m = modify(m, id, (c) => ({
+    ...c,
+    creativeUsed: { ...c.creativeUsed, training: true },
+  }));
+  for (const upgrade of snapshotUpgradesForCard(
+    m.abilityUpgradeSnapshot,
+    source.owner,
+    source.cardId,
+  )) {
+    const e = upgrade.effect;
+    const target =
+      e.kind === "self-power"
+        ? findCard(m, id)
+        : lowest(
+            m.boards
+              .flat()
+              .filter(
+                (c) =>
+                  !c.hazard &&
+                  c.instanceId !== id &&
+                  c.owner ===
+                    (e.target === "friendly"
+                      ? source.owner
+                      : source.owner === "player"
+                        ? "cpu"
+                        : "player") &&
+                  c.lane === source.lane,
+              ),
+          );
+    if (!target) continue;
+    const before = m;
+    m =
+      e.amount < 0
+        ? targetEnemyPowerReduction(m, source, target, e.amount, upgrade.name)
+        : modify(m, target.instanceId, (c) => ({
+            ...c,
+            powerModifier: c.powerModifier + e.amount,
+          }));
+    m = addEvent(before, m, {
+      type: "ability",
+      sourceId: id,
+      owner: source.owner,
+      targetIds: [target.instanceId],
+      note: upgrade.name + ": once-per-match training.",
+      abilityMetadata: {
+        upgradeId: upgrade.id,
+        upgradeName: upgrade.name,
+        sourceCardId: source.cardId,
+        sourceInstanceId: id,
+        targetInstanceIds: [target.instanceId],
+        result: "applied",
+      },
+    });
+  }
+  return m;
+}
+
+function creativeMovePair(
+  m: Match,
+  first: CardInstance,
+  second: CardInstance,
+  destination: Lane,
+  note: string,
+): Match {
+  if (
+    first.instanceId === second.instanceId ||
+    first.owner !== second.owner ||
+    !canMoveTo(m, first, destination) ||
+    !canMoveTo(m, second, destination) ||
+    m.boards[destination].filter((c) => c.owner === first.owner).length > 2
+  )
+    return m;
+  const before = m;
+  m = move(m, first, destination, note, true);
+  const passenger = findCard(m, second.instanceId);
+  if (passenger) m = move(m, passenger, destination, note, true);
+  for (const original of [first, second]) {
+    m = fairytaleDeparture(m, original);
+    m = fairytaleArrival(m, original.instanceId);
+    m = applyScentEntry(m, original.instanceId);
+    m = creativeMoved(before, m, original.instanceId, creativeTools());
   }
   return m;
 }

@@ -160,14 +160,17 @@ test('Sherlock visibly cancels one entrance, expires, and does not erase passive
   assert.equal(reveal.after.districtTraps?.length,0);assert(!find(reveal.after,passive.source).statuses.silenced);
   m=advance(advance(m));assert(!getCharacterDistrictMarks(m).some(t=>t.text.includes('Stakeout')));
 });
-test('DMV surcharge is shared by legal-cost validation, charges once, does not stack and expires', () => {
+test('DMV queue replaces the surcharge, does not stack, and expires', () => {
   let m=cast(blank(),'dmvworker').after;m.playerMotion=9;m=cast(m,'dmvworker').after;
-  const enemy=createCardInstance('bonnetgirl','cpu');
-  assert.equal(getLegalCardCost(m,'cpu',enemy,0),2);assert.equal(getLegalCardCost(m,'cpu',enemy,1),1);
-  assert.throws(()=>play({...m,cpuMotion:1},enemy),/Motion/);
-  const after=play(m,enemy);assert.equal(after.cpuMotion,7);assert.equal(getLegalCardCost(after,'cpu',enemy,0),1);
-  assert.equal(getLegalCardCost(advance(advance(m)),'cpu',enemy,0),1);
+  const enemy=createCardInstance('youngbull','cpu');
+  assert.equal(getLegalCardCost(m,'cpu',enemy,0),2);
+  assert.equal(m.creativeMarks?.filter(x=>x.kind==='queue').length,1);
+  const after=play(m,enemy);assert.equal(find(after,enemy).powerModifier,0);
+  assert(after.creativeMarks?.some(x=>x.kind==='delayed'));
+  assert.equal(find(advance(after),enemy).powerModifier,1);
+  assert(!advance(advance(m)).creativeMarks?.some(x=>x.kind==='queue'));
 });
+
 test('Watson restores actual damage only; Fresh Pot removes Burn and Freeze without unrelated buffs', () => {
   const m=blank(), ally=unit('hooper','player',0);ally.powerModifier=6;m.boards[0]=[ally];
   const damaged=cast(m,'ptang','cpu').after, victim=find(damaged,ally);
