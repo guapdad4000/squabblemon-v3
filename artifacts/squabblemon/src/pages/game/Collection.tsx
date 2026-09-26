@@ -16,6 +16,37 @@ import sunsetBg from '../../assets/collection-sunset-standoff.png';
 import '../../styles/collection-discovery.css';
 import '../../styles/collection.css';
 
+function CollectionOwnedCount({ count, total, reducedMotion }: { count: number; total: number; reducedMotion: boolean }) {
+  const prefersReducedMotion = () => reducedMotion || (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [display, setDisplay] = useState(() => prefersReducedMotion() ? count : 0);
+  const current = useRef(display);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      current.current = count;
+      setDisplay(count);
+      return;
+    }
+    const start = current.current;
+    let frame = 0;
+    let started: number | undefined;
+    const tick = (now: number) => {
+      started ??= now;
+      const progress = Math.min(1, (now - started) / 900);
+      const next = Math.round(start + (count - start) * (1 - (1 - progress) ** 3));
+      current.current = next;
+      setDisplay(next);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [count, reducedMotion]);
+
+  return <span data-testid="text-collection-owned" className="collection-hero__stat-value" role="img" aria-label={`${count} of ${total} cards owned`}>
+    <span aria-hidden="true">{display} / {total}</span>
+  </span>;
+}
+
 export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { seen: markNoticeSeen } = useNotifications();
   const queryClient = useQueryClient();
@@ -90,11 +121,9 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <h1 className="collection-hero__title">The collection.</h1>
             </div>
           </div>
-          <div className="collection-hero__bottom">
-            <div className="collection-hero__stats">
-              <span data-testid="text-collection-owned" className="collection-hero__stat-value">{owned.size} / {cardCatalog.length}</span>
-              <span className="collection-hero__stat-label">CARDS OWNED</span>
-            </div>
+          <div className="collection-hero__stats">
+            <CollectionOwnedCount count={owned.size} total={cardCatalog.length} reducedMotion={bootstrap.profile.settings.reducedMotion} />
+            <span className="collection-hero__stat-label">CARDS OWNED</span>
           </div>
         </div>
       </div>

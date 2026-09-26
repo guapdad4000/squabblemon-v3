@@ -24,6 +24,7 @@ export {
   validateAbilityUpgradeSnapshot, ABILITY_UPGRADE_SNAPSHOT_VERSION,
 } from "./abilityUpgrades";
 export type { AbilityUpgradeSnapshot, CardAbilityUpgradeSnapshot } from "./abilityUpgrades";
+import { elementalWaveCards } from './elementalWave';
 
 export type Owner = 'player' | 'cpu';
 export type Phase = 'player' | 'cpu-reveal' | 'resolved' | 'complete';
@@ -2602,6 +2603,58 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       note('Express Delivery is watching for your second Electric character each round.');
     }
   }
+  else if (Object.hasOwn(elementalWaveCards, source.cardId)) {
+    const id = source.cardId;
+    const allies = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.kind !== 'support' && c.instanceId !== source.instanceId);
+    const inDistrict = allies.filter(c => c.lane === l);
+    const buff = (target: CardInstance | undefined, amount: number) => {
+      if (!target) return;
+      targetIds.add(target.instanceId);
+      m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: +${amount} Hands.` }));
+    };
+    const cleanse = (target: CardInstance | undefined, amount: number) => {
+      if (!target || !needsCleanse(target)) return;
+      targetIds.add(target.instanceId);
+      m = cleanseAlly(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed, +${amount} Hands.` }));
+    };
+    if (id === 'puddle') cleanse(lowest(inDistrict.filter(c => c.statuses.frozen || c.statuses.silenced)), 1);
+    else if (id === 'hydrant') for (const target of inDistrict) cleanse(target, 1);
+    else if (id === 'floodgate') for (const lane of [0, 1, 2] as Lane[]) cleanse(lowest(allies.filter(c => c.lane === lane && needsCleanse(c))), 2);
+    else if (id === 'seedvendor' || id === 'mosskeeper') {
+      buff(lowest((id === 'seedvendor' ? inDistrict : allies).filter(c => c.type === 'Plant')), id === 'seedvendor' ? 1 : 2);
+    } else if (id === 'canopy') {
+      for (const target of inDistrict.filter(c => c.type === 'Plant')) buff(target, 1);
+      const plants = allies.filter(c => c.type === 'Plant').concat(findCard(m, source.instanceId)!);
+      if ([0, 1, 2].every(lane => plants.some(c => c.lane === lane))) {
+        for (const lane of [0, 1, 2] as Lane[]) buff(lowest(plants.filter(c => c.lane === lane)), 1);
+      }
+    } else if (id === 'circuityn') {
+      if (allies.some(c => c.type === 'Electric' && c.lane !== l)) m = refundMotion(m, source.owner, 1);
+    } else if (id === 'flashcourier') m = addDiscountToken(m, source.owner, source, 'another-district');
+    else if (id === 'powerstation') {
+      let helped = false;
+      for (const lane of [0, 1, 2] as Lane[]) {
+        if (lane === l) continue;
+        const target = lowest(allies.filter(c => c.type === 'Electric' && c.lane === lane));
+        if (target) { buff(target, 1); helped = true; }
+      }
+      if (helped) m = refundMotion(m, source.owner, 1);
+    } else if (id === 'gustscout' || id === 'blockmessenger' || id === 'skyline') {
+      const traveler = id === 'gustscout' ? source : lowest(inDistrict.filter(c => id !== 'skyline' || c.type === 'Air'));
+      if (traveler) {
+        const destination = lowestFriendlyLane(m, source.owner, l);
+        targetIds.add(traveler.instanceId);
+        m = move(m, traveler, destination, `${source.ability}: moved to the weakest other district.`);
+        if (findCard(m, traveler.instanceId)?.lane === destination) buff(findCard(m, traveler.instanceId), id === 'skyline' ? 2 : 1);
+      }
+    }
+    const changed = [...targetIds].some(key => {
+      const old = findCard(before, key), current = findCard(m, key);
+      return old && (!current || old.lane !== current.lane || old.powerModifier !== current.powerModifier || JSON.stringify(old.statuses) !== JSON.stringify(current.statuses));
+    });
+    note(changed || m.playerMotion !== before.playerMotion || m.cpuMotion !== before.cpuMotion || m.discountTokens.length !== before.discountTokens.length
+      ? `${source.ability} resolved.` : `${source.ability}: no eligible ally or effect yet.`);
+  }
   else if (Object.hasOwn(streetWaveCards, source.cardId)) {
     const id = source.cardId;
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && c.kind !== 'support');
@@ -2822,7 +2875,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
   const boardAdditionSucceeded = m.boards.flat().some(card => !findCard(before, card.instanceId));
   const movementSucceeded = [source.instanceId, ...targetIds].some(id => findCard(before, id)?.lane !== findCard(m, id)?.lane);
   const meaningfulExpansionChange = mechanicallyChanged(source.instanceId) || successfulChangedTargetIds.length > 0 || boardAdditionSucceeded;
-  const isExpansion = Object.hasOwn(expansionCards, source.cardId) || Object.hasOwn(streetWaveCards, source.cardId)
+  const isExpansion = Object.hasOwn(expansionCards, source.cardId) || Object.hasOwn(streetWaveCards, source.cardId) || Object.hasOwn(elementalWaveCards, source.cardId)
     || Object.hasOwn(characterWaveCards, source.cardId)
     || Object.hasOwn(mythicLegendCards, source.cardId) || source.kind === 'support';
   const baseSucceeded = protectionBlockedIds.length ? meaningfulExpansionChange || m.playerMotion !== before.playerMotion || m.cpuMotion !== before.cpuMotion

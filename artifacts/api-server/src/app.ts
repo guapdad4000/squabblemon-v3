@@ -12,6 +12,7 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 
 import { campaignLogProps, requestId } from "./lib/requestContext";
+import { requestCompletionMessage } from "./lib/requestCompletionMessage";
 import { paymentWebhook } from "./routes/payments";
 
 function productionAuthMiddleware(): RequestHandler {
@@ -33,6 +34,9 @@ export function createApp(
     logger,
     genReqId: requestId,
     customProps: campaignLogProps,
+    // Netlify function invocations mock the socket lifecycle, so completion
+    // vs. abort must follow the adapter-aware provider, not socket flags.
+    customSuccessMessage: requestCompletionMessage,
     serializers: {
       req(req) {
         return {

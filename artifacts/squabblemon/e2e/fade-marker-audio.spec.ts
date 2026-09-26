@@ -44,17 +44,81 @@ async function routeLobby(page: Page, transitionToActive: boolean) {
   let searched = false;
   await page.route('**/api/multiplayer/ranked**', async route => {
     const isSearch = route.request().method() === 'POST';
+    if (route.request().method() === 'DELETE') {
+      searched = false;
+      await route.fulfill({ json: { status: 'closed' } });
+      return;
+    }
     if (isSearch) searched = true;
     const room = searched
       ? {
           code: 'MARKER',
           status: !isSearch && transitionToActive ? 'active' : 'waiting',
-          ranked: { queuedAt: new Date().toISOString() },
+           ranked: { queuedAt: Date.now() },
         }
       : null;
     await route.fulfill({ json: { room } });
   });
 }
+
+async function expectSearchPresentation(page: Page, reduced = false) {
+  const search = page.getByTestId('ranked-search');
+  await expect(search).toBeVisible();
+  for (const [selector, asset] of [
+    ['.park-search-poster', 'search-versus.png'],
+    ['.park-search-fighters', 'search.gif'],
+    ['.park-search-phone', 'sticker-phone.webp'],
+  ]) {
+    const image = search.locator(selector);
+    if (reduced && selector === '.park-search-fighters') await expect(image).toBeHidden();
+    else await expect(image).toBeVisible();
+    await expect(image).toHaveAttribute('src', new RegExp(asset.replace('.', '\\.') + '$'));
+    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+  await expect(search.getByRole('status')).toBeVisible();
+  await expect(search.locator('time')).toContainText(/^\d\d:\d\d$/);
+  const cancelButton = page.getByTestId('cancel-ranked-fade');
+  await expect(cancelButton).toBeEnabled();
+  const fitsViewport = await search.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    return bounds.left >= 0 && bounds.right <= innerWidth;
+  });
+  expect(fitsViewport).toBe(true);
+  expect(await cancelButton.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    return bounds.left >= 0 && bounds.right <= innerWidth;
+  })).toBe(true);
+}
+
+test('ranked search keeps fighters, versus art, and ringing phone through cancellation', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await observeNativeVoiceAudio(page, false);
+  await routeLobby(page, false);
+  await page.goto(fixture);
+  await page.getByTestId('find-ranked-fade').click();
+  await expectSearchPresentation(page);
+  expect(await page.evaluate(() => (window as typeof window & { __voiceEvents: VoiceEvent[] }).__voiceEvents)).toEqual([]);
+  await page.context().setOffline(true);
+  await expect(page.getByTestId('ranked-search').getByRole('heading', { name: 'Reconnecting…' })).toBeVisible();
+  await expectSearchPresentation(page);
+  await page.context().setOffline(false);
+  await page.getByTestId('cancel-ranked-fade').click();
+  await expect(page.getByTestId('ranked-search')).toHaveCount(0);
+  await expect(page.locator('.park-search-art')).toHaveCount(0);
+  await expect(page.getByTestId('find-ranked-fade')).toBeEnabled();
+});
+
+test('reduced motion keeps the static versus scene and phone on a narrow screen', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await observeNativeVoiceAudio(page, false);
+  await routeLobby(page, false);
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto(fixture);
+  await page.getByTestId('find-ranked-fade').click();
+  await expectSearchPresentation(page, true);
+  await page.getByTestId('cancel-ranked-fade').click();
+  await expect(page.getByTestId('ranked-search')).toHaveCount(0);
+});
 
 for (const format of [
   { extension: 'm4a', mime: 'audio/mp4' },
@@ -116,8 +180,10 @@ test('Find a fade marker survives the waiting-to-active lobby unmount', async ({
   await page.waitForTimeout(350);
   await page.getByTestId('find-ranked-fade').click();
   await expect(page.getByTestId('ranked-search')).toBeVisible();
+  await expect(page.getByTestId('ranked-search').locator('.park-search-phone')).toBeVisible();
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(page.getByTestId('active-room')).toBeVisible();
+  await expect(page.getByTestId('ranked-search')).toHaveCount(0);
   await expect.poll(() => page.evaluate(() =>
     (window as typeof window & { __voiceEvents: VoiceEvent[] }).__voiceEvents
       .some(event => event.name.startsWith('fade-marker.') && event.event === 'ended'),
@@ -153,4 +219,16 @@ test('muted feedback preference suppresses Fade Park voice', async ({ page }) =>
   expect(await page.evaluate(() =>
     (window as typeof window & { __voiceEvents: VoiceEvent[] }).__voiceEvents,
   )).toEqual([]);
+});
+
+test('starting a ranked search plays the full catch-a-fade voice line', async ({ page }) => {
+  await observeNativeVoiceAudio(page);
+  await routeLobby(page, false);
+  await page.goto(fixture);
+  await page.getByTestId('find-ranked-fade').click();
+  await expectSearchPresentation(page, await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches));
+  await expect.poll(() => page.evaluate(() =>
+    (window as typeof window & { __voiceEvents: VoiceEvent[] }).__voiceEvents
+      .some(event => event.name.startsWith('fade-marker.') && event.event === 'ended'),
+  ), { timeout: 10_000 }).toBe(true);
 });

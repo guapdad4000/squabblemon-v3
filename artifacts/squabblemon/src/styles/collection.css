@@ -9,12 +9,13 @@
   position: relative;
   flex: none;
   background-size: cover;
-  background-position: center 43%;
+  background-position: center top;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: clamp(160px, 20vh, 200px);
+  height: 224px;
+  min-height: 224px;
   padding: 14px var(--arsenal-gutter) 0;
   border-bottom: 1px solid #e47e3b;
   isolation: isolate;
@@ -41,12 +42,12 @@
 }
 
 .collection-hero__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: auto;
-  flex-wrap: wrap;
-  gap: 8px;
+  position: absolute;
+  top: -112px;
+  left: 0;
+  width: min(205px, 22vw);
+  padding: 3px 5px;
+  background: linear-gradient(90deg, rgb(8 7 6 / 60%), rgb(8 7 6 / 24%) 80%, transparent);
 }
 
 .collection-hero__titles {
@@ -55,19 +56,19 @@
 }
 
 .collection-hero__eyebrow {
-  font: 500 11px var(--font-mono);
+  font: 700 8px var(--font-mono);
   color: #f7c580;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
-.collection-hero__title {
-  font: 900 italic clamp(28px, 4vw, 42px) var(--font-display);
+.game-shell .collection-stage__header .collection-hero__title {
+  font: 900 italic clamp(18px, 2vw, 24px) var(--font-display);
   color: #fff7e5;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 0.98;
   text-shadow: 0 4px 12px rgba(0,0,0,0.9), 0 0 40px rgba(234, 88, 12, 0.4);
 }
 
@@ -120,28 +121,36 @@
 }
 
 .collection-hero__stats {
+  position: absolute;
+  top: -96px;
+  right: 4px;
   display: flex;
   flex-direction: column;
-  padding-bottom: 8px;
+  min-width: 110px;
+  padding: 3px 5px;
+  background: linear-gradient(90deg, rgb(8 7 6 / 60%), rgb(8 7 6 / 24%) 80%, transparent);
 }
 
 .collection-hero__stat-value {
-  font: 900 italic clamp(24px, 3vw, 32px) var(--font-display);
+  font: 900 italic 18px var(--font-display);
   color: #ffb45f;
   line-height: 1;
   text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
 .collection-hero__stat-label {
-  font: 500 10px var(--font-mono);
+  font: 600 8px var(--font-mono);
   color: #e8c79d;
   letter-spacing: 0.15em;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .collection-stage__header .collection-tabs {
-  margin-top: 0;
-  margin-bottom: -1px;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
 }
 
 .collection-stage__header .collection-tabs :is(button, a) {
@@ -165,6 +174,36 @@
     repeating-linear-gradient(100deg, transparent 0 80px, rgb(255 255 255 / 1%) 81px 82px);
 }
 
+.collection-filters {
+  max-width: 1480px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 12px 16px;
+  border: 1px solid rgb(247 197 128 / 35%);
+  background: linear-gradient(100deg, rgb(70 34 20 / 90%), rgb(18 15 13 / 94%));
+  color: #fff0d1;
+  font: 700 12px var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.collection-filters label { display: inline-flex; align-items: center; gap: 10px; }
+.collection-filters select {
+  min-height: 42px;
+  padding: 6px 28px 6px 10px;
+  color: #fff4de;
+  background: #21150f;
+  border: 1px solid #ba8454;
+  border-radius: 3px;
+}
+.collection-filters__bond { min-height: 42px; cursor: pointer; }
+.collection-filters__bond input { width: 18px; height: 18px; accent-color: #f5ad58; }
+.collection-filters__count { margin-left: auto; color: #f5bd7c; }
+.collection-filters :is(select, input):focus-visible { outline: 2px solid #ffd48e; outline-offset: 3px; }
+
 .collection-card-grid {
   grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
   gap: clamp(18px, 2vw, 28px) clamp(12px, 1.7vw, 22px);
@@ -176,6 +215,28 @@
 .collection-card-grid > button {
   border-radius: 5px;
   filter: drop-shadow(0 8px 11px rgb(0 0 0 / 36%));
+}
+
+.collection-card-grid > button[data-collection-bond="true"] {
+  outline: 2px solid #f1b85f;
+  outline-offset: 3px;
+}
+.collection-card-grid > button[data-collection-bond="true"]:focus-visible {
+  outline: 3px solid #fff2c6;
+}
+.collection-card-grid__bond {
+  position: absolute;
+  z-index: 25;
+  top: 37px;
+  left: 2px;
+  max-width: calc(100% - 4px);
+  padding: 3px 5px;
+  background: #281307;
+  border: 1px solid #f1b85f;
+  color: #ffdfa0;
+  font: 800 9px var(--font-mono);
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .collection-card-grid > button:focus-visible {
@@ -225,12 +286,27 @@
 
 @media (max-width: 600px) {
   .collection-stage__hero {
-    min-height: 170px;
-    background-position: 53% center;
+    height: 245px;
+    min-height: 245px;
+    background-position: 53% top;
     padding-top: 12px;
   }
   .collection-hero__top {
-    gap: 10px;
+    top: 62px;
+    left: 12px;
+    width: min(64vw, 235px);
+    padding: 0;
+    background: none;
+  }
+  .collection-hero__titles {
+    display: flex;
+  }
+  .collection-hero__eyebrow {
+    margin-bottom: 2px;
+  }
+  .game-shell .collection-stage__header .collection-hero__title {
+    font-size: clamp(16px, 5vw, 20px);
+    white-space: nowrap;
   }
   .collection-hero__bottom {
     margin-top: 12px;
@@ -242,13 +318,19 @@
     font-size: 10px;
   }
   .collection-hero__stats {
-    padding-bottom: 5px;
+    top: 74px;
+    right: 12px;
+    min-width: 0;
+    padding: 0;
+    background: none;
+    text-align: right;
   }
   .collection-hero__stat-value {
-    font-size: 24px;
+    font-size: 16px;
   }
   .collection-stage__header .collection-tabs {
-    width: 100%;
+    top: 8px;
+    width: min(100%, 420px);
     gap: 8px;
   }
   .collection-stage__header .collection-tabs :is(button, a) {

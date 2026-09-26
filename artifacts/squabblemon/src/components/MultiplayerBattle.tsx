@@ -1,5 +1,6 @@
 import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
+import { onlineResultCopy } from './onlineResultCopy';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -135,6 +136,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     finally { sending.current = false; }
   }
   const rank = room.ranked?.result;
+  const resultCopy = onlineResultCopy(room);
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
@@ -159,13 +161,9 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
     <Dialog open={room.status === 'complete' && !reviewBoard} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
+        title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
-        description={room.reason === 'timeout'
-          ? room.winner === room.seat
-            ? "Your rival's turn clock expired. You win by forfeit."
-            : 'Your turn clock expired. You forfeited the fade.'
-          : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'}
-        timeoutResult={room.reason === 'timeout'}>
+        description={resultCopy.description}>
         {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => void act({ type: 'rematch' })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
         <button className="online-primary" onClick={onLeave}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>

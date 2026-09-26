@@ -100,7 +100,7 @@
 .dossier-banner__stamp {
   width: 96px;
   height: 96px;
-  background-image: url("/assets/inspector/classified-stamp.jpg");
+  background-image: url("/assets/inspector/classified-stamp.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -621,7 +621,7 @@
   content: "";
   position: absolute;
   inset: -1px;
-  background-image: url("/assets/inspector/scout-stamp.jpg");
+  background-image: url("/assets/inspector/scout-stamp.png");
   background-size: 110px 110px;
   background-repeat: no-repeat;
   background-position: right -8px top -10px;
@@ -675,7 +675,7 @@
   bottom: -16px;
   width: 140px;
   height: 140px;
-  background-image: url("/assets/inspector/classified-stamp.jpg");
+  background-image: url("/assets/inspector/classified-stamp.png");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: .55;
@@ -920,6 +920,67 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
     margin-top: 12px;
     padding: 18px 16px 14px;
   }
+}
+
+/* Clipboard hardware lives above the paper; resume copy remains in normal flow. */
+.card-inspector-shell .dossier-paper.referee-clipboard {
+  padding-top: clamp(38px, 4vw, 54px) !important;
+  background: url("/assets/inspector/clipboard-paper.jpg") center top / 600px auto repeat, var(--resume-paper) !important;
+  background-repeat: repeat;
+  background-size: 600px auto;
+  overflow-wrap: anywhere;
+}
+.card-inspector-shell .dossier-paper.referee-clipboard > .dr-fade-referee {
+  position: absolute;
+  top: -62px;
+  left: 12px;
+  width: 110px;
+  height: 110px;
+  z-index: 4;
+}
+.card-inspector-shell .dossier-banner {
+  gap: 8px 14px;
+  margin-bottom: 12px;
+}
+.card-inspector-shell .dossier-banner__stamp {
+  width: 64px;
+  height: 64px;
+}
+.card-inspector-shell .dossier-banner__meta {
+  flex-basis: 100%;
+  width: fit-content;
+}
+.card-inspector-shell .dossier-name,
+.card-inspector-shell .dossier-sticky__title,
+.card-inspector-shell .dossier-sticky__copy,
+.card-inspector-shell .dossier-notes,
+.card-inspector-shell .dossier-stat__value,
+.card-inspector-shell .dossier-stat__sub,
+.card-inspector-shell .dossier-section,
+.card-inspector-shell .dossier-table__row > *,
+.card-inspector-shell .dossier-variant {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.card-inspector-shell .dossier-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.card-inspector-shell .dossier-section__head { flex-wrap: wrap; }
+.card-inspector-shell .dossier-mark { right: 6px; bottom: 6px; }
+@media (min-width: 1100px) {
+  .card-inspector-shell .dossier-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .card-inspector-shell .dossier-paper.referee-clipboard { padding-top: 42px !important; }
+  .card-inspector-shell .dossier-paper.referee-clipboard > .dr-fade-referee { top: -44px; width: 80px; height: 80px; }
+  .card-inspector-shell .dossier-banner__stamp { display: block; width: 46px; height: 46px; }
+  .card-inspector-shell .dossier-banner__tape { max-width: calc(100% - 58px); flex-wrap: wrap; letter-spacing: .08em; }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .card-inspector-shell .card-inspector-layout { height: auto; }
+  .card-inspector-shell .dossier-paper.referee-clipboard { padding-top: 35px !important; max-height: none; overflow: visible; }
+  .card-inspector-shell .dossier-paper.referee-clipboard > .dr-fade-referee { top: -30px; width: 64px; height: 64px; }
+  .card-inspector-shell .dossier-banner__stamp { display: none; }
 }
 
 /* ------------------------------------------------------------------ */

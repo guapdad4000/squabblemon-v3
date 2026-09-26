@@ -98,9 +98,10 @@
 .park-notice { padding: 12px; background: #822b282d; border: 1px solid #eb8b5e55; border-radius: 8px; margin-bottom: 18px; font-size: 12px; }
 .park-notice button { text-decoration: underline; min-height: 34px; }
 
-.park-search-art { position: relative; height: 210px; margin: 0 -25px 12px; overflow: hidden; background: #08130f; }
-.park-search-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .25; mask-image: linear-gradient(transparent,#000 25%,#000 65%,transparent); }
-.park-search-fighters { position: relative; width: 100%; height: 100%; object-fit: contain; }
+.park-search-art { position: relative; height: 210px; margin: 0 0 12px; overflow: hidden; background: #08130f; border: 1px solid #f3d59855; border-radius: 8px; }
+.park-search-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .8; }
+.park-search-fighters { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 8px #000); }
+.park-search-phone { position: absolute; bottom: 4px; right: 5px; width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 2px 5px #000); }
 .park-search-status { display: flex; gap: 8px; align-items: center; }
 .park-search-status h3 { font-size: 15px; font-weight: 700; flex: 1; }
 .park-search-status time { font: 600 12px monospace; color: #f3d598; }
@@ -141,7 +142,7 @@
   .fade-park .deck-carousel__navigation > button { width: 32px; height: 38px; flex-basis: 32px; }
   .park-lineup { height: 49px; margin-bottom: 16px; }
   .park-find { min-height: 52px; padding: 12px 16px; font-size: 16px; }
-  .park-search-art { margin: 0 -20px 12px; height: 180px; }
+  .park-search-art { height: 180px; }
   .park-search-status h3 { font-size: 13px; }
   .fade-park-wallpaper { object-position: 44% top; }
   .fade-park-shade { background: none; }
@@ -156,7 +157,7 @@
   .fade-park .deck-carousel__copy h3 { font-size: 18px; }
   .park-floating-info { flex-wrap: wrap; gap: 10px; }
   .park-rank-caption { font-size: 9px; }
-  .park-search-art { margin: 0 -16px 12px; }
+  .park-search-art { height: 150px; }
   .fight-tabs a,.fight-tabs-disabled { padding-inline: 7px; }
 }
 
@@ -191,9 +192,9 @@ html[data-reduce-motion="true"] .park-layer { transform: none !important; transi
   100% { transform: translateY(-8px) rotate(-1deg); }
 }
 
-@media(prefers-reduced-motion:reduce) { .park-search-fighters { display: none; } .park-search-poster { opacity: .65; } .park-dj .music-dj-art { animation: none; } }
+@media(prefers-reduced-motion:reduce) { .park-search-fighters { display: none; } .park-search-poster { opacity: 1; } .park-dj .music-dj-art { animation: none; } }
 html[data-reduce-motion="true"] .park-search-fighters { display: none; }
-html[data-reduce-motion="true"] .park-search-poster { opacity: .65; }
+html[data-reduce-motion="true"] .park-search-poster { opacity: 1; }
 
 /* A paper-wrapped rank meter: the ember travels toward the cork filter. */
 .park-rank-track {

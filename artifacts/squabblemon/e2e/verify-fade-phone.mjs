@@ -13,7 +13,7 @@ const bootstrap = profileBootstrap({
   ownedCardIds: cardCatalog.map(c => c.catalogId),
   savedDecks: [{ id: 'phone-crew', name: 'THE REGULARS', cardIds: recipe.catalogCardIds, heroCardId: recipe.hero, valid: true, issues: [], recipeId: null }],
 });
-const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
+const browser = await chromium.launch({ headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
 
 async function observeAudio(page) {
   await page.addInitScript(() => {

@@ -100,6 +100,8 @@
 .park-result .park-result-score b,
 .park-result .park-award-label,
 .park-result .park-rp-change{color:#735418}
+.park-result .park-result-receipt>.park-result-board-note{margin:4px 0 8px;color:#554321;font-size:11px;line-height:1.3;font-weight:700;text-align:center}
+.online-clock-rule{position:relative;z-index:30;margin:0;padding:3px 12px;background:#18251f;color:#ffe3a0;text-align:center;font-size:11px;line-height:1.25;font-weight:700}
 @media(max-height:430px){
   .park-result.park-result--illustrated .park-result-scene{height:72px}
   .park-result.park-result--illustrated .park-result-scene>img{width:140px;height:132px;margin-left:-70px;top:-8px}

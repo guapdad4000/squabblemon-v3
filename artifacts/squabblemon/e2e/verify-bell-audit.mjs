@@ -3,7 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 const base = process.env.TEST_BASE_URL ?? 'http://localhost:4318';
 const output = '/tmp/bell-audit';
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: 'chrome' });
+const browser = await chromium.launch(process.env.CHROMIUM_EXECUTABLE_PATH
+  ? { executablePath: process.env.CHROMIUM_EXECUTABLE_PATH }
+  : { channel: 'chrome' });
 const errors = [], requests = [], results = [], devWarnings = [];
 const notices = page => page.getByTestId('notices').textContent().then(JSON.parse);
 const ids = async page => (await notices(page)).map(n => n.id);

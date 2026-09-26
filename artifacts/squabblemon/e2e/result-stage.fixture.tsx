@@ -4,7 +4,7 @@ import {createPortal} from 'react-dom';
 import {ResultScreen} from '../src/components/ResultScreen';
 import {MultiplayerBattle} from '../src/components/MultiplayerBattle';
 import {createMatch,createCardInstance,type Match} from '../src/gameEngine';
-import {applyOnlineCommand,createOnlineRoom,expireOnlineRoom,joinOnlineRoom,onlineRoomView,type OnlineRoom} from '@workspace/squabblemon-engine/multiplayer';
+import {applyOnlineCommand,createOnlineRoom,expireOnlineRoom,joinOnlineRoom,onlineRoomView,type OnlineRoom,type Seat} from '@workspace/squabblemon-engine/multiplayer';
 import {getStoryBattle} from '@workspace/squabblemon-engine/story';
 import {decks,districts} from '../src/data';
 import '../src/index.css';
@@ -28,27 +28,22 @@ function Fixture(){
 }
 function OnlineFixture(){
   const params=new URLSearchParams(location.search);
-  const rankedDraw=params.get('result')==='ranked-draw';
-  const timeout=params.get('result')==='timeout';
-  const seat=params.get('seat')==='cpu'?'cpu':'player';
+  const result=params.get('result');
+  const rankedDraw=result==='ranked-draw';
+  const timeout=result==='ranked-timeout';
+  const seat:Seat=params.get('seat')==='cpu'?'cpu':'player';
+  const expiredSeat:Seat=params.get('expired')==='cpu'?'cpu':'player';
  const [room,setRoom]=useState<OnlineRoom>(()=>{
    const now=Date.now(),deck=decks.find(deck=>deck.id==='block')!;
-   let next=joinOnlineRoom(createOnlineRoom({userId:'host',name:'Host',ready:false,deck},'player',now),{userId:'guest',name:'Guest',ready:false,deck},now);
+    let next=joinOnlineRoom(createOnlineRoom({userId:'host',name:'Host',ready:false,deck},expiredSeat,now),{userId:'guest',name:'Guest',ready:false,deck},now);
    next=applyOnlineCommand(next,'player',{type:'ready'},now);
    next=applyOnlineCommand(next,'cpu',{type:'ready'},now);
    const finished={...next.match!,phase:'complete' as const,round:6};
-     finished.boards=(timeout?['player','player','cpu']:['cpu','cpu','cpu']).map((owner,lane)=>
-       Array.from({length:3},(_,index)=>({...createCardInstance('cornball',owner as 'player'|'cpu','online-result',lane*3+index),lane,playedRound:1}))
-     ) as Match['boards'];
-    const ranked={queuedAt:now-20_000,heartbeatAt:now,botAfter:now-8_000,bot:false,ratings:{player:1000,cpu:1000},settlement:{
-      player:{before:timeout?100:95,after:timeout?85:100,delta:timeout?-15:5,tier:'Bronze' as const,outcome:timeout?'loss' as const:'draw' as const,bot:false},
-      cpu:{before:100,after:timeout?125:105,delta:timeout?25:5,tier:'Bronze' as const,outcome:timeout?'win' as const:'draw' as const,bot:false},
-    }};
-    if(timeout){
-      const timedOut={...next,activeSeat:'player' as const,match:finished,ranked,deadline:next.deadline};
-      return expireOnlineRoom(timedOut,timedOut.deadline!);
-    }
-    return {...next,status:'complete',winner:rankedDraw?'draw':'cpu',reason:'districts',deadline:null,match:finished,...(rankedDraw?{ranked}:{})};
+    if(result==='active') return next;
+    finished.boards=[['cornball'],['hooper'],...(timeout?[[]]:[['wifey']])].map((ids,lane)=>ids.map((id,i)=>({...createCardInstance(id,timeout?expiredSeat:'cpu','online-result',i),lane,playedRound:1}))) as Match['boards'];
+    const completed=timeout?expireOnlineRoom({...next,match:finished},next.deadline!):{...next,status:'complete' as const,winner:rankedDraw?'draw' as const:'cpu' as const,reason:'districts' as const,deadline:null,match:finished};
+    return {...completed,
+      ...(rankedDraw||timeout?{ranked:{queuedAt:now-20_000,heartbeatAt:now,botAfter:now-8_000,bot:false,ratings:{player:1000,cpu:1000},settlement:{[seat]:{before:95,after:timeout&&seat===expiredSeat?80:rankedDraw?100:120,delta:timeout&&seat===expiredSeat?-15:rankedDraw?5:25,tier:'Bronze',outcome:timeout?(seat===expiredSeat?'loss' as const:'win' as const):'draw' as const,bot:false}}}}:{})};
  });
   return <div data-testid="transformed-result-parent" style={{height:'100dvh',overflow:'auto',transform:'translate3d(0,0,0)'}}><MultiplayerBattle room={onlineRoomView(room,'RESULT',seat==='player'?'host':'guest',Date.now())} busy={false} connected reducedMotion send={command=>setRoom(current=>applyOnlineCommand(current,seat,command,Date.now()))} onLeave={()=>{document.body.dataset.action='Online exit';}} /><div aria-hidden="true" style={{height:'50dvh'}} /></div>;
 }

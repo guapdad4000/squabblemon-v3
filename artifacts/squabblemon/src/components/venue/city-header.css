@@ -46,7 +46,17 @@
 .city-header__wallet { display: flex; align-items: center; gap: 14px; flex: none; }
 .city-header__wallet .city-header__balance { white-space: nowrap; }
 .city-header__shards { color: #c7efff; }
+.city-header__return { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.city-header .city-header__safehouse { display: grid; place-items: center; width: 44px; min-width: 44px; min-height: 44px; padding: 5px; border-radius: 5px; }
+.city-header__safehouse img { display: block; width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 2px #0009); transition: transform .15s; }
+.city-header__safehouse:hover img { transform: translateY(-2px); }
+.city-header__safehouse:focus-visible { outline: 2px solid #f5ce6b; outline-offset: 1px; }
+@media (prefers-reduced-motion: reduce) { .city-header__safehouse img { transition: none; } }
 @media (max-width: 600px) {
+  .city-header { gap: 6px; }
+  .city-header__return { gap: 0; }
+  .city-header .city-header__safehouse { width: 40px; min-width: 40px; }
+  .city-header__safehouse img { width: 29px; height: 29px; }
   .city-header::before { bottom: -26px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
   .city-header__wallet { flex-direction: column; align-items: flex-start; gap: 0; }
   .city-header__wallet .city-header__balance { min-height: 24px; }
