@@ -20,7 +20,7 @@ Use `getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-gold.webp')` for th
 
 Import `components/prism-frame.css`, then apply `prism-frame` to a panel with sufficient content padding. Set `--prism-frame-size` (default 34px) and optional `--prism-frame-outset`. The frame slices at 20%, repeats its rails, has no center fill, and cannot intercept clicks. Separate corner/edge files are also provided for compositions needing independently placed pieces.
 
-Prismatic cards use the frame plus the rainbow foil material under the transparent character artwork. Pointer, touch and keyboard reflection controls remain intact. The other card finishes keep their own materials. System and in-game reduced-motion settings stop the logo sheen and animated card reflections.
+Prismatic cards use a clean gold foil-textured edge plus the rainbow foil material under the transparent character artwork. The decorative corner frame is retained in the asset kit for optional reuse, but is not applied to cards. Pointer, touch and keyboard reflection controls remain intact. The other card finishes keep their own materials. System and in-game reduced-motion settings stop the logo sheen and animated card reflections.
 
 ## Generation and import
 

@@ -1,4 +1,3 @@
-@import './prism-frame.css';
 .collector-card {
   --foil-x: 48%; --foil-y: 32%; --tilt-x: 0deg; --tilt-y: 0deg;
   --foil-strength: .15; --foil-light: #e9e4d9; --foil-mid: #9b9e99; --foil-dark: #333b3b;
@@ -224,12 +223,14 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
 .collector-card[data-card-kind="blockbuster"] .collector-edition-seal {display:none;}
 .collector-finish-controls nav {flex-wrap:wrap;}
 
-/* Gold hardware surrounds the reverse holo without clipping the illustration. */
+/* A simple foil-textured edge keeps the full illustration in view. */
 .collector-card.card-variant-prismatic .collector-frame {
-  --prism-frame-size:20px; --prism-frame-outset:6px;
-  clip-path:none; background:linear-gradient(125deg,#170d00aa,#ffe69a44,#15040099),url('/brand/prismatic/materials/prism-gold.webp') center / cover;
+  padding:3px;
+  background-image:linear-gradient(125deg,#170d0055,#fff7,#15040044),url('/brand/prismatic/materials/prism-gold.webp');
+  background-size:200% 200%,cover;
+  background-position:var(--foil-x) var(--foil-y),center;
 }
-.collector-card--inspector.card-variant-prismatic .collector-frame { --prism-frame-size:36px; --prism-frame-outset:12px; }
+.collector-card--inspector.card-variant-prismatic .collector-frame { padding:6px; }
 .collector-card.card-variant-prismatic .collector-engraving { border:0; box-shadow:none; }
 .collector-card.card-variant-prismatic .collector-art-rim { border-color:#ffe49c66; box-shadow:none; }
 .collector-card.card-variant-prismatic .collector-edition-seal { color:#ffebb1; }
