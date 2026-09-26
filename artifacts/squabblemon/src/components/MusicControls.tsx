@@ -6,6 +6,7 @@ import { musicActions, useMusic, useMusicBanks, updateMusicBank } from '../music
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { getAssetUrl } from '../data';
 import { setAnnouncerVolume, useAnnouncerVolume } from '../lib/battleAnnouncerVolume';
+import { MotionSticker } from './MotionSticker';
 import './music-controls.css';
 
 export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '' }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string }) {
@@ -47,7 +48,11 @@ export function MusicControls({ compact = false, variant = 'default', className 
       onClick={event => { if (event.target === dialog.current) dialog.current.close(); }}>
       <div className="music-panel">
         <header className="music-dj-header">
-          <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="Dr. Fade at the Fade Tapes turntables" width={560} height={700} draggable={false} />
+          {open ? (
+            <MotionSticker variant="fade-tapes" className="music-dialog-portrait music-dialog-portrait--motion" label="Dr. Fade at the Fade Tapes turntables" />
+          ) : (
+            <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="Dr. Fade at the Fade Tapes turntables" width={560} height={700} draggable={false} />
+          )}
           <div><span className="music-eyebrow">DR. FADE PRESENTS</span><h2 id={`${id}-title`}>The Fade Tapes</h2></div>
           <button type="button" aria-label="Close music controls" onClick={() => dialog.current?.close()}><X size={20} /></button></header>
         <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>{track.album} · {track.artist}</p></div>

@@ -2,6 +2,7 @@ import { SignUp } from '@clerk/react';
 import { e2eAuthEnabled, getAfterSignIn, TestAccountEntry } from '../../lib/auth';
 import { basePath } from '../../lib/routing';
 import { getCardImage } from '../../data';
+import { MotionSticker } from '../../components/MotionSticker';
 
 export function SignUpPage() {
   if (e2eAuthEnabled) return <TestAccountEntry kind="sign-up" />;
@@ -11,6 +12,7 @@ export function SignUpPage() {
       <div className="noise-overlay" />
       <img src={getCardImage('live-streamer')} alt="" aria-hidden="true" className="fixed -right-[14%] bottom-[-9%] h-[74%] w-[54%] object-contain object-right-bottom opacity-30 grayscale pointer-events-none" />
       <div className="relative z-10 w-full max-w-md">
+        <MotionSticker variant="auth" className="auth-motion-brand" label="Squabblemon" eager />
         <SignUp 
           path={`${basePath}/sign-up`}
           routing="path"

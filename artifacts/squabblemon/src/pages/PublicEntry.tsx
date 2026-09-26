@@ -2,7 +2,7 @@ import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { getAssetUrl, getCardImage } from '../lib/assets';
 import { useAppAuth } from '../lib/auth';
-import { AnimatedLogo } from '../components/AnimatedLogo';
+import { MotionSticker } from '../components/MotionSticker';
 import { InstallGame } from '../components/InstallGame';
 
 export function PublicEntry() {
@@ -13,7 +13,7 @@ export function PublicEntry() {
       <div className="noise-overlay" />
       <div
         className="absolute inset-0 opacity-30 bg-cover bg-center mix-blend-luminosity"
-        style={{ backgroundImage: `url("${getAssetUrl('assets/e71f5189-861e-418d-8237-fa20713b9122.png')}")` }}
+        style={{ backgroundImage: `url("${getAssetUrl('assets/e71f5189-861e-418d-8237-fa20713b9122.webp')}")` }}
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,7,7,.98)_0%,rgba(7,7,7,.88)_45%,rgba(7,7,7,.25)_100%),radial-gradient(circle_at_70%_40%,rgba(250,204,21,.2),transparent_50%)]" />
       <motion.img
@@ -33,7 +33,7 @@ export function PublicEntry() {
       />
       
       <div className="relative z-10 flex-1 flex flex-col items-start justify-center p-6 md:p-12 lg:p-20 text-left max-w-2xl">
-        <AnimatedLogo className="max-w-[34rem] mb-7" />
+        <MotionSticker variant="entry" className="public-entry-motion" label="Squabblemon" eager />
         
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
           <div className="font-mono text-[9px] md:text-[11px] text-primary uppercase tracking-[.28em] mb-3">The city is watching</div>

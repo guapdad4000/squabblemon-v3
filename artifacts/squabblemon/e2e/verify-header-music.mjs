@@ -26,7 +26,7 @@ try {
     await music.click();
     const panel = page.getByRole('dialog', { name: 'The Fade Tapes' });
     await panel.waitFor();
-    assert.match(await panel.locator('.music-dialog-portrait').getAttribute('src'), /dr-fade-dj-turntable\.webp(?:\?|$)/, 'Music controls use the approved Dr. Fade Fade Tapes artwork');
+    assert.match(await panel.locator('.music-dialog-portrait img').getAttribute('src'), /dr-fade-tapes-still\.webp(?:\?|$)/, 'Reduced-motion music controls use the approved Dr. Fade Fade Tapes artwork');
     const bounds = await panel.boundingBox();
     assert.ok(bounds.x >= 0 && bounds.y >= 0 && bounds.x + bounds.width <= width + 1 && bounds.y + bounds.height <= height + 1);
     assert.ok(await panel.getByRole('combobox', { name: 'Choose music track' }).locator('option').count() >= 6);
