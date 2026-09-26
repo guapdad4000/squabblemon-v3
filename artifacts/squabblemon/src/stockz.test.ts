@@ -31,7 +31,7 @@ test('STOCKZ ignores supports and enemy plays, and disabled abilities do not tri
   let match:Match={...createMatch('block','slide'),boards:[[stockz],[],[]]};
   match=addPlay(match,'charger',1,1); assert.equal(growth(match),0);
   match=addPlay(match,'edgar',2,1,'cpu'); assert.equal(growth(match),0);
-  for(const status of ['silenced','frozen'] as const){
+  for(const status of ['silenced','frozen','weakened'] as const){
     const disabled={...stockz,statuses:{...stockz.statuses,[status]:true}};
     match=addPlay({...match,boards:[[disabled],[],[]]},'edgar',3,1);
     assert.equal(growth(match),0);

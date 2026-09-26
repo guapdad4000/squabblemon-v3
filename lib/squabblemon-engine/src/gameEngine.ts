@@ -3144,14 +3144,14 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   // Permanent powerModifier carries these gains through every round.
   if ((card.kind ?? 'character') === 'character') {
     for (const investor of m.boards.flat().filter(c => !c.hazard && c.owner === owner && abilityCardId(c) === 'stockz'
-      && c.instanceId !== instanceId && !c.statuses.silenced && !c.statuses.frozen)) {
+      && c.instanceId !== instanceId && activeAbility(c))) {
       const beforeTrigger = m;
       m = modify(m, investor.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Compound Interest: +1 Hand.' }));
       m = addEvent(beforeTrigger, m, { type: 'ability', sourceId: investor.instanceId, owner, targetIds: [investor.instanceId], note: 'Compound Interest gained +1 Hand from a new friendly character.' });
     }
   }
   // Existing engines see a cheap arrival before its own ability resolves.
-  if (cost <= 2) for (const streamer of m.boards.flat().filter((c) => !c.hazard && c.owner === owner && abilityCardId(c) === 'streamer' && !c.statuses.silenced && !c.statuses.frozen)) if (m.cheapBuffsUsed[owner] < 2) {
+  if (cost <= 2) for (const streamer of m.boards.flat().filter((c) => !c.hazard && c.owner === owner && abilityCardId(c) === 'streamer' && activeAbility(c))) if (m.cheapBuffsUsed[owner] < 2) {
     const beforeTrigger = m;
     m = modify(m, placed.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Follower Frenzy: +1 Hands.' }));
     m = { ...m, cheapBuffsUsed: { ...m.cheapBuffsUsed, [owner]: m.cheapBuffsUsed[owner] + 1 } };
@@ -3160,7 +3160,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   // Gamer moved from reactive Tryhard Trigger (cheap-play watch) to proactive City Tour On Reveal.
   // The reactive cheap-play hook was removed; resolveAbility now handles Gamer's branch directly.
   for (const boss of m.boards.flat().filter(c => !c.hazard && c.owner === owner && abilityCardId(c) === 'bossbabe'
-    && c.lane !== targetLane && !c.statuses.silenced && !c.statuses.frozen && (c.networkBoosts ?? 0) < 2)) {
+    && c.lane !== targetLane && activeAbility(c) && (c.networkBoosts ?? 0) < 2)) {
     const beforeTrigger = m;
     const triggers = (boss.networkBoosts ?? 0) + 1;
     m = modify(m, boss.instanceId, c => ({ ...c, networkBoosts: triggers, powerModifier: c.powerModifier + 1,
@@ -3652,7 +3652,7 @@ export function nextRound(match: Match): Match {
   };
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
-  const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && !card.statuses.silenced && !card.statuses.frozen);
+  const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && activeAbility(card));
   for (const guard of guards) {
     m = modify(m, guard.instanceId, (card) => ({ ...card, statuses: { ...card.statuses, protected: true, blocked: false }, lastEffectNote: 'Side Eye refreshed for this round.' }));
     m = { ...m, timedEffects: [...m.timedEffects, {
