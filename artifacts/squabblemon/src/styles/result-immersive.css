@@ -194,3 +194,26 @@ html[data-reduce-motion=true] .result-immersive__splashes { display:none; }
 html[data-reduce-motion=true] .result-immersive__fade-rain { display:none; }
 
 .result-immersive__brand { object-fit:contain; filter:drop-shadow(0 2px 4px #0009); }
+
+/* A single arrival slam per scene; the underlying W/L GIF keeps playing. */
+.result-immersive__results--slam .result-immersive__mark { animation:result-mark-slam .7s cubic-bezier(.2,.7,.25,1) both; transform-origin:50% 85%; }
+.result-immersive__results--slam { animation:result-impact-shudder .24s .34s linear both; }
+@keyframes result-mark-slam {
+  0% { opacity:0; transform:translate(-50%,-190px) scale(1.75); }
+  12% { opacity:1; }
+  48% { opacity:1; transform:translate(-50%,0) scale(1.13,.82); }
+  66% { transform:translate(-50%,-14px) scale(.94,1.07); }
+  82% { transform:translate(-50%,0) scale(1.04,.96); }
+  100% { opacity:1; transform:translate(-50%,0) scale(1); }
+}
+@keyframes result-impact-shudder {
+  0%,100% { transform:translate(0,0); }
+  20% { transform:translate(-3px,3px); }
+  40% { transform:translate(3px,-2px); }
+  60% { transform:translate(-2px,1px); }
+  80% { transform:translate(1px,-1px); }
+}
+@media(prefers-reduced-motion:reduce) {
+ .result-immersive__results--slam,.result-immersive__results--slam .result-immersive__mark { animation:none; }
+}
+html[data-reduce-motion=true] .result-immersive__results--slam,html[data-reduce-motion=true] .result-immersive__results--slam .result-immersive__mark { animation:none; }

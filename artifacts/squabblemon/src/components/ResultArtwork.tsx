@@ -34,7 +34,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
     {!victory && !draw && !reduced && <div className={`result-immersive__fade-rain result-immersive__fade-rain--${variant}`} aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i key={i} style={{ '--splash-delay': `${-i * .41}s`, '--splash-duration': `${1.6 + i % 3 * .3}s` } as CSSProperties} />)}</div>}
     <img className="result-immersive__brand" src={asset('v3/wordmark')} alt="Squabblemon" />
     {!draw && <button className="result-immersive__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>Scene {variant} / 2 <span aria-hidden="true">↔</span></button>}
-    <div className="result-immersive__results">
+    <div key={`${outcome}-${variant}`} className={`result-immersive__results ${!reduced && !draw ? 'result-immersive__results--slam' : ''}`}>
       <div className="result-immersive__title">
         {!draw && <img draggable={false} className="result-immersive__mark" src={getAssetUrl(`assets/results/${victory ? 'win-w' : 'loss-l'}.gif`)} alt={victory ? 'Victory' : 'Defeat'} />}
         {heading || <h2>{draw ? 'Dead heat' : victory ? 'You won the room' : 'Make your comeback'}</h2>}
