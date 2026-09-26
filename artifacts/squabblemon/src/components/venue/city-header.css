@@ -21,6 +21,40 @@
 @media (max-width: 360px) {
   .city-header { gap: 5px; padding-inline: 8px; }
 }
+/* Paint the venue behind the HUD, while preserving the content's top clearance. */
+.game-shell__content,
+.immersive-shell {
+  --city-header-height: 62px;
+}
+.game-shell__content > .city-header,
+.immersive-shell > .city-header {
+  margin-bottom: calc(-1 * var(--city-header-height));
+}
+.game-shell__content > .game-route-stage > :first-child,
+.immersive-shell:not(:has([data-battle-navigation-slot])) > .city-header + * {
+  border-top: var(--city-header-height) solid transparent;
+  background-clip: border-box;
+  box-sizing: border-box;
+}
+/* Decorative layers also fill the space beneath the translucent header. */
+.game-shell__content .game-route-stage > :is(.decks-spectacle, .deck-editor-screen) > .gang-backdrop {
+  top: calc(-1 * var(--city-header-height));
+}
+.game-shell__content .bounty-hunter-page > .bounty-hunter__backdrop-container {
+  position: fixed;
+  inset: 0;
+}
+.game-shell__content .trading-post .gacha-stage .gym__arena,
+.game-shell__content .trading-post .corner-store > .layered-venue,
+.game-shell__content .trading-post .corner-store::after,
+.game-shell__content .market.world-decor-host > .training-studio__venue {
+  top: 0;
+}
+@media (max-width: 639px) {
+  .game-shell__content,
+  .immersive-shell { --city-header-height: 56px; }
+}
+
 /* A soft scrim keeps the HUD readable without drawing a solid bar over the scene. */
 .city-header {
   isolation: isolate;
@@ -33,13 +67,13 @@
   content: '';
   position: absolute;
   z-index: -1;
-  inset: 0 0 -34px;
+  inset: 0 0 -72px;
   pointer-events: none;
-  background: linear-gradient(180deg, #07120ed1 0%, #07120e9c 35%, #07120e52 65%, #07120e00 100%);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-  mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
+  background: linear-gradient(180deg, rgb(12 22 19 / 66%) 0%, rgb(12 22 19 / 42%) 22%, rgb(12 22 19 / 16%) 48%, rgb(12 22 19 / 4%) 72%, transparent 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 88%) 22%, rgb(0 0 0 / 55%) 48%, rgb(0 0 0 / 18%) 74%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 88%) 22%, rgb(0 0 0 / 55%) 48%, rgb(0 0 0 / 18%) 74%, transparent 100%);
 }
 .city-header .city-header__identity small { color: #d5c6a7; }
 .city-header .city-header__level { text-shadow: none; }
@@ -57,7 +91,7 @@
   .city-header__return { gap: 0; }
   .city-header .city-header__safehouse { width: 40px; min-width: 40px; }
   .city-header__safehouse img { width: 29px; height: 29px; }
-  .city-header::before { bottom: -26px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .city-header::before { bottom: -56px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   .city-header__wallet { flex-direction: column; align-items: flex-start; gap: 0; }
   .city-header__wallet .city-header__balance { min-height: 24px; }
   .city-header__wallet .game-glyph { --glyph-size: 19px; }
