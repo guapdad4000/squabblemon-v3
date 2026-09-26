@@ -46,7 +46,7 @@
 .deck-workbench__card-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#a08a5555 transparent;padding:12px 4px var(--deck-actions-clearance,140px);clip-path:inset(var(--deck-grid-clip-top,0px) 0 0)}
 .deck-workbench__browse{position:relative;flex:none;z-index:20;display:flex;align-items:center;gap:20px;padding:14px 4px 8px;background:none;flex-wrap:wrap;pointer-events:none}
 .deck-workbench__browse > *{pointer-events:auto}
-.deck-workbench__browse h2{font:900 italic 16px var(--font-display);text-transform:uppercase;white-space:nowrap;background:url('../assets/paper/ripped-strip.webp') center / 100% 100% no-repeat;color:#101410;padding:10px 24px 12px 18px;margin:-4px 0}
+.deck-workbench__browse h2{font:900 italic 16px var(--font-display);text-transform:uppercase;white-space:nowrap;background:url('../assets/paper/ripped-strip.webp') center / 100% 100% no-repeat;color:#101410;padding:17px 24px 5px 18px;margin:-4px 0}
 .deck-workbench__browse h2 small{font:10px var(--font-mono);color:#4a4a4a;margin-left:10px}
 .deck-workbench__browse .arsenal-search{margin-left:auto;max-width:340px;background:#f1d28b;border-radius:4px;box-shadow:0 6px 20px rgba(241,210,139,0.35);border:1px solid #ffe8a1;color:#000;display:flex;align-items:center;padding-left:14px}
 .deck-workbench__browse .arsenal-search svg{color:#101410;flex:none}
