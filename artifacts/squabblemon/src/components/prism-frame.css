@@ -1,0 +1,11 @@
+/* Nine-slice frame: corners retain their shape, edge tiles repeat to any aspect ratio.
+   Use on a positioned panel; the decoration never changes its content dimensions. */
+.prism-frame { position:relative; isolation:isolate; }
+.prism-frame::after,
+.collector-card.card-variant-prismatic .collector-frame::after {
+  content:''; position:absolute; inset:calc(var(--prism-frame-outset, 0px) * -1);
+  border:var(--prism-frame-size, 34px) solid transparent;
+  border-image-source:url('/brand/prismatic/frames/prism-gold-nine-slice.webp');
+  border-image-slice:20%; border-image-repeat:round; border-image-width:1;
+  pointer-events:none; z-index:19;
+}
