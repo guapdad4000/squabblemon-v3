@@ -1,3 +1,4 @@
+import { openWelcomePull, welcomePullAvailable } from '../lib/welcomePull';
 import { getAuth } from "@clerk/express";
 import { and, eq, sql } from "drizzle-orm";
 import { Router, type IRouter, type Request, type Response } from "express";
@@ -236,6 +237,22 @@ router.delete(
     }
   },
 );
+
+router.get("/player/packs/welcome", async (req, res): Promise<void> => {
+  const userId = authenticatedUserId(req, res);
+  if (!userId) return;
+  await getPlayerBootstrap(userId);
+  res.json({ available: await welcomePullAvailable(userId) });
+});
+router.post("/player/packs/welcome", async (req, res): Promise<void> => {
+  const userId = authenticatedUserId(req, res);
+  if (!userId) return;
+  try {
+    await getPlayerBootstrap(userId);
+    const result = await openWelcomePull(userId);
+    res.json(OpenPlayerPackResponse.parse({ ...result, opening: serializePackOpening(result.opening), bootstrap: await getPlayerBootstrap(userId) }));
+  } catch (error) { sendError(res, error); }
+});
 
 router.post("/player/packs/open", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
