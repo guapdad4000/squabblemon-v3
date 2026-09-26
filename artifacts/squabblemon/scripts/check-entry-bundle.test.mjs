@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   checkEntryBundle,
+  checkGameBundle,
   ENTRY_BUDGET_BYTES,
 } from './check-entry-bundle.mjs';
 
@@ -37,6 +38,21 @@ test('ignores lazy route chunks when measuring the public entry', () => {
   );
 
   assert.equal(result.bytes, 1000);
+});
+
+const shell = { ...entry, fileName: 'shell.js', modules: ['/workspace/src/pages/game/GameApp.tsx'], dynamicImports: ['home.js', 'shop.js'] };
+const home = { ...entry, fileName: 'home.js', modules: ['/workspace/src/pages/game/Home.tsx'], imports: ['shell.js'] };
+const shop = { ...entry, fileName: 'shop.js', modules: ['/workspace/src/pages/game/Shop.tsx'] };
+
+test('game budget ignores unvisited routes but catches eager routes in shared dependencies', () => {
+  assert.equal(checkGameBundle(report([shell, home, shop]))[1].bytes, 2000);
+  const shared = { ...entry, fileName: 'shared.js', imports: ['shop.js'], modules: [] };
+  assert.throws(() => checkGameBundle(report([{ ...shell, imports: ['shared.js'] }, home, shop, shared])), /unrelated game routes/);
+});
+
+test('game budget includes the size of shared dependencies', () => {
+  const large = { ...entry, fileName: 'large.js', modules: [], bytes: 901 * 1024 };
+  assert.throws(() => checkGameBundle(report([{ ...shell, imports: ['large.js'] }, home, large])), /budget is 900 KiB/);
 });
 
 test('fails when a game module enters the static entry graph', () => {

@@ -1,0 +1,14 @@
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
+import {profileBootstrap} from './fighter-id.fixture';
+import {Home} from '../src/pages/game/Home';
+import {CareerBoard} from '../src/pages/game/CareerBoard';
+import {MarketPurchaseSuccess} from '../src/components/MarketPurchaseSuccess';
+import '../src/index.css';
+import '../src/styles/studio.css';
+import '../src/styles/hustle-stage.css';
+import '../src/styles/market-shelves.css';
+const bootstrap=profileBootstrap();
+bootstrap.profile.storyProgress.gameplay={wins:{cornball:5,plug:4,wifey:2,'dr-fade':1},cleansed:true,choices:['cornball']};
+createRoot(document.getElementById('root')!).render(<QueryClientProvider client={new QueryClient()}><main style={{padding:24,minHeight:'100vh',background:'#0d1811',color:'#efe8d4'}}>{location.search.includes('home') ? <Home bootstrap={bootstrap}/> : location.search.includes('receipt') ? <MarketPurchaseSuccess art="assets/market/thank-you-fade-again-bag.webp" name="Pack ticket" daily={{date:'2026-09-26'}}><p>Added to your account.</p></MarketPurchaseSuccess> : <CareerBoard bootstrap={bootstrap}/>}</main></QueryClientProvider>);

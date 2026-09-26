@@ -20,6 +20,7 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
   const [readyAssets, setReadyAssets] = useState<Set<string>>(() => new Set());
   const [failedAssets, setFailedAssets] = useState<Set<string>>(() => new Set());
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoDue, setVideoDue] = useState(false);
   const stageIndex = Math.max(0, STAGES.findIndex((stage) => stage.phase === phase));
   const activeStage = STAGES[stageIndex];
   const connection = typeof navigator === 'undefined'
@@ -33,6 +34,14 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
     && !connection?.saveData
     && connection?.effectiveType !== 'slow-2g'
     && connection?.effectiveType !== '2g';
+
+  // Short transitions use the existing poster. Give route code and actual game
+  // artwork a head start before downloading the optional 7 MB broadcast loop.
+  useEffect(() => {
+    if (!allowVideo) { setVideoDue(false); return; }
+    const timer = window.setTimeout(() => setVideoDue(true), 1200);
+    return () => window.clearTimeout(timer);
+  }, [allowVideo]);
   const characterUrl = getAssetUrl(`assets/characters/${activeStage.character}.webp`);
   const posterUrl = getAssetUrl('brand/loading-scenes.webp');
   const wordmarkUrl = getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp');
@@ -73,7 +82,7 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
       aria-busy="true"
     >
       <img className="sbl-background" src={posterUrl} alt="" aria-hidden="true" />
-      {allowVideo && (
+      {allowVideo && videoDue && (
         <video
           className="sbl-video"
           data-playing={videoPlaying}

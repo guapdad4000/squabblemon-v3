@@ -53,3 +53,19 @@
 @media(max-width:420px){.fadecade-road-panel{padding:14px}.fadecade-meter{padding-inline:8px}.fadecade-meter>span{font-size:9px;letter-spacing:0}.fadecade-meter b{font-size:12px}.fadecade-attract__hud{gap:5px;padding:7px}.fadecade-attract__hud>span{font-size:9px}.fadecade-attract__hud .cabinet-btn{font-size:12px;min-height:44px;padding:6px 18px}.fadecade-road-milestones{right:4%}.fadecade-road-node span{font-size:9px}.fadecade-road-view:not(.is-compact) .fadecade-road-actor{left:30%}.is-compact .fadecade-sprite{width:42px}}
 @media(prefers-reduced-motion:reduce){.fadecade-road-view *{animation:none!important;transition:none!important}}
 .fadecade-road-view[data-reduced-motion=true] *{animation:none!important;transition:none!important}
+.fadecade-road-view[data-phase=walk]:not(.is-compact) .fadecade-road-actor{animation:fadecade-travel 1.8s ease-in-out both}
+.fadecade-road-view[data-phase=walk] .fadecade-road-asphalt,.fadecade-road-view[data-phase=walk] .fadecade-road-shoulder{animation:fadecade-road-travel 1.8s linear infinite}
+.fadecade-sprite--defeat{transform-origin:50% 80%;animation:fadecade-fall .85s cubic-bezier(.2,.7,.4,1) both}
+.fadecade-sprite--idle{animation:fadecade-breathe 2s ease-in-out infinite}
+.fadecade-road-callout{position:absolute;bottom:15px;left:12px;right:12px;text-align:center;color:#ffe17b;font:900 italic clamp(14px,3vw,22px) var(--font-display);letter-spacing:.06em;text-shadow:0 3px 0 #000,0 0 15px #000;z-index:3;pointer-events:none}
+[data-phase=clear] .fadecade-road-callout{animation:fadecade-celebrate .45s ease-out both;color:#b9ffb6}
+[data-phase=defeat] .fadecade-road-callout{color:#ff9582}
+.fadecade-road-progress{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:12px;border-block:1px solid #edc44044;background:#11151b}
+.fadecade-road-progress span{display:block;font:600 9px var(--font-mono);color:#aeb9c5;letter-spacing:.05em}
+.fadecade-road-progress strong{display:block;margin-top:5px;font:800 19px var(--font-display);color:#ffe17b}
+.fadecade-road-progress progress{grid-column:1/-1;width:100%;height:6px;accent-color:#ffe17b}
+@keyframes fadecade-road-travel{to{background-position:0 -172px}}
+@keyframes fadecade-travel{from{transform:translate(-50%,calc(-50% - 45px))}to{transform:translate(-50%,-50%)}}
+@keyframes fadecade-fall{0%{opacity:0;transform:translateY(-55px) rotate(-24deg) scale(1.15)}65%{opacity:1;transform:translateY(7px) rotate(5deg)}85%{transform:translateY(-3px) rotate(-2deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes fadecade-breathe{50%{transform:translateY(-3px)}}
+@keyframes fadecade-celebrate{from{opacity:0;transform:scale(1.3)}to{opacity:1;transform:scale(1)}}

@@ -12,7 +12,7 @@ import { CardInspector } from '../../components/CardInspector';
 import { cardCatalog, CARD_RARITY_DEFINITIONS } from '../../data';
 import { CardView } from '../../components/CardView';
 import { useCollectionCardDiscovery } from '../../lib/useCollectionCardDiscovery';
-import sunsetBg from '../../assets/collection-sunset-standoff.png';
+import sunsetBg from '../../assets/collection-sunset-standoff.webp';
 import '../../styles/collection-discovery.css';
 import '../../styles/collection.css';
 

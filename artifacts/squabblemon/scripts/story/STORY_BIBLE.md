@@ -1,6 +1,8 @@
 # Squabblemon — Season One story bible
 
-Revision: 2026-09-08. Editorial canon for the revised screenplay. Supersedes conflicting worked examples. Authored story is not automatically deployed game content.
+Revision: 2026-09-26. Editorial canon for the revised screenplay. Supersedes conflicting worked examples. Authored story is not automatically deployed game content.
+
+The current Season One dialogue source is [the complete rewrite](rewrites/season-one/READTHROUGH.md). It supersedes prior chapter dialogue and the illustrative setup/payoff examples below. The same eight chapters, 62 nodes, art and encounters are preserved.
 
 ## The promise
 
@@ -61,7 +63,7 @@ OG Uncle let the block believe Cracked Head had died. There was a memorial, not 
 
 During his absence, Cracked Head learned he had a child. He sent an early message through Red asking after them, then used safety to justify silence. The threat explains his departure; it does not excuse every year. Red delivered practical support but concealed its source and the message.
 
-The present-day season takes roughly six weeks. The immediate threat has passed. Cracked Head chooses a public tournament appearance because he would rather arrive as a champion than knock on Baby Momma's door as an absent father.
+The present-day season takes several weeks. The immediate threat has passed. Cracked Head chooses a public tournament appearance because he would rather arrive as a champion than knock on Baby Momma's door as an absent father.
 
 ## Who knows what at the opening?
 
@@ -118,7 +120,7 @@ Church Auntie hosts a shared meal. No compulsory wedding or funeral. The rooftop
 
 ## Production boundary
 
-The revised scripts govern narrative continuity. The local game now loads Chapters 1–7 from engine data; Markdown still does not add content by itself. Chapter One's eight existing node IDs, dependencies, decks, modifiers, boss phases, star objectives, and rewards remain intact. Later chapter beats use supported engine modifiers and existing art fallbacks until dedicated assets arrive.
+The revised scripts govern narrative continuity. The local game now loads Chapters 1–8 through `rewriteSeasonOne`; Markdown still does not add content by itself. Chapter One's eight existing node IDs, dependencies, decks, modifiers, boss phases, star objectives, and rewards remain intact. Later chapter beats use supported engine modifiers and existing art fallbacks until dedicated assets arrive.
 
 Cornball, Baby Momma, Wifey and the later speaking cast now have story roster entries. Player action remains stage direction. Proposed stage layouts are director instructions, not claims that layer art exists. Dialogue tokens are generated from node, section and index; StoryDialogueLine itself has no token field.
 
@@ -133,6 +135,6 @@ The full chapter now exists as a nine-scene, six-fight screenplay. The old recor
 
 Baby Momma retains the recorder throughout the chapter. Her brother Roaster and Church Auntie receive the message context from her before the private back-room meeting; Snitch is not present for the original playback and never obtains it. Snitch records only Red's public gauntlet statement, a separate clip from the later warehouse footage.
 
-The six-table Gauntlet awards the next showcase's host position, not a replacement Crown. Chapter One's equal-access schedule remains intact. Red brings Baby Momma to OG Uncle after the event, regardless of her personal match result. The player is invited as a neutral witness. At that visit only Baby Momma, Red, OG Uncle, and the player hear OG Uncle admit directing silence. Blue and Wifey are not at the porch and can still learn that fact personally in Chapter Three. The audience should recognize it rather than receive it as a second new reveal.
+The six-table Gauntlet awards the next showcase's host position, not a replacement Crown. Chapter One's equal-access schedule remains intact. Red brings Baby Momma to OG Uncle after the event, regardless of her personal match result. The player is invited as a neutral witness. At that visit only Baby Momma, Red, OG Uncle, and the player hear OG Uncle admit directing silence. Blue and Wifey are not at the porch. They hear Red name OG in the Chapter Two opening; Chapter Three brings OG’s personal admission to Blue. The audience should recognize it rather than receive it as a second new reveal.
 
 OG Uncle's illness is not disclosed or medically teased in Chapter Two. The rescue explanation and Blue's confession remain Chapter Five material. The Chapter One ZIP already delivered to the video agent is frozen; these additions extend the working bible without rewriting that handed-off chapter.

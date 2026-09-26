@@ -1,42 +1,20 @@
 # Story Mode — editorial library
 
-The local playable campaign is assembled in `lib/squabblemon-engine/src/story.ts`. It contains 19 chapters across two seasons and a special presentation: 119 nodes, including 81 card battles and four illustrated evidence-order puzzles. Season One's original 62 nodes and 51 battles retain their save and reward identities. Start with the [story bible](STORY_BIBLE.md) and [Chapter One read-through](chapters/block-party/CHAPTER_ONE_READTHROUGH.md).
+Season One Chapters 1–8 now use the [complete dialogue rewrite](rewrites/season-one/READTHROUGH.md): 626 spoken lines across the same 62 nodes and 51 battles. Other seasons are unchanged.
 
-## Current writing
+## Authority and editing
 
-| Deliverable | Status |
-| --- | --- |
-| Story bible | Revised canon: timeline, family tree, player motivation, reveal order, ending, setup/payoff ledger. |
-| Season One outline | Revised eight-chapter plan; Chapter 8 is now playable. |
-| Chapter One | Eight complete scenes, 106 normal dialogue lines, seven optional defeat lines, three optional boss phase lines. |
-| Chapter Two | [Red Side Tapes](chapters/red-side-tapes/CHAPTER_TWO_READTHROUGH.md): nine authored scenes, six original fights, 158 normal lines. The local game adds an optional courier table and a finale ticket. |
-| Chapters Three–Eight | Playable local chapters adapted from the [MiniMax September 17 screenplay](sources/minimax-2026-09-17/chapters) to the revised story bible; every battle has authored setup and aftermath cards, and 12 selected exchanges have 60 appended lines without moving the original dialogue tokens. |
-| Chapter Eight | Playable nine-battle conclusion written from the revised bible; the MiniMax checkout contained no Chapter Eight script. |
-| Character bibles | Eleven: the original nine plus All Jokes Roaster and Church Auntie. |
-| Stage instructions | Proposed staging and camera briefs, not certified production art. |
-| Season Two | Eight executable chapters, 43 nodes, 24 battles, three puzzles, and 366 dialogue lines. See the [Season Two bible](../../../../docs/season-two-story-bible.md). |
-| The Missing Motion | Three Sherlock guest chapters, 14 nodes, six battles, one puzzle, and 55 dialogue lines. Available after the first Season One chapter. |
-| Theater entrance | Illustrated presentation posters, red curtain cutouts, bottom-origin spotlight, truthful progress/locks, and a direct Continue Story route. |
+1. The [story bible](STORY_BIBLE.md) governs the family relationships, timeline and ending.
+2. [READTHROUGH.md](rewrites/season-one/READTHROUGH.md) is the current Season One spoken screenplay. Earlier chapter scripts and expansion modules are historical references.
+3. `lib/squabblemon-engine/src/story.ts` remains authoritative for encounters, rewards, scene art and save identities.
 
-The [chapter index](chapters/block-party/chapter-1-block-party.md) links every scene and its mechanical contract. The [integration handoff](INTEGRATION_HANDOFF.md) separates finished writing from remaining game/art work. The [season outline](season-1/season-arc.md) follows the revised bible.
+After editing the read-through, run `node scripts/compile-season-one-screenplay.mjs` from the repository root. It generates `lib/squabblemon-engine/src/storyChapters/seasonOneRewrite.json`; `--check` verifies it is current. `rewriteSeasonOne` replaces dialogue only and resolves speakers to their existing portraits. No new visual assets are required.
 
-## Authority
+Use `storyDialogueToken`, never hardcode its format. Rewritten Season One lines use `script-v4`; other seasons retain `script-v3`. This intentionally prevents old positional read markers from skipping newly written lines. Completed nodes, battle clears and reward identities remain unchanged. Historical append-only expansion tests cover the archived expansion, not the current spoken script.
 
-1. STORY_BIBLE.md governs narrative continuity.
-2. Revised character bibles govern voice and knowledge.
-3. The chapter index and scene scripts govern their respective chapter screenplays.
-4. lib/squabblemon-engine/src/story.ts remains the authority for currently implemented encounters and rewards.
-5. Templates are blank authoring aids, not evidence of implemented features.
+The rewrite establishes the player’s tournament goal, explains the family relationships before the arguments, and gives each match a stated role. The return leads to Red’s hidden message, then OG’s admission, the warehouse recording and the family confrontation. Blue’s fear of being displaced leads to his later cheating and disqualification. The ending offers a first parenting commitment, not instant forgiveness.
 
-Markdown is not consumed automatically by the game. Chapter One uses the full 106-line screenplay and a 2D stage. Chapter Two's full dialogue and encounters are loaded from the authored JSON, with decks filled to the engine's current ten-card rule. Chapters Three–Seven use reconciled dialogue and supported battle mechanics. Chapter Eight closes the Crown story and grants its final reward. Season Two loads from `seasonTwo.ts`/`seasonTwoDialogue.ts`; the guest story loads from `storySpecials.ts`. Season membership is additive metadata above the existing chapter registry, not a replacement save format. New generated theater, poster, rooftop and evidence art lives under `public/assets/story/theater/`; later environments also reuse shipped venue art. VENUE_BY_ID remains empty; the playable route renders StoryStage rather than the unused cinematic prototypes.
-
-## Scene format
-
-Each scene has stage directions, a proposed layer/camera brief, ordered dialogue, an encounter reference, and director notes. The encounter reference incorporates the current engine node rather than duplicating decks and numeric rules in a second source. Stage directions are not spoken dialogue. The executable Chapters Three–Eight cards are authored in `seasonChapters.ts`; battles do not use a generic post-match fallback.
-
-Use the shared `storyDialogueToken` helper: `node-id:script-v3:section:index`. StoryDialogueLine itself has no token property. Append Season One expansion lines rather than reordering existing lines, so saved positional tokens remain meaningful. Optional defeat and phase cues need separate integration; they are not currently supported by simply inserting them in an array.
-
-New speakers need an existing portrait or an explicit placeholder and a roster entry. Never equate owning a card with unlocking its story portrait. Add no promised character-unlock or chapter availability unless the actual content and reward configuration support it.
+Optional defeat and phase cues still require separate integration. Existing video handoffs are frozen and do not automatically contain this rewrite. No new VO has been generated or verified for these lines.
 
 ## Puzzles and progress
 
@@ -48,5 +26,10 @@ Run `pnpm --filter @workspace/squabblemon test:story:seasons` for legacy encount
 
 ## Draft provenance
 
-The [MiniMax draft archive](sources/minimax-2026-09-17/chapters) is preserved as source material, not executable content. Its later survival reveal, second pregnancy and unsupported battle flags conflict with the playable Chapter One and revised bible, so Chapters Three–Seven retain its locations, opponents and comedy while following the revised canon. Chapter Seven now opens the final route, and Chapter Eight ends at the community meal and rooftop sale agreement. The Chapter One video-agent ZIP remains frozen at the version already handed off.
+The [MiniMax draft archive](sources/minimax-2026-09-17/chapters), old chapter read-throughs and expansion modules remain historical source material. The September 26 rewrite replaces their spoken Season One dialogue while preserving implemented scenes and mechanics. The Chapter One video-agent ZIP remains frozen at its previously delivered version.
 
+## Review and validation
+
+Open `/e2e/season-one-readthrough.fixture.html` on the development server to review every section in the existing StoryStage presentation without a login or battle. This development fixture does not write campaign progress and is not part of the production route.
+
+Run `pnpm --filter @workspace/squabblemon test:story:seasons` with Node 24 to check source/generated parity, all scene coverage, shipped portraits, versioned read markers, campaign compatibility and existing story tests. With the dev server on port 4207, `node artifacts/squabblemon/e2e/verify-season-one-rewrite.mjs` checks the longest line in every section at 375×667, 390×844 and 1440×900, plus navigation and runtime errors. These checks verify integration and readability; editorial quality still benefits from a human play-through.

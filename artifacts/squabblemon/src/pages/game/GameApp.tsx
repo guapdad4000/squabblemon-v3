@@ -1,11 +1,9 @@
+import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
 import { PlayerLevelCelebration } from '../../components/AccountRewards';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
-import { Inventory } from './Inventory';
-import { CharacterStyles } from './CharacterStyles';
-import { CharacterCollections } from './CharacterCollections';
 import { CosmeticProvider } from '../../components/CosmeticContext';
 import { RewardReveal } from '../../components/RewardReveal';
 import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
@@ -17,22 +15,13 @@ import {
 } from '@workspace/api-client-react';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameNav } from '../../components/venue/GameNav';
-import { useEffect, type ReactNode } from 'react';
+import { Suspense, useEffect, type ReactNode } from 'react';
+import { basePath, stripBase } from '../../lib/routing';
 import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
-import { Collection } from './Collection';
-import { DeckEditor } from './DeckEditor';
-import { Decks } from './Decks';
-import { DeckTest } from './DeckTest';
-import { PlayerDeckPlay } from './PlayerDeckPlay';
-import { Home } from './Home';
-import { Missions } from './Missions';
-import { Onboarding } from './Onboarding';
-import { Settings } from './Settings';
-import { Shop } from './Shop';
-import { Story } from './Story';
-import { Multiplayer } from './Multiplayer';
-import { ChallengesHub } from './ChallengesHub';
+import { Home, Inventory, CharacterStyles, CharacterCollections, Collection,
+  DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
+  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -89,13 +78,36 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useEffect(() => {
     document.documentElement.dataset.reduceMotion =
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
-  }, [bootstrap]);
+  }, [bootstrap.profile.settings.reducedMotion]);
+
+  useEffect(() => {
+    const warmDestination = (event: Event) => {
+      if (!(event.target instanceof Element)) return;
+      const target = event.target.closest<HTMLElement>('a[href], [data-preload-route]');
+      if (!target) return;
+      const route = target.dataset.preloadRoute;
+      if (route) { preloadGameRoute(route); return; }
+      const url = new URL(target.getAttribute('href')!, window.location.href);
+      if (url.origin === window.location.origin && url.pathname.startsWith(`${basePath}/game`)) {
+        preloadGameRoute(stripBase(url.pathname));
+      }
+    };
+    document.addEventListener('pointerover', warmDestination, { passive: true });
+    document.addEventListener('focusin', warmDestination);
+    document.addEventListener('pointerdown', warmDestination, { passive: true });
+    return () => {
+      document.removeEventListener('pointerover', warmDestination);
+      document.removeEventListener('focusin', warmDestination);
+      document.removeEventListener('pointerdown', warmDestination);
+    };
+  }, []);
 
   return (
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardReveal />
     <PlayerLevelCelebration profile={bootstrap.profile} />
+    <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>
       <Route path="/game/onboarding">
         <Onboarding bootstrap={bootstrap} />
@@ -138,6 +150,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       </Route>
       <Route component={() => <Redirect to="/game" />} />
     </Switch>
+    </Suspense>
     </NotificationProvider>
     </CosmeticProvider>
   );
@@ -263,6 +276,9 @@ export default function GameApp() {
       enabled: isLoaded && isSignedIn,
     },
   });
+
+  // Fetch the requested screen while the account/profile gate is still loading.
+  useEffect(() => { preloadGameRoute(location); }, [location]);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {

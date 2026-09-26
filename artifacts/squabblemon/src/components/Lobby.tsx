@@ -8,6 +8,8 @@ import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { selectTrainingRival, trainingDifficulty, TRAINING_REWARD_RULES } from '@workspace/squabblemon-engine/training';
 import { useLocation } from 'wouter';
 import { DeckCarousel } from './DeckCarousel';
+import { useEffect } from 'react';
+import { warmDeckArtwork } from '../lib/battleAssetWarmup';
 
 export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules, onInspect, isLoading, onExit, availableDeckIds, equippedVariants, cardProgression = {} }: any) {
   const [, navigate] = useLocation();
@@ -18,6 +20,7 @@ export function Lobby({ onStart, deckId, setDeckId, rival, setRival, onShowRules
   const recommendedRival = selectTrainingRival(selectedDeck.id, selectedDeck.cards, cardProgression);
   const rivalDeck = decks.find((deck) => deck.id === recommendedRival)!;
   const difficulty = trainingDifficulty(selectedDeck.id, recommendedRival, selectedDeck.cards, cardProgression);
+  useEffect(() => { warmDeckArtwork(selectedDeck, rivalDeck, equippedVariants); }, [selectedDeck, rivalDeck, equippedVariants]);
   
   return (
     <div className="flex-1 min-h-0 min-w-0 grid grid-cols-[minmax(0,1fr)] grid-rows-[minmax(210px,1fr)_auto_auto] md:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] md:grid-rows-[1fr_auto] w-full max-w-full overflow-hidden relative bg-[#070707]">

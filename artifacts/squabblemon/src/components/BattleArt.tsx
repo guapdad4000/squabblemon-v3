@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { cards, getAssetUrl, getCardImage, type Deck } from '../data';
 import type { PresentationPhase } from './PlayLoop';
 import './battle-art.css';
+import { warmImages } from '../lib/imageWarmup';
 
 export const COMBAT_SPRITES = [
   'fight-start-burst',
@@ -18,10 +19,7 @@ export function BattleArtPreload() {
   useEffect(() => {
     // These effects may occur many turns later. Warm the normal image cache
     // without promising the browser that every sprite is immediately needed.
-    for (const asset of COMBAT_SPRITES) {
-      const sprite = new Image();
-      sprite.src = combatSpriteUrl(asset);
-    }
+    void warmImages(COMBAT_SPRITES.map(combatSpriteUrl));
   }, []);
   return null;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GuidedFirstSession } from '../src/pages/game/GuidedFirstSession';
-import { ROOKIE_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_FOUNDATION_IDS } from '../src/data';
+import { ROOKIE_MENTOR_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_FOUNDATION_IDS } from '../src/data';
 import '../src/index.css';
 import '../src/styles/venue.css';
 import '../src/styles/dr-fade.css';
@@ -10,7 +10,7 @@ import '../src/styles/dr-fade.css';
 // Full first-session journey with real clicks: welcome -> home tour -> deck
 // claim handoff -> Dr. Fade welcome -> guided deck workbench. The battle stage
 // is covered by rookie-road.fixture; here onComplete only marks the end.
-const MENTOR_LINEUP = ROOKIE_CORE_IDS.map(id => (id === 'hooper' ? 'dr-fade' : id));
+const MENTOR_LINEUP = ROOKIE_MENTOR_CORE_IDS;
 
 function makeBootstrap(claimed: boolean): any {
   return {

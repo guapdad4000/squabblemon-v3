@@ -30,7 +30,7 @@ The Bounties badge opens your missions. Check your goals, finish the job, and cl
 
 Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.
 
-I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.
+I have a free starter collection for you, including Cornball, Plug, Snow Bunny, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.
 
 Watch close. You’re next.
 
@@ -44,7 +44,7 @@ Tap Landlord. The number at the top is its Motion cost; Hands is the strength it
 
 You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.
 
-Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.
+Tap Plug. It costs 1 Motion in our target district. Hands is the strength it adds to your side.
 
 Tap this district. You win by leading in two of the three districts at the end. Your first play here costs 1 less Motion (minimum 1). Discounts do not stack.
 
@@ -52,7 +52,7 @@ The preview shows the known score after your card lands. Play the card to resolv
 
 Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.
 
-Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.
+Tap Wifey. It costs 3 Motion in our target district. Hands is the strength it adds to your side.
 
 Tap this district. You win by leading in two of the three districts at the end. Spread your strength instead of putting everyone in one place.
 
@@ -66,13 +66,13 @@ Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and giv
 
 Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.
 
-Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.
+Tap THE TRAP. Dr. Fade fights here while helping an ally in another district. Watch both scores.
 
 Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.
 
 Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.
 
-You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.
+You secured at least two districts. Change one card and compare how often its ability helps you hold that second district.
 
 Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.
 

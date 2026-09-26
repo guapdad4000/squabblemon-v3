@@ -522,14 +522,34 @@ export const starterRecipes = decks.map((deck) => ({
   ),
 }));
 
+// Fairytale characters are reserved for a later drop, never introductory recruits.
+export const LATER_DROP_STARTER_IDS = ['alice', 'oz', 'tin-man', 'lion', 'dorothy', 'scarecrow', 'cheshire', 'queen-of-hearts'] as const;
+export const STARTER_STREET_REPLACEMENTS: Record<string, string> = {
+  alice: 'bikelife-yn', oz: 'dr-fade', 'tin-man': 'wifey', lion: 'hooper',
+  dorothy: 'cool-vibe-yn', scarecrow: 'bus-pass', cheshire: 'plug', 'queen-of-hearts': 'all-jokes-roaster',
+};
+
 // Versioned onboarding entitlement, not a playable recipe or faction restriction.
 export const ROOKIE_FOUNDATION_ID = "foundation-v1";
 export const ROOKIE_DECK_ID = "my-first-crew";
 export const ROOKIE_CORE_IDS = ["cornball", "plug", "snow-bunny", "wifey", "hooper", "rastamon", "all-jokes-roaster", "bus-pass", "soul-food", "cognac-bottle"];
 export const ROOKIE_MENTOR_ID = "dr-fade";
 // Existing saved lineups retain their slots; only new crews use the mentor lineup.
-export const ROOKIE_MENTOR_CORE_IDS = ["cornball", "plug", "alice", "wifey", ROOKIE_MENTOR_ID, "rastamon", "scarecrow", "bus-pass", "soul-food", "cognac-bottle"];
-export const ROOKIE_FOUNDATION_IDS = [...new Set([ROOKIE_MENTOR_ID, ...ROOKIE_CORE_IDS, ...ROOKIE_MENTOR_CORE_IDS, "tin-man", ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)])];
+export const ROOKIE_MENTOR_CORE_IDS = ["cornball", "plug", "snow-bunny", "wifey", ROOKIE_MENTOR_ID, "rastamon", "all-jokes-roaster", "bus-pass", "soul-food", "cognac-bottle"];
+export const ROOKIE_FOUNDATION_IDS = [...new Set([ROOKIE_MENTOR_ID, ...ROOKIE_CORE_IDS, ...ROOKIE_MENTOR_CORE_IDS, ...["waterboy", "shiesty", "torta"].map(id => catalogCardByEngineId[id].catalogId), ...["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].map(id => catalogCardByEngineId[id].catalogId)])];
+
+/** Only used for unfinished onboarding; earned cards and completed player crews stay intact. */
+export function starterStreetCrew(ids: readonly string[]): string[] {
+  const result: string[] = [];
+  for (const id of ids) {
+    const preferred = STARTER_STREET_REPLACEMENTS[id] ?? id;
+    const next = result.includes(preferred) ? ROOKIE_MENTOR_CORE_IDS.find(candidate => !result.includes(candidate) && !ids.includes(candidate)) : preferred;
+    if (next) result.push(next);
+  }
+  for (const id of ROOKIE_MENTOR_CORE_IDS) if (result.length < DECK_SIZE && !result.includes(id)) result.push(id);
+  return result.slice(0, DECK_SIZE);
+}
+
 
 export function catalogIdsToEngineIds(catalogIds: string[]): string[] {
   return catalogIds.map((catalogId) => {

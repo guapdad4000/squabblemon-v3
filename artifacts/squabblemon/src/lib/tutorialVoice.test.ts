@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { playTutorialSequence, tutorialClipsForText, tutorialScript } from './tutorialVoice';
 import clips from './tutorialVoiceClips.json';
+import { MECHANIC_LESSONS } from '../components/tutorialGuidance';
+import tour from './safehouseTour.json';
+import pickups from '../../reference/dr-fade-tutorial-recording-updates.json';
 import { FEEDBACK_CHANGE_EVENT } from '../battleFeedback';
 import { attachMusicPlayer } from '../musicStore';
 import type { MusicPlayer } from '../musicPlayer';
@@ -42,7 +45,7 @@ test('all supplied lines have audio assets and alternate cards/costs cannot anno
     for (const extension of ['ogg', 'm4a']) assert.ok(existsSync(new URL(`../../public/audio/voice/dr-fade/tutorial/${clip.id}.${extension}`, import.meta.url)), clip.id);
   }
   assert.deepEqual(tutorialClipsForText('Tap Tin Man. It costs 4 Motion in our target district. Hands is the strength it adds to your side.'), ['generic-card']);
-  assert.deepEqual(tutorialClipsForText('Tap THE TRAP. Dr. Fade fights here while helping an ally in another district. Watch both scores.'), ['generic-fade-district']);
+  assert.deepEqual(tutorialClipsForText('Tap ANOTHER DISTRICT. Dr. Fade fights here while helping an ally in another district. Watch both scores.'), ['generic-fade-district']);
   assert.deepEqual(tutorialClipsForText('A new unrecorded mechanic.'), []);
   assert.deepEqual(tutorialClipsForText(tutorialScript('welcome', 'welcome-reassurance')), ['welcome', 'welcome-reassurance']);
 });
@@ -53,7 +56,7 @@ test('sequences advance, duck music, and stop completely when a new prompt takes
   await settle();
   assert.equal(e.ducks.at(-1), true);
   e.instances[0].end(); await settle();
-  assert.match(e.instances[1].src, /welcome-reassurance\.ogg$/);
+  assert.match(e.instances[1].src, /welcome-reassurance\.ogg\?v=[a-f0-9]+$/);
   const stop = playTutorialSequence(['home-1']); await settle();
   assert.equal(e.instances[1].paused, true);
   oldStop();
@@ -69,7 +72,7 @@ test('mute and backgrounding pause speech and resume the same clip, with AAC fal
   const e = environment(t, false);
   playTutorialSequence(['home-1']); await settle();
   const audio = e.instances[0];
-  assert.match(audio.src, /home-1\.m4a$/);
+  assert.match(audio.src, /home-1\.m4a\?v=[a-f0-9]+$/);
   audio.currentTime = 2;
   e.mute(false);
   assert.equal(audio.paused, true);
@@ -97,7 +100,7 @@ test('autoplay denial retries on a gesture; a late play resolution cannot resurr
   assert.equal(e.instances[0].paused, false);
   let resolve!: () => void;
   e.FakeAudio.prototype.play = function () { return new Promise<void>(done => { resolve = done; }); };
-  const stop = playTutorialSequence(['home-2']);
+  const stop = playTutorialSequence(['home-story-left']);
   const pending = e.instances[1];
   stop(); pending.paused = false; resolve(); await settle();
   assert.equal(pending.paused, true);
@@ -114,13 +117,16 @@ test('failed clips advance without trapping the lesson or leaving music quiet', 
 });
 
 
-test('every safehouse walkthrough stop resolves to a recorded cue in both browser formats', async () => {
-  const { default: tour } = await import('./safehouseTour.json');
-  for (const step of tour) {
-    const ids = tutorialClipsForText(step.body);
-    assert.deepEqual(ids, [step.id], step.title);
-    for (const extension of ['ogg', 'm4a']) {
-      assert.ok(existsSync(new URL(`../../public/audio/voice/dr-fade/tutorial/${ids[0]}.${extension}`, import.meta.url)), `${step.title}: ${extension}`);
-    }
+test('every tour stop and revised card prompt has its exact recording', () => {
+  for (const cue of [...tour.map(step => ({ id: step.id, text: step.body })), ...pickups]) {
+    assert.deepEqual(tutorialClipsForText(cue.text), [cue.id]);
+    assert.match(clips.find(clip => clip.id === cue.id)!.revision, /^[a-f0-9]{12}$/);
+  }
+  assert.ok(clips.every(clip => !/Alice|Tin Man|Scarecrow/.test(clip.text)));
+});
+
+test('every first-sighting mechanic maps its displayed explanation to a dedicated recording', () => {
+  for (const lesson of Object.values(MECHANIC_LESSONS)) {
+    assert.deepEqual(tutorialClipsForText(`${lesson.summary} ${lesson.tacticalTip}`), [`mechanic-${lesson.id}`]);
   }
 });

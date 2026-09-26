@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const fixture = '/e2e/season-theater.fixture.html';
+const fixture = '/squabblemon/e2e/season-theater.fixture.html';
 const screenshots = 'e2e/screenshots';
 const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
@@ -58,13 +58,13 @@ test.describe('season theater in the real game shell', () => {
       const region = page.locator('.theater-posters');
       await expect(region).toBeVisible();
       const posters = region.locator('.cinema-poster');
-      await expect(posters).toHaveCount(3);
+      await expect(posters).toHaveCount(8);
       await expect(page.getByTestId('button-presentation-season-1')).toBeVisible();
       await expect(page.getByTestId('button-presentation-season-2')).toBeAttached();
       await expect(page.getByTestId('button-presentation-special-sherlock')).toBeAttached();
 
       if (viewport.width < 500) {
-        const lastPoster = page.getByTestId('button-presentation-special-sherlock');
+        const lastPoster = page.getByTestId('button-presentation-special-leon');
         await lastPoster.focus();
         await expect(lastPoster).toBeFocused();
         await expect(lastPoster).toHaveAttribute('data-selected', 'true');
@@ -351,12 +351,16 @@ test.describe('season theater in the real game shell', () => {
     await expect(page.getByTestId('popcorn-particles').locator('.popcorn-particle')).toHaveCount(0);
   });
 
-  test('season posters use game characters and the supplied cinema decoration', async ({ page }) => {
+  test('season posters use the authored cover art and supplied cinema decoration', async ({ page }) => {
     await loadFixture(page, 'theater');
-    for (const id of ['season-1', 'season-2', 'special-sherlock']) {
+    const expectedCovers: Record<string, string> = {
+      'season-1': 'block-crown.webp',
+      'season-2': 'blockbuster.webp',
+      'special-sherlock': 'missing-motion.webp',
+    };
+    for (const [id, cover] of Object.entries(expectedCovers)) {
       const poster = page.getByTestId(`button-presentation-${id}`);
-      expect(await poster.locator('img[src*="/assets/characters/"]').count()).toBeGreaterThan(0);
-      await expect(poster.locator('img[src$="/season-one.webp"], img[src$="/season-two.webp"], img[src$="/sherlock.webp"][src*="/theater/"]')).toHaveCount(0);
+      await expect(poster.locator('.cinema-poster-cover')).toHaveAttribute('src', new RegExp(`${cover}$`));
     }
     for (const asset of ['cinema-logo.webp', 'cinema-curtain.webp', 'cinema-film-strip.webp', 'cinema-reel.webp']) {
       expect(await page.locator(`img[src$="/${asset}"]`).count()).toBeGreaterThan(0);

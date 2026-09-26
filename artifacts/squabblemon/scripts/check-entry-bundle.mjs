@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const ENTRY_BUDGET_BYTES = 475 * 1024;
+export const GAME_SHELL_BUDGET_BYTES = 900 * 1024;
+export const SAFEHOUSE_BUDGET_BYTES = 1200 * 1024;
 
 const GAME_MODULE_PATTERNS = [
   /\/src\/pages\/game\//,
@@ -87,6 +89,35 @@ export function checkEntryBundle(report) {
   };
 }
 
+/** Count transitive static dependencies, not just the conveniently small entry file. */
+export function checkGameBundle(report) {
+  const byFile = new Map(report.chunks.map(chunk => [chunk.fileName, chunk]));
+  return ['GameApp', 'Home'].map(name => {
+    const root = report.chunks.find(chunk => chunk.modules.some(id => normalizeModuleId(id).endsWith(`/src/pages/game/${name}.tsx`)));
+    if (!root) throw new Error(`Missing ${name} game route in the bundle report.`);
+    const visited = new Set(), pending = [root], chunks = [];
+    while (pending.length) {
+      const chunk = pending.pop();
+      if (visited.has(chunk.fileName)) continue;
+      visited.add(chunk.fileName); chunks.push(chunk);
+      for (const file of chunk.imports) {
+        const dependency = byFile.get(file);
+        if (!dependency) throw new Error(`Missing static dependency ${file}.`);
+        pending.push(dependency);
+      }
+    }
+    const allowed = name === 'GameApp' ? ['GameApp'] : ['GameApp', 'Home'];
+    const eagerRoutes = chunks.flatMap(chunk => chunk.modules.map(normalizeModuleId))
+      .filter(id => /\/src\/pages\/game\/[^/]+\.tsx$/.test(id))
+      .filter(id => !allowed.some(route => id.endsWith(`/${route}.tsx`)));
+    if (eagerRoutes.length) throw new Error(`${name} eagerly includes unrelated game routes: ${eagerRoutes.join(', ')}`);
+    const bytes = chunks.reduce((sum, chunk) => sum + chunk.bytes, 0);
+    const budget = name === 'GameApp' ? GAME_SHELL_BUDGET_BYTES : SAFEHOUSE_BUDGET_BYTES;
+    if (bytes > budget) throw new Error(`${name} is ${(bytes / 1024).toFixed(1)} KiB; budget is ${budget / 1024} KiB.`);
+    return { name, bytes, budget };
+  });
+}
+
 async function main() {
   const scriptDir = path.dirname(fileURLToPath(import.meta.url));
   const reportPath = path.resolve(
@@ -94,12 +125,14 @@ async function main() {
     '../dist/public/bundle-budget-report.json',
   );
   const report = JSON.parse(await readFile(reportPath, 'utf8'));
-  await unlink(reportPath);
   const result = checkEntryBundle(report);
+  const game = checkGameBundle(report);
+  await unlink(reportPath);
 
   console.log(
     `Public entry bundle: ${(result.bytes / 1024).toFixed(1)} KiB / ${(ENTRY_BUDGET_BYTES / 1024).toFixed(0)} KiB across ${result.chunks.length} static chunk(s).`,
   );
+  for (const route of game) console.log(`${route.name} static JavaScript: ${(route.bytes / 1024).toFixed(1)} KiB / ${route.budget / 1024} KiB.`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

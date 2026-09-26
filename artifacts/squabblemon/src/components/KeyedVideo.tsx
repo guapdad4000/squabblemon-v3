@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createChromaRenderer } from '../lib/chromaRenderer';
 
 type KeyMode = 'green' | 'light';
 
-function keyFrame(data: Uint8ClampedArray, mode: KeyMode) {
+export function keyFrame(data: Uint8ClampedArray, mode: KeyMode) {
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
     const g = data[i + 1];
@@ -40,6 +41,7 @@ export function KeyedVideo({
   onEnded?: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [useGpu, setUseGpu] = useState(true);
   const onEndedRef = useRef(onEnded);
 
   useEffect(() => {
@@ -48,8 +50,14 @@ export function KeyedVideo({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d', { willReadFrequently: true });
-    if (!canvas || !context) return;
+    if (!canvas) return;
+    let renderer: ReturnType<typeof createChromaRenderer>;
+    try { renderer = createChromaRenderer(canvas, mode, pixels => keyFrame(pixels, mode), useGpu); }
+    catch { setUseGpu(false); return; }
+    if (!renderer) return;
+    canvas.dataset.renderer = renderer.kind;
+    const contextLost = (event: Event) => { event.preventDefault(); setUseGpu(false); };
+    canvas.addEventListener('webglcontextlost', contextLost);
 
     const video = document.createElement('video');
     let stopped = false;
@@ -83,11 +91,7 @@ export function KeyedVideo({
           sh = video.videoWidth / targetRatio;
           sy = (video.videoHeight - sh) / 2;
         }
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-        const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-        keyFrame(pixels.data, mode);
-        context.putImageData(pixels, 0, 0);
+        renderer.draw(video, [sx / video.videoWidth, sy / video.videoHeight, sw / video.videoWidth, sh / video.videoHeight]);
         canvas.dataset.ready = 'true';
       } catch {
         finish();
@@ -140,8 +144,10 @@ export function KeyedVideo({
       video.pause();
       video.removeAttribute('src');
       video.load();
+      canvas.removeEventListener('webglcontextlost', contextLost);
+      renderer.dispose();
     };
-  }, [loop, maxWidth, mode, src]);
+  }, [loop, maxWidth, mode, src, useGpu]);
 
-  return <canvas ref={canvasRef} className={className} data-source={src} data-ready="false" aria-hidden="true" />;
+  return <canvas key={useGpu ? 'gpu' : 'cpu'} ref={canvasRef} className={className} data-source={src} data-ready="false" aria-hidden="true" />;
 }

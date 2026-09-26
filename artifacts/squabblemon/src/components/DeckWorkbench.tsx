@@ -1,3 +1,4 @@
+import { ROOKIE_FOUNDATION_IDS } from '../data';
 import { crewInsights } from '@workspace/squabblemon-engine/insights';
 import { useEffect, useRef, useState } from 'react';
 import { CoachSpotlight } from './CoachSpotlight';
@@ -27,7 +28,8 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const [slot, setSlot] = useState<number | null>(null);
   const [search, setSearch] = useState('');
   const [guideStep, setGuideStep] = useState(0);
-  const recruit = workshopSuggestions.find(idea => ownedCardIds.includes(idea.cardId) && !draft.cardIds.includes(idea.cardId))?.cardId ?? ownedCardIds.find(id => !draft.cardIds.includes(id));
+  const recruitPool = lesson ? ownedCardIds.filter(id => ROOKIE_FOUNDATION_IDS.includes(id)) : ownedCardIds;
+  const recruit = workshopSuggestions.find(idea => recruitPool.includes(idea.cardId) && !draft.cardIds.includes(idea.cardId))?.cardId ?? recruitPool.find(id => !draft.cardIds.includes(id));
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
@@ -45,7 +47,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
   const actionsRef = useRef<HTMLElement>(null);
   const insights = crewInsights(draft.cardIds);
   const legality = validateSavedDeck(draft.cardIds, ownedCardIds, draft.heroCardId);
-  const owned = ownedCardIds.map(id => catalogCardById[id]).filter(Boolean);
+  const owned = (lesson ? recruitPool : ownedCardIds).map(id => catalogCardById[id]).filter(Boolean);
   const visible = owned.filter(card => `${card.name} ${card.effect} ${card.type}`.toLowerCase().includes(search.toLowerCase())).sort((a,b) => a.cost - b.cost || a.name.localeCompare(b.name));
   const selected = slot === null ? null : catalogCardById[draft.cardIds[slot]];
   const dirty = draft.name !== savedDraft.name
@@ -179,7 +181,7 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
       </div>
       <div className="deck-workbench__library">
         {lesson && <details className="deck-workbench__ideas"><summary>Dr. Fade’s suggestions</summary><div>
-          {workshopSuggestions.filter(idea => ownedCardIds.includes(idea.cardId)).map(idea => <button type="button" key={idea.cardId} onClick={() => choose(idea.cardId)} aria-label={`Try ${catalogCardById[idea.cardId].name}`}>
+          {workshopSuggestions.filter(idea => recruitPool.includes(idea.cardId)).map(idea => <button type="button" key={idea.cardId} onClick={() => choose(idea.cardId)} aria-label={`Try ${catalogCardById[idea.cardId].name}`}>
             <img src={getCardImage(idea.cardId)} alt="" /><div><strong>{idea.title}</strong><span>{catalogCardById[idea.cardId].name}</span><p>{idea.detail}</p></div>
           </button>)}
         </div></details>}

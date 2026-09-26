@@ -17,7 +17,7 @@ export function GameBackButton({ onClick, label = 'Back', className = '', button
   const back = useGameBack();
   return <button ref={buttonRef} type="button" className={`game-back-button ${className}`} aria-label={label} title={label}
     onClick={onClick ?? back}>
-    <img src={getAssetUrl('brand/navigation/back-arrow.png')} alt="" draggable={false} />
+    <img src={getAssetUrl('brand/navigation/back-arrow.webp')} alt="" draggable={false} />
     <span>{label}</span>
   </button>;
 }

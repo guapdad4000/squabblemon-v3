@@ -108,7 +108,8 @@ export function ResultScreen({
                 <button
                   className="studio-action studio-action--gold"
                   data-testid="button-restart-match"
-                  onClick={onRestart}
+                  onClick={onGoHome}
+                  disabled={rewardPending || rewardError}
                 >
                   Retry this stop
                   <RotateCcw size={15} />
@@ -117,6 +118,7 @@ export function ResultScreen({
               <button
                 className={`studio-action ${!isDraw ? 'studio-action--gold' : ''}`}
                 onClick={onGoHome}
+                disabled={rewardPending || rewardError}
               >
                 {isVictory ? 'Return to the road' : isDraw ? 'Back to the road' : 'View run summary'}
                 <ArrowRight size={15} />
@@ -209,6 +211,7 @@ export function ResultScreen({
           </h2>
         </header>}>
 
+        {challenge && rewardError && retry}
         <details className="result-stage__receipt-drawer">
           <summary>Match Details & Breakdown</summary>
           <div className="result-stage__receipt">
@@ -240,7 +243,7 @@ export function ResultScreen({
                 </details>
               </>
             ) : rewardError ? (
-              retry
+              challenge ? null : retry
             ) : (
               <p className="studio-notice" role="status">
                 Saving chapter outcome…
@@ -263,7 +266,7 @@ export function ResultScreen({
             {customPlayerDeck ? 'Deck tests do not grant rewards.' : 'Sign in to save Card XP from your next run.'}
           </p>
         ) : !isStory && rewardError ? (
-          retry
+          challenge ? null : retry
         ) : reward ? (
           <BattleEarnings reward={reward} showTotals={false} />
         ) : !isStory ? (

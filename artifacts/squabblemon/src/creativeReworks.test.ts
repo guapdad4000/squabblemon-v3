@@ -808,18 +808,18 @@ for (const owner of ["player", "cpu"] as const) {
 }
 for (const owner of ["player", "cpu"] as const) {
   const enemy: Owner = owner === "player" ? "cpu" : "player";
-  test(`${owner}: audit - Verse rewards the deployment, not the ally it pulls in`, () => {
+  test(`${owner}: audit - Verse rewards the pulled ally before the deployment collects`, () => {
     let m = blank();
     const guest = unit("cornball", owner, 1);
     m.boards = [[], [guest], []];
     m = cast(m, "failedrapper", owner).after;
     const pull = cast(m, "vibe", owner);
     m = pull.after;
-    assert.equal(find(m, guest)?.powerModifier, 1);
-    assert.equal(find(m, pull.source)?.powerModifier, 3);
+    assert.equal(find(m, guest)?.powerModifier, 3);
+    assert.equal(find(m, pull.source)?.powerModifier, 1);
     assert(!kinds(m).includes("verse"));
   });
-  test(`${owner}: audit - Dance Captain rejects a non-dancer following the route`, () => {
+  test(`${owner}: audit - Dance Captain rewards a non-dancer following the route once`, () => {
     let m = blank();
     const captain = unit("dancecaptain", owner, 2),
       dancer = unit("break", owner, 0),
@@ -830,38 +830,38 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, captain)?.creativeLane, 1);
     m = cast(m, "vibe", owner, 1).after;
     assert.equal(find(m, visitor)?.lane, 1);
-    assert.equal(find(m, visitor)?.powerModifier, 1);
-    assert.equal(find(m, captain)?.creativeCount, 0);
+    assert.equal(find(m, visitor)?.powerModifier, 3);
+    assert.equal(find(m, captain)?.creativeCount, 1);
   });
-  test(`${owner}: audit - Ahki retains his return reward after departure without paying it`, () => {
+  test(`${owner}: audit - Ahki pays departure while retaining the return reward`, () => {
     let m = blank();
     const guest = unit("cornball", owner, 0);
     m.boards = [[guest], [], []];
     m = cast(m, "ahki", owner).after;
     m = cast(m, "break", owner).after;
-    assert.equal(find(m, guest)?.powerModifier, 1);
+    assert.equal(find(m, guest)?.powerModifier, 2);
     assert.equal(find(m, guest)?.lane, 1);
     assert(m.creativeMarks?.find((x) => x.kind === "loyalty")?.ready);
   });
-  test(`${owner}: audit - Chess needs two enemy districts at deployment, not later`, () => {
+  test(`${owner}: audit - Chess can complete its second mark after deployment`, () => {
     let m = blank();
     m.boards = [[unit("og", enemy, 0)], [], []];
     const chess = cast(m, "chessregular", owner, 2);
     m = chess.after;
-    assert(!kinds(m).includes("fork"));
+    assert.equal(m.creativeMarks?.find(x => x.kind === "fork")?.targets.length, 1);
     m = cast(m, "og", enemy, 1).after;
-    assert(!kinds(m).includes("fork"));
+    assert(m.creativeMarks?.find(x => x.kind === "fork")?.ready);
     assert.equal(find(m, chess.source)?.powerModifier, 0);
   });
-  test(`${owner}: audit - Mall Rules ignores stationary deployments, then consumes on movement`, () => {
+  test(`${owner}: audit - Mall Rules consumes on a stationary deployment before later movement`, () => {
     let m = cast(blank(), "rent-a-cop", owner).after;
     const stationary = cast(m, "og", enemy);
     m = stationary.after;
-    assert(kinds(m).includes("warning"));
-    assert.equal(find(m, stationary.source)?.powerModifier, 0);
+    assert(!kinds(m).includes("warning"));
+    assert.equal(find(m, stationary.source)?.powerModifier, -1);
     const moving = cast(m, "bikelife", enemy);
     m = moving.after;
     assert(!kinds(m).includes("warning"));
-    assert((find(m, moving.source)?.powerModifier ?? -99) < 0);
+    assert.equal(find(m, moving.source)?.powerModifier, 1); // Bikelife movement bonus; no second warning hit.
   });
 }

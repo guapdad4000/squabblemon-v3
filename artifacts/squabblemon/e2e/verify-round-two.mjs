@@ -61,6 +61,7 @@ try {
     );
     const page = await context.newPage(),
       errors = [];
+    await page.routeWebSocket("**", () => {});
     page.on("pageerror", (e) => errors.push(e.message));
     const api = await installFadecadeApi(page);
     let failNext = false,

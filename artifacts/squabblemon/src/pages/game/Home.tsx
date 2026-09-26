@@ -16,7 +16,7 @@ import { useMusic, musicActions } from '../../musicStore';
 import { catalogCardById, getCardImage } from '../../data';
 import { soundtrack } from '../../musicPlayer';
 import { SceneFrame, sendScene, type SceneMessage } from '../../components/venue/SceneFrame';
-import { storyContent } from '@workspace/squabblemon-engine/story';
+import { storySeasons } from '@workspace/squabblemon-engine/storySeasons';
 import '../../styles/studio.css';
 import '../../styles/safehouse-stage.css';
 import { loadFeedbackPreferences } from '../../battleFeedback';
@@ -41,7 +41,6 @@ const welcomedPlayers = new Set<string>();
 // Read geometry before writing positions, and use nearby free spots for overlapping labels.
 function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, markers: Map<string, HTMLButtonElement>, anchors: NonNullable<SceneMessage['anchors']>) {
   if (layer.hidden) return 0;
-  resetRoomMarkers(markers);
   const area = layer.getBoundingClientRect();
   const scene = frame.getBoundingClientRect();
   const buttons = anchors.flatMap(anchor => {
@@ -66,10 +65,13 @@ function positionRoomMarkers(layer: HTMLElement, frame: HTMLIFrameElement, marke
       if (nextDistance < distance) { best = { x, y }; distance = nextDistance; }
     }
     placed.push({ ...best, width, height });
-    button.style.left = `${best.x}px`;
-    button.style.top = `${best.y}px`;
-    button.style.visibility = 'visible';
-    button.dataset.anchorPositioned = 'true';
+    const left = `${best.x}px`, top = `${best.y}px`;
+    if (button.style.left !== left) button.style.left = left;
+    if (button.style.top !== top) button.style.top = top;
+    if (button.dataset.anchorPositioned !== 'true') {
+      button.style.visibility = 'visible';
+      button.dataset.anchorPositioned = 'true';
+    }
   }
   return Array.from(markers.values()).filter(button => button.dataset.anchorPositioned === 'true').length;
 }
@@ -109,9 +111,25 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const arcadeProgress = { status: arcadeRuns.isError ? 'unavailable' : !Array.isArray(arcadeRuns.data) ? 'loading' : arcadeRuns.data.some(run => run.status === 'active') ? 'continue' : 'new', wins: Array.isArray(arcadeRuns.data) ? arcadeRuns.data.find(run => run.status === 'active')?.wins ?? 0 : 0 };
   useEffect(() => { sendScene(frame, { type: 'arcade', ...arcadeProgress }); }, [arcadeProgress.status, arcadeProgress.wins]);
   const markers = useRef(new Map<string, HTMLButtonElement>());
+  const latestAnchors = useRef<NonNullable<SceneMessage['anchors']>>([]);
   const markerLayer = useRef<HTMLElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
   const previousView = useRef<Station | 'room'>('room');
+  useEffect(() => {
+    if (!sceneReady || !markerLayer.current || !frame.current) return;
+    const place = () => {
+      if (markerLayer.current && frame.current && latestAnchors.current.length && !markerLayer.current.hidden) {
+        setMarkersPlaced(positionRoomMarkers(markerLayer.current, frame.current, markers.current, latestAnchors.current) === markers.current.size);
+      }
+    };
+    // Camera messages stop at rest; font, viewport and label-size changes still
+    // need a layout pass so touch targets remain reachable and non-overlapping.
+    const observer = new ResizeObserver(place);
+    observer.observe(markerLayer.current);
+    observer.observe(frame.current);
+    markers.current.forEach(button => observer.observe(button));
+    return () => observer.disconnect();
+  }, [sceneReady, view]);
   useEffect(() => {
     if (onGuideComplete) return;
     if (welcomedPlayers.has(bootstrap.profile.id)) return;
@@ -134,11 +152,13 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const profileSticker = avatarSticker(bootstrap.profile.avatarKey);
   function explore(next: Station | 'room') { setView(next); sendScene(frame, { type: 'view', view: next }); }
   function receive(message: SceneMessage) {
+    if (message.type === 'bag-hit') playInteractionSound('bag-hit');
     if (message.type === 'interact' && music.enabled && !music.playing) musicActions.play();
     if (message.type === 'view' && (message.view === 'room' || stations.some(item => item.id === message.view))) setView(message.view as Station | 'room');
-    if (message.type === 'loading') { setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
-    if (message.type === 'error') { setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
+    if (message.type === 'loading') { latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
+    if (message.type === 'error') { latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
     if (message.type === 'anchors' && markerLayer.current && frame.current) {
+      latestAnchors.current = message.anchors ?? [];
       if (!markerLayer.current.hidden) setMarkersPlaced(positionRoomMarkers(markerLayer.current, frame.current, markers.current, message.anchors ?? []) === markers.current.size);
     }
   }
@@ -148,7 +168,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     if (previous === view) return;
     const sounds: Partial<Record<Station | 'room', InteractionSound>> = {
       mail: 'door-knock', growth: 'crystal', arcade: 'arcade-beep',
-      inventory: 'bag-open', story: 'film', training: 'machine',
+      inventory: 'bag-open', story: 'film',
       cards: 'cards-spread', phone: 'phone-ring', profile: 'ui-beep',
     };
     if (sounds[view]) playInteractionSound(sounds[view]!);
@@ -196,8 +216,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       progress: {
         demo: !validCampaign,
         chapter: chapter?.order ?? 1,
-        totalChapters: validCampaign ? campaign.chapters.length : storyContent.chapters.length,
-        title: chapter?.title ?? storyContent.chapters[0]?.title ?? 'The block awaits',
+        totalChapters: validCampaign ? campaign.chapters.length : storySeasons.reduce((total, season) => total + season.chapterIds.length, 0),
+        title: chapter?.title ?? 'The block awaits',
         completedChapters: validCampaign ? campaign.chapters.filter((c) => c.status === 'cleared').length : 0,
         objective:
           recommended?.title ??
@@ -224,7 +244,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen} />
-      <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
+      <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.webp`}
         onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
       <header className="safehouse-room-header">
@@ -249,7 +269,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
             <p>{station.id === 'music' ? `${music.playing ? 'Now playing' : 'On the turntable'}: ${music.track?.title ?? soundtrack[music.trackIndex].title}` : station.id === 'story' && chapter ? chapter.title : station.detail}</p></div>
             <div className="safehouse-room-actions">
               {station.id === 'growth' ? <div className="room-growth"><img className="room-growth__buddy" src={getAssetUrl('assets/buddy-growth/buddy-welcome.webp')} alt="Buddy welcomes you to his Growth Lab" width="720" height="960" /><button type="button" className="room-action" onClick={() => setGrowthOpen(true)}>Enter Growth Lab<ArrowRight size={15} /></button></div> : station.id === 'music' ? <MusicControls variant="dj" wrapperClassName="room-dj" /> : onGuideComplete && station.id === 'cards' ? <button className="room-action" onClick={onGuideComplete}>Build your gang<ArrowRight size={15} /></button> : <Link href={station.href} className="room-action">{station.action}<ArrowRight size={15} /></Link>}
-              {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { playInteractionSound('bag-hit'); sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
+              {station.id === 'training' && sceneReady && <button type="button" className="room-punch" onClick={() => { sendScene(frame, { type: 'punch' }); }}>Hit the bag</button>}
             </div>
           </div>
         </section> : null}

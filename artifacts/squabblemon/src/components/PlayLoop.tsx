@@ -27,6 +27,7 @@ import { isActivityId } from '@workspace/squabblemon-engine/activities';
 import { createLocalPracticeMatch } from '../lib/localPracticeMatch';
 import { playTurnCard, revealCpuTurn } from '../gameEngine';
 import { getAssetUrl } from '../lib/assets';
+import { warmMatchArtwork } from '../lib/battleAssetWarmup';
 import {
   findFirstUnseenMechanicLesson,
   getTutorialGuidance,
@@ -192,11 +193,14 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
 
   const enterPlayerTurn = useCallback(async (round: number, immediate = false, resetClock = true) => { const id = timeline.current.id; setPresentationPhase('round-intro'); setPhaseMessage(`ROUND ${round} · DECISION IN 1`); if (!immediate && !await waitForBeat(1100, 90, id)) return; decisionStartedAtRef.current = Date.now(); setPresentationPhase('player-ready'); setPhaseMessage(`ROUND ${round} // YOUR MOVE`); if (resetClock) setTimerSeconds(TURN_SECONDS); locked.current = false; fastForwardRef.current = false; setSquabbleCinematicLane(null); }, [waitForBeat]);
   const runIntro = useCallback(async (round = 1) => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(round); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
+  const [restoredComplete, setRestoredComplete] = useState(false);
   const beginMatch = useCallback((initial: Match, committedMoves: MatchMove[] = []) => {
+    warmMatchArtwork(initial, equippedVariants);
     cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); setTutorialPlaysByRound({}); tutorialStepRef.current = null; seenMechanicsRef.current = null; setMechanicLesson(null); playerMovesRef.current = [...committedMoves]; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); playedSpecialMovesRef.current.clear(); setBattleStartEffectVisible(true); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
+    setRestoredComplete(initial.phase === 'complete');
     // Chapter dialogue is presented on the 2D stage before this real match.
-    void runIntro(initial.round);
-  }, [cancelTimers, resetPresentation, runIntro, setVisualFrame]);
+    if (initial.phase !== 'complete') void runIntro(initial.round);
+  }, [cancelTimers, resetPresentation, runIntro, setVisualFrame, equippedVariants]);
 
   const handleCinematicDone = useCallback(() => {
     setEncounterCinematic(null);
@@ -270,6 +274,16 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     setReviewBoard(false);
     setScreen('result');
   }, [completePlayerMatch, mode, queryClient, serverMatchId, onVerifiedComplete]);
+  // A checkpoint can contain the final move when saving the outcome was interrupted.
+  // Recover the receipt instead of unlocking a completed board for another turn.
+  const recoveredCompletion = useRef<string | null>(null);
+  useEffect(() => {
+    if (!challengeRunId || !serverMatchId || match?.phase !== 'complete' ||
+        !restoredComplete || recoveredCompletion.current === serverMatchId) return;
+    recoveredCompletion.current = serverMatchId;
+    void finishMatchSession(match);
+  }, [challengeRunId, serverMatchId, match, restoredComplete, finishMatchSession]);
+
   /** Build the play-once key for a fighter's special move from the active effect. */
   const buildMoveKey = (effect: EffectLogEntry, move: { id: string }) => ({ owner: effect.owner, sourceInstanceId: effect.source?.cardInstanceId ?? effect.cardInstanceId, moveId: move.id });
   const presentEvents = useCallback(async (resolved: Match, fromSequence: number, id: number, fast = false) => {

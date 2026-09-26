@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: '.',
   testMatch: '*.spec.ts',
   // These journeys have isolated production-preview harnesses.
-  testIgnore: ['fighter-id.spec.ts', 'fadecade.spec.ts'],
+  testIgnore: ['fighter-id.spec.ts', 'fadecade.spec.ts', 'safehouse-mail.spec.ts'],
   fullyParallel: false,
   workers: 1,
   use: {

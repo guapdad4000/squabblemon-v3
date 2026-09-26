@@ -21,7 +21,7 @@
     "order": 4,
     "id": "home-story-left",
     "text": "The TV, speakers, and console sit along the left wall, beside your record player. Tap Story. That’s your main adventure: dialogue, battles, new cards, and chapter rewards.",
-    "existingRecording": null
+    "existingRecording": "home-story-left"
   },
   {
     "order": 5,
@@ -33,61 +33,61 @@
     "order": 6,
     "id": "home-back-to-room",
     "text": "Tap Back to the room. Let’s get you familiar with the place before we build your gang.",
-    "existingRecording": null
+    "existingRecording": "home-back-to-room"
   },
   {
     "order": 7,
     "id": "home-records",
     "text": "That record player beside the TV is Fade Tunes. Open Records when you want to pick the soundtrack for your Safehouse.",
-    "existingRecording": null
+    "existingRecording": "home-records"
   },
   {
     "order": 8,
     "id": "home-growth",
     "text": "Buddy’s Growth Lab is tucked into the back-left corner. Check in there for your daily rewards and keep your streak growing.",
-    "existingRecording": null
+    "existingRecording": "home-growth"
   },
   {
     "order": 9,
     "id": "home-profile",
     "text": "See that metal bookshelf under the blackboard? The portrait beside the little fist trophy opens your profile. That’s who you represent on the block.",
-    "existingRecording": null
+    "existingRecording": "home-profile"
   },
   {
     "order": 10,
     "id": "home-mail",
     "text": "That big wooden door in the back-right corner is your mail. When it knocks, you have something unread. Open it and the Mailman brings your letters and gifts. Read each letter, then claim any gift inside. No codes needed.",
-    "existingRecording": null
+    "existingRecording": "home-mail"
   },
   {
     "order": 11,
     "id": "home-bag",
     "text": "Your bag keeps track of your Clout, Pack Tickets, Style Shards, and collection. Fade Market is where you put those resources to work.",
-    "existingRecording": null
+    "existingRecording": "home-bag"
   },
   {
     "order": 12,
     "id": "home-training",
     "text": "The hanging heavy bag opens Training. Come here to practice your plays and try out a gang before you take it into a fight.",
-    "existingRecording": null
+    "existingRecording": "home-training"
   },
   {
     "order": 13,
     "id": "home-fadecade",
     "text": "The Fadecade is at the other end of the couch. That arcade machine takes you to challenges like Straight to the Back and Stockz. Its screen says Play New Game when you’re starting fresh, or Continue when you have a run waiting.",
-    "existingRecording": null
+    "existingRecording": "home-fadecade"
   },
   {
     "order": 14,
     "id": "home-phone",
     "text": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.",
-    "existingRecording": null
+    "existingRecording": "home-phone"
   },
   {
     "order": 15,
     "id": "home-bounties",
     "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
-    "existingRecording": null
+    "existingRecording": "home-bounties"
   },
   {
     "order": 16,
@@ -98,7 +98,7 @@
   {
     "order": 17,
     "id": "home-6",
-    "text": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
+    "text": "I have a free starter collection for you, including Cornball, Plug, Snow Bunny, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
     "existingRecording": "home-6"
   },
   {
@@ -140,7 +140,7 @@
   {
     "order": 24,
     "id": "r1_choose_card",
-    "text": "Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
+    "text": "Tap Plug. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
     "existingRecording": "r1_choose_card"
   },
   {
@@ -164,7 +164,7 @@
   {
     "order": 28,
     "id": "r2_choose_card",
-    "text": "Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.",
+    "text": "Tap Wifey. It costs 3 Motion in our target district. Hands is the strength it adds to your side.",
     "existingRecording": "r2_choose_card"
   },
   {
@@ -206,7 +206,7 @@
   {
     "order": 35,
     "id": "r4_choose_district",
-    "text": "Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+    "text": "Tap THE TRAP. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
     "existingRecording": "r4_choose_district"
   },
   {
@@ -224,7 +224,7 @@
   {
     "order": 38,
     "id": "result-default",
-    "text": "You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.",
+    "text": "You secured at least two districts. Change one card and compare how often its ability helps you hold that second district.",
     "existingRecording": "result-default"
   },
   {

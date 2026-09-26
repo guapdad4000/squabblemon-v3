@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { getMoveClipUrl, keyChromaPixels, type MoveClip } from '../specialMoves';
 import './special-moves.css';
+import { createChromaRenderer } from '../lib/chromaRenderer';
 
 /** Video is decorative: decoding or autoplay failure must never hold up a battle. */
 export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: MoveClip; onStatus?: (status: string) => void; audioEnabled?: boolean }) {
@@ -10,6 +11,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
   const resumePlayback = useRef<(() => void) | null>(null);
   const [muted, setMuted] = useState(true);
   const [ready, setReady] = useState(false);
+  const [useGpu, setUseGpu] = useState(true);
   useEffect(() => {
     audioRequested.current = audioEnabled;
     if (media.current) {
@@ -20,8 +22,14 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
   useEffect(() => {
     setReady(false);
     const surface = canvas.current;
-    const context = surface?.getContext('2d', { willReadFrequently: true });
-    if (!surface || !context) return;
+    if (!surface) return;
+    let renderer: ReturnType<typeof createChromaRenderer>;
+    try { renderer = createChromaRenderer(surface, `move-${clip.chroma}`, pixels => keyChromaPixels(pixels, clip.chroma), useGpu); }
+    catch { setUseGpu(false); return; }
+    if (!renderer) return;
+    surface.dataset.renderer = renderer.kind;
+    const contextLost = (event: Event) => { event.preventDefault(); setUseGpu(false); };
+    surface.addEventListener('webglcontextlost', contextLost);
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let video: HTMLVideoElement | undefined;
     let frame = 0, lastFrame = 0, stopped = false, revealed = false;
@@ -84,10 +92,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
         if (now - lastFrame >= 1000 / 24 && video.readyState >= 2 && !video.seeking) {
           lastFrame = now;
           try {
-            context.drawImage(video, 0, 0, surface.width, surface.height);
-            const pixels = context.getImageData(0, 0, surface.width, surface.height);
-            keyChromaPixels(pixels.data, clip.chroma);
-            context.putImageData(pixels, 0, 0);
+            renderer.draw(video);
             if (!revealed) { revealed = true; setReady(true); onStatus?.('Playing'); }
           } catch { fail(); return; }
         }
@@ -104,11 +109,13 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
       observer.disconnect();
       media.current = null;
       resumePlayback.current = null;
+      surface.removeEventListener('webglcontextlost', contextLost);
+      renderer.dispose();
       if (video) {
         video.onloadedmetadata = null; video.onerror = null; video.onended = null; video.onvolumechange = null;
         video.pause(); video.removeAttribute('src'); video.load();
       }
     };
-  }, [clip, onStatus]);
-  return <canvas ref={canvas} className="special-move-canvas" data-testid="special-move-canvas" data-ready={ready} data-muted={muted} aria-hidden="true" />;
+  }, [clip, onStatus, useGpu]);
+  return <canvas key={useGpu ? 'gpu' : 'cpu'} ref={canvas} className="special-move-canvas" data-testid="special-move-canvas" data-ready={ready} data-muted={muted} aria-hidden="true" />;
 }

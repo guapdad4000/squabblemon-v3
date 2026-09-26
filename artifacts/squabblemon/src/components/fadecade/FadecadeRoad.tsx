@@ -9,22 +9,22 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
   index: number; active: boolean; fighting: boolean; defeated?: boolean; compact?: boolean;
   returnState?: RoadReturn | null; reducedMotion: boolean;
 }) {
-  const resting: Phase = defeated ? 'defeat' : fighting ? 'fight' : 'idle';
+  const resting: Phase = defeated ? 'defeat' : fighting ? 'fight' : compact ? 'walk' : 'idle';
   const [phase, setPhase] = useState<Phase>(resting);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const settle = () => setPhase(resting);
-    if (media.matches || reducedMotion || returnState?.outcome !== 'win') { settle(); return; }
-    setPhase('clear');
-    const clear = window.setTimeout(() => setPhase('walk'), 650);
-    const walk = window.setTimeout(settle, 1650);
+    if (media.matches || reducedMotion || (returnState?.outcome !== 'win' && !active)) { settle(); return; }
+    setPhase(returnState?.outcome === 'win' ? 'clear' : 'walk');
+    const clear = window.setTimeout(() => setPhase('walk'), 900);
+    const walk = window.setTimeout(settle, 1900);
     media.addEventListener('change', settle);
     return () => {
       window.clearTimeout(clear); window.clearTimeout(walk);
       media.removeEventListener('change', settle);
     };
-  }, [resting, reducedMotion, returnState?.key, returnState?.outcome]);
+  }, [resting, active, reducedMotion, returnState?.key, returnState?.outcome]);
   const start = Math.max(0, index - 3);
   const nodes = Array.from({ length: 7 }, (_, offset) => start + offset);
   const asset = phase === 'defeat' ? 'fighter-defeat' : phase === 'fight' ? 'fight' : phase === 'clear' ? 'clear' : phase === 'walk' ? 'runner' : 'idle';
@@ -36,7 +36,7 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
     {!compact && <div className="fadecade-road-milestones" style={{ '--road-offset': `${(index - start) * 86 + 43}px` } as CSSProperties}>
       {nodes.map(stop => <div className={`fadecade-road-node ${stop < index ? 'is-cleared' : ''} ${stop === index ? 'is-current' : ''} ${(stop + 1) % 5 === 0 ? 'is-boss' : ''}`}
         key={stop} aria-current={stop === index ? 'step' : undefined}>
-        <b>{stop + 1}</b><span>{stop < index ? 'CLEARED' : (stop + 1) % 5 === 0 ? 'BOSS' : stop === index ? active ? 'YOUR STOP' : 'START' : 'UPCOMING'}</span>
+        <b>{stop + 1}</b><span>{stop < index ? 'CLEARED' : (stop + 1) % 5 === 0 ? 'BOSS' : stop === index ? defeated ? 'RUN ENDED' : active ? 'YOUR STOP' : 'START' : 'UPCOMING'}</span>
       </div>)}
     </div>}
     <div className="fadecade-road-actor" aria-hidden="true">
@@ -44,6 +44,7 @@ export function FadecadeRoad({ index, active, fighting, defeated, compact = fals
       <img src={image} alt="" className="fadecade-sprite-loader" onError={() => setFailed(true)} />
       {failed ? <span className="fadecade-sprite-fallback">YOU</span> : <div className={`fadecade-sprite fadecade-sprite--${phase}`} style={{ backgroundImage: `url(${image})` }} />}
     </div>
+    {!compact && <div className="fadecade-road-callout" role="status">{phase === 'clear' ? 'STOP CLEARED!' : phase === 'walk' ? 'ON TO THE NEXT BLOCK' : phase === 'defeat' ? 'RUN OVER' : fighting ? 'FIGHT IN PROGRESS' : active ? 'NEXT RIVAL READY' : 'MAKE YOUR RUN'}</div>}
     {!compact && <div className="fadecade-road-overlay"><span>STOP {index + 1}</span><span>{(index + 1) % 5 === 0 ? 'BOSS BLOCK' : 'STRAIGHT TO THE BACK'}</span></div>}
   </div>;
 }

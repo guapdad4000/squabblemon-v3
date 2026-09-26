@@ -1,3 +1,4 @@
+import { playInteractionSound } from '../../lib/interactionAudio';
 import { StreetSelect } from '../../components/ui/street-select';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
@@ -141,6 +142,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
       clearShopRequest(sessionStorage, profile.id);
       setPending(null);
       setReceipt(result.receipt);
+      playInteractionSound('register');
     } catch (reason) {
       if (reason instanceof ApiError && [400, 409].includes(reason.status)) {
         clearShopRequest(sessionStorage, profile.id);

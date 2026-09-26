@@ -23,7 +23,7 @@ test("season expansion preserves every legacy progression, encounter and reward 
   assert.equal(createHash("sha256").update(JSON.stringify(mechanics)).digest("hex"),
     "9db094cb3a342736a8042b80703146556538096e2cfeb3b73b7304818b38ebe9",
     "Existing saves and issued matches depend on unchanged Season One identities/rules/rewards.");
-  assert.equal(storyDialogueToken("welcome-to-the-block", "pre", 0), "welcome-to-the-block:script-v3:pre:0");
+  assert.equal(storyDialogueToken("welcome-to-the-block", "pre", 0), "welcome-to-the-block:script-v4:pre:0");
 });
 
 test("each chapter has exactly one presentation and every advertised chapter exists", () => {

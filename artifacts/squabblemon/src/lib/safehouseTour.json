@@ -13,5 +13,5 @@
   { "id": "home-phone", "target": "[aria-label=\"Explore the phone\"]", "title": "The block is calling.", "body": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.", "next": "Find my bounties" },
   { "id": "home-bounties", "target": ".safehouse-bounty-logo", "title": "Get paid for showing up.", "body": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.", "next": "Find my gang" },
   { "id": "home-5", "target": "[aria-label=\"Explore your gang cards\"]", "title": "These are your gang cards.", "body": "Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.", "next": null },
-  { "id": "home-6", "target": ".safehouse-room-actions", "title": "Let’s build your first deck.", "body": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.", "next": null }
+  { "id": "home-6", "target": ".safehouse-room-actions", "title": "Let’s build your first deck.", "body": "I have a free starter collection for you, including Cornball, Plug, Snow Bunny, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.", "next": null }
 ]

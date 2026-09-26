@@ -6,6 +6,7 @@ import { customFetch, getGetPlayerBootstrapQueryKey, type PlayerBootstrap } from
 import { availableCareerChoices, readCareer } from '@workspace/squabblemon-engine/career';
 import { ArrowRight, Check, FlaskConical, Medal, Shield, Shuffle, Wind } from 'lucide-react';
 import { cardCatalog, catalogCardById, catalogCardByEngineId, getCardImage } from '../../data';
+import '../../styles/mastery-board.css';
 import { ProgressRing } from '../../components/venue/ProgressRing';
 
 export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -61,9 +62,15 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       icon: Shuffle,
     },
   ];
+  const masteryEntries = Object.entries(progress.wins).sort((a, b) => (a[1] >= 5 ? 1 : 0) - (b[1] >= 5 ? 1 : 0) || b[1] - a[1]);
+  const masteredCount = masteryEntries.filter(([, wins]) => wins >= 5).length;
   const badges = bootstrap.profile.unlockedCosmeticIds.filter((id) => id.startsWith('badge:'));
   return (
     <section className="career-stage" aria-label="Experiments and mastery">
+      <header className="mastery-board-hero">
+        <div><span className="studio-eyebrow">THE WORK SHOWS</span><h1>Earn your hands.</h1><p>Build a record with your crew. Five wins. One badge. A reputation you earned.</p></div>
+        <dl><div><dt>Mastered</dt><dd>{masteredCount}</dd></div><div><dt>In the making</dt><dd>{masteryEntries.length - masteredCount}</dd></div><div><dt>Rewards ready</dt><dd>{choices}</dd></div></dl>
+      </header>
       <div className="hustle-stage__section">
         <div>
           <span className="studio-eyebrow">
@@ -145,12 +152,12 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <Medal size={14} />
             Earned on the streets
           </span>
-          <h2>The wall of fame</h2>
+          <h2>Your crew. Your record.</h2>
           <p>Five victories with a character earns their gold mastery badge. Pure recognition, no extra Hands.</p>
         </div>
       </div>
       <div className="career-stage__gallery">
-        {Object.entries(progress.wins).map(([id, wins]) => {
+        {masteryEntries.map(([id, wins]) => {
           const card = catalogCardById[id] ?? catalogCardByEngineId[id];
           return (
             <div data-notification-id={wins >= 5 ? `style:mastery:${id}` : undefined} className="career-stage__mastery" key={id} data-mastered={wins >= 5}>
@@ -161,7 +168,8 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 </ProgressRing>
               </div>
               <strong>{card?.name ?? id}</strong>
-              <span>{wins >= 5 ? 'Mastered' : `${wins} of 5 victories`}</span>
+              <span>{wins >= 5 ? 'MASTERY EARNED' : `${5 - wins} more ${5 - wins === 1 ? 'win' : 'wins'} to mastery`}</span>
+              <div className="mastery-win-track" aria-label={`${Math.min(wins, 5)} of 5 wins`}>{[1,2,3,4,5].map(win => <i key={win} data-earned={wins >= win} />)}</div>
             </div>
           );
         })}

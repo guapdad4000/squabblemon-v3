@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
-import { ROOKIE_CORE_IDS, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, engineIdsToCatalogIds, decks } from '../data';
+import { ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS, LATER_DROP_STARTER_IDS, STARTER_STREET_REPLACEMENTS, starterStreetCrew, catalogCardById, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, engineIdsToCatalogIds, decks } from '../data';
 import { createMatchFromEngineCards, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
 
 test('a full mixed deck keeps the replaced slot and moves its cover without duplicates', () => {
@@ -14,7 +14,7 @@ test('a full mixed deck keeps the replaced slot and moves its cover without dupl
   assert.equal(replaceDeckCard(changed, 5, changed.cardIds[0]), changed);
   assert.equal(replaceDeckCard(changed, -1, 'landlord'), changed);
   assert.equal(new Set(ROOKIE_FOUNDATION_IDS).size, 24);
-  for (const id of ['alice', 'tin-man', 'scarecrow', 'dr-fade']) assert(ROOKIE_FOUNDATION_IDS.includes(id));
+  for (const id of ['cornball', 'plug', 'snow-bunny', 'dr-fade']) assert(ROOKIE_FOUNDATION_IDS.includes(id));
 });
 
 test('custom deck transcript replays the issued roster even if the saved deck changes', () => {
@@ -85,4 +85,17 @@ test('revised workshop copy explains the dependable setup and bounded payoff', (
   assert.match(detail('counter'), /Silence and Weaken enablers/i);
   assert.match(detail('counter'), /first new debuff/i);
   assert.doesNotMatch(detail('counter'), /Closet Nerd (?:costs|is) 3/i);
+});
+
+
+test('starter crews reserve fairytale cards for a later drop and migrate without duplicates', () => {
+  for (const id of LATER_DROP_STARTER_IDS) assert(!ROOKIE_FOUNDATION_IDS.includes(id));
+  for (const id of Object.values(STARTER_STREET_REPLACEMENTS)) assert(catalogCardById[id], id);
+  const old = ['alice', 'oz', 'tin-man', 'lion', 'dorothy', 'scarecrow', 'cheshire', 'queen-of-hearts', 'wifey', 'dr-fade'];
+  const next = starterStreetCrew(old);
+  assert.equal(next.length, 10);
+  assert.equal(new Set(next).size, 10);
+  assert(next.every(id => !LATER_DROP_STARTER_IDS.includes(id as typeof LATER_DROP_STARTER_IDS[number])));
+  assert.deepEqual(starterStreetCrew(next), next);
+  assert.deepEqual(starterStreetCrew(ROOKIE_MENTOR_CORE_IDS), ROOKIE_MENTOR_CORE_IDS);
 });

@@ -69,7 +69,7 @@ export function playTutorialSequence(ids: readonly string[]): () => void {
     if (disposed || !enabled || document.hidden || pending) return;
     if (!audio) {
       if (!byId.has(ids[index])) { advance(); return; }
-      audio = new Audio(`${PUBLIC_BASE}audio/voice/dr-fade/tutorial/${ids[index]}.${extension}`);
+      audio = new Audio(`${PUBLIC_BASE}audio/voice/dr-fade/tutorial/${ids[index]}.${extension}?v=${byId.get(ids[index])?.revision ?? '1'}`);
       audio.volume = 0.95;
       audio.preload = 'auto';
       audio.onended = advance;

@@ -2,17 +2,20 @@
   {
     "id": "welcome",
     "text": "I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.",
-    "duration": 8.5
+    "duration": 9.2,
+    "revision": "100de8ad786f"
   },
   {
     "id": "welcome-reassurance",
     "text": "No timer. No purchases. We’ll learn by playing.",
-    "duration": 3.8
+    "duration": 3.9,
+    "revision": "2b912981c954"
   },
   {
     "id": "home-1",
     "text": "Your Safehouse is where you return between fights. The objects in this room open the parts of your game.",
-    "duration": 5.9
+    "duration": 6.8,
+    "revision": "2fbc5d667ddc"
   },
   {
     "id": "home-2",
@@ -22,7 +25,8 @@
   {
     "id": "home-3",
     "text": "Start with Chapter 1. Follow the highlighted scene, then the next. New chapters open as you clear the story.",
-    "duration": 6.6
+    "duration": 8.1,
+    "revision": "908854f28475"
   },
   {
     "id": "home-4",
@@ -32,147 +36,176 @@
   {
     "id": "home-5",
     "text": "Tap Gang. Your collection is every card you own. Your deck is the ten cards you take into a battle.",
-    "duration": 6.6
+    "duration": 7.5,
+    "revision": "2ebc5077006a"
   },
   {
     "id": "home-6",
-    "text": "I have a free starter collection for you, including Alice, Tin Man, Scarecrow, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
-    "duration": 9.7
+    "text": "I have a free starter collection for you, including Cornball, Plug, Snow Bunny, and my Legendary card. We’ll start with ten, make one swap together, and save your gang.",
+    "duration": 12.35,
+    "revision": "4bf1746415cb"
   },
   {
     "id": "legendary-catchphrase",
     "text": "Watch close. You’re next.",
-    "duration": 2.091
+    "duration": 2.074,
+    "revision": "7ee1fe8638a6"
   },
   {
     "id": "legendary-explanation",
     "text": "Play him for 4 Motion. He brings 6 Hands, hits the strongest enemy in his district for −2 Hands, and gives your weakest ally in another district +2 Hands.",
-    "duration": 9.3
+    "duration": 11.0,
+    "revision": "0cfcc18a41b8"
   },
   {
     "id": "legendary-squabble",
     "text": "We’ll save him for your first SQUABBLE: 12 base Hands in one play. Follow the highlights and see it happen.",
-    "duration": 6.8
+    "duration": 8.1,
+    "revision": "6f47e2362704"
   },
   {
     "id": "deck-1",
     "text": "These ten cards are your battle lineup. The first five are your opening hand. Tap the highlighted sixth slot to change a later draw.",
-    "duration": 8.2
+    "duration": 8.9,
+    "revision": "b86c2358cb1a"
   },
   {
     "id": "deck-2",
     "text": "Tap Landlord. The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
-    "duration": 9.3
+    "duration": 10.7,
+    "revision": "f1b2cbfe9d93"
   },
   {
     "id": "deck-3",
     "text": "You made your first swap. Save your gang and take it into a guided match. I’ll point to every move.",
-    "duration": 6.2
+    "duration": 7.6,
+    "revision": "a4357834d9a2"
   },
   {
     "id": "r1_choose_card",
-    "text": "Tap Alice. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
-    "duration": 6.6
+    "text": "Tap Plug. It costs 1 Motion in our target district. Hands is the strength it adds to your side.",
+    "duration": 7.32,
+    "revision": "fc3aa68e2eb7"
   },
   {
     "id": "r1_choose_district",
     "text": "Tap this district. You win by leading in two of the three districts at the end. Your first play here costs 1 less Motion (minimum 1). Discounts do not stack.",
-    "duration": 10.2
+    "duration": 11.8,
+    "revision": "596fb128ab03"
   },
   {
     "id": "r1_play_card",
     "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
-    "duration": 5.1
+    "duration": 5.9,
+    "revision": "cecda030d443"
   },
   {
     "id": "r1_end_turn",
     "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
-    "duration": 7.3
+    "duration": 8.3,
+    "revision": "574507e88d11"
   },
   {
     "id": "r2_choose_card",
-    "text": "Tap Alice. It costs 2 Motion in our target district. Hands is the strength it adds to your side.",
-    "duration": 6.6
+    "text": "Tap Wifey. It costs 3 Motion in our target district. Hands is the strength it adds to your side.",
+    "duration": 7.76,
+    "revision": "bd0b964dd2bf"
   },
   {
     "id": "r2_choose_district",
     "text": "Tap this district. You win by leading in two of the three districts at the end. Spread your strength instead of putting everyone in one place.",
-    "duration": 7.7
+    "duration": 8.4,
+    "revision": "a825dfb16449"
   },
   {
     "id": "r2_play_card",
     "text": "The preview shows the known score after your card lands. Play the card to resolve it now.",
-    "duration": 5.7
+    "duration": 6.1,
+    "revision": "262288e8eec2"
   },
   {
     "id": "r2_end_turn",
     "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
-    "duration": 7.4
+    "duration": 8.0,
+    "revision": "2fe94d68d106"
   },
   {
     "id": "r3_bank_motion",
     "text": "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts.",
-    "duration": 8.0
+    "duration": 8.4,
+    "revision": "fe4864a303bb"
   },
   {
     "id": "r4_choose_card",
     "text": "Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.",
-    "duration": 8.4
+    "duration": 10.6,
+    "revision": "39df9335c6f9"
   },
   {
     "id": "r4_arm_squabble",
     "text": "Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.",
-    "duration": 7.1
+    "duration": 6.6,
+    "revision": "df9c13a654fd"
   },
   {
     "id": "r4_choose_district",
-    "text": "Tap VIP SECTION. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
-    "duration": 7.5
+    "text": "Tap THE TRAP. Dr. Fade fights here while helping an ally in another district. Watch both scores.",
+    "duration": 6.93,
+    "revision": "426c965a11af"
   },
   {
     "id": "r4_play_squabble",
     "text": "Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.",
-    "duration": 7.8
+    "duration": 9.3,
+    "revision": "8b259583740b"
   },
   {
     "id": "r4_end_turn",
     "text": "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion.",
-    "duration": 8.5
+    "duration": 8.7,
+    "revision": "76bb29b3475d"
   },
   {
     "id": "result-default",
-    "text": "You moved an ally into a district you finished ahead in. Keep looking for movement that helps secure your second district.",
-    "duration": 6.6
+    "text": "You secured at least two districts. Change one card and compare how often its ability helps you hold that second district.",
+    "duration": 8.17,
+    "revision": "c382da1e34c5"
   },
   {
     "id": "lesson-complete",
     "text": "Your first fade is saved. You built a gang, played cards, banked Motion, and used SQUABBLE. Chapter 1 is next.",
-    "duration": 8.0
+    "duration": 9.6,
+    "revision": "93f9e5e100eb"
   },
   {
     "id": "lesson-complete-encouragement",
     "text": "Keep what worked. Change what didn’t. Every card in your collection can be part of your next idea.",
-    "duration": 6.1
+    "duration": 5.7,
+    "revision": "ca23aeab81ce"
   },
   {
     "id": "generic-recruit",
     "text": "The number at the top is its Motion cost; Hands is the strength it adds to a district. This card replaces your selected slot.",
-    "duration": 8.3
+    "duration": 8.8,
+    "revision": "4c243306fac5"
   },
   {
     "id": "generic-card",
     "text": "Hands is the strength it adds to your side.",
-    "duration": 2.507
+    "duration": 2.279,
+    "revision": "982f5dbee2ce"
   },
   {
     "id": "generic-district",
     "text": "Tap this district. You win by leading in two of the three districts at the end.",
-    "duration": 4.7
+    "duration": 4.7,
+    "revision": "f09e32b0b877"
   },
   {
     "id": "generic-fade-district",
     "text": "Dr. Fade fights here while helping an ally in another district. Watch both scores.",
-    "duration": 4.9
+    "duration": 5.0,
+    "revision": "f4598487cf59"
   },
   {
     "id": "home-story-left",
@@ -239,5 +272,65 @@
     "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
     "duration": 6.9,
     "revision": "7bea38f19574"
+  },
+  {
+    "id": "mechanic-burn",
+    "text": "Burn stacks remove that many Hands at round end, then the stacks clear. Cleanse it before round end or plan around the coming score loss.",
+    "duration": 9.3,
+    "revision": "9a27f540ce18"
+  },
+  {
+    "id": "mechanic-freeze",
+    "text": "A Frozen card adds 0 Hands and its ability cannot fire until it is cleansed. A frozen card still occupies its district, so a cleanse can bring it back online.",
+    "duration": 10.77,
+    "revision": "6510209fc177"
+  },
+  {
+    "id": "mechanic-cleanse",
+    "text": "Cleanse removes Burn, Freeze, Silence, Weaken, and Lock from a card. Friendly buffs such as protection and Boost stay in place.",
+    "duration": 9.94,
+    "revision": "bffa8d825631"
+  },
+  {
+    "id": "mechanic-protect",
+    "text": "Protection blocks a targeted hostile effect. Some shields last for the round; Cover lasts until spent. Use protection before the rival targets your most valuable fighter.",
+    "duration": 12.01,
+    "revision": "789f68d42ad6"
+  },
+  {
+    "id": "mechanic-blocked",
+    "text": "The incoming targeted effect was stopped, so its intended change did not land. The protection that stopped it may now be spent; check the card status before the next attack.",
+    "duration": 12.43,
+    "revision": "802e3db1526e"
+  },
+  {
+    "id": "mechanic-weaken",
+    "text": "A Weakened card keeps its Hands but cannot fire its ability. Cleanse restores the ability. The card can still help hold its district meanwhile.",
+    "duration": 10.07,
+    "revision": "f857e84eb095"
+  },
+  {
+    "id": "mechanic-silence",
+    "text": "A Silenced card keeps its Hands but cannot fire its ability. Play for its raw Hands or cleanse it before you need the ability.",
+    "duration": 8.4,
+    "revision": "6d95ae5b12d1"
+  },
+  {
+    "id": "mechanic-movement",
+    "text": "An ability moved a card to another district after it was already in play. Recheck both district scores after movement; one move can swing two districts.",
+    "duration": 9.29,
+    "revision": "6918a4c7e6a7"
+  },
+  {
+    "id": "mechanic-lock",
+    "text": "A Locked card cannot be moved to another district until it is cleansed. Its Hands still count where it stands. Cleanse it if repositioning matters.",
+    "duration": 9.34,
+    "revision": "8527045f9eee"
+  },
+  {
+    "id": "mechanic-boost",
+    "text": "A Boosted card gains +1 Hands at every round end while Boost remains active. Early Boosts compound over several rounds, so answer them before they grow.",
+    "duration": 11.25,
+    "revision": "16611ff15099"
   }
 ]

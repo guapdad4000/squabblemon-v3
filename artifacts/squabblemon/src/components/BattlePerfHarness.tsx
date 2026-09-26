@@ -154,7 +154,8 @@ export function BattlePerfHarness() {
       presentationScores: null,
       timing: 'afterMs',
     });
-    await waitForDuration(EFFECT_PRESENTATION_TIMING.reduced.afterMs);
+    // Include the final transition before checking the settled board.
+    await waitForDuration(EFFECT_PRESENTATION_TIMING.standard.afterMs);
     window.__battlePerfRecord = undefined;
     setCommits(measuredCommits);
     setRenderDurationMs(measuredDuration);
@@ -171,7 +172,8 @@ export function BattlePerfHarness() {
           id="crowded-battle"
           onRender={(...args) => window.__battlePerfRecord?.(args[0], args[1], args[2])}
         >
-          <div data-testid="battle-perf-harness" data-commits={commits} data-render-duration={renderDurationMs}>
+          <div data-testid="battle-perf-harness" data-commits={commits} data-render-duration={renderDurationMs}
+            style={{ width: '100%', height: '100dvh', display: 'flex', flexDirection: 'column' }}>
           <Battle
           match={frame.match}
           deck={deck}

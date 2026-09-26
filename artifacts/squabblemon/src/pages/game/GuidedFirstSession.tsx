@@ -44,7 +44,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
         onTarget={!item.next && lesson < homeLessons.length - 1 ? () => setLesson(lesson + 1) : undefined}>{item.body}</CoachSpotlight>
     </div>;
   }
-  return <main className="rookie-tour" style={{ backgroundImage: 'linear-gradient(90deg,#07100eef,#07100e90),url("' + getAssetUrl('scenes/safehouse/concept.png') + '")', backgroundSize: 'cover', backgroundPosition: 'center' }} data-testid="rookie-welcome"><div className="rookie-tour__welcome">
+  return <main className="rookie-tour" style={{ backgroundImage: 'linear-gradient(90deg,#07100eef,#07100e90),url("' + getAssetUrl('scenes/safehouse/concept.webp') + '")', backgroundSize: 'cover', backgroundPosition: 'center' }} data-testid="rookie-welcome"><div className="rookie-tour__welcome">
     <section><span className="fade-eyebrow">ROOKIE ROAD / WELCOME TO THE BLOCK</span><h1>You belong<br />on this block.</h1>
       <p>I’m Dr. Fade. I’ll show you around, help you build your first gang, and stay beside you through your first win. One move at a time.</p>
       <div className="rookie-tour__steps"><span>01 · Find your feet</span><span>02 · Build your gang</span><span>03 · First battle</span></div>

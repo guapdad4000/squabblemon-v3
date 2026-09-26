@@ -137,8 +137,22 @@ test('SQUABBLE button icon removes its encoded green field', async ({ page }) =>
   const icon = page.locator('canvas.battle-squabble__video');
   await expect(icon).toHaveAttribute('data-source', /assets\/combat\/squabble-button\.webm$/);
   await expect.poll(() => icon.getAttribute('data-ready'), { timeout: 5_000 }).toBe('true');
-  const alphaRange = await icon.evaluate((canvas: HTMLCanvasElement) => {
-    const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data;
+  const alphaRange = await icon.evaluate(async (canvas: HTMLCanvasElement) => {
+    const gl = canvas.getContext('webgl');
+    // Read the GPU output during a real draw, before the compositor clears its
+    // transient buffer. Keep the same alpha assertions for either renderer.
+    const pixels = gl ? await new Promise<Uint8Array>((resolve, reject) => {
+      const draw = gl.drawArrays;
+      const timeout = setTimeout(() => { gl.drawArrays = draw; reject(new Error('No keyed video frame rendered')); }, 3000);
+      gl.drawArrays = function (...args) {
+        draw.apply(gl, args);
+        const frame = new Uint8Array(canvas.width * canvas.height * 4);
+        gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, frame);
+        gl.drawArrays = draw;
+        clearTimeout(timeout);
+        resolve(frame);
+      };
+    }) : canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data;
     let min = 255;
     let max = 0;
     for (let i = 3; i < pixels.length; i += 4) {

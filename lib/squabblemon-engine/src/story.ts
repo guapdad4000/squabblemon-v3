@@ -7,7 +7,7 @@ import { validateStoryPuzzle, type StoryPuzzleDefinition } from "./storyPuzzles"
 import { seasonTwoChapters } from "./seasonTwo";
 import { extendedStoryChapters } from "./storyExpansions";
 import { specialPresentationChapters } from "./storySpecials";
-import { expandSeasonOneDialogue } from "./seasonOneDialogueExpansion";
+import { hasSeasonOneRewrite, rewriteSeasonOne } from "./seasonOneRewrite";
 import { expandSeasonTwoDialogue } from "./seasonTwoDialogueExpansion";
 export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
 export { isStoryPuzzleSolution, type StoryPuzzleDefinition } from "./storyPuzzles";
@@ -252,8 +252,8 @@ export function validateStoryContent(content: StoryContent): StoryContent {
   return content;
 }
 const screenplay = chapterOneDialogue as Record<string, Partial<Record<'pre' | 'post' | 'main', StoryDialogueLine[]>>>;
-export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:script-v3:${section}:${index}`;
-export const storyContent = validateStoryContent({ version: 9, chapters: withStoryEnvironments([...expandSeasonOneDialogue([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:${hasSeasonOneRewrite(nodeId) ? "script-v4" : "script-v3"}:${section}:${index}`;
+export const storyContent = validateStoryContent({ version: 10, chapters: withStoryEnvironments([...rewriteSeasonOne([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'

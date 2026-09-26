@@ -68,7 +68,7 @@ export function GameNav({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       className={`fan-nav__ray ${selected ? 'is-active' : ''}`}
       style={fanPosition(index, count)} aria-label={route.label}
       aria-current={selected ? 'page' : undefined} title={`${route.label} · ${route.detail}`}
-      onClick={() => navigate(route.path)}>
+      data-preload-route={route.path} onClick={() => navigate(route.path)}>
       <span className="fan-nav__pose"><span key={selected ? tap : 'rest'} className="fan-nav__object"><NavArt name={route.art} /></span></span>
       <span className="fan-nav__label">{route.label}<Attention section={route.art === 'collection' ? 'cards' : route.art} /></span>
     </button>;
@@ -150,7 +150,7 @@ export function CinemaNavSheet({
       aria-controls="cinema-nav-sheet"
       onClick={toggle}
     >
-      <img src={getAssetUrl('brand/navigation/squabble-express.png')} width={1254} height={1254} alt="" draggable={false} />
+      <img src={getAssetUrl('brand/navigation/squabble-express.webp')} width={1254} height={1254} alt="" draggable={false} />
       <span>Express</span>
     </button>;
   return <>
@@ -168,7 +168,7 @@ export function CinemaNavSheet({
         <X size={21} aria-hidden="true" />
       </button>
       <div className="express-board">
-        <img className="express-board__art" src={getAssetUrl('brand/navigation/squabble-express-map.png')}
+        <img className="express-board__art" src={getAssetUrl('brand/navigation/squabble-express-map.webp')}
           width={1122} height={1402} alt="" draggable={false} />
         <nav className="express-map" aria-label="Game destinations">
           <p className="express-map__heading">Pick your stop</p>
@@ -187,7 +187,7 @@ export function CinemaNavSheet({
               return <button key={route.path} type="button"
                 className={`express-sign ${index % 2 ? 'express-sign--right' : 'express-sign--left'} ${selected ? 'is-active' : ''}`}
                 aria-label={`${route.label} · ${route.detail}`} aria-current={selected ? 'page' : undefined}
-                title={`${route.label} · ${route.detail}`} onClick={() => choose(route.path)}>
+                title={`${route.label} · ${route.detail}`} data-preload-route={route.path} onClick={() => choose(route.path)}>
                 <span className="express-sign__post" aria-hidden="true" />
                 <span className="express-sign__board"><span className="express-sign__bolt" aria-hidden="true" /><strong>{route.label}<Attention section={route.art === 'collection' ? 'cards' : route.art} /></strong><span className="express-sign__arrow" aria-hidden="true">{index % 2 ? '›' : '‹'}</span></span>
                 {selected && <span className="express-sign__here">You are here</span>}

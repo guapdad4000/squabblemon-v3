@@ -14,7 +14,7 @@ import {
 import type { Match } from "@workspace/squabblemon-engine/gameEngine";
 import { ACCOUNT_XP_PER_LEVEL, WELCOME_REWARD, battleEarnings, economyVersionFromSnapshot } from '@workspace/squabblemon-engine/economy';
 import { checkpointFor, encounterFor } from '@workspace/squabblemon-engine/challenge';
-import { starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, ROOKIE_MENTOR_ID, ROOKIE_FOUNDATION_IDS } from "@workspace/squabblemon-engine/data";
+import { starterStreetCrew, STARTER_STREET_REPLACEMENTS, starterRecipes, ROOKIE_FOUNDATION_ID, ROOKIE_DECK_ID, ROOKIE_MENTOR_CORE_IDS, ROOKIE_MENTOR_ID, ROOKIE_FOUNDATION_IDS } from "@workspace/squabblemon-engine/data";
 import {
   applyCardXp,
   createCardProgressionSnapshot,
@@ -96,7 +96,13 @@ export async function grantFirstCollection(clerkUserId: string): Promise<void> {
     const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
     if (!profile || !["crew", "tutorial"].includes(profile.onboardingStep)) return;
     const ownedCardIds = [...new Set([...profile.ownedCardIds, ...ROOKIE_FOUNDATION_IDS])];
-    const savedDecks = [...profile.savedDecks];
+    const savedDecks = profile.savedDecks.map(deck => {
+      if (deck.id !== ROOKIE_DECK_ID || !deck.cardIds.some(id => STARTER_STREET_REPLACEMENTS[id])) return deck;
+      const cardIds = starterStreetCrew(deck.cardIds);
+      for (const id of cardIds) if (!ownedCardIds.includes(id)) ownedCardIds.push(id);
+      const heroCardId = STARTER_STREET_REPLACEMENTS[deck.heroCardId ?? ''] ?? deck.heroCardId ?? cardIds[0];
+      return { ...deck, cardIds, heroCardId: cardIds.includes(heroCardId) ? heroCardId : cardIds[0], recipeId: null };
+    });
     if (!savedDecks.some(deck => deck.id === ROOKIE_DECK_ID)) savedDecks.push({ id: ROOKIE_DECK_ID, name: "My First Gang", cardIds: [...ROOKIE_MENTOR_CORE_IDS], heroCardId: ROOKIE_MENTOR_ID, recipeId: null });
     await tx.update(playerProfilesTable).set({
       starterDeckId: ROOKIE_FOUNDATION_ID, ownedCardIds,

@@ -1,7 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { PaymentOrder } from '@workspace/api-client-react';
 import { getAssetUrl } from '../lib/assets';
+
+import { playInteractionSound } from '../lib/interactionAudio';
 
 export type MarketReceiptSource = { order: PaymentOrder; daily?: never } | { daily: { date: string }; order?: never };
 
@@ -13,6 +15,8 @@ export function MarketPurchaseSuccess({ art, name, order, daily, children, reduc
   const [itemLoaded, setItemLoaded] = useState(false);
   const [bagLoaded, setBagLoaded] = useState(false);
   const ready = itemLoaded && bagLoaded;
+  const receiptId = daily ? daily.date : order.id;
+  useEffect(() => { playInteractionSound('register'); }, [receiptId]);
   const fulfilledDate = daily ? new Date(`${daily.date}T00:00:00Z`) : order.fulfilledAt ? new Date(order.fulfilledAt) : null;
   const dateLabel = fulfilledDate && !Number.isNaN(fulfilledDate.getTime())
     ? new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: daily ? 'UTC' : undefined }).format(fulfilledDate)
@@ -32,7 +36,7 @@ export function MarketPurchaseSuccess({ art, name, order, daily, children, reduc
         initial={still ? false : { y: -100, rotate: -16, scale: .8, opacity: 0 }}
         animate={still ? { y: -25, scale: .7, opacity: 1 } : ready ? { y: [-100, -65, 82], rotate: [-16, 8, 0], scale: [.8, 1, .5], opacity: [0, 1, 0] } : { y: -100, opacity: 0 }}
         transition={{ duration: 1.4, delay: .25, times: [0, .35, 1], ease: 'easeInOut' }} />
-      <motion.img className="market-thank-you-bag" src={getAssetUrl('assets/market/thank-you-fade-again-bag.png')} alt="" onLoad={() => setBagLoaded(true)}
+      <motion.img className="market-thank-you-bag" src={getAssetUrl('assets/market/thank-you-fade-again-bag.webp')} alt="" onLoad={() => setBagLoaded(true)}
         initial={false} animate={still || !ready ? {} : { rotate: [0, 0, -4, 3, 0], y: [0, 0, 8, -3, 0], scale: [1, 1, 1.04, 1.01, 1] }}
         transition={{ duration: 2, times: [0, .58, .72, .86, 1] }} />
       <span className="market-bag-spark market-bag-spark--one">✦</span><span className="market-bag-spark market-bag-spark--two">✦</span>

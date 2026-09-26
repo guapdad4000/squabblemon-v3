@@ -11,6 +11,8 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
 }) {
   useTutorialVoice(typeof children === 'string' ? children : null, narrate);
   const [rect, setRect] = useState<Rect | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => { setRevealed(false); }, [target, step]);
   const panel = useRef<HTMLElement>(null);
   const callback = useRef(onTarget);
   callback.current = onTarget;
@@ -77,10 +79,11 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
       document.removeEventListener('click', clicked, true); document.removeEventListener('pointerdown', guard, true); document.removeEventListener('keydown', keys, true);
     };
   }, [target, step, interactiveTarget]);
+  const battleDiagram = step.startsWith('ROUND') ? target.includes('squabble') ? 'double' : target.includes('lane-') ? 'districts' : target.includes('next-round') ? 'bank' : target.includes('card-') ? 'card' : 'play' : null;
   const atBottom = rect ? rect.top < window.innerHeight * .48 : true;
   const beside = rect && innerWidth > 1000 ? rect.left + rect.width + 565 < innerWidth ? 'right' : rect.left > 565 ? 'left' : null : null;
   const sideStyle = rect && beside ? { left: beside === 'right' ? rect.left + rect.width + 24 : rect.left - 554, top: Math.max(16, Math.min(innerHeight - 260, rect.top)), bottom: 'auto', transform: 'none' } : undefined;
-  return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target}>
+  return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target} data-revealed={revealed}>
     {rect ? <>
       <div className="fade-mask" style={{ inset: '0 0 auto', height: rect.top }} />
       <div className="fade-mask" style={{ top: rect.top, left: 0, width: rect.left, height: rect.height }} />
@@ -91,7 +94,11 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
     <section ref={panel} className={'fade-tip ' + (atBottom ? 'fade-tip--bottom' : 'fade-tip--top')} style={sideStyle} role="region" aria-label="Dr. Fade’s guide">
       <DrFadePortrait pose={beside === 'right' ? 'left' : beside === 'left' ? 'right' : atBottom ? 'up' : 'down'} />
       <div><span className="fade-eyebrow">DR. FADE / {step}</span>
+        {battleDiagram && <div className="fade-lesson-diagram" aria-label={battleDiagram === 'districts' ? 'Lead in two of three districts' : battleDiagram === 'double' ? 'Double base Hands once per match' : battleDiagram === 'bank' ? 'Carry up to one unused Motion' : 'Spend Motion to add Hands'}>
+          {battleDiagram === 'districts' ? <><b>WIN</b><b>WIN</b><i>3</i><span>2 of 3 districts</span></> : battleDiagram === 'double' ? <><b>HANDS</b><i>×</i><b>2</b><span>Once per match</span></> : battleDiagram === 'bank' ? <><b>0–1</b><i>→</i><b>NEXT</b><span>Unused Motion carries</span></> : <><b>MOTION</b><i>→</i><b>HANDS</b><span>Cost → district strength</span></>}
+        </div>}
         <div aria-live="polite" aria-atomic="true"><h2>{title}</h2><p>{children}</p></div>
+        <button type="button" className="fade-reveal" aria-pressed={revealed} onClick={() => setRevealed(value => !value)}>{revealed ? "Focus this step" : "Show the whole scene"}</button>
         {onNext && <button className="venue-button venue-button--gold" onClick={onNext}>{nextLabel}</button>}
         {!rect && <p role="status">Finding your next step…</p>}
       </div>

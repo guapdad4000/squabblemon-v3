@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
+import { writeFile } from 'node:fs/promises';
 
 let origin = process.env.BATTLE_PERF_ORIGIN;
 let preview;
@@ -129,6 +130,7 @@ async function runMode(mode) {
     const stableFrames = frames.filter((value) => value > 0).sort((a, b) => a - b);
     const p95FrameMs = stableFrames[Math.max(0, Math.ceil(stableFrames.length * .95) - 1)] || 0;
     const droppedFrames = stableFrames.filter((value) => value > 34).length;
+    const board = Array.from(document.querySelectorAll('[data-card-zone="board"]'));
     return {
       ...react,
       longTasks: longTasks.length,
@@ -136,7 +138,9 @@ async function runMode(mode) {
       sampledFrames: stableFrames.length,
       p95FrameMs,
       droppedFrameRatio: stableFrames.length ? droppedFrames / stableFrames.length : 1,
-      boardCards: document.querySelectorAll('[data-card-zone="board"]').length,
+      boardCards: board.length,
+      minimumBoardCardWidth: Math.min(...board.map(card => card.getBoundingClientRect().width)),
+      minimumBoardCardHeight: Math.min(...board.map(card => card.getBoundingClientRect().height)),
       viewport: [innerWidth, innerHeight],
     };
   })()`, true);
@@ -151,15 +155,25 @@ try {
 
   const results = {};
   for (const mode of ['standard', 'reduced']) {
+    if (process.env.BATTLE_PERF_PROFILE && mode === 'standard') {
+      await command('Profiler.enable');
+      await command('Profiler.start');
+    }
     results[mode] = await runMode(mode);
+    if (process.env.BATTLE_PERF_PROFILE && mode === 'standard') {
+      const { profile } = await command('Profiler.stop');
+      await writeFile(process.env.BATTLE_PERF_PROFILE, JSON.stringify(profile));
+    }
     console.log(`${mode}: ${JSON.stringify(results[mode])}`);
   }
+  if (process.env.BATTLE_PERF_REPORT) await writeFile(process.env.BATTLE_PERF_REPORT, JSON.stringify(results, null, 2));
   for (const mode of ['standard', 'reduced']) {
     const metrics = results[mode];
     const budget = budgets[mode];
     assert.deepEqual(metrics.viewport, [390, 844], `${mode}: representative mobile viewport changed`);
     assert.equal(metrics.occupiedDistricts, 3, `${mode}: all three districts must be occupied`);
     assert.equal(metrics.boardCards, 12, `${mode}: six rounds must leave twelve cards on the board`);
+    assert.ok(metrics.minimumBoardCardWidth > 0 && metrics.minimumBoardCardHeight > 0, `${mode}: board cards must be rendered at a visible size`);
     assert.ok(metrics.sampledFrames >= 20, `${mode}: too few animation frames were sampled`);
     assert.ok(metrics.commits > 0, `${mode}: React profiling did not record any commits`);
     assert.ok(metrics.renderDurationMs > 0, `${mode}: React profiling did not record render duration`);

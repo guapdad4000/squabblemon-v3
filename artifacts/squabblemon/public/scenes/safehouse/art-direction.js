@@ -93,20 +93,38 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
       }`
   });
   const quad=new T.Mesh(new T.PlaneGeometry(2,2),composite);quad.frustumCulled=false;postScene.add(quad);
-  const clearColor=new T.Color();
+  const clearColor=new T.Color(),visibility=new Array(skip.length);
   function resize(){renderer.getDrawingBufferSize(size);colorTarget.setSize(size.x,size.y);normalTarget.setSize(size.x,size.y);uniforms.resolution.value.copy(size);pixelRatio.value=renderer.getPixelRatio();}
+  async function prepare(){
+    // Compile both room passes while the loading poster is still visible.
+    const override=scene.overrideMaterial;
+    try{
+      renderer.setRenderTarget(colorTarget);
+      await renderer.compileAsync(scene,camera);
+      scene.overrideMaterial=normalMaterial;
+      renderer.setRenderTarget(normalTarget);
+      await renderer.compileAsync(scene,camera);
+      renderer.setRenderTarget(null);
+      await renderer.compileAsync(postScene,postCamera);
+    }finally{scene.overrideMaterial=override;renderer.setRenderTarget(null);}
+  }
   function render(){
     renderer.setRenderTarget(colorTarget);renderer.render(scene,camera);
     const background=scene.background,override=scene.overrideMaterial;
     renderer.getClearColor(clearColor);const clearAlpha=renderer.getClearAlpha();
     const shadowUpdate=renderer.shadowMap.autoUpdate;renderer.shadowMap.autoUpdate=false;
-    const visibility=skip.map(object=>object.visible);skip.forEach(object=>object.visible=false);
+    skip.forEach((object,i)=>{visibility[i]=object.visible;object.visible=false;});
     scene.background=null;scene.overrideMaterial=normalMaterial;
-    renderer.setClearColor(0x000000,0);renderer.setRenderTarget(normalTarget);renderer.render(scene,camera);
+    // The color pass already updated every transform. The normal pass only
+    // changes materials/visibility, so reuse those exact world matrices.
+    const sceneUpdate=scene.matrixWorldAutoUpdate,cameraUpdate=camera.matrixWorldAutoUpdate;
+    scene.matrixWorldAutoUpdate=false;camera.matrixWorldAutoUpdate=false;
+    try{renderer.setClearColor(0x000000,0);renderer.setRenderTarget(normalTarget);renderer.render(scene,camera);}
+    finally{scene.matrixWorldAutoUpdate=sceneUpdate;camera.matrixWorldAutoUpdate=cameraUpdate;}
     scene.background=background;scene.overrideMaterial=override;skip.forEach((object,i)=>object.visible=visibility[i]);
     renderer.shadowMap.autoUpdate=shadowUpdate;renderer.setClearColor(clearColor,clearAlpha);
     renderer.setRenderTarget(null);renderer.render(postScene,postCamera);
   }
   function dispose(){colorTarget.dispose();normalTarget.dispose();normalMaterial.dispose();quad.geometry.dispose();composite.dispose();}
-  return {render,resize,dispose,styledMaterialCount:styled.size};
+  return {render,resize,dispose,prepare,styledMaterialCount:styled.size};
 }

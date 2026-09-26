@@ -39,10 +39,11 @@ async function verify(width, aac) {
     window.Audio = class extends NativeAudio {
       constructor(src) {
         super(src);
+        if (src?.includes('/dr-fade/battle/')) window.__roundAnnouncements = (window.__roundAnnouncements ?? 0) + 1;
         if (!src?.includes('/dr-fade/tutorial/')) return;
         window.__voiceAudio.push(this);
         this.addEventListener('playing', () => {
-          window.__voicePlayed.push(src.split('/').at(-1));
+          window.__voicePlayed.push(new URL(src, location.href).pathname.split('/').at(-1));
           if (window.__voiceAudio.filter(a => !a.paused && !a.ended).length > 1) window.__voiceOverlap = true;
         });
         this.addEventListener('error', () => window.__voiceErrors.push({ src, code: this.error?.code }));
@@ -52,7 +53,7 @@ async function verify(width, aac) {
   const voice = async id => {
     try {
       const candidates = (Array.isArray(id) ? id : [id]).map(value => value + (aac ? '.m4a' : '.ogg'));
-      await page.waitForFunction(expected => window.__voiceAudio.some(a => expected.some(name => a.src.endsWith(name)) && !a.paused && a.readyState >= 2), candidates, { timeout: 10000 });
+      await page.waitForFunction(expected => window.__voiceAudio.some(a => expected.some(name => new URL(a.src, location.href).pathname.endsWith(name)) && !a.paused && a.readyState >= 2), candidates, { timeout: 10000 });
     } catch (error) {
       const state = await page.evaluate(() => ({ text: document.querySelector('.fade-tip')?.textContent, played: window.__voicePlayed, audio: window.__voiceAudio.map(a => ({ src: a.src, paused: a.paused, ready: a.readyState, time: a.currentTime })), errors: window.__voiceErrors }));
       throw new Error(`Expected ${id}: ${JSON.stringify(state)}; ${error.message}`);
@@ -65,7 +66,7 @@ async function verify(width, aac) {
   const click = locator => width < 600 ? locator.first().tap() : locator.first().click();
   const clickCoach = async () => {
     const panel = page.getByTestId('fade-spotlight');
-    const buttons = panel.getByRole('button');
+    const buttons = panel.locator('button.venue-button');
     if (await buttons.count()) return click(buttons);
     const target = await panel.getAttribute('data-coach-target');
     if (target === '.safehouse-room-actions') return click(page.getByRole('button', { name: 'Build your gang', exact: true }));
@@ -75,6 +76,7 @@ async function verify(width, aac) {
     assert.deepEqual(errors, []);
     assert.deepEqual(await page.evaluate(() => window.__voiceErrors), []);
     assert.equal(await page.evaluate(() => window.__voiceOverlap), false);
+    assert.equal(await page.evaluate(() => window.__roundAnnouncements ?? 0), 0, 'Round announcements stay silent during coaching');
   };
 
   await page.goto(origin + '/e2e/rookie-journey.fixture.html');

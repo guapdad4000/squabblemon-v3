@@ -153,7 +153,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
         <div style={{marginTop: '22px'}}>
           <FadecadeRoad index={active?.encounterIndex ?? latest?.encounterIndex ?? 0}
             active={Boolean(active)} fighting={Boolean(active?.recovery)}
-            defeated={!active && latest?.status === 'settled'} returnState={roadReturn}
+            defeated={!active && (latest?.status === 'settled' || latest?.status === 'abandoned')} returnState={roadReturn}
             reducedMotion={bootstrap.profile.settings.reducedMotion} />
         </div>
         <div className="fadecade-road-status" aria-live="polite">
@@ -162,6 +162,12 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
           {roadReturn?.outcome === 'draw' && <p>Draw. Same stop, same opponent. No repeat rewards.</p>}
           {active?.recovery && <p>Your committed moves are saved. Continue this exact fight.</p>}
         </div>
+        {(active || latest) && <div className="fadecade-road-progress" aria-label="Run progress">
+          <div><span>STOPS CLEARED</span><strong>{(active || latest)!.wins}</strong></div>
+          <div><span>PERSONAL BEST</span><strong>{best}</strong></div>
+          <div><span>{active ? 'NEXT BOSS' : 'REWARDS'}</span><strong>{active ? `STOP ${Math.ceil((active.encounterIndex + 1) / 5) * 5}` : 'KEPT'}</strong></div>
+          {active && <progress aria-label="Progress to next boss" max={5} value={active.wins % 5} />}
+        </div>}
         {!active && <label className="fadecade-crew-label">Choose your ten-card crew
           <StreetSelect aria-label="Choose legal crew" className="cabinet-select" value={selected?.id ?? ''} onValueChange={event => setCrewId(event)} disabled={busy || !entries}>
             {!selected && <option value="">No legal owned crew available</option>}
@@ -171,7 +177,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
         <p className="fadecade-road-rules">One loss ends the run. Boss every fifth stop. Each stop is a fresh, player-controlled battle. Your ten cards and upgrades stay locked for the run.</p>
         <div className="fadecade-road-actions">
           <button type="button" className="cabinet-btn" disabled={busy || runsQuery.isFetching || (!active && (!selected || !entries))} onClick={() => void launch()}>
-            {busy ? 'Saving…' : active ? 'Continue fight' : entries ? 'Start run · 1 entry' : 'Entries reset at 00:00 UTC'}
+            {busy ? 'Saving…' : active ? active.recovery ? 'Continue fight' : `Fight stop ${active.encounterIndex + 1}` : entries ? 'Start run · 1 entry' : 'Entries reset at 00:00 UTC'}
           </button>
           {active && !confirmEnd && <button type="button" className="cabinet-btn cabinet-btn--outline" disabled={busy} onClick={() => setConfirmEnd(true)}>End run</button>}
         </div>

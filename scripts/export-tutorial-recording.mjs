@@ -2,7 +2,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const recordings = JSON.parse(await readFile(new URL('artifacts/squabblemon/src/lib/tutorialVoiceClips.json', root), 'utf8'));
 const tour = JSON.parse(await readFile(new URL('artifacts/squabblemon/src/lib/safehouseTour.json', root), 'utf8'));
-const clip = id => { const found = recordings.find(item => item.id === id); if (!found) throw new Error(`Missing cue ${id}`); return { id, text: found.text }; };
+const updates = JSON.parse(await readFile(new URL('artifacts/squabblemon/reference/dr-fade-tutorial-recording-updates.json', root), 'utf8'));
+const clip = id => { const found = recordings.find(item => item.id === id); if (!found) throw new Error(`Missing cue ${id}`); return { id, text: updates.find(item => item.id === id)?.text ?? found.text }; };
 const sequence = [
   ...['welcome', 'welcome-reassurance'].map(clip),
   ...tour.map(step => ({ id: step.id, text: step.body })),

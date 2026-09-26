@@ -30,16 +30,18 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
     // Keep the affected card in view without scrolling the page or hiding the crew.
     const focusIds = new Set(effect.targetIds.length ? effect.targetIds : [sourceId]);
     const scrolled = new Set<Element>();
+    const scrolls: { stack: HTMLElement; top: number }[] = [];
     arena.querySelectorAll<HTMLElement>('[data-card-zone="board"][data-instance-id]').forEach(node => {
       const stack = node.closest<HTMLElement>('[data-crowded="true"]');
       if (!stack || scrolled.has(stack) || !focusIds.has(node.dataset.instanceId!)) return;
       const cardBounds = node.getBoundingClientRect();
       const stackBounds = stack.getBoundingClientRect();
       if (cardBounds.top < stackBounds.top || cardBounds.bottom > stackBounds.bottom) {
-        stack.scrollTop += cardBounds.top - stackBounds.top - 4;
+        scrolls.push({ stack, top: stack.scrollTop + cardBounds.top - stackBounds.top - 4 });
       }
       scrolled.add(stack);
     });
+    scrolls.forEach(({ stack, top }) => { stack.scrollTop = top; });
     const measure = () => {
       const bounds = arena.getBoundingClientRect();
       const current = new Map<string, Point>();
@@ -48,12 +50,24 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         current.set(node.dataset.instanceId!, { x: rect.x - bounds.x + rect.width / 2, y: rect.y - bounds.y + rect.height / 2, width: rect.width, height: rect.height });
       });
       if (!original.current.size) original.current = new Map(current);
-      setGeometry({ source: original.current.get(sourceId) ?? current.get(sourceId), current, before: original.current });
+      const source = original.current.get(sourceId) ?? current.get(sourceId);
+      setGeometry(previous => {
+        if (previous.source === source && previous.current.size === current.size
+          && [...current].every(([id, point]) => {
+            const old = previous.current.get(id);
+            return old && old.x === point.x && old.y === point.y && old.width === point.width && old.height === point.height;
+          })) return previous;
+        return { source, current, before: original.current };
+      });
     };
     measure();
-    const resize = new ResizeObserver(measure);
+    // ResizeObserver fires once on observe(). Coalesce it with the follow-up
+    // frame instead of forcing two identical board-wide layout reads.
+    let frame = 0;
+    const scheduleMeasure = () => { if (!frame) frame = requestAnimationFrame(() => { frame = 0; measure(); }); };
+    const resize = new ResizeObserver(scheduleMeasure);
     resize.observe(arena);
-    const frame = requestAnimationFrame(measure);
+    scheduleMeasure();
     return () => { resize.disconnect(); cancelAnimationFrame(frame); };
   }, [sourceId, impact]);
   const changes = battleChanges(effect);

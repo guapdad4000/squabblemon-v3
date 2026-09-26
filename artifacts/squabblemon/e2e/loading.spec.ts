@@ -34,3 +34,14 @@ test('data saver and reduced motion do not download the optional loading video',
   await page.goto(`${fixture}?phase=account`, { waitUntil: 'networkidle' });
   await expect(page.getByTestId('loading-screen').locator('video')).toHaveCount(0);
 });
+
+test('short transitions finish without requesting the broadcast video', async ({ page }) => {
+  const videos: string[] = [];
+  page.on('request', request => { if (request.url().includes('loading-scenes.webm')) videos.push(request.url()); });
+  await page.goto(`${fixture}?phase=scene`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByTestId('loading-screen')).toBeVisible();
+  await page.evaluate(() => (window as Window & { finishLoading(): void }).finishLoading());
+  await expect(page.getByText('Ready', { exact: true })).toBeVisible();
+  await page.waitForTimeout(1400);
+  expect(videos).toEqual([]);
+});
