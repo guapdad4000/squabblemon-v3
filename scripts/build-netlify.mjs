@@ -61,6 +61,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   run(['node_modules/typescript/bin/tsc','--build','lib/squabblemon-engine','lib/db','lib/api-zod','lib/api-client-react'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/api-server/tsconfig.json','--noEmit'],env);
   run(['node_modules/typescript/bin/tsc','-p','artifacts/squabblemon/tsconfig.json','--noEmit'],env);
+  // Every walkthrough prompt must ship its narration in both browser formats.
+  run(['--import',pathToFileURL(createRequire(import.meta.url).resolve('tsx', { paths: [path.resolve('artifacts/squabblemon')] })).href,'--test','artifacts/squabblemon/src/lib/tutorialVoice.test.ts'],env);
   // Summoner regressions must block publication before the client/API bundles ship.
   run(['--import','./scripts/battle-test-css.mjs','--import',pathToFileURL(createRequire(import.meta.url).resolve('tsx', { paths: [path.resolve('artifacts/squabblemon')] })).href,'--test','--test-name-pattern=battle renders after|summons render|later copy|summon Hands|stewardesses each','artifacts/squabblemon/src/components/Battle.test.tsx'],env);
   // Both human seats and private online projections are release gates.

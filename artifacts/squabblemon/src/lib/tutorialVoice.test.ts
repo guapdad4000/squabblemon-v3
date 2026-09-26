@@ -112,3 +112,15 @@ test('failed clips advance without trapping the lesson or leaving music quiet', 
   e.instances[1].onerror?.(); await settle();
   assert.equal(e.ducks.at(-1), false);
 });
+
+
+test('every safehouse walkthrough stop resolves to a recorded cue in both browser formats', async () => {
+  const { default: tour } = await import('./safehouseTour.json');
+  for (const step of tour) {
+    const ids = tutorialClipsForText(step.body);
+    assert.deepEqual(ids, [step.id], step.title);
+    for (const extension of ['ogg', 'm4a']) {
+      assert.ok(existsSync(new URL(`../../public/audio/voice/dr-fade/tutorial/${ids[0]}.${extension}`, import.meta.url)), `${step.title}: ${extension}`);
+    }
+  }
+});

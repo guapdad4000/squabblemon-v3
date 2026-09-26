@@ -173,5 +173,71 @@
     "id": "generic-fade-district",
     "text": "Dr. Fade fights here while helping an ally in another district. Watch both scores.",
     "duration": 4.9
+  },
+  {
+    "id": "home-story-left",
+    "text": "The TV, speakers, and console sit along the left wall, beside your record player. Tap Story. That’s your main adventure: dialogue, battles, new cards, and chapter rewards.",
+    "duration": 13.0,
+    "revision": "32728ff896dd"
+  },
+  {
+    "id": "home-back-to-room",
+    "text": "Tap Back to the room. Let’s get you familiar with the place before we build your gang.",
+    "duration": 5.5,
+    "revision": "9469a62f4b98"
+  },
+  {
+    "id": "home-records",
+    "text": "That record player beside the TV is Fade Tunes. Open Records when you want to pick the soundtrack for your Safehouse.",
+    "duration": 9.0,
+    "revision": "2a9ab774ae3e"
+  },
+  {
+    "id": "home-growth",
+    "text": "Buddy’s Growth Lab is tucked into the back-left corner. Check in there for your daily rewards and keep your streak growing.",
+    "duration": 6.9,
+    "revision": "b10fb448fef2"
+  },
+  {
+    "id": "home-profile",
+    "text": "See that metal bookshelf under the blackboard? The portrait beside the little fist trophy opens your profile. That’s who you represent on the block.",
+    "duration": 9.7,
+    "revision": "3e5f72e2ade0"
+  },
+  {
+    "id": "home-mail",
+    "text": "That big wooden door in the back-right corner is your mail. When it knocks, you have something unread. Open it and the Mailman brings your letters and gifts. Read each letter, then claim any gift inside. No codes needed.",
+    "duration": 16.4,
+    "revision": "f653591a9d8e"
+  },
+  {
+    "id": "home-bag",
+    "text": "Your bag keeps track of your Clout, Pack Tickets, Style Shards, and collection. Fade Market is where you put those resources to work.",
+    "duration": 9.4,
+    "revision": "6ef5d758d18e"
+  },
+  {
+    "id": "home-training",
+    "text": "The hanging heavy bag opens Training. Come here to practice your plays and try out a gang before you take it into a fight.",
+    "duration": 7.1,
+    "revision": "3bcc43fd6dc7"
+  },
+  {
+    "id": "home-fadecade",
+    "text": "The Fadecade is at the other end of the couch. That arcade machine takes you to challenges like Straight to the Back and Stockz. Its screen says Play New Game when you’re starting fresh, or Continue when you have a run waiting.",
+    "duration": 14.9,
+    "revision": "6b6ec4a586af"
+  },
+  {
+    "id": "home-phone",
+    "text": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.",
+    "duration": 6.8,
+    "revision": "8119be616ad7"
+  },
+  {
+    "id": "home-bounties",
+    "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
+    "duration": 6.9,
+    "revision": "7bea38f19574"
   }
 ]
