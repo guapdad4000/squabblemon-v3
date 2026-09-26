@@ -25,7 +25,7 @@ try{
  pass('All seven tiers render; collection cards allocate no WebGL contexts.');
  await page.getByRole('button',{name:'Show Legendary',exact:true}).click();
  const finishes=[];
- for(const edition of ['base','tagged','chrome']){
+ for(const edition of ['base','tagged','chrome','prismatic']){
   await page.getByRole('button',{name:edition,exact:true}).click();
   await page.locator('.collector-webgl[data-foil-renderer=webgl] canvas').waitFor();
   const card=page.locator('.foil-stage__portrait .collector-card');
@@ -37,7 +37,13 @@ try{
   assert.notEqual(hash(await canvas.screenshot()),first,'Material reflection changes with the viewing angle');
   await page.screenshot({path:'../../screenshots/foil/verified-'+edition+'.jpg',type:'jpeg',quality:85,fullPage:true});
  }
- assert.equal(new Set(finishes).size,3);pass('Base, Tagged and Chrome have distinct finishes and responsive rendered reflections.');
+ assert.equal(new Set(finishes).size,4);
+ await page.getByRole('button',{name:'prismatic',exact:true}).click();
+ const prism=page.locator('.foil-stage__portrait .collector-card');
+ assert.equal(await prism.getAttribute('data-card-variant'),'prismatic');
+ assert.equal(await prism.getAttribute('data-card-finish'),'Ultimate prism reverse holo');
+ assert.notEqual(await prism.locator('.card-variant-sheen').evaluate(el=>getComputedStyle(el).maskImage),'none');
+ pass('Base, Tagged, Chrome and Prismatic Reverse Holo have distinct finishes; the prism treatment uses a reverse mask and responsive rendered reflections.');
  const hero=page.locator('.foil-stage__portrait .collector-card');await hero.focus();await page.keyboard.press('ArrowLeft');assert.ok(await hero.evaluate(el=>el.style.getPropertyValue('--foil-x')));pass('Keyboard users can move the display light.');
  await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>!document.querySelector('.collector-webgl canvas'));assert.equal(await hero.locator('.collector-foil').evaluate(el=>getComputedStyle(el).display),'block');
  await page.emulateMedia({reducedMotion:'no-preference'});await page.locator('.collector-webgl[data-foil-renderer=webgl] canvas').waitFor();
@@ -50,11 +56,11 @@ try{
  pass('Repeated inspection closes dispose each canvas; exactly one returns on reopen.');
  await page.getByRole('button',{name:'Card details',exact:true}).click();const dialog=page.getByRole('dialog');await dialog.waitFor();
  const mutations=[];page.on('request',r=>{if(r.method()==='POST')mutations.push(r.url());});
- for(const name of ['Tagged','Chrome','Original']){await dialog.getByRole('navigation',{name:'Preview card finish'}).getByRole('button',{name,exact:true}).click();await page.waitForTimeout(100);}
- assert.equal(mutations.length,0);assert.equal(await dialog.getByRole('button',{name:'Craft Variant',exact:true}).count(),2);
- assert.ok(await dialog.getByText('80 Shards',{exact:true}).isVisible());assert.ok(await dialog.getByText('140 Shards',{exact:true}).isVisible());
+ for(const name of ['Tagged','Chrome','Prismatic Reverse Holo','Original']){await dialog.getByRole('navigation',{name:'Preview card finish'}).getByRole('button',{name,exact:true}).click();await page.waitForTimeout(100);}
+ assert.equal(mutations.length,0);assert.equal(await dialog.getByRole('button',{name:'Craft Variant',exact:true}).count(),3);
+ assert.ok(await dialog.getByText('80 Shards',{exact:true}).isVisible());assert.ok(await dialog.getByText('140 Shards',{exact:true}).isVisible());assert.ok(await dialog.getByText('300 Shards',{exact:true}).isVisible());
  assert.equal(await dialog.locator('.card-upgrade-pips i[data-active=true]').count(),2);
- pass('Finish previews spend no currency; both existing crafting prices and earned upgrade indicators remain correct.');
+ pass('Finish previews spend no currency; all three crafting prices and earned upgrade indicators remain correct.');
  await page.screenshot({path:'../../screenshots/foil/inspector-desktop.jpg',type:'jpeg',quality:85,fullPage:true});
  for(const width of [390,320]){
   await page.setViewportSize({width,height:844});await page.waitForTimeout(100);
@@ -68,6 +74,6 @@ try{
  await page.keyboard.press('Escape');assert.equal(await dialog.count(),0);
  const fallback=await browser.newPage({viewport:{width:390,height:844}});
  await fallback.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /^webgl/.test(type)?null:original.call(this,type,...args);};});
- await fallback.goto(origin+'/e2e/foil-studio.fixture.html');await fallback.getByRole('button',{name:'chrome',exact:true}).click();await fallback.locator('.collector-webgl[data-foil-renderer=css]').waitFor();assert.equal(await fallback.locator('.collector-webgl canvas').count(),0);assert.equal(await fallback.locator('.foil-stage .collector-card').count(),1);pass('Devices without WebGL retain the complete card and Chrome treatment.');
+ await fallback.goto(origin+'/e2e/foil-studio.fixture.html');await fallback.getByRole('button',{name:'prismatic',exact:true}).click();await fallback.locator('.collector-webgl[data-foil-renderer=css]').waitFor();assert.equal(await fallback.locator('.collector-webgl canvas').count(),0);assert.equal(await fallback.locator('.foil-stage .collector-card[data-card-variant=prismatic]').count(),1);pass('Devices without WebGL retain the complete card and Prismatic Reverse Holo treatment.');
  assert.deepEqual(report.errors,[]);report.complete=true;
 }finally{await browser?.close();server.kill();await writeFile('../../screenshots/foil/verification.json',JSON.stringify(report,null,2));}

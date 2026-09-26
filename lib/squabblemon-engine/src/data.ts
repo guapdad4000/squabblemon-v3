@@ -486,6 +486,12 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
         description: "Reflective showcase frame for your favorite gang.",
         shardCost: 140,
       },
+      {
+        id: `${card.id}:prismatic`,
+        name: "Prismatic Reverse Holo",
+        description: "Ultimate spectral foil across the card stock and frame, with the character art kept sharp and matte.",
+        shardCost: 300,
+      },
       ...(engineId === 'colognecriminal' ? [{
         id: 'cologne-criminal:crazy',
         name: 'Crazy',

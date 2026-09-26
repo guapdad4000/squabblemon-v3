@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { getAssetUrl } from '../lib/assets';
 import { cardMotionReduced } from '../lib/cardFinish';
+import type { CardVariantKind } from './CardVariantTreatment';
 
 /** Only the inspected card allocates a renderer. The complete CSS finish serves grids and reduced motion. */
-export function CardFoil({ tier, variant }: { tier: number; variant?: 'tagged' | 'chrome' | 'crazy' | null }) {
+export function CardFoil({ tier, variant }: { tier: number; variant?: CardVariantKind | null }) {
   const host = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const element = host.current;

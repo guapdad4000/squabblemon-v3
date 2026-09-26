@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 704">
+  <defs>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ff3c8c"/><stop offset=".18" stop-color="#ffe76b"/><stop offset=".36" stop-color="#63ffc2"/><stop offset=".54" stop-color="#5de6ff"/><stop offset=".72" stop-color="#756fff"/><stop offset=".9" stop-color="#ef63ff"/><stop offset="1" stop-color="#ff3c8c"/>
+    </linearGradient>
+    <pattern id="p" width="64" height="56" patternUnits="userSpaceOnUse" patternTransform="skewX(-8)">
+      <path d="M0 0 32 0 16 28Zm32 0 32 0-16 28ZM16 28 48 28 32 56ZM0 56l16-28 16 28Zm32 0 16-28 16 28Z" fill="none" stroke="url(#s)" stroke-width="1.25" opacity=".92"/>
+      <path d="M16 28 32 0l16 28-16 28Z" fill="url(#s)" opacity=".12"/>
+      <circle cx="16" cy="28" r="1.5" fill="#fff"/><circle cx="48" cy="28" r="1" fill="#fff" opacity=".8"/>
+    </pattern>
+    <pattern id="m" width="9" height="9" patternUnits="userSpaceOnUse">
+      <path d="M0 9 9 0M-3 3 3-3M6 12l6-6" stroke="#fff" stroke-width=".35" opacity=".42"/>
+    </pattern>
+  </defs>
+  <rect width="512" height="704" fill="url(#p)"/>
+  <rect width="512" height="704" fill="url(#m)" opacity=".48"/>
+</svg>

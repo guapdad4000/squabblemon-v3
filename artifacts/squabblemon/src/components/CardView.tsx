@@ -333,7 +333,7 @@ function CardViewComponent({
           <span className="collector-foil-pattern" aria-hidden="true" />
           <span className="collector-foil-grain" aria-hidden="true" />
           <span className="collector-glare" aria-hidden="true" />
-          {isInspector && (rarity !== 'SuperCommon' || variantKind) && <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} />}
+          {isInspector && (rarity !== 'SuperCommon' || variantKind) && <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} />}
         </div>
       </div>
     </MotionElement>{inspection.dialog}</>

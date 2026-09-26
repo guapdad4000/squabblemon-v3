@@ -1,4 +1,5 @@
 import type { CardRarity } from '../data';
+import type { CardVariantKind } from '../components/CardVariantTreatment';
 import { getAssetUrl } from './assets';
 
 export const CARD_FINISH: Record<CardRarity, string> = {
@@ -15,10 +16,11 @@ export const VARIANT_FINISH = {
   alternate: { name: 'Alternate Art', finish: 'Alternate illustration', description: 'A second original illustration of this character.' },
   tagged: { name: 'Tagged', finish: 'Gold-stamped lacquer', description: 'Raised gold ink, vermilion tags and a lacquered frame over the original foil.' },
   chrome: { name: 'Chrome', finish: 'Mirror-cut chrome', description: 'Polished silver, diamond-cut engraving and an icy spectral reflection.' },
+  prismatic: { name: 'Prismatic Reverse Holo', finish: 'Ultimate prism reverse holo', description: 'Ultra-fine spectral facets flood the card stock, frame and copy field while the inmate portrait stays crisp and matte.' },
   crazy: { name: 'Crazy', finish: 'Breakout action frame', description: 'Alternate airborne character art crashing beyond the collector frame.' },
 } as const;
 
-export function cardFinishLabel(rarity: CardRarity, variant?: 'tagged' | 'chrome' | 'crazy' | 'alternate' | null) {
+export function cardFinishLabel(rarity: CardRarity, variant?: CardVariantKind | null) {
   return variant ? VARIANT_FINISH[variant].finish : CARD_FINISH[rarity];
 }
 
