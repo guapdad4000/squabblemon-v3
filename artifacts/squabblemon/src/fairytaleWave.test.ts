@@ -113,7 +113,7 @@ test('Scarecrow swaps atomically; movement hooks protect arrivals and reward Lio
   m.boards[1]=[ally,lion,tin];
   const {source,after}=cast(m,'scarecrow');
   assert.equal(find(after,source).lane,1); assert.equal(find(after,ally).lane,0);
-  assert.equal(find(after,source).powerModifier,1); assert.equal(find(after,ally).powerModifier,1);
+  assert.equal(find(after,source).powerModifier,2); assert.equal(find(after,ally).powerModifier,1);
   assert.equal(find(after,lion).powerModifier,2); assert(find(after,source).statuses.protected);
   const locked=blank(); const held=unit('bonnetgirl','player',1);held.statuses.locked=true;locked.boards[1]=[held];
   const fail=cast(locked,'scarecrow');
@@ -335,3 +335,23 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(cards.watson.power, 3); assert.equal(cards.watson.cost, 2);
   });
 }
+
+for (const owner of ['player', 'cpu'] as const) test('Heart Starter gives one Hand even to a protected arrival and shares its round cap for ' + owner, () => {
+  const m = blank(), tin = unit('tinman', owner, 0);
+  m.boards[0] = [tin];
+  const entrant = createCardInstance('cornball', owner, 'protected-arrival');
+  entrant.statuses.protected = true;
+  const first = play(m, entrant);
+  assert.equal(find(first, entrant).powerModifier, 1);
+  const second = cast(first, 'cornball', owner);
+  assert.equal(find(second.after, second.source).powerModifier, 0);
+  const later = cast({...second.after, round: 4, playerMotion: 9, cpuMotion: 9}, 'cornball', owner);
+  assert.equal(find(later.after, later.source).powerModifier, 1);
+  for (const status of ['silenced', 'frozen', 'weakened'] as const) {
+    const disabled = blank(), leader = unit('tinman', owner, 0);
+    leader.statuses[status] = true; disabled.boards[0] = [leader];
+    const result = cast(disabled, 'cornball', owner);
+    assert.equal(find(result.after, result.source).powerModifier, 0);
+    assert(!find(result.after, result.source).statuses.protected);
+  }
+});

@@ -3,7 +3,7 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 /** First draftable identity wave for Water, Electric, Plant, and Air. */
 export const ELEMENTAL_BOND_WAVE = [
   ["riptidebruiser", "riptide-bruiser", "Gator Boy", "Common", "Water", 1, 2, "Emotional Support Gator", "On Reveal: Give the highest-Hands enemy here -1 Hands. If its Hands fall, gain +1 Hand.", "Pressure"],
-  ["stillwatermedic", "stillwater-medic", "Hot Tub Hottie", "Uncommon", "Water", 2, 2, "Soak Your Problems", "On Reveal: Cleanse your lowest-Hands frozen or silenced ally here and give it +1 Hand. If cleansed, gain +1 Hand.", "Support"],
+  ["stillwatermedic", "stillwater-medic", "Hot Tub Hottie", "Uncommon", "Water", 2, 3, "Soak Your Problems", "On Reveal: Cleanse your lowest-Hands frozen or silenced ally here and give it +1 Hand. If cleansed, gain +1 Hand.", "Support"],
   ["monsoonanchor", "monsoon-anchor", "Gas Station Sushi Chef", "Rare", "Water", 3, 3, "Trust the Cooler", "Ongoing: While in your hand, your other Water characters gain +1 Hand at round end. On Reveal: Weaken the strongest enemy here.", "Disruption", "Water"],
   ["rainmaker", "rainmaker", "Energy Drink Freak", "Epic", "Water", 4, 4, "Fourth Can, No Plan", "On Reveal: Lose 2 Hands, then restore 3 Motion, up to 9.", "Tempo"],
   ["batteryback", "battery-back", "Game Developer", "Common", "Electric", 1, 2, "Works on My Machine", "On Reveal: Repair your lowest-Hands ally in another district with a negative Hands modifier: give it +1 Hand and restore 1 Motion, up to 9.", "Support"],

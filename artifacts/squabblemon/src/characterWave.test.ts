@@ -56,13 +56,13 @@ for (const owner of ['player', 'cpu'] as const) {
     const m = blank(), enemy = unit('hooper', owner === 'player' ? 'cpu' : 'player', 0);
     m.boards[0] = [enemy]; m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 5;
     const { source, after } = cast(m, 'homelessguy', owner, 0, 2);
-    assert.equal(getEffectiveCardPower(find(after, source)), 5);
+    assert.equal(getEffectiveCardPower(find(after, source)), 7);
     assert.equal(find(after, enemy).powerModifier, 0);
     assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 0);
     m[owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 3;
     const stolen = cast(m, 'homelessguy', owner);
     assert.equal(find(stolen.after, enemy).powerModifier, -2);
-    assert.equal(getEffectiveCardPower(find(stolen.after, stolen.source)), 5);
+    assert.equal(getEffectiveCardPower(find(stolen.after, stolen.source)), 6);
   });
 }
 test('investment rejects fractions, negatives, overspend and other cards; shields stop a steal', () => {
@@ -189,12 +189,12 @@ test('Built Different survives overkill once, heals only damage and cannot manuf
   const m = blank(), legend = unit('homelesslegend', 'cpu', 0); legend.statuses.burnStacks = 8; m.boards[0] = [legend];
   const hit = cast(m, 'seafoodassassin').after;
   assert.equal(find(hit, legend).legendSaved, true);
-  assert.equal(getEffectiveCardPower(find(hit, legend)), 1); assert.equal(find(hit, legend).recoverableDamage, 3);
+  assert.equal(getEffectiveCardPower(find(hit, legend)), 1); assert.equal(find(hit, legend).recoverableDamage, 4);
   const healed = advance(hit);
   assert.equal(getEffectiveCardPower(find(healed, legend)), 3);
   const whole = advance(healed);
-  assert.equal(getEffectiveCardPower(find(whole, legend)), 4);
-  assert.equal(getEffectiveCardPower(find(advance(whole), legend)), 4);
+  assert.equal(getEffectiveCardPower(find(whole, legend)), 5);
+  assert.equal(getEffectiveCardPower(find(advance(whole), legend)), 5);
   assert.equal(find(cast(hit, 'seafoodassassin').after, legend), undefined);
 });
 
@@ -248,11 +248,11 @@ for (const seat of ['player', 'cpu'] as const) test('online commands and public 
   room.match = { ...room.match!, round: 3, playerMotion: 8, cpuMotion: 8 };
   const hand = seat === 'player' ? room.match.playerHand : room.match.cpuHand, source = hand.find(c => c.cardId === 'homelessguy')!;
   room = applyOnlineCommand(room, seat, { type: 'play', instanceId: source.instanceId, lane: 0, squabble: false, investment: 3 }, 3);
-  assert.equal(find(room.match!, source).powerModifier, 3);
+  assert.equal(find(room.match!, source).powerModifier, 4);
   assert.equal(room.match![seat === 'player' ? 'playerMotion' : 'cpuMotion'], 2);
   const view = onlineRoomView(room, 'ABC123', seat === 'player' ? 'a' : 'b', 4);
   assert.equal(view.hand.some(c => c.owner !== seat), false);
-  assert.equal(view.boards[0].find(c => c.cardId === 'homelessguy')?.powerModifier, 3);
+  assert.equal(view.boards[0].find(c => c.cardId === 'homelessguy')?.powerModifier, 4);
 });
 test('a complete custom-deck fade replays every paid investment through server verification', () => {
   const ids = ['homelessguy', 'fangirl', 'grownfanboy', 'lawlessyn', 'streetapostle', 'asphaltapostle', 'colognecriminal', 'passportbro', 'seafoodassassin', 'mailman'];
@@ -305,4 +305,12 @@ test('Scent replay starts with no mark and shows the newly created mark after re
   const reveal = result.effectLog.find(event => event.type === 'ability' && event.note.startsWith('Lingering Scent marks'))!;
   assert.deepEqual(reveal.replay.before.lingeringScents, []);
   assert.equal(reveal.replay.after.lingeringScents?.length, 1);
+});
+
+for (const owner of ['player', 'cpu'] as const) test('Nothing to Lose investment bonus is flat and requires spending for ' + owner, () => {
+  for (const amount of [0, 1, 4]) {
+    const {source, after} = cast(blank(), 'homelessguy', owner, 0, amount);
+    assert.equal(getEffectiveCardPower(find(after, source)), 4 + amount + (amount > 0 ? 1 : 0));
+    assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 6 - amount);
+  }
 });

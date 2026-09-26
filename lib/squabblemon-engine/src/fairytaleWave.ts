@@ -2,11 +2,11 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** Collection identities are permanent; alternate art never creates another playable card. */
 export const FAIRYTALE_WAVE = [
-  ['dorothy', 'dorothy', 'Dorothy', 'Epic', 'Air', 3, 4, 'No Place Like Home', 'On Reveal: Return your weakest other character here with a printed cost of 2 or less to your hand. Its next deployment costs 1 less Motion, minimum 1.', 'Movement'],
+  ['dorothy', 'dorothy', 'Dorothy', 'Epic', 'Air', 2, 3, 'No Place Like Home', 'On Reveal: Return your weakest other character here with a printed cost of 2 or less to your hand. Its next deployment costs 1 less Motion, minimum 1.', 'Movement'],
   ['scarecrow', 'scarecrow', 'Scarecrow', 'Rare', 'Earth', 2, 3, 'Wrong Turn, Right Place', 'On Reveal: Swap districts with your weakest ally in another open district. If both can move, both gain +1 Hand.', 'Movement'],
-  ['tinman', 'tin-man', 'Tin Man', 'Rare', 'Electric', 2, 3, 'Heart Starter', 'Ongoing: The first other ally entering your district each round gains Protection. Playing or moving an ally here qualifies.', 'Support'],
+  ['tinman', 'tin-man', 'Tin Man', 'Rare', 'Electric', 2, 3, 'Heart Starter', 'Ongoing: The first other ally entering your district each round gains +1 Hand and Protection. Playing or moving an ally here qualifies.', 'Support'],
   ['lion', 'lion', 'Lion', 'Epic', 'Earth', 3, 4, 'Found My Courage', 'On Reveal: Gain Protection if you are alone here. Ongoing: Once per round, when another ally leaves your district, gain +2 Hands.', 'Growth'],
-  ['oz', 'oz', 'Oz', 'Mythical', 'Light', 4, 4, 'The Grand Reveal', 'On Reveal: Once per match, repeat the most recent eligible other friendly character entrance still on the board, including earlier rounds. Cannot repeat ability-copying effects.', 'Support'],
+  ['oz', 'oz', 'Oz', 'Mythical', 'Light', 4, 5, 'The Grand Reveal', 'On Reveal: Once per match, repeat the most recent eligible other friendly character entrance still on the board, including earlier rounds. If that ally moved this round, it also gains +2 Hands. Cannot repeat ability-copying effects.', 'Support'],
   ['alice', 'alice', 'Alice', 'Rare', 'Water', 2, 3, 'Drink Me / Eat Me', 'Ongoing: At round end, return to your hand once per match, except during the final round. Your next deployment gains +3 Hands and costs 1 less Motion, minimum 1.', 'Movement'],
   ['cheshire', 'cheshire', 'Cheshire', 'Epic', 'Air', 3, 4, 'The Smile Stays', 'Ongoing: The first ally returned to your hand each round leaves a 3-Hand Grin in its district. Maximum one friendly Grin per district.', 'Support'],
   ['queenofhearts', 'queen-of-hearts', 'Queen of Hearts', 'Legendary', 'Dark', 4, 4, 'Off With Their Heads', 'On Reveal: Execute the weakest enemy here if it has 4 or fewer Hands. A successful execution summons a 2-Hand Card Guard. Protection can block execution.', 'Disruption'],

@@ -749,7 +749,7 @@ const queueLeaderReaction = (
     : kind === 'passportbro' ? 'Water'
     : kind === 'streetapostle' ? 'Plant'
     : kind === 'asphaltapostle' ? 'Earth' : 'Light';
-  if (!target || target.hazard || target.kind === 'support' || target.type !== type
+  if (!target || target.hazard || target.kind === 'support' || (target.type !== type && !(kind === 'promoter' && ['bottle', 'piratedj', 'dancecaptain'].includes(target.cardId)))
     || match.leaderRounds?.[target.owner]?.[kind] === match.round) return match;
   // Check the leader at the moment of the block/cleanse. A disabled Medic cannot
   // reward her own recovery, and a later reveal cannot retroactively earn credit.
@@ -1288,8 +1288,9 @@ function fairytaleArrival(m: Match, id: string): Match {
     const before = m;
     m = waveRound(m, tin.instanceId, 'tinman');
     m = grantProtection(m, tin, id);
-    if (!entrant.statuses.protected) m = trainWaveAbility(m, tin.instanceId);
-    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: 'Heart Starter: first ally entering this round gains Protection.' });
+    m = modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + 1 }));
+    m = trainWaveAbility(m, tin.instanceId);
+    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: 'Heart Starter: first ally entering this round gains +1 Hand and Protection.' });
   }
   return m;
 }
@@ -2544,9 +2545,9 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         const key = source.owner === 'player' ? 'playerMotion' : 'cpuMotion';
         if (amount > 0) {
           m = { ...m, [key]: m[key] - amount };
-          buff(findCard(m, source.instanceId), amount, 'Nothing to Lose');
+          buff(findCard(m, source.instanceId), amount + 1, 'Nothing to Lose');
         }
-        note('Nothing to Lose invested ' + amount + ' extra Motion for +' + amount + ' Hands.');
+        note('Nothing to Lose invested ' + amount + ' extra Motion for +' + (amount > 0 ? amount + 1 : 0) + ' Hands.');
       }
     } else if (id === 'fangirl' || id === 'grownfanboy') {
       const idol = highest(id === 'fangirl' ? allies : m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
@@ -2683,7 +2684,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         : id === 'divorceddad' ? allies.length === 0 && enemies.length > 0
         : id === 'failedathlete' ? m.round >= 4 && losing()
         : inLane(m, source.owner, l).length === 1;
-      const amount = id === 'failedathlete' ? 3 : id === 'sportsprodigy' || id === 'homelessyn' || id === 'divorceddad' ? 2 : 1;
+      const amount = id === 'failedathlete' || id === 'homelessyn' ? 3 : id === 'sportsprodigy' || id === 'divorceddad' ? 2 : 1;
       if (succeeds) {
         buff(source, amount);
         if (id === 'sportsprodigy') reduce(highest(enemies), 1);

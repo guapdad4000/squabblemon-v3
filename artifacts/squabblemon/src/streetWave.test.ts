@@ -25,7 +25,7 @@ for (const owner of ['player', 'cpu'] as const) test(`all 21 street fighters res
     if (['homelessyn', 'divorceddad', 'incel'].includes(id)) match.boards[0] = [enemy, bigEnemy];
     const after = playTurnCard(match, owner, source.instanceId, 0);
     const find = (key: string) => after.boards.flat().find(c => c.instanceId === key)!;
-    const selfBuff: Record<string, number> = { homelessyn: 2, sportsprodigy: 2, fein: 1, divorceddad: 2, failedathlete: 3, krump: 1 };
+    const selfBuff: Record<string, number> = { homelessyn: 3, sportsprodigy: 2, fein: 1, divorceddad: 2, failedathlete: 3, krump: 1 };
     if (id in selfBuff) assert.equal(find(source.instanceId).powerModifier, selfBuff[id], id);
     if (id === 'stud') { assert.equal(find(ally.instanceId).powerModifier, 1); assert(find(ally.instanceId).statuses.protected); }
     if (id === 'gothkid') { assert(find(enemy.instanceId).statuses.silenced); assert(!find(bigEnemy.instanceId).statuses.silenced); }
