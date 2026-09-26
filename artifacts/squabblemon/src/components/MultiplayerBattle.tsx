@@ -165,8 +165,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
-        description={resultCopy.description}
-        timeoutResult={room.reason === 'timeout'}>
+        description={resultCopy.description}>
         {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => leaveResults(() => { void act({ type: 'rematch' }); })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
         <button className="online-primary" onClick={() => leaveResults(onLeave)}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>

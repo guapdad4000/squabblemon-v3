@@ -503,7 +503,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <div className="corner-product__display">
                   <span className="bodega-led" aria-hidden="true" /><span className="bodega-light-cone" aria-hidden="true" />
                   <span className="bodega-cubby-back" aria-hidden="true" />
-                  <img src={getAssetUrl(offer.art)} alt="" />
+                  <img src={getAssetUrl(offer.art)} alt="" draggable={false} onContextMenu={event => event.preventDefault()} />
                   <span className="bodega-shelf-number" aria-hidden="true">0{index + 1}</span>
                 </div>
                 <div className="corner-product__label">
@@ -555,7 +555,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           {selected && (
             <>
               <div className="corner-checkout__summary">
-                <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" />
+                <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" draggable={false} onContextMenu={event => event.preventDefault()} />
                 <div><span className="corner-checkout__eyebrow">FADE MARKET · AT THE COUNTER</span>
                   <DialogTitle>{catalog?.offers.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
                   <DialogDescription>{selected.kind === 'clout' ? 'Secure checkout via Stripe.' : 'Showcase preview · not currently for sale.'}</DialogDescription>
@@ -567,7 +567,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <div className="corner-checkout__contents">
                   {selected.cards.map(id => (
                     <figure key={id}>
-                      <img src={getAssetUrl('assets/characters/' + (selected.variant ? id + '-alternate' : id) + '.webp')} alt="" />
+                      <img src={getAssetUrl('assets/characters/' + (selected.variant ? id + '-alternate' : id) + '.webp')} alt="" draggable={false} onContextMenu={event => event.preventDefault()} />
                       <figcaption>{id.replaceAll('-', ' ')}</figcaption>
                     </figure>
                   ))}
