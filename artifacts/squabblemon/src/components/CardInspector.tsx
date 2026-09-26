@@ -179,10 +179,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
           <DrFadeReferee />
           <img
             className="dossier-brand"
-            src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-gold.webp')}
+            src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp')}
             alt="Squabblemon"
             width={1440}
-            height={486}
+            height={469}
             draggable={false}
             decoding="async"
           />

@@ -9,10 +9,10 @@ export function AnimatedLogo({ className = '' }: { className?: string }) {
     <div className={`animated-logo ${className}`} data-paused={paused}>
       <div className="animated-logo__art">
         <img
-          src={getAssetUrl('brand/prismatic/logos/squabblemon-lockup-gold.webp')}
-          alt="Squabblemon — prismatic gold wordmark and impact fists"
+          src={getAssetUrl('brand/prismatic/logos/squabblemon-lockup-standard-gold.webp')}
+          alt="Squabblemon — standard gold wordmark and impact fists"
           width={1440}
-          height={822}
+          height={1000}
           draggable={false}
           decoding="async"
         />

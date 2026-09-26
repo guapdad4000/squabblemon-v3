@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const projectDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -67,7 +68,7 @@ function assertScopedAsset(urlValue, basePath, label) {
   return { emittedPath, resolvedUrl };
 }
 
-function validateBuild(basePath) {
+async function validateBuild(basePath) {
   const htmlPath = path.join(outputDir, 'index.html');
   const html = readFileSync(htmlPath, 'utf8');
 
@@ -121,6 +122,15 @@ function validateBuild(basePath) {
     ]),
   );
 
+  const shareImage = emittedReferences.get('share image');
+  const twitterImage = extractAttribute(html, 'the Twitter share image',
+    /<meta\b(?=[^>]*\bname="twitter:image")[^>]*\bcontent="([^"]+)"/);
+  assert.equal(new URL(twitterImage, publicOrigin).href, shareImage.resolvedUrl.href,
+    'Open Graph and Twitter must use the same current artwork');
+  const shareMetadata = await sharp(shareImage.emittedPath).metadata();
+  assert.deepEqual([shareMetadata.width, shareMetadata.height], [1200, 630],
+    'Social artwork must match the advertised preview dimensions');
+
   const manifestReference = emittedReferences.get('manifest');
   assert.ok(manifestReference);
   const manifest = JSON.parse(
@@ -152,16 +162,19 @@ function validateBuild(basePath) {
       'string',
       `Manifest icon ${index + 1} must have a src`,
     );
-    assertScopedAsset(
+    const iconReference = assertScopedAsset(
       new URL(icon.src, manifestReference.resolvedUrl).href,
       basePath,
       `manifest icon ${index + 1}`,
     );
+    const dimensions = await sharp(iconReference.emittedPath).metadata();
+    assert.equal(`${dimensions.width}x${dimensions.height}`, icon.sizes,
+      `Manifest icon ${index + 1} must match its declared size`);
   }
 }
 
 for (const basePath of basePaths) {
   build(basePath);
-  validateBuild(basePath);
+  await validateBuild(basePath);
   console.log(`Brand metadata valid for base path "${basePath}"`);
 }

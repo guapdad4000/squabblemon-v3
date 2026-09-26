@@ -61,7 +61,7 @@ function resolvePublicOrigin() {
 const publicOrigin = resolvePublicOrigin();
 const publicPageUrl = new URL(basePath, `${publicOrigin}/`).href;
 const publicImageUrl = new URL(
-  `${basePath.replace(/\/$/, '')}/brand/squabblemon-share.jpg`,
+  `${basePath.replace(/\/$/, '')}/brand/squabblemon-standard-gold-share.jpg`,
   `${publicOrigin}/`,
 ).href;
 

@@ -54,7 +54,7 @@ const clerkAppearance = {
   options: {
     logoPlacement: 'inside' as const,
     logoLinkUrl: basePath || '/',
-    logoImageUrl: `${window.location.origin}${basePath}/brand/prismatic/logos/squabblemon-wordmark-gold.webp`,
+    logoImageUrl: `${window.location.origin}${basePath}/brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp`,
   },
   variables: {
     colorPrimary: '#facc15',

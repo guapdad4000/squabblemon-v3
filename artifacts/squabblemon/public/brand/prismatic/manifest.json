@@ -1,6 +1,24 @@
 {
-  "primary": "logos/squabblemon-wordmark-gold.webp",
+  "primary": "logos/squabblemon-wordmark-standard-gold.webp",
   "entries": [
+    {
+      "original": "5d281800-c570-4411-a6ff-5a4aadec39fa.png",
+      "sha256": "eb50d672d3d9f4d3db47992e78316c9779cf0ac1115dd90c8365c53f9c0ea9d5",
+      "master": "masters/marks/impact-standard-gold.png",
+      "exported": "marks/impact-standard-gold.webp"
+    },
+    {
+      "original": "368d448e-1a92-470c-9a67-73ee8fd66187.png",
+      "sha256": "c4c3391d98eb3454f0edf89786d8218e329670ab785ef26b136535393f732190",
+      "master": "masters/logos/squabblemon-lockup-standard-gold.png",
+      "exported": "logos/squabblemon-lockup-standard-gold.webp"
+    },
+    {
+      "original": "grok-image-da7442f3-a7ec-4adb-97d2-151043d6ddc4.jpg",
+      "sha256": "7f29627939cee767c7f5a805c84a858ccdf39bd968889b8045c645aa703efbc2",
+      "master": "masters/source/wordmark-standard-gold-white-background.jpg",
+      "exported": null
+    },
     {
       "original": "f5eb5014-4d47-4c7a-b37f-c77479943221.png",
       "sha256": "3770992def3342fd6b679bd6f742b7c4091bec5250cc4acfc9fc047d31c4cd06",
@@ -295,6 +313,16 @@
       "generatedBy": "built-in imagegen",
       "master": "generated/frames/prism-gold-rail.png",
       "exported": "frames/prism-gold-rail.webp"
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/logos/squabblemon-wordmark-standard-gold.png",
+      "exported": "logos/squabblemon-wordmark-standard-gold.webp"
+    },
+    {
+      "generatedBy": "built-in imagegen",
+      "master": "generated/sheets/squabblemon-bag-wrap-standard-gold.png",
+      "exported": "sheets/squabblemon-bag-wrap-standard-gold.webp"
     },
     {
       "derivedFrom": "frames/prism-gold-nine-slice.webp",

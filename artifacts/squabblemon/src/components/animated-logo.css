@@ -3,10 +3,10 @@
 .animated-logo__art img { display:block; width:100%; height:auto; user-select:none; }
 .animated-logo__art::after {
   content:''; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(112deg,transparent 40%,#eaffff55 46%,#fff9 49%,#ffecff44 52%,transparent 58%) 140% 0 / 300% 100%;
-  -webkit-mask:url('/brand/prismatic/logos/squabblemon-lockup-gold.webp') center / contain no-repeat;
-  mask:url('/brand/prismatic/logos/squabblemon-lockup-gold.webp') center / contain no-repeat;
-  mix-blend-mode:screen; animation:logo-prism-reflection 7s ease-in-out infinite;
+  background:linear-gradient(112deg,transparent 40%,#ffe5a355 46%,#fff9 49%,#ffd36844 52%,transparent 58%) 140% 0 / 300% 100%;
+  -webkit-mask:url('/brand/prismatic/logos/squabblemon-lockup-standard-gold.webp') center / contain no-repeat;
+  mask:url('/brand/prismatic/logos/squabblemon-lockup-standard-gold.webp') center / contain no-repeat;
+  mix-blend-mode:screen; animation:logo-gold-reflection 7s ease-in-out infinite;
 }
 .animated-logo__toggle {
   position:absolute; right:0; bottom:-12px; display:grid; place-items:center;
@@ -17,7 +17,7 @@
 .animated-logo__toggle:focus-visible { outline:2px solid #facc15; outline-offset:2px; opacity:1; }
 .animated-logo[data-paused='true'] .animated-logo__art::after { animation-play-state:paused; }
 .auth-logo { max-width:370px; margin:0 auto 22px; }
-@keyframes logo-prism-reflection { 0%,20% {background-position:140% 0} 75%,100% {background-position:-40% 0} }
+@keyframes logo-gold-reflection { 0%,20% {background-position:140% 0} 75%,100% {background-position:-40% 0} }
 :root:is([data-reduced-motion='true'],[data-reduce-motion='true']) .animated-logo__art::after {animation:none;background:none;}
 :root:is([data-reduced-motion='true'],[data-reduce-motion='true']) .animated-logo__toggle {display:none;}
 @media(prefers-reduced-motion:reduce) { .animated-logo__art::after {animation:none;background:none;} .animated-logo__toggle {display:none;} }

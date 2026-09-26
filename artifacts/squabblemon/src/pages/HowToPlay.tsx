@@ -89,7 +89,7 @@ export default function HowToPlay() {
   return <div className="how-to-play">
     <a className="guide-skip" href="#the-loop">Skip to the guide</a>
     <header className="guide-header" id="guide-top">
-      <Link href="/" aria-label="Squabblemon home"><img src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-gold.webp')} alt="Squabblemon" /></Link>
+      <Link href="/" aria-label="Squabblemon home"><img src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp')} alt="Squabblemon" /></Link>
       <span className="guide-header-label"><BookOpen size={14} /> THE FIELD GUIDE</span>
       <Link className="guide-header-play" href="/play/guest">Try a fade <ArrowRight size={16} /></Link>
     </header>
@@ -206,6 +206,6 @@ export default function HowToPlay() {
         ].map(([question, answer]) => <details className="guide-disclosure" key={question}><summary>{question}<ChevronRight size={18} /></summary><div><p>{answer}</p></div></details>)}
       </div></section>
     </main>
-    <footer className="guide-footer"><img src={getAssetUrl('brand/prismatic/marks/impact-gold.webp')} alt="" loading="lazy" /><div><strong>KNOW THE BLOCK. MAKE YOUR MOVE.</strong><p>Squabblemon field guide · Current game rules · Balance values may evolve.</p></div><a href="#guide-top">Back to top ↑</a></footer>
+    <footer className="guide-footer"><img src={getAssetUrl('brand/prismatic/marks/impact-standard-gold.webp')} alt="" loading="lazy" /><div><strong>KNOW THE BLOCK. MAKE YOUR MOVE.</strong><p>Squabblemon field guide · Current game rules · Balance values may evolve.</p></div><a href="#guide-top">Back to top ↑</a></footer>
   </div>;
 }
