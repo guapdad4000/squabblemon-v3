@@ -101,6 +101,7 @@ createRoot(document.getElementById('root')!).render(
     ) : (
       <div className="result-stage result-stage--art">
         <ResultArtwork
+          storyStars={mode !== 'loss' ? 3 : 0}
           victory={mode !== 'loss'}
           draw={false}
           results={[{ player: 24, cpu: 12, winner: 'player' }, { player: 8, cpu: 18, winner: 'cpu' }, { player: 30, cpu: 23, winner: 'player' }]}
@@ -108,8 +109,8 @@ createRoot(document.getElementById('root')!).render(
           reward={{ softCurrency: 120, xp: 80, streetRep: 12 } as any}
           actions={
             <nav className="result-stage__actions">
-              <button className="venue-button venue-button--gold" onClick={action('continue')}>Continue the fade</button>
-              <button className="venue-button" onClick={action('rebuild')}>Rebuild the deck</button>
+              <button className="venue-button result-street-sign result-street-sign--right" onClick={action('continue')}>Continue the fade</button>
+              <button className="venue-button result-street-sign result-street-sign--left" onClick={action('rebuild')}>Rebuild the deck</button>
             </nav>
           }
         />

@@ -166,14 +166,14 @@ export function ResultScreen({
           ) : (
             <>
               <button
-                className="studio-action studio-action--gold"
+                className="studio-action studio-action--gold result-street-sign result-street-sign--right"
                 data-testid="button-restart-match"
                 onClick={onRestart}
               >
                 Continue the fade
                 <ArrowRight size={15} />
               </button>
-              <button className="studio-action" data-testid="button-change-deck" onClick={rebuild}>
+              <button className="studio-action result-street-sign result-street-sign--left" data-testid="button-change-deck" onClick={rebuild}>
                 Rebuild the deck
               </button>
               <button className="studio-text-action" onClick={onGoHome}>
