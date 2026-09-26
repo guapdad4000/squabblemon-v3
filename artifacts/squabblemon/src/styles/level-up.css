@@ -33,8 +33,7 @@
   top: 56%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: #e7c26f;
-  box-shadow: 0 0 90px #e7c26f66;
+  background: radial-gradient(circle, #e7c26f55, #c3954920 50%, transparent 72%);
 }
 .level-moment__rays {
   position: absolute;
@@ -60,16 +59,39 @@
   opacity: 0.8;
   filter: brightness(0.36) sepia(0.4);
 }
-.level-moment__orbit--boots {
-  top: 50%;
+.level-moment__orbit--outer-fists {
   animation-direction: reverse;
   animation-duration: 130s;
 }
-.level-moment__orbit--boots img {
+.level-moment__orbit--outer-fists img {
   height: 77vmin;
-  width: 28vmin;
+  width: 36vmin;
   filter: brightness(0.6) sepia(0.3);
   opacity: 0.66;
+}
+.level-moment__star {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 62vmin;
+  height: 62vmin;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 20px #080f0e99);
+}
+.level-moment__star svg {
+  width: 100%;
+  height: 100%;
+  animation: level-orbit 60s linear infinite reverse;
+  fill: #243b2a;
+  stroke: #cfaa58;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+.level-moment__star .level-moment__star-inset {
+  fill: #162a20;
+  stroke: #9b7d3a;
+  stroke-width: 1;
 }
 .level-moment__grain {
   position: absolute;
@@ -235,9 +257,13 @@
     height: 74vmin;
     width: 28vmin;
   }
-  .level-moment__orbit--boots img {
+  .level-moment__orbit--outer-fists img {
     height: 110vmin;
-    width: 34vmin;
+    width: 48vmin;
+  }
+  .level-moment__star {
+    width: 86vmin;
+    height: 86vmin;
   }
   .level-moment__footer > strong {
     font-size: 26px;
@@ -275,7 +301,7 @@
   }
 }
 .level-moment[data-reduced-motion="true"]
-  :is(.level-moment__orbit, .level-moment h2 i) {
+  :is(.level-moment__orbit, .level-moment__star svg, .level-moment h2 i) {
   animation: none;
 }
 .level-moment[data-reduced-motion="true"] h2 i {
@@ -283,6 +309,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .level-moment__orbit,
+  .level-moment__star svg,
   .level-moment h2 i {
     animation: none;
   }

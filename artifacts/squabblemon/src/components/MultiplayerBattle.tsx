@@ -1,5 +1,6 @@
 import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
+import { useBattleResultExit } from '../lib/useBattleResultExit';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -100,6 +101,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const [rules, setRules] = useState(false);
   const [surrender, setSurrender] = useState(false);
   const [reviewBoard, setReviewBoard] = useState(false);
+  const { celebrating, leaveResults } = useBattleResultExit();
   const [now, setNow] = useState(Date.now);
   const clockOffset = useRef(room.serverTime - Date.now());
   const [preferences, setPreferences] = useFeedbackPreferences();
@@ -153,11 +155,11 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       presentationScores={projected.presentation.scores} timerSeconds={remaining} timerEnabled={room.status === 'active'}
       feedbackPreferences={preferences} setFeedbackPreferences={setPreferences}
       onFeedback={(cue: 'select' | 'lock') => { feedback.current?.unlockAudio(); feedback.current?.cue(cue, reducedMotion); }}
-      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? onLeave() : setSurrender(true)} />
+      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? leaveResults(onLeave) : setSurrender(true)} />
     </LayoutGroup>
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
-    <Dialog open={room.status === 'complete' && !reviewBoard} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
+    <Dialog open={room.status === 'complete' && !reviewBoard && !celebrating} onOpenChange={open => { if (!open) setReviewBoard(true); }}>
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
         description={room.reason === 'timeout'
@@ -166,8 +168,8 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
             : 'Your turn clock expired. You forfeited the fade.'
           : room.reason === 'surrender' ? 'The fade ended by surrender.' : 'Six rounds. Three districts.'}
         timeoutResult={room.reason === 'timeout'}>
-        {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => void act({ type: 'rematch' })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
-        <button className="online-primary" onClick={onLeave}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
+        {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => leaveResults(() => { void act({ type: 'rematch' }); })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
+        <button className="online-primary" onClick={() => leaveResults(onLeave)}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
       </ParkResult>
     </Dialog>

@@ -6,12 +6,42 @@ export type RewardReceipt = { id: string; title: string; items: RewardItem[]; pr
 const listeners = new Set<() => void>();
 let queue: RewardReceipt[] = [];
 const seen = new Set<string>();
+type PendingLevel = { receipt: RewardReceipt; acknowledge?: () => void };
+let pendingLevel: PendingLevel | null = null;
+type LevelExit = PendingLevel & { continueAfter?: () => void };
+let levelExit: LevelExit | null = null;
+const publish = () => listeners.forEach(fn => fn());
 export const rewardReceipts = {
   subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
   current: () => queue[0] ?? null,
-  reset() { queue = []; seen.clear(); listeners.forEach(fn => fn()); },
-  dismiss() { queue = queue.slice(1); listeners.forEach(fn => fn()); },
+  reset() { queue = []; pendingLevel = null; levelExit = null; seen.clear(); publish(); },
+  dismiss() {
+    const completed = levelExit?.receipt.id === queue[0]?.id ? levelExit : null;
+    queue = queue.slice(1);
+    if (completed) { levelExit = null; completed.acknowledge?.(); }
+    publish();
+    completed?.continueAfter?.();
+  },
+  /** Profile refreshes prepare a celebration; only a results exit can open it. */
+  deferLevel(receipt: RewardReceipt, acknowledge?: () => void) {
+    if (!receipt.level || seen.has(receipt.id)) return;
+    seen.add(receipt.id);
+    if (receipt.level <= (pendingLevel?.receipt.level ?? 0)) return;
+    pendingLevel = { receipt, acknowledge };
+  },
+  /** Hold the next scene/rematch until the celebration is dismissed. */
+  leaveBattleResults(continueAfter: () => void): (() => void) | null {
+    if (!pendingLevel || levelExit) return null;
+    const exit: LevelExit = { ...pendingLevel, continueAfter };
+    pendingLevel = null;
+    levelExit = exit;
+    queue = [exit.receipt, ...queue];
+    publish();
+    // Navigating away independently must not run an old results action later.
+    return () => { exit.continueAfter = undefined; };
+  },
   show(receipt: RewardReceipt) {
+    if (receipt.level) { this.deferLevel(receipt); return; }
     if (!receipt.items.length || seen.has(receipt.id)) return;
     seen.add(receipt.id); queue = [...queue, receipt]; listeners.forEach(fn => fn());
   },

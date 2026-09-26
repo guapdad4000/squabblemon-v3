@@ -15,14 +15,15 @@ import '../styles/result-stage.css';
 import { loadFeedbackPreferences } from '../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../lib/sfx';
 import { useTutorialVoice } from '../lib/useTutorialVoice';
+import { useBattleResultExit } from '../lib/useBattleResultExit';
 
 export function ResultScreen({
   challenge,
   tutorial,
-  onRestart,
-  onChangeDeck,
-  onGoHome,
-  onTutorialComplete,
+  onRestart: restart,
+  onChangeDeck: changeDeck,
+  onGoHome: goHome,
+  onTutorialComplete: completeTutorial,
   onRetryReward,
   match,
   districts,
@@ -36,9 +37,13 @@ export function ResultScreen({
   onInspectBoard,
 }: any) {
   const stageRef = useRef<HTMLDivElement>(null);
-  const rebuild = () => isGuest ? onChangeDeck?.() : navigate('/game/decks');
+  const { celebrating, leaveResults } = useBattleResultExit();
+  const onRestart = () => leaveResults(restart);
+  const onGoHome = () => leaveResults(goHome);
+  const onTutorialComplete = completeTutorial ? () => leaveResults(completeTutorial) : undefined;
+  const rebuild = () => leaveResults(() => isGuest ? changeDeck?.() : navigate('/game/decks'));
   const m = match as Match;
-  useTutorialVoice(tutorial ? coachBattle(m) : null);
+  useTutorialVoice(tutorial ? coachBattle(m) : null, !celebrating);
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
   const isVictory = winner === 'player',
@@ -46,27 +51,31 @@ export function ResultScreen({
   const resultVoice = useRef<HTMLAudioElement | null>(null);
   const resultVoiceKey = useRef('');
   useEffect(() => {
-    if (isDraw) return;
+    if (isDraw || celebrating) return;
     setBattleMusicMode(isVictory ? 'victory' : 'defeat');
     const key = `${m.playerDeck}:${m.round}:${winner}`;
-    if (!tutorial && resultVoiceKey.current !== key) {
-      resultVoiceKey.current = key;
-      resultVoice.current = playVoiceLine(
-        isVictory ? (m.round % 2 === 0 ? 'win-b' : 'win-a') : 'loss',
-        loadFeedbackPreferences().audioEnabled,
-      );
-    }
+    const timer = window.setTimeout(() => {
+      if (!tutorial && resultVoiceKey.current !== key) {
+        resultVoiceKey.current = key;
+        resultVoice.current = playVoiceLine(
+          isVictory ? (m.round % 2 === 0 ? 'win-b' : 'win-a') : 'loss',
+          loadFeedbackPreferences().audioEnabled,
+        );
+      }
+    }, 0);
     return () => {
+      window.clearTimeout(timer);
       setBattleMusicMode(null);
       stopSoundEffect(resultVoice.current);
     };
-  }, [isDraw, isVictory, tutorial]);
+  }, [isDraw, isVictory, tutorial, celebrating, m.playerDeck, m.round, winner]);
   useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
     stage.scrollTop = 0;
     stage.scrollLeft = 0;
   }, []);
+  if (celebrating) return null;
   const isStory = !tutorial && !!m.storyEncounter && !m.storyEncounter.activity;
   const isTutorial = Boolean(tutorial);
   const playerDeck = customPlayerDeck || decks.find((deck) => deck.id === m.playerDeck) || decks[0];

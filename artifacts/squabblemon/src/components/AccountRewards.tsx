@@ -26,21 +26,24 @@ export function PlayerLevelCelebration({
         }
       }
       previous.current = { id: profile.id, level: profile.level };
-      try {
-        localStorage.setItem(
-          `squabblemon:level-seen:${profile.id}`,
-          String(profile.level),
-        );
-      } catch {
-        /* Cosmetic history is optional. */
-      }
+      const remember = () => {
+        try {
+          localStorage.setItem(
+            `squabblemon:level-seen:${profile.id}`,
+            String(profile.level),
+          );
+        } catch {
+          /* Cosmetic history is optional. */
+        }
+      };
       if (profile.level > seen)
-        rewardReceipts.show({
+        rewardReceipts.deferLevel({
           id: `${profile.id}:level:${profile.level}`,
           title: "A level above.",
           level: profile.level,
           items: [{ label: `Player level ${profile.level}`, glyph: "xp" }],
-        });
+        }, remember);
+      else if (seen === profile.level) remember();
     }, 0);
     return () => window.clearTimeout(timer);
   }, [profile.id, profile.level]);

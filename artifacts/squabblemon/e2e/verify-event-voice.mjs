@@ -123,7 +123,11 @@ try {
             throw error;
           });
       };
-      await page.goto(origin + "/game/collection");
+      await page.goto(origin + "/e2e/level-up.fixture.html");
+      await page.getByTestId("profile-level").filter({ hasText: "2" }).waitFor();
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator(".level-moment").count(), 0);
+      await page.getByTestId("button-restart-match").click();
       await page.locator(".level-moment").waitFor();
       await played(name);
       await page.waitForTimeout(2600);
@@ -147,6 +151,7 @@ try {
         true,
       );
       if (index === 0) {
+        await page.goto(origin + "/game/collection");
         // Navigate through real tabs and confirm cleanup without reloading the document.
         await page
           .getByRole("button", { name: "Open game navigation", exact: true })
