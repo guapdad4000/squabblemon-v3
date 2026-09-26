@@ -66,7 +66,7 @@
 .collection-stage__header .venue-page-heading h1{font-size:clamp(27px,3.25vw,43px)}
 .collection-stage__header .venue-page-heading p{margin-top:3px;font-size:10px}
 .collection-tabs{display:flex;gap:16px;border-bottom:0;margin-top:10px;overflow-x:auto}
-.collection-tabs button{position:relative;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;min-height:52px;padding:10px 24px;color:#1a1a1a;font:900 italic 16px var(--font-display);text-transform:uppercase;filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));transform:rotate(-1deg);transition:transform .2s,filter .2s}
+.collection-tabs button{position:relative;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;min-height:52px;padding:18px 24px 6px;color:#1a1a1a;font:900 italic 16px var(--font-display);text-transform:uppercase;filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));transform:rotate(-1deg);transition:transform .2s,filter .2s}
 @media (prefers-reduced-motion: reduce) { .collection-tabs button { transition: none; transform: none; } }
 .collection-tabs button:hover{transform:rotate(0deg) scale(1.02);filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 60%)) brightness(1.05)}
 .collection-tabs button[aria-pressed=true]{color:#111;transform:rotate(1deg) scale(1.05);filter:sepia(.3) saturate(1.45) drop-shadow(3px 5px 5px rgb(0 0 0 / 65%));z-index:2}

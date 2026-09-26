@@ -24,7 +24,7 @@
 .park-topbar { display: flex; gap: 18px; align-items: center; justify-content: space-between; max-width: 1440px; margin: auto; }
 .park-back { display: grid; place-items: center; height: 44px; width: 44px; flex: none; border: 1px solid #fff4d53d; background: #111d168a; border-radius: 50%; }
 .fight-tabs { display: flex; gap: 9px; align-items: stretch; padding: 4px; background: transparent; border: 0; overflow: visible; }
-.fight-tabs a,.fight-tabs-disabled { display: flex; position:relative; isolation:isolate; align-items: center; justify-content: center; gap: 8px; padding: 14px 25px; border-radius: 0; font: 800 italic 12px/1 var(--font-display); white-space: nowrap; color: #242119; min-width: 0; filter:drop-shadow(2px 4px 4px #0008); transform:rotate(-1deg); }
+.fight-tabs a,.fight-tabs-disabled { display: flex; position:relative; isolation:isolate; align-items: center; justify-content: center; gap: 8px; padding: 20px 25px 8px; min-height: 48px; border-radius: 0; font: 800 italic 12px/1 var(--font-display); white-space: nowrap; color: #242119; min-width: 0; filter:drop-shadow(2px 4px 4px #0008); transform:rotate(-1deg); }
 .fight-tabs a::before,.fight-tabs-disabled::before{content:'';position:absolute;z-index:-1;inset:0;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat}
 .fight-tabs a:nth-child(2),.fight-tabs-disabled:nth-child(2){transform:rotate(1deg)}
 .fight-tabs a:nth-child(3){transform:rotate(-.4deg)}.fight-tabs a:nth-child(3)::before{background-image:url('../assets/paper/ripped-strip-alt.webp')}
@@ -120,7 +120,7 @@
   .park-topbar { gap: 8px; } .park-topbar > :last-child:not(.fight-tabs) { display: none; }
   .park-back { width: 38px; height: 38px; }
   .park-topbar > .fight-tabs { margin-right: 0; flex: 1; }
-  .fight-tabs { gap: 3px; } .fight-tabs a,.fight-tabs-disabled { padding: 12px 10px; flex: 1; font-size: 11px; gap: 6px; }
+  .fight-tabs { gap: 3px; } .fight-tabs a,.fight-tabs-disabled { padding: 18px 10px 6px; flex: 1; font-size: 11px; line-height: 1.25; gap: 6px; white-space: normal; text-align: center; }
   .fight-tabs span:not(.fight-tabs-disabled) { display: none; }
   .park-content { display: block; padding: 25px 0 0; min-height: 0; max-width: 460px; margin: 0 auto; }
   .park-intro { padding: 0 3px 25px; } .park-intro h1 { font-size: clamp(36px, 10vw, 58px); line-height: .88; margin: 17px 0 12px; }

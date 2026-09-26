@@ -5,6 +5,7 @@
 .street-select-trigger[data-state=open]>svg{transform:rotate(180deg)}
 .street-select-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .street-select-trigger.street-select-trigger--paper{border:0;border-radius:0;background:#e9dfc5 url('../../assets/paper/ripped-strip.webp') center/100% 100%;color:#27271d;box-shadow:0 3px 10px #0004;clip-path:polygon(1% 5%,12% 0,24% 4%,37% 0,53% 3%,68% 0,85% 4%,99% 0,100% 94%,88% 100%,71% 96%,55% 100%,35% 96%,17% 100%,0 95%)}
+.street-select-trigger.street-select-trigger--paper{padding-block:17px 7px}
 .street-select-trigger--paper::before{display:none}
 .street-select-trigger:focus-visible{outline:3px solid #e6b84b;outline-offset:3px}
 .street-select-trigger:disabled{opacity:.48;cursor:not-allowed;filter:saturate(.4)}
