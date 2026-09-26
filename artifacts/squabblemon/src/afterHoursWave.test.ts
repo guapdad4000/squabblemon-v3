@@ -235,14 +235,14 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.match(cards['homeless-wiseman'].effect, /public board/);
     after.boards[0] = after.boards[0].filter(card => card.cardId !== 'homeless-wiseman');
 
-    after = cast(after, 'squabble-house-manager', enemy, 0, undefined, 1);
+    after = cast(after, 'charger', enemy, 0, undefined, 1);
     assert(after.districtTraps?.some(item => item.kind === 'wiseman'));
     after = nextRound({ ...after, phase: 'resolved', playerHand: [], cpuHand: [] });
     after = { ...after, [enemy === 'player' ? 'playerMotion' : 'cpuMotion']: 9 };
     after = cast(after, 'techbro', enemy, 0, undefined, 2);
     const trappedCard = after.boards[2].find(card => card.cardId === 'techbro')!;
     assert.equal(trappedCard.statuses.weakened, true);
-    assert.equal(trappedCard.powerModifier, -2);
+    assert.equal(trappedCard.powerModifier, 0);
     assert.equal(after.districtTraps?.some(item => item.kind === 'wiseman'), false);
 
     m = blank(); m.boards[0] = [unit('techbro', enemy)];
@@ -269,15 +269,16 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(after.districtTraps?.some(item => item.kind === 'wiseman'), false);
   });
 
-  test(`${owner}: separate Wisemen preserve independent traps and Janitor replay frames stay monotonic`, () => {
+  test(`${owner}: a new Wiseman replaces the previous prediction and Janitor replay frames stay monotonic`, () => {
     let m = blank();
     let after = cast(m, 'homeless-wiseman', owner, 0, undefined, 2);
     assert.deepEqual(after.districtTraps?.filter(trap => trap.kind === 'wiseman').map(trap => trap.lane), [0]);
     after.boards[0] = [unit('techbro', enemy, 0, 20)];
     after = cast(after, 'homeless-wiseman', owner, 0, undefined, 2);
-    assert.deepEqual(after.districtTraps?.filter(trap => trap.kind === 'wiseman').map(trap => trap.lane), [0, 1]);
-    after = cast(after, 'techbro', enemy, 0, undefined, 0);
     assert.deepEqual(after.districtTraps?.filter(trap => trap.kind === 'wiseman').map(trap => trap.lane), [1]);
+    after = cast(after, 'techbro', enemy, 0, undefined, 0);
+    assert.deepEqual(after.districtTraps?.filter(trap => trap.kind === 'wiseman').map(trap => trap.lane), []);
+    assert.equal(after.discountTokens.find(token => token.eligibility === 'wiseman-prediction')?.targetLane, 1);
 
     m = blank();
     after = cast(m, 'homeless-wiseman', owner, 0, undefined, 2);
@@ -288,7 +289,7 @@ for (const owner of ['player', 'cpu'] as const) {
     after = playTurnCard({ ...after, phase: enemy === 'player' ? 'player' : 'cpu-reveal',
       [enemy === 'player' ? 'playerHand' : 'cpuHand']: [entrant] }, enemy, entrant.instanceId, predicted);
     const playEvents = after.effectLog.slice(eventStart);
-    const consumptionIndex = playEvents.findIndex(event => event.note.startsWith('Read The Block consumed'));
+    const consumptionIndex = playEvents.findIndex(event => event.note.startsWith('Told You consumed'));
     assert(consumptionIndex >= 0);
     const events = playEvents.slice(consumptionIndex);
     for (let index = 1; index < events.length; index++) {

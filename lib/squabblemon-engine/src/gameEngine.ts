@@ -169,7 +169,7 @@ export type TimedEffect = {
   amount?: number;
 };
 export type DiscountToken = {
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction';
   targetLane?: Lane;
   targetInstanceId?: string;
   sourceLane: Lane | null; createdOrder: number;
@@ -545,11 +545,14 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
   || (token.eligibility === "another-district" && token.sourceLane !== targetLane)
   || (token.eligibility === 'electric-delivery' && token.targetLane === targetLane
     && card.type === 'Electric' && (card.kind ?? 'character') === 'character' && !card.hazard)
+  || (token.eligibility === 'wiseman-prediction' && token.targetLane === targetLane
+    && (card.kind ?? 'character') === 'character' && !card.hazard)
   || (token.eligibility === 'poison-character'
     && card.type === 'Poison' && (card.kind ?? 'character') === 'character' && !card.hazard);
 const discountFor = (match: Match, owner: Owner, card: CardInstance, targetLane: Lane) =>
   [...(match.discountTokens ?? [])].filter(token => token.expiresAfterRound === undefined || token.expiresAfterRound >= match.round)
-    .sort((a, b) => Number(b.eligibility === 'electric-delivery') - Number(a.eligibility === 'electric-delivery')
+    .sort((a, b) => Number(b.eligibility === 'wiseman-prediction') - Number(a.eligibility === 'wiseman-prediction')
+      || Number(b.eligibility === 'electric-delivery') - Number(a.eligibility === 'electric-delivery')
       || a.createdOrder - b.createdOrder || a.id.localeCompare(b.id))
     .find((token) => token.owner === owner && tokenEligible(token, card, targetLane));
 const districtDiscount = (match: Match, owner: Owner, card: CardInstance, targetLane: Lane): number => {
@@ -566,9 +569,13 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
     && match.plugDiscountLane[owner] !== null && match.plugDiscountLane[owner] !== targetLane;
   const buddyLaneDiscount = inLane(match, owner, targetLane).some(buddy =>
     buddy.cardId === 'buddy' && buddy.buddyForm !== 'squabble-earth' && activeAbility(buddy));
-  const discount = discountFor(match, owner, card, targetLane) || legacyDiscount || buddyLaneDiscount;
+  const token = discountFor(match, owner, card, targetLane);
+  const discount = token || legacyDiscount || buddyLaneDiscount;
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
-  return Math.max(discountFor(match, owner, card, targetLane)?.eligibility === "homecoming" ? 1 : 0, card.cost - (discount ? 1 : districtDiscount(match, owner, card, targetLane))) + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
+  const minimum = token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' ? 1 : 0;
+  const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
+    : districtDiscount(match, owner, card, targetLane);
+  return Math.max(minimum, card.cost - reduction) + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
 }
 export function getCardCostExplanation(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): string {
   const token = discountFor(match, owner, card, targetLane);
@@ -577,10 +584,11 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
     buddy.cardId === 'buddy' && buddy.buddyForm !== 'squabble-earth' && activeAbility(buddy));
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
   const parts = [`${card.cost} base`];
-  if (token || legacy) parts.push("−1 discount");
+  if (token || legacy) parts.push(token?.eligibility === "wiseman-prediction" ? "−2 Told You discount" : "−1 discount");
   else if (buddyLaneDiscount) parts.push("−1 BUDDY district discount");
   else if (districtDiscount(match, owner, card, targetLane)) parts.push(match.districtSnapshot?.locations[targetLane].effect.kind === 'dive-discount' ? "−1 Dive Bar discount" : "−1 Bodega opening discount");
   if (token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
+  if (token?.eligibility === "wiseman-prediction") parts.push("Told You minimum 1 Motion");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
   if (taxed) parts.push("+1 Rent Due tax");
   if (districtTax(match, owner, targetLane)) parts.push("+1 Corrupt Church tithe");
@@ -602,10 +610,14 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
   return [
     ...janitorMarks,
     ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round).map(t => ({ owner: t.owner, lane: t.lane,
-      text: t.kind === 'wiseman' ? 'Wiseman prediction · next enemy character here takes −2 Hands and Weaken'
+      text: t.kind === 'wiseman' ? 'Told You · next enemy character: here = Weaken; elsewhere = predictor gets −2 Motion here · through R' + t.expiresAfterRound
         : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled' : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
     ...(match.lingeringScents ?? []).filter(s => s.expiresAfterRound >= match.round).map(s => ({
       owner: s.owner, lane: s.lane, text: 'Scent · ' + (s.triggeredRound === match.round ? 'spent this round' : 'next enemy: 2 Burn') + ' · through R' + s.expiresAfterRound,
+    })),
+    ...match.discountTokens.filter(t => t.eligibility === 'wiseman-prediction' && t.targetLane !== undefined
+      && (t.expiresAfterRound === undefined || t.expiresAfterRound >= match.round)).map(t => ({
+      owner: t.owner, lane: t.targetLane!, text: 'Told You · next character here: −2 Motion (minimum 1) · through R' + t.expiresAfterRound,
     })),
     ...match.discountTokens.filter(t => t.eligibility === 'electric-delivery' && t.targetLane !== undefined).map(t => ({
       owner: t.owner, lane: t.targetLane!, text: 'Package · next Electric: −1 Motion / +2 Hands',
@@ -1336,10 +1348,14 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
       targets.push(watcher.instanceId);
     } else if (id === 'ronald' && friendly && watcher.waveRounds?.ronald !== m.round) {
       m = waveRound(m, watcher.instanceId, 'ronald');
-      for (const l of [0, 1, 2] as Lane[]) {
-        if (l === victim.lane) continue;
-        const ally = lowest(inLane(m, watcher.owner, l));
-        if (ally) { m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Organize: +1 Hand.' })); targets.push(ally.instanceId); }
+      if (inLane(m, watcher.owner, victim.lane).length < 4) {
+        const backup = lowest(m.boards.flat().filter(c => c.owner === watcher.owner
+          && (c.kind ?? 'character') === 'character' && canMoveTo(m, c, victim.lane!)));
+        if (backup) {
+          m = grantProtection(m, watcher, backup.instanceId);
+          m = move(m, findCard(m, backup.instanceId)!, victim.lane, 'WE OUTSIDE: backup arrived.');
+          targets.push(backup.instanceId);
+        }
       }
     } else if (id === 'trapvamp' && ability && watcher.owner === source.owner && watcher.waveRounds?.trapvamp !== m.round) {
       m = waveRound(m, watcher.instanceId, 'trapvamp');
@@ -1741,8 +1757,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
           - getLaneScoreForMatch(m, inLane(m, enemy, b), b, enemy) || a - b)[0];
       if (destination !== undefined) {
         m = { ...m, districtTraps: [
-          ...(m.districtTraps ?? []).filter(trap => !(trap.kind === 'wiseman' && trap.owner === source.owner
-            && trap.lane === destination && trap.source.instanceId === source.instanceId)),
+          ...(m.districtTraps ?? []).filter(trap => !(trap.kind === 'wiseman' && trap.owner === source.owner)),
           { kind: 'wiseman', owner: source.owner, lane: destination, source: findCard(m, source.instanceId) ?? source, expiresAfterRound: m.round + 1 },
         ] };
         succeeded = true;
@@ -3171,6 +3186,36 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
       note: `Network Boost gained +1 Hands.${triggers === 2 ? ' Your next 4-Cost or higher card costs 1 less Motion.' : ''}`,
     });
   }
+  const prediction = (m.districtTraps ?? []).find(t => t.kind === 'wiseman' && t.owner !== owner
+    && t.expiresAfterRound >= m.round);
+  if (prediction && !placed.hazard && (placed.kind ?? 'character') === 'character') {
+    const beforePrediction = m;
+    m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== prediction) };
+    m = addEvent(beforePrediction, m, { type: 'ability', sourceId: prediction.source.instanceId, owner: prediction.owner,
+      lane: prediction.lane, targetIds: [instanceId], note: 'Told You consumed its public prediction.' });
+    const beforePayoff = m;
+    if (targetLane !== prediction.lane) {
+      const order = m.nextDiscountOrder;
+      m = { ...m, nextDiscountOrder: order + 1, discountTokens: [
+        ...m.discountTokens.filter(t => !(t.eligibility === 'wiseman-prediction' && t.owner === prediction.owner && t.targetLane === prediction.lane)),
+        { id: `wiseman:${prediction.source.instanceId}:${order}`, owner: prediction.owner,
+          sourceInstanceId: prediction.source.instanceId, eligibility: 'wiseman-prediction', targetLane: prediction.lane,
+          sourceLane: prediction.source.lane, createdOrder: order, expiresAfterRound: m.round + 1 },
+      ] };
+      m = addEvent(beforePayoff, m, { type: 'ability', sourceId: prediction.source.instanceId, owner: prediction.owner,
+        lane: prediction.lane, targetIds: [], note: 'Told You: they dodged. Your next character in the predicted district costs 2 less Motion (minimum 1) through next round.' });
+    } else {
+      const actual = m.boards.flat().find(c => c.instanceId === instanceId);
+      const eventCount = m.effectLog.length;
+      if (actual) m = hostileEffect(m, prediction.source, actual, (state, target) =>
+        queueDisruptionReactions(state, modify(state, target.instanceId, c => ({ ...c,
+          statuses: { ...c.statuses, weakened: true }, lastEffectNote: 'Told You: predicted character Weakened.' })),
+          prediction.source, target.instanceId), false, false, true);
+      if (m.effectLog.length === eventCount) m = addEvent(beforePayoff, m, { type: 'ability', sourceId: prediction.source.instanceId,
+        owner: prediction.owner, lane: prediction.lane, targetIds: actual ? [instanceId] : [],
+        note: actual ? 'Told You: predicted character targeted with Weaken; Protection and immunity can block it.' : 'Told You: predicted character already left the board.' });
+    }
+  }
   const revealed = m.boards.flat().find(c => c.instanceId === instanceId);
   if (revealed) {
     // Demario's Mushroom is a one-use lane resource for the next subsequently
@@ -3187,31 +3232,6 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
         m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Mushroom Delivery: consumed Mushroom, +1 Hand.' }));
         m = addEvent(beforeMushroom, m, { type: 'ability', sourceId: mushroom.instanceId, owner, lane: targetLane,
           targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery: the next friendly character consumed a Mushroom for +1 Hand.' });
-      }
-    }
-    const wisemanTrap = (m.districtTraps ?? []).find(t => t.kind === 'wiseman' && t.owner !== owner
-      && t.lane === targetLane && t.expiresAfterRound >= m.round);
-    if (wisemanTrap && !revealed.hazard && (revealed.kind ?? 'character') === 'character') {
-      const beforeTrap = m;
-      m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== wisemanTrap) };
-      m = addEvent(beforeTrap, m, { type: 'ability', sourceId: wisemanTrap.source.instanceId, owner: wisemanTrap.owner,
-        lane: targetLane, targetIds: [instanceId],
-        note: `Read The Block consumed its public prediction trap on ${revealed.name}.` });
-      const beforeTrapHit = m;
-      const eventCountBeforeHit = m.effectLog.length;
-      m = hostileEffect(m, wisemanTrap.source, revealed, (state, actual) => {
-        let result = reduceHands(state, actual, 2, 'Read The Block: predicted character took -2 Hands.');
-        const survivor = findCard(result, actual.instanceId);
-        if (survivor) result = queueDisruptionReactions(state, modify(result, survivor.instanceId, c => ({
-          ...c, statuses: { ...c.statuses, weakened: true },
-          lastEffectNote: 'Read The Block: -2 Hands and Weakened.',
-        })), wisemanTrap.source, actual.instanceId);
-        return result;
-      }, false, false, true);
-      if (m.effectLog.length === eventCountBeforeHit) {
-        m = addEvent(beforeTrapHit, m, { type: 'ability', sourceId: wisemanTrap.source.instanceId, owner: wisemanTrap.owner,
-          lane: targetLane, targetIds: [instanceId],
-          note: `Read The Block hit ${revealed.name}: -2 Hands and Weaken (Protection or immunity may block it).` });
       }
     }
     const survivingReveal = findCard(m, instanceId);

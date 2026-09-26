@@ -216,7 +216,7 @@ test('Bonnet Girl, Ronald and Trap Vamp react to actual damage with correct caps
   const m=blank(), victim=unit('hooper','cpu',0), bonnet=unit('bonnetgirl','cpu',0), ron=unit('ronald','cpu',0), ally=unit('hooper','cpu',2,2), vamp=unit('trapvamp','player',0);
   victim.powerModifier=8;m.boards=[[victim,bonnet,ron,vamp],[],[ally]];
   const hit=cast(m,'ptang').after;
-  assert.equal(find(hit,bonnet).powerModifier,2);assert.equal(find(hit,ally).powerModifier,1);assert.equal(find(hit,vamp).powerModifier,2);
+  assert.equal(find(hit,bonnet).powerModifier,2);assert.equal(find(hit,ally).lane,0);assert(find(hit,ally).statuses.protected);assert.equal(find(hit,vamp).powerModifier,2);
   const again=cast({...hit,playerMotion:9},'powerhouse').after;assert.equal(find(again,vamp).powerModifier,2);
 });
 test('Protection prevents damage reactions, and opposing cooks cannot retaliate indefinitely', () => {
