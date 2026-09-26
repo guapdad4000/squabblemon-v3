@@ -59,36 +59,32 @@ export function FadecadeDialog({ open, onOpenChange, title, children, kind = 'ro
           }}
         >
           <div className="fadecade-dialog-artwork-shell">
-            <header className="fadecade-dialog-art-header" style={frameStyle('stats-banner.webp')} data-art-missing={missingHeader}>
-              {!missingHeader && <img src={getAssetUrl('assets/fadecade/stats-banner.webp')} alt="" className="fadecade-dialog-banner-img" draggable={false} onError={() => setMissingHeader(true)} />}
-              <div className="fadecade-dialog-header-ink">
-                <span className="fadecade-dialog-eyebrow">
-                  {kind === 'road' && 'NO SHORTCUTS'}
-                  {kind === 'daily' && 'DAILY BOUNTY'}
-                  {kind === 'weekly' && 'WEEKLY BOUNTY'}
-                  {kind === 'training' && 'TRAINING'}
-                  {kind === 'events' && 'SPECIAL EVENT'}
-                  {kind === 'stockz' && 'THE CLOUT EXCHANGE'}
-                </span>
+            <img className="fadecade-dialog-console-frame" src={getAssetUrl('assets/fadecade/challenge-console-frame-v1.png')} alt="" draggable={false} />
+            <div className="fadecade-dialog-console-screen">
+              <div className="fadecade-dialog-signal" aria-hidden="true"><i /><i /><i /><span>PLAYER READY</span></div>
+              <header className="fadecade-dialog-art-header" style={frameStyle('stats-banner.webp')} data-art-missing={missingHeader}>
+                {!missingHeader && <img src={getAssetUrl('assets/fadecade/stats-banner.webp')} alt="" className="fadecade-dialog-banner-img" draggable={false} onError={() => setMissingHeader(true)} />}
+                <div className="fadecade-dialog-header-ink">
+                  <span className="fadecade-dialog-eyebrow">
+                    {kind === 'road' && 'NO SHORTCUTS'}
+                    {kind === 'daily' && 'DAILY BOUNTY'}
+                    {kind === 'weekly' && 'WEEKLY BOUNTY'}
+                    {kind === 'training' && 'TRAINING'}
+                    {kind === 'events' && 'SPECIAL EVENT'}
+                    {kind === 'stockz' && 'THE CLOUT EXCHANGE'}
+                  </span>
+                </div>
+              </header>
+              <div className="fadecade-dialog-titlebar">
+                <DialogPrimitive.Title className="fadecade-dialog-title">{title}</DialogPrimitive.Title>
+                <DialogPrimitive.Close className="fadecade-dialog-close" aria-label="Close"><span aria-hidden="true">×</span> Close</DialogPrimitive.Close>
               </div>
-            </header>
-            <div className="fadecade-dialog-titlebar">
-              <DialogPrimitive.Title className="fadecade-dialog-title">{title}</DialogPrimitive.Title>
-              <DialogPrimitive.Close className="fadecade-dialog-close" aria-label="Close">
-                <span aria-hidden="true">×</span> Close
-              </DialogPrimitive.Close>
+              <div className="fadecade-dialog-scroll-body"><div className="fadecade-dialog-inner-content">{children}</div></div>
+              <footer className="fadecade-dialog-art-footer" style={frameStyle('footer-banner.webp')} data-art-missing={missingFooter}>
+                {!missingFooter && <img src={getAssetUrl('assets/fadecade/footer-banner.webp')} alt="" className="fadecade-dialog-footer-img" draggable={false} onError={() => setMissingFooter(true)} />}
+                <div className="fadecade-dialog-footer-ink"><span>{kind === 'stockz' ? 'YOUR CALL. YOUR CLOUT.' : kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span></div>
+              </footer>
             </div>
-            <div className="fadecade-dialog-scroll-body">
-              <div className="fadecade-dialog-inner-content">
-                {children}
-              </div>
-            </div>
-            <footer className="fadecade-dialog-art-footer" style={frameStyle('footer-banner.webp')} data-art-missing={missingFooter}>
-              {!missingFooter && <img src={getAssetUrl('assets/fadecade/footer-banner.webp')} alt="" className="fadecade-dialog-footer-img" draggable={false} onError={() => setMissingFooter(true)} />}
-              <div className="fadecade-dialog-footer-ink">
-                <span>{kind === 'stockz' ? 'YOUR CALL. YOUR CLOUT.' : kind === 'road' ? 'TWO RUNS. ONE ROAD.' : kind === 'daily' || kind === 'weekly' ? 'EARN IT ON THE BLOCK' : 'PICK A CREW. THROW DOWN.'}</span>
-              </div>
-            </footer>
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

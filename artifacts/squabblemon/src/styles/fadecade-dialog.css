@@ -303,3 +303,130 @@
 @media(max-width:480px) { .draft-card-btn strong { font-size:10px; } .draft-card-btn>span { font-size:8px; } }
 .fadecade-dialog-art-footer { container-type:inline-size; }
 .fadecade-dialog-footer-ink span { font-size:clamp(6px,2.1cqw,9px); white-space:nowrap; }
+
+/* The challenge dialog is a playable cabinet face, not an app form. */
+.fadecade-dialog-content {
+  --machine-accent:#ffe449;
+  --machine-accent-rgb:255,228,73;
+  max-width:760px;
+}
+.fadecade-dialog-content--daily { --machine-accent:#4ade80; --machine-accent-rgb:74,222,128; }
+.fadecade-dialog-content--weekly { --machine-accent:#60a5fa; --machine-accent-rgb:96,165,250; }
+.fadecade-dialog-content--training { --machine-accent:#f87171; --machine-accent-rgb:248,113,113; }
+.fadecade-dialog-content--events { --machine-accent:#c084fc; --machine-accent-rgb:192,132,252; }
+.fadecade-dialog-content--stockz { --machine-accent:#a9d498; --machine-accent-rgb:169,212,152; }
+.fadecade-dialog-artwork-shell {
+  isolation:isolate;
+  padding:clamp(42px,7vw,68px) clamp(34px,7.5vw,70px) clamp(48px,8vw,76px);
+  background:transparent;
+  border:0!important;
+  border-radius:0;
+  box-shadow:none!important;
+  overflow:visible;
+}
+.fadecade-dialog-console-frame {
+  position:absolute;
+  inset:0;
+  z-index:4;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 18px 20px #000d) drop-shadow(0 0 18px rgba(var(--machine-accent-rgb),.28));
+}
+.fadecade-dialog-console-screen {
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+  border:3px solid #06070d;
+  outline:2px solid rgba(var(--machine-accent-rgb),.75);
+  background:#080b16;
+  box-shadow:inset 0 0 34px #000,0 0 20px rgba(var(--machine-accent-rgb),.22);
+  clip-path:polygon(2% 0,98% 0,100% 3%,100% 97%,98% 100%,2% 100%,0 97%,0 3%);
+}
+.fadecade-dialog-console-screen::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  opacity:.12;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#b8d7ff 4px);
+  mix-blend-mode:screen;
+}
+.fadecade-dialog-signal {
+  position:absolute;
+  z-index:12;
+  top:8px;
+  left:14px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#cbd5e1;
+  font:800 7px/1 var(--font-mono);
+  letter-spacing:.12em;
+}
+.fadecade-dialog-signal i { width:6px; aspect-ratio:1; border-radius:50%; background:#273047; box-shadow:0 0 0 1px #000; }
+.fadecade-dialog-signal i:first-child { background:var(--machine-accent); box-shadow:0 0 8px var(--machine-accent); }
+.fadecade-dialog-scroll-body {
+  background:
+    linear-gradient(90deg,rgba(var(--machine-accent-rgb),.08) 1px,transparent 1px) 0 0/28px 28px,
+    linear-gradient(rgba(var(--machine-accent-rgb),.06) 1px,transparent 1px) 0 0/28px 28px,
+    radial-gradient(circle at 50% 0,rgba(var(--machine-accent-rgb),.18),transparent 48%),
+    #080b16;
+}
+.fadecade-dialog-titlebar { background:repeating-linear-gradient(115deg,rgba(var(--machine-accent-rgb),.10) 0 2px,transparent 2px 14px),#111526; }
+.fadecade-dialog-title { color:var(--machine-accent); text-shadow:0 0 14px rgba(var(--machine-accent-rgb),.38); }
+.fadecade-dialog-scroll-body .cabinet-btn {
+  position:relative;
+  min-height:48px;
+  border:2px solid #050611;
+  box-shadow:0 4px 0 #03040a,0 0 0 2px var(--machine-accent);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  letter-spacing:.08em;
+}
+.fadecade-dialog-scroll-body .cabinet-btn--outline { border-color:var(--machine-accent); color:var(--machine-accent); }
+.challenge-field-label { display:flex; align-items:center; gap:8px; color:var(--machine-accent); }
+.challenge-field-label::after { content:""; flex:1; height:2px; background:linear-gradient(90deg,var(--machine-accent),transparent); }
+.fadecade-dialog-scroll-body :is(.cabinet-select,[role=combobox]) {
+  min-height:50px;
+  border:2px solid rgba(var(--machine-accent-rgb),.6);
+  background:linear-gradient(135deg,rgba(var(--machine-accent-rgb),.15),#080b16 62%);
+  box-shadow:inset 0 0 18px #0008,4px 4px 0 #0008;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.challenge-crew-preview {
+  border-color:rgba(var(--machine-accent-rgb),.45);
+  border-bottom-color:var(--machine-accent);
+  background:linear-gradient(145deg,rgba(var(--machine-accent-rgb),.12),#060913 64%);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+}
+.challenge-crew-preview strong { color:var(--machine-accent); }
+.fadecade-dialog-scroll-body .bounty-item {
+  position:relative;
+  border-left-color:var(--machine-accent);
+  background:linear-gradient(135deg,rgba(var(--machine-accent-rgb),.13),#080b16 55%);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+}
+.challenge-reward { color:var(--machine-accent); border-color:rgba(var(--machine-accent-rgb),.5); background:rgba(var(--machine-accent-rgb),.1); }
+.fadecade-dialog-scroll-body .draft-card-btn {
+  background:linear-gradient(#11182a,#060a16);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.fadecade-dialog-scroll-body .draft-card-btn:hover { border-color:var(--machine-accent); filter:drop-shadow(0 0 8px rgba(var(--machine-accent-rgb),.45)); }
+@media(max-width:480px) {
+  .fadecade-dialog-artwork-shell { padding:36px 22px 44px; }
+  .fadecade-dialog-signal { top:5px; left:8px; }
+  .fadecade-dialog-signal span { display:none; }
+  .fadecade-dialog-titlebar { gap:6px; padding-left:28px; }
+  .fadecade-dialog-title { min-width:0; font-size:clamp(14px,4.4vw,18px); }
+  .fadecade-dialog-close { min-width:52px; padding-inline:6px; font-size:10px; }
+}
+@media(max-height:650px) {
+  .fadecade-dialog-artwork-shell { padding-top:30px; padding-bottom:34px; }
+}

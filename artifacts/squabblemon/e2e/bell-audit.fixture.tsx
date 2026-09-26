@@ -32,6 +32,8 @@ function Content({ bootstrap, update }: { bootstrap: typeof initial; update: Rea
       <NotificationInbox />
       <button onClick={() => navigate('/game')}>Home</button>
       <button onClick={() => navigate('/game/style')}>The Extras</button>
+      <button onClick={() => navigate('/game/story')}>Story overview</button>
+      <button onClick={() => navigate('/game/settings')}>Fighter ID</button>
       <button onClick={() => navigate('/game/audit-preview')}>Tall preview</button>
       <button onClick={() => seen(notices.map(n => n.id))}>Automatic receipts</button>
       <button onClick={() => update(old => ({ ...old, profile: { ...old.profile, id: old.profile.id === initialPlayer ? 'second-player' : initialPlayer } }))}>Switch player</button>

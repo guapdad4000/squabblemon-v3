@@ -11,13 +11,18 @@ import { CORNER_OFFERS } from '../lib/cornerStore';
 import '../styles/notifications.css';
 import { NotificationArrival } from './NotificationArrival';
 
-type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story';
+type Section = 'cards' | 'style' | 'bag' | 'mail' | 'missions' | 'challenges' | 'shop' | 'growth' | 'story' | 'profile';
 type Notice = { id: string; section: Section; title: string; href: string; sticky?: boolean; dismissalKey?: string };
 type Daily = { date: string; available: boolean; amount: number; attemptsRemaining: number; resetsAt: string };
+type ReceiptResponse = { ids: string[] };
 type NoticeIds = string | readonly string[];
 const Context = createContext({ notices: [] as Notice[], seen: (_ids: NoticeIds) => {}, dismiss: (_ids: NoticeIds) => {}, has: (_section: string): boolean => false });
 function readReceipts(key: string): string[] {
   try { const value: unknown = JSON.parse(localStorage.getItem(key) ?? '[]'); return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string') : []; } catch { return []; }
+}
+function receiptIds(value: unknown): string[] {
+  if (!value || typeof value !== 'object' || !('ids' in value) || !Array.isArray(value.ids)) return [];
+  return value.ids.filter((id): id is string => typeof id === 'string');
 }
 export const useNotifications = () => useContext(Context);
 export function useDailyClout(playerId: string) {
@@ -47,10 +52,16 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   const [read, setRead] = useState(() => readReceipts(key));
   const receipts = useRef(read);
   const mail = useSafehouseMail(p.id), daily = useDailyClout(p.id), client = useQueryClient();
+  const remoteReceipts = useQuery({
+    queryKey: ['notification-receipts', p.id],
+    queryFn: async () => ({ ids: receiptIds(await customFetch<unknown>('/api/player/notifications/receipts')) }),
+    staleTime: 30000,
+    retry: 2,
+  });
   const account = useQuery({ queryKey: ['account-rewards', p.id], queryFn: () => customFetch<{ date: string; pending: { key: string; title: string }[]; growth: { ready: boolean } }>('/api/player/rewards/account'), refetchInterval: 30000, retry: 1 });
   const mythic = useQuery({ queryKey: ['starter-mythic', p.id], queryFn: () => customFetch<{ state: string }>('/api/player/rewards/starter-mythic'), refetchInterval: 60000, retry: 1 });
   useEffect(() => { const timer = setInterval(() => { if (document.visibilityState === 'visible') void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() }); }, 60000); return () => clearInterval(timer); }, [client]);
-  const seen = useCallback((ids: NoticeIds) => {
+  const applyReceipts = useCallback((ids: NoticeIds) => {
     const stored = readReceipts(key);
     const next = [...new Set([...stored, ...receipts.current, ...(typeof ids === 'string' ? [ids] : ids)])];
     // Repair a stale cross-tab write even when this tab already knows every receipt.
@@ -61,14 +72,41 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
     receipts.current = next;
     setRead(next);
   }, [key]);
+  const seen = useCallback((ids: NoticeIds) => {
+    const batch = [...new Set(typeof ids === 'string' ? [ids] : ids)];
+    if (!batch.length) return;
+    applyReceipts(batch);
+    client.setQueryData<ReceiptResponse>(['notification-receipts', p.id], current => ({
+      ids: [...new Set([...(current?.ids ?? []), ...batch])],
+    }));
+    void customFetch<ReceiptResponse>('/api/player/notifications/receipts', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ids: batch }),
+    }).then(result => {
+      const ids = receiptIds(result);
+      // Older servers and browser fixtures may return a generic success body.
+      // Keep the optimistic batch authoritative until the receipt API replies.
+      const confirmed = ids.length ? ids : batch;
+      applyReceipts(confirmed);
+      client.setQueryData(['notification-receipts', p.id], { ids: confirmed });
+    }).catch(() => {
+      // Local optimistic receipts keep the bell usable while React Query retries
+      // the authoritative ledger on the next signed-in visit.
+      void client.invalidateQueries({ queryKey: ['notification-receipts', p.id] });
+    });
+  }, [applyReceipts, client, p.id]);
+  useEffect(() => {
+    if (remoteReceipts.data?.ids) applyReceipts(remoteReceipts.data.ids);
+  }, [applyReceipts, remoteReceipts.data?.ids]);
   useEffect(() => {
     const sync = (event: StorageEvent) => {
       if (event.key !== key || !event.newValue) return;
-      try { const value: unknown = JSON.parse(event.newValue); if (Array.isArray(value)) seen(value.filter((id): id is string => typeof id === 'string')); } catch {}
+      try { const value: unknown = JSON.parse(event.newValue); if (Array.isArray(value)) applyReceipts(value.filter((id): id is string => typeof id === 'string')); } catch {}
     };
     window.addEventListener('storage', sync);
     return () => window.removeEventListener('storage', sync);
-  }, [key, seen]);
+  }, [applyReceipts, key]);
   const notices: Notice[] = [];
   for (const id of p.ownedCardIds) notices.push({ id: `card:${id}`, section: 'cards', title: `New card · ${cardCatalog.find(c => c.catalogId === id)?.name ?? id}`, href: `/game/collection?card=${encodeURIComponent(id)}` });
   for (const set of Object.values(CHARACTER_STYLE_SETS)) if (p.ownedCardIds.includes(set.cardId)) notices.push({ id: `banner:${set.cardId}`, section: 'style', title: `New banner · ${cardCatalog.find(c => c.catalogId === set.cardId)?.name ?? set.cardId}`, href: `/game/style/${set.cardId}?tab=banner` });
@@ -84,9 +122,9 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
       notice.href = `/game/style/${encodeURIComponent(cardId)}?tab=${tab}${cosmetic === 'banner-finish' ? '&finish=silver' : ''}`;
     } else if ((kind === 'mastery' || kind === 'badge') && cardId) {
       const badges: Record<string, string> = { 'after-hours': 'After-hours champion', 'street-draft': 'Street draft winner', neighborhood: 'Neighborhood champion' };
-      notice.section = 'missions';
+      notice.section = 'profile';
       notice.title = kind === 'mastery' ? `Mastery earned · ${name}` : `Badge earned · ${badges[cardId] ?? cardId.replaceAll('-', ' ')}`;
-      notice.href = '/game/missions?view=mastery';
+      notice.href = '/game/settings#overview';
     } else if ((kind === 'story-key' && cardId) || ['side-alley-tagged-cardback', 'block-party-crowned'].includes(id)) {
       notice.section = 'story';
       notice.title = kind === 'story-key' ? `Chapter unlocked · ${cardId.replaceAll('-', ' ')}` : `Story reward · ${label}`;
@@ -108,7 +146,10 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
   for (const offer of CORNER_OFFERS) notices.push({ id: `offer:${offer.id}`, section: 'shop', title: `In the store · ${offer.name}`, href: `/game/shop?view=corner&offer=${encodeURIComponent(offer.id)}` });
   notices.push(...bag.events);
   const unique = [...new Map(notices.map(notice => [notice.id, notice])).values()];
-  const visible = unique.filter(n => !read.includes(`dismissed:${n.dismissalKey ?? n.id}`) && (n.sticky || !read.includes(n.id)));
+  const receiptReady = remoteReceipts.isSuccess || remoteReceipts.isError || read.length > 0;
+  const visible = receiptReady
+    ? unique.filter(n => !read.includes(`dismissed:${n.dismissalKey ?? n.id}`) && (n.sticky || !read.includes(n.id)))
+    : [];
   const dismiss = (ids: NoticeIds) => {
     const selected = new Set(typeof ids === 'string' ? [ids] : ids);
     seen(unique.filter(n => selected.has(n.id)).flatMap(n => n.sticky
@@ -116,7 +157,38 @@ function PlayerNotifications({ bootstrap, children }: { bootstrap: PlayerBootstr
       : [n.id, `dismissed:${n.dismissalKey ?? n.id}`]));
   };
   const has = (section: string) => visible.some(n => n.section === section || (section === 'safehouse' && ['mail','missions','challenges','bag','growth'].includes(n.section)) || (section === 'cards' && n.section === 'style'));
-  return <Context.Provider value={{ notices: visible, seen, dismiss, has }}>{children}<NotificationArrival /></Context.Provider>;
+  return <Context.Provider value={{ notices: visible, seen, dismiss, has }}>{children}<NotificationArrival /><NotificationPageReceipt /></Context.Provider>;
+}
+
+/** Story and Fighter ID are overview destinations. Seeing the page is enough;
+ * players should never have to locate every badge or old story reward. */
+function NotificationPageReceipt() {
+  const { notices, seen } = useNotifications();
+  const [location] = useLocation();
+  const section: Section | null = location.startsWith('/game/story')
+    ? 'story'
+    : location === '/game/settings' ? 'profile' : null;
+  const ids = notices.filter(notice => section === notice.section && !notice.sticky).map(notice => notice.id).join('\n');
+  useEffect(() => {
+    if (!ids) return;
+    let timer: number | undefined;
+    const ready = () => document.visibilityState === 'visible' && !document.querySelector('dialog[open], [role="dialog"][data-state="open"]');
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (!ready()) return;
+      timer = window.setTimeout(() => { if (ready()) seen(ids.split('\n')); }, 700);
+    };
+    const dialogs = new MutationObserver(schedule);
+    dialogs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open', 'data-state'] });
+    document.addEventListener('visibilitychange', schedule);
+    schedule();
+    return () => {
+      window.clearTimeout(timer);
+      dialogs.disconnect();
+      document.removeEventListener('visibilitychange', schedule);
+    };
+  }, [ids, seen]);
+  return null;
 }
 export function Attention({ section, micro = false }: { section: string; micro?: boolean }) {
   const { has } = useNotifications();

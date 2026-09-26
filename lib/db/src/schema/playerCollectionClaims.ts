@@ -11,6 +11,10 @@ import { z } from "zod/v4";
 import { playerProfilesTable } from "./playerProfiles";
 
 export type CollectionRoadRewardRecord = {
+  /** Alert receipts are durable account state, not rewards. They share this
+   * per-player idempotent ledger so logout, a new browser, or a new deploy
+   * cannot resurrect already-read alerts. */
+  notificationReceipt?: { id: string };
   accountReward?: { key: string; title: string; softCurrency: number; packTickets: number; styleShards: number; streak?: number; date?: string };
   stockzBet?: { id: string; ticker: string; direction: 'up' | 'down'; stake: number; openPrice: number; closePrice: number; startedAt: string; closesAt: string; date: string };
   stockzSettlement?: { betId: string; payout: number };

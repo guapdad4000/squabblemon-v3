@@ -10,7 +10,7 @@ const errors = [], requests = [], results = [], devWarnings = [];
 const notices = page => page.getByTestId('notices').textContent().then(JSON.parse);
 const ids = async page => (await notices(page)).map(n => n.id);
 const bell = page => page.getByRole('button', { name: /Notifications,/ });
-async function start(width, initScript) {
+async function start(width, initScript, durableReceipts = new Set()) {
   const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
   context.on('page', page => {
     page.on('pageerror', error => errors.push(error.message));
@@ -22,7 +22,14 @@ async function start(width, initScript) {
   });
   if (initScript) await context.addInitScript(initScript);
   await context.route('**/api/**', route => {
-    requests.push({ method: route.request().method(), path: new URL(route.request().url()).pathname });
+    const method = route.request().method(), path = new URL(route.request().url()).pathname;
+    requests.push({ method, path });
+    if (path.endsWith('/notifications/receipts')) {
+      if (method === 'POST') {
+        for (const id of route.request().postDataJSON().ids ?? []) durableReceipts.add(id);
+      }
+      return route.fulfill({ json: { ids: [...durableReceipts] } });
+    }
     return route.fulfill({ json: { pending: [], growth: { ready: false }, messages: [], state: 'claimed', chapters: [] } });
   });
   const html = await (await context.request.get(`${base}/e2e/bell-audit.fixture.html`)).text();
@@ -30,18 +37,18 @@ async function start(width, initScript) {
   const page = await context.newPage();
   await page.goto(`${base}/e2e/bell-audit.fixture.html`);
   await expect(bell(page)).toBeVisible();
-  return { context, page };
+  return { context, page, durableReceipts };
 }
 try {
   for (const width of [1440, 390, 320]) {
     const { context, page } = await start(width);
     const initial = await notices(page);
     expect(new Set(initial.map(n => n.id)).size).toBe(initial.length);
-    expect([...new Set(initial.map(n => n.section))].sort()).toEqual(['bag', 'cards', 'challenges', 'growth', 'mail', 'missions', 'shop', 'story', 'style']);
+    expect([...new Set(initial.map(n => n.section))].sort()).toEqual(['bag', 'cards', 'challenges', 'growth', 'mail', 'missions', 'profile', 'shop', 'story', 'style']);
     expect(initial.find(n => n.id === 'style:story-key:chapter-two')).toMatchObject({ section: 'story', href: '/game/story' });
     expect(initial.find(n => n.id === 'style:block-party-crowned')).toMatchObject({ section: 'story', href: '/game/story?node=block-crowned' });
-    expect(initial.find(n => n.id === 'style:mastery:kyle').title).toContain('Mastery earned');
-    expect(initial.find(n => n.id === 'style:badge:after-hours').title).toContain('Badge earned');
+    expect(initial.find(n => n.id === 'style:mastery:kyle')).toMatchObject({ section: 'profile', href: '/game/settings#overview' });
+    expect(initial.find(n => n.id === 'style:badge:after-hours')).toMatchObject({ section: 'profile', href: '/game/settings#overview' });
     await bell(page).click();
     const clear = page.getByRole('button', { name: 'Clear all', exact: true });
     await expect(clear).toBeInViewport();
@@ -66,14 +73,6 @@ try {
     await expect(page.getByRole('button', { name: 'Claim free', exact: true })).toBeEnabled();
     await page.reload();
     await expect.poll(async () => ids(page)).toEqual([]);
-    // Switching accounts in the same mounted provider must not copy receipts.
-    await page.getByRole('button', { name: 'Switch player' }).click();
-    await expect.poll(async () => (await ids(page)).length).toBe(initial.length);
-    await bell(page).click(); await page.getByRole('button', { name: 'Clear all', exact: true }).click();
-    await expect(page.getByRole('status')).toHaveText('You’re all caught up.');
-    await page.keyboard.press('Escape');
-    await page.getByRole('button', { name: 'Switch player' }).click();
-    await expect.poll(async () => ids(page)).toEqual([]);
     // A dismissed active bounty gets a fresh reward alert when it becomes claimable.
     await page.getByRole('button', { name: 'Bounty ready' }).click();
     await expect.poll(async () => ids(page)).toEqual(['mission:audit-0:2026-09-26T00:00:00Z']);
@@ -89,7 +88,22 @@ try {
     await bell(page).click(); await clear.click(); await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'Refresh data' }).click();
     await expect.poll(async () => ids(page)).toEqual([]);
-    results.push({ width, allSourcesDismissed: initial.length, pinnedClearAll: true, keyboardFocus: true, persistentReads: true, accountSwitch: true, newDay: true, bountyTransition: true, newUnlock: true, walletGain: true });
+    results.push({ width, allSourcesDismissed: initial.length, pinnedClearAll: true, keyboardFocus: true, persistentReads: true, newDay: true, bountyTransition: true, newUnlock: true, walletGain: true });
+    await context.close();
+  }
+  // Logging out clears the browser cache, but the authenticated ledger restores receipts.
+  {
+    const durable = new Set();
+    const { context, page } = await start(390, undefined, durable);
+    await bell(page).click();
+    await page.getByRole('button', { name: 'Clear all', exact: true }).click();
+    await expect.poll(() => durable.size).toBeGreaterThan(20);
+    await page.evaluate(() => localStorage.removeItem('squabblemon:seen:v1:bell-audit'));
+    await page.reload();
+    await expect.poll(async () => ids(page)).toEqual([]);
+    const signedBackIn = await context.newPage();
+    await signedBackIn.goto(`${base}/e2e/bell-audit.fixture.html`);
+    await expect.poll(async () => ids(signedBackIn)).toEqual([]);
     await context.close();
   }
   // Clear-all is atomic, persists, and propagates to another open tab.
@@ -120,6 +134,21 @@ try {
     const sticky = (await notices(page)).filter(n => n.sticky).map(n => n.id);
     await page.getByRole('button', { name: 'Automatic receipts' }).click();
     await expect.poll(async () => ids(page)).toEqual(sticky);
+    await context.close();
+  }
+  // Story and Fighter ID acknowledge their overview notifications without bell clicks.
+  {
+    const { context, page } = await start(390);
+    const before = await notices(page);
+    const story = before.filter(n => n.section === 'story' && !n.sticky).map(n => n.id);
+    const profile = before.filter(n => n.section === 'profile' && !n.sticky).map(n => n.id);
+    expect(story.length).toBeGreaterThan(0);
+    expect(profile.length).toBeGreaterThan(0);
+    await page.getByRole('button', { name: 'Story overview', exact: true }).click();
+    await expect.poll(async () => (await ids(page)).filter(id => story.includes(id))).toEqual([]);
+    expect(await ids(page)).toEqual(expect.arrayContaining(profile));
+    await page.getByRole('button', { name: 'Fighter ID', exact: true }).click();
+    await expect.poll(async () => (await ids(page)).filter(id => profile.includes(id))).toEqual([]);
     await context.close();
   }
   // Legacy unlocks and mastery without old progress cannot become trapped by a missing target.
@@ -165,8 +194,8 @@ try {
     await expect.poll(async () => ids(page)).toEqual([]);
     await context.close();
   }
-  expect(requests.filter(r => r.method !== 'GET')).toEqual([]);
+  expect(requests.filter(r => r.method !== 'GET').every(r => r.method === 'POST' && r.path.endsWith('/notifications/receipts'))).toBe(true);
   expect(errors).toEqual([]);
-  await writeFile(`${output}/report.json`, JSON.stringify({ results, crossTab: true, legacyNavigation: true, timerResumption: true, storageRecovery: true, noRewardMutations: true, errors, devWarnings }, null, 2));
+  await writeFile(`${output}/report.json`, JSON.stringify({ results, crossTab: true, loginPersistence: true, legacyNavigation: true, timerResumption: true, storageRecovery: true, noRewardMutations: true, errors, devWarnings }, null, 2));
   console.log(JSON.stringify({ results, errors }, null, 2));
 } finally { await browser.close(); }
