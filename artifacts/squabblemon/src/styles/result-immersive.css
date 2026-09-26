@@ -150,3 +150,4 @@ html[data-reduce-motion=true] .result-immersive__gloves { animation:none; }
 @media(max-height:700px) and (max-aspect-ratio:1/1) { .result-immersive { padding-top:19svh; } .result-immersive__plaque { padding-top:58px; } }
 @media(max-height:500px) and (min-aspect-ratio:1/1) { .result-immersive__plaque { padding-top:54px; } }
 @media(max-height:500px) and (min-aspect-ratio:1/1) { .result-immersive { padding-top:36px; } .result-immersive__results { gap:4px; } }
+.result-immersive--loss .result-immersive__gloves { animation:none; }
