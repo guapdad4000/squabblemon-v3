@@ -37,6 +37,10 @@
   box-sizing: border-box;
 }
 /* Decorative layers also fill the space beneath the translucent header. */
+.game-shell__content .safehouse-stage > :is(.venue-scene, .safehouse__shade) {
+  position: fixed;
+  inset: 0;
+}
 .game-shell__content .game-route-stage > :is(.decks-spectacle, .deck-editor-screen) > .gang-backdrop {
   top: calc(-1 * var(--city-header-height));
 }
