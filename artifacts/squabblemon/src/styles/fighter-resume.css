@@ -938,6 +938,19 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
   height: 110px;
   z-index: 4;
 }
+.card-inspector-shell .dossier-paper > .dossier-brand {
+  position: absolute;
+  top: -12px;
+  right: 12px;
+  width: clamp(110px, 18vw, 174px);
+  max-width: calc(100% - 112px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px #21150380);
+  pointer-events: none;
+  user-select: none;
+  z-index: 4;
+}
 .card-inspector-shell .dossier-banner {
   gap: 8px 14px;
   margin-bottom: 12px;
@@ -980,6 +993,7 @@ body:has(.card-inspector-shell) :is(.fan-nav, .cinema-nav-toggle) {
   .card-inspector-shell .card-inspector-layout { height: auto; }
   .card-inspector-shell .dossier-paper.referee-clipboard { padding-top: 35px !important; max-height: none; overflow: visible; }
   .card-inspector-shell .dossier-paper.referee-clipboard > .dr-fade-referee { top: -30px; width: 64px; height: 64px; }
+  .card-inspector-shell .dossier-paper > .dossier-brand { width: 124px; }
   .card-inspector-shell .dossier-banner__stamp { display: none; }
 }
 

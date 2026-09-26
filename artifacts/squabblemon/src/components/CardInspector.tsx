@@ -18,6 +18,7 @@ import { CardRarityTreatment, getRarityClass } from './CardRarityTreatment';
 import { CardUpgrades } from './CardUpgrades';
 import { snapshotUpgradesForCard } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { CARD_FINISH, cardMotionReduced, cardFinishLabel, VARIANT_FINISH, getCardWallpaper } from '../lib/cardFinish';
+import { getAssetUrl } from '../lib/assets';
 import '../styles/collection-inspector.css';
 import '../styles/fighter-resume.css';
 
@@ -176,6 +177,15 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
             ============================================================ */}
         <div className={`dossier-paper referee-clipboard relative w-full ${catalogCard ? getRarityClass(catalogCard.rarity) : ''}`}>
           <DrFadeReferee />
+          <img
+            className="dossier-brand"
+            src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-gold.webp')}
+            alt="Squabblemon"
+            width={1440}
+            height={486}
+            draggable={false}
+            decoding="async"
+          />
           <span className="dossier-stripe" aria-hidden="true" />
           <span className="dossier-mark" aria-hidden="true" />
 
