@@ -24,3 +24,55 @@ test('saved challenge runs stay on the road until the player explicitly continue
   assert.equal(selectedChallengeRun(runs, null), undefined);
   assert.equal(selectedChallengeRun(runs, settled.id), settled);
 });
+
+const levelReceipt = (level: number) => ({ id: `level-player:${level}`, title: 'Level up', level, items: [{ label: `Level ${level}` }] });
+test('level rewards wait for a results exit and hold the next screen until dismissed', () => {
+  rewardReceipts.reset();
+  let continued = 0, acknowledged = 0;
+  rewardReceipts.deferLevel(levelReceipt(2), () => acknowledged++);
+  assert.equal(rewardReceipts.current(), null, 'a profile refresh must not interrupt the victory screen');
+  const cancel = rewardReceipts.leaveBattleResults(() => continued++);
+  assert.equal(rewardReceipts.current()?.level, 2);
+  assert.equal(continued, 0, 'the next scene must not start its audio under level-up');
+  assert.equal(acknowledged, 0);
+  rewardReceipts.dismiss();
+  assert.equal(continued, 1);
+  assert.equal(acknowledged, 1);
+  cancel?.();
+  rewardReceipts.dismiss();
+  assert.equal(continued, 1);
+  rewardReceipts.deferLevel(levelReceipt(2));
+  assert.equal(rewardReceipts.leaveBattleResults(() => continued++), null, 'refreshes do not replay an acknowledged level');
+  rewardReceipts.reset();
+});
+test('multiple earned levels make one celebration; other reward receipts remain available', () => {
+  rewardReceipts.reset();
+  rewardReceipts.show(levelReceipt(2));
+  rewardReceipts.deferLevel(levelReceipt(4));
+  rewardReceipts.deferLevel(levelReceipt(3));
+  rewardReceipts.show({ id: 'haul', title: 'Earnings', items: [{ label: 'Clout', amount: 50 }] });
+  assert.equal(rewardReceipts.current()?.id, 'haul');
+  rewardReceipts.dismiss();
+  assert.equal(rewardReceipts.current(), null);
+  rewardReceipts.leaveBattleResults(() => {});
+  assert.equal(rewardReceipts.current()?.level, 4);
+  rewardReceipts.dismiss();
+  assert.equal(rewardReceipts.current(), null);
+  assert.equal(rewardReceipts.leaveBattleResults(() => {}), null);
+  rewardReceipts.reset();
+});
+test('changing route or player cancels a deferred results action', () => {
+  rewardReceipts.reset();
+  let continued = 0;
+  rewardReceipts.deferLevel(levelReceipt(2));
+  const cancel = rewardReceipts.leaveBattleResults(() => continued++);
+  cancel?.();
+  rewardReceipts.dismiss();
+  assert.equal(continued, 0);
+  rewardReceipts.deferLevel(levelReceipt(3));
+  rewardReceipts.leaveBattleResults(() => continued++);
+  rewardReceipts.reset();
+  rewardReceipts.dismiss();
+  assert.equal(continued, 0);
+  assert.equal(rewardReceipts.leaveBattleResults(() => {}), null);
+});

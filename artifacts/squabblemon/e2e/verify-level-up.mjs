@@ -1,90 +1,96 @@
-import assert from "node:assert/strict";
-import { mkdir } from "node:fs/promises";
-import { chromium } from "@playwright/test";
-import { fadecadeBootstrap } from "./fadecade.fixture.ts";
-const origin = process.env.UI_ORIGIN ?? "http://127.0.0.1:4198";
-assert(["127.0.0.1", "localhost"].includes(new URL(origin).hostname));
-const browser = await chromium.launch({
-  executablePath: process.env.BROWSER_EXECUTABLE ?? "/usr/bin/google-chrome",
-  headless: true,
-});
-const errors = [];
-await mkdir("screenshots/release", { recursive: true });
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium } from '@playwright/test';
+const origin = process.env.UI_ORIGIN ?? 'http://127.0.0.1:4198';
+assert(['127.0.0.1', 'localhost'].includes(new URL(origin).hostname));
+const output = process.env.REVIEW_DIR ?? '../deliverables/level-up-review';
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--autoplay-policy=no-user-gesture-required'] });
+const results = [];
 try {
-  for (const [name, viewport, reducedMotion] of [
-    ["desktop", { width: 1440, height: 1000 }, "no-preference"],
-    ["phone", { width: 390, height: 844 }, "no-preference"],
-    ["reduced", { width: 390, height: 844 }, "reduce"],
+  for (const [name, width, height, query, reducedMotion] of [
+    ['desktop', 1440, 1000, '', 'no-preference'],
+    ['phone', 390, 844, '', 'no-preference'],
+    ['small-phone', 320, 568, '', 'no-preference'],
+    ['landscape', 844, 390, '', 'no-preference'],
+    ['tablet', 768, 1024, '', 'no-preference'],
+    ['reduced', 390, 844, '', 'reduce'],
+    ['loss', 390, 844, '?outcome=loss', 'reduce'],
+    ['draw', 1440, 1000, '?outcome=draw', 'reduce'],
+    ['story', 390, 844, '?flow=story', 'reduce'],
+    ['challenge', 768, 1024, '?flow=challenge', 'reduce'],
+    ['online-exit', 390, 844, '?flow=online', 'reduce'],
+    ['online-rematch', 1440, 1000, '?flow=online', 'reduce'],
+    ['no-level', 390, 844, '?level=1', 'reduce'],
   ]) {
-    const context = await browser.newContext({ viewport, reducedMotion });
-    const bootstrap = fadecadeBootstrap();
-    bootstrap.profile.level = 2;
-    bootstrap.profile.xp = 250;
-    await context.addInitScript((id) => {
-      localStorage.setItem("squabblemon_e2e_user", "signed-in");
-      localStorage.setItem(`squabblemon:level-seen:${id}`, "1");
-    }, bootstrap.profile.id);
-    await context.route("**/api/player/**", (route) =>
-      route.fulfill({
-        json: route.request().url().endsWith("/bootstrap")
-          ? bootstrap
-          : {
-              date: "2026-09-24",
-              streak: 1,
-              claimedToday: false,
-              pending: [],
-              nextResetAt: "2026-09-25T00:00:00Z",
-            },
-      }),
-    );
-    const page = await context.newPage();
-    page.on("pageerror", (error) => {
-      errors.push(error.message);
-      console.log("PAGE ERROR", error.message);
+    const context = await browser.newContext({ viewport: { width, height }, reducedMotion });
+    await context.addInitScript(() => {
+      localStorage.setItem('squabblemon:level-seen:fadecade-player', '1');
+      localStorage.setItem('squabblemon_battle_feedback', JSON.stringify({ audioEnabled: true, hapticsEnabled: false }));
+      window.__voices = [];
+      window.__overlaps = [];
+      const NativeAudio = window.Audio;
+      window.Audio = class extends NativeAudio {
+        constructor(src) {
+          super(src);
+          if (!src?.includes('/audio/voice/')) return;
+          const record = { src, audio: this, plays: 0 };
+          window.__voices.push(record);
+          this.addEventListener('playing', () => {
+            record.plays++;
+            const active = window.__voices.filter(v => !v.audio.paused && !v.audio.ended);
+            if (active.length > 1) window.__overlaps.push(active.map(v => v.src));
+          });
+        }
+      };
     });
-    await page.goto(origin + "/game/collection");
-    await page
-      .locator(".level-moment")
-      .waitFor({ timeout: 15000 })
-      .catch(async (error) => {
-        console.log((await page.locator("body").innerText()).slice(0, 2500));
-        await page.screenshot({ path: "screenshots/release/level-error.png" });
-        throw error;
-      });
-    await page.getByText("APPLYING PRESSURE!", { exact: true }).waitFor();
-    await page.waitForTimeout(1700);
-    assert.equal(
-      await page.locator(".level-moment__orbit--fists img").count(),
-      10,
-    );
-    assert.equal(
-      await page.locator(".level-moment__orbit--boots img").count(),
-      8,
-    );
-    assert(
-      await page
-        .locator(".level-moment__rays img")
-        .evaluateAll((imgs) =>
-          imgs.every((img) => img.complete && img.naturalWidth > 0),
-        ),
-    );
-    await page.screenshot({ path: `screenshots/release/level-up-${name}.png` });
-    const button = page.getByRole("button", { name: "Keep applying pressure" });
-    const b = await button.boundingBox();
-    assert(b && b.y >= 0 && b.y + b.height <= viewport.height);
-    if (reducedMotion === "reduce")
-      assert.equal(
-        await page
-          .locator(".level-moment__orbit--fists")
-          .evaluate((el) => getComputedStyle(el).animationName),
-        "none",
-      );
-    await button.click();
-    await page.getByRole("dialog").waitFor({ state: "hidden" });
-    console.log("PASS level-up", name);
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto(origin + '/e2e/level-up.fixture.html' + query);
+    await page.getByTestId('profile-level').filter({ hasText: name === 'no-level' ? '1' : '2' }).waitFor();
+    await page.waitForTimeout(250);
+    assert.equal(await page.locator('.level-moment').count(), 0, 'level-up waits while results are visible');
+    assert.equal(await page.evaluate(() => window.__voices.filter(v => v.src.includes('/events/level-')).length), 0);
+    if (name === 'desktop') {
+      await page.getByTestId('button-inspect-final-board').click();
+      assert.equal(await page.locator('.level-moment').count(), 0, 'board inspection is not a results exit');
+      await page.getByRole('button', { name: 'View result', exact: true }).click();
+    }
+    if (name.startsWith('online')) await page.getByRole('button', { name: name.endsWith('rematch') ? 'Ask for a rematch' : 'Back to friend fades', exact: true }).click();
+    else if (name === 'story') await page.getByRole('button', { name: 'Continue Chapter' }).click();
+    else if (name === 'challenge') await page.getByRole('button', { name: 'Return to the road' }).click();
+    else await page.getByTestId('button-restart-match').click();
+    if (name !== 'no-level') {
+      await page.locator('.level-moment').waitFor();
+      assert.equal(await page.getByTestId('level-destination').count(), 0, 'the next scene is held until the level-up closes');
+      await page.waitForFunction(() => window.__voices.some(v => v.src.includes('/events/level-') && v.plays === 1));
+      await page.waitForTimeout(1400);
+      assert.equal(await page.locator('.level-moment__orbit--outer-fists img').count(), 8);
+      assert.equal(await page.locator('.level-moment img[src*="boot"]').count(), 0);
+      assert(await page.locator('.level-moment__rays img').evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0)));
+      assert.equal(await page.evaluate(() => window.__voices.filter(v => v.src.includes('/events/level-')).length), 1, 'exactly one level-up take');
+      assert.equal(await page.evaluate(() => window.__voices.some(v => /\/(win-[ab]|loss)\./.test(v.src) && !v.audio.paused && !v.audio.ended)), false, 'result voice is stopped before the celebration');
+      const button = page.getByRole('button', { name: 'Keep applying pressure' });
+      const bounds = await button.boundingBox();
+      assert(bounds && bounds.y >= 0 && bounds.y + bounds.height <= height);
+      if (reducedMotion === 'reduce') assert.equal(await page.locator('.level-moment__star svg').evaluate(el => getComputedStyle(el).animationName), 'none');
+      if (['desktop', 'phone', 'small-phone', 'landscape', 'tablet', 'reduced'].includes(name)) await page.screenshot({ path: `${output}/${name}.png` });
+      if (name === 'reduced') await page.keyboard.press('Escape');
+      else await button.click();
+      await page.locator('.level-moment').waitFor({ state: 'hidden' });
+      assert.equal(await page.evaluate(() => window.__voices.filter(v => v.src.includes('/events/level-')).every(v => v.audio.paused)), true);
+      assert.equal(await page.evaluate(() => localStorage.getItem('squabblemon:level-seen:fadecade-player')), '2');
+    }
+    await page.getByTestId('level-destination').waitFor();
+    await page.waitForFunction(() => window.__voices.some(v => v.src.includes('/home-fade.') && v.plays === 1));
+    assert.deepEqual(await page.evaluate(() => window.__overlaps), [], 'voices never overlap across the handoff');
+    assert.deepEqual(errors, []);
+    results.push({ name, width, height, result: 'passed' });
+    console.log('PASS', name);
     await context.close();
   }
-  assert.deepEqual(errors, []);
 } finally {
   await browser.close();
+  await writeFile(`${output}/verification.json`, JSON.stringify(results, null, 2));
 }

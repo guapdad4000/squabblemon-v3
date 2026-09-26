@@ -58,15 +58,21 @@ export function LevelUpMoment({
             />
           ))}
         </div>
-        <div className="level-moment__orbit level-moment__orbit--boots">
+        <div className="level-moment__orbit level-moment__orbit--outer-fists">
           {Array.from({ length: 8 }, (_, index) => (
             <img
               key={index}
-              src={getAssetUrl("assets/progression/boot-ray-v2.webp")}
+              src={getAssetUrl("assets/progression/raised-fist.webp")}
               style={{ "--angle": `${index * 45 + 22}deg` } as CSSProperties}
               alt=""
             />
           ))}
+        </div>
+        <div className="level-moment__star">
+          <svg viewBox="0 0 200 200" focusable="false">
+            <path d="M100 8 125 69 191 75 140 119 156 184 100 149 44 184 60 119 9 75 75 69Z" />
+            <path className="level-moment__star-inset" d="M100 28 120 79 174 84 132 121 145 173 100 144 55 173 68 121 26 84 80 79Z" />
+          </svg>
         </div>
       </motion.div>
       <div className="level-moment__grain" aria-hidden="true" />
