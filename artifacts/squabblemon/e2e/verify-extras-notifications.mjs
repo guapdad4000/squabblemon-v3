@@ -44,14 +44,14 @@ try {
     await expect.poll(async () => extras(await unread(second)).length).toBe(2);
     await page.bringToFront();
     await page.getByRole('button', { name: 'The Extras', exact: true }).click();
-    await expect(page.getByText('No collections match this filter.', { exact: false })).toBeVisible();
+    await expect(page.getByText('No looks on this rack.', { exact: false })).toBeVisible();
     await page.getByRole('button', { name: /Notifications,/ }).click();
     await page.waitForTimeout(850);
     expect(extras(await unread(page))).toHaveLength(2);
     await page.getByRole('button', { name: 'Close notifications' }).click();
     await expect.poll(async () => extras(await unread(page)).length).toBe(0);
     await expect.poll(async () => extras(await unread(second)).length).toBe(0);
-    await expect(page.locator('.style-library .attention-mark')).toHaveCount(0);
+    await expect(page.locator('.extras-studio .attention-mark')).toHaveCount(0);
     expect(await unread(page)).toEqual(expect.arrayContaining(kept));
     await page.getByRole('searchbox', { name: 'Search signature collections' }).fill('');
     await page.screenshot({ path: `${out}/extras-cleared-${width}.png` });

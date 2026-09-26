@@ -21,7 +21,7 @@ import '../../styles/character-styles.css';
 export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: PlayerBootstrap; cardId?: string }) {
   const { profile } = bootstrap;
   const set = styleSetFor(cardId), card = catalogCardById[cardId];
-  useExtrasNotificationsSeen(cardId, Boolean(set && card));
+  useExtrasNotificationsSeen(cardId, Boolean(set && card && profile.ownedCardIds.includes(cardId)));
   const client = useQueryClient();
   const [tab, setTab] = useViewMemory<'stickers' | 'banner' | 'scene'>(`style-tab:${profile.id}:${cardId}`, 'stickers');
   const [finish, setFinish] = useState<'base' | 'silver'>('base');
@@ -35,6 +35,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const preview = e2eAuthEnabled && profile.id === 'e2e-player';
   if (!set || !card) return <main className="character-styles"><h1>This collection is still in the works.</h1></main>;
   const owned = profile.ownedCardIds.includes(cardId);
+  if (!owned) return <main className="character-styles" data-testid="locked-character-style"><p className="style-kicker">THE EXTRAS / COLLECTION LOCKED</p><h1>Unlock {card.name} first.</h1><p className="style-notice">Their stickers, banners and card scenes become available once this character joins your collection.</p><Link className="style-button" href="/game/style">Back to The Extras</Link></main>;
   const equipped = profile.settings.cosmetics ?? {};
   const offerId: CharacterStyleOfferId = tab === 'stickers' ? 'character-stickers' : tab === 'scene' ? 'character-backdrop' : 'character-banner-finish';
   const offer = CHARACTER_STYLE_OFFERS.find(item => item.id === offerId)!;
