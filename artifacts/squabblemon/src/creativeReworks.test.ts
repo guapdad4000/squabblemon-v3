@@ -121,15 +121,14 @@ for (const owner of ["player", "cpu"] as const) {
       0,
     );
   });
-  test(`${owner}: Mr Trick pays for real damage only, then consumes his Tab`, () => {
+  test(`${owner}: Mr Trick pays for the next guest's real damage, then consumes his Tab`, () => {
     let m = blank();
-    const informant = unit("inmate-informant", owner, 0),
-      victim = unit("og", enemy, 0);
-    m.boards = [[informant, victim], [], []];
+    const victim = unit("og", enemy, 0);
+    m.boards = [[victim], [], []];
     m = cast(m, "mr-trick", owner).after;
-    // Oz repeats the sponsor's entrance while retaining the sponsor's instance identity.
-    m = { ...m, entranceHistory: [informant.instanceId] };
-    m = cast(m, "oz", owner).after;
+    const played = cast(m, "inmate-informant", owner);
+    const informant = played.source;
+    m = played.after;
     assert.equal(m.creativeMarks?.find((x) => x.kind === "tab")?.amount, 1);
     const prior = find(m, informant)!.powerModifier;
     m = end(m);
@@ -412,7 +411,10 @@ for (const owner of ["player", "cpu"] as const) {
       } else {
         const arrival = cast(m, "og", owner);
         assert.equal(find(arrival.after, arrival.source)?.powerModifier, 2);
-        assert(!kinds(arrival.after).includes("chill"));
+        assert.equal(
+          arrival.after.creativeMarks?.find((x) => x.kind === "chill")?.amount,
+          1,
+        );
       }
     }
   });
@@ -458,7 +460,11 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "torta", owner).after;
     m = end(end(m));
     assert.equal(find(m, a)?.powerModifier, 2);
-    assert.equal(find(m, b)?.powerModifier, 2);
+    assert.equal(find(m, b)?.powerModifier, 0);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "torta")?.powerModifier,
+      2,
+    );
     m = blank();
     const child = unit("edgar", owner, 0);
     m.boards = [[child], [], []];
@@ -467,7 +473,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "cognac", owner).after;
     m = end(end(m));
     assert(find(m, child)?.statuses.protected);
-    assert.equal(find(m, child)?.powerModifier, 6);
+    assert.equal(find(m, child)?.powerModifier, 5);
     const loner = cast(blank(), "incel", owner);
     m = end(end(end(loner.after)));
     assert.equal(find(m, loner.source)?.powerModifier, 4);
@@ -530,7 +536,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "edgar", owner).after;
     assert.equal(
       getLegalCardCost(m, owner, createCardInstance("og", owner), 0),
-      4,
+      3,
     );
     m = end(m);
     assert.equal(
@@ -762,7 +768,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, dancer)?.powerModifier, 3);
     assert.equal(find(m, captain)?.creativeCount, 1);
   });
-  test(`${owner}: Busker takes only one Tip per round and consumes two on payment`, () => {
+  test(`${owner}: Busker carries unfinished Tips across rounds and consumes two on payment`, () => {
     let m = blank();
     const busker = unit("busker", owner, 0),
       first = unit("cornball", owner, 1),

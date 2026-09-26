@@ -1,4 +1,4 @@
-import { REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
+import { creativeStatusApplied, creativePreventDamage, creativeCanCross, REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
 export { blockbusterExtraCost } from './blockbusterRules';
 import { blockbusterWaveCards } from './blockbusterWave';
 import { resolveBlockbusterWave, blockbusterExtraCost, type LaneDamage, type DiceResult, type BlockbusterTools } from './blockbusterRules';
@@ -105,6 +105,8 @@ export type CardInstance = Card & {
   instanceId: string; cardId: string; owner: Owner; lane: Lane | null; playedRound: number | null;
   basePower: number; powerModifier: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
   /** Bounded progress for the creative card kits. */
+  creativeEntranceSucceeded?: boolean;
+  creativeTipIds?: string[];
   creativeUsed?: Record<string, boolean>;
   creativeVisits?: Lane[];
   creativeAhead?: boolean;
@@ -196,6 +198,7 @@ const freshDistrictRuntime = (): DistrictRuntime => ({
   plays: { player: [0, 0, 0], cpu: [0, 0, 0] }, roundPlays: { player: [0, 0, 0], cpu: [0, 0, 0] },
   trailing: { player: [false, false, false], cpu: [false, false, false] }, trappedCardIds: [], detainedCardIds: [],
 });
+const DAMAGE_OWNER = Symbol("squabblemon.current-damage-owner");
 const SUPPRESS_PRESENTATION_EVENTS = Symbol("squabblemon.search-without-presentation-events");
 type LeaderKind = 'church' | 'nightmedic' | 'piratedj' | 'promoter' | 'gamer' | 'counter'
   | 'streetapostle' | 'fangirl' | 'asphaltapostle' | 'passportbro';
@@ -221,6 +224,7 @@ export type Match = {
   /** Reactions settle after the triggering action, separately from its upgrade checks. */
   pendingLeaderReactions?: LeaderReaction[];
   lingeringScents?: LingeringScent[];
+  [DAMAGE_OWNER]?: Owner;
   [SUPPRESS_PRESENTATION_EVENTS]?: true;
   /** Absent only for pre-location matches and their legacy transcripts. */
   districtSnapshot?: DistrictSnapshot;
@@ -650,6 +654,12 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
   const before = m.boards.flat().find(c => c.instanceId === id);
   if (!before) return m;
   let after = change(before);
+  if(after.powerModifier<before.powerModifier) {
+    const prevented=creativePreventDamage(m,before,before.powerModifier-after.powerModifier,m[DAMAGE_OWNER]);
+    const absorbed=before.powerModifier-after.powerModifier-prevented.amount;
+    m=prevented.match;
+    after={...after,powerModifier:before.powerModifier-prevented.amount,...(absorbed?{lastEffectNote:after.lastEffectNote+' Emergency Kit prevented '+absorbed+' Hands of damage.'}:{})};
+  }
   const delta = after.powerModifier - before.powerModifier;
   if (abilityCardId(before) === 'homelesslegend' && delta < 0) {
     after = { ...after, recoverableDamage: (before.recoverableDamage ?? 0) + Math.min(-delta, Math.max(0, before.basePower + before.powerModifier)) };
@@ -694,7 +704,7 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string, def
   if (m.districtRuntime?.detainedCardIds.includes(card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'COUNTY JAIL blocked movement.' }));
   }
-  if (card.statuses.locked) {
+  if (card.statuses.locked && !creativeCanCross(m,card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'LOCKED: cannot be moved.' }));
   }
   const effect = m.districtSnapshot?.locations[destination].effect;
@@ -935,10 +945,10 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       result = janitorReversal;
       continue;
     }
-    result = modify(result, card.instanceId, c => ({ ...c,
+    result = withDamageOwner(result,currentBurning.burnSource?.owner,state=>modify(state, card.instanceId, c => ({ ...c,
       powerModifier: c.powerModifier - damage, statuses: { ...c.statuses, burnStacks: 0 },
       lastEffectNote: 'BURN: −' + damage + ' Hands at round end.',
-    }));
+    })));
     if (damage > 0 && card.basePower + card.powerModifier > 0) {
       const enemy = card.owner === 'player' ? 'cpu' : 'player';
       (burnedLanes[enemy] ??= new Set()).add(card.lane!);
@@ -1121,6 +1131,13 @@ const addDiscountToken = (m: Match, owner: Owner, source: CardInstance, eligibil
     id: `discount:${owner}:${order}`, owner, sourceInstanceId: source.instanceId, eligibility, sourceLane: source.lane, createdOrder: order,
   }] };
 };
+/** Attribute reductions before lethal handling; nested hits restore the outer source. */
+function withDamageOwner(m:Match,owner:Owner|undefined,apply:(m:Match)=>Match):Match {
+  const result=apply({...m,[DAMAGE_OWNER]:owner});
+  if(m[DAMAGE_OWNER]!==undefined)return {...result,[DAMAGE_OWNER]:m[DAMAGE_OWNER]};
+  const {[DAMAGE_OWNER]:_context,...clean}=result;
+  return clean;
+}
 /** One hostile package: interception and Protection run once, before its effects. */
 const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   apply: (match: Match, card: CardInstance) => Match, bypassWifeyGuard = false, intercepted = false, honorImmunity = false): Match => {
@@ -1161,14 +1178,14 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
       protected: remaining.some(e => (e.targetInstanceId === target.instanceId && (e.kind === 'church-protection' || e.kind === 'salon-protection'))
         || (e.kind === 'wifey-protection' && e.sourceInstanceId === target.instanceId)) },
       lastEffectNote: shield.kind === 'salon-protection' ? 'NAIL SALON blocked a targeted hostile ability.' : 'Covered blocked a targeted hostile ability.' }));
-    return creativeShieldBroken(queueLeaderReaction({ ...cleared, timedEffects: remaining }, 'church', target.instanceId, m), source, target, creativeTools());
+    return creativeShieldBroken(queueLeaderReaction({ ...cleared, timedEffects: remaining }, 'church', target.instanceId, m), source, target, creativeTools(), shield.sourceInstanceId);
   }
   const targetLane = target.lane ?? m.boards.findIndex(items => items.some(c => c.instanceId === target.instanceId)) as Lane;
   const guard = inLane(m, target.owner, targetLane).find(c => abilityCardId(c) === 'wifey' && c.statuses.protected && !c.statuses.silenced && !c.statuses.blocked);
-  if (guard && !bypassWifeyGuard) return queueLeaderReaction(modify(m, guard.instanceId, c => ({
+  if (guard && !bypassWifeyGuard) return creativeShieldBroken(queueLeaderReaction(modify(m, guard.instanceId, c => ({
     ...c, statuses: { ...c.statuses, blocked: true }, lastEffectNote: 'Side Eye blocked a targeted effect.',
-  })), 'church', target.instanceId, m);
-  const attempted = apply(m, target);
+  })), 'church', target.instanceId, m), source, target, creativeTools());
+  const attempted = withDamageOwner(m,abilityCardId(source)==='thefeds'?undefined:source.owner,state=>apply(state,target));
   const attemptedTarget = findCard(attempted, target.instanceId);
   const harmfulStatus = attemptedTarget && (
     (!target.statuses.frozen && attemptedTarget.statuses.frozen)
@@ -1177,12 +1194,14 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
     || (!target.statuses.locked && attemptedTarget.statuses.locked)
     || attemptedTarget.statuses.burnStacks > target.statuses.burnStacks
   );
-  const harmful = !attemptedTarget || attemptedTarget.powerModifier < target.powerModifier || harmfulStatus;
+  const kitSpent=m.creativeMarks?.some(x=>x.kind==='kit'&&x.targets.includes(target.instanceId)&&!attempted.creativeMarks?.some(y=>y.id===x.id));
+  const harmful = !attemptedTarget || attemptedTarget.powerModifier < target.powerModifier || harmfulStatus || kitSpent;
   if (harmful) {
     const reversed = reverseWithJanitor(m, target, source.owner);
     if (reversed) return reversed;
   }
-  const after = creativeAppeal(m, attempted, target, source, creativeTools()) ?? attempted;
+  const appealed = creativeAppeal(m, attempted, target, source, creativeTools()) ?? attempted;
+  const after = creativeStatusApplied(m,appealed,source,target.instanceId);
   return abilityCardId(source) === 'thefeds' ? after : recordDamage(m, after, source, target);
 };
 /** Focused reversal shared by targeted hostile packages and enemy-sourced Burn ticks. */
@@ -1273,7 +1292,7 @@ const forceEnemyMove = (m: Match, source: CardInstance, target: CardInstance, de
 const forceMoveUnshielded = (state: Match, actual: CardInstance, destination: Lane): Match => {
     const anchored = creativeAnchor(state, actual, creativeTools());
     if (anchored) return anchored;
-    if (actual.statuses.uncounterable || actual.statuses.locked || state.districtRuntime?.detainedCardIds.includes(actual.instanceId)
+    if (actual.statuses.uncounterable || (actual.statuses.locked && !creativeCanCross(state,actual.instanceId)) || state.districtRuntime?.detainedCardIds.includes(actual.instanceId)
       || actual.lane === destination || getStoryLockedLanes(state, actual.owner).includes(destination)) {
       return modify(state, actual.instanceId, c => ({ ...c, lastEffectNote: 'Wrong Block: movement blocked.' }));
     }
@@ -1432,7 +1451,7 @@ function returnAliceAtRoundEnd(m: Match): Match {
   return m;
 }
 function canMoveTo(m: Match, card: CardInstance, destination: Lane): boolean {
-  return card.lane !== null && card.lane !== destination && !card.hazard && !card.statuses.locked
+  return card.lane !== null && card.lane !== destination && !card.hazard && (!card.statuses.locked || creativeCanCross(m,card.instanceId))
     && !m.districtRuntime?.detainedCardIds.includes(card.instanceId) && !getStoryLockedLanes(m, card.owner).includes(destination);
 }
 function undercovaReaction(m: Match, beforePlay: Match, id: string, origin: Lane, owner: Owner): Match {
@@ -1993,7 +2012,17 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       note(`Ratio'd Receipts targeted ${t.name} (2 Burn + ${Math.abs(amount)} immediate Hands loss).`);
     } else note("Ratio'd Receipts found no enemy.");
   }
-  else if (source.cardId === 'nerd') { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemy(m, source, t, (c) => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: 'Unaware: silenced.' }), true); note('Unaware targeted the highest enemy through Side Eye.'); } else note('Unaware found no enemy.'); }
+  else if (source.cardId === 'nerd') {
+    const t = highest(inLane(m, enemy, l));
+    if(t) {
+      targetIds.add(t.instanceId);
+      m=targetEnemy(m,source,t,c=>({...c,statuses:{...c.statuses,silenced:true},lastEffectNote:'Unaware: silenced.'}),true);
+      const disabled=activeAbility(t)&&(t.effect.includes('Ongoing:')||['wifey','bossbabe'].includes(abilityCardId(t)))&&findCard(m,t.instanceId)?.statuses.silenced;
+      const revealed=disabled?[...(enemy==='player'?m.playerHand:m.cpuHand)].sort((a,b)=>a.instanceId.localeCompare(b.instanceId))[0]:undefined;
+      if(revealed)targetIds.add(revealed.instanceId);
+      note('Unaware targeted the highest enemy through Side Eye.'+(revealed?' Read the source: revealed '+revealed.name+' ('+revealed.cost+' Motion).':''));
+    } else note('Unaware found no enemy.');
+  }
   else if (source.cardId === 'cornball') {
     let burned = 0;
     for (const t of inLane(m, enemy, l)) {
@@ -2736,7 +2765,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       m = targetEnemyPowerReduction(m, source, target, -amount, `${source.ability}: -${amount} Hands.`);
     };
     const cleanse = (target: CardInstance, amount: number) => {
-      if (source.cardId === 'foodz' ? !needsCleanse(target) : !target.statuses.frozen && !target.statuses.silenced) return;
+      if (source.cardId === 'foodz' ? !needsCleanse(target) && !m.creativeMarks?.some(x=>x.kind==='pending-appeal'&&x.targets.includes(target.instanceId)) : !target.statuses.frozen && !target.statuses.silenced) return;
       targetIds.add(target.instanceId);
       m = cleanseAlly(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed${amount ? `, +${amount} Hands` : ''}.` }));
     };

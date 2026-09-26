@@ -262,6 +262,7 @@ export const cards: Record<string, Card> = {
 };
 
 applyCreativeCardKits(cards);
+cards.nerd.effect = "On Reveal: Silence the highest-Hands enemy here, bypassing Wifey's Side Eye. Protection still blocks this. If you newly Silence an active Ongoing ability, reveal one enemy hand card.";
 
 /** Complete authored crews without changing their existing draw order. Never use for submitted decks. */
 export function completeEngineCrew(ids: readonly string[], candidates: readonly string[] = ['buspass', 'soulfood', 'cognac', 'bustdown', 'energydrink', 'subwaymap']): string[] {

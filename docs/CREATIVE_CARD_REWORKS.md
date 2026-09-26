@@ -1,5 +1,7 @@
 # Creative card reworks
 
+This records the original 51-card wave. Twenty of these cards subsequently received [follow-up buffs and rules fixes](CARD_BUFFS_25.md), alongside five older cards. Refer to that follow-up for their current rules.
+
 Implements the approved full-roster audit: **41 identity/payoff reworks and 10 replacements for pure hand-bond scaling**, totaling 51 cards. The registry below is generated from the shipped card definitions. Card IDs, collection ownership, rarities, printed costs, base Hands, and upgrade IDs/unlock requirements remain intact. Upgrade text now describes once-per-instance training on a successful setup or payoff; the stored upgrade effect kinds and amounts are preserved.
 
 ## Shared rules
