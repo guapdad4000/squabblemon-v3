@@ -159,3 +159,12 @@ html[data-reduce-motion=true] .result-immersive__gloves { animation:none; }
 @keyframes result-rain-fall { from { transform:translate3d(0,-80px,0) rotate(12deg); } to { transform:translate3d(-16vw,115vh,0) rotate(12deg); } }
 @media(prefers-reduced-motion:reduce) { .result-immersive__rain { display:none; } }
 html[data-reduce-motion=true] .result-immersive__rain { display:none; }
+
+/* Six small impacts anchored to the banner lip, not a per-drop physics loop. */
+.result-immersive__splashes { position:absolute; inset:0; pointer-events:none; z-index:4; }
+.result-immersive__splashes i { position:absolute; top:11%; width:1px; height:1px; }
+.result-immersive__splashes i::before,.result-immersive__splashes i::after { content:''; position:absolute; bottom:0; width:2px; height:7px; border-radius:50%; background:#d6e7ed; opacity:0; animation:result-rain-splash var(--splash-duration) var(--splash-delay) linear infinite; --splash-drift:-9px; }
+.result-immersive__splashes i::after { --splash-drift:9px; height:5px; }
+@keyframes result-rain-splash { 0%,65%,100% { opacity:0; transform:translate(0,0) scale(.4); } 68% { opacity:.75; transform:translate(0,0) scale(1); } 78% { opacity:.55; transform:translate(var(--splash-drift),-12px) rotate(35deg) scale(.8); } 90% { opacity:0; transform:translate(var(--splash-drift),2px) rotate(65deg) scale(.3); } }
+@media(prefers-reduced-motion:reduce) { .result-immersive__splashes { display:none; } }
+html[data-reduce-motion=true] .result-immersive__splashes { display:none; }

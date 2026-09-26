@@ -40,6 +40,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
         {storyStars !== undefined && <div className="result-immersive__stars" aria-label={`${storyStars} of 3 story stars earned`}>{[1,2,3].map(n => <Star key={n} fill={n <= storyStars ? 'currentColor' : 'none'} aria-hidden="true" />)}</div>}
       </div>
       <div className="result-immersive__plaque" role="status">
+        {!victory && !draw && !reduced && <div className="result-immersive__splashes" aria-hidden="true">{[8, 22, 37, 64, 79, 92].map((x, i) => <i key={x} style={{ left: `${x}%`, '--splash-delay': `${-i * .37}s`, '--splash-duration': `${1.3 + i % 3 * .2}s` } as CSSProperties} />)}</div>}
         <svg className="result-immersive__frame" viewBox="0 40 2172 590" preserveAspectRatio="none" aria-hidden="true"><image href={asset("v3/panel")} width="2172" height="724" /></svg>
         <img className="result-immersive__gloves" src={asset("v3/gloves")} alt="" aria-hidden="true" />
         <span className="result-immersive__caption">{stateLabel}</span>
