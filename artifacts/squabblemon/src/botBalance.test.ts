@@ -107,3 +107,13 @@ test('Common upgrades require real effects, while Step Up and Act Up always succ
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.powerModifier, 2);
   assert.equal(m.boards[0].find(c => c.cardId === 'edgar')?.statuses.frozen, false);
 });
+
+test('balance audit observer sees the settled final round without changing results', async () => {
+  const { simulateBalanceMatch, createDefaultBalanceDecks, seededLegalBalancePolicy } = await import('../../../lib/squabblemon-engine/src/balanceLab');
+  const decks = createDefaultBalanceDecks();
+  const input = { deckA: decks[0], deckB: decks[1], districtSeed: 'observer-regression', rotation: 0, tier: 0 as const, seat: 'a-player' as const, policy: seededLegalBalancePolicy };
+  let calls = 0;
+  const observed = simulateBalanceMatch({ ...input, observeComplete: m => { calls++; assert.equal(m.phase, 'complete'); assert(m.effectLog.length > 0); } });
+  assert.equal(calls, 1);
+  assert.deepEqual(observed, simulateBalanceMatch(input));
+});

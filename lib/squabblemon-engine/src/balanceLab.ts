@@ -53,6 +53,8 @@ export type BalancePolicyContext = {
 export type BalancePolicy = (context: BalancePolicyContext) => BalancePlayOption | null;
 
 export type BalanceSimulationOptions = {
+  /** Read-only audit hook for the settled match, including its final-round events. */
+  readonly observeComplete?: (match: Readonly<Match>) => void;
   readonly policy?: BalancePolicy;
   readonly allowSquabble?: boolean;
   readonly maxPlays?: number;
@@ -550,6 +552,7 @@ export function simulateBalanceMatch(input: BalanceMatchInput): BalanceMatchResu
   const winner = getMatchWinner(match);
   if (!winner) throw new Error('Completed balance match has no winner');
   const logicalWinner = winner === 'draw' ? 'draw' : winner === aOwner ? 'a' : 'b';
+  input.observeComplete?.(match);
   const districtResults = getDistrictResults(match);
   const bOwner = opponentOf(aOwner);
   return {

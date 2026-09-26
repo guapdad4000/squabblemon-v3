@@ -2,7 +2,7 @@
 
 Reviewed against the implementation in [the 25-card buff notes](CARD_BUFFS_25.md), including the updated card registry and the [1,536-game batch comparison](../scripts/results/buff25/README.md). These 25 are different from the 25 cards just changed.
 
-**Six cards warrant targeted testing, eight remain on watch, eleven should be held. No additional gameplay changes are applied here.** This is a design and interaction review, not individual live win-rate evidence. The existing batch simulations do not isolate each of these cards. Suggested experiments below are not final balance specifications.
+**Five cards received targeted testing, seven remain on watch, thirteen should be held. No additional gameplay changes are applied here.** This is a design and interaction review, not individual live win-rate evidence. The existing batch simulations do not isolate each of these cards. Suggested experiments below are not final balance specifications.
 
 | Card | Printed Motion / Hands | Decision | Reason | Next check or experiment |
 | --- | --- | --- | --- | --- |
@@ -10,9 +10,9 @@ Reviewed against the implementation in [the 25-card buff notes](CARD_BUFFS_25.md
 | Dance Circle Captain | 3 / 3 | Test next | Requires two different members of a three-card dancer group to move to the same district in one round. The new Busker helps the deck but does not relax this bottleneck. | Test any different ally following the first dancer, with the existing once-per-round +2 cap and no automatic movement. |
 | Ahki | 2 / 2 | Test next | Gives +1 immediately, but the extra +2 requires departure and return. Nail Tech offers a stronger body, immediate +2, and mitigation for the same cost; elements/training still differ. | Measure return completion first. If rare, add a bounded benefit on the first departure instead of raising the eventual return reward. |
 | Chess Regular | 3 / 3 | Test next | No Fork unless enemies already occupy two districts. An early deployment can be entirely blank. | Test storing the first visible mark until a second enemy district becomes available, preserving expiry and one actual fork. |
-| BBL Demon | 4 / 4 | Test next | At 4/4, the opponent controls the delayed +2 or -2 result and can avoid any placement before expiry. Other four-cost attackers offer immediate larger swings. | Test a longer visible Drama window before adding damage or paying both branches. |
+| BBL Demon | 4 / 4 | Hold | User confirmed the current kit is fine. | Leave unchanged. |
 | Rent-a-Cop | 2 / 2 | Test next | A single -2 warning only matters if an enemy moves through the district. It has no payoff in stationary matchups, though movement denial has value. | Compare against movement and stationary opponents separately; test a deployment-based warning condition if non-movement dead draws dominate. |
-| Hooper | 5 / 5 | Watch | The 5-cost challenge has delayed value, but already settles in the final round and rewards a fleeing target. | Track survival and challenge resolution before increasing either reward. |
+| Hooper | 5 / 5 | Hold | User confirmed the current kit is fine. | Leave unchanged. |
 | Block Party Titan | 6 / 7 | Watch | Pulling two allies concentrates power and can abandon other districts. His 6/7 body and movement synergies make a raw buff risky. | Test rally outcomes by districts won, not only total Hands. |
 | Regular guy named LeBron James | 4 / 4 | Watch | Cleanse, a ward, and 3 revenge damage are real value. Chair now profits from blocked hits too, improving his supporting shell. | Retest him alongside Chair and Church before adding more protection rewards. |
 | YN Gokarter | 2 / 2 | Watch | A third distinct district needs another movement enabler; completing the lap already gives +3 at two cost. | Measure route completion alongside Bboy and the improved Busker. |
@@ -33,3 +33,7 @@ Reviewed against the implementation in [the 25-card buff notes](CARD_BUFFS_25.md
 | The Flight Plug | 3 / 3 | Hold | One successful Air move grants +2 and protection on top of a 3/3 source. Movement support is readily available. | Preserve the one-use pass and assess route choices rather than adding a blanket stat increase. |
 
 The next implementation shortlist should come from matched one-card substitutions and actual trigger/completion rates in coherent decks. Do not automatically turn the watch and hold groups into buffs to meet a count of 50.
+
+## Targeted test follow-up
+
+The [960-game five-card audit](../scripts/results/next-five/README.md) identifies Dance Circle Captain and Ahki as the strongest candidates for easier combo conditions, not raw stat buffs. Failed Rapper, Chess Regular, and Rent-a-Cop did not show consistent deck-score weakness against their same-cost substitutions. The experiments above remain proposals; no additional card changes were applied. Hooper and BBL Demon are excluded from the candidate audit at the user's request.
