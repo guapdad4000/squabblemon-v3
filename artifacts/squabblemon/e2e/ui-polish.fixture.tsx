@@ -106,9 +106,6 @@ createRoot(document.getElementById('root')!).render(
           results={[{ player: 24, cpu: 12, winner: 'player' }, { player: 8, cpu: 18, winner: 'cpu' }, { player: 30, cpu: 23, winner: 'player' }]}
           districts={[{ name: 'The Bodega' }, { name: 'The Subway' }, { name: 'Fade Park' }]}
           reward={{ softCurrency: 120, xp: 80, streetRep: 12 } as any}
-          onRegroup={action('regroup')}
-          onTrain={action('retry')}
-          onRebuild={action('rebuild')}
           actions={
             <nav className="result-stage__actions">
               <button className="venue-button venue-button--gold" onClick={action('continue')}>Continue the fade</button>

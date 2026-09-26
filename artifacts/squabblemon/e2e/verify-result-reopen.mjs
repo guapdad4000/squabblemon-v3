@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 
 const origin = process.env.UI_ORIGIN ?? 'http://127.0.0.1:23293';
 const sizes = [[320,568],[390,844],[519,900],[1024,519]];
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? '/usr/bin/google-chrome' });
 try {
   for (const [width,height] of sizes) {
     const page = await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
     await page.goto(`${origin}/e2e/result-stage.fixture.html?state=loss`);
     const panel = page.getByTestId('battle-result-screen');
     await panel.waitFor();
-    const imgSrc = await page.evaluate(() => document.querySelector('.result-art__image').currentSrc);
+    const imgSrc = await page.locator('.result-art__image:visible image').getAttribute('href');
     console.log(`At ${width}x${height}, image is: ${imgSrc.split('/').pop()}`);
     await panel.evaluate(element => { element.scrollTop = element.scrollHeight; });
     await page.getByTestId('button-inspect-final-board').click();
