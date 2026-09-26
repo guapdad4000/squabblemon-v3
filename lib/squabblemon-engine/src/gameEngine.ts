@@ -1780,7 +1780,8 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         lastEffectNote: `${source.ability}: +${amount} Hands.` }));
       succeeded = true;
     };
-    if (source.cardId === 'inmate-crafty' && allies.some(c => c.kind === 'support')) {
+    if (source.cardId === 'inmate-crafty' && allies.some(c => !c.hazard && (c.kind === 'support'
+      || ((c.kind ?? 'character') === 'character' && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId))))) {
       buff(source, 2);
     } else if (source.cardId === 'inmate-boyfriend') {
       const target = lowest(allies);
@@ -1788,10 +1789,10 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       const remote = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
         && c.lane !== l && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'
         && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId)));
-      if (remote) buff(remote, 1);
+      if (remote) buff(remote, 2);
       if (target || remote) resolutionNote = 'Looking Out resolved.'
         + (target ? ` ${target.name} here gained +2 Hands.` : '')
-        + (remote ? ` ${remote.name} in another district gained +1 Hand.` : '');
+        + (remote ? ` ${remote.name} in another district gained +2 Hands.` : '');
     } else if (source.cardId === 'inmate-informant') {
       const target = highest(inLane(m, enemy, l));
       if (target) {
@@ -1822,7 +1823,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
         }] };
         succeeded = JSON.stringify(target.statuses) !== JSON.stringify(findCard(m, target.instanceId)!.statuses);
       }
-      if (losing) buff(source, 1);
+      if (losing) buff(source, 3);
     }
     note(succeeded ? resolutionNote ?? `${source.ability} resolved.` : `${source.ability}: condition not met, effect blocked, or already at cap.`);
     if (!echoed && succeeded) m = trainWaveAbility(m, source.instanceId);
@@ -1841,7 +1842,7 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
             powerModifier: c.powerModifier + 1, lastEffectNote: 'Blowout: cleansed, +1 Hand.' }));
         } else {
           m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, protected: true },
-            powerModifier: c.powerModifier + 1, lastEffectNote: 'Fresh Fit: +1 Hand and Protect.' }));
+            powerModifier: c.powerModifier + 2, lastEffectNote: 'Fresh Fit: +2 Hands and Protect.' }));
           m = { ...m, timedEffects: [...m.timedEffects, {
             id: `fresh-fit:${source.instanceId}:${target.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId,
             targetInstanceId: target.instanceId, owner: source.owner, lane: l, startsAtRound: m.round,
@@ -1918,7 +1919,23 @@ function resolveAbility(match: Match, source: CardInstance, { echoed = false }: 
       ? { ...result, lastRevealedCardId: source.cardId, entranceHistory: [...(result.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] }
       : result;
   }
-  if (source.cardId === 'rastamon') { const t = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId && (c.statuses.frozen || c.statuses.silenced))); if (t) { targetIds.add(t.instanceId); m = cleanseAlly(m, t.instanceId, (c) => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + 2, lastEffectNote: 'Natural Cure: cleansed, +2 Hands.' })); note('Natural Cure cleansed an ally and gave it +2.'); } else note('Natural Cure found no status to cleanse.'); }
+  if (source.cardId === 'rastamon') {
+    const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
+    const affected = lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced));
+    if (affected) {
+      targetIds.add(affected.instanceId);
+      m = cleanseAlly(m, affected.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses),
+        powerModifier: c.powerModifier + 2, lastEffectNote: 'Natural Cure: cleansed, +2 Hands.' }));
+      note('Natural Cure cleansed an ally and gave it +2.');
+    } else {
+      const ally = lowest(allies);
+      if (ally) {
+        targetIds.add(ally.instanceId);
+        m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Natural Cure: fallback, +1 Hand.' }));
+        note('Natural Cure gave another ally +1 Hand.');
+      } else note('Natural Cure found no other ally.');
+    }
+  }
   else if (source.cardId === 'roaster') {
     const t = highest(inLane(m, enemy, l));
     if (t) {

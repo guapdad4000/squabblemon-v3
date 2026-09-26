@@ -70,9 +70,9 @@ test('the four revised lessons expose complete legal balance-lab crews', () => {
 
 test('revised workshop copy explains the dependable setup and bounded payoff', () => {
   const detail = (cardId: string) => workshopSuggestions.find(lesson => lesson.cardId === cardId)!.detail;
-  assert.match(detail('inmate-crafty'), /real support card first/i);
+  assert.match(detail('inmate-crafty'), /another inmate or a real support card first/i);
   assert.match(detail('inmate-crafty'), /2\/3 Crafty/);
-  assert.match(detail('inmate-crafty'), /\+2 locally and \+1 across districts/);
+  assert.match(detail('inmate-crafty'), /\+2 locally and \+2 across districts/);
   assert.match(detail('sherlock'), /actual Sherlock cancellation/i);
   assert.match(detail('sherlock'), /weakest other character \+2/i);
   assert.match(detail('sherlock'), /Watson is a 2\/3/i);

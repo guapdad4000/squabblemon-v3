@@ -843,3 +843,21 @@ test('Church Auntie buff adds immediate Hands, preserves existing shields, and r
   const silenced=playOne('church',m=>({...m,playerHand:m.playerHand.map(c=>({...c,statuses:{...c.statuses,silenced:true}})),boards:[[ally],[],[]]}));
   assert.equal(silenced.boards[0].find(c=>c.instanceId===ally.instanceId)!.powerModifier,0);
 });
+
+for (const owner of ['player', 'cpu'] as const) test(`Natural Cure fallback is local, needs another ally, and preserves the stronger cleanse for ${owner}`, () => {
+  for (const mode of ['healthy', 'frozen', 'solo', 'disabled'] as const) {
+    const source = custom('rastamon', owner, 91), ally = {...custom('cornball', owner, 92), lane: 0 as const};
+    ally.statuses.burnStacks = 2; ally.statuses.frozen = mode === 'frozen';
+    if (mode === 'disabled') source.statuses.silenced = true;
+    const m: Match = {...createMatch('block', 'block'), phase: owner === 'player' ? 'player' : 'cpu-reveal',
+      playerMotion: 9, cpuMotion: 9, playerHand: owner === 'player' ? [source] : [], cpuHand: owner === 'cpu' ? [source] : [],
+      boards: [mode === 'solo' ? [] : [ally], [], []]};
+    const before = JSON.stringify(m), after = playCard(m, owner, source.instanceId, 0);
+    assert.equal(JSON.stringify(m), before); assert.deepEqual(after, playCard(JSON.parse(before), owner, source.instanceId, 0));
+    assert.equal(after.boards[0].find(c => c.instanceId === source.instanceId)!.powerModifier, 0);
+    const helped = after.boards[0].find(c => c.instanceId === ally.instanceId);
+    if (mode === 'solo') assert.equal(helped, undefined);
+    else { assert.equal(helped!.powerModifier, mode === 'frozen' ? 2 : mode === 'disabled' ? 0 : 1);
+      assert.equal(helped!.statuses.burnStacks, mode === 'frozen' ? 0 : 2); }
+  }
+});

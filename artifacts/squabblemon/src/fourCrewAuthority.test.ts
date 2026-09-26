@@ -39,8 +39,8 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 2);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 5);
-  assert.equal(ONLINE_RULES_VERSION, 5);
+  assert.equal(CARD_BALANCE_VERSION, 6);
+  assert.equal(ONLINE_RULES_VERSION, 6);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -149,7 +149,7 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 9;
     room = playOnline(room, owner, 'inmate-boyfriend', 0);
     const crafty = room.match!.boards.flat().find(card => card.cardId === 'inmate-crafty')!;
-    assert.equal(crafty.powerModifier, 1);
+    assert.equal(crafty.powerModifier, 2);
     room = playOnline(room, owner, 'sherlock', 0);
     const trap = room.match!.districtTraps![0];
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
