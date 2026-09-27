@@ -22,7 +22,7 @@ import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Home, Events, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
-  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute } from './routeModules';
+  Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute, preloadAllGameRoutes } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
 import '../../styles/paper-tabs.css';
 
@@ -68,7 +68,7 @@ function BootstrapError({
 }
 
 function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
-  return <div className="immersive-shell sq-route-transition--immersive"><CityHeader bootstrap={bootstrap} />{children}</div>;
+  return <div className="immersive-shell sq-route-transition--immersive"><CityHeader bootstrap={bootstrap} /><Suspense fallback={null}>{children}</Suspense></div>;
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -80,6 +80,8 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     document.documentElement.dataset.reduceMotion =
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap.profile.settings.reducedMotion]);
+
+  useEffect(() => { preloadAllGameRoutes(); }, []);
 
   useEffect(() => {
     const warmDestination = (event: Event) => {
@@ -178,7 +180,7 @@ function GameShell({
           <div className="game-shell__content">
             <CityHeader bootstrap={bootstrap} />
             <div className="game-route-stage sq-route-transition" key={location}>
-              {children}
+              <Suspense fallback={null}>{children}</Suspense>
             </div>
           </div>
         </div>

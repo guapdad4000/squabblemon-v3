@@ -68,3 +68,17 @@ export function preloadGameRoute(path: string) {
   warming.add(key);
   void loaders[key]().catch(() => { warming.delete(key); });
 }
+
+/** After the game shell is up, quietly warm every screen so later taps never wait on a download. */
+export function preloadAllGameRoutes() {
+  const keys = Object.keys(loaders) as (keyof typeof loaders)[];
+  let index = 0;
+  const idle = (cb: () => void) => { if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(cb, { timeout: 2000 }); else setTimeout(cb, 200); };
+  const next = () => {
+    const key = keys[index++];
+    if (!key) return;
+    if (!warming.has(key)) { warming.add(key); void loaders[key]().catch(() => { warming.delete(key); }); }
+    idle(next);
+  };
+  idle(next);
+}
