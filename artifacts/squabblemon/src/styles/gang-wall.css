@@ -1,0 +1,826 @@
+@font-face {
+  font-family: WallMarker;
+  src: url("../assets/fonts/caveat-bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+.gang-mural {
+  --mural-paint: #eac27e;
+  position: relative;
+  isolation: isolate;
+  container: gang-mural/size;
+  height: 100svh;
+  min-height: 320px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: clamp(40px, 13%, 100px) clamp(28px, 6%, 42px) clamp(
+      36px,
+      9%,
+      62px
+    ) minmax(0, 1fr) clamp(42px, 15%, 100px);
+  padding: 6px clamp(12px, 3vw, 48px) 10px;
+  background-image:
+    linear-gradient(90deg, #100c0a55, #100c0a11 55%, #100c0a66), var(--brick);
+  background-size: cover;
+  color: #fff0d2;
+}
+.gang-mural::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  box-shadow: inset 0 0 120px #1d0808a0;
+}
+.gang-mural button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  touch-action: manipulation;
+}
+.gang-mural button:focus-visible,
+.gang-mural__skill:focus-visible {
+  outline: 2px dashed #fff0d2;
+  outline-offset: 3px;
+}
+.gang-mural button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.gang-mural__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-height: 0;
+}
+.gang-mural__header > img {
+  width: min(350px, 60%);
+  height: 100%;
+  object-fit: contain;
+  object-position: left;
+}
+.gang-mural__header > p {
+  font:
+    700 14px WallMarker,
+    cursive;
+  transform: rotate(3deg);
+  text-shadow: 1px 2px #2a1309;
+}
+.gang-mural__header b {
+  font: 900 28px var(--font-display);
+}
+.gang-mural__header span {
+  display: block;
+  font: 700 11px monospace;
+  letter-spacing: 0.15em;
+  text-align: right;
+}
+.gang-mural__layers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 48px);
+  min-height: 0;
+}
+.gang-mural__layers button {
+  position: relative;
+  padding: 3px 7px;
+  font: 900 italic clamp(12px, 1.6vw, 17px) var(--font-display);
+  text-transform: uppercase;
+  text-shadow: 2px 2px #361b0d;
+  opacity: 0.65;
+}
+.gang-mural__layers button[aria-pressed="true"] {
+  opacity: 1;
+  color: #fff4d4;
+}
+.gang-mural__layers button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  height: 4px;
+  bottom: -1px;
+  left: -6%;
+  right: -6%;
+  background: #f7dfa5;
+  transform: rotate(-4deg);
+  clip-path: polygon(0 50%, 100% 0, 90% 60%, 4% 100%);
+}
+.gang-mural__selector {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+  border-bottom: 1px solid #f6d3a638;
+}
+.gang-mural__selector > button {
+  flex: none;
+  width: 34px;
+  font: 700 30px WallMarker;
+}
+.gang-mural__tags {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 2%,
+    #000 98%,
+    transparent
+  );
+  padding: 3px 10px 6px;
+}
+.gang-mural__tags::-webkit-scrollbar,
+.gang-mural__members::-webkit-scrollbar {
+  display: none;
+}
+.gang-mural__tags button {
+  flex: none;
+  font:
+    700 clamp(22px, 2.6vw, 33px)/1 WallMarker,
+    cursive;
+  white-space: nowrap;
+  opacity: 0.55;
+  transform: rotate(-3deg);
+  text-shadow: 1px 2px #1d110a;
+}
+.gang-mural__tags button:nth-child(even) {
+  transform: rotate(2deg);
+}
+.gang-mural__tags button[aria-pressed="true"] {
+  opacity: 1;
+  color: var(--mural-paint);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 5px;
+}
+.gang-mural sup {
+  font: 700 9px monospace;
+  vertical-align: top;
+  padding-right: 6px;
+  opacity: 0.7;
+}
+.gang-mural__scene {
+  position: relative;
+  min-height: 0;
+  isolation: isolate;
+  animation: wall-spray-reveal 0.32s ease-out both;
+}
+.gang-mural__paint {
+  position: absolute;
+  right: -5%;
+  top: -5%;
+  width: 85%;
+  height: 110%;
+  object-fit: fill;
+  mix-blend-mode: screen;
+  opacity: 0.73;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: radial-gradient(ellipse, #000 50%, transparent 75%);
+}
+.gang-mural__title {
+  position: absolute;
+  left: 3%;
+  top: 4%;
+  width: 58%;
+  z-index: 3;
+  pointer-events: none;
+  transform: rotate(-5deg);
+}
+.gang-mural__title > span {
+  font: 700 10px monospace;
+  letter-spacing: 0.2em;
+  background: #321b13bb;
+  padding: 3px 6px;
+}
+.gang-mural__title h2 {
+  font: 1000 italic clamp(48px, 8vw, 130px)/0.87 var(--font-display);
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+  color: var(--mural-paint);
+  -webkit-text-stroke: 1.5px #29190e;
+  paint-order: stroke fill;
+  text-shadow: 4px 5px #24150c;
+  margin: 10px 0 0;
+  overflow-wrap: anywhere;
+}
+.gang-mural__title h2[data-long="true"] {
+  font-size: clamp(36px, 5.2vw, 80px);
+}
+.gang-mural__title > p {
+  font: 800 10px monospace;
+  letter-spacing: 0.13em;
+  margin: 12px 0 0;
+  text-shadow: 1px 2px #1b100b;
+}
+.gang-mural__title i {
+  font: 700 60px/0.4 WallMarker;
+  display: inline-block;
+  margin-left: 20px;
+  color: var(--mural-paint);
+  transform: rotate(12deg);
+}
+.gang-mural__characters {
+  position: absolute;
+  inset: 4% -2% -2% 40%;
+  isolation: isolate;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    0deg,
+    transparent,
+    #000 7%,
+    #000 98%,
+    transparent
+  );
+}
+.gang-mural__characters > img {
+  position: absolute;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: saturate(0.7) contrast(1.18) drop-shadow(4px 0 0 #f3e1b899)
+    drop-shadow(-3px 0 0 #193426);
+  mix-blend-mode: luminosity;
+}
+.gang-mural__featured {
+  width: 72%;
+  height: 100%;
+  bottom: 0;
+  left: 12%;
+  z-index: 2;
+  animation: wall-spray-reveal 0.25s ease-out both;
+}
+.gang-mural__support {
+  width: 54%;
+  height: 77%;
+  bottom: 12%;
+  opacity: 0.68;
+  mix-blend-mode: luminosity;
+}
+.gang-mural__support--0 {
+  left: -5%;
+  transform: rotate(-7deg);
+}
+.gang-mural__support--1 {
+  right: -6%;
+  transform: rotate(8deg);
+}
+.gang-mural__grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--brick);
+  background-size: cover;
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+  z-index: 3;
+  pointer-events: none;
+}
+.gang-mural__readout {
+  position: absolute;
+  z-index: 4;
+  left: 2%;
+  bottom: 4%;
+  width: 39%;
+  max-height: 58%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 12px 14px 14px 8px;
+  isolation: isolate;
+  transform: rotate(-1deg);
+}
+.gang-mural__readout::before {
+  content: "";
+  position: absolute;
+  inset: -5px -25px -10px -15px;
+  background: linear-gradient(90deg, #142219ed, #142219dc 75%, #14221900);
+  z-index: -1;
+  clip-path: polygon(
+    0 9%,
+    27% 3%,
+    30% 7%,
+    64% 0,
+    98% 6%,
+    100% 89%,
+    70% 100%,
+    38% 95%,
+    3% 100%
+  );
+}
+.gang-mural__caption {
+  font: 700 9px monospace;
+  letter-spacing: 0.14em;
+  color: #ddd2b1;
+}
+.gang-mural__readout h3 {
+  font:
+    700 clamp(26px, 3.7vw, 54px)/1 WallMarker,
+    cursive;
+  margin: 5px 0 8px;
+  color: #fff0d2;
+}
+.gang-mural__stats {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  font: 700 9px monospace;
+  letter-spacing: 0.07em;
+  margin-bottom: 9px;
+  color: #dbcda7;
+}
+.gang-mural__stats b {
+  font: 950 22px var(--font-display);
+  color: var(--mural-paint);
+}
+.gang-mural__skill {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d3c09670 transparent;
+  padding: 2px 5px 8px 0;
+}
+.gang-mural__skill h4 {
+  font: 900 12px var(--font-display);
+  text-transform: uppercase;
+  color: var(--mural-paint);
+  margin: 2px 0 5px;
+}
+.gang-mural__skill p,
+.gang-mural__readout > p {
+  font: 500 12px/1.6 var(--font-display);
+  margin: 0;
+  color: #f4e9ce;
+}
+.gang-mural__connection {
+  margin-top: 12px !important;
+  padding-top: 10px;
+  border-top: 1px dashed #dfca8577;
+}
+.gang-mural__connection b {
+  display: block;
+  font: 700 9px monospace;
+  letter-spacing: 0.15em;
+  margin-bottom: 5px;
+}
+.gang-mural__footer {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  border-top: 1px dashed #fff0c64d;
+}
+.gang-mural__footer > span {
+  font: 700 10px monospace;
+  letter-spacing: 0.1em;
+  padding-left: 5px;
+  color: #ffedc2;
+}
+.gang-mural__footer i {
+  display: inline-block;
+  font: 700 30px/0 WallMarker;
+  padding-left: 10px;
+}
+.gang-mural__footer > p {
+  font: 700 24px WallMarker;
+  text-align: center;
+}
+.gang-mural__members {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  padding: 6px 8px 12px;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 2%,
+    #000 98%,
+    transparent
+  );
+}
+.gang-mural__members button {
+  flex: none;
+  white-space: nowrap;
+  position: relative;
+  font: 700 clamp(19px, 2vw, 26px)/1 WallMarker;
+  transform: rotate(-2deg);
+  opacity: 0.65;
+}
+.gang-mural__members button[aria-pressed="true"] {
+  opacity: 1;
+  color: var(--mural-paint);
+}
+.gang-mural__members button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: -4%;
+  height: 3px;
+  bottom: -5px;
+  background: var(--mural-paint);
+  transform: rotate(-2deg);
+}
+.gang-mural__members small {
+  font-size: 9px;
+  padding-left: 6px;
+}
+.gang-mural__reward-art {
+  position: absolute;
+  right: 3%;
+  top: 6%;
+  height: 90%;
+  width: 56%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transform: rotate(7deg);
+  color: var(--mural-paint);
+  text-shadow: 5px 7px #25180e;
+}
+.gang-mural__reward-art > span {
+  font: 700 45px WallMarker;
+}
+.gang-mural__reward-art > b {
+  font: 950 italic clamp(100px, 19vw, 280px)/0.9 var(--font-display);
+  letter-spacing: -0.08em;
+}
+.gang-mural__reward-art > em {
+  font: 700 clamp(18px, 3vw, 38px) WallMarker;
+}
+.gang-mural__claim {
+  align-self: flex-start;
+  font: 700 28px WallMarker !important;
+  color: var(--mural-paint) !important;
+  text-decoration: underline;
+  margin-top: 10px;
+}
+.gang-mural__status {
+  font: 700 20px WallMarker;
+  color: var(--mural-paint);
+  margin-top: 12px;
+}
+.gang-mural__error {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #48150eee;
+  color: #fff;
+  padding: 8px;
+  z-index: 6;
+  font-size: 12px;
+}
+/* Preserve the game's navigation; let the mural use all remaining room. */
+.arsenal-screen.collection-stage--gang-wall::after {
+  display: none;
+}
+.arsenal-screen.collection-stage--gang-wall > .collection-stage__hero,
+.game-route-stage
+  > .arsenal-screen.collection-stage.collection-stage--gang-wall
+  > .collection-stage__hero {
+  height: auto;
+  min-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  border-bottom: 0;
+  background-image: none !important;
+}
+.collection-stage--gang-wall .collection-hero__top,
+.collection-stage--gang-wall .collection-hero__bottom,
+.collection-stage--gang-wall .collection-hero__stats {
+  display: none;
+}
+.collection-stage--gang-wall > .arsenal-paper-tabs {
+  margin: 0 auto;
+  padding: 3px 8px;
+  max-width: 440px;
+}
+.collection-stage--gang-wall > .arsenal-paper-tabs a {
+  padding: 15px 18px 8px;
+  font-size: 14px;
+}
+.collection-stage--gang-wall > .arsenal-paper-tabs span {
+  display: none;
+}
+.collection-stage--gang-wall .collection-stage__header .collection-tabs {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  justify-content: center;
+  margin: 0;
+}
+.collection-stage--gang-wall .collection-tabs :is(button, a) {
+  min-height: 38px;
+  padding: 12px 15px 5px;
+  font-size: 12px;
+}
+.collection-stage--gang-wall .collection-stage__body {
+  padding: 0;
+  overflow: hidden;
+}
+.collection-stage--gang-wall .gang-mural {
+  height: 100%;
+  min-height: 0;
+}
+@container gang-mural (max-width:650px) {
+  .gang-mural__header > img {
+    width: 70%;
+  }
+  .gang-mural__header > p {
+    font-size: 11px;
+  }
+  .gang-mural__header b {
+    font-size: 22px;
+  }
+  .gang-mural__header span {
+    font-size: 8px;
+  }
+  .gang-mural__layers {
+    gap: 9px;
+  }
+  .gang-mural__layers button {
+    font-size: 11px;
+    padding: 3px 4px;
+  }
+  .gang-mural__tags {
+    gap: 18px;
+  }
+  .gang-mural__tags button {
+    font-size: 24px;
+  }
+  .gang-mural__selector > button {
+    width: 22px;
+    font-size: 26px;
+  }
+  .gang-mural__title {
+    left: 2%;
+    top: 5%;
+    width: 87%;
+  }
+  .gang-mural__title h2 {
+    font-size: clamp(48px, 14vw, 84px);
+  }
+  .gang-mural__title h2[data-long="true"] {
+    font-size: clamp(34px, 9vw, 48px);
+  }
+  .gang-mural__title > span {
+    font-size: 7px;
+    letter-spacing: 0.05em;
+  }
+  .gang-mural__title > p {
+    font-size: 8px;
+    margin-top: 7px;
+  }
+  .gang-mural__title i {
+    font-size: 40px;
+  }
+  .gang-mural__paint {
+    top: 4%;
+    right: -15%;
+    width: 120%;
+    height: 83%;
+    opacity: 0.55;
+  }
+  .gang-mural__characters {
+    inset: 7% -12% 26% 5%;
+  }
+  .gang-mural__featured {
+    width: 64%;
+    left: 20%;
+  }
+  .gang-mural__support {
+    height: 76%;
+  }
+  .gang-mural__support--0 {
+    left: 0%;
+  }
+  .gang-mural__support--1 {
+    right: -2%;
+  }
+  .gang-mural__readout {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 40%;
+    max-height: none;
+    transform: none;
+    padding: 8px 9px 4px;
+  }
+  .gang-mural__readout::before {
+    background: linear-gradient(90deg, #142219f2, #142219e8 90%, transparent);
+    inset: -5px -7px -5px -5px;
+  }
+  .gang-mural__readout h3 {
+    font-size: 30px;
+    margin: 2px 0 4px;
+  }
+  .gang-mural__caption {
+    font-size: 7px;
+  }
+  .gang-mural__stats {
+    position: absolute;
+    right: 8px;
+    top: 10px;
+    gap: 9px;
+    max-width: 47%;
+    justify-content: flex-end;
+    font-size: 7px;
+  }
+  .gang-mural__stats b {
+    font-size: 17px;
+  }
+  .gang-mural__skill h4 {
+    font-size: 10px;
+  }
+  .gang-mural__skill p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .gang-mural__footer {
+    gap: 6px;
+  }
+  .gang-mural__footer > span {
+    font-size: 8px;
+  }
+  .gang-mural__members {
+    gap: 20px;
+    padding-bottom: 8px;
+  }
+  .gang-mural__members button {
+    font-size: 23px;
+  }
+  .gang-mural__reward-art {
+    top: 10%;
+    height: 57%;
+    right: 0;
+    width: 75%;
+  }
+  .gang-mural__reward-art > b {
+    font-size: 150px;
+  }
+  .gang-mural__reward-art > span {
+    font-size: 26px;
+  }
+  .gang-mural__reward-art > em {
+    font-size: 22px;
+  }
+  .gang-mural__footer > p {
+    font-size: 18px;
+  }
+}
+@container gang-mural (max-height:500px) and (min-width:651px) {
+  .gang-mural__title {
+    top: 5%;
+    width: 47%;
+  }
+  .gang-mural__title h2 {
+    font-size: 48px;
+  }
+  .gang-mural__title h2[data-long="true"] {
+    font-size: 34px;
+  }
+  .gang-mural__title > span {
+    font-size: 7px;
+  }
+  .gang-mural__title > p {
+    font-size: 8px;
+    margin-top: 8px;
+  }
+  .gang-mural__readout {
+    bottom: 0;
+    max-height: 60%;
+    width: 45%;
+    padding: 5px 7px;
+  }
+  .gang-mural__readout h3 {
+    font-size: 27px;
+    margin: 2px 0 4px;
+  }
+  .gang-mural__caption {
+    font-size: 7px;
+  }
+  .gang-mural__stats {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    gap: 8px;
+    font-size: 7px;
+  }
+  .gang-mural__stats b {
+    font-size: 17px;
+  }
+  .gang-mural__skill p {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .gang-mural__skill h4 {
+    font-size: 10px;
+  }
+  .gang-mural__members button {
+    font-size: 20px;
+  }
+  .gang-mural__footer > span {
+    font-size: 8px;
+  }
+  .gang-mural__header > p {
+    font-size: 11px;
+  }
+  .gang-mural__header b {
+    font-size: 22px;
+  }
+  .gang-mural__tags button {
+    font-size: 25px;
+  }
+  .gang-mural__reward-art > b {
+    font-size: 120px;
+  }
+}
+@container gang-mural (max-height:550px) and (max-width:650px) {
+  .gang-mural__title h2 {
+    font-size: 42px;
+  }
+  .gang-mural__title h2[data-long="true"] {
+    font-size: 30px;
+  }
+  .gang-mural__title > span {
+    display: none;
+  }
+  .gang-mural__characters {
+    inset: 5% -10% 30% 12%;
+  }
+  .gang-mural__readout {
+    height: 44%;
+  }
+  .gang-mural__readout h3 {
+    font-size: 25px;
+  }
+  .gang-mural__stats {
+    gap: 6px;
+    top: 7px;
+  }
+  .gang-mural__stats b {
+    font-size: 14px;
+  }
+  .gang-mural__header > p {
+    font-size: 9px;
+  }
+  .gang-mural__header b {
+    font-size: 17px;
+  }
+  .gang-mural__header span {
+    font-size: 7px;
+  }
+  .gang-mural__tags button {
+    font-size: 20px;
+  }
+  .gang-mural__layers {
+    gap: 4px;
+  }
+  .gang-mural__layers button {
+    font-size: 10px;
+  }
+  .gang-mural__members button {
+    font-size: 19px;
+  }
+  .gang-mural__skill p {
+    font-size: 10px;
+  }
+}
+@keyframes wall-spray-reveal {
+  from {
+    opacity: 0.3;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gang-mural__scene,
+  .gang-mural__featured {
+    animation: none;
+  }
+}
+html[data-reduce-motion="true"] :is(.gang-mural__scene, .gang-mural__featured) {
+  animation: none;
+}
