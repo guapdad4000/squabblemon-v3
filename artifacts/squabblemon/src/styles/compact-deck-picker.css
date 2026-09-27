@@ -1,0 +1,27 @@
+.compact-deck-picker { position:relative; width:100%; max-width:100%; min-width:0; container-type:inline-size; isolation:isolate; }
+.compact-deck-picker__rail { display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:9px 8px 12px; scroll-padding-inline:8px; scroll-snap-type:x proximity; overscroll-behavior-x:contain; scrollbar-width:none; }
+.compact-deck-picker__edge { position:absolute; top:0; bottom:6px; width:clamp(10px,7cqw,32px); z-index:2; pointer-events:none; opacity:0; transition:opacity .18s ease; backdrop-filter:blur(3px); background:#15221915; }
+.compact-deck-picker__edge--left { left:0; mask-image:linear-gradient(to right,#000,transparent); }
+.compact-deck-picker__edge--right { right:0; mask-image:linear-gradient(to left,#000,transparent); }
+.compact-deck-picker[data-left-overflow=true] .compact-deck-picker__edge--left,.compact-deck-picker[data-right-overflow=true] .compact-deck-picker__edge--right { opacity:1; }
+@media(prefers-reduced-motion:reduce) { .compact-deck-picker__edge { transition:none; } }
+.compact-deck-picker__deck { display:flex; align-items:center; gap:12px; flex:0 0 min(168px,calc(100cqw - 16px)); min-height:78px; padding:6px 10px; color:#eee9d9; background:#141c17; border:1px solid #566456; border-radius:3px; text-align:left; scroll-snap-align:start; cursor:pointer; }
+.compact-deck-picker__deck[aria-pressed=true] { border-color:#f4cd70; background:#23452f; box-shadow:inset 0 -3px #d8b359; }
+.compact-deck-picker__deck:focus-visible { outline:3px solid #fff; outline-offset:2px; }
+.compact-deck-picker__deck:disabled { opacity:.45; cursor:not-allowed; }
+.compact-deck-picker__box { position:relative; display:block; flex:0 0 42px; height:60px; background:linear-gradient(135deg,#416346,#0b1511); border:1px solid #d4b36a; box-shadow:-4px 2px 0 #a89873,-6px 3px 0 #28382b; transform:perspective(220px) rotateY(-16deg) rotateZ(-4deg); overflow:hidden; }
+.compact-deck-picker__box img { width:100%; height:100%; object-fit:cover; object-position:50% 18%; }
+.compact-deck-picker__deck strong { display:block; font-size:12px; line-height:1.2; overflow-wrap:anywhere; }
+.compact-deck-picker__deck small { display:block; color:#d2c59e; font-size:9px; margin-top:5px; }
+
+.compact-deck-picker__rail::-webkit-scrollbar { display:none; width:0; height:0; }
+
+/* Inherit each venue's materials while keeping the same selection behavior. */
+.fadecade-dialog-content .compact-deck-picker__deck { background:#171b24; border-color:#60677a; color:#f2eddf; }
+.fadecade-dialog-content .compact-deck-picker__deck[aria-pressed=true] { background:#393020; border-color:#f3ce71; box-shadow:inset 0 -3px #d9ac4f; }
+.fadecade-dialog-content .compact-deck-picker__box { background:linear-gradient(135deg,#78663f,#171b24); }
+.online-room-panel .compact-deck-picker__deck { background:#101d18; border-color:#4b715c; }
+.online-room-panel .compact-deck-picker__deck[aria-pressed=true] { background:#204b35; border-color:#9ae2b4; box-shadow:inset 0 -3px #84cba0; }
+.deck-carousel .compact-deck-picker__deck { background:#28251f; border-color:#746b58; }
+.deck-carousel .compact-deck-picker__deck[aria-pressed=true] { background:#49402a; border-color:#e0c486; box-shadow:inset 0 -3px #d4b36a; }
+.deck-carousel__jump { min-width:0; }

@@ -1,3 +1,4 @@
+import { CompactDeckPicker } from '../CompactDeckPicker';
 import { CrewPreview } from './CrewPreview';
 import { StreetSelect } from '../ui/street-select';
 import { useState } from 'react';
@@ -63,14 +64,7 @@ export function TrainingMachine({ legalCrews, onBattle, initiallyOpen = false }:
           </p>
 
           <span className="challenge-field-label">02 / Bring your crew</span>
-          <StreetSelect
-            className="cabinet-select"
-            value={crewId}
-            onValueChange={e => setCrewId(e)}
-            aria-label="Select Crew"
-          >
-            {legalCrews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </StreetSelect>
+          <CompactDeckPicker decks={legalCrews.map(crew => ({ id:crew.id, name:crew.name, heroCardId:crew.hero, cardIds:crew.cards }))} selectedId={crewId ?? ""} onSelect={setCrewId} disabled={false} />
 
           <CrewPreview crew={legalCrews.find(crew => crew.id === crewId)} />
           <button

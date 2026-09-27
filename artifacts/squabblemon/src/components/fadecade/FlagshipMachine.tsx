@@ -1,5 +1,5 @@
+import { CompactDeckPicker } from '../CompactDeckPicker';
 import { useSearch } from 'wouter';
-import { StreetSelect } from '../ui/street-select';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useEffect, useRef, useState } from 'react';
 import { useStartChallengeRun, useAbandonChallengeRun, type ChallengeRun, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -169,10 +169,7 @@ export function FlagshipMachine({ bootstrap, legalCrews, runsQuery, onBattle, ro
           {active && <progress aria-label="Progress to next boss" max={5} value={active.wins % 5} />}
         </div>}
         {!active && <label className="fadecade-crew-label">Choose your ten-card crew
-          <StreetSelect aria-label="Choose legal crew" className="cabinet-select" value={selected?.id ?? ''} onValueChange={event => setCrewId(event)} disabled={busy || !entries}>
-            {!selected && <option value="">No legal owned crew available</option>}
-            {legalCrews.map(crew => <option key={crew.id} value={crew.id}>{crew.name}</option>)}
-          </StreetSelect>
+          <CompactDeckPicker decks={legalCrews.map(crew => ({ id:crew.id, name:crew.name, heroCardId:crew.hero, cardIds:crew.cards }))} selectedId={selected?.id ?? ''} onSelect={setCrewId} disabled={busy || !entries} />
         </label>}
         <p className="fadecade-road-rules">One loss ends the run. Boss every fifth stop. Each stop is a fresh, player-controlled battle. Your ten cards and upgrades stay locked for the run.</p>
         <div className="fadecade-road-actions">
