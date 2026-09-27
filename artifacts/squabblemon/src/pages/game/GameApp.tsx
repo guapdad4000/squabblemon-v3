@@ -1,3 +1,4 @@
+import { installInteractionClickSounds } from '../../lib/interactionClickSounds';
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
@@ -268,6 +269,7 @@ function getE2EBootstrap(): PlayerBootstrap {
 }
 
 export default function GameApp() {
+  useEffect(installInteractionClickSounds, []);
   const { isLoaded, isSignedIn } = useAppAuth();
   const [location, setLocation] = useLocation();
   const search = useSearch();

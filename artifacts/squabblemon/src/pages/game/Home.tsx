@@ -3,7 +3,7 @@ import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
 import { GameBackButton } from '../../components/venue/GameBackButton';
-import { playInteractionSound, type InteractionSound } from '../../lib/interactionAudio';
+import { playInteractionSound } from '../../lib/interactionAudio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { getGetPlayerStoryQueryKey, useGetPlayerStory, useListChallengeRuns, getListChallengeRunsQueryKey, type PlayerBootstrap } from '@workspace/api-client-react';
@@ -174,13 +174,6 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     const previous = previousView.current;
     previousView.current = view;
     if (previous === view) return;
-    const sounds: Partial<Record<Station | 'room', InteractionSound>> = {
-      mail: 'door-knock', growth: 'crystal', arcade: 'arcade-beep',
-      events: 'ui-beep',
-      inventory: 'bag-open', story: 'film',
-      cards: 'cards-spread', phone: 'phone-ring', profile: 'ui-beep',
-    };
-    if (sounds[view]) playInteractionSound(sounds[view]!);
     if (view !== 'room') backButton.current?.focus({ preventScroll: true });
     else if (previous !== 'room') markers.current.get(previous)?.focus({ preventScroll: true });
   }, [view]);

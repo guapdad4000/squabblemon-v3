@@ -1,6 +1,7 @@
 import { FEEDBACK_CHANGE_EVENT, loadFeedbackPreferences, type FeedbackPreferences } from '../battleFeedback';
 
-export type InteractionSound = 'register' | 'door-chime' | 'door-knock' | 'cards-spread' | 'bag-hit' | 'phone-ring' | 'watering' | 'bag-open' | 'arcade-beep' | 'film' | 'ui-beep' | 'machine' | 'crowd' | 'prison' | 'magic-swoosh' | 'magic-reveal' | 'water-splash' | 'magic-aura' | 'magic-poof' | 'fireball' | 'crystal' | 'low-spell' | 'treasure' | 'intro';
+export type InteractionSound = 'register' | 'door-chime' | 'door-knock' | 'cards-spread' | 'bag-hit' | 'phone-ring' | 'watering' | 'bag-open' | 'arcade-beep' | 'film' | 'ui-beep' | 'machine' | 'crowd' | 'prison' | 'magic-swoosh' | 'magic-reveal' | 'water-splash' | 'magic-aura' | 'magic-poof' | 'fireball' | 'crystal' | 'low-spell' | 'treasure' | 'intro' | 'record-scratch' | 'keys-jingle' | 'arcade-click' | 'page-turn';
+const wavSounds = new Set<InteractionSound>(['register', 'record-scratch', 'keys-jingle', 'arcade-click', 'page-turn']);
 const base = (import.meta.env?.BASE_URL ?? '/').replace(/\/?$/, '/');
 let current: HTMLAudioElement | null = null;
 let lastName = '';
@@ -16,7 +17,7 @@ export function playInteractionSound(name: InteractionSound, enabled = loadFeedb
   if (name === lastName && now - lastTime < 180) return null;
   lastName = name; lastTime = now;
   stopInteractionSound();
-  const audio = new Audio(`${base}audio/sfx/interactions/${name}.${name === 'register' ? 'wav' : 'mp3'}`);
+  const audio = new Audio(`${base}audio/sfx/interactions/${name}.${wavSounds.has(name) ? 'wav' : 'mp3'}`);
   audio.volume = 0.6;
   current = audio;
   const release = () => { if (current === audio) current = null; };
