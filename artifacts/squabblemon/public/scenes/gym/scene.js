@@ -90,27 +90,9 @@ const AudioEngine={
     }
 
     function createGlovePatchTexture() {
-      const canvas = document.createElement("canvas");
-      canvas.width = 512;
-      canvas.height = 256;
-      const ctx = canvas.getContext("2d");
-
-      ctx.fillStyle = "#080a11";
-      ctx.fillRect(0, 0, 512, 256);
-      ctx.lineWidth = 12;
-      ctx.strokeStyle = "#d4a438";
-      ctx.strokeRect(6, 6, 500, 244);
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      const emblem = new Image();
-      emblem.onload = () => {
-        if (disposed) return;
-        const scale = Math.min(224 / emblem.naturalWidth, 224 / emblem.naturalHeight);
-        const width = emblem.naturalWidth * scale, height = emblem.naturalHeight * scale;
-        ctx.drawImage(emblem, (512 - width) / 2, (256 - height) / 2, width, height);
-        texture.needsUpdate = true;
-      };
-      emblem.src = new URL('../../brand/prismatic/marks/impact-standard-gold.webp', import.meta.url).href;
+      const texture = new THREE.TextureLoader().load('../../assets/results/v3/wordmark.webp');
+      texture.encoding = THREE.sRGBEncoding;
+      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
       return texture;
     }
     let scene, camera, renderer;
@@ -305,65 +287,61 @@ const AudioEngine={
       }
     }
 
+    function gloveRestPosition(isLeft) {
+      const halfWidth = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 3.0 * camera.aspect;
+      return new THREE.Vector3((isLeft ? -1 : 1) * Math.min(1.05, halfWidth * .68), -.92, -3.0);
+    }
+    function gloveScale() {
+      return Math.min(.95, Math.max(.5, camera.aspect * 1.3));
+    }
     function buildGloves() {
       const patchTex = createGlovePatchTexture();
-
-      function createGloveMesh(isLeft) {
-        const group = new THREE.Group();
-
-        const fistGeo = new THREE.SphereGeometry(0.52, 22, 18);
-        fistGeo.scale(1.15, 1.25, 1.45);
-        const leatherMat = new THREE.MeshStandardMaterial({
-          color: 0xd97706,
-          roughness: 0.32,
-          metalness: 0.28
-        });
-        const fist = new THREE.Mesh(fistGeo, leatherMat);
-        fist.add(createAnimeOutline(fistGeo, 0.045));
-        group.add(fist);
-
-        const ridgeGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.22, 16);
-        ridgeGeo.scale(1.1, 1.0, 1.3);
-        const ridge = new THREE.Mesh(ridgeGeo, leatherMat);
-        ridge.rotation.z = Math.PI * 0.5;
-        ridge.position.set(0, 0.1, 0.15);
-        group.add(ridge);
-
-        const thumbGeo = new THREE.SphereGeometry(0.24, 16, 12);
-        thumbGeo.scale(0.85, 1.35, 0.9);
-        const thumb = new THREE.Mesh(thumbGeo, leatherMat);
-        thumb.position.set(isLeft ? 0.38 : -0.38, -0.05, 0.18);
-        thumb.rotation.z = isLeft ? -0.42 : 0.42;
-        thumb.add(createAnimeOutline(thumbGeo, 0.038));
-        group.add(thumb);
-
-        const cuffGeo = new THREE.CylinderGeometry(0.42, 0.46, 0.5, 20);
-        const cuffMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.55 });
-        const cuff = new THREE.Mesh(cuffGeo, cuffMat);
-        cuff.position.set(0, -0.5, -0.38);
-        cuff.rotation.x = 0.52;
-        cuff.add(createAnimeOutline(cuffGeo, 0.04));
-        group.add(cuff);
-
-        const patchGeo = new THREE.PlaneGeometry(0.42, 0.22);
-        const patchMat = new THREE.MeshBasicMaterial({ map: patchTex, side: THREE.DoubleSide });
-        const patch = new THREE.Mesh(patchGeo, patchMat);
-        patch.position.set(0, -0.48, -0.15);
-        patch.rotation.x = 0.52;
-        group.add(patch);
-
-        return group;
+      const leather = new THREE.MeshStandardMaterial({color:0xa92319,roughness:.48,metalness:.03});
+      const palm = new THREE.MeshStandardMaterial({color:0x541410,roughness:.7});
+      const cuffMat = new THREE.MeshStandardMaterial({color:0x181a1c,roughness:.72});
+      const seamMat = new THREE.MeshStandardMaterial({color:0xe9c4a1,roughness:.85});
+      function createGlove(isLeft) {
+        const g = new THREE.Group(), side = isLeft ? 1 : -1;
+        function pad(x,y,z,sx,sy,sz,mat) {
+          const geo=new THREE.SphereGeometry(1,28,20);geo.scale(sx,sy,sz);
+          const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);
+          mesh.add(createAnimeOutline(geo,.014));g.add(mesh);return mesh;
+        }
+        // Rounded knuckle shell, tapered palm and attached inner thumb.
+        pad(0,.02,-.03,.37,.43,.29,leather);
+        pad(0,.06,-.25,.27,.28,.10,palm);
+        const thumb=pad(side*.27,-.02,-.08,.14,.24,.16,leather);
+        thumb.rotation.z=side*.45;
+        const cuff=new THREE.Mesh(new THREE.CylinderGeometry(.245,.23,.34,28),cuffMat);
+        cuff.position.set(0,-.44,.04);cuff.add(createAnimeOutline(cuff.geometry,.013));g.add(cuff);
+        for(const y of [-.30,-.58]) {
+          const ring=new THREE.Mesh(new THREE.TorusGeometry(.24,.012,6,28),seamMat);
+          ring.rotation.x=Math.PI/2;ring.position.set(0,y,.04);g.add(ring);
+        }
+        // Short wrist sleeve disappears through the bottom edge of the camera.
+        const wrist=new THREE.Mesh(new THREE.CylinderGeometry(.19,.22,.5,20),cuffMat);
+        wrist.position.set(0,-.82,.03);g.add(wrist);
+        const logoGeometry=new THREE.PlaneGeometry(.48,.16,20,6);
+        const vertices=logoGeometry.attributes.position;
+        for(let i=0;i<vertices.count;i++) {
+          const x=vertices.getX(i), y=vertices.getY(i)+.14;
+          vertices.setXYZ(i,x,y,-.03+.29*Math.sqrt(Math.max(0,1-(x/.37)**2-((y-.02)/.43)**2))+.008);
+        }
+        logoGeometry.computeVertexNormals();
+        const logo=new THREE.Mesh(logoGeometry,new THREE.MeshBasicMaterial({map:patchTex,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));
+        g.add(logo);
+        const strapLogo=new THREE.Mesh(new THREE.PlaneGeometry(.32,.105),logo.material);
+        strapLogo.position.set(0,-.44,.286);g.add(strapLogo);
+        g.rotation.set(-.48,isLeft?-.18:.18,isLeft?-.20:.20);
+        g.userData.isLeft=isLeft;
+        g.scale.setScalar(gloveScale());
+        g.position.copy(gloveRestPosition(isLeft));
+        return g;
       }
-
-      leftGloveMesh = createGloveMesh(true);
-      leftGloveMesh.position.set(-1.35, -1.25, 5.8);
-      scene.add(leftGloveMesh);
-
-      rightGloveMesh = createGloveMesh(false);
-      rightGloveMesh.position.set(1.35, -1.25, 5.8);
-      scene.add(rightGloveMesh);
+      scene.add(camera);
+      leftGloveMesh=createGlove(true);rightGloveMesh=createGlove(false);
+      camera.add(leftGloveMesh,rightGloveMesh);
     }
-
 
     let speedlineCanvas, speedlineCtx;
     let impactCanvas, impactCtx;
@@ -721,8 +699,8 @@ const AudioEngine={
       const glove = hand === "left" ? leftGloveMesh : rightGloveMesh;
       if (!glove) return;
 
-      const restPos = hand === "left" ? new THREE.Vector3(-1.35, -1.25, 5.8) : new THREE.Vector3(1.35, -1.25, 5.8);
-      const targetPos = new THREE.Vector3((hand === "left" ? -0.35 : 0.35), 0.2, 2.1);
+      const restPos = gloveRestPosition(hand === "left");
+      const targetPos = new THREE.Vector3((hand === "left" ? -0.28 : 0.28), -.1, 2.1 - camera.position.z);
 
       const startTime = performance.now();
       const duration = Math.max(85, 210 / speed);
@@ -759,7 +737,9 @@ const AudioEngine={
       ghost.traverse((child) => {
         if (child.isMesh) child.material = ghostMat;
       });
-      ghost.position.copy(originalGlove.position);
+      originalGlove.getWorldPosition(ghost.position);
+      originalGlove.getWorldQuaternion(ghost.quaternion);
+      originalGlove.getWorldScale(ghost.scale);
       ghost.userData = { life: 0.12, maxLife: 0.12 };
       scene.add(ghost);
       gloveGhosts.push(ghost);
@@ -786,6 +766,11 @@ addEventListener('message',e=>{
         : (camera.aspect < .75 ? 11.6 : 10.2);
       camera.updateProjectionMatrix();
       renderer.setSize(size.w, size.h);
+      if (leftGloveMesh) leftGloveMesh.position.copy(gloveRestPosition(true));
+      if (rightGloveMesh) rightGloveMesh.position.copy(gloveRestPosition(false));
+      for (const glove of [leftGloveMesh, rightGloveMesh]) {
+        if (glove) glove.scale.setScalar(gloveScale());
+      }
       resizeSpeedlines();
       resizeImpactCanvas();
     }
