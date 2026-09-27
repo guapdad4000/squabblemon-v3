@@ -20,6 +20,8 @@ export type PackRewardRecord = {
   rarity: string | null;
   isNew: boolean;
   amount: number;
+  /** Absent/null on historical and universal rewards. */
+  shardRarity?: 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical' | null;
 };
 
 export const playerPackOpeningsTable = pgTable(

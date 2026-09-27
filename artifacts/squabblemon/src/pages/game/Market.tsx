@@ -1,3 +1,4 @@
+import { StyleShardWallet, StyleShardCost } from '../../components/StyleShardWallet';
 import { playInteractionSound } from '../../lib/interactionAudio';
 import { StreetSelect } from '../../components/ui/street-select';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
@@ -213,7 +214,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
           <span>
             <GameGlyph name="shards" />
             <strong>{profile.styleShards}</strong>
-            <small>Style Shards</small>
+            <small>Universal Shards</small>
           </span>
         </div>
       </header>
@@ -223,6 +224,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
         </p>
       )}
       <Link href="/game/style" className="market-style-link">Signature collections · Stickers, banners & card scenes →</Link>
+      <StyleShardWallet wallet={profile} cardRarity={card?.rarity}/>
       <nav className="market-offers" aria-label="Shop items">
         {SHOP_OFFERS.filter((item) => item.id !== 'ticket' && !item.id.startsWith('character-')).map((item) => (
           <button
@@ -325,6 +327,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
               )}
             </>
           )}
+          {card && offer.currency === 'styleShards' && <StyleShardCost wallet={profile} rarity={card.rarity} cost={cost}/>}
           {quote && <p className="market-preview">{quote.receipt.summary}</p>}
           {pending && !working && (
             <p role="status" className="market-notice">

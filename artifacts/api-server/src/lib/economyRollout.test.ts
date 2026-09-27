@@ -179,7 +179,7 @@ test("overlapping bootstrap, pack, mission, and shop retries conserve one locked
     .filter((reward) => reward.kind === "softCurrency")
     .reduce((sum, reward) => sum + reward.amount, 0);
   const packStyleShards = opening.rewards
-    .filter((reward) => reward.kind === "styleShards")
+    .filter((reward) => reward.kind === "styleShards" && !reward.shardRarity)
     .reduce((sum, reward) => sum + reward.amount, 0);
   const rewardedCards = opening.rewards
     .filter((reward) => reward.kind === "card" && reward.cardId)

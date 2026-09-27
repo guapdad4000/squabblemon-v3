@@ -1,3 +1,4 @@
+import { STYLE_SHARD_TIERS, styleShardRarityForCard, totalStyleShardRewards, type StyleShardBalances, type StyleShardRarity } from '@workspace/squabblemon-engine/styleShards';
 import { randomInt } from "node:crypto";
 import {
   cardCatalog,
@@ -20,7 +21,7 @@ export { STREET_PACK_RARITY_WEIGHTS };
 export const STREET_PACK_CONFIG = {
   id: "street-pack",
   name: "Street Pack",
-  oddsVersion: "street-pack-v6",
+  oddsVersion: "street-pack-v7",
   softCurrencyCost: STREET_PACK_RULES.single.softCurrencyCost,
   ticketCost: STREET_PACK_RULES.single.ticketCost,
   rewardsPerPack: STREET_PACK_RULES.single.rewards,
@@ -31,7 +32,7 @@ export const STREET_PACK_CONFIG = {
 export const STREET_PACK_TEN_PULL_CONFIG = {
   id: "street-pack-ten",
   name: "Street Pack Ten-Pull",
-  oddsVersion: "street-pack-ten-v2",
+  oddsVersion: "street-pack-ten-v3",
   pullCount: 10,
   ticketCost: STREET_PACK_RULES.ten.ticketCost,
   softCurrencyCost: STREET_PACK_RULES.ten.softCurrencyCost,
@@ -55,6 +56,7 @@ export type ApiPackReward = {
   rarity: CardRarity | null;
   isNew: boolean;
   amount: number;
+  shardRarity?: StyleShardRarity | null;
 };
 
 export type GeneratedStreetPack = {
@@ -63,6 +65,7 @@ export type GeneratedStreetPack = {
   discoveredCardIds: string[];
   ownedVariants: string[];
   styleShardsGained: number;
+  styleShardBalancesGained: StyleShardBalances;
   softCurrencyGained: number;
   pityAfter: number;
 };
@@ -82,6 +85,10 @@ const shardReward = (amount: number, sourceCardId: string | null = null): ApiPac
   rarity: sourceCardId ? catalogCardById[sourceCardId]?.rarity ?? null : null,
   isNew: false, amount,
 });
+const duplicateReward = (card: (typeof cardCatalog)[number]): ApiPackReward => {
+  const shardRarity = styleShardRarityForCard(card.rarity);
+  return { ...shardReward(STYLE_SHARD_TIERS[shardRarity].duplicatePayout, card.catalogId), shardRarity };
+};
 const currencyReward = (amount: number): ApiPackReward => ({
   kind: "softCurrency", cardId: null, variantId: null, name: "Clout",
   rarity: null, isNew: false, amount,
@@ -138,7 +145,7 @@ export function generateStreetPack(
     pulled.add(card.catalogId);
     discoveredCards.add(card.catalogId);
     if (ownedCards.has(card.catalogId)) {
-      rewards.push(shardReward(STREET_PACK_RULES.duplicateStyleShards, card.catalogId));
+      rewards.push(duplicateReward(card));
     } else {
       ownedCards.add(card.catalogId);
       rewards.push(cardReward(card));
@@ -170,7 +177,7 @@ export function generateStreetPack(
     ownedCardIds: [...ownedCards],
     discoveredCardIds: [...discoveredCards],
     ownedVariants: [...ownedVariants],
-    styleShardsGained: rewards.filter(r => r.kind === "styleShards").reduce((sum, r) => sum + r.amount, 0),
+    ...totalStyleShardRewards(rewards),
     softCurrencyGained: rewards.filter(r => r.kind === "softCurrency").reduce((sum, r) => sum + r.amount, 0),
     pityAfter: variants.length === 0 || styleOutcome
       ? 0
@@ -223,7 +230,7 @@ export function generateStreetTenPull(
     const initiallyOrPreviouslyOwned = current.ownedCardIds.includes(card.catalogId)
       || rewards.slice(0, guaranteedRareIndex).some(r => r.kind === "card" && r.cardId === card.catalogId);
     rewards[guaranteedRareIndex] = initiallyOrPreviouslyOwned
-      ? shardReward(STREET_PACK_RULES.duplicateStyleShards, card.catalogId)
+      ? duplicateReward(card)
       : cardReward(card);
   }
 
@@ -231,7 +238,7 @@ export function generateStreetTenPull(
   return {
     rewards,
     ...inventory,
-    styleShardsGained: rewards.filter(r => r.kind === "styleShards").reduce((sum, r) => sum + r.amount, 0),
+    ...totalStyleShardRewards(rewards),
     softCurrencyGained: rewards.filter(r => r.kind === "softCurrency").reduce((sum, r) => sum + r.amount, 0),
     pityAfter: state.pity,
     guaranteedRareIndex,

@@ -16,7 +16,7 @@ test('character cosmetics debit only Style Shards, retain badges, and never chan
 });
 test('purchases reject unowned fighters, insufficient funds, and unfinished character collections', () => {
   assert.throws(() => planShopPurchase(wallet({ownedCardIds:[]}), {itemId:'character-stickers',cardId:'kyle'}), /Unlock/);
-  assert.throws(() => planShopPurchase(wallet({styleShards:99}), {itemId:'character-stickers',cardId:'kyle'}), /100/);
+  assert.throws(() => planShopPurchase(wallet({styleShards:99}), {itemId:'character-stickers',cardId:'kyle'}), /1 more Legendary or Universal/);
   assert.throws(() => planShopPurchase(wallet({ownedCardIds:['cornball']}), {itemId:'character-stickers',cardId:'cornball'}), /not ready/);
 });
 test('base banner is included; paid scenes, finish and individual stickers require ownership', () => {

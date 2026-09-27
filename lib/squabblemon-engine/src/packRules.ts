@@ -1,3 +1,4 @@
+import { STYLE_SHARD_RARITIES, STYLE_SHARD_TIERS } from './styleShards';
 export const STREET_PACK_RARITY_WEIGHTS = {
   SuperCommon: 40,
   Common: 20,
@@ -30,6 +31,7 @@ export const RARE_PLUS_GUARANTEE_WEIGHTS = {
 export const STREET_PACK_RULES = {
   gameplaySlots: 5,
   protectedSlots: 2,
+  /** Fixed legacy/welcome grant; Street Pack duplicates use STYLE_SHARD_TIERS. */
   duplicateStyleShards: 5,
   pityLimit: 10,
   single: { ticketCost: 1, softCurrencyCost: 200, rewards: 6 },
@@ -95,12 +97,12 @@ export const STREET_PACK_DISCLOSURES = [
   {
     label: "Slots 3–5 · Gang cards",
     chance: 100,
-    detail: `Each slot independently rolls ${PACK_RARITY_LABELS.SuperCommon} ${STREET_PACK_RARITY_WEIGHTS.SuperCommon}%, ${PACK_RARITY_LABELS.Common} ${STREET_PACK_RARITY_WEIGHTS.Common}%, ${PACK_RARITY_LABELS.Uncommon} ${STREET_PACK_RARITY_WEIGHTS.Uncommon}%, ${PACK_RARITY_LABELS.Rare} ${STREET_PACK_RARITY_WEIGHTS.Rare}%, ${PACK_RARITY_LABELS.Epic} ${STREET_PACK_RARITY_WEIGHTS.Epic}%, ${PACK_RARITY_LABELS.Legendary} ${STREET_PACK_RARITY_WEIGHTS.Legendary}%, or ${PACK_RARITY_LABELS.Mythical} ${STREET_PACK_RARITY_WEIGHTS.Mythical}%. A card does not repeat within its rarity tier until that tier is exhausted. Duplicate gameplay cards become ${STREET_PACK_RULES.duplicateStyleShards} Style Shards. An empty authored rarity tier fails the opening explicitly; it is never promoted to another rarity.`,
+    detail: `Each slot independently rolls ${PACK_RARITY_LABELS.SuperCommon} ${STREET_PACK_RARITY_WEIGHTS.SuperCommon}%, ${PACK_RARITY_LABELS.Common} ${STREET_PACK_RARITY_WEIGHTS.Common}%, ${PACK_RARITY_LABELS.Uncommon} ${STREET_PACK_RARITY_WEIGHTS.Uncommon}%, ${PACK_RARITY_LABELS.Rare} ${STREET_PACK_RARITY_WEIGHTS.Rare}%, ${PACK_RARITY_LABELS.Epic} ${STREET_PACK_RARITY_WEIGHTS.Epic}%, ${PACK_RARITY_LABELS.Legendary} ${STREET_PACK_RARITY_WEIGHTS.Legendary}%, or ${PACK_RARITY_LABELS.Mythical} ${STREET_PACK_RARITY_WEIGHTS.Mythical}%. A card does not repeat within its rarity tier until that tier is exhausted. Duplicate gameplay cards give matching Style Shards: ${STYLE_SHARD_RARITIES.map(rarity => `${STYLE_SHARD_TIERS[rarity].label} ${STYLE_SHARD_TIERS[rarity].duplicatePayout}`).join(', ')}. Super Common uses Common shards. Styles use their character's rarity; Universal shards cover any shortfall. An empty authored rarity tier fails the opening explicitly; it is never promoted to another rarity.`,
   },
   {
-    label: "Bonus · Style Shards",
+    label: "Bonus · Universal Style Shards",
     chance: STREET_PACK_RULES.bonus.styleShardChance,
-    detail: `Nominal ${STREET_PACK_RULES.bonus.styleShardChance}% chance. ${STREET_PACK_RULES.bonus.styleShardAmounts.join(", ")} Style Shards, each amount equally likely. Cosmetic pity can override the nominal bonus probabilities.`,
+    detail: `Nominal ${STREET_PACK_RULES.bonus.styleShardChance}% chance. ${STREET_PACK_RULES.bonus.styleShardAmounts.join(", ")} Universal Style Shards, each amount equally likely. Cosmetic pity can override the nominal bonus probabilities.`,
   },
   {
     label: "Bonus · Clout",

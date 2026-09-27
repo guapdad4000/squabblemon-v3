@@ -1108,6 +1108,35 @@ components:
           maxLength: 32
       required: [name, cardIds, heroCardId, recipeId]
       additionalProperties: false
+    StyleShardBalances:
+      type: object
+      description: Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.
+      properties:
+        Common:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        Uncommon:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        Rare:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        Epic:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        Legendary:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        Mythical:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+      additionalProperties: false
     PlayerProfile:
       type: object
       properties:
@@ -1134,6 +1163,8 @@ components:
           type: integer
         styleShards:
           type: integer
+        styleShardBalances:
+          $ref: "#/components/schemas/StyleShardBalances"
         packPity:
           type: integer
         deckSlots:
@@ -1383,6 +1414,10 @@ components:
           type: [string, "null"]
         rarity:
           type: [string, "null"]
+        shardRarity:
+          type: [string, "null"]
+          enum: [Common, Uncommon, Rare, Epic, Legendary, Mythical, null]
+          description: Explicit currency issued. Missing or null means universal, including historical duplicate receipts.
         isNew:
           type: boolean
         amount:
@@ -1691,7 +1726,7 @@ components:
           type: integer
           minimum: 0
           maximum: 4
-          description: Card choice: Homeless Guy extra Motion (0–4), Dice Game wager (1–3; zero defaults to 1), or Concert mode (0 boost, 1 reduce). The engine validates affordability and card-specific bounds.
+          description: "Card choice: Homeless Guy extra Motion (0–4), Dice Game wager (1–3; zero defaults to 1), or Concert mode (0 boost, 1 reduce). The engine validates affordability and card-specific bounds."
       required: [cardInstanceId, lane, squabble]
       additionalProperties: false
     MatchReward:

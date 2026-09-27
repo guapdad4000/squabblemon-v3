@@ -45,7 +45,7 @@ test("concurrent retries spend one ticket and persist one pack opening", async (
 
   assert.equal(results[0].opening.id, results[1].opening.id);
   assert.equal(results[0].opening.rewards.length, 6);
-  assert.equal(results[0].opening.oddsVersion, 'street-pack-v6');
+  assert.equal(results[0].opening.oddsVersion, 'street-pack-v7');
   assert.deepEqual(results[0].opening, results[1].opening);
   assert.equal(new Set(results[0].opening.rewards.slice(0,5).map(reward => reward.cardId)).size,5);
   assert.deepEqual(

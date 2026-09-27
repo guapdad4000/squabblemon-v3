@@ -1,3 +1,4 @@
+import { styleShardLabel } from '@workspace/squabblemon-engine/styleShards';
 import { playTutorialSequence } from '../../lib/tutorialVoice';
 import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
@@ -97,7 +98,7 @@ function highestRarity(rewards: readonly PackReward[]) {
 }
 
 const resourceName = (reward: PackReward) =>
-  reward.kind === 'styleShards' ? 'Style shards' : reward.kind === 'softCurrency' ? 'Clout' : (reward.name ?? 'Card');
+  reward.kind === 'styleShards' ? styleShardLabel(reward.shardRarity) : reward.kind === 'softCurrency' ? 'Clout' : (reward.name ?? 'Card');
 
 // Find the index of the rarest reward (≥ Rare) in a haul. Used to badge the
 // "GUARANTEED RARE" reward on the ten-pull reveal. Returns -1 if none —
@@ -142,7 +143,7 @@ function RewardCard({ reward, large = false }: { reward: PackReward; large?: boo
         />
       ) : (
         <div className="gym-reward__resource">
-          <GameGlyph name={reward.kind === 'styleShards' ? 'shards' : 'clout'} />
+          <GameGlyph name={reward.kind === 'styleShards' ? 'shards' : 'clout'} shardRarity={reward.shardRarity} />
           <strong>+{reward.amount}</strong>
           <span>{resourceName(reward)}</span>
         </div>
@@ -151,10 +152,10 @@ function RewardCard({ reward, large = false }: { reward: PackReward; large?: boo
       {reward.kind === 'variant' && <span className="gym-reward__new">STYLE UNLOCKED</span>}
       {isDuplicate && (
         <div className="gym-reward__conversion">
-          <GameGlyph name="shards" />
+          <GameGlyph name="shards" shardRarity={reward.shardRarity} />
           <span>
             Already on your gang
-            <strong>+{reward.amount} Style Shards</strong>
+            <strong>+{reward.amount} {styleShardLabel(reward.shardRarity)}</strong>
           </span>
         </div>
       )}
@@ -560,7 +561,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <p>{WELCOME_PULL_LINES[welcomeStep === 'intro' && !pending ? 'intro' : 'ticket']}</p>
           {welcomeStep === 'ticket' || pending ? <>
             <strong className="welcome-pull__ticket">FREE WELCOME TICKET · DR. FADE GUARANTEED</strong>
-            <small>One per account. No Clout or regular tickets used. Already own him? Receive {STREET_PACK_RULES.duplicateStyleShards} Style Shards.</small>
+            <small>One per account. No Clout or regular tickets used. Already own him? Receive {STREET_PACK_RULES.duplicateStyleShards} Universal Style Shards.</small>
             <button className="studio-action studio-action--gold" disabled={phase !== 'idle'} onClick={() => void handleOpen('ticket', 1, true)}>{phase === 'requesting' ? 'Saving your free pull…' : pending ? 'Retry free pull' : 'Use free welcome ticket'}</button>
           </> : <button className="studio-action studio-action--gold" onClick={() => setWelcomeStep('ticket')}>Show me my ticket <ArrowRight size={16} /></button>}
           {error && <p role="alert">{error}</p>}
@@ -939,7 +940,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </span>
             {currentReward.kind === 'styleShards' && currentReward.cardId && (
               <p className="gacha-results__conversion-note">
-                Full fighter reveal complete. The extra copy powered up your gang with {currentReward.amount} Style Shards.
+                Full fighter reveal complete. The extra copy powered up your gang with {currentReward.amount} {styleShardLabel(currentReward.shardRarity)}.
               </p>
             )}
           </div>
@@ -1033,7 +1034,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 <p data-testid="text-pack-collection-state">
                   {unownedGameplayCards > 0
                     ? `${unownedGameplayCards} gameplay cards remain. The first two card slots protect missing cards when the rolled rarity still has one; they do not silently jump rarity tiers.`
-                    : `You own every gameplay card. Card repeats convert to ${STREET_PACK_RULES.duplicateStyleShards} Style Shards.`}
+                    : `You own every gameplay card. Extra copies become matching rarity shards; rarer copies give more.`}
                   {' '}
                   {unownedCosmeticVariants > 0
                     ? `${unownedCosmeticVariants} featured cosmetic variants remain.`

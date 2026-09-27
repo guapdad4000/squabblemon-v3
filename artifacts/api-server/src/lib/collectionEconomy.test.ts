@@ -19,15 +19,15 @@ const high = (max: number) => max - 1;
 const allCardIds = cardCatalog.map(card => card.catalogId);
 const allVariantIds = cardCatalog.flatMap(card => card.variantSlots.map(variant => variant.id));
 
-test("published v6 rules disclose the authoritative independent rarity and bonus behavior", () => {
-  assert.equal(STREET_PACK_CONFIG.oddsVersion, "street-pack-v6");
-  assert.equal(STREET_PACK_TEN_PULL_CONFIG.oddsVersion, "street-pack-ten-v2");
+test("published v7 rules disclose the authoritative independent rarity and bonus behavior", () => {
+  assert.equal(STREET_PACK_CONFIG.oddsVersion, "street-pack-v7");
+  assert.equal(STREET_PACK_TEN_PULL_CONFIG.oddsVersion, "street-pack-ten-v3");
   assert.equal(STREET_PACK_CONFIG.softCurrencyCost, 200);
   assert.equal(STREET_PACK_TEN_PULL_CONFIG.softCurrencyCost, 1800);
   assert.equal(Object.values(STREET_PACK_RARITY_WEIGHTS).reduce((sum, n) => sum + n, 0), 100);
   const disclosure = STREET_PACK_CONFIG.odds.map(odd => odd.detail).join(" ");
   assert.match(disclosure, /independently/);
-  assert.match(disclosure, /Duplicate gameplay cards become 5 Style Shards/);
+  assert.match(disclosure, /Common 5, Uncommon 8, Rare 12, Super Rare 20, Legendary 40, Mythical 80/);
   assert.match(disclosure, /25 Clout/);
   assert.match(disclosure, /50 gameplay slots/);
   assert.match(disclosure, /duplicate Rare, Super Rare, Legendary, or Mythical counts/);
@@ -78,7 +78,7 @@ test("an authored empty rarity tier fails explicitly", () => {
   }), /SuperCommon.*no gameplay cards/);
 });
 
-test("bonus boundaries, amounts, pity, and exhausted style conversion match v6", () => {
+test("bonus boundaries, amounts, pity, and exhausted style conversion match v7", () => {
   const expected = [
     [2999, "styleShards", 5],
     [3000, "softCurrency", 25],
@@ -128,10 +128,13 @@ test("ten-pull counts duplicate Rare+ gameplay pulls and never cosmetics", () =>
   assert.equal(forced.rewards[59].cardId, null);
   const guaranteed = forced.rewards[58];
   assert.equal(guaranteed.kind, "styleShards");
-  assert.equal(guaranteed.amount, 5);
+  assert.equal(guaranteed.amount, 12);
+  assert.equal(guaranteed.shardRarity, "Rare");
+  assert.equal(forced.styleShardBalancesGained.Common, 49 * 5);
+  assert.equal(forced.styleShardBalancesGained.Rare, 12);
   assert.equal(guaranteed.rarity, "Rare");
   assert.equal(forced.styleShardsGained,
-    forced.rewards.filter(r => r.kind === "styleShards").reduce((sum, r) => sum + r.amount, 0));
+    forced.rewards.filter(r => r.kind === "styleShards" && !r.shardRarity).reduce((sum, r) => sum + r.amount, 0));
   assert.equal(forced.softCurrencyGained,
     forced.rewards.filter(r => r.kind === "softCurrency").reduce((sum, r) => sum + r.amount, 0));
 });

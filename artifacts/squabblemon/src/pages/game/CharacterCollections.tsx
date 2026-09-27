@@ -1,3 +1,4 @@
+import { StyleShardWallet } from '../../components/StyleShardWallet';
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useExtrasNotificationsSeen } from '../../lib/useExtrasNotificationsSeen';
@@ -34,7 +35,8 @@ export function CharacterCollections({ bootstrap }: { bootstrap: PlayerBootstrap
       <div className="extras-stamp" aria-hidden="true">PERSONAL<br/><strong>STYLE</strong><br/>NO STAT BOOSTS</div>
       <div className="extras-hero__signature">Curated by <strong>The Stylist</strong><span>Good taste. Bad intentions.</span></div>
     </header>
-    <section className="extras-counter" aria-label="Your style collection"><div><Sparkles size={20}/><span>YOUR OPEN COLLECTIONS<strong>{String(ownedCount).padStart(2,'0')} <small>/ {sets.length}</small></strong></span></div><p>Unlock the character.<br/><strong>Then make it personal.</strong></p><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Style Shards</span></div></section>
+    <section className="extras-counter" aria-label="Your style collection"><div><Sparkles size={20}/><span>YOUR OPEN COLLECTIONS<strong>{String(ownedCount).padStart(2,'0')} <small>/ {sets.length}</small></strong></span></div><p>Unlock the character.<br/><strong>Then make it personal.</strong></p><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Universal Shards</span></div></section>
+    <StyleShardWallet wallet={profile}/>
     <div className="extras-ribbon" aria-hidden="true"><span>STICK IT.</span><b>✦</b><span>REP IT.</span><b>✦</b><span>MAKE IT YOURS.</span><b>✦</b><span>STICK IT.</span><b>✦</b><span>REP IT.</span></div>
     <section id="extras-collections" className="extras-collections" aria-label="Signature collections">
       <div className="extras-section-heading"><div><p className="extras-eyebrow">THE COLLECTION WALL / {String(visible.length).padStart(2,'0')} SERIES</p><h2>Pick your <em>signature.</em></h2></div><span className="extras-handnote">A little extra never hurt.</span></div>

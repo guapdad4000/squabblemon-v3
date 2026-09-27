@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { PackRewardKind } from './packRewardKind';
+import type { PackRewardShardRarity } from './packRewardShardRarity';
 
 export interface PackReward {
   kind: PackRewardKind;
@@ -17,6 +18,11 @@ export interface PackReward {
   name: string | null;
   /** @nullable */
   rarity: string | null;
+  /**
+     * Explicit currency issued. Missing or null means universal, including historical duplicate receipts.
+     * @nullable
+     */
+  shardRarity?: PackRewardShardRarity;
   isNew: boolean;
   amount: number;
 }

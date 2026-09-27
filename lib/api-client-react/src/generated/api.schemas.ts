@@ -223,6 +223,42 @@ export const PlayerProfileOnboardingStep = {
   complete: 'complete',
 } as const;
 
+/**
+ * Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.
+ */
+export interface StyleShardBalances {
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Common?: number;
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Uncommon?: number;
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Rare?: number;
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Epic?: number;
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Legendary?: number;
+  /**
+     * @minimum 0
+     * @maximum 2147483647
+     */
+  Mythical?: number;
+}
+
 export type CosmeticLoadoutBannerFinish = typeof CosmeticLoadoutBannerFinish[keyof typeof CosmeticLoadoutBannerFinish];
 
 
@@ -298,6 +334,22 @@ export const PackRewardKind = {
   variant: 'variant',
 } as const;
 
+/**
+ * Explicit currency issued. Missing or null means universal, including historical duplicate receipts.
+ * @nullable
+ */
+export type PackRewardShardRarity = typeof PackRewardShardRarity[keyof typeof PackRewardShardRarity] | null;
+
+
+export const PackRewardShardRarity = {
+  Common: 'Common',
+  Uncommon: 'Uncommon',
+  Rare: 'Rare',
+  Epic: 'Epic',
+  Legendary: 'Legendary',
+  Mythical: 'Mythical',
+} as const;
+
 export interface PackReward {
   kind: PackRewardKind;
   /** @nullable */
@@ -308,6 +360,11 @@ export interface PackReward {
   name: string | null;
   /** @nullable */
   rarity: string | null;
+  /**
+     * Explicit currency issued. Missing or null means universal, including historical duplicate receipts.
+     * @nullable
+     */
+  shardRarity?: PackRewardShardRarity;
   isNew: boolean;
   amount: number;
 }
@@ -345,6 +402,7 @@ export interface PlayerProfile {
   softCurrency: number;
   packTickets: number;
   styleShards: number;
+  styleShardBalances?: StyleShardBalances;
   packPity: number;
   deckSlots: number;
   cosmeticCurrency: number;

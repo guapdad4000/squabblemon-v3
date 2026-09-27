@@ -1,0 +1,200 @@
+body {
+  margin: 0;
+  background: #0d100e;
+  color: #f1eddf;
+}
+.shard-preview {
+  max-width: 1240px;
+  padding: 36px clamp(16px, 4vw, 48px);
+  margin: auto;
+  font-family: var(--font-body, Arial), sans-serif;
+}
+.shard-preview__header {
+  position: relative;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #606b553d;
+  padding-bottom: 22px;
+}
+.shard-preview__header > span,
+.shard-preview__art > span,
+.shard-preview__checkout > span {
+  font: 600 10px/1.5 var(--font-mono, monospace);
+  letter-spacing: 0.16em;
+  color: #b9c59e;
+}
+.shard-preview h1 {
+  font: 900 italic clamp(38px, 5.2vw, 67px)/0.95 var(--font-display, Arial);
+  letter-spacing: -0.04em;
+  margin: 16px 0;
+}
+.shard-preview h1 em {
+  color: #c5d49b;
+}
+.shard-preview__header > p {
+  position: absolute;
+  bottom: 54px;
+  right: 0;
+  font: italic 20px Georgia;
+}
+.shard-preview__header small {
+  display: block;
+  font-size: 11px;
+  color: #b4bcaa;
+}
+.shard-preview__bench {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 32px;
+}
+.shard-preview__art {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 370px;
+  padding: 25px 12px;
+  background: linear-gradient(155deg, #222822, #121712);
+  border: 1px solid #85957742;
+  border-bottom: 4px solid var(--tier-color);
+  overflow: hidden;
+}
+.shard-preview__art > .game-glyph {
+  width: min(330px, 90%);
+  height: 300px;
+  margin: 14px auto;
+  filter: drop-shadow(0 18px 14px #0008);
+}
+.shard-preview__art h2 {
+  font: 900 italic 40px var(--font-display, Arial);
+  color: var(--tier-color);
+  margin: 8px 0;
+}
+.shard-preview__art p {
+  font: 500 12px/1.6 var(--font-mono, monospace);
+  margin: 0;
+}
+.shard-preview__checkout h2 {
+  font: 900 italic clamp(24px, 3vw, 36px)/1.05 var(--font-display, Arial);
+  margin: 13px 0;
+}
+.shard-preview__checkout > p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #bcc3b6;
+}
+.shard-preview__checkout nav {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+  margin: 22px 0;
+}
+.shard-preview button {
+  cursor: pointer;
+  color: inherit;
+  border: 1px solid #82916a55;
+  background: #1e281d;
+  min-height: 44px;
+  font: 700 11px var(--font-body, Arial);
+  padding: 10px;
+}
+.shard-preview button:focus-visible {
+  outline: 2px solid #d5ed8d;
+  outline-offset: 4px;
+}
+.shard-preview nav button {
+  padding: 8px 3px;
+  background: #161d17;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 9px;
+}
+.shard-preview nav .game-glyph {
+  width: 44px;
+  height: 44px;
+}
+.shard-preview nav button[aria-pressed="true"] {
+  border-color: var(--tier-color);
+  box-shadow: 0 2px 0 var(--tier-color);
+}
+.shard-preview__checkout h3 {
+  font-size: 16px;
+  margin: 20px 0 8px;
+}
+.shard-preview__actions {
+  display: flex;
+  gap: 9px;
+}
+.shard-preview__actions button {
+  flex: 1;
+}
+.shard-preview__actions button:last-child {
+  background: #c5d49b;
+  color: #172115;
+  border-color: #c5d49b;
+}
+.shard-preview button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.shard-preview .shard-preview__reset {
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  min-height: 36px;
+  padding: 4px 0;
+  color: #b2baa8;
+}
+.shard-preview footer {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #a3ad97;
+  text-align: center;
+  padding: 8px 0;
+}
+.shard-preview [role="status"] {
+  min-height: 23px;
+}
+.shard-preview .shard-cost {
+  margin-bottom: 18px;
+}
+@media (max-width: 740px) {
+  .shard-preview__bench {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .shard-preview__art {
+    min-height: 0;
+    padding: 18px;
+  }
+  .shard-preview__art > .game-glyph {
+    height: 190px;
+    width: 215px;
+    margin: 8px auto;
+  }
+  .shard-preview__art h2 {
+    font-size: 31px;
+  }
+  .shard-preview__header > p {
+    position: static;
+    font-size: 18px;
+  }
+  .shard-preview__checkout nav {
+    gap: 5px;
+  }
+  .shard-preview nav button {
+    font-size: 8px;
+  }
+  .shard-preview nav .game-glyph {
+    width: 38px;
+    height: 38px;
+  }
+  .shard-preview__actions {
+    flex-wrap: wrap;
+  }
+  .shard-preview__actions button {
+    min-width: 140px;
+  }
+}
