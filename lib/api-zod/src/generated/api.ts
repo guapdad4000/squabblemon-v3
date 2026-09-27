@@ -3831,7 +3831,7 @@ export const purchasePlayerShopItemBodyCardIdMax = 100;
 
 export const PurchasePlayerShopItemBody = zod.object({
   "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
-  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1']),
+  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1', 'reaction-pack:kyle:v1', 'reaction-pack:church-auntie:v1']),
   "cardId": zod.string().min(1).max(purchasePlayerShopItemBodyCardIdMax).optional()
 })
 
@@ -4338,5 +4338,4 @@ export const ReceivePaymentWebhookHeader = zod.object({
 })
 
 export const ReceivePaymentWebhookResponse = zod.unknown()
-
 

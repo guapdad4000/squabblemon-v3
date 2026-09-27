@@ -5,8 +5,8 @@ import { REACTIONS, CHARACTER_REACTION_PACKS, ownedReactions, addReaction } from
 import { planShopPurchase } from '../../../../lib/squabblemon-engine/src/economy';
 import { PurchasePlayerShopItemBody } from '../../../../lib/api-zod/src/generated/api';
 const root = new URL('../../../squabblemon/public/', import.meta.url);
-test('all seven character packs validate, purchase and unlock exactly their playable reactions', () => {
- assert.equal(CHARACTER_REACTION_PACKS.length, 7);
+test('all nine character packs validate, purchase and unlock exactly their playable reactions', () => {
+ assert.equal(CHARACTER_REACTION_PACKS.length, 9);
  for (const pack of CHARACTER_REACTION_PACKS) {
   const input = {itemId: pack.id, idempotencyKey:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'};
   assert.ok(PurchasePlayerShopItemBody.safeParse(input).success);
@@ -27,5 +27,5 @@ test('all seven character packs validate, purchase and unlock exactly their play
   assert.throws(()=>planShopPurchase({...wallet,softCurrency:399},input),/Clout/);
  }
  const manifest=JSON.parse(readFileSync(new URL('assets/reactions/character-pack-v1/manifest.json',root),'utf8'));
- assert.equal(manifest.reactions.length,28);
+ assert.equal(manifest.reactions.length,36);
 });

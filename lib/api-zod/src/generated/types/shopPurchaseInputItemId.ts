@@ -29,4 +29,6 @@ export const ShopPurchaseInputItemId = {
   'reaction-pack:buttahs:v1': 'reaction-pack:buttahs:v1',
   'reaction-pack:guap:v1': 'reaction-pack:guap:v1',
   'reaction-pack:cologne-criminal:v1': 'reaction-pack:cologne-criminal:v1',
+  'reaction-pack:kyle:v1': 'reaction-pack:kyle:v1',
+  'reaction-pack:church-auntie:v1': 'reaction-pack:church-auntie:v1',
 } as const;
