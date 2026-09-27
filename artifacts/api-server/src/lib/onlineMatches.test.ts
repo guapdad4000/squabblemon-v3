@@ -160,6 +160,21 @@ test(
     );
     view = readyB.body;
     assert.equal(view.status, "active");
+
+    const reactionPath = `/${code}/reactions`;
+    const reaction = { requestId: randomUUID(), reactionId: 'big-w', gameNumber: view.gameNumber };
+    assert.equal((await request(users[2], reactionPath)).status, 404);
+    assert.equal((await request(users[0], reactionPath, { ...reaction, reactionId: 'hold-that' })).status, 403);
+    assert.equal((await request(users[0], reactionPath, { ...reaction, reactionId: 'external-url' })).status, 400);
+    assert.equal((await request(users[0], reactionPath, { ...reaction, gameNumber: 99 })).status, 409);
+    const sent = await request(users[0], reactionPath, reaction);
+    assert.equal(sent.status, 200);
+    assert.deepEqual((await request(users[0], reactionPath, reaction)).body.revision, sent.body.revision);
+    assert.equal((await request(users[0], reactionPath, { ...reaction, requestId: randomUUID() })).status, 429);
+    assert.equal((await request(users[1], reactionPath, { ...reaction, requestId: randomUUID() })).status, 200);
+    const afterReaction = (await request(users[0], `/${code}`)).body;
+    assert.equal(afterReaction.revision, view.revision, 'reactions never invalidate a card move');
+    assert.equal(afterReaction.deadline, view.deadline, 'reactions never reset the turn clock');
     const actor = () => (view.activeSeat === "player" ? users[0] : users[1]);
     const actorView = async () => (await request(actor(), `/${code}`)).body;
     view = await actorView();

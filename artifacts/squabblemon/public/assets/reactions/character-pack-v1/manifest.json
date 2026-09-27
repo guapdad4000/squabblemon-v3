@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "frameSize": [
+    256,
+    256
+  ],
+  "sheetGrid": [
+    4,
+    4
+  ],
+  "rowOrder": [
+    "laugh",
+    "rage",
+    "shocked",
+    "respect"
+  ],
+  "playbackOrder": [
+    0,
+    1,
+    2,
+    3,
+    2,
+    1
+  ],
+  "frameDurationsMs": [
+    220,
+    160,
+    260,
+    360,
+    160,
+    160
+  ],
+  "packs": [
+    {
+      "id": "reaction-pack:big-city-pigeon:v1",
+      "name": "Big City Pigeon Reactions",
+      "reactionIds": [
+        "reaction:big-city-pigeon:laugh:v1",
+        "reaction:big-city-pigeon:rage:v1",
+        "reaction:big-city-pigeon:shocked:v1",
+        "reaction:big-city-pigeon:respect:v1"
+      ]
+    },
+    {
+      "id": "reaction-pack:dr-fade:v1",
+      "name": "Dr. Fade Reactions",
+      "reactionIds": [
+        "reaction:dr-fade:laugh:v1",
+        "reaction:dr-fade:rage:v1",
+        "reaction:dr-fade:shocked:v1",
+        "reaction:dr-fade:respect:v1"
+      ]
+    },
+    {
+      "id": "reaction-pack:buddy:v1",
+      "name": "Buddy Reactions",
+      "reactionIds": [
+        "reaction:buddy:laugh:v1",
+        "reaction:buddy:rage:v1",
+        "reaction:buddy:shocked:v1",
+        "reaction:buddy:respect:v1"
+      ]
+    }
+  ],
+  "reactions": [
+    {
+      "id": "reaction:big-city-pigeon:laugh:v1",
+      "character": "Big City Pigeon",
+      "catalogCardId": "gust",
+      "reaction": "laugh",
+      "label": "Big City Pigeon \u2014 Laugh",
+      "gif": "assets/reactions/character-pack-v1/big-city-pigeon/laugh.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/laugh-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/big-city-pigeon/laugh.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/big-city-pigeon/spritesheet.png",
+      "row": 0,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:big-city-pigeon:rage:v1",
+      "character": "Big City Pigeon",
+      "catalogCardId": "gust",
+      "reaction": "rage",
+      "label": "Big City Pigeon \u2014 Rage",
+      "gif": "assets/reactions/character-pack-v1/big-city-pigeon/rage.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/rage-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/big-city-pigeon/rage.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/big-city-pigeon/spritesheet.png",
+      "row": 1,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:big-city-pigeon:shocked:v1",
+      "character": "Big City Pigeon",
+      "catalogCardId": "gust",
+      "reaction": "shocked",
+      "label": "Big City Pigeon \u2014 Shocked",
+      "gif": "assets/reactions/character-pack-v1/big-city-pigeon/shocked.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/shocked-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/big-city-pigeon/shocked.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/big-city-pigeon/spritesheet.png",
+      "row": 2,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:big-city-pigeon:respect:v1",
+      "character": "Big City Pigeon",
+      "catalogCardId": "gust",
+      "reaction": "respect",
+      "label": "Big City Pigeon \u2014 Respect",
+      "gif": "assets/reactions/character-pack-v1/big-city-pigeon/respect.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/big-city-pigeon/respect-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/big-city-pigeon/respect.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/big-city-pigeon/spritesheet.png",
+      "row": 3,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:dr-fade:laugh:v1",
+      "character": "Dr. Fade",
+      "catalogCardId": "dr-fade",
+      "reaction": "laugh",
+      "label": "Dr. Fade \u2014 Laugh",
+      "gif": "assets/reactions/character-pack-v1/dr-fade/laugh.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/dr-fade/laugh-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/dr-fade/laugh.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/dr-fade/spritesheet.png",
+      "row": 0,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:dr-fade:rage:v1",
+      "character": "Dr. Fade",
+      "catalogCardId": "dr-fade",
+      "reaction": "rage",
+      "label": "Dr. Fade \u2014 Rage",
+      "gif": "assets/reactions/character-pack-v1/dr-fade/rage.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/dr-fade/rage-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/dr-fade/rage.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/dr-fade/spritesheet.png",
+      "row": 1,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:dr-fade:shocked:v1",
+      "character": "Dr. Fade",
+      "catalogCardId": "dr-fade",
+      "reaction": "shocked",
+      "label": "Dr. Fade \u2014 Shocked",
+      "gif": "assets/reactions/character-pack-v1/dr-fade/shocked.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/dr-fade/shocked-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/dr-fade/shocked.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/dr-fade/spritesheet.png",
+      "row": 2,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:dr-fade:respect:v1",
+      "character": "Dr. Fade",
+      "catalogCardId": "dr-fade",
+      "reaction": "respect",
+      "label": "Dr. Fade \u2014 Respect",
+      "gif": "assets/reactions/character-pack-v1/dr-fade/respect.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/dr-fade/respect-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/dr-fade/respect.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/dr-fade/spritesheet.png",
+      "row": 3,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:buddy:laugh:v1",
+      "character": "Buddy",
+      "catalogCardId": "buddy",
+      "reaction": "laugh",
+      "label": "Buddy \u2014 Laugh",
+      "gif": "assets/reactions/character-pack-v1/buddy/laugh.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/buddy/laugh-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/buddy/laugh.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/buddy/spritesheet.png",
+      "row": 0,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:buddy:rage:v1",
+      "character": "Buddy",
+      "catalogCardId": "buddy",
+      "reaction": "rage",
+      "label": "Buddy \u2014 Rage",
+      "gif": "assets/reactions/character-pack-v1/buddy/rage.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/buddy/rage-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/buddy/rage.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/buddy/spritesheet.png",
+      "row": 1,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:buddy:shocked:v1",
+      "character": "Buddy",
+      "catalogCardId": "buddy",
+      "reaction": "shocked",
+      "label": "Buddy \u2014 Shocked",
+      "gif": "assets/reactions/character-pack-v1/buddy/shocked.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/buddy/shocked-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/buddy/shocked.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/buddy/spritesheet.png",
+      "row": 2,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    },
+    {
+      "id": "reaction:buddy:respect:v1",
+      "character": "Buddy",
+      "catalogCardId": "buddy",
+      "reaction": "respect",
+      "label": "Buddy \u2014 Respect",
+      "gif": "assets/reactions/character-pack-v1/buddy/respect.gif",
+      "animatedWebp": "assets/reactions/character-pack-v1/buddy/respect-animated.webp",
+      "poster": "assets/reactions/character-pack-v1/buddy/respect.webp",
+      "spriteSheet": "assets/reactions/character-pack-v1/buddy/spritesheet.png",
+      "row": 3,
+      "frames": 4,
+      "loopDurationMs": 1320,
+      "width": 256,
+      "height": 256
+    }
+  ]
+}

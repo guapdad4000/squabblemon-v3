@@ -1,3 +1,4 @@
+import { ReactionShop } from '../../components/ReactionShop';
 import { styleShardLabel } from '@workspace/squabblemon-engine/styleShards';
 import { playTutorialSequence } from '../../lib/tutorialVoice';
 import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
@@ -1086,11 +1087,11 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const search = useSearch();
   const params = new URLSearchParams(search);
   const view = params.get('view');
-  const tab = view === 'corner' ? 'corner' :
+  const tab = view === 'reactions' ? 'reactions' : view === 'corner' ? 'corner' :
     view === 'training' || view === 'market' || (view !== 'packs' && (params.has('item') || params.has('card')))
       ? 'market'
       : 'packs';
-  function selectTab(next: 'market' | 'packs' | 'corner') {
+  function selectTab(next: 'market' | 'packs' | 'corner' | 'reactions') {
     const query = new URLSearchParams(search);
     query.set('view', next === 'market' ? 'training' : next);
     navigate(`/game/shop?${query}`);
@@ -1106,9 +1107,10 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <GameGlyph name="motion" />
           Training
         </button>
+        <button aria-pressed={tab === 'reactions'} onClick={() => selectTab('reactions')}>Reactions</button>
         <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
-      {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
+      {tab === 'reactions' ? <ReactionShop key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
         <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (
         <PackGym bootstrap={bootstrap} />

@@ -1,3 +1,4 @@
+import { REACTION_PACKS } from './reactions';
 import { spendStyleShards, type StyleShardBalances } from './styleShards';
 import { catalogCardById } from './data';
 import { CHARACTER_STYLE_OFFERS, cosmeticId, hasCharacterStickers, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
@@ -29,6 +30,7 @@ export const MISSION_TEMPLATES = [
 export const MAX_DECK_SLOTS = 24;
 export const SHOP_OFFERS = [
   ...CHARACTER_STYLE_OFFERS,
+  ...REACTION_PACKS.map(pack => ({ id: pack.id, name: pack.name, description: 'Permanent animated PvP reactions. Cosmetic only.', price: pack.price, currency: 'softCurrency' as const, needsCard: false })),
   { id: 'training', name: 'Practice Session', description: '+100 XP for one owned character.', price: 100, currency: 'softCurrency', needsCard: true },
   { id: 'training-intensive', name: 'Intensive Training', description: '+250 XP for one owned character.', price: 225, currency: 'softCurrency', needsCard: true },
   { id: 'move-training', name: 'Move Coaching', description: 'Activate the next move tier. Requires character level 2, 5, or 8.', price: MOVE_TRAINING_COSTS[0], currency: 'softCurrency', needsCard: true },
@@ -100,6 +102,11 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
   } else if (offer.id === 'ticket') {
     next.packTickets += 1;
     summary = '+1 Street Pack ticket.';
+  } else if (REACTION_PACKS.some(pack => pack.id === offer.id)) {
+    const pack = REACTION_PACKS.find(pack => pack.id === offer.id)!;
+    if (wallet.unlockedCosmeticIds?.includes(pack.unlock)) throw new ShopRuleError('You already own this reaction pack.');
+    next.unlockedCosmeticIds = [...(wallet.unlockedCosmeticIds ?? []), pack.unlock];
+    summary = pack.name + ' unlocked. Find them in your PvP speech bubble.';
   } else if (offer.id === 'deck-slot') {
     if (wallet.deckSlots >= MAX_DECK_SLOTS) throw new ShopRuleError('All 24 gang slots are unlocked.');
     next.deckSlots += 1;

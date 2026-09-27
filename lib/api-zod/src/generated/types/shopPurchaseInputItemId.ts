@@ -21,4 +21,8 @@ export const ShopPurchaseInputItemId = {
   'character-stickers': 'character-stickers',
   'character-backdrop': 'character-backdrop',
   'character-banner-finish': 'character-banner-finish',
+  'reaction-pack': 'reaction-pack',
+  'reaction-pack:big-city-pigeon:v1': 'reaction-pack:big-city-pigeon:v1',
+  'reaction-pack:dr-fade:v1': 'reaction-pack:dr-fade:v1',
+  'reaction-pack:buddy:v1': 'reaction-pack:buddy:v1',
 } as const;

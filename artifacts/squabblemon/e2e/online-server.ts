@@ -37,6 +37,7 @@ await db
     Object.entries(ids).map(([seat, id]) => ({
       clerkUserId: id,
       displayName: seat === "a" ? "Vicky" : "The Rival",
+      ...(process.env.ONLINE_E2E_REACTIONS === "1" ? { softCurrency: 600, xp: seat === "a" ? 750 : 2000, level: seat === "a" ? 4 : 9 } : {}),
       onboardingStep: "complete",
       starterRewardClaimed: true,
       tutorialCompleted: true,

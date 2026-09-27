@@ -1,3 +1,4 @@
+import type { ReactionChannel } from './reactions';
 import type { RankedResult } from './ranked';
 export { RANKED_BOT_WAIT_MS, RANKED_QUEUE_IDLE_MS, RANKED_SEASON, RANK_TIERS, rankedStats, rankProgress, awardRank } from './ranked';
 export type { RankedStats, RankedResult } from './ranked';
@@ -57,6 +58,7 @@ export type OnlineCommand =
   | { type: "ready" | "end-turn" | "surrender" | "rematch" }
   | { type: "play"; instanceId: string; lane: Lane; squabble: boolean; investment?: number };
 export type OnlineRoom = {
+  reactions?: ReactionChannel;
   ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
   revision: number;

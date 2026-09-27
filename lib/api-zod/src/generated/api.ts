@@ -3831,7 +3831,7 @@ export const purchasePlayerShopItemBodyCardIdMax = 100;
 
 export const PurchasePlayerShopItemBody = zod.object({
   "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
-  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish']),
+  "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1']),
   "cardId": zod.string().min(1).max(purchasePlayerShopItemBodyCardIdMax).optional()
 })
 

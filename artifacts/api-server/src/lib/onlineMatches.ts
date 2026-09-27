@@ -1,3 +1,4 @@
+import { addReaction, ownedReactions, ReactionError } from '@workspace/squabblemon-engine/reactions';
 import { randomBytes, randomInt } from "node:crypto";
 import { and, asc, desc, eq, gt, ne, or, sql } from "drizzle-orm";
 import {
@@ -459,5 +460,31 @@ export async function cancelRankedSearch(userId: string, code: string) {
     }
     // If pairing won the race, enter that match instead of silently forfeiting it.
     return onlineRoomView(room, row.code, userId, Date.now());
+  });
+}
+
+/** Reactions share the room lock but never change a card-play revision or turn clock. */
+export async function accessRoomReactions(code: string, userId: string, input?: { requestId: string; reactionId: string; gameNumber: number }) {
+  return db.transaction(async tx => {
+    const [row] = await tx.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code)).for('update');
+    if (!row) throw new OnlineError('Room not found.', 404);
+    const room = restore(row.state);
+    const seat = memberSeat(room, userId);
+    const now = Date.now();
+    const [profile] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
+    if (!profile) throw new OnlineError('Player profile not found.', 404);
+    const owned = ownedReactions(profile.unlockedCosmeticIds);
+    if (input) {
+      if (room.status !== 'active' || room.expiresAt <= now || (room.deadline !== null && room.deadline <= now) || room.gameNumber !== input.gameNumber) throw new OnlineError('Reactions are available during the current battle.', 409);
+      try {
+        const reactions = addReaction(room.reactions, { id: input.requestId, reactionId: input.reactionId, gameNumber: input.gameNumber, seat }, owned, now);
+        if (reactions !== room.reactions) await tx.update(onlineRoomsTable).set({ state: stored({ ...room, reactions }) }).where(eq(onlineRoomsTable.id, row.id));
+        room.reactions = reactions;
+      } catch (error) {
+        if (error instanceof ReactionError) throw new OnlineError(error.message, error.status);
+        throw error;
+      }
+    }
+    return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned };
   });
 }

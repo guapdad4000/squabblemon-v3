@@ -25,6 +25,7 @@
     "./challenge": "./src/challenge.ts",
     "./accountRewards": "./src/accountRewards.ts",
     "./starterMythic": "./src/starterMythic.ts",
-    "./styleShards": "./src/styleShards.ts"
+    "./styleShards": "./src/styleShards.ts",
+    "./reactions": "./src/reactions.ts"
   }
 }

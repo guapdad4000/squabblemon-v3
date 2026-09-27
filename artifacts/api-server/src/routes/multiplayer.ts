@@ -5,7 +5,7 @@ import {
   type OnlineCommand,
 } from "@workspace/squabblemon-engine/multiplayer";
 import {
-  rankedLobby, cancelRankedSearch,
+  rankedLobby, cancelRankedSearch, accessRoomReactions,
   accessFriendRoom,
   createFriendRoom,
   listFriendRooms,
@@ -148,4 +148,10 @@ router.post(
     });
   }),
 );
+router.get('/multiplayer/:code/reactions', endpoint((req, userId) => accessRoomReactions(codeOf(req), userId)));
+router.post('/multiplayer/:code/reactions', endpoint((req, userId) => {
+  const b = bodyOf(req, ['requestId', 'reactionId', 'gameNumber']);
+  if (typeof b.reactionId !== 'string' || b.reactionId.length > 64 || !Number.isSafeInteger(b.gameNumber) || Number(b.gameNumber) < 1) throw new OnlineError('Choose a valid reaction.', 400);
+  return accessRoomReactions(codeOf(req), userId, { requestId: requestId(b.requestId), reactionId: b.reactionId, gameNumber: b.gameNumber as number });
+}));
 export default router;
