@@ -1393,3 +1393,6 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 
 .card-rarity-legendary { --rarity-color: #eab308; }
 .card-rarity-mythical { --rarity-color: #ef4444; }
+
+/* No rubber-band pull on any screen: iOS otherwise drags fixed art and UI layers apart. */
+html, body, * { overscroll-behavior-y: none !important; }

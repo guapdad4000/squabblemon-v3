@@ -20,3 +20,8 @@ One-shot media lifetime must be independent of changing React completion callbac
 **Why:** Pixel tests and synthetic ended events passed while frequent battle-clock rerenders still restarted the decoded video. A visually correct frame did not prove stable playback.
 
 **How to apply:** Keep callback freshness separate from media setup/teardown. Exercise updates and reconnects while the actual clip is playing, then verify it finishes once without creating another player.
+WebGL chroma keying must output premultiplied alpha (default `premultipliedAlpha: true`, rgb*a). An unpremultiplied WebGL canvas showed full green/cyan mattes on iOS Safari while desktop rendered correctly.
+
+**Why:** The GPU keyer shipped with `premultipliedAlpha:false`; desktop passed, and players on iPhone saw every keyed VS/finisher video with its matte.
+
+**How to apply:** Any new GPU compositing path needs a real iOS Safari check, not only desktop Chromium screenshots.
