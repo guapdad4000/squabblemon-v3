@@ -2,12 +2,15 @@ import { createRoot } from 'react-dom/client';
 
 import { ErrorBoundary } from '@/components/error-boundary';
 import { LoadingScreen } from './components/LoadingScreen';
+import { installStaleChunkRecovery } from './lib/staleChunkRecovery';
 
 import './index.css';
 import './styles/venue.css';
 import './styles/layered-art.css';
 import './styles/props.css';
 import './styles/dr-fade.css';
+
+installStaleChunkRecovery();
 
 const root = createRoot(document.getElementById('root')!, {
   // Keeps caught errors off reportError(), which would raise the dev overlay.

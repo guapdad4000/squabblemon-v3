@@ -174,7 +174,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   thicknessContext.putImageData(thicknessData, 0, 0);
   const thickness = makeTexture(thicknessCanvas);
   const roughnessCanvas = makeCanvas(768, 1075);
-  const roughnessContext = roughnessCanvas.getContext('2d')!;
+  const roughnessContext = roughnessCanvas.getContext('2d', { willReadFrequently: true })!;
   const updateRoughness = () => {
     roughnessContext.drawImage(cover.mask, 0, 0);
     const pixels = roughnessContext.getImageData(0, 0, 768, 1075);
