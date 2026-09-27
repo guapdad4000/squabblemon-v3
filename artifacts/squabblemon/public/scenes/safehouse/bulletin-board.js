@@ -46,11 +46,17 @@ export function createBulletinBoard() {
     pin.scale.z = .42; pin.position.set(paper.x, paper.y + paper.h * .42, .105); root.add(pin);
   }
 
+  // A small pinned photograph uses the same art as the event flyer.
+  const photoArt = new T.TextureLoader().load(new URL('../../assets/layered/festival-street.webp', import.meta.url).href);
+  photoArt.colorSpace = T.SRGBColorSpace;
+  const photo = new T.Mesh(new T.PlaneGeometry(.69, .38), new T.MeshStandardMaterial({map:photoArt, roughness:.9}));
+  photo.position.set(-.15,-.49,.083); photo.rotation.z = -.045; root.add(photo);
+
   const labelCanvas = document.createElement('canvas'); labelCanvas.width = 768; labelCanvas.height = 128;
   const label = labelCanvas.getContext('2d'); label.fillStyle = '#007b68'; label.fillRect(0, 0, 768, 128); label.strokeStyle = '#f1c436'; label.lineWidth = 12; label.strokeRect(6, 6, 756, 116); label.fillStyle = '#fff8df'; label.font = '900 56px sans-serif'; label.textAlign = 'center'; label.fillText('THE BLOCK / EVENTS', 384, 83);
   const labelTexture = new T.CanvasTexture(labelCanvas); labelTexture.colorSpace = T.SRGBColorSpace;
   const plaque = new T.Mesh(new T.PlaneGeometry(1.78, .3), new T.MeshStandardMaterial({ map: labelTexture, roughness: .46, metalness: .08 })); plaque.position.set(0, .94, .075); root.add(plaque);
-  const badge = new T.Mesh(new T.SphereGeometry(.095, 18, 12), new T.MeshStandardMaterial({ color: '#e6332d', emissive: '#9e1513', emissiveIntensity: .7, roughness: .34 })); badge.position.set(1.08, .91, .13); root.add(badge);
+  const badge = new T.Mesh(new T.SphereGeometry(.045, 18, 12), new T.MeshStandardMaterial({ color: '#e6332d', emissive: '#9e1513', emissiveIntensity: .7, roughness: .34 })); badge.position.set(1.08, .91, .13); root.add(badge);
   let unread = true;
   return {
     root,

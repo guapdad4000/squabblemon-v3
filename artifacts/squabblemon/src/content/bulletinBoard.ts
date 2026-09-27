@@ -79,7 +79,7 @@ export const bulletinBoard = {
       title: 'Friday Fight Night',
       dateLabel: 'October 2 · 6 PM PT',
       summary: 'A ranked community window with bonus Clout for completing a full set. Wins help, finishing the card matters more.',
-      image: 'assets/fight-night/round-03.webp',
+      image: 'assets/fight-night/rooms/rooftop-court.webp',
       sticker: 'NEXT',
       accent: 'green',
       details: 'Fight Night is a scheduled ranked window built around complete sets instead of quick farming. Play the whole card to bank the best event payout.',
