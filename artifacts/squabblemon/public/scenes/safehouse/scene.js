@@ -119,17 +119,18 @@ const pc=document.createElement('canvas');pc.width=384;pc.height=800;const pctx=
 // Gold-edged card deck with a foil back and a small face-up fan.
 const crewCardCanvases=[];let crewGeneration=0,crewLoaded=0;
 function cardTex(face){const c=document.createElement('canvas');c.width=384;c.height=544;const g=c.getContext('2d');g.fillStyle=face?'#ebdfbd':'#273e3a';g.fillRect(0,0,384,544);g.strokeStyle='#bf9a50';g.lineWidth=8;g.strokeRect(19,19,346,506);g.strokeRect(31,31,322,482);
-if(face){g.fillStyle=face==='A'?'#192a26':'#9d3233';g.font='bold 62px serif';g.fillText(face,46,104);g.fillText(face==='A'?'♠':'♥',42,162);g.save();g.translate(384,544);g.rotate(Math.PI);g.fillText(face,46,104);g.fillText(face==='A'?'♠':'♥',42,162);g.restore();g.textAlign='center';g.font='150px serif';g.fillText(face==='A'?'♠':'♥',192,330);}else{g.strokeStyle='#987c45';g.lineWidth=1;for(let y=56;y<500;y+=20){g.beginPath();g.moveTo(40,y);g.lineTo(340,y-30);g.stroke();}g.fillStyle='#20332e';g.fillRect(51,190,282,168);g.fillStyle='#e7cc8c';g.textAlign='center';g.font='bold 34px sans-serif';g.font='bold 29px sans-serif';g.fillText('SQUABBLEMON',192,254);g.font='bold 18px sans-serif';g.fillText('HOME COURT EDITION',192,299);}const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;if(!face){const crest=new Image();crest.onload=()=>{if(contextLost)return;g.fillStyle='#182a26';g.fillRect(39,39,306,466);g.drawImage(crest,56,109,272,280);g.fillStyle='#e7cc8c';g.textAlign='center';g.font='bold 16px sans-serif';g.fillText('HOME COURT EDITION',192,471);t.needsUpdate=true;};crest.src=new URL('../../brand/prismatic/marks/impact-standard-gold.webp',import.meta.url).href;}if(face)crewCardCanvases.push({canvas:c,texture:t});return t;}
-const cards=new T.Group();cards.position.set(.63,.984,1.36);cards.rotation.y=-.35;scene.add(cards);const cardBack=new T.MeshStandardMaterial({map:cardTex(null),roughness:.39,metalness:.35});
+if(face){g.fillStyle='#142c2b';g.fillRect(39,39,306,466);g.fillStyle='#e7cc8c';g.textAlign='center';g.font='bold 28px sans-serif';g.fillText('SQUABBLEMON',192,85);g.font='bold 18px sans-serif';g.fillText('YOUR FIGHTERS',192,471);}else{g.strokeStyle='#987c45';g.lineWidth=1;for(let y=56;y<500;y+=20){g.beginPath();g.moveTo(40,y);g.lineTo(340,y-30);g.stroke();}g.fillStyle='#20332e';g.fillRect(51,190,282,168);g.fillStyle='#e7cc8c';g.textAlign='center';g.font='bold 34px sans-serif';g.font='bold 29px sans-serif';g.fillText('SQUABBLEMON',192,254);g.font='bold 18px sans-serif';g.fillText('HOME COURT EDITION',192,299);}const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t.anisotropy=8;if(!face){const crest=new Image();crest.onload=()=>{if(contextLost)return;g.fillStyle='#182a26';g.fillRect(39,39,306,466);g.drawImage(crest,56,109,272,280);g.fillStyle='#e7cc8c';g.textAlign='center';g.font='bold 16px sans-serif';g.fillText('HOME COURT EDITION',192,471);t.needsUpdate=true;};crest.src=new URL('../../brand/prismatic/marks/impact-standard-gold.webp',import.meta.url).href;}if(face)crewCardCanvases.push({canvas:c,texture:t});return t;}
+const cards=new T.Group();cards.position.set(.63,.984,1.36);cards.rotation.y=-.35;scene.add(cards);const cardBack=new T.MeshStandardMaterial({map:cardTex(true),roughness:.39,metalness:.35});
 for(let i=0;i<14;i++)soft(.31,.006,.44,i%3?ivory:brass,0,i*.005,0,cards);
 const cardTop=mesh(new T.PlaneGeometry(.298,.426),cardBack,0,.074,0,cards);cardTop.rotation.x=-Math.PI/2;cardTop.castShadow=false;
-for(let i=0;i<3;i++){const f=new T.Group();cards.add(f);f.position.set(-.38-i*.105,-.025+i*.006,.01+i*.08);f.rotation.y=-.15-i*.21;soft(.31,.007,.44,ivory,0,0,0,f);const top=mesh(new T.PlaneGeometry(.30,.43),new T.MeshStandardMaterial({map:cardTex(i===0?'A':i===1?'K':'Q'),roughness:.68}),0,.006,0,f);top.rotation.x=-Math.PI/2;top.castShadow=false;}
+for(let i=0;i<3;i++){const f=new T.Group();cards.add(f);f.position.set(-.38-i*.105,-.025+i*.006,.01+i*.08);f.rotation.y=-.15-i*.21;soft(.31,.007,.44,ivory,0,0,0,f);const top=mesh(new T.PlaneGeometry(.30,.43),new T.MeshStandardMaterial({map:cardTex(true),roughness:.68}),0,.006,0,f);top.rotation.x=-Math.PI/2;top.castShadow=false;}
 function updateCrewCards(list){
-  if(!Array.isArray(list))return;
+  if(!Array.isArray(list)||!list.length)return;
   const generation=++crewGeneration;crewLoaded=0;
-  list.slice(0,crewCardCanvases.length).forEach((card,index)=>{
+  crewCardCanvases.forEach((entry,index)=>{
+    const card=list[(index===0?0:index-1)%list.length];
     if(typeof card?.image!=='string'||typeof card?.name!=='string')return;
-    const url=new URL(card.image,location.href);if(url.origin!==location.origin)return;
+    let url;try{url=new URL(card.image,location.href);}catch{return;}if(url.origin!==location.origin)return;
     const image=new Image();image.onload=()=>{
       if(generation!==crewGeneration||contextLost)return;
       const {canvas,texture}=crewCardCanvases[index],g=canvas.getContext('2d');
@@ -141,6 +142,8 @@ function updateCrewCards(list){
   });
 }
 const hemi=new T.HemisphereLight('#e9f0ee','#3b4650',1.55);scene.add(hemi);const sun=new T.DirectionalLight('#f0f3eb',4.2);sun.position.set(8,5,1);sun.target.position.set(-2,0,-2);sun.castShadow=true;sun.shadow.mapSize.set(innerWidth<600?1024:2048,innerWidth<600?1024:2048);Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:.1,far:25});sun.shadow.normalBias=.035;scene.add(sun,sun.target);const fill=new T.PointLight('#a8c3d0',22,12,2);fill.position.set(-3,2.8,4);scene.add(fill);const tvLight=new T.PointLight('#9ed8ca',8,6,2);tvLight.position.set(-3.4,1.8,-1.15);scene.add(tvLight);const bagLight=new T.SpotLight('#fff0cf',21,8,.6,.7,1.5);bagLight.position.set(2.6,4,-2);bagLight.target=bag;scene.add(bagLight);
+// Standalone room previews also use fighter art; embedded rooms receive the player's crew.
+if(parent===window)updateCrewCards([{name:'Dr. Fade',image:'../../assets/characters/dr-fade.webp'},{name:'Guap',image:'../../assets/characters/guap.webp'},{name:'Rastamon',image:'../../assets/characters/rastamon.webp'}]);
 // Floating dust catches the window light.
 const points=new Float32Array(150*3);for(let i=0;i<points.length;i+=3){points[i]=rand()*8-4;points[i+1]=rand()*4;points[i+2]=rand()*9-4.5;}const pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(points,3));const dust=new T.Points(pg,new T.PointsMaterial({color:'#ffe4a5',size:.018,transparent:true,opacity:.35,depthWrite:false}));scene.add(dust);
 // Inventory duffel on the floor in front of the couch.
