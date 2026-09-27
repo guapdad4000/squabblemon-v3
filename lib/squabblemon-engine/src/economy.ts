@@ -1,3 +1,4 @@
+import { spendStyleShards, type StyleShardBalances } from './styleShards';
 import { catalogCardById } from './data';
 import { CHARACTER_STYLE_OFFERS, cosmeticId, hasCharacterStickers, styleSetFor, type CharacterStyleOfferId } from './cosmetics';
 import { CARD_XP_CAP, cardLevelFromXp, normalizeCardProgress, type CardProgressionMap } from './cardProgression';
@@ -40,11 +41,11 @@ export const SHOP_OFFERS = [
 export type ShopItemId = typeof SHOP_OFFERS[number]['id'];
 export type ShopRequest = { idempotencyKey: string; itemId: ShopItemId; cardId?: string };
 export type ShopWallet = {
-  softCurrency: number; packTickets: number; styleShards: number; deckSlots: number;
+  softCurrency: number; packTickets: number; styleShards: number; styleShardBalances?: StyleShardBalances; deckSlots: number;
   ownedCardIds: string[]; discoveredCardIds: string[]; ownedVariants: string[]; unlockedCosmeticIds?: string[];
   cardProgression: CardProgressionMap; collectionProgress: number;
 };
-export type ShopReceipt = { itemId: ShopItemId; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string };
+export type ShopReceipt = { itemId: ShopItemId; cardId: string | null; cost: number; currency: 'softCurrency' | 'styleShards'; summary: string; shardPayment?: { rarity: string; matching: number; universal: number } };
 export class ShopRuleError extends Error {}
 
 export function accountLevelFromXp(xp: number): number {
@@ -126,7 +127,17 @@ export function planShopPurchase(wallet: ShopWallet, input: Pick<ShopRequest, 'i
     next.ownedVariants = [...wallet.ownedVariants, variant.id];
     summary = `${card!.name}: ${variant.name} finish unlocked. Equip it in Collection.`;
   }
-  if (wallet[offer.currency] < cost) throw new ShopRuleError(`You need ${cost} ${offer.currency === 'softCurrency' ? 'Clout' : 'Style Shards'}.`);
-  next[offer.currency] -= cost;
-  return { wallet: next, receipt: { itemId: offer.id, cardId: card?.catalogId ?? null, cost, currency: offer.currency, summary } };
+  let shardPayment: ShopReceipt['shardPayment'];
+  if (offer.currency === 'styleShards') {
+    try {
+      const spent = spendStyleShards(wallet, card!.rarity, cost);
+      next.styleShards = spent.styleShards;
+      next.styleShardBalances = spent.styleShardBalances;
+      shardPayment = spent.payment;
+    } catch (error) { throw new ShopRuleError((error as Error).message); }
+  } else {
+    if (wallet.softCurrency < cost) throw new ShopRuleError(`You need ${cost} Clout.`);
+    next.softCurrency -= cost;
+  }
+  return { wallet: next, receipt: { itemId: offer.id, cardId: card?.catalogId ?? null, cost, currency: offer.currency, summary, ...(shardPayment ? { shardPayment } : {}) } };
 }

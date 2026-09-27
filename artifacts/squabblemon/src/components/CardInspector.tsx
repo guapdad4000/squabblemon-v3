@@ -1,3 +1,5 @@
+import { quoteStyleShards } from '@workspace/squabblemon-engine/styleShards';
+import { StyleShardCost } from './StyleShardWallet';
 import { DrFadeReferee } from './DrFadeReferee';
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import React from 'react';
@@ -380,7 +382,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
               <div className="dossier-variants">
                 {variantSlots.map((slot: any) => {
                   const isOwned = bootstrap?.profile?.ownedVariants?.includes(slot.id);
-                  const canAfford = (bootstrap?.profile?.styleShards ?? 0) >= slot.shardCost;
+                  const canAfford = !!catalogCard && quoteStyleShards(bootstrap?.profile ?? { styleShards: 0 }, catalogCard.rarity, slot.shardCost).canAfford;
                   return (
                     <article key={slot.id} className="dossier-variant" data-finish={getVariantKind(slot.id)}>
                       <button type="button" className="dossier-variant__preview" aria-label={`Preview ${slot.name} finish`} aria-pressed={displayedVariant === slot.id} onClick={() => setPreview({cardId: card.id, variant: slot.id})}>
@@ -390,6 +392,7 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                       <div className="dossier-variant__cost">
                         {isOwned ? (equippedVariant === slot.id ? 'Equipped' : 'Unlocked') : `${slot.shardCost} Shards`}
                       </div>
+                      {!isOwned && bootstrap && catalogCard && <StyleShardCost wallet={bootstrap.profile} rarity={catalogCard.rarity} cost={slot.shardCost}/>}
                       <h5>{slot.name}</h5>
                       <p>{VARIANT_FINISH[getVariantKind(slot.id) ?? 'tagged'].description}</p>
                       {bootstrap && catalogCard && (

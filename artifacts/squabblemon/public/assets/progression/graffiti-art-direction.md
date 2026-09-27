@@ -1,0 +1,7 @@
+# Gang Wall mural layer
+
+Generated with built-in imagegen. Asset: `graffiti-paint-v2.png`.
+
+Prompt: Use case: stylized-concept. Asset: transparent graffiti paint layer for the Squabblemon interactive game Gang Wall. A single wide composition of authentic wildstyle spray-painted marks, painted emerald and warm cream with heavy black hand-ink contours: broad curved swashes, interlocking angular arrows, dry-brush streaks, aerosol speckles, a few thin gravity paint drips. Center-right a small boldly scribbled clenched fist with FOUR curled fingers and ONE wrapped thumb. NOT a crown. Main composition is a broad asymmetrical crescent wrapping around an OPEN CLEAR central area where live game character artwork will go. Make it feel like high-quality hand-painted cel-shaded anime arcade street art, bold selective shapes, restrained distressed paint, no realism or metallic material, no soft glows, no wallpaper density. Canvas landscape 3:2, art with safe clear margins. Real transparent background, no brick baked in, no words, no lettering, no numbers, no UI, no people, no frames, no paper, no photos. This is colored paint lying flat on an invisible wall, not dimensional objects. Clean strong silhouette with some controlled spray overshoot. Fill most of canvas, preserve plenty of transparent negative space.
+
+The output includes a dark paint wash. The interface blends that wash into the existing user-supplied brick with screen blending. Character silhouettes and live typography are separate layers, with a brick grain overlay to unify them as wall paint.

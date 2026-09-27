@@ -1,3 +1,4 @@
+import { normalizeStyleShardBalances } from '@workspace/squabblemon-engine/styleShards';
 import {
   and,
   asc,
@@ -236,6 +237,7 @@ function serializeProfile(
     softCurrency: profile.softCurrency,
     packTickets: profile.packTickets,
     styleShards: profile.styleShards,
+    styleShardBalances: normalizeStyleShardBalances(profile.styleShardBalances),
     packPity: profile.packPity,
     deckSlots: profile.deckSlots,
     cosmeticCurrency: profile.cosmeticCurrency,

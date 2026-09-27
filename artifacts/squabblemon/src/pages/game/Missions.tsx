@@ -129,7 +129,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       )}
 
       <div className="bounty-hunter__scroll" data-testid="bounty-scroll">
-      <header className="bounty-hunter__hero">
+      {tab === 'bounties' && <header className="bounty-hunter__hero">
         <h1 className="sr-only">Bounty Hunter</h1>
         <div className="bounty-hunter__hero-content">
           <img className="bounty-hunter__logo" src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="Bounty Hunter" draggable={false} />
@@ -140,15 +140,15 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             </span>
           )}
         </div>
-      </header>
+      </header>}
 
       <button type="button" className="bounty-mastery-strip" aria-expanded={tab === 'mastery'} onClick={() => { if (!claimLock.current) setTab(tab === 'mastery' ? 'bounties' : 'mastery'); }} disabled={!!claimState}>
-        <GameGlyph name="mastery" /><b>{tab === 'mastery' ? 'Back to Bounties' : 'Mastery'}</b>
+        <GameGlyph name="mastery" /><b>{tab === 'mastery' ? 'Back to Bounties' : 'Hall of Hands'}</b>
         <small>{availableCareerChoices(readCareer(bootstrap.profile.storyProgress.gameplay))} rewards ready</small><span>{tab === 'mastery' ? '←' : 'View →'}</span>
       </button>
 
       {tab === 'mastery' ? (
-        <div style={{ marginTop: 24, position: 'relative', zIndex: 10 }}>
+        <div className="hall-page-stage">
           <CareerBoard bootstrap={bootstrap} />
         </div>
       ) : (

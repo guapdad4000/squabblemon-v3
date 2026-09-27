@@ -1,7 +1,8 @@
+import { STYLE_SHARD_RARITIES, normalizeStyleShardBalances, styleShardLabel, type StyleShardRarity } from '@workspace/squabblemon-engine/styleShards';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import type { GameGlyphName } from '../components/venue/GameGlyph';
 import { catalogCardById, getCardImage } from '../data';
-export type RewardItem = { label: string; amount?: number; glyph?: GameGlyphName; image?: string };
+export type RewardItem = { label: string; amount?: number; glyph?: GameGlyphName; shardRarity?: StyleShardRarity; image?: string };
 export type RewardReceipt = { id: string; title: string; items: RewardItem[]; preview?: boolean; level?: number; achievement?: boolean; story?: { chapterTitle: string; backgroundAssetId: string; portraitAssetId?: string } };
 const listeners = new Set<() => void>();
 let queue: RewardReceipt[] = [];
@@ -49,9 +50,15 @@ export const rewardReceipts = {
 /** Only call after a successful server action, using its returned profile. */
 export function revealProfileRewards(before: PlayerBootstrap, after: PlayerBootstrap, id: string, title: string) {
   const items: RewardItem[] = [];
-  for (const [key, label, glyph] of [['softCurrency','Clout','cloutStack'],['packTickets','Tickets','ticket'],['styleShards','Style Shards','shards'],['streetRep','Street Rep','rep'],['xp','Profile XP','xp']] as const) {
+  for (const [key, label, glyph] of [['softCurrency','Clout','cloutStack'],['packTickets','Tickets','ticket'],['styleShards','Universal Style Shards','shards'],['streetRep','Street Rep','rep'],['xp','Profile XP','xp']] as const) {
     const amount = after.profile[key] - before.profile[key];
     if (amount > 0) items.push({ label, amount, glyph });
+  }
+  const beforeShards = normalizeStyleShardBalances(before.profile.styleShardBalances);
+  const afterShards = normalizeStyleShardBalances(after.profile.styleShardBalances);
+  for (const rarity of STYLE_SHARD_RARITIES) {
+    const amount = afterShards[rarity] - beforeShards[rarity];
+    if (amount > 0) items.push({ label: styleShardLabel(rarity), amount, glyph: 'shards', shardRarity: rarity });
   }
   for (const cardId of after.profile.ownedCardIds.filter(id => !before.profile.ownedCardIds.includes(id))) items.push({ label: catalogCardById[cardId]?.name ?? cardId, image: getCardImage(cardId) });
   for (const cosmetic of after.profile.unlockedCosmeticIds.filter(id => !before.profile.unlockedCosmeticIds.includes(id))) items.push({ label: cosmetic.replace(/[:_-]/g,' '), glyph: 'mastery' });

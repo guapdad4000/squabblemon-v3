@@ -1,3 +1,4 @@
+import { addStyleShardBalances, spendStyleShards } from '@workspace/squabblemon-engine/styleShards';
 import { and, eq, sql } from "drizzle-orm";
 import {
   db,
@@ -120,6 +121,7 @@ export async function openStreetPackForPlayer(
           (input.paymentMethod === "softCurrency" ? cost : 0) +
           generated.softCurrencyGained,
         styleShards: profile.styleShards + generated.styleShardsGained,
+        styleShardBalances: addStyleShardBalances(profile.styleShardBalances, generated.styleShardBalancesGained),
         packPity: generated.pityAfter,
         ownedCardIds: generated.ownedCardIds,
         discoveredCardIds: generated.discoveredCardIds,
@@ -177,17 +179,15 @@ export async function craftPlayerVariantForPlayer(
     if (profile.ownedVariants.includes(variant.id)) {
       return { alreadyOwned: true };
     }
-    if (profile.styleShards < variant.shardCost) {
-      throw new EconomyTransactionError(
-        400,
-        `You need ${variant.shardCost} Style Shards`,
-      );
-    }
+    let spent: ReturnType<typeof spendStyleShards>;
+    try { spent = spendStyleShards(profile, card.rarity, variant.shardCost); }
+    catch (error) { throw new EconomyTransactionError(400, (error as Error).message); }
 
     await tx
       .update(playerProfilesTable)
       .set({
-        styleShards: profile.styleShards - variant.shardCost,
+        styleShards: spent.styleShards,
+        styleShardBalances: spent.styleShardBalances,
         ownedVariants: [...profile.ownedVariants, variant.id],
       })
       .where(eq(playerProfilesTable.clerkUserId, userId));

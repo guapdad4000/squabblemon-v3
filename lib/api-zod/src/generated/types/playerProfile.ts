@@ -13,6 +13,7 @@ import type { PlayerProfileOnboardingStep } from './playerProfileOnboardingStep'
 import type { PlayerProfileStoryProgress } from './playerProfileStoryProgress';
 import type { PlayerSettings } from './playerSettings';
 import type { SavedDeck } from './savedDeck';
+import type { StyleShardBalances } from './styleShardBalances';
 
 export interface PlayerProfile {
   id: string;
@@ -27,6 +28,7 @@ export interface PlayerProfile {
   softCurrency: number;
   packTickets: number;
   styleShards: number;
+  styleShardBalances?: StyleShardBalances;
   packPity: number;
   deckSlots: number;
   cosmeticCurrency: number;

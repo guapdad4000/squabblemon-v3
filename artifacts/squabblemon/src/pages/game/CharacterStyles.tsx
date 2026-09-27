@@ -1,3 +1,5 @@
+import { quoteStyleShards, STYLE_SHARD_TIERS } from '@workspace/squabblemon-engine/styleShards';
+import { StyleShardWallet, StyleShardCost } from '../../components/StyleShardWallet';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { useExtrasNotificationsSeen } from '../../lib/useExtrasNotificationsSeen';
 import { useEffect, useRef, useState } from 'react';
@@ -39,6 +41,7 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   const equipped = profile.settings.cosmetics ?? {};
   const offerId: CharacterStyleOfferId = tab === 'stickers' ? 'character-stickers' : tab === 'scene' ? 'character-backdrop' : 'character-banner-finish';
   const offer = CHARACTER_STYLE_OFFERS.find(item => item.id === offerId)!;
+  const shardQuote = quoteStyleShards(profile, card.rarity, offer.price);
   const unlocked = ownsStyle(profile, cardId, offerId);
   const canEquip = owned && (tab === 'banner' && finish === 'base' || unlocked);
   const clip = resolveSpecialMove(card.engineId);
@@ -78,7 +81,8 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   }
   function toggleSticker(id: string) { setStickers(current => current.includes(id) ? current.filter(value => value !== id) : current.length < 3 ? [...current, id] : current); }
   return <main className="character-styles" data-testid="character-styles">
-    <header className="character-styles__header"><div><p className="style-kicker">SIGNATURE COLLECTION / {set.series}</p><h1>{card.name}<i>Make it yours.</i></h1></div><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Style Shards</span></div></header>
+    <header className="character-styles__header"><div><p className="style-kicker">SIGNATURE COLLECTION / {set.series}</p><h1>{card.name}<i>Make it yours.</i></h1></div><div className="style-wallet"><GameGlyph name="shards"/><strong>{profile.styleShards.toLocaleString()}</strong><span>Universal Shards</span></div></header>
+    <StyleShardWallet wallet={profile} cardRarity={card.rarity}/>
     {preview && <p className="style-notice">Local preview · Purchases and selections stay in this preview.</p>}
     <CharacterBanner cardId={cardId} finish={tab === 'banner' ? finish : equipped.bannerCardId === cardId ? equipped.bannerFinish : 'base'} stickers={stickers} displayName={profile.displayName} />
     <div className="character-styles__subline"><span>{set.title}</span><div><button className="style-link" type="button" onClick={() => setReveal(value => !value)}>{reveal ? 'Close reveal' : 'Replay unlock reveal'}</button>{clip && <button type="button" className="style-link" disabled={!owned} onClick={() => setPlaying(value => !value)}>{playing ? 'Close special' : 'Watch special'}</button>}</div></div>
@@ -92,8 +96,9 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
       <ul>{(tab === 'stickers' ? set.stickers.map(sticker => sticker.name) : tab === 'banner' ? ['Original character artwork','Mix up to three owned stickers','Respects reduced motion'] : [set.sceneName + ' environment','Works with your foil finish','Collection, details and your cards']).map(text => <li key={text}>{text}</li>)}</ul>
       <div className="style-receipt__total"><span>{canEquip ? 'In your collection' : 'One-time unlock'}</span><strong>{tab === 'banner' && finish === 'base' ? 'INCLUDED' : unlocked ? 'OWNED' : offer.price + ' SHARDS'}</strong></div>
       {!owned ? <p className="style-notice">Unlock {card.name} to collect these cosmetics.</p> : null}
-      {pending ? <><p role="status">A purchase is awaiting confirmation: {pending.itemId.replace('character-','').replaceAll('-',' ')}.</p><button type="button" className="style-button style-button--primary" disabled={busy} onClick={() => void buy()}>Recover purchase</button></> : canEquip ? <><button type="button" className="style-button style-button--primary" disabled={busy || alreadyEquipped} onClick={() => void save()}>{alreadyEquipped ? 'Equipped' : tab === 'stickers' ? 'Save banner stickers' : tab === 'scene' ? 'Equip card scene' : 'Equip banner'}</button>{(tab === 'scene' ? equipped.cardBackgrounds?.[cardId] : equipped.bannerCardId === cardId) && <button className="style-link" type="button" disabled={busy} onClick={() => void save(true)}>{tab === 'scene' ? 'Restore original card scene' : 'Remove profile banner'}</button>}</> : <button type="button" className="style-button style-button--primary" disabled={!owned || busy || profile.styleShards < offer.price} onClick={() => void buy()}>Unlock for {offer.price} Style Shards</button>}
-      {owned && !canEquip && profile.styleShards < offer.price && <p className="style-notice">{offer.price - profile.styleShards} more shards to go. Extra character copies from packs become Style Shards.</p>}
+      {!canEquip && <StyleShardCost wallet={profile} rarity={card.rarity} cost={offer.price}/>}
+      {pending ? <><p role="status">A purchase is awaiting confirmation: {pending.itemId.replace('character-','').replaceAll('-',' ')}.</p><button type="button" className="style-button style-button--primary" disabled={busy} onClick={() => void buy()}>Recover purchase</button></> : canEquip ? <><button type="button" className="style-button style-button--primary" disabled={busy || alreadyEquipped} onClick={() => void save()}>{alreadyEquipped ? 'Equipped' : tab === 'stickers' ? 'Save banner stickers' : tab === 'scene' ? 'Equip card scene' : 'Equip banner'}</button>{(tab === 'scene' ? equipped.cardBackgrounds?.[cardId] : equipped.bannerCardId === cardId) && <button className="style-link" type="button" disabled={busy} onClick={() => void save(true)}>{tab === 'scene' ? 'Restore original card scene' : 'Remove profile banner'}</button>}</> : <button type="button" className="style-button style-button--primary" disabled={!owned || busy || !shardQuote.canAfford} onClick={() => void buy()}>Unlock · {offer.price} {STYLE_SHARD_TIERS[shardQuote.rarity].label} shards</button>}
+
       <small className="style-cosmetic-note">Cosmetic only · Permanent unlock · No random contents</small><p role="status" className="style-status">{busy ? 'Saving…' : message}</p>
     </aside></div>
     {set.deckCover && <section className="style-deck-cover" aria-label={card.name + ' deck cover'}><img src={getAssetUrl(set.deckCover)} alt={card.name + ' deck cover'} loading="lazy" decoding="async" width={768} height={1152}/><div><span className="style-kicker">SIGNATURE DECK COVER</span><h2>Lead with {card.name}.</h2><p>This artwork appears on your deck box when {card.name} is its cover character.</p><Link className="style-link" href="/game/decks">Open your decks →</Link></div></section>}

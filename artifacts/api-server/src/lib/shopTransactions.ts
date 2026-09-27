@@ -20,6 +20,7 @@ export async function purchaseShopItem(userId: string, input: ShopRequest) {
     // Explicit wallet fields only. Never write a stale copy of unrelated profile data.
     await tx.update(playerProfilesTable).set({
       softCurrency: wallet.softCurrency, packTickets: wallet.packTickets, styleShards: wallet.styleShards,
+      styleShardBalances: wallet.styleShardBalances ?? profile.styleShardBalances,
       deckSlots: wallet.deckSlots, ownedCardIds: wallet.ownedCardIds, discoveredCardIds: wallet.discoveredCardIds,
       unlockedCosmeticIds: wallet.unlockedCosmeticIds ?? profile.unlockedCosmeticIds,
       ownedVariants: wallet.ownedVariants, cardProgression: wallet.cardProgression, collectionProgress: wallet.collectionProgress,

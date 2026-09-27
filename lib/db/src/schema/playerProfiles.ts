@@ -40,6 +40,10 @@ export const playerProfilesTable = pgTable("player_profiles", {
   softCurrency: integer("soft_currency").notNull().default(0),
   packTickets: integer("pack_tickets").notNull().default(0),
   styleShards: integer("style_shards").notNull().default(0),
+  styleShardBalances: jsonb("style_shard_balances")
+    .$type<Partial<Record<'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythical', number>>>()
+    .notNull()
+    .default({}),
   packPity: integer("pack_pity").notNull().default(0),
   deckSlots: integer("deck_slots").notNull().default(4),
   cosmeticCurrency: integer("cosmetic_currency").notNull().default(0),

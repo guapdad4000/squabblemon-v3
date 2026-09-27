@@ -1,0 +1,187 @@
+.shard-wallet {
+  --stash-paper: #eee6d2;
+  color: var(--stash-paper);
+  padding: 22px clamp(14px, 2vw, 26px);
+  margin: 20px 0;
+  background: linear-gradient(120deg, #161c18, #131513);
+  border: 1px solid #89927655;
+  border-top: 3px solid #b8c28a;
+  box-shadow: 0 8px 20px #0002;
+  isolation: isolate;
+  min-width: 0;
+}
+.shard-wallet header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.shard-wallet header span {
+  font: 700 9px/1.5 var(--font-mono, monospace);
+  letter-spacing: 0.15em;
+  color: #c3cd9e;
+}
+.shard-wallet h2 {
+  font: 900 italic clamp(19px, 2.4vw, 27px)/1.2 var(--font-display, Arial);
+  margin: 6px 0 0;
+}
+.shard-wallet header p {
+  font: 400 11px/1.6 var(--font-body, Arial);
+  color: #c1c5b7;
+  margin: 0;
+}
+.shard-wallet__balances {
+  display: grid;
+  grid-template-columns: minmax(140px, 1.6fr) repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  align-items: stretch;
+}
+.shard-wallet__universal {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-right: 1px solid #dedbb82c;
+  padding: 10px 12px 10px 0;
+}
+.shard-wallet__universal > .game-glyph {
+  width: 48px;
+  height: 58px;
+  flex-shrink: 0;
+}
+.shard-wallet__universal > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.shard-wallet strong {
+  font: 800 clamp(18px, 2vw, 24px)/1 var(--font-display, Arial);
+  font-variant-numeric: tabular-nums;
+}
+.shard-wallet__universal span {
+  font-size: 11px;
+}
+.shard-wallet__universal small {
+  font-size: 9px;
+  color: #bdbca9;
+  line-height: 1.5;
+}
+.shard-wallet__tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--shard-color) 55%, transparent);
+  padding: 3px 4px 10px;
+  min-width: 0;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--shard-color) 6%, transparent),
+    transparent 60%
+  );
+}
+.shard-wallet__tier > .game-glyph {
+  height: 64px;
+  width: 64px;
+  max-width: 100%;
+}
+.shard-wallet__tier > span {
+  font: 600 10px/1.3 var(--font-body, Arial);
+  color: var(--shard-color);
+  text-align: center;
+}
+.shard-wallet__tier[data-selected="true"] {
+  outline: 1px solid var(--shard-color);
+  outline-offset: 2px;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--shard-color) 14%, transparent),
+    transparent
+  );
+}
+.shard-wallet__help {
+  margin: 15px 0 0;
+  font: 400 10px/1.6 var(--font-body, Arial);
+  color: #b6bbae;
+}
+.shard-cost {
+  padding: 12px 0;
+  border-top: 1px solid currentColor;
+  margin: 14px 0;
+  min-width: 0;
+}
+.shard-cost > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.shard-cost .game-glyph {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+.shard-cost strong {
+  font-size: 18px;
+  line-height: 1.4;
+}
+.shard-cost strong span {
+  font: 500 11px/1.4 var(--font-body, Arial);
+}
+.shard-cost p {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+.shard-cost small {
+  font-size: 10px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+.shard-cost[data-affordable="false"] p {
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .shard-wallet__balances {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .shard-wallet__universal {
+    grid-column: 1/-1;
+    border-right: 0;
+    border-bottom: 1px solid #dedbb82c;
+    padding: 0 0 10px;
+    margin-bottom: 10px;
+  }
+  .shard-wallet__universal > div {
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .shard-wallet__universal > .game-glyph {
+    width: 32px;
+    height: 34px;
+  }
+}
+@media (max-width: 520px) {
+  .shard-wallet header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .shard-wallet header p br {
+    display: none;
+  }
+  .shard-wallet__balances {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 8px;
+  }
+  .shard-wallet__tier > .game-glyph {
+    height: 60px;
+    width: 60px;
+  }
+  .shard-wallet__tier {
+    gap: 6px;
+  }
+}

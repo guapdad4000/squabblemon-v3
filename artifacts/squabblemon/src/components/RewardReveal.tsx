@@ -22,7 +22,7 @@ export function RewardReveal() {
         {receipt.story && <p className="reward-reveal__chapter">{receipt.story.chapterTitle}</p>}
         <h2 id="reward-reveal-title">{receipt.title}</h2>
         <div className="reward-reveal__items">{receipt.items.map((item, i) => <motion.div key={i} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .12 }}>
-          {item.image ? <img src={item.image} alt="" /> : <GameGlyph name={item.glyph ?? 'mastery'} />}
+          {item.image ? <img src={item.image} alt="" /> : <GameGlyph name={item.glyph ?? 'mastery'} shardRarity={item.shardRarity} />}
           {item.amount !== undefined && <strong><AnimatedNumber value={item.amount} prefix="+" delay={i * .12} /></strong>}<span>{item.label}</span>
         </motion.div>)}</div>
         <p>{receipt.achievement ? 'You read the districts, banked your Motion, and landed your first SQUABBLE. Go make the block remember.' : receipt.preview ? 'Saved to this preview only.' : 'Your rewards are saved. Keep building your legend.'}</p>

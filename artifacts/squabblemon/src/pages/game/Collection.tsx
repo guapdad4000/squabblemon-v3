@@ -1,10 +1,11 @@
+import { GangWall } from '../../components/GangWall';
 import { ItemDot, useNotifications } from '../../components/Notifications';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { Link, useSearch } from 'wouter';
 import { revealProfileRewards } from '../../lib/rewardReceipts';
 import { ArsenalScreen } from '../../components/venue/ArsenalScreen';
 import { useEffect, useRef, useState } from 'react';
-import { Check, LockKeyhole } from 'lucide-react';
+import { LockKeyhole } from 'lucide-react';
 import { PlayerBootstrap, useClaimCollectionRoadMilestone, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { CardPressTarget } from '../../components/CardInspection';
@@ -98,21 +99,20 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await claimMilestone.mutateAsync({ milestoneId });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res.bootstrap);
-      revealProfileRewards(bootstrap, res.bootstrap, milestoneId, 'Collection Road reward');
+      revealProfileRewards(bootstrap, res.bootstrap, milestoneId, 'Gang Wall reward');
     } catch { setClaimError('Could not claim this reward. Please try again.'); }
   }
 
   const inspectedCard = inspectId ? cardCatalog.find(card => card.catalogId === inspectId) : null;
-  const progressPercent = Math.min(100, (bootstrap.profile.collectionProgress / (bootstrap.collectionRoad.at(-1)?.threshold || 1)) * 100);
 
   return (
-    <ArsenalScreen rootRef={discoveryRootRef} className="collection-stage world-decor-host" label="Card collection">
+    <ArsenalScreen rootRef={discoveryRootRef} className={`collection-stage world-decor-host ${tab === "road" ? "collection-stage--gang-wall" : ""}`} label="Card collection">
       <div className="collection-stage__hero" style={{ backgroundImage: `url(${sunsetBg})` }}>
         <div className="collection-stage__hero-overlay" aria-hidden="true" />
         <div className="collection-stage__header">
           <nav className="collection-tabs" aria-label="Collection views">
             <button data-testid="button-view-catalog" type="button" aria-pressed={tab === 'cards'} onClick={() => setTab('cards')}>Catalog</button>
-            <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>Collection Road</button>
+            <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>The Gang Wall</button>
             <Link data-testid="link-signature-collections" href="/game/style">The Extras</Link>
           </nav>
           <div className="collection-hero__top">
@@ -171,35 +171,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         )}
 
         {tab === 'road' && (
-          <div className="collection-road">
-            <div className="collection-road__intro">
-              <span className="venue-kicker">EVERY CARD TAKES YOU FURTHER</span>
-              <h2>Rookie Road</h2>
-              <p>Collection level {bootstrap.profile.collectionProgress}</p>
-              <div className="collection-road__progress" role="progressbar" aria-label="Collection progress" aria-valuemin={0} aria-valuemax={bootstrap.collectionRoad.at(-1)?.threshold || 1} aria-valuenow={Math.min(bootstrap.profile.collectionProgress, bootstrap.collectionRoad.at(-1)?.threshold || 1)}>
-                <span style={{ width: `${progressPercent}%` }} />
-              </div>
-            </div>
-            {claimError && <p className="arsenal-error" role="alert">{claimError}</p>}
-            {bootstrap.collectionRoad.length === 0 && <p className="arsenal-empty">Your collection rewards will appear here.</p>}
-            {bootstrap.collectionRoad.map(milestone => (
-              <div key={milestone.id} className={`collection-milestone is-${milestone.status}`}>
-                <div className="collection-milestone__level">{milestone.threshold}</div>
-                <div className="collection-milestone__copy">
-                  <h3>{milestone.title}</h3>
-                  <p>{milestone.description}</p>
-                  <small>{milestone.rewardLabel}</small>
-                </div>
-                {milestone.status === 'claimable' ? (
-                  <button data-testid={`button-claim-${milestone.id}`} type="button" className="arsenal-action" onClick={() => void handleClaim(milestone.id)} disabled={claimMilestone.isPending}>Claim</button>
-                ) : (
-                  <span className="collection-milestone__state">
-                    {milestone.status === 'claimed' ? <><Check size={14} />Claimed</> : <><LockKeyhole size={14} /><span className="sr-only">Locked</span></>}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
+          <GangWall bootstrap={bootstrap} onClaim={id => void handleClaim(id)} busy={claimMilestone.isPending} error={claimError} />
         )}
       </div>
       {inspectedCard && <CardInspector key={inspectId + (requestedVariant ?? '')} initialPreviewVariant={inspectId === requestedCard ? requestedVariant : undefined} card={inspectedCard} onClose={() => { if (inspectId) markNoticeSeen(`card:${inspectId}`); setInspectId(null); }} match={null} bootstrap={bootstrap} />}

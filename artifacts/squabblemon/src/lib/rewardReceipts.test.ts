@@ -76,3 +76,17 @@ test('changing route or player cancels a deferred results action', () => {
   assert.equal(continued, 0);
   assert.equal(rewardReceipts.leaveBattleResults(() => {}), null);
 });
+
+test('reward receipts separate rarity credits from universal credits and ignore debits', () => {
+  rewardReceipts.reset();
+  const before = bootstrap(0), after = bootstrap(0);
+  before.profile.styleShardBalances = { Rare: 10, Common: 20 };
+  after.profile.styleShardBalances = { Rare: 22, Common: 5 };
+  after.profile.styleShards = 5;
+  revealProfileRewards(before, after, 'shards', 'Style stash');
+  assert.deepEqual(rewardReceipts.current()?.items, [
+    { label: 'Universal Style Shards', amount: 5, glyph: 'shards' },
+    { label: 'Rare Style Shards', amount: 12, glyph: 'shards', shardRarity: 'Rare' },
+  ]);
+  rewardReceipts.reset();
+});

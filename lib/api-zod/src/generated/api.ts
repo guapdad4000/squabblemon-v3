@@ -187,6 +187,24 @@ export const GetDeploymentIdentityResponse = zod.object({
 /**
  * @summary Load or provision the authenticated player
  */
+export const getPlayerBootstrapResponseProfileStyleShardBalancesCommonMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const getPlayerBootstrapResponseProfileStyleShardBalancesUncommonMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const getPlayerBootstrapResponseProfileStyleShardBalancesRareMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const getPlayerBootstrapResponseProfileStyleShardBalancesEpicMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMin = 0;
+export const getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -215,6 +233,14 @@ export const GetPlayerBootstrapResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesCommonMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesUncommonMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesRareMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesEpicMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMin).max(getPlayerBootstrapResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -269,6 +295,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -506,6 +533,24 @@ export const CompletePlayerStoryNodeBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryNodeBodyDialogueSeenItemMax)).max(completePlayerStoryNodeBodyDialogueSeenMax)
 })
 
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -599,6 +644,14 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesUncommonMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesRareMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesEpicMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -653,6 +706,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -755,6 +809,24 @@ export const CompletePlayerStoryPuzzleBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryPuzzleBodyDialogueSeenItemMax)).max(completePlayerStoryPuzzleBodyDialogueSeenMax).optional()
 })
 
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -848,6 +920,14 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesUncommonMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesRareMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesEpicMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -902,6 +982,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -1004,6 +1085,24 @@ export const SavePlayerStoryDialogueBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(savePlayerStoryDialogueBodyDialogueSeenItemMax)).max(savePlayerStoryDialogueBodyDialogueSeenMax)
 })
 
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1097,6 +1196,14 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesUncommonMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesRareMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesEpicMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMin).max(savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1151,6 +1258,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -1262,6 +1370,24 @@ export const UpdatePlayerProfileBody = zod.object({
   "turnTimerEnabled": zod.boolean().optional()
 })
 
+export const updatePlayerProfileResponseProfileStyleShardBalancesCommonMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const updatePlayerProfileResponseProfileStyleShardBalancesUncommonMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const updatePlayerProfileResponseProfileStyleShardBalancesRareMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const updatePlayerProfileResponseProfileStyleShardBalancesEpicMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMin = 0;
+export const updatePlayerProfileResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const updatePlayerProfileResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1290,6 +1416,14 @@ export const UpdatePlayerProfileResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesCommonMin).max(updatePlayerProfileResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesUncommonMin).max(updatePlayerProfileResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesRareMin).max(updatePlayerProfileResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesEpicMin).max(updatePlayerProfileResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMin).max(updatePlayerProfileResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(updatePlayerProfileResponseProfileStyleShardBalancesMythicalMin).max(updatePlayerProfileResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1344,6 +1478,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -1427,6 +1562,24 @@ export const AdvancePlayerOnboardingBody = zod.object({
   "starterDeckId": zod.string().max(advancePlayerOnboardingBodyStarterDeckIdMax).optional()
 })
 
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesCommonMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesUncommonMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesRareMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesEpicMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMin = 0;
+export const advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1455,6 +1608,14 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesCommonMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesUncommonMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesRareMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesEpicMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMin).max(advancePlayerOnboardingResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1509,6 +1670,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -1585,6 +1747,24 @@ export const ClaimExperimentCardBody = zod.object({
   "cardId": zod.string().max(claimExperimentCardBodyCardIdMax)
 })
 
+export const claimExperimentCardResponseProfileStyleShardBalancesCommonMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const claimExperimentCardResponseProfileStyleShardBalancesUncommonMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const claimExperimentCardResponseProfileStyleShardBalancesRareMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const claimExperimentCardResponseProfileStyleShardBalancesEpicMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const claimExperimentCardResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMin = 0;
+export const claimExperimentCardResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const claimExperimentCardResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1613,6 +1793,14 @@ export const ClaimExperimentCardResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesCommonMin).max(claimExperimentCardResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesUncommonMin).max(claimExperimentCardResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesRareMin).max(claimExperimentCardResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesEpicMin).max(claimExperimentCardResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesLegendaryMin).max(claimExperimentCardResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(claimExperimentCardResponseProfileStyleShardBalancesMythicalMin).max(claimExperimentCardResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1667,6 +1855,7 @@ export const ClaimExperimentCardResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -1835,6 +2024,24 @@ export const CompletePlayerMatchBody = zod.object({
 })).min(1).max(completePlayerMatchBodyMovesMax)
 })
 
+export const completePlayerMatchResponseProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerMatchResponseProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerMatchResponseProfileStyleShardBalancesRareMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerMatchResponseProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerMatchResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerMatchResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const completePlayerMatchResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -1863,6 +2070,14 @@ export const CompletePlayerMatchResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesCommonMin).max(completePlayerMatchResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesUncommonMin).max(completePlayerMatchResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesRareMin).max(completePlayerMatchResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesEpicMin).max(completePlayerMatchResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesLegendaryMin).max(completePlayerMatchResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerMatchResponseProfileStyleShardBalancesMythicalMin).max(completePlayerMatchResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -1917,6 +2132,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2078,6 +2294,24 @@ export const SavePlayerDeckBody = zod.object({
   "recipeId": zod.string().max(savePlayerDeckBodyRecipeIdMax).nullable()
 })
 
+export const savePlayerDeckResponseProfileStyleShardBalancesCommonMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const savePlayerDeckResponseProfileStyleShardBalancesUncommonMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const savePlayerDeckResponseProfileStyleShardBalancesRareMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const savePlayerDeckResponseProfileStyleShardBalancesEpicMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const savePlayerDeckResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
+export const savePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const savePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2106,6 +2340,14 @@ export const SavePlayerDeckResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesCommonMin).max(savePlayerDeckResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesUncommonMin).max(savePlayerDeckResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesRareMin).max(savePlayerDeckResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesEpicMin).max(savePlayerDeckResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesLegendaryMin).max(savePlayerDeckResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(savePlayerDeckResponseProfileStyleShardBalancesMythicalMin).max(savePlayerDeckResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2160,6 +2402,7 @@ export const SavePlayerDeckResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2237,6 +2480,24 @@ export const DeletePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(deletePlayerDeckPathDeckIdMin).max(deletePlayerDeckPathDeckIdMax)
 })
 
+export const deletePlayerDeckResponseProfileStyleShardBalancesCommonMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const deletePlayerDeckResponseProfileStyleShardBalancesUncommonMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const deletePlayerDeckResponseProfileStyleShardBalancesRareMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const deletePlayerDeckResponseProfileStyleShardBalancesEpicMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMin = 0;
+export const deletePlayerDeckResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const deletePlayerDeckResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2265,6 +2526,14 @@ export const DeletePlayerDeckResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesCommonMin).max(deletePlayerDeckResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesUncommonMin).max(deletePlayerDeckResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesRareMin).max(deletePlayerDeckResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesEpicMin).max(deletePlayerDeckResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMin).max(deletePlayerDeckResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(deletePlayerDeckResponseProfileStyleShardBalancesMythicalMin).max(deletePlayerDeckResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2319,6 +2588,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2400,6 +2670,24 @@ export const OpenPlayerPackBody = zod.object({
   "pullCount": zod.number().min(1).max(openPlayerPackBodyPullCountMax).optional().describe('Number of packs to open. Defaults to 1; 10 unlocks the upgraded ten-pull experience.')
 })
 
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2429,6 +2717,14 @@ export const OpenPlayerPackResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesCommonMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesUncommonMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesRareMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesEpicMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMin).max(openPlayerPackResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2483,6 +2779,7 @@ export const OpenPlayerPackResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2558,6 +2855,7 @@ export const OpenPlayerPackResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2582,6 +2880,24 @@ export const CraftPlayerVariantBody = zod.object({
   "cardId": zod.string().max(craftPlayerVariantBodyCardIdMax),
   "variantId": zod.string().max(craftPlayerVariantBodyVariantIdMax)
 })
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
 
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
@@ -2612,6 +2928,14 @@ export const CraftPlayerVariantResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesCommonMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesUncommonMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesRareMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesEpicMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMin).max(craftPlayerVariantResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2666,6 +2990,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2747,6 +3072,24 @@ export const EquipPlayerVariantBody = zod.object({
   "variantId": zod.string().max(equipPlayerVariantBodyVariantIdMax).nullable()
 })
 
+export const equipPlayerVariantResponseProfileStyleShardBalancesCommonMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const equipPlayerVariantResponseProfileStyleShardBalancesUncommonMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const equipPlayerVariantResponseProfileStyleShardBalancesRareMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const equipPlayerVariantResponseProfileStyleShardBalancesEpicMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMin = 0;
+export const equipPlayerVariantResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const equipPlayerVariantResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2775,6 +3118,14 @@ export const EquipPlayerVariantResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesCommonMin).max(equipPlayerVariantResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesUncommonMin).max(equipPlayerVariantResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesRareMin).max(equipPlayerVariantResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesEpicMin).max(equipPlayerVariantResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMin).max(equipPlayerVariantResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(equipPlayerVariantResponseProfileStyleShardBalancesMythicalMin).max(equipPlayerVariantResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2829,6 +3180,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -2906,6 +3258,24 @@ export const ClaimCollectionRoadMilestoneParams = zod.object({
   "milestoneId": zod.coerce.string().min(claimCollectionRoadMilestonePathMilestoneIdMin).max(claimCollectionRoadMilestonePathMilestoneIdMax)
 })
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -2935,6 +3305,14 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesCommonMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesUncommonMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesRareMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesEpicMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMin).max(claimCollectionRoadMilestoneResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -2989,6 +3367,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -3070,6 +3449,24 @@ export const ClaimPlayerMissionParams = zod.object({
   "missionId": zod.coerce.string()
 })
 
+export const claimPlayerMissionResponseProfileStyleShardBalancesCommonMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const claimPlayerMissionResponseProfileStyleShardBalancesUncommonMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const claimPlayerMissionResponseProfileStyleShardBalancesRareMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const claimPlayerMissionResponseProfileStyleShardBalancesEpicMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMin = 0;
+export const claimPlayerMissionResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const claimPlayerMissionResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3098,6 +3495,14 @@ export const ClaimPlayerMissionResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesCommonMin).max(claimPlayerMissionResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesUncommonMin).max(claimPlayerMissionResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesRareMin).max(claimPlayerMissionResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesEpicMin).max(claimPlayerMissionResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMin).max(claimPlayerMissionResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(claimPlayerMissionResponseProfileStyleShardBalancesMythicalMin).max(claimPlayerMissionResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3152,6 +3557,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -3235,6 +3641,24 @@ export const EquipPlayerCosmeticsBody = zod.object({
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 })
 
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesCommonMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesUncommonMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesRareMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesRareMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesEpicMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMin = 0;
+export const equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3263,6 +3687,14 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesCommonMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesUncommonMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesRareMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesEpicMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMin).max(equipPlayerCosmeticsResponseProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3317,6 +3749,7 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -3402,6 +3835,24 @@ export const PurchasePlayerShopItemBody = zod.object({
   "cardId": zod.string().min(1).max(purchasePlayerShopItemBodyCardIdMax).optional()
 })
 
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3439,6 +3890,14 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesCommonMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesUncommonMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesRareMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesEpicMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMin).max(purchasePlayerShopItemResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3493,6 +3952,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
@@ -3576,6 +4036,24 @@ export const redeemPlayerPromoCodeResponseReceiptSoftCurrencyMin = 0;
 
 export const redeemPlayerPromoCodeResponseReceiptStyleShardsMin = 0;
 
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesRareMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
@@ -3613,6 +4091,14 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "softCurrency": zod.number(),
   "packTickets": zod.number(),
   "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesCommonMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesUncommonMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesRareMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesEpicMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMin).max(redeemPlayerPromoCodeResponseBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
   "packPity": zod.number(),
   "deckSlots": zod.number(),
   "cosmeticCurrency": zod.number(),
@@ -3667,6 +4153,7 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "variantId": zod.string().nullable(),
   "name": zod.string().nullable(),
   "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
   "isNew": zod.boolean(),
   "amount": zod.number()
 })),
