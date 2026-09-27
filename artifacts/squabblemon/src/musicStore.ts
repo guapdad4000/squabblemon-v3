@@ -12,8 +12,8 @@ const subscribe = (listener: () => void) => { listeners.add(listener); return ()
 export const useMusic = () => useSyncExternalStore(subscribe, () => snapshot, () => defaultMusic);
 export const musicActions = {
   play: () => player?.setEnabled(true), pause: () => player?.setEnabled(false),
-  next: () => { player?.unlock(); player?.next(); },
-  select: (index: number) => { player?.unlock(); player?.selectTrack(index); },
+  next: () => { if (snapshot.playlist?.[0]?.id === 'boss-fight-ost') return; player?.unlock(); player?.next(); },
+  select: (index: number) => { if (snapshot.playlist?.[0]?.id === 'boss-fight-ost') return; player?.unlock(); player?.selectTrack(index); },
   volume: (volume: number) => player?.setVolume(volume),
 };
 export type MusicBank = 'background' | 'mode';
@@ -30,7 +30,7 @@ const subscribeBanks = (fn: () => void) => { bankListeners.add(fn); return () =>
 export const useMusicBanks = () => useSyncExternalStore(subscribeBanks, getMusicBanks, getMusicBanks);
 export function updateMusicBank(bank: MusicBank, patch: Partial<MusicPreferences>) { saveMusicBank(bank, { ...banks[bank], ...patch }); }
 export type BattleMusicOverride = 'boss' | 'victory' | 'defeat';
-export type ScopedMusicMode = 'fadecade' | 'battle';
+export type ScopedMusicMode = 'fadecade' | 'battle' | 'story';
 let battleMode: BattleMusicOverride | null = null;
 let scopedMode: ScopedMusicMode | null = null;
 const modeListeners = new Set<() => void>();

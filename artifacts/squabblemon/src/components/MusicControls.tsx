@@ -14,6 +14,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
   const announcerVolume = useAnnouncerVolume();
   const banks = useMusicBanks();
   const playlist = music.playlist ?? soundtrack;
+  const bossLocked = playlist[0]?.id === 'boss-fight-ost';
   const [feedback, saveFeedback] = useFeedbackPreferences();
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -61,7 +62,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
             onClick={() => { if (canPause) musicActions.pause(); else play(); }}>
             {canPause ? <Pause size={19} /> : <Play size={19} />} {canPause ? 'Pause' : 'Play'}
           </button>
-          <button type="button" aria-label="Next track" onClick={musicActions.next}><SkipForward size={19} /> Next track</button>
+          <button type="button" disabled={bossLocked} aria-label="Next track" onClick={musicActions.next}><SkipForward size={19} /> Next track</button>
           <button type="button" className="music-master" aria-label={feedback.audioEnabled ? 'Mute all game sound' : 'Enable all game sound'}
             aria-pressed={!feedback.audioEnabled}
             onClick={() => saveFeedback(value => ({ ...value, audioEnabled: !value.audioEnabled }))}>
@@ -80,7 +81,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
         </label>
         <p className="music-note">Round and turn calls. Set to 0% to silence the announcer; your music keeps playing.</p>
         <label className="music-track"><span>On the turntable <b>{music.trackIndex + 1} / {playlist.length}</b></span>
-          <StreetSelect skin="paper" aria-label="Choose music track" value={music.trackIndex} onValueChange={event => musicActions.select(Number(event))}>
+          <StreetSelect skin="paper" disabled={bossLocked} aria-label="Choose music track" value={music.trackIndex} onValueChange={event => musicActions.select(Number(event))}>
             {playlist.map((song, index) => <option key={song.id} value={index}>{String(index + 1).padStart(2, '0')} · {song.title}</option>)}
           </StreetSelect>
         </label>

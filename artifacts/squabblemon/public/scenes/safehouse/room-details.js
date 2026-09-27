@@ -156,18 +156,12 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
   const albumArt=canvasTexture(512,512,g=>{g.fillStyle='#d6bc88';g.fillRect(0,0,512,512);g.fillStyle='#792f32';g.fillRect(28,28,456,350);g.strokeStyle='#dfbe79';g.lineWidth=14;for(let i=0;i<6;i++){g.beginPath();g.arc(256,205,35+i*29,0,Math.PI*2);g.stroke();}g.fillStyle='#1f3534';g.fillRect(28,252,456,126);g.fillStyle='#eee0b8';g.font='bold 48px sans-serif';g.fillText('AFTER HOURS',42,306,428);g.font='21px monospace';g.fillText('FADE TUNES / VOL. 01',44,350);g.fillStyle='#492d25';g.font='bold 29px sans-serif';g.fillText('SQUABBLE CITY',32,438);});
   const sleeve=box([.55,.57,.026],new T.MeshStandardMaterial({map:albumArt,roughness:.9}),[-.39,1.45,-.34],vinyl);sleeve.rotation.x=-.10;
 
-  // Cloth, a mug, sneakers, and a marked-up local noticeboard soften the primitives.
+  // Cloth, sneakers, and a marked-up local noticeboard soften the primitives.
   const clothTexture = canvasTexture(128, 128, g => { g.fillStyle = '#aa7246'; g.fillRect(0, 0, 128, 128); for (let i = 0; i < 128; i += 16) { g.fillStyle = '#283f38'; g.fillRect(i, 0, 6, 128); g.fillRect(0, i, 128, 4); } });
   const clothGeometry = new T.PlaneGeometry(1.03, 1.55, 24, 32), vertices = clothGeometry.attributes.position;
   for (let i = 0; i < vertices.count; i++) { const x = vertices.getX(i), y = vertices.getY(i); vertices.setXYZ(i, x, .89 - Math.max(0, -y - .25) * 1.3 + Math.sin(x * 23 + y * 3) * .025, y + .18); }
   clothGeometry.computeVertexNormals();
   const cloth = add(clothGeometry, new T.MeshStandardMaterial({ map: clothTexture, roughness: 1, side: T.DoubleSide }), [.65, 0, .1], couch); cloth.rotation.y = .08;
-  const mug = cylinder(.09, .19, paper, [.48, 1.047, 1.5]);
-  const coffee = cylinder(.076, .006, standard('#2a1810'), [.48, 1.145, 1.5]);
-  const handle = add(new T.TorusGeometry(.065, .015, 8, 16), paper, [.59, 1.05, 1.5]);
-  const steamPositions = new Float32Array(18 * 3); for (let i = 0; i < 18; i++) { steamPositions[i * 3] = .48; steamPositions[i * 3 + 1] = 1.2 + i * .018; steamPositions[i * 3 + 2] = 1.5; }
-  const steamGeometry = new T.BufferGeometry(); steamGeometry.setAttribute('position', new T.BufferAttribute(steamPositions, 3));
-  const steam = new T.Points(steamGeometry, new T.PointsMaterial({ size: .022, color: '#ead9b5', opacity: .15, transparent: true, depthWrite: false })); root.add(steam);
   const shoeMaterial = standard('#cebe98'), shoeSole = standard('#263731');
   for (let i = 0; i < 2; i++) {
     const shoe = new T.Group(); shoe.position.set(2.05 + i * .32, .14, -3.75 + i * .14); shoe.rotation.y = -.3 + i * .2; root.add(shoe);
@@ -199,9 +193,6 @@ export function dressSafehouse({ scene, couch, brass, wood, black, ivory, plaste
       rainMaterial.uniforms.time.value = time;
       rotor.rotation.y += dt * .45;
       if (playing) record.rotation.y -= dt * 3.49;
-      const points = steamGeometry.attributes.position;
-      for (let i = 0; i < points.count; i++) { const height = ((time * .1 + i * .023) % .4); points.setXYZ(i, .48 + Math.sin(time + i * .3) * height * .09, 1.18 + height, 1.5 + Math.cos(time * .6 + i) * height * .07); }
-      points.needsUpdate = true;
       return false;
     },
     dispose() { disposed = true; if (profileImage) profileImage.onload = null; cityTextures.forEach(texture => texture.dispose()); }

@@ -255,7 +255,9 @@ test('mode playlists rotate locally, obey muted preferences, and restore the bac
 test('routes choose ranked battle, story, boss, training, gacha, and background music', async () => {
   const { activeMusicMode, musicModeForRoute } = await import('./musicModes');
   assert.equal(musicModeForRoute('/game'),'background');
-  assert.equal(musicModeForRoute('/game/story'),'story');
+  assert.equal(musicModeForRoute('/game/story'),'cinema');
+  assert.equal(activeMusicMode('/game/story', 'story'), 'story');
+  assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', 'story'), 'story');
   assert.equal(musicModeForRoute('/game/play'),'training');
   assert.equal(musicModeForRoute('/game/online'),'battle');
   assert.equal(musicModeForRoute('/game/online/ABCD12'),'battle');
@@ -263,7 +265,7 @@ test('routes choose ranked battle, story, boss, training, gacha, and background 
   assert.equal(musicModeForRoute('/game/shop?view=packs'),'gacha');
   assert.equal(musicModeForRoute('/game/shop?view=training'),'training');
   assert.equal(musicModeForRoute('/game/shop?view=corner'),'background');
-  assert.equal(musicModeForRoute('/game/story/play/welcome-to-the-block'),'story');
+  assert.equal(musicModeForRoute('/game/story/play/welcome-to-the-block'),'battle');
   const { storyContent } = await import('@workspace/squabblemon-engine/story');
   const boss=storyContent.chapters.flatMap(chapter=>chapter.nodes).find(node=>node.kind==='battle' && node.battleType==='boss');
   assert(boss); assert.equal(musicModeForRoute(`/game/story/play/${boss.id}`),'boss');
@@ -272,7 +274,7 @@ test('routes choose ranked battle, story, boss, training, gacha, and background 
   assert.equal(activeMusicMode('/game/online/ABCD12', 'victory'), 'victory');
   assert.equal(activeMusicMode('/game/online/ABCD12', null), 'battle', 'clearing a result override restores the route playlist');
   assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', 'defeat'), 'defeat');
-  assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', null), 'story');
+  assert.equal(activeMusicMode('/game/story/play/welcome-to-the-block', null), 'battle');
 });
 
 test('Fadecade uses its dedicated track and transient battle results take priority', async () => {

@@ -1,6 +1,6 @@
 import { getStoryBattle, storyContent } from '@workspace/squabblemon-engine/story';
 import soundtrack from './soundtrack.json';
-export type MusicMode = 'background' | 'battle' | 'training' | 'story' | 'boss' | 'gacha' | 'fadecade' | 'victory' | 'defeat';
+export type MusicMode = 'cinema' | 'background' | 'battle' | 'training' | 'story' | 'boss' | 'gacha' | 'fadecade' | 'victory' | 'defeat';
 export type SoundtrackTrack = { id: string; title: string; artist: string; album: string; ogg: string; aac: string };
 const modeTrack = (id: string, title: string): SoundtrackTrack => ({ id, title, artist: 'Squabblemon', album: 'Mode soundtrack', ogg: `audio/modes/${id}.mp3`, aac: `audio/modes/${id}.mp3` });
 const catalogById = new Map(soundtrack.map(track => [track.id, track]));
@@ -35,6 +35,7 @@ const storyChapterSoundtracks = {
   even: catalogTracks(['story-music-3']),
 };
 export const modeSoundtracks = {
+  cinema: [{ id:'cinema-urban', title:'Outside the theater', artist:'Squabblemon', album:'Cinema ambience', ogg:'audio/ambience/cinema-urban.ogg', aac:'audio/ambience/cinema-urban.m4a' }],
   battle: battleSoundtrack,
   fadecade: fadecadeSoundtrack,
   training: [modeTrack('training-ost', 'Training OST')],
@@ -45,8 +46,8 @@ export const modeSoundtracks = {
 };
 export function musicModeForRoute(path: string): MusicMode {
   const battle = path.match(/\/game\/story\/play\/([^/?]+)/)?.[1];
-  if (battle) { const type = getStoryBattle(battle)?.battleType; return type === 'boss' || type === 'mini-boss' ? 'boss' : 'story'; }
-  if (path.startsWith('/game/story')) return 'story';
+  if (battle) { const type = getStoryBattle(battle)?.battleType; return type === 'boss' || type === 'mini-boss' ? 'boss' : 'battle'; }
+  if (path.startsWith('/game/story')) return 'cinema';
   if (path.startsWith('/game/shop')) {
     const view = new URLSearchParams(path.split('?')[1] ?? '').get('view');
     if (view === 'training' || view === 'market') return 'training';
@@ -65,7 +66,7 @@ export function soundtrackForRoute(path: string, mode: MusicMode): readonly Soun
   const chapter = storyContent.chapters.find(candidate => candidate.nodes.some(node => node.id === nodeId));
   return chapter?.order && chapter.order % 2 === 0 ? storyChapterSoundtracks.even : storyChapterSoundtracks.odd;
 }
-export function activeMusicMode(path: string, override: 'battle' | 'fadecade' | 'boss' | 'victory' | 'defeat' | null): MusicMode {
+export function activeMusicMode(path: string, override: 'story' | 'battle' | 'fadecade' | 'boss' | 'victory' | 'defeat' | null): MusicMode {
   // A completed room may keep its result component alive briefly while routing
   // back to the lobby. The lobby must never inherit that room's outcome cue.
   if (/^\/game\/online(?:\?|$)/.test(path)) return 'battle';

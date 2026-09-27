@@ -1,4 +1,4 @@
-import { StreetSelect } from '../../components/ui/street-select';
+import { CompactDeckPicker } from '../../components/CompactDeckPicker';
 import { FighterPortrait } from '../../components/profile/FighterPortrait';
 import { FadePark, FightTabs } from './FadePark';
 import { useEffect, useRef, useState } from "react";
@@ -343,18 +343,7 @@ export function Multiplayer({
                 <label className="online-crew-label" htmlFor="online-crew">
                   Who are you bringing?
                 </label>
-                <StreetSelect
-                  id="online-crew"
-                  value={chosen?.id ?? ""}
-                  onValueChange={event => setCrewId(event)}
-                  disabled={working}
-                >
-                  {crews.map((crew) => (
-                    <option key={crew.id} value={crew.id}>
-                      {crew.name}
-                    </option>
-                  ))}
-                </StreetSelect>
+                <CompactDeckPicker decks={crews.map(crew => ({ ...crew, heroCardId:crew.hero }))} selectedId={chosen?.id ?? ""} onSelect={setCrewId} disabled={working} />
                 <div className="online-lineup">
                   {chosen?.cardIds.map((id) => (
                     <img key={id} src={getCardImage(id)} alt="" />

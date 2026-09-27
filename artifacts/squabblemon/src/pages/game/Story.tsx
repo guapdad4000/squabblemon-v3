@@ -1,3 +1,4 @@
+import { setScopedMusicMode } from '../../musicStore';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { useViewMemory } from '../../lib/navigationMemory';
 import { rewardReceipts } from '../../lib/rewardReceipts';
@@ -100,6 +101,11 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [activeChapterId, setActiveChapterId] = useViewMemory<string | null>(`story-chapter:${bootstrap.profile.id}`, null);
   const [activeSeasonId, setActiveSeasonId] = useState<string | null>(null);
   const [rewardsOpen, setRewardsOpen] = useState(false);
+
+  useEffect(() => {
+    setScopedMusicMode(activeSeasonId || selectedNodeId ? 'story' : null);
+    return () => setScopedMusicMode(null);
+  }, [activeSeasonId, selectedNodeId]);
 
   const campaign = storyQuery.data;
   useEffect(() => {

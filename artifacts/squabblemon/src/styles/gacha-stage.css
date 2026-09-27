@@ -2372,3 +2372,13 @@ html[data-reduce-motion='true'] :is(
     margin-block: 8px;
   }
 }
+
+/* The welcome ticket is a separate free offer, never a paid pack button. */
+.fight-bill[hidden]{display:none!important}
+.welcome-pull{position:absolute;z-index:12;right:4%;top:14%;width:min(460px,92%);display:flex;gap:12px;padding:24px;border:1px solid #f1c56a88;border-radius:20px;background:linear-gradient(140deg,#182a33f5,#0b111af5);box-shadow:0 20px 70px #0009;color:#fff}
+.welcome-pull>img{width:90px;height:140px;object-fit:contain;align-self:flex-start;filter:drop-shadow(0 8px 12px #000)}
+.welcome-pull h2{font:900 28px/1.05 var(--font-display);margin:10px 0}.welcome-pull p{font-size:15px;line-height:1.5;margin:12px 0}.welcome-pull small{display:block;line-height:1.5;color:#d0d9dc;margin:12px 0}.welcome-pull .studio-action{width:100%;margin-top:12px}
+.welcome-pull__ticket{display:block;padding:14px 10px;border:1px dashed #f1c56a;color:#f7d58f;font-size:12px;line-height:1.5;letter-spacing:.06em}
+.welcome-pull__coach{position:absolute;z-index:15;top:16px;left:50%;transform:translateX(-50%);width:min(400px,90%);padding:12px 18px;border-radius:12px;background:#09141ef2;border:1px solid #f1c56a80;color:white;pointer-events:none}.welcome-pull__coach strong,.welcome-pull__receipt strong{font-size:11px;color:#f7d58f;letter-spacing:.12em}.welcome-pull__coach p{margin:6px 0;font-size:15px}
+.welcome-pull__receipt{position:relative;z-index:2;margin:0 auto 12px;padding:14px 18px;max-width:660px;border:1px solid #f1c56a66;border-radius:12px;background:#0b1720ed;color:white}.welcome-pull__receipt p{font-size:14px;line-height:1.4;margin:6px 0}.welcome-pull__receipt small{color:#c5d0d7;line-height:1.4;display:block}
+@media(max-width:600px){.welcome-pull{top:8%;right:4%;padding:18px;gap:8px;max-height:84%;overflow-y:auto}.welcome-pull>img{width:58px;height:100px}.welcome-pull h2{font-size:24px}.welcome-pull p{font-size:14px}.welcome-pull__coach{top:6px}.welcome-pull__receipt{padding:10px 12px}}

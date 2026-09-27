@@ -1,7 +1,9 @@
+import { setScopedMusicMode } from '../../musicStore';
+import { StoryCrewSelect } from '../../components/StoryCrewSelect';
 import { useGameBack } from '../../components/venue/GameBackButton';
 import { DECK_SIZE } from '../../data';
 import { GameGlyph, type GameGlyphName } from '../../components/venue/GameGlyph';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import {
   ArrowRight,
@@ -115,6 +117,11 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
   const goBack = useGameBack();
   const [, navigate] = useLocation();
   const [selected, setSelected] = useState<Deck | null>(null);
+  useEffect(() => {
+    if (!storyNodeId) return;
+    setScopedMusicMode(selected ? null : 'story');
+    return () => setScopedMusicMode(null);
+  }, [storyNodeId, selected]);
   const [activity, setActivity] = useState<ActivityId>('auto');
   const [showEvents, setShowEvents] = useState(false);
   const [picks, setPicks] = useState<string[]>([]);
@@ -416,12 +423,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       }
     >
       {storyNodeId ? (
-        <>
-          <div className="activity-stage__story-content" role="region" aria-label="Choose your story gang" tabIndex={0}>
-            {setup}
-          </div>
-          {crews.length > 0 && <footer className="activity-stage__story-start">{fightButton}</footer>}
-        </>
+        <StoryCrewSelect decks={crews} selectedId={chosen?.id ?? ""} onSelect={setCrewId} onBack={goBack} action={crews.length > 0 ? fightButton : null} />
       ) : setup}
     </section>
   );

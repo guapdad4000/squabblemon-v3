@@ -36,6 +36,7 @@ export function ResultScreen({
   equippedVariants,
   onInspectBoard,
 }: any) {
+  const detailsRef = useRef<HTMLDialogElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const { celebrating, leaveResults } = useBattleResultExit();
   const onRestart = () => leaveResults(restart);
@@ -216,8 +217,9 @@ export function ResultScreen({
 
         {(challenge || isStory) && rewardError && retry}
         {isStory && !rewardError && (rewardPending || !reward) && <p className="studio-notice" role="status">Saving your story progress and rewards…</p>}
-        <details className="result-stage__receipt-drawer">
-          <summary>Match Details & Breakdown</summary>
+        <button className="result-details-link" onClick={() => detailsRef.current?.showModal()}>Details</button>
+        <dialog ref={detailsRef} className="result-details-popup" aria-labelledby="result-details-title" onClick={event => { if (event.target === event.currentTarget) detailsRef.current?.close(); }}>
+          <header><h2 id="result-details-title">Match details</h2><button autoFocus onClick={() => detailsRef.current?.close()} aria-label="Close match details">Close ×</button></header>
           <div className="result-stage__receipt">
 
         {isStory && (
@@ -247,7 +249,7 @@ export function ResultScreen({
                 </details>
               </>
             ) : rewardError ? (
-              null
+              challenge ? null : retry
             ) : (
               <p className="studio-notice" role="status">
                 Saving chapter outcome…
@@ -295,7 +297,7 @@ export function ResultScreen({
           </div>
         </aside>
           </div>
-        </details>
+        </dialog>
         </ResultArtwork>
       </div>
     </div>

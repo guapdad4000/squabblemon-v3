@@ -10,6 +10,7 @@ import {
 const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(workspaceRoot);
 
+const welcomePullOnly = process.argv[2] === 'welcome-pull';
 const dailyCloutOnly = process.argv[2] === 'daily-clout';
 const profileAvatarsOnly = process.argv[2] === 'profile-avatars';
 const starterMythicOnly = process.argv[2] === 'starter-mythic';
@@ -145,7 +146,7 @@ try {
 
   assertCampaignDatabaseTarget({ ...process.env, DATABASE_URL: databaseUrl });
   run(
-    profileAvatarsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/playerRewardRoutes.test.ts', 'src/lib/onlineMatches.test.ts'] : dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
+    welcomePullOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/welcomePull.test.ts'] : profileAvatarsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/playerRewardRoutes.test.ts', 'src/lib/onlineMatches.test.ts'] : dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
     {
       ...process.env,
       DATABASE_URL: databaseUrl,

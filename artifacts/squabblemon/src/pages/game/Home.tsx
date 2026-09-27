@@ -152,7 +152,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   useEffect(() => { sendScene(frame, { type: 'mail', unread: unreadMail }); }, [unreadMail]);
   useEffect(() => { sendScene(frame, { type: 'mail-overlay', open: mailOpen || bulletinOpen }); }, [mailOpen, bulletinOpen]);
   useEffect(() => { sendScene(frame, { type: 'bulletin', unread: bulletinUnread }); }, [bulletinUnread]);
-  const crew = (bootstrap.profile.savedDecks[0]?.cardIds ?? bootstrap.profile.ownedCardIds).slice(0, 3).map(id => catalogCardById[id]).filter(Boolean);
+  const crew = [...new Set([...(bootstrap.profile.savedDecks[0]?.cardIds ?? []), ...bootstrap.profile.ownedCardIds])]
+    .map(id => catalogCardById[id]).filter(Boolean).slice(0, 3);
   const profileCard = catalogCardById[bootstrap.profile.avatarKey]
     ?? bootstrap.profile.ownedCardIds.map(id => catalogCardById[id]).find(Boolean)
     ?? catalogCardById.cornball;

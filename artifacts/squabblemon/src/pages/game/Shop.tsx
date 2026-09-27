@@ -1,3 +1,5 @@
+import { playTutorialSequence } from '../../lib/tutorialVoice';
+import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { CornerStore } from './CornerStore';
 import '../../styles/ui-polish.css';
@@ -13,13 +15,14 @@ import '../../styles/market.css';
 import '../../styles/gacha-stage.css';
 import { useEffect, useRef, useState } from 'react';
 import {
+  customFetch,
   getGetPlayerBootstrapQueryKey,
   useOpenPlayerPack,
   type PackOpening,
   type PackReward,
   type PlayerBootstrap,
 } from '@workspace/api-client-react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cardCatalog, catalogCardById, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
 import { CardView } from '../../components/CardView';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
@@ -174,6 +177,10 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const rarityVoice = useRef<HTMLAudioElement | null>(null);
   const rarityVoiceKey = useRef('');
   const preview = e2eAuthEnabled && bootstrap.profile.id === 'e2e-player';
+  const welcome = useQuery({ queryKey: ['welcome-pull', bootstrap.profile.id],
+    queryFn: () => customFetch<{ available: boolean }>('/api/player/packs/welcome'), enabled: !preview,
+    staleTime: 0, retry: 1 });
+  const [welcomeStep, setWelcomeStep] = useState<'intro' | 'ticket'>('intro');
   const [pending, setPending] = useState<PendingPackRequest | null>(() =>
     loadPackRequest(sessionStorage, bootstrap.profile.id),
   );
@@ -186,6 +193,8 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [pullSize, setPullSize] = useState<PullSize>(() =>
     isTenPullOpening(opening) ? 10 : pending?.pullCount ?? 1,
   );
+  const isWelcomeOpening = opening?.oddsVersion === WELCOME_PULL_KEY;
+  const welcomeOffer = !opening && !preview && (pending?.idempotencyKey === WELCOME_PULL_KEY || (!pending && welcome.data?.available));
   const [hits, setHits] = useState(0);
   const [revealIndex, setRevealIndex] = useState(0);
   const [sound, setSound] = useState(() => loadFeedbackPreferences().audioEnabled);
@@ -232,6 +241,17 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const currentReward = arrangedRewards[revealIndex];
   const currentRarity = rewardRarity(currentReward);
   const ceremony = RARITY_CEREMONY[currentRarity] ?? RARITY_CEREMONY.currency;
+  const welcomeVoiceCue = welcomeOffer && phase === 'idle'
+    ? `welcome-pull-${pending ? 'ticket' : welcomeStep}`
+    : isWelcomeOpening && isPunching && landedStrikes < 3
+      ? `welcome-pull-${(['jab', 'hook', 'finish'] as const)[beatIndex]}`
+      : isWelcomeOpening && (phase === 'reveal' || phase === 'summary')
+        ? ['welcome-pull-reveal', ...(rewards[0]?.kind === 'styleShards' ? ['welcome-pull-duplicate'] : []), 'welcome-pull-done'].join(',')
+        : '';
+  useEffect(() => {
+    if (!sound || !welcomeVoiceCue) return;
+    return playTutorialSequence(welcomeVoiceCue.split(','));
+  }, [sound, welcomeVoiceCue]);
   const unownedGameplayCards = cardCatalog.filter(card => !bootstrap.profile.ownedCardIds.includes(card.catalogId)).length;
   const unownedCosmeticVariants = cardCatalog.reduce(
     (count, card) => count + card.variantSlots.filter(variant => !bootstrap.profile.ownedVariants.includes(variant.id)).length,
@@ -288,9 +308,9 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             ? revealIndex % 2 ? 'gacha-rare-b' : 'gacha-rare-a'
             : 'gacha-common';
     revealSound.current = playSoundEffect(soundName, true, currentRarity === 'Mythical' ? 1 : 0.78);
-  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound]);
+  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound, isWelcomeOpening]);
   useEffect(() => {
-    if (phase !== 'reveal' || !currentReward || !sound) return;
+    if (phase !== 'reveal' || !currentReward || !sound || isWelcomeOpening) return;
     const key = `${opening?.id ?? 'opening'}:${revealIndex}`;
     if (rarityVoiceKey.current === key) return;
     const voiceName: VoiceLine | null =
@@ -302,23 +322,24 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     rarityVoiceKey.current = key;
     stopSoundEffect(rarityVoice.current);
     rarityVoice.current = playVoiceLine(voiceName, true, currentRarity === 'Mythical' ? 1 : 0.9);
-  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound]);
+  }, [currentRarity, currentReward, opening?.id, phase, revealIndex, sound, isWelcomeOpening]);
 
   const reveal = () => {
     sendScene(frame, { type: 'reset' });
     setRevealIndex(0);
     setPhase(reduced ? 'summary' : 'reveal');
   };
-  const handleOpen = async (method: Payment, size: PullSize = 1) => {
+  const handleOpen = async (method: Payment, size: PullSize = 1, welcomeTicket = false) => {
     if (busy.current || phase !== 'idle') return;
+    const freeWelcome = welcomeTicket || pending?.idempotencyKey === WELCOME_PULL_KEY;
     const payment = pending?.paymentMethod ?? method;
     const requestedSize = pending?.pullCount ?? size;
     const tier = requestedSize === 10 ? tenPullConfig : bootstrap.packConfig;
     const cost = payment === 'ticket' ? tier.ticketCost : tier.softCurrencyCost;
     const balance = payment === 'ticket' ? bootstrap.profile.packTickets : bootstrap.profile.softCurrency;
-    if (!pending && balance < cost) return;
+    if (!freeWelcome && !pending && balance < cost) return;
     busy.current = true;
-    playVoiceLine('gacha-intro', sound, 0.9);
+    if (!freeWelcome) playVoiceLine('gacha-intro', sound, 0.9);
     playSoundEffect(requestedSize === 10 ? 'pack-ten' : 'pack-tear', sound, 0.72);
     setPullSize(requestedSize);
     setPhase('requesting');
@@ -330,7 +351,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         sessionStorage,
         bootstrap.profile.id,
         payment,
-        () => crypto.randomUUID(),
+        () => freeWelcome ? WELCOME_PULL_KEY : crypto.randomUUID(),
         requestedSize,
       );
       setPending(nextRequest);
@@ -381,16 +402,17 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           },
         });
       } else {
-        const response = await openPack.mutateAsync({
-          data: { ...nextRequest },
-        });
+        const response = freeWelcome
+          ? await customFetch<{ opening: PackOpening; bootstrap: PlayerBootstrap }>('/api/player/packs/welcome', { method: 'POST' })
+          : await openPack.mutateAsync({ data: { ...nextRequest } });
         if (!response?.opening?.rewards?.length || !response.bootstrap?.profile)
           throw new Error('Invalid pack response');
         result = response.opening;
         queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), response.bootstrap);
+        if (freeWelcome) queryClient.setQueryData(['welcome-pull', bootstrap.profile.id], { available: false });
       }
       const guaranteeWasHit =
-        requestedSize === 1 &&
+        !freeWelcome && requestedSize === 1 &&
         result.pityBefore >= Math.max(0, bootstrap.packConfig.pityLimit - 1);
       if (guaranteeWasHit) playSoundEffect('story-star', sound, 0.9);
       // Keep the awarded reveal resumable across refreshes; retries use the same payment intent.
@@ -499,7 +521,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         />
         <div className="gym__vignette" />
       </div>
-      {isPunching && (
+      {isPunching && !isWelcomeOpening && (
         <header className="gacha-stage__heading">
           <span className="studio-eyebrow">
             <GameGlyph name="pack" /> The pack gym · Street edition
@@ -530,7 +552,22 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       >
         {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
       </button>
-      <aside className="fight-bill gym__offer" aria-label="Open a pack">
+      {!preview && !pending && !opening && (welcome.isPending || welcome.isError) && <aside className="welcome-pull" role="status"><div><h2>{welcome.isError ? 'Your ticket needs a moment.' : 'Checking your welcome ticket…'}</h2>{welcome.isError && <><p>We could not check your first-pull reward. Reconnect and try again.</p><button className="studio-action" onClick={() => void welcome.refetch()}>Retry ticket check</button></>}</div></aside>}
+      {welcomeOffer && <aside className="welcome-pull" aria-label="Dr. Fade first pull">
+        <img src={`${PUBLIC_BASE}assets/characters/dr-fade.webp`} alt="Dr. Fade" />
+        <div><span className="studio-eyebrow">Dr. Fade · Your first pull</span>
+          <h2>{welcomeStep === 'intro' && !pending ? 'Meet your recruiter.' : 'One ticket. One doctor.'}</h2>
+          <p>{WELCOME_PULL_LINES[welcomeStep === 'intro' && !pending ? 'intro' : 'ticket']}</p>
+          {welcomeStep === 'ticket' || pending ? <>
+            <strong className="welcome-pull__ticket">FREE WELCOME TICKET · DR. FADE GUARANTEED</strong>
+            <small>One per account. No Clout or regular tickets used. Already own him? Receive {STREET_PACK_RULES.duplicateStyleShards} Style Shards.</small>
+            <button className="studio-action studio-action--gold" disabled={phase !== 'idle'} onClick={() => void handleOpen('ticket', 1, true)}>{phase === 'requesting' ? 'Saving your free pull…' : pending ? 'Retry free pull' : 'Use free welcome ticket'}</button>
+          </> : <button className="studio-action studio-action--gold" onClick={() => setWelcomeStep('ticket')}>Show me my ticket <ArrowRight size={16} /></button>}
+          {error && <p role="alert">{error}</p>}
+        </div>
+      </aside>}
+      {isWelcomeOpening && isPunching && <div className="welcome-pull__coach" role="status"><strong>DR. FADE · {beatIndex + 1} / 3</strong><p>{WELCOME_PULL_LINES[(['jab', 'hook', 'finish'] as const)[beatIndex]]}</p></div>}
+      <aside className="fight-bill gym__offer" aria-label="Open a pack" hidden={Boolean(welcomeOffer) || (!preview && (welcome.isPending || welcome.isError) && !pending && !opening)}>
         <div className="fight-bill__inner">
           <header className="fight-bill__header">
             <div className="fight-bill__stars-row">
@@ -857,6 +894,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <span className="gacha-results__smoke" />
           <img className="gacha-results__impact" src={`${PUBLIC_BASE}brand/gacha/knockout-impact.webp`} alt="" />
         </div>
+        {isWelcomeOpening && <div className="welcome-pull__receipt"><strong>DR. FADE · FREE WELCOME PULL</strong><p>{WELCOME_PULL_LINES.reveal}</p><p>{rewards[0]?.kind === 'styleShards' ? WELCOME_PULL_LINES.duplicate : 'Dr. Fade is now in your collection.'}</p><small>{WELCOME_PULL_LINES.done}</small></div>}
         <div className="gym-results__header">
           <span className="studio-eyebrow">
             {isTenPull

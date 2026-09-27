@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type CSSProperties } from 'react';
+import { useState, useEffect, type ReactNode, type CSSProperties } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { AnimatedNumber } from './AnimatedNumber';
 import '../styles/ui-polish.css';
@@ -17,10 +17,15 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
   storyStars?: number; storyBackground?: string;
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
-  const [scene, setScene] = useState(false);
+  const [variant] = useState(() => {
+    try { return sessionStorage.getItem(`result-scene-${victory ? "win" : "loss"}`) === "1" ? 2 : 1; } catch { return 1; }
+  });
+  useEffect(() => {
+    if (!draw) { try { sessionStorage.setItem(`result-scene-${victory ? "win" : "loss"}`, String(variant)); } catch { /* Storage may be unavailable. */ } }
+  }, [victory, draw, variant]);
   const outcome = victory ? 'win' : draw ? 'draw' : 'loss';
   const asset = (name: string) => getAssetUrl(`assets/results/${name}.webp`);
-  const variant = scene ? 2 : 1;
+
   const background = draw ? 'draw-scene' : `v3/${outcome}-${variant}`;
   const savedReward = !isGuest && !rewardError && !rewardPending ? reward : undefined;
   const stateLabel = isGuest ? 'Offline training · no saved rewards' : rewardError ? 'Rewards not saved · retry below' : rewardPending || !reward ? 'Saving battle earnings…' : 'Battle earnings';
@@ -33,7 +38,6 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
     {!victory && !draw && !reduced && <div className="result-immersive__rain" aria-hidden="true">{Array.from({length: 48}, (_, i) => <i key={i} style={{ '--x': `${(i * 37 + 3) % 100}%`, '--delay': `${-i * .17}s`, '--duration': `${.8 + (i % 7) * .12}s` } as CSSProperties} />)}</div>}
     {!victory && !draw && !reduced && !storyBackground && <div className={`result-immersive__fade-rain result-immersive__fade-rain--${variant}`} aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i key={i} style={{ '--splash-delay': `${-i * .41}s`, '--splash-duration': `${1.6 + i % 3 * .3}s` } as CSSProperties} />)}</div>}
     <img className="result-immersive__brand" src={asset('v3/wordmark')} alt="Squabblemon" />
-    {!draw && !storyBackground && <button className="result-immersive__toggle" onClick={() => setScene(value => !value)} aria-pressed={scene}>Scene {variant} / 2 <span aria-hidden="true">↔</span></button>}
     <div key={`${outcome}-${variant}`} className={`result-immersive__results ${!reduced && !draw ? 'result-immersive__results--slam' : ''}`}>
       <div className="result-immersive__title">
         {!draw && <img draggable={false} className="result-immersive__mark" src={getAssetUrl(`assets/results/${victory ? 'win-w' : 'loss-l'}.gif`)} alt={victory ? 'Victory' : 'Defeat'} />}
