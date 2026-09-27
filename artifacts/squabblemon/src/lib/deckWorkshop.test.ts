@@ -82,8 +82,8 @@ test('revised workshop copy explains the dependable setup and bounded payoff', (
   assert.match(detail('demario'), /Normal or Powered Luigion consumes it once for \+2/);
   assert.match(detail('demario'), /SQUABBLE is optional for the powered jump/i);
   assert.doesNotMatch(detail('demario'), /adds only the powered jump/i);
-  assert.match(detail('counter'), /Silence and Weaken enablers/i);
-  assert.match(detail('counter'), /first new debuff/i);
+  assert.match(detail('counter'), /two encore shots, once per round/i);
+  assert.match(detail('counter'), /Gamer still rewards new Silence and Weaken/i);
   assert.doesNotMatch(detail('counter'), /Closet Nerd (?:costs|is) 3/i);
 });
 

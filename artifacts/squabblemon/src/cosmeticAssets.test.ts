@@ -35,8 +35,10 @@ test('all ten supplied packs are accounted for: 60 banners, 60 deck covers and 2
  let stickers = 0;
  for (const [cardId, art] of Object.entries(CHARACTER_STYLE_ARTWORK)) {
   assert(catalogCardById[cardId], cardId);
-  assert.equal(CHARACTER_STYLE_SETS[cardId].banner, art.banner);
-  assert.equal(CHARACTER_STYLE_SETS[cardId].deckCover, art.deckCover);
+  // Retired Counter artwork stays archived in the import manifest; saved cosmetic IDs now show Shotta.
+  const replacement = cardId === 'counter' ? 'assets/characters/counter.webp?v=shotta-v1' : undefined;
+  assert.equal(CHARACTER_STYLE_SETS[cardId].banner, replacement ?? art.banner);
+  assert.equal(CHARACTER_STYLE_SETS[cardId].deckCover, replacement ?? art.deckCover);
   for (const file of [art.banner, art.deckCover]) {
    const metadata = await sharp(publicFile(file)).metadata();
    assert.equal(metadata.format, 'webp');
@@ -46,7 +48,7 @@ test('all ten supplied packs are accounted for: 60 banners, 60 deck covers and 2
    referenced.add(file);
   }
   for (const sticker of art.stickers) {
-   assert.equal(stickerById(sticker.id)?.sticker.image, sticker.image);
+   assert.equal(stickerById(sticker.id)?.sticker.image, replacement ?? sticker.image);
    const image = sharp(publicFile(sticker.image));
    const metadata = await image.metadata();
    assert.equal(metadata.format, 'webp');

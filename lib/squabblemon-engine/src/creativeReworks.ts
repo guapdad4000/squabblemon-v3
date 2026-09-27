@@ -211,10 +211,6 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
     "Hold Our Ground",
     "On Reveal: Pair yourself with your weakest other Earth ally here. At next round end, if both remain here and you are not losing this district, each gains +2 Hands. One pair per side.",
   ],
-  concrete: [
-    "Set in Stone",
-    "On Reveal: Anchor your weakest other Earth ally here through next round. Its next hostile forced move is blocked and it gains +2 Hands. If unused at expiry, it gains +1 Hand instead. One anchor per ally.",
-  ],
   gardener: [
     "Rooftop Harvest",
     "On Reveal: Plant a Seed here. At the end of next round, your weakest Plant ally here gains +3 Hands. One plot per district per side.",
@@ -479,6 +475,8 @@ function discount(
 }
 export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
   const labels: Record<string, string> = {
+    "home-parcel": "next friendly play or move here: +1 and cleanse",
+    "home-dinner": "return home at round end: +1 if successful",
     fitting: "next successful move refreshes Protection",
     key: "next different friendly arrival: Protection",
     crossing: "next move ignores Lock",
@@ -995,11 +993,6 @@ export function creativeReveal(
     case "torta": {
       const p = [s, ...a.filter((c) => element(c) === "Earth").slice(0, 1)];
       if (p.length === 2) put("ground", p);
-      break;
-    }
-    case "concrete": {
-      const target = a.find((c) => element(c) === "Earth");
-      if (target) put("anchor", [target], l, {}, "target");
       break;
     }
     case "gardener":

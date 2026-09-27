@@ -110,6 +110,9 @@
 .collector-card--inspector .collector-portrait { bottom: 17%; height: 79%; }
 .collector-card--inspector h4 { font-size: clamp(14px, 9cqw, 30px); }
 .collector-card--long-name h4 { overflow-wrap: anywhere; }
+.collector-card--wide-word { container-type: inline-size; }
+.collector-card--wide-word h4 { font-size: min(18px, 9cqw); overflow-wrap: anywhere; }
+.collector-card--inspector.collector-card--wide-word h4 { font-size: clamp(12px, 7cqw, 22px); }
 .collector-card--inspector.collector-card--long-name h4 { font-size: clamp(12px, 7cqw, 22px); }
 .collector-card--inspector .collector-tier-cue { font-size: 8px; }
 /* Anchor names and descriptions to the dark lower edge in every card context. */

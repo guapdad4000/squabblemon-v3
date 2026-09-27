@@ -297,7 +297,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, rider)?.powerModifier, 2);
     assert(!kinds(m).includes("encore"));
   });
-  test(`${owner}: Torta pairs with herself and Concrete chooses a single reward branch`, () => {
+  test(`${owner}: Torta pairs with herself; Box Bot has no expired anchor payoff`, () => {
     let m = blank();
     const ally = unit("landlord", owner, 0);
     m.boards = [[ally], [], []];
@@ -309,7 +309,7 @@ for (const owner of ["player", "cpu"] as const) {
     m.boards = [[ally], [], []];
     m = cast(m, "concrete", owner).after;
     m = end(end(m));
-    assert.equal(find(m, ally)?.powerModifier, 1);
+    assert.equal(find(m, ally)?.powerModifier, 0);
     assert(!kinds(m).includes("anchor"));
   });
   test(`${owner}: Abuela healthy lunch heals actual subsequent loss only once`, () => {

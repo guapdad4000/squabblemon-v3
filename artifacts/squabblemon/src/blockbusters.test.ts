@@ -63,8 +63,8 @@ function cast(
   );
 }
 const end = (m: Match) => nextRound({ ...m, phase: "resolved" });
-test("202 distinct catalog entries include all 18 new fighters and 10 lane events", () => {
-  assert.equal(cardCatalog.length, 202);
+test("205 distinct catalog entries include all 18 new fighters and 10 lane events", () => {
+  assert.equal(cardCatalog.length, 205);
   assert.equal(BLOCKBUSTER_CHARACTERS.length, 18);
   assert.equal(BLOCKBUSTERS.length, 10);
   validateCardAbilityUpgrades();

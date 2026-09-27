@@ -10,7 +10,7 @@ export const MYTHIC_LEGENDS = [
   ['johnhenry', 'john-henry', 'John Henry', 'Earth', 5, 6, 'Steel Driver', 'Gain +1 Hand for each other friendly Earth character across the board, up to +4. If at least two are here, give the strongest enemy here -2 Hands.', 'Pressure'],
   ['ashlee', 'ashlee', 'Ashlee', 'Plant', 5, 3, 'Jet Set', 'Drop Guyana the gorilla (+4, uncounterable) into your weakest friendly district. Give every other friendly character in Ashlee\'s district +1 Hand. Give the highest-Hands enemy on the board -1 Hand. If you have Plant allies in all three districts, give your lowest-Hands Plant ally in each +1 Hand.', 'Pressure'],
   ['captainjigga', 'captain-jigga', 'Captain Jigga', 'Air', 5, 4, 'Cabin Gang', 'Send two 2-Hand Stewards here. Each targets a different highest-Hands enemy for -2 Hands and gives your lowest-Hands other Air character here +1 Hand.', 'Disruption'],
-  ['counter', 'counter', 'Counter', 'Dark', 4, 2, 'Mirror', 'Gain Hands equal to the highest enemy printed cost (up to +4), and Protect self. Ongoing: While on board, once per round when you newly Silence or Weaken an enemy, Protect your lowest-Hands unprotected Dark ally.', 'Disruption'],
+  ['counter', 'counter', 'Shotta', 'Dark', 4, 3, 'Wheel & Come Again', 'Hit the strongest enemy here for 2. Ongoing: After you play another character in a different district, fire 2 at its strongest enemy. Two encores per match, at most one per round.', 'Disruption'],
 ] as const;
 
 export const mythicLegendRarities: Record<string, CardRarity> = Object.fromEntries(
@@ -31,7 +31,7 @@ export const mythicLegendCards: Record<string, Card> = Object.fromEntries(MYTHIC
     ...(engineId === 'captainjigga' ? { artworkLayout: 'portrait' as const } : {}),
     abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({
       id: `${engineId}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
-      description: mythicLegendUpgradeEffects[engineId][index].kind === 'target-power'
+      description: engineId === 'counter' ? 'Once per match, after a successful shot, gain +1 Hand.' : mythicLegendUpgradeEffects[engineId][index].kind === 'target-power'
         ? mythicLegendUpgradeEffects[engineId][index].target === 'friendly'
           ? 'After the base ability succeeds, one affected ally gains +1 Hand.'
           : 'After the base ability succeeds, one affected enemy loses 1 Hand.'

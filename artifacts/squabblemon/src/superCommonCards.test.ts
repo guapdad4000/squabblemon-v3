@@ -176,8 +176,8 @@ test('Rock merges into Earth without changing catalog, rarity, stats or upgrade 
     assert.equal(entry.cost, cost); assert.equal(entry.power, power);
     assert.deepEqual(entry.abilityUpgrades.map(u => u.id), [1, 2, 3].map(t => `${id}:upgrade:${t}`));
   }
-  assert.equal(cards.concrete.ability, 'Set in Stone');
-  assert.match(cards.concrete.effect, /Anchor your weakest other Earth ally/);
+  assert.equal(cards.concrete.ability, 'From Home, With Love');
+  assert.match(cards.concrete.effect, /care package in each other district/);
 });
 
 for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete do not stack passive hand growth for ' + owner, () => {

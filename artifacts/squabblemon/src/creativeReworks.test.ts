@@ -310,7 +310,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(end(dismissed), target)?.statuses.frozen, false);
     assert(moved);
   });
-  test(`${owner}: Floor Sweep, Mall Rules, and Concrete react to movement without permanent locks`, () => {
+  test(`${owner}: Floor Sweep and Mall Rules react to movement without permanent locks`, () => {
     let m = blank();
     const passenger = unit("cornball", owner, 0);
     m.boards = [[passenger], [], []];
@@ -323,22 +323,7 @@ for (const owner of ["player", "cpu"] as const) {
     const rider = cast(m, "bikelife", enemy);
     assert(!kinds(rider.after).includes("warning"));
     assert.equal(find(rider.after, rider.source)?.powerModifier, 0); // warning -1, successful ride +1
-    m = blank();
-    const earth = unit("landlord", owner, 1);
-    m.boards = [[], [earth], []];
-    m = cast(m, "concrete", owner, 1).after;
-    m = {
-      ...m,
-      boards: m.boards.map((cs) =>
-        cs.map((c) =>
-          c.cardId === "concrete" ? { ...c, powerModifier: 20 } : c,
-        ),
-      ) as Match["boards"],
-    };
-    m = cast(m, "black-cowboy", enemy, 0).after;
-    assert.equal(find(m, earth)?.lane, 1);
-    assert.equal(find(m, earth)?.powerModifier, 2);
-    assert(!kinds(m).includes("anchor"));
+
   });
   test(`${owner}: delayed arrival gifts consume once and respect element matching`, () => {
     for (const [id, kind, arrivalId] of [

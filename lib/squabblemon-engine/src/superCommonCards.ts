@@ -9,7 +9,7 @@ const definitions = [
   ['cognac', 'cognac-bottle', 'Cognac Bottle', 'Fire', 1, 0, 'Liquid Courage', 'Give your lowest-Hands friendly character here +2 Hands.', 'support', 'Support'],
   ['bustdown', 'bust-down-watch', 'Bust-Down Watch', 'Light', 1, 0, 'Wrist Check', 'Protect your lowest-Hands friendly character here from one targeted hostile ability.', 'support', 'Support'],
   ['soulfood', 'soul-food', 'Soul Food', 'Plant', 1, 0, 'Full Plate', 'Give your lowest-Hands friendly character here +1 Hands and cleanse its freeze and silence.', 'support', 'Support'],
-  ['concrete', 'concrete', 'Concrete', 'Earth', 1, 1, 'Earth Bond', 'Ongoing: While Concrete is in your hand, your other Earth characters gain +1 Hand at round end.', 'character', 'Sustain', 'Earth'],
+  ['concrete', 'concrete', 'Balikbayan Box Bot', 'Earth', 1, 1, 'From Home, With Love', 'On Reveal: Leave a care package in each other district through next round. The next ally played or moved there gains +1 Hand and is cleansed. One package per district per side.', 'character', 'Sustain'],
 ] as const;
 
 export const superCommonIds = definitions.map(([id]) => id);
@@ -29,7 +29,7 @@ export const superCommonCards: Record<string, Card> = Object.fromEntries(definit
     ...(elementalBond ? { elementalBond } : {}),
     abilityUpgrades: [2, 5, 8].map((unlockLevel, index) => ({
       id: `${engineId}:upgrade:${index + 1}`, name: `${ability} ${['Practice', 'Confidence', 'Mastery'][index]}`,
-      description: elementalBond
+      description: engineId === 'concrete' ? 'Once per match, after leaving a care package, gain +1 Hand.' : elementalBond
         ? 'While this card is in your hand, one bonded ally gains an additional +1 Hand at round end.'
         : superCommonUpgradeEffects[engineId][index].kind === 'target-power'
         ? 'After the base ability succeeds, the affected ally gains +1 Hands.'

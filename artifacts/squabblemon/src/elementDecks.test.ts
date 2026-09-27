@@ -113,7 +113,7 @@ test('Promoter also sees district rides and settles before the next player actio
   assert.equal(after.pendingLeaderReactions?.length, 0);
 });
 
-for (const owner of ['player', 'cpu'] as const) test('Gamer and Counter reward actual disruption for ' + owner, () => {
+for (const owner of ['player', 'cpu'] as const) test('Gamer rewards disruption while Shotta no longer grants Mirror shields for ' + owner, () => {
   const enemy: Owner = owner === 'player' ? 'cpu' : 'player';
   const m = blank(), gamer = unit('gamer', owner, 2, 1, 5), counter = unit('counter', owner, 2, 2, 6);
   const ally = unit('nerd', owner, 1, 3, 1), foe = unit('hooper', enemy, 0, 4);
@@ -121,13 +121,13 @@ for (const owner of ['player', 'cpu'] as const) test('Gamer and Counter reward a
   const first = cast(m, 'subwaymagician', owner).after;
   assert.equal(find(first, foe).statuses.weakened, true);
   assert.equal(find(first, ally).powerModifier, 2);
-  assert.equal(find(first, ally).statuses.protected, true);
-  assert(first.timedEffects.some(e => e.targetInstanceId === ally.instanceId));
+  assert.equal(find(first, ally).statuses.protected, false);
+  assert(!first.timedEffects.some(e => e.targetInstanceId === ally.instanceId));
   const again = cast(first, 'nerd', owner, 0, 1).after;
   assert.equal(find(again, foe).statuses.silenced, true);
   assert.equal(find(again, ally).powerModifier, 2);
-  assert.equal(again.effectLog.filter(e => e.note.startsWith('Mirror: successful disruption')).length, 1);
-  assert.deepEqual(again.leaderRounds?.[owner], { gamer: 3, counter: 3 });
+  assert.equal(again.effectLog.filter(e => e.note.startsWith('Mirror: successful disruption')).length, 0);
+  assert.deepEqual(again.leaderRounds?.[owner], { gamer: 3 });
 });
 test('blocked, repeated, friendly-district and already-present statuses never farm Dark leader bonuses', () => {
   for (const reason of ['protected', 'already-silenced', 'frozen-only'] as const) {
@@ -149,7 +149,7 @@ test('normal Buddy Buds do not invoke the retired Mythical disruption kit', () =
   assert.equal(find(after, enemy).powerModifier, 0);
   assert.equal(find(after, enemy).statuses.silenced, false);
 });
-for (const status of ['silenced', 'frozen', 'weakened'] as const) test('disabled Gamer and Counter cannot react: ' + status, () => {
+for (const status of ['silenced', 'frozen', 'weakened'] as const) test('disabled Gamer and Shotta cannot react: ' + status, () => {
   const m = blank(), gamer = unit('gamer', 'player', 2, 1), counter = unit('counter', 'player', 2, 2);
   gamer.statuses[status] = true; counter.statuses[status] = true;
   m.boards = [[unit('hooper', 'cpu', 0, 3)], [], [gamer, counter]];

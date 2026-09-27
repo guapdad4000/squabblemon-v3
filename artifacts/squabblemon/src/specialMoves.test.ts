@@ -10,6 +10,10 @@ test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve
   assert.equal(openart.clips.length, 100);
   assert.equal(new Set(openart.clips.map(clip => clip.engineId)).size, 100);
   for (const source of openart.clips) {
+    if (['counter', 'concrete'].includes(source.engineId)) {
+      assert.equal(resolveSpecialMove(source.engineId), null, 'retired likeness uses procedural effects');
+      continue;
+    }
     const clip = resolveSpecialMove(source.engineId)!;
     assert.equal(clip?.id, source.clipId, source.engineId);
     assert.equal(resolveSpecialMove(source.catalogId)?.id, source.clipId, source.catalogId);
@@ -194,7 +198,7 @@ test('Wave 6 covers the six original City Legends with their printed moves and c
   assert.deepEqual(rarities, { Mythical: 2, Legendary: 4 });
 });
 
-test('Wave 7 keeps Ashlee and Captain Jigga clips and adds Counter’s delivered finisher', () => {
+test('Wave 7 keeps Ashlee and Captain Jigga clips and retires replaced likenesses', () => {
   for (const [id, clipId] of [['ashlee', 'char100'], ['captainjigga', 'char101']] as const) {
     const clip = resolveSpecialMove(id);
     assert.equal(clip?.id, clipId);
@@ -203,8 +207,8 @@ test('Wave 7 keeps Ashlee and Captain Jigga clips and adds Counter’s delivered
     assert.equal(cardCatalog.find(card => card.engineId === id)?.rarity, 'Mythical');
     assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
   }
-  assert.equal(moveAssignments.counter, 'oa-counter-v1');
-  assert.equal(resolveSpecialMove('counter')?.id, 'oa-counter-v1');
+  assert.equal(moveAssignments.counter, null);
+  assert.equal(resolveSpecialMove('counter'), null);
   assert.equal(cardCatalog.find(card => card.engineId === 'counter')?.rarity, 'Mythical');
 });
 

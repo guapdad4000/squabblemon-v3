@@ -208,7 +208,7 @@ function CardViewComponent({
         collector-card relative shrink-0 flex flex-col justify-end text-left group
         ${tactile ? 'collector-card--tactile' : ''}
         ${isInspector ? 'collector-card--inspector' : ''}
-        ${card.name.length > 24 ? 'collector-card--long-name' : ''}
+        ${card.name.length > 24 ? 'collector-card--long-name' : ''} ${card.name.split(/\s+/).some(word => word.length >= 10) ? 'collector-card--wide-word' : ''}
         ${fillContainer ? 'w-full aspect-[63/88]' : isBoard ? `battle-board-card w-[64px] sm:w-[78px] lg:w-[96px] aspect-[63/88] ${aliveClass} ${stanceClass}` : isInspector ? className : 'battle-hand-card w-[100px] md:w-[136px] aspect-[63/88] shadow-xl shadow-black/80'}
         ${queued ? 'scale-105 -translate-y-2 z-50 ring-2 ring-primary ring-offset-2 ring-offset-black' : 'z-10'}
         ${squabble ? 'card-squabble-armed' : ''}

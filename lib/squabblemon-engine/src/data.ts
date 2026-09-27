@@ -1,3 +1,4 @@
+import { homecomingCards, homecomingRarities, homecomingUpgradeEffects } from './homecomingWave';
 import { applyRosterBalance } from './rosterBalance';
 import { applyCreativeCardKits } from './creativeReworks';
 import { blockbusterWaveCards, blockbusterWaveRarities, blockbusterWaveUpgradeEffects } from './blockbusterWave';
@@ -102,6 +103,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...streetWaveUpgradeEffects,
   ...mythicLegendUpgradeEffects,
   ...characterWaveUpgradeEffects,
+  ...homecomingUpgradeEffects,
   ...neighborhoodWaveUpgradeEffects,
   ...cellblockWaveUpgradeEffects,
   ...fairytaleUpgradeEffects,
@@ -252,6 +254,7 @@ export const cards: Record<string, Card> = {
   ...streetWaveCards,
   ...mythicLegendCards,
   ...characterWaveCards,
+  ...homecomingCards,
   ...neighborhoodWaveCards,
   ...cellblockWaveCards,
   ...fairytaleCards,
@@ -306,6 +309,7 @@ export const rarityByEngineId = {
   ...streetWaveRarities,
   ...mythicLegendRarities,
   ...characterWaveRarities,
+  ...homecomingRarities,
   ...fairytaleRarities,
   ...neighborhoodWaveRarities,
   ...cellblockWaveRarities,
@@ -384,6 +388,7 @@ export function validateCardCatalogRarities(
 }
 
 const factionByEngineId: Record<string, string> = {
+  lola: "Old Heads Know", repoman: "Around the Block", madhatter: "Wonderland",
   ...Object.fromEntries(Object.entries(blockbusterWaveCards).map(([id,c]) => [id,c.kind === "blockbuster" ? "Blockbusters" : "Block Party"])),
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, 'After Hours'])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, 'Elemental Bonds'])),

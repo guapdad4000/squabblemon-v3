@@ -62,6 +62,14 @@ for (const [cardId, art] of Object.entries(CHARACTER_STYLE_ARTWORK)) {
     ],
   };
 }
+// Preserve purchased sticker IDs while retiring Counter's old likeness.
+const shottaStyle = CHARACTER_STYLE_SETS.counter;
+if (shottaStyle) {
+  const portrait = 'assets/characters/counter.webp?v=shotta-v1';
+  shottaStyle.banner = portrait;
+  shottaStyle.deckCover = portrait;
+  shottaStyle.stickers = shottaStyle.stickers.map(sticker => ({ ...sticker, image: portrait }));
+}
 export function hasCharacterStickers(set: CharacterStyleSet | undefined): boolean {
   return !!set?.stickers.length && set.stickers.every(sticker => !!sticker.image || (!!set.stickerAtlas && sticker.cell !== undefined));
 }

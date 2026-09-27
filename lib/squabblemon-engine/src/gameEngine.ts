@@ -1,3 +1,5 @@
+import { HOMECOMING_KIT_IDS, homecomingReveal, homecomingArrival, homecomingAfterPlay, homecomingRoundEnd, type HomecomingTools } from './homecomingAbilities';
+import { homecomingCards } from './homecomingWave';
 import { isActiveOngoing } from './rosterBalance';
 import { creativeStatusApplied, creativePreventDamage, creativeCanCross, REPLACED_BONDS, CREATIVE_KITS, creativeAbilityResolved, creativeReveal, creativeMoved, creativeBeforeEntrance, creativeAfterPlay, creativeAfterAction, creativeDamage, creativeShieldBroken, creativeIntercept, creativeFinishIntercept, creativeAnchor, creativeAppeal, creativeCleansed, creativeRefund, creativeRoundEnd, creativeRoundStart, creativeDistrictMarks, type CreativeMark, type CreativeTools } from './creativeReworks';
 export { blockbusterExtraCost } from './blockbusterRules';
@@ -124,6 +126,8 @@ export type CardInstance = Card & {
   idolId?: string;
   fanRound?: number;
   waveTrainingUsed?: boolean;
+  homecomingEncores?: number;
+  homecomingEncoreRound?: number;
   /** A Luigion deployment can consume only one Mushroom, never from an echo. */
   luigionMushroomUsed?: boolean;
   waveOnce?: Partial<Record<'alice' | 'bonnetgirl' | 'undercova' | 'oz', boolean>>;
@@ -735,7 +739,7 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string, def
   if (deferArrival) return moved;
   moved = fairytaleDeparture(moved, card);
   moved = fairytaleArrival(moved, card.instanceId);
-  return creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools());
+  return homecomingArrival(creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools()), card.instanceId, homecomingTools());
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
 
@@ -815,8 +819,7 @@ const queueDisruptionReactions = (before: Match, after: Match, source: CardInsta
   let result = after;
   const gamerTarget = lowest(allies);
   if (gamerTarget) result = queueLeaderReaction(result, 'gamer', gamerTarget.instanceId, before);
-  const counterTarget = lowest(allies.filter(c => !c.statuses.protected));
-  if (counterTarget) result = queueLeaderReaction(result, 'counter', counterTarget.instanceId, before);
+
 
   return result;
 };
@@ -1258,7 +1261,7 @@ const targetEnemy = (m: Match, source: CardInstance, target: CardInstance, apply
 
 const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id);
-  if (!card || !(Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   let result = modify(m, id, c => ({ ...c, waveTrainingUsed: true }));
   for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, card.owner, card.cardId)) {
     const before = result;
@@ -1776,6 +1779,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
   if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  const homecoming = homecomingReveal(m, source, homecomingTools(), echoed);
+  if (homecoming) return !echoed ? { ...homecoming, lastRevealedCardId: source.cardId,
+    entranceHistory: [...(homecoming.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : homecoming;
   const creative = creativeReveal(m, source, creativeTools(), echoed);
   if (creative) return !echoed && source.effect.includes('On Reveal:') ? { ...creative, lastRevealedCardId: source.cardId,
     entranceHistory: [...(creative.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : creative;
@@ -2629,28 +2635,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     }
     note(`Cabin Gang dispatched 2 stewards${picked.length ? `, ${picked.length} hit${picked.length === 1 ? '' : 's'} enemy Hands` : ' (no enemies in range)'}.`);
   }
-  else if (source.cardId === 'counter') {
-    // Mirror reads printed cost rather than current Hands so buffs cannot inflate it.
-    const target = [...m.boards.flat().filter(c => !c.hazard && c.owner === enemy && c.kind !== 'support')]
-      .sort((a, b) => b.cost - a.cost || getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0];
-    let bonus = 0;
-    if (target) {
-      targetIds.add(target.instanceId);
-      bonus = Math.min(4, target.cost);
-      m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + bonus, lastEffectNote: `Mirror: +${bonus} Hands (read ${target.name}).` }));
-    }
-    m = modify(m, source.instanceId, c => ({
-      ...c, statuses: { ...c.statuses, protected: true },
-      lastEffectNote: target ? c.lastEffectNote : 'Mirror: protected with no enemy to read.',
-    }));
-    m = { ...m, timedEffects: [...m.timedEffects.filter(effect => effect.id !== `counter:${source.instanceId}`), {
-      id: `counter:${source.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId,
-      targetInstanceId: source.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7,
-      expiration: 'match-complete',
-    }] };
-    note(target ? `Mirror read ${target.name} for +${bonus} and gained Protect.` : 'Mirror gained Protect with no enemy to read.');
-  }
-  else if (Object.hasOwn(characterWaveCards, source.cardId)) {
+  else if ((Object.hasOwn(characterWaveCards, source.cardId) || Object.hasOwn(homecomingCards, source.cardId))) {
     const id = source.cardId;
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && c.kind !== 'support');
     const enemies = inLane(m, enemy, l);
@@ -3035,7 +3020,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   const movementSucceeded = [source.instanceId, ...targetIds].some(id => findCard(before, id)?.lane !== findCard(m, id)?.lane);
   const meaningfulExpansionChange = mechanicallyChanged(source.instanceId) || successfulChangedTargetIds.length > 0 || boardAdditionSucceeded;
   const isExpansion = Object.hasOwn(expansionCards, source.cardId) || Object.hasOwn(streetWaveCards, source.cardId) || Object.hasOwn(elementalWaveCards, source.cardId)
-    || Object.hasOwn(characterWaveCards, source.cardId)
+    || (Object.hasOwn(characterWaveCards, source.cardId) || Object.hasOwn(homecomingCards, source.cardId))
     || Object.hasOwn(mythicLegendCards, source.cardId) || source.kind === 'support';
   const baseSucceeded = protectionBlockedIds.length ? meaningfulExpansionChange || m.playerMotion !== before.playerMotion || m.cpuMotion !== before.cpuMotion
     : source.cardId === 'shiesty' ? m.boards.flat().length > before.boards.flat().length
@@ -3050,8 +3035,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       || m.playerMotion !== before.playerMotion || m.cpuMotion !== before.cpuMotion;
   // Fixed upgrades resolve after the printed ability in authored unlock order.  Their
   // small bounded effect budget prevents progression from changing base-card identity.
-  if (!echoed && baseSucceeded && Object.hasOwn(characterWaveCards, source.cardId)) m = trainWaveAbility(m, source.instanceId);
-  if (!echoed && !source.statuses.silenced && !source.statuses.frozen && baseSucceeded && !Object.hasOwn(characterWaveCards, source.cardId)) {
+  if (!echoed && baseSucceeded && (Object.hasOwn(characterWaveCards, source.cardId) || Object.hasOwn(homecomingCards, source.cardId))) m = trainWaveAbility(m, source.instanceId);
+  if (!echoed && !source.statuses.silenced && !source.statuses.frozen && baseSucceeded && !(Object.hasOwn(characterWaveCards, source.cardId) || Object.hasOwn(homecomingCards, source.cardId))) {
     for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, source.owner, source.cardId)) {
       const beforeUpgrade = m;
       const effect = upgrade.effect;
@@ -3288,7 +3273,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   });
   m = applyDistrictArrival(m, owner, instanceId, targetLane);
   m = recordElectricPlay(m, placed);
-  m = fairytaleArrival(m, instanceId);
+  m = homecomingArrival(fairytaleArrival(m, instanceId), instanceId, homecomingTools());
   m = applyScentEntry(m, instanceId);
   // STOCKZ compounds once per later friendly character play, in any district.
   // Permanent powerModifier carries these gains through every round.
@@ -3404,6 +3389,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   // Sneaker moved from reactive trigger (Flip Season on 4+ cost plays) to proactive On Reveal Steal.
   // The reactive logic was removed; resolveAbility now handles Sneaker's branch directly.
   m = creativeAfterPlay(match, m, instanceId, creativeTools(), placed);
+  m = settleLeaderReactions(homecomingAfterPlay(m, placed, homecomingTools()));
   const finalized: Match = { ...m, phase: endTurn ? owner === 'player' ? 'cpu-reveal' : 'resolved' : match.phase };
   const lastEventIndex = finalized.effectLog.length - 1;
   return applyStoryEffects({
@@ -3746,7 +3732,7 @@ function detonateSmileBombs(match: Match): Match {
 export function nextRound(match: Match): Match {
   if (match.phase !== 'resolved') throw new Error('Round is not resolved');
   // Resolve persistent statuses and hand bonds before either advancing or scoring.
-  const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(applyBurntPlates(match), creativeTools())))));
+  const ordinaryRoundEnd = settleLeaderReactions(returnAliceAtRoundEnd(applyOngoingRoundEndHandEffects(applyOngoingRoundEndEffects(creativeRoundEnd(homecomingRoundEnd(applyBurntPlates(match), homecomingTools()), creativeTools())))));
   const roundEnded = settleLeaderReactions(creativeAfterAction(match,ordinaryRoundEnd,creativeTools()));
   if (match.round >= getMatchRoundLimit(match)) {
     const complete = applyStoryEffects({ ...roundEnded, phase: 'complete' as const });
@@ -4380,7 +4366,44 @@ function creativeMovePair(
     m = fairytaleDeparture(m, original);
     m = fairytaleArrival(m, original.instanceId);
     m = applyScentEntry(m, original.instanceId);
-    m = creativeMoved(before, m, original.instanceId, creativeTools());
+    m = homecomingArrival(creativeMoved(before, m, original.instanceId, creativeTools()), original.instanceId, homecomingTools());
+  }
+  return m;
+}
+
+
+function homecomingTools(): HomecomingTools {
+  return { ...creativeTools(), train: trainWaveAbility, swap: homecomingSwap,
+    tow: (m, source, target) => hostileEffect(m, { ...source, cardId: 'thefeds', copiedAbilityCardId: undefined }, target, (state, actual) => {
+      if (source.lane === null || !canMoveTo(state, actual, source.lane)
+        || state.boards[source.lane].filter(c => !c.hazard && c.owner === actual.owner).length >= 4) return state;
+      let result = forceMoveUnshielded(state, actual, source.lane);
+      const arrived = findCard(result, actual.instanceId);
+      if (!arrived || arrived.lane !== source.lane) return result;
+      const amount = Math.min(3, Math.max(0, arrived.powerModifier));
+      const recipient = lowest(inLane(result, source.owner, source.lane).filter(c => c.kind !== 'support'));
+      if (!amount || !recipient) return result;
+      result = modifyWithoutDamage(result, arrived, c => ({ ...c, powerModifier: c.powerModifier - amount,
+        lastEffectNote: `Tow & Collect: repossessed ${amount} bonus Hands.` }));
+      return modify(result, recipient.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount,
+        lastEffectNote: `Tow & Collect: received ${amount} repossessed Hands.` }));
+    }, false, false, true),
+  };
+}
+
+/** Reserve both occupied seats before dispatching movement-arrival reactions. */
+function homecomingSwap(m: Match, a: CardInstance, b: CardInstance): Match {
+  if (a.lane === null || b.lane === null || a.owner !== b.owner || a.instanceId === b.instanceId
+    || !canMoveTo(m, a, b.lane) || !canMoveTo(m, b, a.lane)
+    || [a.lane,b.lane].some(l => m.boards[l].filter(c => !c.hazard && c.owner === a.owner).length > 4)) return m;
+  const before=m;
+  m=move(m,a,b.lane,'Change Places!: a new seat at the tea party.',true);
+  m=move(m,findCard(m,b.instanceId)!,a.lane,'Change Places!: a new seat at the tea party.',true);
+  for (const original of [a,b]) {
+    m=fairytaleDeparture(m,original);
+    m=fairytaleArrival(m,original.instanceId);
+    m=applyScentEntry(m,original.instanceId);
+    m=homecomingArrival(creativeMoved(before,m,original.instanceId,creativeTools()),original.instanceId,homecomingTools());
   }
   return m;
 }
