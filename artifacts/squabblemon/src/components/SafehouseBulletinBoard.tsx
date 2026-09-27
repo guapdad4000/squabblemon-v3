@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'wouter';
 import { ArrowRight, CalendarDays, ChevronDown, Clock3, Gift, Hammer, X } from 'lucide-react';
 import { getAssetUrl } from '../lib/assets';
 import { bulletinBoard, BULLETIN_SEEN_STORAGE_KEY, type BulletinEvent } from '../content/bulletinBoard';
 import '../styles/safehouse-bulletin.css';
 
+
+const supplied = (name: string) => getAssetUrl(`assets/events/supplied/${name}.png`);
 
 export function hasUnreadBulletin() {
   try { return localStorage.getItem(BULLETIN_SEEN_STORAGE_KEY) !== bulletinBoard.edition; }
@@ -26,18 +28,22 @@ function ExpandedEvent({ event, onNavigate }: { event: BulletinEvent; onNavigate
 export function SafehouseBulletinBoardContent({ compact = false, onNavigate }: { compact?: boolean; onNavigate?: () => void }) {
   const [expandedId, setExpandedId] = useState<string>(bulletinBoard.events[0].id);
   const expanded = bulletinBoard.events.find(event => event.id === expandedId) ?? bulletinBoard.events[0];
-  return <div className={`bulletin-shell${compact ? ' bulletin-shell--compact' : ''}`}>
-    <img className="bulletin-watermark" src={getAssetUrl('brand/prismatic/marks/impact-standard-gold.webp')} alt="" />
+  return <div className={`bulletin-shell${compact ? ' bulletin-shell--compact' : ''}`} style={{ '--cork-art': `url("${supplied('cork')}")`, '--wood-art': `url("${supplied('wood-borders')}")` } as CSSProperties}>
+    <div className="bulletin-wood bulletin-wood--top" aria-hidden="true" />
+    <div className="bulletin-wood bulletin-wood--bottom" aria-hidden="true" />
+    <img className="bulletin-watermark" src={supplied('punch')} alt="" />
     <header className="bulletin-header">
+      <img className="bulletin-title-art" src={supplied('events-title')} alt="Squabblemon Events" />
+      <div className="bulletin-header-copy">
       <span><CalendarDays size={15} /> Safehouse community board</span>
       <h2 id={compact ? 'bulletin-title' : 'events-title'}>What’s happening <em>on the block?</em></h2>
       <p>Events, updates, and notes straight from the dev room.</p>
       <small>{bulletinBoard.updatedLabel}</small>
       {compact && <Link className="bulletin-full-page" href="/game/events" onClick={onNavigate}>Open full events page <ArrowRight size={13} /></Link>}
-    </header>
+    </div></header>
 
     <section className="bulletin-section" aria-labelledby="bulletin-events-title">
-      <div className="bulletin-section__title bulletin-section__title--yellow"><span>01</span><div><small>Pull up</small><h3 id="bulletin-events-title">Events</h3></div></div>
+      <div className="bulletin-section__title bulletin-section__title--yellow"><img className="bulletin-calendar" src={supplied('calendar')} alt="" /><div><small>Pull up</small><h3 id="bulletin-events-title">Events</h3></div></div>
       <div className="bulletin-event-grid">
         {bulletinBoard.events.map((event, index) => <article key={event.id} className={`bulletin-event bulletin-accent--${event.accent}${index === 0 ? ' bulletin-event--featured' : ''}${expandedId === event.id ? ' is-selected' : ''}`}>
           <button type="button" className="bulletin-event__expand" onClick={() => setExpandedId(event.id)} aria-expanded={expandedId === event.id} aria-controls="bulletin-event-detail">
@@ -54,7 +60,7 @@ export function SafehouseBulletinBoardContent({ compact = false, onNavigate }: {
       <div className="bulletin-section__title bulletin-section__title--red"><span>02</span><div><small>From behind the curtain</small><h3 id="bulletin-dev-title">Dev messages</h3></div></div>
       <div className="bulletin-dev-grid">
         {bulletinBoard.developerPosts.map((post, index) => <article key={post.id} className="bulletin-dev-note">
-          <b className="bulletin-sticker bulletin-sticker--note">{post.sticker}</b>
+          <img className="bulletin-ink-stamp" src={supplied('fist-stamp')} alt="" /><b className="bulletin-sticker bulletin-sticker--note">{post.sticker}</b>
           {post.image && <img className="bulletin-dev-note__photo" src={getAssetUrl(post.image)} alt="" />}
           <span><Hammer size={12} /> {post.eyebrow}</span><h4>{post.title}</h4><time>{post.publishedLabel}</time><p>{post.summary}</p>
           {post.bullets && <ul>{post.bullets.map(item => <li key={item}>{item}</li>)}</ul>}

@@ -29,10 +29,20 @@ export function createBulletinBoard() {
   root.position.set(2.92, 1.9, -4.76);
   const backing = new T.Mesh(new T.BoxGeometry(2.46, 1.66, .1), new T.MeshStandardMaterial({ color: '#063d36', roughness: .55, metalness: .12 }));
   backing.castShadow = backing.receiveShadow = true; root.add(backing);
-  const boardTexture = new T.TextureLoader().load(new URL('../../assets/events/generated/fadepark-board-texture.webp', import.meta.url).href);
+  const boardTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/cork.png', import.meta.url).href);
   boardTexture.colorSpace = T.SRGBColorSpace; boardTexture.anisotropy = 8;
   const board = new T.Mesh(new T.PlaneGeometry(2.4, 1.6), new T.MeshStandardMaterial({ map: boardTexture, roughness: .72, metalness: .05 }));
   board.position.z = .058; board.castShadow = true; root.add(board);
+
+  const wood = new T.TextureLoader().load(new URL('../../assets/events/supplied/wood-borders.png', import.meta.url).href);
+  wood.colorSpace = T.SRGBColorSpace; wood.repeat.set(.93,.055); wood.offset.set(.035,.902);
+  const woodMaterial = new T.MeshStandardMaterial({map:wood,transparent:true,roughness:.86});
+  for (const y of [-.81,.81]) { const rail = new T.Mesh(new T.PlaneGeometry(2.48,.14),woodMaterial); rail.position.set(0,y,.07); root.add(rail); }
+  for (const x of [-1.2,1.2]) { const rail = new T.Mesh(new T.PlaneGeometry(1.66,.13),woodMaterial); rail.rotation.z=Math.PI/2; rail.position.set(x,0,.071); root.add(rail); }
+  const iconTexture = new T.TextureLoader().load(new URL('../../assets/events/supplied/calendar.png', import.meta.url).href);
+  iconTexture.colorSpace=T.SRGBColorSpace;
+  const icon=new T.Mesh(new T.PlaneGeometry(.37,.37),new T.MeshStandardMaterial({map:iconTexture,transparent:true,roughness:.9}));
+  icon.position.set(.83,.48,.08); root.add(icon);
 
   const papers = [
     { x: -.62, y: .12, w: .68, h: .84, r: -.035, pin: '#e6332d', texture: paperTexture({ color: '#fff6dc', eyebrow: 'EVENT', title: 'BLOCK PARTY', accent: '#e6332d', fresh: true }) },
