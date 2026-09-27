@@ -44,3 +44,9 @@ If Git fetch succeeds but HTTPS push rejects the workspace credential, transfer 
 **Why:** Read access and write authentication can differ. The API route preserved the newer GitHub parent without extracting credentials, while a tree-SHA comparison proved the uploaded release was byte-for-byte the one that passed validation.
 
 **How to apply:** Use this only after confirming the remote parent has not moved. A successful GitHub update does not prove the Git-triggered Netlify deployment succeeded; check that provider separately.
+
+When every changed blob is valid UTF-8, GitHub's tree API can accept changed paths with inline `content` against the remote base tree in one request; compare the returned tree SHA to the verified local tree before creating a remote-parent commit and advancing `main` without force.
+
+**Why:** Uploading many blobs concurrently through the connector hit HTTP 429, while a single inline-content tree request reproduced the exact local tree. This avoids exposing credentials to Git and preserves remote ancestry when local checkpoint history diverges.
+
+**How to apply:** First confirm all changed files round-trip as UTF-8 and include deletions explicitly. Keep binary blobs on the separate blob-upload path. Check the remote ref again before the update, reject a moved ref, then fetch the result and compare tree SHAs before aligning the local branch.
