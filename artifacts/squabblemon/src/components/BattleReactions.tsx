@@ -76,6 +76,6 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
         <p className="pvp-reaction-customize">Customize your quick tray before queueing in <strong>Fighter ID → Style → PvP Reactions</strong>. All owned reactions can still be sent here.</p>
       </div>}
     </div>
-    {Object.values(query.data?.latest ?? {}).filter(event => event.gameNumber === room.gameNumber && serverNow >= event.sentAt && serverNow - event.sentAt < REACTION_DURATION_MS && !(muted && event.seat !== room.seat)).map(event => <div key={event.id} className={`pvp-reaction-bubble pvp-reaction-bubble--${event.seat === room.seat ? 'you' : 'rival'}`} role="status"><small>{event.seat === room.seat ? 'You' : room.members[otherSeat(room.seat)]?.name}</small><ReactionArt id={event.reactionId} still={still} /></div>)}
+    {Object.values(query.data?.latest ?? {}).filter(event => event.gameNumber === room.gameNumber && serverNow >= event.sentAt && serverNow - event.sentAt < REACTION_DURATION_MS && !(muted && event.seat !== room.seat)).map(event => <div key={event.id} className={`pvp-reaction-bubble pvp-reaction-bubble--${event.seat === room.seat ? 'you' : 'rival'}`} role="status"><span className="pvp-reaction-cloud" aria-hidden="true" /><ReactionArt id={event.reactionId} still={still} /><small>- {room.members[event.seat === room.seat ? room.seat : otherSeat(room.seat)]?.name ?? 'Player'}</small></div>)}
   </>;
 }
