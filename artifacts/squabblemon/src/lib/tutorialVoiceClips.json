@@ -332,5 +332,53 @@
     "text": "A Boosted card gains +1 Hands at every round end while Boost remains active. Early Boosts compound over several rounds, so answer them before they grow.",
     "duration": 11.25,
     "revision": "16611ff15099"
+  },
+  {
+    "id": "welcome-pull-intro",
+    "text": "Welcome to recruitment. You hit the bag, somebody joins your gang. Finally, a gym membership with benefits.",
+    "duration": 7.86,
+    "revision": "69c46dc93ee0"
+  },
+  {
+    "id": "welcome-pull-ticket",
+    "text": "First one's on me. This welcome ticket guarantees Dr. Fade. Yes, me. I handled the booking.",
+    "duration": 8.54,
+    "revision": "ed5a98e8722c"
+  },
+  {
+    "id": "welcome-pull-jab",
+    "text": "Tap the bag for a jab. We're opening a pack, not filing a complaint.",
+    "duration": 4.85,
+    "revision": "a33a79400854"
+  },
+  {
+    "id": "welcome-pull-hook",
+    "text": "Good. Now give it a hook. Turn that shoulder.",
+    "duration": 3.17,
+    "revision": "05e783cc2316"
+  },
+  {
+    "id": "welcome-pull-finish",
+    "text": "One more. Put some neighborhood in it!",
+    "duration": 3.06,
+    "revision": "b40d9fa938ba"
+  },
+  {
+    "id": "welcome-pull-reveal",
+    "text": "Surprise. It's the man on the ticket. Dr. Fade, reporting for gang duty.",
+    "duration": 6.52,
+    "revision": "4a5c0c23846c"
+  },
+  {
+    "id": "welcome-pull-duplicate",
+    "text": "Already got me? That copy turns into Style Shards. Same handsome doctor, something useful for your collection.",
+    "duration": 9.1,
+    "revision": "f9786d77b5a9"
+  },
+  {
+    "id": "welcome-pull-done",
+    "text": "That's a pull. This welcome ticket was guaranteed. Regular packs use the drop rates. Check those before you spend, then take your gang outside.",
+    "duration": 11.75,
+    "revision": "3ea1d17528cd"
   }
 ]

@@ -1,3 +1,4 @@
+import { playTutorialSequence } from '../../lib/tutorialVoice';
 import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import { CornerStore } from './CornerStore';
@@ -240,6 +241,17 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const currentReward = arrangedRewards[revealIndex];
   const currentRarity = rewardRarity(currentReward);
   const ceremony = RARITY_CEREMONY[currentRarity] ?? RARITY_CEREMONY.currency;
+  const welcomeVoiceCue = welcomeOffer && phase === 'idle'
+    ? `welcome-pull-${pending ? 'ticket' : welcomeStep}`
+    : isWelcomeOpening && isPunching && landedStrikes < 3
+      ? `welcome-pull-${(['jab', 'hook', 'finish'] as const)[beatIndex]}`
+      : isWelcomeOpening && (phase === 'reveal' || phase === 'summary')
+        ? ['welcome-pull-reveal', ...(rewards[0]?.kind === 'styleShards' ? ['welcome-pull-duplicate'] : []), 'welcome-pull-done'].join(',')
+        : '';
+  useEffect(() => {
+    if (!sound || !welcomeVoiceCue) return;
+    return playTutorialSequence(welcomeVoiceCue.split(','));
+  }, [sound, welcomeVoiceCue]);
   const unownedGameplayCards = cardCatalog.filter(card => !bootstrap.profile.ownedCardIds.includes(card.catalogId)).length;
   const unownedCosmeticVariants = cardCatalog.reduce(
     (count, card) => count + card.variantSlots.filter(variant => !bootstrap.profile.ownedVariants.includes(variant.id)).length,
