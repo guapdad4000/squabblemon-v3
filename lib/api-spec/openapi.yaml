@@ -976,7 +976,7 @@ components:
           pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
         itemId:
           type: string
-          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style, character-stickers, character-backdrop, character-banner-finish, reaction-pack, reaction-pack:big-city-pigeon:v1, reaction-pack:dr-fade:v1, reaction-pack:buddy:v1]
+          enum: [training, training-intensive, move-training, ticket, deck-slot, common-recruit, tagged-style, chrome-style, character-stickers, character-backdrop, character-banner-finish, reaction-pack, reaction-pack:big-city-pigeon:v1, reaction-pack:dr-fade:v1, reaction-pack:buddy:v1, reaction-pack:ashlee:v1, reaction-pack:buttahs:v1, reaction-pack:guap:v1, reaction-pack:cologne-criminal:v1]
         cardId:
           type: string
           minLength: 1

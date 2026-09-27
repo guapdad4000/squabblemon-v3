@@ -574,6 +574,10 @@ export const ShopPurchaseInputItemId = {
   'reaction-pack:big-city-pigeon:v1': 'reaction-pack:big-city-pigeon:v1',
   'reaction-pack:dr-fade:v1': 'reaction-pack:dr-fade:v1',
   'reaction-pack:buddy:v1': 'reaction-pack:buddy:v1',
+  'reaction-pack:ashlee:v1': 'reaction-pack:ashlee:v1',
+  'reaction-pack:buttahs:v1': 'reaction-pack:buttahs:v1',
+  'reaction-pack:guap:v1': 'reaction-pack:guap:v1',
+  'reaction-pack:cologne-criminal:v1': 'reaction-pack:cologne-criminal:v1',
 } as const;
 
 export interface ShopPurchaseInput {
