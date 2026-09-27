@@ -44,8 +44,8 @@ export function FadeFinderButton({ busy, searching, loading, unavailable, reduce
       <path className="fade-phone__plug" d="M121 89 H128" />
     </svg>
     <svg className="fade-phone__cord fade-phone__cord--mobile" viewBox="0 0 160 360" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <path className="fade-phone__mobile-lead" d="M160 0 C156 24 12 2 12 30" />
-      <path d="M12 30 L12 294 C12 304 28 299 22 289 C16 280 3 295 13 309 C23 322 31 307 21 302 C11 296 2 316 14 328 C26 340 31 322 20 320 C8 318 3 341 14 349 C26 359 30 342 20 339 C7 335 9 358 0 359" />
+      <path className="fade-phone__mobile-lead" d="M160 0 C150 20 2 4 2 30" />
+      <path d="M2 30 L2 294 C2 304 18 299 12 289 C6 280 -3 295 3 309 C13 322 21 307 11 302 C1 296 -4 316 4 328 C16 340 21 322 10 320 C-2 318 -4 341 4 349 C16 359 20 342 10 339 C-1 335 1 358 0 359" />
       <path className="fade-phone__plug" d="M0 359 H7" />
     </svg>
     <button className="fade-finder" type="button" data-testid={searching ? 'cancel-ranked-fade' : 'find-ranked-fade'}
