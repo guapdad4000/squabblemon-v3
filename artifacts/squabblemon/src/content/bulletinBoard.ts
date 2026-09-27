@@ -10,6 +10,10 @@ export type BulletinEvent = {
   summary: string;
   image: string;
   sticker: string;
+  accent: 'red' | 'yellow' | 'green';
+  details: string;
+  schedule: readonly string[];
+  reward: string;
   link: BulletinLink;
 };
 
@@ -45,6 +49,10 @@ export const bulletinBoard = {
       summary: 'Run the Fadecade, stack event wins, and put the new roster balance through real neighborhood pressure.',
       image: 'assets/layered/festival-street.webp',
       sticker: 'LIVE',
+      accent: 'red',
+      details: 'Every completed set adds to the neighborhood total. Bring any legal gang, finish the card, and help unlock the community reward before the block closes.',
+      schedule: ['Open queue all weekend', 'Bonus window: 6–9 PM PT', 'Community total updates hourly'],
+      reward: 'Event wins, bonus Clout, and a community pack ticket',
       link: { label: 'Hit the Fadecade', href: '/game/challenges' },
     },
     {
@@ -57,6 +65,10 @@ export const bulletinBoard = {
       summary: 'Forty cards were buffed, rebuilt, or clarified. Blockbusters now hit harder without ending the conversation.',
       image: 'brand/squabblemon-standard-gold-share.jpg',
       sticker: '40×',
+      accent: 'yellow',
+      details: 'The Rules 1.1 roster pass touches every district and gives underplayed identities clearer jobs. Your saved gangs still work, but the board is wide open for new lines.',
+      schedule: ['40 card updates', 'Blockbuster tuning', 'Clarified timing windows'],
+      reward: 'A healthier field and more viable gang combinations',
       link: { label: 'Rebuild your gang', href: '/game/decks' },
     },
     {
@@ -69,6 +81,10 @@ export const bulletinBoard = {
       summary: 'A ranked community window with bonus Clout for completing a full set. Wins help, finishing the card matters more.',
       image: 'assets/fight-night/round-03.webp',
       sticker: 'NEXT',
+      accent: 'green',
+      details: 'Fight Night is a scheduled ranked window built around complete sets instead of quick farming. Play the whole card to bank the best event payout.',
+      schedule: ['Check-in: 5:45 PM PT', 'Main card: 6–8 PM PT', 'Rewards settle at 8:15 PM PT'],
+      reward: 'Completion Clout plus a clean-card bonus',
       link: { label: 'Scout Fight Night', href: '/game/online' },
     },
   ] satisfies readonly BulletinEvent[],

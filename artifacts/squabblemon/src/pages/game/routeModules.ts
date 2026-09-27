@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // Keep these imports dynamic: signing in must not download every game screen.
 const loaders = {
   Home: () => import('./Home').then(m => ({ default: m.Home })),
+  Events: () => import('./Events').then(m => ({ default: m.Events })),
   Inventory: () => import('./Inventory').then(m => ({ default: m.Inventory })),
   CharacterStyles: () => import('./CharacterStyles').then(m => ({ default: m.CharacterStyles })),
   CharacterCollections: () => import('./CharacterCollections').then(m => ({ default: m.CharacterCollections })),
@@ -21,6 +22,7 @@ const loaders = {
 };
 
 export const Home = lazy(loaders.Home);
+export const Events = lazy(loaders.Events);
 export const Inventory = lazy(loaders.Inventory);
 export const CharacterStyles = lazy(loaders.CharacterStyles);
 export const CharacterCollections = lazy(loaders.CharacterCollections);
@@ -40,6 +42,7 @@ export const ChallengesHub = lazy(loaders.ChallengesHub);
 export function gameRouteKey(path: string): keyof typeof loaders | undefined {
   const pathname = path.split(/[?#]/, 1)[0].replace(/\/+$/, '');
   if (pathname === '/game') return 'Home';
+  if (pathname === '/game/events') return 'Events';
   if (pathname === '/game/onboarding') return 'Onboarding';
   if (/^\/game\/(training|challenges|play)$/.test(pathname)) return 'ChallengesHub';
   if (/^\/game\/online(?:\/[^/]+)?$/.test(pathname)) return 'Multiplayer';
@@ -52,6 +55,7 @@ export function gameRouteKey(path: string): keyof typeof loaders | undefined {
     '/game/collection': 'Collection', '/game/decks': 'Decks',
     '/game/missions': 'Missions', '/game/shop': 'Shop',
     '/game/settings': 'Settings', '/game/story': 'Story',
+    '/game/events': 'Events',
   };
   return exactRoutes[pathname];
 }

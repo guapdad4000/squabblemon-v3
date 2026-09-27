@@ -19,7 +19,7 @@ import { Suspense, useEffect, type ReactNode } from 'react';
 import { basePath, stripBase } from '../../lib/routing';
 import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
-import { Home, Inventory, CharacterStyles, CharacterCollections, Collection,
+import { Home, Events, Inventory, CharacterStyles, CharacterCollections, Collection,
   DeckEditor, Decks, DeckTest, PlayerDeckPlay, Missions, Onboarding, Settings,
   Shop, Story, Multiplayer, ChallengesHub, preloadGameRoute } from './routeModules';
 import { Redirect, Route, Switch, useLocation, useSearch } from 'wouter';
@@ -119,6 +119,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/inventory"><GameShell bootstrap={bootstrap} location={location}><Inventory bootstrap={bootstrap} /></GameShell></Route>
+      <Route path="/game/events"><GameShell bootstrap={bootstrap} location={location}><Events /></GameShell></Route>
       <Route path="/game/style"><GameShell bootstrap={bootstrap} location={location}><CharacterCollections bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/style/:cardId">{params => <GameShell bootstrap={bootstrap} location={location}><CharacterStyles key={params.cardId} cardId={params.cardId} bootstrap={bootstrap} /></GameShell>}</Route>
       <Route path="/game/collection">
