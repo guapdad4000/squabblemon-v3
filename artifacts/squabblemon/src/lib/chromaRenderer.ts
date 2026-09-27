@@ -3,7 +3,7 @@ type MediaSource = HTMLVideoElement | HTMLCanvasElement;
 
 /** Same byte-domain key as the CPU fallback, without a GPU → CPU readback per frame. */
 export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode, keyPixels: (pixels: Uint8ClampedArray) => void, preferGpu = true) {
-  const gl = preferGpu ? canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false, antialias: false, depth: false, stencil: false }) : null;
+  const gl = preferGpu ? canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false }) : null;
   if (!gl) {
     const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) return null;
@@ -53,7 +53,9 @@ export function createChromaRenderer(canvas: HTMLCanvasElement, mode: ChromaMode
           if (mode == 3) rgb.b = floor(mix(min(rgb.b, rgb.r + 25.0), rgb.b, alpha) + 0.5);
         }
       }
-      gl_FragColor = vec4(rgb / 255.0, floor(pixel.a * alpha * 255.0 + 0.5) / 255.0);
+      float a = floor(pixel.a * alpha * 255.0 + 0.5) / 255.0;
+      // Premultiplied output: iOS WebKit mis-composites unpremultiplied WebGL canvases.
+      gl_FragColor = vec4(rgb / 255.0 * a, a);
     }
   `);
   const program = gl.createProgram()!;
