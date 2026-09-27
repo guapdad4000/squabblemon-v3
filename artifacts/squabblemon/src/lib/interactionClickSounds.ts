@@ -1,7 +1,7 @@
 import { playInteractionSound, type InteractionSound } from './interactionAudio';
 
 const paperTabs = '.arsenal-paper-tabs, .collection-tabs, .market-tabs, .fight-tabs, .guide-chapter-nav';
-const safehouseIcons = '.safehouse-room-markers, .safehouse-room-tools, .safehouse-bounty-logo, .safehouse-stage .starter-mythic-shortcut, .fan-nav';
+const safehouseHeaderIcon = '.city-header__safehouse';
 
 /** Shared click routing includes keyboard activation and portalled arcade dialogs. */
 export function interactionClickSound(target: EventTarget | null): InteractionSound | null {
@@ -11,7 +11,7 @@ export function interactionClickSound(target: EventTarget | null): InteractionSo
   // A paper tab stays a paper tab even when it sits inside the arcade.
   if (control.closest(paperTabs) || control.matches('.venue-nav__item')) return 'page-turn';
   if (control.closest('.fadecade-hub, .fadecade-dialog-content')) return 'arcade-beep';
-  if (control.closest(safehouseIcons)) return 'keys-jingle';
+  if (control.closest(safehouseHeaderIcon)) return 'keys-jingle';
   return null;
 }
 
