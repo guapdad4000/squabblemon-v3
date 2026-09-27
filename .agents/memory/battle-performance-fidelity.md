@@ -15,3 +15,15 @@ profiling renderer is used, which can otherwise create misleading zero-work pass
 **How to apply:** Run performance gates from an optimized, isolated build that uses
 React's profiling renderer, assert profiler metrics are nonzero, and share timing
 constants with the production presenter so benchmark behavior cannot drift.
+
+When a crowded-board budget fails after a presentation change, compare against
+the same benchmark with that presentation layer forced to its CSS fallback on
+the same runner before assigning blame or adjusting thresholds.
+
+**Why:** In a throttled headless run, both the GPU finish and the CSS-only
+baseline exceeded the existing long-task and commit budgets by a wide margin.
+The absolute failure alone did not isolate the new renderer's contribution.
+
+**How to apply:** Keep the fixed release budget; collect paired runs and final
+board evidence. Do not claim the new layer meets budget just because its baseline
+also fails, and do not widen thresholds to make one noisy runner pass.

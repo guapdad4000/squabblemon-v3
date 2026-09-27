@@ -1,0 +1,21 @@
+.street-close{display:inline-grid;place-items:center;grid-auto-flow:column;gap:4px;min-width:44px;min-height:44px;padding:0;border:0;background:transparent;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.street-close:focus-visible{outline:3px solid #f5ce6b;outline-offset:2px;border-radius:4px}
+.street-close--red-x svg{width:26px;height:26px;fill:#ff2a24;filter:drop-shadow(0 2px 0 #3b0706) drop-shadow(0 0 1px #0009);transform:rotate(-4deg);transition:transform .15s}
+.street-close--red-x:hover svg{transform:rotate(4deg) scale(1.08)}
+.street-close--exit-sign{padding:5px 8px;color:#ff2424}
+.street-close--exit-sign img{width:34px;height:20px;object-fit:fill;filter:drop-shadow(0 2px 2px #0009)}
+.street-close--exit-sign span{font:800 10px var(--font-sans,sans-serif);text-transform:uppercase}
+.street-close--paper-tab{padding:6px 14px 9px;background:#efe3c5;color:#2a2116;font:800 11px var(--font-sans,sans-serif);letter-spacing:.08em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% 82%,94% 100%,86% 86%,74% 100%,62% 88%,48% 100%,36% 86%,22% 100%,10% 86%,0 100%);box-shadow:0 3px 0 #0005}
+/* Pinned corner placement for generic overlays; clears notches. */
+.street-close--pinned{position:absolute;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));z-index:5}
+/* Street overlay backdrop + entrance for upgraded generic dialogs/sheets. */
+.street-overlay{background:radial-gradient(ellipse at center,#1a120ad0,#000000ee 75%);backdrop-filter:blur(6px) saturate(.8)}
+.street-overlay[data-state=open]{animation:street-overlay-in .22s ease-out}
+.street-overlay[data-state=closed]{animation:street-overlay-in .16s ease-in reverse}
+.street-pop[data-state=open]{animation:street-pop-in .28s cubic-bezier(.2,1.4,.4,1)}
+@keyframes street-overlay-in{from{opacity:0}to{opacity:1}}
+@keyframes street-pop-in{from{opacity:0;transform:translate(-50%,-46%) rotate(-1.5deg) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) rotate(0) scale(1)}}
+.street-sheet[data-state=open]{animation-timing-function:cubic-bezier(.2,1.2,.4,1)}
+.battle-crew-dialog::backdrop{background:radial-gradient(ellipse at center,#1a120ad0,#000000ee 75%);backdrop-filter:blur(6px)}
+@media(prefers-reduced-motion:reduce){.street-overlay,.street-pop,.street-close--red-x svg{animation:none!important;transition:none}}
+.battle-crew-dialog header .street-close{padding:5px 8px;border:0;border-radius:0}

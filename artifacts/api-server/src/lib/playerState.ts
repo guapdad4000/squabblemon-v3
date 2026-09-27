@@ -1,4 +1,5 @@
 import { normalizeStyleShardBalances } from '@workspace/squabblemon-engine/styleShards';
+import { resolveReactionTray } from '@workspace/squabblemon-engine/reactions';
 import {
   and,
   asc,
@@ -248,7 +249,7 @@ function serializeProfile(
     starterRewardClaimed: profile.starterRewardClaimed,
     ageConfirmedAt: profile.ageConfirmedAt?.toISOString() ?? null,
     termsAcceptedAt: profile.termsAcceptedAt?.toISOString() ?? null,
-    settings: profile.settings,
+    settings: { ...profile.settings, reactionTray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) },
     ownedCardIds: profile.ownedCardIds,
     cardProgression: profile.cardProgression,
     discoveredCardIds: profile.discoveredCardIds,

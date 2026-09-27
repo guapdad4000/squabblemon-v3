@@ -27,6 +27,7 @@ const initialDeck = {
   heroCardId: starterRecipes[0].hero, recipeId: null, valid: true, issues: [],
 };
 const newIds = ids.filter(id => !initialDeck.cardIds.includes(id)).slice(-3);
+const browserErrors = [];
 const key = 'squabblemon:collection-card-discovery:v1:e2e-player';
 const makeBootstrap = (withPack = false, mixedStates = false) => ({
   profile: {
@@ -65,7 +66,18 @@ async function setup(width, height, { withPack = false, reduce = false, returnin
   }, { initialDeck, key, ids, newIds, returning });
   const page = await context.newPage();
   const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
+  browserErrors.push({ viewport: `${width}x${height}`, errors });
+  const missingResources = [];
+  page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
+  page.on('console', message => {
+    if (message.type() !== 'error') return;
+    const detail = `console: ${message.text()} (${message.location().url})`;
+    if (/^Failed to load resource: the server responded with a status of 404/.test(message.text())) missingResources.push(detail);
+    else errors.push(detail);
+  });
+  context.on('close', () => {
+    if (missingResources.length) console.warn(`${width}x${height}: missing resources:\n${[...new Set(missingResources)].join('\n')}`);
+  });
   const bootstrap = makeBootstrap(withPack, mixedStates);
   await page.route('**/api/**', route => route.fulfill({
     contentType: 'application/json',
@@ -167,8 +179,66 @@ try {
     assert.ok(await hitTest(save), `${name}: Save is clickable before any scrolling`);
     const saveBox = await save.boundingBox(), testBox = await test.boundingBox();
     assert.ok(saveBox.width > testBox.width && saveBox.height >= testBox.height, 'Save is the primary action');
+    assert.ok(await hitTest(test), `${name}: Test remains tappable`);
+    assert.ok(await hitTest(page.getByRole('button', { name: 'Delete deck' })), `${name}: Delete deck remains tappable`);
     assert.equal(await search.evaluate(e => getComputedStyle(e).color), 'rgb(0, 0, 0)');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'No horizontal overflow');
+    const compact = width <= 700 || (width <= 900 && height <= 550);
+    const tabs = page.locator('.deck-workbench > .arsenal-paper-tabs');
+    if (compact) {
+      const tabBox = await tabs.boundingBox();
+      assert.ok(tabBox.height <= 58, `${name}: paper tabs use compact editor-specific height (${tabBox.height}px)`);
+      for (const label of ['Collection', 'Decks']) {
+        const tab = tabs.getByRole('link', { name: label });
+        assert.ok(await hitTest(tab), `${name}: ${label} tab remains tappable`);
+        assert.ok((await tab.boundingBox()).height >= 44, `${name}: ${label} has a usable tap target`);
+      }
+    }
+    await page.screenshot({ path: fileURLToPath(new URL(`${name}-initial.png`, output)) });
+    const roster = page.getByTestId('deck-roster-grid');
+    const slots = roster.locator('.deck-slot');
+    assert.ok(await hitTest(slots.first().getByRole('button', { name: /as cover/ })), `${name}: cover control remains tappable`);
+    const original = [...initialDeck.cardIds];
+    await slots.nth(0).getByRole('button', { name: /^Replace / }).click();
+    assert.ok(await page.getByRole('button', { name: 'Move earlier' }).isDisabled(), `${name}: first slot cannot move earlier`);
+    await page.getByRole('button', { name: 'Cancel replacement' }).click();
+    await slots.nth(9).getByRole('button', { name: /^Replace / }).click();
+    assert.ok(await page.getByRole('button', { name: 'Move later' }).isDisabled(), `${name}: last slot cannot move later`);
+    await page.getByRole('button', { name: 'Cancel replacement' }).click();
+    await roster.evaluate(element => { element.scrollLeft = 0; });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await slots.nth(1).getByRole('button', { name: /^Replace / }).click();
+    const selection = page.getByRole('group', { name: new RegExp(`Lineup slot 2: `) });
+    assert.ok(await selection.isVisible());
+    if (height <= 550) await selection.evaluate(element => element.scrollIntoView({ block: 'center' }));
+    await page.screenshot({ path: fileURLToPath(new URL(`${name}-selected.png`, output)) });
+    if (compact) {
+      const selectionBox = await selection.boundingBox(), rosterBox = await roster.boundingBox();
+      assert.ok(selectionBox.y >= rosterBox.y + rosterBox.height - 1, `${name}: tools directly follow the lineup`);
+      for (const label of ['Move earlier', 'Move later', 'Remove card', 'Cancel replacement']) {
+        const action = selection.getByRole('button', { name: label });
+        assert.ok((await action.boundingBox()).height >= 40, `${name}: ${label} has a usable target`);
+        assert.ok(await hitTest(action), `${name}: ${label} is not covered`);
+      }
+      const removeBox = await selection.getByRole('button', { name: 'Remove card' }).boundingBox();
+      const deleteBox = await page.getByRole('button', { name: 'Delete deck' }).boundingBox();
+      assert.ok(removeBox.y > deleteBox.y + deleteBox.height, `${name}: remove card and delete deck are separate controls`);
+    }
+    await selection.getByRole('button', { name: 'Move earlier' }).click();
+    assert.equal(await slots.nth(0).getByRole('button', { name: /^Replace / }).getAttribute('aria-label'), `Replace ${cardCatalog.find(card => card.catalogId === original[1]).name}`);
+    assert.ok(await page.getByRole('button', { name: 'Move earlier' }).isDisabled(), `${name}: moving to the first slot updates disabled state`);
+    await page.getByRole('button', { name: 'Move later' }).click();
+    await page.getByRole('button', { name: 'Remove card' }).click();
+    assert.equal(await slots.locator('button[aria-label^="Replace "]').count(), original.length - 1, `${name}: remove only removes a card`);
+    assert.equal(await page.getByRole('button', { name: 'Delete deck' }).count(), 1, `${name}: whole deck deletion remains separate`);
+    await page.getByRole('button', { name: 'Undo last change' }).click();
+    assert.equal(await slots.locator('button[aria-label^="Replace "]').count(), original.length, `${name}: undo restores lineup`);
+    await slots.nth(1).getByRole('button', { name: /^Replace / }).click();
+    const recruit = page.locator('[data-testid=deck-collection-grid] > button').filter({ has: page.locator(`[data-card-id="${newIds[0]}"]`) });
+    await recruit.click();
+    assert.equal(await slots.nth(1).getByRole('button', { name: /^Replace / }).getAttribute('aria-label'), `Replace ${cardCatalog.find(card => card.catalogId === newIds[0]).name}`, `${name}: recruit swaps selected card`);
+    await page.getByRole('button', { name: 'Undo last change' }).click();
+    assert.equal(await slots.nth(1).getByRole('button', { name: /^Replace / }).getAttribute('aria-label'), `Replace ${cardCatalog.find(card => card.catalogId === original[1]).name}`, `${name}: undo restores the swap`);
     await page.locator('.deck-workbench__body').evaluate(body => {
       const cards = body.querySelector('.deck-workbench__card-scroll');
       const scroller = /auto|scroll/.test(getComputedStyle(cards).overflowY) ? cards : body;
@@ -198,7 +268,7 @@ try {
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('squabblemon.preview-decks.v1')).find(d => d.id === 'layout-check').name), 'Saved Gang');
     if (name === 'desktop') {
       await page.getByRole('textbox', { name: 'Deck name' }).fill('Unsaved Gang');
-      await page.getByRole('link', { name: 'Back to collection' }).click();
+      await tabs.getByRole('link', { name: /Collection/ }).click();
       await page.getByRole('alertdialog').waitFor();
       await page.getByRole('button', { name: 'Stay here', exact: true }).click();
       assert.ok(page.url().endsWith('/game/decks/layout-check'), 'Removing the old nav preserves the exit guard');
@@ -278,8 +348,11 @@ try {
     await page.getByRole('dialog').waitFor();
     await page.getByRole('button', { name: 'Close card details', exact: true }).click();
     await page.getByTestId('button-view-collection-road').click();
-    await page.getByRole('heading', { name: 'Rookie Road' }).waitFor();
-    assert.equal(await page.getByRole('progressbar', { name: 'Collection progress' }).count(), 1);
+    await page.getByRole('region', { name: 'The Gang Wall' }).waitFor();
+    const layers = page.getByRole('navigation', { name: 'Wall layers' });
+    await layers.getByRole('button', { name: 'Rewards' }).click();
+    assert.equal(await layers.getByRole('button', { name: 'Rewards' }).getAttribute('aria-pressed'), 'true');
+    assert.equal(await page.getByRole('navigation', { name: 'Painted tags' }).getByRole('button', { name: /First Block/ }).count(), 1);
     await page.getByTestId('button-view-catalog').click();
     await page.getByTestId('collection-card-grid').waitFor();
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${name}: no horizontal overflow`);
@@ -307,8 +380,14 @@ try {
     assert.ok((await page.evaluate(key => JSON.parse(localStorage.getItem(key)).pendingCardIds, key)).length > 0, 'Unshown cards remain pending');
     await context.close();
   }
+  for (const { viewport, errors } of browserErrors) {
+    assert.deepEqual(errors, [], `${viewport}: no browser runtime or console errors`);
+  }
   console.log('PASS: Deck Builder floating controls and Collection new-card discovery.');
 } finally {
+  for (const { viewport, errors } of browserErrors) {
+    if (errors.length) console.error(`${viewport} browser errors:\n${errors.join('\n')}`);
+  }
   await browser.close();
   await server.close();
 }

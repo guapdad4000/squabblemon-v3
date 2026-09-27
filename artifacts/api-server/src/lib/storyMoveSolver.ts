@@ -476,16 +476,30 @@ export function solveStoryMoves(
 
   const widths = [8, 16, 32, 64].filter((width) => width <= maximumWidth);
   if (!widths.includes(maximumWidth)) widths.push(maximumWidth);
-  for (const preserveBanks of [false, true]) {
+  // A medium beam handles ordinary turns cheaply. Multi-phase bosses may
+  // demand banking for a scripted late swing; non-phased matches can need a
+  // wider greedy beam to survive the rival's full response.
+  // Try the likely expensive line before exhausting smaller alternatives.
+  const bankFirst = (initial.storyEncounter?.phases?.length ?? 0) > 0;
+  const attempts: Array<[number, boolean]> = [
+    [16, false],
+    ...(bankFirst ? [[16, true]] as Array<[number, boolean]> : []),
+    [64, false],
+    ...widths.flatMap((width): Array<[number, boolean]> => [
+      [width, false], [width, true],
+    ]),
+  ];
+  const attempted = new Set<string>();
+  for (const [width, preserveBanks] of attempts) {
+    if (width > maximumWidth || attempted.has(`${width}:${preserveBanks}`)) continue;
+    attempted.add(`${width}:${preserveBanks}`);
     budget.preserveBanks = preserveBanks;
-    for (const width of widths) {
-      const moves = search(searchInitial, desired, width, budget);
-      if (moves) {
-        assertBudget(budget);
-        return moves;
-      }
+    const moves = search(searchInitial, desired, width, budget);
+    if (moves) {
       assertBudget(budget);
+      return moves;
     }
+    assertBudget(budget);
   }
 
   throw new Error(

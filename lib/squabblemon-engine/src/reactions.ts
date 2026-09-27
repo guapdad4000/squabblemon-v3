@@ -3,6 +3,8 @@ export const REACTION_PACK_ID = 'reaction-pack';
 export const REACTION_PACK_UNLOCK = 'reactions:block-talk';
 export const REACTION_COOLDOWN_MS = 4000;
 export const REACTION_DURATION_MS = 5000;
+
+export const REACTION_TRAY_SIZE = 4;
 export const CHARACTER_REACTION_PACKS = [
   {
     "id": "reaction-pack:big-city-pigeon:v1",
@@ -94,10 +96,23 @@ export type ReactionId = typeof REACTIONS[number]['id'];
 export type ReactionSeat = 'player' | 'cpu';
 export type ReactionEvent = { id: string; reactionId: ReactionId; seat: ReactionSeat; sentAt: number; gameNumber: number };
 export type ReactionChannel = { revision: number; latest: Partial<Record<ReactionSeat, ReactionEvent>> };
-export type ReactionView = ReactionChannel & { serverTime: number; owned: ReactionId[] };
+export type ReactionView = ReactionChannel & { serverTime: number; owned: ReactionId[]; tray: ReactionId[] };
 export const reactionById = (id: string) => REACTIONS.find(reaction => reaction.id === id);
 export function ownedReactions(unlocks: readonly string[] = []): ReactionId[] {
   return REACTIONS.filter(r => r.starter || REACTION_PACKS.some(pack => pack.id === r.packId && unlocks.includes(pack.unlock))).map(r => r.id);
+}
+
+/** An absent legacy preference gets starters; a deliberately empty tray stays empty. */
+export function resolveReactionTray(saved: unknown, unlockedCosmeticIds: readonly string[] = []): ReactionId[] {
+  if (!Array.isArray(saved)) return ['big-w', 'lets-go'];
+  const owned = new Set(ownedReactions(unlockedCosmeticIds));
+  const tray: ReactionId[] = [];
+  for (const id of saved) {
+    const reaction = typeof id === 'string' ? reactionById(id) : undefined;
+    if (reaction && owned.has(reaction.id) && !tray.includes(reaction.id)) tray.push(reaction.id);
+    if (tray.length === REACTION_TRAY_SIZE) break;
+  }
+  return tray;
 }
 export class ReactionError extends Error { constructor(message: string, public status = 400) { super(message); } }
 export function addReaction(channel: ReactionChannel | undefined, input: { id: string; reactionId: string; seat: ReactionSeat; gameNumber: number }, owned: readonly string[], now: number): ReactionChannel {

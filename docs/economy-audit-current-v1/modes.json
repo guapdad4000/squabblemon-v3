@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "5f86e9608f28e48f22879cf5fc5aa61ee1c7b654",
+  "evidenceKind": "source-only",
+  "outcomeOrder": ["win", "draw", "loss"],
+  "standard": {
+    "clout": [80, 60, 40],
+    "legacyClout": [40, 30, 20],
+    "accountXp": [50, 35, 25],
+    "rep": [8, 4, 2],
+    "tickets": [0, 0, 0],
+    "cardXpPerEligibleParticipant": [30, 25, 20],
+    "source": "lib/squabblemon-engine/src/economy.ts:57-70; artifacts/api-server/src/lib/cardProgression.ts:212-247"
+  },
+  "modes": [
+    {"id": "tutorial", "settlement": "zero-match-reward", "source": "artifacts/api-server/src/routes/player.ts:817-891"},
+    {"id": "practice", "settlement": "standard", "source": "artifacts/api-server/src/lib/playerRewardTransactions.ts:210-397"},
+    {"id": "activities", "settlement": "standard", "normalizedActivities": ["fair", "neighborhood", "draft", "boss"], "nonNormalizedActivities": ["auto", "pressure", "control", "movement", "support", "freeze", "cheap"], "draftUnownedCardXp": 0, "source": "lib/squabblemon-engine/src/activities.ts:4-16; artifacts/api-server/src/routes/player.ts:568-575; artifacts/api-server/src/lib/playerRewardTransactions.ts:228-230"},
+    {"id": "story", "settlement": "standard", "firstWin": "additional authored claims", "replay": "standard; first perfect ticket still eligible", "perfectTicketsPerNodeLifetime": 1, "source": "artifacts/api-server/src/routes/player.ts:871-884,941-1032; artifacts/api-server/src/lib/storyTransactions.ts:308-338"},
+    {"id": "challenge", "settlement": "standard except zero draw", "entriesPerUtcDay": 2, "entryCloutDebit": 0, "chainPurse": 0, "win": "advance encounter", "loss": "settle run", "draw": "retry same encounter without rewards or mission advance", "source": "artifacts/api-server/src/routes/challenge.ts:37-82; artifacts/api-server/src/lib/playerRewardTransactions.ts:219-246,323-364"},
+    {"id": "friendly-online", "settlement": "none", "rematches": "two votes; no rewards", "source": "artifacts/api-server/src/lib/onlineMatches.ts:251-279,303-318; lib/squabblemon-engine/src/multiplayer.ts:224-246"},
+    {"id": "ranked-human", "settlement": "rank-only", "rankPoints": [25, 5, -15], "ratingK": 32, "source": "artifacts/api-server/src/lib/onlineMatches.ts:303-318; lib/squabblemon-engine/src/ranked.ts:26-36"},
+    {"id": "ranked-bot", "settlement": "rank-only-human-seat", "rankPoints": [12, 2, -6], "ratingK": 12, "source": "artifacts/api-server/src/lib/onlineMatches.ts:303-318; lib/squabblemon-engine/src/ranked.ts:26-36"},
+    {"id": "guest-offline", "settlement": "none", "source": "artifacts/squabblemon/src/components/PlayLoop.tsx:266-276; artifacts/api-server/src/routes/player.ts:648-671"}
+  ],
+  "xp": {
+    "accountXpPerLevel": 250,
+    "accountLevelCap": null,
+    "accountMilestone": {"everyLevels": 10, "firstAtAccountXp": 2250, "subsequentXpInterval": 2500, "clout": 250, "tickets": 1, "universalShards": 50, "requiresClaim": true, "source": "lib/squabblemon-engine/src/accountRewards.ts:23-27,128-136; artifacts/api-server/src/lib/accountRewards.ts:67-120"},
+    "cardLevelThresholds": [0, 100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500],
+    "cardXpCap": 4500,
+    "moveTierLevelPrerequisites": [2, 5, 8],
+    "moveTierCloutCosts": [100, 250, 500],
+    "participation": "distinct owned player play events intersected with issued roster; destruction does not remove eligibility",
+    "onlineCardProgression": "base snapshot, no purchased move tiers",
+    "source": "lib/squabblemon-engine/src/cardProgression.ts:12-34; lib/squabblemon-engine/src/economy.ts:14,53-55,84-101; artifacts/api-server/src/lib/cardProgression.ts:212-247; lib/squabblemon-engine/src/multiplayer.ts:160-173"
+  },
+  "rank": {
+    "pointFloor": 0,
+    "ratingFloor": 100,
+    "tierFloors": [0, 100, 300, 600, 1000, 1500, 2200],
+    "botWaitMs": 12000,
+    "queueIdleMs": 30000,
+    "turnSeconds": 75,
+    "activeSurrenderAndTimeout": "ordinary rank win/loss, no minimum turns",
+    "waitingSurrender": "closed, no settlement",
+    "rematch": "rejected; requeue",
+    "botRankCap": null,
+    "source": "lib/squabblemon-engine/src/ranked.ts:1-37; lib/squabblemon-engine/src/multiplayer.ts:37,131-246; artifacts/api-server/src/lib/onlineMatches.ts:303-348"
+  },
+  "findingIds": ["MODE-01", "MODE-02", "MODE-03", "MODE-04"],
+  "streetRep": {"role": "earned identity statistic; distinct from rank", "spendOrThresholdGateFound": false, "searchScope": "API, engine and browser source", "source": "artifacts/api-server/src/lib/playerState.ts:234; artifacts/api-server/src/lib/onlineMatches.ts:42-77; lib/squabblemon-engine/src/multiplayer.ts:425-426"},
+  "validation": {"liveAccess": false, "databaseTestsRun": false, "pureRuleTestsPassed": 7, "pureRuleTestsSkipped": 0, "sourceAssertionIsPersistenceProof": false, "command": "node --import tsx --test scripts/src/economy-current-modes.test.ts", "sourceInspection": true}
+}

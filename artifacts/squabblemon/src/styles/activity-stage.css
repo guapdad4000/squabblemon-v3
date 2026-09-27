@@ -151,7 +151,7 @@
   color: var(--activity-color);
 }
 .activity-stage .activity-choice:hover {
-  color: #fff;
+  color: var(--sq-paper);
   transform: translateY(-3px);
 }
 .activity-choice__pip {

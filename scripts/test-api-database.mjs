@@ -11,6 +11,7 @@ const workspaceRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(workspaceRoot);
 
 const reactionsOnly = process.argv[2] === 'reactions';
+const campaignOnly = process.argv[2] === 'campaign';
 const styleShardsOnly = process.argv[2] === 'style-shards';
 const welcomePullOnly = process.argv[2] === 'welcome-pull';
 const dailyCloutOnly = process.argv[2] === 'daily-clout';
@@ -18,12 +19,14 @@ const profileAvatarsOnly = process.argv[2] === 'profile-avatars';
 const starterMythicOnly = process.argv[2] === 'starter-mythic';
 const rankedBrowser = process.argv[2] === 'fade-park';
 const cosmeticsBrowser = process.argv[2] === 'cosmetics';
+const reactionsBrowser = process.argv[2] === 'reactions-browser';
 const paymentsOnly = process.argv[2] === 'payments';
 if (paymentsOnly) {
   await import("./test-payments-database.mjs");
   process.exit(process.exitCode ?? 0);
 }
 const providedUrl = process.env.DATABASE_URL?.trim();
+if (reactionsBrowser && providedUrl) throw new Error("The reactions browser journey requires its own ephemeral PGlite database; unset DATABASE_URL.");
 let databaseUrl = providedUrl;
 const pnpmCli = process.env.npm_execpath;
 if (!pnpmCli) throw new Error("Run this command through pnpm.");
@@ -148,12 +151,13 @@ try {
 
   assertCampaignDatabaseTarget({ ...process.env, DATABASE_URL: databaseUrl });
   run(
-    reactionsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/shop.test.ts', 'src/lib/reactions.test.ts', 'src/lib/onlineMatches.test.ts'] : styleShardsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/styleShards.test.ts', 'src/lib/styleShardTransactions.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts', 'src/lib/economyRollout.test.ts', 'src/lib/cosmetics.test.ts', 'src/lib/shop.test.ts', 'src/lib/playerState.test.ts', 'src/lib/welcomePull.test.ts', 'src/lib/starterMythic.test.ts'] : welcomePullOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/welcomePull.test.ts'] : profileAvatarsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/playerRewardRoutes.test.ts', 'src/lib/onlineMatches.test.ts'] : dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
+    campaignOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/newAccountCampaignRoutes.test.ts', 'src/lib/storyMoveSolver.test.ts'] : reactionsBrowser ? ['exec', 'node', 'scripts/check-reactions-browser.mjs'] : reactionsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/shop.test.ts', 'src/lib/reactions.test.ts', 'src/lib/onlineMatches.test.ts'] : styleShardsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/styleShards.test.ts', 'src/lib/styleShardTransactions.test.ts', 'src/lib/collectionEconomy.test.ts', 'src/lib/collectionTransactions.test.ts', 'src/lib/economyRollout.test.ts', 'src/lib/cosmetics.test.ts', 'src/lib/shop.test.ts', 'src/lib/playerState.test.ts', 'src/lib/welcomePull.test.ts', 'src/lib/starterMythic.test.ts'] : welcomePullOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/welcomePull.test.ts'] : profileAvatarsOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', '--test-concurrency=1', 'src/lib/playerRewardRoutes.test.ts', 'src/lib/onlineMatches.test.ts'] : dailyCloutOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/dailyClout.test.ts'] : starterMythicOnly ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/starterMythic.test.ts'] : cosmeticsBrowser ? ['exec', 'node', 'scripts/check-cosmetics-browser.mjs'] : rankedBrowser ? ['--filter', '@workspace/api-server', 'exec', 'tsx', '--test', 'src/lib/rankedMatches.test.ts'] : ['--filter', '@workspace/api-server', 'test:db'],
     {
       ...process.env,
       DATABASE_URL: databaseUrl,
       CAMPAIGN_DATABASE_TESTS: "1",
       ...(rankedBrowser ? { FADE_PARK_BROWSER: "1" } : {}),
+      ...(reactionsBrowser ? { ONLINE_E2E_REACTIONS: "1" } : {}),
       ...(databaseProcess ? { DATABASE_POOL_MAX: "1" } : {}),
     },
   );

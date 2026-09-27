@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 let origin = process.env.BATTLE_PERF_ORIGIN;
 let preview;
@@ -131,6 +131,7 @@ async function runMode(mode) {
     const p95FrameMs = stableFrames[Math.max(0, Math.ceil(stableFrames.length * .95) - 1)] || 0;
     const droppedFrames = stableFrames.filter((value) => value > 34).length;
     const board = Array.from(document.querySelectorAll('[data-card-zone="board"]'));
+    const foilCards = board.filter(card => card.querySelector('.collector-webgl[data-foil-renderer="webgl"] canvas')).length;
     return {
       ...react,
       longTasks: longTasks.length,
@@ -139,6 +140,7 @@ async function runMode(mode) {
       p95FrameMs,
       droppedFrameRatio: stableFrames.length ? droppedFrames / stableFrames.length : 1,
       boardCards: board.length,
+      foilCards,
       minimumBoardCardWidth: Math.min(...board.map(card => card.getBoundingClientRect().width)),
       minimumBoardCardHeight: Math.min(...board.map(card => card.getBoundingClientRect().height)),
       viewport: [innerWidth, innerHeight],
@@ -150,6 +152,10 @@ try {
   await connect();
   await command('Page.enable');
   await command('Runtime.enable');
+  // Diagnostic baseline: isolate existing battle animation cost from the foil renderer.
+  if (process.env.BATTLE_PERF_FORCE_CSS) {
+    await command('Page.addScriptToEvaluateOnNewDocument', { source: "document.documentElement.dataset.depth = 'lite'" });
+  }
   await command('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
   await command('Emulation.setCPUThrottlingRate', { rate: 4 });
 
@@ -160,6 +166,11 @@ try {
       await command('Profiler.start');
     }
     results[mode] = await runMode(mode);
+    if (process.env.BATTLE_PERF_SCREENSHOTS) {
+      await mkdir('../../screenshots/foil', { recursive: true });
+      const image = await command('Page.captureScreenshot', { format: 'png' });
+      await writeFile(`../../screenshots/foil/battle-${mode}.png`, Buffer.from(image.data, 'base64'));
+    }
     if (process.env.BATTLE_PERF_PROFILE && mode === 'standard') {
       const { profile } = await command('Profiler.stop');
       await writeFile(process.env.BATTLE_PERF_PROFILE, JSON.stringify(profile));
@@ -173,6 +184,9 @@ try {
     assert.deepEqual(metrics.viewport, [390, 844], `${mode}: representative mobile viewport changed`);
     assert.equal(metrics.occupiedDistricts, 3, `${mode}: all three districts must be occupied`);
     assert.equal(metrics.boardCards, 12, `${mode}: six rounds must leave twelve cards on the board`);
+    if (!process.env.BATTLE_PERF_FORCE_CSS) {
+      assert.ok(mode === 'standard' ? metrics.foilCards > 0 : metrics.foilCards === 0, `${mode}: battle cards must use the expected GPU or CSS finish`);
+    }
     assert.ok(metrics.minimumBoardCardWidth > 0 && metrics.minimumBoardCardHeight > 0, `${mode}: board cards must be rendered at a visible size`);
     assert.ok(metrics.sampledFrames >= 20, `${mode}: too few animation frames were sampled`);
     assert.ok(metrics.commits > 0, `${mode}: React profiling did not record any commits`);

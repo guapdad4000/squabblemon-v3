@@ -10,7 +10,7 @@
   --resume-paper-deep: #d6c08a;
   --resume-ink: #1a1611;
   --resume-ink-soft: #4a3f2d;
-  --resume-red: #c0392b;
+  --resume-red: var(--sq-red-brick);
   --resume-shadow: 0 14px 30px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .35);
   --resume-tape-warm: rgba(241, 196, 64, .78);
   --resume-tape-cool: rgba(63, 132, 196, .65);
@@ -134,7 +134,7 @@
   width: clamp(220px, 24vw, 320px);
   aspect-ratio: 63 / 88;
   overflow: hidden;
-  background: #111;
+  background: var(--sq-ink-800);
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
 }
 .polaroid__photo > .collector-card {
@@ -341,7 +341,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ff6b6b 0%, #c0392b 60%, #6c1b15 100%);
+  background: radial-gradient(circle at 35% 35%, #ff6b6b 0%, var(--sq-red-brick) 60%, #6c1b15 100%);
   box-shadow: 0 2px 4px rgba(0,0,0,.4), inset -1px -1px 2px rgba(0,0,0,.4);
 }
 .dossier-stat__pin::before {
@@ -402,7 +402,7 @@
 .dossier-sticky__title {
   font: 700 clamp(1.6rem, 2.4vw, 2.2rem)/1 var(--font-display);
   font-style: italic;
-  color: #c0392b;
+  color: var(--sq-red-brick);
   text-transform: uppercase;
   margin: 6px 0 8px;
   text-shadow: 1px 1px 0 rgba(255,255,255,.55);
@@ -556,7 +556,7 @@
   letter-spacing: .18em;
   text-transform: uppercase;
   background: #1b1212;
-  color: #fff;
+  color: var(--sq-paper);
   border: 0;
   cursor: pointer;
   transition: background .15s;
@@ -649,7 +649,7 @@
 .dossier-vital {
   position: relative;
   padding: 10px 12px;
-  background: #111;
+  background: var(--sq-ink-800);
   color: var(--rarity-color, var(--color-primary));
   border: 1px solid currentColor;
   box-shadow: 0 0 12px color-mix(in srgb, currentColor 30%, transparent);

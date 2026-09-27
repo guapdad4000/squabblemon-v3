@@ -14,6 +14,7 @@ import { canonicalElement, cardEntryAccent } from '@workspace/squabblemon-engine
 import { CARD_RARITY_DEFINITIONS } from '../data';
 import { cardFinishLabel, cardMotionReduced, getCardWallpaper } from '../lib/cardFinish';
 import { CardFoil } from './CardFoil';
+import { tryStartGyro } from '../lib/depthQuality';
 import { useCardInspection } from './CardInspection';
 import './card-finish.css';
 import { useCardScene } from './CosmeticContext';
@@ -190,6 +191,7 @@ function CardViewComponent({
       tabIndex={isInspector ? 0 : undefined}
       onPointerDown={event => {
         inspection.props.onPointerDown?.(event);
+        if (tactile && event.pointerType === 'touch') tryStartGyro(true);
         if (isInspector && !cardMotionReduced()) { event.currentTarget.setPointerCapture(event.pointerId); moveFoil(event); }
       }}
       onPointerUp={event => {
@@ -333,7 +335,7 @@ function CardViewComponent({
           <span className="collector-foil-pattern" aria-hidden="true" />
           <span className="collector-foil-grain" aria-hidden="true" />
           <span className="collector-glare" aria-hidden="true" />
-          {isInspector && (rarity !== 'SuperCommon' || variantKind) && <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} />}
+          <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} />
         </div>
       </div>
     </MotionElement>{inspection.dialog}</>

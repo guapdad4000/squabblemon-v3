@@ -11,7 +11,6 @@ import * as zod from 'zod';
 export const startChallengeRunBodyDeckIdMax = 80;
 
 
-
 export const StartChallengeRunBody = zod.object({
   "deckId": zod.string().max(startChallengeRunBodyDeckIdMax).optional()
 })
@@ -211,13 +210,13 @@ export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax =
 
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const getPlayerBootstrapResponseProfileSettingsReactionTrayMax = 4;
 export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMin = 0;
 export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMax = 3;
 
 export const getPlayerBootstrapResponseProfileCardProgressionXpMin = 0;
 
 export const getPlayerBootstrapResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const GetPlayerBootstrapResponse = zod.object({
@@ -258,6 +257,7 @@ export const GetPlayerBootstrapResponse = zod.object({
   "stickers": zod.array(zod.string().max(getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax)).max(getPlayerBootstrapResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(getPlayerBootstrapResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -436,7 +436,6 @@ export const GetPlayerStoryResponse = zod.object({
 export const resetPlayerStoryDevelopmentBodySelectNodeIdMax = 80;
 
 
-
 export const ResetPlayerStoryDevelopmentBody = zod.object({
   "selectNodeId": zod.string().max(resetPlayerStoryDevelopmentBodySelectNodeIdMax).nullable()
 })
@@ -514,7 +513,6 @@ export const completePlayerStoryNodePathNodeIdMin = 2;
 export const completePlayerStoryNodePathNodeIdMax = 80;
 
 
-
 export const CompletePlayerStoryNodeParams = zod.object({
   "nodeId": zod.coerce.string().min(completePlayerStoryNodePathNodeIdMin).max(completePlayerStoryNodePathNodeIdMax)
 })
@@ -525,7 +523,6 @@ export const completePlayerStoryNodeBodyIdempotencyKeyMax = 80;
 export const completePlayerStoryNodeBodyDialogueSeenItemMax = 120;
 
 export const completePlayerStoryNodeBodyDialogueSeenMax = 100;
-
 
 
 export const CompletePlayerStoryNodeBody = zod.object({
@@ -557,13 +554,13 @@ export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsSti
 
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const completePlayerStoryNodeResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const CompletePlayerStoryNodeResponse = zod.object({
@@ -669,6 +666,7 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "stickers": zod.array(zod.string().max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerStoryNodeResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -800,7 +798,6 @@ export const completePlayerStoryPuzzleBodyDialogueSeenItemMax = 120;
 export const completePlayerStoryPuzzleBodyDialogueSeenMax = 100;
 
 
-
 export const CompletePlayerStoryPuzzleBody = zod.object({
   "nodeId": zod.string().min(completePlayerStoryPuzzleBodyNodeIdMin).max(completePlayerStoryPuzzleBodyNodeIdMax),
   "idempotencyKey": zod.string().min(completePlayerStoryPuzzleBodyIdempotencyKeyMin).max(completePlayerStoryPuzzleBodyIdempotencyKeyMax),
@@ -833,13 +830,13 @@ export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsS
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const CompletePlayerStoryPuzzleResponse = zod.object({
@@ -945,6 +942,7 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "stickers": zod.array(zod.string().max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerStoryPuzzleResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -1066,7 +1064,6 @@ export const savePlayerStoryDialoguePathNodeIdMin = 2;
 export const savePlayerStoryDialoguePathNodeIdMax = 80;
 
 
-
 export const SavePlayerStoryDialogueParams = zod.object({
   "nodeId": zod.coerce.string().min(savePlayerStoryDialoguePathNodeIdMin).max(savePlayerStoryDialoguePathNodeIdMax)
 })
@@ -1077,7 +1074,6 @@ export const savePlayerStoryDialogueBodyIdempotencyKeyMax = 80;
 export const savePlayerStoryDialogueBodyDialogueSeenItemMax = 120;
 
 export const savePlayerStoryDialogueBodyDialogueSeenMax = 100;
-
 
 
 export const SavePlayerStoryDialogueBody = zod.object({
@@ -1109,13 +1105,13 @@ export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsSti
 
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const savePlayerStoryDialogueResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const SavePlayerStoryDialogueResponse = zod.object({
@@ -1221,6 +1217,7 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "stickers": zod.array(zod.string().max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(savePlayerStoryDialogueResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -1352,18 +1349,18 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "alreadyApplied": zod.boolean()
 })
 
-
 /**
  * @summary Update player-facing profile and settings
  */
+export const updatePlayerProfileBodyReactionTrayMax = 4;
 export const updatePlayerProfileBodyDisplayNameMin = 2;
 export const updatePlayerProfileBodyDisplayNameMax = 24;
 
 export const updatePlayerProfileBodyAvatarKeyMax = 64;
 
 
-
 export const UpdatePlayerProfileBody = zod.object({
+  "reactionTray": zod.array(zod.string()).max(updatePlayerProfileBodyReactionTrayMax).optional(),
   "displayName": zod.string().min(updatePlayerProfileBodyDisplayNameMin).max(updatePlayerProfileBodyDisplayNameMax).optional(),
   "avatarKey": zod.string().max(updatePlayerProfileBodyAvatarKeyMax).optional(),
   "reducedMotion": zod.boolean().optional(),
@@ -1394,13 +1391,13 @@ export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax 
 
 export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const updatePlayerProfileResponseProfileSettingsReactionTrayMax = 4;
 export const updatePlayerProfileResponseProfileCardProgressionMoveTierMin = 0;
 export const updatePlayerProfileResponseProfileCardProgressionMoveTierMax = 3;
 
 export const updatePlayerProfileResponseProfileCardProgressionXpMin = 0;
 
 export const updatePlayerProfileResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const UpdatePlayerProfileResponse = zod.object({
@@ -1441,6 +1438,7 @@ export const UpdatePlayerProfileResponse = zod.object({
   "stickers": zod.array(zod.string().max(updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax)).max(updatePlayerProfileResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(updatePlayerProfileResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -1553,7 +1551,6 @@ export const advancePlayerOnboardingBodyDisplayNameMax = 24;
 export const advancePlayerOnboardingBodyStarterDeckIdMax = 32;
 
 
-
 export const AdvancePlayerOnboardingBody = zod.object({
   "action": zod.enum(['accept-terms', 'complete-tutorial', 'choose-starter', 'claim-reward']),
   "displayName": zod.string().min(advancePlayerOnboardingBodyDisplayNameMin).max(advancePlayerOnboardingBodyDisplayNameMax).optional(),
@@ -1586,13 +1583,13 @@ export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItem
 
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const advancePlayerOnboardingResponseProfileSettingsReactionTrayMax = 4;
 export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMin = 0;
 export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMax = 3;
 
 export const advancePlayerOnboardingResponseProfileCardProgressionXpMin = 0;
 
 export const advancePlayerOnboardingResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const AdvancePlayerOnboardingResponse = zod.object({
@@ -1633,6 +1630,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
   "stickers": zod.array(zod.string().max(advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItemMax)).max(advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(advancePlayerOnboardingResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -1742,7 +1740,6 @@ export const AdvancePlayerOnboardingResponse = zod.object({
 export const claimExperimentCardBodyCardIdMax = 64;
 
 
-
 export const ClaimExperimentCardBody = zod.object({
   "cardId": zod.string().max(claimExperimentCardBodyCardIdMax)
 })
@@ -1771,13 +1768,13 @@ export const claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax 
 
 export const claimExperimentCardResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const claimExperimentCardResponseProfileSettingsReactionTrayMax = 4;
 export const claimExperimentCardResponseProfileCardProgressionMoveTierMin = 0;
 export const claimExperimentCardResponseProfileCardProgressionMoveTierMax = 3;
 
 export const claimExperimentCardResponseProfileCardProgressionXpMin = 0;
 
 export const claimExperimentCardResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const ClaimExperimentCardResponse = zod.object({
@@ -1818,6 +1815,7 @@ export const ClaimExperimentCardResponse = zod.object({
   "stickers": zod.array(zod.string().max(claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax)).max(claimExperimentCardResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(claimExperimentCardResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -1940,7 +1938,6 @@ export const startPlayerMatchBodyDraftPicksMin = 10;
 export const startPlayerMatchBodyDraftPicksMax = 10;
 
 
-
 export const StartPlayerMatchBody = zod.object({
   "mode": zod.enum(['practice', 'tutorial', 'story']),
   "playerDeckId": zod.string().max(startPlayerMatchBodyPlayerDeckIdMax),
@@ -1959,8 +1956,6 @@ export const startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMax
 
 export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMin = 0;
 export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMax = 3;
-
-
 
 
 export const StartPlayerMatchResponse = zod.object({
@@ -2013,7 +2008,6 @@ export const completePlayerMatchBodyMovesItemInvestmentMax = 4;
 export const completePlayerMatchBodyMovesMax = 64;
 
 
-
 export const CompletePlayerMatchBody = zod.object({
   "moves": zod.array(zod.object({
   "cardInstanceId": zod.string().nullable(),
@@ -2048,13 +2042,13 @@ export const completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax 
 
 export const completePlayerMatchResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const completePlayerMatchResponseProfileSettingsReactionTrayMax = 4;
 export const completePlayerMatchResponseProfileCardProgressionMoveTierMin = 0;
 export const completePlayerMatchResponseProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerMatchResponseProfileCardProgressionXpMin = 0;
 
 export const completePlayerMatchResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const CompletePlayerMatchResponse = zod.object({
@@ -2095,6 +2089,7 @@ export const CompletePlayerMatchResponse = zod.object({
   "stickers": zod.array(zod.string().max(completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax)).max(completePlayerMatchResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerMatchResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -2269,7 +2264,6 @@ export const savePlayerDeckPathDeckIdMin = 3;
 export const savePlayerDeckPathDeckIdMax = 80;
 
 
-
 export const SavePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(savePlayerDeckPathDeckIdMin).max(savePlayerDeckPathDeckIdMax)
 })
@@ -2284,7 +2278,6 @@ export const savePlayerDeckBodyCardIdsMax = 10;
 export const savePlayerDeckBodyHeroCardIdMax = 64;
 
 export const savePlayerDeckBodyRecipeIdMax = 32;
-
 
 
 export const SavePlayerDeckBody = zod.object({
@@ -2318,13 +2311,13 @@ export const savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
 
 export const savePlayerDeckResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const savePlayerDeckResponseProfileSettingsReactionTrayMax = 4;
 export const savePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
 export const savePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
 export const savePlayerDeckResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const SavePlayerDeckResponse = zod.object({
@@ -2365,6 +2358,7 @@ export const SavePlayerDeckResponse = zod.object({
   "stickers": zod.array(zod.string().max(savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax)).max(savePlayerDeckResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(savePlayerDeckResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -2475,7 +2469,6 @@ export const deletePlayerDeckPathDeckIdMin = 3;
 export const deletePlayerDeckPathDeckIdMax = 80;
 
 
-
 export const DeletePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(deletePlayerDeckPathDeckIdMin).max(deletePlayerDeckPathDeckIdMax)
 })
@@ -2504,13 +2497,13 @@ export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 8
 
 export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const deletePlayerDeckResponseProfileSettingsReactionTrayMax = 4;
 export const deletePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
 export const deletePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
 
 export const deletePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
 export const deletePlayerDeckResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const DeletePlayerDeckResponse = zod.object({
@@ -2551,6 +2544,7 @@ export const DeletePlayerDeckResponse = zod.object({
   "stickers": zod.array(zod.string().max(deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax)).max(deletePlayerDeckResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(deletePlayerDeckResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -2663,7 +2657,6 @@ export const openPlayerPackBodyIdempotencyKeyMax = 80;
 export const openPlayerPackBodyPullCountMax = 10;
 
 
-
 export const OpenPlayerPackBody = zod.object({
   "idempotencyKey": zod.string().min(openPlayerPackBodyIdempotencyKeyMin).max(openPlayerPackBodyIdempotencyKeyMax),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
@@ -2694,13 +2687,13 @@ export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItem
 
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const openPlayerPackResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const OpenPlayerPackResponse = zod.object({
@@ -2742,6 +2735,7 @@ export const OpenPlayerPackResponse = zod.object({
   "stickers": zod.array(zod.string().max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(openPlayerPackResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -2875,7 +2869,6 @@ export const craftPlayerVariantBodyCardIdMax = 64;
 export const craftPlayerVariantBodyVariantIdMax = 96;
 
 
-
 export const CraftPlayerVariantBody = zod.object({
   "cardId": zod.string().max(craftPlayerVariantBodyCardIdMax),
   "variantId": zod.string().max(craftPlayerVariantBodyVariantIdMax)
@@ -2905,13 +2898,13 @@ export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickers
 
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const craftPlayerVariantResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const CraftPlayerVariantResponse = zod.object({
@@ -2953,6 +2946,7 @@ export const CraftPlayerVariantResponse = zod.object({
   "stickers": zod.array(zod.string().max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(craftPlayerVariantResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -3066,7 +3060,6 @@ export const equipPlayerVariantBodyCardIdMax = 64;
 export const equipPlayerVariantBodyVariantIdMax = 96;
 
 
-
 export const EquipPlayerVariantBody = zod.object({
   "cardId": zod.string().max(equipPlayerVariantBodyCardIdMax),
   "variantId": zod.string().max(equipPlayerVariantBodyVariantIdMax).nullable()
@@ -3096,13 +3089,13 @@ export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax =
 
 export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const equipPlayerVariantResponseProfileSettingsReactionTrayMax = 4;
 export const equipPlayerVariantResponseProfileCardProgressionMoveTierMin = 0;
 export const equipPlayerVariantResponseProfileCardProgressionMoveTierMax = 3;
 
 export const equipPlayerVariantResponseProfileCardProgressionXpMin = 0;
 
 export const equipPlayerVariantResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const EquipPlayerVariantResponse = zod.object({
@@ -3143,6 +3136,7 @@ export const EquipPlayerVariantResponse = zod.object({
   "stickers": zod.array(zod.string().max(equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax)).max(equipPlayerVariantResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(equipPlayerVariantResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -3253,7 +3247,6 @@ export const claimCollectionRoadMilestonePathMilestoneIdMin = 2;
 export const claimCollectionRoadMilestonePathMilestoneIdMax = 48;
 
 
-
 export const ClaimCollectionRoadMilestoneParams = zod.object({
   "milestoneId": zod.coerce.string().min(claimCollectionRoadMilestonePathMilestoneIdMin).max(claimCollectionRoadMilestonePathMilestoneIdMax)
 })
@@ -3282,13 +3275,13 @@ export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeti
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const ClaimCollectionRoadMilestoneResponse = zod.object({
@@ -3330,6 +3323,7 @@ export const ClaimCollectionRoadMilestoneResponse = zod.object({
   "stickers": zod.array(zod.string().max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(claimCollectionRoadMilestoneResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -3473,13 +3467,13 @@ export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax =
 
 export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const claimPlayerMissionResponseProfileSettingsReactionTrayMax = 4;
 export const claimPlayerMissionResponseProfileCardProgressionMoveTierMin = 0;
 export const claimPlayerMissionResponseProfileCardProgressionMoveTierMax = 3;
 
 export const claimPlayerMissionResponseProfileCardProgressionXpMin = 0;
 
 export const claimPlayerMissionResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const ClaimPlayerMissionResponse = zod.object({
@@ -3520,6 +3514,7 @@ export const ClaimPlayerMissionResponse = zod.object({
   "stickers": zod.array(zod.string().max(claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax)).max(claimPlayerMissionResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(claimPlayerMissionResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -3633,7 +3628,6 @@ export const equipPlayerCosmeticsBodyStickersItemMax = 80;
 export const equipPlayerCosmeticsBodyStickersMax = 3;
 
 
-
 export const EquipPlayerCosmeticsBody = zod.object({
   "bannerCardId": zod.string().max(equipPlayerCosmeticsBodyBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3665,13 +3659,13 @@ export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersItemMax
 
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersMax = 3;
 
+export const equipPlayerCosmeticsResponseProfileSettingsReactionTrayMax = 4;
 export const equipPlayerCosmeticsResponseProfileCardProgressionMoveTierMin = 0;
 export const equipPlayerCosmeticsResponseProfileCardProgressionMoveTierMax = 3;
 
 export const equipPlayerCosmeticsResponseProfileCardProgressionXpMin = 0;
 
 export const equipPlayerCosmeticsResponseProfileCardProgressionLevelMax = 10;
-
 
 
 export const EquipPlayerCosmeticsResponse = zod.object({
@@ -3712,6 +3706,7 @@ export const EquipPlayerCosmeticsResponse = zod.object({
   "stickers": zod.array(zod.string().max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersItemMax)).max(equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(equipPlayerCosmeticsResponseProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -3828,7 +3823,6 @@ export const purchasePlayerShopItemBodyIdempotencyKeyRegExp = new RegExp('^[0-9a
 export const purchasePlayerShopItemBodyCardIdMax = 100;
 
 
-
 export const PurchasePlayerShopItemBody = zod.object({
   "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
   "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1', 'reaction-pack:kyle:v1', 'reaction-pack:church-auntie:v1']),
@@ -3859,13 +3853,13 @@ export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStic
 
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const purchasePlayerShopItemResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const PurchasePlayerShopItemResponse = zod.object({
@@ -3915,6 +3909,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
   "stickers": zod.array(zod.string().max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(purchasePlayerShopItemResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),
@@ -4025,7 +4020,6 @@ export const PurchasePlayerShopItemResponse = zod.object({
 export const redeemPlayerPromoCodeBodyCodeMax = 64;
 
 
-
 export const RedeemPlayerPromoCodeBody = zod.object({
   "code": zod.string().min(1).max(redeemPlayerPromoCodeBodyCodeMax)
 })
@@ -4060,13 +4054,13 @@ export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStick
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
+export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsReactionTrayMax = 4;
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionLevelMax = 10;
-
 
 
 export const RedeemPlayerPromoCodeResponse = zod.object({
@@ -4116,6 +4110,7 @@ export const RedeemPlayerPromoCodeResponse = zod.object({
   "stickers": zod.array(zod.string().max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersItemMax)).max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersMax).optional(),
   "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
 }).optional(),
+  "reactionTray": zod.array(zod.string()).max(redeemPlayerPromoCodeResponseBootstrapProfileSettingsReactionTrayMax).optional(),
   "reducedMotion": zod.boolean(),
   "turnTimerEnabled": zod.boolean()
 }),

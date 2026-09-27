@@ -61,7 +61,7 @@
 }
 .progression-dossier > header button {
   background: #164630;
-  color: #fff;
+  color: var(--sq-paper);
   padding: 8px 14px;
 }
 .progression-dossier p {
@@ -98,7 +98,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  text-shadow: 0 2px 5px #000;
+  text-shadow: 0 2px 5px var(--sq-ink);
 }
 .hall-heading > img {
   width: min(38%, 400px);
@@ -206,7 +206,7 @@
   position: relative;
   padding: 5% 0 5% 5%;
   transform: rotate(-2deg);
-  text-shadow: 0 3px 6px #000;
+  text-shadow: 0 3px 6px var(--sq-ink);
 }
 .hall-spotlight__eyebrow {
   font-size: 11px;
@@ -393,7 +393,7 @@
     0 12px 35px #0008;
 }
 .hall-of-hands button:focus-visible {
-  outline: 3px solid #fff;
+  outline: 3px solid var(--sq-paper);
   outline-offset: 4px;
 }
 .hall-of-hands {

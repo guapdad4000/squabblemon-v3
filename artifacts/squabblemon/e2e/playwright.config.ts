@@ -36,7 +36,7 @@ export default defineConfig({
   webServer: {
     command: `PORT=${port} BASE_PATH=/squabblemon VITE_E2E_AUTH=true VITE_CLERK_PUBLISHABLE_KEY=pk_test_ZTJlLXRlc3Qk pnpm run dev`,
     cwd: '..',
-    url: `http://127.0.0.1:${port}/squabblemon`,
+    url: `http://127.0.0.1:${port}/squabblemon/`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

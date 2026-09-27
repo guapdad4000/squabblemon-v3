@@ -1,4 +1,6 @@
 import * as THREE from '../shared/three.module.js';
+import {detectGPUQuality} from '../shared/gpu-quality.js';
+const quality=await detectGPUQuality();
 let disposed=false,sceneInitialized=false;
 let armed=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const emit=payload=>parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);
@@ -149,7 +151,7 @@ const AudioEngine={
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(size.w, size.h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+       renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.pixelRatio));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.3;
@@ -247,8 +249,7 @@ const AudioEngine={
       heavyBagMesh = new THREE.Mesh(bagGeo, heavyBagMaterial);
       heavyBagMesh.position.set(0, -3.2, 0);
 
-      const bagOutline = createAnimeOutline(bagGeo, 0.065);
-      heavyBagMesh.add(bagOutline);
+       if(quality.outlines) heavyBagMesh.add(createAnimeOutline(bagGeo, 0.065));
 
       bagAssembly.add(heavyBagMesh);
     }
@@ -305,7 +306,7 @@ const AudioEngine={
         function pad(x,y,z,sx,sy,sz,mat) {
           const geo=new THREE.SphereGeometry(1,28,20);geo.scale(sx,sy,sz);
           const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);
-          mesh.add(createAnimeOutline(geo,.014));g.add(mesh);return mesh;
+           if(quality.outlines) mesh.add(createAnimeOutline(geo,.014));g.add(mesh);return mesh;
         }
         // Rounded knuckle shell, tapered palm and attached inner thumb.
         pad(0,.02,-.03,.37,.43,.29,leather);
@@ -313,7 +314,7 @@ const AudioEngine={
         const thumb=pad(side*.27,-.02,-.08,.14,.24,.16,leather);
         thumb.rotation.z=side*.45;
         const cuff=new THREE.Mesh(new THREE.CylinderGeometry(.245,.23,.34,28),cuffMat);
-        cuff.position.set(0,-.44,.04);cuff.add(createAnimeOutline(cuff.geometry,.013));g.add(cuff);
+         cuff.position.set(0,-.44,.04);if(quality.outlines)cuff.add(createAnimeOutline(cuff.geometry,.013));g.add(cuff);
         for(const y of [-.30,-.58]) {
           const ring=new THREE.Mesh(new THREE.TorusGeometry(.24,.012,6,28),seamMat);
           ring.rotation.x=Math.PI/2;ring.position.set(0,y,.04);g.add(ring);
@@ -531,7 +532,7 @@ const AudioEngine={
     }
 
     function spawnHitSpark(x, y, z, isBig = false) {
-      const sparkCount = isBig ? 24 : 10;
+      const sparkCount = Math.max(1,Math.round((isBig ? 24 : 10)*quality.particleDensity));
       const geo = new THREE.PlaneGeometry(0.35, 0.35);
       const colors = [0xfacc15, 0xffffff, 0xef4444, 0xf97316];
 
@@ -780,10 +781,13 @@ addEventListener('message',e=>{
        ========================================================= */
     const clock = new THREE.Clock();
 
-    function animateLoop() {
+    let lastDraw=0;
+    function animateLoop(now=0) {
       requestAnimationFrame(animateLoop);
 
       if(document.hidden||disposed)return;
+      if(lastDraw&&now-lastDraw<1000/quality.fps)return;
+      lastDraw=now;
       if (hitStopRemaining > 0) {
         hitStopRemaining--;
         renderImpactFrameCanvas();
@@ -914,10 +918,10 @@ addEventListener('message',e=>{
 
 addEventListener('error',event=>{if(event.error)emit({type:'error',message:event.error.message});});
 addEventListener('unhandledrejection',event=>emit({type:'error',message:String(event.reason || 'The gym could not be rendered.')}));
-try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;sceneInitialized=false;emit({type:'error'});});sceneInitialized=true;emit({type:'ready'});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
+try{init3DExperience();renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();armed=false;sceneInitialized=false;emit({type:'error'});});renderer.render(scene,camera);sceneInitialized=true;emit({type:'ready',gpuTier:quality.tier});}catch(e){emit({type:'error',message:'The gym could not be rendered.'});}
 
 addEventListener('pagehide',()=>{disposed=true;AudioEngine.context?.close();scene?.traverse(object=>{object.geometry?.dispose();const materials=Array.isArray(object.material)?object.material:[object.material];for(const material of materials){if(!material)continue;for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose();}});renderer?.dispose();});
 
 addEventListener('message', event => {
-  if (event.origin === location.origin && event.source === parent && event.data?.channel === 'squabblemon-scene' && event.data.type === 'ping' && sceneInitialized && renderer && !disposed && !renderer.getContext().isContextLost()) emit({type:'ready'});
+  if (event.origin === location.origin && event.source === parent && event.data?.channel === 'squabblemon-scene' && event.data.type === 'ping' && sceneInitialized && renderer && !disposed && !renderer.getContext().isContextLost()) emit({type:'ready',gpuTier:quality.tier});
 });

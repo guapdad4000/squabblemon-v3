@@ -92,7 +92,11 @@ function bundleBudgetReport(): Plugin {
 }
 
 export default defineConfig({
-  base: basePath,
+  // Keep nested preview paths canonical for Vite's public asset rewriting.
+  base: basePath.endsWith('/') ? basePath : `${basePath}/`,
+  // A competing startup can optimize dependencies before failing to bind its port.
+  // Never let it (or a test server) replace the React files of a running preview.
+  cacheDir: path.resolve(import.meta.dirname, 'node_modules/.vite-runtime', String(process.pid)),
   plugins: [
     {
       name: 'squabblemon-social-metadata',

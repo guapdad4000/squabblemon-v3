@@ -51,12 +51,49 @@ fairness; tune from issued-currency and redemption data before changing prices.
 Netlify deploys `netlify/database/migrations/202610010004_style-shards/migration.sql`
 before publishing the new API. The matching standalone SQL is
 `lib/db/migrations/20260926_style_shard_balances.sql`. Migration coverage is checked
-during the release build. Both add one non-null JSONB column defaulting to `{}` and
-leave existing balances and receipts untouched. Reapplying preserves new balances
-too. Do not backfill from historical receipts.
+during the release build, but the build does not query the runtime database:
+that branch may not have been migrated yet. After Netlify applies native
+migrations, its `deploy-succeeded` function checks all `player_profiles`
+columns against the deployed API's own pool and search path on every production
+and preview branch. This reads PostgreSQL metadata only; it never runs DDL,
+reads player rows, or logs a connection string. Missing columns or a connection
+failure fail the event invocation and notify `STORE_CHECK_ALERT_WEBHOOK` when
+configured. Check Netlify function logs and any release alert before treating
+a successful deployment as schema-ready; the event cannot retroactively change
+the deploy's `ready` status. Both migrations add one non-null JSONB column
+defaulting to `{}` and leave existing balances and receipts untouched.
+Reapplying preserves new balances too. Do not backfill from historical receipts.
 The old frontend can read the additive response but cannot display all currencies;
 deploy the updated frontend with the updated server. Production migration execution
 is handled by Netlify, not by local development commands.
+
+## Runtime profile schema preflight
+
+The public page and `/api/healthz` can load while signed-in bootstrap fails
+because the API selects every `player_profiles` column and also needs the
+`player_missions`, `player_pack_openings`, `player_collection_claims`, and
+`player_matches` relations. Before starting the local API,
+`pnpm --filter @workspace/api-server run dev` runs a read-only table and
+column check. Run it separately with
+`pnpm --filter @workspace/api-server run db:preflight` when diagnosing a target.
+It checks the exact database resolved by the API process (`DATABASE_URL` when
+set, otherwise the Netlify database connection) and the active search path.
+The check reads PostgreSQL metadata only: it does not create a profile, apply
+migrations, or print the connection string. Missing tables and missing columns
+are reported separately. Connection failures are reported without raw driver
+details.
+
+If it fails, verify which database branch the **API runtime** selects and
+review the missing columns against the migrations for that branch. Back up and
+apply the reviewed migrations using the database's normal migration process,
+then rerun the preflight before retrying sign-in. For `style_shard_balances`,
+the standalone migration is
+`lib/db/migrations/20260926_style_shard_balances.sql`; Netlify has the matching
+`netlify/database/migrations/202610010004_style-shards/migration.sql`. Other
+missing columns may require other migrations; do not blindly run a force push
+or change a different database just to make the check pass. Netlify applies
+its migrations during deploy, so this local runtime check is not a Netlify
+build-time gate against a pre-migration database.
 
 Validation: shared-engine payment tests; isolated PGlite pack/craft/shop retry,
 legacy bootstrap, wallet and existing reward regressions; UI typecheck and build;

@@ -1,4 +1,4 @@
-.attention-mark{display:inline-flex!important;align-items:center;justify-content:center;flex:none;width:13px;height:15px;margin-left:4px;border-radius:4px;background:#d92738;color:#fff!important;font:900 11px/1 sans-serif!important;letter-spacing:0;vertical-align:middle;box-shadow:0 0 0 1px #200b0b80;text-shadow:none;pointer-events:none}
+.attention-mark{display:inline-flex!important;align-items:center;justify-content:center;flex:none;width:13px;height:15px;margin-left:4px;border-radius:4px;background:#d92738;color:var(--sq-paper)!important;font:900 11px/1 sans-serif!important;letter-spacing:0;vertical-align:middle;box-shadow:0 0 0 1px #200b0b80;text-shadow:none;pointer-events:none}
 .attention-mark--dot{width:6px;height:6px;border-radius:50%;margin:0 4px}
 .notification-bell{position:relative;flex:none;display:grid;place-items:center;width:28px;min-height:36px;background:none;border:0;color:#f5dfb2}.notification-bell>.attention-mark{position:absolute;right:0;top:5px}
 .notification-inbox{width:min(440px,calc(100vw - 24px));max-height:80dvh;margin:auto;padding:0;border:1px solid #a78a54;border-radius:12px;background:#14221f;color:#f5dfb2;overflow:hidden}

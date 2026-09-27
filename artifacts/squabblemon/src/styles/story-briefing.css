@@ -85,21 +85,21 @@
 
 .story-briefing__title {
   flex: 1 1 390px;
-  background: #fdfaf3;
+  background: var(--sq-paper-cream);
   padding: 24px 26px;
   box-shadow:
     10px 10px 0 rgba(0,0,0,0.85);
   position: relative;
   transform: rotate(-2deg);
-  border: 2px solid #111;
+  border: 2px solid var(--sq-ink-800);
   z-index: 1;
 }
 .story-briefing__title::after {
   content: '';
   position: absolute;
   top: -8px; left: -2px; right: -2px; height: 16px;
-  background: #fdfaf3;
-  border-top: 2px solid #111;
+  background: var(--sq-paper-cream);
+  border-top: 2px solid var(--sq-ink-800);
   clip-path: polygon(0% 50%, 5% 10%, 10% 60%, 15% 5%, 20% 50%, 25% 10%, 30% 60%, 35% 5%, 40% 50%, 45% 10%, 50% 60%, 55% 5%, 60% 50%, 65% 10%, 70% 60%, 75% 5%, 80% 50%, 85% 10%, 90% 60%, 95% 5%, 100% 50%, 100% 100%, 0% 100%);
   z-index: -1;
 }
@@ -123,7 +123,7 @@
   font: 800 11px var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.25em;
-  color: #fff;
+  color: var(--sq-paper);
   background: #c63333;
   padding: 4px 10px;
   margin-bottom: 12px;
@@ -132,14 +132,14 @@
 }
 
 .story-briefing__title.is-boss .eyebrow {
-  background: #111;
+  background: var(--sq-ink-800);
   color: #f0b35a;
 }
 
 .story-briefing__title h2 {
   font: 900 clamp(34px, 4.6vw, 52px)/0.92 var(--font-display);
   text-transform: uppercase;
-  color: #1a1a1a;
+  color: var(--sq-ink-700);
   letter-spacing: -0.03em;
   margin: 0 0 15px 0;
   text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
@@ -147,32 +147,32 @@
 
 .story-briefing__title p {
   font: 600 14px/1.5 var(--font-sans);
-  color: #555;
+  color: var(--sq-ink-300);
   margin: 0;
 }
 
 .story-briefing__dossier {
-  background: #fdfaf3;
+  background: var(--sq-paper-cream);
   padding: 28px 30px;
   position: relative;
   transform: rotate(1deg);
   box-shadow:
     10px 10px 0 rgba(0,0,0,0.85);
-  border: 2px solid #111;
+  border: 2px solid var(--sq-ink-800);
   background-image:
     linear-gradient(90deg, transparent 50px, #d5c8b3 50px, #d5c8b3 52px, transparent 52px),
     linear-gradient(#f4eee0 1px, transparent 1px);
   background-size: 100% 28px;
   line-height: 28px;
-  color: #222;
+  color: var(--sq-ink-600);
   z-index: 1;
 }
 .story-briefing__dossier::before {
   content: '';
   position: absolute;
   top: -8px; left: -2px; right: -2px; height: 16px;
-  background: #fdfaf3;
-  border-top: 2px solid #111;
+  background: var(--sq-paper-cream);
+  border-top: 2px solid var(--sq-ink-800);
   clip-path: polygon(0% 50%, 5% 10%, 10% 60%, 15% 5%, 20% 50%, 25% 10%, 30% 60%, 35% 5%, 40% 50%, 45% 10%, 50% 60%, 55% 5%, 60% 50%, 65% 10%, 70% 60%, 75% 5%, 80% 50%, 85% 10%, 90% 60%, 95% 5%, 100% 50%, 100% 100%, 0% 100%);
   z-index: -1;
 }
@@ -212,7 +212,7 @@
   font: 900 16px var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: #1a1a1a;
+  background: var(--sq-ink-700);
   color: #f0eadd;
   padding: 4px 12px;
   transform: rotate(-1deg);
@@ -254,7 +254,7 @@
   gap: 12px;
   margin-bottom: 10px;
   font: 600 14px/1.4 var(--font-sans);
-  color: #333;
+  color: var(--sq-ink-500);
 }
 
 .story-briefing__objective svg {
@@ -264,7 +264,7 @@
 }
 
 .story-briefing__focus {
-  background: #1a1a1a;
+  background: var(--sq-ink-700);
   color: #f0eadd;
   padding: 20px 22px;
   margin-top: 14px;
@@ -277,7 +277,7 @@
 
 .story-briefing__focus .story-briefing__section-title {
   background: #f0b35a;
-  color: #1a1a1a;
+  color: var(--sq-ink-700);
 }
 
 .story-briefing__focus-cards {
@@ -287,7 +287,7 @@
   padding-bottom: 15px;
   margin-top: 15px;
   scrollbar-width: thin;
-  scrollbar-color: #f0b35a #333;
+  scrollbar-color: #f0b35a var(--sq-ink-500);
 }
 
 .story-briefing__focus-card {
@@ -358,17 +358,17 @@
 .story-briefing__btn--back {
   background: #2a2a2a;
   color: #e0d9c1;
-  box-shadow: 0 8px 0 #111, 0 15px 20px rgba(0,0,0,0.4);
-  border: 2px solid #444;
+  box-shadow: 0 8px 0 var(--sq-ink-800), 0 15px 20px rgba(0,0,0,0.4);
+  border: 2px solid var(--sq-ink-400);
 }
 
 .story-briefing__btn--back:active {
-  box-shadow: 0 2px 0 #111, 0 5px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 0 var(--sq-ink-800), 0 5px 10px rgba(0,0,0,0.4);
 }
 
 .story-briefing__btn--start {
   background: #f0b35a;
-  color: #111;
+  color: var(--sq-ink-800);
   box-shadow: 0 8px 0 #b48946, 0 15px 20px rgba(0,0,0,0.4);
   border: 2px solid #ffe0a5;
   flex: 2;
@@ -380,7 +380,7 @@
 
 .story-briefing__btn--start.boss {
   background: #c63333;
-  color: #fff;
+  color: var(--sq-paper);
   box-shadow: 0 8px 0 #8c1e27, 0 15px 20px rgba(0,0,0,0.4);
   border: 2px solid #ff6b7b;
 }
@@ -396,9 +396,9 @@
 }
 
 .story-briefing__history button {
-  background: #222;
+  background: var(--sq-ink-600);
   color: #f0eadd;
-  border: 1px solid #444;
+  border: 1px solid var(--sq-ink-400);
   padding: 8px 16px;
   font: 700 11px var(--font-mono);
   text-transform: uppercase;

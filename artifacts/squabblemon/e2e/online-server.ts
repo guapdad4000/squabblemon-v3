@@ -1,5 +1,6 @@
 // Isolated browser-test host. Never imported by the application or deployment.
 import { randomUUID } from "node:crypto";
+import { resolve } from "node:path";
 import { createServer } from "vite";
 import { createApp } from "../../api-server/src/app";
 import { db, pool, playerProfilesTable } from "../../../lib/db/src/index";
@@ -68,6 +69,8 @@ const app = createApp((req, _res, next) => {
 });
 const vite = await createServer({
   configFile: "artifacts/squabblemon/vite.config.ts",
+  // Keep the isolated auth test host from invalidating managed preview's Vite dep cache.
+  cacheDir: resolve(import.meta.dirname, "../node_modules/.vite-online-browser-e2e"),
   server: { middlewareMode: true, hmr: false },
   appType: "spa",
 });

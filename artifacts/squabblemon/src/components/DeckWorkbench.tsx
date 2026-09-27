@@ -165,17 +165,17 @@ export function DeckWorkbench({ initial, ownedCardIds, equippedVariants, onSave,
             <div><p>First five: your opening hand. Last five: draws in rounds 2 through 6.</p><ul>{insights.tips.map(tip => <li key={tip}>{tip}</li>)}</ul></div>
           </div>
         </details>
-        {selected && slot !== null && <div className="deck-workbench__selection">
-          <div><strong>Replacing {selected.name}</strong><p>{selected.effect}</p></div>
+        {selected && slot !== null && <div className="deck-workbench__selection" role="group" aria-label={`Lineup slot ${slot + 1}: ${selected.name}`}>
+          <div><strong><span className="deck-workbench__selection-slot">Slot {String(slot + 1).padStart(2, '0')} · </span>{selected.name}</strong><p>{selected.effect}</p></div>
           <div className="deck-workbench__selection-tools">
-            <button className="arsenal-icon" type="button" title="Move earlier" aria-label="Move earlier" disabled={slot === 0} onClick={() => moveSlot(-1)}><ArrowLeft size={16} /></button>
-            <button className="arsenal-icon" type="button" title="Move later" aria-label="Move later" disabled={slot === draft.cardIds.length - 1} onClick={() => moveSlot(1)}><ArrowRight size={16} /></button>
+            <button className="arsenal-icon" type="button" title="Move earlier" aria-label="Move earlier" disabled={slot === 0} onClick={() => moveSlot(-1)}><ArrowLeft size={16} aria-hidden="true" /><span>Earlier</span></button>
+            <button className="arsenal-icon" type="button" title="Move later" aria-label="Move later" disabled={slot === draft.cardIds.length - 1} onClick={() => moveSlot(1)}><ArrowRight size={16} aria-hidden="true" /><span>Later</span></button>
             <button className="arsenal-icon arsenal-danger" type="button" title="Remove card" aria-label="Remove card" onClick={() => {
               setUndo(draft); const next = draft.cardIds.filter((_, i) => i !== slot);
               setDraft({ ...draft, cardIds: next, heroCardId: draft.heroCardId === selected.catalogId ? next[0] ?? '' : draft.heroCardId });
               setSlot(null); setNotice(`${selected.name} removed. Choose a new recruit.`);
-            }}><Trash2 size={16} /></button>
-            <button className="arsenal-icon" type="button" title="Cancel replacement" aria-label="Cancel replacement" onClick={() => setSlot(null)}><X size={16} /></button>
+            }}><Trash2 size={16} aria-hidden="true" /><span>Remove card</span></button>
+            <button className="arsenal-icon" type="button" title="Cancel replacement" aria-label="Cancel replacement" onClick={() => setSlot(null)}><X size={16} aria-hidden="true" /><span>Cancel</span></button>
           </div>
         </div>}
       </div>

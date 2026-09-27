@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { randomUUID } from 'node:crypto';
-import { addReaction, ownedReactions, REACTION_PACK_UNLOCK, CHARACTER_REACTION_PACKS } from '@workspace/squabblemon-engine/reactions';
+import { addReaction, ownedReactions, resolveReactionTray, REACTION_TRAY_SIZE, REACTION_PACK_UNLOCK, CHARACTER_REACTION_PACKS } from '@workspace/squabblemon-engine/reactions';
+
+test('saved tray read sanitation preserves explicit empty and order while filtering stale or locked IDs', () => {
+  assert.equal(REACTION_TRAY_SIZE, 4);
+  assert.deepEqual(resolveReactionTray(undefined), ['big-w', 'lets-go']);
+  assert.deepEqual(resolveReactionTray([]), []);
+  assert.deepEqual(resolveReactionTray(['lets-go', 'hold-that', 'bogus', 'lets-go', 'big-w']), ['lets-go', 'big-w']);
+  assert.deepEqual(resolveReactionTray(['hold-that', 'big-w', 'too-smooth', 'lets-go', 'hold-that'], [REACTION_PACK_UNLOCK]), ['hold-that', 'big-w', 'too-smooth', 'lets-go']);
+});
 
 test('reactions enforce ownership, independent seat cooldowns, and idempotent retries', () => {
   const input = { id: 'a', reactionId: 'big-w', seat: 'player' as const, gameNumber: 1 };

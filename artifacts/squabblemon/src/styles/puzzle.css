@@ -1,6 +1,6 @@
 .story-puzzle-host {
   position: fixed; inset: 0; z-index: 1000;
-  background: #160f0a; color: #fff;
+  background: #160f0a; color: var(--sq-paper);
   font-family: var(--font-sans);
   display: block; overflow-y: auto; overscroll-behavior: contain;
 }
@@ -30,7 +30,7 @@
   font: 700 0.75rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em;
   color: rgba(255,255,255,0.5); background: none; border: none; cursor: pointer;
 }
-.story-puzzle-back:hover { color: #fff; }
+.story-puzzle-back:hover { color: var(--sq-paper); }
 .story-puzzle-back:disabled { opacity: .35; cursor: not-allowed; }
 .story-puzzle-header h2 {
   font: 900 italic 2rem var(--font-display);
@@ -159,7 +159,7 @@
   margin-top: auto; display: flex; flex-direction: column; gap: .5rem;
 }
 .story-puzzle-submit {
-  background: var(--color-primary); color: #000;
+  background: var(--color-primary); color: var(--sq-ink);
   padding: 1rem; font: 900 italic 1.25rem var(--font-display);
   text-transform: uppercase; border: none; border-radius: 4px;
   cursor: pointer; box-shadow: 0 4px 12px rgba(218,166,56,0.2);
@@ -194,7 +194,7 @@
 .story-puzzle-hint-btn:focus-visible,
 .story-puzzle-submit:focus-visible,
 .story-puzzle-skip:focus-visible {
-  outline: 3px solid #fff; outline-offset: 3px;
+  outline: 3px solid var(--sq-paper); outline-offset: 3px;
 }
 
 @media (max-width: 560px) {

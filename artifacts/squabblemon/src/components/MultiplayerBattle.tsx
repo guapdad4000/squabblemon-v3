@@ -17,6 +17,7 @@ import { BattleFeedback } from '../battleFeedback';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
 import { setBattleMusicMode } from '../musicStore';
+import { runWithoutDeckExitGuard, setDeckExitGuard } from '../lib/deckExitGuard';
 
 type BuddyPublicState = Pick<CardInstance, 'buddyForm' | 'buddyGrowthAtRound' | 'buddyEarthExpiresAtRound' | 'buddyBud'>;
 type OnlinePublicCard = PublicCard & Partial<BuddyPublicState>;
@@ -102,6 +103,10 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const [inspect, setInspect] = useState<CardInstance | null>(null);
   const [rules, setRules] = useState(false);
   const [surrender, setSurrender] = useState(false);
+  const [surrenderFailed, setSurrenderFailed] = useState(false);
+  const [submittingSurrender, setSubmittingSurrender] = useState(false);
+  const surrenderLock = useRef(false);
+  const pendingNavigation = useRef<(() => void) | null>(null);
   const [reviewBoard, setReviewBoard] = useState(false);
   const { celebrating, leaveResults } = useBattleResultExit();
   const [now, setNow] = useState(Date.now);
@@ -110,6 +115,30 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const feedback = useRef<BattleFeedback | null>(null);
   const seen = useRef(room.events.at(-1)?.sequence ?? 0);
   const sending = useRef(false);
+  useEffect(() => {
+    if (room.status !== 'active') return;
+    const guard = (proceed: () => void) => {
+      pendingNavigation.current = proceed;
+      setArrival(false);
+      setSurrender(true);
+    };
+    const clear = setDeckExitGuard(guard);
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+    return () => {
+      clear();
+      window.removeEventListener('beforeunload', beforeUnload);
+    };
+  }, [room.status]);
+  useEffect(() => {
+    if (room.status === 'complete') {
+      setSurrender(false);
+      pendingNavigation.current = null;
+    }
+  }, [room.status]);
   useEffect(() => {
     if (room.status === 'active') setBattleMusicMode(null);
   }, [room.status, room.code, room.gameNumber]);
@@ -138,10 +167,44 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     try { if ((await send(command)) !== false) { setSelected(null); setLane(null); setSquabble(false); } }
     finally { sending.current = false; }
   }
+  const openExit = () => {
+    setArrival(false);
+    setSurrenderFailed(false);
+    setSurrender(true);
+  };
+  const keepPlaying = () => {
+    pendingNavigation.current = null;
+    setSurrender(false);
+    setSurrenderFailed(false);
+  };
+  const returnToHub = () => {
+    pendingNavigation.current = null;
+    setSurrender(false);
+    runWithoutDeckExitGuard(onLeave);
+  };
+  const confirmSurrender = async () => {
+    if (surrenderLock.current || busy || !connected || room.status !== 'active') return;
+    surrenderLock.current = true;
+    setSubmittingSurrender(true);
+    setSurrenderFailed(false);
+    try {
+      if ((await send({ type: 'surrender' })) === false) setSurrenderFailed(true);
+      else {
+        pendingNavigation.current = null;
+        setSurrender(false);
+      }
+    } catch {
+      setSurrenderFailed(true);
+    } finally {
+      surrenderLock.current = false;
+      setSubmittingSurrender(false);
+    }
+  };
   const rank = room.ranked?.result;
   const resultCopy = onlineResultCopy(room);
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
+    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? leaveResults(onLeave) : openExit()}>Leave battle</button>}
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
@@ -159,7 +222,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       presentationScores={projected.presentation.scores} timerSeconds={remaining} timerEnabled={room.status === 'active'}
       feedbackPreferences={preferences} setFeedbackPreferences={setPreferences}
       onFeedback={(cue: 'select' | 'lock') => { feedback.current?.unlockAudio(); feedback.current?.cue(cue, reducedMotion); }}
-      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? leaveResults(onLeave) : setSurrender(true)} />
+      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? leaveResults(onLeave) : openExit()} />
     </LayoutGroup>
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
@@ -173,6 +236,11 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
       </ParkResult>
     </Dialog>
-    <Dialog open={surrender} onOpenChange={setSurrender}><DialogContent className="street-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app does not pause the turn clock.</DialogDescription><button className="online-primary" disabled={busy || !connected} onClick={() => { setSurrender(false); void act({ type: 'surrender' }); }}>Surrender</button><button className="online-secondary" onClick={() => setSurrender(false)}>Keep playing</button></DialogContent></Dialog>
+    <Dialog open={surrender && room.status === 'active'} onOpenChange={open => { if (!open && !submittingSurrender) keepPlaying(); }}><DialogContent className="street-dialog pvp-exit-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app or leaving does not pause the server turn clock.</DialogDescription>
+      {(!connected || surrenderFailed) && <p role="alert"> {surrenderFailed ? 'Surrender could not be confirmed.' : 'Connection lost.'} You can return to {room.ranked ? 'Fade Park' : 'friend fades'} without confirming a surrender. The server clock keeps running{room.ranked ? ' and a ranked loss is still possible' : ''}.</p>}
+      <button className="online-primary" disabled={busy || !connected || submittingSurrender} onClick={() => void confirmSurrender()}>{submittingSurrender ? 'Surrendering…' : 'Surrender'}</button>
+      <button className="online-secondary" disabled={submittingSurrender} onClick={keepPlaying}>Keep playing</button>
+      {(!connected || surrenderFailed) && <button className="online-secondary" disabled={submittingSurrender} onClick={returnToHub}>Return to {room.ranked ? 'Fade Park' : 'friend fades'} without surrender confirmation</button>}
+    </DialogContent></Dialog>
   </main>;
 }

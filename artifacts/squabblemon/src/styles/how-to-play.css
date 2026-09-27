@@ -46,8 +46,8 @@
 .guide-chapter-nav { position:sticky; top:0; z-index:20; display:flex; justify-content:center; gap:16px; padding:10px 3%; border-bottom:0; background:transparent; backdrop-filter:none; overflow-x:auto; }
 .guide-chapter-nav a { display:flex; gap:9px; padding:21px 24px 9px; min-height:44px; align-items:center; white-space:nowrap; font-size:11px; font-weight:800; color:#1a1a1a; background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat; filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%)); transform:rotate(-1deg); transition:transform .2s,filter .2s; }
 @media (prefers-reduced-motion: reduce) { .guide-chapter-nav a { transition: none; transform: none; } }
-.guide-chapter-nav span { font:9px 'Space Mono',monospace; color:#555; align-self:center; }
-.guide-chapter-nav a:hover { color:#111; transform:rotate(0deg) scale(1.02); filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 62%)) brightness(1.05); }
+.guide-chapter-nav span { font:9px 'Space Mono',monospace; color:var(--sq-ink-300); align-self:center; }
+.guide-chapter-nav a:hover { color:var(--sq-ink-800); transform:rotate(0deg) scale(1.02); filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 62%)) brightness(1.05); }
 .guide-section { padding:90px max(5.5%,calc((100% - 1280px)/2)); }
 .guide-section-intro { display:grid; grid-template-columns:1.2fr 1fr; align-items:end; gap:80px; margin-bottom:45px; }
 .guide-section-title h2 { font-size:clamp(38px,4.25vw,60px); margin-top:17px; }
@@ -78,7 +78,7 @@
 .guide-character-select small { display:block; font:9px 'Space Mono',monospace; color:#66705b; margin-top:4px; text-transform:uppercase; }
 .guide-showcase { position:relative; aspect-ratio:3/4.25; max-height:500px; width:100%; border:6px solid #252e20; border-radius:14px; box-shadow:12px 16px 0 #15171510; overflow:hidden; background-size:cover; background-position:center; isolation:isolate; }
 .guide-showcase::after { content:''; position:absolute; inset:0; background:linear-gradient(0deg,#111a10 0%,transparent 58%,#0008); z-index:-1; }
-.guide-showcase-rarity { position:absolute; top:17px; left:17px; right:17px; color:#fff; font:9px/1.7 'Space Mono',monospace; text-transform:uppercase; z-index:2; }
+.guide-showcase-rarity { position:absolute; top:17px; left:17px; right:17px; color:var(--sq-paper); font:9px/1.7 'Space Mono',monospace; text-transform:uppercase; z-index:2; }
 .guide-showcase-art { position:absolute; width:105%; height:87%; bottom:8%; left:-2.5%; object-fit:contain; z-index:-2; }
 .guide-card-stats { position:absolute; bottom:94px; left:17px; right:17px; display:flex; gap:8px; }
 .guide-card-stats > span { background:#111710e8; border:1px solid #ffffff40; display:flex; gap:6px; align-items:center; padding:6px 9px; color:#dbe4cf; font-size:9px; }

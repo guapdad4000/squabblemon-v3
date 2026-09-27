@@ -11,9 +11,11 @@ import {installFightingGameStyle} from './art-direction.js';
 import {dressSafehouse} from './room-details.js';
 import {batchStaticMeshes} from './batch-static.js';
 import {clampCameraOrbit,positionRoomCamera} from './camera-limits.js';
+import {detectGPUQuality} from '../shared/gpu-quality.js';
+const quality=await detectGPUQuality();
 const host=document.querySelector('#stage');
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){document.querySelector('#loading').textContent='This room needs WebGL. Try a browser with hardware acceleration enabled.';throw e;}
-renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<600?1.4:1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.92;host.append(renderer.domElement);
+renderer.setPixelRatio(Math.min(devicePixelRatio,quality.pixelRatio));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=quality.shadows;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.92;host.append(renderer.domElement);
 const scene=new T.Scene();scene.background=new T.Color('#131d24');scene.fog=new T.Fog('#172329',23,42);const camera=new T.PerspectiveCamera(innerWidth/innerHeight<.95?57:44,innerWidth/innerHeight,.1,70);
 const env=new T.Scene();env.background=new T.Color('#78848a');for(const [x,y,z,s,c] of [[0,8,0,7,'#e6eceb'],[8,3,0,6,'#bdccd1'],[-8,2,0,4,'#8ba4ad']]){const p=new T.Mesh(new T.PlaneGeometry(s,s),new T.MeshBasicMaterial({color:c,side:T.DoubleSide}));p.position.set(x,y,z);p.lookAt(0,0,0);env.add(p);}const pm=new T.PMREMGenerator(renderer);scene.environment=pm.fromScene(env,.03).texture;pm.dispose();
 let seed=41;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
@@ -143,11 +145,11 @@ function updateCrewCards(list){
     };image.src=url.href;
   });
 }
-const hemi=new T.HemisphereLight('#e9f0ee','#3b4650',1.55);scene.add(hemi);const sun=new T.DirectionalLight('#f0f3eb',4.2);sun.position.set(8,5,1);sun.target.position.set(-2,0,-2);sun.castShadow=true;sun.shadow.mapSize.set(innerWidth<600?1024:2048,innerWidth<600?1024:2048);Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:.1,far:25});sun.shadow.normalBias=.035;scene.add(sun,sun.target);const fill=new T.PointLight('#a8c3d0',22,12,2);fill.position.set(-3,2.8,4);scene.add(fill);const tvLight=new T.PointLight('#9ed8ca',8,6,2);tvLight.position.set(-3.4,1.8,-1.15);scene.add(tvLight);const bagLight=new T.SpotLight('#fff0cf',21,8,.6,.7,1.5);bagLight.position.set(2.6,4,-2);bagLight.target=bag;scene.add(bagLight);
+const hemi=new T.HemisphereLight('#e9f0ee','#3b4650',1.55);scene.add(hemi);const sun=new T.DirectionalLight('#f0f3eb',4.2);sun.position.set(8,5,1);sun.target.position.set(-2,0,-2);sun.castShadow=quality.shadows;sun.shadow.mapSize.set(quality.tier==='high'?2048:1024,quality.tier==='high'?2048:1024);Object.assign(sun.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:.1,far:25});sun.shadow.normalBias=.035;scene.add(sun,sun.target);const fill=new T.PointLight('#a8c3d0',22,12,2);fill.position.set(-3,2.8,4);scene.add(fill);const tvLight=new T.PointLight('#9ed8ca',8,6,2);tvLight.position.set(-3.4,1.8,-1.15);scene.add(tvLight);const bagLight=new T.SpotLight('#fff0cf',21,8,.6,.7,1.5);bagLight.position.set(2.6,4,-2);bagLight.target=bag;scene.add(bagLight);
 // Standalone room previews also use fighter art; embedded rooms receive the player's crew.
 if(parent===window)updateCrewCards([{name:'Dr. Fade',image:'../../assets/characters/dr-fade.webp'},{name:'Guap',image:'../../assets/characters/guap.webp'},{name:'Rastamon',image:'../../assets/characters/rastamon.webp'}]);
 // Floating dust catches the window light.
-const points=new Float32Array(150*3);for(let i=0;i<points.length;i+=3){points[i]=rand()*8-4;points[i+1]=rand()*4;points[i+2]=rand()*9-4.5;}const pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(points,3));const dust=new T.Points(pg,new T.PointsMaterial({color:'#ffe4a5',size:.018,transparent:true,opacity:.35,depthWrite:false}));scene.add(dust);
+const points=new Float32Array(Math.round(150*quality.particleDensity)*3);for(let i=0;i<points.length;i+=3){points[i]=rand()*8-4;points[i+1]=rand()*4;points[i+2]=rand()*9-4.5;}const pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(points,3));const dust=new T.Points(pg,new T.PointsMaterial({color:'#ffe4a5',size:.018,transparent:true,opacity:.35,depthWrite:false}));scene.add(dust);
 // Inventory duffel on the floor in front of the couch.
 const inventoryBag=new T.Group();inventoryBag.position.set(1.75,0,1.75);inventoryBag.rotation.y=-.3;scene.add(inventoryBag);
 // Fadecade sits at the opposite end of the couch, facing into the room.
@@ -156,7 +158,7 @@ const arcadeDisplay=createArcadeCabinet(arcade);
 dressBags({inventoryBag,bag});
 const roomDetails=dressSafehouse({scene,couch,brass,wood,black,ivory,plaster});
 const batching=batchStaticMeshes(scene,[mailDoor.root,bulletinBoard.root,growthCorner,inventoryBag,tv,bagPivot,cards,phone,arcade,roomDetails.vinyl,...roomDetails.dynamicObjects]);
-const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[screenMat]});
+const art=installFightingGameStyle({renderer,scene,camera,screenMaterials:[screenMat],outlines:quality.outlines});
 const roomPose=()=>innerWidth/innerHeight<.95?[.16,.48,12.1,.15,1.3,-.15]:[-.09,.23,10.7,.1,1.52,-.45];
 // A front three-quarter approach makes the shared spherical easing curve around the table.
 // Keep the focus attached to the cabinet so placement and camera destination cannot drift apart.
@@ -183,24 +185,24 @@ setLighting(false);document.querySelector('#light').onclick=()=>setLighting(!nig
 const dialog=document.querySelector('#concept');document.querySelector('#reference').onclick=()=>dialog.showModal();document.querySelector('#close').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
 addEventListener('keydown',e=>{if(dialog.open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key==='Escape')view('room');if(e.target!==document.body&&e.target!==el)return;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-'].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft')moveCamera(-.08);if(e.key==='ArrowRight')moveCamera(.08);if(e.key==='ArrowUp')moveCamera(0,.08);if(e.key==='ArrowDown')moveCamera(0,-.08);if(e.key==='+'||e.key==='=')moveCamera(0,0,-.4);if(e.key==='-')moveCamera(0,0,.4);});
 el.tabIndex=0;el.setAttribute('aria-label','Safehouse. Arrow keys rotate. Plus and minus zoom. Use the station buttons to inspect objects.');
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth/innerHeight<.95?57:44;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<600?1.35:1.65));renderer.setSize(innerWidth,innerHeight);art.resize();roomDetails.resize();view(selected);});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth/innerHeight<.95?57:44;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,quality.pixelRatio));renderer.setSize(innerWidth,innerHeight);art.resize();roomDetails.resize();view(selected);});
 let sceneReady=false,lastTime=0,contextLost=false;el.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;emit({type:'error'});const notice=document.createElement('div');notice.id='loading';notice.textContent='The room paused. Refresh to step back inside.';host.append(notice);});
 let lastAnchorUpdate=0,mailOverlay=false,mailPauseAt=0;
 let previousAnchors=null;
 const anchorPoint=new T.Vector3();
 function publishAnchors(t){if(parent===window||t-lastAnchorUpdate<100)return;lastAnchorUpdate=t;const anchors=interactive.map(item=>{anchorPoint.set(0,item.key==='mail'?2.5:item.key==='growth'?1.28:item.key==='arcade'?2:item.key==='story'?1.66:item.key==='training'?.45:item.key==='music'?1.24:item.key==='profile'?1.05:.12,0);item.object.localToWorld(anchorPoint);anchorPoint.project(camera);return {id:item.key,x:(anchorPoint.x+1)*50,y:(1-anchorPoint.y)*50,visible:anchorPoint.z>-1&&anchorPoint.z<1&&Math.abs(anchorPoint.x)<.91&&anchorPoint.y<.69&&anchorPoint.y>-.38};});const changed=!previousAnchors||anchors.some((anchor,i)=>{const previous=previousAnchors[i];return anchor.visible!==previous.visible||Math.abs(anchor.x-previous.x)>.015||Math.abs(anchor.y-previous.y)>.015;});if(changed){previousAnchors=anchors;emit({type:'anchors',anchors});}}
-function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden||(mailOverlay&&t>mailPauseAt))return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);clampCameraOrbit(desired,roomPose()[2]);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);positionRoomCamera({yaw,pitch,radius,target},camera.position,innerWidth/innerHeight>=.95);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
+function animate(t){requestAnimationFrame(animate);if(contextLost||document.hidden||(mailOverlay&&t>mailPauseAt)||sceneReady&&t-lastTime<1000/quality.fps)return;const dt=Math.min((t-lastTime)/1000,.05);lastTime=t;const speed=reduced?1:1-Math.exp(-dt*5);clampCameraOrbit(desired,roomPose()[2]);yaw+=(desired.yaw-yaw)*speed;pitch+=(desired.pitch-pitch)*speed;radius+=(desired.radius-radius)*speed;target.lerp(desired.target,speed);positionRoomCamera({yaw,pitch,radius,target},camera.position,innerWidth/innerHeight>=.95);camera.lookAt(target);frameShift+=(desiredFrameShift-frameShift)*speed;camera.setViewOffset(innerWidth,innerHeight,0,frameShift,innerWidth,innerHeight);
 if(!reduced){dust.position.y=Math.sin(t*.00015)*.09;const age=(t-bagStarted)/1000;bagPivot.rotation.z=Math.sin(age*5.5)*bagImpulse*Math.exp(-age*1.35)+Math.sin(t*.0007)*.004;bagPivot.rotation.x=Math.sin(age*4)*bagImpulse*.3*Math.exp(-age*1.35);}
 if(mailDoor.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;
-if(roomDetails.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;bulletinBoard.update(t/1000,reduced);if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();if(!sceneReady){sceneReady=true;document.querySelector('#loading')?.remove();emit({type:'ready'});}publishAnchors(t);}
+if(roomDetails.update(t/1000,dt,reduced))renderer.shadowMap.needsUpdate=true;bulletinBoard.update(t/1000,reduced);if(bagImpulse>0&&(t-bagStarted)<5000)renderer.shadowMap.needsUpdate=true;renderer.info.reset();art.render();if(!sceneReady){sceneReady=true;document.querySelector('#loading')?.remove();emit({type:'ready',gpuTier:quality.tier});}publishAnchors(t);}
 // Keep the loading state through shader compilation and the first drawn frame.
-void art.prepare().catch(()=>{}).then(()=>{if(!contextLost)requestAnimationFrame(animate);});
+void art.prepare().then(()=>{if(!contextLost)requestAnimationFrame(animate);}).catch(()=>emit({type:'error',message:'The room could not be rendered.'}));
 
 function emit(payload){parent.postMessage({channel:'squabblemon-scene',...payload},location.origin);}
 addEventListener('message',e=>{
   if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='squabblemon-scene')return;
   const d=e.data;
-  if(d.type==='ping'&&sceneReady&&!contextLost){previousAnchors=null;emit({type:'ready'});}
+  if(d.type==='ping'&&sceneReady&&!contextLost){previousAnchors=null;emit({type:'ready',gpuTier:quality.tier});}
   if(d.type==='view')view(d.view);
   if(d.type==='arcade')arcadeDisplay.update(d);
   if(d.type==='story')window.Squabblemon.setStoryProgress(d.progress);

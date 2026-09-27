@@ -5,6 +5,7 @@
 @import './components/battle-presentation.css';
 @import './components/battle-readability.css';
 @import './styles/scrollbars.css';
+@import './styles/tokens.css';
 @plugin "@tailwindcss/typography";
 
 @theme inline {
@@ -14,21 +15,44 @@
   --font-hand: 'Caveat', cursive;
   --font-marker: 'Permanent Marker', cursive;
 
-  /* Theme Colors */
-  --color-background: hsl(0 0% 4%);
+  /* Theme Colors — mapped from styles/tokens.css */
+  --color-background: var(--sq-ink-850);
   --color-foreground: hsl(0 0% 98%);
-
-  --color-primary: hsl(45 100% 55%);
-  --color-primary-foreground: hsl(0 0% 0%);
-  
+  --color-primary: var(--sq-gold);
+  --color-primary-foreground: var(--sq-ink);
+  --color-primary-border: var(--sq-gold-hover);
+  --color-secondary: var(--sq-ink-600);
+  --color-secondary-foreground: var(--sq-paper);
+  --color-secondary-border: var(--sq-ink-400);
+  --color-muted: var(--sq-ink-700);
+  --color-muted-foreground: var(--sq-muted);
   --color-accent: hsl(350 80% 55%);
-  --color-accent-foreground: hsl(0 0% 100%);
-  
-  --color-card: hsl(0 0% 9%);
+  --color-accent-foreground: var(--sq-paper);
+  --color-destructive: var(--sq-red-danger);
+  --color-destructive-foreground: var(--sq-paper);
+  --color-destructive-border: var(--sq-red);
+  --color-card: var(--sq-ink-800);
+  --color-card-foreground: var(--sq-paper);
   --color-card-border: hsl(0 0% 15%);
-
+  --color-popover: var(--sq-ink-800);
+  --color-popover-foreground: var(--sq-paper);
+  --color-border: rgb(255 255 255 / 10%);
+  --color-input: var(--sq-ink-750);
+  --color-ring: var(--sq-gold);
+  --color-neutral: var(--sq-neutral);
+  --color-rival: var(--sq-blue);
   --color-squabble: hsl(350 85% 55%);
   --color-squabble-dark: hsl(350 90% 25%);
+
+  --radius-xs: var(--sq-radius-xs);
+  --radius-sm: var(--sq-radius-sm);
+  --radius-md: var(--sq-radius-sm);
+  --radius-lg: var(--sq-radius-md);
+  --radius-xl: var(--sq-radius-lg);
+  --shadow-sm: var(--sq-shadow-1);
+  --shadow: var(--sq-shadow-1);
+  --shadow-md: var(--sq-shadow-2);
+  --shadow-lg: var(--sq-shadow-3);
 }
 
 @layer base {

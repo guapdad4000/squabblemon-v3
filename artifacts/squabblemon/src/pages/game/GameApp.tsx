@@ -36,7 +36,7 @@ function BootstrapError({
   isRetrying: boolean;
 }) {
   return (
-    <div className="min-h-[100dvh] bg-[#070707] text-white p-6 flex flex-col items-center justify-center text-center">
+    <div className="min-h-[100dvh] bg-background text-white p-6 flex flex-col items-center justify-center text-center">
       <img
         src={`${import.meta.env.BASE_URL}brand/prismatic/marks/impact-standard-gold.webp`}
         alt=""
@@ -51,14 +51,14 @@ function BootstrapError({
           type="button"
           onClick={onRetry}
           disabled={isRetrying}
-          className="bg-primary text-black px-6 py-3 font-display font-black italic uppercase text-sm disabled:opacity-50"
+          className="sq-press bg-primary text-black px-6 py-3 font-display font-black italic uppercase text-sm disabled:opacity-50"
         >
           {isRetrying ? 'Retrying…' : 'Retry Connection'}
         </button>
         <button
           type="button"
           onClick={onPractice}
-          className="bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20"
+          className="sq-press bg-white/10 px-6 py-3 font-display font-black uppercase text-sm border border-white/20"
         >
           Play Offline Practice
         </button>
@@ -68,7 +68,7 @@ function BootstrapError({
 }
 
 function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
-  return <div className="immersive-shell"><CityHeader bootstrap={bootstrap} />{children}</div>;
+  return <div className="immersive-shell sq-route-transition--immersive"><CityHeader bootstrap={bootstrap} />{children}</div>;
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
@@ -177,7 +177,7 @@ function GameShell({
           {normalized === '/game' && <GameNav bootstrap={bootstrap} />}
           <div className="game-shell__content">
             <CityHeader bootstrap={bootstrap} />
-            <div className="game-route-stage" key={location}>
+            <div className="game-route-stage sq-route-transition" key={location}>
               {children}
             </div>
           </div>

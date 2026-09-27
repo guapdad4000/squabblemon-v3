@@ -1,6 +1,6 @@
 .fadecade-hub {
   background-color: #050608;
-  color: #fff;
+  color: var(--sq-paper);
   position: relative;
   isolation: isolate;
   font-family: var(--font-sans);
@@ -50,7 +50,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: #fff;
+  color: var(--sq-paper);
   font: 700 0.75rem var(--font-mono);
   text-transform: uppercase;
   cursor: pointer;
@@ -205,8 +205,8 @@
 .cabinet-title {
   font: 900 italic clamp(14px, 4cqw, 20px) var(--font-display);
   text-transform: uppercase;
-  color: #fff;
-  text-shadow: 2px 2px 0 #000;
+  color: var(--sq-paper);
+  text-shadow: 2px 2px 0 var(--sq-ink);
   margin-bottom: auto;
   text-align: center;
   flex: none;
@@ -214,8 +214,8 @@
 
 .cabinet-btn {
   background: var(--color-primary);
-  color: #000;
-  border: 1px solid #000;
+  color: var(--sq-ink);
+  border: 1px solid var(--sq-ink);
   padding: 8px 12px;
   min-height: 44px;
   font: 900 12px var(--font-display);
@@ -227,12 +227,12 @@
   transition: transform 0.1s;
 }
 .cabinet-btn:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--sq-paper);
   outline-offset: 2px;
 }
-.cabinet-btn:hover:not(:disabled) { background: #fff; }
+.cabinet-btn:hover:not(:disabled) { background: var(--sq-paper); }
 .cabinet-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
-.cabinet-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #555; color: #aaa; }
+.cabinet-btn:disabled { opacity: 0.5; cursor: not-allowed; background: var(--sq-ink-300); color: #aaa; }
 
 .cabinet-btn--outline {
   background: rgba(0, 0, 0, 0.6);
@@ -241,13 +241,13 @@
 }
 .cabinet-btn--outline:hover:not(:disabled) {
   background: var(--color-primary);
-  color: #000;
+  color: var(--sq-ink);
 }
 
 .cabinet-select {
-  background: #111;
-  color: #fff;
-  border: 1px solid #444;
+  background: var(--sq-ink-800);
+  color: var(--sq-paper);
+  border: 1px solid var(--sq-ink-400);
   padding: 8px 12px;
   min-height: 44px;
   font: 700 12px var(--font-mono);
@@ -261,7 +261,7 @@
 
 .cabinet-notice {
   font: 700 12px var(--font-mono);
-  color: #a1a1aa;
+  color: var(--sq-muted);
   text-align: center;
   text-transform: uppercase;
 }
@@ -291,7 +291,7 @@
 .fadecade-history h3 {
   font: 900 1rem var(--font-display);
   text-transform: uppercase;
-  color: #facc15;
+  color: var(--sq-gold);
   margin-bottom: 1rem;
 }
 .fadecade-history ul {
@@ -327,7 +327,7 @@
 }
 .bounty-title {
   font: 700 14px var(--font-mono);
-  color: #fff;
+  color: var(--sq-paper);
   line-height: 1.4;
 }
 .fadecade-bounty-description { font-size: 13px; line-height: 1.5; color: #b3bcc9; margin: 0; }
@@ -335,7 +335,7 @@
 .fadecade-machine-group .cabinet-ui { background: radial-gradient(ellipse at top, #1c253b, #050609 75%); }
 .bounty-track {
   height: 4px;
-  background: #222;
+  background: var(--sq-ink-600);
   border-radius: 2px;
   overflow: hidden;
 }

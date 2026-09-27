@@ -13,3 +13,9 @@ Organic economy simulations must exclude promotional wallets and identify those 
 **Why:** Production-available promotional grants can dwarf weeks of ordinary play. Source findings alone do not establish abuse or describe any live player's account.
 
 **How to apply:** Use immutable historical fixtures for before/after simulations, not a moving Git HEAD. Clearly distinguish mocked browser journeys, isolated database verification, and real authenticated production evidence.
+
+For a current-state audit, evaluate exported content after all content transforms; do not infer authored rewards from a shared target constant.
+
+**Why:** A shared rollout target and a historical report can both remain intact while the exported campaign has different finite promises. Reusing the old simulator can then silently misstate current purchasing power.
+
+**How to apply:** Preserve the historical baseline, add a separately versioned current model with source hashes, and cross-check actual generators and claim catalogs. Test restricted currency affordability separately instead of summing balances.

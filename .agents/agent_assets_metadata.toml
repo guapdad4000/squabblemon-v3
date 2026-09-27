@@ -28,3 +28,17 @@ mtime_ms = 1790078718096
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/24c0451d-c14e-473e-a13b-04d398809634/85eaf2b8-fc76-44f4-98f3-913a45a1e7bb"
 storage_version_token = "1790078866276826"
 content_type = "image/gif"
+
+[[outputs]]
+id = "vvW2h5BD0PJtyUA381_2k"
+uri = "file://docs/economy-audit-current-v1/squabblemon-economy-audit-v1.html"
+type = "html"
+title = "Squabblemon Economy Audit — Current-Source v1"
+description = "Full audit, decision roadmap, reproducible pacing tables, and embedded downloads for the currency ledger, cosmetic catalog, mode rules and simulation results. Source analysis—not production-player measurements."
+logical_id = "488b6500-a34f-46b8-83f4-27636e7599e0"
+content_hash = "sha256:cfb0515a877a08320c063200a81bf1f11ab35ea0fc35654f2b3420eba8260036"
+size = 1228935
+mtime_ms = 1790495971162
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/488b6500-a34f-46b8-83f4-27636e7599e0/54745ee2-0424-49d0-a578-a365765ba8ad"
+storage_version_token = "1790495981069575"
+content_type = "text/html"

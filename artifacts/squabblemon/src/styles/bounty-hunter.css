@@ -188,7 +188,7 @@
   transform: translateX(-50%);
   width: 9px;
   height: 9px;
-  background: radial-gradient(circle at 35% 35%, #888, #222);
+  background: radial-gradient(circle at 35% 35%, #888, var(--sq-ink-600));
   border-radius: 50%;
   box-shadow: 0 3px 6px rgba(0,0,0,0.6);
 }
@@ -242,7 +242,7 @@
 .bounty-poster .studio-progress {
   width: 32px;
   height: 32px;
-  color: #8c2a2a;
+  color: var(--sq-red-deep);
   font-size: 9px;
 }
 .bounty-poster .studio-progress::before {
@@ -273,21 +273,21 @@
 }
 .bounty-poster__reward .studio-icon,
 .bounty-poster__reward svg {
-  color: #8c2a2a;
+  color: var(--sq-red-deep);
   width: 20px;
   height: 20px;
 }
 .bounty-poster__reward strong {
   font-family: var(--font-display, Impact, sans-serif);
   font-size: 24px;
-  color: #8c2a2a;
+  color: var(--sq-red-deep);
   line-height: 1;
 }
 .bounty-poster__reward-label {
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #8c2a2a;
+  color: var(--sq-red-deep);
   font-weight: 800;
   margin-top: 4px;
 }
@@ -323,7 +323,7 @@
 }
 /* Ensure claim buttons have clear focus visibility */
 .bounty-poster .studio-action:focus-visible {
-  outline: 3px solid #8c2a2a;
+  outline: 3px solid var(--sq-red-deep);
   outline-offset: 4px;
 }
 
@@ -344,7 +344,7 @@
   transform: rotate(-2deg);
 }
 .bounty-poster[data-status='claimed'] .bounty-poster__status {
-  color: #8c2a2a;
+  color: var(--sq-red-deep);
   border-color: rgba(140,42,42,0.3);
   transform: rotate(-3deg) scale(1.05);
 }

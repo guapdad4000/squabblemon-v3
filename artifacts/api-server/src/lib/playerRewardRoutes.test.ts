@@ -15,6 +15,7 @@ import { starterRecipes, catalogIdsToEngineIds } from "@workspace/squabblemon-en
 import { createStoryMatch, replayMatchPrefix, canAffordSelection, type TranscriptMove } from "@workspace/squabblemon-engine/gameEngine";
 import { CARD_BALANCE_VERSION } from "@workspace/squabblemon-engine/multiplayer";
 import { STICKER_AVATARS, stickerAvatarKey } from '@workspace/squabblemon-engine/cosmetics';
+import { REACTION_PACK_UNLOCK } from '@workspace/squabblemon-engine/reactions';
 import { createApp } from "../app";
 import { createCardProgressionSnapshot } from "./cardProgression";
 
@@ -192,6 +193,52 @@ test("HTTP challenge match start rejects story and tutorial modes without bindin
   const bound = await db.select().from(playerMatchesTable)
     .where(eq(playerMatchesTable.challengeRunId, run.id));
   assert.equal(bound.length, 0);
+});
+
+test("HTTP reaction tray persists ordered owned IDs, rejects invalid edits and preserves profile state", async (t) => {
+  const clerkUserId = `route-reaction-tray-${randomUUID()}`;
+  cleanup(t, clerkUserId);
+  const settings = {
+    reducedMotion: true,
+    turnTimerEnabled: false,
+    cosmetics: { bannerCardId: "cornball", bannerFinish: "silver" as const, stickers: ["cornball:smile"] },
+  };
+  const unlocks = ["badge:after-hours", REACTION_PACK_UNLOCK];
+  await db.insert(playerProfilesTable).values({
+    clerkUserId, onboardingStep: "complete", settings, unlockedCosmeticIds: unlocks,
+    softCurrency: 321,
+  });
+  await withPlayerApi(clerkUserId, async baseUrl => {
+    const initial = await fetch(`${baseUrl}/player/bootstrap`);
+    // A legacy profile without the setting reads the starter tray.
+    const initialBody = await initial.json() as any;
+    assert.deepEqual(initialBody.profile.settings.reactionTray, ["big-w", "lets-go"]);
+
+    const chosen = ["too-smooth", "big-w", "hold-that"];
+    const response = await patchProfile(baseUrl, { reactionTray: chosen });
+    assert.deepEqual(response.profile.settings.reactionTray, chosen);
+    assert.deepEqual((await profileFor(clerkUserId)).settings, { ...settings, reactionTray: chosen });
+
+    for (const tray of [
+      ["unknown"],
+      ["reaction:buddy:laugh:v1"],
+      ["big-w", "big-w"],
+      ["big-w", "lets-go", "hold-that", "too-smooth", "reaction:buddy:laugh:v1"],
+    ]) {
+      await patchProfile(baseUrl, { reactionTray: tray, displayName: "Should Not Save" }, 400);
+      const unchanged = await profileFor(clerkUserId);
+      assert.deepEqual(unchanged.settings, { ...settings, reactionTray: chosen });
+      assert.notEqual(unchanged.displayName, "Should Not Save");
+    }
+    await patchProfile(baseUrl, { displayName: "No Tray Edit" });
+    assert.deepEqual((await profileFor(clerkUserId)).settings.reactionTray, chosen);
+    const empty = await patchProfile(baseUrl, { reactionTray: [] });
+    assert.deepEqual(empty.profile.settings.reactionTray, []);
+    const stored = await profileFor(clerkUserId);
+    assert.deepEqual(stored.settings, { ...settings, reactionTray: [] });
+    assert.deepEqual(stored.unlockedCosmeticIds, unlocks);
+    assert.equal(stored.softCurrency, 321);
+  });
 });
 
 test("HTTP profile update persists an owned catalog character avatar and preserves rewards and cosmetics", async (t) => {

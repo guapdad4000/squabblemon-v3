@@ -1060,6 +1060,12 @@ components:
       properties:
         cosmetics:
           $ref: "#/components/schemas/CosmeticLoadout"
+        reactionTray:
+          type: array
+          maxItems: 4
+          uniqueItems: true
+          items:
+            type: string
         reducedMotion:
           type: boolean
         turnTimerEnabled:
@@ -1541,6 +1547,12 @@ components:
     PlayerProfileUpdate:
       type: object
       properties:
+        reactionTray:
+          type: array
+          maxItems: 4
+          uniqueItems: true
+          items:
+            type: string
         displayName:
           type: string
           minLength: 2

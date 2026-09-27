@@ -69,7 +69,7 @@
 .collection-tabs :is(button, a){position:relative;background:transparent url('../assets/paper/ripped-strip.webp') center/100% 100% no-repeat;min-height:52px;padding:18px 24px 6px;color:#1a1a1a;font:900 italic 16px var(--font-display);text-transform:uppercase;filter:drop-shadow(2px 3px 4px rgb(0 0 0 / 55%));transform:rotate(-1deg);transition:transform .2s,filter .2s}
 @media (prefers-reduced-motion: reduce) { .collection-tabs :is(button, a) { transition: none; transform: none; } }
 .collection-tabs :is(button, a):hover{transform:rotate(0deg) scale(1.02);filter:drop-shadow(3px 5px 5px rgb(0 0 0 / 60%)) brightness(1.05)}
-.collection-tabs :is(button, a)[aria-pressed=true]{color:#111;transform:rotate(1deg) scale(1.05);filter:sepia(.3) saturate(1.45) drop-shadow(3px 5px 5px rgb(0 0 0 / 65%));z-index:2}
+.collection-tabs :is(button, a)[aria-pressed=true]{color:var(--sq-ink-800);transform:rotate(1deg) scale(1.05);filter:sepia(.3) saturate(1.45) drop-shadow(3px 5px 5px rgb(0 0 0 / 65%));z-index:2}
 .collection-tabs :is(button, a)[aria-pressed=true]::before{content:'';position:absolute;top:-4px;left:34%;right:34%;height:13px;background:#d1a85ed1;box-shadow:0 1px 2px #593e1b55;transform:rotate(-3deg)}
 .collection-tabs :is(button, a)[aria-pressed=true]:after{display:none}
 .collection-stage__body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#a08a5555 transparent;padding-bottom:max(18px,var(--fan-clearance,0px))}
@@ -89,7 +89,7 @@
 .collection-card-grid>button:enabled:hover{transform:translateY(-5px)}
 .collection-card-grid>button:disabled{opacity:.35}
 .collection-card-grid__unknown{aspect-ratio:63/88;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:linear-gradient(160deg,#aeb39a0a,transparent);border-bottom:1px solid #d4bf8c30;color:#b2b8a5;font-size:10px}
-.collection-card-grid__lock{position:absolute;right:8px;bottom:8px;color:#f1e2bc;filter:drop-shadow(0 2px 3px #000)}
+.collection-card-grid__lock{position:absolute;right:8px;bottom:8px;color:#f1e2bc;filter:drop-shadow(0 2px 3px var(--sq-ink))}
 .collection-road{max-width:760px;margin:30px auto}
 .collection-road__intro{margin-bottom:30px}
 .collection-road__intro h2{font:900 italic 32px var(--font-display)}

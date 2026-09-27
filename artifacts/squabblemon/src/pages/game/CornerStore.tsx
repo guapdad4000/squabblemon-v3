@@ -1,4 +1,5 @@
 import { DailyCloutPack, ItemDot } from '../../components/Notifications';
+import { ReactionShop } from '../../components/ReactionShop';
 import { useEffect, useRef, useState } from 'react';
 import { LayeredVenue } from '../../components/venue/LayeredVenue';
 import {
@@ -33,6 +34,7 @@ import { appPath } from '../../lib/routing';
 import { useQueryClient } from '@tanstack/react-query';
 
 const MAX_STATUS_ATTEMPTS = 15;
+type MarketShelf = 'clout' | 'pack' | 'style' | 'shards' | 'reactions';
 
 type TaxAwareCatalog = {
   taxMode?: 'none' | 'automatic';
@@ -337,8 +339,18 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
   const returnOrderId = searchParams.get('order');
-
-  const [department, setDepartment] = useState<'clout' | 'pack' | 'style' | 'shards'>('clout');
+  const shelf = searchParams.get('shelf');
+  const department: MarketShelf = searchParams.get('notification')?.startsWith('daily:') ? 'clout'
+    : shelf === 'pack' || shelf === 'style' || shelf === 'shards' || shelf === 'reactions' ? shelf
+    : searchParams.get('view') === 'reactions' ? 'reactions' : 'clout';
+  function selectDepartment(next: MarketShelf) {
+    const params = new URLSearchParams(search);
+    params.set('view', 'corner');
+    if (next === 'clout') params.delete('shelf');
+    else params.set('shelf', next);
+    params.delete('notification');
+    setLocation(`/game/shop?${params}`);
+  }
   const [selected, setSelected] = useState<StoreOffer | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
   const [checkoutBusy, setCheckoutBusy] = useState(false);
@@ -371,7 +383,6 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
 
   useEffect(() => {
     const params = new URLSearchParams(search);
-    if (params.get('notification')?.startsWith('daily:')) setDepartment('clout');
     const offer = CORNER_OFFERS.find(item => item.id === params.get('offer'));
     if (offer) choose(offer);
   }, [search]);
@@ -474,18 +485,18 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         )}
 
         <nav className="corner-store__departments" aria-label="Fade Market shelves">
-          {(['clout', 'pack', 'style', 'shards'] as const).map(d => (
-            <button key={d} aria-pressed={department === d} onClick={() => setDepartment(d)}>
-              {{ clout: 'Clout', pack: 'Packs', style: 'Card styles', shards: 'Shards' }[d]}
+          {(['clout', 'pack', 'style', 'shards', 'reactions'] as const).map(d => (
+            <button key={d} aria-pressed={department === d} onClick={() => selectDepartment(d)}>
+              {{ clout: 'Clout', pack: 'Packs', style: 'Card styles', shards: 'Shards', reactions: 'Reactions' }[d]}
             </button>
           ))}
         </nav>
-        
-        <div className="bodega-shelf-heading"><span>Fresh on the shelf</span><small>TAKE A LOOK AROUND ↔</small></div>
-        <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={department} className={`corner-store__products ${department === 'clout' ? 'corner-store__products--clout' : ''}`} role="region" aria-label={`${department} shelf`} tabIndex={0}
-          initial={reducedMotion ? false : { opacity: 0, x: 45 }} animate={{ opacity: 1, x: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -45 }}
-          transition={{ duration: reducedMotion ? 0 : .22 }}>
+        {department === 'reactions' ? <ReactionShop bootstrap={bootstrap} /> : <>
+          <div className="bodega-shelf-heading"><span>Fresh on the shelf</span><small>TAKE A LOOK AROUND ↔</small></div>
+          <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={department} className={`corner-store__products ${department === 'clout' ? 'corner-store__products--clout' : ''}`} role="region" aria-label={`${department} shelf`} tabIndex={0}
+            initial={reducedMotion ? false : { opacity: 0, x: 45 }} animate={{ opacity: 1, x: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -45 }}
+            transition={{ duration: reducedMotion ? 0 : .22 }}>
 
           {department === 'clout' && <DailyCloutPack playerId={bootstrap.profile.id} onClaimed={reward => setBaggedOffer({
             art: 'assets/rewards/clout-token.webp', name: `${reward.amount.toLocaleString()} Clout`, daily: { date: reward.date },
@@ -529,8 +540,9 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               </motion.article>
             );
           })}
-        </motion.div>
-        </AnimatePresence>
+          </motion.div>
+          </AnimatePresence>
+        </>}
         
         <details className="corner-store__shelf bg-black/60 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden transition-all duration-300 open:pb-4" open={historyOpen} onToggle={e => setHistoryOpen(e.currentTarget.open)}>
           <summary className="flex items-center gap-2 p-3 font-sans font-bold text-sm cursor-pointer hover:bg-white/5 transition-colors select-none">

@@ -1,4 +1,4 @@
-import { addReaction, ownedReactions, ReactionError } from '@workspace/squabblemon-engine/reactions';
+import { addReaction, ownedReactions, resolveReactionTray, ReactionError } from '@workspace/squabblemon-engine/reactions';
 import { randomBytes, randomInt } from "node:crypto";
 import { and, asc, desc, eq, gt, ne, or, sql } from "drizzle-orm";
 import {
@@ -485,6 +485,6 @@ export async function accessRoomReactions(code: string, userId: string, input?: 
         throw error;
       }
     }
-    return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned };
+    return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned, tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) };
   });
 }

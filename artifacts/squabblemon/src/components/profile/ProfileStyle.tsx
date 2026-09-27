@@ -4,9 +4,10 @@ import { useReducedMotion } from 'framer-motion';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { stickerById, styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { CharacterBanner } from '../CharacterBanner';
+import { PvpReactionCollection } from './PvpReactionCollection';
 import { catalogPortrait, FighterPortrait, profilePortrait } from './FighterPortrait';
 
-export function ProfileStyle({ bootstrap }: { bootstrap: PlayerBootstrap }) {
+export function ProfileStyle({ bootstrap, onBusyChange, onDirtyChange }: { bootstrap: PlayerBootstrap; onBusyChange?: (busy: boolean) => void; onDirtyChange?: (dirty: boolean) => void }) {
   const { profile } = bootstrap;
   const cosmetics = profile.settings.cosmetics;
   const bannerId = cosmetics?.bannerCardId;
@@ -35,12 +36,13 @@ export function ProfileStyle({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <dl className="profile-style-details">
         <div><dt>Banner</dt><dd>{hasBanner ? card!.name : 'Safehouse original · default'}</dd></div>
         <div><dt>Finish</dt><dd>{hasBanner ? cosmetics?.bannerFinish === 'silver' ? 'Silver Lining' : 'Base' : 'Original'}</dd></div>
-        <div><dt>Stickers</dt><dd>{hasBanner && stickers.length ? stickers.map(id => stickerById(id)!.sticker.name).join(' · ') : 'None equipped'}</dd></div>
+        <div><dt>Banner stickers</dt><dd>{hasBanner && stickers.length ? stickers.map(id => stickerById(id)!.sticker.name).join(' · ') : 'None equipped'}</dd></div>
       </dl>
     </section>
     <div className="fighter-id-actions">
       {hasBanner && <Link className="street-sign-btn" href={`/game/style/${bannerId}`}>Customize banner →</Link>}
       <Link className={`street-sign-btn${hasBanner ? ' street-sign-btn--secondary' : ''}`} href="/game/style">Browse styles →</Link>
     </div>
+    <PvpReactionCollection bootstrap={bootstrap} onBusyChange={onBusyChange} onDirtyChange={onDirtyChange} />
   </div>;
 }

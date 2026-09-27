@@ -284,8 +284,9 @@
   .corner-store__wallet strong { font-size: 18px; }
   .corner-store__wallet small { font-size: 6px; }
   .corner-store__notice { margin-block: 7px; padding: 6px 8px; font-size: 10px; line-height: 1.35; }
-  .corner-store__departments { display: grid; grid-template-columns: .8fr .8fr 1.35fr .85fr; gap: 7px; margin: 12px 0 10px; padding: 4px 2px; }
-  .corner-store__departments button { min-width: 0; min-height: 44px; padding: 6px 4px; font-size: 20px; }
+  .corner-store__departments { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; margin: 12px 0 10px; padding: 4px 2px; }
+  .corner-store__departments button { grid-column: span 2; min-width: 0; min-height: 44px; padding: 6px 4px; font-size: 20px; }
+  .corner-store__departments button:nth-last-child(-n+2) { grid-column: span 3; }
   .bodega-shelf-heading { padding-bottom: 7px; gap: 8px; }
   .bodega-shelf-heading > span { font-size: 21px; }
   .bodega-shelf-heading small { font-size: 6px; }

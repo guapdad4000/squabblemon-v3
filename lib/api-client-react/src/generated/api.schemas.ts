@@ -286,6 +286,8 @@ export interface CosmeticLoadout {
 
 export interface PlayerSettings {
   cosmetics?: CosmeticLoadout;
+  /** @maxItems 4 */
+  reactionTray?: string[];
   reducedMotion: boolean;
   turnTimerEnabled: boolean;
 }
@@ -732,6 +734,8 @@ export interface CollectionRoadClaimResult {
 }
 
 export interface PlayerProfileUpdate {
+  /** @maxItems 4 */
+  reactionTray?: string[];
   /**
      * @minLength 2
      * @maxLength 24

@@ -58,7 +58,7 @@
 .fadecade-chrome-banner--footer p { font-size: clamp(12px, 1.1vw, 14px); }
 .fadecade-chrome-flag[data-art-missing="true"] .fadecade-chrome-content,
 .fadecade-chrome-banner[data-art-missing="true"] .fadecade-chrome-content {
-  background: #ffe04b; outline: 3px solid #17130e; box-shadow: 4px 4px 0 #000;
+  background: #ffe04b; outline: 3px solid #17130e; box-shadow: 4px 4px 0 var(--sq-ink);
 }
 @media (max-width: 1000px) and (min-width: 621px) {
   .fadecade-hero-stage { grid-template-columns: minmax(0, 1fr) 48% minmax(0, 1fr); }

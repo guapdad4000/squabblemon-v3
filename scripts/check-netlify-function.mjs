@@ -27,14 +27,34 @@ for (const [path, status] of [
 }
 console.log('Release API bundle: health and anonymous-access checks passed.');
 
-// The deploy-succeeded event function is the post-deploy store smoke check:
-// Netlify invokes it after every successful deploy, and it must authenticate
-// against the just-deployed origin and fail loudly unless the payment catalog
-// reports checkout enabled in live mode. Exercise the shipped bundle with a
-// mocked Clerk Backend API and catalog so this release gate proves the real
-// post-deploy command — not just its unit suite — is part of the release path.
-const { default: deploySucceeded } = await import('../artifacts/api-server/dist/netlify-functions/deploy-succeeded.mjs');
+// Exercise the shipped event bundle with a stub for the read-only database
+// query: the build must never query a pre-migration branch. Live deploys must
+// also authenticate against the newly deployed catalog.
+const { runDeploySucceeded: deploySucceeded, checkDeployedProfileSchema } = await import('../artifacts/api-server/dist/netlify-functions/deploy-succeeded.mjs');
 assert.equal(typeof deploySucceeded, 'function');
+assert.equal(typeof checkDeployedProfileSchema, 'function');
+await assert.rejects(
+  checkDeployedProfileSchema(async (statement, values) => {
+    assert.match(statement, /pg_catalog\.to_regclass\(name\)/);
+    assert.ok(values[0].includes('player_profiles'));
+    assert.ok(values[0].includes('player_missions'));
+    return { rows: [] };
+  }),
+  /missing tables:.*player_profiles/,
+);
+await assert.rejects(
+  checkDeployedProfileSchema(async (_statement, values) => ({
+    rows: values[0].map(table_name => ({
+      table_name, table_exists: true, attname: null,
+    })),
+  })),
+  /missing columns:.*player_profiles\./,
+);
+await assert.rejects(
+  checkDeployedProfileSchema(async () => { throw new Error('postgresql://user:secret@private.invalid/branch'); }),
+  error => error.message === 'Post-deploy profile schema check could not inspect the API database branch.',
+  'connection errors must not expose credentials',
+);
 process.env.STORE_CHECK_USER_ID = 'user_smoke_build_validation';
 process.env.STORE_CHECK_ORIGIN = 'https://squabble.today';
 process.env.STORE_CHECK_ALERT_WEBHOOK = 'https://alerts.example/hook';
@@ -69,9 +89,12 @@ const deployEvent = context => new Request('https://events.netlify/deploy-succee
 });
 const originalFetch = globalThis.fetch;
 try {
+  let profileChecks = 0;
+  const verifiedProfile = async () => { profileChecks++; };
   let stub = stubFetch(liveCatalog);
   globalThis.fetch = stub.fetch;
-  await deploySucceeded(deployEvent('production'), { deploy: { context: 'production', id: 'release-build-smoke' } });
+  await deploySucceeded(deployEvent('production'), { deploy: { context: 'production', id: 'release-build-smoke' } }, verifiedProfile);
+  assert.equal(profileChecks, 1, 'deployed database checked before live store');
   const catalogCalls = stub.calls.filter(call => call.url.endsWith('/api/player/payments/catalog'));
   assert.equal(catalogCalls.length, 2, 'anonymous boundary check plus authenticated catalog check');
   assert.equal(catalogCalls[1].init.headers?.authorization, 'Bearer jwt_fixture');
@@ -82,20 +105,35 @@ try {
   stub = stubFetch({ ...liveCatalog, enabled: false, mode: 'disabled', message: 'Live payments await merchant and policy approval.' });
   globalThis.fetch = stub.fetch;
   await assert.rejects(
-    deploySucceeded(deployEvent('production'), { deploy: { context: 'production', id: 'release-build-smoke' } }),
+    deploySucceeded(deployEvent('production'), { deploy: { context: 'production', id: 'release-build-smoke' } }, verifiedProfile),
     /turned checkout off/,
   );
   assert.ok(stub.calls.some(call => call.url === 'https://alerts.example/hook'), 'alert webhook notified');
 
-  // Non-production deploys skip the live-mode assertion entirely.
+  // A failed database check stops the release check before even contacting the
+  // store and alerts operators, including on preview branches.
+  for (const context of ['production', 'deploy-preview']) {
+    stub = stubFetch(liveCatalog);
+    globalThis.fetch = stub.fetch;
+    await assert.rejects(
+      deploySucceeded(deployEvent(context), { deploy: { context, id: 'release-build-smoke' } },
+        async () => { throw new Error('Post-deploy player bootstrap schema check failed: missing columns: player_profiles.style_shard_balances.'); }),
+      /missing columns/,
+    );
+    assert.ok(stub.calls.some(call => call.url === 'https://alerts.example/hook'), 'schema failure alerted');
+    assert.ok(!stub.calls.some(call => call.url.endsWith('/api/player/payments/catalog')), 'store check waits for database');
+  }
+
+  // Non-production deploys still verify their own DB but skip live checkout.
   stub = stubFetch(liveCatalog);
   globalThis.fetch = stub.fetch;
-  await deploySucceeded(deployEvent('deploy-preview'), { deploy: { context: 'deploy-preview', id: 'release-build-smoke' } });
+  await deploySucceeded(deployEvent('deploy-preview'), { deploy: { context: 'deploy-preview', id: 'release-build-smoke' } }, verifiedProfile);
+  assert.equal(profileChecks, 3, 'production and preview branches are each verified');
   assert.ok(!stub.calls.some(call => call.url.endsWith('/api/player/payments/catalog')), 'preview deploys skip the live store check');
 } finally {
   globalThis.fetch = originalFetch;
 }
-console.log('Release API bundle: deploy-succeeded store smoke check passed, alerts on disabled checkout, and skips previews.');
+console.log('Release API bundle: deploy-succeeded checks post-migration profile schema on each branch and live store on production; failures alert.');
 
 // Account configuration must not prevent Stripe from settling previously paid
 // orders. Only the exact signed-webhook endpoint bypasses this preflight.

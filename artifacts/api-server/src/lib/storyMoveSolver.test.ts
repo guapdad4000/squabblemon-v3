@@ -245,6 +245,61 @@ test("Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win"
   );
 });
 
+test("Baby Momma's Terms has a bounded win with the owned rookie core crew", {
+  timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
+}, () => {
+  const battle = getStoryBattle("crown-baby-mommas-terms");
+  assert(battle);
+  const cards = catalogIdsToEngineIds(ROOKIE_CORE_IDS);
+  const districts = createDistrictSnapshot("story-node-v1:crown-baby-mommas-terms");
+  const startedAt = performance.now();
+  const moves = solveStoryMoves(createStoryMatch(
+    battle.encounter,
+    cards,
+    ROOKIE_DECK_ID,
+    undefined,
+    districts,
+  ));
+  const elapsed = performance.now() - startedAt;
+  const completed = verifyStoryMatchTranscript(
+    battle.encounter,
+    cards,
+    moves,
+    ROOKIE_DECK_ID,
+    undefined,
+    districts,
+  );
+  assert.equal(getMatchWinner(completed), "player");
+  assert(
+    elapsed <= STORY_SOLVER_NODE_BUDGET_MS + 500,
+    `Baby Momma solve took ${elapsed.toFixed(1)}ms`,
+  );
+});
+
+test("Published Exhibition has a bounded win with the saved Dr Fade crew", {
+  timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
+}, () => {
+  const battle = getStoryBattle("the-lie-exposed");
+  assert(battle);
+  const cards = catalogIdsToEngineIds(
+    ROOKIE_CORE_IDS.map(id => id === "hooper" ? "dr-fade" : id),
+  );
+  const districts = createDistrictSnapshot("story-node-v1:the-lie-exposed");
+  const startedAt = performance.now();
+  const moves = solveStoryMoves(createStoryMatch(
+    battle.encounter, cards, ROOKIE_DECK_ID, undefined, districts,
+  ));
+  const elapsed = performance.now() - startedAt;
+  const completed = verifyStoryMatchTranscript(
+    battle.encounter, cards, moves, ROOKIE_DECK_ID, undefined, districts,
+  );
+  assert.equal(getMatchWinner(completed), "player");
+  assert(
+    elapsed <= STORY_SOLVER_NODE_BUDGET_MS + 500,
+    `Published Exhibition solve took ${elapsed.toFixed(1)}ms`,
+  );
+});
+
 test("Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win", {
   timeout: STORY_SOLVER_NODE_BUDGET_MS + 2_000,
 }, () => {

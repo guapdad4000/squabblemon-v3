@@ -65,15 +65,36 @@ function studioMap() {
   softbox(75,25,80,190,'#ffffff');softbox(280,48,24,154,'#b3deff');softbox(375,0,90,100,'#ffedc9');return studio;
 }
 
-export function mountFoil(host, tier, variant) {
-  tier=Math.max(0,Math.min(6,Number(tier)||0));
-  const renderer=new WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.setClearColor(0,0);
+// One offscreen GPU context paints a small atlas of stock/edition finishes. Each card
+// owns only a 2D presentation canvas; scrolling and battle transitions move that
+// canvas with the card without starting a separate animation clock.
+// Source tiles match the largest common grid card at 1x. Scaling only the
+// transparent light layer avoids full-resolution physical shaders per card.
+const TILE_W=128, TILE_H=179, COLS=4, ROWS=4;
+const clients=new Set();
+const finishes=new Map();
+let shared, frame=0, delayed=0, lastFlush=0;
+const intersection=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+    const client=[...clients].find(item=>item.host===entry.target);
+    if(client){client.visible=entry.isIntersecting;if(client.visible)schedule();}
+  }
+});
+const resize=new ResizeObserver(entries=>{
+  for(const entry of entries){
+    const client=[...clients].find(item=>item.host===entry.target);
+    if(client && client.visible)paintClient(client);
+  }
+});
+
+function createShared() {
+  const renderer=new WebGLRenderer({alpha:true,antialias:false,powerPreference:'low-power',preserveDrawingBuffer:true});
+  renderer.setPixelRatio(1);renderer.setClearColor(0,0);
   renderer.toneMapping=ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
   const scene=new Scene(), camera=new OrthographicCamera(-1,1,1,-1,.1,10);camera.position.z=3;
   const geometry=new PlaneGeometry(2,2), pointer=new Vector2(.48,.68);
   const material=new ShaderMaterial({transparent:true,depthWrite:false,
-    uniforms:{pointer:{value:pointer},tier:{value:tier},edition:{value:variant==='prismatic'?3:variant==='chrome'?2:variant==='tagged'?1:0}},
+    uniforms:{pointer:{value:pointer},tier:{value:0},edition:{value:0}},
     vertexShader: `varying vec2 p;void main(){p=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
     fragmentShader: `precision highp float;
       varying vec2 p;uniform vec2 pointer;uniform float tier;uniform float edition;
@@ -105,53 +126,165 @@ export function mountFoil(host, tier, variant) {
         gl_FragColor=vec4(color+strip*.23+glint*.65,min(.58,alpha));
       }`
   });
-  scene.add(new Mesh(geometry,material));
-  const source=stockMaps(tier,variant), textures=[];
+  const sheen=new Mesh(geometry,material);scene.add(sheen);
+  const textures=[];
   const texture=(c)=>{const t=new CanvasTexture(c);t.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());textures.push(t);return t;};
-  const mask=texture(source.mask), rough=texture(source.rough), film=texture(source.film);
   const envSource=texture(studioMap());envSource.mapping=EquirectangularReflectionMapping;envSource.colorSpace=SRGBColorSpace;
   const pmrem=new PMREMGenerator(renderer), environment=pmrem.fromEquirectangular(envSource);pmrem.dispose();
+  const plate=new Mesh(geometry);plate.position.z=.01;scene.add(plate);
+  const key=new DirectionalLight('#fff2d7',3.5);key.position.set(-2,3,4);scene.add(key);
+  const rim=new DirectionalLight('#d2eaff',2);rim.position.set(3,-1,3);scene.add(rim);
+  renderer.debug.onShaderError=()=>{throw new Error('Foil shader compilation failed');};
+  renderer.setSize(TILE_W*COLS,TILE_H*ROWS,false);
+  renderer.setScissorTest(true);
+  const lost=event=>{
+    event.preventDefault();
+    shared.lost=true;
+    for(const finish of finishes.values())finish.metal.dispose();
+    finishes.clear();
+    for(const client of clients)client.host.dataset.foilRenderer='css';
+  };
+  const restored=()=>{
+    shared.lost=false;
+    for(const client of clients)client.finish=finishFor(client.finish.tier,client.finish.variant);
+    schedule();
+  };
+  renderer.domElement.addEventListener('webglcontextlost',lost);
+  renderer.domElement.addEventListener('webglcontextrestored',restored);
+  return {renderer,scene,camera,geometry,pointer,material,plate,key,rim,textures,environment,lost:false,
+    dispose(){
+      renderer.domElement.removeEventListener('webglcontextlost',lost);
+      renderer.domElement.removeEventListener('webglcontextrestored',restored);
+      for(const finish of finishes.values())finish.metal.dispose();
+      finishes.clear();geometry.dispose();material.dispose();environment.dispose();
+      textures.forEach(t=>t.dispose());renderer.dispose();renderer.forceContextLoss();
+    }};
+}
+
+function finishFor(tier,variant){
+  const id=tier+':'+(variant||'base');
+  if(finishes.has(id))return finishes.get(id);
+  const source=stockMaps(tier,variant);
+  const mask=new CanvasTexture(source.mask), rough=new CanvasTexture(source.rough), film=new CanvasTexture(source.film);
+  shared.textures.push(mask,rough,film);
   const metal=new MeshPhysicalMaterial({color:variant==='prismatic'?'#dffcff':variant==='chrome'?'#c5e4f4':variant==='tagged'?'#e9bd64':palettes[tier],alphaMap:mask,transparent:true,depthWrite:false,
     metalness:1,roughness:.7,roughnessMap:rough,bumpMap:mask,bumpScale:.012,
     iridescence:tier<2&&!variant?0:variant==='prismatic'?1:variant==='chrome'?.8:.45,iridescenceMap:mask,
     iridescenceIOR:variant==='prismatic'?2.15:1.6,iridescenceThicknessMap:film,iridescenceThicknessRange:variant==='prismatic'?[180,880]:[280,640],
-    envMap:environment.texture,envMapIntensity:variant==='prismatic'?2.35:1.7,clearcoat:1,clearcoatRoughness:variant==='prismatic'?.08:.16,opacity:.85});
-  const plate=new Mesh(geometry,metal);plate.position.z=.01;scene.add(plate);
-  const key=new DirectionalLight('#fff2d7',3.5);key.position.set(-2,3,4);scene.add(key);
-  const rim=new DirectionalLight('#d2eaff',2);rim.position.set(3,-1,3);scene.add(rim);
-  host.appendChild(renderer.domElement);
-  const card=host.closest('[data-card-id]');
-  let frame=0,disposed=false,visible=true,lost=false;
-  function render(){
-    if(disposed||lost||!visible||document.hidden)return;
-    try {renderer.render(scene,camera);host.dataset.foilRenderer='webgl';}
-    catch(error){host.dataset.foilRenderer='css';cleanup();console.debug('Foil material unavailable:',error);}
+    envMap:shared.environment.texture,envMapIntensity:variant==='prismatic'?2.35:1.7,clearcoat:1,clearcoatRoughness:variant==='prismatic'?.08:.16,opacity:.85});
+  const finish={id,tier,variant,metal,tile:null};
+  finishes.set(id,finish);return finish;
+}
+
+function renderTile(finish,x,y,pointer){
+  const {renderer,scene,camera,material,plate,key,rim}=shared;
+  material.uniforms.tier.value=finish.tier;
+  material.uniforms.edition.value=finish.variant==='prismatic'?3:finish.variant==='chrome'?2:finish.variant==='tagged'?1:0;
+  material.uniforms.pointer.value.set(pointer[0],pointer[1]);
+  plate.material=finish.metal;
+  key.position.set((pointer[0]-.5)*8,(pointer[1]-.5)*7,3);
+  rim.position.set(3-pointer[0]*5,-2+pointer[1]*4,2);
+  renderer.setViewport(x,y,TILE_W,TILE_H);renderer.setScissor(x,y,TILE_W,TILE_H);
+  renderer.clear();renderer.render(scene,camera);
+}
+
+function paintClient(client,source=client.finish.tile){
+  if(!source||!client.visible||!client.host.isConnected)return;
+  const ratio=Math.min(devicePixelRatio,client.quality.pixelRatio);
+  const width=Math.min(512,Math.ceil(client.host.clientWidth*ratio));
+  const height=Math.min(716,Math.ceil(client.host.clientHeight*ratio));
+  if(!width||!height)return;
+  if(client.canvas.width!==width)client.canvas.width=width;
+  if(client.canvas.height!==height)client.canvas.height=height;
+  client.context.clearRect(0,0,width,height);
+  client.context.drawImage(source,0,0,width,height);
+  client.host.dataset.foilRenderer='webgl';
+}
+
+function flush(){
+  frame=0;lastFlush=performance.now();
+  if(!shared||shared.lost||document.hidden)return;
+  try{
+    const active=[...clients].filter(client=>client.visible&&client.host.isConnected);
+    const missing=[...new Set(active.map(client=>client.finish))].filter(finish=>!finish.tile);
+    // Scissored tiles are rendered together on the same GPU canvas. Cache by
+    // catalog tier + cosmetic edition so hundreds of grid cards reuse a tile.
+    for(let offset=0;offset<missing.length;offset+=COLS*ROWS){
+      const batch=missing.slice(offset,offset+COLS*ROWS);
+      batch.forEach((finish,i)=>renderTile(finish,(i%COLS)*TILE_W,(ROWS-1-Math.floor(i/COLS))*TILE_H,[.48,.68]));
+      batch.forEach((finish,i)=>{
+        const tile=canvas(TILE_W,TILE_H),ctx=tile.getContext('2d');
+        ctx.drawImage(shared.renderer.domElement,(i%COLS)*TILE_W,Math.floor(i/COLS)*TILE_H,TILE_W,TILE_H,0,0,TILE_W,TILE_H);
+        finish.tile=tile;
+      });
+    }
+    active.forEach(client=>{
+      if(client.pointer){
+        renderTile(client.finish,0,(ROWS-1)*TILE_H,client.pointer);
+        const tile=canvas(TILE_W,TILE_H);
+        tile.getContext('2d').drawImage(shared.renderer.domElement,0,0,TILE_W,TILE_H,0,0,TILE_W,TILE_H);
+        paintClient(client,tile);
+      }else if(client.host.dataset.foilRenderer!=='webgl')paintClient(client);
+    });
+  }catch(error){
+    for(const client of clients)client.host.dataset.foilRenderer='css';
+    console.debug('Foil material unavailable:',error);
+    shared.dispose();shared=null;
   }
-  renderer.debug.onShaderError=()=>{throw new Error('Foil shader compilation failed');};
-  const draw=()=>{if(frame||disposed||lost||!visible||document.hidden)return;frame=requestAnimationFrame(()=>{frame=0;render();});};
+}
+
+function schedule(){
+  if(frame||delayed||document.hidden||!clients.size)return;
+  const fps=Math.min(...[...clients].filter(client=>client.visible).map(client=>client.quality.fps),60);
+  const remaining=1000/fps-(performance.now()-lastFlush);
+  if(remaining>0){
+    delayed=window.setTimeout(()=>{delayed=0;schedule();},remaining);
+    return;
+  }
+  frame=requestAnimationFrame(flush);
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
+
+export function mountFoil(host,tier,variant,quality){
+  tier=Math.max(0,Math.min(6,Number(tier)||0));
+  if(quality?.tier==='static')return ()=>{};
+  if(!shared)try{shared=createShared();}catch(error){console.debug('Foil material unavailable:',error);return ()=>{};}
+  const card=host.closest('[data-card-id]');
+  const display=canvas(1,1),context=display.getContext('2d');
+  if(!context)return ()=>{};
+  host.appendChild(display);
+  const client={host,card,canvas:display,context,finish:finishFor(tier,variant),quality,visible:false,pointer:null};
+  clients.add(client);intersection.observe(host);resize.observe(host);
   const move=event=>{
-    if(document.documentElement.dataset.reduceMotion==='true'||document.documentElement.dataset.reducedMotion==='true'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     const r=card.getBoundingClientRect();if(!r.width||!r.height)return;
-    pointer.set(Math.max(0,Math.min(1,(event.clientX-r.left)/r.width)),1-Math.max(0,Math.min(1,(event.clientY-r.top)/r.height)));
-    key.position.set((pointer.x-.5)*8,(pointer.y-.5)*7,3);rim.position.set(3-pointer.x*5,-2+pointer.y*4,2);draw();
+    client.pointer=[Math.max(0,Math.min(1,(event.clientX-r.left)/r.width)),1-Math.max(0,Math.min(1,(event.clientY-r.top)/r.height))];
+    schedule();
   };
-  const reset=()=>{pointer.set(.48,.68);key.position.set(-2,3,4);rim.position.set(3,-1,3);draw();};
+  const reset=()=>{client.pointer=null;paintClient(client);};
   const keyboard=event=>{
-    const steps={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,.12],ArrowDown:[0,-.12]};const step=steps[event.key];if(!step)return;
-    event.preventDefault();pointer.set(Math.max(0,Math.min(1,pointer.x+step[0])),Math.max(0,Math.min(1,pointer.y+step[1])));
-    card.style.setProperty('--foil-x',pointer.x*100+'%');card.style.setProperty('--foil-y',(1-pointer.y)*100+'%');key.position.set((pointer.x-.5)*8,(pointer.y-.5)*7,3);draw();
+    const steps={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,.12],ArrowDown:[0,-.12]};
+    const step=steps[event.key];if(!step)return;
+    event.preventDefault();
+    const p=client.pointer||[.48,.68];
+    client.pointer=[Math.max(0,Math.min(1,p[0]+step[0])),Math.max(0,Math.min(1,p[1]+step[1]))];
+    schedule();
   };
-  const resize=new ResizeObserver(()=>{if(!disposed&&host.clientWidth&&host.clientHeight){renderer.setSize(host.clientWidth,host.clientHeight,false);draw();}});
-  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)draw();});
-  const contextLost=event=>{event.preventDefault();lost=true;cancelAnimationFrame(frame);frame=0;host.dataset.foilRenderer='css';renderer.domElement.style.visibility='hidden';};
-  const contextRestored=()=>{lost=false;renderer.domElement.style.visibility='';draw();};
-  function cleanup(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);resize.disconnect();intersection.disconnect();
-    card?.removeEventListener('pointermove',move);card?.removeEventListener('pointerleave',reset);card?.removeEventListener('pointercancel',reset);card?.removeEventListener('keydown',keyboard);
-    document.removeEventListener('visibilitychange',draw);renderer.domElement.removeEventListener('webglcontextlost',contextLost);renderer.domElement.removeEventListener('webglcontextrestored',contextRestored);
-    geometry.dispose();material.dispose();metal.dispose();environment.dispose();textures.forEach(t=>t.dispose());renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
-  resize.observe(host);intersection.observe(host);
-  card?.addEventListener('pointermove',move,{passive:true});card?.addEventListener('pointerleave',reset);card?.addEventListener('pointercancel',reset);card?.addEventListener('keydown',keyboard);
-  document.addEventListener('visibilitychange',draw);renderer.domElement.addEventListener('webglcontextlost',contextLost);renderer.domElement.addEventListener('webglcontextrestored',contextRestored);
-  renderer.setSize(Math.max(1,host.clientWidth),Math.max(1,host.clientHeight),false);render();
-  return cleanup;
+  card?.addEventListener('pointermove',move,{passive:true});
+  card?.addEventListener('pointerleave',reset);
+  card?.addEventListener('pointercancel',reset);
+  card?.addEventListener('keydown',keyboard);
+  schedule();
+  return ()=>{
+    intersection.unobserve(host);resize.unobserve(host);
+    card?.removeEventListener('pointermove',move);
+    card?.removeEventListener('pointerleave',reset);
+    card?.removeEventListener('pointercancel',reset);
+    card?.removeEventListener('keydown',keyboard);
+    clients.delete(client);display.remove();host.dataset.foilRenderer='css';
+    if(!clients.size){
+      cancelAnimationFrame(frame);frame=0;
+      clearTimeout(delayed);delayed=0;lastFlush=0;
+      shared?.dispose();shared=null;
+    }
+  };
 }

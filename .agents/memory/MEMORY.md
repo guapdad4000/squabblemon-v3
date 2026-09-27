@@ -31,3 +31,6 @@
 - [Netlify function environment](netlify-function-env.md) — netlify.toml vars never reach functions; NETLIFY is reserved/absent there; trust per-invocation deploy context for runtime gates.
 - [Ranked browser test environment](ranked-browser-test-environment.md) — Local ranked journeys need an owned test database and may need a Chromium override when Edge is absent.
 - [Collection header intent](collection-header-intent.md) — Keep title left and owned count right; separate anchors let the count animate without moving the title.
+- [Mobile grid scroll containment](mobile-grid-scroll-containment.md) — Fixed-width grid tracks can expand a flex child beyond its viewport despite overflow-x:auto; constrain the grid's width.
+- [Campaign solver budget](campaign-solver-budget.md) — Search strategy order, legal crews, per-battle limits, and whole-route deadlines are distinct constraints.
+- [Nested Vite artwork paths](nested-vite-artwork-paths.md) — HTML asset rewriting and SPA fallback can hide broken images behind HTTP 200; verify image MIME on nested previews.

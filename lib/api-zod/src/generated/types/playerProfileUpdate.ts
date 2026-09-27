@@ -7,6 +7,8 @@
  */
 
 export interface PlayerProfileUpdate {
+  /** @maxItems 4 */
+  reactionTray?: string[];
   /**
      * @minLength 2
      * @maxLength 24

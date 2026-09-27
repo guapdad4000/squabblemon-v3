@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
+import { ownedReactions, reactionById, REACTION_TRAY_SIZE } from '@workspace/squabblemon-engine/reactions';
 import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/rookie";
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
 import { createDistrictSnapshot, validateDistrictSnapshot, validateTurnRules } from "@workspace/squabblemon-engine/gameEngine";
@@ -189,7 +190,7 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
   }
 
   await getPlayerBootstrap(userId);
-  const avatarError = await db.transaction(async tx => {
+  const profileError = await db.transaction(async tx => {
     await lockPlayerProfile(tx, userId);
     const [current] = await tx.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, userId));
     if (!current) return null;
@@ -209,6 +210,13 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
         return "Unlock this character before choosing their avatar";
       }
     }
+    if (parsed.data.reactionTray !== undefined) {
+      const tray = parsed.data.reactionTray;
+      if (tray.length > REACTION_TRAY_SIZE || new Set(tray).size !== tray.length) return "Choose up to four different reactions";
+      if (tray.some(id => !reactionById(id))) return "Unknown reaction";
+      const owned = ownedReactions(current.unlockedCosmeticIds);
+      if (tray.some(id => !owned.includes(id as typeof owned[number]))) return "Unlock this reaction first";
+    }
     await tx.update(playerProfilesTable).set({
       ...(parsed.data.displayName ? { displayName: parsed.data.displayName.trim() } : {}),
       ...(requestedAvatarKey !== undefined ? { avatarKey: requestedAvatarKey } : {}),
@@ -216,12 +224,13 @@ router.patch("/player/profile", async (req, res): Promise<void> => {
         ...current.settings,
         reducedMotion: parsed.data.reducedMotion ?? current.settings.reducedMotion,
         turnTimerEnabled: parsed.data.turnTimerEnabled ?? current.settings.turnTimerEnabled,
+        ...(parsed.data.reactionTray !== undefined ? { reactionTray: parsed.data.reactionTray } : {}),
       },
     }).where(eq(playerProfilesTable.clerkUserId, userId));
     return null;
   });
-  if (avatarError) {
-    res.status(400).json({ error: avatarError });
+  if (profileError) {
+    res.status(400).json({ error: profileError });
     return;
   }
 

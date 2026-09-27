@@ -1,0 +1,137 @@
+/* Squabblemon design tokens — the single palette/elevation/motion/type source.
+   Route stylesheets, shadcn primitives and the Clerk theme all read from here.
+   Tokens replace duplicated plain values only; screen art keeps its own styling. */
+:root {
+  /* Palette: street ink, paper, sign gold, squabble red, rival blue */
+  --sq-ink: #000;
+  --sq-ink-950: #050505;
+  --sq-ink-925: #070707;
+  --sq-ink-900: #080808;
+  --sq-ink-850: #0a0a0a;
+  --sq-ink-800: #111;
+  --sq-ink-750: #18181b;
+  --sq-ink-700: #1a1a1a;
+  --sq-ink-600: #222;
+  --sq-ink-500: #333;
+  --sq-ink-400: #444;
+  --sq-ink-300: #555;
+  --sq-muted: #a1a1aa;
+  --sq-neutral: #52525b;
+  --sq-paper: #fff;
+  --sq-paper-cream: #fdfaf3;
+  --sq-paper-aged: #f4ead5;
+  --sq-gold: #facc15;
+  --sq-gold-bright: #ffe449;
+  --sq-gold-hover: #fde047;
+  --sq-red: #e11d48;
+  --sq-red-danger: #f43f5e;
+  --sq-red-brick: #c0392b;
+  --sq-red-deep: #8c2a2a;
+  --sq-blue: #38bdf8;
+  --sq-scrim: rgb(0 0 0 / 60%);
+
+  /* Radii — street signs are nearly square; tickets and chips round slightly */
+  --sq-radius-none: 0;
+  --sq-radius-xs: 2px;
+  --sq-radius-sm: 4px;
+  --sq-radius-md: 8px;
+  --sq-radius-lg: 12px;
+  --sq-radius-pill: 999px;
+
+  /* Elevation — hard offset print shadows plus soft ambient falloff */
+  --sq-shadow-1: 0 2px 0 var(--sq-ink), 0 4px 10px rgb(0 0 0 / 45%);
+  --sq-shadow-2: 0 4px 0 var(--sq-ink), 0 10px 24px rgb(0 0 0 / 60%);
+  --sq-shadow-3: 0 6px 0 var(--sq-ink), 0 18px 40px rgb(0 0 0 / 75%);
+  --sq-shadow-pressed: 0 1px 0 var(--sq-ink), 0 2px 6px rgb(0 0 0 / 40%);
+  --sq-glow-gold: 0 0 24px rgb(250 204 21 / 35%);
+
+  /* Motion */
+  --sq-dur-instant: 80ms;
+  --sq-dur-fast: 140ms;
+  --sq-dur-base: 220ms;
+  --sq-dur-slow: 420ms;
+  --sq-ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --sq-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sq-ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+
+  /* Type scale */
+  --sq-text-2xs: 0.5625rem;
+  --sq-text-xs: 0.6875rem;
+  --sq-text-sm: 0.8125rem;
+  --sq-text-md: 1rem;
+  --sq-text-lg: 1.25rem;
+  --sq-text-xl: 1.75rem;
+  --sq-text-2xl: clamp(2rem, 5vw, 3rem);
+  --sq-text-hero: clamp(2.5rem, 11vw, 8rem);
+
+  /* shadcn surface variables mapped onto the game palette */
+  --button-outline: rgb(255 255 255 / 20%);
+  --elevate-1: rgb(255 255 255 / 5%);
+  --elevate-2: rgb(255 255 255 / 10%);
+}
+
+/* ---- Physical interaction states (shared Button/Card + opt-in .sq-press) ---- */
+.sq-press {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform var(--sq-dur-fast) var(--sq-ease-snap),
+    box-shadow var(--sq-dur-fast) var(--sq-ease-snap),
+    filter var(--sq-dur-fast) ease,
+    background-color var(--sq-dur-fast) ease;
+}
+.sq-press::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 28%) 48%, transparent 66%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  transition: background-position var(--sq-dur-slow) var(--sq-ease-out), opacity var(--sq-dur-fast) ease;
+}
+.sq-press:hover:not(:disabled):not([aria-disabled="true"]) { transform: translateY(-1px); filter: brightness(1.06); }
+.sq-press:hover:not(:disabled):not([aria-disabled="true"])::after { opacity: 1; background-position: -30% 0; }
+.sq-press:active:not(:disabled):not([aria-disabled="true"]) { transform: translateY(2px) scale(.985); box-shadow: var(--sq-shadow-pressed); filter: brightness(.95); }
+.sq-press:focus-visible { outline: 3px solid var(--sq-gold); outline-offset: 2px; }
+.sq-press:disabled, .sq-press[aria-disabled="true"] { cursor: not-allowed; opacity: .5; filter: grayscale(.6); transform: none; box-shadow: none; }
+
+/* shadcn elevation helpers referenced by the primitives */
+.hover-elevate:not(:disabled):hover { background-image: linear-gradient(var(--elevate-1), var(--elevate-1)); }
+.active-elevate-2:not(:disabled):active { background-image: linear-gradient(var(--elevate-2), var(--elevate-2)); }
+
+.sq-card-lift { transition: transform var(--sq-dur-base) var(--sq-ease-snap), box-shadow var(--sq-dur-base) var(--sq-ease-snap); }
+.sq-card-lift:hover { transform: translateY(-2px); box-shadow: var(--sq-shadow-2); }
+
+/* ---- Branded route transition: torn-paper wipe into the new screen ---- */
+.sq-route-transition {
+  animation: sq-route-tear-in var(--sq-dur-slow) var(--sq-ease-out) backwards;
+}
+.sq-route-transition--immersive {
+  /* Immersive routes run their own choreography; only a short ink fade. */
+  animation: sq-route-fade-in var(--sq-dur-base) ease-out backwards;
+}
+@keyframes sq-route-tear-in {
+  0% {
+    opacity: .2;
+    transform: translateX(3%);
+    clip-path: polygon(100% 0, 100% 0, 96% 12%, 100% 26%, 95% 41%, 100% 57%, 96% 72%, 100% 86%, 97% 100%, 100% 100%);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 12%, 100% 26%, 100% 41%, 100% 57%, 100% 72%, 100% 86%, 100% 100%, 0 100%);
+  }
+}
+@keyframes sq-route-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sq-route-transition, .sq-route-transition--immersive { animation: sq-route-fade-in var(--sq-dur-fast) linear backwards; }
+  .sq-press, .sq-press::after, .sq-card-lift { transition: none; }
+  .sq-press:hover:not(:disabled), .sq-press:active:not(:disabled), .sq-card-lift:hover { transform: none; }
+}
+html[data-reduce-motion="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: sq-route-fade-in var(--sq-dur-fast) linear backwards; }
+html[data-reduce-motion="true"] :is(.sq-press, .sq-card-lift) { transition: none; transform: none !important; }

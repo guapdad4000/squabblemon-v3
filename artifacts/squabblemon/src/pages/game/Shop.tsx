@@ -1,4 +1,3 @@
-import { ReactionShop } from '../../components/ReactionShop';
 import { styleShardLabel } from '@workspace/squabblemon-engine/styleShards';
 import { playTutorialSequence } from '../../lib/tutorialVoice';
 import { WELCOME_PULL_KEY, WELCOME_PULL_LINES } from '../../lib/welcomePull';
@@ -27,6 +26,7 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cardCatalog, catalogCardById, CARD_RARITY_DEFINITIONS, type CardRarity } from '../../data';
 import { CardView } from '../../components/CardView';
+import { DepthReveal } from '../../components/DepthReveal';
 import { SceneFrame, sendScene } from '../../components/venue/SceneFrame';
 import { e2eAuthEnabled } from '../../lib/auth';
 import {
@@ -931,7 +931,7 @@ function PackGym({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         </p>
         {phase === 'reveal' && currentReward ? (
           <div className="gym-results__single" data-rarity={currentRarity.toLowerCase()}>
-            {currentReward.kind === 'card' && currentReward.isNew && styleSetFor(currentReward.cardId) ? <CharacterUnlock key={revealIndex} cardId={currentReward.cardId!}><RewardCard reward={currentReward} large /></CharacterUnlock> : <RewardCard key={revealIndex} reward={currentReward} large />}
+            {currentReward.kind === 'card' && currentReward.isNew && styleSetFor(currentReward.cardId) ? <CharacterUnlock key={revealIndex} cardId={currentReward.cardId!}><RewardCard reward={currentReward} large /></CharacterUnlock> : <DepthReveal key={revealIndex} rarity={currentRarity}><RewardCard reward={currentReward} large /></DepthReveal>}
             <h3>{rewardDisplayName(currentReward)}</h3>
             <span className="studio-eyebrow">
               {CARD_RARITY_DEFINITIONS[currentReward.rarity as CardRarity]?.label ?? 'Gang resource'}
@@ -1087,11 +1087,11 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const search = useSearch();
   const params = new URLSearchParams(search);
   const view = params.get('view');
-  const tab = view === 'reactions' ? 'reactions' : view === 'corner' ? 'corner' :
+  const tab = view === 'reactions' || view === 'corner' ? 'corner' :
     view === 'training' || view === 'market' || (view !== 'packs' && (params.has('item') || params.has('card')))
       ? 'market'
       : 'packs';
-  function selectTab(next: 'market' | 'packs' | 'corner' | 'reactions') {
+  function selectTab(next: 'market' | 'packs' | 'corner') {
     const query = new URLSearchParams(search);
     query.set('view', next === 'market' ? 'training' : next);
     navigate(`/game/shop?${query}`);
@@ -1107,10 +1107,9 @@ export function Shop({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           <GameGlyph name="motion" />
           Training
         </button>
-        <button aria-pressed={tab === 'reactions'} onClick={() => selectTab('reactions')}>Reactions</button>
         <button aria-pressed={tab === 'corner'} onClick={() => selectTab('corner')}><GameGlyph name="cloutBag" />Fade Market</button>
       </nav>
-      {tab === 'reactions' ? <ReactionShop key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
+      {tab === 'corner' ? <CornerStore key={bootstrap.profile.id} bootstrap={bootstrap} /> : tab === 'market' ? (
         <Market bootstrap={bootstrap} openPacks={() => selectTab('packs')} />
       ) : (
         <PackGym bootstrap={bootstrap} />

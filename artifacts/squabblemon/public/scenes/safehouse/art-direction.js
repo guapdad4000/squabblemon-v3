@@ -1,7 +1,7 @@
 import * as T from '../shared/three.module.js';
 
 // A separate art pass keeps story text, picking and game state independent of styling.
-export function installFightingGameStyle({renderer,scene,camera,screenMaterials=[]}) {
+export function installFightingGameStyle({renderer,scene,camera,screenMaterials=[],outlines=true}) {
   const pixelRatio={value:renderer.getPixelRatio()};
   const unstyled=new Set(screenMaterials),styled=new Set();
   const diffuseLine='vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;';
@@ -38,6 +38,13 @@ export function installFightingGameStyle({renderer,scene,camera,screenMaterials=
       material.needsUpdate=true;
     }
   });
+  if (!outlines) return {
+    render:()=>renderer.render(scene,camera),
+    resize:()=>{pixelRatio.value=renderer.getPixelRatio();},
+    dispose:()=>{},
+    prepare:()=>renderer.compileAsync(scene,camera),
+    styledMaterialCount:styled.size
+  };
 
   const size=new T.Vector2();renderer.getDrawingBufferSize(size);
   const colorTarget=new T.WebGLRenderTarget(size.x,size.y,{type:T.HalfFloatType,samples:2});

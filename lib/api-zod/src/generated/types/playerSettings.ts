@@ -9,6 +9,8 @@ import type { CosmeticLoadout } from './cosmeticLoadout';
 
 export interface PlayerSettings {
   cosmetics?: CosmeticLoadout;
+  /** @maxItems 4 */
+  reactionTray?: string[];
   reducedMotion: boolean;
   turnTimerEnabled: boolean;
 }

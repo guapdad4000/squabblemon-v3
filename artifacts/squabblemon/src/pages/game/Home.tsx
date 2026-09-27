@@ -1,4 +1,5 @@
 import { useSearch } from 'wouter';
+import { LobbyDepth } from '../../components/LobbyDepth';
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
 import { Attention } from '../../components/Notifications';
 import { StarterMythic } from '../../components/StarterMythic';
@@ -91,6 +92,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const frame = useRef<HTMLIFrameElement>(null);
   const welcomeVoice = useRef<HTMLAudioElement | null>(null);
   const [sceneReady, setSceneReady] = useState(false);
+  const [sceneFallback, setSceneFallback] = useState<'none' | 'static' | 'error'>('none');
   // Readiness and anchor projection are separate scene events; the guided tour
   // fallback must hold until markers have actually been placed on screen.
   const [markersPlaced, setMarkersPlaced] = useState(false);
@@ -163,8 +165,8 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     if (message.type === 'bag-hit') playInteractionSound('bag-hit');
     if (message.type === 'interact' && music.enabled && !music.playing) musicActions.play();
     if (message.type === 'view' && (message.view === 'room' || stations.some(item => item.id === message.view))) setView(message.view as Station | 'room');
-    if (message.type === 'loading') { latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
-    if (message.type === 'error') { latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
+    if (message.type === 'loading') { setSceneFallback('none'); latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
+    if (message.type === 'static' || message.type === 'error') { setSceneFallback(message.type); latestAnchors.current = []; setSceneReady(false); setMarkersPlaced(false); resetRoomMarkers(markers.current); }
     if (message.type === 'anchors' && markerLayer.current && frame.current) {
       latestAnchors.current = message.anchors ?? [];
       if (!markerLayer.current.hidden) setMarkersPlaced(positionRoomMarkers(markerLayer.current, frame.current, markers.current, message.anchors ?? []) === markers.current.size);
@@ -242,14 +244,15 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
 
   return (
     <div className="safehouse venue-page studio-page safehouse-stage safehouse-stage--hero world-decor-host"
-      data-view={view} data-scene-ready={sceneReady} data-lighting={night ? 'night' : 'day'}>
+      data-view={view} data-scene-ready={sceneReady} data-scene-fallback={sceneFallback} data-lighting={night ? 'night' : 'day'}>
+      <LobbyDepth />
       <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
       <SafehouseBulletinBoard open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}
-        onMessage={receive} onReady={() => { resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
+        onMessage={receive} onReady={() => { setSceneFallback('none'); resetRoomMarkers(markers.current); setMarkersPlaced(false); setSceneReady(true); syncRoom(); sendScene(frame, { type: 'view', view }); }} />
       <div className="safehouse__shade" />
       <header className="safehouse-room-header">
         <div className="safehouse-room-title"><span><i /> OAKLAND / HOME COURT</span><h1>The <span className="safehouse-room-title__hand">Safe</span>house<span className="safehouse-room-title__period">.</span></h1><p>The city can wait a minute.</p></div>
@@ -260,7 +263,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
           </button>
         </div>
       </header>
-      <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete)} aria-label="Explore the safehouse">
+      <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete && sceneFallback === 'none')} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
           aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
           <item.icon size={16} aria-hidden="true" /><span>{item.short}{item.id !== 'events' && <Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} />}</span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}{item.id === 'events' && bulletinUnread && <b className="mail-count" aria-label="New bulletin posts">NEW</b>}

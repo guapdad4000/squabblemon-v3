@@ -186,7 +186,7 @@
   opacity: 0.73;
   pointer-events: none;
   z-index: -1;
-  mask-image: radial-gradient(ellipse, #000 50%, transparent 75%);
+  mask-image: radial-gradient(ellipse, var(--sq-ink) 50%, transparent 75%);
 }
 .gang-mural__title {
   position: absolute;
@@ -483,7 +483,7 @@
   left: 0;
   right: 0;
   background: #48150eee;
-  color: #fff;
+  color: var(--sq-paper);
   padding: 8px;
   z-index: 6;
   font-size: 12px;

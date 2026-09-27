@@ -10,8 +10,8 @@
   z-index: 1000;
   inset: 0;
   overflow: hidden;
-  background: #050505;
-  color: #fff;
+  background: var(--sq-ink-950);
+  color: var(--sq-paper);
   font-family: var(--font-sans);
   touch-action: none;
 }
@@ -488,7 +488,7 @@
 .theater-continue-ticket {
   flex: 0 0 auto;
   background: #f7cc67;
-  color: #1a1a1a;
+  color: var(--sq-ink-700);
   padding: clamp(0.8rem, 2vh, 1rem) clamp(2rem, 5vw, 3rem);
   font: 900 italic clamp(1rem, 2.5vw, 1.2rem) var(--font-display);
   margin-bottom: 0;
@@ -520,7 +520,7 @@
 
 .theater-continue-ticket:disabled {
   background: #52525b;
-  color: #a1a1aa;
+  color: var(--sq-muted);
   filter: none;
   cursor: not-allowed;
   text-shadow: none;

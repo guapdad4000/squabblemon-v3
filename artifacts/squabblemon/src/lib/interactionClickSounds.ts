@@ -8,6 +8,9 @@ export function interactionClickSound(target: EventTarget | null): InteractionSo
   if (!(target instanceof Element)) return null;
   const control = target.closest('button, a[href], [role="button"], [role="tab"], input[type="button"], input[type="submit"]');
   if (!control || control.matches(':disabled') || control.closest('[aria-disabled="true"], [inert]')) return null;
+  // Explicit per-control hook: data-sound="ui-beep" etc.
+  const hinted = control.closest<HTMLElement>('[data-sound]')?.dataset.sound;
+  if (hinted) return hinted as InteractionSound;
   // A paper tab stays a paper tab even when it sits inside the arcade.
   if (control.closest(paperTabs) || control.matches('.venue-nav__item')) return 'page-turn';
   if (control.closest('.fadecade-hub, .fadecade-dialog-content')) return 'arcade-beep';

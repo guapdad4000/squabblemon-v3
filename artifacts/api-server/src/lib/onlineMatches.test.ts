@@ -5,6 +5,7 @@ import type {
   OnlineRoom,
   OnlineRoomView,
 } from "@workspace/squabblemon-engine/multiplayer";
+import type { ReactionView } from "@workspace/squabblemon-engine/reactions";
 import {
   cardCatalog,
   ROOKIE_CORE_IDS,
@@ -82,7 +83,7 @@ test(
       assert.match(response.headers.get("cache-control") ?? "", /no-store/);
       return {
         status: response.status,
-        body: (await response.json()) as OnlineRoomView & {
+        body: (await response.json()) as OnlineRoomView & ReactionView & {
           error?: string;
           rooms?: unknown[];
         },
@@ -162,6 +163,11 @@ test(
     assert.equal(view.status, "active");
 
     const reactionPath = `/${code}/reactions`;
+    assert.deepEqual((await request(users[0], reactionPath)).body.tray, ['big-w', 'lets-go']);
+    await db.update(playerProfilesTable).set({
+      settings: { reducedMotion: false, turnTimerEnabled: true, reactionTray: ['lets-go'] },
+    }).where(eq(playerProfilesTable.clerkUserId, users[0]));
+    assert.deepEqual((await request(users[0], reactionPath)).body.tray, ['lets-go'], 'reconnect reads current saved tray');
     const reaction = { requestId: randomUUID(), reactionId: 'big-w', gameNumber: view.gameNumber };
     assert.equal((await request(users[2], reactionPath)).status, 404);
     assert.equal((await request(users[0], reactionPath, { ...reaction, reactionId: 'hold-that' })).status, 403);
@@ -169,6 +175,7 @@ test(
     assert.equal((await request(users[0], reactionPath, { ...reaction, gameNumber: 99 })).status, 409);
     const sent = await request(users[0], reactionPath, reaction);
     assert.equal(sent.status, 200);
+    assert.deepEqual(sent.body.tray, ['lets-go'], 'an owned reaction outside the tray can still be sent');
     assert.deepEqual((await request(users[0], reactionPath, reaction)).body.revision, sent.body.revision);
     assert.equal((await request(users[0], reactionPath, { ...reaction, requestId: randomUUID() })).status, 429);
     assert.equal((await request(users[1], reactionPath, { ...reaction, requestId: randomUUID() })).status, 200);
@@ -259,6 +266,7 @@ test(
     const rematchB = await action(users[1], finalA, { type: "rematch" });
     assert.equal(rematchB.body.status, "waiting");
     assert.equal(rematchB.body.gameNumber, 2);
+    assert.deepEqual((await request(users[0], reactionPath)).body.tray, ['lets-go'], 'rematch reads saved tray');
     const profiles = await db
       .select()
       .from(playerProfilesTable)

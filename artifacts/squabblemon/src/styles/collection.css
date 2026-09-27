@@ -18,8 +18,8 @@
   background: linear-gradient(to top, rgb(13 16 15 / 98%) 0%, rgb(13 16 15 / 70%) 35%, rgb(13 16 15 / 18%) 68%, transparent 100%);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 95%) 30%, rgb(0 0 0 / 55%) 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 95%) 30%, rgb(0 0 0 / 55%) 60%, transparent 100%);
+  mask-image: linear-gradient(to top, var(--sq-ink) 0%, rgb(0 0 0 / 95%) 30%, rgb(0 0 0 / 55%) 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, var(--sq-ink) 0%, rgb(0 0 0 / 95%) 30%, rgb(0 0 0 / 55%) 60%, transparent 100%);
 }
 
 .collection-stage__hero {

@@ -46,3 +46,9 @@ Check both edges of the final item between sticky controls and floating actions,
 **Why:** A final card cleared the bottom action buttons but was almost entirely behind the sticky search on landscape phones. Bottom-only geometry assertions passed while the screenshot exposed the problem.
 
 **How to apply:** Assert the whole item fits below the sticky controls and above the footer, then inspect its screenshot. A successful action hit-test does not prove the content between the controls is readable.
+
+For static replacements of interactive scenes, test the actual route and its navigation, not only the scene container.
+
+**Why:** An isolated static poster proof passed even though the returning-player route hid every station control until the missing 3D iframe reported ready. Reduced-motion and no-WebGL users had no way to explore the room.
+
+**How to apply:** Under both reduced motion and unavailable WebGL, assert that the real route shows its destination controls, open a destination and return, and verify no scene iframe was allocated. Test the manual reload path separately after a genuine context loss.

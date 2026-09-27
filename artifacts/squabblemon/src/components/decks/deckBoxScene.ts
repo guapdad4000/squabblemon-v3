@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+import type { GPUQuality } from '../../lib/gpuQuality';
 
 // This is the deck-box scene recovered from the previous production deployment.
 // Portrait ink stays matte; the frame, seal, spine, and lettering carry the foil.
-export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false }: { name: string; image: string | null; fullCover?: boolean }) {
+export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false }: { name: string; image: string | null; fullCover?: boolean }, quality: GPUQuality) {
   let renderer: THREE.WebGLRenderer;
   try {
     const canvas = document.createElement('canvas');
@@ -33,7 +34,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 30);
   camera.position.set(0, 0.05, 7.5);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality.pixelRatio));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -284,7 +285,7 @@ export function mountDeckBox(host: HTMLElement, { name, image, fullCover = false
   const render = (now: number) => {
     raf = 0;
     if (disposed || unavailable || document.hidden) return;
-    if (now - last < 30) {
+     if (now - last < 1000 / quality.fps) {
       raf = requestAnimationFrame(render);
       return;
     }

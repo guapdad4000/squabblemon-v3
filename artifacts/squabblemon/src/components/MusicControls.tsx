@@ -1,6 +1,6 @@
 import { StreetSelect } from './ui/street-select';
 import { useId, useRef, useState } from 'react';
-import { Music2, Pause, Play, SkipForward, Volume2, VolumeX, X } from 'lucide-react';
+import { Music2, Pause, Play, SkipForward, Volume2, VolumeX } from 'lucide-react';
 import { soundtrack } from '../musicPlayer';
 import { musicActions, useMusic, useMusicBanks, updateMusicBank } from '../musicStore';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
@@ -8,6 +8,7 @@ import { getAssetUrl } from '../data';
 import { setAnnouncerVolume, useAnnouncerVolume } from '../lib/battleAnnouncerVolume';
 import { MotionSticker } from './MotionSticker';
 import './music-controls.css';
+import { StreetClose } from './venue/StreetClose';
 
 export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '' }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string }) {
   const music = useMusic();
@@ -55,7 +56,7 @@ export function MusicControls({ compact = false, variant = 'default', className 
             <img className="music-dialog-portrait" src={getAssetUrl('assets/generated/dr-fade-dj-turntable.webp')} alt="Dr. Fade at the Fade Tapes turntables" width={560} height={700} draggable={false} />
           )}
           <div><span className="music-eyebrow">DR. FADE PRESENTS</span><h2 id={`${id}-title`}>The Fade Tapes</h2></div>
-          <button type="button" aria-label="Close music controls" onClick={() => dialog.current?.close()}><X size={20} /></button></header>
+          <StreetClose variant="red-x" aria-label="Close music controls" onClick={() => dialog.current?.close()} /></header>
         <div className="music-now" aria-live="polite"><span>{status}</span><strong>{track.title}</strong><p>{track.album} · {track.artist}</p></div>
         <div className="music-transport">
           <button type="button" className="music-play" aria-label={canPause ? 'Pause music' : 'Play music'}

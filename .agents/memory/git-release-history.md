@@ -9,6 +9,12 @@ Treat the current GitHub branch as the release parent, rather than assuming the 
 
 **How to apply:** Fetch the remote, compare actual file content, and preserve remote history. If ancestry differs, create a release commit from the remote parent with only the verified changes; compare the resulting application content with the tested workspace and use a non-forced reference update.
 
+Check the remote history before declaring a referenced asset absent from the project.
+
+**Why:** Recently pushed character artwork was present on the GitHub branch but not in the active workspace snapshot; a local asset scan alone falsely suggested it did not exist.
+
+**How to apply:** When the user points to a pushed commit or agent-created media, compare the remote branch and workspace tree first. Bring over only the relevant verified assets and catalog changes; avoid replacing unrelated local work.
+
 Verify the production provider's configured repository before choosing a release target; similarly named GitHub repositories are not interchangeable.
 
 **Why:** A successful push to a different, similarly named repository was mistakenly described as a live-site release. The live site continued serving the old version.

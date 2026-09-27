@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useRef } from 'react';
 import { catalogCardById, getCardImage } from '../data';
 import { styleSetFor } from '@workspace/squabblemon-engine/cosmetics';
 import { getAssetUrl } from '../lib/assets';
+import { detectGPUQuality } from '../lib/gpuQuality';
 import '../styles/deck-carousel.css';
 
 export interface DeckCarouselItem {
@@ -68,14 +69,14 @@ function DeckBox({
       delete host.dataset.rendered;
       if (reduced || !visible) return;
 
-      import('./decks/deckBoxScene')
-        .then(({ mountDeckBox }) => {
-          if (!disposed && nextGeneration === generation) {
+      Promise.all([import('./decks/deckBoxScene'), detectGPUQuality()])
+        .then(([{ mountDeckBox }, quality]) => {
+          if (!disposed && nextGeneration === generation && quality.tier !== 'static') {
             disposeScene = mountDeckBox(host, {
               name,
               image,
               fullCover: !!cover,
-            });
+            }, quality);
           }
         })
         .catch(() => {});

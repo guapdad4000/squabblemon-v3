@@ -43,7 +43,9 @@ const passMoves = Array.from({ length: 6 }, () => ({
 
 test("new account completes every campaign node through HTTP with isolated, idempotent persistence", {
   skip: !process.env.DATABASE_URL,
-  timeout: 240_000,
+  // HTTP setup, persistence, and all campaign nodes share this test deadline.
+  // Each battle still has its own strict 10-second solving budget below.
+  timeout: 600_000,
 }, async t => {
   const campaignCrew = [...ROOKIE_MENTOR_CORE_IDS];
   const runId = randomUUID();
@@ -236,6 +238,16 @@ test("new account completes every campaign node through HTTP with isolated, idem
   }
 
   async function completeNode(node: StoryNode) {
+    if (node.id === "crown-baby-mommas-terms") {
+      // This table needs the owned rookie core's Hooper. Change the saved gang
+      // through the same API a player uses, and restore the usual gang after.
+      campaignCrew.splice(0, campaignCrew.length, ...ROOKIE_CORE_IDS);
+      const deck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
+        name: "Campaign Gang", cardIds: campaignCrew, heroCardId: "hooper", recipeId: null,
+      }, "PUT");
+      assert.equal(deck.status, 200, `${node.id}: ${JSON.stringify(deck.body)}`);
+      assert(deck.body.profile.savedDecks.find((saved: { id: string }) => saved.id === ROOKIE_DECK_ID).valid);
+    }
     const dialogueKey = randomUUID();
     const dialogueSeen = [`seen:${node.id}`];
     const dialogue = await playerRequest(`/player/story/nodes/${node.id}/dialogue`, {
@@ -342,6 +354,14 @@ test("new account completes every campaign node through HTTP with isolated, idem
     assert.equal(retry.body.alreadyCompleted, true);
     assert.equal(retry.body.profile.softCurrency, currency);
     completed += 1;
+    if (node.id === "crown-baby-mommas-terms") {
+      campaignCrew.splice(0, campaignCrew.length, ...ROOKIE_CORE_IDS.map(id => id === "hooper" ? "dr-fade" : id));
+      const deck = await playerRequest(`/player/decks/${ROOKIE_DECK_ID}`, {
+        name: "Campaign Gang", cardIds: campaignCrew, heroCardId: "dr-fade", recipeId: null,
+      }, "PUT");
+      assert.equal(deck.status, 200, `${node.id}: ${JSON.stringify(deck.body)}`);
+      assert(deck.body.profile.savedDecks.find((saved: { id: string }) => saved.id === ROOKIE_DECK_ID).valid);
+    }
   }
 
   for (const chapter of storyContent.chapters) {

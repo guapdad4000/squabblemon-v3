@@ -11,7 +11,7 @@
 .dr-fade-intro__steps button{width:44px;height:44px;border:1px solid #c5a55850;background:#131810;color:#c5c6bd;font:700 14px var(--font-mono)}
 .dr-fade-intro__steps button[aria-current=step]{color:#10120d;background:#dfc477;border-color:#dfc477}
 .dr-fade-intro__actions{display:flex;gap:12px;margin-bottom:14px}
-.dr-fade-intro button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.dr-fade-intro button:focus-visible{outline:2px solid var(--sq-paper);outline-offset:4px}
 .battle-guidance--coached .dr-fade-coach{width:48px;height:58px;flex:none;object-fit:cover;object-position:50% 6%;border-bottom:2px solid #cbb975}
 .battle-guidance--coached>div{flex:1;min-width:0}
 .dr-fade-coach__name{color:#d5c58c}

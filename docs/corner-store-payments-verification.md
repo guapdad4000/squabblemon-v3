@@ -5,7 +5,11 @@
 
 The `deploy-succeeded` Netlify event function
 (`artifacts/api-server/src/netlify/functions/deploy-succeeded.mts`) runs
-automatically after every successful deploy. On production deploys it verifies
+automatically after every successful deploy. It first checks the deployed
+API database branch's profile columns after native migrations on both production
+and preview deployments. A failed schema check fails the event invocation and
+alerts via `STORE_CHECK_ALERT_WEBHOOK` when configured; it does not change the
+already successful Netlify deploy status. On production deploys it then verifies
 the unauthenticated catalog request still returns 401, mints a short-lived
 Clerk session for the dedicated smoke-check user, and asserts
 `GET /api/player/payments/catalog` returns `enabled: true` with `mode: live`
