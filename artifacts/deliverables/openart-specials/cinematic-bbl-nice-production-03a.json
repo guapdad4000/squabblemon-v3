@@ -1,0 +1,27 @@
+{
+  "catalogId": "bbl-nice",
+  "name": "BBL Nice",
+  "move": "Good Company",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Visual/audio/engine QA pending",
+  "result": {
+    "status": "COMPLETED",
+    "historyId": "x6kKflJwmDoZ5hLO6vdj",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBBL NICE \u2014 GOOD COMPANY.\nPreserve the exact illustrated adult woman: long voluminous blonde ponytail and pink scrunchie, gold hoop earrings and bracelets, white top, cropped pink track jacket, pink cargo track pants with white stripes and white/pink chunky sneakers. Her personality is friendly, confident and glamorous.\n0\u20130.7s: full-body stance; she opens both hands in a welcoming gesture and gently blows two tiny golden-pink hearts from one palm.\n0.7\u20132.4s: the hearts race apart through the cyan depth, then expand into TWO ENORMOUS winged heart guardians made of layered pink ribbons and gold feathers. Camera rockets back as they orbit her from opposite sides; their energy passes between them as a bright gold infinity loop. They meet behind her in a colossal synchronized pink-gold starburst, wings flaring and a brief impact hold. This is shared empowerment and companionship, not an attack. Clear cyan through and around all finite ribbons; no solid backdrop.\n2.4\u20133.5s: camera SNAP-PUSHES toward her smiling face as exact title \"GOOD COMPANY\" slams in two bold comic lines beside her, matching the giant shared pulse.\n3.5\u20135s: the guardians fold into two tiny glowing hearts; she catches one on each palm, brings them together with a playful wink and holds the welcoming hero pose. Ponytail settles, title remains legible. Sound: two bright spark chimes, rising twin wing rushes, huge synchronized pulse, title slam, paired final chimes. No dialogue or music, no camera emphasis on isolated body parts. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474454963_a1865266.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

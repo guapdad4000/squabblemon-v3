@@ -1,0 +1,27 @@
+{
+  "catalogId": "circuit-captain",
+  "name": "Electrician Foreman",
+  "move": "Everybody on the Clock",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Portrait inspected. Foreman is the reference's older Black WOMAN with short white curls, yellow hardhat, navy shirt, tan trousers and orange extension cord. Review identity, cord continuity, title and navy chroma integrity.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "mjPIXh8n63jkYNC1PTYz",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nElectrician Foreman \u2014 Everybody on the Clock.\nIDENTITY: preserve the exact authoritative older Black WOMAN, short silver-white curls under a yellow construction hardhat, gold hoop earrings, navy work shirt, tan work trousers with brown belt, heavy brown work boots, and coiled bright-orange extension cable. Strong foreman attitude; do not turn her into a man. No other people.\n0\u20131.2s: full-body stance. She gives a sharp two-finger work assignment, then cracks the coil of orange extension cable open like a massive whip.\n1.2\u20133.2s: camera whip-tracks the two cable ends as they fly outward in enormous opposite arcs, thirty feet apart, and plug into two sockets on a giant black-and-gold industrial circuit breaker floating behind her. The breaker is a finite sculptural foreground prop with an exposed massive red lever, never a rectangular scene or background panel; broad cyan space remains around it. Two separate amber electric charges race along the orange cables toward the device, visibly completing two jobs together.\n3.2\u20134.8s: she braces both boots wide and YANKS the cable in a full-body power pull. The giant red breaker lever, taller than she is, slams from upright to fully down. A brutal metal-on-metal impact hold, then a colossal double-pronged golden lightning fork bursts above the device and unites in one enormous warm-white/gold impact star. Camera pulls impossibly wide to reveal the scale, then punches back toward her commanding face. No blue/cyan lightning, no floor or scenery; every electric branch ends naturally against cyan.\n4.8\u20136s: exact title EVERYBODY ON THE CLOCK slams in three powerful comic lines below her face. The giant device collapses into two compact golden bolt-shaped energy badges, one at each cable end, visually showing both jobs powered up.\n6\u20138s: she reels the cord back into its original neat coil, settles into the reference's commanding point and gives the viewer a raised eyebrow. One tiny loose spark sneaks along the cable; she pins the insulated cord with her boot and the spark stops with an embarrassed little click. Hero silhouette, both boots visible, stable title. SFX: thick cable whip, two separated plug CLACKS, racing electrical charge, immense industrial lever KLANG, thunderous double discharge, ratcheting cable recoil and final tiny click. No voices or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476042226_bd1f7334.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

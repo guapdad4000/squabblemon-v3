@@ -1,0 +1,27 @@
+{
+  "catalogId": "break-dancer",
+  "name": "Break",
+  "move": "Floor Sweep",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Keep cobalt-blue costume intact; use gold/ivory effects instead of the cyan reference energy and inspect clothing highlights under runtime key.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "FAiyKUaquDx1Zowrdlgz",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBREAK \u2014 FLOOR SWEEP.\nPreserve the exact illustrated athletic adult woman: short swept black hair, hoop earrings, open royal-blue track jacket and loose matching trousers with white stripes, black crop top, fingerless black gloves, black knee pads, blue-white high-top sneakers. Keep the costume cobalt-blue.\n0\u20130.7s: full-body low stance, one gloved palm plants while she coils an extended leg underneath herself; confident competitive smile.\n0.7\u20132.4s: she performs one whip-fast traveling circular leg sweep, the extended sneaker carving an ENORMOUS crescent of gold-and-ivory energy. Camera skims low alongside the shoe, then pulls wide as the crescent rolls outward like a gigantic curling wave carrying loose ink fragments away. She slides cleanly through the opening into a sharp one-knee finish; one luminous shoe-print sigil remains behind at the original spot, matching the ability's lasting mark. No floor plane, scene or other person; complete finite shoe-print graphic floats against cyan. Strongest impact is the wave snapping outward, with a brief hold and strong anatomy.\n2.4\u20133.5s: camera whips toward her confident face and upright knee as exact title \"FLOOR SWEEP\" slams diagonally into two clear comic lines.\n3.5\u20135s: she lightly dusts one glove off, taps the finishing sneaker once and gives a competitive grin while the distant shoe-print pulses. Clear asymmetrical dance finish, not a windmill or headspin. Sound: cloth windup, fast low sweeping whoosh, huge wave snap, title slam, final sneaker tap. No dialogue or music. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474796860_e30be3ae.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

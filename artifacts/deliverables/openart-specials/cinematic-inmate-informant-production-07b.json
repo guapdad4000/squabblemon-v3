@@ -1,0 +1,27 @@
+{
+  "catalogId": "inmate-informant",
+  "name": "Inmate Informant",
+  "move": "Quiet Tip",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve pulled-back locs, orange jumpsuit, black platform work boots and beige evidence folder; existing EVIDENCE label allowed, no invented readable document text. Review escalating domino depth, plane continuity, target compression and title.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "Al2Xir1JYXoplzwJKmnW",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words except the folder's existing EVIDENCE label. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nInmate Informant \u2014 Quiet Tip.\nIDENTITY: exact athletic adult brown-skinned man with long dark locs pulled back, intense eyes, orange long-sleeve jumpsuit and chunky black lace-up work boots. Preserve the thick beige folder held behind him and its existing EVIDENCE label; inner pages may carry abstract lines and small portrait thumbnails but no new readable writing. His signature gesture is one finger held to his lips, without speaking.\n0\u20130.7s: establish complete crouched figure. He silently signals for quiet, then flicks one tiny folded ivory paper airplane from the open folder with his free thumb.\n0.7\u20132.5s: camera races alongside the little airplane through the cyan void. It taps a thumb-sized black domino. Pull way back to reveal THREE freestanding domino blocks in a line of dramatically increasing scale, each separated by cyan: tiny, body-sized, then a colossal slab. One crisp escalating chain reaction: the tiny one tips the medium one; the medium topples the giant. The giant domino slams down onto a huge freestanding bronze armored FIST emblem and flattens that boastful emblem into a thin comically crumpled token. Bounded gold/ivory star and hard contact hold on the final dominant impact. Use isolated solid props only, no floor, room, scene panel or full-frame opaque slab; keep cyan margins visible.\n2.5\u20133.5s: snap back to his perfectly calm face. The tiny paper airplane glides back into the folder while exact title QUIET TIP slams in below his chin, visibly much heavier than his original tiny flick.\n3.5\u20135s: whole-character crouched hero hold, folder under one arm. A single little domino tries to wobble beside his boot; he gently steadies it with a fingertip, then resumes his silent shush. All face and finger shapes remain stable. SFX: paper flick, tiny tick, medium clack, enormous final bass CRASH, gentle paper glide, title slam, one small settling tick. No whispered words, narration or music. The joke is that one tiny tip causes an absurdly huge consequence.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478730516_ff51e5ca.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

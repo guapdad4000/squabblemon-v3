@@ -1,0 +1,27 @@
+{
+  "catalogId": "corrupt-pastor",
+  "name": "Corrupt Pastor",
+  "move": "Collection Plate",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Visual/audio/engine QA pending",
+  "result": {
+    "status": "PENDING",
+    "historyId": "mAvd4kelZqMKGOKtZyBc",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCORRUPT PASTOR \u2014 COLLECTION PLATE.\nPreserve the exact fictional illustrated adult preacher: close-cropped hair and goatee, dark sunglasses, black clerical outfit with white collar, long purple-and-gold embroidered stole, purple trousers, black patent loafers, heavy gold chains and cross pendant, gold rings/watch, black gold-edged book. Replace small crown motifs on buckle/shoes with gold fist emblems; keep religious crosses and other outfit identity intact. Satirical individual character, no congregation or real person.\n0\u20131.2s: full body; he opens the book with theatrical gravitas and extends one ornate golden collection plate from beneath its cover, holding it perfectly level.\n1.2\u20133.2s: the plate begins spinning on one fingertip like a huge carnival disk. Camera pulls far back as streams of abstract gold power coins spiral in from three directions, forming an ENORMOUS funnel above the plate. No currency details or actual donation instructions, just magical game tokens.\n3.2\u20134.8s: he sharply closes the book. The entire swirling token funnel SLAMS down into the plate in one thunderous golden flash confined to a huge ink-outlined sunburst. The plate temporarily swells to absurd size; his gold accessories flare with power and his robe billows, while his body remains the same person and proportions. Leave clean cyan around the finite effect.\n4.8\u20136s: camera SNAP-PUSHES to his pleased face and reflective sunglasses as exact title \"COLLECTION PLATE\" stamps into two big comic lines.\n6\u20138s: he secretly tilts the overflowing plate into the open book; the coins pour between its pages and vanish. He snaps the book shut, hugs it close and assumes an exaggerated innocent expression as one last coin drops into his hand. Camera eases to a readable hero composition. Sound: book open, plate spin, accelerating coin cascade, enormous collection impact, title stamp, book clap and final coin ping. No sermon, speech, choir or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474854335_9dd404db.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

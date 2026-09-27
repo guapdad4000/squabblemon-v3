@@ -1,0 +1,53 @@
+{
+  "catalogId": "watson",
+  "name": "Watson",
+  "move": "Still Breathing",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve short curls, trimmed beard, round gold glasses, brown pinstripe vest/trousers, rolled white sleeves, green patterned tie, brown shoes, magnifier and medical bag. Review one bandage path, mechanical patient repair, bounded protective wrap and clear anatomy within five seconds.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "BPE8Sisg7w3GIW5oatKh",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nWatson \u2014 Still Breathing.\nIDENTITY: exact adult brown-skinned doctor with close dark curls, short trimmed beard/mustache, round gold glasses, rolled white shirt sleeves, brown pinstripe waistcoat and trousers, green patterned tie, gold watch chain and polished brown shoes. Preserve the gold-rimmed magnifying glass and brown leather medical satchel with its existing red medical cross. No white coat or other costume substitution.\n0\u20130.7s: establish complete kneeling doctor beside a slumped orange-and-brass clockwork training mannequin, its chest spring sagging and one arm loosely detached at a clean toy joint. He looks through the magnifier, then snaps open his medical satchel and flicks one roll of ivory bandage outward. This is a toy repair with no wound detail.\n0.7\u20132.5s: camera races beside the unrolling bandage as it becomes a colossal continuous ribbon thirty feet long. It swoops in a huge overhead loop, retrieves the detached toy arm and coils around the mannequin from feet to shoulders with three sharp accelerating wraps. Each wrap pulls a loose mechanical part into place. On the final wrap its brass chest spring kicks back into rhythm and the mannequin rises upright. At that same instant a falling black iron weight hits the outer bandage loop; the loop stretches like a massive protective sling and catapults the weight far away with one huge bounded ivory/amber impact star. Recovery then protection, one clear continuous action.\n2.5\u20133.5s: camera whips back to Watson's focused face. Exact title STILL BREATHING slams below his shoulders with the main bandage-recoil boom. He catches the bandage roll as the giant loose loop rewinds neatly into his hand; a tidy protective wrap remains on the repaired mannequin.\n3.5\u20135s: whole doctor and upright mannequin on cyan. He checks the toy's now-steady chest spring through the magnifier, gives a brief satisfied nod, then catches one stray loose screw before it falls and quietly pockets it. Small dry comedy without losing his competence. SFX: bag latch click, fabric unspooling rush, three strong cloth snaps and mechanical repair clacks, steady two-beat spring thump, dominant sling recoil, title slam and tiny screw tick. No speech, music, hospital, floor or new writing.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "BPE8Sisg7w3GIW5oatKh",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nWatson \u2014 Still Breathing.\nIDENTITY: exact adult brown-skinned doctor with close dark curls, short trimmed beard/mustache, round gold glasses, rolled white shirt sleeves, brown pinstripe waistcoat and trousers, green patterned tie, gold watch chain and polished brown shoes. Preserve the gold-rimmed magnifying glass and brown leather medical satchel with its existing red medical cross. No white coat or other costume substitution.\n0\u20130.7s: establish complete kneeling doctor beside a slumped orange-and-brass clockwork training mannequin, its chest spring sagging and one arm loosely detached at a clean toy joint. He looks through the magnifier, then snaps open his medical satchel and flicks one roll of ivory bandage outward. This is a toy repair with no wound detail.\n0.7\u20132.5s: camera races beside the unrolling bandage as it becomes a colossal continuous ribbon thirty feet long. It swoops in a huge overhead loop, retrieves the detached toy arm and coils around the mannequin from feet to shoulders with three sharp accelerating wraps. Each wrap pulls a loose mechanical part into place. On the final wrap its brass chest spring kicks back into rhythm and the mannequin rises upright. At that same instant a falling black iron weight hits the outer bandage loop; the loop stretches like a massive protective sling and catapults the weight far away with one huge bounded ivory/amber impact star. Recovery then protection, one clear continuous action.\n2.5\u20133.5s: camera whips back to Watson's focused face. Exact title STILL BREATHING slams below his shoulders with the main bandage-recoil boom. He catches the bandage roll as the giant loose loop rewinds neatly into his hand; a tidy protective wrap remains on the repaired mannequin.\n3.5\u20135s: whole doctor and upright mannequin on cyan. He checks the toy's now-steady chest spring through the magnifier, gives a brief satisfied nod, then catches one stray loose screw before it falls and quietly pockets it. Small dry comedy without losing his competence. SFX: bag latch click, fabric unspooling rush, three strong cloth snaps and mechanical repair clacks, steady two-beat spring thump, dominant sling recoil, title slam and tiny screw tick. No speech, music, hospital, floor or new writing.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/004dafd98bfcd7dc7e921445a0ad1810443163e1a372bbe09e1c1512fa99501b.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "YENcor4OArQls393pbk0",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484838131_54a16e1e.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_c4f0c473-9f74-4132-8930-e19855469b07_output_aigc_1790484845449_40fe3bc2.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  }
+}

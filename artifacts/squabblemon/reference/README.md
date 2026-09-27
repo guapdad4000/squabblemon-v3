@@ -2,6 +2,10 @@
 
 Mobile-first playable three-district prototype using the seven Starter Meta decks and Patch 0.2 card data, with Patch 0.3 experiments selectable from the lobby.
 
+## Developer handoffs
+
+- [OpenArt special animations and future swaps](./OPENART-SPECIALS.md): all 100 provisional finishers, known review issues, source generations, stable assignments, cache revisions, timing and verification steps.
+
 ## Builds
 - Patch 0.2 Control
 - P03-A1: Good Vibes swaps Smoker Jr → Techy

@@ -1,0 +1,27 @@
+{
+  "catalogId": "bouncer",
+  "name": "Bouncer",
+  "move": "Not on the List",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Visual/audio/engine QA pending",
+  "result": {
+    "status": "PENDING",
+    "historyId": "wDcJoMhO1wYRJDgJKqO1",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBOUNCER \u2014 NOT ON THE LIST.\nPreserve the exact muscular bald Black man with close dark beard, gold chain and pendant, earpiece/radio, black SECURITY tactical vest, gloves, utility cargo trousers and heavy black boots, with the existing gold fist emblems. Preserve SECURITY as an existing costume marking; move title is the only additional text.\n0\u20130.7s: complete full-body view, he raises the broad stop palm with an utterly unimpressed stare. Two finite gold rope-post props with a red velvet rope stand beside him against cyan.\n0.7\u20132.4s: a giant red-gold energy fist emblem rushes toward the entrance. He casually catches its momentum on a MASSIVE translucent gold palm-shaped shield, then sweeps that palm sideways in one decisive ejection. Camera rockets along the trajectory as the emblem hurtles far into the distance, stretching the velvet rope into an enormous elastic arc before the rope SNAPS it through a tiny freestanding door outline. Huge localized gold-white impact star and heavy hold; no human target, no club interior or visible ground.\n2.4\u20133.5s: SNAP-PUSH back to his stone-faced expression as exact title \"NOT ON THE LIST\" slams in two large comic lines beside his stop hand.\n3.5\u20135s: he calmly clips the velvet rope back onto its post, taps his earpiece once and folds his arms. The tiny door closes far behind with a delayed little click. Hold complete imposing silhouette and title. Sound: incoming rush, huge palm stop, elastic rope whip and ejection boom, title slam, calm metal clasp and distant door click. No speech or music. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474796915_0639a8b5.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

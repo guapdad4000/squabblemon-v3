@@ -1,0 +1,30 @@
+{
+  "catalogId": "mr-trick",
+  "name": "Mr. Trick",
+  "move": "Open Tab",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve older heavyset figure, white linen outfit, gray beard, gold glasses/jewelry, cigar and amber tumbler. Review drawer slam, glass/cigar hand continuity, receipt bounds and title. No added golden-fist effects.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "qhJEQKnqIqIJ1wiD36b6",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nMr. Trick \u2014 Open Tab.\nIDENTITY: exact heavyset older brown-skinned man with close-cropped hair, salt-and-pepper beard, large gold-framed tinted glasses, open white linen shirt, loose white trousers, dark brown loafers with gold hardware, thick gold chains, round medallion, rings, bracelet and forearm tattoo. Preserve the cigar in his right hand and amber drink with ice in his left. Confident indulgent smile.\n0\u20130.7s: establish full body. An elegant small red-and-brass cash register floats in front of him. He casually presses its single large button with his cigar-holding hand's extended index finger, keeping the glass perfectly level.\n0.7\u20132.5s: the register expands to outrageous scale as its drawer fires outward like a thirty-foot piston. Camera rockets backward to reveal the enormous drawer smashing into a giant floating charcoal padded target, launching it tumbling into the cyan distance. One massive ivory/copper impact star, a momentary drawer-contact hold, then rushing deep perspective. Coins and blank receipt curls jump briefly inside the open drawer, but no scenery, counter, bar, floor or casino. Keep all props finite with cyan between and around them.\n2.5\u20133.5s: the drawer retracts into the now-small register with an enormous triumphant CHA-CHING. Camera snaps back up to his pleased face as exact title OPEN TAB slams below his medallion. His drink is still level, its ice finally making one little clink.\n3.5\u20135s: full-body hero hold. The register prints an absurdly long blank receipt curling down past his knees; he gives it one unconcerned glance and flicks the receipt neatly into his open shirt pocket using two free fingertips of the cigar hand. Stable correct hands, untouched costume, cigar and tumbler. SFX: tiny button click, accelerating cash-drawer cannon whoosh, giant padded CRASH, retreating mechanism, huge CHA-CHING, title slam, paper flutter and ice clink. No speech, music or extra readable text.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480137576_67b7796e.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "catalogId": "demario",
+  "name": "Demario",
+  "move": "Mushroom Delivery",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference visually inspected. Preserve blue bib and red trousers, cap and existing fist insignias. Review blue-highlight keying, mushroom continuity, title and launch readability.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "QSrBnSNA9ILqKGFX6RUF",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nDemario \u2014 Mushroom Delivery.\nIDENTITY: the exact muscular dark-skinned man with short black chin beard, red cap with white fist emblem, white tank, bright royal-blue overall bib, red work trousers and tan heavy work boots. Preserve this unusual color arrangement and all fist emblems.\n0.0\u20130.7s: full-body low-angle anticipation. He flicks one tiny red-and-cream spotted mushroom up from his palm, eyes following it; his boots coil into an exaggerated squat.\n0.7\u20132.5s: a thunderous upward boot-kick sends that SAME mushroom thirty feet upward. Camera rockets backward and tilts up: the mushroom rapidly expands into a gigantic red-and-cream umbrella, then rebounds toward him like a meteor. He launches after it and punches beneath its stem, blasting it toward the camera with a huge warm-gold, black-edged starburst and a deep BOOM. Keep cyan visible around the mushroom silhouette; no actual ground or scenery.\n2.5\u20133.5s: snap back to his three-quarter hero view as the mushroom magically compresses back to palm-size and lands neatly in his outstretched hand. Exact title MUSHROOM DELIVERY slams into the lower-middle composition, below his face, on the landing impact.\n3.5\u20135.0s: he smugly offers the mushroom to the viewer like a perfectly delivered package; its delayed bounce tips his cap over one eye. He catches the brim with his free hand and holds an annoyed heroic pose. Keep one mushroom only, readable silhouette and stable text. SFX: spring-loaded squeak, giant rising rush, boot thump, massive punch boom, tiny delivery ding and soft hat tap.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475479194_6da10eb8.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  },
+  "accepted": false,
+  "creativeReview": {
+    "status": "REJECTED",
+    "reason": "User rejected Mario-style mushrooms. Redo with no mushrooms or Mario-style power-up iconography."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "catalogId": "homeless-legend",
+  "name": "Homeless Legend",
+  "move": "Built Different",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve older boxer, broad ragged hat, gray locs/white beard and two hanging gold boxing gloves; gloves must move naturally onto hands before boxing. Review survival beat, giant hammer continuity, fist emblems and hat recovery.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "FZgUgkVGQnrHkNseUHtt",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nHomeless Legend \u2014 Built Different.\nIDENTITY: exact muscular older dark-skinned man with long gray locs, large white beard, eyes shaded beneath broad battered ragged brown brimmed hat. Tattered beige sleeveless top, very torn cream trousers, cream forearm wraps, brown boots, leather belt with round fist emblem. The reference's two battered GOLD BOXING GLOVES start hanging together at his chest; he slips his hands into those SAME gloves at the start. Preserve seasoned calm, hat and weathered clothes.\n0\u20131.2s: establish full body. Without rushing he puts on the dangling gold boxing gloves, rolls one shoulder and adjusts the hat brim using a glove. Above him enters an enormous detached rectangular iron hammer, many times his size, descending from deep perspective. Only hammer and character, no floor, arena or scenery.\n1.2\u20133.2s: camera pulls way back as the hammer slams DOWN onto his crossed gold gloves. A compact orange/ivory impact star and finite curling gray impact puffs terminate on cyan. Impact drives his body downward in the composition; his battered hat flies upward, but he keeps both boots visible and holds the giant hammer suspended overhead. Hold a brutal beat: tiny elderly boxer supporting an impossible weight on one shaking forearm, then his free glove slowly draws back. No injury, flattening or anatomical distortion.\n3.2\u20134.8s: extreme face close-up, calm eye opens beneath gray brows. Snap to a dramatic wide as he delivers ONE short devastating upward counterpunch. The enormous hammerhead buckles in half, launches upward, and fractures into two clean giant pieces that spin apart to expose cyan between them. Shock ripples are bounded black-inked gold crescents, not screen-covering filters. The small counterpunch must feel heavier than the incoming hammer; loud bassy metal detonation and one impact hold.\n4.8\u20136s: camera whips upward with the departing wreckage, then snaps back down to him as the hat descends neatly onto his head. Exact title BUILT DIFFERENT slams beneath his beard with heavyweight force.\n6\u20138s: full-body boxer victory hold. He taps the hat into place with his glove and brushes one imaginary speck off his shoulder. A tiny hammer screw lands on the hat brim; he flicks it away without looking. Gold gloves, beard and face stay stable. SFX: old glove creak, descending hammer roar, colossal blocked impact, strain creak, thunderous counterpunch metal rupture, soft hat flop, tiny screw tick. No speech or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477940171_b2ebc5fc.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "catalogId": "sugarfoot",
+  "name": "Sugarfoot",
+  "move": "Sweet Weakness",
+  "attempt": 1,
+  "quotedCredits": 480,
+  "result": {
+    "status": "PENDING",
+    "historyId": "Bz6My9KOTbaYX3K8YpF3",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSUGARFOOT \u2014 SWEET WEAKNESS.\nPreserve the exact woman, textured updo, hoop earrings, white crop top, oversized pink jacket, distressed pink pants, chunky white sneakers, decorative handbag and beverage can.\n0\u20131.2s: full-body swagger, handbag on one arm. She casually cracks open the can, one tiny pink-gold fizzy bubble emerging; amused expression.\n1.2\u20133.2s: she flicks the bubble away. Camera chases it as it expands into an enormous spiral of crystalline sugar, fizz and rose-pink ribbons. A floating gold armored fist EMBLEM approaches the spiral, not a real person's body part.\n3.2\u20134.8s: the sugar ribbons bind the emblem, making its huge armored surface fracture into thousands of harmless sugar cubes. Camera pulls wide for the giant candy-crystal collapse, then the cubes spiral into a spectacular pink-and-gold burst around her. Convey stylish weakening of power; preserve cyan gaps and do not make a solid background.\n4.8\u20136s: rapid push back to her confident waist-up pose as exact title \"SWEET WEAKNESS\" lands in two large comic lines.\n6\u20138s: she gives a tiny unimpressed toast with the can, flicks a stray sugar cube off her handbag and turns her shoulder with a grin. Stable title and strong silhouette. Sound: can crack, rising fizz, ribbon whips, massive brittle crystal collapse, title hit, tiny cube tap.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "Bz6My9KOTbaYX3K8YpF3",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSUGARFOOT \u2014 SWEET WEAKNESS.\nPreserve the exact woman, textured updo, hoop earrings, white crop top, oversized pink jacket, distressed pink pants, chunky white sneakers, decorative handbag and beverage can.\n0\u20131.2s: full-body swagger, handbag on one arm. She casually cracks open the can, one tiny pink-gold fizzy bubble emerging; amused expression.\n1.2\u20133.2s: she flicks the bubble away. Camera chases it as it expands into an enormous spiral of crystalline sugar, fizz and rose-pink ribbons. A floating gold armored fist EMBLEM approaches the spiral, not a real person's body part.\n3.2\u20134.8s: the sugar ribbons bind the emblem, making its huge armored surface fracture into thousands of harmless sugar cubes. Camera pulls wide for the giant candy-crystal collapse, then the cubes spiral into a spectacular pink-and-gold burst around her. Convey stylish weakening of power; preserve cyan gaps and do not make a solid background.\n4.8\u20136s: rapid push back to her confident waist-up pose as exact title \"SWEET WEAKNESS\" lands in two large comic lines.\n6\u20138s: she gives a tiny unimpressed toast with the can, flicks a stray sugar cube off her handbag and turns her shoulder with a grin. Stable title and strong silhouette. Sound: can crack, rising fizz, ribbon whips, massive brittle crystal collapse, title hit, tiny cube tap.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/02199094d82ee15c7a6f08d53c434ec20a978864f9199c70055624cdee75d733.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "oyKRFUMmvcBF4xYg5krv",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471564009_dce3f020.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_b135e9fd-7b8a-4135-a5e1-36465246a828_output_aigc_1790471569381_8d724e3b.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 8,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  }
+}

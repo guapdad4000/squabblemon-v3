@@ -1,0 +1,30 @@
+{
+  "catalogId": "revolutionary-ronald",
+  "name": "Revolutionary Ronald",
+  "move": "WE OUTSIDE.",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve locs, beard, red beret with existing star, olive fatigues, satchel and red/black/green cape. No new emblems. Review cape continuity during rescue, clear protection before deflection, readable secondary training figure and green fabric retained in chroma key.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "ufVFyuRHgCGlWKx6BYYq",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nRevolutionary Ronald \u2014 WE OUTSIDE..\nIDENTITY: exact adult dark-skinned man with long dark locs, full short beard, red beret with its small existing star, olive fatigues with rolled sleeves, tan cross-body pouch and combat boots. His huge red/black/green striped cloth cape is the central prop, with its original colors and ragged hem. The cape must remain fabric attached at his shoulders, not a background or a new creature.\n0\u20131.2s: whole-body heroic low angle. He notices a small faceless orange padded training mannequin tumbling far away through cyan; three heavy black iron spheres are converging toward it from above. He throws his arm outward and the cape snaps taut behind him with an enormous cloth crack. All targets are nonliving training props.\n1.2\u20133.2s: camera races down the cape as it unfurls into a spectacular thirty-foot-long ribbon, twisting through depth like an aerial rescue line. Its far end scoops the orange mannequin into a soft cloth cradle just before the spheres meet. A hard yank draws the cradle all the way back toward his side in one continuous wave along the fabric. Keep cyan visible around every fabric edge and between the separated spheres, never fill the frame with the cape.\n3.2\u20134.8s: dynamic half-orbit around him as he pivots, tucking the rescued mannequin behind his shoulder and sweeping the broad middle of his cape outward into a huge curved protective sail. The three iron spheres strike the stretched fabric in quick succession; it bows deeply, then he reverses the sweep and slings ALL THREE back into the distant cyan in one colossal simultaneous recoil. Bounded ivory/red impact stars at the three contacts, a dramatic cloth ripple visible from shoulder to hem. His face and body stay solid and recognizable.\n4.8\u20136s: cape snaps back to its normal wearable size. He raises his actual hand in the same resolute pose as the reference while the exact title WE OUTSIDE. slams below his face, including the final period. No extra slogans, chants, fist emblems or crowd.\n6\u20138s: full-body hero hold, rescued orange mannequin safely upright beside his boot, cape fluttering in three beautiful separated folds. A tiny crease remains in his beret; he fixes it with two precise fingers without breaking his stern stare. SFX: massive cloth unfurl, accelerating rescue whoosh, three heavy bass impacts, dominant sail recoil crack, three receding whistles, title slam and soft beret pat. No music, speech or narration.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482592870_efcfdb1d.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

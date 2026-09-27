@@ -1,0 +1,27 @@
+{
+  "catalogId": "dmv-worker",
+  "name": "DMV Worker",
+  "move": "Take a Number",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference visually inspected. Preserve woman, braided bun, rectangular glasses, blue uniform and heavy boots. Keep existing small uniform markings only; move title is sole new display text. Review paper edges and freeze impact.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "ldKimr7pUMpLAUx29H9D",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nDMV Worker \u2014 Take a Number.\nIDENTITY: the exact stern brown-skinned woman with large braided bun, rectangular black glasses, gold hoop earrings, blue short-sleeve uniform shirt, black cargo trousers, black heavy work shoes, keys and ID, holding forms and a chunky red-and-black rubber stamp. Keep small existing uniform labels unobtrusive; invent no extra signage or written captions. Paperwork shows abstract form lines, not readable prose.\n0.0\u20130.7s: establish full body. She peers over her glasses, raises one index finger commanding wait, then flicks one blank cream queue ticket from the stack.\n0.7\u20132.5s: camera races backward as that ticket unspools into an enormous corkscrew of cream paper, whipping thirty feet into depth and gathering her loose forms into a roaring bureaucratic tornado. A dark ink-outlined gold fist-shaped GAME TOKEN, not a person, gets harmlessly caught at its center. She pulls back the stamp like a judge about to end the universe; extreme perspective makes it colossal. One stamping blow snaps the paper tornado and token into a frozen accordion-shaped queue, with an explosive red-orange impact star and a single resonant desk-slam BOOM. All paper shapes are foreground objects with cyan visible between coils, never a full background sheet or panel.\n2.5\u20133.5s: snap-zoom to her bored face, reveal the towering motionless queue beside her. Exact title TAKE A NUMBER slams below her face in the established comic treatment.\n3.5\u20135.0s: everything in the queue remains frozen while she slowly straightens her glasses with a single finger. One late sheet tries to drift free; she taps it with the stamp without looking and it freezes instantly. Hero composition, visible boots, stable text. SFX: ticket tear, roaring paper cyclone, massive stamp boom, sudden silence, tiny second stamp click; no speech.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475438475_56257d64.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "savedAt": "2026-09-27T05:54:07.386714+00:00",
+  "scope": "100 non-fairytale characters",
+  "submissionComplete": true,
+  "submittedCharacters": 100,
+  "completedGenerations": 100,
+  "pendingGenerations": 0,
+  "acceptedClips": 100,
+  "integratedClips": 100,
+  "remainingCreditsLastVerified": 4170,
+  "pending": [],
+  "completedOutputsNeedingUrlReconciliation": [],
+  "nextPhase": "All 100 are installed locally. Replace individual clips over time using the manifest and recorded visual findings; no new credit spend is part of this integration.",
+  "reviewNotes": [
+    "User requested every completed render implemented now, with replacements over time. All 100 are provisionally accepted for use; sampled visual issues and subjective audio review remain open.",
+    "Use the tool-based Demario retry; the mushroom version is rejected.",
+    "Sherlock and Sports Prodigy rendered at eight seconds but submitted prompt headers said five seconds; review pacing.",
+    "Check cyan and teal costume regions for keying holes without silently recoloring identities.",
+    "Review exact title spelling and punctuation.",
+    "No further generations or automatic rerenders are authorized by this checkpoint."
+  ],
+  "firstReviewPassComplete": true,
+  "mediaDecodePassed": 100,
+  "browserMediaChecksPassed": 100,
+  "gpuCpuFrameComparisonsPassed": 300,
+  "sampledVisualReviewCount": 100,
+  "compositingReviewFlagged": 91,
+  "fullPlaybackCandidates": 9,
+  "acceptance": "provisional-user-approved-with-known-issues",
+  "cleanVisualApprovalClips": 0,
+  "runtimeIntegrationVerification": {
+    "passed": true,
+    "runtimeClips": 100,
+    "fullDurationSamplesSeconds": [
+      5.167,
+      8
+    ],
+    "battleCards": [
+      "drfade",
+      "demario",
+      "counter",
+      "sugarfoot"
+    ],
+    "audioControls": true,
+    "fallbacks": [
+      "cpu",
+      "reduced-motion",
+      "unavailable-media"
+    ],
+    "targetedTestsPassed": 101,
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "buildMediaHashMatches": 100,
+    "publication": "See Git history for publication; this checkpoint records completed integration and validation.",
+    "validatedAgainstMain": "15971d5c3d24a06283a442a1250f9ca90bb5b6aa",
+    "sharedLibraryTypeBuild": "passed",
+    "reviewFixtureUsesRuntimeAssets": true
+  }
+}

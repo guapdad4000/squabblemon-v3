@@ -1,0 +1,30 @@
+{
+  "catalogId": "rent-a-cop",
+  "name": "Rent-a-Cop",
+  "move": "Mall Rules",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve heavyset build, mustache, black cap, white security shirt, black harness/tie/trousers, radio and keys. Existing costume logos stay physical details; no added fist effects. Check belt/cage continuity, readable five-second action, stable badges and keying around white shirt.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "C7mxOMau0Zst3JJ71VfP",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nRent-a-Cop \u2014 Mall Rules.\nIDENTITY: exact heavyset adult security guard from the reference, curly brown hair under black cap, thick mustache, white short-sleeve shirt, black tie and tactical harness, black trousers, chunky dark sneakers, walkie-talkie, belt equipment and dangling keys. Keep the existing small costume markings. No new weapon.\n0\u20130.7s: full-body guard throws his open left palm toward camera in an exaggerated STOP gesture and clicks the radio in his right hand once. His mustache bristles with completely unjustified authority. Behind the palm, one runaway empty chrome shopping cart rockets toward him through empty cyan, wheels spinning.\n0.7\u20132.5s: camera whip-pans and pulls back to reveal his absurd response: four enormous portable chrome queue posts snap into position around the cart. Wide red retractable belts shoot between them, crossing over and under into a huge suspended web. The cart hits the web with one gigantic bounded ivory/red impact burst, stretching it twenty feet into a deep elastic pocket. He remains upright at the origin, whole body visible, smug and motionless. This is one clear trap-and-rebound action; no mall scenery, floor, background panel or people in the cart.\n2.5\u20133.5s: the belts recoil in a thunderous SNAP, wrapping neatly around the empty cart into an overbuilt rectangular parcel. Camera slams back to his stern face as the exact title MALL RULES stamps into the lower composition with a metal-and-rubber impact. Do not add stop signs or other new writing.\n3.5\u20135s: complete guard and securely wrapped cart framed together on cyan. He gravely sticks one tiny BLANK warning slip onto the enormous bundled cart, then gives it a disapproving wag of one finger. The cart's single loose wheel spins and squeaks. SFX: radio click/chirp with no voice, wheel rattle, accelerating retractable-belt whips, enormous elastic catch and snap, title slam, tiny paper pat and squeaky wheel. Five-second choreography, no sped-up footage.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482525245_59b1bfe3.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

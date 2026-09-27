@@ -1,0 +1,59 @@
+{
+  "catalogId": "monsoon-anchor",
+  "name": "Gas Station Sushi Chef",
+  "move": "Trust the Cooler",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve red-shirted chef, white/red paper hat, cream apron with red fist, black trousers, white shoes, chopsticks and sushi tray. Remove embedded backdrop remnants. Review six-piece serving continuity and no cyan-tinted steam.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "zClla630dXKV5UFVhNIh",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGas Station Sushi Chef \u2014 Trust the Cooler.\nIDENTITY: exact adult male chef with tousled black hair, narrow mustache and pointed chin beard, white paper cook's hat with red stripe, short-sleeve red collared shirt, cream apron with a small red FIST emblem, black trousers and white slip-on work shoes. Preserve wooden chopsticks and the black clear-lidded supermarket sushi tray, salmon orange, ivory rice and dark olive seaweed. No crowns, new signs, words, shop scenery or background stripes from the reference.\n0\u20130.7s: full-body confident pose. He flashes the sushi tray toward the viewer with a knowing smirk, then hooks the chopsticks under the lid of one small ivory cooler with a red lid floating beside him.\n0.7\u20132.5s: the cooler bursts open and launches one ENORMOUS complete sushi roll thirty feet upward, a spiraling cylinder of ivory rice, dark olive nori and salmon-orange filling. Camera yanks upward and far back to reveal its scale. He leaps after it with apron billowing and gives one impossibly fast, decisive chopstick scissor-sweep. The giant roll splits cleanly into six massive circular pieces in a spectacular radial arrangement, with a huge orange-and-ivory impact star and a sharp contact hold. Camera races through the gaps as all six pieces shrink and descend toward his waiting tray. Strong physical food forms, finite rice grains and cream ink-outlined cold-vapor curls; no cyan or turquoise liquid, no floor, shop or fullscreen whiteout.\n2.5\u20133.5s: snap back to full-body service pose. The six normal-sized pieces land in the black tray in a rapid satisfying cascade as he clicks its clear lid shut. Exact title TRUST THE COOLER slams below his face in two bold comic lines.\n3.5\u20135s: he proudly offers the tray; one sushi piece gives a suspicious little wobble under the clear lid. He taps it once with a chopstick, holds a perfectly innocent smile and nudges the cooler closed with his shoe. Keep his face, fist apron emblem, shoes and text readable. SFX: plastic lid click, enormous cold-air whoosh, rising food rush, crisp giant slicing WHACK, six quick soft serving taps and tiny final cooler click. No voice or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "zClla630dXKV5UFVhNIh",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGas Station Sushi Chef \u2014 Trust the Cooler.\nIDENTITY: exact adult male chef with tousled black hair, narrow mustache and pointed chin beard, white paper cook's hat with red stripe, short-sleeve red collared shirt, cream apron with a small red FIST emblem, black trousers and white slip-on work shoes. Preserve wooden chopsticks and the black clear-lidded supermarket sushi tray, salmon orange, ivory rice and dark olive seaweed. No crowns, new signs, words, shop scenery or background stripes from the reference.\n0\u20130.7s: full-body confident pose. He flashes the sushi tray toward the viewer with a knowing smirk, then hooks the chopsticks under the lid of one small ivory cooler with a red lid floating beside him.\n0.7\u20132.5s: the cooler bursts open and launches one ENORMOUS complete sushi roll thirty feet upward, a spiraling cylinder of ivory rice, dark olive nori and salmon-orange filling. Camera yanks upward and far back to reveal its scale. He leaps after it with apron billowing and gives one impossibly fast, decisive chopstick scissor-sweep. The giant roll splits cleanly into six massive circular pieces in a spectacular radial arrangement, with a huge orange-and-ivory impact star and a sharp contact hold. Camera races through the gaps as all six pieces shrink and descend toward his waiting tray. Strong physical food forms, finite rice grains and cream ink-outlined cold-vapor curls; no cyan or turquoise liquid, no floor, shop or fullscreen whiteout.\n2.5\u20133.5s: snap back to full-body service pose. The six normal-sized pieces land in the black tray in a rapid satisfying cascade as he clicks its clear lid shut. Exact title TRUST THE COOLER slams below his face in two bold comic lines.\n3.5\u20135s: he proudly offers the tray; one sushi piece gives a suspicious little wobble under the clear lid. He taps it once with a chopstick, holds a perfectly innocent smile and nudges the cooler closed with his shoe. Keep his face, fist apron emblem, shoes and text readable. SFX: plastic lid click, enormous cold-air whoosh, rising food rush, crisp giant slicing WHACK, six quick soft serving taps and tiny final cooler click. No voice or music.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/c4a93bbdc56334665ec4539c5bb38a1decf72a296ea1e0158368641bad2711f3.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "bAvi8oFVXQYOo3zjx4Io",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476906764_71b834d3.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_573121e7-b4c1-46ac-a6bf-ae595f919e47_output_aigc_1790476911741_8fe33507.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476906764_71b834d3.mp4",
+    "width": 768,
+    "height": 1344,
+    "duration": 5.167,
+    "fps": 24,
+    "hasAudio": true
+  }
+}

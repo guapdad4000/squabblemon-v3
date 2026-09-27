@@ -1,0 +1,48 @@
+{
+  "catalogId": "concrete",
+  "name": "Concrete",
+  "move": "Set in Stone",
+  "attempt": 1,
+  "quotedCredits": 480,
+  "result": {
+    "status": "PENDING",
+    "historyId": "DLs9sdaTSMZrhfP3FGl6",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCONCRETE \u2014 SET IN STONE.\nPreserve the illustrated woman: green tied headscarf, dark gray mechanic coveralls over white tank top, work gloves, tan work boots, enormous silver pipe wrench.\n0\u20131.2s: full-body stance; she confidently spins the wrench once, catches it, clamps its jaws around a floating stone bolt and gives the viewer a challenging look.\n1.2\u20133.2s: she cranks the wrench with her whole body. A tiny stone collar suddenly grows into six towering interlocking basalt slabs orbiting her like massive lock tumblers. Camera ROCKETS backward to reveal the absurd scale; keep each slab finite and floating, no ground or building backdrop.\n3.2\u20134.8s: she gives one final quarter-turn. The huge slabs SLAM together into a monumental fist-shaped protective stone bastion behind her, explosive amber seams, flying bounded chips, enormous ink impact accents and a brief heavy hold. This is earth anchoring and protection, not a hit on another person.\n4.8\u20136s: snap low-angle push toward her as exact title \"SET IN STONE\" crashes in two lines above the wrench.\n6\u20138s: she taps the bastion with one knuckle as if checking a repair, rests the wrench on her shoulder and gives a satisfied nod; one final pebble drops belatedly. Sound: metal jaw click, wrench ratchet accelerating, seismic stone clunks, colossal final lock, tiny late pebble tick.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "DLs9sdaTSMZrhfP3FGl6",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCONCRETE \u2014 SET IN STONE.\nPreserve the illustrated woman: green tied headscarf, dark gray mechanic coveralls over white tank top, work gloves, tan work boots, enormous silver pipe wrench.\n0\u20131.2s: full-body stance; she confidently spins the wrench once, catches it, clamps its jaws around a floating stone bolt and gives the viewer a challenging look.\n1.2\u20133.2s: she cranks the wrench with her whole body. A tiny stone collar suddenly grows into six towering interlocking basalt slabs orbiting her like massive lock tumblers. Camera ROCKETS backward to reveal the absurd scale; keep each slab finite and floating, no ground or building backdrop.\n3.2\u20134.8s: she gives one final quarter-turn. The huge slabs SLAM together into a monumental fist-shaped protective stone bastion behind her, explosive amber seams, flying bounded chips, enormous ink impact accents and a brief heavy hold. This is earth anchoring and protection, not a hit on another person.\n4.8\u20136s: snap low-angle push toward her as exact title \"SET IN STONE\" crashes in two lines above the wrench.\n6\u20138s: she taps the bastion with one knuckle as if checking a repair, rests the wrench on her shoulder and gives a satisfied nod; one final pebble drops belatedly. Sound: metal jaw click, wrench ratchet accelerating, seismic stone clunks, colossal final lock, tiny late pebble tick.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/afdfbe856b4c518e28120a326ee880aa2f159865406b94c8df98948d6c7b8848.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "kmskI7tjzymV4VlS6AHj",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471649472_ee6447a8.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_4c984095-1a0b-4f9e-934c-94994617abfc_output_aigc_1790471654332_7b0e0c42.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 8,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  }
+}

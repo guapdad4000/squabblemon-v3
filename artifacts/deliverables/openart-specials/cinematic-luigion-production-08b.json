@@ -1,0 +1,32 @@
+{
+  "catalogId": "luigion",
+  "name": "Luigion",
+  "move": "Power-Up",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve green cap/shirt, blue overalls, brown work boots and canvas tool bag. User's rejection of Demario mushrooms carried into related character: no mushrooms, franchise pickups, pipes or borrowed jingles. Existing white fist costume patches remain reference details; no added gold-fist effects. Review spring/wrench continuity and body anatomy.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false,
+    "noMushrooms": true,
+    "noFranchisePickups": true
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "Zdsgqqwbjrn3fpxOQhYQ",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nLuigion \u2014 Power-Up.\nIDENTITY: exact tall slim adult brown-skinned man with expressive eyebrows, short black goatee, green work cap with its existing white emblem, green long-sleeve shirt, blue bib overalls with two round silver buttons, black wrist cuffs, brown belt and tan lace-up work boots. Preserve the open brown canvas tool bag, steel wrench, pliers and hammer. He remains this exact illustrated tradesman. Strictly original work-tool fantasy: NO mushrooms of any kind, question blocks, warp pipes, coin pickups, star mascots, franchise characters or borrowed game jingles.\n0\u20130.7s: full-body stance beside the tool bag. He grabs the steel ratchet wrench and gives one small floating brass bolt a hard quarter turn. That turn magically reveals one ENORMOUS steel compression spring beneath his boots, a stylized isolated game prop with no real construction steps.\n0.7\u20132.5s: camera pulls far back as he presses the giant spring down to a pancake with a deep crouch. It releases with an explosive metallic BOING, launching him high through cyan space. He performs one crisp airborne half-turn and uses his tan boot to deliver a huge heel strike to a suspended oversized steel gear above him. Show one clear boot-contact hold and a bounded ivory/orange impact star. The gear spins away like a colossal flywheel, accelerating deep into the distance. The spring and gear are standalone objects, no pipe network, factory, floor or backdrop. Camera follows the gear briefly then snap-tracks his controlled descent.\n2.5\u20133.5s: he returns to a stable full-body stance beside his same brown tool bag, catches the falling wrench in one hand and tips his cap with the other. Exact title POWER-UP crashes into place below his face with a mechanical ratchet clack.\n3.5\u20135s: hero hold. The giant spring shrinks to one tiny coil that drops into the bag; the bag gives a single small startled hop. He looks down, taps it once with the wrench, and it settles. Keep cap, overalls and face stable; preserve correct hands and feet. SFX: ratchet click, enormous spring strain, dominant launch BOING, rushing ascent, powerful metal gear impact, receding flywheel whistle, title clack and tiny final bag thump. No speech, music or golden-fist power effects.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479732176_d22d042d.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

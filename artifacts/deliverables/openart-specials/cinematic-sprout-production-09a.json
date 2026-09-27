@@ -1,0 +1,30 @@
+{
+  "catalogId": "sprout",
+  "name": "OG Vegan",
+  "move": "I Brought My Own Plate",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve older woman with gray loc bun, rust dress, forest cardigan, sandals, tote and vegetables. Plate is the move-specific prop. Review bag continuity, roundhouse anatomy, plate rebound, bounded plant accents and title legibility.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "VRokVlc2t01IZkXraI7X",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nOG Vegan \u2014 I Brought My Own Plate.\nIDENTITY: exact older brown-skinned woman with long gray locs gathered in a high bun, gold round earrings, confident lined face, rust-orange ankle-length dress, loose dark forest-green cardigan and brown strapped sandals. Preserve her cream canvas grocery tote with leafy greens and carrots. Keep her powerful balanced kicking ability and no-nonsense expression. Same clothing throughout.\n0\u20130.7s: establish full body. She draws one plain cream dinner plate from the grocery tote, checks its clean surface and tosses it forward with her free hand.\n0.7\u20132.5s: the plate expands comically to the size of a satellite dish. Camera pulls way back as she pivots into the reference's strong high SIDE KICK, driving her sandal into the plate's rim. The huge plate spins away like a discus through cyan depth and collides with a giant charcoal bowling-ball-shaped obstacle, batting the obstacle far out into the distance. One tremendous bounded ivory/rust impact star, hard readable contact hold, then accelerating plate return. Her whole body stays readable at the kick, hands correct, tote still held securely. No kitchen, table, ground, landscape or extra characters.\n2.5\u20133.5s: on its return the plate spins under her tote as two carrots, a bunch of leafy greens and one red pepper tumble out in an elegant arc. It catches all the vegetables perfectly, shrinks back to dinner size and lands in her open palm. Camera snap-zooms toward her raised eyebrow as exact title I BROUGHT MY OWN PLATE slams into three clear lines below her face.\n3.5\u20135s: whole-character hero hold, balanced on both sandals, plate offered forward proudly and tote hanging from the other hand. One small leaf lands on her shoulder; she brushes it straight onto the plate with a tiny satisfied nod. Finite olive-green leaf accents only, no cyan glow or golden-fist icon. SFX: ceramic tap, enormous discus wind-up, forceful kick whoosh, giant resonant impact CLANG, receding obstacle whistle, plate return hum, crisp vegetable catches, title slam and small leaf rustle. No narration, voices or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480125861_b26028ce.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

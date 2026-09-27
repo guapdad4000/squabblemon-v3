@@ -1,0 +1,263 @@
+[
+  {
+    "catalogId": "concrete",
+    "name": "Concrete",
+    "move": "Set in Stone",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-afdfbe856b4c518e28120a326ee880aa2f159865406b94c8df98948d6c7b8848",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/afdfbe856b4c518e28120a326ee880aa2f159865406b94c8df98948d6c7b8848.webp",
+            "label": "concrete.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCONCRETE — SET IN STONE.\nPreserve the illustrated woman: green tied headscarf, dark gray mechanic coveralls over white tank top, work gloves, tan work boots, enormous silver pipe wrench.\n0–1.2s: full-body stance; she confidently spins the wrench once, catches it, clamps its jaws around a floating stone bolt and gives the viewer a challenging look.\n1.2–3.2s: she cranks the wrench with her whole body. A tiny stone collar suddenly grows into six towering interlocking basalt slabs orbiting her like massive lock tumblers. Camera ROCKETS backward to reveal the absurd scale; keep each slab finite and floating, no ground or building backdrop.\n3.2–4.8s: she gives one final quarter-turn. The huge slabs SLAM together into a monumental fist-shaped protective stone bastion behind her, explosive amber seams, flying bounded chips, enormous ink impact accents and a brief heavy hold. This is earth anchoring and protection, not a hit on another person.\n4.8–6s: snap low-angle push toward her as exact title \"SET IN STONE\" crashes in two lines above the wrench.\n6–8s: she taps the bastion with one knuckle as if checking a repair, rests the wrench on her shoulder and gives a satisfied nod; one final pebble drops belatedly. Sound: metal jaw click, wrench ratchet accelerating, seismic stone clunks, colossal final lock, tiny late pebble tick."
+      }
+    }
+  },
+  {
+    "catalogId": "counter",
+    "name": "Counter",
+    "move": "Mirror",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-fb04222be044d762c39f756e711b8283c5a434c6dddb486189b7c662fb1f160c",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/fb04222be044d762c39f756e711b8283c5a434c6dddb486189b7c662fb1f160c.webp",
+            "label": "counter.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCOUNTER — MIRROR.\nPreserve the exact man with short dark twists, black high-collar coat with angular silver trim, dark trousers, silver forearm guards, pendant, chunky black boots.\n0–1.2s: full-body planted stance; he slowly lifts one open palm. A blazing orange projectile approaches, reflected in a tiny silver shard suspended before his palm.\n1.2–3.2s: camera pulls far back as that shard unfolds into a huge rotating fan of silver mirror facets surrounding his silhouette. The projectile ricochets between facets in an increasingly fast angular path, multiplied reflections providing impossible depth, not extra physical characters.\n3.2–4.8s: he closes two fingers. All facets collapse into one enormous mirror disk that catches the combined blazing energy, bends like a spring, then REVERSES it back along its path in a giant gold-and-violet reflected shockwave. Huge localized impact flare with clear cyan surrounding it; no full rectangular reflective backdrop.\n4.8–6s: camera rushes through the dispersing finite shards to his composed face and raised palm. Exact title \"MIRROR\" snaps into place with a hard metallic impact.\n6–8s: he catches the last little shard, casually checks his reflection and flicks it away without losing his cool. Coat settles, protective silver halo behind shoulders, confident final pose. Sound: incoming energy whine, rapid glassy ricochets, huge reversal crack, title slam, last shard chime."
+      }
+    }
+  },
+  {
+    "catalogId": "undercova-brotha",
+    "name": "Undercova Brotha",
+    "move": "Inside Man",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-6a10f0ff59ce9bfbd580cac0dfcc6eaf2be1b5557b63c940eda4e0d4979aefb6",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/6a10f0ff59ce9bfbd580cac0dfcc6eaf2be1b5557b63c940eda4e0d4979aefb6.webp",
+            "label": "undercova-brotha.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nUNDERCOVA BROTHA — INSIDE MAN.\nPreserve the afro, dark sunglasses, mustache and beard, rust-brown leather coat, black shirt, gold medallion, tan flared trousers and black heeled boots.\n0–1.2s: establish full body; he tilts his sunglasses, spots a suspended glowing gold power token and gives a sly half-smile.\n1.2–3.2s: he twists into a dramatic coat sweep and vanishes inside its swirling dark ink afterimage. Camera whips around the empty coat-shaped decoy as a bright gold energy strike passes through it; the silhouette collapses into loose graphic ribbons, never a second actual person.\n3.2–4.8s: he reappears much deeper in the cyan void, already holding the stolen token between two fingers. A fast pullback reveals a zigzag trail of three fleeting coat afterimages connecting where he was to where he escaped. He snaps the token into his palm, sending a massive gold keyhole-shaped graphic pulse through the trail.\n4.8–6s: whip-push into a chest-up close-up; exact title \"INSIDE MAN\" slams at a jaunty angle beside his face.\n6–8s: he slides the token into his inner coat pocket, drops the sunglasses back over his eyes and turns away with an exaggerated coat flourish. Nobody else appears. Sound: coat snap, incoming strike, accelerating spy-like whooshes without music, clean token snatch click, power pulse, title slam."
+      }
+    }
+  },
+  {
+    "catalogId": "sugarfoot",
+    "name": "Sugarfoot",
+    "move": "Sweet Weakness",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-02199094d82ee15c7a6f08d53c434ec20a978864f9199c70055624cdee75d733",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/02199094d82ee15c7a6f08d53c434ec20a978864f9199c70055624cdee75d733.webp",
+            "label": "sugarfoot.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSUGARFOOT — SWEET WEAKNESS.\nPreserve the exact woman, textured updo, hoop earrings, white crop top, oversized pink jacket, distressed pink pants, chunky white sneakers, decorative handbag and beverage can.\n0–1.2s: full-body swagger, handbag on one arm. She casually cracks open the can, one tiny pink-gold fizzy bubble emerging; amused expression.\n1.2–3.2s: she flicks the bubble away. Camera chases it as it expands into an enormous spiral of crystalline sugar, fizz and rose-pink ribbons. A floating gold armored fist EMBLEM approaches the spiral, not a real person's body part.\n3.2–4.8s: the sugar ribbons bind the emblem, making its huge armored surface fracture into thousands of harmless sugar cubes. Camera pulls wide for the giant candy-crystal collapse, then the cubes spiral into a spectacular pink-and-gold burst around her. Convey stylish weakening of power; preserve cyan gaps and do not make a solid background.\n4.8–6s: rapid push back to her confident waist-up pose as exact title \"SWEET WEAKNESS\" lands in two large comic lines.\n6–8s: she gives a tiny unimpressed toast with the can, flicks a stray sugar cube off her handbag and turns her shoulder with a grin. Stable title and strong silhouette. Sound: can crack, rising fizz, ribbon whips, massive brittle crystal collapse, title hit, tiny cube tap."
+      }
+    }
+  },
+  {
+    "catalogId": "juneteenth-chair-guy",
+    "name": "Juneteenth Chair Guy",
+    "move": "Fold-Out Justice",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-1b1b8993d544e4a31132841d0209a7f348913787f12ec5141a0cb4638073d076",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/1b1b8993d544e4a31132841d0209a7f348913787f12ec5141a0cb4638073d076.webp",
+            "label": "juneteenth-chair-guy.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nJUNETEENTH CHAIR GUY — FOLD-OUT JUSTICE.\nPreserve the exact joyful man, afro, green headband and sunglasses, open dark-green/yellow floral shirt, white tank top, olive shorts, layered jewelry, wrapped hands and green/white sneakers; one metal folding chair. Replace the reference's little chair crown graphic with a simple fist emblem and omit old chair lettering.\n0–1.2s: establish full body; he checks the folded chair's hinge with a loud metallic snap, then winds his torso into an enormous athletic swing.\n1.2–3.2s: he hurls the folded chair like a spinning boomerang far into the cyan distance. Camera follows its exaggerated corkscrew flight; sharp gold arcs and graphic metal afterimages show speed, with only ONE real chair.\n3.2–4.8s: the chair curves back, growing huge in perspective as it breaks through a floating abstract red impact disk in a thunderous ink-and-gold burst. He catches it by the frame and swings it upward, stopping in a powerful protective stance. No human target or victim.\n4.8–6s: snap push to his delighted grin as exact title \"FOLD-OUT JUSTICE\" slams into two readable comic lines, synchronized with the chair's final metallic clang.\n6–8s: he smoothly unfolds that same chair, drops into the seat with his arms folded and nods as if the job is done. Camera eases wide enough to show the complete seated pose and chair. Sound: hinge snap, whistling metal spin, enormous comic impact, ringing catch, title slam, cheeky final seat creak."
+      }
+    }
+  },
+  {
+    "catalogId": "homeless-wiseman",
+    "name": "Homeless Wiseman",
+    "move": "Told You.",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-5a6dc15b0fd2668681f81a77b6c68a30951e0e67b94c48cc04482e9befbecb21",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5a6dc15b0fd2668681f81a77b6c68a30951e0e67b94c48cc04482e9befbecb21.webp",
+            "label": "homeless-wiseman.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nHOMELESS WISEMAN — TOLD YOU..\nPreserve the exact seated older dark-skinned man with long unkempt locs, expressive face, weathered olive patched jacket, layered necklaces, dark worn trousers and battered sneakers. Keep his crate seat and belongings as a finite cluster; no street scene. His personality is perceptive and unflappable.\n0–1.2s: establish him seated on the crate. Eyes half-closed, he raises one finger BEFORE anything happens. Three small amber prediction arcs appear beside his hand.\n1.2–3.2s: a gigantic fiery stone orb sweeps toward him through the cyan void. He calmly leans his head aside a split-second early. Camera whips around, revealing the enormous orb missed him and split into three massive orbiting pieces. Finite warm-colored stones and fire trails, no landscape or full background.\n3.2–4.8s: without looking, he taps three fingers in a measured rhythm. The three pieces pass exactly where his fingers predicted, collide behind him ONE-TWO-THREE and explode into a spectacular gold clocklike ring of suspended fragments. He remains calmly seated in the center of the spectacle, no harm.\n4.8–6s: camera snap-pushes to his knowing face as exact title \"TOLD YOU.\" slams in; he gives the smallest eyebrow raise.\n6–8s: camera eases back. He extends his empty palm before one last pebble arrives, catches it exactly on cue and tosses it aside with an unimpressed shrug. Sound: soft predictive ticks, huge incoming rush, three heavy collision beats, title impact, perfectly timed pebble click."
+      }
+    }
+  },
+  {
+    "catalogId": "bonnet-girl",
+    "name": "Bonnet Girl",
+    "move": "Now I’m Up",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-8c70264f9e7affb30415200df9d7c02c3e99131f608401dc63de5329b02da88b",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/8c70264f9e7affb30415200df9d7c02c3e99131f608401dc63de5329b02da88b.webp",
+            "label": "bonnet-girl.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBONNET GIRL — NOW I’M UP.\nPreserve exact woman, shiny purple satin bonnet, long dark hair, purple patterned robe, lavender pajamas, oversized pink bunny slippers and white pillow. Keep bonnet and bunny faces consistent.\n0–1.2s: full body; she is dozing into the pillow, then one eye opens with an irritated glare. Slow heavy inhale, robe begins to billow.\n1.2–3.2s: she winds the pillow over her shoulder and executes an outrageously fast full-body swing. The white pillow stretches in perspective without changing its identity; a giant crescent of ink-edged white feathers and purple energy sweeps around her. Camera pulls back as the feather spiral grows into a towering cyclone.\n3.2–4.8s: she leaps a short distance and brings the pillow down in a colossal comic slam against a floating purple impact sigil, producing an enormous bunny-faced pillow-shaped shockwave and a burst of feathers. No floor plane or person being struck. A brief impact hold sells absurd power from a soft pillow.\n4.8–6s: fast push to her unimpressed face as exact title \"NOW I'M UP\" crashes into two big lines beside the bonnet.\n6–8s: she catches the pillow as it rebounds, tucks it against one cheek and gives the camera a pointed glare; the last feather drifts down onto a bunny slipper. Hold personality and title. Sound: drowsy fabric rustle without voice, rising wind, whip-fast pillow whoosh, huge bassy pillow thump, title slam, soft feather tail."
+      }
+    }
+  },
+  {
+    "catalogId": "tattoo-artist",
+    "name": "Tattoo Artist",
+    "move": "Permanent Ink",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-070cdf19da9af4a7d75d3f1b6356427e41c7404f1c8c0a7b38fa16d906de476a",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/070cdf19da9af4a7d75d3f1b6356427e41c7404f1c8c0a7b38fa16d906de476a.webp",
+            "label": "tattoo-artist.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nTATTOO ARTIST — PERMANENT INK.\nPreserve exact tattooed woman with dark-red loc updo, headband, black tank, patterned ink-stained patchwork apron, red/black baggy trousers, black gloves, tool belt, chunky black/red shoes and tattoo machine. Keep her existing tattoos and costume stable.\n0–1.2s: establish full body; she buzzes the tattoo machine and pulls a single bold black-red ink stroke through empty air as if drawing a design.\n1.2–3.2s: the stroke comes alive as an immense coiling ink dragon with thick ivory highlights and crimson flame-like fins. Camera pulls rapidly back and arcs upward to reveal its huge finite ribbon body spiraling around her; creature is clearly a magical ink drawing, no extra human character.\n3.2–4.8s: she finishes one decisive stroke. The dragon dives through its own coil and folds into a gigantic protective fist-and-shield tattoo emblem behind her with an explosive black/red/ivory ink burst. Sharp graphic splashes with cyan gaps, not an opaque rectangular backing. Brief impact hold.\n4.8–6s: camera surges through the settling ink flourishes to her confident expression as exact title \"PERMANENT INK\" slams across two readable lines.\n6–8s: she blows lightly across the tip without vocalization, examines her work with a satisfied grin and twirls the tool into a steady ready pose. The enormous emblem hangs behind like a freshly finished masterpiece. No new permanent tattoos on her body. Sound: machine buzz building, flowing ink whip, dragon-like rushing air without voice, heavy sealing impact, title stamp, quiet tool click."
+      }
+    }
+  },
+  {
+    "catalogId": "the-mailman",
+    "name": "The Mailman",
+    "move": "Express Delivery",
+    "attempt": 1,
+    "quotedCredits": 480,
+    "status": "PREPARED",
+    "request": {
+      "model": "minimax-h3",
+      "mode": "element2video",
+      "projectId": "ACukOqwZhgiVJk1sNgUG",
+      "params": {
+        "duration": 8,
+        "resolution": "768P",
+        "aspectRatio": "9:16",
+        "videoCount": 1,
+        "autoEnhancePrompt": false,
+        "visualReferences": [
+          {
+            "id": "mcp-545dc2b8597a95cfcfddbf398f22bf10b9649be1c013b739d83fd19ef4f2c3e5",
+            "type": "image",
+            "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/545dc2b8597a95cfcfddbf398f22bf10b9649be1c013b739d83fd19ef4f2c3e5.webp",
+            "label": "the-mailman.webp"
+          }
+        ],
+        "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nTHE MAILMAN — EXPRESS DELIVERY.\nPreserve the exact slim dark-skinned man, tan short-sleeved uniform and matching trousers, peaked delivery cap, dark sunglasses, shoulder patches, brown belt, black shoes and large white ankle wings. Do not change uniform into another outfit or add a bag absent from the reference. One plain small parcel is the delivery prop, no readable address.\n0–1.2s: full body; he balances the small parcel on one hand, checks it with a quick glance, then crouches as his ankle wings spread and gold electricity coils around his shoes.\n1.2–3.2s: he flicks the parcel toward the far cyan distance and LAUNCHES after it at absurd speed. Camera races alongside him, wings pumping and limbs posed clearly, multiple long tapered gold afterimages marking acceleration.\n3.2–4.8s: camera pulls far wide to show him overtaking the parcel, carving a huge loop around it and arriving ahead of it. The loop forms an enormous winged-envelope lightning emblem. He catches the parcel on one palm with a thunderous gold-and-white impact star and a brief hold: faster than his own express delivery.\n4.8–6s: snap push into a low-angle hero shot as exact title \"EXPRESS DELIVERY\" slams in two bold lines; he presents the intact parcel toward the viewer, confident smile.\n6–8s: camera eases back enough to show the ankle wings settling while he taps the parcel twice and adjusts his cap. One last tiny spark zips around his shoe and stops. Sound: parcel flick, sprint ignition, huge accelerating whoosh, sonic snap, clean catch impact, title slam, settling wing feathers."
+      }
+    }
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "catalogId": "livewire",
+  "name": "Dominican Phone Salesman",
+  "move": "Switch Carriers",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference visually inspected. Preserve exact salesman, blue polo with Dominican flag patch, cream trousers, brown loafers, jewelry, three phones. Review portal body continuity, fingers, flag fidelity and title spelling.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "qehzN9Tf4OrylbXum9X4",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nDominican Phone Salesman \u2014 Switch Carriers.\nIDENTITY: the exact smiling brown-skinned man with short black curls, neat fade haircut and shaped goatee, royal-blue polo with small Dominican flag patch, gold chain and stud earrings, cream trousers, brown belt and polished brown loafers. Preserve his three black, cream and royal-blue smartphones. No company logos or extra readable UI text.\n0.0\u20130.7s: full-body salesman leans confidently toward camera and fans the three phones. One fast thumb swipe flings them outward like playing cards.\n0.7\u20132.5s: the three phones enlarge into enormous separate floating portal-shaped devices arranged thirty feet apart in depth, their centers pure cyan and their solid black/gold rims clearly outlined. Camera whip-tracks him as he launches feet-first through the nearest device, vanishes cleanly into its cyan screen and bursts from the farthest device with a huge accelerating gold signal-ring shockwave. His body stays anatomically coherent and never duplicates. He brakes in a spectacular loafers-first slide through the cyan void as four enormous gold signal bars explode upward in a rising staircase beside him, one dominant final impact, no physical floor.\n2.5\u20133.5s: the camera snap-zooms from the towering bars to his confident grin. The devices shrink back into three ordinary phones, landing neatly fanned in his hand. Exact title SWITCH CARRIERS slams across the lower-middle frame below his face.\n3.5\u20135.0s: settle into a readable full-body sales pose. He presents the three phones and winks; the smallest gold signal bar gives one belated enormous pulse that briefly ruffles his collar, but his smile never slips. Keep backing pure cyan and title stable. SFX: swipe clicks, escalating electric portal zip, rapid air rush, huge bass impact, rubbery shoe squeak and one late notification ping. No voice or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475462413_0c1b5260.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

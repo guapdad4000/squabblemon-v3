@@ -1,0 +1,30 @@
+{
+  "catalogId": "seafood-assassin",
+  "name": "Seafood Assassin",
+  "move": "Extra Sauce",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve brown skin, high ponytail, white headband and fitted white tactical suit, black gloves/belt/holster/boots and transparent seafood-boil bag. Review clear sauce color as food, finite cyclone, three separate ignition beats, bag transparency over cyan and intact face/costume.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "eeX807FNNcO1iVGfK38H",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSeafood Assassin \u2014 Extra Sauce.\nIDENTITY: exact adult brown-skinned woman from the reference, focused face, long dark high ponytail, wide white headband, white zipped tactical jumpsuit, black gloves, belt, thigh straps and tall black boots. She carries the clear seafood-boil bag with orange shellfish, yellow corn, clams and butter, tied with a red clip. The sauce is obviously thick orange-red seasoned food, not blood. Preserve her illustrated style and original proportions.\n0\u20131.2s: full-body fighter establishment. She flips the bag once and catches its tied end between two gloved fingers. Snap close-up: a single heavy drop of orange garlic sauce hangs beneath the bag and quivers as she cocks an eyebrow. She lashes the bag around her body in one fast low-to-high arc.\n1.2\u20133.2s: camera pulls upward and away to reveal that arc unfolding into a towering corkscrew of glossy sauce, cooked crab claws, corn sections and shellfish shells. She vaults through the OPEN CENTER of the huge spiral, ponytail trailing, body fully readable against cyan. Three large iron serving cloches hover in a triangular formation below. Three thick sauce lashes peel out of the spiral and strike the three cloches in distinct, precise contacts, each leaving a bright orange food coating. No people or animals struck, all shellfish visibly cooked food.\n3.2\u20134.8s: she lands in an airborne graphic crouch at the center, flicks one tiny butter cube upward and catches it back in the bag. On that tiny gesture all THREE coated cloches ignite in quick rhythmic succession, then leap outward on a single huge synchronized explosion of bounded orange flame petals, ivory impact stars and disconnected sizzling droplets. The payoff looks like an ultimate culinary super attack. Cyan remains visible around and between the separate blasts; no full-screen sauce sheet, smoke cloud or white flash.\n4.8\u20136s: whip close-up to her face while she catches the refilled boil bag on one shoulder. Exact title EXTRA SAUCE slams along the lower frame with a wet-heavy impact and sizzling tail. Keep her face and white headband completely clear.\n6\u20138s: return to a complete cool hero stance. One final cooked shrimp drops from above; she catches it cleanly with two fingers, tilts her head in satisfaction, and drops it back into the bag. Her white suit is still spotless. SFX: bag/plastic crackle, heavy sauce whip, accelerating spiral roar, three precise wet impacts, three sharp ignitions into one dominant culinary BOOM, title slam, trailing sizzle and tiny shrimp plop. No dialogue, music or narration.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482650725_6c946885.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

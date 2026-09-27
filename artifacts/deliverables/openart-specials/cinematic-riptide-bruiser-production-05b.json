@@ -1,0 +1,59 @@
+{
+  "catalogId": "riptide-bruiser",
+  "name": "Gator Boy",
+  "move": "Emotional Support Gator",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve young Black man with locs, camo bib overalls, white tank, tan boots and small Haitian flag patch; exact charcoal/olive gator with tan underside. Review gator limb/tail consistency, tire continuity and title.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "qXHuLzau1LthNPDPnyuk",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGator Boy \u2014 Emotional Support Gator.\nIDENTITY: exact athletic young adult Black man with short parted locs, neat goatee, small gold hoop earring, camouflage bib overalls over a white tank, tan work boots and the same small Haitian flag patch. Preserve his companion alligator: broad charcoal/olive armored back, tan-yellow underside, yellow eyes, broad snout and long thick tail. Keep the alligator's proportions recognizable. One man and one alligator only.\n0\u20130.7s: establish both complete bodies. He gives the gator a confident head pat, then throws one small black rubber tire spinning high into the distance as a fetch toy.\n0.7\u20132.5s: camera rockets backward to follow the tire thirty feet away. The alligator launches from beside him like a muscular torpedo, jaws open in an exaggerated comic silhouette. It catches the tire in one monumental CHOMP, then performs one spectacular airborne barrel roll. Huge tan-and-gold impact star, bold circular ink motion arcs, violent rubber stretch, readable bite contact hold. The tire collapses into a flattened oval but stays intact. Camera whips with the rolling gator and races back toward its amused handler. No swamp, water surface, ground, landscape, victim or blood; this is outrageous cartoon fetch.\n2.5\u20133.5s: the gator skids back beside him in the cyan void, proudly offering the squashed tire. He catches his balance and settles into the reference's confident crouch with a hand on its head. Exact title EMOTIONAL SUPPORT GATOR slams in three large comic lines away from both faces.\n3.5\u20135s: he calmly scratches under the gator's chin. It closes its eyes blissfully; the flattened tire slips from its mouth and makes one embarrassingly tiny rubber squeak. Hold both complete silhouettes, tail curled fully in frame, stable title. SFX: throw whoosh, rushing torpedo air, thunderous jaw CLACK with rubber compression, rolling wind, heavy return thump, contented low gator rumble and final tiny squeak. No human voice or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "qXHuLzau1LthNPDPnyuk",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGator Boy \u2014 Emotional Support Gator.\nIDENTITY: exact athletic young adult Black man with short parted locs, neat goatee, small gold hoop earring, camouflage bib overalls over a white tank, tan work boots and the same small Haitian flag patch. Preserve his companion alligator: broad charcoal/olive armored back, tan-yellow underside, yellow eyes, broad snout and long thick tail. Keep the alligator's proportions recognizable. One man and one alligator only.\n0\u20130.7s: establish both complete bodies. He gives the gator a confident head pat, then throws one small black rubber tire spinning high into the distance as a fetch toy.\n0.7\u20132.5s: camera rockets backward to follow the tire thirty feet away. The alligator launches from beside him like a muscular torpedo, jaws open in an exaggerated comic silhouette. It catches the tire in one monumental CHOMP, then performs one spectacular airborne barrel roll. Huge tan-and-gold impact star, bold circular ink motion arcs, violent rubber stretch, readable bite contact hold. The tire collapses into a flattened oval but stays intact. Camera whips with the rolling gator and races back toward its amused handler. No swamp, water surface, ground, landscape, victim or blood; this is outrageous cartoon fetch.\n2.5\u20133.5s: the gator skids back beside him in the cyan void, proudly offering the squashed tire. He catches his balance and settles into the reference's confident crouch with a hand on its head. Exact title EMOTIONAL SUPPORT GATOR slams in three large comic lines away from both faces.\n3.5\u20135s: he calmly scratches under the gator's chin. It closes its eyes blissfully; the flattened tire slips from its mouth and makes one embarrassingly tiny rubber squeak. Hold both complete silhouettes, tail curled fully in frame, stable title. SFX: throw whoosh, rushing torpedo air, thunderous jaw CLACK with rubber compression, rolling wind, heavy return thump, contented low gator rumble and final tiny squeak. No human voice or music.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/afa183679565b2e3771d917a60e48c6df5fcef0ed7998389e366f95293ce4f4a.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "MPzGTEW1lhlK37gO7dnV",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476905512_ac8bae3f.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_8753e1c5-4a92-4ea3-9579-595ea98d7ebd_output_aigc_1790476909703_e4707a9e.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476905512_ac8bae3f.mp4",
+    "width": 768,
+    "height": 1344,
+    "duration": 5.167,
+    "fps": 24,
+    "hasAudio": true
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalogId": "nigerian-father",
+  "name": "Nigerian Father",
+  "move": "High Expectations",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve older father, navy/cream/gold traditional outfit and cap, glasses, beard, cane, keys and checklist. Existing garment emblems remain; no new fist effects. Review finite book structures, full-body cane motion, checklist continuity and readable title.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "Z7yRLmR6m9Z68VdbfYMt",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nNigerian Father \u2014 High Expectations.\nIDENTITY: exact dignified older brown-skinned man with gold-framed rectangular glasses, short salt-and-pepper beard, navy traditional robe with ornate gold trim over cream tunic and trousers, matching patterned navy cap, polished dark brown loafers with gold hardware, wristwatch and rings. Preserve his slender dark cane with ornate gold handle, dangling keys and small paper checklist. Keep the source outfit's existing markings; do not invent new emblems. Stern, patient, quietly formidable.\n0\u20131.2s: full-body view. He glances at the little checklist and raises one index finger. In front of him floats one modest closed navy textbook with cream pages. He taps it once with his cane tip, then points higher.\n1.2\u20133.2s: camera cranes rapidly upward and backward as that little book becomes the base of an astonishing towering spiral of enormous navy-and-ivory textbooks. The books hinge open sequentially like powerful mechanical wings, lifting the little original book upward through the spiral. He remains clearly visible below, cane directing the ascent like a conductor. These are separate floating book props with broad cyan gaps, no library, walls, floor or solid staircase background. He gives a tiny dissatisfied head shake and raises his finger HIGHER; the tower stretches even further.\n3.2\u20134.8s: he makes one decisive upward cane sweep. The entire huge spiral folds inward in an accelerating chain of book-cover CLAPS, squeezing all its momentum into the small original book at its peak. A gigantic bounded ivory/bronze impact star erupts on the final clap with a powerful hold and thunderous textbook BOOM. The original book bursts out above the formation wearing a single academic graduation cap, surrounded by one clean bronze protective ring. No crowns, fist effects, floating numbers or extra words.\n4.8\u20136s: camera races back down as the giant book props shrink into a single normal-sized closed volume that lands perfectly in his free hand. Exact title HIGH EXPECTATIONS slams below his face in two forceful comic lines. The capped little book floats proudly beside his shoulder.\n6\u20138s: whole-character hero hold. He inspects the floating graduated book, gives the smallest possible approving nod, then calmly lifts his pointing finger one inch higher again. The little graduation cap droops comically in response. Checklist and keys give a small settling flutter. Stable face, ornate robe and cane. SFX: checklist rustle, cane tap, accelerating heavy pages, rising cover creaks, three dominant cover claps ending in a colossal BOOM, soft book catch, title impact and tiny cap flop. No speech, accent imitation, narration or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480155046_a8d50796.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

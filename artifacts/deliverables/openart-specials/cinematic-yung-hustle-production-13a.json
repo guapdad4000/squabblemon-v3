@@ -1,0 +1,53 @@
+{
+  "catalogId": "yung-hustle",
+  "name": "Yung Hustle",
+  "move": "Side Hustle",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve gold-beaded braids, small goatee, yellow puffer vest, black hoodie/cargos, cross-body pouch, yellow/black sneakers and black phone. Review one body, same phone throughout, three parcel routing impacts, stable hands and no new app/receipt writing.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "eyo8yW3Zy30P6LNKPHov",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nYung Hustle \u2014 Side Hustle.\nIDENTITY: exact young adult brown-skinned hustler with neat shoulder-length braids tipped in gold beads, small chin beard, gold stud earrings, bright yellow sleeveless puffer vest over a black hoodie, black cargo trousers, small black cross-body pouch, yellow/black high-top sneakers and black smartphone. Preserve his warm confident grin and all clothing colors.\n0\u20130.7s: full-body forward-leaning stance. His phone vibrates in his left hand; he taps it once with his right index finger. THREE plain cardboard parcels burst upward from his small cross-body pouch in absurdly oversized succession, the last as large as he is. He bends low, ready to move.\n0.7\u20132.5s: camera whips with an explosive athletic delivery combo. He palm-launches the first parcel far left, heel-kicks the second far right, then vaults onto the largest and rides it straight ahead like a rocket while still holding the SAME phone in his left hand. Three open unmarked delivery lockers float far apart in cyan. The first two parcels slam into the left and right lockers; he backflips off the biggest parcel and drives it into the central locker with one enormous downward sneaker stomp. Three escalating cardboard-and-metal impacts with bounded ivory/amber stars, the third huge. Clear route to three destinations, no recipients, buildings, floor or road.\n2.5\u20133.5s: all three locker doors slam shut in a sharp left-right-center rhythm. Three long BLANK receipt strips whip back toward his pouch and fold into one tiny paper stack as he catches himself in a stylish complete airborne stance. Camera snaps to his grinning face; exact title SIDE HUSTLE slams below his shoulders with the final delivery BOOM. No app interface, prices, numbers, brands or additional lettering.\n3.5\u20135s: complete hero pose on cyan. He checks the phone once, satisfied. It immediately vibrates again and one more little parcel pokes from his pouch. He gives the camera a knowing half-smile, tugs the yellow vest straight and leans forward ready for the next run. SFX: phone buzz/tap, three package pops, fast palm and kick whooshes, roaring box flight, three escalating delivery impacts, receipt flutter, title slam and final short phone buzz. No speech, music or background haze.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "eyo8yW3Zy30P6LNKPHov",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nYung Hustle \u2014 Side Hustle.\nIDENTITY: exact young adult brown-skinned hustler with neat shoulder-length braids tipped in gold beads, small chin beard, gold stud earrings, bright yellow sleeveless puffer vest over a black hoodie, black cargo trousers, small black cross-body pouch, yellow/black high-top sneakers and black smartphone. Preserve his warm confident grin and all clothing colors.\n0\u20130.7s: full-body forward-leaning stance. His phone vibrates in his left hand; he taps it once with his right index finger. THREE plain cardboard parcels burst upward from his small cross-body pouch in absurdly oversized succession, the last as large as he is. He bends low, ready to move.\n0.7\u20132.5s: camera whips with an explosive athletic delivery combo. He palm-launches the first parcel far left, heel-kicks the second far right, then vaults onto the largest and rides it straight ahead like a rocket while still holding the SAME phone in his left hand. Three open unmarked delivery lockers float far apart in cyan. The first two parcels slam into the left and right lockers; he backflips off the biggest parcel and drives it into the central locker with one enormous downward sneaker stomp. Three escalating cardboard-and-metal impacts with bounded ivory/amber stars, the third huge. Clear route to three destinations, no recipients, buildings, floor or road.\n2.5\u20133.5s: all three locker doors slam shut in a sharp left-right-center rhythm. Three long BLANK receipt strips whip back toward his pouch and fold into one tiny paper stack as he catches himself in a stylish complete airborne stance. Camera snaps to his grinning face; exact title SIDE HUSTLE slams below his shoulders with the final delivery BOOM. No app interface, prices, numbers, brands or additional lettering.\n3.5\u20135s: complete hero pose on cyan. He checks the phone once, satisfied. It immediately vibrates again and one more little parcel pokes from his pouch. He gives the camera a knowing half-smile, tugs the yellow vest straight and leans forward ready for the next run. SFX: phone buzz/tap, three package pops, fast palm and kick whooshes, roaring box flight, three escalating delivery impacts, receipt flutter, title slam and final short phone buzz. No speech, music or background haze.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/90347bb85c8c8d25bc6ebe7434767c0199c5d3b9ab58f91421133eb5cf3e883d.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "XGxBOvOm7fJ0bSAbWQ1I",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790485644985_22aff781.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_10a9da8b-3006-4791-8dd9-9cb7146fd274_output_aigc_1790485649162_38f1293b.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  }
+}

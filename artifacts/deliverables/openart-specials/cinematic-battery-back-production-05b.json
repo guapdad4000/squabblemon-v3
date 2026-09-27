@@ -1,0 +1,59 @@
+{
+  "catalogId": "battery-back",
+  "name": "Game Developer",
+  "move": "Works on My Machine",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve sleepy curly-haired developer, purple T-shirt, gray sweatpants, navy cat slippers, beige cracked CRT and cables. Review CRT facial icon, giant pixel wrench repair, connectors and title readability.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "KxMxrsLB9LNY21XGqh1X",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGame Developer \u2014 Works on My Machine.\nIDENTITY: exact tired brown-skinned adult man with messy black curls, faint chin stubble, heavy-lidded eyes, loose purple T-shirt, gray drawstring sweatpants and navy slippers with cream sleeping-cat faces. Preserve his old beige CRT monitor with cracked glass, tiny pixel sad-face icon and loose black cables. Do not replace it with a laptop. No code listings or other readable screen text.\n0\u20130.7s: full-body view. He looks exhausted, balances the cracked CRT against his shoulder and gives its side one impatient open-palm thump. The little sad-face icon abruptly changes to a determined square face.\n0.7\u20132.5s: the screen erupts into a COLOSSAL gold-and-magenta pixel-built socket wrench on a segmented mechanical arm, thrusting thirty feet into depth toward a broken gold shield emblem. Camera shoots alongside it as big finite pixel blocks click together. The wrench grabs the emblem's separated pieces, spins one enormous quarter-turn and slams them together into a perfectly repaired shield with a thunderous mechanical CLONK and explosive warm-white/gold pixel shockwave. Strong readable repair impact and impossible tool scale. Device, pixels and shield are foreground props against pure cyan; no background screen rectangle, room, desk or fullscreen digital filter.\n2.5\u20133.5s: snap back to the developer as the giant wrench folds into the CRT in a rapid series of satisfying chunky clicks. The repaired shield shrinks to a small glowing token beside him. Exact title WORKS ON MY MACHINE slams in three clear comic lines below his face.\n3.5\u20135s: he raises one weary approving thumb. The screen's tiny face becomes smug for a beat, then one little puff of warm-gray smoke escapes the monitor. He immediately lowers his thumb and side-eyes the screen without moving his body. Hold the complete figure, cat slippers, CRT and stable title. SFX: hollow plastic thump, startup click, enormous ratcheting tool rush, metallic repair CLONK, pixel snap-retraction and tiny exhausted smoke pfft. No speech, music or real operating-system jingles.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "KxMxrsLB9LNY21XGqh1X",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nGame Developer \u2014 Works on My Machine.\nIDENTITY: exact tired brown-skinned adult man with messy black curls, faint chin stubble, heavy-lidded eyes, loose purple T-shirt, gray drawstring sweatpants and navy slippers with cream sleeping-cat faces. Preserve his old beige CRT monitor with cracked glass, tiny pixel sad-face icon and loose black cables. Do not replace it with a laptop. No code listings or other readable screen text.\n0\u20130.7s: full-body view. He looks exhausted, balances the cracked CRT against his shoulder and gives its side one impatient open-palm thump. The little sad-face icon abruptly changes to a determined square face.\n0.7\u20132.5s: the screen erupts into a COLOSSAL gold-and-magenta pixel-built socket wrench on a segmented mechanical arm, thrusting thirty feet into depth toward a broken gold shield emblem. Camera shoots alongside it as big finite pixel blocks click together. The wrench grabs the emblem's separated pieces, spins one enormous quarter-turn and slams them together into a perfectly repaired shield with a thunderous mechanical CLONK and explosive warm-white/gold pixel shockwave. Strong readable repair impact and impossible tool scale. Device, pixels and shield are foreground props against pure cyan; no background screen rectangle, room, desk or fullscreen digital filter.\n2.5\u20133.5s: snap back to the developer as the giant wrench folds into the CRT in a rapid series of satisfying chunky clicks. The repaired shield shrinks to a small glowing token beside him. Exact title WORKS ON MY MACHINE slams in three clear comic lines below his face.\n3.5\u20135s: he raises one weary approving thumb. The screen's tiny face becomes smug for a beat, then one little puff of warm-gray smoke escapes the monitor. He immediately lowers his thumb and side-eyes the screen without moving his body. Hold the complete figure, cat slippers, CRT and stable title. SFX: hollow plastic thump, startup click, enormous ratcheting tool rush, metallic repair CLONK, pixel snap-retraction and tiny exhausted smoke pfft. No speech, music or real operating-system jingles.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/399a5153e37f3ff5006c8d858c3e1c57a433e5953cbb1dd110f0dbedfd8c9d6f.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "nbDx3DGGTdoXzTVN48eO",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476920840_0759ca68.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_84203801-10a0-4c42-99cf-ed86a1c616ea_output_aigc_1790476924872_519ee703.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476920840_0759ca68.mp4",
+    "width": 768,
+    "height": 1344,
+    "duration": 5.167,
+    "fps": 24,
+    "hasAudio": true
+  }
+}

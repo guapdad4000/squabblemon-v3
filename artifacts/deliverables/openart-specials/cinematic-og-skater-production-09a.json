@@ -1,0 +1,30 @@
+{
+  "catalogId": "og-skater",
+  "name": "OG Skater",
+  "move": "Still Got It",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve older skater's gray beaded locs/beard, backwards red cap, distressed red layers, stitched trousers and worn board. Review rail as isolated prop with cyan through loop, truck contact, kickflip continuity, smoking prop consistency and title.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "iKIhk7AngzbtXbsaOiGV",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nOG Skater \u2014 Still Got It.\nIDENTITY: exact older brown-skinned skater with gray beaded locs, wiry gray beard, backward ragged red cap, hoop earrings, nose bandage, weathered face and the small smoking prop already at his mouth. Distressed red jacket over dark hoodie and worn cream graphic shirt, stitched black patchwork trousers, red plaid shirt tied at waist, white socks with red stripes, battered off-white high-top skate shoes, silver chains and rings. Preserve his heavily scraped black/red skateboard with cream wheels and metal trucks. He is a seasoned expert, not frail or de-aged.\n0\u20130.7s: full-body rolling crouch with the whole board visible. He snaps the board tail and ollies onto an isolated curved steel grind rail floating in cyan.\n0.7\u20132.5s: camera pulls dramatically out: the single rail curls into an enormous vertical LOOP many times taller than him, with pure cyan through its center. He grinds the entire outside of the loop at outrageous speed, trucks throwing finite orange/ivory sparks. At the top he kicks off into one huge soaring kickflip across empty depth. The board's broad underside SLAPS a suspended oversized charcoal padded target far away, sending the target tumbling backward while the same board completes its flip and returns perfectly under his shoes. One enormous bounded cream/red impact star, brief clear board-contact hold, then clean foot catch. No skate park, street, floor or background speed-line sheet.\n2.5\u20133.5s: snap into a low-angle view of his confident grin as he rides out along a short finite cream/red wheel-trail ribbon suspended on cyan. Exact title STILL GOT IT slams below his chest in two rough-edged but readable comic lines.\n3.5\u20135s: settle to a whole-character crouched board pose. A single tiny loose washer from the rail arcs back toward him; he casually catches it on the board nose and flicks it into his pocket without breaking his pose. The trail and rail recede, leaving clear cyan around the complete silhouette. SFX: board pop, intense rising truck grind, loop whoosh, explosive board-on-pad CRACK, crisp landing snap, title slam and tiny washer tick. No music, voices or gold-fist effects.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480134380_a2d242a9.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

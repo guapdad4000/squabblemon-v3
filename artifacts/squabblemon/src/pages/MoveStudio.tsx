@@ -54,7 +54,7 @@ export default function MoveStudio() {
       <button aria-pressed={audioEnabled} onClick={() => { setAudioEnabled(value => !value); if (!audioEnabled) setReplay(value => value + 1); }}>{audioEnabled ? 'Mute preview' : 'Play with sound'}</button>
       <button className="primary" onClick={save}>Use for this card</button>
       <p role="status">{status}</p>
-      <small>Selections save on this browser. Export assignments to share them or make them the game defaults. Preview plays the full clip at normal speed; battles use shorter excerpts, with a full reveal for OG Uncle.</small>
+      <small>Selections save on this browser. Export assignments to share them or make them the game defaults. Preview plays the full clip at normal speed. Battles use each animation’s configured timing.</small>
       <div><button onClick={download}>Export assignments</button><button onClick={() => {
         try { localStorage.removeItem(MOVE_STORAGE_KEY); setOverrides({}); setClipId(moveAssignments[cardId] ?? ''); setStatus('Default assignments restored.'); }
         catch { setStatus('Browser storage is unavailable.'); }

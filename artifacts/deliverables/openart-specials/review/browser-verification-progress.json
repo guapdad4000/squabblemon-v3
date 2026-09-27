@@ -1,0 +1,3306 @@
+{
+  "tested": 100,
+  "errors": [],
+  "clips": [
+    {
+      "catalogId": "dr-fade",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 79581,
+          "clearPixels": 54421
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 79893,
+          "clearPixels": 63666
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64660,
+          "clearPixels": 75671
+        }
+      ]
+    },
+    {
+      "catalogId": "folks",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 95501,
+          "clearPixels": 47673
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 132637,
+          "clearPixels": 6491
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 102948,
+          "clearPixels": 23834
+        }
+      ]
+    },
+    {
+      "catalogId": "buddy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72031,
+          "clearPixels": 68738
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 40897,
+          "clearPixels": 96987
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 83728,
+          "clearPixels": 54420
+        }
+      ]
+    },
+    {
+      "catalogId": "concrete",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64436,
+          "clearPixels": 72495
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 90884,
+          "clearPixels": 41036
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 115221,
+          "clearPixels": 29015
+        }
+      ]
+    },
+    {
+      "catalogId": "counter",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 65503,
+          "clearPixels": 73520
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 77523,
+          "clearPixels": 65948
+        }
+      ]
+    },
+    {
+      "catalogId": "undercova-brotha",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58595,
+          "clearPixels": 80451
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67094,
+          "clearPixels": 50404
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 69573,
+          "clearPixels": 74394
+        }
+      ]
+    },
+    {
+      "catalogId": "sugarfoot",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 32208,
+          "clearPixels": 111545
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 135450,
+          "clearPixels": 0
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 94713,
+          "clearPixels": 47701
+        }
+      ]
+    },
+    {
+      "catalogId": "juneteenth-chair-guy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55869,
+          "clearPixels": 82009
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 92677,
+          "clearPixels": 41884
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 41162,
+          "clearPixels": 98171
+        }
+      ]
+    },
+    {
+      "catalogId": "homeless-wiseman",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53125,
+          "clearPixels": 90626
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 105189,
+          "clearPixels": 34178
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66579,
+          "clearPixels": 73233
+        }
+      ]
+    },
+    {
+      "catalogId": "bonnet-girl",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59387,
+          "clearPixels": 79016
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 81310,
+          "clearPixels": 56770
+        }
+      ]
+    },
+    {
+      "catalogId": "tattoo-artist",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66938,
+          "clearPixels": 73464
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 112970,
+          "clearPixels": 30913
+        }
+      ]
+    },
+    {
+      "catalogId": "the-mailman",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 44671,
+          "clearPixels": 98336
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55513,
+          "clearPixels": 19852
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145149,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "garden-wall",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 37764,
+          "clearPixels": 105657
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 75706,
+          "clearPixels": 51239
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 113923,
+          "clearPixels": 30132
+        }
+      ]
+    },
+    {
+      "catalogId": "ahki",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145125,
+          "clearPixels": 0
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 95584,
+          "clearPixels": 42864
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 85554,
+          "clearPixels": 58339
+        }
+      ]
+    },
+    {
+      "catalogId": "cloudbreak",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 16981,
+          "clearPixels": 121009
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72405,
+          "clearPixels": 31340
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 57586,
+          "clearPixels": 72554
+        }
+      ]
+    },
+    {
+      "catalogId": "alchy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42874,
+          "clearPixels": 95624
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 114213,
+          "clearPixels": 23249
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 100285,
+          "clearPixels": 42212
+        }
+      ]
+    },
+    {
+      "catalogId": "atl-scammer",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59118,
+          "clearPixels": 84107
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 136734,
+          "clearPixels": 7783
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 124799,
+          "clearPixels": 18997
+        }
+      ]
+    },
+    {
+      "catalogId": "crosswind",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58879,
+          "clearPixels": 73202
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 120560,
+          "clearPixels": 1204
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42283,
+          "clearPixels": 96000
+        }
+      ]
+    },
+    {
+      "catalogId": "bbl-demon",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72977,
+          "clearPixels": 61345
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 106212,
+          "clearPixels": 16912
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68856,
+          "clearPixels": 71404
+        }
+      ]
+    },
+    {
+      "catalogId": "bbl-nice",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 44390,
+          "clearPixels": 99216
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 89573,
+          "clearPixels": 51163
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 98977,
+          "clearPixels": 44145
+        }
+      ]
+    },
+    {
+      "catalogId": "bboy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 17853,
+          "clearPixels": 120447
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 71319,
+          "clearPixels": 58231
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 41298,
+          "clearPixels": 96111
+        }
+      ]
+    },
+    {
+      "catalogId": "gust",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 39196,
+          "clearPixels": 104127
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 87993,
+          "clearPixels": 55383
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 80343,
+          "clearPixels": 62072
+        }
+      ]
+    },
+    {
+      "catalogId": "black-cowboy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55036,
+          "clearPixels": 28350
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 137842,
+          "clearPixels": 0
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68334,
+          "clearPixels": 37591
+        }
+      ]
+    },
+    {
+      "catalogId": "bouncer",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67856,
+          "clearPixels": 75529
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 133488,
+          "clearPixels": 10921
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55731,
+          "clearPixels": 83317
+        }
+      ]
+    },
+    {
+      "catalogId": "break-dancer",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 34895,
+          "clearPixels": 106623
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 140771,
+          "clearPixels": 2543
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 76042,
+          "clearPixels": 59938
+        }
+      ]
+    },
+    {
+      "catalogId": "cologne-criminal",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53889,
+          "clearPixels": 89209
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 82047,
+          "clearPixels": 59891
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 134147,
+          "clearPixels": 8674
+        }
+      ]
+    },
+    {
+      "catalogId": "corrupt-pastor",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 114793,
+          "clearPixels": 29932
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 118424,
+          "clearPixels": 17673
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 113742,
+          "clearPixels": 30849
+        }
+      ]
+    },
+    {
+      "catalogId": "demario",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 83561,
+          "clearPixels": 53202
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 31991,
+          "clearPixels": 107491
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 54181,
+          "clearPixels": 85169
+        }
+      ]
+    },
+    {
+      "catalogId": "divorced-dad",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 73859,
+          "clearPixels": 66328
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 137656,
+          "clearPixels": 5467
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 126838,
+          "clearPixels": 1804
+        }
+      ]
+    },
+    {
+      "catalogId": "dmv-worker",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42224,
+          "clearPixels": 101487
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 139566,
+          "clearPixels": 4718
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 88339,
+          "clearPixels": 54127
+        }
+      ]
+    },
+    {
+      "catalogId": "livewire",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 39431,
+          "clearPixels": 101608
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 121524,
+          "clearPixels": 12842
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55319,
+          "clearPixels": 80758
+        }
+      ]
+    },
+    {
+      "catalogId": "dr-umah",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 73292,
+          "clearPixels": 65889
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 55758,
+          "clearPixels": 78849
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66586,
+          "clearPixels": 73928
+        }
+      ]
+    },
+    {
+      "catalogId": "wiretap",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 91540,
+          "clearPixels": 51240
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 63038,
+          "clearPixels": 78621
+        }
+      ]
+    },
+    {
+      "catalogId": "circuit-captain",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 32843,
+          "clearPixels": 109517
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 86747,
+          "clearPixels": 38886
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42165,
+          "clearPixels": 99996
+        }
+      ]
+    },
+    {
+      "catalogId": "rainmaker",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 70818,
+          "clearPixels": 71322
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 35844,
+          "clearPixels": 106578
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 34443,
+          "clearPixels": 108152
+        }
+      ]
+    },
+    {
+      "catalogId": "failed-athlete",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 81753,
+          "clearPixels": 59499
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 40123,
+          "clearPixels": 102269
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 118163,
+          "clearPixels": 23218
+        }
+      ]
+    },
+    {
+      "catalogId": "failed-rapper",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53235,
+          "clearPixels": 90746
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 143528,
+          "clearPixels": 1340
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 110853,
+          "clearPixels": 32789
+        }
+      ]
+    },
+    {
+      "catalogId": "fangirl",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 54300,
+          "clearPixels": 88093
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 138462,
+          "clearPixels": 5404
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 60726,
+          "clearPixels": 80323
+        }
+      ]
+    },
+    {
+      "catalogId": "fein",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68324,
+          "clearPixels": 71510
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 130942,
+          "clearPixels": 8325
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 110299,
+          "clearPixels": 27997
+        }
+      ]
+    },
+    {
+      "catalogId": "battery-back",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64105,
+          "clearPixels": 79323
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 98214,
+          "clearPixels": 43815
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 78704,
+          "clearPixels": 64437
+        }
+      ]
+    },
+    {
+      "catalogId": "monsoon-anchor",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67250,
+          "clearPixels": 70919
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 77164,
+          "clearPixels": 59684
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 126014,
+          "clearPixels": 11257
+        }
+      ]
+    },
+    {
+      "catalogId": "riptide-bruiser",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 28865,
+          "clearPixels": 114913
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 43491,
+          "clearPixels": 98743
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74834,
+          "clearPixels": 68797
+        }
+      ]
+    },
+    {
+      "catalogId": "god-of-hookah",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 40981,
+          "clearPixels": 101304
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 107552,
+          "clearPixels": 11
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72819,
+          "clearPixels": 69444
+        }
+      ]
+    },
+    {
+      "catalogId": "goth-kid",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67923,
+          "clearPixels": 0
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 141747,
+          "clearPixels": 0
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68270,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "grown-man-fanboy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74205,
+          "clearPixels": 64283
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 90609,
+          "clearPixels": 29616
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 75311,
+          "clearPixels": 60182
+        }
+      ]
+    },
+    {
+      "catalogId": "hair-stylist",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 50508,
+          "clearPixels": 91623
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 127526,
+          "clearPixels": 13436
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 63470,
+          "clearPixels": 78104
+        }
+      ]
+    },
+    {
+      "catalogId": "hater",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 112392,
+          "clearPixels": 30852
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 13468,
+          "clearPixels": 126359
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 78206,
+          "clearPixels": 65117
+        }
+      ]
+    },
+    {
+      "catalogId": "homeless-guy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 70394,
+          "clearPixels": 0
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 52300,
+          "clearPixels": 47
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53881,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "homeless-legend",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 90454,
+          "clearPixels": 50424
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 81786,
+          "clearPixels": 27669
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68180,
+          "clearPixels": 66860
+        }
+      ]
+    },
+    {
+      "catalogId": "homeless-yn",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 90042,
+          "clearPixels": 53484
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 60711,
+          "clearPixels": 83430
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 90745,
+          "clearPixels": 52886
+        }
+      ]
+    },
+    {
+      "catalogId": "stillwater-medic",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53379,
+          "clearPixels": 85258
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 131164,
+          "clearPixels": 4799
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59244,
+          "clearPixels": 80284
+        }
+      ]
+    },
+    {
+      "catalogId": "incel",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 82682,
+          "clearPixels": 55318
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 2159,
+          "clearPixels": 136018
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59304,
+          "clearPixels": 83915
+        }
+      ]
+    },
+    {
+      "catalogId": "inmate-boyfriend",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 76073,
+          "clearPixels": 63258
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 25192,
+          "clearPixels": 36485
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 70006,
+          "clearPixels": 70778
+        }
+      ]
+    },
+    {
+      "catalogId": "inmate-contraband",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 70733,
+          "clearPixels": 43008
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 56764,
+          "clearPixels": 81420
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145024,
+          "clearPixels": 13
+        }
+      ]
+    },
+    {
+      "catalogId": "inmate-crafty",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 88906,
+          "clearPixels": 53774
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 144755,
+          "clearPixels": 217
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 75437,
+          "clearPixels": 67798
+        }
+      ]
+    },
+    {
+      "catalogId": "inmate-informant",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 96251,
+          "clearPixels": 47638
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 127005,
+          "clearPixels": 17706
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 97171,
+          "clearPixels": 46231
+        }
+      ]
+    },
+    {
+      "catalogId": "inmate-kingpin",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 81076,
+          "clearPixels": 61333
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58860,
+          "clearPixels": 41281
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 88734,
+          "clearPixels": 52394
+        }
+      ]
+    },
+    {
+      "catalogId": "janitor",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 50819,
+          "clearPixels": 87650
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 142871,
+          "clearPixels": 1953
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 48295,
+          "clearPixels": 91887
+        }
+      ]
+    },
+    {
+      "catalogId": "krump-dancer",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 57960,
+          "clearPixels": 85233
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 121379,
+          "clearPixels": 22853
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64369,
+          "clearPixels": 78501
+        }
+      ]
+    },
+    {
+      "catalogId": "lawless-yn",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67030,
+          "clearPixels": 73154
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 125881,
+          "clearPixels": 17861
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58036,
+          "clearPixels": 78625
+        }
+      ]
+    },
+    {
+      "catalogId": "lawyer",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 56500,
+          "clearPixels": 87391
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 87498,
+          "clearPixels": 57017
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 113327,
+          "clearPixels": 31417
+        }
+      ]
+    },
+    {
+      "catalogId": "live-streamer-male",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64029,
+          "clearPixels": 72217
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 134495,
+          "clearPixels": 101
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 67444,
+          "clearPixels": 67735
+        }
+      ]
+    },
+    {
+      "catalogId": "luigion",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 47488,
+          "clearPixels": 95462
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74254,
+          "clearPixels": 66555
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 45920,
+          "clearPixels": 95590
+        }
+      ]
+    },
+    {
+      "catalogId": "root-nurse",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 109542,
+          "clearPixels": 34095
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 137092,
+          "clearPixels": 7030
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 109328,
+          "clearPixels": 33738
+        }
+      ]
+    },
+    {
+      "catalogId": "miami-surgeon",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74466,
+          "clearPixels": 62384
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 115243,
+          "clearPixels": 17831
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 28766,
+          "clearPixels": 106156
+        }
+      ]
+    },
+    {
+      "catalogId": "mr-trick",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 79891,
+          "clearPixels": 63497
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 128619,
+          "clearPixels": 14350
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 83410,
+          "clearPixels": 59677
+        }
+      ]
+    },
+    {
+      "catalogId": "nigerian-father",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 87642,
+          "clearPixels": 55786
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 100304,
+          "clearPixels": 43640
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 78477,
+          "clearPixels": 64520
+        }
+      ]
+    },
+    {
+      "catalogId": "og-skater",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66667,
+          "clearPixels": 6
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 131100,
+          "clearPixels": 446
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 103791,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "sprout",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 78538,
+          "clearPixels": 65781
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74176,
+          "clearPixels": 52594
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 57435,
+          "clearPixels": 85438
+        }
+      ]
+    },
+    {
+      "catalogId": "p-tang",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72379,
+          "clearPixels": 70437
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 57870,
+          "clearPixels": 85598
+        }
+      ]
+    },
+    {
+      "catalogId": "passport-bro",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53888,
+          "clearPixels": 86322
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 49501,
+          "clearPixels": 93218
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68653,
+          "clearPixels": 70286
+        }
+      ]
+    },
+    {
+      "catalogId": "canopy-keeper",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 33681,
+          "clearPixels": 106062
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 107043,
+          "clearPixels": 33249
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58166,
+          "clearPixels": 15867
+        }
+      ]
+    },
+    {
+      "catalogId": "powerhouse",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66533,
+          "clearPixels": 76156
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42325,
+          "clearPixels": 97367
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 69706,
+          "clearPixels": 69976
+        }
+      ]
+    },
+    {
+      "catalogId": "red-pill",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 94196,
+          "clearPixels": 27086
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 46060,
+          "clearPixels": 97048
+        }
+      ]
+    },
+    {
+      "catalogId": "redneck",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 102976,
+          "clearPixels": 38835
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 114362,
+          "clearPixels": 28825
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 39911,
+          "clearPixels": 103437
+        }
+      ]
+    },
+    {
+      "catalogId": "redneck-evil",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68877,
+          "clearPixels": 74175
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 58875,
+          "clearPixels": 79714
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 123590,
+          "clearPixels": 20258
+        }
+      ]
+    },
+    {
+      "catalogId": "lebron-james",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 97218,
+          "clearPixels": 46914
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59409,
+          "clearPixels": 54331
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68917,
+          "clearPixels": 74315
+        }
+      ]
+    },
+    {
+      "catalogId": "rent-a-cop",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 75597,
+          "clearPixels": 67217
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 49448,
+          "clearPixels": 85775
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 70921,
+          "clearPixels": 70697
+        }
+      ]
+    },
+    {
+      "catalogId": "revolutionary-ronald",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 51685,
+          "clearPixels": 91349
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 115862,
+          "clearPixels": 19916
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 73946,
+          "clearPixels": 67386
+        }
+      ]
+    },
+    {
+      "catalogId": "roommate",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59109,
+          "clearPixels": 83649
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 143928,
+          "clearPixels": 958
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 66181,
+          "clearPixels": 75458
+        }
+      ]
+    },
+    {
+      "catalogId": "seafood-assassin",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 77467,
+          "clearPixels": 64551
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 26708,
+          "clearPixels": 97216
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 41580,
+          "clearPixels": 101257
+        }
+      ]
+    },
+    {
+      "catalogId": "sherlock",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64948,
+          "clearPixels": 78388
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 96901,
+          "clearPixels": 26314
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 63744,
+          "clearPixels": 79050
+        }
+      ]
+    },
+    {
+      "catalogId": "sports-prodigy",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 34558,
+          "clearPixels": 106303
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 38535,
+          "clearPixels": 103098
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 38718,
+          "clearPixels": 98454
+        }
+      ]
+    },
+    {
+      "catalogId": "squabble-house-manager",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68705,
+          "clearPixels": 74765
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 140713,
+          "clearPixels": 3778
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53687,
+          "clearPixels": 86654
+        }
+      ]
+    },
+    {
+      "catalogId": "squabble-house-female",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 47224,
+          "clearPixels": 96634
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 109557,
+          "clearPixels": 33044
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "squabble-house-male",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 59493,
+          "clearPixels": 74520
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 144944,
+          "clearPixels": 113
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 53940,
+          "clearPixels": 87069
+        }
+      ]
+    },
+    {
+      "catalogId": "stoner-jr",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 82343,
+          "clearPixels": 60704
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 49569,
+          "clearPixels": 83315
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 56945,
+          "clearPixels": 86810
+        }
+      ]
+    },
+    {
+      "catalogId": "stoner-sr",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 49154,
+          "clearPixels": 92950
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 96470,
+          "clearPixels": 42843
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 84298,
+          "clearPixels": 57929
+        }
+      ]
+    },
+    {
+      "catalogId": "stud",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68213,
+          "clearPixels": 72467
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 124163,
+          "clearPixels": 18781
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 145152,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "stylist",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 56331,
+          "clearPixels": 0
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 125718,
+          "clearPixels": 0
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 75872,
+          "clearPixels": 0
+        }
+      ]
+    },
+    {
+      "catalogId": "teacher",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 84795,
+          "clearPixels": 56667
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 138402,
+          "clearPixels": 316
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 64836,
+          "clearPixels": 72117
+        }
+      ]
+    },
+    {
+      "catalogId": "asphalt-apostle",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 72412,
+          "clearPixels": 49803
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 101176,
+          "clearPixels": 38310
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 51553,
+          "clearPixels": 85316
+        }
+      ]
+    },
+    {
+      "catalogId": "the-feds",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 68311,
+          "clearPixels": 75164
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 101558,
+          "clearPixels": 16467
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 65338,
+          "clearPixels": 77929
+        }
+      ]
+    },
+    {
+      "catalogId": "slipstream",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 44369,
+          "clearPixels": 96059
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 39432,
+          "clearPixels": 10371
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 48313,
+          "clearPixels": 84639
+        }
+      ]
+    },
+    {
+      "catalogId": "street-apostle",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 144716,
+          "clearPixels": 0
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 69021,
+          "clearPixels": 50211
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 56773,
+          "clearPixels": 81531
+        }
+      ]
+    },
+    {
+      "catalogId": "trap-vamp",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 95176,
+          "clearPixels": 41990
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 92328,
+          "clearPixels": 38922
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 76134,
+          "clearPixels": 64739
+        }
+      ]
+    },
+    {
+      "catalogId": "watson",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 94716,
+          "clearPixels": 47332
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 138731,
+          "clearPixels": 6183
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 91156,
+          "clearPixels": 46637
+        }
+      ]
+    },
+    {
+      "catalogId": "yn-atv-lord",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.32,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 57759,
+          "clearPixels": 84043
+        },
+        {
+          "t": 4,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 42651,
+          "clearPixels": 82764
+        },
+        {
+          "t": 7.52,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 69007,
+          "clearPixels": 72560
+        }
+      ]
+    },
+    {
+      "catalogId": "yn-gokarter",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 62834,
+          "clearPixels": 1973
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 87154,
+          "clearPixels": 13270
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 79098,
+          "clearPixels": 13779
+        }
+      ]
+    },
+    {
+      "catalogId": "yung-hustle",
+      "renderer": "gpu",
+      "loaded": true,
+      "seeked": true,
+      "playbackAdvanced": true,
+      "samples": [
+        {
+          "t": 0.20668,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 88347,
+          "clearPixels": 55923
+        },
+        {
+          "t": 2.5835,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 63594,
+          "clearPixels": 79899
+        },
+        {
+          "t": 4.856979,
+          "alphaMax": 0,
+          "alphaMean": 0,
+          "opaqueRgbMean": 0,
+          "visiblePixels": 74728,
+          "clearPixels": 68955
+        }
+      ]
+    }
+  ]
+}

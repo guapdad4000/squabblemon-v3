@@ -1,0 +1,48 @@
+{
+  "catalogId": "undercova-brotha",
+  "name": "Undercova Brotha",
+  "move": "Inside Man",
+  "attempt": 1,
+  "quotedCredits": 480,
+  "result": {
+    "status": "PENDING",
+    "historyId": "o04HKqu34D40M7cJ5gk5",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nUNDERCOVA BROTHA \u2014 INSIDE MAN.\nPreserve the afro, dark sunglasses, mustache and beard, rust-brown leather coat, black shirt, gold medallion, tan flared trousers and black heeled boots.\n0\u20131.2s: establish full body; he tilts his sunglasses, spots a suspended glowing gold power token and gives a sly half-smile.\n1.2\u20133.2s: he twists into a dramatic coat sweep and vanishes inside its swirling dark ink afterimage. Camera whips around the empty coat-shaped decoy as a bright gold energy strike passes through it; the silhouette collapses into loose graphic ribbons, never a second actual person.\n3.2\u20134.8s: he reappears much deeper in the cyan void, already holding the stolen token between two fingers. A fast pullback reveals a zigzag trail of three fleeting coat afterimages connecting where he was to where he escaped. He snaps the token into his palm, sending a massive gold keyhole-shaped graphic pulse through the trail.\n4.8\u20136s: whip-push into a chest-up close-up; exact title \"INSIDE MAN\" slams at a jaunty angle beside his face.\n6\u20138s: he slides the token into his inner coat pocket, drops the sunglasses back over his eyes and turns away with an exaggerated coat flourish. Nobody else appears. Sound: coat snap, incoming strike, accelerating spy-like whooshes without music, clean token snatch click, power pulse, title slam.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "o04HKqu34D40M7cJ5gk5",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nUNDERCOVA BROTHA \u2014 INSIDE MAN.\nPreserve the afro, dark sunglasses, mustache and beard, rust-brown leather coat, black shirt, gold medallion, tan flared trousers and black heeled boots.\n0\u20131.2s: establish full body; he tilts his sunglasses, spots a suspended glowing gold power token and gives a sly half-smile.\n1.2\u20133.2s: he twists into a dramatic coat sweep and vanishes inside its swirling dark ink afterimage. Camera whips around the empty coat-shaped decoy as a bright gold energy strike passes through it; the silhouette collapses into loose graphic ribbons, never a second actual person.\n3.2\u20134.8s: he reappears much deeper in the cyan void, already holding the stolen token between two fingers. A fast pullback reveals a zigzag trail of three fleeting coat afterimages connecting where he was to where he escaped. He snaps the token into his palm, sending a massive gold keyhole-shaped graphic pulse through the trail.\n4.8\u20136s: whip-push into a chest-up close-up; exact title \"INSIDE MAN\" slams at a jaunty angle beside his face.\n6\u20138s: he slides the token into his inner coat pocket, drops the sunglasses back over his eyes and turns away with an exaggerated coat flourish. Nobody else appears. Sound: coat snap, incoming strike, accelerating spy-like whooshes without music, clean token snatch click, power pulse, title slam.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/6a10f0ff59ce9bfbd580cac0dfcc6eaf2be1b5557b63c940eda4e0d4979aefb6.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "j1kc4y56bjn7YfBzdVvR",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471561426_6ed7c254.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_f0895eec-cf40-4696-8121-7530155d0540_output_aigc_1790471566353_6ff3d0d7.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 8,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  }
+}

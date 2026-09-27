@@ -1,0 +1,30 @@
+{
+  "catalogId": "asphalt-apostle",
+  "name": "The Asphalt Apostle",
+  "move": "Concrete Congregation",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve sepia/olive skin rendering, locs, muscular bare chest, ivory glyph-covered torn coat, black wide trousers/boots and dark staff. Do not expand source glyphs into new text or import image-edge artifacts. Review finite stone pieces with cyan gaps, no floor/environment, and continuous staff/guard action.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "eSUyawZRXldFrEoFXBo5",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nThe Asphalt Apostle \u2014 Concrete Congregation.\nIDENTITY: exact muscular adult man with dark olive-brown skin rendered in the reference's dramatic sepia palette, thick short splayed locs, bare defined chest, long torn ivory coat covered in its original dark graphic glyphs, black belt, wide dark trousers, heavy dark boots and long dark staff. Preserve the reference markings as fixed fabric designs, never floating text. No new color makeover.\n0\u20131.2s: low-angle full-body establishment, long coat sweeping behind him. He balances one small asphalt pebble on the tip of his horizontal staff, then flicks it upward. Three enormous jagged iron weights approach through cyan behind a small plain clay figurine at his side.\n1.2\u20133.2s: he drives the staff tip into the airborne pebble. A colossal burst of individual asphalt slabs erupts outward from that single contact, suspended in cyan without any ground. Camera pulls far back as seven massive slabs rotate into a segmented protective shell around him and the clay figurine, like a giant open mechanical fan of stone. Leave broad cyan gaps between the slabs and keep his face visible through the front opening. The formation is a floating shield object, not a building or landscape.\n3.2\u20134.8s: the three iron weights slam into the shell in an accelerating left-center-right sequence. Each stone slab shifts, absorbs the hit and grinds out a bounded ivory/ochre spark star. He plants the staff crosswise as a lever and twists his entire torso: the shell snaps OPEN with overwhelming force, launching all three weights away in diverging deep-perspective arcs. One monumental final stone-crack BOOM with disconnected dust chips, never a full-screen dust cloud. The clay figurine remains completely untouched.\n4.8\u20136s: camera races back between the falling slabs to his focused face. Exact title CONCRETE CONGREGATION slams in two bold lines below his shoulders, warm ivory/gold and black like the series. The seven slabs spiral down into the one small pebble again.\n6\u20138s: entire character and staff in a clear hero composition. He catches the pebble on his staff tip, gives the safely sheltered clay figurine a small approving nod, then brushes one speck of dust from his ivory coat. The pebble rolls once along the staff and stops at his hand. SFX: pebble tick, staff strike, enormous rising stone grind, three staggered heavy impacts, dominant shield recoil CRACK, receding weight whistles, title slam and small pebble clack. No speech, music, floor or architecture.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484438371_697ead75.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

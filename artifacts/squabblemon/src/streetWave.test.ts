@@ -197,13 +197,13 @@ test('Alchy trained tiers add one bounded round-end Hand each', () => {
   assert(cards.alchy.abilityUpgrades.every(upgrade => upgrade.description.includes('round end')));
 });
 
-test('new fighters are collectible, trained and use replaceable special-move fallbacks', () => {
+test('street fighters are collectible, trained and use their delivered replaceable special moves', () => {
   assert.equal(STREET_WAVE.length, 21);
   for (const [id, artwork, , rarity] of STREET_WAVE) {
     const entry = cardCatalog.find(c => c.engineId === id)!;
     assert(entry); assert.equal(entry.catalogId, artwork); assert.equal(entry.rarity, rarity);
     assert.equal(cards[id].abilityUpgrades?.length, 3);
-    const delivered = id === 'simmy' ? 'char93' : id === 'foodz' ? 'char92' : null;
+    const delivered = id === 'simmy' ? 'char93' : id === 'foodz' ? 'char92' : `oa-${artwork}-v1`;
     assert.equal(moveAssignments[id], delivered);
     assert.equal(resolveSpecialMove(id)?.id ?? null, delivered);
   }

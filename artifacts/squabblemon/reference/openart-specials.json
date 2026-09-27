@@ -1,0 +1,2109 @@
+{
+  "scope": "100 non-fairytale characters",
+  "acceptanceNote": "User requested all completed renders implemented now, with replacements over time. Known source defects remain; this is not clean visual or subjective audio QA acceptance.",
+  "clips": [
+    {
+      "catalogId": "dr-fade",
+      "engineId": "drfade",
+      "clipId": "oa-dr-fade-v1",
+      "file": "oa-dr-fade-v1.mp4",
+      "generationId": "eBVHEjsbg08knJXkBB3D",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471081826_daded3be.mp4",
+      "sha256": "3ad40819373aaa796d354b228e45293e28ba3e5d6b99bed2ea46f65995e2ab3b",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Sampled frames retain character and readable title; broad depth pullback leaves the hero very small around 2.25s. Check full-speed impact and audio."
+      }
+    },
+    {
+      "catalogId": "folks",
+      "engineId": "folks",
+      "clipId": "oa-folks-v1",
+      "file": "oa-folks-v1.mp4",
+      "generationId": "2YXGqBsW1bOHobJvMoQB",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471088708_02d8701f.mp4",
+      "sha256": "de15c8612e4934c7416909a10798e16220700ea418007d7972635d38c50fc5a8",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque radial background and floor remain across action/finish, especially 2.25-7.75s. Early pre-removal golden fist motif."
+      }
+    },
+    {
+      "catalogId": "buddy",
+      "engineId": "buddy",
+      "clipId": "oa-buddy-v1",
+      "file": "oa-buddy-v1.mp4",
+      "generationId": "zn01hzfXFWqXy7ZNJJvh",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471073970_988ef9b6.mp4",
+      "sha256": "7a8db4587771e4833344225188165f9cccd2d993554bf19eb1b511be4052dae4",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Sampled vine payoff, title and seated finish retain transparent gaps. Inspect motion continuity and audio."
+      }
+    },
+    {
+      "catalogId": "concrete",
+      "engineId": "concrete",
+      "clipId": "oa-concrete-v1",
+      "file": "oa-concrete-v1.mp4",
+      "generationId": "DLs9sdaTSMZrhfP3FGl6",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471649472_ee6447a8.mp4",
+      "sha256": "3b26ca429a654e2c9d1bea654fc8b31ad1a0d856eed321c1640a648c3b9fe506",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Impact/title beats include opaque speed-line panels around 4.5-5.5s. Foreground stone slabs themselves are intentional."
+      }
+    },
+    {
+      "catalogId": "counter",
+      "engineId": "counter",
+      "clipId": "oa-counter-v1",
+      "file": "oa-counter-v1.mp4",
+      "generationId": "qA4y4k68imGDfPMyIQKW",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471561997_5806dbb8.mp4",
+      "sha256": "d8416fd4d95a8b1b8cf1149abea6478e6ab8d41186f0f23952da0e66d0ea1195",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Impact at 4.5s fills frame with opaque radial backdrop; mirror foreground and final pose otherwise clear."
+      }
+    },
+    {
+      "catalogId": "undercova-brotha",
+      "engineId": "undercova",
+      "clipId": "oa-undercova-brotha-v1",
+      "file": "oa-undercova-brotha-v1.mp4",
+      "generationId": "o04HKqu34D40M7cJ5gk5",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471561426_6ed7c254.mp4",
+      "sha256": "861a87e66f8098308cf66dceebe3e7b1df0b33eb4d34cbc64cbfc032c7a9d750",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial backing visible around 2.25 and 4.5s. Hero and title otherwise recognizable."
+      }
+    },
+    {
+      "catalogId": "sugarfoot",
+      "engineId": "sugarfoot",
+      "clipId": "oa-sugarfoot-v1",
+      "file": "oa-sugarfoot-v1.mp4",
+      "generationId": "Bz6My9KOTbaYX3K8YpF3",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790471564009_dce3f020.mp4",
+      "sha256": "f1d692de2d9fb8b0b6e6a370823cef4ba88aebc902430c8f622f23206fb73724",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/colored backdrops behind candy vortex and title, approximately 2.25-5.5s. Early pre-removal golden fist motif."
+      }
+    },
+    {
+      "catalogId": "juneteenth-chair-guy",
+      "engineId": "juneteenth-chair-guy",
+      "clipId": "oa-juneteenth-chair-guy-v1",
+      "file": "oa-juneteenth-chair-guy-v1.mp4",
+      "generationId": "TjG13kI8vd5YLGcWW8WS",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790472262936_a6270ed5.mp4",
+      "sha256": "d30d5dc932bf08a682d44b27f7f1743d94b9d55f43a00f8cd8f2275b1ff0cf9d",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Red rectangular impact panel at 4.5s, then clear seated finish."
+      }
+    },
+    {
+      "catalogId": "homeless-wiseman",
+      "engineId": "homeless-wiseman",
+      "clipId": "oa-homeless-wiseman-v1",
+      "file": "oa-homeless-wiseman-v1.mp4",
+      "generationId": "ErQqBHSGd4PMLBzLKk0O",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790472242227_312bd544.mp4",
+      "sha256": "740b32aef27ec8428906f887ec584a156361cc66a5d328333d09a6238835f4d0",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark radial background at 2.25-3.25s, opaque title closeup at 5.5s."
+      }
+    },
+    {
+      "catalogId": "bonnet-girl",
+      "engineId": "bonnetgirl",
+      "clipId": "oa-bonnet-girl-v1",
+      "file": "oa-bonnet-girl-v1.mp4",
+      "generationId": "0BKzIarWHLB9I6HAmMlx",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790472213509_d7e46b93.mp4",
+      "sha256": "8c4416614129948859d1987a0e18fbe1d65dd5d6501ae3d9753bbdf5695099e6",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark purple beam background at 2.25s and opaque title impact. Final silhouette clear."
+      }
+    },
+    {
+      "catalogId": "tattoo-artist",
+      "engineId": "tattoo-artist",
+      "clipId": "oa-tattoo-artist-v1",
+      "file": "oa-tattoo-artist-v1.mp4",
+      "generationId": "09gj0cfNa81yt7qopOmG",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790472220882_e23b9e4b.mp4",
+      "sha256": "ee786d3913e1045cf2c99401ec839c827444b8db6fcec92c452726eec94fc3e3",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Large ink shield is a discrete foreground object; sampled frames preserve clear gaps. Title/pose readable. Needs motion and audio review."
+      }
+    },
+    {
+      "catalogId": "the-mailman",
+      "engineId": "mailman",
+      "clipId": "oa-the-mailman-v1",
+      "file": "oa-the-mailman-v1.mp4",
+      "generationId": "TQlDYP3IRqlTGJ9Z3aUG",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473171343_23d29f4e.mp4",
+      "sha256": "bb5614dacafa5609bef2d17b1f3163e333abcbae269b5a7a16352c34dc78ed2b",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/teal backing persists behind wings and travel/portal/title, approximately 1-5.5s, black halo persists in finish."
+      }
+    },
+    {
+      "catalogId": "garden-wall",
+      "engineId": "gardenwall",
+      "clipId": "oa-garden-wall-v1",
+      "file": "oa-garden-wall-v1.mp4",
+      "generationId": "HbMBF3nnavkJ0xGKyn50",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473166722_8429e879.mp4",
+      "sha256": "c40af29f043c041d038c38cfa00710f470100f428cc3b1458249983d4a16acf7",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panels around asparagus thrust at 2.25s and growth at 4.5s."
+      }
+    },
+    {
+      "catalogId": "ahki",
+      "engineId": "ahki",
+      "clipId": "oa-ahki-v1",
+      "file": "oa-ahki-v1.mp4",
+      "generationId": "doCCiZxaoMa5nFsM9z9T",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473143298_9dbdf02a.mp4",
+      "sha256": "024fda6837f7cad4b6df82f606aea2c8347af2aa7bde5cd1a8f570569e9f121e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black background on opening frame and opaque speed panel at 1.5s. Giant sandwich is intentional foreground."
+      }
+    },
+    {
+      "catalogId": "cloudbreak",
+      "engineId": "cloudbreak",
+      "clipId": "oa-cloudbreak-v1",
+      "file": "oa-cloudbreak-v1.mp4",
+      "generationId": "NaKuXaOZoGNaCsLktafx",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473173232_cfb2a22c.mp4",
+      "sha256": "afd3c4a746c9f3f47cef9495aec5ea360ee0895629f1d7eddc26c3d76fc22d86",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "title",
+          "background"
+        ],
+        "notes": "Title repeats GATE: WRONG GATE, GATE, GREAT LIGHTING. Opaque blue radial lines behind portal action.",
+        "titleFollowup": "Confirmed at 8 fps: repeated GATE persists after title settles."
+      }
+    },
+    {
+      "catalogId": "alchy",
+      "engineId": "alchy",
+      "clipId": "oa-alchy-v1",
+      "file": "oa-alchy-v1.mp4",
+      "generationId": "LJW1NgGThiMd0RJTrIIg",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473605375_163b86cb.mp4",
+      "sha256": "bc6746ad3eaea75a2ed1b15c25f0895e207669ade6a5e84a8d377656e193f7c8",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque background behind gold rising strike around 1.5s. Early pre-removal golden fist motif."
+      }
+    },
+    {
+      "catalogId": "atl-scammer",
+      "engineId": "atl-scammer",
+      "clipId": "oa-atl-scammer-v1",
+      "file": "oa-atl-scammer-v1.mp4",
+      "generationId": "WbB9mCgY7tjoCACmiVnS",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473607558_f251eaf0.mp4",
+      "sha256": "8e9c2986bc5551e1825f93601f60e053310d00b0502aeff01f4c07161e4ab8d4",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "White/gray paper tunnel around 1.5s covers frame; unclear distinction from intentional receipt prop requires motion review."
+      }
+    },
+    {
+      "catalogId": "crosswind",
+      "engineId": "crosswind",
+      "clipId": "oa-crosswind-v1",
+      "file": "oa-crosswind-v1.mp4",
+      "generationId": "i56h1GVYgfgAWFAmgzQd",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473618722_9d722421.mp4",
+      "sha256": "f331aa5abe2cdd657b7754a778470272d367062cbcf274dabea2c12b4f01108b",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Teal radial background fills edges around 0.75-2.25s. Pajamas appear preserved at sampled frames."
+      }
+    },
+    {
+      "catalogId": "bbl-demon",
+      "engineId": "bbldemon",
+      "clipId": "oa-bbl-demon-v1",
+      "file": "oa-bbl-demon-v1.mp4",
+      "generationId": "BncTlWIMGbAuPME0h5qa",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473648983_e19969d7.mp4",
+      "sha256": "88d94a262fd28e51bccdec2b0e6238a84e7fc576ab2c800593959e6db24c11a8",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque backing around giant mask payoff at 4.5s; other sampled gaps clear."
+      }
+    },
+    {
+      "catalogId": "bbl-nice",
+      "engineId": "bblnice",
+      "clipId": "oa-bbl-nice-v1",
+      "file": "oa-bbl-nice-v1.mp4",
+      "generationId": "x6kKflJwmDoZ5hLO6vdj",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474454963_a1865266.mp4",
+      "sha256": "89f2b463c31049c7b361b0820d4d691cb458156329981ca6216a5df7f26c95c1",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque background around heart/wing burst at 1.5-2.25s; final title readable."
+      }
+    },
+    {
+      "catalogId": "bboy",
+      "engineId": "bboy",
+      "clipId": "oa-bboy-v1",
+      "file": "oa-bboy-v1.mp4",
+      "generationId": "QrUlaAXLFlDwUjtlJM4H",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474475021_118e66a8.mp4",
+      "sha256": "e685a6be654d8e33624cfb01d7102e32369c1a0b2b6a47d4df4067f583afd86d",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Sampled windmill effect and final pose key cleanly. Check teal jacket at full resolution and motion; title partly cropped during slam before settling."
+      }
+    },
+    {
+      "catalogId": "gust",
+      "engineId": "gust",
+      "clipId": "oa-gust-v1",
+      "file": "oa-gust-v1.mp4",
+      "generationId": "LkzvMv1wVTLxSH7RrqAE",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474470283_1390c5a9.mp4",
+      "sha256": "8754fd8b06b22a6280f1eac45db927972dd7e68f4f808be4ffd12caf4cacd0a8",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque brown/black radial tunnel behind crumbs at 0.75-1.5s."
+      }
+    },
+    {
+      "catalogId": "black-cowboy",
+      "engineId": "black-cowboy",
+      "clipId": "oa-black-cowboy-v1",
+      "file": "oa-black-cowboy-v1.mp4",
+      "generationId": "reYgulYj3YCqzentoScr",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474518280_e270723b.mp4",
+      "sha256": "1ce41d986ea2579a98e985bba50e57cac2dced0c4a4d3faf65507e614c352143",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque dark star/rope tunnel backgrounds around 2.25 and 4.5s."
+      }
+    },
+    {
+      "catalogId": "bouncer",
+      "engineId": "bouncer",
+      "clipId": "oa-bouncer-v1",
+      "file": "oa-bouncer-v1.mp4",
+      "generationId": "wDcJoMhO1wYRJDgJKqO1",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474796915_0639a8b5.mp4",
+      "sha256": "e4f1c8ed9d3a24b463c4b6866ead5821d79772f3d7172dcfc862c28e879742c5",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque impact backdrop at 0.75s. Early pre-removal golden palm/fist graphic."
+      }
+    },
+    {
+      "catalogId": "break-dancer",
+      "engineId": "break",
+      "clipId": "oa-break-dancer-v1",
+      "file": "oa-break-dancer-v1.mp4",
+      "generationId": "FAiyKUaquDx1Zowrdlgz",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474796860_e30be3ae.mp4",
+      "sha256": "0b66a39695b057260e519c84403a069c41a179ca88633e36a226b149463d834f",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark radial backing behind circular kick at 1.5-2.25s."
+      }
+    },
+    {
+      "catalogId": "cologne-criminal",
+      "engineId": "colognecriminal",
+      "clipId": "oa-cologne-criminal-v1",
+      "file": "oa-cologne-criminal-v1.mp4",
+      "generationId": "ebLMUMG0pJYkSgTDIkOV",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474844239_04491d80.mp4",
+      "sha256": "5271ee589db767bc972fb730aa8ce792fd685ffae2f7d6a705773247511a797c",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial backdrop during perfume expansion around 2.25s; end perfume plume is foreground."
+      }
+    },
+    {
+      "catalogId": "corrupt-pastor",
+      "engineId": "corruptpastor",
+      "clipId": "oa-corrupt-pastor-v1",
+      "file": "oa-corrupt-pastor-v1.mp4",
+      "generationId": "mAvd4kelZqMKGOKtZyBc",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474854335_9dd404db.mp4",
+      "sha256": "3a1151cff6b40ebc348605ddc749879255c680fec4f78c3ca2165a876d669dad",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Coin funnel and oversized plate retain clear surrounding gaps in sampled frames. Title readable; body finish cropped at legs, inspect in motion."
+      }
+    },
+    {
+      "catalogId": "demario",
+      "engineId": "demario",
+      "clipId": "oa-demario-v1",
+      "file": "oa-demario-v1.mp4",
+      "generationId": "Gzt40FX7fhe6HBiIqnd5",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475740336_a2ed7ec4.mp4",
+      "sha256": "c580e9360ecf521c910cf003bb73da72fbaae677da65894ceb76d4792835d34e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background",
+          "catalog-title"
+        ],
+        "notes": "Correct tool-based retry: no mushrooms in sampled frames. Opaque impact backdrop at 1.5-2.25s. Render title SPECIAL DELIVERY differs from legacy ability label Mushroom Delivery; reconcile display copy before integration."
+      }
+    },
+    {
+      "catalogId": "divorced-dad",
+      "engineId": "divorceddad",
+      "clipId": "oa-divorced-dad-v1",
+      "file": "oa-divorced-dad-v1.mp4",
+      "generationId": "knVqoE6PLRdmCSgF1lsi",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475437189_97998607.mp4",
+      "sha256": "d0e8d7d0abe7b071b521c8bd7c2d7200670241a115602833106976576b0f5829",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque speed-line/impact panels occupy most mid-sequence frames and persist behind final closeup."
+      }
+    },
+    {
+      "catalogId": "dmv-worker",
+      "engineId": "dmvworker",
+      "clipId": "oa-dmv-worker-v1",
+      "file": "oa-dmv-worker-v1.mp4",
+      "generationId": "ldKimr7pUMpLAUx29H9D",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475438475_56257d64.mp4",
+      "sha256": "ec0c768a2a1500f1342cb6f6481164cf978944053fff89307df6f0d92244c533",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial backdrop behind receipt tornado at 0.75-2.25s. Title settles after oversized slam."
+      }
+    },
+    {
+      "catalogId": "livewire",
+      "engineId": "livewire",
+      "clipId": "oa-livewire-v1",
+      "file": "oa-livewire-v1.mp4",
+      "generationId": "qehzN9Tf4OrylbXum9X4",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475462413_0c1b5260.mp4",
+      "sha256": "d8a322d9c8f3ed49b280e950d87f1670e24d7436b732bbe77fb4c7bf27af1c35",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Blue/white speed panel behind phone portal action at 0.75-2.25s and title at 3.5s."
+      }
+    },
+    {
+      "catalogId": "dr-umah",
+      "engineId": "dr-umah",
+      "clipId": "oa-dr-umah-v1",
+      "file": "oa-dr-umah-v1.mp4",
+      "generationId": "c9sbZJbT1fR62un6osKk",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476033783_cb21e8bc.mp4",
+      "sha256": "7171a5b8184c8e7e3e045b882cd386033e27f75725ea9845bb49d7f9c00c5ad9",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque impact backing behind birds/paper action at 2.25-5.5s."
+      }
+    },
+    {
+      "catalogId": "wiretap",
+      "engineId": "wiretap",
+      "clipId": "oa-wiretap-v1",
+      "file": "oa-wiretap-v1.mp4",
+      "generationId": "25rFrEUSKGH6C4LAhzM3",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790475987658_d6530ff7.mp4",
+      "sha256": "e94b92a5daa8d5da02743f75b8b50f6b89fb6c0b22b8b7e4a94c966ce651aaaa",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background",
+          "title"
+        ],
+        "notes": "Speed-line backdrop at 1.5-2.25s. Final FREE is obscured/truncated behind the hero; verify full phrase readability.",
+        "titleFollowup": "Confirmed at 8 fps: hero overlaps FREE throughout settled title. Needs placement adjustment."
+      }
+    },
+    {
+      "catalogId": "circuit-captain",
+      "engineId": "circuitcaptain",
+      "clipId": "oa-circuit-captain-v1",
+      "file": "oa-circuit-captain-v1.mp4",
+      "generationId": "mjPIXh8n63jkYNC1PTYz",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476042226_bd1f7334.mp4",
+      "sha256": "2f106b66dc65d6b14600a9ce53a65cb0cfca3c0fe5448abe61c09a77443b323d",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Equipment occupies large foreground area but sampled background gaps remain keyed. Check short impact flash between samples; title readable."
+      }
+    },
+    {
+      "catalogId": "rainmaker",
+      "engineId": "rainmaker",
+      "clipId": "oa-rainmaker-v1",
+      "file": "oa-rainmaker-v1.mp4",
+      "generationId": "N7yAMFSlwPdlMK4KBXmf",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476597504_f9d31fb8.mp4",
+      "sha256": "94d7a68c246f7d0e01c7656569c3535b6c2548ecfe13b7527ee6460325a61496",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque dark radial panel surrounds energy tornado at 2.25-3.25s."
+      }
+    },
+    {
+      "catalogId": "failed-athlete",
+      "engineId": "failedathlete",
+      "clipId": "oa-failed-athlete-v1",
+      "file": "oa-failed-athlete-v1.mp4",
+      "generationId": "D7mITYHXLDoUUgXxlgII",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476556175_3f65def2.mp4",
+      "sha256": "64f88a6277ad1ae35d9849e263a7e9c07dc22fb1a26edf07609ee662b7599776",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial impact behind hoop/trophy title around 0.75-2.75s; title settles after clipped overshoot."
+      }
+    },
+    {
+      "catalogId": "failed-rapper",
+      "engineId": "failedrapper",
+      "clipId": "oa-failed-rapper-v1",
+      "file": "oa-failed-rapper-v1.mp4",
+      "generationId": "MF71kFZQjB2G5iFg3o4R",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476578407_f6d27bae.mp4",
+      "sha256": "f120b6727dd95961bfa46286a4ab961ec9f5ad81431d7c67c273beecf1bdd21b",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panel at microphone impact around 1.5s; title readable once settled."
+      }
+    },
+    {
+      "catalogId": "fangirl",
+      "engineId": "fangirl",
+      "clipId": "oa-fangirl-v1",
+      "file": "oa-fangirl-v1.mp4",
+      "generationId": "AOPGTtwj8CXZjyK9YrvD",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476575804_e6c29968.mp4",
+      "sha256": "c1cfa7a5b987fadb66722375fe2bea955002c1abcb5b6a343c570b5b68d430a2",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque action backing and broad white flash at 0.75-2.25s."
+      }
+    },
+    {
+      "catalogId": "fein",
+      "engineId": "fein",
+      "clipId": "oa-fein-v1",
+      "file": "oa-fein-v1.mp4",
+      "generationId": "fj2fvjgLtZDkOCeOfKp2",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476897898_8ff09824.mp4",
+      "sha256": "959ac71d9358195021236354c66ab25dc051abf23da373879e6b170ece6cb1aa",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Gray/teal background veil and speed lines remain after cyan key during spinning attack."
+      }
+    },
+    {
+      "catalogId": "battery-back",
+      "engineId": "batteryback",
+      "clipId": "oa-battery-back-v1",
+      "file": "oa-battery-back-v1.mp4",
+      "generationId": "KxMxrsLB9LNY21XGqh1X",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476920840_0759ca68.mp4",
+      "sha256": "ea339ba279b6d3ddedce3c7bfcb1705f6f390a4f19fcba0e6a13a3fc11532fdb",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial backing behind giant wrench/shield contact at 0.75-2.25s."
+      }
+    },
+    {
+      "catalogId": "monsoon-anchor",
+      "engineId": "monsoonanchor",
+      "clipId": "oa-monsoon-anchor-v1",
+      "file": "oa-monsoon-anchor-v1.mp4",
+      "generationId": "zClla630dXKV5UFVhNIh",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476906764_71b834d3.mp4",
+      "sha256": "6facc2bf1d67b4a0ea6a0853eb3da1d76e4a1419573c307514b1d2a4665a2861",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background",
+          "framing"
+        ],
+        "notes": "Speed streaks reach frame edges; ending is a tray closeup with face chopped at top for 3.5-5s rather than a readable whole-character finish."
+      }
+    },
+    {
+      "catalogId": "riptide-bruiser",
+      "engineId": "riptidebruiser",
+      "clipId": "oa-riptide-bruiser-v1",
+      "file": "oa-riptide-bruiser-v1.mp4",
+      "generationId": "qXHuLzau1LthNPDPnyuk",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476905512_ac8bae3f.mp4",
+      "sha256": "5519a5c649cadaf5880f46e55947f5469dbfa6ce6ce5833a3ede8ae4d781f644",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panel behind gator bite at 0.75-2.25s."
+      }
+    },
+    {
+      "catalogId": "god-of-hookah",
+      "engineId": "godofhookah",
+      "clipId": "oa-god-of-hookah-v1",
+      "file": "oa-god-of-hookah-v1.mp4",
+      "generationId": "7RKEZXZNDE7OY3LRG1JQ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477527976_dba62199.mp4",
+      "sha256": "ea7fcd55f39eacd527193f9d6994320e95706ad6e63dbd4cba50030939081a1b",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark opaque backing around fire ring at 4.5s; face/phone otherwise retained in sampled frames."
+      }
+    },
+    {
+      "catalogId": "goth-kid",
+      "engineId": "gothkid",
+      "clipId": "oa-goth-kid-v1",
+      "file": "oa-goth-kid-v1.mp4",
+      "generationId": "K4OUo8cJavyRWL2T0u32",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477486254_e623b09d.mp4",
+      "sha256": "7421da66f0f897d01ef8ac543395270e409e8c3f4fe4e590c271108dc8486bc5",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/teal backdrop under headphones and speed lines persists at 0.75-2.25s; background tint remains in finish."
+      }
+    },
+    {
+      "catalogId": "grown-man-fanboy",
+      "engineId": "grownfanboy",
+      "clipId": "oa-grown-man-fanboy-v1",
+      "file": "oa-grown-man-fanboy-v1.mp4",
+      "generationId": "ocxaSW00jr1PBQ2LEmEQ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477526610_38e7084b.mp4",
+      "sha256": "03f7c91186930b875945491540482d2914adab115dea5d2ddf09bd43d0f65eb0",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panels across fan shield action and title at 2.25-5.5s. Early pre-removal fist token present."
+      }
+    },
+    {
+      "catalogId": "hair-stylist",
+      "engineId": "hair-stylist",
+      "clipId": "oa-hair-stylist-v1",
+      "file": "oa-hair-stylist-v1.mp4",
+      "generationId": "vc6SgIWj1IF7S2NXIN80",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477512095_17a76223.mp4",
+      "sha256": "c4dfca503c7cbbd4b54d2f5d974f331c09391042be4881a54bfcfbac52f5981c",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/teal background beneath hair cyclone spans 0.75-2.25s."
+      }
+    },
+    {
+      "catalogId": "hater",
+      "engineId": "hater",
+      "clipId": "oa-hater-v1",
+      "file": "oa-hater-v1.mp4",
+      "generationId": "fnb5J8EjRjT09A0d7S5o",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477895271_51aff001.mp4",
+      "sha256": "5e0af0dd56e7f739eca6a7b2fda41f03ff225c9214555466e346ce714721639e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "MUST BE NICE settles into view after its slam. Radial dark strokes are visible at 2.5s and require compositing review.",
+        "titleFollowup": "MUST BE NICE settles into view after its slam. Radial dark strokes are visible at 2.5s and require compositing review."
+      }
+    },
+    {
+      "catalogId": "homeless-guy",
+      "engineId": "homelessguy",
+      "clipId": "oa-homeless-guy-v1",
+      "file": "oa-homeless-guy-v1.mp4",
+      "generationId": "A49z2F68DhRFugPPGu69",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478371623_d71343e3.mp4",
+      "sha256": "72ef2c55fb45b8bd512fed083248202814f9658602246dbe3826f66fac8c5c3d",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque speed/impact panel behind spring/barbell payoff. Detailed title scan: NOTHING TO LOSE settles fully into view at 5.625-6.25s.",
+        "titleFollowup": "NOTHING TO LOSE settles fully into view at 5.625-6.25s."
+      }
+    },
+    {
+      "catalogId": "homeless-legend",
+      "engineId": "homelesslegend",
+      "clipId": "oa-homeless-legend-v1",
+      "file": "oa-homeless-legend-v1.mp4",
+      "generationId": "FZgUgkVGQnrHkNseUHtt",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477940171_b2ebc5fc.mp4",
+      "sha256": "ffb5c42895ee5cb7d48510bf478bb616815d4d98dea94c3bc9f7056a6c62b4fc",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Large hammer and face closeup explain opaque-frame metric. Sampled outlines/finish stay readable; inspect hammer impact between sampled frames."
+      }
+    },
+    {
+      "catalogId": "homeless-yn",
+      "engineId": "homelessyn",
+      "clipId": "oa-homeless-yn-v1",
+      "file": "oa-homeless-yn-v1.mp4",
+      "generationId": "uijzfEUjzmogQaK5QDbW",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790477907304_4fe68e4c.mp4",
+      "sha256": "1628d6bbbb34e99949b380916c2267aba9163761182023b2fea2d1d6120d1278",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Teal/white opaque backing during backpack hit at 0.75-2.25s; title settles after cropped slam."
+      }
+    },
+    {
+      "catalogId": "stillwater-medic",
+      "engineId": "stillwatermedic",
+      "clipId": "oa-stillwater-medic-v1",
+      "file": "oa-stillwater-medic-v1.mp4",
+      "generationId": "uLnEsXHQiWBRpA4d3tIw",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478335669_cfa0d43e.mp4",
+      "sha256": "d26a6848c2cbf5e5d1fb6a0583eacc2175f25c0b1bb0bc50e507e3a800d52b5e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial strokes surround foam wave at 0.75-2.25s. Teal swimsuit needs detailed hole check; appears darker but retained in samples."
+      }
+    },
+    {
+      "catalogId": "incel",
+      "engineId": "incel",
+      "clipId": "oa-incel-v1",
+      "file": "oa-incel-v1.mp4",
+      "generationId": "mEhyTRwjUF4F4IXZ4ojT",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478335448_291ae696.mp4",
+      "sha256": "5b9f66dcdcbe4fd9bca3408ca5061c5409053c8216dcc72ae11c3e69a7918f1e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark/white speed-line backdrop around expanding sound ring at 1.5-2.25s."
+      }
+    },
+    {
+      "catalogId": "inmate-boyfriend",
+      "engineId": "inmate-boyfriend",
+      "clipId": "oa-inmate-boyfriend-v1",
+      "file": "oa-inmate-boyfriend-v1.mp4",
+      "generationId": "tgVMQt7LoluFKSKZm0uJ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478342851_b8766828.mp4",
+      "sha256": "1d609139f580a3943685c570881a6307d3502b3c6d2f0aa835543ff382b26c2c",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark radial/rectangular motion backdrop during phone attack. Detailed title scan: LOOKING OUT is present and readable at 3.0-3.25s.",
+        "titleFollowup": "LOOKING OUT is present and readable at 3.0-3.25s."
+      }
+    },
+    {
+      "catalogId": "inmate-contraband",
+      "engineId": "inmate-contraband",
+      "clipId": "oa-inmate-contraband-v1",
+      "file": "oa-inmate-contraband-v1.mp4",
+      "generationId": "IbIxb0h8Q9YoZxMoyFQU",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478732873_808684a9.mp4",
+      "sha256": "308f4685a026cc2781c04257c77cf225fe48eea50c9b8470d5136d709fc1e261",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial action panel and completely white background at 4.25-5s."
+      }
+    },
+    {
+      "catalogId": "inmate-crafty",
+      "engineId": "inmate-crafty",
+      "clipId": "oa-inmate-crafty-v1",
+      "file": "oa-inmate-crafty-v1.mp4",
+      "generationId": "T9MTJsXvg2B8vnanwU2V",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478751194_dad110bb.mp4",
+      "sha256": "9bfbe7f54f430603c7e804c7fc025c867e3633789170b2e1d1726c35189fe5e9",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial backdrop at 2.25-2.75s."
+      }
+    },
+    {
+      "catalogId": "inmate-informant",
+      "engineId": "inmate-informant",
+      "clipId": "oa-inmate-informant-v1",
+      "file": "oa-inmate-informant-v1.mp4",
+      "generationId": "Al2Xir1JYXoplzwJKmnW",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478730516_ff51e5ca.mp4",
+      "sha256": "1701af68d97934fcd1d4d5a68849c25b6ceecee7d0a81d83140ac9cb556d04f3",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Discrete dominoes, paper plane and title retain cyan gaps in sampled frames. Early pre-removal fist trophy present; motion/audio review pending."
+      }
+    },
+    {
+      "catalogId": "inmate-kingpin",
+      "engineId": "inmate-kingpin",
+      "clipId": "oa-inmate-kingpin-v1",
+      "file": "oa-inmate-kingpin-v1.mp4",
+      "generationId": "DzKHmXIE9i48xFLbCXMi",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478794872_f25c3691.mp4",
+      "sha256": "efcd070e0181f34cd57229ec4d02f43ff476379ddcf9d6b017df5c02a415a0c1",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque background under star impact at 4.5s. Detailed title scan: RUN THE YARD settles fully into view at 5.625-6.125s.",
+        "titleFollowup": "RUN THE YARD settles fully into view at 5.625-6.125s."
+      }
+    },
+    {
+      "catalogId": "janitor",
+      "engineId": "janitor",
+      "clipId": "oa-janitor-v1",
+      "file": "oa-janitor-v1.mp4",
+      "generationId": "Bc9By3dShB6Gyh0jeRKV",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479269789_b184a281.mp4",
+      "sha256": "a5df0574d4f4b1a0cdaedb8ace3c0569f89283146eeda92ff969dd2a4049af93",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial backdrop around mop/dust hit at 1.5s."
+      }
+    },
+    {
+      "catalogId": "krump-dancer",
+      "engineId": "krump",
+      "clipId": "oa-krump-dancer-v1",
+      "file": "oa-krump-dancer-v1.mp4",
+      "generationId": "KyHsxqMYoLvcrR9UdOgr",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479279398_59b0c6c2.mp4",
+      "sha256": "89eb386b386f4b98d71954fbd2041a9f8f7fde3ea13756d0c8f3d27b058fe3f4",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Gray/teal radial panel behind soundwave/speaker attack at 1.5-2.25s."
+      }
+    },
+    {
+      "catalogId": "lawless-yn",
+      "engineId": "lawlessyn",
+      "clipId": "oa-lawless-yn-v1",
+      "file": "oa-lawless-yn-v1.mp4",
+      "generationId": "JnEQ15rgyJ6axlqSMnye",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479258863_f563184d.mp4",
+      "sha256": "29cb331f9c9cc3493e0b5a0a7455e574eeb8812721fd52e2b0781b4326641d81",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Narrow opaque speed rays reach the frame border behind the dummy strike, around 1.5s."
+      }
+    },
+    {
+      "catalogId": "lawyer",
+      "engineId": "lawyer",
+      "clipId": "oa-lawyer-v1",
+      "file": "oa-lawyer-v1.mp4",
+      "generationId": "R3wemMJyDttJ1eprglgQ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479287786_5b1e4fdb.mp4",
+      "sha256": "6ca848f623f22264b7fc9bbe6abb619a4e1d9767e6b5af042a71150083f117d5",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "OBJECTION settles into view after its slam but is tight to the right edge. Radial dark strokes visible at 2.5s require compositing review.",
+        "titleFollowup": "OBJECTION settles into view after its slam but is tight to the right edge. Radial dark strokes visible at 2.5s require compositing review."
+      }
+    },
+    {
+      "catalogId": "live-streamer-male",
+      "engineId": "live-streamer-male",
+      "clipId": "oa-live-streamer-male-v1",
+      "file": "oa-live-streamer-male-v1.mp4",
+      "generationId": "OVjiXjK1yDESJI3wFik5",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479698317_2c69f9c5.mp4",
+      "sha256": "2b4bf934e2edd46917fd753ca72027f0754ebb3a25e56690ba041a4b3052c203",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque magenta rectangular explosion fills background at 2.25s; speed panels at 0.75-1.5s."
+      }
+    },
+    {
+      "catalogId": "luigion",
+      "engineId": "luigion",
+      "clipId": "oa-luigion-v1",
+      "file": "oa-luigion-v1.mp4",
+      "generationId": "Zdsgqqwbjrn3fpxOQhYQ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479732176_d22d042d.mp4",
+      "sha256": "06971a31dd1b2c62e0f64db29f8042d603734c2b33bde68a1238b4da526cf748",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque black/orange impact panel at 3.5s, gray radial at 1.5s. Tool-based action, no mushrooms seen."
+      }
+    },
+    {
+      "catalogId": "root-nurse",
+      "engineId": "rootnurse",
+      "clipId": "oa-root-nurse-v1",
+      "file": "oa-root-nurse-v1.mp4",
+      "generationId": "ziJjirbwpPXmeHHcfpnh",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479717804_98ecb70f.mp4",
+      "sha256": "cbef8464c4717d28ae3cb175f526bb51f6c010b197e93793e07d0d7eb77da221",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial lines around matcha serpent at 1.5-2.25s."
+      }
+    },
+    {
+      "catalogId": "miami-surgeon",
+      "engineId": "miami-surgeon",
+      "clipId": "oa-miami-surgeon-v1",
+      "file": "oa-miami-surgeon-v1.mp4",
+      "generationId": "zfY4zGrXGpSIy2Yfsqxm",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479720883_45693306.mp4",
+      "sha256": "cf8faa25bf2611405982096e62d48579037a8108629d91a9384ad9a69419c3bc",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "costume-key",
+          "background"
+        ],
+        "notes": "Cyan key visibly punches transparency through teal scrub trousers in opening and finishing frames. Opaque radial effects also visible. Needs a protected foreground matte, not broader global key thresholds."
+      }
+    },
+    {
+      "catalogId": "mr-trick",
+      "engineId": "mr-trick",
+      "clipId": "oa-mr-trick-v1",
+      "file": "oa-mr-trick-v1.mp4",
+      "generationId": "qhJEQKnqIqIJ1wiD36b6",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480137576_67b7796e.mp4",
+      "sha256": "cc7b4c1c2cb520f54b1179a930b4baa596b756c3277a2ccc4c94e5d9aebf7ef6",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque dark backdrop during cash-register rush at 0.75s."
+      }
+    },
+    {
+      "catalogId": "nigerian-father",
+      "engineId": "nigerian-father",
+      "clipId": "oa-nigerian-father-v1",
+      "file": "oa-nigerian-father-v1.mp4",
+      "generationId": "Z7yRLmR6m9Z68VdbfYMt",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480155046_a8d50796.mp4",
+      "sha256": "e6cf0c079085cf323b529d55985dbd029a14444c135cc42320b1b4eb17bd3fff",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial backgrounds behind graduation/book impact and title at 4.5-5.5s."
+      }
+    },
+    {
+      "catalogId": "og-skater",
+      "engineId": "og-skater",
+      "clipId": "oa-og-skater-v1",
+      "file": "oa-og-skater-v1.mp4",
+      "generationId": "iKIhk7AngzbtXbsaOiGV",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480134380_a2d242a9.mp4",
+      "sha256": "8a964506ab1b7323cb48d623f74be969f58b300245bc22d6b7cfa577372c1b9e",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Teal background veil remains throughout much of attack and finish; speed trails touch frame edges."
+      }
+    },
+    {
+      "catalogId": "sprout",
+      "engineId": "sprout",
+      "clipId": "oa-sprout-v1",
+      "file": "oa-sprout-v1.mp4",
+      "generationId": "VRokVlc2t01IZkXraI7X",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790480125861_b26028ce.mp4",
+      "sha256": "6ae9bd15d5c3cbf34c3ec452fa62be0fe9bdb63e1a383f0ec65520916afc8184",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/teal radial panel at plate impact 0.75-2.25s. Detailed title scan: I BROUGHT MY OWN PLATE settles fully into view at 2.875-3.5s.",
+        "titleFollowup": "I BROUGHT MY OWN PLATE settles fully into view at 2.875-3.5s."
+      }
+    },
+    {
+      "catalogId": "p-tang",
+      "engineId": "ptang",
+      "clipId": "oa-p-tang-v1",
+      "file": "oa-p-tang-v1.mp4",
+      "generationId": "RLv7e3DTmoZ6lql2rP3O",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790481180070_6566b65f.mp4",
+      "sha256": "54c21ae55b91b11b9cceb5331eb3a86b336c30755b3582b8104bc6b80a22b073",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Black/teal rays extend to frame edges during bag impact at 3.25-4.5s."
+      }
+    },
+    {
+      "catalogId": "passport-bro",
+      "engineId": "passportbro",
+      "clipId": "oa-passport-bro-v1",
+      "file": "oa-passport-bro-v1.mp4",
+      "generationId": "8mbulAnkwssrI7ktpcOD",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790481179035_072abf27.mp4",
+      "sha256": "ab9e65a3bbd3a07cda62dae13cadc208cacdb17a7bc59731752394b0e2beea38",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Radial background at plane/portal action and solid warm impact at 4.5s. Detailed title scan: GEOGRAPHIC ARBITRAGE is present and readable at 6.0-6.5s.",
+        "titleFollowup": "GEOGRAPHIC ARBITRAGE is present and readable at 6.0-6.5s."
+      }
+    },
+    {
+      "catalogId": "canopy-keeper",
+      "engineId": "canopykeeper",
+      "clipId": "oa-canopy-keeper-v1",
+      "file": "oa-canopy-keeper-v1.mp4",
+      "generationId": "rcYRpe9ygre0iIGCEwQe",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790481141561_0eb54459.mp4",
+      "sha256": "d23c28aaef13f42bdd722bbe0ad1bba7d342f599ccfc7b60a2a3fef81441cbae",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Speed rays touch frame edges during crane attack; final right-side opaque vertical teal streak remains at 4.25-5s."
+      }
+    },
+    {
+      "catalogId": "powerhouse",
+      "engineId": "powerhouse",
+      "clipId": "oa-powerhouse-v1",
+      "file": "oa-powerhouse-v1.mp4",
+      "generationId": "1ZLbPMdaYQ5OewN5j1kK",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790481188598_d2054785.mp4",
+      "sha256": "4edb552cd7b3f5c7af4b5e67d4ac34c25a7b484f3f82fdff5a8cc14f9531529a",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Radial rays at frame edges during weight attack. Detailed title scan: OVERTIME settles fully into view at 5.625-5.875s.",
+        "titleFollowup": "OVERTIME settles fully into view at 5.625-5.875s."
+      }
+    },
+    {
+      "catalogId": "red-pill",
+      "engineId": "redpill",
+      "clipId": "oa-red-pill-v1",
+      "file": "oa-red-pill-v1.mp4",
+      "generationId": "MC8p5inyzhQI0IMQstNr",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482146398_840e9e6d.mp4",
+      "sha256": "d21910726f332622614b5db252cef7e8799e96b357da1470b51af7b26aad0835",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opening contains a stage/room scene, then opaque teal speaker tunnel. Detailed title scan: ECHO CHAMBER is present and readable at 5.75-6.25s.",
+        "titleFollowup": "ECHO CHAMBER is present and readable at 5.75-6.25s."
+      }
+    },
+    {
+      "catalogId": "redneck",
+      "engineId": "redneck",
+      "clipId": "oa-redneck-v1",
+      "file": "oa-redneck-v1.mp4",
+      "generationId": "OUOSE4b95Ht4PB4PLd6n",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482108426_0514682e.mp4",
+      "sha256": "1c7af2a6ea2b80b297dbef9461ee9941eef9c11458b73bb28c8354f4818f6651",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Dark/teal radial background behind parts/engine/title at 1.5-2.75s."
+      }
+    },
+    {
+      "catalogId": "redneck-evil",
+      "engineId": "redneck-evil",
+      "clipId": "oa-redneck-evil-v1",
+      "file": "oa-redneck-evil-v1.mp4",
+      "generationId": "xJ2nuI57SGiUHKQomg6L",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482153670_847b9db0.mp4",
+      "sha256": "1c74f7f7a0490311924ab6dd5792265f1f7ff917cac20f8e1952370637b12959",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panel at bell hit around 4.5s. Clear gaps return for finish."
+      }
+    },
+    {
+      "catalogId": "lebron-james",
+      "engineId": "lebron-james",
+      "clipId": "oa-lebron-james-v1",
+      "file": "oa-lebron-james-v1.mp4",
+      "generationId": "5nrlpRpqsyEpKKcDyatJ",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482161294_28ae5a2a.mp4",
+      "sha256": "5b9a41f8ce3d278b2f6172694720f5e03717f8c825600df9626fb83ba85f2268",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial lines behind refrigerator/box action around 4.5s; title and finish readable."
+      }
+    },
+    {
+      "catalogId": "rent-a-cop",
+      "engineId": "rent-a-cop",
+      "clipId": "oa-rent-a-cop-v1",
+      "file": "oa-rent-a-cop-v1.mp4",
+      "generationId": "C7mxOMau0Zst3JJ71VfP",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482525245_59b1bfe3.mp4",
+      "sha256": "978d3341e34e5088627dbe94be44a723725d8b7a472d217ca0bb67a6ada86d35",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Teal/white opaque panel behind shopping-cart restraint at 0.75-2.75s."
+      }
+    },
+    {
+      "catalogId": "revolutionary-ronald",
+      "engineId": "ronald",
+      "clipId": "oa-revolutionary-ronald-v1",
+      "file": "oa-revolutionary-ronald-v1.mp4",
+      "generationId": "ufVFyuRHgCGlWKx6BYYq",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482592870_efcfdb1d.mp4",
+      "sha256": "26109fed2dffa798265d8f610985d204a840b654f4b90a9fde874380c883593f",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial backdrop visible behind flag at 2.25-3.25s. WE OUTSIDE. title punctuation appears correct in sampled title frame."
+      }
+    },
+    {
+      "catalogId": "roommate",
+      "engineId": "roommate",
+      "clipId": "oa-roommate-v1",
+      "file": "oa-roommate-v1.mp4",
+      "generationId": "lWRC0QPqPdgsdSfPUz73",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482533453_9a20d7ae.mp4",
+      "sha256": "684ef907bc68b644bca4ae98e882616f848933b71e83d9a74706316509aafdf1",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal backing behind food wave and large white title burst at 1.5-2.75s."
+      }
+    },
+    {
+      "catalogId": "seafood-assassin",
+      "engineId": "seafoodassassin",
+      "clipId": "oa-seafood-assassin-v1",
+      "file": "oa-seafood-assassin-v1.mp4",
+      "generationId": "eeX807FNNcO1iVGfK38H",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482650725_6c946885.mp4",
+      "sha256": "06403bd731d9e51c1a4c1bd3edad037ff2bf9b3bfb4c24303ce6b4609f8a4af0",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panel around central sauce impact at 4.5s; transparent seafood bag detail needs motion check."
+      }
+    },
+    {
+      "catalogId": "sherlock",
+      "engineId": "sherlock",
+      "clipId": "oa-sherlock-v1",
+      "file": "oa-sherlock-v1.mp4",
+      "generationId": "w47VgW3dbLoWHsgV0D6f",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483100664_fb5f03d3.mp4",
+      "sha256": "7b562fe3a0daa28a6c57085178ca5429c89f5a947a86e3368717ea6fa8a48e5a",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background",
+          "pacing"
+        ],
+        "notes": "Black rectangular backdrop surrounds chess/clock scene at 2.25-3.25s, radial panel at 4.5s. Eight-second render had five-second prompt header. Detailed title scan: STAKEOUT is present and readable at 5.75-6.25s.",
+        "titleFollowup": "STAKEOUT is present and readable at 5.75-6.25s."
+      }
+    },
+    {
+      "catalogId": "sports-prodigy",
+      "engineId": "sportsprodigy",
+      "clipId": "oa-sports-prodigy-v1",
+      "file": "oa-sports-prodigy-v1.mp4",
+      "generationId": "ScOL4W7QVJLK7jvSBZ8E",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483082009_7336f9db.mp4",
+      "sha256": "77ce7ff33ad8886625787cfd8b9c413ecd2c61b71920c9e4ccac25f9f13f7fcc",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background",
+          "pacing"
+        ],
+        "notes": "Vertical opaque teal trail under jump at 1s; later cyan gaps clear. NEXT UP readable. Eight-second render had five-second prompt header."
+      }
+    },
+    {
+      "catalogId": "squabble-house-manager",
+      "engineId": "squabble-house-manager",
+      "clipId": "oa-squabble-house-manager-v1",
+      "file": "oa-squabble-house-manager-v1.mp4",
+      "generationId": "VJ35pXqyM4QSmaDpeA5N",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483061871_37266ba7.mp4",
+      "sha256": "ca1a5a04d75f0c7c50907253e301241de8ccfc537f3e53ea11feb0d2065d923c",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial lines behind chair spread at 1.5s; title and full-character finish readable."
+      }
+    },
+    {
+      "catalogId": "squabble-house-female",
+      "engineId": "squabbleserver",
+      "clipId": "oa-squabble-house-female-v1",
+      "file": "oa-squabble-house-female-v1.mp4",
+      "generationId": "OXTZOVzugJAvExdboScc",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483090982_44f34286.mp4",
+      "sha256": "6ece1795d9650fd5abea0161241f3e65f23ad5003ac5c5961c2b46f4babf11d5",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Solid black background replaces cyan for the entire sampled finish, 3.5-5s."
+      }
+    },
+    {
+      "catalogId": "squabble-house-male",
+      "engineId": "squabblecook",
+      "clipId": "oa-squabble-house-male-v1",
+      "file": "oa-squabble-house-male-v1.mp4",
+      "generationId": "9hzx75euVrVNu8w0c4ng",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483469893_068c31f4.mp4",
+      "sha256": "a4348ff15df5495acb20449b43868dc6d14e34c4186645fe5505650bcb49fc4a",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque black radial backing behind title at 2.75s; pan foreground itself is intentional."
+      }
+    },
+    {
+      "catalogId": "stoner-jr",
+      "engineId": "stonerjr",
+      "clipId": "oa-stoner-jr-v1",
+      "file": "oa-stoner-jr-v1.mp4",
+      "generationId": "BgxCoevlo0QsMb4VEfA7",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483519104_4a4dee0d.mp4",
+      "sha256": "8e2754ccf1b3e4b03cdb9717633e5dd83fbfa7cdc96a45a17f01c70a44bdeb0b",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal radial panels during green ring/speaker sequence, 0.75-1.5s; also under title at 2.75s."
+      }
+    },
+    {
+      "catalogId": "stoner-sr",
+      "engineId": "stonersr",
+      "clipId": "oa-stoner-sr-v1",
+      "file": "oa-stoner-sr-v1.mp4",
+      "generationId": "Xq0nV7DBlMI1NBpwFRq1",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483511626_ee5a1cb2.mp4",
+      "sha256": "b656d27e619c5f25472ff7daadb97b70c2d883e380e84c5e841a235eb403fbd4",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal/white radial panels during chain/ring action. Detailed title scan: PASS IT AROUND is present and readable at 3.0-3.25s.",
+        "titleFollowup": "PASS IT AROUND is present and readable at 3.0-3.25s."
+      }
+    },
+    {
+      "catalogId": "stud",
+      "engineId": "stud",
+      "clipId": "oa-stud-v1",
+      "file": "oa-stud-v1.mp4",
+      "generationId": "FLUebfQuKoPf6qkahUzX",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483490885_bb02930f.mp4",
+      "sha256": "6d9011989bbb1acc39188fdb22bfd90c9e0adc9ea027c0cc3d0d87b5828c3a04",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Solid black background behind character/passenger during ending, 3.5-5s; title and outfit otherwise clear."
+      }
+    },
+    {
+      "catalogId": "stylist",
+      "engineId": "stylist",
+      "clipId": "oa-stylist-v1",
+      "file": "oa-stylist-v1.mp4",
+      "generationId": "OEcg6v9RVodaPsN4OSv5",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484396036_8b20d9bf.mp4",
+      "sha256": "9c2f771f3fb8fb84d1e9328d5ae9b054f9590ced6e5c6bfa9f8cc5b92f39f8de",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Persistent opaque teal veil over backing, with radial panels during tailoring. Checker partially showing is not fully transparent."
+      }
+    },
+    {
+      "catalogId": "teacher",
+      "engineId": "teacher",
+      "clipId": "oa-teacher-v1",
+      "file": "oa-teacher-v1.mp4",
+      "generationId": "aJ6YMylI0nPr2WKiE3m2",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484392328_09d6ab8c.mp4",
+      "sha256": "3fe4fb771f528175d090a66932ec0dd65cc8d98342c249da79ca378a773a4630",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial backdrop during microphone/pencil strike at 1.5-2.25s. STILL RAPPING? punctuation is correct in sampled title."
+      }
+    },
+    {
+      "catalogId": "asphalt-apostle",
+      "engineId": "asphaltapostle",
+      "clipId": "oa-asphalt-apostle-v1",
+      "file": "oa-asphalt-apostle-v1.mp4",
+      "generationId": "eSUyawZRXldFrEoFXBo5",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484438371_697ead75.mp4",
+      "sha256": "6f07907fca0bb646550cebb1c8268a2ddcd90fc74ad87e318d0725dd0dfcf584",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque dark/teal circular backdrop around stone construction at 2.25s and behind final heroes."
+      }
+    },
+    {
+      "catalogId": "the-feds",
+      "engineId": "thefeds",
+      "clipId": "oa-the-feds-v1",
+      "file": "oa-the-feds-v1.mp4",
+      "generationId": "PHXEyhZ2RfhuvgQpdRTn",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484424919_5fa5064a.mp4",
+      "sha256": "fb39c29522034a44c20cfa71c8842c88a094315501af75114c228e882ba81086",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal speed-line panels during clamp/bullion/title beats at 3.25-5.5s."
+      }
+    },
+    {
+      "catalogId": "slipstream",
+      "engineId": "slipstream",
+      "clipId": "oa-slipstream-v1",
+      "file": "oa-slipstream-v1.mp4",
+      "generationId": "t6eXctoQmpZou8XodlHk",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484844037_bc42f2ac.mp4",
+      "sha256": "c83c4be54c14e010cd15ef1709fb2f0d83411f39e282800e72570ab72c891e84",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque teal speed tunnel fills frame at 1.5-2.25s. Detailed title scan: BOARDING PASS settles fully into view at 2.875-3.5s.",
+        "titleFollowup": "BOARDING PASS settles fully into view at 2.875-3.5s."
+      }
+    },
+    {
+      "catalogId": "street-apostle",
+      "engineId": "streetapostle",
+      "clipId": "oa-street-apostle-v1",
+      "file": "oa-street-apostle-v1.mp4",
+      "generationId": "OQd858sXOM2OpBbGcuTk",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484859942_ef634890.mp4",
+      "sha256": "70218fd3aec7251e1c01ee3343083e37d063d87d6d3fa7ac9bfeafa581a0e23d",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Solid black background at opening and 1s; later vine/title sequence has opaque dark/teal remnants."
+      }
+    },
+    {
+      "catalogId": "trap-vamp",
+      "engineId": "trapvamp",
+      "clipId": "oa-trap-vamp-v1",
+      "file": "oa-trap-vamp-v1.mp4",
+      "generationId": "OCvL9zvF14x08ilKzqF1",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484866299_082b4aef.mp4",
+      "sha256": "1a483c377f974527159f75d04fb21b6dcc0821851072adcb7c0fc7d523765f31",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial panel behind red crystal burst at 3.25s; clear character finish afterward."
+      }
+    },
+    {
+      "catalogId": "watson",
+      "engineId": "watson",
+      "clipId": "oa-watson-v1",
+      "file": "oa-watson-v1.mp4",
+      "generationId": "BPE8Sisg7w3GIW5oatKh",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484838131_54a16e1e.mp4",
+      "sha256": "6e016b435d1a04c4e46d4227769e74083385f61d61419b756ea0e8eadcb06819",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "candidate-for-full-playback-review",
+      "swapNotes": {
+        "tags": [],
+        "notes": "Bandage loop, dummy and title retain clear backing gaps in all sampled frames. Candidate for full motion/audio approval."
+      }
+    },
+    {
+      "catalogId": "yn-atv-lord",
+      "engineId": "yn-atv-lord",
+      "clipId": "oa-yn-atv-lord-v1",
+      "file": "oa-yn-atv-lord-v1.mp4",
+      "generationId": "9waEEhHkz977DaNC5vdY",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790485662225_36add39d.mp4",
+      "sha256": "93e9da401104406b3d821c650f3bad2fa07000d335156e8c45189c0d4696ad22",
+      "durationSeconds": 8.0,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Red ramp is intentional foreground; opaque radial speed lines run into frame edges at 2.25-5.5s."
+      }
+    },
+    {
+      "catalogId": "yn-gokarter",
+      "engineId": "yn-gokarter",
+      "clipId": "oa-yn-gokarter-v1",
+      "file": "oa-yn-gokarter-v1.mp4",
+      "generationId": "0KFb0h1OcVHl7EhsD8e9",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790485636241_3e59a999.mp4",
+      "sha256": "6ae7fb17b384889590d17547b7ae01b9a5e486ec573428d5df70f346ddf86f89",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Persistent translucent teal backing and opaque radial panel at title impact, 2.75s. Lap Record readable; final pose switches from seated to standing."
+      }
+    },
+    {
+      "catalogId": "yung-hustle",
+      "engineId": "yunghustle",
+      "clipId": "oa-yung-hustle-v1",
+      "file": "oa-yung-hustle-v1.mp4",
+      "generationId": "eyo8yW3Zy30P6LNKPHov",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790485644985_22aff781.mp4",
+      "sha256": "12cfc7c7c59aa2f0f41fdd3138c5f5313713e4829a21e6037b414cde513c8b5c",
+      "durationSeconds": 5.167,
+      "width": 768,
+      "height": 1344,
+      "acceptance": "provisional-user-approved",
+      "visualReview": "sampled-frames-reviewed",
+      "reviewDisposition": "needs-repair-or-closer-review",
+      "swapNotes": {
+        "tags": [
+          "background"
+        ],
+        "notes": "Opaque radial speed/impact backgrounds during delivery hits at 0.75-2.75s; clear title/finish thereafter."
+      }
+    }
+  ]
+}

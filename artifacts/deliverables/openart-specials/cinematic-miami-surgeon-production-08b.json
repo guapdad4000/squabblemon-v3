@@ -1,0 +1,30 @@
+{
+  "catalogId": "miami-surgeon",
+  "name": "Miami Surgeon",
+  "move": "Clean Work",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve white coat, bright teal scrubs, blue gloves, tools and stethoscope. HIGH cyan-key risk: scrubs/gloves/mask may disappear under current key and require character masking; do not recolor reference to hide the issue. No added gold-fist motifs. Review abstract crystal-only cutting, precise anatomy, bounded effects, title and full-body framing.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "zfY4zGrXGpSIy2Yfsqxm",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nMiami Surgeon \u2014 Clean Work.\nIDENTITY: exact adult tan/brown-skinned man with short wavy black hair, neatly shaped beard and mustache, white long lab coat over teal scrubs and matching trousers, bright blue gloves, black stethoscope around his neck, clipped ID badge, blue mask at his waist and white/teal sneakers. Preserve the two small silver surgical instruments, one in each gloved hand, and his confident expert expression. This is fantastical abstract game magic; no patient, body part, operation or anatomical injury is shown.\n0\u20130.7s: full-body establishment with coat tails billowing. A gigantic floating charcoal crystal shell looms before him. A tiny warm CORAL HEART icon, a simple solid cartoon symbol, can be seen glowing through one crack at its center. He glances at the problem, then lightly crosses the two silver instruments.\n0.7\u20132.5s: in one graceful full-body pivot he uncrosses his hands, tracing two immense precise warm-white slash crescents through the crystal shell. Camera pulls sharply back: four huge charcoal shell sections peel apart along the clean crossed lines like opening flower petals, revealing a radiant oversized coral heart. A single dominant clean crystalline CHIME-CRACK and a forceful contact hold on the reveal. The freed heart sends a powerful coral/ivory pulse ring outward, sweeping the loose shell fragments into the distance. All effects are finite opaque illustrated shapes with cyan visible between them, no turquoise glow, medical room, floor or screen-covering flash. Instruments remain small and recognizable in his hands.\n2.5\u20133.5s: the heart shrinks to a palm-sized healthy glowing icon and floats upward beside his shoulder. Camera snap-zooms to his composed face as exact title CLEAN WORK slams beneath his stethoscope.\n3.5\u20135s: full-body professional hero hold, coat settling. One tiny charcoal chip drifts toward his spotless lapel; he catches it precisely between the two instrument tips and flicks it away without looking, then gives a restrained satisfied nod. Keep blue gloves, teal uniform, skin and coat colors true to the reference. SFX: delicate metal instrument click, two fast precision swishes, dominant crystalline shell release, warm pulsing bass hit, title slam, tiny chip tick. No narration, voices, music or golden-fist symbols.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479720883_45693306.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

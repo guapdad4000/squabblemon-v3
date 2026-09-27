@@ -1,0 +1,30 @@
+{
+  "catalogId": "squabble-house-male",
+  "name": "Squabble House Worker \u2014 Male",
+  "move": "Hands on the Clock",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve black branded cap/apron, white shirt, yellow trousers, towel, black gloves/boots, metal spatula and full breakfast plate. Check spatula-hand continuity, clear incoming-versus-returning skillet, untouched meal and readable five-second timing.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "9hzx75euVrVNu8w0c4ng",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSquabble House Worker \u2014 Male \u2014 Hands on the Clock.\nIDENTITY: exact muscular adult brown-skinned cook with trimmed goatee, black cap and black apron carrying their existing yellow lettering, white collared short-sleeve shirt, yellow trousers, striped kitchen towel, black gloves and work boots. Keep the large steel spatula in his right hand and breakfast platter in his left. Existing garment wording is fixed costume detail; no new signs or labels.\n0\u20130.7s: full-body action pose. A huge empty black iron skillet hurtles toward his breakfast platter like a spinning discus. He catches sight of it and turns his spatula flat, the metal face flashing a small sharp ivory glint. His left hand keeps the original waffle, eggs and bacon level.\n0.7\u20132.5s: a dramatic close pass beside his right arm: the skillet hits the flat spatula with a violent PING, bending the utensil backward like a loaded spring. He twists through a powerful low-to-high pivot and releases that stored force. The SAME skillet rockets back the way it came, spinning so fast its rim draws a finite orange/ivory comet tail. Camera races alongside it and pulls back to reveal its source, a towering stack of three empty cast-iron pans. The returned skillet smashes through all three in a single escalating metallic cascade. No people struck, no room, stove or floor.\n2.5\u20133.5s: the impact rebounds through the edit into a snap close-up of the cook. Exact title HANDS ON THE CLOCK slams in two clean lines below his face with the loudest iron CLANG. Apron and towel crack once in the shockwave. The breakfast platter is still in his left hand.\n3.5\u20135s: complete proud pose against cyan. He uses the now slightly bent spatula to flip one waffle section exactly once and catches it back on the plate. He looks at the crooked spatula, straightens it with his thumb and gives the camera a flat workday stare. SFX: incoming skillet whistle, tense steel flex, dominant ricochet PING, accelerating metallic whirr, three crashing pan hits, title slam, small waffle pat and final spatula click. No speech or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483469893_068c31f4.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

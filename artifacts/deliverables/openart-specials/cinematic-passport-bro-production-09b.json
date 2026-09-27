@@ -1,0 +1,30 @@
+{
+  "catalogId": "passport-bro",
+  "name": "Passport Bro",
+  "move": "Geographic Arbitrage",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve heavyset adult traveler, white cap/shirt, denim shorts, sandals, passport, cash and comic heart eyes. Review paper-plane/carry-on continuity, abstract cleansing ribbons, cyan through travel loops and long title. Existing passport cover label may remain; no invented readable country stamps.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "8mbulAnkwssrI7ktpcOD",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words except the passport's existing small cover label. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nPassport Bro \u2014 Geographic Arbitrage.\nIDENTITY: exact heavyset adult dark-skinned man with neat black goatee, white baseball cap, loose white pocket T-shirt, torn blue denim shorts with drawstrings, brown/black strapped sandals and bracelets. Preserve his navy passport with boarding pass, fan of green banknotes and the exaggerated glowing pink heart-shaped eyes from the reference. Playful excited traveler, same build and outfit throughout.\n0\u20131.2s: full-body establishment. He pockets the loose cash, pulls the pale boarding pass from his passport and gives it one triumphant flick. A small battered carry-on suitcase floats far away, tangled in finite dark-gray ribbon-like storm curls.\n1.2\u20133.2s: the boarding pass folds itself into an enormous ivory paper passenger jet with thick navy ink edges. Camera rockets backward as he hops astride its broad body, passport held aloft. The jet launches through cyan space and sweeps under the trapped carry-on, catching it safely on one wing. Convey great distance with foreground paper folds, separated orange speed strokes and scale changes, not an airport, clouds, map or landscape.\n3.2\u20134.8s: the giant paper jet performs one spectacular climbing loop through TWO separate oval travel-stamp rings, one rust-red and one deep violet, both with empty cyan centers and abstract border marks only. At the first ring the dark ribbons peel off the suitcase; at the second the suitcase brightens and pops open to reveal neatly packed clothes. A huge bounded cream/coral impact bloom marks the second pass, like a sonic boom of paper and clean air. Powerful payoff, no lettering in the stamp rings, no rectangular portal background or full-frame flash.\n4.8\u20136s: camera snap-tracks him back toward the foreground. He steps off the jet into a balanced hero stance; the entire plane folds down neatly into the original boarding pass and slides into his passport. Exact title GEOGRAPHIC ARBITRAGE slams in two large readable lines beneath his face.\n6\u20138s: full-body hold beside the restored carry-on. He proudly opens his passport; one endless accordion strip of blank boarding passes spills out. He looks briefly surprised, then fans it like money with a delighted grin and bright heart eyes. SFX: ticket flick, huge paper unfurl, rising jet-like wind, two accelerating ring whooshes, dominant sonic paper BOOM, precise refolding clicks, title slam and long paper flutter. No speech, music or human crowd sounds.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790481179035_072abf27.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

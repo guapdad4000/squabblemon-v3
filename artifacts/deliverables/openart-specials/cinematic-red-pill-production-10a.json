@@ -1,0 +1,30 @@
+{
+  "catalogId": "red-pill",
+  "name": "Red Pill",
+  "move": "Echo Chamber",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve swept brown hair, beard, red leather jacket, black shirt/trousers, silver jewelry and red/black sneakers. Review one continuous sound-pulse journey, exact title spelling, microphone continuity and cyan gaps through speaker rings. No spoken dialogue or political slogans.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "MC8p5inyzhQI0IMQstNr",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nRed Pill \u2014 Echo Chamber.\nIDENTITY: exact adult light-skinned man with swept-back dark brown hair, short beard, glossy red leather jacket over a black shirt, dark trousers, silver dog tags and trouser chain, red-and-black sneakers, black handheld microphone. His red energy graphics are finite crimson sound strokes, never opaque backdrop panels.\n0\u20131.2s: establish his whole body, microphone held at chest height, other hand pointing with supreme confidence. He taps the microphone twice, no speech. The second tap kicks out a small sharp crimson sound ring. Camera abruptly pulls back to reveal three enormous circular assemblies of black speaker cones suspended in a deep thirty-foot tunnel, with open pure-cyan centers and generous cyan between every object.\n1.2\u20133.2s: race beside that one ring as it ricochets from one speaker assembly to the next. Each successive speaker flexes hugely and doubles the ring's size, creating a visible accelerating feedback relay. Tight dynamic perspective: first speaker at hand scale, last speaker larger than the man. The original character remains one person, visible at the far origin, no clones or chanting mouths.\n3.2\u20134.8s: the colossal returning sound wave rushes toward him. He catches its rhythm with a precise microphone-down gesture, then jabs the mic forward like a conductor. The wave reverses and barrels through all three speaker assemblies, telescoping them together into one small crumpled speaker cube with a huge bounded ivory-and-crimson pressure star. One clear dominant contact beat, powerful scale change, cyan around the blast. The deafening buildup ends in a sharp sudden silence.\n4.8\u20136s: snap close-up on his smug face, jacket collar fluttering. Exact title ECHO CHAMBER slams into the lower composition with a heavy bass impact, away from his face.\n6\u20138s: return to a complete readable hero pose. The tiny speaker cube floats beside his shoulder. He gives the mic one satisfied tap; the cube emits a pathetic rubbery squeak and his eyebrow twitches. Hold that reaction. Sound is percussive mic taps, accelerating resonant pulses, huge compressed bass hit, abrupt hush, title slam and one tiny squeak. Absolutely no speech, narration, chanting or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482146398_840e9e6d.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

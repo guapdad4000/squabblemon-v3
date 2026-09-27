@@ -1,0 +1,59 @@
+{
+  "catalogId": "fein",
+  "name": "Fein",
+  "move": "One More",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve black/purple spiky hair, purple jacket, black ripped trousers, silver chains/cross and chartreuse sneakers. No drug props inferred from name. Review two-ring continuity, purple effect edges and anatomy.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "fj2fvjgLtZDkOCeOfKp2",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nFein \u2014 One More.\nIDENTITY: exact illustrated lean adult man with wild black hair and purple streaks, pale skin, sharp grin, purple jacket with white scratch-like emblems, torn black/gray trousers with straps, silver chain necklaces and cross, rings and bracelets, black fingernails, and chartreuse/white/black sneakers. Keep existing costume marks. Purple and hot-magenta flame effects have warm cream cores and dark ink outlines; no cyan glow. No new handheld props.\n0\u20130.7s: full-body low crouch. He rattles his chain bracelets, gives a taunting two-finger beckon, then coils backward as three short purple flame ribbons wind tightly around his shoulders.\n0.7\u20132.5s: explosive shoulder-first charge. Camera rockets backward as the ribbons twist into an ENORMOUS tapered flame drill around his complete body, stretching thirty feet behind him. He corkscrews through two large freestanding iron rings suspended apart in the cyan void: the first bursts into finite dark fragments, the second turns incandescent orange and bursts on the final shoulder strike. One colossal purple-orange starburst and brief impact hold; camera chases the spiraling drill, then whip-pans back with him. Rings are isolated game targets, no human opponent, floor, environment or edge-connected speed panels.\n2.5\u20133.5s: snap to his sly face and settle into a readable full-body prowling stance, jacket straps still whipping. Exact title ONE MORE slams below his face in two thick comic lines. The main flames collapse into a tiny ember on one raised fingertip.\n3.5\u20135s: he casually flicks that tiny ember over his shoulder without looking. It detonates far behind him in one absurdly oversized but finite magenta-and-orange impact flower, an extra final hit. The delayed air pulse ruffles his hair; his grin widens. Hold the intact hero silhouette and stable title, cyan around the distant burst. SFX: chain rattle, winding flame rush, corkscrew acceleration, iron-shattering BOOM, tiny finger flick and huge delayed bass pop. No speech, music or narration.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "fj2fvjgLtZDkOCeOfKp2",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nFein \u2014 One More.\nIDENTITY: exact illustrated lean adult man with wild black hair and purple streaks, pale skin, sharp grin, purple jacket with white scratch-like emblems, torn black/gray trousers with straps, silver chain necklaces and cross, rings and bracelets, black fingernails, and chartreuse/white/black sneakers. Keep existing costume marks. Purple and hot-magenta flame effects have warm cream cores and dark ink outlines; no cyan glow. No new handheld props.\n0\u20130.7s: full-body low crouch. He rattles his chain bracelets, gives a taunting two-finger beckon, then coils backward as three short purple flame ribbons wind tightly around his shoulders.\n0.7\u20132.5s: explosive shoulder-first charge. Camera rockets backward as the ribbons twist into an ENORMOUS tapered flame drill around his complete body, stretching thirty feet behind him. He corkscrews through two large freestanding iron rings suspended apart in the cyan void: the first bursts into finite dark fragments, the second turns incandescent orange and bursts on the final shoulder strike. One colossal purple-orange starburst and brief impact hold; camera chases the spiraling drill, then whip-pans back with him. Rings are isolated game targets, no human opponent, floor, environment or edge-connected speed panels.\n2.5\u20133.5s: snap to his sly face and settle into a readable full-body prowling stance, jacket straps still whipping. Exact title ONE MORE slams below his face in two thick comic lines. The main flames collapse into a tiny ember on one raised fingertip.\n3.5\u20135s: he casually flicks that tiny ember over his shoulder without looking. It detonates far behind him in one absurdly oversized but finite magenta-and-orange impact flower, an extra final hit. The delayed air pulse ruffles his hair; his grin widens. Hold the intact hero silhouette and stable title, cyan around the distant burst. SFX: chain rattle, winding flame rush, corkscrew acceleration, iron-shattering BOOM, tiny finger flick and huge delayed bass pop. No speech, music or narration.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5d57919c4f1db375bb5ee2f7d8be0c3e6d83653b1ef3106ac9ab8dcd320610a2.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "PDnEdEBpHxPxAMiP38xQ",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476897898_8ff09824.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_f95e9c13-c47b-4849-9158-1b11dd5e1f3d_output_aigc_1790476904387_077142f2.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790476897898_8ff09824.mp4",
+    "width": 768,
+    "height": 1344,
+    "duration": 5.167,
+    "fps": 24,
+    "hasAudio": true
+  }
+}

@@ -2,8 +2,58 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { cardCatalog, cards } from './data';
+import openart from '../reference/openart-specials.json';
+import { cardCatalog, cards, LATER_DROP_STARTER_IDS } from './data';
 import { getMoveClipUrl, gateSpecialMoveReplay, getMovePlayKey, keyChromaPixels, markSpecialMovePlayed, planSpecialMoveBeat, moveAssignments, moveClips, resolveSpecialMove, specialMoveForEvent } from './specialMoves';
+
+test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve full timing and remain replaceable', () => {
+  assert.equal(openart.clips.length, 100);
+  assert.equal(new Set(openart.clips.map(clip => clip.engineId)).size, 100);
+  for (const source of openart.clips) {
+    const clip = resolveSpecialMove(source.engineId)!;
+    assert.equal(clip?.id, source.clipId, source.engineId);
+    assert.equal(resolveSpecialMove(source.catalogId)?.id, source.clipId, source.catalogId);
+    assert.equal(clip.file, source.file);
+    assert.equal(clip.revision, source.sha256.slice(0, 16));
+    assert.equal(clip.move, cards[source.engineId].ability);
+    assert.equal(clip.startSeconds, 0);
+    assert.equal(clip.playbackRate, 1);
+    assert.equal(clip.durationMs, Math.ceil(source.durationSeconds * 1000));
+    const event = { type: 'ability' as const, kind: 'ability' as const, cardId: source.engineId };
+    assert.equal(specialMoveForEvent(event)?.id, source.clipId);
+    for (const kind of ['blocked', 'fizzle', 'story'] as const) {
+      assert.equal(specialMoveForEvent({ ...event, kind }), null);
+    }
+    assert.equal(resolveSpecialMove(source.engineId, { [source.engineId]: null }), null);
+    assert.equal(resolveSpecialMove(source.engineId, { [source.engineId]: 'char08' })?.id, 'char08');
+    const played = new Set<string>();
+    const key = { owner: 'player' as const, sourceInstanceId: 'first-copy', moveId: clip.id };
+    assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, clip.durationMs);
+    markSpecialMovePlayed(played, key);
+    assert.equal(gateSpecialMoveReplay(clip, key, played), null);
+    assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, 650);
+  }
+});
+
+test('Demario uses the approved tool-based retry and matching Special Delivery title', () => {
+  const source = openart.clips.find(clip => clip.engineId === 'demario')!;
+  assert.equal(source.generationId, 'Gzt40FX7fhe6HBiIqnd5');
+  assert.equal(resolveSpecialMove('demario')?.move, 'Special Delivery');
+  assert.equal(cards.demario.ability, 'Special Delivery');
+});
+
+test('excluded fairytale characters, support cards and Blockbusters keep their card effects', () => {
+  const excluded = cardCatalog.filter(card => (LATER_DROP_STARTER_IDS as readonly string[]).includes(card.catalogId)
+    || card.kind === 'blockbuster'
+    || ['energydrink', 'charger', 'firstaid', 'boombox', 'subwaymap', 'workboots'].includes(card.engineId));
+  assert.equal(excluded.filter(card => card.kind === 'character').length, 8);
+  assert.equal(excluded.filter(card => card.kind === 'support').length, 6);
+  assert.equal(excluded.filter(card => card.kind === 'blockbuster').length, 10);
+  for (const card of excluded) {
+    assert.equal(moveAssignments[card.engineId], null, card.catalogId);
+    assert.equal(resolveSpecialMove(card.engineId), null, card.catalogId);
+  }
+});
 
 test('media URLs carry a revision matching the actual bytes, so replacements bypass cached videos', () => {
   for (const clip of Object.values(moveClips)) {
@@ -38,7 +88,7 @@ test('every roster card has a valid clip assignment or explicit fallback; all im
   }
   for (const clip of Object.values(moveClips)) {
     assert.ok(existsSync(new URL(`../public/assets/special-moves/${clip.file}`, import.meta.url)));
-    assert.ok(clip.durationMs > 0 && clip.durationMs <= 7000);
+    assert.ok(clip.durationMs > 0 && clip.durationMs <= 8000);
     assert.ok(clip.playbackRate > 0 && clip.startSeconds >= 0);
   }
 });
@@ -144,7 +194,7 @@ test('Wave 6 covers the six original City Legends with their printed moves and c
   assert.deepEqual(rarities, { Mythical: 2, Legendary: 4 });
 });
 
-test('Wave 7 maps Ashlee and Captain Jigga clips while Counter uses an explicit fallback', () => {
+test('Wave 7 keeps Ashlee and Captain Jigga clips and adds Counter’s delivered finisher', () => {
   for (const [id, clipId] of [['ashlee', 'char100'], ['captainjigga', 'char101']] as const) {
     const clip = resolveSpecialMove(id);
     assert.equal(clip?.id, clipId);
@@ -153,8 +203,8 @@ test('Wave 7 maps Ashlee and Captain Jigga clips while Counter uses an explicit 
     assert.equal(cardCatalog.find(card => card.engineId === id)?.rarity, 'Mythical');
     assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: id })?.id, clipId);
   }
-  assert.equal(moveAssignments.counter, null);
-  assert.equal(resolveSpecialMove('counter'), null);
+  assert.equal(moveAssignments.counter, 'oa-counter-v1');
+  assert.equal(resolveSpecialMove('counter')?.id, 'oa-counter-v1');
   assert.equal(cardCatalog.find(card => card.engineId === 'counter')?.rarity, 'Mythical');
 });
 

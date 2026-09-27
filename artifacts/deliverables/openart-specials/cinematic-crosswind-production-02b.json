@@ -1,0 +1,27 @@
+{
+  "catalogId": "crosswind",
+  "name": "Baby Crying on an Airplane",
+  "move": "No Quiet Section",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Cyan-key review required: preserve pale-blue pajamas and tears. Do not recolor identity; isolate foreground matte if cyan key damages clothing.",
+  "result": {
+    "status": "COMPLETED",
+    "historyId": "i56h1GVYgfgAWFAmgzQd",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBABY CRYING ON AN AIRPLANE \u2014 NO QUIET SECTION.\nPreserve the exact cartoon baby with curly brown hair, round cheeks, pale-blue cloud-print footed pajamas and blue/white airplane seat with the secure lap belt. Match the original clothing color; never recolor pajamas to suit effects. The seat is a complete finite prop against cyan, no airplane cabin or other people.\n0\u20130.7s: wide enough to see the entire seated baby and chair; lower lip trembles, eyes squeeze shut and a comically gigantic preparatory breath puffs the cheeks.\n0.7\u20132.4s: the baby unleashes a single exaggerated wordless cartoon wail. HUGE concentric ivory-and-gold sonic rings rocket outward; camera pulls rapidly backward revealing the little seated baby at the center of an absurdly large expanding sound-wave structure. Tiny floating paper-airplane shapes harmlessly cartwheel in the wake. The infant stays safely supported in the intact chair; no impact, injury, violent chair movement or distress realism. Ink-edged rings with clear cyan gaps, no full-frame flash or background panel.\n2.4\u20133.5s: camera SNAP-PUSHES toward the baby's indignant expression as exact title \"NO QUIET SECTION\" slams in two readable comic lines over the sonic climax.\n3.5\u20135s: the baby instantly stops, opens big innocent eyes and lets out a small satisfied giggle as the very last tiny sound ring pops. A paper airplane gently lands on the chair arm. Hold the complete safe seated character and title. Sound: comical inhalation, stylized nonverbal baby wail mixed as a punchy sonic effect rather than painful shrill noise, bassy ring pulses, title slam, tiny giggle/pop. No words, music, airplane emergency or other voices. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473618722_9d722421.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

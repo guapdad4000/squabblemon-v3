@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "catalogId": "sherlock",
+      "batchFile": "cinematic-production-11a-prepared.json",
+      "promptHeaderSeconds": 5,
+      "requestedDurationSeconds": 8
+    },
+    {
+      "catalogId": "sports-prodigy",
+      "batchFile": "cinematic-production-11a-prepared.json",
+      "promptHeaderSeconds": 5,
+      "requestedDurationSeconds": 8
+    }
+  ],
+  "futureRule": "Normalize EPIC N-second with a numeric regex and assert header equals params.duration before every submission. Preserve historical submitted prompts."
+}

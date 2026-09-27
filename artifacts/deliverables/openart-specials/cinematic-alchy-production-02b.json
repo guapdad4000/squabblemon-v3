@@ -1,0 +1,27 @@
+{
+  "catalogId": "alchy",
+  "name": "Alchy",
+  "move": "Last Round",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Visual/audio/engine QA pending",
+  "result": {
+    "status": "COMPLETED",
+    "historyId": "LJW1NgGThiMd0RJTrIIg",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nALCHY \u2014 LAST ROUND.\nPreserve the exact illustrated adult man: tousled brown hair and beard, open dark-red short-sleeved shirt with white stripes, white tank, gold pendant, dark gray trousers, brown loafers and bottle wrapped in a brown paper bag. Preserve face and proportions.\n0\u20130.7s: establish his full body in an impossibly deep backward lean, one hand open and the other keeping the bagged bottle perfectly upright. It looks as though he has nothing left, then his eyes sharpen.\n0.7\u20132.4s: he whips forward out of the lean into a giant springing upward palm strike. A huge amber-gold liquid dragonlike spiral follows his motion, camera rockets back to show it looping completely around him before BURSTING into an enormous rising fist-shaped wave. Clearly a comeback surge of magical liquid energy; bottle stays intact and upright, no person struck, no ground or scenery. Freeze briefly on the enormous peak.\n2.4\u20133.5s: SNAP-PUSH into his suddenly confident grin as exact title \"LAST ROUND\" slams into two clear comic lines.\n3.5\u20135s: he casually catches one last amber drop on the bottle's rim, straightens his shirt and holds a triumphant, slightly surprised pose; title stays legible. The joke is the impossible recovery without spilling his bottle. Sound: elastic windup, huge accelerating liquid whoosh, heavy comeback impact, title slam, tiny final drop. No drinking sequence, speech or music. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790473605375_163b86cb.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

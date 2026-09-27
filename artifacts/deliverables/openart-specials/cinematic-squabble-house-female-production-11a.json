@@ -1,0 +1,30 @@
+{
+  "catalogId": "squabble-house-female",
+  "name": "Squabble House Worker \u2014 Female",
+  "move": "Fresh Pot",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve curly bun, black/yellow visor, gold hoops, white blouse, black apron/trousers, striped towel, boots, breakfast tray and glass coffee pot. Review one continuous coffee arc, finite steam and ice, pot/tray hand continuity and transparency/keying around glass.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "OXTZOVzugJAvExdboScc",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nSquabble House Worker \u2014 Female \u2014 Fresh Pot.\nIDENTITY: exact adult brown-skinned server with dark curly hair in a high bun, black visor with existing yellow checker marks, gold hoop earrings, white short-sleeve blouse, black apron and trousers, striped white/yellow towel and black work boots. Preserve the full breakfast tray overhead in her left hand and round glass coffee pot with black handle in her right. She stays poised and athletic.\n0\u20130.7s: full-body pose with loaded tray perfectly balanced overhead. Ahead floats one oversized white ceramic mug imprisoned in jagged pale-lavender ice, with three small orange flame tongues licking its outer rim. She sights the mug, flicks her wrist and launches a single strong arc of dark brown coffee from the pot.\n0.7\u20132.5s: camera rides beside that arc and pulls far back as it grows into an enormous sweeping coffee waterfall over twenty feet of empty cyan. She slides through the air underneath it in a low graceful split stance, breakfast still level. The ribbon curls around the trapped mug once, then crashes through its ice shell with one huge bounded ivory/amber impact burst. Lavender ice shards fling outward and the flame tongues snuff simultaneously into three small separate cream puffs. This is an extravagant restoration move: the mug stays intact and emerges warm and spotless. No opaque steam wall, no cyan ice and no surrounding diner.\n2.5\u20133.5s: the coffee ribbon tightens into one perfect final pour into the restored mug, then breaks cleanly. Camera whips back to her face as exact title FRESH POT slams beneath her shoulders with a sharp tray-clang impact. Loaded left-hand tray remains horizontal and undisturbed, right hand retains the original pot.\n3.5\u20135s: clear complete hero composition. The giant mug gently shrinks to normal size and glides onto her raised breakfast tray. She stops it neatly with one fingertip under the tray, pours one last precise drop with her right hand, and flashes a knowing sideways smile. Small bounded cream steam curls above the cup, all backing pure cyan. SFX: coffee-pot swish, accelerating liquid rush, huge ice-breaking splash with simultaneous flame hiss, precise pour, title impact, gentle mug clink and one final drip. No speech or music. Author clean five-second action rather than speeding playback.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483090982_44f34286.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

@@ -1,0 +1,104 @@
+[
+  {
+    "catalogId": "dr-fade",
+    "name": "Dr. Fade",
+    "model": "minimax-h3",
+    "mode": "element2video",
+    "projectId": "ACukOqwZhgiVJk1sNgUG",
+    "params": {
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: The First Lesson. The bespectacled instructor retains his swept-back hair, white rolled-sleeve shirt, dark tailored vest and trousers, emerald tie, orange suspenders, dark boxing gloves and brown shoes. Include one compact leather training bag as in the reference, with its complete short chain and top ring visible wholly inside the safe area, never extending to the top border. He makes a compact guarded parry, gives the bag a crisp short jab marked by a small gold impact ring, then raises the opposite glove in a confident teaching gesture with a brief gold ribbon. The bag shifts only slightly. No giant foreshortened fist, no perspective push-in; both shoes and both gloves remain visible. Remove the reference's illustrated impact lettering; animate only clean effects.",
+      "duration": 5,
+      "resolution": "768P",
+      "aspectRatio": "9:16",
+      "videoCount": 1,
+      "autoEnhancePrompt": false,
+      "visualReferences": [
+        {
+          "id": "mcp-3c982238f11a2f3dd8907e0d223bc7be31f1715671b29085ca5312540c7ce139",
+          "type": "image",
+          "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/3c982238f11a2f3dd8907e0d223bc7be31f1715671b29085ca5312540c7ce139.webp",
+          "label": "dr-fade.webp"
+        }
+      ]
+    },
+    "quotedCredits": 300,
+    "status": "PENDING",
+    "result": {
+      "status": "PENDING",
+      "historyId": "awOnbgDLmW3uaaUu2aSF",
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: The First Lesson. The bespectacled instructor retains his swept-back hair, white rolled-sleeve shirt, dark tailored vest and trousers, emerald tie, orange suspenders, dark boxing gloves and brown shoes. Include one compact leather training bag as in the reference, with its complete short chain and top ring visible wholly inside the safe area, never extending to the top border. He makes a compact guarded parry, gives the bag a crisp short jab marked by a small gold impact ring, then raises the opposite glove in a confident teaching gesture with a brief gold ribbon. The bag shifts only slightly. No giant foreshortened fist, no perspective push-in; both shoes and both gloves remain visible. Remove the reference's illustrated impact lettering; animate only clean effects.",
+      "modelDisplayName": "MiniMax H3",
+      "aspectRatio": "9:16",
+      "resolution": "768P",
+      "pollAfterSeconds": 10
+    }
+  },
+  {
+    "catalogId": "folks",
+    "name": "FOLKS",
+    "model": "minimax-h3",
+    "mode": "element2video",
+    "projectId": "ACukOqwZhgiVJk1sNgUG",
+    "params": {
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: Whole Block Hot. Preserve the exact short-haired fighter, black torn sleeveless FOLKS 24 jersey, black torn cargo pants, fingerless gloves, arm accessories and white sneakers. He braces low, draws both fists inward, then opens his forearms sharply to release ONE small orange-red flame ring around his upper body, no wider than the safe box. The flames curl back into a restrained orange aura and fade. Finish in a planted fighting guard. No explosions filling the screen, no smoke backdrop, no ground fire, no thrown projectile leaving the frame. Preserve all clothing edges and both feet throughout.",
+      "duration": 5,
+      "resolution": "768P",
+      "aspectRatio": "9:16",
+      "videoCount": 1,
+      "autoEnhancePrompt": false,
+      "visualReferences": [
+        {
+          "id": "mcp-1bac152facd9114b8fe6f392cb4a951f3cf24d37889de10daee1058ef52e1a48",
+          "type": "image",
+          "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/1bac152facd9114b8fe6f392cb4a951f3cf24d37889de10daee1058ef52e1a48.webp",
+          "label": "folks.webp"
+        }
+      ]
+    },
+    "quotedCredits": 300,
+    "status": "PENDING",
+    "result": {
+      "status": "PENDING",
+      "historyId": "mgtDvNyswJ7ECidJSFhO",
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: Whole Block Hot. Preserve the exact short-haired fighter, black torn sleeveless FOLKS 24 jersey, black torn cargo pants, fingerless gloves, arm accessories and white sneakers. He braces low, draws both fists inward, then opens his forearms sharply to release ONE small orange-red flame ring around his upper body, no wider than the safe box. The flames curl back into a restrained orange aura and fade. Finish in a planted fighting guard. No explosions filling the screen, no smoke backdrop, no ground fire, no thrown projectile leaving the frame. Preserve all clothing edges and both feet throughout.",
+      "modelDisplayName": "MiniMax H3",
+      "aspectRatio": "9:16",
+      "resolution": "768P",
+      "pollAfterSeconds": 10
+    }
+  },
+  {
+    "catalogId": "buddy",
+    "name": "BUDDY",
+    "model": "minimax-h3",
+    "mode": "element2video",
+    "projectId": "ACukOqwZhgiVJk1sNgUG",
+    "params": {
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: Buddy Buds. Preserve the exact lean young man with forehead goggles, white T-shirt, gold necklace with green pendant, loose blue jeans and brown boots. Keep his glass flask secure in one hand and the compact camouflage bag beside his boots, all entirely within the safe box. He makes a deliberate planting gesture with his free hand. Three small floating earth-and-leaf buds appear below elbow height, sprout bright yellow-green outlined leaves and pulse once. One contained vine curls around the free forearm without concealing fingers. He recovers to the same relaxed confident stance. Preserve the green plant identity and flask; use yellow-green, never cyan or turquoise, for generated glow. No ground plane or spreading scenery, no plants crossing the safe border.",
+      "duration": 5,
+      "resolution": "768P",
+      "aspectRatio": "9:16",
+      "videoCount": 1,
+      "autoEnhancePrompt": false,
+      "visualReferences": [
+        {
+          "id": "mcp-704028174b371ccbb67298f3e45413af3f8b1d0da50ac3dfa13c3604baf44cd9",
+          "type": "image",
+          "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/704028174b371ccbb67298f3e45413af3f8b1d0da50ac3dfa13c3604baf44cd9.webp",
+          "label": "buddy.webp"
+        }
+      ]
+    },
+    "quotedCredits": 300,
+    "status": "PENDING",
+    "result": {
+      "status": "PENDING",
+      "historyId": "zhH31v3KYyXwgLmXeOg3",
+      "prompt": "Create a production-ready 2D cel-shaded fighting-game special animation, 5 seconds, portrait 9:16. Use the supplied image strictly as the CHARACTER IDENTITY reference, NOT as the framing or background. Preserve the exact face, hairstyle, skin tone, costume, body proportions, original costume markings, shoes and identifying accessories. Recompose from the very FIRST frame as a locked-camera FULL-BODY shot centered on a perfectly uniform flat RGB(0,255,255) #00FFFF background. Character starts at only 58 percent of canvas height. All anatomy, BOTH HANDS, BOTH FEET, props and all effects must remain fully visible inside x=12–88 percent and y=10–90 percent for EVERY frame. Outer 10 percent border is entirely empty pure cyan. No zoom, pan, tilt, tracking, camera shake, cuts, close-ups, offscreen movement, clipping, extra people, morphing, photorealism or 3D. No floor, horizon, scenery, backdrop shadows, gradients, fog, smoke covering the backing or lighting change. Bold ink outlines; preserve character colors, avoid cyan/turquoise VFX because cyan is removed by the game compositor. No captions, move names, new lettering, logos, crowns or title cards. Sound: synchronized short whooshes, prop/action sounds and one impact only; no music, speech or narrator. Timing: 0–0.4 calm opening pose, 0.4–1.2 readable windup, 1.2–2.4 one action and impact, 2.4–3.5 recovery, 3.5–5 hold a complete full-body finisher. Keep the camera completely static and the entire silhouette small enough to fit during the widest pose. Special: Buddy Buds. Preserve the exact lean young man with forehead goggles, white T-shirt, gold necklace with green pendant, loose blue jeans and brown boots. Keep his glass flask secure in one hand and the compact camouflage bag beside his boots, all entirely within the safe box. He makes a deliberate planting gesture with his free hand. Three small floating earth-and-leaf buds appear below elbow height, sprout bright yellow-green outlined leaves and pulse once. One contained vine curls around the free forearm without concealing fingers. He recovers to the same relaxed confident stance. Preserve the green plant identity and flask; use yellow-green, never cyan or turquoise, for generated glow. No ground plane or spreading scenery, no plants crossing the safe border.",
+      "modelDisplayName": "MiniMax H3",
+      "aspectRatio": "9:16",
+      "resolution": "768P",
+      "pollAfterSeconds": 10
+    }
+  }
+]

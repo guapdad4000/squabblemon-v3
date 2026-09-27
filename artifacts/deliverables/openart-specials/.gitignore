@@ -1,0 +1,6 @@
+# Local review media. Promote only accepted clips into the game's runtime assets.
+review/raw/
+review/frames/
+review/sheets/
+review/*.png
+__pycache__/

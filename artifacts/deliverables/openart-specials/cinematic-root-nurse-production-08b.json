@@ -1,0 +1,30 @@
+{
+  "catalogId": "root-nurse",
+  "name": "Matcha Freak",
+  "move": "Ceremonial Grade Crashout",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve adult woman's black bob, forest-green sweater, cream trousers, green canvas shoes and iced matcha cup. Matcha effects use olive/chartreuse and cream with dark outlines, not turquoise. Review liquid creature shape, cup/straw continuity, full-body establishment and long three-line title.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "ziJjirbwpPXmeHHcfpnh",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nMatcha Freak \u2014 Ceremonial Grade Crashout.\nIDENTITY: exact adult light-skinned woman with sharp green eyes, short straight black bob and blunt bangs, oversized dark forest-green ribbed sweater, loose cream trousers and green/off-white canvas sneakers. Preserve the enormous clear cup of iced matcha with cream marbling, green straw, clear lid and olive-green ice reflections. Keep her intensely focused, caffeine-powered comic attitude.\n0\u20130.7s: establish her entire compact crouched pose and both shoes. She takes one emphatic sip of matcha. Her eyes sharpen; she pulls the straw out and holds it like a conductor's baton, gripping the cup securely in the other hand.\n0.7\u20132.5s: one sudden upward straw flick pulls a towering SPIRAL of opaque olive-green matcha and ivory cream from the cup. Camera whips upward and far back as the spiral forms one colossal tea KOI with a broad flowing tail and fierce comic face, many times larger than her body. The koi lunges in one spectacular overhead arc and crunches a giant isolated pale-ivory ice cube into sparkling chunky pieces. One dominant creamy impact burst with inked olive edges, a brief bite-contact hold, then an accelerating curve back toward the little cup. This is a stylized liquid creature with bounded solid silhouettes, no aquarium, water surface, fog or translucent cyan/teal effect.\n2.5\u20133.5s: she twists the straw once; the enormous koi spirals neatly back into her cup through its lid opening, collapsing from huge to tiny. Snap close to her unbothered face as exact title CEREMONIAL GRADE CRASHOUT slams in THREE stable readable lines below the cup, away from her eyes.\n3.5\u20135s: return to complete crouched hero view. She resumes sipping as one final little ice cube lands in the cup with a loud CLINK. Her eye twitches once, then she takes another tiny satisfied sip. Cup, hands and bob hairstyle stay stable. SFX: strong straw slurp, rising liquid cyclone, immense koi whoosh, one explosive ice CRUNCH, swirling suction return, title slam, isolated ice clink. No music, speech or golden-fist emblems.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479717804_98ecb70f.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

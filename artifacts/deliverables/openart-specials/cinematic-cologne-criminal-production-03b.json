@@ -1,0 +1,27 @@
+{
+  "catalogId": "cologne-criminal",
+  "name": "Cologne Criminal",
+  "move": "You Can Still Smell Him",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Visual/audio/engine QA pending",
+  "result": {
+    "status": "PENDING",
+    "historyId": "ebLMUMG0pJYkSgTDIkOV",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nCOLOGNE CRIMINAL \u2014 YOU CAN STILL SMELL HIM.\nPreserve the exact bizarre illustrated character: muscular brown human body, bare chest under an open taupe fur-trimmed coat, dark trousers and heavy black lace-up boots; his HEAD is a large translucent rectangular perfume bottle with a spray nozzle and drawn weary cartoon face. Preserve the bottle head and cartoon eyes/mouth; never replace it with a human head. Keep the bottle visible with ink outlines and ivory/lavender glass highlights, not cyan glow.\n0\u20131.2s: establish full body. He straightens his fur collar, gives a weary suave look with the bottle's drawn face, then reaches up and presses his own spray nozzle once.\n1.2\u20133.2s: that single spray becomes a colossal ribbon of gold-and-lavender perfume, curling upward into an enormous sculpted scent plume shaped like a swaggering coat silhouette. Camera rockets backward to reveal the impossible scale. The plume is finite ink-edged spirals and mist ribbons with cyan gaps, never a solid smoke backdrop or second physical character.\n3.2\u20134.8s: he strides away from his original position. The gigantic scent silhouette STAYS BEHIND, then flexes outward into a huge flower-like blast of perfume curls and amber sparks, selling an effect that keeps dominating after he leaves. Camera tracks him moving forward while the lingering burst remains visibly distant. Brief impact hold on the scent expansion.\n4.8\u20136s: SNAP-PUSH to his expressive bottle face as exact title \"YOU CAN STILL SMELL HIM\" slams in three bold readable lines beside him.\n6\u20138s: camera eases back; he adjusts one cuff and tries to look dignified, but the nozzle gives one tiny delayed spritz. His drawn eyes shift upward in embarrassment while the huge persistent scent curls still hang behind. Hold title and character. Sound: collar rustle, atomizer click, gigantic spray rush, lingering plume boom, title slam, comically tiny late spritz. No dialogue or music.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474844239_04491d80.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "catalogId": "lebron-james",
+  "name": "Regular guy named LeBron James",
+  "move": "Definitely Not Him",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. This is the game's fictional regular guy, preserve his reference face instead of substituting the athlete. Preserve dark tank top and existing shirt wording, black jeans and boots. Review refrigerator/bag hand continuity, dramatic distance, exact title, intact groceries and navy fabric chroma key.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "5nrlpRpqsyEpKKcDyatJ",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nRegular guy named LeBron James \u2014 Definitely Not Him.\nIDENTITY: the FICTIONAL regular guy in the reference: young adult dark-skinned muscular man, short tight black curls, clean-shaven angular face, dark navy tank top with its existing white shirt slogan, black jeans, black belt and black lace-up work boots. Use this exact illustrated face, not a different celebrity likeness. Preserve the source shirt lettering as a fixed costume detail; the only NEW on-screen wording is the move title. No sports uniform, crown or basketball court.\n0\u20131.2s: establish complete character casually carrying one brown grocery bag in his left arm. A single egg pops upward from the bag. He looks annoyed and reaches for it with his right hand. Camera whips upward to reveal an enormous tumbling ivory refrigerator descending toward the egg and groceries. Treat this as a completely absurd graphic prop stunt on empty cyan.\n1.2\u20133.2s: camera pulls WAY back to show the refrigerator is three times taller than him. In one explosive leap he intercepts it with his right palm while keeping the grocery bag upright in his left arm. The refrigerator compresses slightly with cartoon squash at the hand contact, one huge ivory/orange bounded pressure burst behind it. Hold the impossible one-handed catch for a tiny emphatic beat, then drive into the reversal. Face strained with annoyance, not triumph.\n3.2\u20134.8s: he rotates his whole body into a colossal one-arm throw, sending the refrigerator thirty feet away into an enormous open cardboard shipping carton. Track its accelerating flight in depth, then the clean direct impact. The carton folds its flaps around the refrigerator in four thunderous CLACKS and shoots off into distant cyan, intact. This is the huge finisher payoff, not a gentle set-down. Grocery bag remains in his left arm without changing hands; no people endangered.\n4.8\u20136s: camera snap-zooms back to his irritated face as he comes into a complete upright hero composition. His now-free right hand catches the SAME egg just before it falls back into the grocery bag. Exact title DEFINITELY NOT HIM slams below his shoulders with heavy comic impact.\n6\u20138s: pull back enough to show his entire character, grocery bag secure, egg perfectly intact. He raises one eyebrow toward the camera, slowly points to the existing message on his own tank top, then gives a dry exhausted head shake. Crisp character comedy after the absurd feat. SFX: little egg pop, plunging refrigerator rush, gigantic palm-stop impact, explosive launch whoosh, distant carton thunder and four flap clacks, title slam, tiny soft egg catch and bag rustle. No dialogue, music, crowd or scenery.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482161294_28ae5a2a.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "catalogId": "stillwater-medic",
+  "name": "Hot Tub Hottie",
+  "move": "Soak Your Problems",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected: adult woman, white robe/towel and dark teal swimsuit/slides. Preserve costume colors; teal garment and sandals are a major cyan-key masking risk and must be tested before acceptance. Review foam boundaries, towel continuity, cleanse payoff, title and anatomy.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "uLnEsXHQiWBRpA4d3tIw",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nHot Tub Hottie \u2014 Soak Your Problems.\nIDENTITY: the exact adult athletic brown-skinned woman from the reference, large curly brown high bun with loose curls at her face, gold hoop earrings, dark teal one-piece athletic swimsuit with white fist emblem, open white bathrobe, long white towel held between her hands, teal-and-white slide sandals. Preserve her costume, confident face and hairstyle. Athletic action framing centered on her face, arms and prop. Do not add a pool, hot tub, room or floor.\n0\u20130.7s: establish full body as she draws the long white towel taut. Far behind her floats a small golden FIST emblem trapped inside a jagged black charcoal shell, a graphic symbol of a disabled ally rather than another person.\n0.7\u20132.5s: she whips the towel upward, then snaps it forward with both hands. Camera pulls backward hard: the towel's motion raises a towering curling wave of dense white bath foam with warm ivory highlights, pale rose shadows and bold black ink contours, many times taller than she is. The wave sweeps over the trapped emblem in ONE powerful crest; the charcoal shell dissolves into harmless round black soap bubbles that pop, revealing the bright gold fist intact. A thunderous towel CRACK and a rolling water-and-foam BOOM on the cleanse. This is an isolated sculptural effect on pure cyan, not an ocean, translucent blue water, fog or a background fill. Keep clear cyan margins around the crest.\n2.5\u20133.5s: snap close to her face as she retracts the same towel, collapsing the immense foam wave into one small clean white puff. Exact title SOAK YOUR PROBLEMS slams in two lines below her face. The restored gold fist briefly shines beside her shoulder, then rises away.\n3.5\u20135s: full-body confident hold with the towel draped over one shoulder. A tiny yellow rubber duck drops from the towel into her open palm; she gives it an unimpressed glance, and it produces one tiny squeak. Stable costume and title, clean hand anatomy. SFX: cloth stretch, gigantic towel snap, cresting foam roar, three bubble pops, title impact, single rubber-duck squeak. No speech, music or sensual motion.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790478335669_cfa0d43e.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

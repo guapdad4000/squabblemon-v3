@@ -13,31 +13,9 @@ export const moveClips = Object.fromEntries(Object.entries(catalog.clips).map(([
   return [id, { ...clip, ...(engineId && cards[engineId] ? { move: cards[engineId].ability } : {}) }];
 })) as Record<string, MoveClip>;
 export const moveAssignments: Record<string, string | null> = {
+  // New cards keep a fallback until an explicit catalog assignment is delivered.
+  ...Object.fromEntries(Object.keys(cards).map(id => [id, null])),
   ...catalog.assignments,
-  ...Object.fromEntries(Object.values(cards).filter(card => card.roles?.includes('Block Party') || card.kind === 'blockbuster').map(card => [card.id, null])),
-  sugarfoot: null,
-  'yn-gokarter': null,
-  'yn-atv-lord': null,
-  janitor: null,
-  'homeless-wiseman': null,
-  'juneteenth-chair-guy': null,
-  'squabble-house-manager': null,
-  riptidebruiser: null,
-  stillwatermedic: null,
-  monsoonanchor: null,
-  rainmaker: null,
-  batteryback: null,
-  circuitcaptain: null,
-  wiretap: null,
-  livewire: null,
-  sprout: null,
-  rootnurse: null,
-  canopykeeper: null,
-  gardenwall: null,
-  gust: null,
-  crosswind: null,
-  slipstream: null,
-  cloudbreak: null,
 };
 export const MOVE_STORAGE_KEY = 'squabblemon.special-moves.v1';
 export type MoveOverrides = Record<string, string | null>;

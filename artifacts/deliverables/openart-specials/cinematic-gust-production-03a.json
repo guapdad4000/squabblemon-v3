@@ -1,0 +1,27 @@
+{
+  "catalogId": "gust",
+  "name": "Big City Pigeon",
+  "move": "Run Your Breadcrumbs",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Review iridescent green neck feathers against cyan key; preserve natural palette and mask foreground if needed.",
+  "result": {
+    "status": "COMPLETED",
+    "historyId": "LkzvMv1wVTLxSH7RrqAE",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nBIG CITY PIGEON \u2014 RUN YOUR BREADCRUMBS.\nPreserve the exact stylized gray pigeon with orange eyes, black knitted balaclava around its head, black beak, purple/green iridescent neck, layered gray-white wings and exaggerated orange clawed feet. It stays a bird, no human hands or humanoid body.\n0\u20130.7s: full bird visible; it spots one tiny floating breadcrumb, tilts its masked head suspiciously, then launches with an explosive wingbeat.\n0.7\u20132.4s: camera chases the pigeon as it corkscrews through a colossal spiral of bread crumbs and golden air streaks. It suddenly grabs a baguette TEN TIMES its size with both feet, yanks it out of the depth and whips it around in one outrageous banking turn. The loaf cuts an enormous crescent through the crumb cloud, ending in a huge gold-white comic impact burst. Keep bird and baguette intact, finite shapes on cyan; no person or animal is struck, no city scenery.\n2.4\u20133.5s: SNAP-PUSH onto the pigeon's fierce orange eyes with the giant loaf over its shoulder as exact title \"RUN YOUR BREADCRUMBS\" slams in three clear comic lines.\n3.5\u20135s: camera pulls out to reveal it proudly standing on the oversized baguette; after all that spectacle it delicately pecks the original tiny crumb and gives an indignant head bob. Hold clear bird silhouette and title. Sound: explosive wing flap, accelerating gust whistle, enormous loaf swing, title slam, tiny comic peck and short pigeon coo without words. Five seconds total.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790474470283_1390c5a9.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

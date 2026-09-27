@@ -1,0 +1,30 @@
+{
+  "catalogId": "stoner-sr",
+  "name": "Stoner Sr.",
+  "move": "Pass It Around",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve older face, gray beard/locs, olive bucket hat/vest, muted tie-dye, brown wide trousers, beads, patterned sash and green sneakers. Wide source is reframed to portrait with whole-character establishment. Review ring relay continuity, no opaque smoke backing, no added fist emblems.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "Xq0nV7DBlMI1NBpwFRq1",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nStoner Sr. \u2014 Pass It Around.\nIDENTITY: exact older dark-skinned man with long gray-streaked locs, full white-gray beard, warm amused eyes, olive bucket hat and utility vest, muted cream/purple/green tie-dye shirt, wide brown trousers, patterned woven sash, wooden bead necklaces and bracelets, green sneakers. Preserve age, face and relaxed tai-chi stance. Vapor is warm ivory with olive shading and dark ink edges, with no turquoise light.\n0\u20130.7s: establish his complete body in the wide low stance from the reference, fitted inside the portrait. He rolls one wrist slowly; a bead on his bracelet briefly lifts and three small open vapor rings form above his palm. Three enormous interlinked iron padlocks hang in a zigzag chain far ahead in empty cyan.\n0.7\u20132.5s: he pivots smoothly through a full-body palm sweep. The front ring accelerates outward, growing to ten times his height; camera travels THROUGH its empty cyan center to reveal the spectacular depth. It slams around the first padlock, opens it with a thunderous snap, then divides into TWO rolling rings that pass the released momentum onward to the remaining two locks. Those two burst open in a staggered left-right relay, heavy metal links flying apart with huge bounded ivory/olive impact curls. The action is a clear pass-one-then-two sequence, never a full-screen fog sheet or random particles.\n2.5\u20133.5s: the two rings orbit back around him and meet above his shoulders in a large open halo of flowing vapor. Exact title PASS IT AROUND slams below his face on the second enormous lock release. No additional emblems, fists or words.\n3.5\u20135s: whole-character calm ending. The big rings shrink into three ordinary wooden beads and drop neatly onto the bracelet at his wrist. He pats them into place, tips his bucket hat and opens his free palm toward camera with a tiny knowing smile. The last loose lock link drops past; he casually nudges it aside with the back of his sneaker. SFX: soft bead rattle, deep gathering air rush, huge ring flyby, three escalating lock snaps and metal booms, title slam, airy return and delicate bead clicks. No speech, music or scenery.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790483511626_ee5a1cb2.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

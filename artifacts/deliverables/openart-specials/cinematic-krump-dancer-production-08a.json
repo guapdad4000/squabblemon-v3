@@ -1,0 +1,59 @@
+{
+  "catalogId": "krump-dancer",
+  "name": "Krump",
+  "move": "Chest Pop",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve short locs, orange tank/wrist wraps/ribbons, black cargo pants and orange-black sneakers; original orange background must not carry over. Review authentic stomp-arm-swing-chest-pop sequence, torso anatomy, bounded rings and bass impact without music.",
+  "result": {
+    "status": "PENDING",
+    "historyId": "KyHsxqMYoLvcrR9UdOgr",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nKrump \u2014 Chest Pop.\nIDENTITY: exact extremely muscular adult brown-skinned dancer, short loose black locs, black goatee, gold hoop earrings, long bright orange tank with black armhole trim, orange wrist wraps with flowing tails, loose black cargo trousers with orange hanging ties, orange-and-black high-top sneakers. Preserve fierce joyful confidence, not a stiff bodybuilder pose. The reference's orange backdrop is replaced completely with flat cyan.\n0\u20130.7s: establish complete body. He snaps into a low krump stance, performs one forceful stomp and an angular arm swing across his torso. A tiny tight orange compression ring forms just ahead of his chest; isolated inked stomp strokes terminate on cyan without any rendered floor.\n0.7\u20132.5s: he throws his elbows back and performs ONE enormous, unmistakable forward CHEST POP. His chest movement punches the little ring forward, expanding it into three gigantic separated ivory-and-orange pressure hoops racing through depth. Camera races alongside the lead hoop and pulls back to reveal a huge floating black loudspeaker cabinet far away. The leading ring hits its woofer dead center, turning the giant speaker cone inside out with an immense bass impact; the cabinet tumbles backward like a lightweight toy. One brief chest-contact hold and another short readable speaker-impact beat. Keep clear cyan through every hoop and around the cabinet. No room, club, crowd, floor or giant opaque sound-wave panel.\n2.5\u20133.5s: whip back into a low-angle close-up of his delighted face and clenched fists. Exact title CHEST POP slams into two chunky lines below his face as the orange wrist-wrap tails snap into place.\n3.5\u20135s: return to a complete-character dance hold, knee lifted and shoulders squared, as in the reference. A tiny speaker cone bounces back into view; he catches it on the toe of one sneaker, flicks it upward, and gives one small final shoulder hit on its squeak. Keep the final pose readable and the outfit stable. SFX: isolated sneaker stomp, cloth snap, rising pressure suction, enormous single chest-pop bass THOOM, speaker cone rubber CRACK, tumbling cabinet rattle, title slam and tiny final cone squeak. Percussive action sound only, no music, crowd voices or shouting.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionResult": {
+    "status": "COMPLETED",
+    "historyId": "KyHsxqMYoLvcrR9UdOgr",
+    "capabilityId": "minimax-h3:element2video",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nKrump \u2014 Chest Pop.\nIDENTITY: exact extremely muscular adult brown-skinned dancer, short loose black locs, black goatee, gold hoop earrings, long bright orange tank with black armhole trim, orange wrist wraps with flowing tails, loose black cargo trousers with orange hanging ties, orange-and-black high-top sneakers. Preserve fierce joyful confidence, not a stiff bodybuilder pose. The reference's orange backdrop is replaced completely with flat cyan.\n0\u20130.7s: establish complete body. He snaps into a low krump stance, performs one forceful stomp and an angular arm swing across his torso. A tiny tight orange compression ring forms just ahead of his chest; isolated inked stomp strokes terminate on cyan without any rendered floor.\n0.7\u20132.5s: he throws his elbows back and performs ONE enormous, unmistakable forward CHEST POP. His chest movement punches the little ring forward, expanding it into three gigantic separated ivory-and-orange pressure hoops racing through depth. Camera races alongside the lead hoop and pulls back to reveal a huge floating black loudspeaker cabinet far away. The leading ring hits its woofer dead center, turning the giant speaker cone inside out with an immense bass impact; the cabinet tumbles backward like a lightweight toy. One brief chest-contact hold and another short readable speaker-impact beat. Keep clear cyan through every hoop and around the cabinet. No room, club, crowd, floor or giant opaque sound-wave panel.\n2.5\u20133.5s: whip back into a low-angle close-up of his delighted face and clenched fists. Exact title CHEST POP slams into two chunky lines below his face as the orange wrist-wrap tails snap into place.\n3.5\u20135s: return to a complete-character dance hold, knee lifted and shoulders squared, as in the reference. A tiny speaker cone bounces back into view; he catches it on the toe of one sneaker, flicks it upward, and gives one small final shoulder hit on its squeak. Keep the final pose readable and the outfit stable. SFX: isolated sneaker stomp, cloth snap, rising pressure suction, enormous single chest-pop bass THOOM, speaker cone rubber CRACK, tumbling cabinet rattle, title slam and tiny final cone squeak. Percussive action sound only, no music, crowd voices or shouting.",
+    "resolution": "768P",
+    "inputImages": [
+      {
+        "url": "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/1ee6e8a0321271412f31acaf7320c14bed68f3f4ba11843f44fe2c8619a39daf.webp",
+        "role": "reference"
+      }
+    ],
+    "resources": [
+      {
+        "id": "PwaeGB15mYyPKzFb4c3Z",
+        "mediaType": "video",
+        "url": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479279398_59b0c6c2.mp4",
+        "status": "completed",
+        "aspectRatio": "9:16",
+        "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-09-27_b9fe3c17-9b55-4ab9-b95e-99cf47def696_output_aigc_1790479284359_9a79392c.webp",
+        "metadata": {
+          "width": 768,
+          "height": 1344,
+          "duration": 5.167,
+          "fps": 24,
+          "hasAudio": true
+        }
+      }
+    ]
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790479279398_59b0c6c2.mp4",
+    "width": 768,
+    "height": 1344,
+    "duration": 5.167,
+    "fps": 24,
+    "hasAudio": true
+  }
+}

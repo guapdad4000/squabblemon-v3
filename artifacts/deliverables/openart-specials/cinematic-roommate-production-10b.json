@@ -1,0 +1,30 @@
+{
+  "catalogId": "roommate",
+  "name": "Roommate",
+  "move": "Your Side of the Fridge",
+  "attempt": 1,
+  "duration": 5,
+  "quotedCredits": 300,
+  "qaNote": "Reference inspected. Preserve messy locks, goatee, stained white shirt, draped laundry, black shorts, mismatched socks/slides, controller and dishes. Review food-prop continuity, no new printed labels, readable title across two lines, and cyan controller light/keying. Keep the room absent.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "lWRC0QPqPdgsdSfPUz73",
+    "prompt": "Create an EPIC 5-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nRoommate \u2014 Your Side of the Fridge.\nIDENTITY: exact lanky adult man with messy short twisting dark locks, small goatee, lazy half-lidded expression, stained oversized white T-shirt, black athletic shorts with white trim, mismatched socks and striped slides, laundry draped over one shoulder and leg. Preserve the black game controller in his right hand and the precarious takeaway bowl/boxes held in his left arm.\n0\u20130.7s: establish complete slouching character. He presses one controller button without looking up. A closed ivory double-door refrigerator floats behind him on pure cyan, no kitchen or floor. Its doors bulge outward as if something enormous is packed inside.\n0.7\u20132.5s: the doors burst open and a colossal avalanche of takeaway boxes, noodle ribbons and plastic leftovers containers curls out like a cresting wave. Camera rockets backward to show its ridiculous scale, several times his height. He casually hops onto one broad container lid at the wave's leading edge and surfs the curling airborne food spiral toward camera, controller still in his right hand, bowl balanced in his left. His laziness contrasts with the huge fast action. Rich orange noodles, ivory boxes and brown sauce, never blue-green vapor. The fridge is one finite prop with dark interior visible only inside its silhouette.\n2.5\u20133.5s: one final controller click SLAMS the refrigerator doors. The airborne food wave recoils in a tight spectacular spiral back through a shrinking gap, leaving only him, his lid and the bowl. One giant bounded cream/orange impact burst on the door slam. Exact title YOUR SIDE OF THE FRIDGE slams in two stable readable lines beneath his face. No new labels, usernames or receipts with writing.\n3.5\u20135s: settle into a whole-character pose beside the closed fridge, controller lowered and his original dishes/laundry still carried. He plucks one long noodle from the bowl and slurps it with a deeply unbothered expression. One lonely sock slowly slides down the refrigerator handle. SFX: two crisp controller clicks, overstuffed door creak, enormous tumbling-box rumble and spiral whoosh, dominant fridge-door BOOM, title slam, short noodle slurp. No words, music, scenery or full-frame smoke. Distinct action beats authored for five seconds.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790482533453_9a20d7ae.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 5.167
+  }
+}

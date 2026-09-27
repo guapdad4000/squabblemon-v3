@@ -1,0 +1,30 @@
+{
+  "catalogId": "the-feds",
+  "name": "The Feds",
+  "move": "Asset Seizure",
+  "attempt": 1,
+  "duration": 8,
+  "quotedCredits": 480,
+  "qaNote": "Reference inspected. Preserve one shadow-faced noir agent, black fedora/trench coat/suit/gloves, pale collar, burgundy tie and glossy shoes. No duplicate agents or inserted weapons. Review safe/clip scale, four-bar transfer, clear lock state, cyan outside objects and readable title.",
+  "creativeConstraints": {
+    "recurringGoldenFistMotif": false
+  },
+  "result": {
+    "status": "PENDING",
+    "historyId": "PHXEyhZ2RfhuvgQpdRTn",
+    "prompt": "Create an EPIC 8-second illustrated fighting-game super finisher, portrait 9:16. Bold hand-inked outlines, rich cel shading, dynamic comic-book perspective, exaggerated scale and explosive acceleration. Reference image defines the exact character identity, face, costume, colors and props, NOT the background or initial camera crop. Preserve the illustrated character; no live-action or 3D makeover. Make a complete miniature action scene with a surprising payoff and a charismatic ending, not an idle animation with particles.\nCAMERA AND COMPOSITING: cinematic camera motion is encouraged: dramatic pullbacks to reveal impossible scale, depth travel and deliberate close-ups. Establish the complete character early and return to a clear hero composition. Keep face and anatomy correct; intentional close-up crops are fine, accidental chopped limbs in a wide shot are not. The unoccupied backing remains perfectly flat pure cyan #00FFFF in EVERY shot, including close-ups. No scenery, floor plane, opaque rectangular manga panel, background gradient, vignette or full-frame whiteout. Use foreground objects and perspective to communicate distance. Large impact stars and disconnected tapered speed strokes terminate naturally on cyan instead of connecting to image borders. Warm effect colors with ink edges; no cyan/turquoise glow that will disappear under chroma key. No crowns. Use character-specific effects and props; do not add a recurring golden-fist emblem or generic fist-shaped power effect.\nTEXT: one exact move title, thick uppercase comic lettering, warm white-to-gold fill, chunky black outline and dark offset extrusion, angled forceful slam with brief overshoot and settle. Stable readable spelling, intelligently placed away from the face, no additional captions or words. A title arrival is an impact beat of its own.\nSOUND: strong synchronized anticipation, accelerating whooshes, exaggerated action hits, one dominant payoff, and a short settling tail. No music, speech or narration.\n\nThe Feds \u2014 Asset Seizure.\nIDENTITY: ONE exact noir agent from the reference, adult man in a black fedora, long black trench coat, black three-piece suit, pale shirt collar, dark burgundy tie, black leather gloves and shiny black dress shoes. Face remains partly shaded by his hat as in the art, without making the cyan backing dark. Preserve his restrained expression and coat silhouette; do not add other agents or weapons.\n0\u20131.2s: complete agent stands perfectly composed. He opens a small plain manila envelope with his left hand and removes one ordinary steel paperclip with his right. A massive charcoal safe floats far ahead on cyan, with four oversized gold bullion bars secured around its exterior. No lettering, serial numbers or currency portraits.\n1.2\u20133.2s: he flicks the paperclip toward the safe. Camera races behind it and passes THROUGH its open center as the clip expands into a colossal steel loop, larger than a bus. It snaps around the safe in one crushing metallic clamp; the safe stays intact while the four exterior gold bars pop loose in four distinct beats. The open manila envelope in his distant left hand unfolds into a gigantic funnel mouth, still visibly connected to his hand.\n3.2\u20134.8s: all FOUR bars accelerate into the envelope in a dramatic staggered procession, each passing close to camera before vanishing into its impossibly thin interior. He seals the envelope with one decisive thumb stroke. At that instant the huge paperclip around the emptied safe tightens into a locked steel band with an enormous bounded ivory/amber impact flash and one dominant CLACK. Seizure and lock are both visually clear; the base safe remains, stripped of its exterior bars.\n4.8\u20136s: snap-zoom back to his shadowed face as he slips the now ordinary envelope inside his trench coat. Exact title ASSET SEIZURE slams below his collar with a stamp-like heavy impact. No official seals, new badges, legal text or extra captions.\n6\u20138s: pull out to the full agent, the locked safe small and distant behind him. One last tiny gold bar falls late from above. Without moving his head he catches it between two fingers, pockets it, then tips his fedora by a fraction. Coat tails settle on pure cyan. SFX: dry envelope rustle, tiny paperclip ping, swelling metal flight, massive clamp CRUNCH, four rapid bullion clangs and whooshes, envelope slap, title stamp and tiny final coin-like clink. No dialogue, music or scenery.",
+    "modelDisplayName": "MiniMax H3",
+    "aspectRatio": "9:16",
+    "resolution": "768P",
+    "pollAfterSeconds": 10
+  },
+  "completionCallback": {
+    "status": "COMPLETED",
+    "outputUrl": "https://cdn.openart.ai/openart-ai/production/2026-09/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790484424919_5fa5064a.mp4",
+    "width": 768,
+    "height": 1344,
+    "fps": 24,
+    "hasAudio": true,
+    "duration": 8
+  }
+}
