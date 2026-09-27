@@ -28,9 +28,7 @@ function ExpandedEvent({ event, onNavigate }: { event: BulletinEvent; onNavigate
 export function SafehouseBulletinBoardContent({ compact = false, onNavigate }: { compact?: boolean; onNavigate?: () => void }) {
   const [expandedId, setExpandedId] = useState<string>(bulletinBoard.events[0].id);
   const expanded = bulletinBoard.events.find(event => event.id === expandedId) ?? bulletinBoard.events[0];
-  return <div className={`bulletin-shell${compact ? ' bulletin-shell--compact' : ''}`} style={{ '--cork-art': `url("${supplied('cork')}")`, '--wood-art': `url("${supplied('wood-borders')}")` } as CSSProperties}>
-    <div className="bulletin-wood bulletin-wood--top" aria-hidden="true" />
-    <div className="bulletin-wood bulletin-wood--bottom" aria-hidden="true" />
+  return <div className={`bulletin-shell${compact ? ' bulletin-shell--compact' : ''}`} style={{ '--cork-art': `url("${supplied('cork')}")` } as CSSProperties}>
     <img className="bulletin-watermark" src={supplied('punch')} alt="" />
     <header className="bulletin-header">
       <img className="bulletin-title-art" src={supplied('events-title')} alt="Squabblemon Events" />
