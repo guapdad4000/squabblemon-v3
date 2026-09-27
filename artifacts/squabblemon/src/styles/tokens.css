@@ -135,3 +135,12 @@
 }
 html[data-reduce-motion="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: sq-route-fade-in var(--sq-dur-fast) linear backwards; }
 html[data-reduce-motion="true"] :is(.sq-press, .sq-card-lift) { transition: none; transform: none !important; }
+
+/* Native-feeling screen blends (View Transitions). The header holds still; content crossfades and slides. */
+html[data-view-transition="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: none; }
+.city-header { view-transition-name: sq-city-header; }
+::view-transition-old(root) { animation: sq-vt-out 160ms ease-in both; }
+::view-transition-new(root) { animation: sq-vt-in 240ms var(--sq-ease-out, cubic-bezier(.22,1,.36,1)) both; }
+::view-transition-group(sq-city-header) { animation-duration: 200ms; }
+@keyframes sq-vt-out { to { opacity: 0; transform: translateX(-14px); } }
+@keyframes sq-vt-in { from { opacity: 0; transform: translateX(18px); } }

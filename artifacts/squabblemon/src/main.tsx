@@ -4,6 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { LoadingScreen } from './components/LoadingScreen';
 import { installStaleChunkRecovery } from './lib/staleChunkRecovery';
 import { startDepthSystem } from './lib/depthQuality';
+import { registerServiceWorker } from './lib/registerServiceWorker';
 import './styles/depth.css';
 
 import './index.css';
@@ -14,6 +15,7 @@ import './styles/dr-fade.css';
 
 installStaleChunkRecovery();
 startDepthSystem();
+registerServiceWorker();
 
 const root = createRoot(document.getElementById('root')!, {
   // Keeps caught errors off reportError(), which would raise the dev overlay.

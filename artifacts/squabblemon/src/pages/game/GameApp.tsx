@@ -2,6 +2,7 @@ import { installInteractionClickSounds } from '../../lib/interactionClickSounds'
 import './gameStyles';
 import { NotificationProvider } from '../../components/Notifications';
 import { useNavigationScroll } from '../../lib/navigationMemory';
+import { warmScreenArt } from '../../lib/screenArtWarmup';
 import { PlayerLevelCelebration } from '../../components/AccountRewards';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
@@ -81,7 +82,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       bootstrap.profile.settings.reducedMotion ? 'true' : 'false';
   }, [bootstrap.profile.settings.reducedMotion]);
 
-  useEffect(() => { preloadAllGameRoutes(); }, []);
+  useEffect(() => { preloadAllGameRoutes(); warmScreenArt(); }, []);
 
   useEffect(() => {
     const warmDestination = (event: Event) => {

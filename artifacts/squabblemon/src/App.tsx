@@ -8,7 +8,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 import { PublicEntry } from './pages/PublicEntry';
 import { LoadingScreen } from './components/LoadingScreen';
 import { basePath, stripBase } from './lib/routing';
-import { guardDeckRouteNavigation } from './lib/deckExitGuard';
+import { viewTransitionNavigation } from './lib/viewTransitionNav';
 import { AppAuthProvider, useAppAuth, useAppClerk } from './lib/auth';
 
 const SignInPage = lazy(() =>
@@ -89,7 +89,10 @@ const clerkAppearance = {
 };
 
 
-const queryClient = new QueryClient();
+// Show what we already know instantly; refresh quietly instead of blocking screens.
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 30_000, gcTime: 30 * 60_000, refetchOnWindowFocus: false } },
+});
 
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useAppClerk();
@@ -175,7 +178,7 @@ function ClerkProviderWithRoutes() {
 
 export default function App() {
   return (
-    <WouterRouter base={basePath} aroundNav={guardDeckRouteNavigation}>
+    <WouterRouter base={basePath} aroundNav={viewTransitionNavigation}>
       <ClerkProviderWithRoutes />
     </WouterRouter>
   );

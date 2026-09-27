@@ -21,6 +21,16 @@ export function SafehouseMail({ playerId, open, onClose }: { playerId: string; o
   const letters = query.data?.messages ?? [];
   const letter = letters.find(m => m.id === selected);
   const action = useMutation({ mutationFn: ({ id, kind }: { id: string; kind: 'read' | 'claim' }) => customFetch<{ mail: Letter; credited: boolean }>(`/api/player/mail/${encodeURIComponent(id)}/${kind}`, { method: 'POST' }),
+    // Instant feedback: mark the letter read/claimed now; the server response or a refetch corrects it.
+    onMutate: async ({ id, kind }) => {
+      const key = ['player-mail', playerId];
+      await client.cancelQueries({ queryKey: key });
+      const previous = client.getQueryData<{ messages: Letter[] }>(key);
+      const now = new Date().toISOString();
+      client.setQueryData<{ messages: Letter[] }>(key, old => old && ({ messages: old.messages.map(m => m.id !== id ? m : { ...m, readAt: m.readAt ?? now, ...(kind === 'claim' ? { claimedAt: m.claimedAt ?? now } : {}) }) }));
+      return { previous };
+    },
+    onError: (_error, _variables, context) => { if (context?.previous) client.setQueryData(['player-mail', playerId], context.previous); },
     onSuccess: (result, variables) => {
       client.setQueryData<{ messages: Letter[] }>(['player-mail', playerId], old => old && ({ messages: old.messages.map(m => m.id === result.mail.id ? result.mail : m) }));
       if (variables.kind === 'claim') {

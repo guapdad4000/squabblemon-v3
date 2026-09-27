@@ -68,15 +68,23 @@ export function CharacterStyles({ bootstrap, cardId = 'kyle' }: { bootstrap: Pla
   }
   async function save(remove = false) {
     if (flight.current || pending) return; flight.current = true; setBusy(true); setMessage('');
+    let rollback = false;
     try {
       const next: CosmeticLoadout = { ...equipped, cardBackgrounds: { ...equipped.cardBackgrounds } };
       if (tab === 'scene') { if (remove) delete next.cardBackgrounds![cardId]; else next.cardBackgrounds![cardId] = 'blue-hour'; }
       else if (remove) { next.bannerCardId = null; next.bannerFinish = 'base'; next.stickers = []; }
       else { next.bannerCardId = cardId; next.bannerFinish = tab === 'banner' ? finish : equipped.bannerCardId === cardId ? equipped.bannerFinish ?? 'base' : 'base'; next.stickers = stickers; }
       const invalid = validateCosmeticLoadout(profile, next); if (invalid) { setMessage(invalid); return; }
-      const result = preview ? { ...bootstrap, profile: { ...profile, settings: { ...profile.settings, cosmetics: next } } } : await customFetch<PlayerBootstrap>('/api/player/cosmetics', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(next) });
+      const optimistic = { ...bootstrap, profile: { ...profile, settings: { ...profile.settings, cosmetics: next } } };
+      // Show the new look immediately; the server's answer replaces it, or the catch below restores the old one.
+      rollback = true; await applyBootstrap(optimistic);
+      const result = preview ? optimistic : await customFetch<PlayerBootstrap>('/api/player/cosmetics', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(next) });
       await applyBootstrap(result); setMessage(remove ? 'Original look restored.' : 'Saved to your collection.');
-    } catch (error) { setMessage(error instanceof ApiError ? (error.data as { error?: string })?.error ?? 'Could not save. Please retry.' : 'Could not save. Please retry.'); }
+    } catch (error) {
+      // Undo only by re-reading the server's truth, so unrelated updates made meanwhile survive.
+      if (rollback) void client.invalidateQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
+      setMessage(error instanceof ApiError ? (error.data as { error?: string })?.error ?? 'Could not save. Please retry.' : 'Could not save. Please retry.');
+    }
     finally { flight.current = false; setBusy(false); }
   }
   function toggleSticker(id: string) { setStickers(current => current.includes(id) ? current.filter(value => value !== id) : current.length < 3 ? [...current, id] : current); }

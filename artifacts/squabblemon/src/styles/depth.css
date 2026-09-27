@@ -76,3 +76,16 @@ html[data-depth='off'] .depth-reveal__burst, html[data-depth='off'] .depth-revea
 .lobby-depth canvas { width: 100%; height: 100%; display: block; }
 html[data-depth='off'] .lobby-depth { display: none; }
 html[data-depth='lite'] .lobby-depth__layer--near { display: none; }
+
+/* Struggling phones: drop the most expensive battle layers (live blurs and stacked glows), keep the look. */
+html[data-depth="lite"] .district-lane,
+html[data-depth="lite"] .battle-popover,
+html[data-depth="lite"] .glass-panel { backdrop-filter: none; -webkit-backdrop-filter: none; }
+html[data-depth="lite"] .district-lane { background: linear-gradient(180deg, rgb(10 40 58 / 70%), rgb(8 8 7 / 62%) 34% 66%, rgb(73 39 9 / 68%)); }
+html[data-depth="lite"] .battle-card-stack > *:hover,
+html[data-depth="lite"] .battle-card-stack > *:focus-visible,
+html[data-depth="lite"] .staged-card { filter: none; }
+html[data-depth="lite"] .battle-squabble.is-armed,
+html[data-depth="lite"] .card-variant-chrome::after,
+html[data-depth="lite"] .card-variant-prismatic::after { animation: none; }
+html[data-depth="lite"] .noise-overlay { display: none; }
