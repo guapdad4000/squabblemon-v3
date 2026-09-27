@@ -1,7 +1,7 @@
 import { DrFadeReferee } from './DrFadeReferee';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { StreetClose } from './venue/StreetClose';
+import { X } from 'lucide-react';
 import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS } from './tutorialGuidance';
 
 export function RulesModal({ onClose }: any) {
@@ -26,7 +26,7 @@ export function RulesModal({ onClose }: any) {
   ];
 
   return (
-    <div className="fixed inset-0 z-[60] street-overlay flex items-center justify-center p-4 md:p-6 overflow-y-auto pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] bg-black/85 backdrop-blur-xl flex items-center justify-center p-4 md:p-6 overflow-y-auto" onClick={onClose}>
       <motion.div
         ref={panel}
         role="dialog"
@@ -55,7 +55,9 @@ export function RulesModal({ onClose }: any) {
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
         <div className="flex justify-between items-center mb-5 md:mb-8">
           <div className="font-mono text-primary text-[10px] md:text-xs tracking-widest uppercase">Field Manual // 01</div>
-          <StreetClose variant="red-x" aria-label="Close field manual" data-testid="button-rules-modal" onClick={onClose} />
+          <button type="button" aria-label="Close field manual" data-testid="button-rules-modal" onClick={onClose} className="w-9 h-9 border border-white/15 text-white/50 hover:text-black hover:bg-primary hover:border-primary transition-colors grid place-items-center">
+            <X size={24} />
+          </button>
         </div>
         
         <h2 id="rules-modal-title" className="font-display font-black italic text-4xl md:text-6xl uppercase leading-none mb-2">Know the streets.</h2>

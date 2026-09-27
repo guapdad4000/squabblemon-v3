@@ -129,7 +129,7 @@ export function ResultScreen({
             <>
               {storyMetadata?.outcome !== 'win' && (
                 <button
-                  className="studio-action studio-action--gold"
+                  className="studio-action result-street-sign result-street-sign--left"
                   data-testid="button-restart-match"
                   onClick={onRestart}
                   disabled={rewardPending || !!rewardError || !reward}
@@ -139,7 +139,7 @@ export function ResultScreen({
                 </button>
               )}
               <button
-                className={`studio-action ${storyMetadata?.outcome === 'win' ? 'studio-action--gold' : ''}`}
+                className="studio-action studio-action--gold result-street-sign result-street-sign--right"
                 onClick={onGoHome}
                 disabled={rewardPending || !!rewardError || !reward}
               >
@@ -203,8 +203,7 @@ export function ResultScreen({
         <ResultArtwork victory={isVictory} draw={isDraw} results={results} districts={districts}
           reward={reward} isGuest={isGuest} rewardError={rewardError} rewardPending={rewardPending}
           storyStars={isStory && storyMetadata ? earnedStars : undefined}
-          storyBackground={isStory ? m.storyEncounter?.cinematic?.environmentAssetId ?? m.storyEncounter?.battlefieldAssetId : undefined}
-          actions={actions} heading={<header className="result-stage__heading">
+                    actions={actions} heading={<header className="result-stage__heading">
           <span className="studio-eyebrow">
             {isTutorial ? 'Rookie Road' : isStory ? 'Chapter battle' : m.storyEncounter?.activity ? 'The block circuit' : 'Fade complete'}
             <span>•</span>
