@@ -34,7 +34,9 @@ test('every character fits the six-round Motion curve without an oversized free 
   }
   for (const card of characters) {
     assert(card.cost >= 1 && card.cost <= 6, `${card.name} cannot fit the six-round Motion curve`);
-    const printedBudget = card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade'].includes(card.engineId) ? 6 : card.cost + 1;
+    // Kingpin's explicitly approved 1-Motion / 3-Hand budget is an exception,
+    // not a reason to loosen the printed-Hand ceiling for other cheap cards.
+    const printedBudget = card.engineId === 'inmate-kingpin' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade'].includes(card.engineId) ? 6 : card.cost + 1;
     assert(card.power >= 1 && card.power <= printedBudget, `${card.name} has excessive unconditional Hands`);
   }
 });

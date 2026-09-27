@@ -116,8 +116,9 @@ test('Street Apostle echoes actual Plant growth once across other districts with
 test('Wrong Block moves the weakest enemy to its strongest other district', () => {
   const m = blank(), weak = unit('cornball', 'cpu', 0), strong = unit('hooper', 'cpu', 0, 2);
   strong.powerModifier = 8; m.boards = [[weak, strong], [unit('hooper', 'cpu', 1, 3)], []];
-  const after = cast(m, 'lawlessyn').after;
+  const { source, after } = cast(m, 'lawlessyn');
   assert.equal(find(after, weak).lane, 1); assert.equal(find(after, strong).lane, 0);
+  assert.equal(find(after, source).powerModifier, 1);
 });
 for (const protection of ['shield', 'locked', 'uncounterable', 'asphalt'] as const) test('Wrong Block respects ' + protection, () => {
   const m = blank(), target = unit('landlord', 'cpu', 0);
@@ -173,6 +174,25 @@ test('Passport Bro cleanses a Water passenger only when leaving a losing distric
     assert.equal(find(after, water).powerModifier, losing ? 2 : 0);
     assert.equal(after.playerMotion, 6);
   }
+});
+
+for (const owner of ['player', 'cpu'] as const) test('Wrong Block rewards a real enemy displacement only for ' + owner, () => {
+  const enemy = owner === 'player' ? 'cpu' : 'player';
+  const target = unit('cornball', enemy, 0, 71);
+  const m = blank(); m.boards[0] = [target];
+  const successful = cast(m, 'lawlessyn', owner);
+  assert.notEqual(find(successful.after, target).lane, 0);
+  assert.equal(find(successful.after, successful.source).powerModifier, 1);
+
+  const lockedTarget = unit('cornball', enemy, 0, 72);
+  lockedTarget.statuses.locked = true;
+  const locked = blank(); locked.boards[0] = [lockedTarget];
+  const blocked = cast(locked, 'lawlessyn', owner);
+  assert.equal(find(blocked.after, lockedTarget).lane, 0);
+  assert.equal(find(blocked.after, blocked.source).powerModifier, 0);
+
+  const absent = cast(blank(), 'lawlessyn', owner);
+  assert.equal(find(absent.after, absent.source).powerModifier, 0);
 });
 
 test('Extra Sauce detonates stored Burn immediately once; a shield blocks the entire package', () => {

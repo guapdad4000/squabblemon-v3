@@ -117,6 +117,9 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after, 'squabble-house-manager').powerModifier, 1);
     assert.equal(cards['squabble-house-manager'].cost, 1);
     assert.equal(cards['squabble-house-manager'].power, 2);
+    const emptyLane = blank();
+    const unopposed = cast(emptyLane, 'squabble-house-manager', owner);
+    assert.equal(find(unopposed, 'squabble-house-manager').powerModifier, 0, 'Home Advantage still requires an enemy in its district');
   });
 
   test(`${owner}: deterministic movement respects capacity, locks, and success-only buffs`, () => {
@@ -132,7 +135,7 @@ for (const owner of ['player', 'cpu'] as const) {
     m.boards[0] = [rider];
     after = cast(m, 'yn-atv-lord', owner);
     assert.equal(find(after, 'rastamon').lane, 1);
-    assert.equal(find(after, 'rastamon').powerModifier, 0);
+    assert.equal(find(after, 'rastamon').powerModifier, 1);
     assert.equal(find(after, 'rastamon').statuses.protected, true);
     assert.equal(find(after, 'yn-atv-lord').lane, 1);
 

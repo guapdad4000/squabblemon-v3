@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards } from './data';
-import { createMatch, createCardInstance, playCard, suppressMatchPresentationEvents, type Match, type CardInstance, type Owner, type Lane } from './gameEngine';
+import { createMatch, createCardInstance, getLegalCardCost, playCard, suppressMatchPresentationEvents, type Match, type CardInstance, type Owner, type Lane } from './gameEngine';
 
 const unit = (id: string, owner: Owner, lane: Lane, n: number, power = 10): CardInstance =>
   ({ ...createCardInstance(id, owner, 'redesign', n), lane, basePower: power, power });
@@ -73,6 +73,84 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(blocked.after.discountTokens.length, 0);
     assert.equal(find(blocked.after, blocked.source).powerModifier, 0);
   });
+  test(`Salesman rewards only the successful discounted cross-district play: ${owner}`, () => {
+    const moved = cast(blank(), 'livewire', owner);
+    const wire = find(moved.after, moved.source);
+    assert.notEqual(wire.lane, null);
+    const destination = wire.lane === 0 ? 1 : 0;
+    const sameLaneCard = createCardInstance('cornball', owner, 'same-lane-discount-test', 9);
+    const sameLaneState = { ...moved.after, phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const,
+      [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 9,
+      [owner === 'player' ? 'playerHand' : 'cpuHand']: [sameLaneCard] };
+    const sameLane = playCard(sameLaneState, owner, sameLaneCard.instanceId, wire.lane!);
+    assert.equal(find(sameLane, sameLaneCard).powerModifier, 0);
+    assert(sameLane.discountTokens.some(token => token.eligibility === 'livewire-cross-district'));
+
+    const nextCard = createCardInstance('cornball', owner, 'discount-test', 10);
+    const handKey = owner === 'player' ? 'playerHand' : 'cpuHand';
+    const playState = { ...JSON.parse(JSON.stringify(moved.after)) as Match,
+      phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const,
+      [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 9,
+      [handKey]: [nextCard] };
+    assert.equal(getLegalCardCost(playState, owner, nextCard, destination), 0);
+    const discounted = playCard(playState, owner, nextCard.instanceId, destination);
+    assert.equal(find(discounted, nextCard).powerModifier, 1);
+    assert.equal(discounted.discountTokens.some(token => token.eligibility === 'livewire-cross-district'), false);
+    assert(discounted.effectLog.some(event => event.note.includes('discounted character +1 Hand on placement')));
+
+    const demon = unit('bbldemon', enemy, destination, 12);
+    const fragile = createCardInstance('rastamon', owner, 'hostile-discount-test', 13);
+    const hostileState: Match = { ...JSON.parse(JSON.stringify(moved.after)) as Match,
+      phase: owner === 'player' ? 'player' : 'cpu-reveal',
+      boards: moved.after.boards.map((lane, index) => index === destination ? [...lane, demon] : lane) as Match['boards'],
+      creativeMarks: [{ id: 'drama:hostile-discount', kind: 'drama', source: demon,
+        owner: enemy, lane: destination, targets: [], expires: 99 }],
+      [motionKey]: 9, [handKey]: [fragile] };
+    const survivesDrama = playCard(hostileState, owner, fragile.instanceId, destination);
+    assert.equal(find(survivesDrama, fragile).powerModifier, -1,
+      'the +1 placement reward lets a 2-Hand character survive the 2-damage arrival trap');
+    const rewardEvent = survivesDrama.effectLog.find(event => event.note.includes('discounted character +1 Hand on placement'))!;
+    assert.equal(rewardEvent.replay.before.boards.flat().find(c => c.instanceId === fragile.instanceId)?.powerModifier, 0);
+    assert.equal(rewardEvent.replay.after.boards.flat().find(c => c.instanceId === fragile.instanceId)?.powerModifier, 1);
+    assert(survivesDrama.effectLog.some(event => event.note.includes('Problem Energy')),
+      'the hostile arrival hit still resolves');
+
+    const supportCard = createCardInstance('energydrink', owner, 'support-discount-test', 11);
+    const supportState = { ...JSON.parse(JSON.stringify(moved.after)) as Match,
+      phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const,
+      [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 9,
+      [handKey]: [supportCard] };
+    assert.equal(getLegalCardCost(supportState, owner, supportCard, destination), 0);
+    const supportPlayed = playCard(supportState, owner, supportCard.instanceId, destination);
+    assert.equal(find(supportPlayed, supportCard).kind, 'support');
+    assert.equal(find(supportPlayed, supportCard).powerModifier, 0);
+    assert.equal(supportPlayed.discountTokens.some(token => token.eligibility === 'livewire-cross-district'), false,
+      'support cards can spend the cross-district discount');
+    assert.equal(supportPlayed.effectLog.some(event => event.note.includes('discounted cross-district card +1 Hand')), false);
+
+    const plug = cast(blank(), 'plug', owner).after;
+    const ordinaryToken = { ...plug, phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const,
+      [owner === 'player' ? 'playerMotion' : 'cpuMotion']: 9, [handKey]: [nextCard] };
+    const ordinary = playCard(ordinaryToken, owner, nextCard.instanceId, 1);
+    assert.equal(find(ordinary, nextCard).powerModifier, 0, 'unrelated another-district discounts do not inherit Livewire’s reward');
+  });
+  test(`Live Streamer is 2/2 and keeps its two-cheap-play cap for ${owner}`, () => {
+    assert.equal(cards.streamer.power, 2);
+    let m = cast(blank(), 'streamer', owner).after;
+    const first = cast(m, 'cornball', owner);
+    const second = cast(first.after, 'cornball', owner);
+    const third = cast(second.after, 'cornball', owner);
+    assert.equal(third.after.cheapBuffsUsed[owner], 2);
+    const streamer = third.after.boards.flat().find(card => card.cardId === 'streamer')!;
+    const countLaterFrenzyEvents = (state: Match) => state.effectLog.filter(event => event.source?.cardInstanceId === streamer.instanceId
+      && event.note === 'Follower Frenzy gave the cheap play +1 Hands.');
+    assert.equal(countLaterFrenzyEvents(first.after).filter(event =>
+      event.targets.some(target => target.cardInstanceId !== streamer.instanceId)).length, 1);
+    assert.equal(countLaterFrenzyEvents(second.after).filter(event =>
+      event.targets.some(target => target.cardInstanceId !== streamer.instanceId)).length, 2);
+    assert.equal(countLaterFrenzyEvents(third.after).filter(event =>
+      event.targets.some(target => target.cardInstanceId !== streamer.instanceId)).length, 2);
+  });
   test(`OG Vegan shares with Plant, Gus reaches across lanes: ${owner}`, () => {
     for (const plant of [false, true]) {
       const m = blank(), ally = unit(plant ? 'rastamon' : 'cornball', owner, 0, 1);
@@ -106,7 +184,25 @@ for (const owner of ['player', 'cpu'] as const) {
     const baby = cast(m, 'crosswind', owner);
     assert.equal(find(baby.after, foe).statuses.weakened, true);
     assert.notEqual(find(baby.after, ally).lane, 0);
+    assert.equal(find(baby.after, ally).powerModifier, 1);
     assert.equal(find(cast(m, 'monsoonanchor', owner).after, foe).statuses.weakened, true);
+  });
+  test(`Baby rewards only a successful ally move and leaves missing or blocked passengers unchanged: ${owner}`, () => {
+    const ally = unit('cornball', owner, 0, 41);
+    const m = blank(); m.boards[0] = [ally];
+    const successful = cast(m, 'crosswind', owner);
+    assert.notEqual(find(successful.after, ally).lane, 0);
+    assert.equal(find(successful.after, ally).powerModifier, 1);
+
+    const blockedAlly = unit('cornball', owner, 0, 42);
+    blockedAlly.statuses.locked = true;
+    const blocked = blank(); blocked.boards[0] = [blockedAlly];
+    const noMove = cast(blocked, 'crosswind', owner);
+    assert.equal(find(noMove.after, blockedAlly).lane, 0);
+    assert.equal(find(noMove.after, blockedAlly).powerModifier, 0);
+
+    const noPassenger = cast(blank(), 'crosswind', owner);
+    assert.equal(find(noPassenger.after, noPassenger.source).powerModifier, 0);
   });
 }
 test('new identities preserve catalog keys and AI search resolves the same mechanics', () => {

@@ -20,13 +20,25 @@ function unprotect(m: Match, target: CardInstance): Match {
 test('40 revisions preserve the 202 collectible identities and instantiate their new budgets', () => {
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
   assert.equal(cardCatalog.length, 202);
-  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 3], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [4, 4], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
+  const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 3], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 3], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');
     assert.deepEqual([c.cost, c.basePower], pair, id);
     assert.equal(c.effect, cards[id].effect);
   }
   assert.equal(cards['the-concert'].cost, 2);
+});
+
+test('Inmate Kingpin can be played for one Motion with three printed Hands', () => {
+  for (const owner of ['player', 'cpu'] as const) {
+    const source = createCardInstance('inmate-kingpin', owner, 'budget', 0);
+    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+    const motion = owner === 'player' ? 'playerMotion' : 'cpuMotion';
+    const match = { ...blank(), phase: owner === 'player' ? 'player' as const : 'cpu-reveal' as const, [hand]: [source], [motion]: 1 };
+    const after = playTurnCard(match, owner, source.instanceId, 0);
+    assert.equal(after[motion], 0, owner);
+    assert.equal(find(after, source).basePower, 3, owner);
+  }
 });
 
 for (const owner of ['player', 'cpu'] as const) {

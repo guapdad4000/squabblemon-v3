@@ -39,6 +39,13 @@ const unit = (
 });
 const find = (m: Match, c: CardInstance) =>
   m.boards.flat().find((x) => x.instanceId === c.instanceId);
+test("ATV Lord and Dr. Umah can start their setup turns for three Motion", () => {
+  for (const id of ["yn-atv-lord", "dr-umah"]) {
+    const c = createCardInstance(id, "player");
+    assert.equal(c.cost, 3, id);
+    assert.equal(c.basePower, id === "yn-atv-lord" ? 4 : 3, id);
+  }
+});
 function cast(
   m: Match,
   id: string,
@@ -111,6 +118,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(after, p)?.lane, 1);
     assert.equal(find(after, source)?.lane, 1);
     assert(find(after, p)?.statuses.protected);
+    assert.equal(find(after, p)?.powerModifier, 1);
     assert.equal(find(after, lion)?.powerModifier, 2);
     m = json(m);
     m.boards[0][0].statuses.locked = true;
@@ -158,6 +166,10 @@ for (const owner of ["player", "cpu"] as const) {
     const played = cast(m, "youngbull", enemy);
     m = played.after;
     assert.equal(find(m, played.source)?.powerModifier, 0);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "dmvworker" && c.owner === owner)?.powerModifier,
+      1,
+    );
     assert(kinds(m).includes("delayed"));
     const released = end(m);
     assert.equal(find(released, played.source)?.powerModifier, 1);
@@ -366,6 +378,10 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "og", enemy, 0).after;
     assert.equal(find(m, first)?.powerModifier, 0);
     assert.equal(find(m, second)?.powerModifier, -2);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "chessregular" && c.owner === owner)?.powerModifier,
+      1,
+    );
     assert(!kinds(m).includes("fork"));
     const demon = cast(blank(), "bbldemon", owner, 2);
     m = cast(demon.after, "og", enemy, 1).after;
@@ -407,6 +423,7 @@ for (const owner of ["player", "cpu"] as const) {
         };
         m = cast(m, "break", owner).after;
         assert.equal(find(m, target)?.statuses.weakened, false);
+        assert.equal(find(m, target)?.powerModifier, 2);
         assert(!kinds(m).includes("cycle"));
       } else {
         const arrival = cast(m, "og", owner);
@@ -495,6 +512,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, regular)?.lane, 1);
     m = cast(m, "vibe", owner, 0).after;
     assert.equal(find(m, regular)?.powerModifier, 4);
+    assert(find(m, regular)?.statuses.protected);
     assert(!kinds(m).includes("loyalty"));
   });
   test(`${owner}: actual healing fulfills the promise; Abuela heals actual damage`, () => {
@@ -563,6 +581,10 @@ for (const owner of ["player", "cpu"] as const) {
     assert(!kinds(m).includes("project"));
     assert.equal(find(m, first.source)?.powerModifier, 4);
     assert.equal(find(m, second.source)?.powerModifier, 3);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "dr-umah" && c.owner === owner)?.powerModifier,
+      1,
+    );
   });
   test(`${owner}: Foreman jobs require both assigned workers and pay once`, () => {
     let m = blank();
@@ -766,6 +788,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "vibe", owner, 1).after;
     assert.equal(find(m, dancer)?.lane, 1);
     assert.equal(find(m, dancer)?.powerModifier, 3);
+    assert(find(m, dancer)?.statuses.protected);
     assert.equal(find(m, captain)?.creativeCount, 1);
   });
   test(`${owner}: Busker carries unfinished Tips across rounds and consumes two on payment`, () => {
@@ -819,7 +842,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, pull.source)?.powerModifier, 1);
     assert(!kinds(m).includes("verse"));
   });
-  test(`${owner}: audit - Dance Captain rewards a non-dancer following the route once`, () => {
+  test(`${owner}: audit - Dance Captain rewards the next different character following the destination`, () => {
     let m = blank();
     const captain = unit("dancecaptain", owner, 2),
       dancer = unit("break", owner, 0),
@@ -831,6 +854,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "vibe", owner, 1).after;
     assert.equal(find(m, visitor)?.lane, 1);
     assert.equal(find(m, visitor)?.powerModifier, 3);
+    assert(find(m, visitor)?.statuses.protected);
     assert.equal(find(m, captain)?.creativeCount, 1);
   });
   test(`${owner}: audit - Ahki pays departure while retaining the return reward`, () => {
@@ -852,6 +876,27 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "og", enemy, 1).after;
     assert(m.creativeMarks?.find(x => x.kind === "fork")?.ready);
     assert.equal(find(m, chess.source)?.powerModifier, 0);
+    m = cast(m, "og", enemy, 0).after;
+    assert(!kinds(m).includes("fork"));
+    assert.equal(find(m, chess.source)?.powerModifier, 1);
+  });
+  test(`${owner}: a lethal Fork still pays Chess, but a blocked Fork does not`, () => {
+    for (const protectedMark of [false, true]) {
+      let m = blank();
+      const marked = unit("og", enemy, 0);
+      marked.basePower = 1;
+      m.boards = [[marked], [], []];
+      if (protectedMark) {
+        m = cast(m, "bustdown", enemy).after;
+        assert(find(m, marked)?.statuses.protected);
+      }
+      const chess = cast(m, "chessregular", owner, 2);
+      m = cast(chess.after, "og", enemy, 1).after;
+      m = cast(json(m), "og", enemy, 1).after;
+      assert.equal(find(m, chess.source)?.powerModifier, protectedMark ? 0 : 1);
+      assert.equal(Boolean(find(m, marked)), protectedMark);
+      assert(!kinds(m).includes("fork"));
+    }
   });
   test(`${owner}: audit - Mall Rules consumes on a stationary deployment before later movement`, () => {
     let m = cast(blank(), "rent-a-cop", owner).after;
@@ -859,9 +904,38 @@ for (const owner of ["player", "cpu"] as const) {
     m = stationary.after;
     assert(!kinds(m).includes("warning"));
     assert.equal(find(m, stationary.source)?.powerModifier, -1);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "rent-a-cop" && c.owner === owner)?.powerModifier,
+      1,
+    );
     const moving = cast(m, "bikelife", enemy);
     m = moving.after;
     assert(!kinds(m).includes("warning"));
     assert.equal(find(m, moving.source)?.powerModifier, 1); // Bikelife movement bonus; no second warning hit.
+  });
+  test(`${owner}: a lethal Mall Rules warning pays once after replay`, () => {
+    let m = cast(blank(), "rent-a-cop", owner).after;
+    const incoming = cast(json(m), "concrete", enemy);
+    m = incoming.after;
+    assert(!find(m, incoming.source));
+    const cop = m.boards.flat().find((c) => c.cardId === "rent-a-cop" && c.owner === owner);
+    assert.equal(cop?.powerModifier, 1);
+    assert(!kinds(m).includes("warning"));
+    m = cast(json(m), "og", enemy).after;
+    assert.equal(find(m, cop!)?.powerModifier, 1);
+  });
+  test(`${owner}: Mall Rules does not pay when Protection blocks the warning`, () => {
+    let m = cast(blank(), "rent-a-cop", owner).after;
+    const traveler = unit("og", enemy, 1);
+    m.boards[1] = [traveler];
+    m = cast(m, "bustdown", enemy, 1).after;
+    assert(find(m, traveler)?.statuses.protected);
+    m = cast(json(m), "subwaymap", enemy, 1).after;
+    assert.equal(find(m, traveler)?.lane, 0);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "rent-a-cop" && c.owner === owner)?.powerModifier,
+      0,
+    );
+    assert(!kinds(m).includes("warning"));
   });
 }

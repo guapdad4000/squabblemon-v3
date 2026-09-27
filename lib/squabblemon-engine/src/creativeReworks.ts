@@ -33,7 +33,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
 
   "yn-atv-lord": [
     "Hop On",
-    "On Reveal: Move with your weakest other ally here to your weakest other district with two spaces. Both must be movable. Protect your passenger after arrival.",
+    "On Reveal: Move with your weakest other ally here to your weakest other district with two spaces. Both must be movable. Protect your passenger after arrival and give it +1 Hand.",
   ],
   "mr-trick": [
     "Open Tab",
@@ -41,7 +41,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   "dr-umah": [
     "Group Project",
-    "On Reveal: Start a Group Project through next round. Your next two different-element allies to resolve successful entrances gain +1 Hand each. When both contribute, each gains another +2 Hands. One project per side.",
+    "On Reveal: Start a Group Project through next round. Your next two different-element allies to resolve successful entrances gain +1 Hand each. When both contribute, each gains another +2 Hands and Dr. Umah gains +1 Hand if still active. One project per side.",
   ],
   hooper: [
     "Ankle Breaker",
@@ -57,11 +57,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   chessregular: [
     "Fork",
-    "On Reveal: Mark the strongest enemy in up to two different districts through next round. With one mark, wait for an enemy placement in another district to complete the Fork. The next enemy placement after completion saves that district; other marked enemies lose 2 Hands. One Fork per side.",
+    "On Reveal: Mark the strongest enemy in up to two different districts through next round. With one mark, wait for an enemy placement in another district to complete the Fork. The next enemy placement after completion saves that district; other marked enemies lose 2 Hands. If a marked enemy loses Hands, Chess Regular gains +1 Hand. One Fork per side.",
   ],
   dmvworker: [
     "Take a Number",
-    "On Reveal: Post one queue ticket here through next round. The next enemy character entrance here waits until round end, then resolves if that character is still active. One ticket per district per side; no repeat delay.",
+    "On Reveal: Post one queue ticket here through next round and gain +1 Hand. The next enemy character entrance here waits until round end, then resolves if that character is still active. One ticket per district per side; no repeat delay.",
   ],
   "tattoo-artist": [
     "Permanent Ink",
@@ -77,7 +77,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   laundry: [
     "Spin Cycle",
-    "On Reveal: Cleanse your weakest other ally here and give it +1 Hand. Its next successful move cleanses it again, once.",
+    "On Reveal: Cleanse your weakest other ally here and give it +1 Hand. Its next successful move cleanses it again and gives it +1 Hand, once.",
   ],
   "black-cowboy": [
     "Wanted",
@@ -109,7 +109,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   dancecaptain: [
     "Follow My Lead",
-    "Ongoing: Once per round, the first friendly dancer move sets a destination. The next different friendly character moving there gains +2 Hands. Dancers: Break, Bboy, Dance Circle Captain.",
+    "Ongoing: Once per round, the first friendly dancer move sets a destination. The next different friendly character moving there gains +2 Hands and Protection. Dancers: Break, Bboy, Dance Circle Captain.",
   ],
   break: [
     "Floor Sweep",
@@ -165,7 +165,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   "rent-a-cop": [
     "Mall Rules",
-    "On Reveal: Post a warning here through next round. The next enemy character played here or moving into or out of this district takes 1 damage. One warning per district per side.",
+    "On Reveal: Post a warning here through next round. The next enemy character played here or moving into or out of this district takes 1 damage. If the warning deals damage, Rent-a-Cop gains +1 Hand if still active. One warning per district per side.",
   ],
   "redneck-evil": [
     "Chain Reaction",
@@ -189,7 +189,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   ahki: [
     "The Usual",
-    "On Reveal: Remember your weakest other ally here and give it +1 Hand. Its first departure from this district grants +1 Hand; its first later return grants another +1. Each reward once.",
+    "On Reveal: Remember your weakest other ally here and give it +1 Hand. Its first departure from this district grants +1 Hand; its first later return grants another +1 Hand and Protection. Each reward once.",
   ],
   firstaid: [
     "Emergency Kit",
@@ -630,7 +630,10 @@ export function creativeReveal(
       if (to !== undefined && passenger) {
         // Capacity and movement locks are checked for both before either departs.
         m = t.movePair(m, s, passenger, to, s.ability);
-        if (card(m, passenger.instanceId)?.lane === to) cover(passenger);
+        if (card(m, passenger.instanceId)?.lane === to) {
+          cover(passenger);
+          give(card(m, passenger.instanceId), 1);
+        }
       }
       break;
     }
@@ -679,6 +682,7 @@ export function creativeReveal(
     }
     case "dmvworker":
       put("queue", [], l, {}, "lane");
+      give(card(m, s.instanceId), 1);
       break;
     case "tattoo-artist": {
       const target = a.find((c) => !c.creativeUsed?.ink);
@@ -1102,7 +1106,17 @@ function arrival(
     ) {
       m = remove(m, x.id);
       const current = card(m, entrant.instanceId);
-      if (current) m = t.hit(m, x.source, current, -1, "Mall Rules");
+      if (current) {
+        const priorPower = t.power(current);
+        m = t.hit(m, x.source, current, -1, "Mall Rules");
+        const worker = card(m, x.source.instanceId);
+        const after = card(m, entrant.instanceId);
+        if (
+          (!after || t.power(after) < priorPower) &&
+          active(worker)
+        )
+          m = buff(m, x.source.instanceId, 1, t);
+      }
     } else if (
       friendly &&
       eligible &&
@@ -1189,6 +1203,8 @@ function contribute(
   ) {
     m = remove(m, x.id);
     for (const target of x.targets) m = buff(m, target, 2, t);
+    if (x.kind === "project" && active(card(m, x.source.instanceId)))
+      m = buff(m, x.source.instanceId, 1, t);
     if (x.kind === "jobs") m = t.refund(m, x.owner, 1);
   }
   return m;
@@ -1229,6 +1245,7 @@ export function creativeMoved(
         else if (x.ready && current.lane === x.lane) {
           m = remove(m, x.id);
           m = buff(m, id, 1, t);
+          m = t.protect(m, card(m, x.source.instanceId) ?? x.source, id);
         }
       } else if (x.kind === "visit") {
         if (current.lane === x.origin) {
@@ -1248,7 +1265,10 @@ export function creativeMoved(
         if (x.kind === "ink" || x.kind === "boarding" || x.kind === "fitting")
           m = t.protect(m, x.source, id);
         if (x.kind === "boarding") m = buff(m, id, 2, t);
-        if (x.kind === "cycle") m = t.cleanse(m, id);
+        if (x.kind === "cycle") {
+          m = t.cleanse(m, id);
+          m = buff(m, id, 1, t);
+        }
       }
     }
     if (start !== m)
@@ -1323,6 +1343,7 @@ export function creativeMoved(
           creativeCount: 1,
         }));
         m = buff(m, id, 2, t);
+        m = t.protect(m, watcher, id);
       }
     }
     if (m !== start) {
@@ -1440,13 +1461,20 @@ export function creativeAfterPlay(
         continue;
       }
       m = remove(m, x.id);
-      if (x.kind === "fork")
+      if (x.kind === "fork") {
+        let forkHit = false;
         for (const targetId of x.targets) {
           const target = card(m, targetId);
-          if (target && target.lane !== entrant.lane)
+          if (target && target.lane !== entrant.lane) {
+            const priorPower = t.power(target);
             m = t.hit(m, x.source, target, -2, "Fork");
+            const after = card(m, targetId);
+            if (!after || t.power(after) < priorPower) forkHit = true;
+          }
         }
-      else if (here) m = t.hit(m, x.source, entrant, -2, "Problem Energy");
+        if (forkHit && active(card(m, x.source.instanceId)))
+          m = buff(m, x.source.instanceId, 1, t);
+      } else if (here) m = t.hit(m, x.source, entrant, -2, "Problem Energy");
       else if (active(card(m, x.source.instanceId)))
         m = buff(m, x.source.instanceId, 2, t);
     } else if (friendly && x.source.instanceId !== id) {
@@ -1508,6 +1536,39 @@ export function creativeAfterPlay(
       m = buff(m, athlete.instanceId, 4, t);
       m = t.protect(m, athlete, athlete.instanceId);
       m = t.train(m, athlete.instanceId);
+    }
+  }
+  const sportsEntrantLane = entrant.lane;
+  if (sportsEntrantLane !== null) {
+    for (const athlete of board(m).filter(
+      (c) =>
+        identity(c) === "sportsprodigy" &&
+        active(c) &&
+        c.owner !== entrant.owner &&
+        c.lane === sportsEntrantLane &&
+        c.sportsComebackArmed &&
+        !c.sportsComebackUsed &&
+        (c.sportsComebackUntilRound ?? -1) >= m.round,
+    )) {
+      const wasNotLosing =
+        t.score(before, athlete.owner, sportsEntrantLane) >=
+        t.score(before, rival(athlete.owner), sportsEntrantLane);
+      const isLosing =
+        t.score(m, athlete.owner, sportsEntrantLane) <
+        t.score(m, rival(athlete.owner), sportsEntrantLane);
+      if (!wasNotLosing || !isLosing) continue;
+      const start = m;
+      m = t.modify(m, athlete.instanceId, (c) => ({
+        ...c,
+        sportsComebackUsed: true,
+        sportsComebackArmed: false,
+      }));
+      m = buff(m, athlete.instanceId, 2, t);
+      const target = sorted(enemies(m, athlete), t, true)[0];
+      if (target) m = t.hit(m, athlete, target, -1, "Next Up: -1 Hand.");
+      m = t.train(m, athlete.instanceId);
+      m = t.event(start, m, athlete, [entrant.instanceId, ...(target ? [target.instanceId] : [])],
+        "Next Up: the district fell behind on an enemy arrival; +2 Hands and the strongest enemy lost 1 Hand.");
     }
   }
   return creativeAfterAction(before, m, t);

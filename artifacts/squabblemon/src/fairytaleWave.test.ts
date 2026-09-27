@@ -26,6 +26,17 @@ function cover(m: Match, c: CardInstance) {
 }
 const advance = (m: Match) => nextRound({ ...m, phase: 'resolved' });
 
+for (const owner of ['player', 'cpu'] as const) test(`Squabble Cook keeps its retaliation at 3 printed Hands for ${owner}`, () => {
+  const enemy = owner === 'player' ? 'cpu' : 'player';
+  const m = blank(), cook = unit('squabblecook', owner, 0), victim = unit('hooper', owner, 0, 2);
+  victim.powerModifier = 9;
+  m.boards[0] = [cook, victim];
+  const { source, after: attacked } = cast(m, 'ptang', enemy);
+  assert.equal(cards.squabblecook.power, 3);
+  assert.equal(find(attacked, cook).basePower, 3);
+  assert.equal(find(attacked, source).powerModifier, -2, 'Hands on the Clock still retaliates against the damaging enemy ability');
+});
+
 test('granted Protection survives its grantor returning to hand', () => {
   let m=blank();const tin=unit('tinman','player',0);m.boards[0]=[tin];
   const entrant=cast(m,'hooper'); m=entrant.after;
@@ -199,6 +210,39 @@ test('P. Tang damage and push are one protected package; locked survivors stay p
     const m=blank(), victim=unit('hooper','cpu',0);victim.powerModifier=4;m.boards[0]=[victim];if(status==='protected')cover(m,victim);else victim.statuses.locked=true;
     const {after}=cast(m,'ptang');assert.equal(find(after,victim).lane,0);assert.equal(find(after,victim).powerModifier,status==='protected'?4:2);
   }
+});
+for (const owner of ['player', 'cpu'] as const) test(`P. Tang pays only for landed damage whose survivor cannot be knocked back for ${owner}`, () => {
+  const opponent = owner === 'player' ? 'cpu' : 'player';
+  const m = blank(), tang = unit('ptang', owner, 0), victim = unit('hooper', opponent, 0);
+  victim.powerModifier = 8;
+  const blockers = [1, 2].flatMap(lane => Array.from({ length: 4 }, (_, i) => unit('cornball', opponent, lane as Lane, 100 + lane * 10 + i)));
+  m.boards = [[victim], blockers.slice(0, 4), blockers.slice(4)];
+  const { source, after } = cast(m, 'ptang', owner);
+  assert.equal(find(after, victim).lane, 0, 'both enemy destinations are full');
+  assert.equal(find(after, victim).powerModifier, 6, 'the damage is preserved');
+  assert.equal(find(after, source).powerModifier, 1, 'surviving damage with failed knockback pays once');
+
+  const locked = blank(), lockedVictim = unit('hooper', opponent, 0);
+  lockedVictim.powerModifier = 8; lockedVictim.statuses.locked = true; locked.boards[0] = [lockedVictim];
+  const lockedTang = cast(locked, 'ptang', owner);
+  const blockedMove = lockedTang.after;
+  assert.equal(find(blockedMove, lockedVictim).powerModifier, 6);
+  assert.equal(find(blockedMove, lockedVictim).lane, 0);
+  assert.equal(find(blockedMove, lockedTang.source).powerModifier, 1, 'locked survivor pays the fallback');
+
+  const noEnemy = cast(blank(), 'ptang', owner);
+  assert.equal(find(noEnemy.after, noEnemy.source).powerModifier, 0);
+  const lethal = blank(), fragile = unit('bonnetgirl', opponent, 0);
+  lethal.boards[0] = [fragile];
+  const lethalResult = cast(lethal, 'ptang', owner).after;
+  assert.equal(find(lethalResult, fragile), undefined);
+  assert.equal(find(lethalResult, source).powerModifier, 0, 'lethal damage does not pay');
+
+  const protectedMatch = blank(), shielded = unit('hooper', opponent, 0);
+  shielded.powerModifier = 8; protectedMatch.boards[0] = [shielded]; cover(protectedMatch, shielded);
+  const protectedResult = cast(protectedMatch, 'ptang', owner).after;
+  assert.equal(find(protectedResult, shielded).powerModifier, 8);
+  assert.equal(find(protectedResult, source).powerModifier, 0, 'Protection blocks damage and fallback');
 });
 test('Pastor counts actual donations, leaves one Hand, and creates no damage reactions', () => {
   const m=blank(), small=unit('bonnetgirl','player',0), large=unit('hooper','player',0);m.boards[0]=[small,large];

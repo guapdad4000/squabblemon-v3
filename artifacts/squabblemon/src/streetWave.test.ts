@@ -79,6 +79,94 @@ test('Red Pill rewards an already weakened target; STUD intercepts once and esca
 
 });
 
+for (const owner of ['player', 'cpu'] as const) {
+  test(`Sports Prodigy preserves its immediate comeback and arms one serialized delayed comeback for ${owner}`, () => {
+    const opponent = owner === 'player' ? 'cpu' : 'player';
+    for (const start of ['winning', 'tied'] as const) {
+      const source = unit('sportsprodigy', owner, 70);
+      const tieEnemy = unit('cornball', opponent, 71);
+      if (start === 'tied') tieEnemy.powerModifier = source.basePower - tieEnemy.basePower;
+      const match: Match = {
+        ...createMatch('block', 'block'), round: 2, playerMotion: 9, cpuMotion: 9,
+        phase: owner === 'player' ? 'player' : 'cpu-reveal',
+        playerHand: owner === 'player' ? [source] : [], cpuHand: owner === 'cpu' ? [source] : [],
+        boards: [[...(start === 'tied' ? [tieEnemy] : [])], [], []],
+      };
+      let armed = playTurnCard(match, owner, source.instanceId, 0);
+      const armedSource = armed.boards[0].find(c => c.instanceId === source.instanceId)!;
+      assert.equal(armedSource.powerModifier, 0, `${start}: no premature reward`);
+      assert.equal(armedSource.sportsComebackArmed, true);
+      assert.equal(armedSource.sportsComebackUntilRound, 3);
+
+      const serialized = JSON.parse(JSON.stringify(armed)) as Match;
+      const arrival = unit('hooper', opponent, 72);
+      const handKey = opponent === 'player' ? 'playerHand' : 'cpuHand';
+      const nextPlacement = {
+        ...serialized,
+        phase: opponent === 'player' ? 'player' : 'cpu-reveal',
+        [handKey]: [arrival],
+      };
+      const enemyPlay = playTurnCard(nextPlacement, opponent, arrival.instanceId, 0);
+      assert.deepEqual(enemyPlay, playTurnCard({
+        ...armed,
+        phase: opponent === 'player' ? 'player' : 'cpu-reveal',
+        [handKey]: [arrival],
+      }, opponent, arrival.instanceId, 0), 'JSON serialization preserves the armed reaction');
+      const rewarded = enemyPlay.boards[0].find(c => c.instanceId === source.instanceId)!;
+      assert.equal(rewarded.powerModifier, 2, `${start}: enemy arrival caused the district to fall behind`);
+      assert.equal(rewarded.sportsComebackUsed, true);
+      assert.equal(rewarded.sportsComebackArmed, false);
+      assert.equal(enemyPlay.boards[0].find(c => c.instanceId === arrival.instanceId)?.powerModifier, -1);
+      const comebackEvent = enemyPlay.effectLog.find(e => e.note.startsWith('Next Up: the district fell behind'))!;
+      assert.equal(comebackEvent.replay.before.boards.flat().find(c => c.instanceId === source.instanceId)?.sportsComebackArmed, true);
+      assert.equal(comebackEvent.replay.after.boards.flat().find(c => c.instanceId === source.instanceId)?.sportsComebackUsed, true);
+
+      const again = unit('hooper', opponent, 73);
+      const second = playTurnCard({
+        ...enemyPlay,
+        playerMotion: 9,
+        cpuMotion: 9,
+        phase: opponent === 'player' ? 'player' : 'cpu-reveal',
+        [handKey]: [again],
+      }, opponent, again.instanceId, 0);
+      assert.equal(second.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier, 2, 'pays once');
+    }
+
+    const { source: immediate, match: losing } = setup('sportsprodigy', owner);
+    const immediateResult = playTurnCard(losing, owner, immediate.instanceId, 0);
+    assert.equal(immediateResult.boards[0].find(c => c.instanceId === immediate.instanceId)?.powerModifier, 2);
+    assert.equal(immediateResult.boards[0].find(c => c.instanceId === immediate.instanceId)?.sportsComebackArmed, undefined);
+  });
+
+  test(`Sports Prodigy's delayed comeback requires an active source and expires for ${owner}`, () => {
+    const opponent = owner === 'player' ? 'cpu' : 'player';
+    for (const condition of ['absent', 'silenced', 'frozen', 'weakened', 'expired'] as const) {
+      const source = unit('sportsprodigy', owner, 80);
+      const match: Match = {
+        ...createMatch('block', 'block'), round: 2, playerMotion: 9, cpuMotion: 9,
+        phase: owner === 'player' ? 'player' : 'cpu-reveal',
+        playerHand: owner === 'player' ? [source] : [], cpuHand: owner === 'cpu' ? [source] : [],
+        boards: [[], [], []],
+      };
+      let armed = playTurnCard(match, owner, source.instanceId, 0);
+      if (condition === 'absent') armed.boards[0] = [];
+      else if (condition !== 'expired') {
+        armed.boards[0] = armed.boards[0].map(c => c.instanceId === source.instanceId
+          ? { ...c, statuses: { ...c.statuses, [condition]: true } } : c);
+      } else armed.round = 4;
+      const arrival = unit('hooper', opponent, 81);
+      const handKey = opponent === 'player' ? 'playerHand' : 'cpuHand';
+      const result = playTurnCard({
+        ...armed,
+        phase: opponent === 'player' ? 'player' : 'cpu-reveal',
+        [handKey]: [arrival],
+      }, opponent, arrival.instanceId, 0);
+      if (condition !== 'absent')
+        assert.equal(result.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier ?? 0, 0, condition);
+    }
+  });
+}
+
 test('Alchy trained tiers add one bounded round-end Hand each', () => {
   const playedSetup = setup('alchy', 'player');
   const played = playTurnCard(playedSetup.match, 'player', playedSetup.source.instanceId, 0);

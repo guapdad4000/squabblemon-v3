@@ -147,6 +147,10 @@ export type CardInstance = Card & {
   buddyBud?: { readonly sourceInstanceId: string; readonly sproutsAtRound: number; readonly sprouted: boolean };
   /** The transformed form's active-through round; effects expire at its start. */
   buddyEarthExpiresAtRound?: number;
+  /** Sports Prodigy's one-time delayed comeback window survives snapshots and replay. */
+  sportsComebackArmed?: boolean;
+  sportsComebackUsed?: boolean;
+  sportsComebackUntilRound?: number;
 };
 
 export type EffectKind = 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
@@ -182,7 +186,7 @@ export type TimedEffect = {
 };
 export type DiscountToken = {
   startsAtRound?: number;
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
   targetLane?: Lane;
   targetInstanceId?: string;
   sourceLane: Lane | null; createdOrder: number;
@@ -558,7 +562,7 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
   || token.eligibility === "any"
   || (token.eligibility === "printed-two-cost" && card.cost === 2)
   || (token.eligibility === "printed-four-plus" && card.cost >= 4)
-  || (token.eligibility === "another-district" && token.sourceLane !== targetLane)
+  || ((token.eligibility === "another-district" || token.eligibility === "livewire-cross-district") && token.sourceLane !== targetLane)
   || (token.eligibility === 'electric-delivery' && token.targetLane === targetLane
     && card.type === 'Electric' && (card.kind ?? 'character') === 'character' && !card.hazard)
   || ((token.eligibility === 'wiseman-prediction' || token.eligibility === 'creative-local') && token.targetLane === targetLane
@@ -1585,12 +1589,25 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       m = hostileEffect(m, source, target, (state, actual) => {
         let result = reduceHands(state, actual, 2, 'Belt Check: 2 damage.');
         const survivor = result.boards.flat().find(c => c.instanceId === actual.instanceId);
+        const damageLanded = !!survivor && survivor.powerModifier < actual.powerModifier;
         if (survivor) {
-          const destination = [((survivor.lane! + 1) % 3) as Lane, ((survivor.lane! + 2) % 3) as Lane].find(x => !getStoryLockedLanes(result, survivor.owner).includes(x));
+          const destination = [((survivor.lane! + 1) % 3) as Lane, ((survivor.lane! + 2) % 3) as Lane]
+            .find(x => !getStoryLockedLanes(result, survivor.owner).includes(x)
+              && inLane(result, survivor.owner, x).length < 4);
           if (destination !== undefined) result = forceMoveUnshielded(result, survivor, destination);
         }
         const after = findCard(result, actual.instanceId);
-        succeeded = !after || after.powerModifier < actual.powerModifier || after.lane !== actual.lane;
+        const moved = !!after && after.lane !== actual.lane;
+        succeeded = !after || after.powerModifier < actual.powerModifier || moved;
+        if (damageLanded && after && !moved) {
+          const tang = findCard(result, source.instanceId);
+          if (tang) {
+            targets.push(tang.instanceId);
+            result = modify(result, tang.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1,
+              lastEffectNote: 'Belt Check: surviving target held its ground, +1 Hand.' }));
+            succeeded = true;
+          }
+        }
         return result;
       }, false, false, true);
     }
@@ -2686,7 +2703,12 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         .sort((a, b) => getLaneScoreForMatch(m, inLane(m, enemy, b), b, enemy) - getLaneScoreForMatch(m, inLane(m, enemy, a), a, enemy) || a - b);
       if (target && destinations.length) {
         targetIds.add(target.instanceId);
+        const originalLane = target.lane;
         m = forceEnemyMove(m, source, target, destinations[0]);
+        const displaced = findCard(m, target.instanceId);
+        if (displaced && displaced.lane !== originalLane) {
+          buff(findCard(m, source.instanceId), 1, 'Wrong Block: successful displacement, +1 Hand.');
+        }
       }
       note(target && destinations.length ? 'Wrong Block targeted the weakest enemy for relocation.' : 'Wrong Block found no legal enemy destination.');
     } else if (id === 'streetapostle') {
@@ -2818,6 +2840,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           const burnTarget = highest(enemies);
           if (burnTarget) { targetIds.add(burnTarget.instanceId); m = applyBurn(m, source, burnTarget, 1, 'One More: 1 Burn.'); }
         }
+      } else if (id === 'sportsprodigy' && !source.sportsComebackArmed && !source.sportsComebackUsed) {
+        m = modify(m, source.instanceId, c => ({
+          ...c,
+          sportsComebackArmed: true,
+          sportsComebackUntilRound: m.round + 1,
+          lastEffectNote: 'Next Up: comeback armed through next round.',
+        }));
       }
     } else if (id === 'stud') {
       const target = lowest(allies);
@@ -2956,7 +2985,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       if (travel(source)) {
         const moved = findCard(m, source.instanceId)!;
         buff(moved, 1);
-        m = addDiscountToken(m, source.owner, moved, 'another-district');
+        m = addDiscountToken(m, source.owner, moved, 'livewire-cross-district');
       }
     } else if (id === 'gust') {
       if (travel(source)) reduce(lowest(inLane(m, enemy, findCard(m, source.instanceId)!.lane!)), 1);
@@ -2969,7 +2998,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else if (id === 'crosswind') {
       weaken(highest(enemies));
       const traveler = lowest(allies);
-      if (traveler) travel(traveler);
+      if (traveler && travel(traveler)) buff(findCard(m, traveler.instanceId), 1);
     } else if (id === 'cloudbreak') {
       if (travel(source)) {
         const left = lowest(inLane(m, source.owner, l).filter(c => (c.kind ?? 'character') === 'character'));
@@ -3245,6 +3274,14 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     type: 'play', sourceId: instanceId, owner, lane: targetLane,
     note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${usedToken ? ` ${usedToken.eligibility} discount used.` : ''}${taxed ? " Rent Due added 1 Motion." : ""}${squabble ? ' SQUABBLE doubled its base Hands.' : ''}`,
   });
+  if (usedToken?.eligibility === 'livewire-cross-district'
+    && (placed.kind ?? 'character') === 'character' && !placed.hazard) {
+    const beforeLivewireReward = m;
+    m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1,
+      lastEffectNote: 'Switch Carriers: discounted cross-district play, +1 Hand.' }));
+    m = addEvent(beforeLivewireReward, m, { type: 'ability', sourceId: usedToken.sourceInstanceId,
+      owner, targetIds: [instanceId], note: 'Switch Carriers gave its discounted character +1 Hand on placement.' });
+  }
   m = addEvent(m, m, {
     type: 'reveal', sourceId: instanceId, owner, lane: targetLane,
     note: `${card.name} revealed in district ${targetLane + 1}.`,
