@@ -502,7 +502,7 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             art: 'assets/rewards/clout-token.webp', name: `${reward.amount.toLocaleString()} Clout`, daily: { date: reward.date },
           })} />}
           {CORNER_OFFERS.filter(o => o.kind === department).map((offer, index) => {
-            const catalogOffer = catalog?.offers.find(o => o.id === offer.id);
+            const catalogOffer = catalog?.offers?.find(o => o.id === offer.id);
             const isSupported = offer.kind === 'clout';
             const available = !!catalogOffer && catalogOffer.enabled && checkoutEnabled;
             const priceDisplay = catalogOffer ? catalogPriceLabel(catalogOffer.amountMinor, catalogOffer.currency, catalog as TaxAwareCatalog | undefined) : 'Unavailable';
@@ -569,9 +569,9 @@ export function CornerStore({ bootstrap }: { bootstrap: PlayerBootstrap }) {
               <div className="corner-checkout__summary">
                 <img className="corner-checkout__art" src={getAssetUrl(selected.art)} alt="" draggable={false} onContextMenu={event => event.preventDefault()} />
                 <div><span className="corner-checkout__eyebrow">FADE MARKET · AT THE COUNTER</span>
-                  <DialogTitle>{catalog?.offers.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
+                  <DialogTitle>{catalog?.offers?.find(offer => offer.id === selected.id)?.name ?? selected.name}</DialogTitle>
                   <DialogDescription>{selected.kind === 'clout' ? 'Secure checkout via Stripe.' : 'Showcase preview · not currently for sale.'}</DialogDescription>
-                  <p>{selected.kind === 'clout' ? `${catalog?.offers.find(offer => offer.id === selected.id)?.clout.toLocaleString() ?? '—'} Clout for your account.` : selected.description}</p>
+                  <p>{selected.kind === 'clout' ? `${catalog?.offers?.find(offer => offer.id === selected.id)?.clout.toLocaleString() ?? '—'} Clout for your account.` : selected.description}</p>
                 </div>
               </div>
               
