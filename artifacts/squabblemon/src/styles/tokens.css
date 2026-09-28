@@ -164,3 +164,15 @@ html .panel-section:not([class*=-paper]) :is(.bg-white\/50, .bg-white\/70):hover
 html .panel-section:not([class*=-paper]) .profile-style-details > div { background: #0d241a8c; border-top-color: #e9d9a8; }
 html .panel-section:not([class*=-paper]) .profile-style-details dt { color: #e9d9a8 !important; }
 html .panel-section:not([class*=-paper]) .profile-style-details dd { color: #f4eedb !important; }
+
+/* No fade-to-black "blink": the new screen wipes in over the old one, which stays fully visible. */
+.sq-route-transition, .sq-route-transition--immersive, html[data-reduce-motion="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: none; }
+::view-transition-old(root) { animation: sq-vt-hold 300ms linear both; }
+::view-transition-new(root) { animation: sq-vt-wipe 300ms cubic-bezier(.3,.9,.3,1) both; }
+@keyframes sq-vt-hold { to { filter: brightness(.55); transform: translateX(-4%); } }
+@keyframes sq-vt-wipe {
+  from { clip-path: polygon(110% 0, 110% 100%, 101% 100%, 105% 80%, 102% 63%, 106% 47%, 101% 30%, 105% 14%, 102% 0%); }
+  to { clip-path: polygon(110% 0, 110% 100%, -6% 100%, -2% 80%, -5% 63%, -1% 47%, -6% 30%, -2% 14%, -5% 0%); }
+}
+
+@media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root) { animation: none; } }
