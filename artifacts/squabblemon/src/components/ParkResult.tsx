@@ -1,10 +1,10 @@
-import { type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { rankProgress, type RankedResult } from '@workspace/squabblemon-engine/multiplayer';
 import { getAssetUrl } from '../lib/assets';
 import { AnimatedNumber } from './AnimatedNumber';
 import { RankTrophy, RPToken } from './RankArtwork';
-import { DialogClose, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
+import { DialogClose, DialogContent, DialogPortal, DialogDescription, DialogTitle } from './ui/dialog';
 import { setBattleMusicMode } from '../musicStore';
 import '../styles/park-result-legible.css';
 export function ParkResult({ outcome, ranked, rank, description, title, subtitle, boardNote, claimed, rivalClaimed, reducedMotion = false, children }: {
@@ -30,7 +30,13 @@ export function ParkResult({ outcome, ranked, rank, description, title, subtitle
     panel.scrollLeft = 0;
   }, []);
   const promoted = rank && rank.after > rank.before && rankProgress(rank.before).tier !== rank.tier;
-  return <DialogContent ref={panelRef} className={'park-result park-result--illustrated outcome-' + outcome} aria-describedby="park-result-description" data-testid="park-result-dialog">
+  const weather = !reduced && outcome !== 'draw' && <DialogPortal>{
+    <div className={'park-weather park-weather--' + outcome} aria-hidden="true" data-testid="park-weather">
+      {win
+        ? Array.from({ length: 36 }, (_, i) => <i key={i} style={{ '--x': `${(i * 37 + 7) % 100}%`, '--delay': `${-i * .45}s`, '--duration': `${4 + i % 5}s`, '--spin': `${i * 31}deg` } as CSSProperties} />)
+        : Array.from({ length: 60 }, (_, i) => <i key={i} style={{ '--x': `${(i * 37 + 3) % 100}%`, '--delay': `${-i * .13}s`, '--duration': `${.7 + (i % 7) * .1}s` } as CSSProperties} />)}
+    </div>}</DialogPortal>;
+  return <>{weather}<DialogContent ref={panelRef} className={'park-result park-result--illustrated outcome-' + outcome} aria-describedby="park-result-description" data-testid="park-result-dialog">
     <DialogClose className="park-result-close" aria-label="Close result" data-park-result-close><span aria-hidden="true">×</span></DialogClose>
     <div className="park-result-scene" style={{ backgroundImage: `linear-gradient(0deg,#18251f00,#09161455),url("${getAssetUrl('assets/fade-park/park.png')}")` }} aria-hidden="true"><div className="park-result-sun" /><motion.img draggable={false} src={getAssetUrl(hero)}
       initial={reduced ? false : { y: 45, scale: .85, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 16, delay: .1 }} />
@@ -44,5 +50,5 @@ export function ParkResult({ outcome, ranked, rank, description, title, subtitle
       {rank && <div className="park-result-award" data-testid="ranked-result"><motion.div initial={reduced ? false : { y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: 'spring', damping: 12, delay: .3 }}><RankTrophy tier={rank.tier} /></motion.div><div><span className="park-award-label">{promoted ? 'RANK UP!' : 'PRESEASON RANK'}</span><h3>{rank.tier}</h3><div className="park-rp-change"><RPToken /><strong><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.delta} prefix={rank.delta >= 0 ? '+' : ''} delay={.5} /> RP</strong></div><small><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.after} from={rank.before} delay={.5} /> total RP{rank.bot ? ' · Park Bot' : ''}</small></div></div>}
       <nav className="park-result-actions" aria-label="After the fade">{children}</nav>
     </div>
-  </DialogContent>;
+  </DialogContent></>;
 }

@@ -11,6 +11,7 @@ import { cards, type Card } from '../data';
 import { SUMMON_TEMPLATES, type CardInstance, type Lane, type Match } from '../gameEngine';
 import { otherSeat, TURN_SECONDS, type OnlineCommand, type OnlineRoomView, type PublicCard, type Seat } from '@workspace/squabblemon-engine/multiplayer';
 import { Battle, type OnlineBattlePresentation } from './Battle';
+import { useOnlineEffectPresenter } from '../lib/useOnlineEffectPresenter';
 import { BattleStartSmoke } from './BattleStartSmoke';
 import { CardInspector } from './CardInspector';
 import { RulesModal } from './RulesModal';
@@ -162,6 +163,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
     setSelected(null); setLane(null); setSquabble(false);
   } }, [myTurn, room.hand, selected]);
   const projected = useMemo(() => onlineBattleProjection(room), [room]);
+  const liveEffect = useOnlineEffectPresenter(room, projected.presentation.scores, Boolean(reducedMotion) || room.status !== 'active');
   const status = room.status === 'complete' ? 'Fade complete' : !connected ? 'Reconnecting…' : busy ? 'Sending play…' : remaining === 0 ? 'Checking result…' : myTurn ? 'Your turn' : `${rival.name}'s turn`;
   async function act(command: OnlineCommand) {
     if (sending.current || busy || !connected) return;
@@ -223,6 +225,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       endTurn={() => void act({ type: 'end-turn' })}
       presentationPhase={interactive ? 'player-ready' : 'rival-thinking'}
       phaseMessage={`${status}${latest && !myTurn ? ' · ' + latest.note : ''}`}
+      activeEffect={liveEffect} activeEffectId={liveEffect?.cardInstanceId ?? null} activeEffectLane={liveEffect?.lane ?? null}
       presentationScores={projected.presentation.scores} timerSeconds={remaining} timerEnabled={room.status === 'active'}
       feedbackPreferences={preferences} setFeedbackPreferences={setPreferences}
       onFeedback={(cue: 'select' | 'lock') => { feedback.current?.unlockAudio(); feedback.current?.cue(cue, reducedMotion); }}

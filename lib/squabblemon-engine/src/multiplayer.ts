@@ -24,6 +24,7 @@ import {
   type Match,
   type Owner,
   type Statuses,
+  type EffectLogEntry,
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
@@ -352,7 +353,15 @@ export type PublicEvent = {
   owner: Seat;
   lane: Lane;
   cardId: string | null;
+  /** Board-only presentation data so clients can animate effects. Never includes hand cards. */
+  sourceId?: string;
+  participants?: PublicParticipant[];
+  scores?: EffectLogEntry['scores'];
 };
+export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; moved: boolean; statuses: Statuses };
+export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null };
+const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
+  state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier, moved: state.moved, statuses: state.statuses } : null;
 export type OnlineRoomView = {
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
@@ -385,6 +394,15 @@ export type OnlineRoomView = {
   rematch: Record<Seat, boolean>;
 };
 /** Explicit allowlist: full engine snapshots, event replays, user IDs and rival hands NEVER cross this boundary. */
+function publicPresentation(event: EffectLogEntry): Pick<PublicEvent, 'sourceId' | 'participants' | 'scores'> {
+  const participants = [event.source, ...event.targets].flatMap((p) => {
+    if (!p) return [];
+    const before = publicParticipantState(p.before), after = publicParticipantState(p.after);
+    return before || after ? [{ cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: p.owner, before, after }] : [];
+  });
+  const sourceOnBoard = event.source && participants.some((p) => p.cardInstanceId === event.source!.cardInstanceId);
+  return { ...(sourceOnBoard ? { sourceId: event.source!.cardInstanceId } : {}), participants, scores: event.scores };
+}
 export function onlineRoomView(
   room: OnlineRoom,
   code: string,
@@ -482,6 +500,7 @@ export function onlineRoomView(
           event.type === "play" || event.type === "reveal"
             ? event.cardId
             : null,
+        ...publicPresentation(event),
       })),
     squabble: match?.squabbleByOwner ?? { player: false, cpu: false },
     winner: room.winner,

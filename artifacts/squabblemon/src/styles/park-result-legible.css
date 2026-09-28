@@ -12,3 +12,18 @@ html .park-result.park-result--illustrated .park-award-label { color: #8a1f17; }
 html .park-result.park-result--illustrated .park-rp-change strong { color: #111; }
 html .park-result.park-result--illustrated .park-result-receipt .park-result-board-note { color: #3a2d12; }
 html .park-result.park-result--illustrated .park-result-actions .online-secondary { color: #111; background: #fff; border: 2px solid #111; box-shadow: 3px 3px 0 #0003; }
+
+/* Win confetti / loss rain behind and around the PvP result card. */
+.park-weather { position: fixed; inset: 0; z-index: 49; overflow: hidden; pointer-events: none; }
+body:has(.park-result) .park-weather { z-index: 51; }
+.park-weather--loss { background: linear-gradient(180deg, #1b2c4a55, #0a0f1a33); }
+.park-weather--win { background: radial-gradient(ellipse at 50% 20%, #ffd66b33, transparent 70%); }
+.park-weather--loss i { position: absolute; top: -90px; left: var(--x); width: 2px; height: 70px; border-radius: 2px; background: linear-gradient(transparent, #c9dcf0cc); animation: park-rain var(--duration) var(--delay) linear infinite; }
+.park-weather--loss i:nth-child(3n) { height: 44px; opacity: .55; }
+.park-weather--win i { position: absolute; top: -20px; left: var(--x); width: 9px; height: 14px; border-radius: 2px; background: #ffd23f; animation: park-confetti var(--duration) var(--delay) linear infinite; }
+.park-weather--win i:nth-child(4n+1) { background: #ff3fa4; }
+.park-weather--win i:nth-child(4n+2) { background: #3fd7ff; width: 6px; }
+.park-weather--win i:nth-child(4n+3) { background: #7dff6a; height: 9px; }
+@keyframes park-rain { from { transform: translate3d(0, -80px, 0) rotate(12deg); } to { transform: translate3d(-16vw, 115vh, 0) rotate(12deg); } }
+@keyframes park-confetti { from { transform: translateY(-5vh) rotate(var(--spin)); } to { transform: translate(60px, 110vh) rotate(720deg); } }
+@media (prefers-reduced-motion: reduce) { .park-weather { display: none; } }
