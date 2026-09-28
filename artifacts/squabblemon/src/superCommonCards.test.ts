@@ -104,6 +104,17 @@ test('Cognac and Soul Food support a character, skipping items and enemies', () 
   }
 });
 
+test('Soul Food cleanses a frozen ally even when another ally ties at 0 Hands', () => {
+  for (const owner of ['player', 'cpu'] as const) {
+    const frozen = { ...instance('shiesty', owner, 5), statuses: { ...instance('shiesty').statuses, frozen: true } };
+    const weak = { ...instance('torta', owner, 1), powerModifier: -9 };
+    const m = reveal('soulfood', m => ({ ...m, boards: [[frozen, weak], [], []] }), owner);
+    assert.equal(find(m, 'shiesty').statuses.frozen, false);
+    assert.equal(find(m, 'shiesty').powerModifier, 1);
+    assert.equal(find(m, 'torta').powerModifier, -9);
+  }
+});
+
 test('Bust-Down Watch protects a character from one hostile ability, then is consumed', () => {
   let m = reveal('bustdown', m => ({ ...m, boards: [[instance('torta'), instance('buspass', 'player', 1)], [], []] }));
   assert.equal(find(m, 'torta').statuses.protected, true);

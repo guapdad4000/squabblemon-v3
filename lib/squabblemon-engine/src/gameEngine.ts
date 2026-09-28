@@ -2367,7 +2367,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     note(!target ? 'Wrist Check needs another friendly card here.' : target.statuses.protected ? 'Wrist Check: ally is already protected.' : `Wrist Check protected ${target.name}.`);
   }
   else if (source.cardId === 'pinaynurse' || source.cardId === 'soulfood') {
-    const target = lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'soulfood' || c.kind !== 'support')));
+    const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'soulfood' || c.kind !== 'support'));
+    // Frozen allies drop to 0 Hands and can tie with other weak allies; a cleanse must reach the one that needs it.
+    const target = lowest(allies.filter(needsCleanse)) ?? lowest(allies);
     const amount = source.cardId === 'pinaynurse' ? 2 : 1;
     if (target) {
       targetIds.add(target.instanceId);
