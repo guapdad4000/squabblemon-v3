@@ -11,3 +11,4 @@ html .park-result.park-result--illustrated .park-result-award h3 { color: #111; 
 html .park-result.park-result--illustrated .park-award-label { color: #8a1f17; }
 html .park-result.park-result--illustrated .park-rp-change strong { color: #111; }
 html .park-result.park-result--illustrated .park-result-receipt .park-result-board-note { color: #3a2d12; }
+html .park-result.park-result--illustrated .park-result-actions .online-secondary { color: #111; background: #fff; border: 2px solid #111; box-shadow: 3px 3px 0 #0003; }
