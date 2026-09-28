@@ -26,7 +26,7 @@ export function ResultArtwork({ victory, draw, results, districts, reward, isGue
   const outcome = victory ? 'win' : draw ? 'draw' : 'loss';
   const asset = (name: string) => getAssetUrl(`assets/results/${name}.webp`);
 
-  const background = draw ? 'draw-scene' : `v3/${outcome}-${variant}`;
+  const background = draw ? 'v3/draw-1' : `v3/${outcome}-${variant}`;
   const savedReward = !isGuest && !rewardError && !rewardPending ? reward : undefined;
   const stateLabel = isGuest ? 'Offline training · no saved rewards' : rewardError ? 'Rewards not saved · retry below' : rewardPending || !reward ? 'Saving battle earnings…' : 'Battle earnings';
   return <section className={`result-immersive result-immersive--${outcome}`} data-result-outcome={outcome} style={{ "--result-panel": `url("${asset("v3/panel")}")` } as CSSProperties} aria-label={`${draw ? 'Tied' : victory ? 'Winning' : 'Losing'} battle outcome artwork`}>
