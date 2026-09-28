@@ -2,10 +2,10 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** First bond wave: rarity is collection metadata, never an ability condition. */
 export const ELEMENTAL_WAVE = [
-  ['puddle', 'puddle-runner', 'Puddle Runner', 'Common', 'Water', 1, 1, 'Fresh Start', 'Cleanse your lowest-Hands frozen or silenced other ally here. If cleansed, give it +1 Hand.', 'Support'],
-  ['raincaller', 'rain-caller', 'Rain Caller', 'Rare', 'Water', 3, 3, 'Water Bond', 'Ongoing: While Rain Caller is in your hand, your other Water characters gain +1 Hand at round end.', 'Sustain', 'Water'],
-  ['hydrant', 'hydrant-medic', 'Hydrant Medic', 'Uncommon', 'Water', 3, 3, 'Open Hydrant', 'Cleanse Freeze, Silence, Burn, Weaken, and Lock from every other ally here. Each cleansed ally gains +1 Hand.', 'Support'],
-  ['floodgate', 'floodgate-captain', 'Floodgate Captain', 'Epic', 'Water', 5, 5, 'Clear the Block', 'Cleanse your lowest-Hands affected other ally in each district. Each cleansed ally gains +2 Hands.', 'Support'],
+  ['puddle', 'puddle-runner', 'Puddle Runner', 'Common', 'Water', 1, 2, 'Fresh Start', 'Cleanse your lowest-Hands frozen or silenced other ally here. If cleansed, give it +1 Hand.', 'Support'],
+  ['raincaller', 'rain-caller', 'Rain Caller', 'Rare', 'Water', 3, 4, 'Water Bond', 'Ongoing: While Rain Caller is in your hand, your other Water characters gain +1 Hand at round end.', 'Sustain', 'Water'],
+  ['hydrant', 'hydrant-medic', 'Hydrant Medic', 'Uncommon', 'Water', 3, 4, 'Open Hydrant', 'Cleanse Freeze, Silence, Burn, Weaken, and Lock from every other ally here. Each cleansed ally gains +1 Hand.', 'Support'],
+  ['floodgate', 'floodgate-captain', 'Floodgate Captain', 'Epic', 'Water', 5, 6, 'Clear the Block', 'Cleanse your lowest-Hands affected other ally in each district. Each cleansed ally gains +2 Hands.', 'Support'],
   ['seedvendor', 'seed-vendor', 'Seed Vendor', 'Common', 'Plant', 1, 1, 'First Sprout', 'Give your lowest-Hands other Plant ally here +1 Hand.', 'Growth'],
   ['vinekeeper', 'sidewalk-vinekeeper', 'Sidewalk Vinekeeper', 'Rare', 'Plant', 3, 3, 'Plant Bond', 'Ongoing: While Sidewalk Vinekeeper is in your hand, your other Plant characters gain +1 Hand at round end.', 'Growth', 'Plant'],
   ['mosskeeper', 'moss-keeper', 'Moss Keeper', 'Uncommon', 'Plant', 3, 3, 'Root Support', 'Give your lowest-Hands other Plant ally on the board +2 Hands.', 'Growth'],

@@ -998,8 +998,8 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       result = modify(result, card.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'BOOST: +1 Hands at round end.' }));
     }
   }
-  // Alchy: round 4+ conditional round-end gain (+1, +2 if losing the district).
-  if (result.round >= 4) {
+  // Alchy: round 3+ conditional round-end gain (+1, +2 if losing the district).
+  if (result.round >= 3) {
     for (const card of result.boards.flat().filter(c => c.cardId === 'alchy' && !c.statuses.silenced && !c.statuses.frozen && !c.statuses.weakened && c.lane !== null)) {
       const cardLane = card.lane as Lane;
       const enemy = card.owner === 'player' ? 'cpu' : 'player';
@@ -1891,22 +1891,22 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     };
     if (source.cardId === 'inmate-crafty' && allies.some(c => !c.hazard && (c.kind === 'support'
       || ((c.kind ?? 'character') === 'character' && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId))))) {
-      buff(source, 2);
+      buff(source, 3);
     } else if (source.cardId === 'inmate-boyfriend') {
       const target = lowest(allies);
-      if (target) buff(target, 2);
+      if (target) buff(target, 3);
       const remote = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
         && c.lane !== l && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'
         && ['inmate-crafty', 'inmate-boyfriend', 'inmate-informant', 'inmate-contraband'].includes(c.cardId)));
-      if (remote) buff(remote, 2);
+      if (remote) buff(remote, 3);
       if (target || remote) resolutionNote = 'Looking Out resolved.'
-        + (target ? ` ${target.name} here gained +2 Hands.` : '')
-        + (remote ? ` ${remote.name} in another district gained +2 Hands.` : '');
+        + (target ? ` ${target.name} here gained +3 Hands.` : '')
+        + (remote ? ` ${remote.name} in another district gained +3 Hands.` : '');
     } else if (source.cardId === 'inmate-informant') {
       const target = highest(inLane(m, enemy, l));
       if (target) {
         targetIds.add(target.instanceId);
-        m = targetEnemyPowerReduction(m, source, target, 2, 'Quiet Tip: -2 Hands.');
+        m = targetEnemyPowerReduction(m, source, target, 3, 'Quiet Tip: -3 Hands.');
         // Count actual damage (including an intercepted hit), not a consumed shield.
         succeeded = before.boards.flat().some(old => old.owner === enemy
           && (!findCard(m, old.instanceId) || findCard(m, old.instanceId)!.powerModifier < old.powerModifier));
@@ -2370,7 +2370,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (source.cardId !== 'soulfood' || c.kind !== 'support'));
     // Frozen allies drop to 0 Hands and can tie with other weak allies; a cleanse must reach the one that needs it.
     const target = lowest(allies.filter(needsCleanse)) ?? lowest(allies);
-    const amount = source.cardId === 'pinaynurse' ? 2 : 1;
+    const amount = source.cardId === 'pinaynurse' ? 3 : 1;
     if (target) {
       targetIds.add(target.instanceId);
       m = cleanseAlly(m, target.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + amount, lastEffectNote: `${source.ability}: cleansed, +${amount} Hands.` }));
@@ -2815,7 +2815,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const succeeds = id === 'homelessyn' ? enemies.length > inLane(m, source.owner, l).length - 1
         : id === 'sportsprodigy' ? losing()
         : id === 'fein' ? enemies.length > 0
-        : id === 'alchy' ? m.round >= 4
+        : id === 'alchy' ? m.round >= 3
         : id === 'divorceddad' ? allies.length === 0 && enemies.length > 0
         : id === 'failedathlete' ? m.round >= 4 && losing()
         : inLane(m, source.owner, l).length === 1;
@@ -2837,13 +2837,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       }
     } else if (id === 'stud') {
       const target = lowest(allies);
-      buff(target, 1);
+      buff(target, 2);
       if (target && !target.statuses.protected) {
         m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, protected: true } }));
         m = { ...m, timedEffects: [...m.timedEffects, { id: `stud:${source.instanceId}:${target.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId, targetInstanceId: target.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7, expiration: 'match-complete' }] };
       }
     } else if (id === 'gothkid' || id === 'redpill') {
-      const target = id === 'gothkid' ? lowest(enemies.filter(c => c.cost <= 2)) : highest(enemies);
+      const target = id === 'gothkid' ? lowest(enemies.filter(c => c.cost <= 3)) : highest(enemies);
       if (target) {
         if (id === 'gothkid') {
           targetIds.add(target.instanceId);

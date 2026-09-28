@@ -269,19 +269,18 @@ for (const owner of ["player", "cpu"] as const) {
       if (id === "stud") {
         assert.equal(find(m, target)?.powerModifier, 10);
         assert.equal(find(m, target)?.lane, 1);
-        assert.equal(find(m, setup.source)?.powerModifier, -2);
+        assert.equal(find(m, setup.source)?.powerModifier, -3);
       }
       if (id === "lebron-james") {
         assert.equal(find(m, target)?.powerModifier, 10);
-        assert(
-          !m.boards
-            .flat()
-            .some((c) => c.cardId === "inmate-informant" && c.owner === enemy),
+        assert.equal(
+          m.boards.flat().find((c) => c.cardId === "inmate-informant" && c.owner === enemy)?.powerModifier,
+          -3,
         );
         assert(!kinds(m).includes("revenge"));
       }
       if (id === "firstaid") {
-        assert.equal(find(m, target)?.powerModifier, 10);
+        assert.equal(find(m, target)?.powerModifier, 9);
         assert(!kinds(m).includes("kit"));
       }
     }

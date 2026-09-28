@@ -4,8 +4,8 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 // a bounded reveal effect, and the same three-tier training budget.
 export const BLOCK_EXPANSION = [
   ['bodegacat', 'bodega-cat', 'Bodega Cat', 'Common', 'Normal', 1, 1, 'Counter Claim', 'If you have no other friendly cards here, gain +1 Hands.', 'Opener'],
-  ['crossingguard', 'crossing-guard', 'Crossing Guard', 'Common', 'Light', 2, 2, 'Safe Crossing', 'Protect your lowest-Hands other ally here from one targeted hostile ability.', 'Support'],
-  ['laundry', 'laundromat-regular', 'Laundromat Regular', 'Common', 'Water', 2, 2, 'Fresh Cycle', 'Cleanse your lowest-Hands frozen or silenced ally here. If cleansed, give it +1 Hands.', 'Support'],
+  ['crossingguard', 'crossing-guard', 'Crossing Guard', 'Common', 'Light', 2, 3, 'Safe Crossing', 'Protect your lowest-Hands other ally here from one targeted hostile ability.', 'Support'],
+  ['laundry', 'laundromat-regular', 'Laundromat Regular', 'Common', 'Water', 2, 3, 'Fresh Cycle', 'Cleanse your lowest-Hands frozen or silenced ally here. If cleansed, give it +1 Hands.', 'Support'],
   ['busker', 'corner-busker', 'Corner Busker', 'Common', 'Air', 2, 1, 'Loose Change', 'Give each of your other 1-Cost cards here +1 Hands.', 'Support'],
   ['cornercoach', 'corner-coach', 'Corner Coach', 'Uncommon', 'Fire', 3, 3, 'Run It Back', 'Give your lowest-Hands other ally here +2 Hands.', 'Support'],
   ['nightcashier', 'night-cashier', 'Night Cashier', 'Common', 'Electric', 2, 2, 'Late Shift', 'On round 4 or later, restore 1 Motion.', 'Tempo'],

@@ -35,7 +35,7 @@ test('five collectible identities have rarities, three upgrades and legal acquis
     assert.equal(catalogCardById[id], undefined);
     assert.equal(cards[id], undefined);
   }
-  assert.equal(SUMMON_TEMPLATES['demario-mushroom'].power, 1);
+  assert.equal(SUMMON_TEMPLATES['demario-mushroom'].power, 2);
 });
 
 for (const owner of ['player', 'cpu'] as const) {
@@ -57,7 +57,7 @@ for (const owner of ['player', 'cpu'] as const) {
         assert.equal(find(after, 'rastamon').powerModifier, 1);
       }
       if (id === 'stylist') { assert.equal(find(after, 'rastamon').statuses.protected, true); assert.equal(find(after, 'rastamon').powerModifier, 1); }
-      if (id === 'demario') assert.equal(find(after, 'demario-mushroom').basePower, 1);
+      if (id === 'demario') assert.equal(find(after, 'demario-mushroom').basePower, 2);
       if (id === 'black-cowboy') assert.equal(find(after, 'hooper').lane, 0);
     }
   });
@@ -68,9 +68,9 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(cast(full, 'demario', owner, 0, false, 3), 'demario').powerModifier, 0);
     const solo = cast(blank(), 'luigion', owner, 0, true);
     assert.equal(find(solo, 'luigion').id, 'luigion-powered');
-    assert.equal(find(solo, 'luigion').powerModifier, 5);
+    assert.equal(find(solo, 'luigion').powerModifier, 6);
     assert.equal(find(cast(blank(), 'luigion', owner), 'luigion').powerModifier, 2);
-    assert.equal(find(cast(blank(), 'luigion', owner, 0, true, 3), 'luigion').powerModifier, 8);
+    assert.equal(find(cast(blank(), 'luigion', owner, 0, true, 3), 'luigion').powerModifier, 9);
   });
 }
 
@@ -86,7 +86,7 @@ test('Luigion consumes only one same-owner same-lane mushroom, preserving identi
   assert.equal(luigion.cardId, 'luigion');
   assert.equal(luigion.name, 'Powered Luigion');
   assert.equal(luigion.instanceId, 'player:cast:0:luigion');
-  assert.equal(luigion.powerModifier, 6); // +2 Squabble, +1 base reveal, +2 Mushroom, +1 jump
+  assert.equal(luigion.powerModifier, 7); // +3 Squabble, +1 base reveal, +2 Mushroom, +1 jump
   assert.equal(after.boards[0].filter(c => c.owner === 'player' && c.cardId === 'demario-mushroom').length, 1);
   assert.ok(after.boards[0].some(c => c.instanceId === 'enemy-mushroom'));
   assert.ok(after.boards[1].some(c => c.instanceId === 'remote-mushroom'));
@@ -100,7 +100,7 @@ test('form preserves existing statuses and buffs and projects public art without
   const card = createCardInstance('luigion', 'player');
   card.powerModifier = 3; card.statuses.protected = true; card.statuses.silenced = true;
   const m = playTurnCard({ ...blank(), playerHand: [card], cpuHand: [createCardInstance('demario', 'cpu')] }, 'player', card.instanceId, 0, true);
-  assert.equal(find(m, 'luigion').powerModifier, 5);
+  assert.equal(find(m, 'luigion').powerModifier, 6);
   assert.deepEqual(find(m, 'luigion').statuses, card.statuses);
   const host = { userId: 'host', name: 'Host', ready: true, deck: { id: 'custom', name: 'Crew', hero: 'luigion', cards: m.playerCardIds } };
   const room = { ...createOnlineRoom(host, 'player', 0), match: JSON.parse(JSON.stringify(m)), status: 'active' as const };
@@ -118,7 +118,7 @@ test('opponent and remote mushrooms never grant a transformation bonus', () => {
   m.boards[0] = [{ ...seed, owner: 'cpu', instanceId: 'enemy-only' }];
   m.boards[1] = [{ ...seed, lane: 1, instanceId: 'remote-only' }];
   const after = cast(m, 'luigion', 'player', 0, true);
-  assert.equal(find(after, 'luigion').powerModifier, 5);
+  assert.equal(find(after, 'luigion').powerModifier, 6);
   assert.ok(after.boards[0].some(c => c.instanceId === 'enemy-only'));
   assert.ok(after.boards[1].some(c => c.instanceId === 'remote-only'));
 });
@@ -143,15 +143,15 @@ for (const owner of ['player', 'cpu'] as const) {
       const opening = { ...blank(), round: 1, playerMotion: 2, cpuMotion: 2 };
       const setup = cast(opening, 'demario', owner);
       assert.equal(setup[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 0);
-      assert.equal(find(setup, 'demario').basePower, 2);
-      assert.equal(find(setup, 'demario-mushroom').basePower, 1);
+      assert.equal(find(setup, 'demario').basePower, 3);
+      assert.equal(find(setup, 'demario-mushroom').basePower, 2);
       const m = { ...setup, playerMotion: 9, cpuMotion: 9 };
       const seed = find(m, 'demario-mushroom');
       m.boards[0].push({ ...seed, instanceId: 'spare-mushroom' });
       const before = JSON.stringify(m), after = cast(m, 'luigion', owner, 0, powered, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), 'luigion', owner, 0, powered, tier), after);
-      assert.equal(find(after, 'luigion').powerModifier, tier + (powered ? 6 : 3));
+      assert.equal(find(after, 'luigion').powerModifier, tier + (powered ? 7 : 3));
       assert.equal(find(after, 'demario').powerModifier, 1);
       assert.equal(after.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 1);
       assert.equal(find(after, 'luigion').luigionMushroomUsed, true);
@@ -185,7 +185,7 @@ for (const owner of ['player', 'cpu'] as const) {
       source.statuses[status] = true;
       const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
       const after = playTurnCard({ ...setup, phase: owner === 'player' ? 'player' : 'cpu-reveal', [hand]: [source] }, owner, source.instanceId, 0, powered);
-      assert.equal(find(after, 'luigion').powerModifier, powered ? 2 : 0);
+      assert.equal(find(after, 'luigion').powerModifier, powered ? 3 : 0);
       assert(find(after, 'demario-mushroom'));
     }
     const setup = cast(blank(), 'demario', owner);

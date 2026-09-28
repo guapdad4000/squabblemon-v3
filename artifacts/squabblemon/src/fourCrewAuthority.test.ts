@@ -35,12 +35,12 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.watson.cost, 2);
   assert.equal(cards.watson.power, 3);
   assert.equal(cards.demario.cost, 2);
-  assert.equal(cards.demario.power, 2);
+  assert.equal(cards.demario.power, 3);
   assert.equal(cards.luigion.cost, 2);
-  assert.equal(cards.luigion.power, 2);
+  assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 11);
-  assert.equal(ONLINE_RULES_VERSION, 12);
+  assert.equal(CARD_BALANCE_VERSION, 12);
+  assert.equal(ONLINE_RULES_VERSION, 13);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -126,7 +126,7 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     room = playOnline(room, owner, 'demario', 0);
     const mushroom = room.match!.boards[0].find(card => card.cardId === 'demario-mushroom')!;
     assert.ok(mushroom);
-    assert.equal(getEffectiveCardPower(mushroom), 1);
+    assert.equal(getEffectiveCardPower(mushroom), 2);
     // Isolated fixture advances spending capacity, not any live match or player data.
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 2;
     room = playOnline(room, owner, 'luigion', 0, powered);
@@ -149,7 +149,7 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 9;
     room = playOnline(room, owner, 'inmate-boyfriend', 0);
     const crafty = room.match!.boards.flat().find(card => card.cardId === 'inmate-crafty')!;
-    assert.equal(crafty.powerModifier, 2);
+    assert.equal(crafty.powerModifier, 3);
     room = playOnline(room, owner, 'sherlock', 0);
     const trap = room.match!.districtTraps![0];
     const enemy: Owner = owner === 'player' ? 'cpu' : 'player';

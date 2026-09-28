@@ -83,7 +83,7 @@ test('rival planning cannot inspect private player cards even through Promoter',
 test('Nurse now supports a healthy ally and Edgar/Abuela have their tuned bodies', () => {
   const nurse = createCardInstance('pinaynurse','player','test',0), ally = {...createCardInstance('edgar','player','test',1),lane:0 as Lane};
   const m = playCard({...createMatch('block','block'), playerMotion:2, playerHand:[nurse],boards:[[ally],[],[]]},'player',nurse.instanceId,0);
-  assert.equal(m.boards[0][0].powerModifier,2);
+  assert.equal(m.boards[0][0].powerModifier,3);
   assert.equal(cards.edgar.power,2); assert.equal(cards.abuela.power,4); assert.equal(cards.abuela.cost,4);
   assert.equal(battleAchievements(m).cleansed,false);
 });

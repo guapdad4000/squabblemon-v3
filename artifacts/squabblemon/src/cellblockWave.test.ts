@@ -52,9 +52,9 @@ for (const owner of ['player', 'cpu'] as const) {
       const m = setup(owner), before = JSON.stringify(m), after = cast(m, id, owner, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), id, owner, tier), after);
-      assert.equal(find(after, id).powerModifier, tier + (id === 'inmate-crafty' ? 2 : 0));
-      if (id === 'inmate-boyfriend') assert.equal(find(after, supportId).powerModifier, 2);
-      if (id === 'inmate-informant') assert.equal(find(after, 'hooper').powerModifier, 18);
+      assert.equal(find(after, id).powerModifier, tier + (id === 'inmate-crafty' ? 3 : 0));
+      if (id === 'inmate-boyfriend') assert.equal(find(after, supportId).powerModifier, 3);
+      if (id === 'inmate-informant') assert.equal(find(after, 'hooper').powerModifier, 17);
       if (id === 'inmate-contraband') assert.equal(after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
       if (id === 'lebron-james') assert.equal(find(after, 'rastamon').statuses.protected, true);
       assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
@@ -123,8 +123,8 @@ test('weakest and strongest ties use stable instance IDs, not board order', () =
     m.boards[0] = [b, a];
     const after = cast(m, id);
     const selected = after.boards[0].find(c => c.instanceId === a.instanceId);
-    if (id === 'inmate-boyfriend') assert.equal(selected?.powerModifier, 2);
-    else assert.equal(selected, undefined); // Two-Hand target destroyed by -2.
+    if (id === 'inmate-boyfriend') assert.equal(selected?.powerModifier, 3);
+    else assert.equal(selected, undefined); // Two-Hand target destroyed by -3.
   }
 });
 test('six rounds do not create passive growth or repeat upgrade payments', () => {
@@ -147,13 +147,13 @@ for (const owner of ['player', 'cpu'] as const) {
       const before = JSON.stringify(m), after = cast(m, 'inmate-boyfriend', owner, tier);
       assert.equal(JSON.stringify(m), before);
       assert.deepEqual(cast(JSON.parse(before), 'inmate-boyfriend', owner, tier), after);
-      assert.equal(after.boards[1][0].powerModifier, 2);
+      assert.equal(after.boards[1][0].powerModifier, 3);
       assert.equal(after.boards[2][0].powerModifier, 0);
       assert.equal(find(after, 'inmate-boyfriend').powerModifier, tier);
       assert.equal(after.effectLog.filter(e => e.abilityMetadata).length, tier);
       const event = after.effectLog.find(e => e.note.startsWith('Looking Out resolved.'))!;
       assert(event.targets.some(t => t.cardInstanceId === a.instanceId));
-      if (local) assert.equal(find(after, supportId).powerModifier, 2);
+      if (local) assert.equal(find(after, supportId).powerModifier, 3);
     }
   });
   test(`${owner}: remote Looking Out rejects wrong identities, owners, kinds and disabled sources`, () => {
@@ -182,7 +182,7 @@ for (const owner of ['player', 'cpu'] as const) {
 for (const owner of ['player', 'cpu'] as const) test(`${owner}: Crafty requires a local friendly inmate or support`, () => {
   for (const id of ['inmate-boyfriend', 'inmate-informant', 'inmate-contraband']) {
     const m = blank(); m.boards[0] = [unit(id, owner)];
-    for (const tier of [0, 3]) assert.equal(find(cast(m, 'inmate-crafty', owner, tier), 'inmate-crafty').powerModifier, 2 + tier);
+    for (const tier of [0, 3]) assert.equal(find(cast(m, 'inmate-crafty', owner, tier), 'inmate-crafty').powerModifier, 3 + tier);
   }
   for (const kind of ['enemy', 'remote', 'token', 'hazard'] as const) {
     const m = blank(), ally = unit('inmate-informant', owner);

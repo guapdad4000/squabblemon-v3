@@ -8,11 +8,11 @@ const definitions = [
   ['edgar', 'edgar', 'Edgar', 'Normal', 2, 2, 'Gang Check', 'If another friendly card costing 2 or less is here, gain +1 Hands.', 'Pressure'],
   ['nguyen', 'nguyen', 'Nguyen', 'Electric', 2, 2, 'Side Project', 'If you have a friendly card in another district, gain +1 Hands.', 'Tempo'],
   ['manman', 'man-man', 'Man-Man', 'Earth', 3, 3, 'All Hands', 'If at least two other friendly cards are here, gain +2 Hands.', 'Pressure'],
-  ['pinaynurse', 'pinay-nurse', 'Pinay Nurse', 'Light', 2, 2, 'Check In', 'Give your lowest-Hands other ally here +2 Hands and cleanse its freeze and silence.', 'Support'],
+  ['pinaynurse', 'pinay-nurse', 'Pinay Nurse', 'Light', 2, 3, 'Check In', 'Give your lowest-Hands other ally here +3 Hands and cleanse its freeze and silence.', 'Support'],
   ['honestthot', 'honest-thot', 'Honest Thot', 'Air', 1, 2, 'Air Bond', 'Ongoing: While Honest Thot is in your hand, your other Air characters gain +1 Hand at round end.', 'Sustain', 'Air'],
   ['earthy', 'earthy-sugar-foot', 'Earthy Sugar Foot', 'Plant', 1, 1, 'Grounded', 'Give your lowest-Hands other card here +1 Hands.', 'Support'],
   ['abuela', 'abuela', 'Abuela', 'Light', 4, 4, 'Light Bond', 'Ongoing: While Abuela is in your hand, your other Light characters gain +1 Hand at round end.', 'Sustain', 'Light'],
-  ['icecream', 'ice-cream-truck', 'Ice Cream Truck', 'Water', 3, 2, 'Water Bond', 'Ongoing: While Ice Cream Truck is in your hand, your other Water characters gain +1 Hand at round end.', 'Sustain', 'Water'],
+  ['icecream', 'ice-cream-truck', 'Ice Cream Truck', 'Water', 3, 3, 'Water Bond', 'Ongoing: While Ice Cream Truck is in your hand, your other Water characters gain +1 Hand at round end.', 'Sustain', 'Water'],
 ] as const;
 
 export const neighborhoodCommonIds = definitions.map(([id]) => id);

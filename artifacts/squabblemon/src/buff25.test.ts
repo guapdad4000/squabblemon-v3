@@ -233,7 +233,7 @@ for (const owner of ["player", "cpu"] as const) {
     const hit = cast(m, "inmate-informant", enemy);
     m = hit.after;
     assert.equal(find(m, big)?.powerModifier, 7);
-    assert(!find(m, hit.source));
+    assert.equal(find(m, hit.source)?.powerModifier, -3);
     assert(
       m.boards.flat().find((c) => c.cardId === "juneteenth-chair-guy")
         ?.creativeUsed?.chair,
@@ -265,12 +265,12 @@ for (const owner of ["player", "cpu"] as const) {
     const target = unit("cornball", owner, 0);
     m.boards = [[target], [], []];
     m = cast(m, "firstaid", owner).after;
-    m = cast(m, "inmate-informant", enemy).after;
+    m = cast(m, "counter", enemy).after;
     assert(find(m, target));
     assert.equal(find(m, target)?.powerModifier, 0);
     assert(!kinds(m).includes("kit"));
     assert.equal(find(m, target)?.recoverableDamage ?? 0, 0);
-    m = cast(m, "inmate-informant", enemy).after;
+    m = cast(m, "counter", enemy).after;
     assert(!find(m, target));
   });
   test(`${owner}: Crossing ignores one movement Lock without clearing it`, () => {
@@ -321,7 +321,7 @@ for (const owner of ["player", "cpu"] as const) {
     m = cast(m, "inmate-informant", enemy).after;
     assert(kinds(m).includes("lunch")); // ward absorbs first
     m = cast(m, "inmate-informant", enemy).after;
-    assert.equal(find(m, ally)?.powerModifier, 3);
+    assert.equal(find(m, ally)?.powerModifier, 2);
     assert(!kinds(m).includes("lunch"));
   });
   test(`${owner}: STUD protects his partner only after a successful paired escape`, () => {
@@ -417,7 +417,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, ally)?.powerModifier, 2);
     m = cast(m, "inmate-informant", enemy).after;
     assert(!kinds(m).includes("kit"));
-    assert.equal(find(m, ally)?.powerModifier, 2);
+    assert.equal(find(m, ally)?.powerModifier, 1);
   });
   test(`${owner}: Trick waits for appealed status to actually land and pays at that round end`, () => {
     let m = blank();

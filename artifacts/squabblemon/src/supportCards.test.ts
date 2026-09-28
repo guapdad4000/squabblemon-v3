@@ -16,7 +16,7 @@ test('requested balance pass updates starting Hands, Motion, support strength, a
   assert.equal(cards.ogdominican.power, 4);
   assert.equal(cards.leroy.cost, 3);
   assert.equal(cards.leroy.power, 4);
-  assert.equal(cards.pinaynurse.effect.includes('+2 Hands'), true);
+  assert.equal(cards.pinaynurse.effect.includes('+3 Hands'), true);
   assert.equal(cards.workboots.name, 'Buttahs');
   assert.equal(cards.workboots.effect.includes('+2 Hands'), true);
   assert.deepEqual([cards.hooper.cost, cards.hooper.power], [5, 5]);
