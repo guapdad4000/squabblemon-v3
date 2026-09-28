@@ -177,7 +177,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   "inmate-kingpin": [
     "Run the Yard",
-    "On Reveal: Give Contraband and +1 Hand to your weakest other Inmate anywhere. Later Inmate deployments or moves pass it on; each of the first three distinct carriers gains +1 Hand. After three carriers, each survivor gains another +1. Once per Kingpin per match.",
+    "On Reveal: Give Contraband and +1 Hand to your weakest other Inmate anywhere; if none, Kingpin holds it for the next Inmate. Later Inmate deployments or moves pass it on; each of the first three distinct carriers gains +1 Hand. After three carriers, each survivor gains another +1. Once per Kingpin per match.",
   ],
   mural: [
     "Fresh Color",
@@ -514,7 +514,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     warning: "next enemy play here or move through: -1",
     primer: "next Burn damage or friendly defeat splashes 2",
     goal: "reach the tutored goal: Protection and +2",
-    stash: "three distinct Inmates: +2 each",
+    stash: "Contraband: next Inmate played or moved carries it (+1); after three carriers, each survivor +1",
     paint: "next different friendly element entering: +2",
     receipt: "next cheap play: immediate discount; final round +2",
     loyalty: "first departure +1; first return +1",
@@ -921,14 +921,15 @@ export function creativeReveal(
     }
     case "inmate-kingpin": {
       const target = all.find((c) => c.cardId.startsWith("inmate-"));
-      if (target && !s.creativeUsed?.stash) {
+      if (!s.creativeUsed?.stash) {
         m = once(m, s, "stash", t);
-        give(target, 1);
+        // With no other Inmate yet, Kingpin holds the stash for the next one.
+        if (target) give(target, 1);
         put(
           "stash",
-          [target],
+          target ? [target] : [],
           l,
-          { seen: [target.instanceId], expires: 99 },
+          { seen: target ? [target.instanceId] : [], expires: 99 },
           "source",
         );
       }
