@@ -623,9 +623,51 @@ for (const owner of ["player", "cpu"] as const) {
     assert(kinds(m).includes("jobs"));
     m = cast(m, "break", owner, 0).after;
     assert(!kinds(m).includes("jobs"));
-    assert.equal(find(m, a)?.powerModifier, 4);
-    assert.equal(find(m, b)?.powerModifier, 3);
+    assert.equal(find(m, a)?.powerModifier, 3);
+    assert.equal(find(m, b)?.powerModifier, 2);
     assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 8);
+  });
+  test(`${owner}: Circuit Captain gives each distinct Electric worker +1, then +1 each once`, () => {
+    let m = cast(blank(), "circuitcaptain", owner).after;
+    const first = cast(m, "wiretap", owner, 0);
+    m = first.after;
+    assert.equal(find(m, first.source)?.powerModifier, 1, "first job pays +1");
+    assert(kinds(m).includes("jobs"));
+
+    const secondSource = createCardInstance("techbro", owner, "play", m.nextEventSequence);
+    const motionKey = owner === "player" ? "playerMotion" : "cpuMotion";
+    const secondPlayed = playTurnCard(
+      {
+        ...m,
+        phase: owner === "player" ? "player" : "cpu-reveal",
+        [owner === "player" ? "playerHand" : "cpuHand"]: [secondSource],
+        [motionKey]: 6,
+      },
+      owner,
+      secondSource.instanceId,
+      1,
+    );
+    m = secondPlayed;
+    assert.equal(find(m, first.source)?.powerModifier, 2, "first worker totals +2");
+    assert.equal(find(m, secondSource)?.powerModifier, 2, "second worker totals +2");
+    assert(!kinds(m).includes("jobs"));
+    assert.equal(m[motionKey], 6, "the completion refund offsets the second worker's paid Motion");
+
+    // The completed job is consumed across serialization; later Electric plays
+    // and movement cannot re-award Hands or refund Motion.
+    m = json(m);
+    const third = cast(m, "stockz", owner, 2);
+    m = third.after;
+    assert.equal(find(m, third.source)?.powerModifier, 0);
+    assert.equal(find(m, first.source)?.powerModifier, 2);
+    assert.equal(find(m, secondSource)?.powerModifier, 2);
+    assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 6);
+
+    m = cast(json(m), "break", owner, 0).after;
+    assert(!kinds(m).includes("jobs"));
+    assert.equal(find(m, first.source)?.powerModifier, 2);
+    assert.equal(find(m, secondSource)?.powerModifier, 2);
+    assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 7);
   });
   test(`${owner}: Coach retries a failed eligible entrance once, without replay loops`, () => {
     let m = blank();

@@ -1,5 +1,56 @@
 # Element balance evidence
 
+## Balance patch 16
+
+This pass changes seven cards, using their finalized playable kits rather than superseded expansion definitions:
+
+- **Closet Nerd:** 4 → 3 Motion; 3 printed Hands and the existing interruption/reveal behavior are unchanged.
+- **Shotta:** 4 → 3 Motion; 3 printed Hands, the opening hit, and the two-encore/once-per-round limits are unchanged.
+- **Sherlock:** 3 Motion / 4 Hands → 2 Motion / 3 Hands. His visible, avoidable Stakeout trap, expiry, and successful-cancellation rewards are unchanged. Watson retains the v15 pair bonus.
+- **Alchy:** ongoing growth begins at round 4 instead of round 3. The losing-district bonus, trained upgrades, and suppression rules remain.
+- **Last Train Conductor:** a successfully moved passenger gains +2 Hands, or +3 if Water, instead of +3/+4. Movement and cleansing remain required.
+- **Electrician Foreman** (`circuitcaptain`): each worker still gains +1 Hand on taking a job. Completing both jobs now gives each another +1 instead of +2; the one-time 1-Motion refund remains.
+- **E.V. Enthusiast** (`wiretap`): retains the next-card cross-district discount but no longer also refunds 1 Motion immediately.
+
+Card balance and online rules versions are both **16**. Printed Hands remain within cost + 1. Global Motion, hand bonds, crew lists, ownership, rewards, and artwork are unchanged. In particular, Monsoon Anchor and Pirate Radio DJ still have their active hand bonds; the removed Ice Cream Truck and Foreman bonds were not used to explain or tune this pass.
+
+### Matched v15 → v16 comparison
+
+The complete v16 reports are `v16/v16-greedy.json` and `v16/v16-seeded-legal.json`. Their exact deck lists and schedule metadata were compared to the preserved v15 reports: the same 13 crews, district seeds, rotations, tiers, and both seats. Each policy completed **1,248 matches**, **192 appearances per crew**: **2,496 matches with zero simulation failures**.
+
+These are bot **score rates**, including half a point for a draw, not player win rates.
+
+| Crew | Greedy v15 → v16 | Seeded-legal v15 → v16 |
+|---|---:|---:|
+| Light | 38.8% → 34.4% | 47.9% → 44.5% |
+| Water | 77.1% → 77.3% | 73.7% → 67.2% |
+| Plant | 53.6% → 53.6% | 44.0% → 42.2% |
+| Electric | 69.8% → 54.7% | 75.5% → 66.9% |
+| Dark | 35.2% → 39.8% | 25.3% → 28.6% |
+| Earth | 50.0% → 46.9% | 47.4% → 47.1% |
+| Fire | 35.2% → 29.9% | 52.1% → 53.6% |
+| Air | 68.0% → 64.8% | 48.4% → 48.7% |
+| Poison | 51.0% → 50.0% | 48.4% → 47.9% |
+| Sherlock and Watson | 32.6% → 53.9% | 38.3% → 52.1% |
+| Demario and Luigion | 34.9% → 34.6% | 41.9% → 39.3% |
+| Cellblock | 55.2% → 54.2% | 59.9% → 57.0% |
+| Counterplay — Dark Control | 48.7% → 55.7% | 47.1% → 54.7% |
+
+The detective and mixed Dark Control crews improved under both policies, and Electric's lead narrowed. Pure Dark improved only modestly and remains weak. Water remains dominant under greedy play despite its smaller payoffs; its improvement toward the middle is limited to the seeded policy. Light and Demario declined under both policies, and Fire's greedy result fell even as its seeded result improved. This is a targeted pass, not evidence that every crew or element is balanced, nor an isolated causal estimate for any one of the seven cards.
+
+Run from the repository root:
+
+```sh
+pnpm --filter @workspace/scripts run balance:elements --label=v16 --out-dir=results/element-audit/v16
+pnpm --filter @workspace/scripts run balance:elements --seeded --label=v16 --out-dir=results/element-audit/v16
+```
+
+Regression coverage includes collection/battle stat parity and exact-cost play for both owners; Alchy's old/new trigger rounds and disabled states; Conductor's Water/non-Water and blocked-movement cases; Wiretap's solo/crowded no-refund and one-use discount; Foreman's partial/completed jobs and serialized no-repeat behavior; and authoritative crew/online replay. The new cost and tempo tests run through the default game test command.
+
+Type checking, frontend/API builds, and bundle-budget checks passed. The affected battle, card, and multiplayer checks passed, and the running mobile preview was checked.
+
+**Remaining verification gap:** the broader owned-test-database API suite passed 192 of 193 checks. Its full new-account campaign journey timed out while solving `cracked-head-takes-the-block`; an isolated campaign retry hit the same 10,000 ms / 40,000-expansion search limit after 8,081 expansions. A focused comparison also reproduced that timeout on both the pre-patch v15 and current v16 engines with identical participating card definitions, encounter, crew, and districts; none of the seven changed cards appears in that match. That focused fixture used default level-one upgrades, not the HTTP journey's database-derived XP. This is evidence of a pre-existing solver verification gap, not a passing end-to-end campaign result or proof that the battle is unwinnable. Neither search budgets nor campaign gameplay were changed to hide it.
+
 ## Balance patch 15
 
 - **Abuela:** her existing healing/protection/lunch also gives the target +1 Hand. Healing still restores only damage actually taken.

@@ -75,7 +75,7 @@ test('City Legend Motion prices and Dragonfly Jones Hands are printed on playabl
   assert.equal(cards.ashlee.cost, 5);
   assert.equal(cards.ashlee.power, 3);
   assert.equal(cards.captainjigga.cost, 5);
-  assert.equal(cards.counter.cost, 4);
+  assert.equal(cards.counter.cost, 3);
   assert.equal(cards.counter.power, 3);
 });
 for (const owner of ['player', 'cpu'] as const) test(`TRON buffs two without refund, three with refund, even through Protection (${owner})`, () => {

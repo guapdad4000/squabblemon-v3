@@ -78,7 +78,7 @@ for (const owner of ['player','cpu'] as const) test(`unchanged expansion reveal 
     }
     if (id === 'subwaymagician') { assert.equal(enemy.statuses.weakened,true); assert.notEqual(self.lane,0); }
     if (id === 'ogdominican') { assert.notEqual(self.lane,0); assert.equal(self.powerModifier,2); }
-    if (id === 'conductor') { assert.notEqual(ally.lane,0); assert.equal(ally.powerModifier,3); assert.equal(self.lane,0); }
+    if (id === 'conductor') { assert.notEqual(ally.lane,0); assert.equal(ally.powerModifier,2); assert.equal(self.lane,0); }
   }
 });
 

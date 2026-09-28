@@ -59,9 +59,9 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(dev.after[motionKey], damaged ? 9 : 8);
     }
   });
-  test(`EV respects solo parking and Salesman anchors discount to his new lane: ${owner}`, () => {
+  test(`EV has no instant refund and Salesman anchors discount to his new lane: ${owner}`, () => {
     const solo = cast(blank(), 'wiretap', owner);
-    assert.equal(solo.after[motionKey], 8);
+    assert.equal(solo.after[motionKey], 7);
     const m = blank(); m.boards[0] = [unit('cornball', owner, 0, 1)];
     assert.equal(cast(m, 'wiretap', owner).after[motionKey], 7);
     const moved = cast(blank(), 'livewire', owner);

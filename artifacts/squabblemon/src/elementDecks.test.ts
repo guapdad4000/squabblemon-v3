@@ -194,14 +194,14 @@ test('Ashlee rewards a full Plant spread; Air cards and Guyana do not fill missi
     assert.equal(guyana.type, 'Earth'); assert.equal(guyana.basePower, 4); assert(guyana.statuses.uncounterable);
   }
 });
-test('Conductor cleanses moved passengers and gives Water +4 total Hands', () => {
+test('Conductor cleanses moved passengers and gives Water +3 total Hands', () => {
   for (const id of ['snow', 'cornball'] as const) {
     const m = blank(), passenger = unit(id, 'player', 0, 1, 2);
     passenger.statuses = { ...passenger.statuses, frozen: true, silenced: true, weakened: true, burnStacks: 3 };
     m.boards[0] = [passenger];
     const { after } = cast(m, 'conductor');
     const moved = find(after, passenger);
-    assert.equal(moved.lane, 1); assert.equal(moved.powerModifier, id === 'snow' ? 4 : 3);
+    assert.equal(moved.lane, 1); assert.equal(moved.powerModifier, id === 'snow' ? 3 : 2);
     assert.equal(moved.statuses.frozen, false); assert.equal(moved.statuses.silenced, false);
     assert.equal(moved.statuses.weakened, false); assert.equal(moved.statuses.burnStacks, 0);
   }
@@ -212,7 +212,7 @@ test('Conductor movement can trigger Promoter, and a cleansed Light passenger ca
     if (burn) passenger.statuses.burnStacks = 3;
     m.boards = [[passenger], [], [leader]];
     const { after } = cast(m, 'conductor');
-    assert.equal(find(after, passenger).powerModifier, 5);
+    assert.equal(find(after, passenger).powerModifier, 4);
     assert.equal(after.leaderRounds?.player?.[leaderId], 3);
   }
 });
@@ -232,7 +232,7 @@ for (const owner of ['player', 'cpu'] as const) {
     m.boards = [[guest], [], [leader]];
     const moved = cast(m, 'conductor', owner).after;
     assert.notEqual(find(moved, guest).lane, 0);
-    assert.equal(find(moved, guest).powerModifier, 5, 'Conductor +3 and Guest List +2');
+    assert.equal(find(moved, guest).powerModifier, 4, 'Conductor +2 and Guest List +2');
     const air = cast(moved, 'ogdominican', owner, 0, 4);
     assert.equal(find(air.after, air.source).powerModifier, 2, 'Air shares the already-spent trigger');
     for (const status of ['silenced', 'frozen', 'weakened', 'locked'] as const) {

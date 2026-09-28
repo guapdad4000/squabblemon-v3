@@ -221,7 +221,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   circuitcaptain: [
     "Everybody on the Clock",
-    "On Reveal: Post two jobs through next round. Your next two different Electric allies played or moved each gain +1 Hand. When both take a job, each gains another +2 Hands and restore 1 Motion once. One job pair per side.",
+    "On Reveal: Post two jobs through next round. Your next two different Electric allies played or moved each gain +1 Hand. When both take a job, each gains another +1 Hand and restore 1 Motion once. One job pair per side.",
   ],
   canopykeeper: [
     "Show Up Then",
@@ -499,7 +499,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     "follow-family": "follow family once if space allows",
     tab: "next guest: hit or harmful status earns a Tip",
     project: "two different elements must contribute",
-    jobs: "two different Electric workers",
+    jobs: "two different Electric workers: +1 each; when both jobs fill, +1 each and restore 1 Motion",
     duel: "leave: +3 to Hooper; stay: take 3 at expiry",
     fork: "next enemy placement saves that district; other marks take 2",
     queue: "next enemy entrance waits until round end",
@@ -1214,7 +1214,8 @@ function contribute(
     x.targets.every((target) => seen.includes(target))
   ) {
     m = remove(m, x.id);
-    for (const target of x.targets) m = buff(m, target, 2, t);
+    for (const target of x.targets)
+      m = buff(m, target, x.kind === "jobs" ? 1 : 2, t);
     if (x.kind === "project" && active(card(m, x.source.instanceId)))
       m = buff(m, x.source.instanceId, 1, t);
     if (x.kind === "jobs") m = t.refund(m, x.owner, 1);

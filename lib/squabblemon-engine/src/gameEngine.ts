@@ -994,8 +994,8 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       result = modify(result, card.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'BOOST: +1 Hands at round end.' }));
     }
   }
-  // Alchy: round 3+ conditional round-end gain (+1, +2 if losing the district).
-  if (result.round >= 3) {
+  // Alchy: round 4+ conditional round-end gain (+1, +2 if losing the district).
+  if (result.round >= 4) {
     for (const card of result.boards.flat().filter(c => c.cardId === 'alchy' && !c.statuses.silenced && !c.statuses.frozen && !c.statuses.weakened && c.lane !== null)) {
       const cardLane = card.lane as Lane;
       const enemy = card.owner === 'player' ? 'cpu' : 'player';
@@ -2562,7 +2562,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       targetIds.add(traveler.instanceId);
       const destination = lowestFriendlyLane(m, source.owner, l);
       m = move(m, traveler, destination, `${source.ability}: moved to the weakest other district.`);
-      const amount = source.cardId === 'conductor' ? 3 + (traveler.type === 'Water' ? 1 : 0) : source.cardId === 'ogdominican' ? 2 : 0;
+      const amount = source.cardId === 'conductor' ? 2 + (traveler.type === 'Water' ? 1 : 0) : source.cardId === 'ogdominican' ? 2 : 0;
       if (amount && findCard(m, traveler.instanceId)?.lane === destination) {
         m = cleanseAlly(m, traveler.instanceId, c => ({ ...c,
           ...(source.cardId === 'conductor' ? { statuses: cleanseStatuses(c.statuses) } : {}),
@@ -2823,7 +2823,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const succeeds = id === 'homelessyn' ? enemies.length > inLane(m, source.owner, l).length - 1
         : id === 'sportsprodigy' ? losing()
         : id === 'fein' ? enemies.length > 0
-        : id === 'alchy' ? m.round >= 3
+        : id === 'alchy' ? m.round >= 4
         : id === 'divorceddad' ? allies.length === 0 && enemies.length > 0
         : id === 'failedathlete' ? m.round >= 4 && losing()
         : inLane(m, source.owner, l).length === 1;
@@ -2978,7 +2978,6 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       if (broken) { buff(broken, 1); m = refundMotion(m, source.owner, 1); }
     } else if (id === 'wiretap') {
       m = addDiscountToken(m, source.owner, source, 'another-district');
-      if (!allies.length) m = refundMotion(m, source.owner, 1);
     } else if (id === 'livewire') {
       if (travel(source)) {
         const moved = findCard(m, source.instanceId)!;
@@ -3009,7 +3008,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         || JSON.stringify(old.statuses) !== JSON.stringify(current.statuses));
     }) || m.playerMotion !== before.playerMotion || m.cpuMotion !== before.cpuMotion
       || m.discountTokens.length > before.discountTokens.length;
-    note(succeeded ? `${source.ability} resolved.` : `${source.ability}: condition not met or effect blocked.`);
+    note(succeeded
+      ? id === 'wiretap' ? `${source.ability}: next card in another district costs 1 less Motion.` : `${source.ability} resolved.`
+      : `${source.ability}: condition not met or effect blocked.`);
   }
   else if (source.cardId === 'wifey') {
     const duration: EventDuration = { unit: 'round', startsAtRound: m.round, expiresAtRound: m.round + 1, expiration: 'round-start' };
