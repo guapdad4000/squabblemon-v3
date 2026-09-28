@@ -39,7 +39,7 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 13);
+  assert.equal(CARD_BALANCE_VERSION, 14);
   assert.equal(ONLINE_RULES_VERSION, 14);
 });
 

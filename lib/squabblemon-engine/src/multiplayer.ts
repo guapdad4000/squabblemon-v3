@@ -34,7 +34,7 @@ export const ONLINE_RULES_VERSION = 14;
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 13;
+export const CARD_BALANCE_VERSION = 14;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;

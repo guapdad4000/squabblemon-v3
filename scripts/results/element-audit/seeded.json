@@ -1,0 +1,383 @@
+{
+  "decks": [
+    {
+      "id": "element-light",
+      "name": "Light",
+      "cardIds": [
+        "abuela",
+        "church",
+        "nightmedic",
+        "foodz",
+        "drfade",
+        "pinaynurse",
+        "crossingguard",
+        "leroy",
+        "yasuke",
+        "homeless-wiseman"
+      ]
+    },
+    {
+      "id": "element-water",
+      "name": "Water",
+      "cardIds": [
+        "monsoonanchor",
+        "conductor",
+        "vibe",
+        "waterboy",
+        "laundry",
+        "alchy",
+        "icecream",
+        "stillwatermedic",
+        "riptidebruiser",
+        "watson"
+      ]
+    },
+    {
+      "id": "element-plant",
+      "name": "Plant",
+      "cardIds": [
+        "canopykeeper",
+        "ashlee",
+        "gardener",
+        "sprout",
+        "rootnurse",
+        "gardenwall",
+        "streetapostle",
+        "homelesslegend",
+        "rastamon",
+        "lola"
+      ]
+    },
+    {
+      "id": "element-electric",
+      "name": "Electric",
+      "cardIds": [
+        "circuitcaptain",
+        "piratedj",
+        "tron",
+        "plug",
+        "wiretap",
+        "batteryback",
+        "livewire",
+        "tinman",
+        "techbro",
+        "bossbabe"
+      ]
+    },
+    {
+      "id": "element-dark",
+      "name": "Dark",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "shonuff",
+        "queenofhearts",
+        "repoman",
+        "thefeds",
+        "chessregular"
+      ]
+    },
+    {
+      "id": "element-earth",
+      "name": "Earth",
+      "cardIds": [
+        "torta",
+        "concrete",
+        "mansamusa",
+        "johnhenry",
+        "asphaltapostle",
+        "landlord",
+        "bigzoey",
+        "stud",
+        "bouncer",
+        "lion"
+      ]
+    },
+    {
+      "id": "element-fire",
+      "name": "Fire",
+      "cardIds": [
+        "guap",
+        "folks",
+        "hooper",
+        "bbldemon",
+        "cornercoach",
+        "krump",
+        "og",
+        "baby",
+        "youngbull",
+        "kyle"
+      ]
+    },
+    {
+      "id": "element-air",
+      "name": "Air",
+      "cardIds": [
+        "slipstream",
+        "promoter",
+        "captainjigga",
+        "honestthot",
+        "gust",
+        "crosswind",
+        "cloudbreak",
+        "ptang",
+        "ogdominican",
+        "cheshire"
+      ]
+    },
+    {
+      "id": "element-poison",
+      "name": "Poison",
+      "cardIds": [
+        "bottle",
+        "nail",
+        "mural",
+        "fein",
+        "simmy",
+        "colognecriminal",
+        "seafoodassassin",
+        "godofhookah",
+        "buspass",
+        "soulfood"
+      ]
+    },
+    {
+      "id": "focus-detective",
+      "name": "Sherlock and Watson",
+      "cardIds": [
+        "sherlock",
+        "watson",
+        "crossingguard",
+        "nightmedic",
+        "wifey",
+        "counter",
+        "oz",
+        "rastamon",
+        "bustdown",
+        "tinman"
+      ]
+    },
+    {
+      "id": "focus-demario-luigion",
+      "name": "Demario and Luigion",
+      "cardIds": [
+        "demario",
+        "luigion",
+        "rastamon",
+        "vibe",
+        "plug",
+        "bustdown",
+        "soulfood",
+        "black-cowboy",
+        "hair-stylist",
+        "stylist"
+      ]
+    },
+    {
+      "id": "focus-cellblock",
+      "name": "Cellblock",
+      "cardIds": [
+        "inmate-crafty",
+        "inmate-boyfriend",
+        "inmate-informant",
+        "inmate-contraband",
+        "inmate-kingpin",
+        "lebron-james",
+        "bustdown",
+        "cognac",
+        "rastamon",
+        "wifey"
+      ]
+    },
+    {
+      "id": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "buddy",
+        "wifey",
+        "pinaynurse",
+        "plug",
+        "bustdown"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "games": 192,
+      "wins": 141,
+      "losses": 38,
+      "draws": 13,
+      "scoreRate": 0.7682291666666666,
+      "deckId": "element-electric",
+      "deckName": "Electric",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.796875,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.7395833333333334
+    },
+    {
+      "games": 192,
+      "wins": 139,
+      "losses": 45,
+      "draws": 8,
+      "scoreRate": 0.7447916666666666,
+      "deckId": "element-water",
+      "deckName": "Water",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.71875,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.7708333333333334
+    },
+    {
+      "games": 192,
+      "wins": 117,
+      "losses": 68,
+      "draws": 7,
+      "scoreRate": 0.6276041666666666,
+      "deckId": "focus-cellblock",
+      "deckName": "Cellblock",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.5520833333333334,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.703125
+    },
+    {
+      "games": 192,
+      "wins": 96,
+      "losses": 81,
+      "draws": 15,
+      "scoreRate": 0.5390625,
+      "deckId": "element-fire",
+      "deckName": "Fire",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.4947916666666667,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.5833333333333334
+    },
+    {
+      "games": 192,
+      "wins": 89,
+      "losses": 90,
+      "draws": 13,
+      "scoreRate": 0.4973958333333333,
+      "deckId": "element-air",
+      "deckName": "Air",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.4479166666666667,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.546875
+    },
+    {
+      "games": 192,
+      "wins": 90,
+      "losses": 92,
+      "draws": 10,
+      "scoreRate": 0.4947916666666667,
+      "deckId": "element-poison",
+      "deckName": "Poison",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.5104166666666666,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4791666666666667
+    },
+    {
+      "games": 192,
+      "wins": 88,
+      "losses": 97,
+      "draws": 7,
+      "scoreRate": 0.4765625,
+      "deckId": "element-earth",
+      "deckName": "Earth",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.515625,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4375
+    },
+    {
+      "games": 192,
+      "wins": 86,
+      "losses": 95,
+      "draws": 11,
+      "scoreRate": 0.4765625,
+      "deckId": "focus-counterplay-coherent",
+      "deckName": "Counterplay — Dark Control",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.46875,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.484375
+    },
+    {
+      "games": 192,
+      "wins": 78,
+      "losses": 104,
+      "draws": 10,
+      "scoreRate": 0.4322916666666667,
+      "deckId": "focus-demario-luigion",
+      "deckName": "Demario and Luigion",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.3697916666666667,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4947916666666667
+    },
+    {
+      "games": 192,
+      "wins": 76,
+      "losses": 108,
+      "draws": 8,
+      "scoreRate": 0.4166666666666667,
+      "deckId": "element-light",
+      "deckName": "Light",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.3697916666666667,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4635416666666667
+    },
+    {
+      "games": 192,
+      "wins": 66,
+      "losses": 109,
+      "draws": 17,
+      "scoreRate": 0.3880208333333333,
+      "deckId": "element-plant",
+      "deckName": "Plant",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.359375,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4166666666666667
+    },
+    {
+      "games": 192,
+      "wins": 70,
+      "losses": 115,
+      "draws": 7,
+      "scoreRate": 0.3828125,
+      "deckId": "focus-detective",
+      "deckName": "Sherlock and Watson",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.3645833333333333,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.4010416666666667
+    },
+    {
+      "games": 192,
+      "wins": 45,
+      "losses": 139,
+      "draws": 8,
+      "scoreRate": 0.2552083333333333,
+      "deckId": "element-dark",
+      "deckName": "Dark",
+      "asPlayerGames": 96,
+      "asPlayerScoreRate": 0.203125,
+      "asCpuGames": 96,
+      "asCpuScoreRate": 0.3072916666666667
+    }
+  ]
+}

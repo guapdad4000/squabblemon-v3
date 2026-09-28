@@ -42,23 +42,23 @@ for (const owner of ['player', 'cpu'] as const) test('DJ rewards exactly the sec
   const normal = cast(first.after, 'cornball', owner, 1, 1).after;
   assert.equal(normal.electricPlays?.[owner]?.count, 1);
   const second = cast(JSON.parse(JSON.stringify(normal)), 'streamer', owner, 1, 2);
-  assert.equal(second.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 8);
+  assert.equal(second.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 7);
   assert.equal(find(second.after, second.source).powerModifier, 2, 'DJ bonus stacks with Streamer cheap-play bonus');
   const third = cast(second.after, 'techbro', owner, 2, 3);
   assert.equal(third.after[owner === 'player' ? 'playerMotion' : 'cpuMotion'], 9 - cards.techbro.cost + 2);
   assert.equal(third.after.electricPlays?.[owner]?.count, 3);
   assert.equal(third.after.leaderRounds?.[owner]?.piratedj, 3);
 });
-test('DJ can be the second Electric play, but a later DJ cannot grant an earlier missed refund', () => {
+test('DJ can be the second Electric play, but a later DJ cannot grant an earlier missed bonus', () => {
   const m = cast(blank(), 'nightcashier').after;
   const second = cast(m, 'piratedj', 'player', 1, 1);
   assert.equal(find(second.after, second.source).powerModifier, 1);
-  assert.equal(second.after.playerMotion, 7);
+  assert.equal(second.after.playerMotion, 6);
   const missed = cast(m, 'streamer', 'player', 1, 2).after;
   const late = cast(missed, 'piratedj', 'player', 2, 3);
   assert.equal(late.after.playerMotion, 6); assert.equal(find(late.after, late.source).powerModifier, 0);
 });
-test('DJ refund respects the Motion cap, resets next round and never charges a negative cost', () => {
+test('DJ bonus resets next round and never charges a negative cost', () => {
   const m = blank(), dj = unit('piratedj', 'player', 2, 1);
   const source = { ...createCardInstance('nightcashier', 'player'), cost: 0 };
   m.boards[2] = [dj]; m.electricPlays = { player: { round: 3, count: 1 } }; m.playerHand = [source];
@@ -70,7 +70,7 @@ test('DJ refund respects the Motion cap, resets next round and never charges a n
   const second = cast(first, 'nightcashier', 'player', 1, 3).after;
   assert.equal(second.leaderRounds?.player?.piratedj, 4);
 });
-for (const status of ['silenced', 'frozen', 'weakened'] as const) test('disabled DJ cannot refund: ' + status, () => {
+for (const status of ['silenced', 'frozen', 'weakened'] as const) test('disabled DJ grants no bonus: ' + status, () => {
   const m = blank(), dj = unit('piratedj', 'player', 2, 1);
   dj.statuses[status] = true; m.boards[2] = [dj]; m.electricPlays = { player: { round: 3, count: 1 } };
   const { after, source } = cast(m, 'nightcashier');

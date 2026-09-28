@@ -890,7 +890,7 @@ const settleLeaderReactions = (match: Match): Match => {
       : reaction.kind === 'gamer'
       ? 'City Tour: successful disruption gave ' + target.name + ' +2 Hands (once per round).'
       : reaction.kind === 'piratedj'
-      ? 'Citywide Signal: your second Electric play gained +1 Hand and refunded 1 Motion.'
+      ? 'Citywide Signal: your second Electric play gained +1 Hand.'
       : reaction.kind === 'passportbro'
       ? 'Geographic Arbitrage: leaving a losing district cleansed this Water ally and gave +2 Hands.'
       : reaction.kind === 'fangirl'
@@ -915,10 +915,6 @@ const settleLeaderReactions = (match: Match): Match => {
       result = modify(result, target.instanceId, card => ({
         ...card, powerModifier: card.powerModifier + (reaction.kind === 'piratedj' || reaction.kind === 'fangirl' ? 1 : 2), lastEffectNote: note,
       }));
-      if (reaction.kind === 'piratedj') {
-        const resource = reaction.owner === 'player' ? 'playerMotion' : 'cpuMotion';
-        result = refundMotion(result, reaction.owner, 1);
-      }
     }
     result = trainWaveAbility(result, reaction.sourceInstanceId);
     result = addEvent(before, result, { type: 'ability', sourceId: reaction.sourceInstanceId,
