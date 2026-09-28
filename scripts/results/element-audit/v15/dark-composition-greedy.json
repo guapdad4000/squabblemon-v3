@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "cardBalanceVersion": 15,
+    "rulesVersion": 15,
+    "policy": "greedy",
+    "bothSeats": true,
+    "schedule": {
+      "districtSeeds": [
+        "element-audit-district-00"
+      ],
+      "rotations": [
+        0,
+        5
+      ],
+      "tiers": [
+        0,
+        3
+      ],
+      "includeMirrors": false,
+      "allowSquabble": true
+    },
+    "opponentIds": [
+      "element-water",
+      "element-electric",
+      "element-earth",
+      "element-poison"
+    ],
+    "note": "Small composition pilot. Not comparable to the full 13-deck leaderboard."
+  },
+  "results": [
+    {
+      "label": "original-dark",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "shonuff",
+        "queenofhearts",
+        "repoman",
+        "thefeds",
+        "chessregular"
+      ],
+      "games": 32,
+      "scoreRate": 0.34375,
+      "failedMatches": 0,
+      "averageCost": 3.4,
+      "matchups": [
+        {
+          "opponentId": "element-water",
+          "games": 8,
+          "wins": 1,
+          "losses": 6,
+          "draws": 1,
+          "scoreRate": 0.1875,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.125,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.25
+        },
+        {
+          "opponentId": "element-electric",
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "scoreRate": 0.5,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 1
+        },
+        {
+          "opponentId": "element-earth",
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "scoreRate": 0.3125,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.25,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.375
+        },
+        {
+          "opponentId": "element-poison",
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "scoreRate": 0.375,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.75
+        }
+      ]
+    },
+    {
+      "label": "dark-lower-curve",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "shonuff",
+        "shiesty",
+        "incel",
+        "sugarfoot",
+        "subwaymagician"
+      ],
+      "games": 32,
+      "scoreRate": 0.375,
+      "failedMatches": 0,
+      "averageCost": 2.7,
+      "matchups": [
+        {
+          "opponentId": "element-water",
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "scoreRate": 0.375,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.75
+        },
+        {
+          "opponentId": "element-electric",
+          "games": 8,
+          "wins": 3,
+          "losses": 4,
+          "draws": 1,
+          "scoreRate": 0.4375,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.375,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.5
+        },
+        {
+          "opponentId": "element-earth",
+          "games": 8,
+          "wins": 3,
+          "losses": 4,
+          "draws": 1,
+          "scoreRate": 0.4375,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.125,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.75
+        },
+        {
+          "opponentId": "element-poison",
+          "games": 8,
+          "wins": 1,
+          "losses": 5,
+          "draws": 2,
+          "scoreRate": 0.25,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.125,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.375
+        }
+      ]
+    },
+    {
+      "label": "dark-mixed-support",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "queenofhearts",
+        "repoman",
+        "thefeds",
+        "buddy",
+        "plug"
+      ],
+      "games": 32,
+      "scoreRate": 0.25,
+      "failedMatches": 0,
+      "averageCost": 3.2,
+      "matchups": [
+        {
+          "opponentId": "element-water",
+          "games": 8,
+          "wins": 2,
+          "losses": 6,
+          "draws": 0,
+          "scoreRate": 0.25,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.5
+        },
+        {
+          "opponentId": "element-electric",
+          "games": 8,
+          "wins": 1,
+          "losses": 6,
+          "draws": 1,
+          "scoreRate": 0.1875,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0.125,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.25
+        },
+        {
+          "opponentId": "element-earth",
+          "games": 8,
+          "wins": 2,
+          "losses": 6,
+          "draws": 0,
+          "scoreRate": 0.25,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.5
+        },
+        {
+          "opponentId": "element-poison",
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "scoreRate": 0.3125,
+          "deckId": "element-dark",
+          "deckName": "Dark",
+          "asPlayerGames": 4,
+          "asPlayerScoreRate": 0,
+          "asCpuGames": 4,
+          "asCpuScoreRate": 0.625
+        }
+      ]
+    }
+  ]
+}

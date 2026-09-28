@@ -1,10 +1,10 @@
 import type { Card } from './data';
 import type { CardInstance } from './gameEngine';
 
-/** Version 11 printed-value changes; collection and upgrade identities stay stable. */
+/** Printed-value changes; collection and upgrade identities stay stable. */
 export const ROSTER_BALANCE_PATCH: Record<string, Partial<Pick<Card, 'cost' | 'power' | 'effect'>>> = {
   'atl-scammer': { cost: 2 }, failedathlete: { power: 3 }, lawyer: { power: 3 },
-  'tattoo-artist': { power: 3 }, 'inmate-kingpin': { cost: 1, power: 3 },
+  'tattoo-artist': { power: 3 }, 'inmate-kingpin': { cost: 1, power: 2 },
   'juneteenth-chair-guy': { cost: 4, power: 4 }, livewire: { power: 3 },
   subwaymagician: { cost: 3 }, squabbleserver: { power: 2 }, stylist: { cost: 2, power: 2 },
   'the-concert': { cost: 2 },

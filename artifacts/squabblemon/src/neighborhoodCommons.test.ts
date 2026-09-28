@@ -66,7 +66,7 @@ test('Grounded buffs one ally, former bonds set up board effects, and Nurse clea
   for (const [id, bond] of [['abuela', 'Light'], ['icecream', 'Water']] as const) {
     m = reveal(id, match => ({ ...match, boards: [[instance('cornball', 'player', 1), instance('plug', 'player', 2)], [], []] }));
     assert.equal(cards[id].elementalBond, undefined);
-    assert.equal(m.boards[0][0].powerModifier, id === 'icecream' ? 2 : 0);
+    assert.equal(m.boards[0][0].powerModifier, id === 'icecream' ? 2 : 1);
     assert(m.boards[0].slice(1).every(card => card.powerModifier === 0));
   }
   const ally = instance('cornball', 'player', 1);

@@ -36,6 +36,9 @@ test('both leaders become Epic without changing IDs, training keys, opening gran
     assert.deepEqual(cards[engineId].abilityUpgrades.map(u => u.id), [1, 2, 3].map(n => engineId + ':upgrade:' + n));
   }
   assert(ROOKIE_FOUNDATION_IDS.includes('church-auntie'));
+  assert.match(cards.church.effect, /\+3 Hands if Light, or \+2 otherwise/);
+  assert.match(cards.nightmedic.effect, /weakest other Light character here \+1 Hand, even if healthy/);
+  assert.match(cards.foodz.effect, /\+2 Hands if Light, or \+1 otherwise/);
   validateCardAbilityUpgrades();
 });
 
@@ -64,9 +67,20 @@ test('Auntie keeps Covered reveal and does not reward merely granting protection
   const m = blank(), ally = unit('crossingguard', 'player', 0, 1, 2);
   m.boards[0] = [ally];
   const { after } = cast(m, 'church', 'player');
-  assert.equal(find(after, ally).powerModifier, 2);
+  assert.equal(find(after, ally).powerModifier, 3);
   assert(find(after, ally).statuses.protected);
   assert.equal(after.leaderRounds, undefined);
+});
+for (const owner of ['player', 'cpu'] as const) test(`Covered gives +3 to Light and +2 to non-Light, including already protected targets (${owner})`, () => {
+  for (const id of ['leroy', 'cornball'] as const) for (const protectedAlready of [false, true]) {
+    const m = blank(), ally = unit(id, owner, 0, 1, 2);
+    ally.statuses.protected = protectedAlready;
+    m.boards[0] = [ally];
+    const after = cast(m, 'church', owner).after;
+    assert.equal(find(after, ally).powerModifier, id === 'leroy' ? 3 : 2);
+    assert.equal(find(after, ally).statuses.protected, true);
+    assert.equal(after.leaderRounds?.[owner]?.church, undefined);
+  }
 });
 test('Auntie caps board-wide multi-hit reactions at one and refreshes next round', () => {
   const { m, target, enemy } = defense();
@@ -124,7 +138,7 @@ for (const owner of ['player', 'cpu'] as const) test('Medic clears every harmful
     for (const key of ['frozen', 'silenced', 'weakened', 'locked'] as const) assert.equal(statuses[key], false);
     assert.equal(statuses.burnStacks, 0); assert.equal(statuses.protected, true); assert.equal(statuses.boosted, true);
   }
-  assert.equal(find(after, first).powerModifier, 2);
+  assert.equal(find(after, first).powerModifier, 3, 'Medic reveal +1 and cleanse leader +2 are separate');
   assert.equal(find(after, second).powerModifier, 0); assert.equal(find(after, normal).powerModifier, 0);
   assert.equal(find(after, distant).statuses.frozen, true);
   assert.equal(find(after, source).powerModifier, 0);
@@ -137,9 +151,22 @@ for (const status of ['frozen', 'silenced', 'weakened', 'locked', 'burnStacks'] 
     m.boards[0] = [target];
     const { after } = cast(m, 'nightmedic', 'player');
     assert.equal(find(after, target).statuses[status], status === 'burnStacks' ? 0 : false);
-    assert.equal(find(after, target).powerModifier, 2);
+    assert.equal(find(after, target).powerModifier, 3);
   });
 }
+for (const owner of ['player', 'cpu'] as const) test(`Medic rewards the weakest healthy local Light character without inventing a cleanse (${owner})`, () => {
+  const m = blank(), high = unit('leroy', owner, 0, 1, 9), low = unit('church', owner, 0, 2, 2);
+  const tied = unit('crossingguard', owner, 0, 3, 2), distant = unit('leroy', owner, 1, 4, 1);
+  const support = { ...unit('leroy', owner, 0, 5, 0), kind: 'support' as const };
+  const token = { ...unit('leroy', owner, 0, 6, 0), kind: 'token' as const };
+  const normal = unit('cornball', owner, 0, 7, 0);
+  m.boards = [[high, tied, low, support, token, normal], [distant], []];
+  const { after } = cast(m, 'nightmedic', owner);
+  assert.equal(find(after, low).powerModifier, 1, 'tie breaks by instanceId, not array order');
+  for (const c of [high, tied, distant, support, token, normal]) assert.equal(find(after, c).powerModifier, 0);
+  assert.equal(after.leaderRounds?.[owner]?.nightmedic, undefined);
+  assert(!after.effectLog.some(e => e.note.startsWith('All Clear: cleansing gave')));
+});
 test('Foodz cleanses Burn/Weaken/Lock across the board and triggers Medic once', () => {
   const m = blank(), medic = unit('nightmedic', 'player', 2, 1);
   const burned = unit('church', 'player', 0, 2), weakened = unit('crossingguard', 'player', 1, 3);
@@ -150,9 +177,24 @@ test('Foodz cleanses Burn/Weaken/Lock across the board and triggers Medic once',
   assert.equal(find(after, burned).statuses.burnStacks, 0);
   assert.equal(find(after, weakened).statuses.weakened, false);
   assert.equal(find(after, locked).statuses.locked, false);
-  assert.equal(find(after, burned).powerModifier, 3, 'Foodz district buff plus Medic');
-  assert.equal(find(after, weakened).powerModifier, 1); assert.equal(find(after, locked).powerModifier, 2, 'Foodz also rewards the weakest cleansed Light ally');
+  assert.equal(find(after, burned).powerModifier, 4, 'Foodz Light district +2 and Medic +2');
+  assert.equal(find(after, weakened).powerModifier, 2); assert.equal(find(after, locked).powerModifier, 3, 'Foodz Light district +2 and recovery +1');
   assert.equal(after.effectLog.filter(e => e.note.startsWith('All Clear: cleansing gave')).length, 1);
+});
+for (const owner of ['player', 'cpu'] as const) test(`Foodz selects one weakest character per district, with Light premium and real recovery only (${owner})`, () => {
+  const m = blank(), light = unit('church', owner, 0, 1, 2), normal = unit('cornball', owner, 0, 2, 9);
+  const remote = unit('leroy', owner, 1, 3, 2), remoteTie = unit('crossingguard', owner, 1, 4, 2);
+  const third = unit('cornball', owner, 2, 5, 4);
+  const token = { ...unit('leroy', owner, 2, 6, 0), kind: 'token' as const };
+  const support = { ...unit('leroy', owner, 0, 7, 0), kind: 'support' as const };
+  m.boards = [[normal, support, light], [remoteTie, remote], [token, third]];
+  const after = cast(m, 'foodz', owner, 0, 9).after;
+  assert.equal(find(after, light).powerModifier, 2);
+  assert.equal(find(after, remote).powerModifier, 2);
+  assert.equal(find(after, remoteTie).powerModifier, 0);
+  assert.equal(find(after, third).powerModifier, 1);
+  for (const c of [normal, token, support]) assert.equal(find(after, c).powerModifier, 0);
+  assert.equal(after.leaderRounds?.[owner]?.nightmedic, undefined);
 });
 for (const id of ['rastamon', 'laundry', 'firstaid', 'pinaynurse', 'soulfood', 'stonersr'] as const) {
   test(id + ' can trigger an active Medic in another district', () => {
@@ -179,7 +221,7 @@ for (const status of ['silenced', 'frozen', 'weakened'] as const) test('Medic ca
   medic.statuses[status] = true; m.boards[0] = [medic];
   const { after } = cast(m, 'foodz', 'player');
   assert.equal(find(after, medic).statuses[status], false);
-  assert.equal(find(after, medic).powerModifier, 2, 'only Foodz district and recovery buffs');
+  assert.equal(find(after, medic).powerModifier, 3, 'only Foodz Light district and recovery buffs');
   assert.equal(after.leaderRounds?.player?.nightmedic, undefined);
 });
 test('Medic is once per round, survives JSON saves and copy changes, and refreshes next round', () => {
@@ -189,11 +231,12 @@ test('Medic is once per round, survives JSON saves and copy changes, and refresh
   const saved = JSON.parse(JSON.stringify(after)) as Match;
   find(saved, target).statuses.burnStacks = 1;
   after = cast(saved, 'nightmedic', 'player', 0, 1).after;
-  assert.equal(find(after, target).powerModifier, 4, 'no second leader bonus this round');
+  assert.equal(find(after, target).powerModifier, 5, 'no second leader bonus; reveal +1 goes to weaker Foodz');
+  assert.equal(after.boards[0].find(c => c.cardId === 'foodz')?.powerModifier, 1);
   after = nextRound({ ...after, phase: 'resolved', playerHand: [], cpuHand: [] });
   find(after, target).statuses.burnStacks = 1;
   after = cast(after, 'nightmedic', 'player', 0, 2).after;
-  assert.equal(find(after, target).powerModifier, 6);
+  assert.equal(find(after, target).powerModifier, 7);
 });
 test('both leader rewards agree in AI search and replayable matches', () => {
   const { m, target, enemy } = defense();

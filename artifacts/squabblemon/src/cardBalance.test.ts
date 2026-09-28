@@ -34,9 +34,7 @@ test('every character fits the six-round Motion curve without an oversized free 
   }
   for (const card of characters) {
     assert(card.cost >= 1 && card.cost <= 6, `${card.name} cannot fit the six-round Motion curve`);
-    // Kingpin's explicitly approved 1-Motion / 3-Hand budget is an exception,
-    // not a reason to loosen the printed-Hand ceiling for other cheap cards.
-    const printedBudget = card.engineId === 'inmate-kingpin' ? 3 : card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade'].includes(card.engineId) ? 6 : card.cost + 1;
+    const printedBudget = card.engineId === 'yasuke' ? 4 : ['landlord', 'drfade'].includes(card.engineId) ? 6 : card.cost + 1;
     assert(card.power >= 1 && card.power <= printedBudget, `${card.name} has excessive unconditional Hands`);
   }
 });
@@ -53,7 +51,7 @@ test('Mythical reveal swings stay bounded in a favorable contested board', () =>
     const after = playTurnCard(before, 'player', source.instanceId, 0);
     const swing = totalHands(after, 'player') - totalHands(before, 'player')
       - (totalHands(after, 'cpu') - totalHands(before, 'cpu'));
-    const expectedNetMotion = cards[mythic.engineId].cost - (mythic.engineId === 'tron' ? 1 : 0);
+    const expectedNetMotion = cards[mythic.engineId].cost;
     assert.equal(9 - after.playerMotion, expectedNetMotion, mythic.name);
     // GUAP's approved global FINNAM! package is intentionally the sole bounded
     // exception: five charge plus up to three enemy districts of reduction.

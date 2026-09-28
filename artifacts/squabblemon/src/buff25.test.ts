@@ -312,16 +312,18 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, ally)?.powerModifier, 0);
     assert(!kinds(m).includes("anchor"));
   });
-  test(`${owner}: Abuela healthy lunch heals actual subsequent loss only once`, () => {
+  test(`${owner}: Abuela gives +1 Hand and healthy lunch heals actual subsequent loss only once`, () => {
     let m = blank();
     const ally = { ...unit("og", owner, 0), powerModifier: 3 };
     m.boards = [[ally], [], []];
     m = cast(m, "abuela", owner).after;
+    assert.equal(find(m, ally)?.powerModifier, 4);
     assert(kinds(m).includes("lunch"));
     m = cast(m, "inmate-informant", enemy).after;
     assert(kinds(m).includes("lunch")); // ward absorbs first
+    assert.equal(find(m, ally)?.powerModifier, 4);
     m = cast(m, "inmate-informant", enemy).after;
-    assert.equal(find(m, ally)?.powerModifier, 2);
+    assert.equal(find(m, ally)?.powerModifier, 3);
     assert(!kinds(m).includes("lunch"));
   });
   test(`${owner}: STUD protects his partner only after a successful paired escape`, () => {

@@ -36,6 +36,8 @@ test('five collectible identities have rarities, three upgrades and legal acquis
     assert.equal(cards[id], undefined);
   }
   assert.equal(SUMMON_TEMPLATES['demario-mushroom'].power, 2);
+  assert.match(cards.demario.effect, /consumes one Mushroom for \+2 Hands/);
+  assert.match(SUMMON_TEMPLATES['demario-mushroom'].effect, /consumes one Mushroom for \+2 Hands/);
 });
 
 for (const owner of ['player', 'cpu'] as const) {
@@ -179,7 +181,7 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(after.boards[0].find(c => c.instanceId === invalid.instanceId)!.powerModifier, 0);
     }
   });
-  test(`${owner}: disabled Luigion cannot consume or train; ordinary consumers still get only +1`, () => {
+  test(`${owner}: disabled Luigion cannot consume or train; ordinary consumers get exactly +2`, () => {
     for (const powered of [false, true]) for (const status of ['silenced', 'frozen', 'weakened'] as const) {
       const setup = cast(blank(), 'demario', owner), source = createCardInstance('luigion', owner);
       source.statuses[status] = true;
@@ -190,8 +192,26 @@ for (const owner of ['player', 'cpu'] as const) {
     }
     const setup = cast(blank(), 'demario', owner);
     const after = cast(setup, 'rastamon', owner);
-    assert.equal(find(after, 'rastamon').powerModifier, 1);
+    assert.equal(find(after, 'rastamon').powerModifier, 2);
     assert.equal(find(after, 'demario-mushroom'), undefined);
+    assert(after.effectLog.some(e => e.note.includes('consumed a Mushroom for +2 Hands')));
+  });
+  test(`${owner}: ordinary deployment consumes one Mushroom, not on echoes; a silenced entrant still consumes`, () => {
+    const setup = cast(blank(), 'demario', owner), seed = find(setup, 'demario-mushroom');
+    setup.boards[0].push({ ...seed, instanceId: 'spare-ordinary' });
+    const after = cast(setup, 'cornball', owner);
+    assert.equal(find(after, 'cornball').powerModifier, 2);
+    assert.equal(after.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 1);
+    assert.equal(after.effectLog.filter(e => e.note.includes('consumed a Mushroom for +2 Hands')).length, 1);
+    const echoed = cast({ ...after, playerMotion: 9, cpuMotion: 9 }, 'oz', owner, 1);
+    assert.equal(echoed.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 1);
+    const source = createCardInstance('cornball', owner);
+    source.statuses.silenced = true;
+    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+    const disabled = playTurnCard({ ...after, playerMotion: 9, cpuMotion: 9,
+      phase: owner === 'player' ? 'player' : 'cpu-reveal', [hand]: [source] }, owner, source.instanceId, 0);
+    assert.equal(disabled.boards[0].filter(c => c.cardId === 'demario-mushroom').length, 0);
+    assert.equal(disabled.boards[0].find(c => c.instanceId === source.instanceId)?.powerModifier, 2);
   });
   test(`${owner}: Oz echoes cannot consume another Mushroom; return and redeploy can`, () => {
     let m = cast(blank(), 'demario', owner);

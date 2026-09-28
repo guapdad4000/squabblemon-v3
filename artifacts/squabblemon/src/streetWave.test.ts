@@ -41,7 +41,7 @@ for (const owner of ['player', 'cpu'] as const) test(`unchanged street fighters 
     if (id === 'bboy') { assert.equal(find(source.instanceId).lane, 2); assert.equal(find(remoteTwo.instanceId).powerModifier, 11); }
     if (id === 'yunghustle') assert.equal(owner === 'player' ? after.playerMotion : after.cpuMotion, 9);
     if (id === 'simmy') { assert.equal(find(bigEnemy.instanceId).powerModifier, 17); assert.equal(find(ally.instanceId).powerModifier, 2); }
-    if (id === 'foodz') for (const target of [ally, remote, remoteTwo]) { assert(!find(target.instanceId).statuses.frozen); assert(!find(target.instanceId).statuses.silenced); assert.equal(find(target.instanceId).powerModifier, target.powerModifier + 1); }
+    if (id === 'foodz') for (const target of [ally, remote, remoteTwo]) { assert(!find(target.instanceId).statuses.frozen); assert(!find(target.instanceId).statuses.silenced); assert.equal(find(target.instanceId).powerModifier, target.powerModifier + (target.type === 'Light' ? 2 : 1)); }
     assert(after.effectLog.some(e => e.type === 'ability'), id);
     assert.equal(ally.powerModifier, 0, 'input state is immutable');
   }

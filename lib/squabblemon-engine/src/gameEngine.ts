@@ -1565,7 +1565,11 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       if (fallback) { targets.push(fallback.instanceId); m = grantProtection(m, source, fallback.instanceId); succeeded = true; }
     }
     for (const sherlock of m.boards.flat().filter(c => c.owner === source.owner && abilityCardId(c) === 'sherlock' && activeAbility(c))) {
-      if (sherlock.instanceId !== source.instanceId) { targets.push(sherlock.instanceId); m = grantProtection(m, source, sherlock.instanceId); }
+      if (sherlock.instanceId !== source.instanceId) {
+        targets.push(sherlock.instanceId);
+        m = grantProtection(m, source, sherlock.instanceId);
+        buff(sherlock, 2);
+      }
     }
   } else if (id === 'thefeds') {
     const removable = (c: CardInstance) => Math.max(0, c.basePower + c.powerModifier - c.power);
@@ -2213,12 +2217,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   else if (source.cardId === 'church') {
     const target = lowest(inLane(m, source.owner, l).filter((c) => c.instanceId !== source.instanceId));
     if (!target) note("Covered needs another friendly card.");
-    else if (target.statuses.protected) { targetIds.add(target.instanceId); m = modify(m, target.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: "Covered: already protected, +2 Hands." })); note("Covered reinforced an already protected ally."); }
+    else if (target.statuses.protected) { const amount = target.type === 'Light' ? 3 : 2; targetIds.add(target.instanceId); m = modify(m, target.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: `Covered: already protected, +${amount} Hands.` })); note("Covered reinforced an already protected ally."); }
     else {
+      const amount = target.type === 'Light' ? 3 : 2;
       targetIds.add(target.instanceId);
-      m = modify(m, target.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, statuses: { ...c.statuses, protected: true }, lastEffectNote: "Covered: +2 Hands and protected from one targeted hostile ability." }));
+      m = modify(m, target.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + amount, statuses: { ...c.statuses, protected: true }, lastEffectNote: `Covered: +${amount} Hands and protected from one targeted hostile ability.` }));
       m = { ...m, timedEffects: [...m.timedEffects, { id: `church:${source.instanceId}:${target.instanceId}`, kind: "church-protection", sourceInstanceId: source.instanceId, targetInstanceId: target.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7, expiration: "match-complete" }] };
-      note("Covered gave the lowest-Hands friendly card +2 Hands and protection.");
+      note(`Covered gave the lowest-Hands friendly card +${amount} Hands and protection.`);
     }
   }
   else if (source.cardId === 'carmeet') {
@@ -2415,6 +2420,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     note(!target ? 'Safe Crossing needs another ally here.' : target.statuses.protected ? 'Safe Crossing: ally is already protected.' : `Safe Crossing protected ${target.name}.`);
   }
   else if (source.cardId === 'laundry' || source.cardId === 'nightmedic') {
+    const medicTarget = source.cardId === 'nightmedic'
+      ? lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId
+        && (c.kind ?? 'character') === 'character' && c.type === 'Light'))
+      : undefined;
     const eligible = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId
       && (source.cardId === 'nightmedic' ? needsCleanse(c) : c.statuses.frozen || c.statuses.silenced));
     const target = lowest(eligible);
@@ -2423,7 +2432,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       targetIds.add(ally.instanceId);
       m = cleanseAlly(m, ally.instanceId, c => ({ ...c, statuses: cleanseStatuses(c.statuses), powerModifier: c.powerModifier + (source.cardId === 'laundry' ? 1 : 0), lastEffectNote: `${source.ability}: cleansed.` }));
     }
-    note(targets.length ? `${source.ability} cleansed ${targets.length} allies.` : `${source.ability} found no status to cleanse.`);
+    if (medicTarget) {
+      targetIds.add(medicTarget.instanceId);
+      m = modify(m, medicTarget.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'All Clear: +1 Hand to the weakest other local Light character.' }));
+    }
+    note(`${targets.length ? `${source.ability} cleansed ${targets.length} allies.` : `${source.ability} found no status to cleanse.`}${medicTarget ? ' The weakest local Light character gained +1 Hand.' : ''}`);
   }
   else if (['busker', 'cornercoach', 'piratedj', 'partytitan'].includes(source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
@@ -2524,9 +2537,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       targetIds.add(ally.instanceId);
       m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'For the Hood: +1 Hands.' }));
     }
-    const motionKey = source.owner === 'player' ? 'playerMotion' : 'cpuMotion';
-    if (allies.length >= 2) m = refundMotion(m, source.owner, 1);
-    note(allies.length ? `For the Hood helped ${allies.length} characters${allies.length >= 2 ? ' and restored up to 1 Motion' : ''}.` : 'For the Hood needs other friendly characters here.');
+    if (allies.length === 3) m = refundMotion(m, source.owner, 1);
+    note(allies.length ? `For the Hood helped ${allies.length} characters${allies.length === 3 ? ' and restored up to 1 Motion' : ''}.` : 'For the Hood needs other friendly characters here.');
   }
   else if (source.cardId === 'johnhenry') {
     const allies = m.boards.flat().filter(c => c.owner === source.owner && c.instanceId !== source.instanceId
@@ -2888,7 +2900,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const recovery = lowest(crew.filter(c => c.type === 'Light' && needsCleanse(c)));
       for (const target of crew) cleanse(target, 0);
       if (recovery) buff(findCard(m, recovery.instanceId), 1);
-      for (const district of [0, 1, 2] as const) buff(lowest(inLane(m, source.owner, district).filter(c => c.instanceId !== source.instanceId && c.kind !== 'support')), 1);
+      for (const district of [0, 1, 2] as const) {
+        const target = lowest(inLane(m, source.owner, district).filter(c => c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character'));
+        if (target) buff(target, target.type === 'Light' ? 2 : 1);
+      }
     }
     const succeeded = [...targetIds].some(key => {
       const old = findCard(before, key), current = findCard(m, key);
@@ -3347,9 +3362,9 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
         m = { ...m, boards: m.boards.map(items => items.filter(c => c.instanceId !== mushroom.instanceId)) as Match['boards'],
           timedEffects: m.timedEffects.filter(e => e.targetInstanceId !== mushroom.instanceId) };
         m = fairytaleDeparture(m, mushroom);
-        m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Mushroom Delivery: consumed Mushroom, +1 Hand.' }));
+        m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Mushroom Delivery: consumed Mushroom, +2 Hands.' }));
         m = addEvent(beforeMushroom, m, { type: 'ability', sourceId: mushroom.instanceId, owner, lane: targetLane,
-          targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery: the next friendly character consumed a Mushroom for +1 Hand.' });
+          targetIds: [instanceId, mushroom.instanceId], note: 'Mushroom Delivery: the next friendly character consumed a Mushroom for +2 Hands.' });
       }
     }
     const survivingReveal = findCard(m, instanceId);

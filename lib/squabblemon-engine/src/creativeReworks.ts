@@ -201,7 +201,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   abuela: [
     "Eat Something",
-    "On Reveal: Restore up to 3 Hands actually lost to damage to your weakest injured ally anywhere and Protect it. If nobody is injured, Protect your weakest other ally here and pack one lunch: heal up to 2 Hands of its first later enemy damage if it survives.",
+    "On Reveal: Give your weakest injured ally anywhere +1 Hand, restore up to 3 Hands actually lost to damage, and Protect it. If nobody is injured, give your weakest other ally here +1 Hand, Protect it, and pack one lunch: heal up to 2 Hands of its first later enemy damage if it survives.",
   ],
   icecream: [
     "Neighborhood Route",
@@ -213,7 +213,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   gardener: [
     "Rooftop Harvest",
-    "On Reveal: Plant a Seed here. At the end of next round, your weakest Plant ally here gains +3 Hands. One plot per district per side.",
+    "On Reveal: Plant a Seed here. At the end of this round, your weakest Plant ally here gains +3 Hands. One plot per district per side.",
   ],
   incel: [
     "Leave Me Alone",
@@ -225,7 +225,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   canopykeeper: [
     "Show Up Then",
-    "On Reveal: Promise to help your weakest other ally here. Through next round, if another card gives it Hands, cleanses it, or heals enemy damage, it gains +2 Hands and you gain +1 Hand, once.",
+    "On Reveal: Give your weakest other ally here +1 Hand and promise to help it. Through next round, if another card gives it Hands, cleanses it, or heals enemy damage, it gains +2 Hands and you gain +1 Hand, once.",
   ],
   slipstream: [
     "Boarding Pass",
@@ -535,7 +535,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     treat: "next other friendly arrival: +2",
     ground: "hold this district together: +2 each",
     anchor: "block one forced move: +2",
-    seed: "at expiry: weakest Plant here +3",
+    seed: "this round end: weakest Plant here +3",
     promise: "help this ally to fulfill the promise",
     boarding: "next move: +2 and Protection",
   };
@@ -990,6 +990,7 @@ export function creativeReveal(
             recoverableDamage: Math.max(0, (c.recoverableDamage ?? 0) - heal),
           }));
         cover(target);
+        give(target, 1);
         if (!heal) put("lunch", [target], l, { expires: 99 }, "target");
       }
       break;
@@ -1010,7 +1011,7 @@ export function creativeReveal(
       break;
     }
     case "gardener":
-      put("seed", [], l, {}, "lane");
+      put("seed", [], l, { expires: m.round }, "lane");
       break;
     case "incel":
       break;
@@ -1018,7 +1019,11 @@ export function creativeReveal(
       put("jobs", [], l, { seen: [] });
       break;
     case "canopykeeper":
-      if (a[0]) put("promise", [a[0]]);
+      if (a[0]) {
+        give(a[0], 1);
+        // The initial help is not the promised follow-up from another card.
+        put("promise", [a[0]]);
+      }
       break;
     case "slipstream": {
       const target = a.find((c) => c.type === "Air");
@@ -1609,7 +1614,8 @@ export function creativeAfterAction(
         );
       }
     }
-    if (x.kind === "promise") {
+    // A newly posted promise cannot count the initial help that created it.
+    if (x.kind === "promise" && marks(before).some(previous => previous.id === x.id)) {
       const old = card(before, x.targets[0]),
         now = card(m, x.targets[0]);
       if (

@@ -28,6 +28,7 @@
     "test:neighborhood-wave": "tsx --test src/neighborhoodWave.test.ts",
     "test:cellblock-wave": "tsx --test src/cellblockWave.test.ts",
     "test:crew-authority": "tsx --test src/fourCrewAuthority.test.ts",
+    "test:balance-patch": "tsx --test src/balancePatch.test.ts",
     "test:pack-opening": "node --test src/lib/packJournal.test.ts",
     "test:performance": "node scripts/battle-performance.mjs",
     "validate:brand": "node scripts/validate-brand-metadata.mjs",

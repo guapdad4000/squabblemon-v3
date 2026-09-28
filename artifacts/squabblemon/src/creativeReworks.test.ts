@@ -448,12 +448,25 @@ for (const owner of ["player", "cpu"] as const) {
     const plant = unit("rastamon", owner, 0);
     m.boards = [[plant], [], []];
     m = cast(m, "gardener", owner).after;
-    m = end(end(m));
+    assert(kinds(m).includes("seed"));
+    m = end(m);
     assert.equal(
       m.boards.flat().find((c) => c.cardId === "gardener")?.powerModifier,
-      3,
+      0,
     );
+    assert.equal(find(m, plant)?.powerModifier, 3, "Rastamon wins the tie for weakest Plant after Gardener's printed Hands increase");
     assert(!kinds(m).includes("seed"));
+    m = end(m);
+    assert.equal(
+      m.boards.flat().find((c) => c.cardId === "gardener")?.powerModifier,
+      0,
+      "a harvested Seed cannot pay twice",
+    );
+    assert.equal(
+      find(m, plant)?.powerModifier,
+      3,
+      "a harvested Seed cannot pay twice",
+    );
     m = blank();
     const a = unit("landlord", owner, 0),
       b = unit("manman", owner, 0);
@@ -506,10 +519,39 @@ for (const owner of ["player", "cpu"] as const) {
     hurt.recoverableDamage = 2;
     m.boards = [[hurt], [], []];
     const promise = cast(m, "canopykeeper", owner);
+    assert.equal(find(promise.after, hurt)?.powerModifier, -1);
+    assert.equal(find(promise.after, promise.source)?.powerModifier, 0);
+    assert(kinds(promise.after).includes("promise"), "initial +1 does not fulfill its own promise");
     m = cast(promise.after, "abuela", owner).after;
-    assert.equal(find(m, hurt)?.powerModifier, 2);
+    assert.equal(find(m, hurt)?.powerModifier, 4);
+    assert.equal(find(m, hurt)?.recoverableDamage, 0);
     assert.equal(find(m, promise.source)?.powerModifier, 1);
     assert(!kinds(m).includes("promise"));
+  });
+  test(`${owner}: Abuela gives a healthy ally one Hand without inventing damage recovery`, () => {
+    const m = blank();
+    const healthy = unit("cornball", owner, 0);
+    m.boards = [[healthy], [], []];
+    const after = cast(m, "abuela", owner).after;
+    assert.equal(find(after, healthy)?.powerModifier, 1);
+    assert.equal(find(after, healthy)?.recoverableDamage ?? 0, 0);
+    assert.equal(find(after, healthy)?.statuses.protected, true);
+    assert.equal(after.creativeMarks?.filter(x => x.kind === "lunch").length, 1);
+    const disabled = cast(m, "abuela", owner, 0, true).after;
+    assert.equal(find(disabled, healthy)?.powerModifier, 0);
+    assert(!kinds(disabled).includes("lunch"));
+  });
+  test(`${owner}: Seed harvest survives serialization and stays local`, () => {
+    let m = blank();
+    const remotePlant = unit("rastamon", owner, 1);
+    m.boards = [[], [remotePlant], []];
+    const seed = cast(m, "gardener", owner);
+    const mark = seed.after.creativeMarks?.find(x => x.kind === "seed");
+    assert.equal(mark?.expires, m.round);
+    m = end(json(seed.after));
+    assert.equal(find(m, seed.source)?.powerModifier, 3);
+    assert.equal(find(m, remotePlant)?.powerModifier, 0);
+    assert(!kinds(m).includes("seed"));
   });
   test(`${owner}: Kingpin pays only after three distinct inmate carriers`, () => {
     let m = blank();

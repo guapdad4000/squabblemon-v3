@@ -192,6 +192,41 @@ test('Watson restores actual damage only; Fresh Pot removes Burn and Freeze with
   const served=cast(clean,'squabbleserver').after;
   assert.equal(find(served,dirty).statuses.burnStacks,0);assert(!find(served,dirty).statuses.frozen);assert(find(served,dirty).statuses.boosted);assert(find(served,dirty).statuses.locked);
 });
+for (const owner of ['player', 'cpu'] as const) test(`Watson pairs with an active friendly Sherlock anywhere without manufacturing healing (${owner})`, () => {
+  const enemy = owner === 'player' ? 'cpu' : 'player';
+  const m = blank(), sherlock = unit('sherlock', owner, 2, 11), local = unit('hooper', owner, 0, 12);
+  const rival = unit('sherlock', enemy, 1, 13);
+  m.boards = [[local], [rival], [sherlock]];
+  const healthy = cast(m, 'watson', owner).after;
+  assert.equal(find(healthy, local).powerModifier, 0);
+  assert(find(healthy, local).statuses.protected, 'the unchanged local fallback still protects');
+  assert.equal(find(healthy, sherlock).powerModifier, 2);
+  assert(find(healthy, sherlock).statuses.protected);
+  assert.equal(find(healthy, sherlock).recoverableDamage ?? 0, 0);
+  assert.equal(find(healthy, rival).powerModifier, 0);
+  assert(!find(healthy, rival).statuses.protected);
+  assert(!healthy.effectLog.some(e => e.note.includes('cleansing gave')));
+  const solo = blank(); solo.boards[0] = [local];
+  assert.equal(find(cast(solo, 'watson', owner).after, local).powerModifier, 0, 'no Sherlock means no extra Hands');
+
+  const injured = unit('hooper', owner, 0, 14);
+  injured.powerModifier = -4; injured.recoverableDamage = 4;
+  const damage = blank(); damage.boards = [[injured], [], [sherlock]];
+  const healed = cast(damage, 'watson', owner).after;
+  assert.equal(find(healed, injured).powerModifier, -1, 'only three actual damage Hands are restored');
+  assert.equal(find(healed, injured).recoverableDamage, 1);
+  assert(find(healed, injured).statuses.protected);
+  assert.equal(find(healed, sherlock).powerModifier, 2, 'detective bonus is separate from the heal');
+  assert.equal(find(healed, sherlock).recoverableDamage ?? 0, 0);
+  for (const status of ['silenced', 'frozen', 'weakened'] as const) {
+    const disabled = blank(), inactive = { ...sherlock, statuses: { ...sherlock.statuses, [status]: true } };
+    disabled.boards[2] = [inactive];
+    const result = cast(disabled, 'watson', owner).after;
+    assert.equal(find(result, inactive).powerModifier, 0);
+    assert(!find(result, inactive).statuses.protected);
+  }
+  assert.match(cards.watson.effect, /Protect a friendly Sherlock anywhere and give him \+2 Hands/);
+});
 test('Undercover waits until entrance resolves, steals once and escapes into the weakest open district', () => {
   const m=blank(), spy=unit('undercova','player',0);m.boards[0]=[spy];
   const {source,after}=cast(m,'lion','cpu');

@@ -6,9 +6,11 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test ./src/balanceLab.test.ts ./src/challenge.test.ts ./src/challengeApiRoutes.test.ts ./src/challengesHub.test.ts && node --test ./fadecade-art.test.mjs",
+    "test": "node --import tsx --test ./src/balanceLab.test.ts ./src/challenge.test.ts ./src/challengeApiRoutes.test.ts ./src/challengesHub.test.ts ./src/element-balance-audit-cli.test.ts && node --test ./fadecade-art.test.mjs",
     "balance:smoke": "tsx ./src/balance-lab.ts --smoke",
-    "balance:full": "tsx ./src/balance-lab.ts --full"
+    "balance:full": "tsx ./src/balance-lab.ts --full",
+    "balance:elements": "tsx ./src/element-balance-audit.ts",
+    "balance:dark-composition": "tsx ./src/dark-composition-audit.ts"
   },
   "devDependencies": {
     "@types/node": "catalog:",

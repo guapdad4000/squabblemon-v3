@@ -71,11 +71,40 @@ test('City Legend Motion prices and Dragonfly Jones Hands are printed on playabl
   assert.equal(cards.shonuff.cost, 3);
   assert.equal(cards.yasuke.cost, 2);
   assert.equal(cards.tron.cost, 3);
+  assert.match(cards.tron.effect, /If all three gained Hands, restore 1 Motion/);
   assert.equal(cards.ashlee.cost, 5);
   assert.equal(cards.ashlee.power, 3);
   assert.equal(cards.captainjigga.cost, 5);
   assert.equal(cards.counter.cost, 4);
   assert.equal(cards.counter.power, 3);
+});
+for (const owner of ['player', 'cpu'] as const) test(`TRON buffs two without refund, three with refund, even through Protection (${owner})`, () => {
+  const motion = owner === 'player' ? 'playerMotion' : 'cpuMotion';
+  const two = setup('tron', owner);
+  two.ally.statuses.protected = true;
+  two.m.boards[0] = [two.ally, two.second];
+  const noRefund = playCard(two.m, owner, two.source.instanceId, 0);
+  assert.equal(onBoard(noRefund, two.ally).powerModifier, 1);
+  assert.equal(onBoard(noRefund, two.second).powerModifier, 1);
+  assert(onBoard(noRefund, two.ally).statuses.protected);
+  assert.equal(noRefund[motion], 9 - cards.tron.cost);
+  assert(!noRefund.effectLog.some(e => e.note.includes('For the Hood helped 2 characters and restored')));
+
+  const three = setup('tron', owner);
+  three.ally.statuses.protected = true;
+  const refunded = playCard(three.m, owner, three.source.instanceId, 0);
+  for (const ally of [three.ally, three.second, three.third]) assert.equal(onBoard(refunded, ally).powerModifier, 1);
+  assert(onBoard(refunded, three.ally).statuses.protected);
+  assert.equal(refunded[motion], 9 - cards.tron.cost + 1);
+  assert(refunded.effectLog.some(e => e.note.includes('For the Hood helped 3 characters and restored up to 1 Motion')));
+
+  const capped = setup('tron', owner);
+  capped.source.cost = 1;
+  capped.m.plugDiscountLane = { ...capped.m.plugDiscountLane, [owner]: 1 };
+  assert.equal(getLegalCardCost(capped.m, owner, capped.source, 0), 0);
+  const atCap = playCard(capped.m, owner, capped.source.instanceId, 0);
+  assert.equal(atCap[motion], 9, 'zero-cost placement cannot refund above the Motion cap');
+  for (const ally of [capped.ally, capped.second, capped.third]) assert.equal(onBoard(atCap, ally).powerModifier, 1);
 });
 
 for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend reveals resolve for ${owner}`, () => {
