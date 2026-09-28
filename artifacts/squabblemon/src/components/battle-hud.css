@@ -304,3 +304,16 @@
 .battle-hud .wild-investment select { min-height: 44px; max-width: 150px; background: #211b30; color: white; border: 1px solid #bba0eb88; border-radius: 5px; padding: 0 8px; font: inherit; }
 .battle-hud .wild-investment select:focus-visible { outline: 2px solid #e4ccff; outline-offset: 2px; }
 .battle-hud .character-district-mark { display: block; color: #f0d6ff; font: 600 9px/1.2 sans-serif; white-space: normal; padding: 2px 3px; background: #21102bc9; border-radius: 3px; }
+
+/* PvP turn clock: subtle red edge glow in the final ten seconds of your turn. */
+.pvp-clock-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  box-shadow: inset 0 0 90px 14px rgba(220, 30, 30, 0.32);
+  animation: pvp-clock-glow 1s ease-in-out infinite alternate;
+}
+@keyframes pvp-clock-glow { from { opacity: 0.45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pvp-clock-glow { animation: none; opacity: 0.7; } }
+html[data-reduce-motion="true"] .pvp-clock-glow { animation: none; opacity: 0.7; }

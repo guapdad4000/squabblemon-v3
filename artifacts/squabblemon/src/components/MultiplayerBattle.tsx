@@ -3,6 +3,7 @@ import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
 import { onlineResultCopy } from './onlineResultCopy';
 import { useBattleResultExit } from '../lib/useBattleResultExit';
+import { useTurnClockCues } from '../lib/turnClockCues';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { LayoutGroup, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -154,6 +155,8 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const rivalSeat = otherSeat(room.seat), rival = room.members[rivalSeat]!;
   const remaining = Math.max(0, Math.min(TURN_SECONDS, Math.ceil(((room.deadline ?? now) - now - clockOffset.current) / 1000)));
   const myTurn = room.status === 'active' && room.activeSeat === room.seat;
+  useTurnClockCues(remaining, myTurn, room.deadline, room.status === 'active' && connected);
+  const clockDanger = myTurn && connected && room.status === 'active' && remaining > 0 && remaining <= 10;
   const interactive = myTurn && connected && !busy && !arrival && remaining > 0;
   useEffect(() => { if (!myTurn || (selected && !room.hand.some(c => c.instanceId === selected))) {
     setSelected(null); setLane(null); setSquabble(false);
@@ -204,6 +207,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const resultCopy = onlineResultCopy(room);
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
+    {clockDanger && <div className="pvp-clock-glow" aria-hidden="true" data-testid="pvp-clock-glow" />}
     {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? leaveResults(onLeave) : openExit()}>Leave battle</button>}
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
