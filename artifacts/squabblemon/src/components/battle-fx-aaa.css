@@ -52,4 +52,4 @@
 .battle-arena[data-reduced-motion='true'] .battle-choreography::before { display: none; }
 .battle-arena[data-reduced-motion='true'][data-impact-strength] .battlefield-grid { animation: none !important; }
 .battle-choreography.is-replay :is(.attack-beam-glow, .attack-beam-core, .attack-comet) { display: none; }
-.battle-arena:has(.battle-choreography.is-replay) .battlefield-grid { animation: none !important; }
+.battle-arena[data-replaying] .battlefield-grid { animation: none !important; }

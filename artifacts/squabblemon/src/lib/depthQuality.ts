@@ -63,6 +63,9 @@ export function startDepthSystem() {
 let gyroOn = false;
 let gyroFrame = 0;
 let pending: { x: number; y: number } | null = null;
+let lastGyro = { x: '', y: '' };
+/** Latest quantized device angle for canvas consumers (not written to <html>). */
+export const currentGyro = () => ({ x: parseFloat(lastGyro.x) || 0, y: parseFloat(lastGyro.y) || 0 });
 const orient = (event: DeviceOrientationEvent) => {
   if (event.beta == null || event.gamma == null) return;
   // Relative to a comfortable ~40° reading angle; clamp to ±1.
@@ -73,9 +76,17 @@ const orient = (event: DeviceOrientationEvent) => {
     gyroFrame = 0;
     if (!pending) return;
     const root = document.documentElement;
-    root.style.setProperty('--gyro-x', pending.x.toFixed(3));
-    root.style.setProperty('--gyro-y', pending.y.toFixed(3));
+    // Quantize and scope: writing custom properties on <html> restyles the entire
+    // document every frame (very costly on iPad). Only live, featured cards follow
+    // the device angle; background cards keep their resting finish.
+    const x = pending.x.toFixed(2), y = pending.y.toFixed(2);
     root.dataset.gyro = 'on';
+    if (x === lastGyro.x && y === lastGyro.y) return;
+    lastGyro = { x, y };
+    document.querySelectorAll<HTMLElement>('.collector-card[data-live-finish]').forEach(card => {
+      card.style.setProperty('--gyro-x', x);
+      card.style.setProperty('--gyro-y', y);
+    });
   });
 };
 

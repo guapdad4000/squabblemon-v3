@@ -44,6 +44,8 @@ const browser = spawn(chromium, [
 const pending = new Map();
 let nextId = 1;
 let socket;
+const traceEvents = [];
+let traceDone;
 
 async function connect() {
   for (let attempt = 0; attempt < 50; attempt += 1) {
@@ -58,6 +60,8 @@ async function connect() {
         });
         socket.addEventListener('message', ({ data }) => {
           const message = JSON.parse(data);
+          if (message.method === 'Tracing.dataCollected') traceEvents.push(...message.params.value);
+          if (message.method === 'Tracing.tracingComplete') traceDone?.();
           if (!message.id) return;
           const handler = pending.get(message.id);
           if (!handler) return;
@@ -161,6 +165,9 @@ try {
 
   const results = {};
   for (const mode of ['standard', 'reduced']) {
+    if (process.env.BATTLE_PERF_TRACE && mode === 'standard') {
+      await command('Tracing.start', { categories: process.env.BATTLE_PERF_TRACE_CATEGORIES || 'devtools.timeline,disabled-by-default-devtools.timeline', transferMode: 'ReportEvents' });
+    }
     if (process.env.BATTLE_PERF_PROFILE && mode === 'standard') {
       await command('Profiler.enable');
       await command('Profiler.start');
@@ -175,6 +182,12 @@ try {
       const { profile } = await command('Profiler.stop');
       await writeFile(process.env.BATTLE_PERF_PROFILE, JSON.stringify(profile));
     }
+    if (process.env.BATTLE_PERF_TRACE && mode === 'standard') {
+      const done = new Promise(resolve => { traceDone = resolve; });
+      await command('Tracing.end');
+      await done;
+      await writeFile(process.env.BATTLE_PERF_TRACE, JSON.stringify(traceEvents));
+    }
     console.log(`${mode}: ${JSON.stringify(results[mode])}`);
   }
   if (process.env.BATTLE_PERF_REPORT) await writeFile(process.env.BATTLE_PERF_REPORT, JSON.stringify(results, null, 2));
@@ -185,7 +198,9 @@ try {
     assert.equal(metrics.occupiedDistricts, 3, `${mode}: all three districts must be occupied`);
     assert.equal(metrics.boardCards, 12, `${mode}: six rounds must leave twelve cards on the board`);
     if (!process.env.BATTLE_PERF_FORCE_CSS) {
-      assert.ok(mode === 'standard' ? metrics.foilCards > 0 : metrics.foilCards === 0, `${mode}: battle cards must use the expected GPU or CSS finish`);
+      // Effect priority: background board cards keep the baked CSS finish; only featured
+      // cards (selected, inspected, special-move sources) may run the live GPU foil.
+      assert.ok(mode === 'standard' ? metrics.foilCards <= 2 : metrics.foilCards === 0, `${mode}: background battle cards must use the baked CSS finish`);
     }
     assert.ok(metrics.minimumBoardCardWidth > 0 && metrics.minimumBoardCardHeight > 0, `${mode}: board cards must be rendered at a visible size`);
     assert.ok(metrics.sampledFrames >= 20, `${mode}: too few animation frames were sampled`);

@@ -181,6 +181,7 @@ function CardViewComponent({
       data-card-power={displayPower}
       data-battle-draggable={dragEnabled && !presentationOnly ? true : undefined}
       data-card-zone={isBoard ? 'board' : 'hand'}
+      data-live-finish={isInspector || queued || squabble ? true : undefined}
       data-card-variant={variantKind ?? 'base'}
       data-card-rarity={rarity}
       data-card-kind={card.kind ?? 'character'}
@@ -335,7 +336,7 @@ function CardViewComponent({
           <span className="collector-foil-pattern" aria-hidden="true" />
           <span className="collector-foil-grain" aria-hidden="true" />
           <span className="collector-glare" aria-hidden="true" />
-          <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} />
+          <CardFoil tier={CARD_RARITY_DEFINITIONS[rarity].order + 1} variant={variantKind} live={Boolean(isInspector || queued || squabble)} />
         </div>
       </div>
     </MotionElement>{inspection.dialog}</>

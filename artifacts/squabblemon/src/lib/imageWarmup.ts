@@ -7,8 +7,13 @@ const CONCURRENCY = 3;
 const HISTORY_LIMIT = 96;
 const QUEUE_LIMIT = 64;
 
+let battleActive = 0;
+/** Background art warmup yields to an active battle; battle-critical art is warmed before it starts. */
+export function setBattleActive(active: boolean) { battleActive = Math.max(0, battleActive + (active ? 1 : -1)); if (!battleActive) drain(); }
+export const isBattleActive = () => battleActive > 0;
+
 function drain() {
-  while (active < CONCURRENCY && pending.length) {
+  while (active < (battleActive ? 1 : CONCURRENCY) && pending.length) {
     const job = pending.shift()!;
     active++;
     const image = new Image();

@@ -82,3 +82,29 @@ for low / medium / high respectively (at 390 CSS px). That is approximately
 full-scene extra render passes below high. These are buffer/pipeline measures,
 not physical-device frame-time claims. Keep the separate battle performance
 budget above unchanged.
+
+## Effect priority (iPad smoothness)
+
+Every card keeps its full CSS finish (foil sheen, shine, rarity frame, depth tilt).
+The live WebGL foil and gyroscope tilt run only on featured cards — the inspector,
+the selected hand card and an armed squabble — and unmount when offscreen. Device
+angle is written only to those cards (never to `<html>`, which restyled the whole
+document every frame). `startFrameGuard` in `src/lib/gpuQuality.ts` samples frames
+while live effects run and drops one quality tier only when ≥25% of frames exceed
+34 ms; iPads are detected as capable hardware and start at high quality.
+
+Battle rendering rules: no ancestor `:has()` selectors on the arena (use explicit
+`data-*` state from `Battle.tsx`; each descendant mutation otherwise restyled ~1,400
+elements); presentation frames reuse unchanged card objects (`shareEqual`) so memoized
+cards skip re-rendering; hand cards receive stable handlers.
+
+The service worker (`sq-v2`) caches only images and fonts, on use, capped at 240
+entries; video and audio stream from the network. Art warmup runs one request at a
+time while a battle is mounted.
+
+Measured on this runner (4× CPU, standard motion), before → after this pass:
+long-task time ~30 s → ~19–21 s, p95 frame 217–267 ms → 133 ms, style recalculation
+16.6 s → 9.7 s, live foil canvases on the final board 0 (was every visible card).
+The pre-existing budget (18 long tasks) was already exceeded ~10× by the baseline on
+this runner and is still not met; remaining cost is forced layout from framer-motion
+projection and attack geometry measurement, plus special-move chroma drawing.

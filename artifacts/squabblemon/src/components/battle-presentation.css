@@ -194,10 +194,10 @@
 .battle-arena .battle-board-card .card-stat-pair > div { min-width: 22px; padding: 3px 5px; }
 .battle-arena .battle-board-card .card-stat-pair { gap: 0; }
 .battle-choreography:not(.intensity-squabble) .attack-caption { top: 62px; left: 12px; right: auto; transform: none; height: 50px; width: min(320px,calc(100% - 130px)); }
-.battle-arena:has(.attack-caption) .battle-guidance-message { visibility: hidden; }
-.battle-arena:has(.attack-caption) .battle-guidance { min-height: 56px; }
+.battle-arena[data-attack-caption] .battle-guidance-message { visibility: hidden; }
+.battle-arena[data-attack-caption] .battle-guidance { min-height: 56px; }
 @media (max-width:600px) { .battle-choreography:not(.intensity-squabble) .attack-caption { top: 61px; } }
-@media (max-height:580px) { .battle-choreography:not(.intensity-squabble) .attack-caption { top: 48px; height: 36px; } .battle-arena:has(.attack-caption) .battle-guidance { min-height: 40px; } }
+@media (max-height:580px) { .battle-choreography:not(.intensity-squabble) .attack-caption { top: 48px; height: 36px; } .battle-arena[data-attack-caption] .battle-guidance { min-height: 40px; } }
 .battle-arena .battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2']) { --columns: 3; --rows: var(--desktop-rows,2); }
 @media (max-width:600px) { .battle-arena .battle-card-stack:not([data-count='0'],[data-count='1'],[data-count='2']) { --columns: 2; --rows: var(--mobile-rows,3); } }
 .battle-arena .battle-board-card .card-stat-pair > div { min-width: 14px; padding: 2px 3px; }

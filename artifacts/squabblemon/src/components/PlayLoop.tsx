@@ -1,3 +1,4 @@
+import { shareEqual } from '../lib/structuralShare';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useStartPlayerMatch, useCompletePlayerMatch, checkpointChallengeRun as saveChallengeCheckpoint, getGetPlayerBootstrapQueryKey, getGetPlayerStoryQueryKey, MatchReward, type MatchMove, type StoryMatchMetadata } from '@workspace/api-client-react';
@@ -65,8 +66,9 @@ const getLessonStorage = () => {
 };
 /** Rebuild only participants from the authoritative before/after event snapshots. */
 /** Use the complete event snapshot: participant-only patches omit summons and lane-wide effects. */
-export const applyEventState = (_visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match =>
-  buildReplayFrame(authoritative, event, key);
+export const applyEventState = (visual: Match, authoritative: Match, event: EffectLogEntry, key: 'before' | 'after'): Match =>
+  // Reuse unchanged cards/boards from the previous frame so memoized card views skip re-rendering.
+  shareEqual(visual, buildReplayFrame(authoritative, event, key));
 
 /** Apply the engine-captured complete visual state for one historical step. */
 export const buildReplayFrame = (live: Match, selected: EffectLogEntry, key: 'before' | 'after'): Match => ({

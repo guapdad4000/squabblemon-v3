@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { currentDepthQuality, subscribeDepthQuality, type DepthQuality } from '../lib/depthQuality';
+import { currentDepthQuality, currentGyro, subscribeDepthQuality, type DepthQuality } from '../lib/depthQuality';
 
 /** Pointer/gyro parallax layers plus a lightweight 2D ember field for the lobby. */
 export function LobbyDepth() {
@@ -25,20 +25,22 @@ export function LobbyDepth() {
       surface.width = Math.round(root.clientWidth * scale);
       surface.height = Math.round(root.clientHeight * scale);
     };
-    let px = 0, py = 0;
+    let px = 0, py = 0, lastPx = '', lastPy = '';
     const frame = (now: number) => {
       raf = 0;
       if (!context || quality === 'off' || document.hidden) return;
       const budget = quality === 'full' ? 16 : 40;
       if (now - last >= budget) {
         const dt = Math.min(0.1, (now - last) / 1000); last = now;
-        const style = document.documentElement.style;
-        const gx = parseFloat(style.getPropertyValue('--gyro-x')) || 0;
-        const gy = parseFloat(style.getPropertyValue('--gyro-y')) || 0;
+        const { x: gx, y: gy } = currentGyro();
         const tx = document.documentElement.dataset.gyro === 'on' ? gx : px;
         const ty = document.documentElement.dataset.gyro === 'on' ? gy : py;
-        root.style.setProperty('--px', tx.toFixed(3));
-        root.style.setProperty('--py', ty.toFixed(3));
+        const nextPx = tx.toFixed(3), nextPy = ty.toFixed(3);
+        if (nextPx !== lastPx || nextPy !== lastPy) {
+          lastPx = nextPx; lastPy = nextPy;
+          root.style.setProperty('--px', nextPx);
+          root.style.setProperty('--py', nextPy);
+        }
         const { width, height } = surface;
         context.clearRect(0, 0, width, height);
         for (const mote of motes) {

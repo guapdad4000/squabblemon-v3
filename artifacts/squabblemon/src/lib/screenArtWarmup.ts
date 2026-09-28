@@ -1,5 +1,5 @@
 import { getAssetUrl } from './assets';
-import { warmImages } from './imageWarmup';
+import { isBattleActive, warmImages } from './imageWarmup';
 import collectionSunset from '../assets/collection-sunset-standoff.webp';
 
 /** Signature art for the main screens, fetched at low priority once the game is idle. */
@@ -20,7 +20,7 @@ const SCREEN_ART = [
 export function warmScreenArt() {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? '')) return;
-  const start = () => void warmImages([collectionSunset, ...SCREEN_ART.map(path => getAssetUrl(path))]);
+  const start = () => isBattleActive() ? undefined : void warmImages([collectionSunset, ...SCREEN_ART.map(path => getAssetUrl(path))]);
   if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(start, { timeout: 4000 });
   else setTimeout(start, 1500);
 }

@@ -6,7 +6,7 @@ export const GPU_TIERS = Object.freeze({
   medium: Object.freeze({tier:'medium',pixelRatio:1.4,shadows:true,outlines:false,particleDensity:.5,fps:30}),
   high: Object.freeze({tier:'high',pixelRatio:2,shadows:true,outlines:true,particleDensity:1,fps:60}),
 });
-const key='squabblemon-gpu-tier-v1';
+const key='squabblemon-gpu-tier-v2';
 const valid=value=>value==='low'||value==='medium'||value==='high';
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches ||
   document.documentElement.dataset.reduceMotion==='true' ||
@@ -36,6 +36,10 @@ export async function detectGPUQuality() {
   if (nav.deviceMemory !== undefined) score+=nav.deviceMemory<=2?-2:nav.deviceMemory>=8?1:0;
   if (nav.hardwareConcurrency !== undefined) score+=nav.hardwareConcurrency<=4?-1:nav.hardwareConcurrency>=8?1:0;
   if (nav.connection?.saveData) score-=2;
+  // iPadOS Safari reports as MacIntel and hides deviceMemory; it starts at high
+  // quality and relies on the runtime frame guard to step down if frames drop.
+  const iPad=/iPad/.test(nav.userAgent) || (nav.platform==='MacIntel' && nav.maxTouchPoints>1);
+  if (iPad) score+=2;
   // A short main-thread probe, bounded to 12 ms, measures JS throughput without
   // taking a WebGL context away from a scene on context-limited phones.
   const start=performance.now();let samples=0,acc=1;
@@ -54,6 +58,16 @@ export async function detectGPUQuality() {
   } catch { cached='static'; return GPU_TIERS.static; }
   finally { gl?.getExtension('WEBGL_lose_context')?.loseContext(); }
   cached=score<=-1?'low':score>=3?'high':'medium';
+  try { sessionStorage.setItem(key,cached); } catch {}
+  return gpuQuality(cached);
+}
+
+// Runtime step-down: called only after measured frame drops while live effects run.
+export function downgradeGPUQuality() {
+  if (forcedGPUTier()) return null;
+  const next = cached==='high' ? 'medium' : cached==='medium' ? 'low' : null;
+  if (!next) return null;
+  cached=next;
   try { sessionStorage.setItem(key,cached); } catch {}
   return gpuQuality(cached);
 }

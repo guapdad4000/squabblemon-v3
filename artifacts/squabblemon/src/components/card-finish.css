@@ -237,3 +237,9 @@ html[data-reduce-motion='true'] .card-touch-hint {display:none}
 .collector-card.card-variant-prismatic .collector-engraving { border:0; box-shadow:none; }
 .collector-card.card-variant-prismatic .collector-art-rim { border-color:#ffe49c66; box-shadow:none; }
 .collector-card.card-variant-prismatic .collector-edition-seal { color:#ffebb1; }
+
+/* Performance: each card lays out and restyles independently, so forced reflows
+   from layout animations and choreography measurement stay card-local. Layout/style
+   containment does not clip overflowing glows, bursts or tilt. */
+.collector-card { contain: layout style; }
+.battle-card-stack, .battle-hand-row { contain: layout style; }

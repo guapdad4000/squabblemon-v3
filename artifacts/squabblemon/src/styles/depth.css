@@ -21,7 +21,7 @@ html[data-depth] .collector-card[data-tilting='true'] .collector-frame {
 html[data-depth] .collector-card[data-tilting='true'] .collector-glare { opacity: calc(.35 + var(--tilt-scale) * .45); }
 
 /* Phone gyroscope: resting tactile cards follow the device angle. */
-html[data-depth='full'][data-gyro='on'] .collector-card--tactile:not([data-tilting='true']) .collector-frame {
+html[data-depth='full'][data-gyro='on'] .collector-card--tactile[data-live-finish]:not([data-tilting='true']) .collector-frame {
   transform: perspective(700px)
     rotateX(calc(var(--gyro-y) * -7deg * var(--tilt-scale)))
     rotateY(calc(var(--gyro-x) * 9deg * var(--tilt-scale)));
@@ -29,7 +29,7 @@ html[data-depth='full'][data-gyro='on'] .collector-card--tactile:not([data-tilti
   transition: transform .12s linear;
   animation: none;
 }
-html[data-depth='full'][data-gyro='on'] .collector-card--tactile:not([data-tilting='true']) .collector-glare {
+html[data-depth='full'][data-gyro='on'] .collector-card--tactile[data-live-finish]:not([data-tilting='true']) .collector-glare {
   opacity: calc(.2 + var(--tilt-scale) * .35);
   background-position: calc(50% + var(--gyro-x) * 50%) calc(50% + var(--gyro-y) * 50%);
 }

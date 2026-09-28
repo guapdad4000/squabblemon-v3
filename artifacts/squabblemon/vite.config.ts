@@ -108,7 +108,8 @@ export default defineConfig({
     },
     bundleBudgetReport(),
     react(),
-    tailwindcss({ optimize: false }),
+    // Minify/optimize CSS for production builds only; dev keeps fast rebuilds.
+    tailwindcss({ optimize: process.env.NODE_ENV === 'production' }),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
@@ -125,17 +126,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@workspace/squabblemon-engine/multiplayer': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/multiplayer.ts'),
-      '@workspace/squabblemon-engine/activities': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/activities.ts'),
-      '@workspace/squabblemon-engine/career': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/career.ts'),
-      '@workspace/squabblemon-engine/insights': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/insights.ts'),
-      '@workspace/squabblemon-engine/story': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/story.ts'),
-      '@workspace/squabblemon-engine/economy': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/economy.ts'),
-      '@workspace/squabblemon-engine/cardProgression': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/cardProgression.ts'),
-      '@workspace/squabblemon-engine/abilityUpgrades': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/abilityUpgrades.ts'),
       '@workspace/api-client-react': path.resolve(import.meta.dirname, '../../lib/api-client-react/src/index.ts'),
-      '@workspace/squabblemon-engine/data': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/data.ts'),
-      '@workspace/squabblemon-engine/gameEngine': path.resolve(import.meta.dirname, '../../lib/squabblemon-engine/src/gameEngine.ts'),
       '@': path.resolve(import.meta.dirname, 'src'),
       '@assets': path.resolve(
         import.meta.dirname,
@@ -153,6 +144,17 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, process.env.VITE_BATTLE_PERF === '1' ? 'dist/performance' : 'dist/public'),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // Engine modules resolve to one module ID each (package exports -> src),
+        // so Rollup already ships a single copy split by route. Only stable
+        // vendor code gets long-lived chunks.
+        manualChunks(id) {
+          if (/node_modules\/(?:\.pnpm\/)?(?:react|react-dom|scheduler)[@/]/.test(id)) return 'react';
+          if (id.includes('node_modules') && /framer-motion|motion-dom|motion-utils/.test(id)) return 'motion';
+        },
+      },
+    },
   },
   server: {
     port,

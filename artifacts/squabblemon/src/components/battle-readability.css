@@ -28,7 +28,7 @@
 .ability-chain-banner>span { font:700 8px/1 var(--font-mono);letter-spacing:.1em;color:#c4b5fd; }
 .ability-chain-banner strong { font:700 12px/1.15 var(--font-sans);color:white; }
 .ability-chain-banner>div { display:flex;gap:3px; }.ability-chain-banner i { width:16px;height:2px;background:#ffffff30; }.ability-chain-banner i.is-fired { background:#c4b5fd;box-shadow:0 0 6px #a78bfa; }
-.battle-arena:has(.ability-chain-banner) .battle-guidance-message { visibility:hidden; }.battle-arena:has(.ability-chain-banner) .battle-guidance { min-height:56px; }
+.battle-arena[data-chain-banner] .battle-guidance-message { visibility:hidden; }.battle-arena[data-chain-banner] .battle-guidance { min-height:56px; }
 .chain-link { stroke:#c4b5fd;stroke-width:3;fill:none;stroke-dasharray:.07 .04;animation:chain-pass 450ms ease-out both;filter:drop-shadow(0 0 6px #a78bfa); }
 .status-release { position:absolute;translate:-50% -50%;color:#a5f3fc; }.status-release.is-shattering { color:#fde68a; }.status-release.is-restoring { color:#a7f3d0; }
 .status-release i { position:absolute;left:50%;top:50%;width:9px;height:18px;background:currentColor;clip-path:polygon(20% 0,100% 35%,70% 100%,0 65%);animation:status-shard 600ms ease-out both;filter:drop-shadow(0 0 4px currentColor); }
