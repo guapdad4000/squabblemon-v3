@@ -304,6 +304,7 @@
 .battle-hud .wild-investment select { min-height: 44px; max-width: 150px; background: #211b30; color: white; border: 1px solid #bba0eb88; border-radius: 5px; padding: 0 8px; font: inherit; }
 .battle-hud .wild-investment select:focus-visible { outline: 2px solid #e4ccff; outline-offset: 2px; }
 .battle-hud .character-district-mark { display: block; color: #f0d6ff; font: 600 9px/1.2 sans-serif; white-space: normal; padding: 2px 3px; background: #21102bc9; border-radius: 3px; }
+.battle-hud .character-district-mark img { display: inline-block; width: 22px; height: 22px; object-fit: contain; vertical-align: middle; margin-right: 4px; }
 
 /* PvP turn clock: subtle red edge glow in the final ten seconds of your turn. */
 .pvp-clock-glow {

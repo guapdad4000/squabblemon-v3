@@ -620,7 +620,7 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   return parts.join(" · ");
 }
 const dmvTax = (m: Match, owner: Owner, lane: Lane) => (m.districtTraps ?? []).some(t => t.kind === "dmv" && t.owner !== owner && t.lane === lane && t.expiresAfterRound >= m.round);
-export type CharacterDistrictMark = { owner: Owner; lane: Lane; text: string };
+export type CharacterDistrictMark = { owner: Owner; lane: Lane; text: string; artworkId?: string };
 export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[] {
   const janitorMarks = ([0, 1, 2] as Lane[]).flatMap(targetLane =>
     (['player', 'cpu'] as Owner[]).flatMap(owner => {

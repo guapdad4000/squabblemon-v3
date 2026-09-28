@@ -246,7 +246,7 @@ function CardViewComponent({
           {card.id === 'dr-fade' && (!isBoard || fillContainer || isInspector)
             ? <DrFadeArt className={'collector-portrait ' + (isSilenced ? 'grayscale' : '')} animated={!isSilenced && !isFrozen} />
             : <img
-                src={isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : getCardImage(card.id, variantId)}
+                src={isBurntPlate ? getCardImage('burnt-plate') : isBuddyBud ? getCardImage('buddy') : buddyRockForm ? getBuddySquabbleImage() : getCardImage(card.id, variantId)}
                 alt=""
                  draggable={false}
                 className={`collector-portrait absolute inset-x-0 bottom-[10%] w-full h-[85%] object-contain object-bottom transition-transform duration-500 z-10 ${isSilenced ? 'grayscale' : ''} ${!isInspector && card.kind !== 'blockbuster' && 'group-hover/inner:scale-[1.03]'} ${isInspector ? 'collector-portrait--inspector' : ''}`}
