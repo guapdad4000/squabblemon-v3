@@ -37,3 +37,6 @@ html .park-result.park-result--illustrated .park-result-score b { color: #111; }
 .park-result-splashes i::after { --drift: 9px; height: 5px; }
 @keyframes park-splash { 0%,65%,100% { opacity: 0; transform: translate(0,0) scale(.4); } 68% { opacity: .9; transform: translate(0,0) scale(1); } 78% { opacity: .7; transform: translate(var(--drift),-12px) rotate(35deg) scale(.8); } 90% { opacity: 0; transform: translate(var(--drift),2px) rotate(65deg) scale(.3); } }
 @media (prefers-reduced-motion: reduce) { .park-result-splashes { display: none; } }
+/* Force dark readable text on the cream receipt (win + loss). */
+html body .park-result.park-result--illustrated .park-result-receipt :is(p, span, small, b, i, h3, strong, .park-award-label) { color: #1d1a16 !important; -webkit-text-fill-color: #1d1a16 !important; text-shadow: none !important; }
+html body .park-result.park-result--illustrated .park-result-receipt .park-award-label { color: #8a1f17 !important; -webkit-text-fill-color: #8a1f17 !important; }
