@@ -148,7 +148,7 @@ html[data-view-transition="true"] :is(.sq-route-transition, .sq-route-transition
 /* Game-wide chalkboard surface for basic panels. Applies only where a panel still uses the
    default surface (custom paper/art panels keep their own look). */
 :root { --sq-chalkboard: url('/assets/ui/chalkboard.webp'); }
-html :is(.glass-panel, .panel-section, .corner-store__counter, .sq-card-lift.bg-card, [role=dialog].bg-background) {
+html :is(.glass-panel, .panel-section:not([class*=-paper]), .corner-store__counter, .sq-card-lift.bg-card, [role=dialog].bg-background) {
   background-color: #1d4630;
   background-image: linear-gradient(#0000, #0000002e), var(--sq-chalkboard);
   background-size: cover;
@@ -156,8 +156,11 @@ html :is(.glass-panel, .panel-section, .corner-store__counter, .sq-card-lift.bg-
 }
 html .corner-store__counter { padding: 14px; border-radius: 3px 18px 3px 3px; border: 1px solid #c6ad654a; }
 /* Chalk-light text on chalkboard panels; buttons and fields keep their own colors. */
-html :is(.glass-panel, .panel-section, .corner-store__counter, .sq-card-lift.bg-card, [role=dialog].bg-background) { color: #f4eedb; }
-html :is(.glass-panel, .panel-section, .sq-card-lift.bg-card, [role=dialog].bg-background) :is(h1, h2, h3, h4, h5, h6, p, label, small, strong, legend, span, div):not(:is(button, a, input, select, textarea, [role=switch], [role=checkbox]) *):not(:is(button, a, input, select, textarea)) { color: #f4eedb !important; text-shadow: 0 1px 1px #0008; }
-html :is(.glass-panel, .panel-section, .sq-card-lift.bg-card, [role=dialog].bg-background) :is(small, label + p, p + p, legend) { color: #d9e4cf !important; }
-html .panel-section :is(.bg-white\/50, .bg-white\/70, .bg-white) { background-color: #0d241a8c; border-color: #f4eedb33; }
-html .panel-section :is(.bg-white\/50, .bg-white\/70):hover { background-color: #0d241ab8; }
+html :is(.glass-panel, .panel-section:not([class*=-paper]), .corner-store__counter, .sq-card-lift.bg-card, [role=dialog].bg-background) { color: #f4eedb; }
+html :is(.glass-panel, .panel-section:not([class*=-paper]), .sq-card-lift.bg-card, [role=dialog].bg-background) :is(h1, h2, h3, h4, h5, h6, p, label, small, strong, legend, span, div):not(:is(button, a, input, select, textarea, [role=switch], [role=checkbox]) *):not(:is(button, a, input, select, textarea)) { color: #f4eedb !important; text-shadow: 0 1px 1px #0008; }
+html :is(.glass-panel, .panel-section:not([class*=-paper]), .sq-card-lift.bg-card, [role=dialog].bg-background) :is(small, label + p, p + p, legend) { color: #d9e4cf !important; }
+html .panel-section:not([class*=-paper]) :is(.bg-white\/50, .bg-white\/70, .bg-white) { background-color: #0d241a8c; border-color: #f4eedb33; }
+html .panel-section:not([class*=-paper]) :is(.bg-white\/50, .bg-white\/70):hover { background-color: #0d241ab8; }
+html .panel-section:not([class*=-paper]) .profile-style-details > div { background: #0d241a8c; border-top-color: #e9d9a8; }
+html .panel-section:not([class*=-paper]) .profile-style-details dt { color: #e9d9a8 !important; }
+html .panel-section:not([class*=-paper]) .profile-style-details dd { color: #f4eedb !important; }
