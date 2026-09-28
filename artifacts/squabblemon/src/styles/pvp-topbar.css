@@ -70,33 +70,6 @@
   .pvp-topbar__center { min-width: 62px; }
 }
 
-/* Reaction speech bubbles: solid white comic bubbles under each player's plate. */
-html .battle-arena .pvp-reaction-bubble, html .pvp-reaction-bubble { width: 132px; padding: 10px 8px 8px; }
-html .pvp-reaction-bubble .pvp-reaction-cloud {
-  inset: 0; top: 0; left: 0; right: 0; height: auto;
-  background: #fff; border: 3px solid #111; border-radius: 22px; backdrop-filter: none;
-  box-shadow: 4px 5px 0 #000b, 0 0 0 1px #fff inset;
-}
-html .pvp-reaction-bubble .pvp-reaction-cloud::after {
-  top: -14px; bottom: auto; left: 22px; width: 20px; height: 16px; border-radius: 0;
-  background: #fff; clip-path: polygon(0 100%, 30% 0, 100% 100%); box-shadow: none;
-  filter: drop-shadow(0 -3px 0 #111);
-}
-html .pvp-reaction-bubble--rival .pvp-reaction-cloud::after { left: auto; right: 22px; clip-path: polygon(0 100%, 70% 0, 100% 100%); }
-html .pvp-reaction-bubble::before { display: none; }
-html .pvp-reaction-bubble img { width: 104px; height: 92px; filter: none; }
-html .pvp-reaction-bubble small { max-width: 100%; margin-top: 2px; color: #151515; text-shadow: none; font-size: 14px; white-space: normal; overflow-wrap: anywhere; text-align: center; transform: rotate(-2deg); }
-html .pvp-reaction-bubble--you { top: var(--pvp-bubble-top, 118px); bottom: auto; left: 12px; right: auto; }
-html .pvp-reaction-bubble--rival { top: var(--pvp-bubble-top, 118px); bottom: auto; right: 12px; left: auto; }
-html .pvp-reaction-controls { top: auto; bottom: calc(190px + env(safe-area-inset-bottom, 0px)); right: 12px; }
-@media (max-width: 600px) {
-  html .pvp-reaction-bubble { width: 110px; }
-  html .pvp-reaction-bubble img { width: 86px; height: 76px; }
-  html .pvp-reaction-bubble small { font-size: 12px; }
-  html .pvp-reaction-bubble--you, html .pvp-reaction-bubble--rival { top: var(--pvp-bubble-top, 112px); }
-  html .pvp-reaction-controls { top: auto; bottom: calc(176px + env(safe-area-inset-bottom, 0px)); right: 10px; }
-}
-
 /* Leave sits at the right end of the slim tools row instead of over the rival plate. */
 .pvp-exit-control { top: calc(var(--pvp-bar-bottom, 110px) - 42px); min-height: 36px; padding: 6px 10px; font-size: 12px; }
 .battle-arena.battle-hud .battle-header.pvp-topbar > .battle-match-meta { padding-right: 112px; min-height: 36px; }

@@ -1,0 +1,13 @@
+/* PvP result card legibility: solid ink on paper, solid title plate, no washed-out greys. */
+html .park-result.park-result--illustrated .park-result-sign { background: #151515; border: 3px solid #111; box-shadow: 4px 5px 0 #0008; }
+html .park-result.park-result--illustrated .park-result-sign > span { color: #ffd66b; opacity: 1; letter-spacing: .16em; }
+html .park-result.park-result--illustrated .park-result-sign h2 { color: #fff; text-shadow: 3px 3px 0 #c8342a; opacity: 1; }
+html .park-result.park-result--illustrated.outcome-win .park-result-sign h2 { text-shadow: 3px 3px 0 #1f8a4c; }
+html .park-result.park-result--illustrated .park-result-sign p { color: #f2ead7; opacity: 1; }
+html .park-result.park-result--illustrated .park-result-receipt { background: #fbf6ea; color: #1b1b1b; }
+html .park-result.park-result--illustrated .park-result-receipt :is(p, small, span, #park-result-description) { color: #2c2a25; opacity: 1; text-shadow: none; }
+html .park-result.park-result--illustrated .park-result-score b { color: #111; }
+html .park-result.park-result--illustrated .park-result-award h3 { color: #111; opacity: 1; text-shadow: none; }
+html .park-result.park-result--illustrated .park-award-label { color: #8a1f17; }
+html .park-result.park-result--illustrated .park-rp-change strong { color: #111; }
+html .park-result.park-result--illustrated .park-result-receipt .park-result-board-note { color: #3a2d12; }

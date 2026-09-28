@@ -57,3 +57,5 @@
 }
 @media (prefers-reduced-motion:reduce) { .world-decor__primary { animation:none; } }
 html[data-reduce-motion='true'] .world-decor__primary { animation:none; }
+/* Battle props sat over the board on every viewport; the battlefield stays clean. */
+.world-decor[data-decor='battle'] { display: none; }

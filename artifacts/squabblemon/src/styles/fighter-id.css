@@ -1194,3 +1194,11 @@ html[data-reduce-motion="true"] .fighter-id-stage * {
   animation: none !important;
   transition: none !important;
 }
+
+/* PvP trophy stamp on the player file */
+.id-card__stats { flex-wrap: wrap; row-gap: 10px; }
+.id-card__trophy { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.id-card__trophy .rank-trophy { flex: none; width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(2px 3px 0 #0003); }
+.id-card__trophy > span { display: flex; flex-direction: column; min-width: 0; }
+.id-card__trophy small { color: #5a4a36; font: 800 10px/1.2 var(--font-mono, monospace); letter-spacing: .08em; }
+@media (max-width: 600px) { .id-card__trophy .rank-trophy { width: 38px; height: 38px; } }

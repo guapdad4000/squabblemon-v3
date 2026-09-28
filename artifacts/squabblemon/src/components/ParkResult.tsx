@@ -6,6 +6,7 @@ import { AnimatedNumber } from './AnimatedNumber';
 import { RankTrophy, RPToken } from './RankArtwork';
 import { DialogClose, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
 import { setBattleMusicMode } from '../musicStore';
+import '../styles/park-result-legible.css';
 export function ParkResult({ outcome, ranked, rank, description, title, subtitle, boardNote, claimed, rivalClaimed, reducedMotion = false, children }: {
   outcome: 'win' | 'loss' | 'draw'; ranked: boolean; rank?: RankedResult; description: string;
   title?: string; subtitle?: string; boardNote?: string;

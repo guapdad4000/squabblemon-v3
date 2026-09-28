@@ -570,7 +570,8 @@ export function Battle({
       </>}
       <div className="battle-match-meta">
         {online?.playerIdentity && !online.rivalIdentity && <div className="pvp-player-identity"><div className="pvp-avatar pvp-avatar--you" data-testid="pvp-player-avatar"><FighterPortrait cardId={online.playerIdentity.hero} avatarKey={online.playerIdentity.avatarKey} name={online.playerIdentity.name} /></div><span title={online.playerIdentity.name}><small>Your corner {online.playerIdentity.level !== undefined && <b className="pvp-level">Lv. {online.playerIdentity.level}</b>}</small>{online.playerIdentity.name}</span></div>}
-        <MusicControls compact />
+        <MusicControls compact logo={!!online} />
+        {online && <span className="pvp-reaction-slot" />}
         <details className="battle-tools" onToggle={event => { if (!event.currentTarget.open) { setShowHistory(false); setShowStatuses(false); setShowModifiers(false); } }} onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}><summary aria-label="Battle menu" title="Battle menu"><MoreHorizontal size={22} aria-hidden="true" /></summary><div className="battle-tools__panel referee-clipboard"><DrFadeReferee />
         {passive && (
           <div className="hidden lg:block border border-purple-500/50 bg-purple-500/10 px-2 py-1 text-right max-w-xs">

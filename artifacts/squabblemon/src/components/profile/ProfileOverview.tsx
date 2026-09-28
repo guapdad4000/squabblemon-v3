@@ -7,6 +7,10 @@ import { catalogCardByEngineId } from '@workspace/squabblemon-engine/data';
 import { ACCOUNT_XP_PER_LEVEL } from '@workspace/squabblemon-engine/economy';
 import { catalogPortrait, FighterPortrait, profilePortrait } from './FighterPortrait';
 import { IdentityEditor } from './IdentityEditor';
+import { useQuery } from '@tanstack/react-query';
+import { rankedStats, rankProgress } from '@workspace/squabblemon-engine/multiplayer';
+import { getRankedLobby } from '../../lib/multiplayer';
+import { RankTrophy } from '../RankArtwork';
 
 const eventBadges: Record<string, string> = {
   'badge:after-hours': 'After-hours champion',
@@ -24,6 +28,9 @@ export function ProfileOverview({ bootstrap, onBusyChange }: { bootstrap: Player
     if (!editing && wasEditing.current) editButton.current?.focus();
     wasEditing.current = editing;
   }, [editing]);
+  const ranked = useQuery({ queryKey: ['fade-park', profile.id], queryFn: ({ signal }) => getRankedLobby(signal), staleTime: 30_000, retry: 1 });
+  const rankStats = ranked.data?.stats ?? rankedStats(null);
+  const rank = ranked.data?.progress ?? rankProgress(rankStats.points);
   const portrait = profilePortrait(profile);
   const ownedCount = new Set(profile.ownedCardIds.filter(id => !!catalogPortrait(id))).size;
   const career = readCareer(profile.storyProgress.gameplay);
@@ -51,6 +58,7 @@ export function ProfileOverview({ bootstrap, onBusyChange }: { bootstrap: Player
         <p className="id-card__character">{portrait.name}<small>{portrait.isFallback ? 'Default portrait' : portrait.isSticker ? 'Your signature · Profile + PvP' : 'Character portrait · Profile + PvP'}</small></p>
         <div className="id-card__stats">
           <div className="id-card__level"><span className="id-card__label">Account level</span><strong className="id-card__stat-val">Level {profile.level}</strong></div>
+          <div className="id-card__trophy" data-testid="profile-pvp-trophy"><RankTrophy tier={rank.tier} /><span><span className="id-card__label">PvP rank</span><strong className="id-card__stat-val">{ranked.isPending ? '…' : rank.tier}</strong><small>{ranked.isPending ? '' : `${rankStats.points.toLocaleString()} RP`}</small></span></div>
           <div><span className="id-card__label">Street Rep</span><strong className="id-card__stat-val">{profile.streetRep.toLocaleString()}</strong></div>
         </div>
         <button ref={editButton} className="street-sign-btn" onClick={() => { setMessage(''); setEditing(true); }}>Edit Identity</button>

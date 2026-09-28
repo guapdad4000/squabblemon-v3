@@ -9,7 +9,7 @@ import { setAnnouncerVolume, useAnnouncerVolume } from '../lib/battleAnnouncerVo
 import { MotionSticker } from './MotionSticker';
 import './music-controls.css';
 
-export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '' }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string }) {
+export function MusicControls({ compact = false, variant = 'default', className = '', wrapperClassName = '', logo = false }: { compact?: boolean; variant?: 'default' | 'dj'; className?: string; wrapperClassName?: string; logo?: boolean }) {
   const music = useMusic();
   const announcerVolume = useAnnouncerVolume();
   const banks = useMusicBanks();
@@ -28,11 +28,11 @@ export function MusicControls({ compact = false, variant = 'default', className 
   }
 
   const trigger = (
-    <button type="button" className={`music-trigger ${compact ? 'music-trigger--compact' : ''} ${variant === 'dj' ? 'music-trigger--dj' : ''} ${className}`}
+    <button type="button" className={`music-trigger ${compact ? 'music-trigger--compact' : ''} ${variant === 'dj' ? 'music-trigger--dj' : ''} ${logo ? 'music-trigger--logo' : ''} ${className}`}
       aria-label="Music controls" aria-haspopup="dialog" aria-expanded={open} aria-controls={id}
       title={`${audible ? 'Now playing' : 'Soundtrack'}: ${track.title}`}
       onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
-      <Music2 size={17} aria-hidden="true" /><span>Music</span><i className={audible ? 'is-playing' : ''} aria-hidden="true" />
+      {logo ? <img className="music-trigger__logo" src={getAssetUrl('assets/brand-motion/dr-fade-tapes-still.webp')} alt="" aria-hidden="true" width={34} height={34} decoding="async" draggable={false} /> : <Music2 size={17} aria-hidden="true" />}<span>Music</span><i className={audible ? 'is-playing' : ''} aria-hidden="true" />
     </button>
   );
 
