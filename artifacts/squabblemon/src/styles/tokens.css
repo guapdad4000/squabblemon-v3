@@ -155,3 +155,9 @@ html :is(.glass-panel, .panel-section, .corner-store__counter, .sq-card-lift.bg-
   background-position: center;
 }
 html .corner-store__counter { padding: 14px; border-radius: 3px 18px 3px 3px; border: 1px solid #c6ad654a; }
+/* Chalk-light text on chalkboard panels; buttons and fields keep their own colors. */
+html :is(.glass-panel, .panel-section, .corner-store__counter, .sq-card-lift.bg-card, [role=dialog].bg-background) { color: #f4eedb; }
+html :is(.glass-panel, .panel-section, .sq-card-lift.bg-card, [role=dialog].bg-background) :is(h1, h2, h3, h4, h5, h6, p, label, small, strong, legend, span, div):not(:is(button, a, input, select, textarea, [role=switch], [role=checkbox]) *):not(:is(button, a, input, select, textarea)) { color: #f4eedb !important; text-shadow: 0 1px 1px #0008; }
+html :is(.glass-panel, .panel-section, .sq-card-lift.bg-card, [role=dialog].bg-background) :is(small, label + p, p + p, legend) { color: #d9e4cf !important; }
+html .panel-section :is(.bg-white\/50, .bg-white\/70, .bg-white) { background-color: #0d241a8c; border-color: #f4eedb33; }
+html .panel-section :is(.bg-white\/50, .bg-white\/70):hover { background-color: #0d241ab8; }
