@@ -23,7 +23,7 @@ function Fixture() {
   const [match, setMatch] = useState(() => limit === 6 ? createMatch('block', 'vibes') : createStoryMatch({ ...rookieEncounter(), roundLimit: limit }, deck.cards, deck.id));
   const [room, setRoom] = useState(() => {
     const now = Date.now();
-    let room = joinOnlineRoom(createOnlineRoom({ userId: 'host', name: 'Host', ready: false, deck }, 'player', now), { userId: 'guest', name: 'Guest', ready: false, deck }, now);
+    let room = joinOnlineRoom(createOnlineRoom({ userId: 'host', name: 'Host', level: 12, banner: { cardId: 'kyle', finish: 'base', stickers: ['kyle:v3-portrait', 'kyle:v3-action'] }, ready: false, deck }, 'player', now), { userId: 'guest', name: params.get('longname') ? 'The Midnight Mayor Of Oakland' : 'Guest', level: 7, banner: { cardId: 'midnight-mayor', finish: 'silver' }, ready: false, deck }, now);
     room = applyOnlineCommand(room, 'player', { type: 'ready' }, now);
     return applyOnlineCommand(room, 'cpu', { type: 'ready' }, now);
   });

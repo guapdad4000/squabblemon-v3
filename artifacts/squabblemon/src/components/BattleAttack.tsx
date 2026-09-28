@@ -14,6 +14,16 @@ type Point = { x: number; y: number; width: number; height: number };
 type Geometry = { source?: Point; current: Map<string, Point>; before: Map<string, Point> };
 
 /** Anchor choreography to board cards, including effects that cross district boundaries. */
+const SPARK_ANGLES = Array.from({ length: 8 }, (_, index) => index * Math.PI / 4 + Math.PI / 8);
+/** Jagged comic-book impact star; deterministic so renders stay stable. */
+function impactStar(x: number, y: number, radius: number) {
+  return Array.from({ length: 20 }, (_, index) => {
+    const angle = index * Math.PI / 10 - Math.PI / 2;
+    const r = index % 2 ? radius * (index % 4 === 1 ? .42 : .5) : radius * (index % 6 === 0 ? 1 : .8);
+    return `${(x + Math.cos(angle) * r).toFixed(1)},${(y + Math.sin(angle) * r).toFixed(1)}`;
+  }).join(' ');
+}
+
 export function BattleAttack({ card, effect, impact, replaying = false, audioEnabled = false, playedSpecialMoves = null }: { card: Card; effect: PresentationEffect; impact: boolean; replaying?: boolean; audioEnabled?: boolean; playedSpecialMoves?: Set<string> | null }) {
   const root = useRef<HTMLDivElement>(null);
   const original = useRef(new Map<string, Point>());
@@ -95,11 +105,14 @@ export function BattleAttack({ card, effect, impact, replaying = false, audioEna
         const self = id === sourceId;
         const path = `M ${source.x} ${source.y} Q ${(source.x + target.x) / 2 + 35} ${(source.y + target.y) / 2} ${target.x} ${target.y}`;
         return <g key={id} data-attack-target={id}>
+          {!self && <path className="attack-beam-glow" d={path} pathLength="1" />}
           {!self && <path className={'attack-beam' + (card.id === 'dr-fade' && effect.targets.some(target => target.cardInstanceId === id && target.owner === effect.owner) ? ' dr-fade-coaching' : '')} d={path} pathLength="1" />}
+          {!self && <path className="attack-beam-core" d={path} pathLength="1" />}
+          {!self && <path className="attack-comet" d={path} pathLength="1" />}
           {impact && <g className="attack-hit" style={{ transformOrigin: `${target.x}px ${target.y}px` }}>
             {effect.kind === 'blocked'
               ? <path className="attack-shield" d={`M ${target.x} ${target.y - 35} l 28 12 v 26 q -4 23 -28 34 q -24 -11 -28 -34 v -26 Z`} />
-              : <><circle cx={target.x} cy={target.y} r={Math.max(24, target.width * .45)} /><circle cx={target.x} cy={target.y} r={Math.max(16, target.width * .3)} /></>}
+              : <><circle className="attack-flash" cx={target.x} cy={target.y} r={Math.max(30, target.width * .55)} /><polygon className="attack-star" points={impactStar(target.x, target.y, Math.max(34, target.width * .62))} /><circle cx={target.x} cy={target.y} r={Math.max(24, target.width * .45)} /><circle cx={target.x} cy={target.y} r={Math.max(16, target.width * .3)} />{SPARK_ANGLES.map(angle => <line key={angle} className="attack-spark" x1={target.x + Math.cos(angle) * 14} y1={target.y + Math.sin(angle) * 14} x2={target.x + Math.cos(angle) * Math.max(46, target.width * .8)} y2={target.y + Math.sin(angle) * Math.max(46, target.width * .8)} />)}</>}
           </g>}
         </g>;
       })}

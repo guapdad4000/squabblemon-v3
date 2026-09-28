@@ -5,12 +5,15 @@ import { FighterPortrait } from './profile/FighterPortrait';
 import { playSoundEffect, stopSoundEffect } from '../lib/sfx';
 import { useFeedbackPreferences } from '../hooks/useFeedbackPreferences';
 import { KeyedVideo } from './KeyedVideo';
+import { bannerArtUrl, BannerStickers } from './PvpPlate';
+import type { OnlineBanner } from '@workspace/squabblemon-engine/multiplayer';
 import '../styles/ui-polish.css';
 import '../styles/pvp-art.css';
+import '../styles/pvp-topbar.css';
 
 export function MatchArrival({ player, rival, label = 'Match found', onContinue }: {
-  player: { name: string; hero: string; avatarKey?: string; level?: number; rp?: number };
-  rival: { name: string; hero: string; avatarKey?: string; level?: number; rp?: number };
+  player: { name: string; hero: string; avatarKey?: string; level?: number; rp?: number; banner?: OnlineBanner };
+  rival: { name: string; hero: string; avatarKey?: string; level?: number; rp?: number; banner?: OnlineBanner };
   label?: string; onContinue: () => void;
 }) {
   const reduced = useReducedMotion() || (typeof document !== 'undefined' && document.documentElement.dataset.reduceMotion === 'true');
@@ -58,8 +61,10 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
     </div>
     <div className="match-poster__billing"><span>SQUABBLEMON PRESENTS</span><strong>{label}</strong><span>THE MAIN EVENT</span></div>
     <div className="match-poster__fighters">
-      {[player, rival].map((fighter, i) => <motion.div className={'match-poster__fighter side-' + i} key={i}
+      {[player, rival].map((fighter, i) => { const art = bannerArtUrl(fighter.banner); return <motion.div className={'match-poster__fighter side-' + i} key={i} data-has-banner={art ? 'true' : 'false'} data-finish={fighter.banner?.finish ?? 'base'}
         initial={reduced ? false : { x: i ? 90 : -90, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: .45 }}>
+        {art && <motion.img className="fighter-card__banner" src={art} alt="" aria-hidden="true" initial={reduced ? false : { scale: 1.25, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: .25, duration: .6, ease: [0.16, 1, 0.3, 1] }} />}
+        {art && fighter.banner?.stickers?.length ? <BannerStickers ids={fighter.banner.stickers} /> : null}
         <FighterPortrait cardId={fighter.hero} avatarKey={fighter.avatarKey} name={fighter.name} />
         <div className="fighter-card__copy">
           <span className="fighter-card__corner"><b>0{i + 1}</b>{i ? 'CHALLENGER' : 'YOUR CORNER'}</span>
@@ -67,7 +72,7 @@ export function MatchArrival({ player, rival, label = 'Match found', onContinue 
           <div className="fighter-card__meta"><span>{fighter.hero.replaceAll('-', ' ')} fighter</span><span className="fighter-card__level"><small>LVL</small><b>{fighter.level ?? '—'}</b></span><em>RP {fighter.rp?.toLocaleString() ?? '—'}</em></div>
         </div>
         <strong className="fighter-card__player">P{i + 1}</strong>
-      </motion.div>)}
+      </motion.div>; })}
     </div>
     <footer><p>3 DISTRICTS <i /> 6 ROUNDS <i /> ONE FADE</p><small>Tap anywhere to enter the fight</small></footer>
   </motion.section>;

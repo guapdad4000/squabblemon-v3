@@ -52,6 +52,16 @@ export function BattleReactions({ room, connected, reducedMotion }: { room: Onli
     ? REACTIONS.filter(reaction => owned.includes(reaction.id))
     : tray.flatMap(id => REACTIONS.filter(reaction => reaction.id === id));
   const still = reducedMotion || !!systemReducedMotion;
+  // Anchor speech bubbles just under the PvP top bar, whatever height it wraps to.
+  useEffect(() => {
+    const bar = document.querySelector<HTMLElement>('.pvp-topbar');
+    if (!bar) return;
+    const place = () => { const bottom = Math.round(bar.getBoundingClientRect().bottom); document.documentElement.style.setProperty('--pvp-bubble-top', bottom + 14 + 'px'); const exitParent = document.querySelector<HTMLElement>('.pvp-exit-control')?.offsetParent; document.documentElement.style.setProperty('--pvp-bar-bottom', bottom - Math.round(exitParent?.getBoundingClientRect().top ?? 0) + 'px'); };
+    place();
+    const observer = new ResizeObserver(place); observer.observe(bar);
+    window.addEventListener('resize', place);
+    return () => { observer.disconnect(); window.removeEventListener('resize', place); document.documentElement.style.removeProperty('--pvp-bubble-top'); document.documentElement.style.removeProperty('--pvp-bar-bottom'); };
+  }, [room.status]);
   if (room.status !== 'active') return null;
   return <>
     <div className="pvp-reaction-controls">

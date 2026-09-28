@@ -45,12 +45,15 @@ export type OnlineDeck = {
   hero: string;
   cards: string[];
 };
+export type OnlineBanner = { cardId: string; finish?: 'base' | 'silver'; stickers?: string[] };
 export type OnlineMember = {
   userId: string;
   name: string;
   avatarKey?: string;
   level?: number;
   streetRep?: number;
+  /** Display-only equipped banner; never affects play. */
+  banner?: OnlineBanner;
   deck: OnlineDeck;
   ready: boolean;
 };
@@ -360,7 +363,7 @@ export type OnlineRoomView = {
   gameNumber: number;
   status: OnlineRoom["status"];
   seat: Seat;
-  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; ready: boolean } | null>;
+  members: Record<Seat, { name: string; hero: string; avatarKey?: string; level?: number; streetRep?: number; rp?: number; banner?: OnlineBanner; ready: boolean } | null>;
   ownDeck: OnlineDeck;
   revealedDecks: Record<Seat, OnlineDeck> | null;
   activeSeat: Seat;
@@ -423,7 +426,7 @@ export function onlineRoomView(
   const publicMember = (member: OnlineMember | null, memberSeat: Seat) =>
     member
       ? { name: member.name, hero: member.deck.hero, avatarKey: member.avatarKey, level: member.level,
-          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ready: member.ready }
+          streetRep: member.streetRep, rp: room.ranked?.ratings[memberSeat], ...(member.banner ? { banner: member.banner } : {}), ready: member.ready }
       : null;
   return {
     ...(room.ranked ? { ranked: { opponent: room.members.cpu ? room.ranked.bot ? "bot" as const : "player" as const : "searching" as const, queuedAt: room.ranked.queuedAt, botAfter: room.ranked.botAfter, rating: room.ranked.ratings[seat] ?? 1000, result: room.ranked.settlement?.[seat] ?? null } } : {}),

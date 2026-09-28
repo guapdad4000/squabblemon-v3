@@ -67,6 +67,7 @@ async function loadMember(
     avatarKey: profile.avatarKey,
     level: profile.level,
     streetRep: profile.streetRep,
+    ...equippedBanner(profile),
     ready: false,
     deck: {
       id: deckId,
@@ -487,4 +488,12 @@ export async function accessRoomReactions(code: string, userId: string, input?: 
     }
     return { ...(room.reactions ?? { revision: 0, latest: {} }), serverTime: now, owned, tray: resolveReactionTray(profile.settings.reactionTray, profile.unlockedCosmeticIds) };
   });
+}
+
+/** Display-only banner for PvP; only an owned character banner is shown. */
+function equippedBanner(profile: { ownedCardIds: string[]; settings: unknown }) {
+  const loadout = (profile.settings as { cosmetics?: { bannerCardId?: string | null; bannerFinish?: 'base' | 'silver'; stickers?: string[] } } | null)?.cosmetics;
+  const cardId = loadout?.bannerCardId;
+  if (!cardId || !profile.ownedCardIds.includes(cardId)) return {};
+  return { banner: { cardId, finish: loadout?.bannerFinish === 'silver' ? 'silver' as const : 'base' as const, stickers: (loadout?.stickers ?? []).slice(0, 3) } };
 }
