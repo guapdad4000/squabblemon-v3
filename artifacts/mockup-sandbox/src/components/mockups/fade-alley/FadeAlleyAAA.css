@@ -1,0 +1,739 @@
+/* Street-stage direction: the shared game HUD above an illustrated venue,
+   with the Story crew picker's paper files and portrait-led selections below. */
+.fa-root {
+  --fa-ink: #fff2cc;
+  --fa-muted: #c2bca9;
+  --fa-citrus: #f3c95e;
+  --fa-coral: #d94d34;
+  position: relative;
+  background: #0a1410;
+}
+.fa-root :is(button, input):focus-visible { outline: 3px solid #ffe390; outline-offset: 3px; }
+
+.fa-hud {
+  position: absolute; z-index: 20; top: 0; left: 0; right: 0;
+  height: 62px; color: #f5dfb2;
+  text-shadow: 0 1px 3px #000c, 0 2px 10px #0008;
+}
+.fa-hud::before {
+  content: ''; position: absolute; z-index: -1; inset: 0 0 -65px; pointer-events: none;
+  background: linear-gradient(180deg, #07100de8, #07100db3 39%, #07100d48 70%, transparent);
+}
+.fa-hud__inner {
+  height: 100%; max-width: 1440px; margin: 0 auto; padding: 5px max(16px, env(safe-area-inset-right)) 5px max(16px, env(safe-area-inset-left));
+  display: flex; align-items: center; gap: 12px;
+}
+.fa-hud button {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  min-width: 42px; min-height: 44px; padding: 0; color: inherit;
+  background: none; border: 0; cursor: pointer;
+}
+.fa-hud button:hover { color: #fff6d9; filter: brightness(1.2); }
+.fa-hud__return { display: flex; align-items: center; gap: 2px; flex: none; }
+.fa-hud .fa-hud__back { width: 57px; gap: 5px; font: 800 9px 'DM Mono', monospace; }
+.fa-hud__safehouse img { display: block; width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 2px 2px #0009); }
+.fa-hud .fa-hud__identity { display: flex; align-items: center; justify-content: flex-start; gap: 7px; min-width: 0; margin-right: auto; text-align: left; }
+.fa-hud__level {
+  display: grid; place-items: center; width: 32px; height: 36px; flex: none;
+  background: #e6be67; color: #191914; text-shadow: none;
+  font: 900 20px 'Barlow Condensed', sans-serif;
+  clip-path: polygon(0 0, 80% 0, 100% 22%, 100% 100%, 20% 100%, 0 80%);
+}
+.fa-hud__identity-copy { min-width: 0; }
+.fa-hud__identity strong {
+  display: block; max-width: 175px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font: italic 900 16px 'Barlow Condensed', sans-serif; letter-spacing: .04em;
+}
+.fa-hud__identity small { display: block; color: #d5c6a7; white-space: nowrap; font: 600 8px 'DM Mono', monospace; }
+.fa-hud__wallet { display: flex; align-items: center; flex: none; gap: 12px; }
+.fa-hud .fa-hud__balance { gap: 3px; font: 800 12px 'DM Mono', monospace; white-space: nowrap; }
+.fa-hud__balance img { width: 26px; height: 26px; object-fit: contain; }
+.fa-hud__shards { color: #c7efff !important; }
+.fa-hud .fa-hud__icon { width: 40px; position: relative; }
+.fa-hud__inbox i {
+  position: absolute; top: 2px; right: 3px; display: grid; place-items: center;
+  width: 16px; height: 16px; border-radius: 50%; border: 1px solid #f5dfb2;
+  background: #b53e31; font: 900 9px 'DM Mono', monospace; font-style: normal;
+}
+.fa-hud .fa-hud__music { width: 43px; flex-direction: column; gap: 0; }
+.fa-hud__music span, .fa-hud__express span { font: 700 8px/10px 'DM Mono', monospace; letter-spacing: .02em; }
+.fa-hud .fa-hud__express { width: 63px; flex-direction: column; }
+.fa-hud__express img { display: block; width: 43px; height: 32px; object-fit: contain; }
+
+.fa-scene { height: min(650px, 72vh); min-height: 555px; }
+.fa-scene::before {
+  background:
+    linear-gradient(90deg, #06100dc9 0%, #06100d8c 26%, #06100d26 59%, #06100d57 100%),
+    linear-gradient(0deg, #0a1410 0%, #0a141032 30%, #0a14104d 100%);
+}
+.fa-scene::after { opacity: .19; }
+.fa-scene__image { object-position: center 52%; }
+.fa-scene__copy {
+  top: 86px; left: clamp(24px, 5vw, 72px); width: min(44%, 470px); z-index: 4;
+  text-shadow: none;
+}
+.fa-hero-logo {
+  display: block; width: min(100%, 310px); height: auto; max-height: 128px; object-fit: contain;
+  object-position: left; filter: drop-shadow(3px 5px 1px #0009);
+  margin: 0 0 6px -6px;
+}
+.fa-scene__copy .fa-eyebrow {
+  gap: 8px; color: #ffe5a0; font: 800 10px 'DM Mono', monospace; letter-spacing: .14em;
+}
+.fa-scene__copy .fa-eyebrow::before { width: 28px; height: 3px; background: #d94d34; }
+.fa-scene__copy h1 {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  margin: 13px 0 0; font: italic 900 clamp(42px, 5.1vw, 66px)/.81 'Barlow Condensed', sans-serif;
+  letter-spacing: -.045em; text-transform: uppercase;
+}
+.fa-scene__copy h1 > span {
+  display: inline-block; padding: 8px 19px 12px 13px; color: #152318;
+  background: #f1e0b5;
+  background-image: repeating-linear-gradient(0deg, transparent 0 17px, #7c623514 18px 19px);
+  clip-path: polygon(0 7%, 6% 2%, 16% 6%, 32% 1%, 52% 4%, 76% 0, 100% 5%, 97% 95%, 80% 99%, 55% 96%, 31% 100%, 10% 96%, 0 100%);
+  transform: rotate(-3deg);
+  text-shadow: 2px 2px 0 #b59655;
+  filter: drop-shadow(5px 6px 0 #080b08);
+}
+.fa-scene__copy h1 em {
+  position: relative; display: inline-block; padding: 5px 30px 8px 15px;
+  color: #fff4d9; font-style: italic; background: #bd392b;
+  clip-path: polygon(0 5%, 91% 0, 100% 15%, 95% 89%, 99% 100%, 2% 92%);
+  transform: translate(35px,-3px) rotate(-5deg);
+  text-shadow: 2px 3px 0 #551e1a, 4px 5px 0 #431510;
+}
+.fa-scene__copy h1 em span { color: #ffda75; }
+.fa-playerlabel {
+  border-left-width: 5px; background: #102016f2;
+  box-shadow: 3px 4px 0 #0009; transform: rotate(1deg);
+}
+.fa-playerlabel--rival { transform: rotate(-2deg); }
+.fa-playerlabel strong { font-style: italic; font-size: 19px; }
+.fa-rival-silhouette { border: 2px dashed #f4dfaa76; background: #0b2a1b4d; }
+.fa-lobby {
+  padding-top: 14px;
+  background: radial-gradient(ellipse at 70% 0%, #38503757, transparent 50%), #0a1410;
+  grid-template-columns: minmax(0, 1.55fr) minmax(275px, .85fr);
+}
+.fa-control {
+  color: #20261c; padding: 27px clamp(20px, 3vw, 34px) 28px;
+  border: 5px solid #1b3021; outline: 1px solid #aa8e55;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 30px, #7866380b 31px 32px),
+    linear-gradient(135deg, #f0dfb3, #d7bd85);
+  box-shadow: 8px 11px 0 #050d09a1, inset 0 0 0 1px #f8eccb;
+}
+.fa-control::before { top: 0; left: 28px; width: 96px; height: 5px; background: #b43b29; }
+.fa-sectionhead { align-items: center; padding-bottom: 13px; border-bottom: 2px solid #725e386e; }
+.fa-sectionhead h2 {
+  margin: 7px 0 0; color: #163620;
+  font: italic 900 clamp(30px, 3.6vw, 43px)/.88 'Barlow Condensed', sans-serif;
+  letter-spacing: -.01em; text-shadow: 1px 2px 0 #c1a770;
+}
+.fa-sectionhead h2 em { color: #b9392a; font-style: italic; }
+.fa-step { color: #344433; font-weight: 800; margin-top: 19px; }
+.fa-step b { background: #173d29; border-color: #173d29; color: #fff0bd; }
+.fa-homies { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; }
+.fa-homie {
+  min-width: 0; min-height: 62px; gap: 7px; padding: 8px; color: #273827;
+  background: #fff6d598; border: 2px solid #655c4280; box-shadow: 2px 3px 0 #7e6a3c51;
+}
+.fa-homie:hover { border-color: #153e28; }
+.fa-homie[aria-checked="true"] { background: #fff8d9; border-color: #b43b29; box-shadow: 0 0 0 2px #e9c960, 3px 4px 0 #6a492c80; }
+.fa-homie__name { color: #1c2b1d; font: italic 900 15px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.fa-homie__handle { color: #635c49; font-size: 8px; }
+.fa-playericon { width: 32px; height: 35px; flex: none; background: #214a35; color: #fff1c7; border: 2px solid #f7dfaa; font-size: 16px; transform: rotate(-4deg); }
+.fa-check { color: #ad382b; flex: none; }
+.fa-crew-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.fa-crew {
+  position: relative; min-width: 0; min-height: 107px; padding: 7px;
+  display: flex; align-items: flex-end; gap: 4px; text-align: left;
+  border: 2px solid #78836d; background: linear-gradient(138deg,#365441,#102d21);
+  box-shadow: 2px 3px 0 #544f35a6; overflow: visible;
+}
+.fa-crew:hover { transform: translateY(-2px); border-color: #e4b454; }
+.fa-crew[aria-pressed="true"] { color: #fff1cf; background: linear-gradient(138deg,#34583d,#12291f); border: 3px solid #fcd47a; box-shadow: 0 0 0 2px #93661d, 3px 4px 0 #44331a8c; }
+.fa-crew img { width: 48%; height: 85px; object-fit: contain; object-position: bottom; flex: none; filter: drop-shadow(2px 3px 1px #050a08); }
+.fa-crew__copy { min-width: 0; padding: 0 1px 4px; }
+.fa-crew__copy strong { display: block; font: italic 900 16px/.93 'Barlow Condensed', sans-serif; text-transform: uppercase; color: #f6eccf; }
+.fa-crew small { display: block; margin-top: 5px; color: #d3c4a0; opacity: 1; font: 700 8px/1.2 'DM Mono', monospace; }
+.fa-crew__selected { position: absolute; top: -7px; left: -5px; padding: 3px 7px; transform: rotate(-7deg); background: #af2f22; color: white; font: 900 11px 'Barlow Condensed',sans-serif; }
+.fa-actions { margin-top: 18px; }
+.fa-control .fa-button {
+  min-height: 48px; padding-inline: 18px 25px; color: #fff3d3; background: #164930;
+  border: 2px solid #0e3322; font: 900 15px 'Barlow Condensed',sans-serif;
+  clip-path: polygon(0 0,calc(100% - 13px) 0,100% 50%,calc(100% - 13px) 100%,0 100%);
+}
+.fa-control .fa-button--secondary { color: #1a3d29; border-color: #406447; background: #ebd49c; }
+.fa-control .fa-button--quiet { min-height: 37px; font-size: 12px; border-color: #7f7859; background: #ead5a4; }
+.fa-demo { border: 1px dashed #665b40; background: #efddaf8c; }
+.fa-demo strong { color: #2d4130; }
+.fa-control .fa-status { background: #e9d297; color: #26382a; border-left: 4px solid #8b7229; font-weight: 750; }
+.fa-control .fa-error { background: #eed2b7; color: #852c23; border-color: #b43b29; }
+.fa-control .fa-input { color: #263429; background: #fff5d5; border: 2px solid #6f6b4d; }
+.fa-control .fa-input::placeholder { color: #7d735f; }
+.fa-control .fa-divider { background: #8678537e; }
+.fa-sidecard {
+  padding: 24px 22px; border: 4px solid #566342; outline: 1px solid #d5bc70;
+  background: repeating-linear-gradient(0deg,transparent 0 26px,#d3bd7112 27px 28px), #152b1f;
+  box-shadow: 8px 11px 0 #050d09a1;
+}
+.fa-sidecard::before { top: -3px; background: #c44030; }
+.fa-sidecard h3 { color: #fff0c4; font: italic 900 31px/.9 'Barlow Condensed',sans-serif; text-shadow: 2px 3px 0 #08120b; }
+.fa-seat { min-height: 76px; border: 1px solid #b8a97276; background: #08140e99; }
+.fa-seat__badge { width: 44px; height: 46px; background: #ad3c2d; border: 2px solid #f0d78d; transform: rotate(-4deg); font-size: 21px; }
+.fa-seat strong { font: italic 900 16px 'Barlow Condensed',sans-serif; text-transform: uppercase; }
+.fa-seat small { font-size: 8px; }
+.fa-sidecard .fa-button--wide { color: #173b27; background: #f4c76b; border: 2px solid #fff0ba; font-size: 15px; }
+.fa-sidecard .fa-button--quiet { color: #fff1cd; background: #214b32; border-color: #8caa76; }
+.fa-roomcode { background: #0b1b14; }
+.fa-roomcode button { color: #f4d17a; }
+.fa-rules { color: #c7bea5; }
+
+@media (max-width: 760px) {
+  .fa-hud { height: 56px; }
+  .fa-hud__inner { gap: 5px; padding-inline: 9px; }
+  .fa-hud .fa-hud__back { width: 31px; min-width: 31px; }
+  .fa-hud__back span { display: none; }
+  .fa-hud .fa-hud__safehouse { width: 34px; min-width: 34px; }
+  .fa-hud__safehouse img { width: 29px; height: 29px; }
+  .fa-hud .fa-hud__identity { gap: 4px; }
+  .fa-hud__identity strong { max-width: 88px; font-size: 12px; }
+  .fa-hud__identity small { font-size: 6px; }
+  .fa-hud__level { width: 27px; height: 31px; font-size: 18px; }
+  .fa-hud__wallet { gap: 2px; }
+  .fa-hud .fa-hud__balance { min-width: 0; font-size: 10px; }
+  .fa-hud__balance img { width: 20px; height: 20px; }
+  .fa-hud .fa-hud__icon { width: 30px; min-width: 30px; }
+  .fa-hud .fa-hud__express { width: 44px; min-width: 44px; }
+  .fa-hud__express img { width: 37px; height: 29px; }
+  .fa-hud__express span { font-size: 6px; }
+  .fa-hud__music { display: none !important; }
+  .fa-scene { min-height: 580px; height: 65svh; max-height: 700px; }
+  .fa-scene__copy { top: 82px; left: 20px; width: calc(100% - 40px); }
+  .fa-hero-logo { width: min(58vw, 230px); max-height: 95px; margin-left: -5px; margin-bottom: 3px; }
+  .fa-scene__copy .fa-eyebrow { font-size: 8px; letter-spacing: .07em; }
+  .fa-scene__copy .fa-eyebrow::before { width: 18px; }
+  .fa-scene__copy h1 { margin-top: 10px; font-size: clamp(39px, 9vw, 50px); }
+  .fa-scene__copy h1 > span { padding: 4px 11px 8px 8px; }
+  .fa-scene__copy h1 em { padding: 4px 18px 7px 9px; transform: translate(20px,-3px) rotate(-5deg); }
+  .fa-avatar--you { height: 53%; }
+  .fa-rivalzone { height: 53%; }
+  .fa-playerlabel { bottom: 5%; }
+  .fa-lobby { grid-template-columns: minmax(0, 1fr); padding-top: 8px; gap: 17px; }
+  .fa-control, .fa-sidecard { min-width: 0; }
+  .fa-control { padding: 21px 15px 25px; }
+  .fa-sectionhead h2 { font-size: 37px; }
+  .fa-homies { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .fa-crew-row { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .fa-crew { min-height: 130px; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .fa-crew img { width: 86%; height: 80px; }
+  .fa-crew__copy { width: 100%; text-align: center; }
+  .fa-crew__copy strong { font-size: 15px; }
+  .fa-crew small { font-size: 7px; }
+  .fa-sidecard { padding: 20px 17px; }
+}
+@media (max-width: 460px) {
+  .fa-hud__shards, .fa-hud__inbox { display: none !important; }
+  .fa-hud__identity small { display: none; }
+  .fa-hud .fa-hud__balance { font-size: 9px; }
+  .fa-hud__inner { gap: 3px; }
+  .fa-hud::before { bottom: -48px; }
+  .fa-scene { min-height: 550px; }
+  .fa-scene__copy { top: 79px; }
+  .fa-hero-logo { width: min(57vw, 220px); }
+  .fa-scene__copy h1 { font-size: clamp(38px, 9.5vw, 44px); }
+  .fa-homie { min-height: 63px; }
+  .fa-control .fa-button { font-size: 13px; }
+  .fa-crew { min-height: 113px; padding: 5px; }
+  .fa-crew img { height: 67px; }
+  .fa-crew__copy strong { font-size: 12px; }
+  .fa-crew small { display: none; }
+}
+@media (max-width: 360px) {
+  .fa-hud .fa-hud__back { display: none; }
+  .fa-crew__copy strong { font-size: 11px; }
+  .fa-scene__copy .fa-eyebrow { letter-spacing: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fa-hud button, .fa-crew { transition: none; }
+}
+
+/* Compact pass: the player HUD stays first, followed immediately by fight-mode navigation. */
+.fa-topnav {
+  position: relative;
+  z-index: 12;
+  min-height: 42px;
+  margin-top: 62px;
+  padding: 3px clamp(16px, 5vw, 70px);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #d7ceb7;
+  background: #0b1510;
+  border-bottom: 1px solid #f3d58a35;
+  box-shadow: 0 4px 13px #060b09a8;
+}
+.fa-topnav button {
+  min-height: 34px;
+  padding: 0 14px;
+  color: #c9c1aa;
+  background: transparent;
+  border: 1px solid transparent;
+  font: 800 11px 'Barlow Condensed', sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.fa-topnav button:hover { color: #fff2cc; background: #ffffff0a; }
+.fa-topnav .fa-topnav__active {
+  color: #fff0c0;
+  background: #183323;
+  border-color: #d7b45c7d;
+  box-shadow: inset 0 -2px #d94d34;
+}
+.fa-topnav > span {
+  margin-left: auto;
+  color: #b6aa89;
+  font: 500 8px 'DM Mono', monospace;
+  letter-spacing: .14em;
+}
+
+.fa-scene { height: min(510px,58vh); min-height: 370px; }
+.fa-scene__copy { top: clamp(34px,8%,52px); width: min(38%,390px); }
+.fa-hero-logo { width: min(100%,205px); max-height: 84px; margin-bottom: 2px; }
+.fa-scene__copy .fa-eyebrow { font-size: 9px; }
+.fa-scene__copy h1 { margin-top: 9px; font-size: clamp(40px,4.8vw,61px); }
+.fa-scene__copy h1 > span { padding: 5px 13px 7px 10px; }
+.fa-scene__copy h1 em { padding: 3px 21px 6px 11px; transform: translate(24px,-2px) rotate(-5deg); }
+.fa-avatar--you { height: 70%; }
+.fa-rivalzone { height: 69%; }
+.fa-playerlabel { bottom: 4%; padding: 6px 9px 6px 10px; }
+.fa-playerlabel strong { font-size: 16px; }
+.fa-playerlabel span { font-size: 8px; }
+
+.fa-lobby {
+  grid-template-columns: minmax(0,1fr);
+  gap: 0;
+  padding: 0 clamp(18px,5.5vw,82px) 24px;
+}
+.fa-control {
+  width: min(100%,980px);
+  margin: 0 auto;
+  padding: 16px clamp(16px,2.6vw,27px) 17px;
+}
+.fa-control::before { left: 20px; width: 68px; height: 4px; }
+.fa-sectionhead { margin-bottom: 8px; padding-bottom: 8px; }
+.fa-sectionhead h2 { margin-top: 2px; font-size: 30px; }
+.fa-step { gap: 7px; margin: 11px 0 7px; font-size: 9px; }
+.fa-step b { width: 19px; height: 19px; font-size: 9px; }
+.fa-homies { gap: 6px; }
+.fa-homie { min-height: 49px; gap: 7px; padding: 5px 8px 5px 6px; }
+.fa-homie:hover { transform: translateY(-1px); }
+.fa-playericon { width: 28px; height: 30px; }
+.fa-homie__name { font-size: 11px; }
+.fa-homie__handle { font-size: 8px; }
+.fa-crew-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 3px 8px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #917b48 transparent;
+}
+.fa-crew {
+  flex: 0 0 clamp(148px,24%,185px);
+  min-width: 0;
+  min-height: 67px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px;
+  text-align: left;
+  scroll-snap-align: start;
+  border-width: 1px;
+}
+.fa-crew:hover { transform: translateY(-1px); }
+.fa-crew[aria-pressed=true] { border-width: 2px; }
+.fa-crew img {
+  width: 39px;
+  height: 54px;
+  flex: 0 0 39px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.fa-crew__copy { min-width: 0; flex: 1; padding: 0 1px; }
+.fa-crew__copy strong { font-size: 13px; line-height: 1; }
+.fa-crew small { margin-top: 4px; font-size: 7px; line-height: 1.25; }
+.fa-crew__selected { top: -6px; left: auto; right: 3px; padding: 2px 5px; font-size: 8px; transform: rotate(3deg); }
+.fa-actions { gap: 7px; margin-top: 12px; }
+.fa-control .fa-button {
+  min-height: 38px;
+  padding-inline: 12px 19px;
+  font-size: 12px;
+}
+.fa-control .fa-button svg { width: 14px; height: 14px; }
+.fa-control .fa-button--quiet { min-height: 32px; font-size: 10px; }
+.fa-demo {
+  min-height: 37px;
+  margin-top: 8px;
+  padding: 5px 8px;
+}
+.fa-demo strong { font-size: 8px; }
+.fa-demo span { margin-top: 2px; font-size: 8px; }
+.fa-control .fa-status { margin: 7px 0; padding: 7px 9px; font-size: 10px; }
+.fa-divider { margin: 10px 0; }
+.fa-fieldrow { gap: 7px; }
+.fa-control .fa-input { min-height: 37px; padding: 7px 10px; font-size: 10px; }
+.fa-control form .fa-button { min-height: 37px; }
+.fa-session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 8px 9px;
+  color: #203426;
+  background: #e6d3a1;
+  border: 1px solid #89764c;
+}
+.fa-session__summary { min-width: 0; display: flex; align-items: center; gap: 12px; }
+.fa-session__status small, .fa-roomcode small {
+  display: block;
+  color: #655b43;
+  font: 500 7px 'DM Mono', monospace;
+  letter-spacing: .12em;
+}
+.fa-session__status strong {
+  display: block;
+  margin-top: 2px;
+  color: #243c2b;
+  font: 900 14px 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
+.fa-session .fa-roomcode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.fa-session .fa-roomcode strong {
+  color: #173b27;
+  font: 700 11px 'DM Mono', monospace;
+  letter-spacing: .1em;
+}
+.fa-session .fa-roomcode button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #21482e;
+  background: #f6e9c8;
+  border: 1px solid #94825a;
+  cursor: pointer;
+}
+.fa-session__actions { display: flex; align-items: center; gap: 6px; }
+.fa-session__actions .fa-button { min-height: 34px; font-size: 10px; }
+.fa-session__actions .fa-button--quiet { color: #324132; }
+
+@media (max-width: 760px) {
+  .fa-topnav { min-height: 40px; margin-top: 56px; padding-inline: 10px; }
+  .fa-topnav button { min-height: 32px; padding-inline: 10px; font-size: 10px; }
+  .fa-topnav > span { font-size: 7px; letter-spacing: .08em; }
+  .fa-scene { height: min(430px,54svh); min-height: 350px; max-height: 480px; }
+  .fa-scene__copy { top: 37px; left: 20px; width: calc(100% - 40px); }
+  .fa-hero-logo { width: min(42vw,155px); max-height: 65px; margin: 0 0 2px -3px; }
+  .fa-scene__copy .fa-eyebrow { font-size: 7px; letter-spacing: .06em; }
+  .fa-scene__copy .fa-eyebrow::before { width: 15px; height: 2px; }
+  .fa-scene__copy h1 { margin-top: 7px; font-size: clamp(34px,8.4vw,43px); }
+  .fa-scene__copy h1 > span { padding: 3px 9px 5px 7px; }
+  .fa-scene__copy h1 em { padding: 3px 16px 5px 8px; transform: translate(16px,-2px) rotate(-5deg); }
+  .fa-avatar--you { height: 50%; }
+  .fa-rivalzone { height: 49%; }
+  .fa-lobby { grid-template-columns: minmax(0,1fr); gap: 0; padding: 0 12px 19px; }
+  .fa-control { padding: 14px 12px 14px; }
+  .fa-sectionhead h2 { font-size: 27px; }
+  .fa-step { margin-top: 10px; }
+  .fa-homies { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .fa-crew-row { gap: 6px; }
+  .fa-crew { flex-basis: clamp(143px,48%,170px); min-height: 63px; }
+  .fa-crew img { width: 35px; height: 49px; flex-basis: 35px; }
+  .fa-crew__copy strong { font-size: 12px; }
+  .fa-crew small { font-size: 7px; }
+  .fa-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .fa-actions .fa-button { min-height: 36px; padding-inline: 8px 14px; font-size: 10px; }
+  .fa-demo .fa-button { width: auto; }
+  .fa-session { align-items: stretch; }
+  .fa-session__summary { flex: 1 1 100%; justify-content: space-between; }
+  .fa-session__actions { width: 100%; }
+  .fa-session__actions .fa-button { flex: 1; }
+}
+@media (max-width: 460px) {
+  .fa-topnav { gap: 2px; }
+  .fa-topnav button { padding-inline: 8px; font-size: 9px; letter-spacing: .06em; }
+  .fa-topnav > span { font-size: 6px; letter-spacing: .02em; }
+  .fa-scene { height: 390px; min-height: 340px; }
+  .fa-scene__copy { top: 31px; }
+  .fa-hero-logo { width: min(40vw,145px); max-height: 60px; }
+  .fa-scene__copy h1 { font-size: clamp(32px,8.7vw,39px); }
+  .fa-playerlabel { padding: 5px 7px; }
+  .fa-playerlabel small { font-size: 7px; }
+  .fa-playerlabel strong { font-size: 14px; }
+  .fa-playerlabel span { font-size: 7px; }
+  .fa-homie { min-height: 45px; }
+  .fa-crew { flex-basis: 152px; }
+  .fa-demo { align-items: center; }
+  .fa-demo .fa-button { width: auto; }
+}
+@media (max-width: 360px) {
+  .fa-topnav { padding-inline: 6px; }
+  .fa-topnav button { padding-inline: 6px; }
+  .fa-topnav > span { display: none; }
+  .fa-actions { grid-template-columns: 1fr; }
+}
+
+/* One more density pass: keep the venue expressive, but let the playable controls own the page. */
+.fa-scene { height: min(420px,49vh); min-height: 330px; }
+.fa-scene__copy { top: clamp(30px,7%,42px); }
+.fa-hero-logo { width: min(100%,165px); max-height: 66px; }
+.fa-scene__copy h1 { font-size: clamp(36px,4.2vw,51px); }
+.fa-scene__copy h1 > span { padding: 4px 11px 6px 9px; }
+.fa-scene__copy h1 em { padding: 3px 18px 5px 10px; transform: translate(20px,-2px) rotate(-5deg); }
+.fa-lobby { padding-bottom: 18px; }
+.fa-control { padding-block: 13px 14px; }
+.fa-homie { min-height: 45px; }
+.fa-actions .fa-button { min-height: 35px; }
+.fa-demo { min-height: 33px; }
+.fa-control .fa-status { padding-block: 5px; }
+
+@media (max-width: 760px) {
+  .fa-scene { height: min(360px,46svh); min-height: 320px; max-height: 390px; }
+  .fa-scene__copy { top: 27px; }
+  .fa-hero-logo { width: min(40vw,135px); max-height: 55px; }
+  .fa-scene__copy h1 { font-size: clamp(31px,7.8vw,38px); }
+  .fa-scene__copy h1 > span { padding: 3px 8px 4px 6px; }
+  .fa-scene__copy h1 em { padding: 3px 14px 4px 7px; transform: translate(13px,-1px) rotate(-5deg); }
+  .fa-control { padding-block: 12px 13px; }
+}
+@media (max-width: 460px) {
+  .fa-scene { height: 345px; min-height: 315px; }
+  .fa-scene__copy { top: 24px; }
+  .fa-hero-logo { width: min(37vw,125px); max-height: 51px; }
+  .fa-scene__copy h1 { font-size: clamp(29px,8vw,34px); }
+  .fa-scene__copy .fa-eyebrow { font-size: 6px; }
+  .fa-playerlabel { bottom: 3%; }
+}
+
+/* Keep the compact row, but bring back the torn-paper fight-mode tabs. */
+.fa-root .fa-topnav {
+  min-height: 47px;
+  gap: 12px;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, #0b1510 0%, #0b1510e8 75%, #0b1510d6);
+  box-shadow: 0 4px 13px #060b09a8;
+}
+.fa-topnav__tabs { display: flex; align-items: center; gap: 7px; }
+.fa-root .fa-topnav .fa-topnav__tab {
+  position: relative;
+  min-width: 110px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 11px;
+  padding: 5px 10px 5px 12px;
+  color: #344031;
+  border: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 6px, #7a694018 7px 8px),
+    linear-gradient(105deg, #f2e4c0, #d9c99e);
+  box-shadow: 2px 3px 0 #050b08a1;
+  clip-path: polygon(1% 4%, 7% 1%, 22% 3%, 42% 0, 61% 3%, 81% 0, 100% 4%, 98% 96%, 79% 99%, 60% 96%, 38% 100%, 17% 97%, 0 100%);
+  font: 900 10px 'Barlow Condensed', sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transform: rotate(-.7deg);
+  transition: transform .16s ease, filter .16s ease;
+}
+.fa-root .fa-topnav .fa-topnav__tab:nth-child(2) { transform: rotate(.7deg); }
+.fa-root .fa-topnav .fa-topnav__tab:nth-child(3) { transform: rotate(-.4deg); }
+.fa-root .fa-topnav .fa-topnav__tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 13px;
+  width: 25px;
+  height: 3px;
+  background: #8b7544;
+  opacity: .65;
+}
+.fa-root .fa-topnav .fa-topnav__tab:hover { color: #173c29; filter: brightness(1.08); transform: translateY(-2px) rotate(-.7deg); }
+.fa-root .fa-topnav .fa-topnav__tab--active {
+  color: #173b27;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 6px, #7a694018 7px 8px),
+    linear-gradient(105deg, #fff0c9, #e4d4ad);
+  box-shadow: 2px 3px 0 #050b08a1, inset 0 -3px #c24532;
+  transform: rotate(.7deg) translateY(-1px);
+}
+.fa-root .fa-topnav .fa-topnav__tab--active::before { background: #bd392b; opacity: 1; }
+.fa-topnav__label { white-space: nowrap; }
+.fa-root .fa-topnav .fa-topnav__tab small {
+  flex: none;
+  color: #7b6d4c;
+  font: 500 6px 'DM Mono', monospace;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.fa-topnav__status { display: none; }
+
+@media (max-width: 760px) {
+  .fa-root .fa-topnav { min-height: 42px; gap: 7px; }
+  .fa-topnav__tabs { gap: 5px; }
+  .fa-root .fa-topnav .fa-topnav__tab { min-width: 101px; min-height: 32px; padding-inline: 8px; font-size: 9px; }
+}
+@media (max-width: 460px) {
+  .fa-root .fa-topnav { padding-inline: 7px; gap: 5px; }
+  .fa-topnav__tabs { flex: 1; min-width: 0; gap: 4px; }
+  .fa-root .fa-topnav .fa-topnav__tab { min-width: 0; flex: 1; justify-content: center; gap: 3px; padding: 4px 3px; font-size: 8px; letter-spacing: .03em; }
+  .fa-root .fa-topnav .fa-topnav__tab small { font-size: 5px; }
+  .fa-root .fa-topnav__status { display: none; }
+}
+@media (max-width: 360px) {
+  .fa-root .fa-topnav { padding-inline: 5px; gap: 3px; }
+  .fa-topnav__tabs { gap: 3px; }
+  .fa-root .fa-topnav .fa-topnav__tab { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fa-root .fa-topnav .fa-topnav__tab { transition: none; }
+}
+/* Final composition: brand lives centered in the HUD, the headline is gone,
+   and the two fighters carry the scene. */
+.fa-hud-logo {
+  position: absolute; z-index: 21; top: 0; left: 50%;
+  height: 62px; transform: translateX(-50%);
+  display: flex; align-items: center; pointer-events: none;
+}
+.fa-hud-logo img {
+  height: 42px; width: auto; object-fit: contain;
+  filter: drop-shadow(2px 3px 1px #000a);
+}
+.fa-scene__copy { top: clamp(16px, 4%, 26px); width: auto; }
+
+.fa-avatar--you { right: 6%; width: min(39%, 470px); height: 91%; }
+.fa-rivalzone { right: 38%; width: min(37%, 450px); height: 89%; }
+.fa-rival-silhouette { width: 64%; height: 72%; }
+
+@media (max-width: 760px) {
+  .fa-hud-logo { height: 56px; }
+  .fa-hud-logo img { height: 30px; }
+  .fa-scene__copy { top: 12px; }
+  .fa-avatar--you { right: 0; width: 54%; height: 60%; }
+  .fa-rivalzone { right: 45%; width: 52%; height: 58%; }
+}
+@media (max-width: 639px) {
+  /* The compact HUD has no free center; the paper tabs carry the name here. */
+  .fa-hud-logo { display: none; }
+}
+@media (max-width: 460px) {
+  .fa-avatar--you { height: 57%; width: 55%; }
+  .fa-rivalzone { height: 55%; width: 53%; right: 44%; }
+}
+
+/* Setup board: quick room entry, material controls, and contained activity. */
+.fa-root .fa-scene .fa-hud-logo {
+  position: absolute; z-index: 6; top: 16px; right: clamp(18px,5vw,70px); left: auto;
+  height: auto; display: flex; align-items: center; transform: none;
+}
+.fa-root .fa-scene .fa-hud-logo img { width: clamp(116px,12vw,164px); height: auto; }
+.fa-root .fa-sectionhead { justify-content: space-between; flex-wrap: wrap; gap: 10px 18px; }
+.fa-root .fa-join { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; }
+.fa-root .fa-join label { display: inline-flex; align-items: center; gap: 4px; color: #344433; font: 800 9px 'DM Mono',monospace; letter-spacing: .06em; text-transform: uppercase; }
+.fa-root .fa-join__row { min-width: 0; display: flex; gap: 5px; }
+.fa-root .fa-join .fa-input { width: 148px; flex: 1 1 125px; }
+.fa-root .fa-join .fa-button { flex: none; min-height: 38px; padding-inline: 11px 19px; }
+.fa-root .fa-add-homie {
+  width: fit-content; min-width: 163px; min-height: 47px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; margin: 6px 0 1px; padding: 7px 19px; color: #1c3d2a;
+  background: transparent url('/__mockup/images/fade-alley/add-homie-paper.png') center/100% 100% no-repeat;
+  border: 0; filter: drop-shadow(2px 3px 1px #6756387d);
+  font: italic 900 14px 'Barlow Condensed',sans-serif; letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+  transition: transform .16s ease,filter .16s ease;
+}
+.fa-root .fa-add-homie:hover { transform: translateY(-2px) rotate(-1deg); filter: drop-shadow(3px 5px 2px #67563899); }
+.fa-root .fa-actions { justify-content: center; gap: 12px; }
+.fa-root .fa-actions .fa-button {
+  min-width: 210px; min-height: 47px; padding: 4px 22px; border: 0; color: #fff3d3;
+  background: linear-gradient(180deg,#2c7050 0 12%,#1d5038 13% 80%,#123825 81%);
+  box-shadow: inset 0 2px #8bb58a,inset 0 -3px #09271b,0 4px 0 #59472a;
+  text-shadow: 1px 2px 0 #091c15; font-size: 14px; letter-spacing: .055em;
+}
+.fa-root .fa-actions .fa-button--left { clip-path: polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%); padding-left: 28px; transform: rotate(-1.4deg); }
+.fa-root .fa-actions .fa-button--right { color: #fff4d4; background: linear-gradient(180deg,#b16436 0 12%,#8b442c 13% 80%,#642d21 81%); box-shadow: inset 0 2px #e5a164,inset 0 -3px #4d241e,0 4px 0 #59472a; transform: rotate(1.4deg); }
+.fa-root .fa-actions .fa-button--left:hover { transform: translateY(-2px) rotate(-1.4deg); }
+.fa-root .fa-actions .fa-button--right:hover { transform: translateY(-2px) rotate(1.4deg); }
+.fa-root .fa-activity-tabs { display: flex; gap: 3px; margin-top: 16px; border-bottom: 3px solid #214b31; }
+.fa-root .fa-activity-tabs button { min-height: 39px; display: inline-flex; align-items: center; gap: 7px; padding: 5px 13px; color: #dac997; background: #34513a; border: 1px solid #163823; border-bottom: 0; font: 900 13px 'Barlow Condensed',sans-serif; letter-spacing: .045em; text-transform: uppercase; cursor: pointer; transform: translateY(2px); }
+.fa-root .fa-activity-tabs button[aria-selected=true] { color: #fff1c5; background: #183e2b; box-shadow: inset 0 3px #e2bd6c; }
+.fa-root .fa-activity-tabs span { min-width: 19px; padding: 2px 4px; color: #253827; background: #e3c978; font: 800 10px 'DM Mono',monospace; text-align: center; }
+.fa-root .fa-activity-panel { min-height: 57px; padding: 11px 12px; color: #efe1ba; background: #173925; border: 1px solid #426047; border-top: 0; font-size: 11px; }
+.fa-root .fa-activity-panel[hidden] { display: none; }
+.fa-root .fa-activity-panel p { margin: 3px 0; }
+.fa-root .fa-activity-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.fa-root .fa-activity-item button { padding: 6px 10px; color: #fff1c5; background: #285b3b; border: 1px solid #a2b181; cursor: pointer; font: 800 10px 'DM Mono',monospace; }
+.fa-root .fa-activity-panel .fa-session { margin: 0; }
+@media (max-width: 760px) {
+  .fa-root .fa-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .fa-root .fa-actions .fa-button { min-width: 0; min-height: 42px; padding-inline: 15px; font-size: 11px; }
+  .fa-root .fa-actions .fa-button--left { padding-left: 23px; }
+}
+@media (max-width: 639px) {
+  .fa-root .fa-scene .fa-hud-logo { top: 12px; right: 12px; }
+  .fa-root .fa-scene .fa-hud-logo img { width: 91px; }
+}
+@media (max-width: 360px) {
+  .fa-root .fa-actions { grid-template-columns: 1fr; justify-items: center; }
+  .fa-root .fa-actions .fa-button { width: min(100%,245px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fa-root .fa-add-homie { transition: none; }
+}
+
+/* The street remains visible beneath a clear HUD; fight modes float independently. */
+.fa-root .fa-hud { background: transparent; }
+.fa-root .fa-hud::before {
+  background: linear-gradient(180deg, #0c1613ab 0%, #0c16136b 40%, transparent 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(180deg, #000 0%, #0009 60%, transparent 100%);
+}
+.fa-root .fa-topnav {
+  position: absolute; top: 62px; left: 0; right: 0; z-index: 12;
+  margin: 0; background: transparent; border: 0; box-shadow: none;
+}
+.fa-root .fa-scene { height: calc(min(420px,49vh) + 104px); min-height: 434px; max-height: none; }
+.fa-root .fa-scene__copy { top: calc(104px + clamp(16px,4%,26px)); }
+.fa-root .fa-scene .fa-hud-logo { top: 120px; }
+.fa-root .fa-avatar--you { height: calc(91% - 95px); }
+.fa-root .fa-rivalzone { height: calc(89% - 93px); }
+@media (max-width: 760px) {
+  .fa-root .fa-topnav { top: 56px; }
+  .fa-root .fa-scene { height: calc(min(430px,54svh) + 98px); min-height: 448px; }
+  .fa-root .fa-scene__copy { top: 110px; }
+  .fa-root .fa-scene .fa-hud-logo { top: 110px; }
+  .fa-root .fa-avatar--you { height: calc(60% - 59px); }
+  .fa-root .fa-rivalzone { height: calc(58% - 57px); }
+}
+@media (max-width: 460px) {
+  .fa-root .fa-scene { height: 488px; min-height: 438px; }
+  .fa-root .fa-avatar--you { height: calc(57% - 56px); }
+  .fa-root .fa-rivalzone { height: calc(55% - 54px); }
+}

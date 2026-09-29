@@ -70,7 +70,7 @@ for (const owner of ["player", "cpu"] as const) {
     );
     assert.equal(find(hit, backup).lane, 0);
     assert(find(hit, backup).statuses.protected);
-    assert.equal(find(hit, backup).powerModifier, 1, "Tin Man arrival");
+    assert.equal(find(hit, backup).powerModifier, 2, "Tin Man rewards an ally moving into his district");
     assert.equal(find(hit, lion).powerModifier, 2, "Lion departure");
     assert.equal(find(hit, ron).waveRounds?.ronald, 3);
     const second = cast(hit, "inmate-informant", enemy).after;

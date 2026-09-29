@@ -14,6 +14,7 @@ import { cellblockWaveCards, cellblockWaveRarities, cellblockWaveUpgradeEffects 
 import { fairytaleCards, fairytaleRarities, fairytaleUpgradeEffects, FAIRYTALE_ALTERNATE_ART } from './fairytaleWave';
 import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffects } from './afterHoursWave';
 import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
+import { sideOzWaveCards, sideOzWaveRarities, sideOzWaveUpgradeEffects, sideOzWaveFactions } from './sideOzWave';
 
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
@@ -109,6 +110,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...fairytaleUpgradeEffects,
   ...afterHoursWaveUpgradeEffects,
   ...elementalBondWaveUpgradeEffects,
+  ...sideOzWaveUpgradeEffects,
   ...blockbusterWaveUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
@@ -260,6 +262,7 @@ export const cards: Record<string, Card> = {
   ...fairytaleCards,
   ...afterHoursWaveCards,
   ...elementalBondWaveCards,
+  ...sideOzWaveCards,
   ...blockbusterWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
@@ -315,6 +318,7 @@ export const rarityByEngineId = {
   ...cellblockWaveRarities,
   ...afterHoursWaveRarities,
   ...elementalBondWaveRarities,
+  ...sideOzWaveRarities,
   ...blockbusterWaveRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
@@ -392,11 +396,12 @@ const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.entries(blockbusterWaveCards).map(([id,c]) => [id,c.kind === "blockbuster" ? "Blockbusters" : "Block Party"])),
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, 'After Hours'])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, 'Elemental Bonds'])),
+  ...sideOzWaveFactions,
   'inmate-crafty': 'Cellblock', 'inmate-boyfriend': 'Cellblock', 'inmate-informant': 'Cellblock', 'inmate-contraband': 'Cellblock',
   'lebron-james': 'Independent',
   'hair-stylist': 'Neighborhood Creatives', stylist: 'Neighborhood Creatives',
   demario: 'Neighborhood Heroes', luigion: 'Neighborhood Heroes', 'black-cowboy': 'Independent',
-  ...Object.fromEntries(Object.keys(fairytaleCards).map(id => [id, ['dorothy', 'scarecrow', 'tinman', 'lion', 'oz'].includes(id) ? 'The Wiz' : ['alice', 'cheshire', 'queenofhearts'].includes(id) ? 'Wonderland' : 'Around the Block'])),
+  ...Object.fromEntries(Object.keys(fairytaleCards).map(id => [id, ['dorothy', 'scarecrow', 'tinman', 'lion', 'oz'].includes(id) ? 'The Wiz' : ['alice', 'cheshire', 'queenofhearts', 'mrrabbit'].includes(id) ? 'Wonderland' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(streetWaveCards).map(id => [id, streetWaveRarities[id] === 'Mythical' ? 'City Legends' : ['break', 'krump', 'bboy'].includes(id) ? 'The Cypher' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(mythicLegendCards).map(id => [id, 'City Legends'])),
   ...Object.fromEntries(Object.keys(characterWaveCards).map(id => [id, characterWaveRarities[id] === 'Mythical' ? 'City Legends' : 'Around the Block'])),
@@ -444,6 +449,7 @@ const factionByEngineId: Record<string, string> = {
 const sourceByEngineId: Record<string, string[]> = {
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, ['Street Packs']])),
+  ...Object.fromEntries(Object.keys(sideOzWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(cellblockWaveCards).map(id => [id, ['Street Packs']])),
   buddy: ["Street Packs"],
   folks: ["Street Packs"],
@@ -477,7 +483,9 @@ export const cardCatalog: CatalogCard[] = Object.entries(cards).map(
     faction: factionByEngineId[engineId] ?? "Independent",
     crewTags: decks
       .filter((deck) => deck.cards.includes(engineId))
-      .map((deck) => deck.id).concat(Object.hasOwn(neighborhoodWaveCards, engineId) ? ['neighborhood'] : []),
+      .map((deck) => deck.id).concat(Object.hasOwn(neighborhoodWaveCards, engineId) ? ['neighborhood'] : [],
+        Object.hasOwn(sideOzWaveCards, engineId) ? ['side-oz', sideOzWaveFactions[engineId] === 'Red Side' ? 'red-side'
+          : sideOzWaveFactions[engineId] === 'Blue Side' ? 'blue-side' : 'the-wiz'] : []),
     acquisitionSources: sourceByEngineId[engineId] ?? (["barber", "bottle", "sneaker", "church", "landlord", "carmeet", "promoter", "nail", "og", "delivery"].includes(engineId) ? ["City Never Sleeps"] : ["Street Packs"]),
     variantSlots: [
       ...(FAIRYTALE_ALTERNATE_ART.some(id => id === card.id) ? [{

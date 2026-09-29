@@ -115,12 +115,6 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             <button data-testid="button-view-collection-road" type="button" aria-pressed={tab === 'road'} onClick={() => setTab('road')}>The Gang Wall</button>
             <Link data-testid="link-signature-collections" href="/game/style">The Extras</Link>
           </nav>
-          <div className="collection-hero__top">
-            <div className="collection-hero__titles">
-              <span className="collection-hero__eyebrow">THE ARSENAL / CARD ARCHIVE</span>
-              <h1 className="collection-hero__title">The collection.</h1>
-            </div>
-          </div>
           <div className="collection-hero__stats">
             <CollectionOwnedCount count={owned.size} total={cardCatalog.length} reducedMotion={bootstrap.profile.settings.reducedMotion} />
             <span className="collection-hero__stat-label">CARDS OWNED</span>

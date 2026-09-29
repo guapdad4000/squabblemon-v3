@@ -70,3 +70,17 @@ mtime_ms = 1790566360136
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4890f841-dc1c-49f3-9635-210b751e9b67/98ebdb97-6e18-4b81-acd9-e78338c5a93b"
 storage_version_token = "1790566395906176"
 content_type = "image/png"
+
+[[outputs]]
+id = "xH0M5eVneZxptK7qP7FIq"
+uri = "file://artifacts/mockup-sandbox/public/images/fade-alley-night.png"
+type = "image"
+title = "Fade Alley background"
+description = "Original illustrated alley image used behind the 3D characters in the prototype."
+logical_id = "489186c3-e546-4687-af9b-724e92bd96f4"
+content_hash = "sha256:433226d439edfaab6488aa1b62068264df69437d5fb5dfe200e4cb226cfc7183"
+size = 1923417
+mtime_ms = 1790676465937
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/489186c3-e546-4687-af9b-724e92bd96f4/918118c1-b17a-403c-a311-5c80299c0ad6"
+storage_version_token = "1790677166840944"
+content_type = "image/png"

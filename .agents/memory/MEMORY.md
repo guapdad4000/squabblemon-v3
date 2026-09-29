@@ -42,3 +42,8 @@
 - [Social load evidence](social-load-evidence.md) — Include pool/reconnect effects; neither local throughput nor rate-capped runtime samples establishes hosted capacity.
 - [Social identity compatibility](social-identity-compatibility.md) — Replacing visible friend codes must not invalidate existing contacts or previously shared links.
 - [Render-test environment](render-test-environment.md) — Keep Vite environment emulation in the Node rendering harness, not production routing or authentication.
+- [Story-passive timing](story-passive-timing.md) — Evaluate story before round-start summons for new locks, then after summons for power-triggered phases.
+- [Guided browser journeys](guided-browser-journeys.md) — Freeze watched files during a live onboarding run; a Vite reload resets the unsaved encounter and creates misleading timeouts.
+- [WebGL preview fallback](webgl-preview-fallback.md) — Replit screenshots can lack WebGL even when the model works; keep a still from the actual model and verify animation separately.
+- [Story portrait cache revisions](story-portrait-cache.md) — Revised character art must refresh raw story asset URLs as well as catalog card images.
+- [Blue Scarf turn choice](blue-scarf-turn-choice.md) — User confirmed one random 50/50 give-or-steal choice each turn, not a fixed choice or a roll for each ally.

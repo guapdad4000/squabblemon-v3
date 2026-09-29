@@ -31,6 +31,10 @@
 .rookie-home-tour .safehouse-room-markers[data-guide-fallback="true"] button:not([data-anchor-positioned="true"]){position:static;left:auto;top:auto;visibility:visible;transform:none}
 @media(max-height:500px){.fade-tip>.dr-fade-portrait{height:80px;width:64px}.fade-tip{padding:8px;max-width:430px}.fade-tip h2{font-size:17px}.fade-tip p{font-size:12px;margin:4px 0}.fade-tip .venue-button{min-height:32px}.rookie-tour__welcome{grid-template-columns:1fr .5fr}.rookie-tour__welcome>.dr-fade-portrait{grid-row:auto;height:70dvh}}
 .fade-spotlight{position:fixed;inset:0;pointer-events:none;z-index:10000}.fade-mask,.fade-tip{pointer-events:auto}
+.fade-spotlight[data-nonblocking=true] .fade-mask{pointer-events:none}
+.fade-spotlight[data-nonblocking=true] .fade-tip{pointer-events:none}
+.fade-spotlight[data-nonblocking=true] .fade-tip button{pointer-events:auto}
+.fade-spotlight[data-nonblocking=true] .fade-tip--top{top:max(70px,env(safe-area-inset-top))}
 
 /* Coach cards keep the board legible and offer an explicit full-scene view. */
 .fade-mask{transition:background .18s ease}

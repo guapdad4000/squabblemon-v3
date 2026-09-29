@@ -3,8 +3,8 @@ import type { CreativeTools } from './creativeReworks';
 
 export const HOMECOMING_KIT_IDS = new Set(['counter', 'concrete', 'lola', 'repoman', 'madhatter']);
 export type HomecomingTools = CreativeTools & {
-  swap(m: Match, a: CardInstance, b: CardInstance): Match;
   tow(m: Match, source: CardInstance, target: CardInstance): Match;
+  returnAlly(m: Match, source: CardInstance, target: CardInstance): Match;
 };
 const lanes: Lane[] = [0, 1, 2];
 const crew = (m: Match) => m.boards.flat().filter(c => !c.hazard && c.kind !== 'support');
@@ -60,22 +60,37 @@ export function homecomingReveal(m: Match, s: CardInstance, t: HomecomingTools, 
     }
     note=success?'Tow & Collect: towed the target and redistributed up to 3 bonus Hands.':'Tow & Collect: no tow completed; movement restrictions and defenses apply.';
   } else if (s.cardId==='madhatter') {
-    const local=weakest(allies().filter(c=>c.lane===lane),t);
-    const remote=strongest(allies().filter(c=>c.lane!==lane),t);
-    if (local && remote) {
-      targets=[local.instanceId,remote.instanceId];
-      const origin=remote.lane!;
-      m=t.swap(m,local,remote);
-      if (find(m,local.instanceId)?.lane===origin && find(m,remote.instanceId)?.lane===lane) {
-        success=true;
-        if (local.cost===remote.cost) { m=give(m,local,1,t); m=give(m,remote,1,t); }
-        else {
-          const cheap=local.cost<remote.cost?local:remote, expensive=cheap===local?remote:local;
-          m=give(m,cheap,3,t); m=t.protect(m,s,expensive.instanceId);
+    const local=weakest(allies().filter(c=>c.lane===lane && (c.kind??'character')==='character'),t);
+    if (local) {
+      m=t.returnAlly(m,s,local);
+      const hand=s.owner==='player'?'playerHand':'cpuHand';
+      if (m[hand].some(c=>c.instanceId===local.instanceId)) {
+        targets.push(local.instanceId); success=true;
+        const remote=strongest(allies().filter(c=>c.lane!==lane && (c.kind??'character')==='character' && t.canMove(m,c,lane)),t);
+        if (remote && space(m,remote,lane)) {
+          m=t.move(m,remote,lane,'Change Places!: the stronger guest took the open seat.');
+          if (find(m,remote.instanceId)?.lane===lane) {
+            targets.push(remote.instanceId);
+            if (local.cost===remote.cost) {
+              m={...m,[hand]:m[hand].map(c=>c.instanceId===local.instanceId
+                ? {...c,powerModifier:c.powerModifier+1,lastEffectNote:'Change Places!: returned with +2 Hands and a one-use −1 Motion credit.'} : c)};
+              m=give(m,remote,1,t);
+            } else if (local.cost<remote.cost) {
+              m={...m,[hand]:m[hand].map(c=>c.instanceId===local.instanceId
+                ? {...c,powerModifier:c.powerModifier+3,lastEffectNote:'Change Places!: returned with +4 Hands and a one-use −1 Motion credit.'} : c)};
+              m=t.protect(m,s,remote.instanceId);
+            } else {
+              m=give(m,remote,3,t);
+            }
+          }
         }
       }
+      note=success?'Change Places!: weaker guest returned with +1 Hand and a one-use −1 Motion credit; if another guest moved in, the cheaper guest also gained +3 Hands (equal costs: +1 each).':'Change Places!: no guest returned.';
+    } else {
+      m=give(m,s,2,t);
+      success=true;
+      note='Change Places!: alone here, Mad Hatter gains +2 Hands.';
     }
-    note=success?'Change Places!: cheaper guest +3; other guest Protected. Equal costs: +1 each.':'Change Places!: both guests must be present and movable; no partial swap.';
   }
   if (success && !echoed) m=t.train(m,s.instanceId);
   return t.event(before,m,s,targets,note);

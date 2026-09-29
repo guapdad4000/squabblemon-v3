@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GuidedFirstSession } from '../src/pages/game/GuidedFirstSession';
+import { FirstDeckWorkshop } from '../src/pages/game/FirstDeckWorkshop';
 import { ROOKIE_MENTOR_CORE_IDS, ROOKIE_DECK_ID, ROOKIE_FOUNDATION_IDS } from '../src/data';
 import '../src/index.css';
 import '../src/styles/venue.css';
@@ -52,6 +53,9 @@ function Journey() {
   const [done, setDone] = useState(false);
   const bootstrap = makeBootstrap(claimed);
   (window as any).__ROOKIE_BOOTSTRAP_B = makeBootstrap(true);
+  if (new URLSearchParams(location.search).has('reward')) return <FirstDeckWorkshop
+    bootstrap={{ ...makeBootstrap(true), nextAction: { ...makeBootstrap(true).nextAction, id: 'rookie-reward' } }}
+    onComplete={() => setDone(true)} />;
   if (done) return <div data-testid="journey-done" style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center', background: '#07100e', color: 'white' }}>JOURNEY COMPLETE</div>;
   return <GuidedFirstSession bootstrap={bootstrap} onCollect={() => setClaimed(true)} onComplete={() => setDone(true)} />;
 }

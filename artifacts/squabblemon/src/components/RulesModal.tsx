@@ -6,6 +6,7 @@ import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS } from './tutorialGuidance';
 
 export function RulesModal({ onClose }: any) {
   const panel = React.useRef<HTMLDivElement>(null);
+  const [fieldGuideOpen, setFieldGuideOpen] = React.useState(false);
   React.useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     panel.current?.querySelector<HTMLButtonElement>('[data-testid=button-rules-modal]')?.focus({ preventScroll: true });
@@ -13,16 +14,11 @@ export function RulesModal({ onClose }: any) {
   }, []);
 
   const rules = [
-    "Drag a card from your hand into a district to play it immediately. Swipe sideways to browse your hand. You can also tap a card, choose a district, and press Play card. Keep playing while you have Motion, then End Turn.",
-    "Both gangs start with 2 Motion. Each new round refills to its round number plus up to 1 unspent Motion, capped at 9. Plug can discount your next card in another district.",
-    "Characters and support cards resolve immediately and stay on the board. Blockbusters are lane events: choose a lane, resolve the effect, then discard the event. After you end your turn, the Rival can also play multiple cards with its remaining Motion.",
-    "Blockbusters use the same ten-card deck. Concert lets you choose +1 or −1 Hands for both crews. Dice Game wagers 1–3 Motion per side and compares the best two of three D6. After Party extends the fight to seven rounds once. Blockbusters cannot use SQUABBLE.",
-    "Abilities resolve immediately. Hands changes, movement, freeze, silence, protection, and blocked effects stay visible on the affected cards.",
-    "Frozen cards add 0 Hands until cleansed. Silenced cards keep their Hands but cannot fire their ability.",
-    "Each fade draws three of sixteen locations. Rules can help or hurt: Dive Bar lowers costs and Hands; Corrupt Church charges extra Motion for a buff. Location penalties cannot lower a card below 0 Hands. Read each mat before playing.",
-    "When the final round ends, claim at least two of three districts to win. A 1–1–1 split or no two-district claim is a draw.",
-    "SQUABBLE can be armed once per fade after selecting a card. It doubles that card's Base Hands: save it to steal a close district or force the rival to answer, but do not wait past the final round.",
-    "Online fades have a clock for each turn. End your own turn before zero or you forfeit the match, even if you lead in districts. On the rival's turn, their clock is running."
+    "Each gang has ten unique cards. A standard fade starts with five in hand and draws one at the start of each new round while cards remain; encounter rules may change the opening hand.",
+    "A standard fade lasts six rounds. After Party can extend it to round seven once. Story and special encounters may set a different length.",
+    "You start with 2 Motion. Each later round gives Motion equal to its round number plus up to 1 unspent Motion carried forward, capped at 9. Spend it to play cards, then end your turn.",
+    "The higher Hands total claims each district. Claim at least two of the three to win; tied districts belong to neither player. If neither side claims two at the finish, the match is a draw.",
+    "You can use SQUABBLE once per fade: it adds the selected card's base Hands to its score, doubling that base value. Other effects resolve separately.",
   ];
 
   return (
@@ -44,7 +40,7 @@ export function RulesModal({ onClose }: any) {
             onClose();
           }
           if (event.key === 'Tab') {
-            const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],[tabindex="0"]') ?? [])];
+            const elements = [...(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],summary,[tabindex="0"]') ?? [])];
             const first = elements[0], last = elements[elements.length - 1];
             if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
             else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
@@ -61,7 +57,7 @@ export function RulesModal({ onClose }: any) {
         </div>
         
         <h2 id="rules-modal-title" className="font-display font-black italic text-4xl md:text-6xl uppercase leading-none mb-2">Know the streets.</h2>
-        <p className="text-white/40 text-xs md:text-sm mb-6 md:mb-8">Three districts. One reputation. Check the match length.</p>
+        <p className="text-white/40 text-xs md:text-sm mb-6 md:mb-8">The core rules at a glance. Encounter briefings and district mats show any match-specific twists.</p>
         
         <ul className="grid sm:grid-cols-2 gap-2 md:gap-3 mb-7 md:mb-9">
           {rules.map((rule, i) => (
@@ -73,23 +69,59 @@ export function RulesModal({ onClose }: any) {
             </li>
           ))}
         </ul>
+
+        <section aria-labelledby="field-guide-entry-title" className="mb-7 border-t border-white/10 pt-5">
+          <h3 id="field-guide-entry-title" className="font-display text-lg font-black italic uppercase">Need a little more?</h3>
+          <p className="mt-1 mb-3 text-xs leading-relaxed text-white/55">Open the quick Field Guide here without leaving your match.</p>
+          <button
+            type="button"
+            aria-expanded={fieldGuideOpen}
+            aria-controls="in-match-field-guide"
+            onClick={() => setFieldGuideOpen(open => !open)}
+            className="border border-primary/50 px-4 py-2 font-display text-sm font-black uppercase text-primary hover:bg-primary hover:text-black transition-colors"
+          >
+            {fieldGuideOpen ? 'Close quick Field Guide' : 'Open quick Field Guide'}
+          </button>
+          {fieldGuideOpen && (
+            <div id="in-match-field-guide" className="mt-4 grid gap-2 sm:grid-cols-2" data-testid="in-match-field-guide">
+              <article className="border border-white/10 bg-black/55 p-3">
+                <h4 className="font-display text-sm font-black uppercase text-primary">Play the turn</h4>
+                <p className="mt-1 text-xs leading-relaxed text-white/65">Play cards into districts while you can afford them. Drag or tap to select and place; inspect a card before committing. The rival takes its turn after you end yours.</p>
+              </article>
+              <article className="border border-white/10 bg-black/55 p-3">
+                <h4 className="font-display text-sm font-black uppercase text-primary">Check the battlefield</h4>
+                <p className="mt-1 text-xs leading-relaxed text-white/65">District rules and encounter modifiers can change card value, Motion, or match length. Read each district mat and any story briefing before choosing a lane.</p>
+              </article>
+              <details className="border border-white/10 bg-black/55 p-3 sm:col-span-2">
+                <summary className="cursor-pointer font-display text-sm font-black uppercase text-primary">Events, statuses & timing</summary>
+                <ul className="mt-2 space-y-2 text-xs leading-relaxed text-white/65">
+                  <li><b className="text-white/85">Blockbusters</b> use slots in the same ten-card deck. Choose a lane; the event resolves and leaves play without adding Hands. Concert chooses +1 or −1 Hands for each character in its lane. Dice Game wagers 1–3 Motion per side and compares the best two of three D6; a tie refunds both wagers. Blockbusters cannot use SQUABBLE.</li>
+                  <li><b className="text-white/85">Frozen</b> cards contribute 0 Hands until cleansed. <b className="text-white/85">Silenced</b> cards keep their Hands but cannot use abilities. Other statuses and protections are shown on the card.</li>
+                  <li><b className="text-white/85">Online turn clocks</b> are separate for each player. End your turn before your clock expires; running out forfeits the match even if you lead.</li>
+                </ul>
+              </details>
+            </div>
+          )}
+        </section>
         
         <section aria-labelledby="mechanic-reference-title" className="mb-7 border-t border-white/10 pt-6">
-          <div className="mb-4">
-            <div className="font-mono text-[9px] uppercase tracking-[.2em] text-primary">Field Manual // Mechanics</div>
-            <h3 id="mechanic-reference-title" className="mt-1 font-display text-2xl font-black italic uppercase">Read every effect.</h3>
-          </div>
-          <dl className="grid gap-2 sm:grid-cols-2" data-testid="mechanic-reference">
-            {MECHANIC_LESSON_IDS.map(id => {
-              const lesson = MECHANIC_LESSONS[id];
-              return (
-                <div key={id} data-mechanic={id} className="border border-white/10 bg-black/55 p-3">
-                  <dt className="font-display text-sm font-black uppercase text-primary">{lesson.name}</dt>
-                  <dd className="mt-1 text-xs leading-relaxed text-white/65">{lesson.summary}</dd>
-                </div>
-              );
-            })}
-          </dl>
+          <details>
+            <summary className="cursor-pointer">
+              <span className="font-mono text-[9px] uppercase tracking-[.2em] text-primary">Field Manual // Mechanics</span>
+              <span id="mechanic-reference-title" className="mt-1 block font-display text-2xl font-black italic uppercase">Read every effect.</span>
+            </summary>
+            <dl className="mt-4 grid gap-2 sm:grid-cols-2" data-testid="mechanic-reference">
+              {MECHANIC_LESSON_IDS.map(id => {
+                const lesson = MECHANIC_LESSONS[id];
+                return (
+                  <div key={id} data-mechanic={id} className="border border-white/10 bg-black/55 p-3">
+                    <dt className="font-display text-sm font-black uppercase text-primary">{lesson.name}</dt>
+                    <dd className="mt-1 text-xs leading-relaxed text-white/65">{lesson.summary}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </details>
         </section>
 
         <button type="button" data-testid="button-close-rules" onClick={onClose} className="w-full bg-primary text-black font-display font-black italic text-lg md:text-xl uppercase py-4 md:py-5 hover:bg-yellow-400 transition-colors shadow-[0_5px_0_#854d0e] active:translate-y-1 active:shadow-none">

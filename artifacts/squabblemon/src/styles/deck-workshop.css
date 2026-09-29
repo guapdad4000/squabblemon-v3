@@ -11,6 +11,12 @@
 .deck-workbench__header-tools{display:flex;align-items:center;gap:20px;flex:none}
 .deck-workbench__count{font:500 12px var(--font-mono);color:#a8a99d;white-space:nowrap}
 .deck-workbench__count strong{font:900 italic 28px var(--font-display);color:#f1d28b;margin-right:4px}
+.deck-workbench__count small{display:block;color:#b9beaf;font-size:9px;text-align:right}
+.deck-workbench__cover-preview{display:flex;align-items:center;gap:8px;color:#d7c391;font:9px var(--font-mono);text-transform:uppercase}
+.deck-workbench__cover-preview img{width:32px;height:44px;object-fit:contain;border:1px solid #d7c39170;background:#111}
+.deck-workbench__cover-preview span{display:grid;gap:3px}
+.deck-workbench__cover-preview strong{max-width:100px;color:#f6f1e4;font:700 11px var(--font-display);text-transform:uppercase}
+.deck-workbench__replay-lesson{font-size:10px!important;white-space:nowrap}
 .deck-workbench__coach-art{width:58px;height:82px;object-fit:contain;filter:drop-shadow(0 6px 14px var(--sq-ink))}
 .deck-workbench__body{display:flex;flex-direction:column;flex:1;min-height:0;min-width:0;border:0;padding:0;margin:0}
 .deck-workbench__lineup{flex:none}
@@ -37,11 +43,16 @@
 .deck-workbench__curve i{width:100%;height:36px;display:flex;align-items:end;background:#ffffff04}
 .deck-workbench__curve i b{width:100%;min-height:2px;background:linear-gradient(0deg,#8c784b,#e4c77e)}
 .deck-workbench__selection{display:flex;align-items:center;gap:8px;min-height:56px;padding:5px 0;border-bottom:1px solid #d7c39125}
+.deck-workbench__selection:has(.deck-workbench__swap-plan){flex-wrap:wrap}
 .deck-workbench__selection>div:first-child{flex:1;min-width:0}
 .deck-workbench__selection strong{color:#f1d28b;font-size:12px}
 .deck-workbench__selection p{font-size:11px;color:#b9beaf;line-height:1.5;margin-top:3px;max-width:700px}
 .deck-workbench__selection-tools{display:flex;gap:3px;flex:none}
 .deck-workbench__selection-tools button span{display:none}
+.deck-workbench__swap-plan{flex-basis:100%;display:flex;align-items:center;gap:10px;padding:8px 10px;background:#27271d;border:1px solid #b8955680;border-radius:4px}
+.deck-workbench__swap-plan p{flex:1;max-width:none;margin:0}
+.deck-workbench__swap-plan strong{color:#f1d28b}
+.deck-workbench__swap-plan button{white-space:nowrap}
 
 .deck-workbench__library{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
 .deck-workbench__card-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#a08a5555 transparent;padding:12px 4px var(--deck-actions-clearance,140px);clip-path:inset(var(--deck-grid-clip-top,0px) 0 0)}
@@ -90,6 +101,11 @@
 .rookie-review h1{font-family:var(--font-display);font-size:40px;font-weight:900;margin:16px 0}
 .rookie-review p{font-size:16px;line-height:1.7;color:#d2d5c9;margin:16px 0}
 .rookie-review nav{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:24px}
+.rookie-progression-primer{max-width:580px;margin:14px auto;padding:10px 14px;border:1px solid #d6bd7f66;background:#111b18;text-align:left;font-size:13px;line-height:1.45}
+.rookie-progression-primer summary{cursor:pointer;color:#f3d98c;font-weight:700}
+.rookie-progression-primer ul{padding:8px 0 6px 18px;list-style:disc}
+.rookie-progression-primer li+li{margin-top:5px}
+.rookie-progression-primer a{color:#f3d98c;text-decoration:underline}
 @media(min-width:1500px){.deck-workbench__roster{max-width:1250px}.deck-workbench__collection{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
 @media(max-width:700px),(max-height:700px){
  .deck-workbench__roster{grid-template-columns:repeat(10,100px);gap:14px;overflow-x:auto;padding:5px 3px 4px;scroll-snap-type:x proximity;scrollbar-width:thin}
@@ -97,6 +113,10 @@
  .deck-workbench__header{padding:12px 0;gap:10px}
  .deck-workbench__title p{font-size:11px}
  .deck-workbench__header-tools{gap:8px}
+  .deck-workbench__cover-preview{gap:4px;font-size:8px}
+  .deck-workbench__cover-preview img{width:24px;height:34px}
+  .deck-workbench__cover-preview strong{max-width:66px;font-size:9px}
+  .deck-workbench__replay-lesson{padding:4px!important;font-size:8px!important}
  .deck-workbench__count strong{font-size:22px}
  .deck-workbench__count{font-size:10px}
  .deck-workbench__name input{font-size:26px}
@@ -109,7 +129,7 @@
  .deck-workbench__browse{gap:10px;padding:8px 0}
  .deck-workbench__browse h2{max-width:100%;font-size:clamp(11px,3.85vw,16px);padding-inline:14px}
  .deck-workbench__browse .arsenal-search{flex-basis:100%;max-width:none}
- .deck-workbench__selection{align-items:start}
+  .deck-workbench__selection{align-items:start}
  .deck-workbench__selection p{display:none}
  .deck-workbench__ideas>div{grid-template-columns:1fr}
  .deck-workbench__readout{gap:8px;font-size:10px}
@@ -201,6 +221,9 @@ html[data-reduce-motion=true] .deck-workbench *{transition:none!important;scroll
   .deck-workbench__selection-tools .arsenal-icon:disabled{opacity:.38;background:#262622;color:#b5aa91}
   .deck-workbench__selection-tools .arsenal-danger{border-color:#e6958270;color:#ffbaa8}
   .deck-workbench__selection-tools button span{display:block;font:600 10px/1.1 var(--font-mono);white-space:nowrap}
+   .deck-workbench__swap-plan{display:block;margin-top:5px;padding:6px}
+   .deck-workbench__swap-plan p{display:block;margin-bottom:5px;font-size:10px}
+   .deck-workbench__swap-plan button{min-height:38px;margin:2px}
   .deck-workbench__browse{gap:3px;padding:3px 0 5px}
   .deck-workbench__browse h2{box-sizing:border-box;padding:10px 14px 3px;margin:0;font-size:14px;word-spacing:2px}
   .deck-workbench__browse .arsenal-search{margin:0}

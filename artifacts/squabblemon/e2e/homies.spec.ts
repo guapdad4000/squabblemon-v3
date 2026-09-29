@@ -218,6 +218,7 @@ test('incoming indicator survives refresh and updates after disconnected menu re
 });
 
 test('actual Friendly Fades shell: empty, crowded, selected homie and legal crew at six sizes', async ({ page }) => {
+  test.setTimeout(120_000);
   const readyCrew = (id: string, name: string) => ({
     id, name, heroCardId: 'hooper', cardIds: [...ROOKIE_CORE_IDS],
     recipeId: null, valid: true, issues: [],
@@ -231,8 +232,28 @@ test('actual Friendly Fades shell: empty, crowded, selected homie and legal crew
     : route.fulfill({ status: 400, json: { error: 'A screenshot may not create a room.' } }));
   await page.goto('/squabblemon/game/online?tab=friends');
   const screen = page.getByTestId('friendly-fades-device');
-  await expect(screen).toBeVisible();
+  await expect(screen).toBeVisible({ timeout: 30_000 });
   await expect(screen.getByText('No homies on your phone yet.')).toBeVisible();
+  const setup = screen.getByRole('region', { name: 'Set up a fade' });
+  await expect(setup.getByRole('link', { name: 'Add a homie' })).toHaveAttribute('href', '/squabblemon/game/settings#homies');
+  await expect(setup.locator('.fa-sectionhead').getByLabel('Room code')).toBeVisible();
+  const sentTab = setup.getByRole('tab', { name: /Sent invites/ });
+  const roomsTab = setup.getByRole('tab', { name: /Your rooms/ });
+  await expect(sentTab).toHaveAttribute('aria-selected', 'true');
+  await expect(setup.getByRole('tabpanel', { name: /Sent invites/ })).toContainText('No invites out right now.');
+  await roomsTab.click();
+  await expect(roomsTab).toHaveAttribute('aria-selected', 'true');
+  await expect(setup.getByRole('tabpanel', { name: 'Your rooms' })).toContainText('No rooms yet.');
+  await sentTab.click();
+  await expect(setup.getByRole('tabpanel', { name: 'Your rooms' })).toBeHidden();
+  await page.setViewportSize(sizes[5]);
+  await page.locator('.immersive-shell').evaluate(element => { element.scrollTop = 0; });
+  await expect(page.locator('.fa-hud-logo img')).toBeVisible();
+  await shot(page, 'friendly-fades-hero-desktop');
+  await page.setViewportSize(sizes[1]);
+  await page.locator('.immersive-shell').evaluate(element => { element.scrollTop = 0; });
+  await expect(page.getByRole('navigation', { name: 'Fight modes' }).getByRole('link', { name: /Friendly Fades/ })).toHaveAttribute('aria-current', 'page');
+  await shot(page, 'friendly-fades-hero-phone');
   for (const size of sizes) {
     await page.setViewportSize(size);
     await screen.getByTestId('button-open-room').scrollIntoViewIfNeeded();

@@ -9,6 +9,12 @@ Treat controls and information panels as physical objects from the Squabblemon w
 
 **How to apply:** Reuse the established visual primitives on future screens before inventing new container styles. Prefer floating paper labels over a continuous software-style tab bar. Keep live text and controls in accessible HTML above decorative art; never bake required labels into generated images or let foreground art cover controls.
 
+Keep the existing ripped-paper fight-mode tabs when changing a lobby layout; move them rather than replacing or redrawing them.
+
+**Why:** The user explicitly called out the loss of the original paper tabs during a Friendly Fades redesign, and rejected newly made lookalikes.
+
+**How to apply:** Reuse the app's shared fight navigation on ranked, friend, and challenge screens, including its existing paper assets.
+
 On the Safehouse, keep floating room labels dark and understated, but use long torn-paper banners for the detail panels opened by clicking room objects.
 
 **Why:** On 2026-09-23 the user rejected the scattered paper treatment on the room, then clarified that the longer banner-style popup panels were the part they liked. Do not interpret rejection of the room labels as rejection of those detail banners.

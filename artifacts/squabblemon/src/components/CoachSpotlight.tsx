@@ -5,11 +5,11 @@ import { useTutorialVoice } from '../lib/useTutorialVoice';
 
 type Rect = { top: number; left: number; width: number; height: number };
 /** The highlighted control remains the real app control; everything else waits. */
-export function CoachSpotlight({ target, title, children, step, onNext, nextLabel = 'Got it', onTarget, narrate = true }: {
+export function CoachSpotlight({ target, title, children, step, onNext, nextLabel = 'Got it', onTarget, narrate = true, voiceIds, nonBlocking = false, onDismiss }: {
   target: string; title: string; children: React.ReactNode; step: string;
-  onNext?: () => void; nextLabel?: string; onTarget?: () => void; narrate?: boolean;
+  onNext?: () => void; nextLabel?: string; onTarget?: () => void; narrate?: boolean; voiceIds?: readonly string[]; nonBlocking?: boolean; onDismiss?: () => void;
 }) {
-  useTutorialVoice(typeof children === 'string' ? children : null, narrate);
+  useTutorialVoice(typeof children === 'string' ? children : null, narrate, voiceIds);
   const [rect, setRect] = useState<Rect | null>(null);
   const [revealed, setRevealed] = useState(false);
   useEffect(() => { setRevealed(false); }, [target, step]);
@@ -31,7 +31,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
       element = document.querySelector<HTMLElement>(target);
       element?.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
       measure();
-      (panel.current?.querySelector('button') ?? element)?.focus({ preventScroll: true });
+      if (!nonBlocking) (panel.current?.querySelector('button') ?? element)?.focus({ preventScroll: true });
     });
     const observer = new ResizeObserver(measure);
     observer.observe(document.body);
@@ -70,20 +70,22 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
         }
       } else if (['Enter', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) guard(event);
     };
-    document.addEventListener('click', clicked, true);
-    document.addEventListener('pointerdown', guard, true);
-    document.addEventListener('keydown', keys, true);
+    if (!nonBlocking) {
+      document.addEventListener('click', clicked, true);
+      document.addEventListener('pointerdown', guard, true);
+      document.addEventListener('keydown', keys, true);
+    }
     return () => {
       cancelAnimationFrame(frame); cancelAnimationFrame(mutationFrame); observer.disconnect(); mutations.disconnect();
       window.removeEventListener('resize', measure); window.removeEventListener('scroll', measure, true);
       document.removeEventListener('click', clicked, true); document.removeEventListener('pointerdown', guard, true); document.removeEventListener('keydown', keys, true);
     };
-  }, [target, step, interactiveTarget]);
+  }, [target, step, interactiveTarget, nonBlocking]);
   const battleDiagram = step.startsWith('ROUND') ? target.includes('squabble') ? 'double' : target.includes('lane-') ? 'districts' : target.includes('next-round') ? 'bank' : target.includes('card-') ? 'card' : 'play' : null;
   const atBottom = rect ? rect.top < window.innerHeight * .48 : true;
   const beside = rect && innerWidth > 1000 ? rect.left + rect.width + 565 < innerWidth ? 'right' : rect.left > 565 ? 'left' : null : null;
   const sideStyle = rect && beside ? { left: beside === 'right' ? rect.left + rect.width + 24 : rect.left - 554, top: Math.max(16, Math.min(innerHeight - 260, rect.top)), bottom: 'auto', transform: 'none' } : undefined;
-  return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target} data-revealed={revealed}>
+  return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target} data-revealed={revealed} data-nonblocking={nonBlocking}>
     {rect ? <>
       <div className="fade-mask" style={{ inset: '0 0 auto', height: rect.top }} />
       <div className="fade-mask" style={{ top: rect.top, left: 0, width: rect.left, height: rect.height }} />
@@ -99,6 +101,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
         </div>}
         <div aria-live="polite" aria-atomic="true"><h2>{title}</h2><p>{children}</p></div>
         <button type="button" className="fade-reveal" aria-pressed={revealed} onClick={() => setRevealed(value => !value)}>{revealed ? "Focus this step" : "Show the whole scene"}</button>
+        {onDismiss && <button type="button" className="fade-reveal" onClick={onDismiss}>Hide tip (reopen anytime)</button>}
         {onNext && <button className="venue-button venue-button--gold" onClick={onNext}>{nextLabel}</button>}
         {!rect && <p role="status">Finding your next step…</p>}
       </div>

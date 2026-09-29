@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { playTutorialSequence, tutorialClipsForText, tutorialScript } from './tutorialVoice';
+import { execFileSync } from 'node:child_process';
+import { playTutorialSequence, rookieRoadCues, tutorialClipsForText, tutorialScript } from './tutorialVoice';
 import clips from './tutorialVoiceClips.json';
+import manifest from '../../reference/dr-fade-tutorial-audio.json';
 import { MECHANIC_LESSONS } from '../components/tutorialGuidance';
 import tour from './safehouseTour.json';
 import pickups from '../../reference/dr-fade-tutorial-recording-updates.json';
@@ -48,6 +50,36 @@ test('all supplied lines have audio assets and alternate cards/costs cannot anno
   assert.deepEqual(tutorialClipsForText('Tap ANOTHER DISTRICT. Dr. Fade fights here while helping an ally in another district. Watch both scores.'), ['generic-fade-district']);
   assert.deepEqual(tutorialClipsForText('A new unrecorded mechanic.'), []);
   assert.deepEqual(tutorialClipsForText(tutorialScript('welcome', 'welcome-reassurance')), ['welcome', 'welcome-reassurance']);
+});
+
+test('expanded recording sections decode completely in desktop Ogg and phone AAC', () => {
+  for (const take of manifest.clips.filter(clip => clip.source === 'expanded')) {
+    const duration = take.end - take.start;
+    const metadata = clips.find(clip => clip.id === take.id)!;
+    assert.ok(metadata, take.id);
+    for (const extension of ['ogg', 'm4a']) {
+      const file = new URL(`../../public/audio/voice/dr-fade/tutorial/${take.id}.${extension}`, import.meta.url);
+      const decoded = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file.pathname], { encoding: 'utf8' }).trim());
+      assert.ok(Math.abs(decoded - duration) < .22, `${take.id}.${extension}: ${decoded}s vs ${duration}s`);
+      execFileSync('ffmpeg', ['-v', 'error', '-xerror', '-i', file.pathname, '-f', 'null', '-'], { stdio: 'pipe' });
+    }
+  }
+});
+
+test('stable Rookie Road context routes only truthful cues; missing coverage stays written', () => {
+  assert.deepEqual(rookieRoadCues('home-5'), ['expanded-home-gang']);
+  for (const id of ['r1_choose_card', 'r2_choose_card', 'r1_choose_district', 'r2_choose_district', 'r1_play_card', 'r2_play_card', 'r3_bank_motion']) {
+    assert.ok(rookieRoadCues(id).every(cue => cue.startsWith('expanded-')), id);
+  }
+  assert.deepEqual(rookieRoadCues('r3_bank_motion', { cardSelected: true }), ['expanded-clear-card']);
+  assert.deepEqual(rookieRoadCues('r4_choose_card', { fadeHighlighted: false }), []);
+  assert.deepEqual(rookieRoadCues('r4_choose_district', { fadeHighlighted: false }), []);
+  assert.deepEqual(rookieRoadCues('r4_choose_district', { fadeHighlighted: true }), ['expanded-fade-district']);
+  assert.deepEqual(rookieRoadCues('r4_end_turn', { squabbleThisRound: false }), ['expanded-end-turn']);
+  assert.deepEqual(rookieRoadCues('result'), ['expanded-result']);
+  assert.deepEqual(rookieRoadCues('handoff'), ['expanded-handoff']);
+  assert.deepEqual(rookieRoadCues('unrecorded-reward-total'), []);
+  assert.deepEqual(tutorialClipsForText('Tap another card. It costs 7 Motion in THE TRAP.'), []);
 });
 
 test('sequences advance, duck music, and stop completely when a new prompt takes over', async t => {
@@ -118,14 +150,15 @@ test('failed clips advance without trapping the lesson or leaving music quiet', 
 
 
 test('every tour stop and revised card prompt has its exact recording', () => {
-  for (const cue of [...tour.map(step => ({ id: step.id, text: step.body })), ...pickups]) {
+  for (const cue of [...tour.filter(step => step.id !== 'home-5').map(step => ({ id: step.id, text: step.body })), ...pickups]) {
     assert.deepEqual(tutorialClipsForText(cue.text), [cue.id]);
     assert.match(clips.find(clip => clip.id === cue.id)!.revision, /^[a-f0-9]{12}$/);
   }
   assert.ok(clips.every(clip => !/Alice|Tin Man|Scarecrow/.test(clip.text)));
+  assert.deepEqual(tutorialClipsForText(tour.find(step => step.id === 'home-5')!.body), [], 'revised draw order must not play the older Gang take');
 });
 
-test('every first-sighting mechanic maps its displayed explanation to a dedicated recording', () => {
+test('every first-sighting mechanic still maps its displayed explanation to a dedicated recording', () => {
   for (const lesson of Object.values(MECHANIC_LESSONS)) {
     assert.deepEqual(tutorialClipsForText(`${lesson.summary} ${lesson.tacticalTip}`), [`mechanic-${lesson.id}`]);
   }

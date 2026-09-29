@@ -39,8 +39,8 @@ test('revised recommendations remain legal collectibles, not new starters or bat
   assert.equal(cards.luigion.cost, 2);
   assert.equal(cards.luigion.power, 3);
   assert.equal(MAX_MOTION, 9);
-  assert.equal(CARD_BALANCE_VERSION, 16);
-  assert.equal(ONLINE_RULES_VERSION, 16);
+  assert.equal(CARD_BALANCE_VERSION, 25);
+  assert.equal(ONLINE_RULES_VERSION, 25);
 });
 
 for (const crewId of crewIds) for (let tier = 0; tier <= 3; tier++) {
@@ -124,15 +124,21 @@ for (const owner of ['player', 'cpu'] as const) for (let tier = 0; tier <= 3; ti
     const ids = ['demario', 'luigion', 'plug', 'watson', 'bustdown', 'soulfood', 'gamer', 'counter', 'nerd', 'buddy'];
     let room = roomFor(owner, ids, tier);
     room = playOnline(room, owner, 'demario', 0);
-    const mushroom = room.match!.boards[0].find(card => card.cardId === 'demario-mushroom')!;
+    const mushroom = room.match!.boards.flat().find(card => card.cardId === 'demario-mushroom' && card.owner === owner)!;
     assert.ok(mushroom);
     assert.equal(getEffectiveCardPower(mushroom), 2);
+    const localLane = mushroom.lane!;
+    room.match!.boards = room.match!.boards.map((lane, index) => index === localLane
+      ? lane.filter(card => card.cardId !== 'demario-mushroom' || card.instanceId === mushroom.instanceId)
+      : lane) as typeof room.match!.boards;
+    assert.ok(room.match!.boards[localLane].filter(card => card.owner === owner).length < 4);
     // Isolated fixture advances spending capacity, not any live match or player data.
     room.match![owner === 'player' ? 'playerMotion' : 'cpuMotion'] = 2;
-    room = playOnline(room, owner, 'luigion', 0, powered);
+    const consumedBefore = room.match!.effectLog.filter(event => /consumed.*Mushroom/i.test(event.note)).length;
+    room = playOnline(room, owner, 'luigion', localLane, powered);
     assert.ok(!room.match!.boards.flat().some(card => card.instanceId === mushroom.instanceId));
     const consumed = room.match!.effectLog.filter(event => /consumed.*Mushroom/i.test(event.note));
-    assert.equal(consumed.length, 1);
+    assert.equal(consumed.length - consumedBefore, 1);
     for (const user of ['a', 'b']) {
       const view = onlineRoomView(room, 'FIXTURE', user, 11);
       const luigion = view.boards.flat().find(card => card.cardId === 'luigion')!;

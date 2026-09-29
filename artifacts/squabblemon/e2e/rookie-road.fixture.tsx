@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Battle } from '../src/components/Battle';
+import { ResultScreen } from '../src/components/ResultScreen';
+import { RookieHandoff } from '../src/pages/game/GuidedFirstSession';
 import {
-  canAffordSelection, createStoryMatch, nextRound, pass, playTurnCard, revealCpuTurn, type Lane,
+  canAffordSelection, createStoryMatch, getMatchDistricts, nextRound, pass, playTurnCard, revealCpuTurn, type Lane,
 } from '../src/gameEngine';
 import { rookieDistricts, rookieEncounter } from '@workspace/squabblemon-engine/rookie';
 import { ROOKIE_CORE_IDS, ROOKIE_DECK_ID, catalogIdsToEngineIds, decks } from '../src/data';
@@ -24,6 +26,8 @@ function RookieRoadBattle() {
   const [squabble, setSquabble] = useState(false);
   const [playsByRound, setPlaysByRound] = useState<Record<number, number>>({});
   const [rejection, setRejection] = useState('');
+  const [stage, setStage] = useState<'battle' | 'result' | 'handoff'>('battle');
+  useEffect(() => { if (match.phase === 'complete') setStage('result'); }, [match.phase]);
 
   const guidance = getTutorialGuidance({
     match, selectedInstanceId: selected, selectedLane: lane, squabble,
@@ -49,13 +53,15 @@ function RookieRoadBattle() {
     setMatch(next);
   };
 
-  const done = match.phase === 'complete';
+  if (stage === 'handoff') return <RookieHandoff onReview={() => setStage('result')} onComplete={() => {}} />;
+  if (stage === 'result') return <ResultScreen tutorial match={match} districts={getMatchDistricts(match)}
+    reward={{ id: 'voice-fixture', softCurrency: 0, xp: 0, streetRep: 0, packTickets: 0, cardXp: [] }}
+    onTutorialComplete={() => setStage('handoff')} onRestart={() => setStage('battle')} />;
   return <div style={{ height: '100dvh', color: 'white' }}>
     <div data-testid="match-sig" style={{ position: 'fixed', top: 0, left: 0, zIndex: 1, fontSize: 8, opacity: 0.05, pointerEvents: 'none' }}>
       {match.round}|{match.phase}|{selected}|{lane}|{squabble ? 1 : 0}|{playsByRound[match.round] ?? 0}
     </div>
     <div data-testid="commit-rejection" style={{ position: 'fixed', top: 0, right: 0, zIndex: 1, fontSize: 8, opacity: 0.05, pointerEvents: 'none' }}>{rejection}</div>
-    {done && <div data-testid="tutorial-done" style={{ position: 'fixed', inset: 0, zIndex: 20000, display: 'grid', placeItems: 'center', background: '#07100e' }}>LESSON COMPLETE</div>}
     <Battle tutorialCoach tutorialGuidance={guidance} match={match}
       deck={decks.find(d => d.id === ROOKIE_DECK_ID) ?? decks.find(d => d.id === 'vibes')} rivalDeck={decks.find(d => d.id === 'vibes')}
       selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane}

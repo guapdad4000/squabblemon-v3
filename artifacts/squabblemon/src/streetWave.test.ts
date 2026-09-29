@@ -68,7 +68,9 @@ test('Red Pill rewards an already weakened target; STUD intercepts once and esca
   const afterRed = playTurnCard(red.match, 'player', red.source.instanceId, 0);
   assert.equal(afterRed.boards[0].find(c => c.cardId === 'redpill')?.powerModifier, 2);
   assert.equal(afterRed.boards[0].find(c => c.instanceId === red.bigEnemy.instanceId)?.statuses.silenced, true);
-  const { source, ally, match } = setup('stud', 'player'); match.boards = [[ally], [], []];
+  const { source, ally, match } = setup('stud', 'player');
+  // Fill both other districts so Goth Kid uses its original direct-Silence fallback.
+  match.boards = [[ally], [unit('hooper', 'player', 21, 1)], [unit('hooper', 'player', 22, 2)]];
   let m = playTurnCard(match, 'player', source.instanceId, 0);
   const hostile=unit('gothkid','cpu',20);
   m=playTurnCard({...m,cpuHand:[hostile],cpuMotion:9,phase:'cpu-reveal'},'cpu',hostile.instanceId,0);

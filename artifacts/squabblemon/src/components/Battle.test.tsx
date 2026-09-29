@@ -1,4 +1,5 @@
 import { getDistrictResults } from '../gameEngine';
+import { SIDE_OZ_WAVE } from '../../../../lib/squabblemon-engine/src/sideOzWave';
 import { asCard } from './MultiplayerBattle';
 import { getCardRarity } from './CardRarityTreatment';
 import { Router } from 'wouter';
@@ -109,6 +110,28 @@ test('collection and deck card shells render progression for catalog ids', () =>
   assert.match(html, /All Jokes Roaster/);
   assert.match(html, /1\/3 active/);
   assert.doesNotMatch(html, /<button/);
+});
+
+test('all twelve side and Oz cards show their own art and abilities in collection, deck, inspector, and battle', () => {
+  for (const [engineId, art, name, , , , , ability] of SIDE_OZ_WAVE) {
+    const card = catalogCardById[art];
+    const image = `/assets/characters/${art}.webp?v=${(characterRevisions as Record<string, string>)[art]}`;
+    for (const presentationOnly of [true, false]) {
+      const shell = renderToStaticMarkup(<CardView card={card} fillContainer presentationOnly={presentationOnly} />);
+      assert(shell.includes(image), `${name} collection/deck art`);
+      assert(shell.includes(name), `${name} collection/deck name`);
+    }
+    const instance = createCardInstance(engineId, 'player', 'side-oz-render', 1);
+    const match = createMatch('block', 'slide');
+    const inspector = renderToStaticMarkup(<QueryClientProvider client={new QueryClient()}>
+      <CardInspector card={instance} match={match} onClose={noop} />
+    </QueryClientProvider>);
+    assert(inspector.includes(image), `${name} inspector art`);
+    assert(inspector.includes(ability), `${name} inspector ability`);
+    assert.equal((inspector.match(/data-testid="card-upgrade-/g) ?? []).length, 3);
+    const board = renderBattle({ ...match, boards: [[{ ...instance, lane: 0 }], [], []] });
+    assert(board.includes(image), `${name} board art`);
+  }
 });
 
 test('summoned token cards render with their own art instead of requiring a catalog rarity', () => {
@@ -900,7 +923,10 @@ test('later copy, cheap ally buffs, and enemy targeting handle summoned cards', 
   const tokens = summoned.boards[0].filter(c => c.kind === 'token');
   for (const [id, owner] of [['scammer', 'cpu'], ['gothkid', 'cpu'], ['failedrapper', 'player']] as const) {
     const played = createCardInstance(id, owner, 'followup', 1);
-    const match = playCard({ ...summoned, boards: [tokens, [], []],
+    // Dead Air takes an empty district before attempting to Silence a target.
+    // Fill the other districts so this fixture exercises its targeting branch.
+    const blockers = [1, 2].map(lane => ({ ...createCardInstance('cornball', 'player', 'occupied', lane), lane: lane as 1 | 2 }));
+    const match = playCard({ ...summoned, boards: [tokens, [blockers[0]], [blockers[1]]],
       phase: owner === 'player' ? 'player' : 'cpu-reveal',
       playerHand: owner === 'player' ? [played] : [], cpuHand: owner === 'cpu' ? [played] : [],
       playerMotion: 9, cpuMotion: 9,

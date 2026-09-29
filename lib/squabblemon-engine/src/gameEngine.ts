@@ -16,6 +16,7 @@ import { neighborhoodWaveCards, DEMARIO_MUSHROOM, LUIGION_POWERED } from './neig
 import { cellblockWaveCards } from './cellblockWave';
 import { afterHoursWaveCards } from './afterHoursWave';
 import { elementalBondWaveCards } from './elementalBondWave';
+import { sideOzWaveCards, sideOzWaveFactions } from './sideOzWave';
 export { createDistrictSnapshot, validateDistrictSnapshot, DISTRICT_CATALOG } from './districts';
 export type { DistrictSnapshot, DistrictId, DistrictDisplay } from './districts';
 import {
@@ -126,6 +127,11 @@ export type CardInstance = Card & {
   idolId?: string;
   fanRound?: number;
   waveTrainingUsed?: boolean;
+  /** Lil Blue's once-only cover for the next deployed friendly card. */
+  blueCoverReady?: boolean;
+  /** OG Red Night gets one steal opportunity per round for three rounds total. */
+  redNightStartRound?: number;
+  redNightLastRound?: number;
   homecomingEncores?: number;
   homecomingEncoreRound?: number;
   /** A Luigion deployment can consume only one Mushroom, never from an echo. */
@@ -133,6 +139,8 @@ export type CardInstance = Card & {
   waveOnce?: Partial<Record<'alice' | 'bonnetgirl' | 'undercova' | 'oz', boolean>>;
   waveRounds?: Partial<Record<'tinman' | 'lion' | 'ronald' | 'trapvamp' | 'squabblecook' | 'godofhookah', number>>;
   aliceReady?: boolean;
+  /** Mr Rabbit's one-use discount granted when this character last returned to hand. */
+  rabbitReturnDiscount?: boolean;
   bankedMotion?: number;
   burnSource?: { instanceId: string; owner: Owner };
   wildInvestment?: number;
@@ -179,7 +187,7 @@ export type ReplayState = Pick<Match,
   'nextArrivalOrder' | 'afterParty' | 'laneDamage' | 'diceResult' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
-  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime'
+  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime' | 'blueNextBonus'
 >;
 
 export type TimedEffect = {
@@ -190,9 +198,10 @@ export type TimedEffect = {
 };
 export type DiscountToken = {
   startsAtRound?: number;
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
   targetLane?: Lane;
   targetInstanceId?: string;
+  bonusHandsOnUse?: number;
   sourceLane: Lane | null; createdOrder: number;
   expiresAfterRound?: number;
 };
@@ -213,7 +222,7 @@ type LeaderKind = 'church' | 'nightmedic' | 'piratedj' | 'promoter' | 'gamer' | 
   | 'streetapostle' | 'fangirl' | 'asphaltapostle' | 'passportbro';
 type LeaderReaction = { kind: LeaderKind; owner: Owner; sourceInstanceId: string; targetInstanceId: string; amount?: number; triggerLane?: Lane };
 export type LingeringScent = { owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; triggeredRound?: number };
-export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
+export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman' | 'dead-air'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
 export type Match = {
   afterParty?: boolean;
   laneDamage?: LaneDamage[];
@@ -238,6 +247,8 @@ export type Match = {
   /** Absent only for pre-location matches and their legacy transcripts. */
   districtSnapshot?: DistrictSnapshot;
   districtRuntime?: DistrictRuntime;
+  /** Destroyed Blue Big Trippin cards reward the next friendly deployment. */
+  blueNextBonus?: Partial<Record<Owner, number>>;
   /** Present only in human-vs-human matches; solo transcript semantics stay unchanged. */
   squabbleByOwner?: Record<Owner, boolean>;
   round: number; phase: Phase; playerDeck: string; cpuDeck: string; playerHand: CardInstance[]; cpuHand: CardInstance[];
@@ -337,7 +348,7 @@ export function createMatchFromEngineCards(
     } : {}),
   };
   match = refreshDistrictRound(applyStoryEffects(match));
-  return match;
+  return applyStoryEffects(spawnHandDemarioMushrooms(match, false));
 }
 
 export function createMatchFromCatalog(
@@ -564,6 +575,7 @@ const activeLandlord = (match: Match, owner: Owner, targetLane: Lane) =>
 const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lane) =>
   (token.eligibility === "homecoming" && token.targetInstanceId === card.instanceId)
   || token.eligibility === "any"
+  || (token.eligibility === 'red-side' && sideOzWaveFactions[card.cardId] === 'Red Side')
   || (token.eligibility === "printed-two-cost" && card.cost === 2)
   || (token.eligibility === "printed-four-plus" && card.cost >= 4)
   || ((token.eligibility === "another-district" || token.eligibility === "livewire-cross-district") && token.sourceLane !== targetLane)
@@ -575,7 +587,9 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
     && card.type === 'Poison' && (card.kind ?? 'character') === 'character' && !card.hazard);
 const discountFor = (match: Match, owner: Owner, card: CardInstance, targetLane: Lane) =>
   [...(match.discountTokens ?? [])].filter(token => (token.startsAtRound === undefined || token.startsAtRound <= match.round) && (token.expiresAfterRound === undefined || token.expiresAfterRound >= match.round))
-    .sort((a, b) => Number(b.eligibility === 'wiseman-prediction') - Number(a.eligibility === 'wiseman-prediction')
+    .sort((a, b) => Number(b.eligibility === 'homecoming' && b.targetInstanceId === card.instanceId)
+      - Number(a.eligibility === 'homecoming' && a.targetInstanceId === card.instanceId)
+      || Number(b.eligibility === 'wiseman-prediction') - Number(a.eligibility === 'wiseman-prediction')
       || Number(b.eligibility === 'electric-delivery') - Number(a.eligibility === 'electric-delivery')
       || a.createdOrder - b.createdOrder || a.id.localeCompare(b.id))
     .find((token) => token.owner === owner && tokenEligible(token, card, targetLane));
@@ -596,10 +610,12 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
   const token = discountFor(match, owner, card, targetLane);
   const discount = token || legacyDiscount || buddyLaneDiscount;
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
-  const minimum = token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
+  const aliceReturnDiscount = card.cardId === 'alice' && !!card.aliceReady;
+  const minimum = aliceReturnDiscount || card.rabbitReturnDiscount || token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
   const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
     : districtDiscount(match, owner, card, targetLane);
-  return Math.max(minimum, card.cost - reduction) + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
+  return Math.max(minimum, card.cost - reduction - (aliceReturnDiscount ? 1 : 0) - (card.rabbitReturnDiscount ? 1 : 0))
+    + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
 }
 export function getCardCostExplanation(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): string {
   const token = discountFor(match, owner, card, targetLane);
@@ -614,6 +630,8 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   if (token?.eligibility === "creative-local") parts.push("Local pass minimum 1 Motion");
   if (token?.eligibility === "homecoming") parts.push("Homecoming minimum 1 Motion");
   if (token?.eligibility === "wiseman-prediction") parts.push("Told You minimum 1 Motion");
+  if (card.cardId === 'alice' && card.aliceReady) parts.push("−1 Drink Me / Eat Me return discount (minimum 1 Motion)");
+  if (card.rabbitReturnDiscount) parts.push("−1 Pocket Watch return discount (minimum 1 Motion)");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
   if (taxed) parts.push("+1 Rent Due tax");
   if (districtTax(match, owner, targetLane)) parts.push("+1 Corrupt Church tithe");
@@ -636,9 +654,12 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
     ...janitorMarks,
     ...creativeDistrictMarks(match),
     ...match.discountTokens.filter(t => t.eligibility === 'creative-local' && t.targetLane !== undefined && (t.expiresAfterRound??99) >= match.round).map(t => ({owner:t.owner,lane:t.targetLane!,text:`Local pass · next character here −1 Motion (minimum 1) · R${t.startsAtRound}–${t.expiresAfterRound}`})),
-    ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round).map(t => ({ owner: t.owner, lane: t.lane,
+    ...(match.districtTraps ?? []).filter(t => t.expiresAfterRound >= match.round
+      && (t.kind !== 'dead-air' || match.boards[t.lane].some(c => c.instanceId === t.source.instanceId && activeAbility(c)))).map(t => ({ owner: t.owner, lane: t.lane,
       text: t.kind === 'wiseman' ? 'Told You · next enemy character: here = Weaken; elsewhere = predictor gets −2 Motion here · through R' + t.expiresAfterRound
-        : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled' : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
+        : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled'
+          : t.kind === 'dead-air' ? 'Dead Air · first enemy played or moved here: Silence'
+          : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
     ...(match.lingeringScents ?? []).filter(s => s.expiresAfterRound >= match.round).map(s => ({
       owner: s.owner, lane: s.lane, text: 'Scent · ' + (s.triggeredRound === match.round ? 'spent this round' : 'next enemy: 2 Burn') + ' · through R' + s.expiresAfterRound,
     })),
@@ -663,6 +684,10 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
   const before = m.boards.flat().find(c => c.instanceId === id);
   if (!before) return m;
   let after = change(before);
+  if (before.cardId === 'blueside1' && after.powerModifier < before.powerModifier) {
+    after = { ...after, powerModifier: before.powerModifier,
+      lastEffectNote: after.lastEffectNote + ' OG Blue cannot lose Hands.' };
+  }
   if(after.powerModifier<before.powerModifier) {
     const prevented=creativePreventDamage(m,before,before.powerModifier-after.powerModifier,m[DAMAGE_OWNER]);
     const absorbed=before.powerModifier-after.powerModifier-prevented.amount;
@@ -706,6 +731,30 @@ const nextArrivalOrder = (m: Match): number => Math.max(
 const inLane = (m: Match, owner: Owner, target: Lane) => m.boards[target].filter((c) => !c.hazard && c.owner === owner);
 const highest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0];
 const lowest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(a) - getEffectiveCardPower(b) || a.instanceId.localeCompare(b.instanceId))[0];
+function deadAirArrival(m: Match, id: string, lane: Lane): Match {
+  const entrant = findCard(m, id);
+  if (!entrant || entrant.hazard || (entrant.kind ?? 'character') !== 'character') return m;
+  const trap = (m.districtTraps ?? []).find(t => {
+    if (t.kind !== 'dead-air' || t.owner === entrant.owner || t.lane !== lane || t.expiresAfterRound < m.round) return false;
+    const goth = findCard(m, t.source.instanceId);
+    return goth?.lane === lane && activeAbility(goth);
+  });
+  if (!trap) return m;
+  const before = m;
+  m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
+  const goth = findCard(m, trap.source.instanceId)!;
+  m = hostileEffect(m, goth, entrant, (state, actual) =>
+    queueDisruptionReactions(state, modify(state, actual.instanceId, c => ({
+      ...c,
+      statuses: { ...c.statuses, silenced: true },
+      lastEffectNote: 'Dead Air: first enemy to enter this district was Silenced.',
+    })), goth, actual.instanceId), false, false, true);
+  const silenced = findCard(m, id)?.statuses.silenced;
+  return addEvent(before, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner,
+    lane, targetIds: [id], note: silenced
+      ? 'Dead Air Silenced the first enemy entering this district before its ability.'
+      : 'Dead Air triggered, but the arriving enemy resisted or intercepted its Silence.' });
+}
 const move = (m: Match, card: CardInstance, destination: Lane, note: string, deferArrival = false): Match => {
   if (card.hazard) return m;
   const sourceLane = card.lane ?? m.boards.findIndex((items) => items.some((candidate) => candidate.instanceId === card.instanceId)) as Lane;
@@ -716,12 +765,23 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string, def
   if (card.statuses.locked && !creativeCanCross(m,card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'LOCKED: cannot be moved.' }));
   }
+  const beforeMove = m;
   const effect = m.districtSnapshot?.locations[destination].effect;
   const trapBonus = effect?.kind === 'move-bonus' && !m.districtRuntime!.trappedCardIds.includes(card.instanceId) ? effect.amount : 0;
   const updated = { ...card, lane: destination, moved: true, powerModifier: card.powerModifier + trapBonus, lastEffectNote: note + (trapBonus ? ` THE TRAP: +${trapBonus} Hands.` : '') };
   if (trapBonus) m = { ...m, districtRuntime: { ...m.districtRuntime!, trappedCardIds: [...m.districtRuntime!.trappedCardIds, card.instanceId] } };
   let moved = { ...m, boards: m.boards.map((items, i) => i === sourceLane ? items.filter((c) => c.instanceId !== card.instanceId) : i === destination ? [...items, { ...updated, powerModifier: card.powerModifier }] : items) as Match['boards'] };
   if (trapBonus) moved = modify(moved, card.instanceId, c => ({ ...c, powerModifier: c.powerModifier + trapBonus }));
+  if (abilityCardId(card) === 'gothkid') moved = { ...moved,
+    districtTraps: (moved.districtTraps ?? []).filter(t => t.kind !== 'dead-air' || t.source.instanceId !== card.instanceId) };
+  // Preserve the move as its own replay frame before the arrival consumes the trap.
+  if ((card.kind ?? 'character') === 'character' && (moved.districtTraps ?? []).some(t =>
+    t.kind === 'dead-air' && t.owner !== card.owner && t.lane === destination && t.expiresAfterRound >= moved.round
+    && moved.boards[destination].some(c => c.instanceId === t.source.instanceId && activeAbility(c)))) {
+    moved = addEvent(beforeMove, moved, { type: 'ability', kind: 'move', sourceId: card.instanceId, owner: card.owner,
+      lane: destination, targetIds: [card.instanceId], note: card.name + ' moved into district ' + (destination + 1) + '.' });
+  }
+  moved = deadAirArrival(moved, card.instanceId, destination);
   moved = queueLeaderReaction(moved, 'promoter', card.instanceId, m);
   const enemy = card.owner === 'player' ? 'cpu' : 'player';
   if (getLaneScoreForMatch(m, inLane(m, card.owner, sourceLane), sourceLane, card.owner)
@@ -738,7 +798,7 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string, def
   };
   if (deferArrival) return moved;
   moved = fairytaleDeparture(moved, card);
-  moved = fairytaleArrival(moved, card.instanceId);
+  moved = fairytaleArrival(moved, card.instanceId, true);
   return homecomingArrival(creativeMoved(m, applyScentEntry(moved, card.instanceId), card.instanceId, creativeTools()), card.instanceId, homecomingTools());
 };
 const lowestFriendlyLane = (m: Match, owner: Owner, except: Lane): Lane => ([0, 1, 2] as Lane[]).filter((x) => x !== except).sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner) - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b)[0];
@@ -1066,7 +1126,7 @@ const applyOngoingRoundEndHandEffects = (m: Match): Match => {
  */
 export const SUMMON_TEMPLATES = {
   'demario-mushroom': DEMARIO_MUSHROOM,
-  grin: { id: 'cheshire', name: 'Grin', type: 'Air', cost: 0, power: 3, ability: 'The Smile Stays', effect: 'A 3-Hand Grin left by a returning ally.', kind: 'token' as const, abilityUpgrades: [] },
+  grin: { id: 'cheshire', name: 'Grin', type: 'Air', cost: 0, power: 6, ability: 'The Smile Stays', effect: 'A 6-Hand Grin left by a returning ally.', kind: 'token' as const, abilityUpgrades: [] },
   cardguard: { id: 'queen-of-hearts', name: 'Card Guard', type: 'Dark', cost: 0, power: 2, ability: 'Royal Guard', effect: 'A 2-Hand guard summoned after an execution.', kind: 'token' as const, abilityUpgrades: [] },
   'smile-bomb': {
     id: 'smile-bomb', name: 'Smile Bomb', type: 'Fire', cost: 0, power: 0,
@@ -1256,12 +1316,18 @@ const targetEnemy = (m: Match, source: CardInstance, target: CardInstance, apply
     queueDisruptionReactions(before, modify(before, actual.instanceId, apply), source, actual.instanceId), bypassWifeyGuard);
 
 const trainWaveAbility = (m: Match, id: string): Match => {
-  const card = m.boards.flat().find(c => c.instanceId === id);
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
-  let result = modify(m, id, c => ({ ...c, waveTrainingUsed: true }));
+  const card = m.boards.flat().find(c => c.instanceId === id)
+    ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
+    if (card.lane !== null) return modify(state, id, change, copiedGain);
+    const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
+    return { ...state, [hand]: state[hand].map(c => c.instanceId === id ? change(c) : c) };
+  };
+  let result = update(m, c => ({ ...c, waveTrainingUsed: true }));
   for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, card.owner, card.cardId)) {
     const before = result;
-    result = modify(result, id, c => ({ ...c, powerModifier: c.powerModifier + upgrade.effect.amount,
+    result = update(result, c => ({ ...c, powerModifier: c.powerModifier + upgrade.effect.amount,
       lastEffectNote: upgrade.name + ': +1 Hand (once per match).' }), true);
     result = addEvent(before, result, { type: 'ability', sourceId: id, owner: card.owner, targetIds: [id],
       note: upgrade.name + ': +1 Hand (once per match).', abilityMetadata: {
@@ -1282,11 +1348,17 @@ const removeDestroyedCard = (m: Match, id: string): Match => {
     return trainWaveAbility(saved, id);
   }
   return { ...m, boards: m.boards.map(items => items.filter(item => item.instanceId !== id)) as Match['boards'],
-    timedEffects: m.timedEffects.filter(effect => effect.targetInstanceId !== id) };
+    timedEffects: m.timedEffects.filter(effect => effect.targetInstanceId !== id),
+    ...(card.cardId === 'blueside5' && activeAbility(card)
+      ? { blueNextBonus: { ...m.blueNextBonus, [card.owner]: (m.blueNextBonus?.[card.owner] ?? 0) + 1 } }
+      : {}) };
 };
 
 /** Damage is evaluated on the actual recipient after interception and shields. */
 const reduceHands = (m: Match, target: CardInstance, amount: number, note: string, burnStacks?: number): Match => {
+  if (target.cardId === 'blueside1') return modify(m, target.instanceId, c => ({
+    ...c, lastEffectNote: note + ' (no effect: OG Blue cannot lose Hands).',
+  }));
   if (target.statuses.uncounterable) return modify(m, target.instanceId, c => ({ ...c, lastEffectNote: note + ' (no effect: uncounterable).' }));
   const mitigation = m.timedEffects.find(e => e.kind === 'nail-mitigation' && e.targetInstanceId === target.instanceId);
   const damage = Math.max(0, amount - (mitigation ? 1 : 0));
@@ -1355,16 +1427,17 @@ function grantProtection(m: Match, source: CardInstance, id: string): Match {
 function waveRound(m: Match, id: string, key: keyof NonNullable<CardInstance['waveRounds']>): Match {
   return modify(m, id, c => ({ ...c, waveRounds: { ...c.waveRounds, [key]: m.round } }));
 }
-function fairytaleArrival(m: Match, id: string): Match {
+function fairytaleArrival(m: Match, id: string, movedHere = false): Match {
   const entrant = m.boards.flat().find(c => c.instanceId === id);
   if (!entrant || entrant.hazard || entrant.lane === null) return m;
   for (const tin of inLane(m, entrant.owner, entrant.lane).filter(c => c.instanceId !== id && abilityCardId(c) === 'tinman' && activeAbility(c) && c.waveRounds?.tinman !== m.round)) {
     const before = m;
+    const hands = movedHere || ['dorothy', 'scarecrow', 'tinman', 'lion'].includes(abilityCardId(entrant)) ? 2 : 1;
     m = waveRound(m, tin.instanceId, 'tinman');
     m = grantProtection(m, tin, id);
-    m = modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + 1 }));
+    m = modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + hands }));
     m = trainWaveAbility(m, tin.instanceId);
-    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: 'Heart Starter: first ally entering this round gains +1 Hand and Protection.' });
+    m = addEvent(before, m, { type: 'ability', sourceId: tin.instanceId, owner: tin.owner, targetIds: [id], note: `Heart Starter: first ally entering this round gains +${hands} ${hands === 1 ? 'Hand' : 'Hands'} and Protection.` });
   }
   return m;
 }
@@ -1439,18 +1512,24 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
 function returnToHand(m: Match, source: CardInstance, target: CardInstance, discount = false): Match {
   if (target.lane === null || (target.kind ?? 'character') !== 'character' || !m.boards.flat().some(c => c.instanceId === target.instanceId)) return m;
   const before = m, printed = cards[target.cardId], hand = target.owner === 'player' ? 'playerHand' : 'cpuHand';
-  const returned: CardInstance = { ...target, ...printed, basePower: printed.power, powerModifier: 0, lane: null, playedRound: null,
+  const rabbitInHand = m[hand].find(c => c.instanceId !== target.instanceId && abilityCardId(c) === 'mrrabbit' && activeAbility(c));
+  const returned: CardInstance = { ...target, ...printed, basePower: printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
     statuses: emptyStatuses(), copiedAbilityCardId: undefined, recoverableDamage: 0, burnSource: undefined, moved: false,
-    lastEffectNote: 'Returned to hand by ' + source.name + '.' };
+    rabbitReturnDiscount: !!rabbitInHand,
+    lastEffectNote: source.cardId === 'madhatter'
+      ? 'Change Places!: returned with +1 Hand and a one-use −1 Motion credit.'
+      : 'Returned to hand by ' + source.name + '.' };
   m = { ...m, [hand]: [...m[hand], returned], boards: m.boards.map(items => items.filter(c => c.instanceId !== target.instanceId)) as Match['boards'],
     timedEffects: m.timedEffects.filter(e => e.targetInstanceId !== target.instanceId && !(e.sourceInstanceId === target.instanceId && e.kind === 'wifey-protection')),
     discountTokens: m.discountTokens.filter(t => t.targetInstanceId !== target.instanceId) };
   if (discount) {
     m = addDiscountToken(m, target.owner, source, 'homecoming');
-    m = { ...m, discountTokens: m.discountTokens.map(t => t.createdOrder === m.nextDiscountOrder - 1 ? { ...t, targetInstanceId: target.instanceId } : t) };
+    m = { ...m, discountTokens: m.discountTokens.map(t => t.createdOrder === m.nextDiscountOrder - 1
+      ? { ...t, targetInstanceId: target.instanceId, ...(source.cardId === 'dorothy' ? { bonusHandsOnUse: 1 } : {}) } : t) };
   }
   m = fairytaleDeparture(m, target);
-  const cat = before.boards.flat().find(c => c.owner === target.owner && abilityCardId(c) === 'cheshire' && activeAbility(c));
+  const cat = [...before.boards.flat(), ...before[hand]]
+    .find(c => c.owner === target.owner && abilityCardId(c) === 'cheshire' && activeAbility(c));
   if (cat && m.cheshireRounds?.[target.owner] !== m.round) {
     m = { ...m, cheshireRounds: { ...m.cheshireRounds, [target.owner]: m.round } };
     if (!inLane(m, target.owner, target.lane).some(c => c.cardId === 'grin')) {
@@ -1458,7 +1537,21 @@ function returnToHand(m: Match, source: CardInstance, target: CardInstance, disc
       m = trainWaveAbility(m, cat.instanceId);
     }
   }
-  return addEvent(before, m, { type: 'ability', kind: 'move', sourceId: source.instanceId, owner: source.owner, targetIds: [target.instanceId], note: target.name + ' returned to hand.' + (discount ? ' Its next deployment costs 1 less Motion, minimum 1.' : '') });
+  m = addEvent(before, m, { type: 'ability', kind: 'move', sourceId: source.instanceId, owner: source.owner, targetIds: [target.instanceId], note: target.name + ' returned to hand.' + (source.cardId === 'madhatter' ? ' It has +1 Hand.' : '') + (discount ? ' Its next deployment costs 1 less Motion, minimum 1' + (source.cardId === 'dorothy' ? ', and gains +1 Hand.' : '.') : '') });
+  if (rabbitInHand) m = addEvent(m, m, { type: 'ability', sourceId: rabbitInHand.instanceId, owner: target.owner,
+    targetIds: [target.instanceId], note: 'Pocket Watch: ' + target.name + ' costs 1 less Motion on its next deployment (minimum 1).' });
+  for (const rabbit of before.boards.flat().filter(c => c.owner === target.owner && c.instanceId !== target.instanceId
+    && abilityCardId(c) === 'mrrabbit' && activeAbility(c))) {
+    const current = findCard(m, rabbit.instanceId);
+    if (!current || !activeAbility(current)) continue;
+    const start = m;
+    m = modify(m, rabbit.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1,
+      lastEffectNote: 'Pocket Watch: an ally returned to hand; +1 Hand.' }));
+    m = trainWaveAbility(m, rabbit.instanceId);
+    m = addEvent(start, m, { type: 'ability', sourceId: rabbit.instanceId, owner: rabbit.owner,
+      targetIds: [rabbit.instanceId], note: 'Pocket Watch: an ally returned to hand; +1 Hand.' });
+  }
+  return m;
 }
 function returnAliceAtRoundEnd(m: Match): Match {
   if (m.round >= getMatchRoundLimit(m)) return m;
@@ -1499,20 +1592,280 @@ function undercovaReaction(m: Match, beforePlay: Match, id: string, origin: Lane
 function hasEntrance(c: CardInstance): boolean {
   return c.aliceReady || c.effect.includes('On Reveal:') || (!c.effect.startsWith('Ongoing:') && !['bossbabe', 'stockz', 'streamer', 'wifey', 'nail'].includes(c.cardId));
 }
+function clearBlueScarfRoute(m: Match, source: CardInstance): {
+  match: Match; targetIds: string[]; moved: number; note: string;
+} {
+  const enemy = source.owner === 'player' ? 'cpu' : 'player';
+  // Pick from the original three districts so an ally cannot move twice on the same turn.
+  const riders = ([0, 1, 2] as Lane[]).flatMap(origin => {
+    const ally = lowest(inLane(m, source.owner, origin)
+      .filter(card => !card.hazard && card.instanceId !== source.instanceId));
+    return ally ? [{ id: ally.instanceId, origin }] : [];
+  });
+  const steal = seededIndex(JSON.stringify(['blue-scarf-route', source.instanceId, m.round, m.nextEventSequence]), 2) === 1;
+  const targets: string[] = [];
+  let moved = 0;
+  for (const { id, origin } of riders) {
+    const rider = findCard(m, id);
+    const currentSource = findCard(m, source.instanceId);
+    if (!rider || rider.lane !== origin || !currentSource || !activeAbility(currentSource)) continue;
+    // Districts are a row, not a ring: the outer districts can only enter the center.
+    const adjacent: Lane[] = origin === 0 || origin === 2 ? [1] : [2, 0];
+    const destination = adjacent
+      .find(next => inLane(m, source.owner, next).length < 4
+        && !getStoryLockedLanes(m, source.owner).includes(next) && canMoveTo(m, rider, next));
+    if (destination === undefined) continue;
+    m = move(m, rider, destination, 'Clear the Route: crossed one district.');
+    const arrival = findCard(m, id);
+    if (arrival?.lane !== destination) continue;
+    moved++;
+    targets.push(id);
+    if (!steal) {
+      m = modify(m, id, card => ({ ...card, powerModifier: card.powerModifier + 1,
+        lastEffectNote: 'Clear the Route: +1 Hand.' }));
+      continue;
+    }
+    const victim = highest(inLane(m, enemy, destination));
+    if (!victim) continue;
+    const previous = victim.powerModifier;
+    m = targetEnemyPowerReduction(m, currentSource, victim, 1, 'Clear the Route: stole 1 Hand.');
+    const survivor = findCard(m, victim.instanceId);
+    if (!survivor || survivor.powerModifier < previous) {
+      targets.push(victim.instanceId);
+      m = modify(m, id, card => ({ ...card, powerModifier: card.powerModifier + 1,
+        lastEffectNote: 'Clear the Route: stole +1 Hand.' }));
+    }
+  }
+  return { match: m, targetIds: targets, moved,
+    note: moved ? `Clear the Route moved ${moved} ally card${moved === 1 ? '' : 's'}; ${steal ? 'stole Hands from unprotected enemies where possible' : 'gave each +1 Hand'}.`
+      : 'Clear the Route found no legal ally route.' };
+}
+function resolveRedNightSteal(m: Match, source: CardInstance): {
+  match: Match; targetIds: string[]; succeeded: boolean; note: string;
+} {
+  const current = findCard(m, source.instanceId);
+  if (!current || current.lane === null || !activeAbility(current)
+    || current.redNightStartRound === undefined
+    || m.round >= current.redNightStartRound + 3
+    || current.redNightLastRound === m.round) {
+    return { match: m, targetIds: [], succeeded: false, note: 'Eyes on the Crossing has no steal available this turn.' };
+  }
+  m = modify(m, current.instanceId, card => ({ ...card, redNightLastRound: m.round }));
+  const enemy: Owner = current.owner === 'player' ? 'cpu' : 'player';
+  const enemyHere = inLane(m, enemy, current.lane);
+  const target = enemyHere.length
+    ? highest(enemyHere.filter(card => card.cardId !== 'blueside1' && !card.statuses.uncounterable
+      && getEffectiveCardPower(card) > 0))
+    : highest(inLane(m, current.owner, current.lane)
+    .filter(card => card.instanceId !== current.instanceId && card.kind !== 'support'
+      && card.cardId !== 'blueside1' && !card.statuses.uncounterable
+      && getEffectiveCardPower(card) > 1));
+  if (!target) return { match: m, targetIds: [], succeeded: false,
+    note: enemyHere.length
+      ? 'Eyes on the Crossing found no enemy it could steal from; allies are safe while enemies remain.'
+      : 'Eyes on the Crossing found no ally with a Hand to spare.' };
+  const enemyTarget = target.owner !== current.owner;
+  const previous = getEffectiveCardPower(target);
+  m = enemyTarget
+    ? targetEnemyPowerReduction(m, current, target, 1, 'Eyes on the Crossing: stole 1 Hand.')
+    : reduceHands(m, target, 1, 'Eyes on the Crossing: gave 1 Hand to OG Red Night.');
+  const remaining = findCard(m, target.instanceId);
+  const succeeded = !remaining || getEffectiveCardPower(remaining) < previous;
+  if (succeeded) m = modify(m, current.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
+    lastEffectNote: `Eyes on the Crossing: stole 1 Hand from ${enemyTarget ? 'an enemy' : 'an ally'}.` }));
+  return { match: m, targetIds: [target.instanceId, ...(succeeded ? [current.instanceId] : [])],
+    succeeded, note: succeeded
+      ? `Eyes on the Crossing stole 1 Hand from ${target.name} and gave it to OG Red Night.`
+      : `Eyes on the Crossing could not take a Hand from ${target.name}.` };
+}
+function resolveSideOzAbility(m: Match, source: CardInstance, echoed: boolean): Match {
+  const before = m, lane = source.lane!, enemy = source.owner === 'player' ? 'cpu' : 'player';
+  const targets: string[] = [];
+  let succeeded = false;
+  let resolution = '';
+  const own = () => m.boards.flat().filter(card => !card.hazard && card.owner === source.owner);
+  const enemiesHere = () => inLane(m, enemy, lane);
+  const buff = (target: CardInstance, amount: number, note: string) => {
+    targets.push(target.instanceId);
+    m = modify(m, target.instanceId, card => ({ ...card, powerModifier: card.powerModifier + amount, lastEffectNote: note }));
+    succeeded = true;
+  };
+  const protect = (target: CardInstance | undefined) => {
+    if (!target || target.statuses.protected) return false;
+    targets.push(target.instanceId);
+    m = grantProtection(m, source, target.instanceId);
+    return !!findCard(m, target.instanceId)?.statuses.protected;
+  };
+  const openOtherLanes = (owner: Owner, from: Lane) => ([0, 1, 2] as Lane[])
+    .filter(candidate => candidate !== from && inLane(m, owner, candidate).length < 4
+      && !getStoryLockedLanes(m, owner).includes(candidate))
+    .sort((a, b) => getLaneScoreForMatch(m, inLane(m, owner, a), a, owner)
+      - getLaneScoreForMatch(m, inLane(m, owner, b), b, owner) || a - b);
+  const applyStatus = (target: CardInstance | undefined, status: 'weakened' | 'silenced' | 'locked') => {
+    if (!target || target.statuses[status]) return false;
+    targets.push(target.instanceId);
+    m = hostileEffect(m, source, target, (state, actual) => queueDisruptionReactions(
+      state, modify(state, actual.instanceId, card => ({
+        ...card, statuses: { ...card.statuses, [status]: true },
+        lastEffectNote: `${source.ability}: ${status === 'weakened' ? 'Weakened' : status === 'silenced' ? 'Silenced' : 'Locked'}.`,
+      })), source, actual.instanceId,
+    ), false, false, true);
+    return !!findCard(m, target.instanceId)?.statuses[status];
+  };
+  const damage = (target: CardInstance | undefined, amount: number) => {
+    if (!target) return false;
+    targets.push(target.instanceId);
+    const oldPower = target.powerModifier;
+    m = targetEnemyPowerReduction(m, source, target, amount, `${source.ability}: -${amount} Hands.`);
+    const current = findCard(m, target.instanceId);
+    return !current || current.powerModifier < oldPower;
+  };
+  const alliesHere = () => inLane(m, source.owner, lane).filter(card => card.instanceId !== source.instanceId && !card.hazard);
+
+  if (source.cardId === 'redside1') {
+    const destination = openOtherLanes(source.owner, lane)[0];
+    if (destination !== undefined) {
+      m = move(m, source, destination, 'Take the Shortcut: moved to your weakest open district.');
+      if (findCard(m, source.instanceId)?.lane === destination) {
+        buff(findCard(m, source.instanceId)!, 1, 'Take the Shortcut: successful move, +1 Hand.');
+        m = addDiscountToken(m, source.owner, source, 'red-side');
+      }
+    }
+    resolution = succeeded ? 'Take the Shortcut moved Red Plaid Petey, granted +1 Hand, and discounted the next Red Side card.' : 'Take the Shortcut found no legal route.';
+  } else if (source.cardId === 'redside2') {
+    if (findCard(m, source.instanceId)?.redNightStartRound === undefined) {
+      m = modify(m, source.instanceId, card => ({ ...card, redNightStartRound: m.round }));
+    }
+    const steal = resolveRedNightSteal(m, source);
+    m = steal.match; targets.push(...steal.targetIds);
+    succeeded = steal.succeeded; resolution = steal.note;
+  } else if (source.cardId === 'redside3') {
+    succeeded = damage(highest(enemiesHere()), 1);
+    const otherOpen = openOtherLanes(source.owner, lane);
+    const roll = seededIndex(JSON.stringify(['red-robber', source.instanceId, m.round, m.nextEventSequence]), 2);
+    if (otherOpen.length && roll === 0) {
+      const destination = otherOpen[seededIndex(JSON.stringify(['red-robber-district', source.instanceId, m.round, m.nextEventSequence]), otherOpen.length)];
+      m = summonCard(m, source.owner, destination, sideOzWaveCards.redside3, 'redside3', source, false, 'red-side-3');
+      const copy = m.boards[destination].at(-1)!;
+      targets.push(copy.instanceId);
+      const foe = highest(inLane(m, enemy, destination));
+      if (foe) {
+        const previous = foe.powerModifier;
+        m = targetEnemyPowerReduction(m, copy, foe, 1, 'Check In: summoned Red Robber dealt 1 damage.');
+        const remaining = findCard(m, foe.instanceId);
+        if (!remaining || remaining.powerModifier < previous) targets.push(foe.instanceId);
+      }
+      succeeded = true;
+      resolution = 'Check In hit here and summoned one Red Robber in another district.';
+    } else resolution = succeeded ? 'Check In dealt 1 damage; no extra Red Robber arrived.' : 'Check In found no unprotected target or open summon.';
+  } else if (source.cardId === 'redside4') {
+    succeeded = applyStatus(highest(enemiesHere()), 'weakened');
+    resolution = succeeded ? 'Bad Omen applied Weaken.' : 'Bad Omen had no target or its status was blocked or already present.';
+  } else if (source.cardId === 'redside5') {
+    const target = lowest(own().filter(card => card.instanceId !== source.instanceId));
+    if (target) buff(target, 2, 'Raise the Colors: +2 Hands.');
+    else {
+      buff(findCard(m, source.instanceId)!, 1, 'Raise the Colors: no other ally, +1 Hand.');
+      applyStatus(highest(enemiesHere()), 'weakened');
+    }
+    resolution = target ? `${target.name} gained +2 Hands.` : 'Alone on the board, Ruby Shades gained +1 Hand and tried to Weaken an enemy here.';
+  } else if (source.cardId === 'blueside1') {
+    const target = highest(m.boards.flat().filter(card => !card.hazard && card.owner === enemy && card.lane !== lane));
+    const hit = damage(target, 3);
+    const blueCount = own().filter(card => sideOzWaveFactions[card.cardId] === 'Blue Side').length;
+    buff(findCard(m, source.instanceId)!, blueCount, `Crossfire: +${blueCount} Hands from Blue Side allies.`);
+    resolution = `Crossfire ${hit ? 'dealt 3 damage' : 'found no unprotected target'} and gained +${blueCount} Hands.`;
+  } else if (source.cardId === 'blueside2') {
+    buff(findCard(m, source.instanceId)!, 1, 'Stand Behind Me: +1 Hand; next ally gains Protection.');
+    m = modify(m, source.instanceId, card => ({ ...card, blueCoverReady: true }));
+    resolution = 'lil Blue gained +1 Hand and prepared Protection for the next deployed ally.';
+  } else if (source.cardId === 'blueside3') {
+    const routed = clearBlueScarfRoute(m, source);
+    m = routed.match; targets.push(...routed.targetIds);
+    succeeded = routed.moved > 0;
+    resolution = routed.note;
+  } else if (source.cardId === 'blueside4') {
+    const affected = lowest(alliesHere().filter(card => card.statuses.frozen || card.statuses.silenced));
+    if (affected) {
+      targets.push(affected.instanceId);
+      const old = affected.statuses;
+      m = cleanseAlly(m, affected.instanceId, card => ({
+        ...card, statuses: { ...card.statuses, frozen: false, silenced: false },
+        powerModifier: card.powerModifier + 2, lastEffectNote: 'Steady Nerves: cleansed Freeze and Silence, +2 Hands.',
+      }));
+      const current = findCard(m, affected.instanceId);
+      succeeded = !!current && (old.frozen !== current.statuses.frozen || old.silenced !== current.statuses.silenced
+        || current.powerModifier > affected.powerModifier);
+      resolution = 'Steady Nerves cleansed Freeze and Silence and gave +2 Hands.';
+    } else {
+      const target = lowest([...alliesHere(), source].filter(card => !card.statuses.protected));
+      const covered = protect(target);
+      buff(findCard(m, source.instanceId)!, 1, 'Steady Nerves: +1 Hand with no ally to cleanse.');
+      resolution = covered ? `${target!.name} gained Protection; Blue loco gained +1 Hand.` : 'Blue loco gained +1 Hand; no ally needed Protection.';
+    }
+  } else if (source.cardId === 'blueside5') {
+    succeeded = applyStatus(highest(enemiesHere()), 'weakened');
+    if (succeeded) buff(findCard(m, source.instanceId)!, 1, 'Measured Strike: Weaken landed, +1 Hand.');
+    resolution = succeeded ? 'Measured Strike applied Weaken and granted +1 Hand.' : 'Measured Strike had no target or its status was blocked or already present.';
+  } else if (source.cardId === 'wickedwitch') {
+    let drained = 0;
+    for (const foe of enemiesHere().filter(card => card.powerModifier > 0)) {
+      const previous = foe.powerModifier;
+      if (damage(foe, Math.min(2, previous))) drained++;
+    }
+    if (drained) buff(findCard(m, source.instanceId)!, drained, `Voice of the West: +${drained} Hands stolen.`);
+    let summoned = false;
+    if (inLane(m, source.owner, lane).length < 4) {
+      m = summonCard(m, source.owner, lane, sideOzWaveCards.flyingmonkeys, 'flyingmonkeys', source, false, 'flying-monkeys');
+      targets.push(m.boards[lane].at(-1)!.instanceId);
+      summoned = true; succeeded = true;
+    }
+    resolution = `Voice of the West drained ${drained} boosted enem${drained === 1 ? 'y' : 'ies'}${summoned ? ' and summoned Flying Monkeys.' : '; no room for Flying Monkeys.'}`;
+  } else if (source.cardId === 'flyingmonkeys') {
+    const target = lowest(enemiesHere());
+    const destination = target ? openOtherLanes(target.owner, lane)[0] : undefined;
+    if (target && destination !== undefined) {
+      targets.push(target.instanceId);
+      const oldLane = target.lane;
+      m = forceEnemyMove(m, source, target, destination);
+      succeeded = findCard(m, target.instanceId)?.lane !== oldLane;
+      if (succeeded) m = applyBurn(m, source, findCard(m, target.instanceId)!, 1, 'Snatch and Scatter: 1 Burn.');
+    }
+    resolution = succeeded ? 'Snatch and Scatter moved the enemy to its weakest open district and applied Burn.' : 'Snatch and Scatter found no target or legal destination, or movement was blocked.';
+  }
+
+  if (succeeded && !echoed) m = trainWaveAbility(m, source.instanceId);
+  return addEvent(before, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner,
+    lane, targetIds: [...new Set(targets)], note: resolution });
+}
+
 function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean): Match {
   const before = m, l = source.lane!, enemy = source.owner === 'player' ? 'cpu' : 'player';
   const id = source.cardId, targets: string[] = [];
   let succeeded = false;
   const buff = (target: CardInstance, amount: number) => { targets.push(target.instanceId); m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount })); succeeded = true; };
   if (id === 'dorothy') {
-    const target = lowest(inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character' && c.cost <= 2));
+    const target = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character' && c.cost <= 2));
     if (target) { targets.push(target.instanceId); m = returnToHand(m, source, target, true); succeeded = true; }
   } else if (id === 'scarecrow') {
     const ally = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.lane !== l && !c.hazard && c.lane !== null && canMoveTo(m, source, c.lane) && canMoveTo(m, c, l)));
     if (ally) {
       m = move(m, source, ally.lane!, 'Wrong Turn, Right Place: swapped districts.');
-      m = move(m, findCard(m, ally.instanceId)!, l, 'Wrong Turn, Right Place: swapped districts.');
-      buff(findCard(m, source.instanceId)!, 1); buff(findCard(m, ally.instanceId)!, 1);
+      const traveled = findCard(m, source.instanceId);
+      const partner = findCard(m, ally.instanceId);
+      if (traveled?.lane === ally.lane && activeAbility(traveled) && partner) {
+        m = move(m, partner, l, 'Wrong Turn, Right Place: swapped districts.');
+        if (findCard(m, ally.instanceId)?.lane === l) {
+          buff(findCard(m, source.instanceId)!, 1); buff(findCard(m, ally.instanceId)!, 1);
+        }
+      }
+    } else {
+      const empty = ([0, 1, 2] as Lane[]).find(destination => m.boards[destination].length === 0 && canMoveTo(m, source, destination));
+      if (empty !== undefined) {
+        m = move(m, source, empty, 'Wrong Turn, Right Place: moved to an empty district.');
+        const arrived = findCard(m, source.instanceId);
+        if (arrived?.lane === empty && activeAbility(arrived)) buff(arrived, 1);
+      }
     }
   } else if (id === 'lion' && inLane(m, source.owner, l).length === 1) {
     m = grantProtection(m, source, source.instanceId); succeeded = !source.statuses.protected;
@@ -1520,10 +1873,10 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
     const historicalIds = (m.entranceHistory?.length ? m.entranceHistory : (m.lastMovedAlly?.[source.owner] ? [m.lastMovedAlly[source.owner]!.instanceId] : []));
     const eligible = historicalIds.slice().reverse()
       .map(id => m.boards.flat().find(c => c.instanceId === id))
-      .find(c => c && c.owner === source.owner && c.instanceId !== source.instanceId
+      .filter((c): c is CardInstance => !!c && c.owner === source.owner && c.instanceId !== source.instanceId
         && (c.kind ?? 'character') === 'character' && activeAbility(c) && hasEntrance(c)
         && !['oz', 'tayaty', 'scammer'].includes(abilityCardId(c)));
-    const ally = eligible;
+    const ally = eligible.find(c => ['dorothy', 'scarecrow', 'tinman', 'lion'].includes(abilityCardId(c))) ?? eligible[0];
     if (ally) {
       m = modify(m, source.instanceId, c => ({ ...c, waveOnce: { ...c.waveOnce, oz: true } }));
       m = resolveAbility(m, ally, { echoed: true }); targets.push(ally.instanceId); succeeded = true;
@@ -1537,10 +1890,10 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
     m = modify(m, source.instanceId, c => ({ ...c, aliceReady: false })); buff(source, 3);
   } else if (id === 'queenofhearts') {
     const target = lowest(inLane(m, enemy, l));
-    if (target && getEffectiveCardPower(target) <= 4) {
+    if (target && getEffectiveCardPower(target) <= 6) {
       targets.push(target.instanceId);
       m = hostileEffect(m, source, target, (state, actual) => {
-        if (getEffectiveCardPower(actual) > 4) return state;
+        if (getEffectiveCardPower(actual) > 6) return state;
         let result = removeDestroyedCard(modify(state, actual.instanceId, c => ({ ...c, powerModifier: -c.basePower, lastEffectNote: 'Off With Their Heads: executed.' })), actual.instanceId);
         if (!findCard(result, actual.instanceId)) { result = summonCard(result, source.owner, l, SUMMON_TEMPLATES.cardguard, 'cardguard', source, false, 'queen-of-hearts'); succeeded = true; }
         return result;
@@ -1960,13 +2313,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         }
         succeeded = true;
       }
-    } else if (source.cardId === 'demario' && inLane(m, source.owner, l).length < 4) {
-      m = summonCard(m, source.owner, l, DEMARIO_MUSHROOM, 'demario-mushroom', source);
-      const token = m.boards[l].at(-1)!;
-      targetIds.add(token.instanceId);
-      m = fairytaleArrival(m, token.instanceId);
-      m = applyScentEntry(m, token.instanceId);
-      succeeded = true;
+    } else if (source.cardId === 'demario') {
+      for (let draw = 0; draw < 2; draw++) {
+        const result = plantDemarioMushroom(m, source, draw, false);
+        m = result.match;
+        if (result.token) { targetIds.add(result.token.instanceId); succeeded = true; }
+      }
+      resolutionNote = `Special Delivery: ${targetIds.size} Mushrooms summoned in random open districts.`;
     } else if (source.cardId === 'luigion') {
       const powered = source.id === LUIGION_POWERED.id || source.name === LUIGION_POWERED.name;
       const mushroom = !echoed && !source.luigionMushroomUsed
@@ -2021,6 +2374,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     note(succeeded ? resolutionNote ?? `${source.ability} resolved.` : `${source.ability} found no legal target or space.`);
     if (succeeded) m = trainWaveAbility(m, source.instanceId);
     return !echoed ? { ...m, lastRevealedCardId: source.cardId } : m;
+  }
+  if (Object.hasOwn(sideOzWaveCards, source.cardId)) {
+    const result = resolveSideOzAbility(m, source, echoed);
+    return !echoed
+      ? { ...result, lastRevealedCardId: source.cardId,
+        entranceHistory: [...(result.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] }
+      : result;
   }
   if (Object.hasOwn(fairytaleCards, source.cardId)) {
     const result = resolveFairytaleAbility(m, source, echoed);
@@ -2132,7 +2492,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   }
   else if (source.cardId === 'stockz') { note('Compound Interest is watching your next character plays.'); }
   else if (source.cardId === 'techbro') { const supported = inLane(m, source.owner, l).some(c => c.instanceId !== source.instanceId); if (supported) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'VC Funded Flex: +2 Hands.' })); note('VC Funded Flex gained +2 Hands with an ally here.'); } else note('VC Funded Flex needs another friendly card here.'); }
-  else if (source.cardId === 'bikelife') { const to = lowestFriendlyLane(m, source.owner, l); m = move(m, source, to, 'Ride Out moved here, +1 Hands.'); if (findCard(m, source.instanceId)?.lane === to) m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Ride Out moved here, +1 Hands.' })); note('Ride Out moved Bikelife and gave +1.'); }
+  else if (source.cardId === 'bikelife') { const to = lowestFriendlyLane(m, source.owner, l); m = move(m, source, to, 'Ride Out moved here, +1 Hands.'); const arrived = findCard(m, source.instanceId); if (arrived?.lane === to && activeAbility(arrived)) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Ride Out moved here, +1 Hands.' })); note('Ride Out moved Bikelife and gave +1.'); } else note('Ride Out was interrupted before its bonus.'); }
   else if (source.cardId === 'vibe') { const t = lowest(m.boards.flat().filter((c) => !c.hazard && c.owner === source.owner && c.instanceId !== source.instanceId && c.lane !== l)); if (t) { targetIds.add(t.instanceId); m = move(m, t, l, 'Wave Check pulled this card here, +1 Hands.'); if (findCard(m, t.instanceId)?.lane === l) { m = modify(m, t.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check pulled this card here, +1 Hands.' })); m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'Wave Check: +1 Hands.' })); } note('Wave Check pulled the lowest ally here; both gained +1.'); } else note('Wave Check needs an ally in another district.'); }
   else if (source.cardId === 'hooper') { if (getLaneScoreForMatch(m, inLane(m, source.owner, l), l, source.owner) < getLaneScoreForMatch(m, inLane(m, enemy, l), l, enemy)) { const t = highest(inLane(m, enemy, l)); if (t) { targetIds.add(t.instanceId); m = targetEnemyPowerReduction(m, source, t, -2, 'Ankle Breaker: -2 Hands.'); } m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Ankle Breaker: +2 Hands.' })); note('Ankle Breaker flipped the pressure.'); } else note('Ankle Breaker only triggers while losing.'); }
   else if (source.cardId === 'baby') { if (inLane(m, enemy, l).length > inLane(m, source.owner, l).length) { m = modify(m, source.instanceId, (c) => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Mama Bear: +2 Hands.' })); note('Mama Bear gained +2.'); } else note('Mama Bear found no crowd disadvantage.'); }
@@ -2850,17 +3210,31 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         m = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses, protected: true } }));
         m = { ...m, timedEffects: [...m.timedEffects, { id: `stud:${source.instanceId}:${target.instanceId}`, kind: 'church-protection', sourceInstanceId: source.instanceId, targetInstanceId: target.instanceId, owner: source.owner, lane: l, startsAtRound: m.round, expiresAtRound: 7, expiration: 'match-complete' }] };
       }
-    } else if (id === 'gothkid' || id === 'redpill') {
-      const target = id === 'gothkid' ? lowest(enemies.filter(c => c.cost <= 3)) : highest(enemies);
-      if (target) {
-        if (id === 'gothkid') {
+    } else if (id === 'gothkid') {
+      const destination = ([0, 1, 2] as Lane[]).find(lane => m.boards[lane].length === 0 && canMoveTo(m, source, lane));
+      if (destination !== undefined) {
+        m = move(m, source, destination, 'Dead Air: moved into an empty district.');
+        const goth = findCard(m, source.instanceId);
+        if (goth?.lane === destination) {
+          m = { ...m, districtTraps: [...(m.districtTraps ?? []).filter(t => t.kind !== 'dead-air' || t.source.instanceId !== source.instanceId),
+            { kind: 'dead-air', owner: source.owner, lane: destination, source: goth, expiresAfterRound: getMatchRoundLimit(m) }] };
+          targetIds.add(source.instanceId);
+        }
+      } else {
+        const target = lowest(enemies.filter(c => c.cost <= 3));
+        if (target) {
           targetIds.add(target.instanceId);
           m = targetEnemy(m, source, target, c => ({
             ...c,
             statuses: { ...c.statuses, silenced: true },
             lastEffectNote: `${source.ability}: Silenced.`,
           }));
-        } else if (target.statuses.weakened) {
+        }
+      }
+    } else if (id === 'redpill') {
+      const target = highest(enemies);
+      if (target) {
+        if (target.statuses.weakened) {
           targetIds.add(target.instanceId);
           m = targetEnemy(m, source, target, c => ({ ...c, statuses: { ...c.statuses, silenced: true }, lastEffectNote: `${source.ability}: already Weakened, silenced.` }));
           if (findCard(m, target.instanceId)?.statuses.silenced) buff(source, 2);
@@ -3243,6 +3617,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     m = { ...m, districtRuntime: { ...runtime, plays: { ...runtime.plays, [owner]: plays }, roundPlays: { ...runtime.roundPlays, [owner]: roundPlays } } };
   }
   let placed: CardInstance = { ...card, lane: targetLane, playedRound: m.round, arrivalOrder,
+    rabbitReturnDiscount: false,
     powerModifier: card.powerModifier + (squabble ? card.basePower : 0),
     ...(card.cardId === 'buddy' ? {
       buddyForm: squabble ? 'squabble-earth' as const : 'earth' as const,
@@ -3269,10 +3644,34 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (usedToken?.eligibility === 'electric-delivery') m = modify(m, instanceId, c => ({
     ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Express Delivery: Package received; +2 Hands.',
   }));
+  if (usedToken?.bonusHandsOnUse) m = modify(m, instanceId, c => ({
+    ...c, powerModifier: c.powerModifier + usedToken.bonusHandsOnUse!,
+    lastEffectNote: `No Place Like Home: discounted redeployment, +${usedToken.bonusHandsOnUse} Hand.`,
+  }));
   m = addEvent(match, m, {
     type: 'play', sourceId: instanceId, owner, lane: targetLane,
     note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${usedToken ? ` ${usedToken.eligibility} discount used.` : ''}${taxed ? " Rent Due added 1 Motion." : ""}${squabble ? ' SQUABBLE doubled its base Hands.' : ''}`,
   });
+  m = deadAirArrival(m, instanceId, targetLane);
+  const nextBonus = m.blueNextBonus?.[owner] ?? 0;
+  if (nextBonus > 0) {
+    const beforeBonus = m;
+    m = { ...m, blueNextBonus: { ...m.blueNextBonus, [owner]: 0 } };
+    m = modify(m, instanceId, c => ({ ...c, powerModifier: c.powerModifier + nextBonus,
+      lastEffectNote: `Measured Strike: inherited +${nextBonus} Hand${nextBonus === 1 ? '' : 's'}.` }));
+    m = addEvent(beforeBonus, m, { type: 'ability', sourceId: instanceId, owner,
+      targetIds: [instanceId], note: `Blue Big Trippin's last stand gave the next deployed card +${nextBonus} Hand${nextBonus === 1 ? '' : 's'}.` });
+  }
+  const cover = m.boards.flat().filter(c => c.owner === owner && c.cardId === 'blueside2'
+    && c.instanceId !== instanceId && c.blueCoverReady && activeAbility(c))
+    .sort((a, b) => (a.arrivalOrder ?? 0) - (b.arrivalOrder ?? 0) || a.instanceId.localeCompare(b.instanceId))[0];
+  if (cover) {
+    const beforeCover = m;
+    m = modify(m, cover.instanceId, c => ({ ...c, blueCoverReady: false }));
+    m = grantProtection(m, cover, instanceId);
+    m = addEvent(beforeCover, m, { type: 'ability', sourceId: cover.instanceId, owner,
+      targetIds: [instanceId], note: `Stand Behind Me protected the next deployed ally, ${card.name}.` });
+  }
   if (usedToken?.eligibility === 'livewire-cross-district'
     && (placed.kind ?? 'character') === 'character' && !placed.hazard) {
     const beforeLivewireReward = m;
@@ -3550,6 +3949,31 @@ const seededIndex = (seed: string, count: number): number => {
   hash = Math.imul(hash ^ (hash >>> 13), 0xc2b2ae35);
   return ((hash ^ (hash >>> 16)) >>> 0) % count;
 };
+function plantDemarioMushroom(m: Match, source: CardInstance, draw: number, log: boolean): { match: Match; token?: CardInstance } {
+  const lanes = ([0, 1, 2] as Lane[]).filter(lane =>
+    inLane(m, source.owner, lane).length < 4 && !getStoryLockedLanes(m, source.owner).includes(lane));
+  if (!lanes.length) return { match: m };
+  const seed = JSON.stringify(['demario-mushroom', source.instanceId, source.owner, m.round, draw,
+    m.nextEventSequence, m.boards.map(items => items.map(card => card.instanceId)), m.districtSnapshot]);
+  const lane = lanes[seededIndex(seed, lanes.length)];
+  const before = m;
+  m = summonCard(m, source.owner, lane, DEMARIO_MUSHROOM, 'demario-mushroom', source);
+  const token = m.boards[lane].at(-1)!;
+  if (log) m = addEvent(before, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner,
+    lane, targetIds: [token.instanceId], note: `Special Delivery: Mushroom sprouted in district ${lane + 1} while Demario was in hand.` });
+  m = fairytaleArrival(m, token.instanceId);
+  m = applyScentEntry(m, token.instanceId);
+  return { match: m, token };
+}
+function spawnHandDemarioMushrooms(match: Match, log: boolean): Match {
+  let m = match;
+  for (const owner of ['player', 'cpu'] as Owner[]) {
+    const source = (owner === 'player' ? m.playerHand : m.cpuHand)
+      .find(card => card.cardId === 'demario' && activeAbility(card));
+    if (source) m = plantDemarioMushroom(m, source, 0, log).match;
+  }
+  return m;
+}
 const smileBombSeed = (match: Match, id: string, draw: number) =>
   JSON.stringify([id, draw, match.round, match.nextEventSequence, match.districtSnapshot,
     match.boards.map(lane => lane.map(card => [card.instanceId, card.basePower + card.powerModifier]))]);
@@ -3832,6 +4256,29 @@ export function nextRound(match: Match): Match {
   });
   m = detonateSmileBombs(m);
   m = applyStoryEffects(m);
+  m = spawnHandDemarioMushrooms(m, true);
+  m = applyStoryEffects(m);
+  for (const candidate of m.boards.flat().filter(card => card.cardId === 'redside2')) {
+    const red = findCard(m, candidate.instanceId);
+    if (!red || red.lane === null || !activeAbility(red) || red.redNightStartRound === undefined) continue;
+    const beforeSteal = m;
+    const steal = resolveRedNightSteal(m, red);
+    if (steal.match === m) continue;
+    m = steal.match;
+    if (steal.succeeded) m = trainWaveAbility(m, red.instanceId);
+    m = addEvent(beforeSteal, m, { type: 'ability', sourceId: red.instanceId, owner: red.owner,
+      lane: red.lane, targetIds: steal.targetIds, note: steal.note });
+  }
+  for (const candidate of m.boards.flat().filter(card => card.cardId === 'blueside3')) {
+    const scarf = findCard(m, candidate.instanceId);
+    if (!scarf || !activeAbility(scarf) || scarf.lane === null) continue;
+    const beforeScarf = m;
+    const routed = clearBlueScarfRoute(m, scarf);
+    m = routed.match;
+    if (routed.moved) m = trainWaveAbility(m, scarf.instanceId);
+    m = addEvent(beforeScarf, m, { type: 'ability', sourceId: scarf.instanceId, owner: scarf.owner,
+      lane: scarf.lane, targetIds: routed.targetIds, note: routed.note });
+  }
   if (!m.districtRuntime) return m;
   m = settleLeaderReactions(applyDistrictRoundStart(m));
   const refreshed = refreshDistrictRound(m);
@@ -4130,6 +4577,7 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   plugDiscountLane: m.plugDiscountLane,
   cheapBuffsUsed: m.cheapBuffsUsed,
   discountTokens: m.discountTokens ?? [],
+  blueNextBonus: m.blueNextBonus ?? {},
   nextDiscountOrder: m.nextDiscountOrder ?? 1,
   landlordTaxUsed: m.landlordTaxUsed ?? { player: { 0: false, 1: false, 2: false }, cpu: { 0: false, 1: false, 2: false } },
   sneakerTriggered: m.sneakerTriggered ?? { player: false, cpu: false },
@@ -4378,7 +4826,7 @@ function creativeMovePair(
   if (passenger) m = move(m, passenger, destination, note, true);
   for (const original of [first, second]) {
     m = fairytaleDeparture(m, original);
-    m = fairytaleArrival(m, original.instanceId);
+    m = fairytaleArrival(m, original.instanceId, findCard(m, original.instanceId)?.lane === destination);
     m = applyScentEntry(m, original.instanceId);
     m = homecomingArrival(creativeMoved(before, m, original.instanceId, creativeTools()), original.instanceId, homecomingTools());
   }
@@ -4387,7 +4835,8 @@ function creativeMovePair(
 
 
 function homecomingTools(): HomecomingTools {
-  return { ...creativeTools(), train: trainWaveAbility, swap: homecomingSwap,
+  return { ...creativeTools(), train: trainWaveAbility,
+    returnAlly: (m, source, target) => returnToHand(m, source, target, true),
     tow: (m, source, target) => hostileEffect(m, { ...source, cardId: 'thefeds', copiedAbilityCardId: undefined }, target, (state, actual) => {
       if (source.lane === null || !canMoveTo(state, actual, source.lane)
         || state.boards[source.lane].filter(c => !c.hazard && c.owner === actual.owner).length >= 4) return state;
@@ -4403,21 +4852,4 @@ function homecomingTools(): HomecomingTools {
         lastEffectNote: `Tow & Collect: received ${amount} repossessed Hands.` }));
     }, false, false, true),
   };
-}
-
-/** Reserve both occupied seats before dispatching movement-arrival reactions. */
-function homecomingSwap(m: Match, a: CardInstance, b: CardInstance): Match {
-  if (a.lane === null || b.lane === null || a.owner !== b.owner || a.instanceId === b.instanceId
-    || !canMoveTo(m, a, b.lane) || !canMoveTo(m, b, a.lane)
-    || [a.lane,b.lane].some(l => m.boards[l].filter(c => !c.hazard && c.owner === a.owner).length > 4)) return m;
-  const before=m;
-  m=move(m,a,b.lane,'Change Places!: a new seat at the tea party.',true);
-  m=move(m,findCard(m,b.instanceId)!,a.lane,'Change Places!: a new seat at the tea party.',true);
-  for (const original of [a,b]) {
-    m=fairytaleDeparture(m,original);
-    m=fairytaleArrival(m,original.instanceId);
-    m=applyScentEntry(m,original.instanceId);
-    m=homecomingArrival(creativeMoved(before,m,original.instanceId,creativeTools()),original.instanceId,homecomingTools());
-  }
-  return m;
 }

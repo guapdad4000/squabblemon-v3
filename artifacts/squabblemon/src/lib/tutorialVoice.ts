@@ -10,6 +10,39 @@ for (const clip of clips) if (!byText.has(normalize(clip.text))) byText.set(norm
 
 export const tutorialScript = (...ids: string[]) => ids.map(id => byId.get(id)?.text ?? '').filter(Boolean).join('\n');
 
+/** Recorded context, not interpolated copy. Uncovered details stay written-only. */
+export function rookieRoadCues(
+  step: string,
+  context: { fadeHighlighted?: boolean; cardSelected?: boolean; squabbleThisRound?: boolean } = {},
+): string[] {
+  switch (step) {
+    case 'home-5': return ['expanded-home-gang'];
+    case 'deck-0': return ['expanded-deck-lineup'];
+    case 'deck-1': return ['expanded-deck-recruit'];
+    case 'deck-2': return ['expanded-deck-confirm'];
+    case 'deck-3': return ['expanded-deck-ready'];
+    case 'fight-brief': return ['expanded-fight-goal', 'expanded-fight-format'];
+    case 'r1_choose_card': return ['expanded-first-card'];
+    case 'r1_choose_district': return ['expanded-first-district'];
+    case 'r1_play_card': case 'r2_play_card': return ['expanded-preview'];
+    case 'r1_end_turn': case 'r2_end_turn': return ['expanded-end-turn'];
+    case 'r2_choose_card': return ['expanded-next-card'];
+    case 'r2_choose_district': return ['expanded-spread'];
+    case 'r3_bank_motion': return [context.cardSelected ? 'expanded-clear-card' : 'expanded-bank'];
+    case 'r4_choose_card': return context.fadeHighlighted ? ['expanded-fade-card'] : [];
+    case 'r4_arm_squabble': return context.fadeHighlighted ? ['expanded-fade-squabble'] : [];
+    case 'r4_choose_district': return context.fadeHighlighted ? ['expanded-fade-district'] : [];
+    case 'r4_play_squabble': return context.fadeHighlighted ? ['expanded-fade-play', 'expanded-fade-kept'] : ['expanded-preview'];
+    case 'r4_end_turn': return [context.squabbleThisRound ? 'expanded-fade-end-turn' : 'expanded-end-turn'];
+    case 'free_play': return context.squabbleThisRound ? ['expanded-already-squabble'] : [];
+    case 'result': return ['expanded-result'];
+    case 'handoff': return ['expanded-handoff'];
+    case 'reward-primer': return ['expanded-reward', 'expanded-primer', 'expanded-next'];
+    case 'practice-review': return ['expanded-encouragement'];
+    default: return [];
+  }
+}
+
 /** Never announce a recorded card, price, or district that differs from the live prompt. */
 export function tutorialClipsForText(text: string): string[] {
   return text.split('\n').flatMap(paragraph => {

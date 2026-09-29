@@ -102,7 +102,7 @@ function CardViewComponent({
     : '';
 
   const chargeLabel = instance?.cardId === 'powerhouse' ? 'Overtime ' + (instance.bankedMotion ?? 0) + '/3'
-    : instance?.aliceReady ? 'Next play: +3 Hands' : '';
+    : instance?.aliceReady ? 'Next play: +3 Hands · −1 Motion' : '';
   const isBurntPlate = instance?.cardId === 'burnt-plate';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
   const fuseDescription = isBurntPlate ? ' At each round end, gives a random friendly character here 1 Burn. Persists and adds no lane Hands.' : isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";

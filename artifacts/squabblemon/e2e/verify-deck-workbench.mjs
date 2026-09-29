@@ -338,12 +338,8 @@ try {
     const ownedCount = page.getByTestId('text-collection-owned');
     assert.equal(await ownedCount.getAttribute('aria-label'), `${ids.length - 2} of ${ids.length} cards owned`, `${name}: the full count is accessible during animation`);
     await page.waitForFunction(expected => document.querySelector('[data-testid="text-collection-owned"]')?.textContent?.trim() === expected, `${ids.length - 2} / ${ids.length}`);
-    const title = await page.locator('.collection-hero__title').evaluate(element => ({
-      content: element.scrollWidth,
-      available: element.clientWidth,
-      font: getComputedStyle(element).font,
-    }));
-    assert.ok(title.content <= title.available + 1, `${name}: collection heading fits without clipping (${title.content}px / ${title.available}px, ${title.font})`);
+    assert.equal(await page.getByText('THE ARSENAL / CARD ARCHIVE', { exact: true }).count(), 0, `${name}: redundant collection eyebrow is removed`);
+    assert.equal(await page.getByText('The collection.', { exact: true }).count(), 0, `${name}: redundant collection heading is removed`);
     assert.ok((await page.locator('.collection-stage__hero').evaluate(element => getComputedStyle(element).backgroundImage)).includes('collection-sunset-standoff'), `${name}: supplied wallpaper is installed`);
     const firstCard = page.getByTestId('collection-card-control').first();
     await firstCard.focus();

@@ -1,16 +1,20 @@
 {
-  "version": 2,
+  "version": 3,
   "sources": {
     "full": {
       "source": "ElevenLabs_2026-09-25T10_00_33_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp89_s50_sb75_se0_b_m2.mp3",
       "sha256": "11a221afeecd7339cf74a05532bede1d10a9a820dc796e6aab9f8346b9b488c1"
+    },
+    "expanded": {
+      "source": "ElevenLabs_2026-09-29T12_44_26_Tyrese_Tate_-_Warm,_Smooth,_and_1790685908917.mp3",
+      "sha256": "685761fff2950f94a58c9bb0dec8fa13620e7f4f9b63f0a16e8baee3903a9432"
     },
     "pickups": {
       "source": "ElevenLabs_2026-09-25T10_10_25_Tyrese Tate - Warm, Smooth, and Husky_pvc_sp89_s50_sb75_se0_b_m2.mp3",
       "sha256": "bb8938a5903bac9b28fdf52bb34468219d24a3616a73c594e0e3ab9c4f9bb5af"
     }
   },
-  "notes": "40 main-path cues. Five replacement takes override the original full recording. Four generic pickups are cut from these same new recordings. Original delivery speed retained; word timestamps checked against silence boundaries.",
+  "notes": "The expanded source is a separate 260.754-second recording, not the earlier pickup sheet. Expanded boundaries are aligned to outer pauses (ffmpeg silencedetect and section transcription); no internal pauses or tempo are removed. Original clips remain untouched. Variable values and unrecorded paragraphs stay written-only.",
   "clips": [
     {
       "id": "welcome",
@@ -363,6 +367,34 @@
       "start": 29.5,
       "end": 34.42,
       "speed": 1.0
-    }
+    },
+    { "id": "expanded-home-gang", "text": "Tap Gang. Your collection is every card you own. Your deck is ten different cards from that collection. The first five are your opening hand, then you draw one new card each round from round two through six.", "source": "expanded", "start": 0, "end": 14.46, "speed": 1.0 },
+    { "id": "expanded-deck-lineup", "text": "Your lineup needs ten different cards you own. Hold a card to inspect it without playing it. Tap the highlighted sixth slot to plan a swap.", "source": "expanded", "start": 14.46, "end": 24.67, "speed": 1.0 },
+    { "id": "expanded-deck-recruit", "text": "Choose an owned recruit. Check its Motion cost, Base Hands, and ability before deciding. Compare your new card with the one it would replace.", "source": "expanded", "start": 24.67, "end": 35.38, "speed": 1.0 },
+    { "id": "expanded-deck-confirm", "text": "Confirm the swap when you're ready.", "source": "expanded", "start": 35.38, "end": 38.35, "speed": 1.0 },
+    { "id": "expanded-deck-ready", "text": "The new card keeps that draw position. Your gang is ready. Save it, then let's review the goal before your first fight.", "source": "expanded", "start": 38.35, "end": 46.45, "speed": 1.0 },
+    { "id": "expanded-fight-goal", "text": "Finish ahead in at least two of the three districts to win. A tie belongs to neither side. The rival plays at the top of the board; your gang plays at the bottom.", "source": "expanded", "start": 46.45, "end": 58.36, "speed": 1.0 },
+    { "id": "expanded-fight-format", "text": "This is a four-round, timer-free lesson with a limited rival. Regular fights usually last six rounds, and their rules or clocks may differ.", "source": "expanded", "start": 58.36, "end": 69.42, "speed": 1.0 },
+    { "id": "expanded-first-card", "text": "Choose the highlighted card. Motion pays for the play. Base Hands add strength to a district. Inspect the other lit cards if you want to see your options.", "source": "expanded", "start": 69.42, "end": 80.09, "speed": 1.0 },
+    { "id": "expanded-first-district", "text": "Choose the highlighted district, read its rule, and compare the Rival and You scores. You need two district leads when the match ends.", "source": "expanded", "start": 80.09, "end": 89.21, "speed": 1.0 },
+    { "id": "expanded-preview", "text": "The preview estimates what happens on the board you can see. It cannot promise what the rival will do next. Confirm your play.", "source": "expanded", "start": 89.21, "end": 99.02, "speed": 1.0 },
+    { "id": "expanded-end-turn", "text": "You can play more affordable cards before ending a normal turn. In this coached round, tap End Turn and watch the rival respond.", "source": "expanded", "start": 99.02, "end": 108.7, "speed": 1.0 },
+    { "id": "expanded-next-card", "text": "Every district changes the fight. Choose an affordable card, then check where its ability and the district rule will help most.", "source": "expanded", "start": 108.7, "end": 117.84, "speed": 1.0 },
+    { "id": "expanded-spread", "text": "Spread your strength. A big lead in one district cannot replace a lead in a second one.", "source": "expanded", "start": 117.84, "end": 123.69, "speed": 1.0 },
+    { "id": "expanded-clear-card", "text": "Tap the selected card again to clear it. Then end your turn without playing.", "source": "expanded", "start": 123.69, "end": 129.97, "speed": 1.0 },
+    { "id": "expanded-bank", "text": "End Turn without playing. At most one unused Motion carries into the next round's refill. Watch your Motion counter.", "source": "expanded", "start": 129.97, "end": 141.58, "speed": 1.0 },
+    { "id": "expanded-fade-card", "text": "Tap Dr. Fade. His Base Hands help hold this district. His ability can hit the strongest enemy here and coach a weak ally somewhere else, if those cards are present.", "source": "expanded", "start": 141.58, "end": 151.2, "speed": 1.0 },
+    { "id": "expanded-fade-squabble", "text": "Tap SQUABBLE. It adds Dr. Fade's Base Hands again before other bonuses. You can do that once per match, and it costs no extra Motion.", "source": "expanded", "start": 151.2, "end": 163.19, "speed": 1.0 },
+    { "id": "expanded-fade-district", "text": "Put Dr. Fade in the highlighted district. Read its rule.", "source": "expanded", "start": 163.19, "end": 166.93, "speed": 1.0 },
+    { "id": "expanded-fade-play", "text": "Confirm your play. The preview includes known effects, but not the rival's next answer.", "source": "expanded", "start": 171.5, "end": 179.16, "speed": 1.0 },
+    { "id": "expanded-fade-kept", "text": "Dr. Fade stays in your collection after this lesson.", "source": "expanded", "start": 179.16, "end": 183, "speed": 1.0 },
+    { "id": "expanded-fade-end-turn", "text": "Your SQUABBLE is spent. End the turn and see whether the rival can answer those doubled Base Hands.", "source": "expanded", "start": 183, "end": 189.75, "speed": 1.0 },
+    { "id": "expanded-already-squabble", "text": "If you already used SQUABBLE, read the scores and play this round your way.", "source": "expanded", "start": 189.75, "end": 195.66, "speed": 1.0 },
+    { "id": "expanded-result", "text": "Check each district's final score. A tied district belongs to neither side. District claims decide the winner, not total Hands across the board.", "source": "expanded", "start": 195.66, "end": 206.98, "speed": 1.0 },
+    { "id": "expanded-handoff", "text": "Your ten-card gang and chosen cover are saved. You can review your lineup before another fade.", "source": "expanded", "start": 214.8, "end": 221.74, "speed": 1.0 },
+    { "id": "expanded-reward", "text": "Your starter cards are already yours. Your welcome reward is ready to claim. A practice fight does not claim it.", "source": "expanded", "start": 221.74, "end": 230.35, "speed": 1.0 },
+    { "id": "expanded-primer", "text": "Clout pays for eligible purchases and coaching. Profile XP grows your account level. Street Rep tracks separate account progress. Character XP belongs to an individual card. Pack tickets open packs. Style Shards unlock cosmetic styles, not extra Hands or Motion.", "source": "expanded", "start": 230.35, "end": 251.99, "speed": 1.0 },
+    { "id": "expanded-next", "text": "You can practice with your saved gang or head into Chapter One.", "source": "expanded", "start": 251.99, "end": 255.7, "speed": 1.0 },
+    { "id": "expanded-encouragement", "text": "Keep what worked, change what didn't, and take your next idea onto the block.", "source": "expanded", "start": 255.7, "end": 260.754, "speed": 1.0 }
   ]
 }

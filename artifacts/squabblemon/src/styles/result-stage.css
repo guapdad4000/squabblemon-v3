@@ -57,6 +57,26 @@
   color: #f7f2e5;
   text-wrap: balance;
 }
+.result-stage__lesson-debrief {
+  max-width: 650px;
+  margin: 12px auto 0;
+  padding: 10px 14px;
+  border: 1px solid #e7c77b88;
+  background: #07100de8;
+  text-align: left;
+  font-size: clamp(11px, 1.5vw, 14px);
+  line-height: 1.35;
+  color: #f7f2e5;
+}
+.result-stage__lesson-debrief p + p { margin-top: 6px; }
+.result-stage__teach-back { max-width:650px; margin:14px auto; padding:12px; border:1px solid #e7c77b77; background:#06100de8; color:#f7f2e5; text-align:left; font-size:13px; line-height:1.45; }
+.result-stage__teach-back > summary { cursor:pointer; font-weight:800; color:#f6d36b; }
+.result-stage__teach-back > p { margin:8px 0; }
+.result-stage__teach-question { margin:12px 0; padding:10px; border:1px solid #ffffff33; }
+.result-stage__teach-question legend { padding:0 4px; font-weight:700; }
+.result-stage__teach-question label { display:flex; align-items:flex-start; gap:8px; padding:5px 0; cursor:pointer; }
+.result-stage__teach-question input { flex:none; margin-top:3px; accent-color:#f6d36b; }
+.result-stage__teach-question p { margin-top:6px; color:#e2eadc; }
 .result-stage .winning-crew {
   position: relative;
   display: flex;

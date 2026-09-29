@@ -169,6 +169,8 @@ test('Goth Kid safely evaluates Ashlee and Captain Jigga summon costs', () => {
     const goth = unit('gothkid', 'cpu', 90);
     const after = playTurnCard({
       ...summoned,
+      // With no empty district, Dead Air still performs its printed-cost direct-Silence fallback.
+      boards: [summoned.boards[0], [unit('cornball', 'cpu', 91, 1)], [unit('cornball', 'cpu', 92, 2)]],
       phase: 'cpu-reveal',
       cpuMotion: 9,
       cpuHand: [goth],

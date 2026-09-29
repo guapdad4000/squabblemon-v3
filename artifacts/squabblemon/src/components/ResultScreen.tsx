@@ -15,7 +15,10 @@ import '../styles/result-stage.css';
 import { loadFeedbackPreferences } from '../battleFeedback';
 import { playVoiceLine, stopSoundEffect } from '../lib/sfx';
 import { useTutorialVoice } from '../lib/useTutorialVoice';
+import { rookieRoadCues } from '../lib/tutorialVoice';
 import { useBattleResultExit } from '../lib/useBattleResultExit';
+import { describeTutorialBoard, tutorialNextAdjustment } from './tutorialRecap';
+import { RookieTeachBack } from './RookieTeachBack';
 
 export function ResultScreen({
   challenge,
@@ -44,9 +47,9 @@ export function ResultScreen({
   const onTutorialComplete = completeTutorial ? () => leaveResults(completeTutorial) : undefined;
   const rebuild = () => leaveResults(() => isGuest ? changeDeck?.() : navigate('/game/decks'));
   const m = match as Match;
-  useTutorialVoice(tutorial ? coachBattle(m) : null, !celebrating);
   const results = getDistrictResults(m);
   const winner = getMatchWinner(m);
+  useTutorialVoice(tutorial ? 'Rookie Road final board' : null, Boolean(tutorial) && !celebrating, rookieRoadCues('result'));
   const isVictory = winner === 'player',
     isDraw = winner === 'draw';
   const resultVoice = useRef<HTMLAudioElement | null>(null);
@@ -212,11 +215,17 @@ export function ResultScreen({
           <h2 data-testid="status-match-result">
             {isVictory ? 'You Won The Room' : isDraw ? 'Nobody Owns The Room' : 'You Got Cleared'}
           </h2>
+          {isTutorial && <div className="result-stage__lesson-debrief" aria-label="Rookie Road final board lesson" data-testid="tutorial-final-debrief">
+            <p>{describeTutorialBoard(m)}</p>
+            <p>{tutorialNextAdjustment(m)}</p>
+            <p>This coached fade had four rounds, no clock and a limited rival. Regular fades usually last six rounds; you may play multiple cards before End Turn. Check card kinds, location rules, encounter modifiers and any clock before the next fight.</p>
+          </div>}
         </header>}>
 
         {(challenge || isStory) && rewardError && retry}
         {isStory && !rewardError && (rewardPending || !reward) && <p className="studio-notice" role="status">Saving your story progress and rewards…</p>}
         <button className="result-details-link" onClick={() => detailsRef.current?.showModal()}>Details</button>
+        {isTutorial && <RookieTeachBack match={m} />}
         <dialog ref={detailsRef} className="result-details-popup" aria-labelledby="result-details-title" onClick={event => { if (event.target === event.currentTarget) detailsRef.current?.close(); }}>
           <header><h2 id="result-details-title">Match details</h2><button autoFocus onClick={() => detailsRef.current?.close()} aria-label="Close match details">Close ×</button></header>
           <div className="result-stage__receipt">

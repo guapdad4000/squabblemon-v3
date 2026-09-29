@@ -66,7 +66,7 @@ export const BLOCKBUSTER_CHARACTERS = [
     "Hater",
     "Common",
     "Dark",
-    2,
+    1,
     2,
     "Always Something",
     "Give the strongest enemy here -1 Hand.",

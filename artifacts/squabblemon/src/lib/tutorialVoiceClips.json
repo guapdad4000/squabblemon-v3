@@ -18,9 +18,10 @@
     "revision": "2fbc5d667ddc"
   },
   {
-    "id": "home-2",
-    "text": "Tap Story. This is your main adventure: dialogue, battles, new cards, and chapter rewards.",
-    "duration": 7.3
+    "id": "home-story-left",
+    "text": "The TV, speakers, and console sit along the left wall, beside your record player. Tap Story. That’s your main adventure: dialogue, battles, new cards, and chapter rewards.",
+    "duration": 13.0,
+    "revision": "32728ff896dd"
   },
   {
     "id": "home-3",
@@ -29,9 +30,64 @@
     "revision": "908854f28475"
   },
   {
-    "id": "home-4",
-    "text": "Tap Back to the room. Your cards live right here in the Safehouse too.",
-    "duration": 4.7
+    "id": "home-back-to-room",
+    "text": "Tap Back to the room. Let’s get you familiar with the place before we build your gang.",
+    "duration": 5.5,
+    "revision": "9469a62f4b98"
+  },
+  {
+    "id": "home-records",
+    "text": "That record player beside the TV is Fade Tunes. Open Records when you want to pick the soundtrack for your Safehouse.",
+    "duration": 9.0,
+    "revision": "2a9ab774ae3e"
+  },
+  {
+    "id": "home-growth",
+    "text": "Buddy’s Growth Lab is tucked into the back-left corner. Check in there for your daily rewards and keep your streak growing.",
+    "duration": 6.9,
+    "revision": "b10fb448fef2"
+  },
+  {
+    "id": "home-profile",
+    "text": "See that metal bookshelf under the blackboard? The portrait beside the little fist trophy opens your profile. That’s who you represent on the block.",
+    "duration": 9.7,
+    "revision": "3e5f72e2ade0"
+  },
+  {
+    "id": "home-mail",
+    "text": "That big wooden door in the back-right corner is your mail. When it knocks, you have something unread. Open it and the Mailman brings your letters and gifts. Read each letter, then claim any gift inside. No codes needed.",
+    "duration": 16.4,
+    "revision": "f653591a9d8e"
+  },
+  {
+    "id": "home-bag",
+    "text": "Your bag keeps track of your Clout, Pack Tickets, Style Shards, and collection. Fade Market is where you put those resources to work.",
+    "duration": 9.4,
+    "revision": "6ef5d758d18e"
+  },
+  {
+    "id": "home-training",
+    "text": "The hanging heavy bag opens Training. Come here to practice your plays and try out a gang before you take it into a fight.",
+    "duration": 7.1,
+    "revision": "3bcc43fd6dc7"
+  },
+  {
+    "id": "home-fadecade",
+    "text": "The Fadecade is at the other end of the couch. That arcade machine takes you to challenges like Straight to the Back and Stockz. Its screen says Play New Game when you’re starting fresh, or Continue when you have a run waiting.",
+    "duration": 14.9,
+    "revision": "6b6ec4a586af"
+  },
+  {
+    "id": "home-phone",
+    "text": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.",
+    "duration": 6.8,
+    "revision": "8119be616ad7"
+  },
+  {
+    "id": "home-bounties",
+    "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
+    "duration": 6.9,
+    "revision": "7bea38f19574"
   },
   {
     "id": "home-5",
@@ -208,70 +264,172 @@
     "revision": "f4598487cf59"
   },
   {
-    "id": "home-story-left",
-    "text": "The TV, speakers, and console sit along the left wall, beside your record player. Tap Story. That’s your main adventure: dialogue, battles, new cards, and chapter rewards.",
-    "duration": 13.0,
-    "revision": "32728ff896dd"
+    "id": "expanded-home-gang",
+    "text": "Tap Gang. Your collection is every card you own. Your deck is ten different cards from that collection. The first five are your opening hand, then you draw one new card each round from round two through six.",
+    "duration": 14.5,
+    "revision": "f9b2b70bb235"
   },
   {
-    "id": "home-back-to-room",
-    "text": "Tap Back to the room. Let’s get you familiar with the place before we build your gang.",
-    "duration": 5.5,
-    "revision": "9469a62f4b98"
+    "id": "expanded-deck-lineup",
+    "text": "Your lineup needs ten different cards you own. Hold a card to inspect it without playing it. Tap the highlighted sixth slot to plan a swap.",
+    "duration": 10.3,
+    "revision": "34dba735461c"
   },
   {
-    "id": "home-records",
-    "text": "That record player beside the TV is Fade Tunes. Open Records when you want to pick the soundtrack for your Safehouse.",
-    "duration": 9.0,
-    "revision": "2a9ab774ae3e"
+    "id": "expanded-deck-recruit",
+    "text": "Choose an owned recruit. Check its Motion cost, Base Hands, and ability before deciding. Compare your new card with the one it would replace.",
+    "duration": 10.8,
+    "revision": "b2f1430d0326"
   },
   {
-    "id": "home-growth",
-    "text": "Buddy’s Growth Lab is tucked into the back-left corner. Check in there for your daily rewards and keep your streak growing.",
-    "duration": 6.9,
-    "revision": "b10fb448fef2"
+    "id": "expanded-deck-confirm",
+    "text": "Confirm the swap when you're ready.",
+    "duration": 2.955,
+    "revision": "4d2421381c82"
   },
   {
-    "id": "home-profile",
-    "text": "See that metal bookshelf under the blackboard? The portrait beside the little fist trophy opens your profile. That’s who you represent on the block.",
+    "id": "expanded-deck-ready",
+    "text": "The new card keeps that draw position. Your gang is ready. Save it, then let's review the goal before your first fight.",
+    "duration": 8.1,
+    "revision": "a8b233fdb095"
+  },
+  {
+    "id": "expanded-fight-goal",
+    "text": "Finish ahead in at least two of the three districts to win. A tie belongs to neither side. The rival plays at the top of the board; your gang plays at the bottom.",
+    "duration": 12.0,
+    "revision": "54c4c19ff2e8"
+  },
+  {
+    "id": "expanded-fight-format",
+    "text": "This is a four-round, timer-free lesson with a limited rival. Regular fights usually last six rounds, and their rules or clocks may differ.",
+    "duration": 11.1,
+    "revision": "19893709a1ee"
+  },
+  {
+    "id": "expanded-first-card",
+    "text": "Choose the highlighted card. Motion pays for the play. Base Hands add strength to a district. Inspect the other lit cards if you want to see your options.",
+    "duration": 10.7,
+    "revision": "70ba9961e418"
+  },
+  {
+    "id": "expanded-first-district",
+    "text": "Choose the highlighted district, read its rule, and compare the Rival and You scores. You need two district leads when the match ends.",
+    "duration": 9.2,
+    "revision": "1a95b87f0353"
+  },
+  {
+    "id": "expanded-preview",
+    "text": "The preview estimates what happens on the board you can see. It cannot promise what the rival will do next. Confirm your play.",
+    "duration": 9.9,
+    "revision": "50ec41ee9817"
+  },
+  {
+    "id": "expanded-end-turn",
+    "text": "You can play more affordable cards before ending a normal turn. In this coached round, tap End Turn and watch the rival respond.",
     "duration": 9.7,
-    "revision": "3e5f72e2ade0"
+    "revision": "3aeb74d74da5"
   },
   {
-    "id": "home-mail",
-    "text": "That big wooden door in the back-right corner is your mail. When it knocks, you have something unread. Open it and the Mailman brings your letters and gifts. Read each letter, then claim any gift inside. No codes needed.",
-    "duration": 16.4,
-    "revision": "f653591a9d8e"
+    "id": "expanded-next-card",
+    "text": "Every district changes the fight. Choose an affordable card, then check where its ability and the district rule will help most.",
+    "duration": 9.2,
+    "revision": "faf58bce231f"
   },
   {
-    "id": "home-bag",
-    "text": "Your bag keeps track of your Clout, Pack Tickets, Style Shards, and collection. Fade Market is where you put those resources to work.",
-    "duration": 9.4,
-    "revision": "6ef5d758d18e"
+    "id": "expanded-spread",
+    "text": "Spread your strength. A big lead in one district cannot replace a lead in a second one.",
+    "duration": 5.9,
+    "revision": "b704c91730fb"
   },
   {
-    "id": "home-training",
-    "text": "The hanging heavy bag opens Training. Come here to practice your plays and try out a gang before you take it into a fight.",
-    "duration": 7.1,
-    "revision": "3bcc43fd6dc7"
+    "id": "expanded-clear-card",
+    "text": "Tap the selected card again to clear it. Then end your turn without playing.",
+    "duration": 6.3,
+    "revision": "9c42caa91d4d"
   },
   {
-    "id": "home-fadecade",
-    "text": "The Fadecade is at the other end of the couch. That arcade machine takes you to challenges like Straight to the Back and Stockz. Its screen says Play New Game when you’re starting fresh, or Continue when you have a run waiting.",
-    "duration": 14.9,
-    "revision": "6b6ec4a586af"
+    "id": "expanded-bank",
+    "text": "End Turn without playing. At most one unused Motion carries into the next round's refill. Watch your Motion counter.",
+    "duration": 11.7,
+    "revision": "44c8b9551748"
   },
   {
-    "id": "home-phone",
-    "text": "The phone beside the couch opens online play. When you’re ready, use it to challenge a friend.",
+    "id": "expanded-fade-card",
+    "text": "Tap Dr. Fade. His Base Hands help hold this district. His ability can hit the strongest enemy here and coach a weak ally somewhere else, if those cards are present.",
+    "duration": 9.7,
+    "revision": "5813987805da"
+  },
+  {
+    "id": "expanded-fade-squabble",
+    "text": "Tap SQUABBLE. It adds Dr. Fade's Base Hands again before other bonuses. You can do that once per match, and it costs no extra Motion.",
+    "duration": 12.0,
+    "revision": "535d9b90ac2d"
+  },
+  {
+    "id": "expanded-fade-district",
+    "text": "Put Dr. Fade in the highlighted district. Read its rule.",
+    "duration": 3.8,
+    "revision": "9cb946a0c4a9"
+  },
+  {
+    "id": "expanded-fade-play",
+    "text": "Confirm your play. The preview includes known effects, but not the rival's next answer.",
+    "duration": 7.7,
+    "revision": "fd6175fd089b"
+  },
+  {
+    "id": "expanded-fade-kept",
+    "text": "Dr. Fade stays in your collection after this lesson.",
+    "duration": 3.9,
+    "revision": "26d5822f7c8d"
+  },
+  {
+    "id": "expanded-fade-end-turn",
+    "text": "Your SQUABBLE is spent. End the turn and see whether the rival can answer those doubled Base Hands.",
     "duration": 6.8,
-    "revision": "8119be616ad7"
+    "revision": "e2d4f29106e4"
   },
   {
-    "id": "home-bounties",
-    "text": "The Bounties badge opens your missions. Check your goals, finish the job, and claim the rewards you’ve earned.",
-    "duration": 6.9,
-    "revision": "7bea38f19574"
+    "id": "expanded-already-squabble",
+    "text": "If you already used SQUABBLE, read the scores and play this round your way.",
+    "duration": 6.0,
+    "revision": "e194e296d4d4"
+  },
+  {
+    "id": "expanded-result",
+    "text": "Check each district's final score. A tied district belongs to neither side. District claims decide the winner, not total Hands across the board.",
+    "duration": 11.4,
+    "revision": "f1c1f80dcbfb"
+  },
+  {
+    "id": "expanded-handoff",
+    "text": "Your ten-card gang and chosen cover are saved. You can review your lineup before another fade.",
+    "duration": 7.0,
+    "revision": "df5317c2f520"
+  },
+  {
+    "id": "expanded-reward",
+    "text": "Your starter cards are already yours. Your welcome reward is ready to claim. A practice fight does not claim it.",
+    "duration": 8.7,
+    "revision": "b6c3b6172adc"
+  },
+  {
+    "id": "expanded-primer",
+    "text": "Clout pays for eligible purchases and coaching. Profile XP grows your account level. Street Rep tracks separate account progress. Character XP belongs to an individual card. Pack tickets open packs. Style Shards unlock cosmetic styles, not extra Hands or Motion.",
+    "duration": 21.7,
+    "revision": "99d1770be794"
+  },
+  {
+    "id": "expanded-next",
+    "text": "You can practice with your saved gang or head into Chapter One.",
+    "duration": 3.8,
+    "revision": "3acda82b2a74"
+  },
+  {
+    "id": "expanded-encouragement",
+    "text": "Keep what worked, change what didn't, and take your next idea onto the block.",
+    "duration": 5.1,
+    "revision": "ad43c79a6d59"
   },
   {
     "id": "mechanic-burn",

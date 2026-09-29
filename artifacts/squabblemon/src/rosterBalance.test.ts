@@ -17,9 +17,9 @@ function unprotect(m: Match, target: CardInstance): Match {
   return { ...m, timedEffects: m.timedEffects.filter(x => x.targetInstanceId !== target.instanceId), boards: m.boards.map(l => l.map(c => c.instanceId === target.instanceId ? { ...c, statuses: { ...c.statuses, protected: false } } : c)) as Match['boards'] };
 }
 
-test('40 revisions preserve the 205 collectible identities and instantiate their new budgets', () => {
+test('40 revisions preserve collectible identities and instantiate their new budgets', () => {
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
-  assert.equal(cardCatalog.length, 205);
+  assert.equal(cardCatalog.length, 218);
   const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 3], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 2], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');

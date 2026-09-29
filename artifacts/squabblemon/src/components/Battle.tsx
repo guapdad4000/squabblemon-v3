@@ -1,4 +1,4 @@
-import { playTutorialSequence, tutorialClipsForText } from '../lib/tutorialVoice';
+import { playTutorialSequence, rookieRoadCues, tutorialClipsForText } from '../lib/tutorialVoice';
 import { StreetSelect } from './ui/street-select';
 import { FighterPortrait } from './profile/FighterPortrait';
 import { DiceGameOverlay } from './DiceGameOverlay';
@@ -45,6 +45,7 @@ import { CoachSpotlight } from './CoachSpotlight';
 import { playVoiceLine } from '../lib/sfx';
 import { useBattleAnnouncer } from '../lib/useBattleAnnouncer';
 import { useTutorialVoice } from '../lib/useTutorialVoice';
+import { describeTutorialEvent, describeTutorialBoard } from './tutorialRecap';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -282,7 +283,7 @@ export function Battle({
   squabble, setSquabble, setInspect, archiveMatch, onShowRules, onExit, presentationScores,
   feedbackPreferences, setFeedbackPreferences, decisionStartedAt, equippedVariants, authoritativeHistory,
   replay, onReplayStep, onExitReplay, onFeedback,
-  playedSpecialMoves, online: onlineInput,
+  playedSpecialMoves, online: onlineInput, helpOpen = false,
 }: any) {
   const squabbleCinematicLaneValue = squabbleCinematicLane as Lane | null | undefined;
   const m = match as Match;
@@ -335,7 +336,18 @@ export function Battle({
   const activeTutorialGuidance = tutorialCoach && tutorialGuidance
     ? tutorialGuidance as TutorialGuidance
     : null;
-  useTutorialVoice(interactive && !mechanicLesson ? activeTutorialGuidance?.body : null, feedback?.audioEnabled ?? true);
+  const [showCoachTip, setShowCoachTip] = useState(true);
+  const fadeHighlighted = m.playerHand.some(card =>
+    card.instanceId === (activeTutorialGuidance?.expectedCard ?? selectedInstanceId) && card.cardId === 'drfade');
+  const squabbleThisRound = m.effectLog.some(event =>
+    event.round === m.round && event.owner === 'player' && event.type === 'play' && event.note.includes('SQUABBLE'));
+  const guidedVoice = activeTutorialGuidance
+    ? rookieRoadCues(activeTutorialGuidance.id, {
+      fadeHighlighted, cardSelected: !!selectedCard, squabbleThisRound,
+    }) : [];
+  useTutorialVoice(activeTutorialGuidance?.body,
+    interactive && showCoachTip && !helpOpen && !mechanicLesson && (feedback?.audioEnabled ?? true),
+    guidedVoice);
   const tutorialEndTurnAllowed = !activeTutorialGuidance
     || activeTutorialGuidance.focus === 'end-turn'
     || activeTutorialGuidance.focus === 'free';
@@ -451,7 +463,7 @@ export function Battle({
     decisionHandlers.selectCard(card, playable);
     if (interactive && playable) onFeedback?.('select');
   });
-  const inspectHandCard = useLatestCallback((card: CardInstance) => { if (!activeTutorialGuidance?.target) setInspect(card); });
+  const inspectHandCard = useLatestCallback((card: CardInstance) => { setInspect(card); });
   const drag = useBattleDrag({
     enabled: !tutorialCoach && interactive && Boolean(onPlayCard) && tutorialCardPlayAllowed, contextKey: `${m.round}:${m.nextEventSequence}:${phase}`,
     hasCard: instanceId => m.playerHand.some(card => card.instanceId === instanceId),
@@ -619,12 +631,16 @@ export function Battle({
         {!online && timerNode}
       </div>
     </div>
-    {interactive && !mechanicLesson && activeTutorialGuidance?.target && <CoachSpotlight narrate={false} target={activeTutorialGuidance.target} title={activeTutorialGuidance.title} step={"ROUND " + m.round + " / 4"}>{activeTutorialGuidance.body}</CoachSpotlight>}
+    {interactive && !mechanicLesson && !helpOpen && !showHistory && showCoachTip && activeTutorialGuidance?.target && <CoachSpotlight nonBlocking onDismiss={() => setShowCoachTip(false)} narrate={false} target={activeTutorialGuidance.target} title={activeTutorialGuidance.title} step={"ROUND " + m.round + " / 4"}>{activeTutorialGuidance.body}</CoachSpotlight>}
     <div className={`battle-guidance relative z-30 shrink-0 w-full ${tutorialCoach ? 'battle-guidance--coached' : ''}`}>
       {tutorialCoach && <div className="dr-fade-coach-frame"><DrFadePortrait pose="right" className="dr-fade-coach" /></div>}
       <div className="min-w-0">
         <div className="battle-guidance-kicker" data-testid={coachedTitle && interactive ? 'tutorial-step-' + (tutorialGuidance as TutorialGuidance).id : undefined}>{tutorialCoach && <span className="dr-fade-coach__name">DR. FADE · </span>}{replaying ? `Replay · ${replay.step === 'before' ? 'Before' : 'After'}` : interactive ? coachedTitle ?? 'Your decision' : presentedEffect ? `${presentedEffect.owner === 'player' ? 'Your' : 'Rival'} ${presentedEffect.type}` : 'Fade flow'}</div>
         <div data-testid="battle-guidance" className="battle-guidance-message">{presentedEffect && <span className={`effect-kind-chip kind-${presentedEffect.kind}`}>{presentedEffect.kind}{presentedEffect.durationLabel ? ` · ${presentedEffect.durationLabel}` : ''}</span>} {phase === 'round-result' || (phase === 'round-intro' && m.round > 1) ? <BattleRound match={m} phase={phase} /> : interactive ? coachedDecision : phaseMessage}</div>
+        {tutorialCoach && interactive && <button type="button" className="text-[11px] underline text-primary" aria-expanded={showCoachTip} onClick={() => setShowCoachTip(value => !value)}>{showCoachTip ? 'Hide coach tip' : 'Reopen coach tip'}</button>}
+        {tutorialCoach && phase === 'round-result' && <p role="status" data-testid="tutorial-round-summary" className="text-xs text-white/85">{describeTutorialBoard(m)}</p>}
+        {tutorialCoach && interactive && recentActions.length > 0 && <details className="text-xs text-white/80"><summary>Review what just changed</summary><ol className="max-h-32 overflow-y-auto">{recentActions.slice(0, 4).map(event => <li key={event.sequence} className="py-1 border-b border-white/10">{describeTutorialEvent(event as EffectLogEntry, m)}</li>)}</ol></details>}
+        {tutorialCoach && presentedEffect?.impact && !interactive && <p role="status" data-testid="tutorial-event-summary" className="text-xs text-white/85">{describeTutorialEvent(presentedEffect, m)}</p>}
         {presentedEffect && <div data-testid="effect-causality" className={replaying ? "battle-causality" : "battle-causality--live"}>{triggeredUpgradeName(presentedEffect) && <span data-testid="effect-upgrade-trigger" className="mr-1 font-mono text-[9px] uppercase text-primary">Upgrade · {triggeredUpgradeName(presentedEffect)} · </span>}<b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
         {replaying && <div data-testid="replay-controls" className="mt-2 flex flex-wrap items-center gap-2"><button type="button" disabled={replay.step === 'before'} onClick={() => onReplayStep(replay.event, 'before')} className="battle-utility">Before</button><button type="button" disabled={replay.step === 'after'} onClick={() => onReplayStep(replay.event, 'after')} className="battle-utility">After</button><button type="button" onClick={onExitReplay} className="battle-fast-forward">Return to live battle</button><span className="w-full text-[10px] text-white/60">{[replay.event.source, ...replay.event.targets].filter(Boolean).map(participantChange).join(' · ')}</span></div>}
       </div>

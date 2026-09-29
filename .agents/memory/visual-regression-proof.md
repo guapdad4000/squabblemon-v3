@@ -23,6 +23,12 @@ Verify setup-screen reachability inside the real route shell at the reported vie
 
 **How to apply:** Match the real route's height constraints, intermediate parents, and navigation—not just its component names. Assert the final action is in view and hit-testable before clicking. Exercise wheel or keyboard scrolling of overflowing content. Check both width and height breakpoints; for battle setup, select a crew and enter the actual first turn with a valid match-start response.
 
+Reset the actual scroll owner before using a screenshot as proof of a translucent header or top-of-scene placement.
+
+**Why:** Playwright scrolled a nested game shell while interacting with the setup tabs; `window.scrollTo(0, 0)` left that shell scrolled, so screenshots labeled "hero" showed only the control panel.
+
+**How to apply:** Identify the route's scroll container, reset its `scrollTop`, and verify the header is in the viewport before capturing top-of-screen evidence.
+
 Prefer one vertical scroll owner for a screen with persistent foreground artwork.
 
 **Why:** Independently scrolling the route, poster board, and poster list made the bounty screen feel unpredictable despite passing scroll-to-click checks. The user explicitly rejected the extra scrollbars.

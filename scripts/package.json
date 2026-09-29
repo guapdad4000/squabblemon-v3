@@ -10,7 +10,8 @@
     "balance:smoke": "tsx ./src/balance-lab.ts --smoke",
     "balance:full": "tsx ./src/balance-lab.ts --full",
     "balance:elements": "tsx ./src/element-balance-audit.ts",
-    "balance:dark-composition": "tsx ./src/dark-composition-audit.ts"
+    "balance:dark-composition": "tsx ./src/dark-composition-audit.ts",
+    "balance:dark-sweep": "tsx ./src/dark-card-sweep.ts"
   },
   "devDependencies": {
     "@types/node": "catalog:",

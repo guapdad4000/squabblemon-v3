@@ -5,6 +5,7 @@ import type { SocialInvitation } from '@workspace/api-client-react';
 import { ArrowUpRight, Check, KeyRound, Send, Swords, UserPlus } from 'lucide-react';
 import { useSocial } from '../../lib/social';
 import { listFriendMatches } from '../../lib/multiplayer';
+import { getAssetUrl } from '../../lib/assets';
 import { CompactDeckPicker, type PickerDeck } from '../CompactDeckPicker';
 import { SectionHead, SocialPlayerRow } from './SocialPlayerRow';
 import { InvitationList } from './InvitationList';
@@ -35,6 +36,7 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
   useEffect(() => { if (FRIEND_CODE_PATTERN.test(homieParam)) setTarget(homieParam); }, [homieParam]);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [activityTab, setActivityTab] = useState<'sent' | 'rooms'>('sent');
   const retry = useRef<{ target: string; deck: string; id: string } | null>(null);
   const rooms = useQuery({ queryKey: ['friend-rooms', accountId], queryFn: listFriendMatches, refetchInterval: 10000, retry: 1 });
   const selected = state?.homies.find(player => player.friendCode === target);
@@ -69,87 +71,84 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
   const toInvite = (invitation: SocialInvitation) => navigate(`/game/online?tab=friends&invite=${invitation.id}`);
 
   return <>
-    <header className="sq-device__header">
-      <span className="sq-kicker"><span className="sq-device-name" aria-hidden="true" />FRIENDLY FADES</span>
-      <h1>Call somebody out.</h1>
-      <p>Private 1v1 with your homies. No rank, no currency, just bragging rights.</p>
-    </header>
-
-    {incoming.some(item => item.status === 'pending') && <section className="sq-section" aria-label="Incoming fade invitations">
-      <SectionHead title="They want smoke" count={incoming.filter(item => item.status === 'pending').length} />
+    {incoming.some(item => item.status === 'pending') && <section className="fa-incoming" aria-label="Incoming fade invitations">
+      <SectionHead title="Incoming invites" count={incoming.filter(item => item.status === 'pending').length} />
       <InvitationList invitations={incoming.filter(item => item.status === 'pending')} emptyText="" onView={toInvite} onOpenRoom={toRoom} />
     </section>}
 
-    <section className="sq-card ff-send" aria-labelledby="ff-send-title">
-      <SectionHead title="Invite a homie" />
-      <span id="ff-send-title" className="sq-sr">Invite a homie</span>
-      {social.query.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading homies"><i /><i /></div>
-        : social.query.isError ? <div className="sq-state sq-state--inline"><p>Homies did not load.</p>
-          <button type="button" className="sq-btn" onClick={() => void social.query.refetch()}>Retry</button></div>
-        : !state?.homies.length ? <div className="sq-state sq-state--inline">
-          <h3>No homies on your phone yet.</h3><p>Find them by username first, or open a shareable room below.</p>
-          <Link className="sq-btn sq-btn--primary" to="/game/settings#homies"><UserPlus size={16} />Add a homie</Link></div>
-        : <>
-          <p className="sq-step"><b>1</b> Who are you calling?</p>
-          <div className="ff-homies" role="radiogroup" aria-label="Choose a homie">
-            {state.homies.map(player => <button key={player.friendCode} type="button" role="radio" aria-checked={target === player.friendCode}
-              className="ff-homie" disabled={working} data-testid={`button-target-${player.friendCode}`}
-              onClick={() => { setTarget(player.friendCode); setSendError(null); history.replaceState(history.state, '', `${location.pathname}?tab=friends&homie=${player.friendCode}`); }}>
-              <span className="ff-homie__name">{player.displayName}</span>
-              <span className="ff-homie__handle">@{player.username}</span>
-              {target === player.friendCode && <Check size={16} aria-hidden="true" />}
-            </button>)}
-          </div>
-          {target && !selected && <p className="sq-bad" role="alert">That fighter is not on your homies list anymore.</p>}
-          {selected && <ul className="sq-list"><SocialPlayerRow player={selected} tone="gold" testId="row-selected-homie" meta={<span>Target locked</span>} /></ul>}
-          <p className="sq-step"><b>2</b> Who are you bringing?</p>
-          {crewPicker}
-          <p className="sq-step"><b>3</b> Send it.</p>
-          <button type="button" className="sq-btn sq-btn--primary sq-btn--wide" disabled={!selected || !chosenDeck || working} data-testid="button-send-invitation" onClick={() => void sendInvite()}>
-            <Send size={17} />{sending ? 'Sending the invite…' : selected ? `Send fade invite to ${selected.displayName}` : 'Pick a homie first'}</button>
-          {sendError && <p className="sq-flash sq-flash--bad" role="alert">{sendError}</p>}
-        </>}
-    </section>
-
-    <section className="sq-section" aria-label="Your sent invitations">
-      <SectionHead title="Sent invites" count={outgoing.filter(item => item.status === 'pending').length} />
-      <InvitationList invitations={outgoing} emptyText="No invites out right now." onView={toInvite} onOpenRoom={toRoom} />
-    </section>
-
-    {incoming.some(item => item.status !== 'pending') && <section className="sq-section" aria-label="Past invitations">
-      <SectionHead title="Past invites" />
-      <InvitationList invitations={incoming.filter(item => item.status !== 'pending')} emptyText="" onView={toInvite} onOpenRoom={toRoom} />
-    </section>}
-
-    <section className="sq-section" aria-label="Your rooms">
-      <SectionHead title="Your rooms" />
-      {rooms.isError ? <p className="sq-empty">Rooms did not load. <button type="button" className="sq-btn" onClick={() => void rooms.refetch()}>Retry</button></p>
-        : rooms.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading rooms"><i /></div>
-        : !rooms.data.rooms.length ? <p className="sq-empty">No rooms yet. Your first fade shows up here.</p>
-        : <ul className="sq-list" data-testid="list-rooms">{rooms.data.rooms.map(item => <li key={item.code} className="sq-row">
-          <Link className="ff-room" to={`/game/online/${item.code}`} data-testid={`link-room-${item.code}`}>
-            <span className="sq-pill" data-status={item.status === 'active' ? 'accepted' : item.status === 'waiting' ? 'pending' : 'closed'}>
-              {item.status === 'active' ? 'Live' : item.status === 'waiting' ? 'Waiting' : 'Final'}</span>
-            <strong className="sq-row__name">{item.rival}</strong>
-            <span className="sq-code">{item.code} <ArrowUpRight size={14} aria-hidden="true" /></span>
-          </Link></li>)}</ul>}
-    </section>
-
-    <section className="sq-card sq-card--quiet" aria-label="Rooms for people not on your list">
-      <SectionHead title="Not on your list yet?" note="Open a room anyone with the code can join, or punch in a code you were sent." />
-      {!state?.homies.length && crewPicker}
-      {!!crews.length && <>
-        <button type="button" className="sq-btn sq-btn--wide" disabled={working || !chosenDeck} aria-label="Create friend fade" data-testid="button-open-room" onClick={onOpenRoom}>
-          <Swords size={16} />{roomBusy ? 'Opening…' : `Open a shareable room with ${chosenDeck?.name ?? 'your crew'}`}</button>
-        <form className="sq-inline-form" onSubmit={submitCode}>
-          <label htmlFor="online-code" className="sq-sr">Room code</label>
-          <KeyRound size={16} aria-hidden="true" className="sq-inline-form__icon" />
-          <input id="online-code" className="sq-input" autoComplete="off" spellCheck={false} maxLength={12} placeholder="Room code"
-            value={enteredCode} onChange={event => onEnteredCode(event.target.value.toUpperCase())} data-testid="input-room-code" />
-          <button className="sq-btn" aria-label="Join room" disabled={working || !enteredCode} data-testid="button-join-room">Join</button>
-        </form>
-      </>}
-    </section>
+    <div className="fa-lobby">
+      <section className="fa-control" aria-label="Set up a fade">
+        <div className="fa-sectionhead">
+          <h2>Set up the <em>fade.</em></h2>
+          <form className="fa-join" onSubmit={submitCode}>
+            <label htmlFor="online-code"><KeyRound size={13} /> Room code</label>
+            <div className="fa-join__row">
+              <input id="online-code" className="fa-input" autoComplete="off" spellCheck={false} maxLength={12} placeholder="PASTE CODE HERE"
+                value={enteredCode} onChange={event => onEnteredCode(event.target.value.toUpperCase())} data-testid="input-room-code" />
+              <button className="fa-button fa-button--secondary" aria-label="Join room" disabled={working || !enteredCode} data-testid="button-join-room">Join room</button>
+            </div>
+          </form>
+        </div>
+        <div className="fa-step"><b>1</b> Choose a homie</div>
+        {social.query.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading homies"><i /><i /></div>
+          : social.query.isError ? <div className="sq-state sq-state--inline"><p>Homies did not load.</p>
+            <button type="button" className="sq-btn" onClick={() => void social.query.refetch()}>Retry</button></div>
+          : !state?.homies.length ? <div className="sq-state sq-state--inline">
+            <h3>No homies on your phone yet.</h3></div>
+          : <>
+            <div className="ff-homies" role="radiogroup" aria-label="Choose a homie">
+              {state.homies.map(player => <button key={player.friendCode} type="button" role="radio" aria-checked={target === player.friendCode}
+                className="ff-homie" disabled={working} data-testid={`button-target-${player.friendCode}`}
+                onClick={() => { setTarget(player.friendCode); setSendError(null); history.replaceState(history.state, '', `${location.pathname}?tab=friends&homie=${player.friendCode}`); }}>
+                <span className="fa-playericon" aria-hidden="true">{player.displayName.charAt(0)}</span>
+                <span className="ff-homie__copy"><strong className="ff-homie__name">{player.displayName}</strong><small className="ff-homie__handle">@{player.username}</small></span>
+                {target === player.friendCode && <Check size={16} aria-hidden="true" />}
+              </button>)}
+            </div>
+            {target && !selected && <p className="sq-bad" role="alert">That fighter is not on your homies list anymore.</p>}
+          </>}
+        <Link className="fa-add-homie" to="/game/settings#homies"
+          style={{ backgroundImage: `url("${getAssetUrl('assets/fade-alley/add-homie-paper.png')}")` }}>
+          <UserPlus size={16} />Add a homie</Link>
+        <div className="fa-step"><b>2</b> Choose a crew</div>
+        {crewPicker}
+        <div className="fa-step"><b>3</b> Invite or open a room</div>
+        <div className="fa-actions">
+          <button type="button" className="fa-button fa-button--left" disabled={!selected || !chosenDeck || working} data-testid="button-send-invitation" onClick={() => void sendInvite()}>
+            <Send size={17} />{sending ? 'Sending…' : 'Send fade invite'}</button>
+          <button type="button" className="fa-button fa-button--secondary fa-button--right" disabled={working || !chosenDeck} aria-label="Create friend fade" data-testid="button-open-room" onClick={onOpenRoom}>
+            <Swords size={16} />{roomBusy ? 'Opening…' : 'Open a shareable room'}</button>
+        </div>
+        {sendError && <p className="sq-flash sq-flash--bad" role="alert">{sendError}</p>}
+        <div className="fa-activity-tabs" role="tablist" aria-label="Fade activity">
+          <button type="button" id="fa-sent-tab" role="tab" aria-controls="fa-sent-panel" aria-selected={activityTab === 'sent'}
+            onClick={() => setActivityTab('sent')}>Sent invites <span>{outgoing.filter(item => item.status === 'pending').length}</span></button>
+          <button type="button" id="fa-rooms-tab" role="tab" aria-controls="fa-rooms-panel" aria-selected={activityTab === 'rooms'}
+            onClick={() => setActivityTab('rooms')}>Your rooms <span>{rooms.data?.rooms.length ?? 0}</span></button>
+        </div>
+        <div className="fa-activity-panel" id="fa-sent-panel" role="tabpanel" aria-labelledby="fa-sent-tab" hidden={activityTab !== 'sent'}>
+          <section className="sq-section" aria-label="Your sent invitations">
+            <InvitationList invitations={outgoing} emptyText="No invites out right now." onView={toInvite} onOpenRoom={toRoom} />
+          </section>
+          {incoming.some(item => item.status !== 'pending') && <section className="sq-section" aria-label="Past invitations">
+            <SectionHead title="Past invites" />
+            <InvitationList invitations={incoming.filter(item => item.status !== 'pending')} emptyText="" onView={toInvite} onOpenRoom={toRoom} />
+          </section>}
+        </div>
+        <section className="fa-activity-panel" id="fa-rooms-panel" role="tabpanel" aria-labelledby="fa-rooms-tab" aria-label="Your rooms" hidden={activityTab !== 'rooms'}>
+          {rooms.isError ? <p className="sq-empty">Rooms did not load. <button type="button" className="sq-btn" onClick={() => void rooms.refetch()}>Retry</button></p>
+            : rooms.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading rooms"><i /></div>
+            : !rooms.data.rooms.length ? <p className="sq-empty">No rooms yet.</p>
+            : <ul className="sq-list" data-testid="list-rooms">{rooms.data.rooms.map(item => <li key={item.code} className="sq-row">
+              <Link className="ff-room" to={`/game/online/${item.code}`} data-testid={`link-room-${item.code}`}>
+                <span className="sq-pill" data-status={item.status === 'active' ? 'accepted' : item.status === 'waiting' ? 'pending' : 'closed'}>
+                  {item.status === 'active' ? 'Live' : item.status === 'waiting' ? 'Waiting' : 'Final'}</span>
+                <strong className="sq-row__name">{item.rival}</strong>
+                <span className="sq-code">{item.code} <ArrowUpRight size={14} aria-hidden="true" /></span>
+              </Link></li>)}</ul>}
+        </section>
+      </section>
+    </div>
     <FadeRules />
   </>;
 }

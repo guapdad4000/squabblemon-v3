@@ -1,4 +1,3 @@
-import { FighterPortrait } from '../../components/profile/FighterPortrait';
 import { FadePark, FightTabs } from './FadePark';
 import { useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
@@ -13,9 +12,8 @@ import {
   useFriendMatch,
 } from "../../lib/multiplayer";
 import { MultiplayerBattle } from "../../components/MultiplayerBattle";
-import { InstallGame } from "../../components/InstallGame";
-import { DeviceFrame } from "../../components/social/DeviceFrame";
 import { FadeRules, FriendlyFadesHub } from "../../components/social/FriendlyFadesHub";
+import { FadeAlleyScene } from "../../components/social/FadeAlleyScene";
 import { CompactDeckPicker } from '../../components/CompactDeckPicker';
 import { useSocial } from "../../lib/social";
 import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
@@ -146,40 +144,35 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
     const opponentSeat = room.seat === 'player' ? 'cpu' : 'player';
     const opponentJoined = !!room.members[opponentSeat];
     screen = <>
-      <header className="sq-device__header">
-        <span className="sq-kicker">{invitedPlayer ? 'INVITE-ONLY ROOM' : 'PRIVATE ROOM'} · {room.code}</span>
-        <h1 data-testid="online-room">{room.members.cpu ? "The rivalry is ready." : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}.` : "Call your rival."}</h1>
-        {invitedPlayer && !opponentJoined && <p>Only {invitedPlayer.displayName} can take this seat. {targeted?.status === 'pending' ? 'They will see your invite in their Homies and Friendly Fades.' : `Invite ${targeted?.status}.`}</p>}
-      </header>
-      <section className="sq-card">
-        <ul className="sq-list ff-seats">
-          {(["player", "cpu"] as const).map(seat => {
-            const member = room.members[seat];
-            const name = member?.name ?? invitedPlayer?.displayName ?? 'Waiting for your friend';
-            return <li key={seat} className="sq-row" data-tone={member?.ready ? 'leaf' : undefined}>
-              <div className="sq-row__who">
-                <span className="sq-row__portrait"><FighterPortrait cardId={member?.hero ?? 'ganger-blue'} avatarKey={member?.avatarKey ?? invitedPlayer?.avatarKey} name={name} decorative /></span>
-                <span className="sq-row__text"><strong className="sq-row__name">{name}</strong>
-                  <small className="sq-row__meta"><span className="sq-pill" data-status={member?.ready ? 'accepted' : 'pending'}>
-                    {member?.ready ? "READY" : member ? (seat === room.seat ? "YOU" : "JOINED") : invitedPlayer ? "INVITED" : "OPEN SEAT"}</span></small></span>
-              </div>
-            </li>;
-          })}
-        </ul>
-        <p className="sq-note">Your crew: <strong>{room.ownDeck.name}</strong>. {room.members[room.firstThisRound]?.name ?? "Your rival"} starts round one; the starting player switches each round.</p>
-        {!invitedPlayer && !room.members.cpu && <div className="ff-code">
-          <span>ROOM CODE</span><strong data-testid="online-room-code">{room.code}</strong>
-          <button type="button" className="sq-btn" onClick={() => void copyInvite()} data-testid="button-copy-room">
-            {copied ? <Check size={16} /> : <Copy size={16} />}{copied ? "Link copied" : "Copy invite link"}</button>
-        </div>}
-        <button className="sq-btn sq-btn--primary sq-btn--wide" data-testid="online-ready"
-          disabled={working || !room.members.cpu || room.members[room.seat]!.ready} onClick={() => void send({ type: "ready" })}>
-          {room.members[room.seat]!.ready ? "Ready. Waiting for your rival…" : !room.members.cpu ? "Waiting for your rival to join" : "Ready to squabble"}</button>
-        {invitedPlayer && targeted?.status === 'pending' && room.seat === 'player' && !opponentJoined && <button className="sq-btn sq-btn--wide" disabled={working || social.busy} data-testid="button-cancel-targeted"
-          onClick={() => { if (window.confirm(`Call off the invite to ${invitedPlayer.displayName}?`)) void social.respondInvitation(targeted.id, 'cancel').catch(reason => setError(onlineErrorMessage(reason))); }}>Cancel invite</button>}
-        <button className="sq-btn sq-btn--danger sq-btn--wide" disabled={working} onClick={() => void send({ type: "surrender" })}>Close room</button>
-        <button className="sq-btn sq-btn--ghost sq-btn--wide" onClick={leave}>Back to Friendly Fades</button>
-      </section>
+      <div className="fa-lobby fa-lobby--room">
+        <section className="fa-control" aria-label="Room controls">
+          <div className="fa-sectionhead">
+            <h2 data-testid="online-room">{opponentJoined ? 'Rival joined' : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}` : 'Room open'}</h2>
+            {!invitedPlayer && room.seat === 'player' && !opponentJoined && <div className="fa-session__code">
+              <span>ROOM CODE</span><strong data-testid="online-room-code">{room.code}</strong>
+              <button type="button" onClick={() => void copyInvite()} data-testid="button-copy-room" aria-label={copied ? 'Link copied' : 'Copy invite link'}>
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+              </button>
+            </div>}
+          </div>
+          {invitedPlayer && !opponentJoined && <p className="fa-room-note">Only {invitedPlayer.displayName} can join. {targeted?.status === 'pending' ? 'Invite pending.' : targeted ? `Invite ${targeted.status}.` : ''}</p>}
+          <div className="fa-session" aria-label="Room status and actions">
+            <div className="fa-session__summary">
+              <div className="fa-session__status"><small>YOUR CREW</small><strong>{room.ownDeck.name}</strong></div>
+              <div className="fa-session__status"><small>{room.seat === 'player' ? 'RIVAL' : 'HOST'}</small><strong>{room.members[opponentSeat]?.name ?? invitedPlayer?.displayName ?? 'Open seat'}</strong></div>
+            </div>
+            <div className="fa-session__actions">
+              <button className="fa-button fa-button--ready" data-testid="online-ready"
+                disabled={working || !opponentJoined || room.members[room.seat]!.ready} onClick={() => void send({ type: "ready" })}>
+                {room.members[room.seat]!.ready ? 'Ready. Waiting for your rival…' : !opponentJoined ? 'Waiting for your rival to join' : 'Ready to squabble'}</button>
+              {invitedPlayer && targeted?.status === 'pending' && room.seat === 'player' && !opponentJoined && <button className="fa-button fa-button--secondary" disabled={working || social.busy} data-testid="button-cancel-targeted"
+                onClick={() => { if (window.confirm(`Call off the invite to ${invitedPlayer.displayName}?`)) void social.respondInvitation(targeted.id, 'cancel').catch(reason => setError(onlineErrorMessage(reason))); }}>Cancel invite</button>}
+              <button className="fa-button fa-button--secondary" disabled={working} onClick={() => void send({ type: "surrender" })}>Close room</button>
+              <button className="fa-button fa-button--secondary" onClick={leave}>Back to Friendly Fades</button>
+            </div>
+          </div>
+        </section>
+      </div>
       <FadeRules />
     </>;
   } else {
@@ -203,16 +196,23 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
   }
 
   return (
-    <main className="ff-stage" aria-label="Friendly Fades" tabIndex={-1}>
+    <main className="ff-stage ff-stage--alley" aria-label="Friendly Fades" tabIndex={-1}>
+      <div className="ff-stage__alley">
       <header className="ff-stage__nav">
         <FightTabs friends />
-        <Link to="/game/training">Training Circuit</Link>
-        <div className="ff-stage__tools"><InstallGame /></div>
       </header>
-      <DeviceFrame label="Friendly Fades" testId="friendly-fades-device" className="ff-stage__device">
+      <FadeAlleyScene
+        rivalName={room ? room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? invitedPlayer?.displayName : undefined}
+        joined={!!room?.members[room.seat === 'player' ? 'cpu' : 'player']}
+        invited={!!invitedPlayer}
+        ready={!!room?.members[room.seat]?.ready}
+        rivalReady={!!room?.members[room.seat === 'player' ? 'cpu' : 'player']?.ready}
+        seat={room?.seat ?? 'player'} />
+      <div className="ff-stage__content" aria-label="Friendly Fades controls" data-testid="friendly-fades-device">
         {errorBanner && <p className="sq-flash sq-flash--bad" role="alert">{errorBanner}</p>}
         {screen}
-      </DeviceFrame>
+      </div>
+      </div>
     </main>
   );
 }

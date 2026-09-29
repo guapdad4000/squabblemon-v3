@@ -50,7 +50,7 @@ const playSequence = (
   if (playsThisRound > 0) {
     return {
       id: `${prefix}_end_turn`, round, focus: 'end-turn', title: 'Let the rival answer',
-      body: 'You can keep playing while you have Motion. For this lesson, end your turn and watch the rival respond.',
+      body: 'Motion remaining can pay for another card in a normal turn. In this coached round, End Turn passes the move to the rival; its reply may change any district.',
     };
   }
   if (!selectedInstanceId) {
@@ -71,7 +71,7 @@ const playSequence = (
   }
   return {
     id: `${prefix}_play_card`, round, focus: 'play', title: 'Commit the play',
-    body: 'The preview shows the known score after your card lands. Play the card to resolve it now.',
+    body: 'The preview estimates this play with the known board and location rule. It cannot promise what the rival will play after End Turn.',
   };
 };
 
@@ -85,7 +85,7 @@ function getBaseTutorialGuidance({
       id: 'r3_bank_motion', round: 3, focus: selectedInstanceId ? 'card' : 'end-turn', title: 'Bank one Motion',
       body: selectedInstanceId
         ? 'Tap the selected card again to clear it. Then end your turn without playing.'
-        : 'End your turn now. Up to 1 unspent Motion carries into the next round, so patience can fund a bigger play.',
+        : `You have ${match.playerMotion} Motion. End Turn without playing: at most 1 unused Motion carries into round 4, then the round refill is added (maximum 9).`,
     };
   }
   if (match.round === 4) {
@@ -132,22 +132,22 @@ function getBaseTutorialGuidance({
 export function getTutorialGuidance(input: TutorialGuidanceInput): TutorialGuidance {
   const guidance = getBaseTutorialGuidance(input);
   if (input.match.storyEncounter?.id !== "rookie-road-v2") return guidance;
-  const choice = guidance.focus === "end-turn" ? null : getTutorialPlay(input.match);
+    const choice = guidance.focus === "end-turn" ? null : getTutorialPlay(input.match);
   const card = input.match.playerHand.find(c => c.instanceId === choice?.instanceId);
   const district = choice ? getMatchDistricts(input.match)[choice.lane] : null;
   const common = { ...guidance, expectedCard: choice?.instanceId, expectedLane: choice?.lane };
   const selector = (id: string) => '[data-testid="' + id + '"]';
-  if (card?.cardId === 'drfade' && input.match.round === 4) {
-    if (guidance.focus === 'card') return { ...common, target: selector('card-dr-fade'), title: 'Your Legendary is ready.', body: 'Tap Dr. Fade. He brings 6 Hands, hits the strongest enemy here for −2, and gives your weakest ally in another district +2.' };
-    if (guidance.focus === 'squabble') return { ...common, target: selector('button-squabble'), title: 'Double Dr. Fade to 12 Hands.', body: 'Tap SQUABBLE. It doubles his base Hands from 6 to 12. His punch and coaching ability still resolve.' };
-    if (guidance.focus === 'district' && choice && district) return { ...common, target: selector('lane-' + choice.lane), title: 'Put your coach to work.', body: 'Tap ' + district.name + '. Dr. Fade fights here while helping an ally in another district. Watch both scores.' };
-    if (guidance.focus === 'play') return { ...common, target: selector('button-lock'), title: 'Watch close. You’re next.', body: 'Confirm your play. Dr. Fade lands with 12 base Hands, then his ability resolves. You keep this Legendary after the lesson.' };
+   if (card?.cardId === 'drfade' && input.match.round === 4) {
+    if (guidance.focus === 'card') return { ...common, target: selector('card-dr-fade'), title: 'Your Legendary is ready.', body: `Tap Dr. Fade. He costs ${getLegalCardCost(input.match, 'player', card, choice!.lane)} Motion here, brings ${card.basePower} Base Hands, then hits the strongest enemy here for −2 and coaches the weakest ally elsewhere for +2 if they are present.` };
+    if (guidance.focus === 'squabble') return { ...common, target: selector('button-squabble'), title: 'Double Dr. Fade’s Base Hands.', body: `Tap SQUABBLE. It adds his ${card.basePower} Base Hands again (${card.basePower} → ${card.basePower * 2}), before location or ability effects. You can use it only once per match.` };
+    if (guidance.focus === 'district' && choice && district) return { ...common, target: selector('lane-' + choice.lane), title: 'Put your coach to work.', body: `Tap ${district.name}. Rule: ${district.rule} Dr. Fade fights here and may help an ally in another district. Watch both scores.` };
+    if (guidance.focus === 'play') return { ...common, target: selector('button-lock'), title: 'Watch the score settle.', body: 'Confirm the card. The preview includes known effects but not the rival’s next answer. Your owned Dr. Fade stays in your collection after this lesson.' };
   }
-  if (guidance.focus === "card" && card && choice) return { ...common, target: selector("card-" + card.id), body: "Tap " + card.name + ". It costs " + getLegalCardCost(input.match, "player", card, choice.lane) + " Motion in our target district. Hands is the strength it adds to your side." };
-  if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: "Tap this district. You win by leading in two of the three districts at the end. " + (input.match.round === 1 ? district.rule : "Spread your strength instead of putting everyone in one place.") };
-  if (guidance.focus === "play") return { ...common, target: selector("button-lock") };
+   if (guidance.focus === "card" && card && choice) return { ...common, target: selector("card-" + card.id), body: `Tap ${card.name}. It costs ${getLegalCardCost(input.match, "player", card, choice.lane)} Motion in ${district?.name}; you have ${input.match.playerMotion}. Its ${card.basePower} Base Hands add strength, and its ability can change the final score. Other lit cards can be inspected; follow this highlighted move for the coached match.` };
+   if (guidance.focus === "district" && choice && district) return { ...common, target: selector("lane-" + choice.lane), title: "Take " + district.name + ".", body: `Tap ${district.name}. ${district.rule} Watch the Rival/You score labels: a tie claims nothing, and you need two district leads at the finish. A locked or unaffordable lane cannot take this card.` };
+   if (guidance.focus === "play") return { ...common, target: selector("button-lock"), body: 'The preview uses the board you can see and known effects; it does not predict the rival’s answer. Confirm this card now, then read its ability and any score change.' };
   if (guidance.focus === "squabble") return { ...common, target: selector("button-squabble") };
-  if (guidance.focus === "end-turn") return { ...common, target: selector("button-next-round"), title: input.match.round === 3 ? "Save a little for later." : "Now let the rival respond.", body: input.match.round === 3 ? "Tap End Turn without playing. One unused Motion carries into the next round. Watch your Motion counter when the next round starts." : "Your card is on the board. Tap End Turn. In regular battles, you can play more cards first if you have enough Motion." };
+   if (guidance.focus === "end-turn") return { ...common, target: selector("button-next-round"), title: input.match.round === 3 ? "Save a little for later." : "Now let the rival respond.", body: input.match.round === 3 ? `End Turn without playing. You have ${input.match.playerMotion} Motion; up to one carries into the next round’s refill. Watch the Motion counter.` : `You have ${input.match.playerMotion} Motion left. In a regular fade you can play more affordable cards first. End Turn now to see the rival’s response; this round’s unused Motion carries over by at most one.` };
   return guidance;
 }
 export const MECHANIC_LESSON_IDS = [

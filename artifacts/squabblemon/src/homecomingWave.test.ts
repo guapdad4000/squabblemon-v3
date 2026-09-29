@@ -104,27 +104,63 @@ for (const owner of ['player', 'cpu'] as const) {
    assert.equal(find(after,target).lane,1);assert.equal(find(after,target).powerModifier,4);assert.equal(find(after,source).powerModifier,0);
   }
  });
- test('Mad Hatter swaps occupied seats and rewards printed costs, not strength: '+owner,()=>{
+  test('Mad Hatter sends the weaker guest to hand with +1 Hand and one-use −1 Motion, then seats the stronger guest: '+owner,()=>{
   const m=blank(), cheap=unit('cornball',owner,0), expensive={...unit('hooper',owner,1),powerModifier:10};
   m.boards=[[cheap],[expensive],[]];const after=cast(m,'madhatter',owner).after;
-  assert.equal(find(after,cheap).lane,1);assert.equal(find(after,expensive).lane,0);
-  assert.equal(find(after,cheap).powerModifier,3);assert.equal(find(after,expensive).powerModifier,10);assert(find(after,expensive).statuses.protected);
+   const hand=owner==='player'?'playerHand':'cpuHand', returned=after[hand].find(c=>c.instanceId===cheap.instanceId)!;
+   assert(returned);assert.equal(returned.lane,null);assert.equal(returned.powerModifier,4,
+     'the weaker guest gets +1 on return and the cheaper guest still gets +3');
+   assert.equal(getLegalCardCost(after,owner,returned,1),Math.max(1,cheap.cost-1));
+   assert(after.discountTokens.some(t=>t.targetInstanceId===cheap.instanceId));
+   assert.equal(find(after,expensive).lane,0);assert.equal(find(after,expensive).powerModifier,10);
+   assert(find(after,expensive).statuses.protected);
+   const replay=playTurnCard({...after,phase:owner==='player'?'player':'cpu-reveal',
+     [owner==='player'?'playerMotion':'cpuMotion']:9},owner,cheap.instanceId,1);
+   assert.equal(find(replay,cheap).powerModifier,4);
+   assert(!replay.discountTokens.some(t=>t.targetInstanceId===cheap.instanceId));
  });
- test('Mad Hatter never partially swaps a locked guest and works with two full districts: '+owner,()=>{
+  test('Mad Hatter still returns the weaker guest if the stronger guest cannot move, and works in a crowded district: '+owner,()=>{
   const m=blank(), cheap=unit('cornball',owner,0), expensive={...unit('hooper',owner,1),powerModifier:10};
   expensive.statuses.locked=true;m.boards=[[cheap],[expensive],[]];const blocked=cast(m,'madhatter',owner).after;
-  assert.equal(find(blocked,cheap).lane,0);assert.equal(find(blocked,cheap).powerModifier,0);assert.equal(find(blocked,expensive).lane,1);
+   assert(blocked[owner==='player'?'playerHand':'cpuHand'].some(c=>c.instanceId===cheap.instanceId));
+   assert.equal(find(blocked,expensive).lane,1);assert(!find(blocked,expensive).statuses.protected);
   expensive.statuses.locked=false;
   m.boards=[[cheap,unit('og',owner,0),unit('church',owner,0)],[expensive,unit('plug',owner,1),unit('landlord',owner,1),unit('nerd',owner,1)],[]];
-  const swapped=cast(m,'madhatter',owner).after;assert.equal(find(swapped,cheap).lane,1);assert.equal(find(swapped,expensive).lane,0);assert.equal(swapped.boards[0].length,4);assert.equal(swapped.boards[1].length,4);
+   const seated=cast(m,'madhatter',owner).after;
+   assert(seated[owner==='player'?'playerHand':'cpuHand'].some(c=>c.instanceId===cheap.instanceId));
+   assert.equal(find(seated,expensive).lane,0);assert.equal(seated.boards[0].length,4);assert.equal(seated.boards[1].length,3);
  });
- test('Hatter equal-cost guests each gain one Hand and a missing guest gives no reward: '+owner,()=>{
+  test('Mad Hatter returns the weaker guest regardless of printed costs, and gains +2 Hands when alone: '+owner,()=>{
   const m=blank(), a=unit('cornball',owner,0), b={...unit('cornball',owner,1),powerModifier:2};m.boards=[[a],[b],[]];
   const after=cast(m,'madhatter',owner).after;
-  assert.equal(find(after,a).powerModifier,1);assert.equal(find(after,b).powerModifier,3);
-  assert(!find(after,a).statuses.protected);assert(!find(after,b).statuses.protected);
-  const empty=cast(blank(),'madhatter',owner);assert.equal(find(empty.after,empty.source).powerModifier,0);
+   assert.equal(after[owner==='player'?'playerHand':'cpuHand'].find(c=>c.instanceId===a.instanceId)?.powerModifier,2);
+   assert.equal(find(after,b).lane,0);assert.equal(find(after,b).powerModifier,3);assert(!find(after,b).statuses.protected);
+   const empty=cast(blank(),'madhatter',owner);assert.equal(find(empty.after,empty.source).powerModifier,2);
+   assert.equal(cards.madhatter.cost,2);
  });
+  test('Mad Hatter rewards the cheaper remote guest instead if the weaker returned guest costs more: '+owner,()=>{
+    const m=blank(), local=unit('hooper',owner,0), remote=unit('cornball',owner,1);
+    m.boards=[[local],[remote],[]];
+    const after=cast(m,'madhatter',owner).after;
+    const returned=after[owner==='player'?'playerHand':'cpuHand'].find(c=>c.instanceId===local.instanceId)!;
+    assert.equal(returned.powerModifier,1);
+    assert.equal(getLegalCardCost(after,owner,returned,1),Math.max(1,local.cost-1));
+    assert.equal(find(after,remote).lane,0);
+    assert.equal(find(after,remote).powerModifier,3);
+  });
+  test('Mad Hatter’s weaker return triggers Cheshire and Mr Rabbit while preserving the hand credit: '+owner,()=>{
+    const m=blank(), local=unit('cornball',owner,0), rabbit=unit('mrrabbit',owner,0);
+    const hatter=createCardInstance('madhatter',owner,'tea-party',1), cheshire=createCardInstance('cheshire',owner,'tea-party',2);
+    m.boards[0]=[local,rabbit];
+    const hand=owner==='player'?'playerHand':'cpuHand';
+    m[hand]=[hatter,cheshire];
+    const after=playTurnCard({...m,phase:owner==='player'?'player':'cpu-reveal'},owner,hatter.instanceId,0);
+    assert.equal(after[hand].find(c=>c.instanceId===local.instanceId)?.powerModifier,1);
+    assert(after.discountTokens.some(t=>t.targetInstanceId===local.instanceId));
+    assert.equal(find(after,rabbit).powerModifier,1);
+    assert.equal(after.boards[0].filter(c=>c.cardId==='grin').length,1);
+    assert.equal(after.boards[0].find(c=>c.cardId==='grin')?.basePower,6);
+  });
  test('each reworked kit awards existing training tiers after a successful base ability: '+owner,()=>{
   for(const id of ['counter','concrete','lola','repoman','madhatter']) {
    const m=blank(), remote=unit('og',owner,1), local=unit('cornball',owner,0), foe={...unit('hooper',enemy,id==='repoman'?2:0),basePower:10,powerModifier:4};

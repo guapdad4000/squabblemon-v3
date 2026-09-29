@@ -5,7 +5,7 @@ import test from 'node:test';
 import { FAIRYTALE_WAVE, FAIRYTALE_ALTERNATE_ART } from '../../../lib/squabblemon-engine/src/fairytaleWave';
 import { decks, cards, cardCatalog, catalogCardById, validateCardAbilityUpgrades } from './data';
 import { createCardInstance, createMatch, playTurnCard, nextRound, getEffectiveCardPower, getLegalCardCost, getCharacterDistrictMarks,
-  pass, revealCpuTurn, verifyMatchTranscript, type PlayerMove, createMatchFromEngineCards, createAbilityUpgradeSnapshot, type Match, type CardInstance, type Owner, type Lane } from './gameEngine';
+  getCardCostExplanation, pass, revealCpuTurn, verifyMatchTranscript, type PlayerMove, createMatchFromEngineCards, createAbilityUpgradeSnapshot, type Match, type CardInstance, type Owner, type Lane } from './gameEngine';
 import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, onlineRoomView } from '@workspace/squabblemon-engine/multiplayer';
 
 const unit = (id: string, owner: Owner, lane: Lane, index = 1): CardInstance => ({ ...createCardInstance(id, owner, 'fairytale', index), lane });
@@ -79,9 +79,11 @@ test('new district state is replayed before/after and a full solo transcript ver
 });
 
 
-test('all 21 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition', () => {
-  assert.equal(FAIRYTALE_WAVE.length, 21); assert.equal(FAIRYTALE_ALTERNATE_ART.length, 8);
-  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 185);
+test('all 22 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition', () => {
+  assert.equal(FAIRYTALE_WAVE.length, 22); assert.equal(FAIRYTALE_ALTERNATE_ART.length, 8);
+  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 198);
+  assert.equal(catalogCardById['mr-rabbit'].faction, 'Wonderland');
+  assert.equal(catalogCardById['mr-rabbit'].rarity, 'Rare');
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
     assert.equal(cards[id].name, name); assert.equal(cards[id].cost, cost); assert.equal(cards[id].power, id === 'squabbleserver' ? 2 : power);
     assert.equal(catalogCardById[art].rarity, rarity);
@@ -112,24 +114,113 @@ for (const owner of ['player','cpu'] as const) {
     const {after}=cast(m,'dorothy',owner), returned=find(after,ally);
     assert.equal(returned.lane,null); assert.equal(returned.powerModifier,0); assert.equal(returned.statuses.frozen,false);
     assert.equal(returned.waveOnce?.bonnetgirl,true); assert.equal(getLegalCardCost(after,owner,returned,0),1);
+    assert.equal(after.discountTokens.find(t=>t.targetInstanceId===ally.instanceId)?.bonusHandsOnUse,1);
     assert.equal(after.playerDrawIndex,m.playerDrawIndex); assert.equal(after.cpuDrawIndex,m.cpuDrawIndex);
     const played=play(after,returned);
     assert(!played.discountTokens.some(t=>t.targetInstanceId===ally.instanceId));
     assert.equal(played.boards.flat().filter(c=>c.instanceId===ally.instanceId).length,1);
+    assert.equal(find(played,ally).powerModifier,1,'the discounted redeployment also gains +1 Hand');
+  });
+  test(`Dorothy can return a cheap ally from another district but not an enemy or token for ${owner}`, () => {
+    const m=blank(), distant=unit('bonnetgirl',owner,2,101), enemy=unit('bonnetgirl',owner==='player'?'cpu':'player',0,102);
+    const token={...unit('bonnetgirl',owner,0,103),kind:'token' as const};
+    m.boards=[[enemy,token],[],[distant]];
+    const {source,after}=cast(m,'dorothy',owner);
+    assert.equal(find(after,distant).lane,null);
+    assert.equal(find(after,source).lane,0);
+    assert.equal(find(after,enemy).lane,0);
+    assert.equal(find(after,token).lane,0);
+    const returned=find(after,distant), replayed=play(after,returned,1);
+    assert.equal(getLegalCardCost(after,owner,returned,1),Math.max(1,returned.cost-1));
+    assert.equal(find(replayed,distant).lane,1);
+    assert.equal(find(replayed,distant).powerModifier,1);
+    assert.equal(replayed.discountTokens.some(t=>t.targetInstanceId===distant.instanceId),false);
+    const empty=cast(blank(),'dorothy',owner);
+    assert.equal(empty.after.discountTokens.length,0,'no discounted bonus appears without an eligible ally');
+  });
+  test(`Dorothy's returned ally receives her bonus on its next play despite competing discounts for ${owner}`, () => {
+    const m=blank(), ally=unit('tinman',owner,2,105);
+    m.boards[2]=[ally];
+    const {after}=cast(m,'dorothy',owner);
+    const returned=find(after,ally);
+    assert.equal(returned.lane,null);
+    const competitors: Match['discountTokens']=[
+      {id:'older-any',owner,sourceInstanceId:'older',eligibility:'any',sourceLane:0,createdOrder:0},
+      {id:'prediction',owner,sourceInstanceId:'wise',eligibility:'wiseman-prediction',targetLane:1,sourceLane:0,createdOrder:0,expiresAfterRound:9},
+      {id:'electric',owner,sourceInstanceId:'delivery',eligibility:'electric-delivery',targetLane:1,sourceLane:0,createdOrder:0,expiresAfterRound:9},
+    ];
+    const withDiscounts={...after,discountTokens:[...competitors,...after.discountTokens]};
+    const replayed=play(withDiscounts,returned,1);
+    assert.equal(getLegalCardCost(withDiscounts,owner,returned,1),1);
+    assert.equal(find(replayed,ally).powerModifier,1,'the +1 is granted on this deployment, not deferred');
+    assert.deepEqual(replayed.discountTokens.map(t=>t.id).sort(),competitors.map(t=>t.id).sort());
   });
 }
 
-test('Scarecrow swaps atomically; movement hooks protect arrivals and reward Lion departures', () => {
-  const m=blank(), ally=unit('bonnetgirl','player',1), lion=unit('lion','player',1), tin=unit('tinman','player',1);
-  m.boards[1]=[ally,lion,tin];
-  const {source,after}=cast(m,'scarecrow');
-  assert.equal(find(after,source).lane,1); assert.equal(find(after,ally).lane,0);
-  assert.equal(find(after,source).powerModifier,2); assert.equal(find(after,ally).powerModifier,1);
-  assert.equal(find(after,lion).powerModifier,2); assert(find(after,source).statuses.protected);
-  const locked=blank(); const held=unit('bonnetgirl','player',1);held.statuses.locked=true;locked.boards[1]=[held];
-  const fail=cast(locked,'scarecrow');
-  assert.equal(find(fail.after,fail.source).lane,0);assert.equal(find(fail.after,held).lane,1);
-});
+for (const owner of ['player', 'cpu'] as const) {
+  test(`Scarecrow moves alone to the first empty legal district for ${owner}`, () => {
+    const m=blank(), {source,after}=cast(m,'scarecrow',owner);
+    assert.equal(find(after,source).lane,1);
+    assert.equal(find(after,source).powerModifier,1);
+    assert.deepEqual(cast(JSON.parse(JSON.stringify(m)),'scarecrow',owner).after,after);
+  });
+  test(`Scarecrow does not move without a swap ally or empty legal district for ${owner}`, () => {
+    const m=blank(), enemy=owner==='player'?'cpu':'player';
+    m.boards[1]=Array.from({length:4},(_,i)=>unit('hooper',enemy,1,20+i));
+    m.boards[2]=Array.from({length:4},(_,i)=>unit('hooper',enemy,2,30+i));
+    const {source,after}=cast(m,'scarecrow',owner);
+    assert.equal(find(after,source).lane,0);
+    assert.equal(find(after,source).powerModifier,0);
+  });
+  test(`Scarecrow keeps its ally swap, Hands and movement hooks for ${owner}`, () => {
+    const m=blank(), ally=unit('bonnetgirl',owner,1), lion=unit('lion',owner,1), tin=unit('tinman',owner,1);
+    m.boards[1]=[ally,lion,tin];
+    const {source,after}=cast(m,'scarecrow',owner);
+    assert.equal(find(after,source).lane,1); assert.equal(find(after,ally).lane,0);
+    assert.equal(find(after,source).powerModifier,3); assert.equal(find(after,ally).powerModifier,1);
+    assert.equal(find(after,lion).powerModifier,2); assert(find(after,source).statuses.protected);
+  });
+  test(`Tin Man grants a bigger first reward to a moved ally or Oz traveler for ${owner}`, () => {
+    const tin=unit('tinman',owner,1), partner=unit('bonnetgirl',owner,1,202);
+    const m=blank();m.boards[1]=[tin,partner];
+    const {source: scarecrow,after: swapped}=cast(m,'scarecrow',owner,0);
+    assert.equal(find(swapped,scarecrow).lane,1);
+    assert.equal(find(swapped,scarecrow).powerModifier,3,'moved Scarecrow gets +2 from Tin Man and +1 from the swap');
+    assert.equal(find(swapped,scarecrow).statuses.protected,true);
+    const {source: late,after: spent}=cast(swapped,'hooper',owner,1);
+    assert.equal(find(spent,late).powerModifier,0,'Tin Man still triggers once per round');
+    const withTraveler=blank(), anotherTin=unit('tinman',owner,0,203);
+    withTraveler.boards[0]=[anotherTin];
+    const {source: dorothy,after: welcomed}=cast(withTraveler,'dorothy',owner,0);
+    assert.equal(find(welcomed,dorothy).powerModifier,2,'a played Oz traveler gets +2');
+    assert.equal(find(welcomed,dorothy).statuses.protected,true);
+    const withOrdinary=blank();withOrdinary.boards[0]=[unit('tinman',owner,0,204)];
+    const {source: ordinary,after: ordinaryArrival}=cast(withOrdinary,'hooper',owner,0);
+    assert.equal(find(ordinaryArrival,ordinary).powerModifier,1,'ordinary plays retain their old reward');
+    assert.equal(find(ordinaryArrival,ordinary).statuses.protected,true);
+  });
+  test(`Tin Man triggers once on Mad Hatter's arrival and still rewards paired movement for ${owner}`, () => {
+    const swap=blank(), cheap=unit('bonnetgirl',owner,0,220);
+    const expensive=unit('hooper',owner,1,221);expensive.powerModifier=9;
+    swap.boards=[[cheap,unit('tinman',owner,0,222)],[expensive],[]];
+    const {after: swapped}=cast(swap,'madhatter',owner,0);
+    assert.equal(find(swapped,cheap).lane,null);
+    assert.equal(find(swapped,cheap).powerModifier,4);
+    assert.equal(find(swapped,expensive).lane,0);
+    assert.equal(find(swapped,expensive).statuses.protected,true);
+    assert.equal(find(swapped,expensive).powerModifier,9,'Tin Man already greeted Mad Hatter this round');
+    assert(swapped.effectLog.some(event=>event.note.includes('Heart Starter') && event.note.includes('+1 Hand')));
+
+    const paired=blank(), passenger=unit('cornball',owner,0,223);
+    paired.boards=[[passenger],[unit('tinman',owner,1,224)],
+      Array.from({length:4},(_,i)=>unit('bonnetgirl',owner,2,225+i))];
+    const {source: driver,after: driven}=cast(paired,'yn-atv-lord',owner,0);
+    assert.equal(find(driven,driver).lane,1);
+    assert.equal(find(driven,passenger).lane,1);
+    assert(driven.effectLog.some(event=>event.note.includes('Heart Starter') && event.note.includes('+2 Hands')));
+    assert.equal(find(driven,driver).statuses.protected,true);
+  });
+}
 test('Tin Man and Lion respect once-per-round and active-status gates', () => {
   const m=blank(), tin=unit('tinman','player',0);m.boards[0]=[tin];
   const a=cast(m,'bonnetgirl'), b=cast(a.after,'squabbleserver');
@@ -141,11 +232,155 @@ test('Alice returns once, leaves a capped Grin and receives +3 on her next deplo
   const m=blank(), alice=unit('alice','player',0), cat=unit('cheshire','player',1);m.boards=[[alice],[cat],[]];
   const returned=advance(m), hand=find(returned,alice);
   assert.equal(hand.lane,null);assert(hand.aliceReady);assert.equal(returned.boards[0].filter(c=>c.cardId==='grin').length,1);
+  assert.equal(returned.boards[0].find(c=>c.cardId==='grin')?.basePower,6);
+  assert.equal(getLegalCardCost(returned,'player',hand,0),1);
+  assert.match(getCardCostExplanation(returned,'player',hand,0),/Drink Me \/ Eat Me/);
   const back=play(returned,hand,0);assert.equal(find(back,alice).powerModifier,3);assert(!find(back,alice).aliceReady);
+  assert.equal(getLegalCardCost(back,'player',find(back,alice),0),2,'Alice’s discount is consumed on replay');
   assert.equal(find(advance(back),alice).lane,0);
   const final=blank();final.round=6;final.boards[0]=[unit('alice','player',0)];
   assert.equal(advance(final).boards[0][0].cardId,'alice');
 });
+for (const owner of ['player', 'cpu'] as const) {
+  test(`Cheshire in ${owner}'s hand leaves one six-Hand Grin on an ally's return`, () => {
+    assert.equal(cards.cheshire.cost, 2);
+    assert.equal(cards.cheshire.power, 3, 'base Hands remain within the cost-plus-one budget');
+    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+    const alice = unit('alice', owner, 0);
+    const cheshire = createCardInstance('cheshire', owner, 'hand-grin', 2);
+    const m = blank();
+    m.boards[0] = [alice];
+    m[hand] = [cheshire];
+    m.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot(owner === 'player' ? ['cheshire'] : [], owner === 'cpu' ? ['cheshire'] : [],
+      { [owner]: { cheshire: { level: 8, xp: 2800, moveTier: 3 } } });
+    const returned = advance(m);
+    assert.equal(find(returned, alice).lane, null);
+    assert.equal(returned.boards[0].filter(c => c.cardId === 'grin').length, 1);
+    assert.equal(returned.boards[0].find(c => c.cardId === 'grin')?.basePower, 6);
+    assert.equal(find(returned, cheshire).waveTrainingUsed, true);
+    assert.equal(find(returned, cheshire).powerModifier, 3, 'a hand trigger earns its upgrade exactly once');
+    assert.equal(returned.cheshireRounds?.[owner], returned.round - 1);
+    const deployed = play(returned, find(returned, cheshire), 1);
+    assert.equal(find(deployed, cheshire).powerModifier, 3, 'hand-earned training survives deployment');
+
+    const disabled = blank();
+    disabled.boards[0] = [alice];
+    disabled[hand] = [{ ...cheshire, statuses: { ...cheshire.statuses, silenced: true } }];
+    assert(!advance(disabled).boards.flat().some(c => c.cardId === 'grin'));
+  });
+
+  test(`Alice's own next-play discount works for ${owner} without Mr Rabbit`, () => {
+    const alice = unit('alice', owner, 0);
+    const m = blank();
+    m.boards[0] = [alice];
+    const returned = advance(m);
+    const ready = find(returned, alice);
+    assert.equal(ready.lane, null);
+    assert.equal(ready.aliceReady, true);
+    assert.equal(ready.rabbitReturnDiscount, false);
+    assert.equal(getLegalCardCost(returned, owner, ready, 1), 1);
+    assert.match(getCardCostExplanation(returned, owner, ready, 1), /Drink Me \/ Eat Me/);
+    const redeployed = play(returned, ready, 1);
+    assert.equal(redeployed[owner === 'player' ? 'playerMotion' : 'cpuMotion'],
+      returned[owner === 'player' ? 'playerMotion' : 'cpuMotion'] - 1, 'the printed discount is actually paid');
+    assert.equal(find(redeployed, alice).aliceReady, false);
+    assert.equal(find(redeployed, alice).powerModifier, 3);
+    const withAnotherCredit = { ...returned, discountTokens: [{
+      id: 'alice-targeted-credit', owner, sourceInstanceId: 'dorothy', targetInstanceId: ready.instanceId,
+      eligibility: 'homecoming' as const, sourceLane: 0 as Lane, createdOrder: 1,
+    }] };
+    assert.equal(getLegalCardCost(withAnotherCredit, owner, ready, 1), 1, 'stacked discounts honor the 1-Motion floor');
+    assert(!play(withAnotherCredit, ready, 1).discountTokens.some(t => t.id === 'alice-targeted-credit'));
+
+    const charged = blank();
+    const initiallyDrawn = createCardInstance('alice', owner, 'initial-alice', 1);
+    assert.equal(getLegalCardCost(charged, owner, initiallyDrawn, 1), 2);
+    const silenced = blank();
+    silenced.boards[0] = [{ ...alice, statuses: { ...alice.statuses, silenced: true } }];
+    assert.equal(find(advance(silenced), alice).lane, 0, 'suppressed Alice does not return or receive a credit');
+  });
+
+  test(`Mr Rabbit in ${owner}'s hand discounts Alice's next play, even after Rabbit leaves hand`, () => {
+    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+    const rabbit = createCardInstance('mrrabbit', owner, 'pocket-watch', 4);
+    const alice = unit('alice', owner, 0, 5);
+    const m = blank();
+    m.boards[0] = [alice];
+    m[hand] = [rabbit];
+    const returned = advance(m);
+    const aliceInHand = find(returned, alice);
+    assert.equal(aliceInHand.lane, null);
+    assert.equal(aliceInHand.rabbitReturnDiscount, true);
+    assert.equal(getLegalCardCost(returned, owner, aliceInHand, 1), 1);
+    assert.match(getCardCostExplanation(returned, owner, aliceInHand, 1), /Pocket Watch/);
+    assert.match(getCardCostExplanation(returned, owner, aliceInHand, 1), /Drink Me \/ Eat Me/);
+    assert(returned.effectLog.some(e => e.cardInstanceId === rabbit.instanceId && e.note.includes('Pocket Watch')));
+    const withoutRabbit = { ...returned, [hand]: returned[hand].filter(c => c.instanceId !== rabbit.instanceId) };
+    assert.equal(getLegalCardCost(withoutRabbit, owner, aliceInHand, 1), 1, 'the return locks in its one-use discount');
+    const redeployed = play(withoutRabbit, aliceInHand, 1);
+    assert.equal(find(redeployed, alice).rabbitReturnDiscount, false);
+    assert.equal(find(redeployed, alice).powerModifier, 3);
+    const disabled = blank();
+    disabled.boards[0] = [alice];
+    disabled[hand] = [{ ...rabbit, statuses: { ...rabbit.statuses, silenced: true } }];
+    assert.equal(find(advance(disabled), alice).rabbitReturnDiscount, false);
+
+    const dorothyMatch = blank();
+    const ally = unit('bonnetgirl', owner, 0, 12);
+    dorothyMatch.boards[0] = [ally];
+    dorothyMatch[hand] = [rabbit];
+    const dorothyReturn = cast(dorothyMatch, 'dorothy', owner).after;
+    const traveler = find(dorothyReturn, ally);
+    assert.equal(traveler.rabbitReturnDiscount, true);
+    assert(dorothyReturn.discountTokens.some(t => t.eligibility === 'homecoming' && t.targetInstanceId === traveler.instanceId));
+    assert.equal(getLegalCardCost(dorothyReturn, owner, traveler, 0), 1);
+    const backFromDorothy = play(dorothyReturn, traveler, 0);
+    assert.equal(find(backFromDorothy, ally).powerModifier, 1, 'Dorothy still gives +1 Hand on replay');
+    assert.equal(find(backFromDorothy, ally).rabbitReturnDiscount, false);
+  });
+
+  test(`Mr Rabbit on ${owner}'s board gains Hands on Dorothy and Alice returns alongside Cheshire`, () => {
+    const rabbit = unit('mrrabbit', owner, 0, 4);
+    const ally = unit('bonnetgirl', owner, 0, 5);
+    const alice = unit('alice', owner, 1, 6);
+    const cheshire = unit('cheshire', owner, 2, 7);
+    const m = blank();
+    m.boards = [[rabbit, ally], [alice], [cheshire]];
+    const dorothy = cast(m, 'dorothy', owner).after;
+    assert.equal(find(dorothy, ally).lane, null);
+    assert.equal(find(dorothy, rabbit).powerModifier, 1);
+    assert.equal(getLegalCardCost(dorothy, owner, find(dorothy, ally), 0), 1, 'Dorothy retains her Homecoming discount');
+    assert.equal(dorothy.boards.flat().filter(c => c.cardId === 'grin').length, 1);
+    const next = advance(dorothy);
+    assert.equal(find(next, alice).lane, null);
+    assert.equal(find(next, rabbit).powerModifier, 2, 'each separate return grants +1 Hand');
+    assert.equal(next.boards.flat().filter(c => c.cardId === 'grin').length, 1, 'Cheshire still caps its Grin once per round');
+    assert.equal(next.effectLog.filter(e => e.cardInstanceId === rabbit.instanceId && e.note.includes('Pocket Watch')).length, 2);
+
+    const silenced = blank();
+    silenced.boards[0] = [{ ...rabbit, statuses: { ...rabbit.statuses, silenced: true } }, ally];
+    assert.equal(find(cast(silenced, 'dorothy', owner).after, rabbit).powerModifier, 0);
+    const rival = owner === 'player' ? 'cpu' : 'player';
+    const enemyReturn = blank();
+    enemyReturn.boards = [[rabbit], [unit('alice', rival, 1, 10)], []];
+    assert.equal(find(advance(enemyReturn), rabbit).powerModifier, 0, 'enemy returns do not grant Hands');
+  });
+
+  test(`Mr Rabbit's return credit stacks with an existing targeted discount for ${owner}, with a 1-Motion floor`, () => {
+    const m = blank();
+    const pricey = { ...createCardInstance('guap', owner, 'rabbit-credit', 1), rabbitReturnDiscount: true };
+    const hand = owner === 'player' ? 'playerHand' : 'cpuHand';
+    m[hand] = [pricey];
+    m.discountTokens = [{ id: 'homecoming-rabbit-test', owner, sourceInstanceId: 'dorothy',
+      targetInstanceId: pricey.instanceId, eligibility: 'homecoming', sourceLane: 0, createdOrder: 1 }];
+    assert.equal(getLegalCardCost(m, owner, pricey, 0), 4, '6 base −1 Homecoming −1 Rabbit');
+    const deployed = play(m, pricey, 0);
+    assert.equal(find(deployed, pricey).rabbitReturnDiscount, false);
+    assert(!deployed.discountTokens.some(t => t.id === 'homecoming-rabbit-test'));
+    const cheap = { ...createCardInstance('bonnetgirl', owner, 'rabbit-floor', 2), rabbitReturnDiscount: true };
+    assert.equal(getLegalCardCost({ ...m, [hand]: [cheap] }, owner, cheap, 0), 1);
+  });
+}
 test('Cheshire only leaves one Grin each round and never duplicates a district token', () => {
   let m=blank();const cat=unit('cheshire','player',2), ally=unit('bonnetgirl','player',0);m.boards=[[ally],[],[cat]];
   m=cast(m,'dorothy').after;const returned=find(m,ally);m=play(m,returned,0);m.playerMotion=9;
@@ -154,6 +389,7 @@ test('Cheshire only leaves one Grin each round and never duplicates a district t
   assert.equal(m.boards.flat().filter(c=>c.cardId==='grin').length,1);
 });
 test('Queen executes only at threshold; Protection and Built Different prevent a guard', () => {
+  assert.equal(cards.queenofhearts.cost, 3);
   for (const protectedTarget of [false,true]) {
     const m=blank(), target=unit('bonnetgirl','cpu',0);m.boards[0]=[target];if(protectedTarget)cover(m,target);
     const {after}=cast(m,'queenofhearts');
@@ -161,6 +397,14 @@ test('Queen executes only at threshold; Protection and Built Different prevent a
   }
   const m=blank(), legend=unit('homelesslegend','cpu',0);legend.powerModifier=2-legend.basePower;m.boards[0]=[legend];
   const {after}=cast(m,'queenofhearts');assert(find(after,legend).legendSaved);assert(!after.boards[0].some(c=>c.cardId==='cardguard'));
+  for (const [hands, executed] of [[6, true], [7, false]] as const) {
+    const threshold = blank(), enemy = unit('hooper', 'cpu', 0);
+    enemy.powerModifier = hands - enemy.basePower;
+    threshold.boards[0] = [enemy];
+    const played = cast(threshold, 'queenofhearts').after;
+    assert.equal(played.boards[0].some(c => c.instanceId === enemy.instanceId), !executed);
+    assert.equal(played.boards[0].filter(c => c.cardId === 'cardguard').length, executed ? 1 : 0);
+  }
 });
 test('Sherlock visibly cancels one entrance, expires, and does not erase passive abilities', () => {
   let m=cast(blank(),'sherlock').after;
@@ -308,12 +552,31 @@ test('Protection prevents damage reactions, and opposing cooks cannot retaliate 
   const hit=cast({...blocked,playerMotion:9},'ptang').after;assert(hit.effectLog.length<40);
   assert.equal(find(hit,b).waveRounds?.squabblecook,3);assert.equal(find(hit,a).waveRounds?.squabblecook,3);
 });
-test('Oz repeats the most recent historical eligible entrance once per match, and refuses copying loops', () => {
-  const m=blank(), ally=unit('corruptpastor','player',0), donor=unit('hooper','player',0);ally.moved=true;m.boards[0]=[ally,donor];m.entranceHistory=[ally.instanceId];m.roundMovedIds={player:[ally.instanceId],cpu:[]};
-  const {source,after}=cast(m,'oz','player',1);assert(find(after,source).waveOnce?.oz);assert.equal(find(after,ally).powerModifier,4);
-  const loop=blank(), echo=unit('tayaty','player',0);loop.boards[0]=[echo];loop.entranceHistory=[echo.instanceId];
-  const rejected=cast(loop,'oz');assert(!find(rejected.after,rejected.source).waveOnce?.oz);
-});
+for (const owner of ['player', 'cpu'] as const) {
+  test(`Oz prefers the most recent eligible Oz traveler over a newer ordinary entrance for ${owner}`, () => {
+    const m=blank(), dorothy=unit('dorothy',owner,0), saved=unit('bonnetgirl',owner,0);
+    const ordinary=unit('corruptpastor',owner,1), donor=unit('hooper',owner,1);
+    m.boards=[[dorothy,saved],[ordinary,donor],[]];
+    m.entranceHistory=[dorothy.instanceId,ordinary.instanceId];
+    const {source,after}=cast(m,'oz',owner,2);
+    assert(find(after,source).waveOnce?.oz);
+    assert.equal(find(after,saved).lane,null,'Dorothy is echoed instead of the newer ordinary character');
+    assert.equal(find(after,donor).powerModifier,0);
+    assert.deepEqual(cast(JSON.parse(JSON.stringify(m)),'oz',owner,2).after,after);
+  });
+  test(`Oz falls back to the most recent eligible ordinary entrance when no traveler qualifies for ${owner}`, () => {
+    const m=blank(), ally=unit('corruptpastor',owner,0), donor=unit('hooper',owner,0);
+    m.boards[0]=[ally,donor];m.entranceHistory=[ally.instanceId];
+    const {source,after}=cast(m,'oz',owner,1);
+    assert(find(after,source).waveOnce?.oz);
+    assert.equal(find(after,ally).powerModifier,2);
+    assert.equal(find(after,donor).powerModifier,-1);
+  });
+  test(`Oz refuses copying loops for ${owner}`, () => {
+    const loop=blank(), echo=unit('tayaty',owner,0);loop.boards[0]=[echo];loop.entranceHistory=[echo.instanceId];
+    const rejected=cast(loop,'oz',owner);assert(!find(rejected.after,rejected.source).waveOnce?.oz);
+  });
+}
 
 test('Oz movement bonus uses successful current-round IDs, not persistent moved flags or one-mover history', () => {
   const ally = unit('corruptpastor', 'player', 0), later = unit('hooper', 'player', 0);
@@ -332,7 +595,7 @@ test('Oz movement bonus uses successful current-round IDs, not persistent moved 
   assert.equal(find(noBonus, ally).powerModifier, 2);
 });
 test('the same fairytale rules survive six-round authoritative online games for both seats', () => {
-  const ids=FAIRYTALE_WAVE.slice(0,10).map(([id])=>id), other=FAIRYTALE_WAVE.slice(11).map(([id])=>id);
+  const ids=FAIRYTALE_WAVE.slice(0,10).map(([id])=>id), other=FAIRYTALE_WAVE.slice(11,21).map(([id])=>id);
   const member=(userId:string, list:string[])=>({userId,name:userId,ready:false,deck:{id:userId,name:userId,hero:list[0],cards:list}});
   let room=createOnlineRoom(member('a',ids),'player',1);room=joinOnlineRoom(room,member('b',other),2);
   room=applyOnlineCommand(room,'player',{type:'ready'},3);room=applyOnlineCommand(room,'cpu',{type:'ready'},4);
