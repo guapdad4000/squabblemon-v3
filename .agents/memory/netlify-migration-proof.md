@@ -26,3 +26,15 @@ Post-deploy event failures do not retroactively change a Netlify deploy's `ready
 **Why:** The runtime branch can still be missing schema after publication; an event-function failure appears in function logs or an operator alert, not as a failed deploy build.
 
 **How to apply:** Keep database probes in the post-deploy event using the API's own database selection, redact connection failures, and require operators to examine the event result before treating a ready deploy as schema-ready.
+
+Netlify, not native migration SQL, must own the outer transaction. Keep transaction wrappers only in standalone development copies.
+
+**Why:** Explicit SQL commits ended Netlify's transaction before its migration-ledger update. Deployment failed with `unexpected transaction status idle`; production had the new schema while its provider ledger still listed only the prior versions. Standalone node-postgres execution had passed because it did not reproduce the runner's transaction ownership.
+
+**How to apply:** Reject native top-level transaction control, test the files in an externally owned PostgreSQL transaction, and prove rollback and retry. After this failure, compare both provider history and actual schema before retrying; existing objects may require nondestructive idempotency guards. Do not reset database history.
+
+Use the deployment's reported database branch when reading Netlify migration metadata, not its Git branch.
+
+**Why:** The production database is labeled independently of Git `main`; querying migration history with the Git branch returned 404 even though the database existed.
+
+**How to apply:** Obtain the database branch from the exact deployment, and inspect only that branch's provider history and read-only schema metadata without exposing connection strings.

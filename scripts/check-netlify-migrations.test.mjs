@@ -150,3 +150,57 @@ test('feedback listing and account-limit indexes require matching ordering', t =
   writeFileSync(file, original.replace(/CREATE INDEX IF NOT EXISTS event_feedback_author_time[^;]+;/, ''));
   assert.throws(() => checkNetlifyMigrationCoverage(root), /index event_feedback_author_time/);
 });
+
+test('native copies of social and username migrations must not manage the runner transaction', t => {
+  const root = fixture(t);
+  const files = [
+    'netlify/database/migrations/202610020001_social/migration.sql',
+    'netlify/database/migrations/202610030001_social-usernames/migration.sql',
+  ].map(file => path.join(root, file));
+  for (const file of files) {
+    const original = readFileSync(file, 'utf8');
+    const unwrapped = original.replace(/^BEGIN;\s*/i, '').replace(/\s*COMMIT;\s*$/i, '');
+    writeFileSync(file, `BEGIN;\n${unwrapped}\nCOMMIT;\n`);
+    assert.throws(() => checkNetlifyMigrationCoverage(root), error =>
+      error.message.includes(file) && /runner-owned transaction: BEGIN/.test(error.message));
+    writeFileSync(file, unwrapped);
+  }
+  assert.doesNotThrow(() => checkNetlifyMigrationCoverage(root));
+});
+
+test('native transaction controls and nontransactional commands are rejected', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  for (const command of [
+    'BEGIN', 'START TRANSACTION', 'COMMIT', 'END', 'ROLLBACK', 'ABORT', 'PREPARE TRANSACTION batch',
+    'CREATE INDEX CONCURRENTLY feedback_test ON event_feedback (id)',
+    'CREATE UNIQUE INDEX CONCURRENTLY feedback_test ON event_feedback (id)',
+    'DROP INDEX CONCURRENTLY feedback_test', 'VACUUM event_feedback',
+  ]) {
+    writeFileSync(file, `${original}\n${command};\n`);
+    assert.throws(() => checkNetlifyMigrationCoverage(root), error =>
+      error.message.includes(file) &&
+      error.message.includes(`runner-owned transaction: ${command.toUpperCase().split(/\s+/).slice(0, 3).join(' ')}`),
+    command);
+  }
+});
+
+test('native scanner ignores transaction words inside quoted SQL and comments', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  writeFileSync(file, original + String.raw`
+-- BEGIN; COMMIT; VACUUM;
+/* BEGIN; /* nested COMMIT; */ DROP INDEX CONCURRENTLY ignored; */
+SELECT 'BEGIN;''COMMIT;', E'escaped \'; ROLLBACK; ABORT;', "END", "VACUUM";
+DO $$ BEGIN RAISE NOTICE 'COMMIT;'; END; $$;
+DO $tag$ BEGIN RAISE NOTICE 'ROLLBACK;'; END; $tag$;
+CREATE FUNCTION migration_guard_sample() RETURNS void LANGUAGE plpgsql AS $function$
+BEGIN
+  PERFORM 'START TRANSACTION; PREPARE TRANSACTION;';
+END;
+$function$;
+`);
+  assert.doesNotThrow(() => checkNetlifyMigrationCoverage(root));
+});

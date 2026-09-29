@@ -27,7 +27,7 @@
 - [Character combat identities](character-combat-identities.md) — Preserve user-approved reversal, prediction/trap, and cheap-brawler roles when balancing the new characters.
 - [Progression rollout boundaries](progression-rollout.md) — Preserve finite story promises; exclude promotional wallets from organic pacing and use immutable audit baselines.
 - [Payment verification fidelity](payment-verification-fidelity.md) — Native PostgreSQL proves wallet locking; synthetic signatures and real Stripe webhook delivery are separate evidence.
-- [Netlify migration proof](netlify-migration-proof.md) — A ready monorepo deploy can omit migrations; verify applied versions on the exact database branch.
+- [Netlify migration proof](netlify-migration-proof.md) — Verify runner-owned transactions, retry safety, and both schema and applied versions on the deployment’s database branch.
 - [Netlify function environment](netlify-function-env.md) — netlify.toml vars never reach functions; NETLIFY is reserved/absent there; trust per-invocation deploy context for runtime gates.
 - [Ranked browser test environment](ranked-browser-test-environment.md) — Local ranked journeys need an owned test database and may need a Chromium override when Edge is absent.
 - [Collection header intent](collection-header-intent.md) — Keep title left and owned count right; separate anchors let the count animate without moving the title.

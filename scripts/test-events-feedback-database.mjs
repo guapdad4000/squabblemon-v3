@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { delimiter, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { verifyNativeMigrationTransactions } from "./verify-native-migration-transactions.mjs";
 
 // Always use a newly owned native cluster. Never take a caller's DATABASE_URL.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -106,15 +107,13 @@ try {
   for (const history of ["dev", "native"]) {
     const url = `postgresql://postgres@127.0.0.1:${p}/events_feedback_${history}`;
     await queryDb(url, async client => {
-      await apply(client, initial);
       if (history === "dev") {
+        await apply(client, initial);
         for (const entry of readdirSync(join(root, "lib/db/migrations")).filter(n => n.endsWith(".sql")).sort()) {
           await apply(client, join(root, "lib/db/migrations", entry));
         }
       } else {
-        for (const entry of readdirSync(join(root, "netlify/database/migrations")).sort().filter(n => n !== "202609170001_initial-game")) {
-          await apply(client, join(root, "netlify/database/migrations", entry, "migration.sql"));
-        }
+        await verifyNativeMigrationTransactions(client, root);
       }
       await apply(client, join(root, history === "dev" ? "lib/db/migrations/20260928_event_feedback.sql" : "netlify/database/migrations/202610010005_event-feedback/migration.sql"));
       await verify(client);
@@ -124,7 +123,8 @@ try {
   console.info("Both isolated development and native migration histories verified.");
   const pnpm = process.env.npm_execpath ? [process.execPath, process.env.npm_execpath] : ["pnpm"];
   const browserOnly = process.argv.includes("--browser-only");
-  if (!browserOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1", "src/lib/eventFeedback.test.ts"]);
+  const migrationsOnly = process.argv.includes("--migrations-only");
+  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1", "src/lib/eventFeedback.test.ts"]);
   if (browserOnly || process.argv.includes("--browser")) {
     const separator = process.argv.indexOf("--");
     const browserArgs = separator < 0 ? [] : process.argv.slice(separator + 1);

@@ -170,6 +170,72 @@ function schemaCoverage(root) {
   return coverage;
 }
 
+// Netlify owns the transaction around native migrations. Only examine
+// statement-leading keywords: PL/pgSQL bodies and SQL literals may contain
+// transaction words and semicolons without being top-level SQL statements.
+function checkNativeTransactionSafety(sql, file) {
+  let words = [];
+  const checkStatement = () => {
+    const [first, second, third, fourth] = words;
+    const transactionControl = ['BEGIN', 'COMMIT', 'END', 'ROLLBACK', 'ABORT'].includes(first) ||
+      first === 'START' && second === 'TRANSACTION' ||
+      first === 'PREPARE' && second === 'TRANSACTION';
+    const concurrentIndex = (first === 'CREATE' && (second === 'INDEX' ||
+      second === 'UNIQUE' && third === 'INDEX') &&
+      (second === 'INDEX' ? third : fourth) === 'CONCURRENTLY') ||
+      first === 'DROP' && second === 'INDEX' && third === 'CONCURRENTLY' ||
+      first === 'REINDEX' && words.includes('CONCURRENTLY');
+    if (transactionControl || concurrentIndex || first === 'VACUUM') {
+      throw new Error(`Netlify-native migration ${file} cannot run inside the runner-owned transaction: ${words.join(' ')}`);
+    }
+    words = [];
+  };
+  for (let i = 0; i < sql.length;) {
+    const char = sql[i];
+    if (char === '-' && sql[i + 1] === '-') {
+      i = sql.indexOf('\n', i + 2);
+      if (i < 0) break;
+    } else if (char === '/' && sql[i + 1] === '*') {
+      let depth = 1;
+      i += 2;
+      while (i < sql.length && depth) {
+        if (sql.startsWith('/*', i)) { depth++; i += 2; }
+        else if (sql.startsWith('*/', i)) { depth--; i += 2; }
+        else i++;
+      }
+      if (depth) throw new Error(`Unclosed block comment in Netlify-native migration ${file}`);
+    } else if (char === "'" || char === '"') {
+      const quote = char;
+      const escaped = quote === "'" && (/[eE]/.test(sql[i - 1] ?? '') &&
+        (i < 2 || !/[a-zA-Z_0-9$]/.test(sql[i - 2])) ||
+        sql[i - 1] === '&' && /[uU]/.test(sql[i - 2] ?? ''));
+      i++;
+      let closed = false;
+      while (i < sql.length) {
+        if (sql[i] === '\\' && escaped) { i += 2; continue; }
+        if (sql[i] === quote && sql[i + 1] === quote) { i += 2; continue; }
+        if (sql[i++] === quote) { closed = true; break; }
+      }
+      if (!closed) throw new Error(`Unclosed SQL quote in Netlify-native migration ${file}`);
+    } else if (char === '$' && /^\$(?:[a-zA-Z_][a-zA-Z_0-9]*)?\$/.test(sql.slice(i))) {
+      const delimiter = sql.slice(i).match(/^\$(?:[a-zA-Z_][a-zA-Z_0-9]*)?\$/)[0];
+      const end = sql.indexOf(delimiter, i + delimiter.length);
+      if (end < 0) throw new Error(`Unclosed dollar quote in Netlify-native migration ${file}`);
+      i = end + delimiter.length;
+    } else if (char === ';') {
+      checkStatement();
+      i++;
+    } else if (/[a-zA-Z_]/.test(char)) {
+      const start = i++;
+      while (i < sql.length && /[a-zA-Z_0-9$]/.test(sql[i])) i++;
+      if (words.length < 6) words.push(sql.slice(start, i).toUpperCase());
+    } else {
+      i++;
+    }
+  }
+  checkStatement();
+}
+
 export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   const required = schemaCoverage(root);
   const devDir = path.join(root, 'lib/db/migrations');
@@ -187,7 +253,9 @@ export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   if (!entries.length) throw new Error('No Netlify-native migrations found.');
   for (const entry of entries) {
     const file = path.join(nativeDir, entry, 'migration.sql');
-    merge(native, sqlCoverage(readFileSync(file, 'utf8'), file));
+    const sql = readFileSync(file, 'utf8');
+    checkNativeTransactionSafety(sql, file);
+    merge(native, sqlCoverage(sql, file));
   }
   const missing = [];
   for (const [table, columns] of required.tables) {

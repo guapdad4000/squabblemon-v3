@@ -1,4 +1,4 @@
-BEGIN;
+-- Netlify owns the transaction for native migrations.
 ALTER TABLE online_rooms ADD COLUMN IF NOT EXISTS invite_only boolean NOT NULL DEFAULT false;
 CREATE TABLE IF NOT EXISTS social_identities (
  user_id text PRIMARY KEY REFERENCES player_profiles(clerk_user_id) ON DELETE CASCADE,
@@ -45,4 +45,3 @@ CREATE TABLE IF NOT EXISTS social_throttle (
  PRIMARY KEY(user_id,action)
 );
 UPDATE online_rooms SET invite_only = true WHERE id IN (SELECT room_id FROM social_invitations);
-COMMIT;
