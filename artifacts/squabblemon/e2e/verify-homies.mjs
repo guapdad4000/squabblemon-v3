@@ -22,6 +22,19 @@ async function api(context, method, path, body, expected = 200) {
   return data;
 }
 const social = index => api(contexts[index], "GET", "/social");
+async function searchOnScreen(page, query) {
+  await page.getByTestId("tab-fb-find").click();
+  await page.getByTestId("input-search").fill(query);
+  await page.getByTestId("button-search").click();
+  await page.getByTestId("list-search").waitFor();
+  return page.getByTestId("list-search");
+}
+async function assertPortraitAndName(row, name) {
+  await row.waitFor();
+  assert.equal(await row.locator(".sq-row__name").innerText(), name);
+  await row.locator(".sq-row__portrait img").waitFor();
+  assert.equal(await row.locator(".sq-row__portrait img").count(), 1);
+}
 async function waitForState(index, predicate, label) {
   for (let tries = 0; tries < 30; tries++) {
     const state = await social(index);
@@ -41,6 +54,13 @@ try {
   }
   const [a, b, c] = pages;
   await a.goto(`${origin}/game/settings#homies`);
+  await b.goto(`${origin}/game/settings#homies`);
+  // Neither account has customized a username. Search by the public names
+  // first; a search must discover even profiles without social identity rows.
+  const bInitialResults = await searchOnScreen(b, "Vic");
+  await assertPortraitAndName(bInitialResults.locator("li").filter({ hasText: "Vicky" }), "Vicky");
+  const aInitialResults = await searchOnScreen(a, "The Riv");
+  await assertPortraitAndName(aInitialResults.locator("li").filter({ hasText: "The Rival" }), "The Rival");
   const aState = await social(0), bState = await social(1);
   assert.match(aState.self.friendCode, /^[A-F0-9]{12}$/);
   assert.match(bState.self.friendCode, /^[A-F0-9]{12}$/);
@@ -50,6 +70,16 @@ try {
   assert.deepEqual(Object.keys(aState.self).sort(), ["avatarKey", "displayName", "friendCode", "lastActiveAt", "username"]);
   assert.match(aState.self.username, /^[a-z0-9_]{3,24}$/);
   assert.match(bState.self.username, /^[a-z0-9_]{3,24}$/);
+  await assertPortraitAndName(bInitialResults.getByTestId(`row-found-${aState.self.username}`), "Vicky");
+  await assertPortraitAndName(aInitialResults.getByTestId(`row-found-${bState.self.username}`), "The Rival");
+  await b.screenshot({ path: "screenshots/homies-discovery-before.png" });
+
+  // Change the actual account handle through its visible profile editor.
+  await a.getByTestId("button-edit-username").click();
+  await a.getByTestId("input-username").fill("vicky_reborn");
+  await a.getByRole("button", { name: "Save", exact: true }).click();
+  await a.getByTestId("text-username").getByText("@vicky_reborn").waitFor();
+  assert.equal((await social(0)).self.username, "vicky_reborn");
   await b.goto(`${origin}/game/settings?friend=${aState.self.friendCode}#homies`);
   await b.getByTestId("card-lookup").waitFor();
   assert.match(await b.getByTestId("card-lookup").innerText(), /Vicky/);
@@ -60,12 +90,13 @@ try {
   assert.equal(lookup.player.friendCode, aState.self.friendCode);
   assert.deepEqual(Object.keys(lookup.player).sort(), ["avatarKey", "displayName", "friendCode", "lastActiveAt", "username"]);
   assert.equal(lookup.requestId, null);
-  assert.match(await b.getByTestId("card-lookup").innerText(), new RegExp(`@${aState.self.username}\\b`));
-  await b.getByTestId("input-search").fill(aState.self.username);
-  const found = b.getByTestId("list-search").getByTestId(`row-found-${aState.self.username}`);
-  await found.waitFor();
-  assert.match(await found.innerText(), /Vicky/);
-  await found.getByTestId(`button-add-${aState.self.username}`).click();
+  assert.match(await b.getByTestId("card-lookup").innerText(), /@vicky_reborn\b/);
+  const bUpdatedResults = await searchOnScreen(b, "@VICKY_REB");
+  const found = bUpdatedResults.getByTestId("row-found-vicky_reborn");
+  await assertPortraitAndName(found, "Vicky");
+  assert.match(await found.innerText(), /@vicky_reborn\b/);
+  await b.screenshot({ path: "screenshots/homies-discovery-after.png" });
+  await found.getByTestId("button-add-vicky_reborn").click();
   const sent = await waitForState(1, state => state.outgoingRequests.length === 1, "sent request");
   assert.equal(sent.outgoingRequests.length, 1);
   const incoming = await waitForState(0, state => state.incomingRequests.length === 1, "incoming request");
@@ -84,6 +115,7 @@ try {
   await a.getByTestId("tab-homies").locator(".fighter-tab__badge").waitFor({ state: "hidden" });
   assert.equal(accepted.homies[0].friendCode, bState.self.friendCode);
   assert.equal((await social(1)).homies[0].friendCode, aState.self.friendCode);
+  assert.equal((await social(1)).homies[0].username, "vicky_reborn");
   await Promise.all([a.reload(), b.reload()]);
   assert.equal((await social(0)).homies[0].friendCode, bState.self.friendCode);
   assert.equal((await social(1)).homies[0].friendCode, aState.self.friendCode);
@@ -155,7 +187,7 @@ try {
   assert.equal((await social(0)).homies[0].friendCode, bState.self.friendCode);
   assert.deepEqual(errors, []);
   console.log(JSON.stringify({ passed: true, friendCodes: [aState.self.friendCode, bState.self.friendCode], invitationRoom: invitation.roomCode,
-    checks: ["two native PostgreSQL accounts", "minimal exact-code lookup", "link does not send request", "request and explicit acceptance", "mutual persistence after reload", "targeted invitation", "third-party room rejection", "recipient crew acceptance", "both ready", "active battle and reconnect", "battle social polling paused", "ordinary non-homie room join"] }, null, 2));
+    checks: ["two native PostgreSQL accounts discover one another by public names before handle customization", "visible Search button returns names and portraits", "new @handle resolves updated identity", "minimal exact-code lookup", "link does not send request", "request and explicit acceptance", "mutual persistence after reload", "targeted invitation", "third-party room rejection", "recipient crew acceptance", "both ready", "active battle and reconnect", "battle social polling paused", "ordinary non-homie room join"] }, null, 2));
 } catch (error) {
   for (const [index, page] of pages.entries()) await page.screenshot({ path: `screenshots/homies-failure-${index}.png`, fullPage: true }).catch(() => {});
   throw error;

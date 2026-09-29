@@ -58,7 +58,7 @@ async function setup(page: Page, initial: Record<string, Relation> = {}) {
     }
     if (path === '/api/social/search' && method === 'GET') {
       const query = (url.searchParams.get('query') ?? '').toLowerCase().replace(/^@/, '');
-      const found = all.filter(p => p.username.includes(query) && p.friendCode !== self.friendCode && relation(p) !== 'blocked').slice(0, 12);
+      const found = all.filter(p => (p.username.toLowerCase().startsWith(query) || p.displayName.toLowerCase().startsWith(query)) && p.friendCode !== self.friendCode && relation(p) !== 'blocked').slice(0, 12);
       // Snapshot on receipt, before any held response. A later mutation must
       // outrank this older answer, rather than appearing to belong to its state.
       const players = found.map(lookup);
@@ -139,7 +139,7 @@ async function section(page: Page, name: 'Homies' | 'Requests' | 'Find Players')
 }
 async function search(page: Page, query: string) {
   await section(page, 'Find Players');
-  await page.getByRole('searchbox', { name: 'Search by username' }).fill(query);
+  await page.getByRole('searchbox', { name: 'Search by player name or @username' }).fill(query);
   await expect(page.getByTestId('list-search')).toBeVisible();
 }
 async function refresh(page: Page, api: Awaited<ReturnType<typeof setup>>) {
@@ -180,6 +180,26 @@ test('actual authenticated shell uses supplied logo, handle, editable name and c
   await section(page, 'Homies');
 });
 
+test('Find Players accepts player-name prefixes and @username without claiming an exact handle', async ({ page }) => {
+  await setup(page);
+  await open(page);
+  await section(page, 'Find Players');
+  const field = page.getByRole('searchbox', { name: 'Search by player name or @username' });
+  await expect(field).toHaveAttribute('placeholder', 'Player name or @username');
+  await expect(page.locator('#fb-search-help')).toContainText('3–24 characters');
+  await field.fill('FIGHTER 100');
+  await page.getByTestId('button-search').click();
+  await expect(page.getByTestId('row-found-crowd_1')).toContainText('Fighter 100');
+  await field.fill('@CROWD_1');
+  await page.getByTestId('button-search').click();
+  await expect(page.getByTestId('row-found-crowd_1')).toContainText('@crowd_1');
+  await field.fill('ighter 100');
+  await expect(page.getByText('No players found for “ighter 100”.')).toBeVisible();
+  await field.fill('a'.repeat(25));
+  await expect(page.getByTestId('button-search')).toBeDisabled();
+  await expect(page.getByRole('alert')).toContainText('up to 24 characters');
+});
+
 test('search caps at 12 named portrait results; confirmation precedes one send, cancel and safe existing relationship', async ({ page }) => {
   const api = await setup(page, { rival: 'homie' });
   await open(page);
@@ -201,7 +221,7 @@ test('search caps at 12 named portrait results; confirmation precedes one send, 
   await found.getByRole('button', { name: 'Cancel' }).click();
   await expect(found.getByRole('button', { name: 'Add Homie' })).toBeVisible();
   expect(api.calls).toContain('cancel:request-crowd_1');
-  await page.getByRole('searchbox', { name: 'Search by username' }).fill('rival');
+  await page.getByRole('searchbox', { name: 'Search by player name or @username' }).fill('rival');
   const existing = page.getByTestId('row-found-rival');
   await expect(existing).toContainText('Homies');
   await expect(existing.getByRole('button', { name: 'Add Homie' })).toHaveCount(0);
@@ -219,7 +239,7 @@ test('newer search and shared-link lookup incoming receipts beat stale cached st
   await linked.getByRole('button', { name: 'Accept request' }).click();
   await expect(linked).toContainText('Homies');
   expect(api.calls).toContain('accept:request-visitor');
-  await page.getByRole('searchbox', { name: 'Search by username' }).fill('newcomer');
+  await page.getByRole('searchbox', { name: 'Search by player name or @username' }).fill('newcomer');
   const found = page.getByTestId('list-search').getByTestId('row-found-newcomer');
   await expect(found.getByRole('button', { name: 'Accept request' })).toBeVisible();
   await found.getByRole('button', { name: 'Accept request' }).click();

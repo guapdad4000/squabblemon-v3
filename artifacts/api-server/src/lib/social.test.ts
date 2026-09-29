@@ -5,7 +5,7 @@ import type { AddressInfo } from "node:net";
 import test from "node:test";
 import { and, eq, sql } from "drizzle-orm";
 import { db, pool, playerProfilesTable as profiles, socialIdentitiesTable as identities,
-  socialRelationshipsTable as relations, socialInvitationsTable as invitations, socialThrottleTable as throttle, onlineRoomsTable as rooms } from "@workspace/db";
+  socialRelationshipsTable as relations, socialBlocksTable as blocks, socialInvitationsTable as invitations, socialThrottleTable as throttle, onlineRoomsTable as rooms } from "@workspace/db";
 import { cardCatalog, starterRecipes } from "@workspace/squabblemon-engine/data";
 import { createApp } from "../app";
 import { identityViews } from "./socialIdentity";
@@ -139,6 +139,114 @@ test("Homies authenticated routes on owned native PostgreSQL", { skip: process.e
       await db.update(profiles).set({ displayName: "Changed Display Name" }).where(sql`${profiles.clerkUserId} in (${sql.join(ids.map(id => sql`${id}`), sql`, `)})`);
       const again = await db.transaction(async tx => { await lockSocial(tx); return identityViews(tx, ids); });
       assert.deepEqual([...again.values()].map(p => p.username).sort(), [...views.values()].map(p => p.username).sort());
+    });
+    await t.test("authenticated search discovers profile-only players in both directions and preserves identity", async () => {
+      const tag = randomUUID().replaceAll("-", "").slice(0, 10);
+      const nameA = `Nova ${tag} Alpha`, nameB = `Nova ${tag} Beta`;
+      const a = `social-test-${randomUUID()}`, b = `social-test-${randomUUID()}`;
+      users.push(a, b);
+      await db.insert(profiles).values([{ clerkUserId: a, displayName: nameA }, { clerkUserId: b, displayName: nameB }]);
+      assert.equal((await db.select().from(identities).where(eq(identities.userId, a))).length, 0);
+      assert.equal((await db.select().from(identities).where(eq(identities.userId, b))).length, 0);
+      const first = await ok(a, `/social/search?query=${encodeURIComponent(nameB)}`);
+      assert.equal(first.players.length, 1);
+      assert.equal(first.players[0].player.displayName, nameB);
+      assert.match(first.players[0].player.friendCode, /^[A-F0-9]{12}$/);
+      assert.match(first.players[0].player.username, /^[a-z0-9_]{3,24}$/);
+      assert.equal(first.players[0].relationship, "none");
+      assert.equal(first.players[0].requestId, null);
+      const reverse = await ok(b, `/social/search?query=${encodeURIComponent(nameA.toUpperCase())}`);
+      assert.equal(reverse.players.length, 1);
+      assert.equal(reverse.players[0].player.displayName, nameA);
+      const [stored] = await db.select().from(identities).where(eq(identities.userId, b));
+      assert.equal(stored.friendCode, first.players[0].player.friendCode);
+      const again = await ok(a, `/social/search?query=${encodeURIComponent(nameB)}`);
+      assert.equal(again.players[0].player.friendCode, stored.friendCode);
+      assert.equal(again.players[0].player.username, stored.username);
+      assert.equal((await request(null, `/social/search?query=${encodeURIComponent(nameB)}`)).status, 401);
+      assert.equal((await request(a, "/social/search?query=no")).status, 400);
+      assert.equal((await request(a, `/social/search?query=${"x".repeat(27)}`)).status, 400);
+      const [lookupThrottle] = await db.select().from(throttle).where(and(eq(throttle.userId, a), eq(throttle.action, "lookup")));
+      assert.equal(lookupThrottle.count, 4);
+    });
+    await t.test("literal display-name prefixes, null handles, renames and chosen usernames", async () => {
+      const tag = randomUUID().replaceAll("-", "").slice(0, 9);
+      const seeker = `social-test-${randomUUID()}`, target = `social-test-${randomUUID()}`;
+      const decoy = `social-test-${randomUUID()}`, slash = `social-test-${randomUUID()}`;
+      users.push(seeker, target, decoy, slash);
+      const name = `Space_${tag}% & Star`;
+      await db.insert(profiles).values([{ clerkUserId: seeker, displayName: "Searching Player" }, { clerkUserId: target, displayName: name },
+        { clerkUserId: decoy, displayName: `SpaceX${tag}Q & Star` }, { clerkUserId: slash, displayName: `Slash\\${tag} Unit` }]);
+      await db.insert(identities).values({ userId: target, friendCode: randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase(), username: null });
+      const path = (query: string) => `/social/search?query=${encodeURIComponent(query)}`;
+      const literal = (await ok(seeker, path(`SPACE_${tag}% &`))).players;
+      assert.equal(literal.length, 1);
+      assert.equal(literal[0].player.displayName, name);
+      assert.equal((await ok(seeker, path(`Slash\\${tag}`))).players[0].player.displayName, `Slash\\${tag} Unit`);
+      const initial = (await ok(seeker, path(name))).players[0].player;
+      assert.match(initial.username, /^[a-z0-9_]{3,24}$/);
+      const [stored] = await db.select().from(identities).where(eq(identities.userId, target));
+      assert.equal(stored.friendCode, initial.friendCode);
+      assert.equal(stored.username, initial.username);
+      const oldHandle = `old_${tag}`, newHandle = `new_${tag}`;
+      assert.equal((await request(target, "/social/username", { username: oldHandle }, "PATCH")).status, 200);
+      assert.equal((await ok(seeker, path(`@${oldHandle.toUpperCase()}`))).players[0].player.friendCode, initial.friendCode);
+      assert.equal((await request(target, "/social/username", { username: newHandle }, "PATCH")).status, 200);
+      assert.equal((await ok(seeker, path(`@${oldHandle}`))).players.length, 0);
+      assert.equal((await ok(seeker, path(`@${newHandle.toUpperCase()}`))).players[0].player.friendCode, initial.friendCode);
+      assert.equal((await ok(seeker, path(name))).players[0].player.username, newHandle);
+      const [renamed] = await db.select().from(identities).where(eq(identities.userId, target));
+      assert.equal(renamed.friendCode, initial.friendCode);
+      assert.equal(renamed.username, newHandle);
+      const chosen = `chosen_${tag}`;
+      await db.update(identities).set({ username: chosen }).where(eq(identities.userId, target));
+      assert.equal((await ok(seeker, path(name))).players[0].player.username, chosen);
+      assert.equal((await db.select().from(identities).where(eq(identities.userId, target)))[0].username, chosen);
+      await db.update(profiles).set({ displayName: `${chosen} another player` }).where(eq(profiles.clerkUserId, decoy));
+      const exact = (await ok(seeker, path(chosen))).players;
+      assert.equal(exact.length, 2);
+      assert.equal(exact[0].player.friendCode, initial.friendCode, "an exact current username outranks a display-name prefix");
+      assert.equal((await ok(seeker, path("___"))).players.length, 0);
+      assert.equal((await ok(seeker, path("%%%"))).players.length, 0);
+    });
+    await t.test("self and either-direction blocks filter before allocation; same-name results are bounded", async () => {
+      const tag = randomUUID().replaceAll("-", "").slice(0, 10);
+      const name = `Crowd ${tag} Players`;
+      const ids = Array.from({ length: 16 }, () => `social-test-${randomUUID()}`);
+      users.push(...ids);
+      await db.insert(profiles).values(ids.map(clerkUserId => ({ clerkUserId, displayName: name })));
+      await db.insert(blocks).values([{ userId: ids[0], targetId: ids[1] }, { userId: ids[2], targetId: ids[0] }]);
+      const first = (await ok(ids[0], `/social/search?query=${encodeURIComponent(name)}`)).players;
+      assert.equal(first.length, 12);
+      assert.equal(new Set(first.map((row: any) => row.player.friendCode)).size, 12);
+      assert.ok(first.every((row: any) => row.player.displayName === name));
+      assert.equal((await db.select().from(identities).where(sql`${identities.userId} in (${sql.join(ids.slice(1, 3).map(id => sql`${id}`), sql`, `)})`)).length, 0);
+      assert.equal((await db.select().from(identities).where(eq(identities.userId, ids[0]))).length, 1, "authenticated throttle creates the searcher's identity");
+      const second = (await ok(ids[0], `/social/search?query=${encodeURIComponent(name)}`)).players;
+      assert.deepEqual(second.map((row: any) => row.player.friendCode), first.map((row: any) => row.player.friendCode));
+      assert.ok((await db.select().from(identities).where(sql`${identities.userId} in (${sql.join(ids.map(id => sql`${id}`), sql`, `)})`)).length <= 13, "only self and at most twelve eligible matches allocate identities");
+    });
+    await t.test("exact claimed handle outranks twelve unallocated public-name matches", async () => {
+      const handle = `crowd_${randomUUID().replaceAll("-", "").slice(0, 10)}`;
+      const seeker = `social-test-${randomUUID()}`, owner = `social-test-${randomUUID()}`;
+      const crowd = Array.from({ length: 14 }, () => `social-test-${randomUUID()}`);
+      users.push(seeker, owner, ...crowd);
+      await db.insert(profiles).values([
+        { clerkUserId: seeker, displayName: "Handle Seeker" },
+        { clerkUserId: owner, displayName: "Distinct Name" },
+        ...crowd.map(clerkUserId => ({ clerkUserId, displayName: `${handle} Public Name` })),
+      ]);
+      const code = randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase();
+      await db.insert(identities).values({ userId: owner, username: handle, friendCode: code });
+      assert.equal((await db.select().from(identities).where(sql`${identities.userId} in (${sql.join(crowd.map(id => sql`${id}`), sql`, `)})`)).length, 0);
+      const found = (await ok(seeker, `/social/search?query=${encodeURIComponent(`@${handle.toUpperCase()}`)}`)).players;
+      assert.equal(found.length, 12);
+      assert.equal(found[0].player.friendCode, code);
+      assert.equal(found[0].player.username, handle);
+      assert.equal(new Set(found.map((row: any) => row.player.friendCode)).size, 12);
+      assert.equal((await db.select().from(identities).where(sql`${identities.userId} in (${sql.join(crowd.map(id => sql`${id}`), sql`, `)})`)).length, 11,
+        "only the eleven selected public-name matches receive identities");
+      assert.equal((await db.select().from(identities).where(eq(identities.userId, owner)))[0].username, handle);
     });
     await t.test("Fadebook handles, concurrent claims, bounded private search and durable opponents", async () => {
       const a = await player(), b = await player(), c = await player();

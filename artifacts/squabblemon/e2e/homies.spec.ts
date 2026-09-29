@@ -38,8 +38,8 @@ async function fixture(page: Page, long = false, bootstrap = profileBootstrap())
       : route.fulfill({ json: currentState });
   });
   await page.route('**/api/social/search*', route => {
-    const q = (new URL(route.request().url()).searchParams.get('query') ?? '').toLowerCase();
-    const matches = Array.from({ length: 80 }, (_, n) => player(n + 1)).filter(p => p.username.includes(q)).slice(0, 12);
+    const q = (new URL(route.request().url()).searchParams.get('query') ?? '').toLowerCase().replace(/^@/, '');
+    const matches = Array.from({ length: 80 }, (_, n) => player(n + 1)).filter(p => p.username.toLowerCase().startsWith(q) || p.displayName.toLowerCase().startsWith(q)).slice(0, 12);
     return route.fulfill({ json: { players: matches.map(p => ({ player: p, relationship: 'none', requestId: null })) } });
   });
   return {

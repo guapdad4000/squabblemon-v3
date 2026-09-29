@@ -87,7 +87,7 @@ paths:
       operationId: searchSocialPlayers
       parameters: [{ name: query, in: query, required: true, schema: { type: string, minLength: 3, maxLength: 26 } }]
       responses:
-        '200': { description: Up to twelve matching public usernames, content: { application/json: { schema: { $ref: '#/components/schemas/SocialSearchResult' } } } }
+        '200': { description: Up to twelve players matching a public display name or current username prefix, content: { application/json: { schema: { $ref: '#/components/schemas/SocialSearchResult' } } } }
   /social/username:
     patch:
       operationId: updateSocialUsername

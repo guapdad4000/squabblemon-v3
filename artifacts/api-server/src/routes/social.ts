@@ -34,7 +34,7 @@ const endpoint = (output: Parser, run: (req: Request, userId: string) => Promise
 router.get("/social", endpoint(schemas.GetSocialStateResponse, (_req, userId) => getSocialState(userId)));
 router.get("/social/search", endpoint(schemas.SearchSocialPlayersResponse, (req, userId) => {
   const parsed = schemas.SearchSocialPlayersQueryParams.safeParse(req.query);
-  if (!parsed.success) throw new OnlineError("Enter a valid username search.", 400);
+  if (!parsed.success) throw new OnlineError("Enter a valid player name or username search.", 400);
   return searchSocialPlayers(userId, parsed.data.query);
 }, "lookup"));
 router.patch("/social/username", endpoint(schemas.UpdateSocialUsernameResponse, (req, userId) =>

@@ -43,8 +43,9 @@ export function FadebookFind({ state, act, working, disabled, onInvite, linkedCo
   const immediateQuery = useRef<string | null>(null);
 
   const q = normalizeHandle(term);
+  const validQuery = q.length >= 3 && q.length <= 24;
   useEffect(() => {
-    if (q.length < 3) { setResults(null); setSearching(false); setError(null); return; }
+    if (q.length < 3 || q.length > 24) { setResults(null); setSearching(false); setError(null); return; }
     const controller = new AbortController();
     const delay = immediateQuery.current === q ? 0 : 380;
     immediateQuery.current = null;
@@ -83,7 +84,7 @@ export function FadebookFind({ state, act, working, disabled, onInvite, linkedCo
     history.replaceState(history.state, '', `${url.pathname}${url.search}#homies`);
   }
   function requestSearch() { immediateQuery.current = q; setSubmitted(n => n + 1); }
-  function submit(event: FormEvent) { event.preventDefault(); if (q.length >= 3 && !searching) requestSearch(); }
+  function submit(event: FormEvent) { event.preventDefault(); if (validQuery && !searching) requestSearch(); }
 
   const card = (found: SocialLookup, keyPrefix: string, snapshot: LookupSnapshot<unknown>) => {
     const p = found.player; const code = p.friendCode;
@@ -128,17 +129,18 @@ export function FadebookFind({ state, act, working, disabled, onInvite, linkedCo
     <section className="fb-box" aria-labelledby="fb-find-title">
       <header className="fb-box__head"><h2 id="fb-find-title">Find players</h2></header>
       <form className="fb-search" onSubmit={submit} role="search">
-        <label htmlFor="fb-search-input" className="sq-sr">Search by username</label>
+        <label htmlFor="fb-search-input" className="sq-sr">Search by player name or @username</label>
         <span className="fb-input-wrap"><Search size={16} aria-hidden="true" />
           <input id="fb-search-input" className="fb-input" type="search" value={term} autoComplete="off" spellCheck={false} maxLength={25}
-            placeholder="Search @username" aria-describedby="fb-search-help" onChange={e => setTerm(e.target.value)} data-testid="input-search" /></span>
-        <button className="sq-btn sq-btn--primary" disabled={q.length < 3 || searching} data-testid="button-search">{searching ? 'Searching…' : 'Search'}</button>
+            placeholder="Player name or @username" aria-describedby="fb-search-help" onChange={e => setTerm(e.target.value)} data-testid="input-search" /></span>
+        <button className="sq-btn sq-btn--primary" disabled={!validQuery || searching} data-testid="button-search">{searching ? 'Searching…' : 'Search'}</button>
       </form>
-      <small id="fb-search-help" className="fb-note">Type at least 3 characters of their username.</small>
+      <small id="fb-search-help" className="fb-note">Type 3–24 characters of a player name or @username. Matches start with what you type.</small>
       <div aria-live="polite" aria-busy={searching}>
+        {q.length > 24 && <p className="fb-err" role="alert">Searches can be up to 24 characters, not counting @.</p>}
         {error && <div className="fb-err" role="alert">{error} <button type="button" className="fb-chip" onClick={requestSearch}>Retry</button></div>}
         {searching && !results && <div className="sq-skeleton" aria-label="Searching"><i /><i /></div>}
-        {results?.query === q && !results.value.length && !error && <p className="fb-empty-line">Nobody goes by @{q} yet. Check the spelling.</p>}
+        {results?.query === q && !results.value.length && !error && <p className="fb-empty-line">No players found for “{term.trim()}”. Try another player name or @username.</p>}
         {results?.query === q && !!results.value.length && <ul className="sq-list" data-testid="list-search">{results.value.map(r => card(r, 'res', results))}</ul>}
       </div>
     </section>

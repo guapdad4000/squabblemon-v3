@@ -15,6 +15,27 @@ test('hosting adapter preserves JSON, query parameters, auth headers, and separa
   assert.deepEqual(await response.json(),{body:{item:'ticket',text:'✓'},query:{tag:['one','two']},auth:'Bearer test',cookie:'session=a',host:'game.example'});
   assert.equal(response.headers.getSetCookie().length,2);
 });
+test('Netlify GET player searches preserve encoded names, handles, and authentication', async () => {
+  const app = express();
+  app.get('/api/social/search', (req, res) => {
+    res.json({
+      query: req.query.query,
+      auth: req.header('authorization'),
+      cookie: req.header('cookie'),
+    });
+  });
+  const handle = webRequestAdapter(app);
+  for (const query of ['@BETA_player', 'Beta Player', 'Name_100%', "O'Neil"]) {
+    const response = await handle(new Request(
+      `https://game.example/api/social/search?${new URLSearchParams({ query })}`,
+      { headers: { authorization: 'Bearer search-test', cookie: 'session=search-test' } },
+    ));
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), {
+      query, auth: 'Bearer search-test', cookie: 'session=search-test',
+    });
+  }
+});
 test('hosting adapter preserves binary bodies and empty 204 responses', async () => {
   const app = express(); app.get('/api/binary',(_req,res)=>res.type('application/octet-stream').send(Buffer.from([0,128,255]))); app.post('/api/empty',(_req,res)=>res.status(204).end());
   const handle=webRequestAdapter(app);

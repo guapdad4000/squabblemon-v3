@@ -1,5 +1,5 @@
 import { and, eq, inArray, or, sql } from "drizzle-orm";
-import { socialIdentitiesTable as identities, socialRelationshipsTable as relations, socialBlocksTable as blocks, onlineRoomsTable as rooms } from "@workspace/db";
+import { playerProfilesTable as profiles, socialIdentitiesTable as identities, socialRelationshipsTable as relations, socialBlocksTable as blocks, onlineRoomsTable as rooms } from "@workspace/db";
 import type { SocialLookup } from "@workspace/api-zod";
 import { OnlineError, type OnlineRoom } from "@workspace/squabblemon-engine/multiplayer";
 import { identityViews } from "./socialIdentity";
@@ -20,19 +20,22 @@ async function lookups(tx: SocialTx, userId: string, others: string[]): Promise<
 }
 export function normalizeSearch(value: string) {
   const query = value.trim().replace(/^@/, "").toLowerCase();
-  if (!/^[a-z0-9_]{3,24}$/.test(query)) throw new OnlineError("Enter at least 3 username characters (letters, numbers, or underscores).", 400);
+  if (query.length < 3 || query.length > 24) throw new OnlineError("Enter 3–24 display name or username characters.", 400);
   return query;
 }
 export async function searchSocialPlayers(userId: string, value: string) {
   const query = normalizeSearch(value);
   return homiesDiagnostics.operation("social_read", "lookup", () => homiesTransaction(async tx => {
     await lockSocial(tx);
-    // Escape underscores: usernames are literal prefixes, not LIKE patterns.
-    const prefix = query.replace(/_/g, "\\_") + "%";
-    const rows = await tx.select({ userId: identities.userId }).from(identities).where(and(
-      sql`${identities.userId} <> ${userId}`, sql`${identities.username} like ${prefix}`,
-      sql`not exists (select 1 from ${blocks} where (${blocks.userId} = ${userId} and ${blocks.targetId} = ${identities.userId}) or (${blocks.targetId} = ${userId} and ${blocks.userId} = ${identities.userId}))`
-    )).orderBy(sql`(${identities.username} = ${query}) desc`, identities.username).limit(12);
+    // A bound, escaped literal prefix for both names and handles; never expand LIKE wildcards.
+    const prefix = query.replace(/[\\%_]/g, char => `\\${char}`) + "%";
+    const rows = await tx.select({ userId: profiles.clerkUserId }).from(profiles)
+      .leftJoin(identities, eq(identities.userId, profiles.clerkUserId)).where(and(
+        sql`${profiles.clerkUserId} <> ${userId}`,
+        or(sql`lower(${profiles.displayName}) like ${prefix} escape ${"\\"}`,
+          sql`${identities.username} like ${prefix} escape ${"\\"}`),
+        sql`not exists (select 1 from ${blocks} where (${blocks.userId} = ${userId} and ${blocks.targetId} = ${profiles.clerkUserId}) or (${blocks.targetId} = ${userId} and ${blocks.userId} = ${profiles.clerkUserId}))`
+      )).orderBy(sql`coalesce(${identities.username} = ${query}, false) desc`, sql`lower(${profiles.displayName})`, profiles.clerkUserId).limit(12);
     return { players: await lookups(tx, userId, rows.map(row => row.userId)) };
   }));
 }
