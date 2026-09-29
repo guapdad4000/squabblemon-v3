@@ -4,7 +4,9 @@ import { mkdir } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
 import { createServer } from 'vite';
 import { cardCatalog, starterRecipes } from '@workspace/squabblemon-engine/data';
+import { assertDeckToolbarLayout } from './deck-toolbar-layout.mjs';
 
+// Run through tsx because the engine package exports TypeScript source.
 // Keep this test's auth flags and optimized modules away from the live preview.
 const port = 4197;
 process.env.PORT = String(port);
@@ -162,9 +164,10 @@ try {
     await context.close();
   }
   for (const [name, width, height] of [
-    ['desktop', 1280, 900], ['tablet', 1024, 790], ['phone', 390, 844],
+    ['desktop', 1280, 900], ['wide-desktop', 1536, 960], ['reference', 1024, 640],
+    ['wide-short', 1024, 500], ['tablet', 1024, 790], ['phone', 390, 844],
     ['small-phone', 320, 740], ['landscape', 844, 390], ['short-phone', 390, 500],
-  ].filter(([name]) => !process.argv[2] || name === process.argv[2])) {
+  ].filter(([name]) => !process.argv[2] || process.argv.slice(2).includes(name))) {
     const { context, page, errors } = await setup(width, height, { withPack: true });
     const search = page.getByRole('searchbox', { name: 'Browse your collection' });
     const save = page.getByRole('button', { name: 'Save deck', exact: true });
@@ -185,6 +188,7 @@ try {
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'No horizontal overflow');
     const compact = width <= 700 || (width <= 900 && height <= 550);
     const tabs = page.locator('.deck-workbench > .arsenal-paper-tabs');
+    await assertDeckToolbarLayout(page, { name, width });
     if (compact) {
       const tabBox = await tabs.boundingBox();
       assert.ok(tabBox.height <= 58, `${name}: paper tabs use compact editor-specific height (${tabBox.height}px)`);
