@@ -7,8 +7,8 @@ import { join } from "node:path";
 export async function verifyNativeMigrationTransactions(client, root) {
   const directory = join(root, "netlify/database/migrations");
   const migrations = readdirSync(directory).sort();
-  const firstPending = migrations.indexOf("202610010005_event-feedback");
-  assert.ok(firstPending > 0, "The pre-social migration baseline must be present.");
+  const firstPending = migrations.indexOf("202610040001_social-schema-reconcile");
+  assert.ok(firstPending > 0, "The applied historical migration baseline must be present.");
   const baseline = migrations.slice(0, firstPending);
   const pending = migrations.slice(firstPending);
   const relation = async name =>
@@ -36,20 +36,23 @@ export async function verifyNativeMigrationTransactions(client, root) {
     }
   }
 
-  // Fresh installations must remain one transaction through all SQL files.
-  await batch(migrations, { rollback: true });
-  assert.equal(await relation("public.player_profiles"), null, "Fresh history escaped rollback.");
-  assert.equal(await relation("public.social_identities"), null, "Social DDL escaped rollback.");
-
-  // Reproduce an upgrade from the five migrations preceding this release.
-  await batch(baseline);
+  // Seed the already-applied schema, not a fresh Netlify migration run.
+  // The two immutable historical files own transactions and cannot be changed
+  // after application. See docs/netlify-migration-recovery.md for this boundary.
+  for (const entry of baseline) {
+    await client.query(readFileSync(join(directory, entry, "migration.sql"), "utf8"));
+  }
   await client.query("CREATE TABLE migration_transaction_probe (id integer PRIMARY KEY, value text NOT NULL)");
   await client.query("INSERT INTO migration_transaction_probe VALUES (1, 'preserve-existing-data')");
   await client.query("INSERT INTO player_profiles (clerk_user_id, soft_currency, style_shards) VALUES ('migration_retry_probe', 1234, 17)");
+  // Owned fixture only: exercise repair and rollback of a missing schema piece.
+  await client.query("ALTER TABLE social_identities DROP COLUMN username CASCADE");
   await assert.rejects(batch(pending, { failAtEnd: true }), error => error.code === "22012");
   for (const table of ["event_feedback", "social_identities", "social_relationships", "social_blocks", "social_invitations", "social_throttle"]) {
-    assert.equal(await relation(`public.${table}`), null, `${table} survived a failed migration batch.`);
+    assert.equal(await relation(`public.${table}`), table, `${table} was lost during a failed repair.`);
   }
+  const rolledBack = await client.query("SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'social_identities' AND column_name = 'username'");
+  assert.equal(rolledBack.rowCount, 0, "The repaired column escaped the runner rollback.");
   assert.deepEqual((await client.query("SELECT * FROM migration_transaction_probe")).rows,
     [{ id: 1, value: "preserve-existing-data" }]);
   assert.equal(await relation("public.player_profiles"), "player_profiles");
@@ -58,8 +61,7 @@ export async function verifyNativeMigrationTransactions(client, root) {
   await batch(pending);
   await client.query("INSERT INTO social_identities (user_id, friend_code, username) VALUES ('migration_retry_probe', 'A1B2C3D4E5F6', 'existing_player')");
 
-  // The failed production deploy committed the objects but not its migration
-  // ledger. Replaying the pending files over that schema must be nondestructive.
+  // Replaying the forward migration over a complete schema is nondestructive.
   await batch(pending);
   assert.deepEqual((await client.query("SELECT friend_code, username FROM social_identities WHERE user_id = 'migration_retry_probe'")).rows,
     [{ friend_code: "A1B2C3D4E5F6", username: "existing_player" }]);
@@ -78,5 +80,5 @@ export async function verifyNativeMigrationTransactions(client, root) {
   }
   await client.query("DELETE FROM player_profiles WHERE clerk_user_id = 'migration_retry_probe'");
   await client.query("DROP TABLE migration_transaction_probe");
-  console.info(`Native transaction checks passed: ${migrations.length} fresh migrations, ${pending.length} upgrade migrations, rollback, retry, and partial-commit recovery preserving balances and identities.`);
+  console.info(`Native transaction checks passed: ${baseline.length} applied-history fixtures, ${pending.length} forward migrations, rollback, retry, and schema reconciliation preserving balances and identities.`);
 }

@@ -19,18 +19,18 @@ test('current native history covers development SQL, schema, and consolidated on
   assert.equal(checkNetlifyMigrationCoverage().tables, 17);
 });
 
-test('social tables and active invitation uniqueness require native migration coverage', t => {
+test('historical social uniqueness cannot be removed by editing an applied migration', t => {
   const root = fixture(t);
   const file = path.join(root, 'netlify/database/migrations/202610020001_social/migration.sql');
   writeFileSync(file, readFileSync(file, 'utf8').replace(/CREATE UNIQUE INDEX IF NOT EXISTS social_invite_active_pair[^;]+;/, ''));
-  assert.throws(() => checkNetlifyMigrationCoverage(root), /social_invite_active_pair/);
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /Immutable Netlify-native migration changed: .*202610020001_social/);
 });
 
-test('existing targeted room reservation backfill requires native coverage', t => {
+test('historical room reservation backfill cannot be removed by editing an applied migration', t => {
   const root = fixture(t);
   const file = path.join(root, 'netlify/database/migrations/202610020001_social/migration.sql');
   writeFileSync(file, readFileSync(file, 'utf8').replace(/UPDATE online_rooms SET invite_only[^;]+;/, ''));
-  assert.throws(() => checkNetlifyMigrationCoverage(root), /social reservation backfill/);
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /Immutable Netlify-native migration changed: .*202610020001_social/);
 });
 
 test('omitting a required table from native history blocks release', t => {
@@ -151,7 +151,7 @@ test('feedback listing and account-limit indexes require matching ordering', t =
   assert.throws(() => checkNetlifyMigrationCoverage(root), /index event_feedback_author_time/);
 });
 
-test('native copies of social and username migrations must not manage the runner transaction', t => {
+test('only exact historical social and username migration bytes retain their transaction wrappers', t => {
   const root = fixture(t);
   const files = [
     'netlify/database/migrations/202610020001_social/migration.sql',
@@ -159,13 +159,47 @@ test('native copies of social and username migrations must not manage the runner
   ].map(file => path.join(root, file));
   for (const file of files) {
     const original = readFileSync(file, 'utf8');
-    const unwrapped = original.replace(/^BEGIN;\s*/i, '').replace(/\s*COMMIT;\s*$/i, '');
-    writeFileSync(file, `BEGIN;\n${unwrapped}\nCOMMIT;\n`);
+    assert.match(original, /^BEGIN;/);
+    assert.match(original, /COMMIT;$/);
+    writeFileSync(file, `${original}\n`);
     assert.throws(() => checkNetlifyMigrationCoverage(root), error =>
-      error.message.includes(file) && /runner-owned transaction: BEGIN/.test(error.message));
-    writeFileSync(file, unwrapped);
+      error.message.includes(file) && /Immutable Netlify-native migration changed/.test(error.message));
+    writeFileSync(file, original);
   }
   assert.doesNotThrow(() => checkNetlifyMigrationCoverage(root));
+});
+
+test('removing either immutable historical migration blocks release', t => {
+  const root = fixture(t);
+  for (const entry of ['202610020001_social', '202610030001_social-usernames']) {
+    const directory = path.join(root, 'netlify/database/migrations', entry);
+    const original = readFileSync(path.join(directory, 'migration.sql'));
+    rmSync(directory, { recursive: true });
+    assert.throws(() => checkNetlifyMigrationCoverage(root), new RegExp(`Missing immutable Netlify-native migration ${entry}`));
+    mkdirSync(directory);
+    writeFileSync(path.join(directory, 'migration.sql'), original);
+  }
+});
+
+test('copying historical SQL into a new migration name does not exempt it', t => {
+  const root = fixture(t);
+  const nativeDir = path.join(root, 'netlify/database/migrations');
+  const copy = path.join(nativeDir, '202610050001_legacy-copy');
+  mkdirSync(copy);
+  writeFileSync(path.join(copy, 'migration.sql'),
+    readFileSync(path.join(nativeDir, '202610020001_social/migration.sql')));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /202610050001_legacy-copy.*runner-owned transaction: BEGIN/);
+});
+
+test('a new migration cannot introduce BEGIN or COMMIT', t => {
+  const root = fixture(t);
+  const directory = path.join(root, 'netlify/database/migrations/202610050001_transaction-test');
+  mkdirSync(directory);
+  for (const statement of ['BEGIN;', 'COMMIT;']) {
+    writeFileSync(path.join(directory, 'migration.sql'), statement);
+    assert.throws(() => checkNetlifyMigrationCoverage(root),
+      new RegExp(`202610050001_transaction-test.*runner-owned transaction: ${statement.slice(0, -1)}`));
+  }
 });
 
 test('native transaction controls and nontransactional commands are rejected', t => {

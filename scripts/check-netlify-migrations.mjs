@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -10,6 +11,12 @@ const socialReservationBackfill = "UPDATE online_rooms SET invite_only = true WH
 const normalizeStatement = value => value.trim().replace(/\s+/g, " ").toLowerCase();
 const type = String.raw`(?:timestamp(?:\(\d+\))?(?:\s+(?:with|without)\s+time\s+zone)?|timestamptz(?:\(\d+\))?|double\s+precision|uuid|text|integer|serial|boolean|jsonb|varchar(?:\(\d+\))?|numeric(?:\(\d+(?:,\s*\d+)?\))?|bigint|bigserial|date|real|smallint)`;
 const typeEnd = String.raw`(?=\s|$|,)`;
+// Already-applied migrations cannot be rewritten. These are the SHA-256 hashes
+// of the original deployed migration.sql bytes (Git 8f48232).
+const legacyNativeMigrations = new Map([
+  ['202610020001_social', '2baa157aca19feb441c18dab0707aab0a888d45ad47390b3cfe8357f4e828ff0'],
+  ['202610030001_social-usernames', 'd25bacb5efcdd237eea084edd88b8c451a601ea6a91858a64db73d3c8230d4ed'],
+]);
 
 function normalizedType(value) {
   return value.toLowerCase().replace(/\s+/g, ' ')
@@ -247,16 +254,26 @@ export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   const entries = readdirSync(nativeDir).sort();
   const nativeText = entries.map(entry => readFileSync(path.join(nativeDir, entry, 'migration.sql'), 'utf8')).join('\n');
   const developmentText = readdirSync(devDir).filter(file => file.endsWith('.sql')).map(file => readFileSync(path.join(devDir, file), 'utf8')).join('\n');
+  if (!entries.length) throw new Error('No Netlify-native migrations found.');
+  for (const entry of legacyNativeMigrations.keys()) {
+    if (!entries.includes(entry)) throw new Error(`Missing immutable Netlify-native migration ${entry}`);
+  }
+  for (const entry of entries) {
+    const file = path.join(nativeDir, entry, 'migration.sql');
+    const bytes = readFileSync(file);
+    const sql = bytes.toString('utf8');
+    if (legacyNativeMigrations.has(entry)) {
+      if (createHash('sha256').update(bytes).digest('hex') !== legacyNativeMigrations.get(entry)) {
+        throw new Error(`Immutable Netlify-native migration changed: ${file}`);
+      }
+    } else {
+      checkNativeTransactionSafety(sql, file);
+    }
+    merge(native, sqlCoverage(sql, file));
+  }
   if (normalizeStatement(developmentText).includes(normalizeStatement(socialReservationBackfill)) &&
     !normalizeStatement(nativeText).includes(normalizeStatement(socialReservationBackfill)))
     throw new Error("Native migrations lack social reservation backfill.");
-  if (!entries.length) throw new Error('No Netlify-native migrations found.');
-  for (const entry of entries) {
-    const file = path.join(nativeDir, entry, 'migration.sql');
-    const sql = readFileSync(file, 'utf8');
-    checkNativeTransactionSafety(sql, file);
-    merge(native, sqlCoverage(sql, file));
-  }
   const missing = [];
   for (const [table, columns] of required.tables) {
     if (!native.tables.has(table)) missing.push(`table ${table}`);

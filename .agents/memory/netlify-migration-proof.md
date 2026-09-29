@@ -27,11 +27,17 @@ Post-deploy event failures do not retroactively change a Netlify deploy's `ready
 
 **How to apply:** Keep database probes in the post-deploy event using the API's own database selection, redact connection failures, and require operators to examine the event result before treating a ready deploy as schema-ready.
 
-Netlify, not native migration SQL, must own the outer transaction. Keep transaction wrappers only in standalone development copies.
+Netlify, not new native migration SQL, must own the outer transaction. Already-applied historical SQL must remain byte-identical even when it contains an old transaction mistake.
 
-**Why:** Explicit SQL commits ended Netlify's transaction before its migration-ledger update. Deployment failed with `unexpected transaction status idle`; production had the new schema while its provider ledger still listed only the prior versions. Standalone node-postgres execution had passed because it did not reproduce the runner's transaction ownership.
+**Why:** Explicit SQL commits caused `unexpected transaction status idle` after the schema and database-level history were already applied. The migration-list API still showed only the previous published bundle. Editing the seemingly pending files then failed checksum validation. A documented provider dry run against the original deploy revealed the actual current database version.
 
-**How to apply:** Reject native top-level transaction control, test the files in an externally owned PostgreSQL transaction, and prove rollback and retry. After this failure, compare both provider history and actual schema before retrying; existing objects may require nondestructive idempotency guards. Do not reset database history.
+**How to apply:** Use provider dry-run validation as well as schema metadata; do not infer unapplied history from the listing API alone. Preserve applied bytes, add a forward-only corrective migration, and test it under an externally owned transaction with rollback and retry. Historical exceptions must be checksum-pinned, never broadly exempted. Do not reset or directly edit protected history.
+
+An applied-schema recovery fixture is not a fresh hosted-bootstrap test.
+
+**Why:** A managed runner skips already-applied historical files, including immutable transaction mistakes, while a new empty database would execute them.
+
+**How to apply:** State that boundary in verification evidence. Validate empty-database bootstrap separately rather than weakening new-migration checks or claiming a seeded upgrade proves a fresh install.
 
 Use the deployment's reported database branch when reading Netlify migration metadata, not its Git branch.
 
