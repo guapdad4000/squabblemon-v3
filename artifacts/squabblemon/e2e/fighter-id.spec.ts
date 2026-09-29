@@ -92,7 +92,9 @@ test('fresh and established fighter identities show only earned account truth', 
   await expect(page.getByText(/Neighborhood champion/i)).toBeVisible();
   await expect(page.getByText(/7 wins|wins 7|total wins/i)).toHaveCount(0);
   await expect(page.locator('img[src*="legacy-profile-photo"]')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Keep applying pressure' }).click();
+  // Account XP can render without opening a level-up celebration on reload.
+  const celebration = page.getByRole('button', { name: 'Keep applying pressure' });
+  if (await celebration.isVisible()) await celebration.click();
 
   await page.getByRole('button', { name: /Edit identity/i }).click();
   const portraitChoices = page.locator('.avatar-grid');
@@ -104,7 +106,7 @@ test('fresh and established fighter identities show only earned account truth', 
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.getByRole('link', { name: 'Explore mastery & events' }).click();
   await expect(page).toHaveURL(/\/game\/missions\?view=mastery/);
-  await expect(page.getByRole('heading', { name: 'The wall of fame' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Hall of Hands', exact: true })).toBeVisible();
 });
 
 test('profile draft cancel is local; save sends the exact contract and updates shared identity', async ({ page }) => {

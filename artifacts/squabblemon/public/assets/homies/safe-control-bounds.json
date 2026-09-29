@@ -1,0 +1,40 @@
+{
+  "coordinateSystem": "pixel coordinates in whole image, origin top left; x/y inclusive, width/height dimensions",
+  "scaling": "Scale all coordinates with the image; position HTML within safeControls; frame must not use object-fit: cover.",
+  "frames": {
+    "phone": {
+      "image": "squabble-phone.webp",
+      "width": 960,
+      "height": 1500,
+      "aperture": {
+        "x": 86,
+        "y": 160,
+        "width": 791,
+        "height": 1239
+      },
+      "safeControls": {
+        "x": 102,
+        "y": 180,
+        "width": 759,
+        "height": 1199
+      }
+    },
+    "tablet": {
+      "image": "squabble-tablet.webp",
+      "width": 1600,
+      "height": 1000,
+      "aperture": {
+        "x": 189,
+        "y": 114,
+        "width": 1226,
+        "height": 770
+      },
+      "safeControls": {
+        "x": 206,
+        "y": 132,
+        "width": 1192,
+        "height": 734
+      }
+    }
+  }
+}

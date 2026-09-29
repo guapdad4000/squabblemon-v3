@@ -49,6 +49,7 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
+- Page-to-page navigation should be immediate, without route wipes, fades, or slides. Keep battle animations and in-page effects separate from navigation.
 - Story, boss, training, gacha, victory, and defeat use only their dedicated music queues. General and original tracks belong only in the battle queue; never append battle tracks as fallback music for dedicated modes.
 
 ## Pointers

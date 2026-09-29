@@ -28,6 +28,8 @@ import {
 } from "@workspace/squabblemon-engine/multiplayer";
 
 import { chooseCpuPlay } from "@workspace/squabblemon-engine/gameEngine";
+import { lockSocial, guardTargetedRoom, syncRoomInvitation } from "./socialRoomGuard";
+import { homiesDiagnostics, homiesTransaction } from "./homiesDiagnosticsRuntime";
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 const stored = (state: OnlineRoom) =>
@@ -39,7 +41,7 @@ const commandFingerprint = (command: object) =>
     Object.entries(command).sort(([a], [b]) => a.localeCompare(b)),
   );
 
-async function loadMember(
+export async function loadMember(
   tx: Tx,
   userId: string,
   deckId: string,
@@ -184,7 +186,25 @@ export async function accessFriendRoom(
   userId: string,
   mutation?: Mutation,
 ) {
-  const result = await db.transaction(async (tx) => {
+  return homiesDiagnostics.operation("room_access",
+    mutation?.kind === "command" ? "room_command" : mutation?.kind === "join" ? "room_join" : "room_read",
+    () => accessFriendRoomOperation(code, userId, mutation));
+}
+
+async function accessFriendRoomOperation(code: string, userId: string, mutation?: Mutation) {
+  const access = (forceSocialLock: boolean) => homiesTransaction(async (tx) => {
+    // This unlocked hint only chooses a lock path; it never authorizes access.
+    // Joined seats survive remove/block and rematches, so polling or commanding
+    // those rooms need not queue behind unrelated social menus.
+    const [hint] = forceSocialLock ? [] : await tx
+      .select({ joined: sql<boolean>`${onlineRoomsTable.state}->'members'->'cpu'->>'userId' is not null` })
+      .from(onlineRoomsTable)
+      .where(eq(onlineRoomsTable.code, code));
+    const socialLocked = forceSocialLock || !hint?.joined;
+    if (socialLocked) {
+      homiesDiagnostics.roomPath(false);
+      await lockSocial(tx);
+    }
     const [row] = await tx
       .select()
       .from(onlineRoomsTable)
@@ -192,6 +212,11 @@ export async function accessFriendRoom(
       .for("update");
     if (!row) throw new OnlineError("Room not found.", 404);
     let room = restore(row.state);
+    // Recheck under the row lock. If the hint ever becomes stale, end this
+    // transaction before retrying: never acquire social after a room lock.
+    if (!socialLocked && !room.members.cpu) return { retryWithSocialLock: true as const };
+    if (!socialLocked) homiesDiagnostics.roomPath(true);
+    await guardTargetedRoom(tx, row.id, room, userId, mutation?.kind === "join", row.inviteOnly);
     if (mutation?.kind !== "join") memberSeat(room, userId);
     const now = Date.now();
     room = advanceRankedBot(room, now);
@@ -268,6 +293,7 @@ export async function accessFriendRoom(
       failure = error;
     }
     room = await settleRankedRoom(tx, room, now);
+    room = await syncRoomInvitation(tx, row.id, room);
     // Persist expired turns even when rejecting a late/stale action.
     if (room.revision !== restore(row.state).revision)
       await tx
@@ -283,6 +309,11 @@ export async function accessFriendRoom(
       ? { failure }
       : { view: onlineRoomView(room, code, userId, now) };
   });
+  let result = await access(false);
+  if (result.retryWithSocialLock) {
+    homiesDiagnostics.retry();
+    result = await access(true);
+  }
   if (result.failure) throw result.failure;
   return result.view!;
 }

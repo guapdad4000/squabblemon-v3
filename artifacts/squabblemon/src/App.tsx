@@ -8,8 +8,9 @@ import { lazy, Suspense, useEffect, useRef } from 'react';
 import { PublicEntry } from './pages/PublicEntry';
 import { LoadingScreen } from './components/LoadingScreen';
 import { basePath, stripBase } from './lib/routing';
-import { viewTransitionNavigation } from './lib/viewTransitionNav';
-import { AppAuthProvider, useAppAuth, useAppClerk } from './lib/auth';
+import { guardDeckRouteNavigation } from './lib/deckExitGuard';
+import { AppAuthProvider, clearAfterSignIn, useAppAuth, useAppClerk } from './lib/auth';
+import { clearSocialDestination } from './lib/socialDestinations';
 
 const SignInPage = lazy(() =>
   import('./pages/auth/SignIn').then((module) => ({ default: module.SignInPage })),
@@ -107,6 +108,10 @@ function ClerkQueryClientCacheInvalidator() {
         prevUserIdRef.current !== userId
       ) {
         queryClient.clear();
+        if (prevUserIdRef.current) {
+          clearSocialDestination(sessionStorage);
+          clearAfterSignIn();
+        }
       }
       prevUserIdRef.current = userId;
     });
@@ -178,7 +183,7 @@ function ClerkProviderWithRoutes() {
 
 export default function App() {
   return (
-    <WouterRouter base={basePath} aroundNav={viewTransitionNavigation}>
+    <WouterRouter base={basePath} aroundNav={guardDeckRouteNavigation}>
       <ClerkProviderWithRoutes />
     </WouterRouter>
   );

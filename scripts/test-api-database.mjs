@@ -21,6 +21,11 @@ const rankedBrowser = process.argv[2] === 'fade-park';
 const cosmeticsBrowser = process.argv[2] === 'cosmetics';
 const reactionsBrowser = process.argv[2] === 'reactions-browser';
 const paymentsOnly = process.argv[2] === 'payments';
+if (process.argv[2] === 'social') {
+  process.argv.push('--social');
+  await import("./test-payments-database.mjs");
+  process.exit(process.exitCode ?? 0);
+}
 if (paymentsOnly) {
   await import("./test-payments-database.mjs");
   process.exit(process.exitCode ?? 0);

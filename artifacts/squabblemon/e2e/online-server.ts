@@ -19,25 +19,24 @@ if (
   throw new Error(
     "This test host requires a loopback database and ONLINE_E2E=1.",
   );
-// PGlite has one database session: avoid interleaving independent transactions.
-// Production keeps its normal PostgreSQL pool.
-pool.options.max = 1;
+// Existing online harness remains single-connection. Homies requires real concurrent
+// PostgreSQL sessions; never serialize the native-PG concurrency journey.
+if (process.env.HOMIES_E2E !== "1") pool.options.max = 1;
 const ids = {
   a: `online-browser-${randomUUID()}`,
   b: `online-browser-${randomUUID()}`,
+  ...(process.env.HOMIES_E2E === "1" ? { c: `online-browser-${randomUUID()}` } : {}),
 };
-const identify = (req: Request) =>
-  req.headers.cookie?.includes("online_test_seat=a")
-    ? ids.a
-    : req.headers.cookie?.includes("online_test_seat=b")
-      ? ids.b
-      : null;
+const identify = (req: Request) => {
+  const seat = req.headers.cookie?.match(/(?:^|;\s*)online_test_seat=([abc])(?:;|$)/)?.[1];
+  return seat && seat in ids ? ids[seat as keyof typeof ids] : null;
+};
 await db
   .insert(playerProfilesTable)
   .values(
     Object.entries(ids).map(([seat, id]) => ({
       clerkUserId: id,
-      displayName: seat === "a" ? "Vicky" : "The Rival",
+      displayName: seat === "a" ? "Vicky" : seat === "b" ? "The Rival" : "Uninvited Player",
       ...(process.env.ONLINE_E2E_REACTIONS === "1" ? { softCurrency: 600, xp: seat === "a" ? 750 : 2000, level: seat === "a" ? 4 : 9 } : {}),
       onboardingStep: "complete",
       starterRewardClaimed: true,
@@ -70,7 +69,7 @@ const app = createApp((req, _res, next) => {
 const vite = await createServer({
   configFile: "artifacts/squabblemon/vite.config.ts",
   // Keep the isolated auth test host from invalidating managed preview's Vite dep cache.
-  cacheDir: resolve(import.meta.dirname, "../node_modules/.vite-online-browser-e2e"),
+  cacheDir: resolve(import.meta.dirname, process.env.HOMIES_E2E === "1" ? "../node_modules/.vite-homies-browser-e2e" : "../node_modules/.vite-online-browser-e2e"),
   server: { middlewareMode: true, hmr: false },
   appType: "spa",
 });

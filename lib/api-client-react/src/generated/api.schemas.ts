@@ -5,6 +5,211 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+export type EventFeedbackCategory = typeof EventFeedbackCategory[keyof typeof EventFeedbackCategory];
+
+
+export const EventFeedbackCategory = {
+  bug: 'bug',
+  suggestion: 'suggestion',
+  general: 'general',
+} as const;
+
+export interface EventFeedbackInput {
+  category: EventFeedbackCategory;
+  /**
+     * Plain text only. Trimmed by the server; whitespace-only input is rejected.
+     * @minLength 1
+     * @maxLength 2000
+     */
+  message: string;
+  /** Client-created identifier reused for retries of this submission. */
+  retryId: string;
+}
+
+export interface EventFeedbackPost {
+  id: string;
+  /** Public in-game name at the time of posting */
+  displayName: string;
+  category: EventFeedbackCategory;
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  message: string;
+  createdAt: string;
+}
+
+export interface EventFeedbackPage {
+  /** @maxItems 50 */
+  posts: EventFeedbackPost[];
+  /**
+     * @maxLength 256
+     * @nullable
+     */
+  nextCursor: string | null;
+}
+
+export interface EventFeedbackReceipt {
+  post: EventFeedbackPost;
+  /** The saved post ID; unchanged on retries. */
+  receiptId: string;
+  replayed: boolean;
+}
+
+export interface FeedbackError {
+  error: string;
+  code: string;
+  /** @minimum 1 */
+  retryAfterSeconds?: number;
+}
+
+export interface SocialPlayer {
+  username: string;
+  lastActiveAt: string | null;
+  friendCode: string;
+  displayName: string;
+  avatarKey: string;
+}
+
+export interface SocialRequest {
+  id: string;
+  player: SocialPlayer;
+  createdAt: string;
+}
+
+export type SocialInvitationDirection = typeof SocialInvitationDirection[keyof typeof SocialInvitationDirection];
+
+
+export const SocialInvitationDirection = {
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type SocialInvitationStatus = typeof SocialInvitationStatus[keyof typeof SocialInvitationStatus];
+
+
+export const SocialInvitationStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  declined: 'declined',
+  cancelled: 'cancelled',
+  expired: 'expired',
+  unavailable: 'unavailable',
+  closed: 'closed',
+} as const;
+
+export interface SocialInvitation {
+  id: string;
+  roomCode: string;
+  direction: SocialInvitationDirection;
+  player: SocialPlayer;
+  status: SocialInvitationStatus;
+  expiresAt: string;
+}
+
+export type SocialStateCounts = {
+  requests: number;
+  invitations: number;
+};
+
+export interface SocialState {
+  self: SocialPlayer;
+  homies: SocialPlayer[];
+  incomingRequests: SocialRequest[];
+  outgoingRequests: SocialRequest[];
+  blocked: SocialPlayer[];
+  invitations: SocialInvitation[];
+  counts: SocialStateCounts;
+}
+
+export type SocialLookupRelationship = typeof SocialLookupRelationship[keyof typeof SocialLookupRelationship];
+
+
+export const SocialLookupRelationship = {
+  none: 'none',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+  homie: 'homie',
+  blocked: 'blocked',
+  self: 'self',
+} as const;
+
+export interface SocialLookup {
+  requestId: string | null;
+  player: SocialPlayer;
+  relationship: SocialLookupRelationship;
+}
+
+export interface SocialSearchResult {
+  /** @maxItems 12 */
+  players: SocialLookup[];
+}
+
+export interface SocialMatchOpponent {
+  opponent: SocialLookup | null;
+}
+
+export interface SocialUsernameInput {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  username: string;
+}
+
+export interface SocialCodeInput {
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  friendCode: string;
+}
+
+export type SocialResponseInputAction = typeof SocialResponseInputAction[keyof typeof SocialResponseInputAction];
+
+
+export const SocialResponseInputAction = {
+  accept: 'accept',
+  decline: 'decline',
+  cancel: 'cancel',
+} as const;
+
+export interface SocialResponseInput {
+  action: SocialResponseInputAction;
+}
+
+export interface FadeInvitationInput {
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
+  friendCode: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  deckId: string;
+  requestId: string;
+}
+
+export type FadeInvitationResponseInputAction = typeof FadeInvitationResponseInputAction[keyof typeof FadeInvitationResponseInputAction];
+
+
+export const FadeInvitationResponseInputAction = {
+  accept: 'accept',
+  decline: 'decline',
+  cancel: 'cancel',
+} as const;
+
+export interface FadeInvitationResponseInput {
+  action: FadeInvitationResponseInputAction;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  deckId?: string;
+}
+
 export type PaymentCheckoutInputOfferId = typeof PaymentCheckoutInputOfferId[keyof typeof PaymentCheckoutInputOfferId];
 
 
@@ -1217,6 +1422,27 @@ export interface StoryDialogueProgressResponse {
   alreadyApplied: boolean;
 }
 
+export type ListEventFeedbackParams = {
+/**
+ * @minimum 1
+ * @maximum 50
+ */
+limit?: number;
+/**
+ * @minLength 1
+ * @maxLength 256
+ */
+cursor?: string;
+};
+
+export type SearchSocialPlayersParams = {
+/**
+ * @minLength 3
+ * @maxLength 26
+ */
+query: string;
+};
+
 export type ClaimExperimentCardBody = {
   /** @maxLength 64 */
   cardId: string;
@@ -1227,3 +1453,4 @@ export type GetPlayerShop200 = { [key: string]: unknown };
 export type ListPaymentOrdersParams = {
 cursor?: string;
 };
+

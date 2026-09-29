@@ -19,6 +19,8 @@ import type { PlayerBootstrap } from '@workspace/api-client-react';
 import { GameNav } from '../../components/venue/GameNav';
 import { Suspense, useEffect, type ReactNode } from 'react';
 import { basePath, stripBase } from '../../lib/routing';
+import { SocialProvider } from '../../lib/social';
+import { clearSocialDestination, readSocialDestination, rememberSocialDestination, safeSocialDestination } from '../../lib/socialDestinations';
 import { cardCatalog, starterRecipes } from '../../data';
 import { STREET_PACK_RULES } from '@workspace/squabblemon-engine/packRules';
 import { Home, Events, Inventory, CharacterStyles, CharacterCollections, Collection,
@@ -69,13 +71,23 @@ function BootstrapError({
 }
 
 function ImmersiveGameRoute({ bootstrap, children }: { bootstrap: PlayerBootstrap; children: ReactNode }) {
-  return <div className="immersive-shell sq-route-transition--immersive"><CityHeader bootstrap={bootstrap} /><Suspense fallback={null}>{children}</Suspense></div>;
+  return <div className="immersive-shell"><CityHeader bootstrap={bootstrap} /><Suspense fallback={null}>{children}</Suspense></div>;
 }
 
 function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   useNavigationScroll();
   useEffect(() => { rewardReceipts.reset(); return () => rewardReceipts.reset(); }, [bootstrap.profile.id]);
   const [location, setLocation] = useLocation();
+  const search = useSearch();
+  useEffect(() => {
+    if (bootstrap.profile.onboardingStep !== 'complete') return;
+    const options = { base: basePath, origin: window.location.origin };
+    const destination = safeSocialDestination(`${location}${search ? `?${search}` : ''}${window.location.hash}`, basePath, options.origin);
+    if (destination && destination === readSocialDestination(sessionStorage, bootstrap.profile.id, options)) {
+      // Reaching the confirmation screen consumes the redirect, not the invitation itself.
+      clearSocialDestination(sessionStorage);
+    }
+  }, [bootstrap.profile.id, bootstrap.profile.onboardingStep, location, search]);
 
   useEffect(() => {
     document.documentElement.dataset.reduceMotion =
@@ -107,6 +119,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   }, []);
 
   return (
+    <SocialProvider key={bootstrap.profile.id} accountId={bootstrap.profile.id} enabled={bootstrap.profile.onboardingStep === 'complete'}>
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
     <RewardReveal />
@@ -123,7 +136,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <Route path="/game/online"><ImmersiveGameRoute bootstrap={bootstrap}><Multiplayer bootstrap={bootstrap} /></ImmersiveGameRoute></Route>
       <Route path="/game/story/play/:nodeId">{params => <ImmersiveGameRoute bootstrap={bootstrap}><PlayerDeckPlay key={params.nodeId} bootstrap={bootstrap} storyNodeId={params.nodeId} /></ImmersiveGameRoute>}</Route>
       <Route path="/game/inventory"><GameShell bootstrap={bootstrap} location={location}><Inventory bootstrap={bootstrap} /></GameShell></Route>
-      <Route path="/game/events"><GameShell bootstrap={bootstrap} location={location}><Events /></GameShell></Route>
+      <Route path="/game/events"><GameShell bootstrap={bootstrap} location={location}><Events key={bootstrap.profile.id} playerId={bootstrap.profile.id} /></GameShell></Route>
       <Route path="/game/style"><GameShell bootstrap={bootstrap} location={location}><CharacterCollections bootstrap={bootstrap} /></GameShell></Route>
       <Route path="/game/style/:cardId">{params => <GameShell bootstrap={bootstrap} location={location}><CharacterStyles key={params.cardId} cardId={params.cardId} bootstrap={bootstrap} /></GameShell>}</Route>
       <Route path="/game/collection">
@@ -158,6 +171,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     </Suspense>
     </NotificationProvider>
     </CosmeticProvider>
+    </SocialProvider>
   );
 }
 
@@ -180,7 +194,7 @@ function GameShell({
           {normalized === '/game' && <GameNav bootstrap={bootstrap} />}
           <div className="game-shell__content">
             <CityHeader bootstrap={bootstrap} />
-            <div className="game-route-stage sq-route-transition" key={location}>
+            <div className="game-route-stage" key={location}>
               <Suspense fallback={null}>{children}</Suspense>
             </div>
           </div>
@@ -288,8 +302,11 @@ export default function GameApp() {
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      if (/^\/game\/online\/[a-f0-9]{12}$/i.test(location)) sessionStorage.setItem('squabblemon_friend_invite', location);
-      if (location.startsWith('/game')) sessionStorage.setItem('squabblemon_after_sign_in', `${location}${search ? `?${search}` : ''}`);
+      const destination = `${location}${search ? `?${search}` : ''}${window.location.hash}`;
+      rememberSocialDestination(sessionStorage, destination, null, { base: basePath, origin: window.location.origin });
+      if (location.startsWith('/game')) {
+        try { sessionStorage.setItem('squabblemon_after_sign_in', destination); } catch { /* The current confirmation remains available through its shared link. */ }
+      }
       setLocation('/sign-in');
     } else if (isLoaded && isSignedIn) {
       clearAfterSignIn();
@@ -329,13 +346,14 @@ export default function GameApp() {
   const isComplete = bootstrap.profile.onboardingStep === 'complete';
   const normalizedLocation = location.length > 1 ? location.replace(/\/+$/, '') : location;
   const isOnboardingRoute = normalizedLocation === '/game/onboarding';
+  const destinationOptions = { base: basePath, origin: window.location.origin };
   if (!isComplete && !isOnboardingRoute) {
-    if (/^\/game\/online\/[a-f0-9]{12}$/i.test(location)) sessionStorage.setItem('squabblemon_friend_invite', location);
+    rememberSocialDestination(sessionStorage, `${location}${search ? `?${search}` : ''}${window.location.hash}`, bootstrap.profile.id, destinationOptions);
     return <Redirect to="/game/onboarding" />;
   }
   if (isComplete && isOnboardingRoute) {
-    const invite = sessionStorage.getItem('squabblemon_friend_invite');
-    return <Redirect to={invite && /^\/game\/online\/[a-f0-9]{12}$/i.test(invite) ? invite : '/game'} />;
+    const invite = readSocialDestination(sessionStorage, bootstrap.profile.id, destinationOptions);
+    return <Redirect to={invite ?? '/game'} />;
   }
   return <GameRoutes bootstrap={bootstrap} />;
 }

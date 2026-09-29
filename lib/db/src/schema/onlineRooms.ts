@@ -1,5 +1,6 @@
 import {
   index,
+  boolean,
   integer,
   jsonb,
   pgTable,
@@ -15,6 +16,7 @@ export const onlineRoomsTable = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     code: text("code").notNull().unique(),
+    inviteOnly: boolean("invite_only").notNull().default(false),
     hostUserId: text("host_user_id")
       .notNull()
       .references(() => playerProfilesTable.clerkUserId, {

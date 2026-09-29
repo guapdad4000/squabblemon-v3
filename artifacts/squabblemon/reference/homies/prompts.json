@@ -1,0 +1,29 @@
+{
+  "tool": "Replit media-generation generateImage callback",
+  "platformDocumentedModel": "Google Imagen 4",
+  "platformDocumentation": "https://docs.replit.com/features/agent/image-generation",
+  "documentationChecked": "2026-09-28",
+  "modelIdentityNote": "Replit's official Agent Image Generation documentation states its image generation is powered by Google Imagen 4. These assets were made with the platform generateImage callback, which does not expose per-job model metadata or a model-selection parameter; no per-job model identifier/version was verified.",
+  "options": { "resolution": "high", "removeBackground": true },
+  "sharedPrompt": "Original production raster game prop for Squabblemon. Premium anime cel-shaded streetwear concept illustration, angular gouache planes and energetic fine irregular black ink contours, selectively scratched worn cream edges, ochre brass, deep forest-green enamel and rust-red accents; believable scuffed painted hardware and sticker paper, handmade tactile instead of glossy 3D. Front-facing exact orthographic elevation, zero tilt, zero perspective, absolutely no isometric view. Entire device silhouette visible with small transparent margin, straight screen rails parallel to canvas edges. The device is the only subject, no floor, shadow, people, labels, UI, words, fake content, iconography inside the display, reflections or gradient crossing display. Make a very large completely empty featureless dark forest green rectangular display region with precise straight borders for transparent aperture cutout and live HTML overlay. All decorative marks strictly on bezel outside screen. Rounded outer corners, restrained realistic object thickness, asymmetric small physical sticker details: tiny cream torn crown stamp, ochre diagonal fabric-tape patch, one rust scuff and green chipped paint. Slim bezel: display at least 76% of total device width and 76% of height. Contrast-rich, legible silhouette like Squabblemon painted ID card, not arcade neon colors. Transparent PNG outside object.",
+  "assets": [
+    {
+      "master": "squabble-phone-master.png",
+      "runtime": "../../public/assets/homies/squabble-phone.webp",
+      "promptSuffix": " PORTRAIT SQUABBLE PHONE, tall 3:5 composition, phone upright centered, very thin top and bottom rails, screen occupying nearly all usable face; small speaker slit at very top on frame, no home button. Tall portrait canvas. Crown sticker entirely in small top-left bezel corner not overlapping display. Top rim tiny stitch-like sticker accents, bottom rim spare. Large dark uninterrupted rectangular display from approximately 11% to 89% across and 10% to 90% vertically. Do NOT make device diagonal or depict a screen showing chat messages."
+    },
+    {
+      "master": "squabble-tablet-master.png",
+      "runtime": "../../public/assets/homies/squabble-tablet.webp",
+      "promptSuffix": " LANDSCAPE SQUABBLE TABLET, independently composed wide 16:10 horizontal tablet, matching phone material language but adapted side rail placement and physically plausible landscape tablet silhouette. Horizontally centered orthographic front elevation. A single VERY LARGE rectangular empty dark screen opening approximately x 8%-92% and y 11%-89%, no game mockup. Tiny cream crown sticker along upper left frame, small ochre patch on lower right bezel and rust scratch on opposite corner, decorations completely outside screen. No phone rotated sideways; tablet has its own wide physical framing. No arcade marquee, bulky speaker bays, keyboard or foot pedestal."
+    }
+  ],
+  "referencesReviewed": [
+    "../ART_STYLE_BIBLE.md",
+    "../navigation-painted/prompts.json",
+    "../../public/assets/props/sticker-phone.webp",
+    "../../public/assets/fadecade/flagship.webp",
+    "../../src/pages/game/Settings.tsx",
+    "../../src/pages/game/Multiplayer.tsx"
+  ]
+}

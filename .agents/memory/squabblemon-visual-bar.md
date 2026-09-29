@@ -26,3 +26,15 @@ Arcade setup belongs in artwork-styled popups, not expanding panels that move th
 **Why:** The user explicitly rejected the inline dropdown panels after seeing them and requested popups matching the supplied comic arcade artwork, plus flags and a lower banner that retract behind the flagship as it scrolls away.
 
 **How to apply:** Keep the arcade composition stable while opening setup, bounties, or the road. Use accessible modal focus/close behavior, readable artwork-safe text, and transform-only scroll decoration. Reduced motion must leave controls and stats readable.
+
+Fadebook is an intentional exception to avoiding website-style game menus: the user explicitly requested an anime-styled early Facebook/Myspace social screen, without a phone or tablet bezel.
+
+**Why:** The device frame felt restrictive. Here, familiar social navigation and recognizable player portraits are the intended experience, not an accidental generic dashboard.
+
+**How to apply:** Preserve the social-site layout and original character art. Do not restore the device frame merely to make this screen more diegetic.
+
+Do not infer a black Fadebook theme from the supplied logo's black background.
+
+**Why:** The user explicitly rejected that interpretation and requested background removal so the gold artwork could sit on the lighter layout.
+
+**How to apply:** Use the transparent supplied artwork rather than a black image rectangle or black social panels. Preserve the gold wordmark, fist emblem, and supporting logo details.

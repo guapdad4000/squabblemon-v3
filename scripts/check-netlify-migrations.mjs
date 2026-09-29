@@ -6,10 +6,15 @@ import { pathToFileURL } from 'node:url';
 // may be consolidated into a native baseline, so compare DDL rather than filenames.
 const identifier = String.raw`(?:"([a-z_][a-z_0-9]*)"|([a-z_][a-z_0-9]*))`;
 const name = (match, offset = 1) => match[offset] || match[offset + 1];
-const type = String.raw`(?:timestamp(?:\s+with\s+time\s+zone)?|timestamptz|double\s+precision|uuid|text|integer|serial|boolean|jsonb|varchar(?:\(\d+\))?|numeric(?:\(\d+(?:,\s*\d+)?\))?|bigint|bigserial|date|real|smallint)`;
+const socialReservationBackfill = "UPDATE online_rooms SET invite_only = true WHERE id IN (SELECT room_id FROM social_invitations)";
+const normalizeStatement = value => value.trim().replace(/\s+/g, " ").toLowerCase();
+const type = String.raw`(?:timestamp(?:\(\d+\))?(?:\s+(?:with|without)\s+time\s+zone)?|timestamptz(?:\(\d+\))?|double\s+precision|uuid|text|integer|serial|boolean|jsonb|varchar(?:\(\d+\))?|numeric(?:\(\d+(?:,\s*\d+)?\))?|bigint|bigserial|date|real|smallint)`;
+const typeEnd = String.raw`(?=\s|$|,)`;
 
 function normalizedType(value) {
-  return value.toLowerCase().replace(/\s+/g, ' ').replace(/^timestamp with time zone$/, 'timestamptz');
+  return value.toLowerCase().replace(/\s+/g, ' ')
+    .replace(/^timestamp(\(\d+\))? with time zone$/, 'timestamptz$1')
+    .replace(/^timestamp(\(\d+\))? without time zone$/, 'timestamp$1');
 }
 
 function addColumn(coverage, table, column, definition = null) {
@@ -48,7 +53,7 @@ function sqlCoverage(sql, file, strict = false) {
   const clean = sql.replace(/--[^\n]*/g, '');
   if (strict) {
     for (const statement of clean.split(';').map(part => part.trim()).filter(Boolean)) {
-      if (!/^(?:BEGIN|COMMIT|CREATE\s+TABLE\b|ALTER\s+TABLE\b|CREATE\s+(?:UNIQUE\s+)?INDEX\b|DROP\s+INDEX\b)/i.test(statement)) {
+      if (normalizeStatement(statement) !== normalizeStatement(socialReservationBackfill) && !/^(?:BEGIN|COMMIT|CREATE\s+TABLE\b|ALTER\s+TABLE\b|CREATE\s+(?:UNIQUE\s+)?INDEX\b|DROP\s+INDEX\b)/i.test(statement)) {
         throw new Error(`Unsupported development migration statement in ${file}: ${statement.slice(0, 80)}`);
       }
     }
@@ -77,10 +82,13 @@ function sqlCoverage(sql, file, strict = false) {
       }
     }
     if (depth !== 0) throw new Error(`Unclosed CREATE TABLE ${table} in ${file}`);
-    const column = new RegExp(String.raw`^${identifier}\s+(${type})\b`, 'i');
+    const column = new RegExp(String.raw`^${identifier}\s+(${type})${typeEnd}`, 'i');
+    const tableConstraint = new RegExp(String.raw`^CONSTRAINT\s+${identifier}\s+([\s\S]+)$`, 'i');
     for (const entry of entries) {
       const field = entry.match(column);
+      const constraint = entry.match(tableConstraint);
       if (field) addColumn(coverage, table, name(field), columnDefinition(entry, field));
+      else if (constraint) coverage.constraints.set(`${table}.${name(constraint)}`, normalizeConstraint(constraint[3]));
       else if (strict && !/^(?:CONSTRAINT|PRIMARY\s+KEY|UNIQUE|CHECK|FOREIGN\s+KEY)\b/i.test(entry)) {
         throw new Error(`Unsupported development CREATE TABLE column in ${file}: ${entry.slice(0, 80)}`);
       }
@@ -88,7 +96,7 @@ function sqlCoverage(sql, file, strict = false) {
     if (!coverage.tables.get(table).size) throw new Error(`No recognized columns in CREATE TABLE ${table} in ${file}`);
   }
   const alters = new RegExp(String.raw`ALTER\s+TABLE\s+${identifier}\s+([\s\S]*?);`, 'gi');
-  const added = new RegExp(String.raw`ADD\s+COLUMN\s+(?:IF\s+NOT\s+EXISTS\s+)?${identifier}\s+(${type})\b([^,;]*)`, 'gi');
+  const added = new RegExp(String.raw`ADD\s+COLUMN\s+(?:IF\s+NOT\s+EXISTS\s+)?${identifier}\s+(${type})${typeEnd}([^,;]*)`, 'gi');
   const namedConstraint = new RegExp(String.raw`ADD\s+CONSTRAINT\s+${identifier}\s+([\s\S]+)`, 'i');
   for (const alter of clean.matchAll(alters)) {
     const table = name(alter);
@@ -96,7 +104,7 @@ function sqlCoverage(sql, file, strict = false) {
     for (const field of alter[3].matchAll(added)) {
       const entry = `${field[1] || field[2]} ${field[3]} ${field[4]}`;
       // Reuse the definition parser with a field prefix (without ADD COLUMN).
-      const prefix = entry.match(new RegExp(String.raw`^${identifier}\s+(${type})\b`, 'i'));
+      const prefix = entry.match(new RegExp(String.raw`^${identifier}\s+(${type})${typeEnd}`, 'i'));
       addColumn(coverage, table, name(field), columnDefinition(entry, prefix));
       addedCount++;
     }
@@ -152,7 +160,8 @@ function schemaCoverage(root) {
       const body = source.slice(definitions[i].index + definitions[i][0].length, definitions[i + 1]?.index ?? source.length);
       // Column declarations are keyed properties; callbacks and index declarations
       // do not have this shape. This also handles columns declared across lines.
-      const columns = body.matchAll(/\b[a-zA-Z]\w*\s*:\s*(?:uuid|text|integer|serial|boolean|jsonb|timestamp|varchar|numeric|bigint|bigserial|date|real|doublePrecision|smallint)\(\s*["']([a-z_][a-z_0-9]*)["']/g);
+      // social.ts uses account/time constructors for cascading FK and timestamp columns.
+      const columns = body.matchAll(/\b[a-zA-Z]\w*\s*:\s*(?:uuid|text|integer|serial|boolean|jsonb|timestamp|varchar|numeric|bigint|bigserial|date|real|doublePrecision|smallint|account|time)\(\s*["']([a-z_][a-z_0-9]*)["']/g);
       for (const column of columns) addColumn(coverage, table, column[1]);
       if (!coverage.tables.get(table).size) throw new Error(`No recognized schema columns for ${table} in ${file}`);
     }
@@ -170,6 +179,11 @@ export function checkNetlifyMigrationCoverage(root = process.cwd()) {
   const nativeDir = path.join(root, 'netlify/database/migrations');
   const native = { tables: new Map(), indexes: new Map(), constraints: new Map(), foreignKeys: new Map(), droppedIndexes: new Set() };
   const entries = readdirSync(nativeDir).sort();
+  const nativeText = entries.map(entry => readFileSync(path.join(nativeDir, entry, 'migration.sql'), 'utf8')).join('\n');
+  const developmentText = readdirSync(devDir).filter(file => file.endsWith('.sql')).map(file => readFileSync(path.join(devDir, file), 'utf8')).join('\n');
+  if (normalizeStatement(developmentText).includes(normalizeStatement(socialReservationBackfill)) &&
+    !normalizeStatement(nativeText).includes(normalizeStatement(socialReservationBackfill)))
+    throw new Error("Native migrations lack social reservation backfill.");
   if (!entries.length) throw new Error('No Netlify-native migrations found.');
   for (const entry of entries) {
     const file = path.join(nativeDir, entry, 'migration.sql');

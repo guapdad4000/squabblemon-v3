@@ -42,3 +42,31 @@ mtime_ms = 1790495971162
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/488b6500-a34f-46b8-83f4-27636e7599e0/54745ee2-0424-49d0-a578-a365765ba8ad"
 storage_version_token = "1790495981069575"
 content_type = "text/html"
+
+[[outputs]]
+id = "nlcN-umsdrlT4gjbEN5JW"
+uri = "file://attached_assets/tie/w.png"
+type = "image"
+title = "Tie screen — horizontal"
+description = "New wide tie scene, no baked boxes."
+logical_id = "75f5c6d3-4e91-4df8-bb14-3f2461ebc1a7"
+content_hash = "sha256:d1b39debdb96aabc2dbbd758e0dccd70252dd8ed5d680e38fea42b3b8221d65a"
+size = 3571309
+mtime_ms = 1790566359668
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/75f5c6d3-4e91-4df8-bb14-3f2461ebc1a7/1f311cb8-a5bb-4616-8d14-e107edea6f05"
+storage_version_token = "1790566395010021"
+content_type = "image/png"
+
+[[outputs]]
+id = "8ipBqYAPu7PwVq_hjBe1H"
+uri = "file://attached_assets/tie/p.png"
+type = "image"
+title = "Tie screen — vertical"
+description = "New phone tie scene."
+logical_id = "4890f841-dc1c-49f3-9635-210b751e9b67"
+content_hash = "sha256:ce414f449c5bfac2ef5d03c76fe702b25c176f952697d5433d2b567d94329606"
+size = 3439352
+mtime_ms = 1790566360136
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4890f841-dc1c-49f3-9635-210b751e9b67/98ebdb97-6e18-4b81-acd9-e78338c5a93b"
+storage_version_token = "1790566395906176"
+content_type = "image/png"

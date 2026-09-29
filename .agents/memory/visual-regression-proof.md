@@ -52,3 +52,9 @@ For static replacements of interactive scenes, test the actual route and its nav
 **Why:** An isolated static poster proof passed even though the returning-player route hid every station control until the missing 3D iframe reported ready. Reduced-motion and no-WebGL users had no way to explore the room.
 
 **How to apply:** Under both reduced motion and unavailable WebGL, assert that the real route shows its destination controls, open a destination and return, and verify no scene iframe was allocated. Test the manual reload path separately after a genuine context loss.
+
+Exercise modal dismissal after both a visible trigger and automatic deep-link entry.
+
+**Why:** Trigger-based checks passed while a deep-linked popup opened before its scene marker became focusable. Dismissal silently lost the attempted focus restoration.
+
+**How to apply:** Check close and Escape from both entry paths. If restoration must wait for layout, stop waiting when the player chooses another control or leaves the route; delayed focus must not override their next action.

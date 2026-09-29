@@ -1,0 +1,32 @@
+.ff-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 70% at 50% 110%, #d9a23b22, transparent 60%),
+    radial-gradient(70% 60% at 0% 0%, #24402f, transparent 70%),
+    #121a15;
+}
+.ff-stage__nav { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; }
+.ff-stage__nav > a { min-height: 44px; display: inline-flex; align-items: center; color: #eadfbf; font: 700 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.ff-stage__tools { margin-left: auto; }
+.ff-stage__device { flex: 1 1 auto; }
+.ff-homies { display: flex; flex-direction: column; gap: 6px; }
+.ff-homie { min-height: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 8px 12px; border-radius: 10px; border: 1.5px solid #eadfbf30; background: #0000002e; color: #eadfbf; text-align: left; cursor: pointer; transition: border-color .15s ease, background-color .15s ease; }
+.ff-homie[aria-checked="true"] { border-color: #d9a23b; background: #d9a23b1f; }
+.ff-homie:disabled { opacity: .5; }
+.ff-homie__name { flex: 1 1 auto; font-weight: 700; overflow-wrap: anywhere; }
+.ff-homie svg { color: #d9a23b; }
+.ff-room { flex: 1; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: inherit; text-decoration: none; }
+.ff-room .sq-row__name { flex: 1 1 120px; }
+.ff-code { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px; border-radius: 10px; border: 1px dashed #d9a23b66; }
+.ff-code span { font: 700 10px var(--font-mono); letter-spacing: .14em; color: #b9b395; }
+.ff-code strong { flex: 1 1 auto; font: 700 18px var(--font-mono); letter-spacing: .12em; color: #d9a23b; user-select: all; overflow-wrap: anywhere; }
+.sq-device__screen .compact-deck-picker { max-width: 100%; }
+@media (max-height: 460px) { .ff-stage__nav { padding: 2px 8px; } .ff-stage__tools { display: none; } }
+@media (prefers-reduced-motion: reduce) { .ff-homie { transition: none; } }

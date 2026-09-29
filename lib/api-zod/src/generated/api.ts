@@ -8,7 +8,711 @@
 import * as zod from 'zod';
 
 
+/**
+ * Available to every signed-in player, including developers using the game. Newest first, ordered by saved timestamp and post ID. Opaque keyset cursors page through older posts without shifts when new posts arrive. Responses contain only public in-game display names and post content.
+ * @summary Read shared player feedback on the Events board
+ */
+export const listEventFeedbackQueryLimitDefault = 20;
+export const listEventFeedbackQueryLimitMax = 50;
+
+export const listEventFeedbackQueryCursorMax = 256;
+
+
+
+export const ListEventFeedbackQueryParams = zod.object({
+  "limit": zod.coerce.number().min(1).max(listEventFeedbackQueryLimitMax).default(listEventFeedbackQueryLimitDefault),
+  "cursor": zod.coerce.string().min(1).max(listEventFeedbackQueryCursorMax).optional()
+})
+
+export const listEventFeedbackResponsePostsItemMessageMax = 2000;
+
+export const listEventFeedbackResponsePostsMax = 50;
+
+export const listEventFeedbackResponseNextCursorMax = 256;
+
+
+
+export const ListEventFeedbackResponse = zod.object({
+  "posts": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "displayName": zod.string().describe('Public in-game name at the time of posting'),
+  "category": zod.enum(['bug', 'suggestion', 'general']),
+  "message": zod.string().min(1).max(listEventFeedbackResponsePostsItemMessageMax),
+  "createdAt": zod.coerce.date()
+})).max(listEventFeedbackResponsePostsMax),
+  "nextCursor": zod.string().max(listEventFeedbackResponseNextCursorMax).nullable()
+})
+
+
+/**
+ * Uses the existing game session, not a separate feedback account. Author, public display name, receipt ID and timestamp are server-derived. A retry ID belongs to one author and one trimmed category/message pair; identical retries return the saved receipt, changed content returns 409. At most 5 new posts per rolling 10 minutes and 20 per rolling 24 hours per account. Retries of saved posts do not consume this allowance.
+ * @summary Save player feedback to the shared Events board
+ */
+export const submitEventFeedbackBodyMessageMax = 2000;
+
+
+
+export const SubmitEventFeedbackBody = zod.object({
+  "category": zod.enum(['bug', 'suggestion', 'general']),
+  "message": zod.string().min(1).max(submitEventFeedbackBodyMessageMax).describe('Plain text only. Trimmed by the server; whitespace-only input is rejected.'),
+  "retryId": zod.string().uuid().describe('Client-created identifier reused for retries of this submission.')
+})
+
+export const submitEventFeedbackResponsePostMessageMax = 2000;
+
+
+
+export const SubmitEventFeedbackResponse = zod.object({
+  "post": zod.object({
+  "id": zod.string().uuid(),
+  "displayName": zod.string().describe('Public in-game name at the time of posting'),
+  "category": zod.enum(['bug', 'suggestion', 'general']),
+  "message": zod.string().min(1).max(submitEventFeedbackResponsePostMessageMax),
+  "createdAt": zod.coerce.date()
+}),
+  "receiptId": zod.string().uuid().describe('The saved post ID; unchanged on retries.'),
+  "replayed": zod.boolean()
+})
+
+
+export const GetSocialStateResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const searchSocialPlayersQueryQueryMin = 3;
+export const searchSocialPlayersQueryQueryMax = 26;
+
+
+
+export const SearchSocialPlayersQueryParams = zod.object({
+  "query": zod.coerce.string().min(searchSocialPlayersQueryQueryMin).max(searchSocialPlayersQueryQueryMax)
+})
+
+export const searchSocialPlayersResponsePlayersMax = 12;
+
+
+
+export const SearchSocialPlayersResponse = zod.object({
+  "players": zod.array(zod.object({
+  "requestId": zod.string().nullable(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "relationship": zod.enum(['none', 'incoming', 'outgoing', 'homie', 'blocked', 'self'])
+})).max(searchSocialPlayersResponsePlayersMax)
+})
+
+
+export const updateSocialUsernameBodyUsernameMax = 100;
+
+
+
+export const UpdateSocialUsernameBody = zod.object({
+  "username": zod.string().min(1).max(updateSocialUsernameBodyUsernameMax)
+})
+
+export const UpdateSocialUsernameResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const GetSocialMatchOpponentParams = zod.object({
+  "code": zod.coerce.string()
+})
+
+export const GetSocialMatchOpponentResponse = zod.object({
+  "opponent": zod.object({
+  "requestId": zod.string().nullable(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "relationship": zod.enum(['none', 'incoming', 'outgoing', 'homie', 'blocked', 'self'])
+}).nullable()
+})
+
+
+export const LookupSocialPlayerParams = zod.object({
+  "code": zod.coerce.string()
+})
+
+export const LookupSocialPlayerResponse = zod.object({
+  "requestId": zod.string().nullable(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "relationship": zod.enum(['none', 'incoming', 'outgoing', 'homie', 'blocked', 'self'])
+})
+
+
+export const sendHomieRequestBodyFriendCodeMax = 32;
+
+
+
+export const SendHomieRequestBody = zod.object({
+  "friendCode": zod.string().min(1).max(sendHomieRequestBodyFriendCodeMax)
+})
+
+export const SendHomieRequestResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const RespondHomieRequestParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const RespondHomieRequestBody = zod.object({
+  "action": zod.enum(['accept', 'decline', 'cancel'])
+})
+
+export const RespondHomieRequestResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const RemoveHomieParams = zod.object({
+  "code": zod.coerce.string()
+})
+
+export const RemoveHomieResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const blockSocialPlayerBodyFriendCodeMax = 32;
+
+
+
+export const BlockSocialPlayerBody = zod.object({
+  "friendCode": zod.string().min(1).max(blockSocialPlayerBodyFriendCodeMax)
+})
+
+export const BlockSocialPlayerResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const UnblockSocialPlayerParams = zod.object({
+  "code": zod.coerce.string()
+})
+
+export const UnblockSocialPlayerResponse = zod.object({
+  "self": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "homies": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "incomingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "outgoingRequests": zod.array(zod.object({
+  "id": zod.string(),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "createdAt": zod.string()
+})),
+  "blocked": zod.array(zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+})),
+  "invitations": zod.array(zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})),
+  "counts": zod.object({
+  "requests": zod.number(),
+  "invitations": zod.number()
+})
+})
+
+
+export const sendFadeInvitationBodyFriendCodeMax = 32;
+
+export const sendFadeInvitationBodyDeckIdMax = 100;
+
+
+
+export const SendFadeInvitationBody = zod.object({
+  "friendCode": zod.string().min(1).max(sendFadeInvitationBodyFriendCodeMax),
+  "deckId": zod.string().min(1).max(sendFadeInvitationBodyDeckIdMax),
+  "requestId": zod.string().uuid()
+})
+
+export const SendFadeInvitationResponse = zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})
+
+
+export const GetFadeInvitationParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const GetFadeInvitationResponse = zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})
+
+
+export const RespondFadeInvitationParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const respondFadeInvitationBodyDeckIdMax = 100;
+
+
+
+export const RespondFadeInvitationBody = zod.object({
+  "action": zod.enum(['accept', 'decline', 'cancel']),
+  "deckId": zod.string().min(1).max(respondFadeInvitationBodyDeckIdMax).optional()
+})
+
+export const RespondFadeInvitationResponse = zod.object({
+  "id": zod.string(),
+  "roomCode": zod.string(),
+  "direction": zod.enum(['incoming', 'outgoing']),
+  "player": zod.object({
+  "username": zod.string(),
+  "lastActiveAt": zod.string().nullable(),
+  "friendCode": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string()
+}),
+  "status": zod.enum(['pending', 'accepted', 'declined', 'cancelled', 'expired', 'unavailable', 'closed']),
+  "expiresAt": zod.string()
+})
+
+
 export const startChallengeRunBodyDeckIdMax = 80;
+
 
 
 export const StartChallengeRunBody = zod.object({
@@ -211,12 +915,14 @@ export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersItemMax =
 export const getPlayerBootstrapResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const getPlayerBootstrapResponseProfileSettingsReactionTrayMax = 4;
+
 export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMin = 0;
 export const getPlayerBootstrapResponseProfileCardProgressionMoveTierMax = 3;
 
 export const getPlayerBootstrapResponseProfileCardProgressionXpMin = 0;
 
 export const getPlayerBootstrapResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const GetPlayerBootstrapResponse = zod.object({
@@ -436,6 +1142,7 @@ export const GetPlayerStoryResponse = zod.object({
 export const resetPlayerStoryDevelopmentBodySelectNodeIdMax = 80;
 
 
+
 export const ResetPlayerStoryDevelopmentBody = zod.object({
   "selectNodeId": zod.string().max(resetPlayerStoryDevelopmentBodySelectNodeIdMax).nullable()
 })
@@ -513,6 +1220,7 @@ export const completePlayerStoryNodePathNodeIdMin = 2;
 export const completePlayerStoryNodePathNodeIdMax = 80;
 
 
+
 export const CompletePlayerStoryNodeParams = zod.object({
   "nodeId": zod.coerce.string().min(completePlayerStoryNodePathNodeIdMin).max(completePlayerStoryNodePathNodeIdMax)
 })
@@ -523,6 +1231,7 @@ export const completePlayerStoryNodeBodyIdempotencyKeyMax = 80;
 export const completePlayerStoryNodeBodyDialogueSeenItemMax = 120;
 
 export const completePlayerStoryNodeBodyDialogueSeenMax = 100;
+
 
 
 export const CompletePlayerStoryNodeBody = zod.object({
@@ -555,12 +1264,14 @@ export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsSti
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const completePlayerStoryNodeResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const completePlayerStoryNodeResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const CompletePlayerStoryNodeResponse = zod.object({
@@ -798,6 +1509,7 @@ export const completePlayerStoryPuzzleBodyDialogueSeenItemMax = 120;
 export const completePlayerStoryPuzzleBodyDialogueSeenMax = 100;
 
 
+
 export const CompletePlayerStoryPuzzleBody = zod.object({
   "nodeId": zod.string().min(completePlayerStoryPuzzleBodyNodeIdMin).max(completePlayerStoryPuzzleBodyNodeIdMax),
   "idempotencyKey": zod.string().min(completePlayerStoryPuzzleBodyIdempotencyKeyMin).max(completePlayerStoryPuzzleBodyIdempotencyKeyMax),
@@ -831,12 +1543,14 @@ export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsS
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const completePlayerStoryPuzzleResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const CompletePlayerStoryPuzzleResponse = zod.object({
@@ -1064,6 +1778,7 @@ export const savePlayerStoryDialoguePathNodeIdMin = 2;
 export const savePlayerStoryDialoguePathNodeIdMax = 80;
 
 
+
 export const SavePlayerStoryDialogueParams = zod.object({
   "nodeId": zod.coerce.string().min(savePlayerStoryDialoguePathNodeIdMin).max(savePlayerStoryDialoguePathNodeIdMax)
 })
@@ -1074,6 +1789,7 @@ export const savePlayerStoryDialogueBodyIdempotencyKeyMax = 80;
 export const savePlayerStoryDialogueBodyDialogueSeenItemMax = 120;
 
 export const savePlayerStoryDialogueBodyDialogueSeenMax = 100;
+
 
 
 export const SavePlayerStoryDialogueBody = zod.object({
@@ -1106,12 +1822,14 @@ export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsSti
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const savePlayerStoryDialogueResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const SavePlayerStoryDialogueResponse = zod.object({
@@ -1349,14 +2067,17 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "alreadyApplied": zod.boolean()
 })
 
+
 /**
  * @summary Update player-facing profile and settings
  */
 export const updatePlayerProfileBodyReactionTrayMax = 4;
+
 export const updatePlayerProfileBodyDisplayNameMin = 2;
 export const updatePlayerProfileBodyDisplayNameMax = 24;
 
 export const updatePlayerProfileBodyAvatarKeyMax = 64;
+
 
 
 export const UpdatePlayerProfileBody = zod.object({
@@ -1392,12 +2113,14 @@ export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersItemMax 
 export const updatePlayerProfileResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const updatePlayerProfileResponseProfileSettingsReactionTrayMax = 4;
+
 export const updatePlayerProfileResponseProfileCardProgressionMoveTierMin = 0;
 export const updatePlayerProfileResponseProfileCardProgressionMoveTierMax = 3;
 
 export const updatePlayerProfileResponseProfileCardProgressionXpMin = 0;
 
 export const updatePlayerProfileResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const UpdatePlayerProfileResponse = zod.object({
@@ -1551,6 +2274,7 @@ export const advancePlayerOnboardingBodyDisplayNameMax = 24;
 export const advancePlayerOnboardingBodyStarterDeckIdMax = 32;
 
 
+
 export const AdvancePlayerOnboardingBody = zod.object({
   "action": zod.enum(['accept-terms', 'complete-tutorial', 'choose-starter', 'claim-reward']),
   "displayName": zod.string().min(advancePlayerOnboardingBodyDisplayNameMin).max(advancePlayerOnboardingBodyDisplayNameMax).optional(),
@@ -1584,12 +2308,14 @@ export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersItem
 export const advancePlayerOnboardingResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const advancePlayerOnboardingResponseProfileSettingsReactionTrayMax = 4;
+
 export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMin = 0;
 export const advancePlayerOnboardingResponseProfileCardProgressionMoveTierMax = 3;
 
 export const advancePlayerOnboardingResponseProfileCardProgressionXpMin = 0;
 
 export const advancePlayerOnboardingResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const AdvancePlayerOnboardingResponse = zod.object({
@@ -1740,6 +2466,7 @@ export const AdvancePlayerOnboardingResponse = zod.object({
 export const claimExperimentCardBodyCardIdMax = 64;
 
 
+
 export const ClaimExperimentCardBody = zod.object({
   "cardId": zod.string().max(claimExperimentCardBodyCardIdMax)
 })
@@ -1769,12 +2496,14 @@ export const claimExperimentCardResponseProfileSettingsCosmeticsStickersItemMax 
 export const claimExperimentCardResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const claimExperimentCardResponseProfileSettingsReactionTrayMax = 4;
+
 export const claimExperimentCardResponseProfileCardProgressionMoveTierMin = 0;
 export const claimExperimentCardResponseProfileCardProgressionMoveTierMax = 3;
 
 export const claimExperimentCardResponseProfileCardProgressionXpMin = 0;
 
 export const claimExperimentCardResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const ClaimExperimentCardResponse = zod.object({
@@ -1938,6 +2667,7 @@ export const startPlayerMatchBodyDraftPicksMin = 10;
 export const startPlayerMatchBodyDraftPicksMax = 10;
 
 
+
 export const StartPlayerMatchBody = zod.object({
   "mode": zod.enum(['practice', 'tutorial', 'story']),
   "playerDeckId": zod.string().max(startPlayerMatchBodyPlayerDeckIdMax),
@@ -1956,6 +2686,8 @@ export const startPlayerMatchResponseAbilityUpgradeSnapshotPlayerItemMoveTierMax
 
 export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMin = 0;
 export const startPlayerMatchResponseAbilityUpgradeSnapshotCpuItemMoveTierMax = 3;
+
+
 
 
 export const StartPlayerMatchResponse = zod.object({
@@ -2008,6 +2740,7 @@ export const completePlayerMatchBodyMovesItemInvestmentMax = 4;
 export const completePlayerMatchBodyMovesMax = 64;
 
 
+
 export const CompletePlayerMatchBody = zod.object({
   "moves": zod.array(zod.object({
   "cardInstanceId": zod.string().nullable(),
@@ -2043,12 +2776,14 @@ export const completePlayerMatchResponseProfileSettingsCosmeticsStickersItemMax 
 export const completePlayerMatchResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const completePlayerMatchResponseProfileSettingsReactionTrayMax = 4;
+
 export const completePlayerMatchResponseProfileCardProgressionMoveTierMin = 0;
 export const completePlayerMatchResponseProfileCardProgressionMoveTierMax = 3;
 
 export const completePlayerMatchResponseProfileCardProgressionXpMin = 0;
 
 export const completePlayerMatchResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const CompletePlayerMatchResponse = zod.object({
@@ -2264,6 +2999,7 @@ export const savePlayerDeckPathDeckIdMin = 3;
 export const savePlayerDeckPathDeckIdMax = 80;
 
 
+
 export const SavePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(savePlayerDeckPathDeckIdMin).max(savePlayerDeckPathDeckIdMax)
 })
@@ -2278,6 +3014,7 @@ export const savePlayerDeckBodyCardIdsMax = 10;
 export const savePlayerDeckBodyHeroCardIdMax = 64;
 
 export const savePlayerDeckBodyRecipeIdMax = 32;
+
 
 
 export const SavePlayerDeckBody = zod.object({
@@ -2312,12 +3049,14 @@ export const savePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 80;
 export const savePlayerDeckResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const savePlayerDeckResponseProfileSettingsReactionTrayMax = 4;
+
 export const savePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
 export const savePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
 
 export const savePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
 export const savePlayerDeckResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const SavePlayerDeckResponse = zod.object({
@@ -2469,6 +3208,7 @@ export const deletePlayerDeckPathDeckIdMin = 3;
 export const deletePlayerDeckPathDeckIdMax = 80;
 
 
+
 export const DeletePlayerDeckParams = zod.object({
   "deckId": zod.coerce.string().min(deletePlayerDeckPathDeckIdMin).max(deletePlayerDeckPathDeckIdMax)
 })
@@ -2498,12 +3238,14 @@ export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersItemMax = 8
 export const deletePlayerDeckResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const deletePlayerDeckResponseProfileSettingsReactionTrayMax = 4;
+
 export const deletePlayerDeckResponseProfileCardProgressionMoveTierMin = 0;
 export const deletePlayerDeckResponseProfileCardProgressionMoveTierMax = 3;
 
 export const deletePlayerDeckResponseProfileCardProgressionXpMin = 0;
 
 export const deletePlayerDeckResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const DeletePlayerDeckResponse = zod.object({
@@ -2657,6 +3399,7 @@ export const openPlayerPackBodyIdempotencyKeyMax = 80;
 export const openPlayerPackBodyPullCountMax = 10;
 
 
+
 export const OpenPlayerPackBody = zod.object({
   "idempotencyKey": zod.string().min(openPlayerPackBodyIdempotencyKeyMin).max(openPlayerPackBodyIdempotencyKeyMax),
   "paymentMethod": zod.enum(['ticket', 'softCurrency']),
@@ -2688,12 +3431,14 @@ export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersItem
 export const openPlayerPackResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const openPlayerPackResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const openPlayerPackResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const openPlayerPackResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const OpenPlayerPackResponse = zod.object({
@@ -2869,6 +3614,7 @@ export const craftPlayerVariantBodyCardIdMax = 64;
 export const craftPlayerVariantBodyVariantIdMax = 96;
 
 
+
 export const CraftPlayerVariantBody = zod.object({
   "cardId": zod.string().max(craftPlayerVariantBodyCardIdMax),
   "variantId": zod.string().max(craftPlayerVariantBodyVariantIdMax)
@@ -2899,12 +3645,14 @@ export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickers
 export const craftPlayerVariantResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const craftPlayerVariantResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const craftPlayerVariantResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const CraftPlayerVariantResponse = zod.object({
@@ -3060,6 +3808,7 @@ export const equipPlayerVariantBodyCardIdMax = 64;
 export const equipPlayerVariantBodyVariantIdMax = 96;
 
 
+
 export const EquipPlayerVariantBody = zod.object({
   "cardId": zod.string().max(equipPlayerVariantBodyCardIdMax),
   "variantId": zod.string().max(equipPlayerVariantBodyVariantIdMax).nullable()
@@ -3090,12 +3839,14 @@ export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersItemMax =
 export const equipPlayerVariantResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const equipPlayerVariantResponseProfileSettingsReactionTrayMax = 4;
+
 export const equipPlayerVariantResponseProfileCardProgressionMoveTierMin = 0;
 export const equipPlayerVariantResponseProfileCardProgressionMoveTierMax = 3;
 
 export const equipPlayerVariantResponseProfileCardProgressionXpMin = 0;
 
 export const equipPlayerVariantResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const EquipPlayerVariantResponse = zod.object({
@@ -3247,6 +3998,7 @@ export const claimCollectionRoadMilestonePathMilestoneIdMin = 2;
 export const claimCollectionRoadMilestonePathMilestoneIdMax = 48;
 
 
+
 export const ClaimCollectionRoadMilestoneParams = zod.object({
   "milestoneId": zod.coerce.string().min(claimCollectionRoadMilestonePathMilestoneIdMin).max(claimCollectionRoadMilestonePathMilestoneIdMax)
 })
@@ -3276,12 +4028,14 @@ export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeti
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const claimCollectionRoadMilestoneResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const ClaimCollectionRoadMilestoneResponse = zod.object({
@@ -3468,12 +4222,14 @@ export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersItemMax =
 export const claimPlayerMissionResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const claimPlayerMissionResponseProfileSettingsReactionTrayMax = 4;
+
 export const claimPlayerMissionResponseProfileCardProgressionMoveTierMin = 0;
 export const claimPlayerMissionResponseProfileCardProgressionMoveTierMax = 3;
 
 export const claimPlayerMissionResponseProfileCardProgressionXpMin = 0;
 
 export const claimPlayerMissionResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const ClaimPlayerMissionResponse = zod.object({
@@ -3628,6 +4384,7 @@ export const equipPlayerCosmeticsBodyStickersItemMax = 80;
 export const equipPlayerCosmeticsBodyStickersMax = 3;
 
 
+
 export const EquipPlayerCosmeticsBody = zod.object({
   "bannerCardId": zod.string().max(equipPlayerCosmeticsBodyBannerCardIdMax).nullish(),
   "bannerFinish": zod.enum(['base', 'silver']).optional(),
@@ -3660,12 +4417,14 @@ export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersItemMax
 export const equipPlayerCosmeticsResponseProfileSettingsCosmeticsStickersMax = 3;
 
 export const equipPlayerCosmeticsResponseProfileSettingsReactionTrayMax = 4;
+
 export const equipPlayerCosmeticsResponseProfileCardProgressionMoveTierMin = 0;
 export const equipPlayerCosmeticsResponseProfileCardProgressionMoveTierMax = 3;
 
 export const equipPlayerCosmeticsResponseProfileCardProgressionXpMin = 0;
 
 export const equipPlayerCosmeticsResponseProfileCardProgressionLevelMax = 10;
+
 
 
 export const EquipPlayerCosmeticsResponse = zod.object({
@@ -3823,6 +4582,7 @@ export const purchasePlayerShopItemBodyIdempotencyKeyRegExp = new RegExp('^[0-9a
 export const purchasePlayerShopItemBodyCardIdMax = 100;
 
 
+
 export const PurchasePlayerShopItemBody = zod.object({
   "idempotencyKey": zod.string().regex(purchasePlayerShopItemBodyIdempotencyKeyRegExp),
   "itemId": zod.enum(['training', 'training-intensive', 'move-training', 'ticket', 'deck-slot', 'common-recruit', 'tagged-style', 'chrome-style', 'character-stickers', 'character-backdrop', 'character-banner-finish', 'reaction-pack', 'reaction-pack:big-city-pigeon:v1', 'reaction-pack:dr-fade:v1', 'reaction-pack:buddy:v1', 'reaction-pack:ashlee:v1', 'reaction-pack:buttahs:v1', 'reaction-pack:guap:v1', 'reaction-pack:cologne-criminal:v1', 'reaction-pack:kyle:v1', 'reaction-pack:church-auntie:v1']),
@@ -3854,12 +4614,14 @@ export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStic
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const purchasePlayerShopItemResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const purchasePlayerShopItemResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const PurchasePlayerShopItemResponse = zod.object({
@@ -4020,6 +4782,7 @@ export const PurchasePlayerShopItemResponse = zod.object({
 export const redeemPlayerPromoCodeBodyCodeMax = 64;
 
 
+
 export const RedeemPlayerPromoCodeBody = zod.object({
   "code": zod.string().min(1).max(redeemPlayerPromoCodeBodyCodeMax)
 })
@@ -4055,12 +4818,14 @@ export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStick
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsCosmeticsStickersMax = 3;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileSettingsReactionTrayMax = 4;
+
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMin = 0;
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionMoveTierMax = 3;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionXpMin = 0;
 
 export const redeemPlayerPromoCodeResponseBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const RedeemPlayerPromoCodeResponse = zod.object({
@@ -4333,4 +5098,5 @@ export const ReceivePaymentWebhookHeader = zod.object({
 })
 
 export const ReceivePaymentWebhookResponse = zod.unknown()
+
 

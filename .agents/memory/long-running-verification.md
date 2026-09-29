@@ -8,3 +8,9 @@ Use the shell tool's explicit background-task option for verification commands t
 **Why:** Detached balance experiments were terminated without producing their result files even after using `setsid`. The explicit background-task option preserved the processes and their logs.
 
 **How to apply:** Keep the returned task handle, collect the exit status and output, and wait for completed evidence before drawing conclusions. If a harness supports resumable checkpoints, never resume across changed mechanics or comparison axes.
+
+Native test startup can appear idle while enumerating the cold, lazily mounted Nix store after a workspace restart.
+
+**Why:** Directory enumeration blocked before PostgreSQL initialization even though the installed toolchain already supplied the required binaries. This was environment startup work, not a database connection failure.
+
+**How to apply:** Prefer installed toolchain discovery before a full store search. Keep tests on their owned disposable database; do not switch to an inherited database to work around slow provisioning.

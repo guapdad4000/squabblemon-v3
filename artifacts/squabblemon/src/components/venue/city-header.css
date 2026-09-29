@@ -18,6 +18,24 @@
 }
 .city-header .city-header__music svg { width: 21px; height: 21px; }
 .city-header__identity small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.city-header__identity { position: relative; }
+.city-header__identity .city-header__social-count {
+  position: absolute;
+  top: -3px;
+  left: 22px;
+  min-width: 19px;
+  height: 19px;
+  padding-inline: 4px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #f5dfb2;
+  border-radius: 50%;
+  background: #b53e31;
+  color: #fff3d5;
+  font: 900 10px/1 var(--font-sans);
+  text-shadow: none;
+  box-shadow: 0 2px 4px #0008;
+}
 @media (max-width: 360px) {
   .city-header { gap: 5px; padding-inline: 8px; }
 }

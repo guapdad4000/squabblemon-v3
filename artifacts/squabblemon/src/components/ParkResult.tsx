@@ -7,10 +7,10 @@ import { RankTrophy, RPToken } from './RankArtwork';
 import { DialogClose, DialogContent, DialogPortal, DialogDescription, DialogTitle } from './ui/dialog';
 import { setBattleMusicMode } from '../musicStore';
 import '../styles/park-result-legible.css';
-export function ParkResult({ outcome, ranked, rank, description, title, subtitle, boardNote, claimed, rivalClaimed, reducedMotion = false, children }: {
+export function ParkResult({ outcome, ranked, rank, description, title, subtitle, boardNote, claimed, rivalClaimed, opponent, reducedMotion = false, children }: {
   outcome: 'win' | 'loss' | 'draw'; ranked: boolean; rank?: RankedResult; description: string;
   title?: string; subtitle?: string; boardNote?: string;
-  claimed: number; rivalClaimed: number; reducedMotion?: boolean; children: ReactNode;
+  claimed: number; rivalClaimed: number; opponent?: ReactNode; reducedMotion?: boolean; children: ReactNode;
 }) {
   const systemReduced = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -48,6 +48,7 @@ export function ParkResult({ outcome, ranked, rank, description, title, subtitle
       <div className="park-result-score"><span>YOUR DISTRICTS <b><AnimatedNumber reducedMotion={Boolean(reduced)} value={claimed} delay={.2} /></b></span><i>—</i><span>RIVAL DISTRICTS <b><AnimatedNumber reducedMotion={Boolean(reduced)} value={rivalClaimed} delay={.4} /></b></span></div>
       {boardNote && <p className="park-result-board-note" data-testid="timeout-board-note">{boardNote}</p>}
       {rank && <div className="park-result-award" data-testid="ranked-result"><motion.div initial={reduced ? false : { y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: 'spring', damping: 12, delay: .3 }}><RankTrophy tier={rank.tier} /></motion.div><div><span className="park-award-label">{promoted ? 'RANK UP!' : 'PRESEASON RANK'}</span><h3>{rank.tier}</h3><div className="park-rp-change"><RPToken /><strong><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.delta} prefix={rank.delta >= 0 ? '+' : ''} delay={.5} /> RP</strong></div><small><AnimatedNumber reducedMotion={Boolean(reduced)} value={rank.after} from={rank.before} delay={.5} /> total RP{rank.bot ? ' · Park Bot' : ''}</small></div></div>}
+       {opponent}
       <nav className="park-result-actions" aria-label="After the fade">{children}</nav>
     </div>
   </DialogContent></>;

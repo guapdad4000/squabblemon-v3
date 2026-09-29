@@ -6,6 +6,7 @@ import { CinemaNavSheet } from './GameNav';
 import { GameGlyph } from './GameGlyph';
 import { MusicControls } from '../MusicControls';
 import { getAssetUrl } from '../../lib/assets';
+import { useOptionalSocial } from '../../lib/social';
 import '../../styles/ui-polish.css';
 import './city-header.css';
 
@@ -13,6 +14,9 @@ import './city-header.css';
 export function CityHeader({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [location, navigate] = useLocation();
   const { profile } = bootstrap;
+  const social = useOptionalSocial();
+  const pending = social && !social.paused ? social.pendingCount : 0;
+  const pendingLabel = social?.query.data ? `${social.query.data.counts.requests} homie requests and ${social.query.data.counts.invitations} fade invitations` : '';
   const isSafehouse = location.replace(/\/+$/, '') === '/game';
   return <header className="city-header" aria-label="Player and navigation">
     {!isSafehouse && <div className="city-header__return">
@@ -21,7 +25,11 @@ export function CityHeader({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         <img src={getAssetUrl('brand/navigation/safehouse-key.webp')} alt="" draggable={false} />
       </Link>
     </div>}
-    <Link href="/game/settings" className="city-header__identity"><span className="city-header__level" aria-label={'Level ' + profile.level}>{profile.level}</span><span><strong>{profile.displayName}</strong><small>LEVEL {profile.level} · {profile.streetRep.toLocaleString()} REP</small></span></Link>
+    <Link href={pending ? '/game/settings#homies' : '/game/settings'} className="city-header__identity" aria-label={`${profile.displayName} · Fighter ID${pending ? ` · ${pendingLabel}` : ''}`}>
+      <span className="city-header__level" aria-label={'Level ' + profile.level}>{profile.level}</span>
+      <span><strong>{profile.displayName}</strong><small>LEVEL {profile.level} · {profile.streetRep.toLocaleString()} REP</small></span>
+      {pending > 0 && <span className="city-header__social-count" aria-hidden="true" data-testid="homies-pending-count">{pending > 99 ? '99+' : pending}</span>}
+    </Link>
     <div className="city-header__wallet">
       <Link href="/game/shop?view=corner" className="city-header__balance" title={profile.softCurrency.toLocaleString() + ' Clout'} aria-label={profile.softCurrency + ' Clout. Open Fade Market'}><GameGlyph name="clout" /><b>{profile.softCurrency.toLocaleString()}</b></Link>
       <Link href="/game/style" className="city-header__balance city-header__shards" title={(profile.styleShards ?? 0).toLocaleString() + ' Universal Style Shards'} aria-label={(profile.styleShards ?? 0) + ' Universal Style Shards. Open character styles and all shard balances'}><GameGlyph name="shards" /><b>{(profile.styleShards ?? 0).toLocaleString()}</b></Link>

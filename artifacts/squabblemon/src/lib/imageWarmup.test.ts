@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { warmImages } from './imageWarmup';
+import { isBattleActive, setBattleActive, subscribeBattleActive, warmImages } from './imageWarmup';
 
 test('art warmup bounds concurrency, waits for decoding, shares requests, and retries failures', async () => {
   const original = globalThis.Image;
@@ -42,4 +42,20 @@ test('art warmup bounds concurrency, waits for decoding, shares requests, and re
     retried.onload!(); retried.decoded();
     assert.deepEqual(await retry, [true]);
   } finally { globalThis.Image = original; }
+});
+
+test('menu subscribers are notified only when the battle lifecycle changes', () => {
+  const snapshots: boolean[] = [];
+  const unsubscribe = subscribeBattleActive(() => snapshots.push(isBattleActive()));
+  setBattleActive(true);
+  setBattleActive(true);
+  setBattleActive(false);
+  assert.equal(isBattleActive(), true, 'a mounted battle still pauses background menus');
+  setBattleActive(false);
+  setBattleActive(false);
+  assert.deepEqual(snapshots, [true, false]);
+  unsubscribe();
+  setBattleActive(true);
+  setBattleActive(false);
+  assert.deepEqual(snapshots, [true, false], 'unmounted menus receive no events');
 });

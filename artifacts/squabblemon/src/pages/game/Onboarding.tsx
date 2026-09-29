@@ -12,6 +12,8 @@ import { PlayLoop } from '../../components/PlayLoop';
 import { Link, useLocation } from 'wouter';
 import { DrFadePortrait, DR_FADE_LESSONS } from '../../components/DrFade';
 import { WELCOME_REWARD } from '@workspace/squabblemon-engine/economy';
+import { readSocialDestination } from '../../lib/socialDestinations';
+import { basePath } from '../../lib/routing';
 
 export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const step = bootstrap.profile.onboardingStep;
@@ -26,7 +28,13 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       const res = await advance.mutateAsync({ data: payload });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
       if (payload.action === 'complete-tutorial') rewardReceipts.show({ id: `${res.profile.id}:rookie-graduation`, title: 'You earned your corner.', achievement: true, items: [{ label: 'Rookie Road complete', glyph: 'mastery' }, { label: 'Dr. Fade is in your corner', image: getCardImage('dr-fade') }] });
-      if (payload.action === 'claim-reward') { revealProfileRewards(bootstrap, res, 'onboarding', 'Your first haul'); setLocation('/game/story'); }
+      if (payload.action === 'claim-reward') {
+        revealProfileRewards(bootstrap, res, 'onboarding', 'Your first haul');
+        // The complete-account gate can render before navigation commits. Keep the
+        // destination until its confirmation mounts so both redirects agree.
+        const destination = readSocialDestination(sessionStorage, res.profile.id, { base: basePath, origin: location.origin });
+        setLocation(destination ?? '/game/story');
+      }
     } catch (e) {
       console.error(e);
       setError('The block could not save that step. Check your connection and try again.');

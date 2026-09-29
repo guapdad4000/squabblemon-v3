@@ -238,7 +238,7 @@ export function ProfileSettings({
 
       <section className="panel-section pt-4 border-t-2 border-dashed border-black/10">
         <h2 className="panel-section-title">Account</h2>
-        <button type="button" onClick={() => signOut({ redirectUrl: basePath || '/' })} disabled={mutationBusy} className="street-sign-btn street-sign-btn--secondary border-red-600 text-red-600 w-full min-h-11 justify-center">Sign Out</button>
+        <button type="button" onClick={() => signOut({ redirectUrl: `${basePath}/` })} disabled={mutationBusy} className="street-sign-btn street-sign-btn--secondary border-red-600 text-red-600 w-full min-h-11 justify-center">Sign Out</button>
       </section>
     </div>
   );

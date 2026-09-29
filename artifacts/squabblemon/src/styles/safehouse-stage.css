@@ -63,3 +63,6 @@
 /* Floating station labels keep their invisible touch targets. */
 .safehouse-room-markers button svg{display:none}
 .safehouse-room-markers button:focus-visible{outline:2px dashed #ffe394;outline-offset:0}
+/* Short phones: the marker band collapses to ~24px, so every anchor clamps onto one row and Events lands under Fight.
+   Pin only the Events marker into the clear floor area at lower-left (above the card fan). */
+@media (max-width:480px) and (max-height:560px){.safehouse-stage:not([data-scene-fallback="static"]):not([data-scene-fallback="error"]) .safehouse-room-markers button[data-station="events"][data-anchor-positioned="true"]{left:72px!important;top:90px!important;z-index:3}}

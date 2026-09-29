@@ -31,8 +31,15 @@ import type {
   CraftVariantResult,
   DeploymentIdentity,
   EquipVariantInput,
+  EventFeedbackInput,
+  EventFeedbackPage,
+  EventFeedbackReceipt,
+  FadeInvitationInput,
+  FadeInvitationResponseInput,
+  FeedbackError,
   GetPlayerShop200,
   HealthStatus,
+  ListEventFeedbackParams,
   ListPaymentOrdersParams,
   MatchCompleteInput,
   MatchCompletion,
@@ -51,8 +58,17 @@ import type {
   PromoCodeInput,
   PromoCodeResult,
   SaveDeckInput,
+  SearchSocialPlayersParams,
   ShopPurchaseInput,
   ShopPurchaseResult,
+  SocialCodeInput,
+  SocialInvitation,
+  SocialLookup,
+  SocialMatchOpponent,
+  SocialResponseInput,
+  SocialSearchResult,
+  SocialState,
+  SocialUsernameInput,
   StoryCampaign,
   StoryDevelopmentResetInput,
   StoryDialogueProgressResponse,
@@ -88,6 +104,1047 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getListEventFeedbackUrl = (params?: ListEventFeedbackParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/events/feedback?${stringifiedParams}` : `/api/events/feedback`
+}
+
+/**
+ * Available to every signed-in player, including developers using the game. Newest first, ordered by saved timestamp and post ID. Opaque keyset cursors page through older posts without shifts when new posts arrive. Responses contain only public in-game display names and post content.
+ * @summary Read shared player feedback on the Events board
+ */
+export const listEventFeedback = async (params?: ListEventFeedbackParams, options?: RequestInit): Promise<EventFeedbackPage> => {
+
+  return customFetch<EventFeedbackPage>(getListEventFeedbackUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListEventFeedbackQueryKey = (params?: ListEventFeedbackParams,) => {
+    return [
+    `/api/events/feedback`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListEventFeedbackQueryOptions = <TData = Awaited<ReturnType<typeof listEventFeedback>>, TError = ErrorType<FeedbackError>>(params?: ListEventFeedbackParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEventFeedback>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListEventFeedbackQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listEventFeedback>>> = ({ signal }) => listEventFeedback(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listEventFeedback>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListEventFeedbackQueryResult = NonNullable<Awaited<ReturnType<typeof listEventFeedback>>>
+export type ListEventFeedbackQueryError = ErrorType<FeedbackError>
+
+
+/**
+ * @summary Read shared player feedback on the Events board
+ */
+
+export function useListEventFeedback<TData = Awaited<ReturnType<typeof listEventFeedback>>, TError = ErrorType<FeedbackError>>(
+ params?: ListEventFeedbackParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listEventFeedback>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListEventFeedbackQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSubmitEventFeedbackUrl = () => {
+
+
+
+
+  return `/api/events/feedback`
+}
+
+/**
+ * Uses the existing game session, not a separate feedback account. Author, public display name, receipt ID and timestamp are server-derived. A retry ID belongs to one author and one trimmed category/message pair; identical retries return the saved receipt, changed content returns 409. At most 5 new posts per rolling 10 minutes and 20 per rolling 24 hours per account. Retries of saved posts do not consume this allowance.
+ * @summary Save player feedback to the shared Events board
+ */
+export const submitEventFeedback = async (eventFeedbackInput: EventFeedbackInput, options?: RequestInit): Promise<EventFeedbackReceipt> => {
+
+  return customFetch<EventFeedbackReceipt>(getSubmitEventFeedbackUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(eventFeedbackInput)
+  }
+);}
+
+
+
+
+
+export const getSubmitEventFeedbackMutationOptions = <TError = ErrorType<FeedbackError | void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitEventFeedback>>, TError,{data: BodyType<EventFeedbackInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitEventFeedback>>, TError,{data: BodyType<EventFeedbackInput>}, TContext> => {
+
+const mutationKey = ['submitEventFeedback'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitEventFeedback>>, {data: BodyType<EventFeedbackInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  submitEventFeedback(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitEventFeedbackMutationResult = NonNullable<Awaited<ReturnType<typeof submitEventFeedback>>>
+    export type SubmitEventFeedbackMutationBody = BodyType<EventFeedbackInput>
+    export type SubmitEventFeedbackMutationError = ErrorType<FeedbackError | void>
+
+    /**
+ * @summary Save player feedback to the shared Events board
+ */
+export const useSubmitEventFeedback = <TError = ErrorType<FeedbackError | void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitEventFeedback>>, TError,{data: BodyType<EventFeedbackInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitEventFeedback>>,
+        TError,
+        {data: BodyType<EventFeedbackInput>},
+        TContext
+      > => {
+      return useMutation(getSubmitEventFeedbackMutationOptions(options));
+    }
+
+export const getGetSocialStateUrl = () => {
+
+
+
+
+  return `/api/social`
+}
+
+export const getSocialState = async ( options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getGetSocialStateUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSocialStateQueryKey = () => {
+    return [
+    `/api/social`
+    ] as const;
+    }
+
+
+export const getGetSocialStateQueryOptions = <TData = Awaited<ReturnType<typeof getSocialState>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSocialState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSocialStateQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSocialState>>> = ({ signal }) => getSocialState({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSocialState>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSocialStateQueryResult = NonNullable<Awaited<ReturnType<typeof getSocialState>>>
+export type GetSocialStateQueryError = ErrorType<unknown>
+
+
+
+export function useGetSocialState<TData = Awaited<ReturnType<typeof getSocialState>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSocialState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSocialStateQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSearchSocialPlayersUrl = (params: SearchSocialPlayersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/social/search?${stringifiedParams}` : `/api/social/search`
+}
+
+export const searchSocialPlayers = async (params: SearchSocialPlayersParams, options?: RequestInit): Promise<SocialSearchResult> => {
+
+  return customFetch<SocialSearchResult>(getSearchSocialPlayersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getSearchSocialPlayersQueryKey = (params?: SearchSocialPlayersParams,) => {
+    return [
+    `/api/social/search`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getSearchSocialPlayersQueryOptions = <TData = Awaited<ReturnType<typeof searchSocialPlayers>>, TError = ErrorType<unknown>>(params: SearchSocialPlayersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchSocialPlayers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchSocialPlayersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchSocialPlayers>>> = ({ signal }) => searchSocialPlayers(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchSocialPlayers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type SearchSocialPlayersQueryResult = NonNullable<Awaited<ReturnType<typeof searchSocialPlayers>>>
+export type SearchSocialPlayersQueryError = ErrorType<unknown>
+
+
+
+export function useSearchSocialPlayers<TData = Awaited<ReturnType<typeof searchSocialPlayers>>, TError = ErrorType<unknown>>(
+ params: SearchSocialPlayersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchSocialPlayers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getSearchSocialPlayersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateSocialUsernameUrl = () => {
+
+
+
+
+  return `/api/social/username`
+}
+
+export const updateSocialUsername = async (socialUsernameInput: SocialUsernameInput, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getUpdateSocialUsernameUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(socialUsernameInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateSocialUsernameMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSocialUsername>>, TError,{data: BodyType<SocialUsernameInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateSocialUsername>>, TError,{data: BodyType<SocialUsernameInput>}, TContext> => {
+
+const mutationKey = ['updateSocialUsername'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateSocialUsername>>, {data: BodyType<SocialUsernameInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateSocialUsername(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateSocialUsernameMutationResult = NonNullable<Awaited<ReturnType<typeof updateSocialUsername>>>
+    export type UpdateSocialUsernameMutationBody = BodyType<SocialUsernameInput>
+    export type UpdateSocialUsernameMutationError = ErrorType<unknown>
+
+    export const useUpdateSocialUsername = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSocialUsername>>, TError,{data: BodyType<SocialUsernameInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateSocialUsername>>,
+        TError,
+        {data: BodyType<SocialUsernameInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateSocialUsernameMutationOptions(options));
+    }
+
+export const getGetSocialMatchOpponentUrl = (code: string,) => {
+
+
+
+
+  return `/api/social/match-opponent/${code}`
+}
+
+export const getSocialMatchOpponent = async (code: string, options?: RequestInit): Promise<SocialMatchOpponent> => {
+
+  return customFetch<SocialMatchOpponent>(getGetSocialMatchOpponentUrl(code),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSocialMatchOpponentQueryKey = (code: string,) => {
+    return [
+    `/api/social/match-opponent/${code}`
+    ] as const;
+    }
+
+
+export const getGetSocialMatchOpponentQueryOptions = <TData = Awaited<ReturnType<typeof getSocialMatchOpponent>>, TError = ErrorType<unknown>>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSocialMatchOpponent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSocialMatchOpponentQueryKey(code);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSocialMatchOpponent>>> = ({ signal }) => getSocialMatchOpponent(code, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: code !== null && code !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSocialMatchOpponent>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSocialMatchOpponentQueryResult = NonNullable<Awaited<ReturnType<typeof getSocialMatchOpponent>>>
+export type GetSocialMatchOpponentQueryError = ErrorType<unknown>
+
+
+
+export function useGetSocialMatchOpponent<TData = Awaited<ReturnType<typeof getSocialMatchOpponent>>, TError = ErrorType<unknown>>(
+ code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSocialMatchOpponent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSocialMatchOpponentQueryOptions(code,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getLookupSocialPlayerUrl = (code: string,) => {
+
+
+
+
+  return `/api/social/lookup/${code}`
+}
+
+export const lookupSocialPlayer = async (code: string, options?: RequestInit): Promise<SocialLookup> => {
+
+  return customFetch<SocialLookup>(getLookupSocialPlayerUrl(code),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getLookupSocialPlayerQueryKey = (code: string,) => {
+    return [
+    `/api/social/lookup/${code}`
+    ] as const;
+    }
+
+
+export const getLookupSocialPlayerQueryOptions = <TData = Awaited<ReturnType<typeof lookupSocialPlayer>>, TError = ErrorType<unknown>>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof lookupSocialPlayer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLookupSocialPlayerQueryKey(code);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof lookupSocialPlayer>>> = ({ signal }) => lookupSocialPlayer(code, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: code !== null && code !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof lookupSocialPlayer>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LookupSocialPlayerQueryResult = NonNullable<Awaited<ReturnType<typeof lookupSocialPlayer>>>
+export type LookupSocialPlayerQueryError = ErrorType<unknown>
+
+
+
+export function useLookupSocialPlayer<TData = Awaited<ReturnType<typeof lookupSocialPlayer>>, TError = ErrorType<unknown>>(
+ code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof lookupSocialPlayer>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getLookupSocialPlayerQueryOptions(code,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSendHomieRequestUrl = () => {
+
+
+
+
+  return `/api/social/requests`
+}
+
+export const sendHomieRequest = async (socialCodeInput: SocialCodeInput, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getSendHomieRequestUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(socialCodeInput)
+  }
+);}
+
+
+
+
+
+export const getSendHomieRequestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendHomieRequest>>, TError,{data: BodyType<SocialCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendHomieRequest>>, TError,{data: BodyType<SocialCodeInput>}, TContext> => {
+
+const mutationKey = ['sendHomieRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendHomieRequest>>, {data: BodyType<SocialCodeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  sendHomieRequest(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendHomieRequestMutationResult = NonNullable<Awaited<ReturnType<typeof sendHomieRequest>>>
+    export type SendHomieRequestMutationBody = BodyType<SocialCodeInput>
+    export type SendHomieRequestMutationError = ErrorType<unknown>
+
+    export const useSendHomieRequest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendHomieRequest>>, TError,{data: BodyType<SocialCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendHomieRequest>>,
+        TError,
+        {data: BodyType<SocialCodeInput>},
+        TContext
+      > => {
+      return useMutation(getSendHomieRequestMutationOptions(options));
+    }
+
+export const getRespondHomieRequestUrl = (id: string,) => {
+
+
+
+
+  return `/api/social/requests/${id}/respond`
+}
+
+export const respondHomieRequest = async (id: string,
+    socialResponseInput: SocialResponseInput, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getRespondHomieRequestUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(socialResponseInput)
+  }
+);}
+
+
+
+
+
+export const getRespondHomieRequestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof respondHomieRequest>>, TError,{id: string;data: BodyType<SocialResponseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof respondHomieRequest>>, TError,{id: string;data: BodyType<SocialResponseInput>}, TContext> => {
+
+const mutationKey = ['respondHomieRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof respondHomieRequest>>, {id: string;data: BodyType<SocialResponseInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  respondHomieRequest(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RespondHomieRequestMutationResult = NonNullable<Awaited<ReturnType<typeof respondHomieRequest>>>
+    export type RespondHomieRequestMutationBody = BodyType<SocialResponseInput>
+    export type RespondHomieRequestMutationError = ErrorType<unknown>
+
+    export const useRespondHomieRequest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof respondHomieRequest>>, TError,{id: string;data: BodyType<SocialResponseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof respondHomieRequest>>,
+        TError,
+        {id: string;data: BodyType<SocialResponseInput>},
+        TContext
+      > => {
+      return useMutation(getRespondHomieRequestMutationOptions(options));
+    }
+
+export const getRemoveHomieUrl = (code: string,) => {
+
+
+
+
+  return `/api/social/homies/${code}/remove`
+}
+
+export const removeHomie = async (code: string, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getRemoveHomieUrl(code),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getRemoveHomieMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeHomie>>, TError,{code: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof removeHomie>>, TError,{code: string}, TContext> => {
+
+const mutationKey = ['removeHomie'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeHomie>>, {code: string}> = (props) => {
+          const {code} = props ?? {};
+
+          return  removeHomie(code,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RemoveHomieMutationResult = NonNullable<Awaited<ReturnType<typeof removeHomie>>>
+
+    export type RemoveHomieMutationError = ErrorType<unknown>
+
+    export const useRemoveHomie = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeHomie>>, TError,{code: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof removeHomie>>,
+        TError,
+        {code: string},
+        TContext
+      > => {
+      return useMutation(getRemoveHomieMutationOptions(options));
+    }
+
+export const getBlockSocialPlayerUrl = () => {
+
+
+
+
+  return `/api/social/blocks`
+}
+
+export const blockSocialPlayer = async (socialCodeInput: SocialCodeInput, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getBlockSocialPlayerUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(socialCodeInput)
+  }
+);}
+
+
+
+
+
+export const getBlockSocialPlayerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockSocialPlayer>>, TError,{data: BodyType<SocialCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof blockSocialPlayer>>, TError,{data: BodyType<SocialCodeInput>}, TContext> => {
+
+const mutationKey = ['blockSocialPlayer'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof blockSocialPlayer>>, {data: BodyType<SocialCodeInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  blockSocialPlayer(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BlockSocialPlayerMutationResult = NonNullable<Awaited<ReturnType<typeof blockSocialPlayer>>>
+    export type BlockSocialPlayerMutationBody = BodyType<SocialCodeInput>
+    export type BlockSocialPlayerMutationError = ErrorType<unknown>
+
+    export const useBlockSocialPlayer = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockSocialPlayer>>, TError,{data: BodyType<SocialCodeInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof blockSocialPlayer>>,
+        TError,
+        {data: BodyType<SocialCodeInput>},
+        TContext
+      > => {
+      return useMutation(getBlockSocialPlayerMutationOptions(options));
+    }
+
+export const getUnblockSocialPlayerUrl = (code: string,) => {
+
+
+
+
+  return `/api/social/blocks/${code}/remove`
+}
+
+export const unblockSocialPlayer = async (code: string, options?: RequestInit): Promise<SocialState> => {
+
+  return customFetch<SocialState>(getUnblockSocialPlayerUrl(code),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getUnblockSocialPlayerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockSocialPlayer>>, TError,{code: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof unblockSocialPlayer>>, TError,{code: string}, TContext> => {
+
+const mutationKey = ['unblockSocialPlayer'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unblockSocialPlayer>>, {code: string}> = (props) => {
+          const {code} = props ?? {};
+
+          return  unblockSocialPlayer(code,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnblockSocialPlayerMutationResult = NonNullable<Awaited<ReturnType<typeof unblockSocialPlayer>>>
+
+    export type UnblockSocialPlayerMutationError = ErrorType<unknown>
+
+    export const useUnblockSocialPlayer = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockSocialPlayer>>, TError,{code: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof unblockSocialPlayer>>,
+        TError,
+        {code: string},
+        TContext
+      > => {
+      return useMutation(getUnblockSocialPlayerMutationOptions(options));
+    }
+
+export const getSendFadeInvitationUrl = () => {
+
+
+
+
+  return `/api/social/invitations`
+}
+
+export const sendFadeInvitation = async (fadeInvitationInput: FadeInvitationInput, options?: RequestInit): Promise<SocialInvitation> => {
+
+  return customFetch<SocialInvitation>(getSendFadeInvitationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(fadeInvitationInput)
+  }
+);}
+
+
+
+
+
+export const getSendFadeInvitationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendFadeInvitation>>, TError,{data: BodyType<FadeInvitationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendFadeInvitation>>, TError,{data: BodyType<FadeInvitationInput>}, TContext> => {
+
+const mutationKey = ['sendFadeInvitation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendFadeInvitation>>, {data: BodyType<FadeInvitationInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  sendFadeInvitation(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendFadeInvitationMutationResult = NonNullable<Awaited<ReturnType<typeof sendFadeInvitation>>>
+    export type SendFadeInvitationMutationBody = BodyType<FadeInvitationInput>
+    export type SendFadeInvitationMutationError = ErrorType<unknown>
+
+    export const useSendFadeInvitation = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendFadeInvitation>>, TError,{data: BodyType<FadeInvitationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendFadeInvitation>>,
+        TError,
+        {data: BodyType<FadeInvitationInput>},
+        TContext
+      > => {
+      return useMutation(getSendFadeInvitationMutationOptions(options));
+    }
+
+export const getGetFadeInvitationUrl = (id: string,) => {
+
+
+
+
+  return `/api/social/invitations/${id}`
+}
+
+export const getFadeInvitation = async (id: string, options?: RequestInit): Promise<SocialInvitation> => {
+
+  return customFetch<SocialInvitation>(getGetFadeInvitationUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFadeInvitationQueryKey = (id: string,) => {
+    return [
+    `/api/social/invitations/${id}`
+    ] as const;
+    }
+
+
+export const getGetFadeInvitationQueryOptions = <TData = Awaited<ReturnType<typeof getFadeInvitation>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFadeInvitation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFadeInvitationQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFadeInvitation>>> = ({ signal }) => getFadeInvitation(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFadeInvitation>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFadeInvitationQueryResult = NonNullable<Awaited<ReturnType<typeof getFadeInvitation>>>
+export type GetFadeInvitationQueryError = ErrorType<unknown>
+
+
+
+export function useGetFadeInvitation<TData = Awaited<ReturnType<typeof getFadeInvitation>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFadeInvitation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFadeInvitationQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRespondFadeInvitationUrl = (id: string,) => {
+
+
+
+
+  return `/api/social/invitations/${id}/respond`
+}
+
+export const respondFadeInvitation = async (id: string,
+    fadeInvitationResponseInput: FadeInvitationResponseInput, options?: RequestInit): Promise<SocialInvitation> => {
+
+  return customFetch<SocialInvitation>(getRespondFadeInvitationUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(fadeInvitationResponseInput)
+  }
+);}
+
+
+
+
+
+export const getRespondFadeInvitationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof respondFadeInvitation>>, TError,{id: string;data: BodyType<FadeInvitationResponseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof respondFadeInvitation>>, TError,{id: string;data: BodyType<FadeInvitationResponseInput>}, TContext> => {
+
+const mutationKey = ['respondFadeInvitation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof respondFadeInvitation>>, {id: string;data: BodyType<FadeInvitationResponseInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  respondFadeInvitation(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RespondFadeInvitationMutationResult = NonNullable<Awaited<ReturnType<typeof respondFadeInvitation>>>
+    export type RespondFadeInvitationMutationBody = BodyType<FadeInvitationResponseInput>
+    export type RespondFadeInvitationMutationError = ErrorType<unknown>
+
+    export const useRespondFadeInvitation = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof respondFadeInvitation>>, TError,{id: string;data: BodyType<FadeInvitationResponseInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof respondFadeInvitation>>,
+        TError,
+        {id: string;data: BodyType<FadeInvitationResponseInput>},
+        TContext
+      > => {
+      return useMutation(getRespondFadeInvitationMutationOptions(options));
+    }
 
 export const getStartChallengeRunUrl = () => {
 

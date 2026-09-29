@@ -106,44 +106,11 @@
 .sq-card-lift { transition: transform var(--sq-dur-base) var(--sq-ease-snap), box-shadow var(--sq-dur-base) var(--sq-ease-snap); }
 .sq-card-lift:hover { transform: translateY(-2px); box-shadow: var(--sq-shadow-2); }
 
-/* ---- Branded route transition: torn-paper wipe into the new screen ---- */
-.sq-route-transition {
-  animation: sq-route-tear-in var(--sq-dur-slow) var(--sq-ease-out) backwards;
-}
-.sq-route-transition--immersive {
-  /* Immersive routes run their own choreography; only a short ink fade. */
-  animation: sq-route-fade-in var(--sq-dur-base) ease-out backwards;
-}
-@keyframes sq-route-tear-in {
-  0% {
-    opacity: .2;
-    transform: translateX(3%);
-    clip-path: polygon(100% 0, 100% 0, 96% 12%, 100% 26%, 95% 41%, 100% 57%, 96% 72%, 100% 86%, 97% 100%, 100% 100%);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-    clip-path: polygon(0 0, 100% 0, 100% 12%, 100% 26%, 100% 41%, 100% 57%, 100% 72%, 100% 86%, 100% 100%, 0 100%);
-  }
-}
-@keyframes sq-route-fade-in { from { opacity: 0; } to { opacity: 1; } }
-
 @media (prefers-reduced-motion: reduce) {
-  .sq-route-transition, .sq-route-transition--immersive { animation: sq-route-fade-in var(--sq-dur-fast) linear backwards; }
   .sq-press, .sq-press::after, .sq-card-lift { transition: none; }
   .sq-press:hover:not(:disabled), .sq-press:active:not(:disabled), .sq-card-lift:hover { transform: none; }
 }
-html[data-reduce-motion="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: sq-route-fade-in var(--sq-dur-fast) linear backwards; }
 html[data-reduce-motion="true"] :is(.sq-press, .sq-card-lift) { transition: none; transform: none !important; }
-
-/* Native-feeling screen blends (View Transitions). The header holds still; content crossfades and slides. */
-html[data-view-transition="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: none; }
-.city-header { view-transition-name: sq-city-header; }
-::view-transition-old(root) { animation: sq-vt-out 160ms ease-in both; }
-::view-transition-new(root) { animation: sq-vt-in 240ms var(--sq-ease-out, cubic-bezier(.22,1,.36,1)) both; }
-::view-transition-group(sq-city-header) { animation-duration: 200ms; }
-@keyframes sq-vt-out { to { opacity: 0; transform: translateX(-14px); } }
-@keyframes sq-vt-in { from { opacity: 0; transform: translateX(18px); } }
 
 /* Game-wide chalkboard surface for basic panels. Applies only where a panel still uses the
    default surface (custom paper/art panels keep their own look). */
@@ -164,15 +131,3 @@ html .panel-section:not([class*=-paper]) :is(.bg-white\/50, .bg-white\/70):hover
 html .panel-section:not([class*=-paper]) .profile-style-details > div { background: #0d241a8c; border-top-color: #e9d9a8; }
 html .panel-section:not([class*=-paper]) .profile-style-details dt { color: #e9d9a8 !important; }
 html .panel-section:not([class*=-paper]) .profile-style-details dd { color: #f4eedb !important; }
-
-/* No fade-to-black "blink": the new screen wipes in over the old one, which stays fully visible. */
-.sq-route-transition, .sq-route-transition--immersive, html[data-reduce-motion="true"] :is(.sq-route-transition, .sq-route-transition--immersive) { animation: none; }
-::view-transition-old(root) { animation: sq-vt-hold 300ms linear both; }
-::view-transition-new(root) { animation: sq-vt-wipe 300ms cubic-bezier(.3,.9,.3,1) both; }
-@keyframes sq-vt-hold { to { filter: brightness(.55); transform: translateX(-4%); } }
-@keyframes sq-vt-wipe {
-  from { clip-path: polygon(110% 0, 110% 100%, 101% 100%, 105% 80%, 102% 63%, 106% 47%, 101% 30%, 105% 14%, 102% 0%); }
-  to { clip-path: polygon(110% 0, 110% 100%, -6% 100%, -2% 80%, -5% 63%, -1% 47%, -6% 30%, -2% 14%, -5% 0%); }
-}
-
-@media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root) { animation: none; } }

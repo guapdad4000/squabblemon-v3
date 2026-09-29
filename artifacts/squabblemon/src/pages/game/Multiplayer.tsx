@@ -1,99 +1,55 @@
-import { CompactDeckPicker } from '../../components/CompactDeckPicker';
 import { FighterPortrait } from '../../components/profile/FighterPortrait';
 import { FadePark, FightTabs } from './FadePark';
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { useQuery } from "@tanstack/react-query";
 import { ApiError, type PlayerBootstrap } from "@workspace/api-client-react";
-import { ArrowUpRight, Check, Copy, KeyRound, MapPin, Swords, Users } from "lucide-react";
-import {
-  getAssetUrl,
-  getCardImage,
-  starterRecipes,
-  validateSavedDeck,
-} from "../../data";
+import { Check, Copy } from "lucide-react";
+import { starterRecipes, validateSavedDeck } from "../../data";
 import { basePath } from "../../lib/routing";
 import {
   createFriendMatch,
   joinFriendMatch,
-  listFriendMatches,
   onlineErrorMessage,
   useFriendMatch,
 } from "../../lib/multiplayer";
 import { MultiplayerBattle } from "../../components/MultiplayerBattle";
 import { InstallGame } from "../../components/InstallGame";
+import { DeviceFrame } from "../../components/social/DeviceFrame";
+import { FadeRules, FriendlyFadesHub } from "../../components/social/FriendlyFadesHub";
+import { CompactDeckPicker } from '../../components/CompactDeckPicker';
+import { useSocial } from "../../lib/social";
 import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
 import "../../styles/multiplayer.css";
+import "../../styles/friendly-fades.css";
 import { useEventVoice } from "../../lib/useEventVoice";
 
-export function Multiplayer({
-  bootstrap,
-  code,
-}: {
-  bootstrap: PlayerBootstrap;
-  code?: string;
-}) {
+export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; code?: string }) {
   const [, navigate] = useLocation();
   const friends = new URLSearchParams(useSearch()).get('tab') === 'friends';
   useEventVoice(friends && !code ? 'friendly-fade' : null);
   const { profile } = bootstrap;
-  const saved = profile.savedDecks.filter(
-    (deck) =>
-      validateSavedDeck(deck.cardIds, profile.ownedCardIds, deck.heroCardId)
-        .valid,
-  );
-  const recipes = starterRecipes.filter(
-    (deck) =>
-      validateSavedDeck(deck.catalogCardIds, profile.ownedCardIds, deck.hero)
-        .valid,
-  );
+  const social = useSocial();
+  const saved = profile.savedDecks.filter(deck => validateSavedDeck(deck.cardIds, profile.ownedCardIds, deck.heroCardId).valid);
+  const recipes = starterRecipes.filter(deck => validateSavedDeck(deck.catalogCardIds, profile.ownedCardIds, deck.hero).valid);
   const crews = [
-    ...saved.map((deck) => ({
-      id: deck.id,
-      name: deck.name,
-      hero: deck.heroCardId!,
-      cardIds: deck.cardIds,
-    })),
-    ...recipes
-      .filter((deck) => !saved.some((s) => s.id === deck.id))
-      .map((deck) => ({
-        id: deck.id,
-        name: deck.name,
-        hero: deck.hero,
-        cardIds: deck.catalogCardIds,
-      })),
+    ...saved.map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.heroCardId!, cardIds: deck.cardIds })),
+    ...recipes.filter(deck => !saved.some(s => s.id === deck.id))
+      .map(deck => ({ id: deck.id, name: deck.name, heroCardId: deck.hero, cardIds: deck.catalogCardIds })),
   ];
   const [crewId, setCrewId] = useState(crews[0]?.id ?? "");
-  const chosen = crews.find((crew) => crew.id === crewId) ?? crews[0];
+  const chosen = crews.find(crew => crew.id === crewId) ?? crews[0];
   const [enteredCode, setEnteredCode] = useState(code ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const operationLock = useRef(false);
   const createKey = useRef<{ deckId: string; id: string } | null>(null);
-  const { query, mutation, accept, connected } = useFriendMatch(
-    profile.id,
-    code,
-  );
-  const rooms = useQuery({
-    queryKey: ["friend-rooms", profile.id],
-    queryFn: listFriendMatches,
-    enabled: !code && friends,
-    refetchInterval: 10000,
-    retry: 1,
-  });
+  const { query, mutation, accept, connected } = useFriendMatch(profile.id, code);
   const room = query.data;
-  const joinable =
-    !!code && query.error instanceof ApiError && query.error.status === 404;
-  useEffect(() => {
-    if (code)
-      sessionStorage.setItem(
-        "squabblemon_friend_invite",
-        `/game/online/${code}`,
-      );
-  }, [code]);
+  const joinable = !!code && query.error instanceof ApiError && query.error.status === 404;
+  // Targeted rooms are matched to the shared social snapshot by room code.
+  const targeted = code ? social.query.data?.invitations.find(item => item.roomCode === code) : undefined;
   function leave() {
-    sessionStorage.removeItem("squabblemon_friend_invite");
     navigate(room?.ranked ? "/game/online" : "/game/online?tab=friends");
   }
   async function openRoom(join = false) {
@@ -104,14 +60,12 @@ export function Multiplayer({
     try {
       const target = (code ?? enteredCode).replace(/\s/g, "").toUpperCase();
       if (join && !/^[A-F0-9]{12}$/.test(target)) {
-        setError("Enter the 12-character code your friend shared.");
+        setError("Enter the 12-character room code your friend shared.");
         return;
       }
       if (!createKey.current || createKey.current.deckId !== chosen.id)
         createKey.current = { deckId: chosen.id, id: crypto.randomUUID() };
-      const next = join
-        ? await joinFriendMatch(target, chosen.id)
-        : await createFriendMatch(chosen.id, createKey.current.id);
+      const next = join ? await joinFriendMatch(target, chosen.id) : await createFriendMatch(chosen.id, createKey.current.id);
       accept(next);
       createKey.current = null;
       navigate(`/game/online/${next.code}`);
@@ -127,11 +81,7 @@ export function Multiplayer({
     operationLock.current = true;
     setError(null);
     try {
-      await mutation.mutateAsync({
-        requestId: crypto.randomUUID(),
-        expectedRevision: room.revision,
-        command,
-      });
+      await mutation.mutateAsync({ requestId: crypto.randomUUID(), expectedRevision: room.revision, command });
       return true;
     } catch (reason) {
       setError(onlineErrorMessage(reason));
@@ -142,34 +92,21 @@ export function Multiplayer({
   }
   async function copyInvite() {
     try {
-      await navigator.clipboard.writeText(
-        `${window.location.origin}${basePath}/game/online/${room!.code}`,
-      );
+      await navigator.clipboard.writeText(`${window.location.origin}${basePath}/game/online/${room!.code}`);
       setCopied(true);
     } catch {
       setError("Copy the room code shown below and send it to your friend.");
     }
   }
   const working = busy || mutation.isPending;
-  const errorBanner =
-    error ||
-    (room && !connected
-      ? "Connection interrupted. Reconnecting to your fade…"
-      : null);
+  const errorBanner = error || (room && !connected ? "Connection interrupted. Reconnecting to your fade…" : null);
   if (room?.status === "active" || room?.status === "complete")
     return (
       <>
         {errorBanner && (
           <div className="online-connection" role="alert">
             {errorBanner}
-            <button
-              onClick={() => {
-                setError(null);
-                void query.refetch();
-              }}
-            >
-              Refresh fade
-            </button>
+            <button onClick={() => { setError(null); void query.refetch(); }}>Refresh fade</button>
           </div>
         )}
         <MultiplayerBattle
@@ -184,282 +121,98 @@ export function Multiplayer({
       </>
     );
   if (!code && !friends) return <FadePark bootstrap={bootstrap} />;
-  return (
-    <main className="online-lobby fight-night" aria-label="Friendly Fade’s lobby" tabIndex={-1}>
-      <div className="fight-night__lights" aria-hidden="true"><i /><i /></div>
-      <img
-        className="online-lobby__venue"
-        src={getAssetUrl("assets/fight-night/rooms/rooftop-court.webp")}
-        alt=""
-      />
-      <header className="online-lobby__nav">
 
+  const invitedPlayer = targeted?.direction === 'outgoing' ? targeted.player : null;
+  let screen;
+  if (!code) {
+    screen = <FriendlyFadesHub accountId={profile.id} crews={crews} crewId={chosen?.id ?? ''} onCrew={setCrewId}
+      roomBusy={busy} onOpenRoom={() => void openRoom()} onJoinCode={() => void openRoom(true)}
+      enteredCode={enteredCode} onEnteredCode={setEnteredCode} />;
+  } else if (!room && !joinable) {
+    screen = <div className="sq-state">
+      <h2>{query.isPending ? "Finding your fade…" : "Could not reach this room."}</h2>
+      {query.isPending && <div className="sq-skeleton" aria-busy="true"><i /><i /></div>}
+      {query.error && <><p>{onlineErrorMessage(query.error)}</p>
+        <button className="sq-btn sq-btn--primary" onClick={() => void query.refetch()}>Retry connection</button></>}
+      <button className="sq-btn" onClick={leave}>Back to Friendly Fades</button>
+    </div>;
+  } else if (room?.status === "closed") {
+    screen = <div className="sq-state">
+      <h2>This room has closed.</h2>
+      <p>{targeted ? `The invite with ${targeted.player.displayName} is ${targeted.status}.` : 'Open a fresh challenge to play again.'}</p>
+      <button className="sq-btn sq-btn--primary" onClick={leave}>Back to Friendly Fades</button>
+    </div>;
+  } else if (room) {
+    const opponentSeat = room.seat === 'player' ? 'cpu' : 'player';
+    const opponentJoined = !!room.members[opponentSeat];
+    screen = <>
+      <header className="sq-device__header">
+        <span className="sq-kicker">{invitedPlayer ? 'INVITE-ONLY ROOM' : 'PRIVATE ROOM'} · {room.code}</span>
+        <h1 data-testid="online-room">{room.members.cpu ? "The rivalry is ready." : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}.` : "Call your rival."}</h1>
+        {invitedPlayer && !opponentJoined && <p>Only {invitedPlayer.displayName} can take this seat. {targeted?.status === 'pending' ? 'They will see your invite in their Homies and Friendly Fades.' : `Invite ${targeted?.status}.`}</p>}
+      </header>
+      <section className="sq-card">
+        <ul className="sq-list ff-seats">
+          {(["player", "cpu"] as const).map(seat => {
+            const member = room.members[seat];
+            const name = member?.name ?? invitedPlayer?.displayName ?? 'Waiting for your friend';
+            return <li key={seat} className="sq-row" data-tone={member?.ready ? 'leaf' : undefined}>
+              <div className="sq-row__who">
+                <span className="sq-row__portrait"><FighterPortrait cardId={member?.hero ?? 'ganger-blue'} avatarKey={member?.avatarKey ?? invitedPlayer?.avatarKey} name={name} decorative /></span>
+                <span className="sq-row__text"><strong className="sq-row__name">{name}</strong>
+                  <small className="sq-row__meta"><span className="sq-pill" data-status={member?.ready ? 'accepted' : 'pending'}>
+                    {member?.ready ? "READY" : member ? (seat === room.seat ? "YOU" : "JOINED") : invitedPlayer ? "INVITED" : "OPEN SEAT"}</span></small></span>
+              </div>
+            </li>;
+          })}
+        </ul>
+        <p className="sq-note">Your crew: <strong>{room.ownDeck.name}</strong>. {room.members[room.firstThisRound]?.name ?? "Your rival"} starts round one; the starting player switches each round.</p>
+        {!invitedPlayer && !room.members.cpu && <div className="ff-code">
+          <span>ROOM CODE</span><strong data-testid="online-room-code">{room.code}</strong>
+          <button type="button" className="sq-btn" onClick={() => void copyInvite()} data-testid="button-copy-room">
+            {copied ? <Check size={16} /> : <Copy size={16} />}{copied ? "Link copied" : "Copy invite link"}</button>
+        </div>}
+        <button className="sq-btn sq-btn--primary sq-btn--wide" data-testid="online-ready"
+          disabled={working || !room.members.cpu || room.members[room.seat]!.ready} onClick={() => void send({ type: "ready" })}>
+          {room.members[room.seat]!.ready ? "Ready. Waiting for your rival…" : !room.members.cpu ? "Waiting for your rival to join" : "Ready to squabble"}</button>
+        {invitedPlayer && targeted?.status === 'pending' && room.seat === 'player' && !opponentJoined && <button className="sq-btn sq-btn--wide" disabled={working || social.busy} data-testid="button-cancel-targeted"
+          onClick={() => { if (window.confirm(`Call off the invite to ${invitedPlayer.displayName}?`)) void social.respondInvitation(targeted.id, 'cancel').catch(reason => setError(onlineErrorMessage(reason))); }}>Cancel invite</button>}
+        <button className="sq-btn sq-btn--danger sq-btn--wide" disabled={working} onClick={() => void send({ type: "surrender" })}>Close room</button>
+        <button className="sq-btn sq-btn--ghost sq-btn--wide" onClick={leave}>Back to Friendly Fades</button>
+      </section>
+      <FadeRules />
+    </>;
+  } else {
+    screen = <>
+      <header className="sq-device__header">
+        <span className="sq-kicker">ROOM {code}</span>
+        <h1>{targeted?.direction === 'incoming' ? `${targeted.player.displayName} invited you.` : 'Join the room.'}</h1>
+        {targeted?.direction === 'incoming' && targeted.status === 'pending' && <p>Use the invite to confirm your crew.</p>}
+      </header>
+      <section className="sq-card">
+        {targeted?.direction === 'incoming' && targeted.status === 'pending'
+          ? <button className="sq-btn sq-btn--primary sq-btn--wide" onClick={() => navigate(`/game/online?tab=friends&invite=${targeted.id}`)}>View invite</button>
+          : crews.length ? <>
+            <CompactDeckPicker decks={crews} selectedId={chosen?.id ?? ""} onSelect={setCrewId} disabled={working} label="Who are you bringing?" />
+            <button className="sq-btn sq-btn--primary sq-btn--wide" disabled={working} onClick={() => void openRoom(true)}>{working ? "Joining…" : "Join your friend"}</button>
+          </> : <><p>Save ten unique cards you own to enter a Friendly Fade.</p><Link className="sq-btn sq-btn--primary" to="/game/decks">Build your crew</Link></>}
+        <button className="sq-btn sq-btn--ghost sq-btn--wide" onClick={leave}>Back to Friendly Fades</button>
+      </section>
+      <FadeRules />
+    </>;
+  }
+
+  return (
+    <main className="ff-stage" aria-label="Friendly Fades" tabIndex={-1}>
+      <header className="ff-stage__nav">
         <FightTabs friends />
         <Link to="/game/training">Training Circuit</Link>
+        <div className="ff-stage__tools"><InstallGame /></div>
       </header>
-      <div className="online-lobby__content">
-        <div className="fight-night__tools">
-          <InstallGame />
-        </div>
-        <div className="fight-night__poster">
-        <section className="online-lobby__hero">
-          <div className="fight-night__copy">
-            <span className="online-eyebrow">
-              <Users size={16} /> PRIVATE 1V1 · NO RANK ON THE LINE
-            </span>
-            <h1>
-              Friendly
-              <br />
-              <em>Fade.</em>
-            </h1>
-            <p>Bring your crew, send the code, and settle it somewhere worth remembering.</p>
-            <div className="fight-night__stage-label">
-              <MapPin size={16} />
-              <span><small>TONIGHT'S STAGE</small>Moonline Rooftop</span>
-            </div>
-          </div>
-          <div className="online-lobby__fighters" aria-hidden="true">
-            <img src={getCardImage(chosen?.hero ?? "ganger-red")} alt="" />
-            <img src={getCardImage("ganger-blue")} alt="" />
-            <span className="fight-night__versus">VS</span>
-          </div>
-        </section>
-        <div className="fight-night__ticket"><span>PRIVATE 1V1</span><b>6 ROUNDS</b><span>3 DISTRICTS</span><b>NO RANK LOSS</b></div>
-        </div>
-        {errorBanner && (
-          <p className="online-notice" role="alert">
-            {errorBanner}
-          </p>
-        )}
-        {code && !room && !joinable ? (
-          <section className="online-room-panel">
-            <h2>
-              {query.isPending
-                ? "Searching for a fade…"
-                : "Could not connect to this room."}
-            </h2>
-            {query.error && (
-              <>
-                <p>{onlineErrorMessage(query.error)}</p>
-                <button
-                  className="online-primary"
-                  onClick={() => void query.refetch()}
-                >
-                  Retry connection
-                </button>
-              </>
-            )}
-            <button className="online-secondary" onClick={leave}>
-              Back to rooms
-            </button>
-          </section>
-        ) : room?.status === "closed" ? (
-          <section className="online-room-panel">
-            <h2>This room has closed.</h2>
-            <p>Create a fresh challenge to play again.</p>
-            <button className="online-primary" onClick={leave}>
-              Back to rooms
-            </button>
-          </section>
-        ) : room ? (
-          <section className="online-room-panel" data-testid="online-room">
-            <div className="fight-night__panel-heading">
-              <span>PRIVATE ROOM</span>
-              <strong>Moonline Rooftop</strong>
-            </div>
-            <div className="online-room-title">
-              <div>
-                <span className="online-eyebrow">YOUR PRIVATE ROOM</span>
-                <h2>
-                  {room.members.cpu
-                    ? "The rivalry is ready."
-                    : "Call your rival."}
-                </h2>
-              </div>
-              <button
-                className="online-secondary"
-                onClick={() => void copyInvite()}
-              >
-                {copied ? <Check size={17} /> : <Copy size={17} />}
-                {copied ? "Link copied" : "Copy invite link"}
-              </button>
-            </div>
-            <div className="online-room-code">
-              <span>ROOM CODE</span>
-              <strong data-testid="online-room-code">{room.code}</strong>
-            </div>
-            <div className="online-room-members">
-              {(["player", "cpu"] as const).map((seat) => (
-                <div key={seat}>
-                  <FighterPortrait cardId={room.members[seat]?.hero ?? 'ganger-blue'} avatarKey={room.members[seat]?.avatarKey} name={room.members[seat]?.name ?? 'Waiting for your friend'} />
-                  <strong>
-                    {room.members[seat]?.name ?? "Waiting for your friend"}
-                  </strong>
-                  <span>
-                    {room.members[seat]?.ready
-                      ? "READY"
-                      : room.members[seat]
-                        ? seat === room.seat
-                          ? "YOU"
-                          : "JOINED"
-                        : "Share the code to invite them"}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <p>
-              Your gang: <strong>{room.ownDeck.name}</strong>.{" "}
-              {room.members[room.firstThisRound]?.name ?? "Your rival"} starts
-              round one; the starting player switches each round.
-            </p>
-            <button
-              className="online-primary"
-              data-testid="online-ready"
-              disabled={
-                working || !room.members.cpu || room.members[room.seat]!.ready
-              }
-              onClick={() => void send({ type: "ready" })}
-            >
-              {room.members[room.seat]!.ready
-                ? "Ready. Waiting for your rival…"
-                : "Ready to squabble"}
-            </button>
-            <button
-              className="online-secondary"
-              disabled={working}
-              onClick={() => void send({ type: "surrender" })}
-            >
-              Close room
-            </button>
-          </section>
-        ) : (
-          <section className="online-room-panel">
-            <div className="fight-night__panel-heading">
-              <span>{joinable ? `INVITE ${code}` : "CHALLENGE DESK"}</span>
-              <strong>{joinable ? "Join the room" : "Set the matchup"}</strong>
-            </div>
-            {crews.length ? (
-              <>
-                <label className="online-crew-label" htmlFor="online-crew">
-                  Who are you bringing?
-                </label>
-                <CompactDeckPicker decks={crews.map(crew => ({ ...crew, heroCardId:crew.hero }))} selectedId={chosen?.id ?? ""} onSelect={setCrewId} disabled={working} />
-                <div className="online-lineup">
-                  {chosen?.cardIds.map((id) => (
-                    <img key={id} src={getCardImage(id)} alt="" />
-                  ))}
-                </div>
-                {joinable ? (
-                  <button
-                    className="online-primary"
-                    disabled={working}
-                    onClick={() => void openRoom(true)}
-                  >
-                    {working ? "Joining…" : "Join your friend"}
-                  </button>
-                ) : (
-                  <div className="online-room-options">
-                    <button
-                      className="online-primary"
-                      aria-label="Create friend fade"
-                      disabled={working}
-                      onClick={() => void openRoom()}
-                    >
-                      <Swords size={18} />
-                      {working ? "Opening the room…" : "Open a private room"}
-                    </button>
-                    <form
-                      onSubmit={(event) => {
-                        event.preventDefault();
-                        void openRoom(true);
-                      }}
-                    >
-                      <label htmlFor="online-code"><KeyRound size={14} /> Have a room code?</label>
-                      <div>
-                        <input
-                          id="online-code"
-                          autoComplete="off"
-                          spellCheck={false}
-                          maxLength={12}
-                          placeholder="12-character code"
-                          value={enteredCode}
-                          onChange={(event) =>
-                            setEnteredCode(event.target.value.toUpperCase())
-                          }
-                        />
-                        <button
-                          className="online-secondary"
-                          aria-label="Join room"
-                          disabled={working || !enteredCode}
-                        >
-                          Enter
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <h2>Bring a complete gang.</h2>
-                <p>Save ten unique cards you own to enter a friend fade.</p>
-                <Link className="online-primary" to="/game/decks">
-                  Build your gang
-                </Link>
-              </>
-            )}
-          </section>
-        )}
-        <div className="online-rules">
-          <span>BASE STRENGTH</span>
-          <span>ONE SQUABBLE EACH</span>
-          <span>75 SEC TURNS</span>
-          <p>
-            Cards hit the table face-up. Your hand stays private. Miss the timer
-            and you forfeit the fade. No currency or rank changes hands.
-          </p>
-        </div>
-        {!code && (
-          <section className="online-recent">
-            <div className="online-recent__heading">
-              <div><span>THE SPOTS</span><h2>Your rooms</h2></div>
-              <p>Every rivalry deserves a scene.</p>
-            </div>
-            {rooms.isError ? (
-              <p>
-                Could not load your rooms.{" "}
-                <button onClick={() => void rooms.refetch()}>Retry</button>
-              </p>
-            ) : rooms.isPending ? (
-              <p>Loading rooms…</p>
-            ) : !rooms.data?.rooms.length ? (
-              <div className="online-recent__empty">
-                <article className="online-recent__preview online-recent__preview--roof">
-                  <span>Tonight</span><strong>Moonline Rooftop</strong>
-                </article>
-                <article className="online-recent__preview online-recent__preview--wash">
-                  <span>After hours</span><strong>Spin Cycle</strong>
-                </article>
-                <article className="online-recent__preview online-recent__preview--rail">
-                  <span>Last train</span><strong>Highline Table</strong>
-                </article>
-              </div>
-            ) : (
-              <div className="online-recent__grid">
-                {rooms.data.rooms.map((item, index) => (
-                  <Link className={`online-recent__room online-recent__room--${index % 3}`} key={item.code} to={`/game/online/${item.code}`}>
-                    <span className="online-recent__status">
-                      {item.status === "active" ? "LIVE NOW" : item.status === "waiting" ? "OPEN ROOM" : "FINAL"}
-                    </span>
-                    <strong>{item.rival}</strong>
-                    <span>{item.code} <ArrowUpRight size={15} /></span>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-      </div>
+      <DeviceFrame label="Friendly Fades" testId="friendly-fades-device" className="ff-stage__device">
+        {errorBanner && <p className="sq-flash sq-flash--bad" role="alert">{errorBanner}</p>}
+        {screen}
+      </DeviceFrame>
     </main>
   );
 }

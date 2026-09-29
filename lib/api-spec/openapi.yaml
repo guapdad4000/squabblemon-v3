@@ -14,7 +14,148 @@ tags:
     description: Authenticated player progression
   - name: challenge
     description: Deterministic endless reward challenges
+  - name: events
+    description: Shared community feedback using the current game session
 paths:
+  /events/feedback:
+    get:
+      operationId: listEventFeedback
+      tags: [events]
+      summary: Read shared player feedback on the Events board
+      description: >-
+        Available to every signed-in player, including developers using the game.
+        Newest first, ordered by saved timestamp and post ID. Opaque keyset
+        cursors page through older posts without shifts when new posts arrive.
+        Responses contain only public in-game display names and post content.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
+        - name: cursor
+          in: query
+          schema: { type: string, minLength: 1, maxLength: 256 }
+      responses:
+        '200': { description: Shared feedback page, content: { application/json: { schema: { $ref: '#/components/schemas/EventFeedbackPage' } } } }
+        '400': { description: Invalid page size or cursor, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '401': { description: Game session expired or absent, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '503': { description: Feedback could not be loaded, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+    post:
+      operationId: submitEventFeedback
+      tags: [events]
+      summary: Save player feedback to the shared Events board
+      description: >-
+        Uses the existing game session, not a separate feedback account.
+        Author, public display name, receipt ID and timestamp are server-derived.
+        A retry ID belongs to one author and one trimmed category/message pair;
+        identical retries return the saved receipt, changed content returns 409.
+        At most 5 new posts per rolling 10 minutes and 20 per rolling 24 hours
+        per account. Retries of saved posts do not consume this allowance.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventFeedbackInput' }
+      responses:
+        '200': { description: Original saved receipt for an identical retry, content: { application/json: { schema: { $ref: '#/components/schemas/EventFeedbackReceipt' } } } }
+        '201': { description: Feedback saved, content: { application/json: { schema: { $ref: '#/components/schemas/EventFeedbackReceipt' } } } }
+        '400': { description: Invalid input or unsupported fields, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '401': { description: Game session expired or absent, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '403': { description: Cross-origin mutation rejected }
+        '409': { description: Retry ID already used for different content, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '413': { description: Request exceeds the JSON parser size limit, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+        '429':
+          description: Account posting limit reached
+          headers:
+            Retry-After:
+              description: Seconds until a new submission may be attempted
+              schema: { type: integer, minimum: 1 }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FeedbackError' }
+        '503': { description: Submission could not be confirmed; retry with the same retry ID, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+  /social:
+    get:
+      operationId: getSocialState
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/search:
+    get:
+      operationId: searchSocialPlayers
+      parameters: [{ name: query, in: query, required: true, schema: { type: string, minLength: 3, maxLength: 26 } }]
+      responses:
+        '200': { description: Up to twelve matching public usernames, content: { application/json: { schema: { $ref: '#/components/schemas/SocialSearchResult' } } } }
+  /social/username:
+    patch:
+      operationId: updateSocialUsername
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SocialUsernameInput' } } } }
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/match-opponent/{code}:
+    get:
+      operationId: getSocialMatchOpponent
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Stored human opponent for an authorized participant, content: { application/json: { schema: { $ref: '#/components/schemas/SocialMatchOpponent' } } } }
+  /social/lookup/{code}:
+    get:
+      operationId: lookupSocialPlayer
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Exact lookup, content: { application/json: { schema: { $ref: '#/components/schemas/SocialLookup' } } } }
+  /social/requests:
+    post:
+      operationId: sendHomieRequest
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SocialCodeInput' } } } }
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/requests/{id}/respond:
+    post:
+      operationId: respondHomieRequest
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SocialResponseInput' } } } }
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/homies/{code}/remove:
+    post:
+      operationId: removeHomie
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/blocks:
+    post:
+      operationId: blockSocialPlayer
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SocialCodeInput' } } } }
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/blocks/{code}/remove:
+    post:
+      operationId: unblockSocialPlayer
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Social state, content: { application/json: { schema: { $ref: '#/components/schemas/SocialState' } } } }
+  /social/invitations:
+    post:
+      operationId: sendFadeInvitation
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/FadeInvitationInput' } } } }
+      responses:
+        '200': { description: Invitation, content: { application/json: { schema: { $ref: '#/components/schemas/SocialInvitation' } } } }
+  /social/invitations/{id}:
+    get:
+      operationId: getFadeInvitation
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Invitation, content: { application/json: { schema: { $ref: '#/components/schemas/SocialInvitation' } } } }
+  /social/invitations/{id}/respond:
+    post:
+      operationId: respondFadeInvitation
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/FadeInvitationResponseInput' } } } }
+      responses:
+        '200': { description: Invitation, content: { application/json: { schema: { $ref: '#/components/schemas/SocialInvitation' } } } }
   /player/challenges/runs:
     post:
       operationId: startChallengeRun
@@ -780,6 +921,157 @@ components:
       type: http
       scheme: bearer
   schemas:
+    EventFeedbackCategory:
+      type: string
+      enum: [bug, suggestion, general]
+    EventFeedbackInput:
+      type: object
+      additionalProperties: false
+      required: [category, message, retryId]
+      properties:
+        category: { $ref: '#/components/schemas/EventFeedbackCategory' }
+        message:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Plain text only. Trimmed by the server; whitespace-only input is rejected.
+        retryId:
+          type: string
+          format: uuid
+          description: Client-created identifier reused for retries of this submission.
+    EventFeedbackPost:
+      type: object
+      additionalProperties: false
+      required: [id, displayName, category, message, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        displayName: { type: string, description: Public in-game name at the time of posting, never an account ID or email }
+        category: { $ref: '#/components/schemas/EventFeedbackCategory' }
+        message: { type: string, minLength: 1, maxLength: 2000 }
+        createdAt: { type: string, format: date-time }
+    EventFeedbackPage:
+      type: object
+      additionalProperties: false
+      required: [posts, nextCursor]
+      properties:
+        posts:
+          type: array
+          maxItems: 50
+          items: { $ref: '#/components/schemas/EventFeedbackPost' }
+        nextCursor: { type: [string, 'null'], maxLength: 256 }
+    EventFeedbackReceipt:
+      type: object
+      additionalProperties: false
+      required: [post, receiptId, replayed]
+      properties:
+        post: { $ref: '#/components/schemas/EventFeedbackPost' }
+        receiptId:
+          type: string
+          format: uuid
+          description: The saved post ID; unchanged on retries.
+        replayed: { type: boolean }
+    FeedbackError:
+      type: object
+      additionalProperties: false
+      required: [error, code]
+      properties:
+        error: { type: string }
+        code: { type: string }
+        retryAfterSeconds: { type: integer, minimum: 1 }
+    SocialPlayer:
+      type: object
+      required: [friendCode, displayName, avatarKey, username, lastActiveAt]
+      properties:
+        username: { type: string }
+        lastActiveAt: { type: string, nullable: true }
+        friendCode: { type: string }
+        displayName: { type: string }
+        avatarKey: { type: string }
+    SocialRequest:
+      type: object
+      required: [id, player, createdAt]
+      properties:
+        id: { type: string }
+        player: { $ref: '#/components/schemas/SocialPlayer' }
+        createdAt: { type: string }
+    SocialInvitation:
+      type: object
+      required: [id, roomCode, direction, player, status, expiresAt]
+      properties:
+        id: { type: string }
+        roomCode: { type: string }
+        direction: { type: string, enum: [incoming, outgoing] }
+        player: { $ref: '#/components/schemas/SocialPlayer' }
+        status: { type: string, enum: [pending, accepted, declined, cancelled, expired, unavailable, closed] }
+        expiresAt: { type: string }
+    SocialState:
+      type: object
+      required: [self, homies, incomingRequests, outgoingRequests, blocked, invitations, counts]
+      properties:
+        self: { $ref: '#/components/schemas/SocialPlayer' }
+        homies: { type: array, items: { $ref: '#/components/schemas/SocialPlayer' } }
+        incomingRequests: { type: array, items: { $ref: '#/components/schemas/SocialRequest' } }
+        outgoingRequests: { type: array, items: { $ref: '#/components/schemas/SocialRequest' } }
+        blocked: { type: array, items: { $ref: '#/components/schemas/SocialPlayer' } }
+        invitations: { type: array, items: { $ref: '#/components/schemas/SocialInvitation' } }
+        counts:
+          type: object
+          required: [requests, invitations]
+          properties:
+            requests: { type: integer }
+            invitations: { type: integer }
+    SocialLookup:
+      type: object
+      required: [player, relationship, requestId]
+      properties:
+        requestId: { type: string, nullable: true }
+        player: { $ref: '#/components/schemas/SocialPlayer' }
+        relationship: { type: string, enum: [none, incoming, outgoing, homie, blocked, self] }
+    SocialSearchResult:
+      type: object
+      required: [players]
+      properties:
+        players: { type: array, maxItems: 12, items: { $ref: '#/components/schemas/SocialLookup' } }
+    SocialMatchOpponent:
+      type: object
+      required: [opponent]
+      properties:
+        opponent:
+          allOf: [{ $ref: '#/components/schemas/SocialLookup' }]
+          nullable: true
+    SocialUsernameInput:
+      type: object
+      additionalProperties: false
+      required: [username]
+      properties:
+        username: { type: string, minLength: 1, maxLength: 100 }
+    SocialCodeInput:
+      type: object
+      additionalProperties: false
+      required: [friendCode]
+      properties:
+        friendCode: { type: string, minLength: 1, maxLength: 32 }
+    SocialResponseInput:
+      type: object
+      additionalProperties: false
+      required: [action]
+      properties:
+        action: { type: string, enum: [accept, decline, cancel] }
+    FadeInvitationInput:
+      type: object
+      additionalProperties: false
+      required: [friendCode, deckId, requestId]
+      properties:
+        friendCode: { type: string, minLength: 1, maxLength: 32 }
+        deckId: { type: string, minLength: 1, maxLength: 100 }
+        requestId: { type: string, format: uuid }
+    FadeInvitationResponseInput:
+      type: object
+      additionalProperties: false
+      required: [action]
+      properties:
+        action: { type: string, enum: [accept, decline, cancel] }
+        deckId: { type: string, minLength: 1, maxLength: 100 }
     PaymentCheckoutInput:
       type: object
       additionalProperties: false

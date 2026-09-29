@@ -35,9 +35,9 @@ Use Replit's connected GitHub API for this project's release operations; do not 
 
 Use file-backed JSON for complete Git tree comparisons. Do not rely on tab separators or large shell output surviving tool transport, and sanity-check an unexpectedly empty diff.
 
-**Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies. A large JSON tree listing also arrived as a truncated tail despite a raised shell output budget.
+**Why:** Removed tab delimiters made a parsed tree comparison falsely report no differences, which hid unpublished dependencies. A large JSON tree listing also arrived as a truncated tail despite a raised shell output budget. Returning a complete GitHub tree across the impure boundary can exceed the execution ledger's per-entry limit even when console output is filtered.
 
-**How to apply:** Parse Git's NUL-delimited output inside the shell process, save full trees to temporary JSON files, and return only the comparison summary. Verify entry counts and compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.
+**How to apply:** Parse Git's NUL-delimited output inside the shell process, save full trees to temporary JSON files, and return only the comparison summary. For large API trees, write the file inside the impure function and return only its path, commit/tree hashes, and entry count. Verify entry counts and compare the complete candidate application tree against the tested workspace, not just the selected changed files, before updating a remote branch.
 
 If Git fetch succeeds but HTTPS push rejects the workspace credential, transfer the verified release through the connected GitHub API: upload missing binary blobs, create a tree on the current remote base, and require its SHA to equal the tested local tree before creating the remote-parent commit. Advance `main` with `force: false`; keep the original workspace branch intact and check out the newly fetched remote commit.
 

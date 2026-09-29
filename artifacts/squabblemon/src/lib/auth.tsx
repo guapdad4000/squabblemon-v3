@@ -6,20 +6,17 @@ import {
   type ClerkProviderProps,
 } from '@clerk/react';
 import { useLocation } from 'wouter';
+import { basePath } from './routing';
+import { safeGameDestination } from './socialDestinations';
 
 const e2eAuthEnabled = import.meta.env.DEV && import.meta.env.VITE_E2E_AUTH === 'true';
 const storageKey = 'squabblemon_e2e_user';
 const afterSignInKey = 'squabblemon_after_sign_in';
 
 function getAfterSignIn(): string {
-  const intended = sessionStorage.getItem(afterSignInKey);
-  if (!intended) return '/game';
   try {
-    const parsed = new URL(intended, window.location.origin);
-    const isGamePath = parsed.pathname === '/game' || parsed.pathname.startsWith('/game/');
-    return parsed.origin === window.location.origin && isGamePath
-      ? `${parsed.pathname}${parsed.search}${parsed.hash}`
-      : '/game';
+    const intended = sessionStorage.getItem(afterSignInKey);
+    return intended ? safeGameDestination(intended, basePath, window.location.origin) ?? '/game' : '/game';
   } catch {
     return '/game';
   }
@@ -32,7 +29,7 @@ function consumeAfterSignIn(): string {
 }
 
 function clearAfterSignIn() {
-  sessionStorage.removeItem(afterSignInKey);
+  try { sessionStorage.removeItem(afterSignInKey); } catch { /* Optional recovery storage. */ }
 }
 
 type AuthSnapshot = { isLoaded: boolean; isSignedIn: boolean };

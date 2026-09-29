@@ -8,9 +8,20 @@ const HISTORY_LIMIT = 96;
 const QUEUE_LIMIT = 64;
 
 let battleActive = 0;
+const battleListeners = new Set<() => void>();
 /** Background art warmup yields to an active battle; battle-critical art is warmed before it starts. */
-export function setBattleActive(active: boolean) { battleActive = Math.max(0, battleActive + (active ? 1 : -1)); if (!battleActive) drain(); }
+export function setBattleActive(active: boolean) {
+  const wasActive = battleActive > 0;
+  battleActive = Math.max(0, battleActive + (active ? 1 : -1));
+  if (!battleActive) drain();
+  if (wasActive !== (battleActive > 0)) for (const listener of battleListeners) listener();
+}
 export const isBattleActive = () => battleActive > 0;
+/** Menu polling reacts only to battle entry/exit, never to battle frames. */
+export function subscribeBattleActive(listener: () => void) {
+  battleListeners.add(listener);
+  return () => { battleListeners.delete(listener); };
+}
 
 function drain() {
   while (active < (battleActive ? 1 : CONCURRENCY) && pending.length) {

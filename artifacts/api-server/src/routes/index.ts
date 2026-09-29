@@ -15,6 +15,8 @@ import accountRewardsRouter from './accountRewards';
 import starterMythicRouter from './starterMythic';
 import mailRouter from './mail';
 import notificationsRouter from './notifications';
+import socialRouter from './social';
+import eventFeedbackRouter from './eventFeedback';
 
 const router: IRouter = Router();
 
@@ -32,6 +34,8 @@ router.use(accountRewardsRouter);
 router.use(starterMythicRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);
+router.use(eventFeedbackRouter);
 router.use(stockzRouter);
+router.use(socialRouter);
 
 export default router;

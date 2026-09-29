@@ -33,4 +33,12 @@
 - [Collection header intent](collection-header-intent.md) — Keep title left and owned count right; separate anchors let the count animate without moving the title.
 - [Mobile grid scroll containment](mobile-grid-scroll-containment.md) — Fixed-width grid tracks can expand a flex child beyond its viewport despite overflow-x:auto; constrain the grid's width.
 - [Campaign solver budget](campaign-solver-budget.md) — Search strategy order, legal crews, per-battle limits, and whole-route deadlines are distinct constraints.
-- [Nested Vite artwork paths](nested-vite-artwork-paths.md) — HTML asset rewriting and SPA fallback can hide broken images behind HTTP 200; verify image MIME on nested previews.
+- [Nested Vite paths](nested-vite-artwork-paths.md) — Root document URLs need a trailing slash; asset success needs image MIME/decode, not just HTTP 200.
+- [Service worker caching](service-worker-caching.md) — Cache-first only hashed build files; unversioned art revalidates; never cache API.
+- [Card buff constraints](card-buff-constraints.md) — Hands ≤ cost+1, starter cards drive tutorial lines, bump balance versions on every card change.
+- [GitHub proxy release staging](github-proxy-release-staging.md) — CodeExecution shell runs outside the workspace; use explicit cwd and tolerate normalized whitespace in git index output.
+- [Balance evidence](balance-evidence.md) — Compare fixed crews and schedules; composition probes and bot scores are not causal card strength or player win rates.
+- [Battle style invalidation](battle-style-invalidation.md) — No ancestor :has() on the arena and no per-frame vars on <html>; both restyle the whole battle.
+- [Social load evidence](social-load-evidence.md) — Include pool/reconnect effects; neither local throughput nor rate-capped runtime samples establishes hosted capacity.
+- [Social identity compatibility](social-identity-compatibility.md) — Replacing visible friend codes must not invalidate existing contacts or previously shared links.
+- [Render-test environment](render-test-environment.md) — Keep Vite environment emulation in the Node rendering harness, not production routing or authentication.

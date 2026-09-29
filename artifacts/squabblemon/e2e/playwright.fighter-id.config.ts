@@ -4,7 +4,7 @@ const port = 4188;
 
 export default defineConfig({
   testDir: '.',
-  testMatch: 'fighter-id.spec.ts',
+  testMatch: ['fighter-id.spec.ts', 'homies.spec.ts', 'homies-guards.spec.ts'],
   fullyParallel: false,
   workers: 1,
   timeout: 45_000,
@@ -22,7 +22,7 @@ export default defineConfig({
   webServer: {
     command: `PORT=${port} BASE_PATH=/squabblemon pnpm exec vite build --config e2e/vite.fighter-id.config.ts && PORT=${port} BASE_PATH=/squabblemon pnpm exec vite preview --config e2e/vite.fighter-id.config.ts`,
     cwd: '..',
-    url: `http://127.0.0.1:${port}/squabblemon`,
+    url: `http://127.0.0.1:${port}/squabblemon/`,
     reuseExistingServer: false,
     timeout: 120_000,
   },

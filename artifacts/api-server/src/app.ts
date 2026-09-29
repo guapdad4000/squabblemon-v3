@@ -13,6 +13,7 @@ import {
 
 import { campaignLogProps, requestId } from "./lib/requestContext";
 import { requestCompletionMessage } from "./lib/requestCompletionMessage";
+import { requestLogUrl } from "./lib/requestLogUrl";
 import { paymentWebhook } from "./routes/payments";
 
 function productionAuthMiddleware(): RequestHandler {
@@ -42,7 +43,7 @@ export function createApp(
         return {
           id: req.id,
           method: req.method,
-          url: req.url?.split("?")[0],
+          url: requestLogUrl(req.url),
         };
       },
       res(res) {
@@ -96,6 +97,16 @@ export function createApp(
   app.use(requireSameOrigin);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  // Body-parser errors otherwise reach Express's default handler, which may
+  // print a SyntaxError containing the player's submitted text.
+  app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.path !== "/api/events/feedback") { next(err); return; }
+    const status = typeof err === "object" && err !== null && "status" in err && err.status === 413 ? 413 : 400;
+    res.status(status).json({
+      error: status === 413 ? "Feedback request is too large." : "Invalid feedback request.",
+      code: status === 413 ? "FEEDBACK_TOO_LARGE" : "INVALID_FEEDBACK",
+    });
+  });
   app.use(authMiddleware);
 
   app.use("/api", router);

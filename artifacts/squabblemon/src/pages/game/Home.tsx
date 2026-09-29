@@ -26,7 +26,7 @@ import { playVoiceLine, stopSoundEffect } from '../../lib/sfx';
 
 const stations = [
   { id: 'mail', label: 'The mail door', short: 'Mail', icon: Briefcase, title: 'Special delivery.', detail: 'Letters, updates, and gifts from your people.', action: 'Open your mail', href: '' },
-  { id: 'events', label: 'The bulletin board', short: 'Events', icon: CalendarDays, title: 'What’s happening on the block?', detail: 'Live events, upcoming dates, roadmaps, and messages from the dev room.', action: 'Read the board', href: '' },
+  { id: 'events', label: 'The bulletin board', short: 'Events', icon: CalendarDays, title: 'What’s happening on the block?', detail: 'What you can play right now, what is planned, dev notes, and a place to send feedback to the devs.', action: 'Read the board', href: '' },
   { id: 'growth', label: 'Buddy’s plants', short: 'Growth Lab', icon: Sprout, title: 'Buddy’s Growth Lab', detail: 'Helping you get them hands holistically.', action: 'Enter Growth Lab', href: '' },
   { id: 'arcade', label: 'The arcade machine', short: 'Fadecade', icon: Tv, title: 'Got next?', detail: 'Straight to the Back, Stockz, and a whole room of challenges.', action: 'Enter the Fadecade', href: '/game/challenges' },
   { id: 'inventory', label: 'Your inventory bag', short: 'Bag', icon: Briefcase, title: 'Keep it in the bag.', detail: 'Your Clout, tickets, Style Shards, and collection. All accounted for.', action: 'Open your bag', href: '/game/inventory' },
@@ -119,6 +119,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const arcadeProgress = { status: arcadeRuns.isError ? 'unavailable' : !Array.isArray(arcadeRuns.data) ? 'loading' : arcadeRuns.data.some(run => run.status === 'active') ? 'continue' : 'new', wins: Array.isArray(arcadeRuns.data) ? arcadeRuns.data.find(run => run.status === 'active')?.wins ?? 0 : 0 };
   useEffect(() => { sendScene(frame, { type: 'arcade', ...arcadeProgress }); }, [arcadeProgress.status, arcadeProgress.wins]);
   const markers = useRef(new Map<string, HTMLButtonElement>());
+  const pendingMarkerFocus = useRef<string | null>(null);
   const latestAnchors = useRef<NonNullable<SceneMessage['anchors']>>([]);
   const markerLayer = useRef<HTMLElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
@@ -177,8 +178,22 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
     previousView.current = view;
     if (previous === view) return;
     if (view !== 'room') backButton.current?.focus({ preventScroll: true });
-    else if (previous !== 'room') markers.current.get(previous)?.focus({ preventScroll: true });
+    else if (previous !== 'room') {
+      const marker = markers.current.get(previous);
+      marker?.focus({ preventScroll: true });
+      // Deep links (e.g. ?notice=events) open before markers are placed; hidden markers cannot take focus yet.
+      pendingMarkerFocus.current = marker && document.activeElement !== marker ? previous : null;
+    }
   }, [view]);
+  useEffect(() => {
+    const id = pendingMarkerFocus.current;
+    if (!id || !markersPlaced || view !== 'room') return;
+    pendingMarkerFocus.current = null;
+    const active = document.activeElement;
+    // Only restore when nothing else has claimed focus since the dismissal.
+    if (active && active !== document.body && active !== document.documentElement) return;
+    markers.current.get(id)?.focus({ preventScroll: true });
+  }, [markersPlaced, view]);
   useEffect(() => {
     sendScene(frame, { type: 'light', night });
     try { localStorage.setItem('squabblemon_safehouse_lighting', night ? 'night' : 'day'); } catch { /* Preferences are optional. */ }
@@ -265,7 +280,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       </header>
       <nav ref={markerLayer} className="safehouse-room-markers" data-guide-fallback={Boolean(onGuideComplete && !markersPlaced)} hidden={view !== 'room' || (!sceneReady && !onGuideComplete && sceneFallback === 'none')} aria-label="Explore the safehouse">
         {stations.map(item => <button key={item.id} type="button" ref={node => { if (node) markers.current.set(item.id, node); else markers.current.delete(item.id); }}
-          aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
+          data-station={item.id} aria-label={`Explore ${item.label.toLowerCase()}`} onClick={() => explore(item.id)}>
           <item.icon size={16} aria-hidden="true" /><span>{item.short}{item.id !== 'events' && <Attention section={item.id === 'arcade' ? 'challenges' : item.id === 'inventory' ? 'bag' : item.id === 'profile' ? 'style' : item.id} />}</span>{item.id === 'mail' && unreadMail > 0 && <b className="mail-count" aria-label={`${unreadMail} unread`}>{unreadMail}</b>}{item.id === 'events' && bulletinUnread && <b className="mail-count" aria-label="New bulletin posts">NEW</b>}
         </button>)}
       </nav>

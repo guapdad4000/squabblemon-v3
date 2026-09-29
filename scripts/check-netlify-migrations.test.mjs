@@ -16,7 +16,21 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 11);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 17);
+});
+
+test('social tables and active invitation uniqueness require native migration coverage', t => {
+  const root = fixture(t);
+  const file = path.join(root, 'netlify/database/migrations/202610020001_social/migration.sql');
+  writeFileSync(file, readFileSync(file, 'utf8').replace(/CREATE UNIQUE INDEX IF NOT EXISTS social_invite_active_pair[^;]+;/, ''));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /social_invite_active_pair/);
+});
+
+test('existing targeted room reservation backfill requires native coverage', t => {
+  const root = fixture(t);
+  const file = path.join(root, 'netlify/database/migrations/202610020001_social/migration.sql');
+  writeFileSync(file, readFileSync(file, 'utf8').replace(/UPDATE online_rooms SET invite_only[^;]+;/, ''));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /social reservation backfill/);
 });
 
 test('omitting a required table from native history blocks release', t => {
@@ -91,4 +105,48 @@ test('unknown development ALTER statements fail closed', t => {
   writeFileSync(path.join(root, 'lib/db/migrations/20261002_type.sql'),
     'ALTER TABLE player_profiles ALTER COLUMN level TYPE text;');
   assert.throws(() => checkNetlifyMigrationCoverage(root), /Unsupported development ALTER TABLE/);
+});
+
+const feedbackMigration = 'netlify/database/migrations/202610010005_event-feedback/migration.sql';
+
+test('shared Events feedback needs its native table and per-author retry uniqueness', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  writeFileSync(file, original.replace(
+    /CREATE UNIQUE INDEX IF NOT EXISTS event_feedback_author_retry_unique[^;]+;/, ''
+  ));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /index event_feedback_author_retry_unique/);
+  writeFileSync(file, '');
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /table event_feedback/);
+});
+
+test('feedback category and bounded-message checks inside CREATE TABLE cannot be omitted or weakened', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  writeFileSync(file, original.replace(/^.*CONSTRAINT event_feedback_message_check.*\n/m, ''));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /constraint event_feedback.event_feedback_message_check/);
+  writeFileSync(file, original.replace("category IN ('bug', 'suggestion', 'general')", "category IN ('bug', 'suggestion', 'general', 'other')"));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /constraint event_feedback.event_feedback_category_check/);
+});
+
+test('feedback keyset pagination requires matching millisecond timestamp precision', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  writeFileSync(file, original.replace('timestamptz(3)', 'timestamptz'));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /column definition event_feedback.created_at/);
+  writeFileSync(file, original.replace('timestamptz(3)', 'timestamp(3) with time zone'));
+  assert.doesNotThrow(() => checkNetlifyMigrationCoverage(root));
+});
+
+test('feedback listing and account-limit indexes require matching ordering', t => {
+  const root = fixture(t);
+  const file = path.join(root, feedbackMigration);
+  const original = readFileSync(file, 'utf8');
+  writeFileSync(file, original.replace('event_feedback(created_at DESC, id DESC)', 'event_feedback(created_at ASC, id DESC)'));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /index event_feedback_feed_order/);
+  writeFileSync(file, original.replace(/CREATE INDEX IF NOT EXISTS event_feedback_author_time[^;]+;/, ''));
+  assert.throws(() => checkNetlifyMigrationCoverage(root), /index event_feedback_author_time/);
 });

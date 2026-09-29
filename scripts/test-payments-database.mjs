@@ -9,6 +9,10 @@ import { assertCampaignDatabaseTarget } from "./database-safety.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const mailOnly = process.argv.includes('--mail');
+const socialBrowser = process.argv.includes('--social-browser');
+const socialOnly = process.argv.includes('--social') || socialBrowser;
+const socialLoad = process.argv.includes('--social-load');
+if (socialLoad && (mailOnly || socialOnly)) throw new Error("--social-load cannot be combined with another test mode.");
 process.chdir(root);
 let ownedDirectory;
 let pgBin;
@@ -20,6 +24,9 @@ const environment = {
   PAYMENT_REQUIRE_POSTGRES: "1",
   DATABASE_POOL_MAX: "5",
 };
+// Sampling is strictly confined to the guarded, fresh-cluster social child.
+if (socialOnly && !socialBrowser) environment.HOMIES_DIAGNOSTICS_SAMPLE_RATE = "1";
+if (socialLoad) environment.DATABASE_POOL_MAX = "50";
 
 function discoverPostgres() {
   const directories = (process.env.PATH ?? "").split(delimiter);
@@ -78,7 +85,7 @@ process.on("SIGTERM", interrupt);
 
 try {
   const provided = process.env.DATABASE_URL?.trim();
-  if (mailOnly && provided) throw new Error('Mail broadcast tests require a fresh owned cluster. Unset DATABASE_URL.');
+  if ((mailOnly || socialOnly || socialLoad) && "DATABASE_URL" in process.env) throw new Error('These tests require a fresh owned cluster. Unset DATABASE_URL.');
   if (provided) {
     const target = assertCampaignDatabaseTarget(process.env);
     if (!target.local) throw new Error("Payment database tests refuse remote databases.");
@@ -87,13 +94,13 @@ try {
   } else {
     pgBin = discoverPostgres();
     if (process.getuid?.() === 0) throw new Error("Run owned PostgreSQL payment tests as an unprivileged user, not root.");
-    ownedDirectory = mkdtempSync(join(tmpdir(), "payment-tests-pg-"));
+    ownedDirectory = mkdtempSync(join(tmpdir(), socialLoad ? "homies-load-pg-" : "payment-tests-pg-"));
     const data = join(ownedDirectory, "data");
     const port = await unusedLoopbackPort();
     await run(join(pgBin, "initdb"), ["-D", data, "-A", "trust", "-U", "postgres", "--no-locale", "--encoding=UTF8"], "Owned PostgreSQL initialization");
     await run(join(pgBin, "pg_ctl"), [
       "-D", data, "-l", join(ownedDirectory, "postgres.log"),
-      "-o", `-h 127.0.0.1 -p ${port} -k ${ownedDirectory}`,
+      "-o", `-h 127.0.0.1 -p ${port} -k ${ownedDirectory}${socialLoad ? " -c max_connections=100" : ""}`,
       "-w", "-t", "30", "start",
     ], "Owned loopback PostgreSQL startup");
     environment.DATABASE_URL = `postgresql://postgres@127.0.0.1:${port}/postgres`;
@@ -105,8 +112,11 @@ try {
     ], "Fresh payment test schema creation");
     console.log("Using fresh owned native PostgreSQL with independent connections; no external database is modified.");
   }
-  const args = ["--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1",
-    ...(mailOnly ? ['src/lib/mail.test.ts'] : ["src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"])];
+  const args = socialLoad ? ["--filter", "@workspace/api-server", "exec", "tsx", "src/tools/homies-load.ts", ...process.argv.slice(2).filter(arg => arg !== "--social-load")] :
+    socialBrowser ? ["--filter", "@workspace/squabblemon", "exec", "tsx", "e2e/verify-homies.ts"] : ["--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1",
+    ...(socialOnly ? ['src/lib/social.test.ts', 'src/lib/onlineMatches.test.ts', 'src/lib/rankedMatches.test.ts', 'src/lib/homiesDiagnostics.native.test.ts'] : mailOnly ? ['src/lib/mail.test.ts'] : ["src/lib/payments/provider.test.ts", "src/lib/payments/service.test.ts", "src/lib/payments/geography.test.ts"])];
+  if (socialOnly) environment.SOCIAL_TEST_OWNED = '1';
+  if (socialLoad) environment.SOCIAL_LOAD_OWNED = '1';
   if (mailOnly) environment.MAIL_TEST_OWNED = '1';
   if (process.env.npm_execpath) {
     await run(process.execPath, [process.env.npm_execpath, ...args], "Payment database tests", true);

@@ -7,3 +7,5 @@ export * from "./playerStory";
 export * from './onlineRooms';
 export * from "./challengeRuns";
 export * from './paymentOrders';
+export * from './social';
+export * from './eventFeedback';

@@ -13,6 +13,8 @@
     "payments:ops": "tsx src/tools/payment-ops.ts",
     "mail:ops": "tsx src/tools/mail-ops.ts",
     "test:mail": "node ../../scripts/test-payments-database.mjs --mail",
+    "test:social": "node ../../scripts/test-api-database.mjs social",
+    "test:events-feedback": "node ../../scripts/test-events-feedback-database.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:db": "node ../../scripts/require-db-tests.mjs"
   },
