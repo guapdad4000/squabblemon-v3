@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { playTutorialSequence, rookieRoadCues, tutorialClipsForText, tutorialScript } from './tutorialVoice';
 import clips from './tutorialVoiceClips.json';
 import manifest from '../../reference/dr-fade-tutorial-audio.json';
@@ -52,11 +53,32 @@ test('all supplied lines have audio assets and alternate cards/costs cannot anno
   assert.deepEqual(tutorialClipsForText(tutorialScript('welcome', 'welcome-reassurance')), ['welcome', 'welcome-reassurance']);
 });
 
-test('expanded recording sections decode completely in desktop Ogg and phone AAC', () => {
-  for (const take of manifest.clips.filter(clip => clip.source === 'expanded')) {
+test('expanded recordings match decoded exports and decode completely when tools are available', t => {
+  // This digest was recorded after ffprobe/ffmpeg verified every expanded take.
+  // Netlify does not ship those binaries, so its build must reject any changed
+  // audio rather than silently skipping the release's decode verification.
+  const verifiedAudioSha256 = '60268505073187e5dd4cc4a7501c4a45eb396bb82350eaff97fc93bd0b8e9a03';
+  const digest = createHash('sha256');
+  const expanded = manifest.clips.filter(clip => clip.source === 'expanded');
+  for (const take of expanded) {
+    assert.ok(clips.some(clip => clip.id === take.id), take.id);
+    for (const extension of ['ogg', 'm4a']) {
+      const filename = `${take.id}.${extension}`;
+      const file = new URL(`../../public/audio/voice/dr-fade/tutorial/${filename}`, import.meta.url);
+      digest.update(`${filename}\0`, 'utf8');
+      digest.update(readFileSync(file));
+    }
+  }
+  assert.equal(digest.digest('hex'), verifiedAudioSha256,
+    'An expanded audio export changed. Decode every Ogg/AAC take locally before updating the verified digest.');
+
+  if (spawnSync('ffprobe', ['-version'], { stdio: 'ignore' }).status !== 0
+    || spawnSync('ffmpeg', ['-version'], { stdio: 'ignore' }).status !== 0) {
+    t.diagnostic('ffprobe/ffmpeg unavailable; all expanded audio matches the previously decoded exports.');
+    return;
+  }
+  for (const take of expanded) {
     const duration = take.end - take.start;
-    const metadata = clips.find(clip => clip.id === take.id)!;
-    assert.ok(metadata, take.id);
     for (const extension of ['ogg', 'm4a']) {
       const file = new URL(`../../public/audio/voice/dr-fade/tutorial/${take.id}.${extension}`, import.meta.url);
       const decoded = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file.pathname], { encoding: 'utf8' }).trim());
