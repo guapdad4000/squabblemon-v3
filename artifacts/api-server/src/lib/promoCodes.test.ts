@@ -6,17 +6,18 @@ import { catalogCardById, STORY_ONLY_CARD_IDS, validateSavedDeck } from '@worksp
 import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
 import { getStoryNode } from '@workspace/squabblemon-engine/story';
 import { isStreetPackCard } from './collectionEconomy';
-import { findPromoCode, isDevelopmentPromoCodeEnabled } from './promoCodes';
+import { findPromoCode, isDevelopmentPromoCodeEnabled, PROMO_CODES } from './promoCodes';
 
 const testerGrants = {
   DEVBLUEGANG: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'],
   DEVREDGANG: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'],
   DEVWITCHMONKEY: ['wicked-witch', 'flying-monkeys'],
+  TRIPLEOGDEV: ['triple-og-blue', 'triple-og-red', 'initiation', 'block-spinner', 'look-out'],
 } as const;
 
-test('tester codes grant exactly their catalog characters with no currency in development and production', () => {
+test('tester codes grant exactly their catalog cards with no currency in development and production', () => {
   const allIds = Object.values(testerGrants).flat();
-  assert.equal(new Set(allIds).size, 14);
+  assert.equal(new Set(allIds).size, 19);
   for (const [code, cardIds] of Object.entries(testerGrants)) {
     const expected = { code, packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: [...cardIds] };
     for (const environment of ['development', 'production']) {
@@ -25,7 +26,7 @@ test('tester codes grant exactly their catalog characters with no currency in de
     assert.equal(new Set(cardIds).size, cardIds.length, code);
     for (const id of cardIds) {
       assert.equal(catalogCardById[id]?.catalogId, id, id);
-      assert.equal(catalogCardById[id]?.kind, 'character', id);
+      assert.equal(catalogCardById[id]?.kind, id === 'initiation' ? 'support' : 'character', id);
     }
   }
   for (const input of ['DEV BLUEGANG', 'DEVREDGANG!', 'DEVWITCHMONKEY EXTRA', 'DEVBLUEGANG\u0000', '__proto__']) {
@@ -154,6 +155,29 @@ test('promo redemption persists rewards once and works with the real economy', {
     assert.equal((await profile(id)).softCurrency, 700);
   });
 
+  await t.test('rejects unknown reward cards without consuming the code or changing the wallet', async () => {
+    const id = await createPlayer();
+    const cardIds = PROMO_CODES.TRIPLEOGDEV.cardIds;
+    try {
+      PROMO_CODES.TRIPLEOGDEV.cardIds = ['triple-og-blue', 'missing-promo-card'];
+      const result = await post({ code: 'TRIPLEOGDEV' }, id);
+      assert.equal(result.status, 500);
+      assert.equal(result.body.error, 'Promo code reward is misconfigured.');
+      assert.equal((await claims(id)).length, 0);
+      const current = await profile(id);
+      assert.deepEqual(current.ownedCardIds, ['cornball']);
+      assert.equal(current.packTickets, 3);
+      assert.equal(current.softCurrency, 700);
+      assert.equal(current.styleShards, 20);
+    } finally {
+      PROMO_CODES.TRIPLEOGDEV.cardIds = cardIds;
+    }
+    const retry = await post({ code: 'tripleogdev' }, id);
+    assert.equal(retry.status, 200);
+    assert.equal(retry.body.alreadyRedeemed, false);
+    assert.deepEqual(retry.body.receipt.cardIds, testerGrants.TRIPLEOGDEV);
+  });
+
   await t.test('each tester code redeems through the production HTTP route exactly once per account', async () => {
     const previousEnvironment = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
@@ -198,7 +222,7 @@ test('promo redemption persists rewards once and works with the real economy', {
       discoveredCardIds: ['cornball', 'ganger-blue', 'blue-side-2'],
       cardProgression: { 'ganger-blue': { xp: 300, level: 3, moveTier: 1 }, 'blue-side-2': { xp: 300, level: 3, moveTier: 1 } },
     });
-    const requests = ['DEVBLUEGANG', 'DEVBLUEGANG', 'DEVREDGANG', 'DEVREDGANG', 'DEVWITCHMONKEY', 'DEVWITCHMONKEY'];
+    const requests = Object.keys(testerGrants).flatMap(code => [code, code]);
     const results = await Promise.all(requests.map(code => redeemPromoCode(id, code)));
     for (const code of Object.keys(testerGrants)) {
       assert.equal(results.filter(result => result.receipt.code === code && !result.alreadyRedeemed).length, 1, code);
@@ -207,7 +231,7 @@ test('promo redemption persists rewards once and works with the real economy', {
     const current = await profile(id);
     const allIds = Object.values(testerGrants).flat();
     assert.deepEqual(new Set(current.ownedCardIds), new Set(['cornball', ...allIds]));
-    assert.equal(current.ownedCardIds.length, 15);
+    assert.equal(current.ownedCardIds.length, 20);
     assert.deepEqual(current.cardProgression['ganger-blue'], { xp: 300, level: 3, moveTier: 1 });
     assert.deepEqual(current.cardProgression['blue-side-2'], { xp: 300, level: 3, moveTier: 1 });
     assert.deepEqual(current.cardProgression['wicked-witch'], { xp: 0, level: 1, moveTier: 0 });

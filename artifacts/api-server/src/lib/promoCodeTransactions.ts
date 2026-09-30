@@ -19,7 +19,12 @@ export async function redeemPromoCode(userId: string, input: string) {
   const reward = findPromoCode(input);
   if (!reward) throw new EconomyTransactionError(400, 'This promo code is not available. Check the code and try again.');
   const cardIds = reward.cardIds ?? [];
-  if (cardIds.some(cardId => catalogCardById[cardId]?.kind !== 'character')) {
+  // Promo rewards may include support cards as well as characters. Reject
+  // unknown/non-catalog rewards, not legitimate collection card kinds.
+  if (cardIds.some(cardId => {
+    const kind = catalogCardById[cardId]?.kind;
+    return kind !== 'character' && kind !== 'support';
+  })) {
     throw new EconomyTransactionError(500, 'Promo code reward is misconfigured.');
   }
 

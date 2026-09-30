@@ -143,7 +143,7 @@ export function ProfileSettings({
       const { receipt } = result;
       const names = receipt.cardIds?.map(id => catalogCardById[id]?.name ?? id).join(' and ');
       const cards = receipt.cardIds?.length && receipt.cardIds.length > 2
-        ? `${receipt.cardIds.length} characters` : names;
+        ? `${receipt.cardIds.length} cards` : names;
       const credited = [
         cards ? `${cards} added to your collection` : null,
         receipt.packTickets ? `+${receipt.packTickets.toLocaleString()} pack tickets` : null,
