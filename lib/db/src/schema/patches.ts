@@ -52,13 +52,15 @@ export const patchDeliveryTargetsTable = pgTable("patch_delivery_targets", {
   // Keep the immutable publish-time recipient snapshot even if a profile is
   // deleted before delivery; the worker marks such rows terminally missing.
   clerkUserId: text("clerk_user_id").notNull(),
-  status: text("status").$type<"pending" | "delivered" | "failed" | "missing">().notNull().default("pending"),
+  // "late" rows record players who joined after publication and received the
+  // letter on their next visit; they never count toward the frozen snapshot.
+  status: text("status").$type<"pending" | "delivered" | "failed" | "missing" | "late">().notNull().default("pending"),
   attempts: integer("attempts").notNull().default(0),
   lastError: text("last_error"),
   deliveredAt: timestamp("delivered_at", { withTimezone: true }),
 }, table => [
   uniqueIndex("patch_delivery_patch_user_unique").on(table.patchId, table.clerkUserId),
-  check("patch_delivery_status_check", sql`${table.status} IN ('pending', 'delivered', 'failed', 'missing')`),
+  check("patch_delivery_status_check", sql`${table.status} IN ('pending', 'delivered', 'failed', 'missing', 'late')`),
   index("patch_delivery_work_queue").on(table.patchId, table.status, table.clerkUserId),
 ]);
 

@@ -291,6 +291,64 @@ async function processPatchBatch(patchId: string, limit: number, includeExhauste
   });
 }
 
+/**
+ * Everyone receives every published patch letter, including players who join
+ * after publication. The publish-time snapshot and its counts stay frozen; a
+ * late joiner gets one "late" ledger row per patch, and the unique ledger key
+ * plus the stable campaign ID in the locked inbox make this safe to repeat.
+ * Snapshot members (including failed or missing ones) stay with admin retry.
+ */
+function sameLetter(existing: unknown, mail: ReturnType<typeof makePatchLetter>): boolean {
+  return isMail(existing) && existing.title === mail.title && existing.body === mail.body && existing.sender === mail.sender &&
+    existing.gift.softCurrency === mail.gift.softCurrency && existing.gift.packTickets === mail.gift.packTickets &&
+    existing.gift.styleShards === mail.gift.styleShards;
+}
+
+export async function deliverLatePatchLetters(clerkUserId: string): Promise<number> {
+  if (clerkUserId === "e2e-player") return 0;
+  const missed = await db.select().from(patchDraftsTable)
+    .where(and(
+      eq(patchDraftsTable.status, "published"),
+      isNotNull(patchDraftsTable.publishedAt),
+      sql`NOT EXISTS (
+        SELECT 1 FROM ${patchDeliveryTargetsTable}
+        WHERE ${patchDeliveryTargetsTable.patchId} = ${patchDraftsTable.id}
+          AND ${patchDeliveryTargetsTable.clerkUserId} = ${clerkUserId}
+      )`,
+    ))
+    .orderBy(asc(patchDraftsTable.publishedAt), asc(patchDraftsTable.id))
+    .limit(100);
+  if (!missed.length) return 0;
+  return db.transaction(async tx => {
+    const [profile] = await tx.select().from(playerProfilesTable)
+      .where(eq(playerProfilesTable.clerkUserId, clerkUserId)).for("update");
+    if (!profile) return 0;
+    let inbox = profile.inbox;
+    let added = 0;
+    const sentAt = Date.now();
+    for (const patch of missed) {
+      const mail = makePatchLetter(patchContent(patch));
+      const existing = inbox.find(item => (item as { id?: unknown })?.id === mail.id);
+      // A different letter already holding this campaign ID is left unresolved
+      // (no ledger row), so it is never marked delivered without the real gift.
+      if (existing && !sameLetter(existing, mail)) continue;
+      const [owned] = await tx.insert(patchDeliveryTargetsTable).values({
+        patchId: patch.id,
+        clerkUserId,
+        status: "late",
+        attempts: 1,
+        deliveredAt: new Date(),
+      }).onConflictDoNothing().returning({ id: patchDeliveryTargetsTable.id });
+      if (!owned || existing) continue;
+      // Oldest patch first, one millisecond apart, so the newest note sorts on top.
+      inbox = [...inbox, { ...parseMail({ ...mail, sentAt: "", readAt: null, claimedAt: null }), sentAt: new Date(sentAt + added).toISOString() }];
+      added++;
+    }
+    if (added) await tx.update(playerProfilesTable).set({ inbox }).where(eq(playerProfilesTable.clerkUserId, clerkUserId));
+    return added;
+  });
+}
+
 export async function processPatchDeliveryBatch(patchId: string, includeExhausted = false) {
   return processPatchBatch(patchId, DELIVERY_BATCH_SIZE, includeExhausted);
 }

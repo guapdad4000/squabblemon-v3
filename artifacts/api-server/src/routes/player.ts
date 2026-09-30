@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { avatarSticker } from '@workspace/squabblemon-engine/cosmetics';
+import { deliverLatePatchLetters } from "../lib/patches";
 import { ownedReactions, reactionById, REACTION_TRAY_SIZE } from '@workspace/squabblemon-engine/reactions';
 import { rookieDistricts, rookieEncounter } from "@workspace/squabblemon-engine/rookie";
 import { activities, eventWeek, isActivityId, makeActivityEncounter, validateDraft } from "@workspace/squabblemon-engine/activities";
@@ -175,7 +176,14 @@ function authenticatedUserId(req: Request, res: Response): string | null {
 router.get("/player/bootstrap", async (req, res): Promise<void> => {
   const userId = authenticatedUserId(req, res);
   if (!userId) return;
-  const state = await getPlayerBootstrap(userId);
+  let state = await getPlayerBootstrap(userId);
+  // Players who joined after a patch was published receive its letter here.
+  // A failure is logged and retried on the next visit rather than blocking play.
+  try {
+    if (await deliverLatePatchLetters(userId)) state = await getPlayerBootstrap(userId);
+  } catch (error) {
+    req.log.warn({ error }, "Late patch delivery failed");
+  }
   res.json(GetPlayerBootstrapResponse.parse(state));
 });
 

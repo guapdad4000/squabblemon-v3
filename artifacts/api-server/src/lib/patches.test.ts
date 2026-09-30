@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { db, patchDeliveryTargetsTable, patchDraftsTable, playerProfilesTable } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
-import { createPatchDraft, listPublicPatches, previewPatch, processOutstandingPatchBatches, processPatchDeliveryBatch, publishPatch, updatePatchDraft } from "./patches";
+import { createPatchDraft, deliverLatePatchLetters, listPublicPatches, previewPatch, processOutstandingPatchBatches, processPatchDeliveryBatch, publishPatch, updatePatchDraft } from "./patches";
 import { updateMail } from "./mail";
 import { createApp } from "../app";
 
@@ -134,6 +134,40 @@ test("published patch snapshots recipients and delivers resumable bounded, repla
     assert.equal(claimedProfile.softCurrency, 187);
     assert.equal(claimedProfile.packTickets, 3);
     assert.equal(claimedProfile.inbox.filter(mail => mail.id === campaignId).length, 1);
+
+    // Late joiners still get the letter once, outside the frozen snapshot counts.
+    // A conflicting inbox entry with the campaign ID is never marked as delivered.
+    const conflictId = `${runId}-late-conflict`;
+    await db.insert(playerProfilesTable).values({ clerkUserId: conflictId, inbox: [{
+      id: campaignId!, title: "Conflicting content", body: "Something else.", sender: "System",
+      sentAt: new Date().toISOString(), readAt: null, claimedAt: null, gift: { softCurrency: 0, packTickets: 0, styleShards: 0 },
+    }] });
+    try {
+      assert.equal(await deliverLatePatchLetters(conflictId), 0);
+      assert.equal((await db.select().from(patchDeliveryTargetsTable)
+        .where(and(eq(patchDeliveryTargetsTable.patchId, draft.id), eq(patchDeliveryTargetsTable.clerkUserId, conflictId)))).length, 0);
+    } finally {
+      await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, conflictId));
+    }
+    const [snapshotBefore] = await db.select().from(patchDraftsTable).where(eq(patchDraftsTable.id, draft.id));
+    const lateRuns = await Promise.all([deliverLatePatchLetters(lateId), deliverLatePatchLetters(lateId)]);
+    assert.equal(lateRuns.reduce((sum, value) => sum + value, 0), 1);
+    assert.equal(await deliverLatePatchLetters(lateId), 0);
+    assert.equal(await deliverLatePatchLetters(fixtureId), 0);
+    assert.equal(await deliverLatePatchLetters(userIds[0]), 0, "snapshot members stay with admin retry");
+    const [lateTarget] = await db.select().from(patchDeliveryTargetsTable)
+      .where(and(eq(patchDeliveryTargetsTable.patchId, draft.id), eq(patchDeliveryTargetsTable.clerkUserId, lateId)));
+    assert.equal(lateTarget?.status, "late");
+    const [snapshotAfter] = await db.select().from(patchDraftsTable).where(eq(patchDraftsTable.id, draft.id));
+    assert.deepEqual(
+      [snapshotAfter.intendedCount, snapshotAfter.deliveredCount, snapshotAfter.failedCount],
+      [snapshotBefore.intendedCount, snapshotBefore.deliveredCount, snapshotBefore.failedCount],
+    );
+    assert.equal((await listPublicPatches()).find(patch => patch.version === draft.version)?.mailStatus, "partial");
+    const lateClaims = await Promise.all([updateMail(lateId, campaignId!, true), updateMail(lateId, campaignId!, true)]);
+    assert.equal(lateClaims.filter(result => result.credited).length, 1);
+    const [lateProfile] = await db.select().from(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateId));
+    assert.equal(lateProfile.inbox.filter(mail => mail.id === campaignId).length, 1);
   } finally {
     await db.delete(playerProfilesTable).where(eq(playerProfilesTable.clerkUserId, lateId));
   }

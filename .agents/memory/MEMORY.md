@@ -54,3 +54,4 @@
 - [Story deck editor return](story-deck-editor-return.md) — Preserve a validated story return destination through starter-recipe saves; browser history alone cannot recover it.
 - [Story reward import boundary](story-reward-import-boundary.md) — Keep story-only lookups behind the lazy story route so shared reward UI does not load the full story catalog in the game shell.
 - [Patch publication audience](patch-publication-audience.md) — Freeze the approved audience; only all-delivered is complete, while missing or exhausted targets remain partial.
+- [Local release gates](local-release-gates.md) — Run build gates as staging with PUBLIC_ORIGIN set; production mode needs a live Clerk key the workspace lacks.
