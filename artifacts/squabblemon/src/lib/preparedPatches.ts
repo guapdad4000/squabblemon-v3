@@ -140,4 +140,25 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     ],
     ...gift,
   },
+  {
+    version: '1.7',
+    date: '2026-09-29',
+    title: 'Triple OGs Run the Block',
+    artCardId: 'triple-og-blue',
+    overview: 'Blue OG and Red OG brought their dogs to the block. Five new cards join the Street Packs, with fresh pushes, burns, and district tricks.',
+    buffs: [
+      'CLUE COOKY (Mythical Water, 4 Motion / 6 Hands): left district only. If you’re losing here, other allies with Hands to spare each pay him 1 Hand, and he gains every Hand paid. He also sends the weakest enemy here to your strongest other district with -1 Hand. He can’t lose Hands.',
+      'RED PUNCH (Mythical Fire, 4 / 3): right district only. Takes 1 Hand from every other character here (-1), allies included, and gains each Hand actually taken. Untouchable cards move out of respect.',
+      'INITIATION (Legendary, 1-Motion support): marks the next character you play here to gain this district’s set color and +1 Hand. No set? Still +1 Hand.',
+      'BLOCK SPINNER (Epic Fire, 1 / 2): puts 1 Burn on an enemy here and the next enemy played here.',
+      'LOOK OUT (Epic Air, 1 / 2): watches your opponent’s next district; your next friendly play there costs 1 less Motion.',
+    ],
+    changes: [
+      'All five additions are ordinary Street Pack pulls.',
+      'Both Triple OG reveal abilities ignore Silence.',
+      'Roll Call now removes defeated 1-Hand allies instead of leaving them on the board at zero.',
+      'Forced moves and follow-up effects play in order without replay jumps.',
+    ],
+    ...gift,
+  },
 ];

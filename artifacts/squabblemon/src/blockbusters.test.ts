@@ -64,7 +64,7 @@ function cast(
 }
 const end = (m: Match) => nextRound({ ...m, phase: "resolved" });
 test("catalog entries include all 18 new fighters and 10 lane events", () => {
-  assert.equal(cardCatalog.length, 218);
+  assert.equal(cardCatalog.length, 227);
   assert.equal(BLOCKBUSTER_CHARACTERS.length, 18);
   assert.equal(BLOCKBUSTERS.length, 10);
   validateCardAbilityUpgrades();

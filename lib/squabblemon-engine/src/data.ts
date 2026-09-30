@@ -16,6 +16,7 @@ import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffec
 import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
 import { sideOzWaveCards, sideOzWaveRarities, sideOzWaveUpgradeEffects, sideOzWaveFactions } from './sideOzWave';
 import { storyCharacterWaveCards, storyCharacterWaveRarities, storyCharacterWaveUpgradeEffects } from './storyCharacterWave';
+import { tripleOgCards, tripleOgRarities, tripleOgUpgradeEffects } from './tripleOgs';
 
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
@@ -115,6 +116,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...elementalBondWaveUpgradeEffects,
   ...sideOzWaveUpgradeEffects,
   ...storyCharacterWaveUpgradeEffects,
+  ...tripleOgUpgradeEffects,
   ...blockbusterWaveUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
@@ -268,6 +270,7 @@ export const cards: Record<string, Card> = {
   ...elementalBondWaveCards,
   ...sideOzWaveCards,
   ...storyCharacterWaveCards,
+  ...tripleOgCards,
   ...blockbusterWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
@@ -325,6 +328,7 @@ export const rarityByEngineId = {
   ...elementalBondWaveRarities,
   ...sideOzWaveRarities,
   ...storyCharacterWaveRarities,
+  ...tripleOgRarities,
   ...blockbusterWaveRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
@@ -410,6 +414,7 @@ const factionByEngineId: Record<string, string> = {
   ...Object.fromEntries(Object.keys(fairytaleCards).map(id => [id, ['dorothy', 'scarecrow', 'tinman', 'lion', 'oz'].includes(id) ? 'The Wiz' : ['alice', 'cheshire', 'queenofhearts', 'mrrabbit'].includes(id) ? 'Wonderland' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(streetWaveCards).map(id => [id, streetWaveRarities[id] === 'Mythical' ? 'City Legends' : ['break', 'krump', 'bboy'].includes(id) ? 'The Cypher' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(mythicLegendCards).map(id => [id, 'City Legends'])),
+  ...Object.fromEntries(Object.keys(tripleOgCards).map(id => [id, 'Triple OGs'])),
   ...Object.fromEntries(Object.keys(characterWaveCards).map(id => [id, characterWaveRarities[id] === 'Mythical' ? 'City Legends' : 'Around the Block'])),
   ...Object.fromEntries(Object.keys(supportCards).map(id => [id, 'Everyday Essentials'])),
   buddy: "City Legends",
