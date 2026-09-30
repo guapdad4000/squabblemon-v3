@@ -27,6 +27,7 @@ import {
   updatePatchDraft,
 } from "../lib/patches";
 import { getClerkProxyHost } from "../middlewares/clerkProxyMiddleware";
+import { catalogCardById } from "@workspace/squabblemon-engine/data";
 
 const router = Router();
 
@@ -94,13 +95,22 @@ function authorizeMutation(
 
 function normalizedInput(data: {
   version: string; title: string; date: string; overview: string;
-  buffs: string[]; changes: string[]; softCurrency?: number; packTickets?: number;
+  buffs: string[]; changes: string[]; softCurrency?: number; packTickets?: number; artCardId?: string | null;
 }) {
   return {
     ...data,
     softCurrency: data.softCurrency ?? 50,
     packTickets: data.packTickets ?? 0,
+    artCardId: data.artCardId ?? null,
   };
+}
+
+/** Patch art must be an original catalog character portrait, never a support or token. */
+function validArtCard(id: string | null): boolean {
+  if (id === null) return true;
+  if (!Object.hasOwn(catalogCardById, id)) return false;
+  const card = catalogCardById[id];
+  return card.kind !== "support" && card.kind !== "token";
 }
 
 function validTextContent(input: ReturnType<typeof normalizedInput>): boolean {
@@ -117,7 +127,8 @@ function validTextContent(input: ReturnType<typeof normalizedInput>): boolean {
   ].join("\n");
   return calendarDate && !!input.version.trim() && !!input.title.trim() && !!input.overview.trim() &&
     `Patch ${input.version}: ${input.title}`.length <= 120 &&
-    input.buffs.every(item => !!item.trim()) && input.changes.every(item => !!item.trim()) && letterBody.length <= 6000;
+    input.buffs.every(item => !!item.trim()) && input.changes.every(item => !!item.trim()) && letterBody.length <= 6000 &&
+    validArtCard(input.artCardId);
 }
 
 router.get("/events/patches", async (_req, res): Promise<void> => {
@@ -147,7 +158,7 @@ router.post("/admin/patches", async (req, res): Promise<void> => {
   }
   const input = normalizedInput(parsed.data);
   if (!validTextContent(input)) {
-    res.status(400).json({ error: "Patch date or text is invalid, blank, or too long for patch mail." });
+    res.status(400).json({ error: "Patch date, text, or artwork is invalid, blank, or too long for patch mail." });
     return;
   }
   try {
@@ -168,7 +179,7 @@ router.put("/admin/patches/:id", async (req, res): Promise<void> => {
   }
   const input = normalizedInput(parsed.data);
   if (!validTextContent(input)) {
-    res.status(400).json({ error: "Patch date or text is invalid, blank, or too long for patch mail." });
+    res.status(400).json({ error: "Patch date, text, or artwork is invalid, blank, or too long for patch mail." });
     return;
   }
   try {

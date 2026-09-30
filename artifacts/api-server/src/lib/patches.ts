@@ -23,6 +23,7 @@ export function adminPatchRecord(record: PatchDraftRecord) {
     changes: record.changes,
     softCurrency: record.softCurrency,
     packTickets: record.packTickets,
+    artCardId: record.artCardId ?? null,
     status: record.status,
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString(),
@@ -79,6 +80,7 @@ function patchContent(record: PatchDraftRecord): PatchContent {
     changes: record.changes,
     softCurrency: record.softCurrency,
     packTickets: record.packTickets,
+    artCardId: record.artCardId ?? null,
   };
 }
 
@@ -91,6 +93,7 @@ export async function listPublicPatches() {
     overview: patchDraftsTable.overview,
     buffs: patchDraftsTable.buffs,
     changes: patchDraftsTable.changes,
+    artCardId: patchDraftsTable.artCardId,
     publishedAt: patchDraftsTable.publishedAt,
   }).from(patchDraftsTable)
     .where(and(eq(patchDraftsTable.status, "published"), isNotNull(patchDraftsTable.publishedAt)))
@@ -117,6 +120,7 @@ export async function listPublicPatches() {
     overview: record.overview,
     buffs: record.buffs,
     changes: record.changes,
+    artCardId: record.artCardId ?? null,
     publishedAt: record.publishedAt!.toISOString(),
     mailStatus: activePatchIds.has(record.id)
       ? "delivering" as const
@@ -146,6 +150,7 @@ export async function createPatchDraft(input: PatchContent, userId: string) {
     changes: input.changes.map(item => item.trim()),
     softCurrency: input.softCurrency ?? 50,
     packTickets: input.packTickets ?? 0,
+    artCardId: input.artCardId ?? null,
     createdBy: userId,
   }).returning();
   return adminPatchRecord(record);
@@ -161,6 +166,7 @@ export async function updatePatchDraft(id: string, input: PatchContent) {
     changes: input.changes.map(item => item.trim()),
     softCurrency: input.softCurrency ?? 50,
     packTickets: input.packTickets ?? 0,
+    artCardId: input.artCardId ?? null,
     // A strict monotonic edit stamp prevents stale publish confirmations even
     // when two edits occur within one JS millisecond.
     updatedAt: sql`GREATEST(clock_timestamp(), ${patchDraftsTable.updatedAt} + interval '1 millisecond')`,

@@ -13,6 +13,7 @@ export type PatchContent = {
   changes: string[];
   softCurrency: number;
   packTickets: number;
+  artCardId?: string | null;
 };
 
 export const patchDraftsTable = pgTable("patch_drafts", {
@@ -25,6 +26,7 @@ export const patchDraftsTable = pgTable("patch_drafts", {
   changes: jsonb("changes").$type<string[]>().notNull().default([]),
   softCurrency: integer("soft_currency").notNull().default(50),
   packTickets: integer("pack_tickets").notNull().default(0),
+  artCardId: text("art_card_id"),
   status: text("status").$type<"draft" | "published">().notNull().default("draft"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),

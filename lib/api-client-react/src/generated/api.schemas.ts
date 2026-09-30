@@ -49,6 +49,14 @@ export interface PatchInput {
      * @maximum 1
      */
   packTickets?: number;
+  /**
+     * Catalog character whose original artwork headlines this patch.
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     * @pattern ^[a-z0-9-]+$
+     */
+  artCardId?: string | null;
 }
 
 export interface PatchPublishInput {
@@ -70,6 +78,8 @@ export const PublicPatchMailStatus = {
 
 export interface PublicPatch {
   version: string;
+  /** @nullable */
+  artCardId: string | null;
   /** @maxLength 120 */
   title: string;
   /**
@@ -129,7 +139,7 @@ export type AdminPatch = PatchInput & ({
   lastError: string | null;
   /** @nullable */
   campaignId: string | null;
-}), 'softCurrency' | 'packTickets'>>;
+}), 'softCurrency' | 'packTickets' | 'artCardId'>>;
 
 export type PatchLetterGift = {
   /**

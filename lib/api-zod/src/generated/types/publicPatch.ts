@@ -9,6 +9,8 @@ import type { PublicPatchMailStatus } from './publicPatchMailStatus';
 
 export interface PublicPatch {
   version: string;
+  /** @nullable */
+  artCardId: string | null;
   /** @maxLength 120 */
   title: string;
   /**

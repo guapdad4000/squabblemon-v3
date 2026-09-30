@@ -50,3 +50,14 @@ When every changed blob is valid UTF-8, GitHub's tree API can accept changed pat
 **Why:** Uploading many blobs concurrently through the connector hit HTTP 429, while a single inline-content tree request reproduced the exact local tree. This avoids exposing credentials to Git and preserves remote ancestry when local checkpoint history diverges.
 
 **How to apply:** First confirm all changed files round-trip as UTF-8 and include deletions explicitly. Keep binary blobs on the separate blob-upload path. Check the remote ref again before the update, reject a moved ref, then fetch the result and compare tree SHAs before aligning the local branch.
+When remote `main` is an ancestor of local commits that are unsigned, recreate each commit through the GitHub API with the same tree, parent, message, and author/committer names, emails, and timestamps. GitHub then returns identical commit SHAs, so local and remote history match and no realignment is needed.
+
+**Why:** Reproducing the commit objects exactly avoids the squashed-commit divergence and backup branches that the tree-only method creates.
+
+**How to apply:** Read the metadata from `git cat-file commit`, confirm there is no `gpgsig` header and the timezone is UTC, and compare each returned SHA to the local SHA before the non-forced ref update.
+
+Run the Netlify build's own test gates (`scripts/build-netlify.mjs`) locally before pushing to `main`; root typecheck and focused API tests do not cover them.
+
+**Why:** A push that added four story-earned cards failed the hosted build on hard-coded catalog counts and a Season One save-compatibility fingerprint, even though typecheck and API tests had passed.
+
+**How to apply:** When cards or legacy story rewards change, update the count and fingerprint assertions deliberately. Keep the fingerprint covering all current rewards; excluding reward namespaces weakens save protection.

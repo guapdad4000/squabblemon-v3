@@ -89,6 +89,7 @@ export const listPublishedPatchesResponseDateRegExp = new RegExp('^[0-9]{4}-[0-9
 
 export const ListPublishedPatchesResponseItem = zod.object({
   "version": zod.string(),
+  "artCardId": zod.string().nullable(),
   "title": zod.string().max(listPublishedPatchesResponseTitleMax),
   "date": zod.string().min(listPublishedPatchesResponseDateMin).max(listPublishedPatchesResponseDateMax).regex(listPublishedPatchesResponseDateRegExp),
   "overview": zod.string(),
@@ -130,6 +131,10 @@ export const listAdminPatchesResponseOnePackTicketsDefault = 0;
 export const listAdminPatchesResponseOnePackTicketsMin = 0;
 export const listAdminPatchesResponseOnePackTicketsMax = 1;
 
+export const listAdminPatchesResponseOneArtCardIdMax = 80;
+
+
+export const listAdminPatchesResponseOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const listAdminPatchesResponseTwoIntendedCountMin = 0;
 
 export const listAdminPatchesResponseTwoDeliveredCountMin = 0;
@@ -146,7 +151,8 @@ export const ListAdminPatchesResponseItem = zod.object({
   "buffs": zod.array(zod.string().min(1).max(listAdminPatchesResponseOneBuffsItemMax)).max(listAdminPatchesResponseOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(listAdminPatchesResponseOneChangesItemMax)).max(listAdminPatchesResponseOneChangesMax),
   "softCurrency": zod.number().min(listAdminPatchesResponseOneSoftCurrencyMin).max(listAdminPatchesResponseOneSoftCurrencyMax).default(listAdminPatchesResponseOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(listAdminPatchesResponseOnePackTicketsMin).max(listAdminPatchesResponseOnePackTicketsMax).default(listAdminPatchesResponseOnePackTicketsDefault)
+  "packTickets": zod.number().min(listAdminPatchesResponseOnePackTicketsMin).max(listAdminPatchesResponseOnePackTicketsMax).default(listAdminPatchesResponseOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(listAdminPatchesResponseOneArtCardIdMax).regex(listAdminPatchesResponseOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),
@@ -193,6 +199,10 @@ export const createAdminPatchBodyPackTicketsDefault = 0;
 export const createAdminPatchBodyPackTicketsMin = 0;
 export const createAdminPatchBodyPackTicketsMax = 1;
 
+export const createAdminPatchBodyArtCardIdMax = 80;
+
+
+export const createAdminPatchBodyArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 
 
 export const CreateAdminPatchBody = zod.object({
@@ -203,7 +213,8 @@ export const CreateAdminPatchBody = zod.object({
   "buffs": zod.array(zod.string().min(1).max(createAdminPatchBodyBuffsItemMax)).max(createAdminPatchBodyBuffsMax),
   "changes": zod.array(zod.string().min(1).max(createAdminPatchBodyChangesItemMax)).max(createAdminPatchBodyChangesMax),
   "softCurrency": zod.number().min(createAdminPatchBodySoftCurrencyMin).max(createAdminPatchBodySoftCurrencyMax).default(createAdminPatchBodySoftCurrencyDefault),
-  "packTickets": zod.number().min(createAdminPatchBodyPackTicketsMin).max(createAdminPatchBodyPackTicketsMax).default(createAdminPatchBodyPackTicketsDefault)
+  "packTickets": zod.number().min(createAdminPatchBodyPackTicketsMin).max(createAdminPatchBodyPackTicketsMax).default(createAdminPatchBodyPackTicketsDefault),
+  "artCardId": zod.string().min(1).max(createAdminPatchBodyArtCardIdMax).regex(createAdminPatchBodyArtCardIdRegExp).nullish().describe('Catalog character whose original artwork headlines this patch.')
 })
 
 export const createAdminPatchResponseOneVersionMax = 40;
@@ -233,6 +244,10 @@ export const createAdminPatchResponseOnePackTicketsDefault = 0;
 export const createAdminPatchResponseOnePackTicketsMin = 0;
 export const createAdminPatchResponseOnePackTicketsMax = 1;
 
+export const createAdminPatchResponseOneArtCardIdMax = 80;
+
+
+export const createAdminPatchResponseOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const createAdminPatchResponseTwoIntendedCountMin = 0;
 
 export const createAdminPatchResponseTwoDeliveredCountMin = 0;
@@ -249,7 +264,8 @@ export const CreateAdminPatchResponse = zod.object({
   "buffs": zod.array(zod.string().min(1).max(createAdminPatchResponseOneBuffsItemMax)).max(createAdminPatchResponseOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(createAdminPatchResponseOneChangesItemMax)).max(createAdminPatchResponseOneChangesMax),
   "softCurrency": zod.number().min(createAdminPatchResponseOneSoftCurrencyMin).max(createAdminPatchResponseOneSoftCurrencyMax).default(createAdminPatchResponseOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(createAdminPatchResponseOnePackTicketsMin).max(createAdminPatchResponseOnePackTicketsMax).default(createAdminPatchResponseOnePackTicketsDefault)
+  "packTickets": zod.number().min(createAdminPatchResponseOnePackTicketsMin).max(createAdminPatchResponseOnePackTicketsMax).default(createAdminPatchResponseOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(createAdminPatchResponseOneArtCardIdMax).regex(createAdminPatchResponseOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),
@@ -296,6 +312,10 @@ export const updateAdminPatchBodyPackTicketsDefault = 0;
 export const updateAdminPatchBodyPackTicketsMin = 0;
 export const updateAdminPatchBodyPackTicketsMax = 1;
 
+export const updateAdminPatchBodyArtCardIdMax = 80;
+
+
+export const updateAdminPatchBodyArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 
 
 export const UpdateAdminPatchBody = zod.object({
@@ -306,7 +326,8 @@ export const UpdateAdminPatchBody = zod.object({
   "buffs": zod.array(zod.string().min(1).max(updateAdminPatchBodyBuffsItemMax)).max(updateAdminPatchBodyBuffsMax),
   "changes": zod.array(zod.string().min(1).max(updateAdminPatchBodyChangesItemMax)).max(updateAdminPatchBodyChangesMax),
   "softCurrency": zod.number().min(updateAdminPatchBodySoftCurrencyMin).max(updateAdminPatchBodySoftCurrencyMax).default(updateAdminPatchBodySoftCurrencyDefault),
-  "packTickets": zod.number().min(updateAdminPatchBodyPackTicketsMin).max(updateAdminPatchBodyPackTicketsMax).default(updateAdminPatchBodyPackTicketsDefault)
+  "packTickets": zod.number().min(updateAdminPatchBodyPackTicketsMin).max(updateAdminPatchBodyPackTicketsMax).default(updateAdminPatchBodyPackTicketsDefault),
+  "artCardId": zod.string().min(1).max(updateAdminPatchBodyArtCardIdMax).regex(updateAdminPatchBodyArtCardIdRegExp).nullish().describe('Catalog character whose original artwork headlines this patch.')
 })
 
 export const updateAdminPatchResponseOneVersionMax = 40;
@@ -336,6 +357,10 @@ export const updateAdminPatchResponseOnePackTicketsDefault = 0;
 export const updateAdminPatchResponseOnePackTicketsMin = 0;
 export const updateAdminPatchResponseOnePackTicketsMax = 1;
 
+export const updateAdminPatchResponseOneArtCardIdMax = 80;
+
+
+export const updateAdminPatchResponseOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const updateAdminPatchResponseTwoIntendedCountMin = 0;
 
 export const updateAdminPatchResponseTwoDeliveredCountMin = 0;
@@ -352,7 +377,8 @@ export const UpdateAdminPatchResponse = zod.object({
   "buffs": zod.array(zod.string().min(1).max(updateAdminPatchResponseOneBuffsItemMax)).max(updateAdminPatchResponseOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(updateAdminPatchResponseOneChangesItemMax)).max(updateAdminPatchResponseOneChangesMax),
   "softCurrency": zod.number().min(updateAdminPatchResponseOneSoftCurrencyMin).max(updateAdminPatchResponseOneSoftCurrencyMax).default(updateAdminPatchResponseOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(updateAdminPatchResponseOnePackTicketsMin).max(updateAdminPatchResponseOnePackTicketsMax).default(updateAdminPatchResponseOnePackTicketsDefault)
+  "packTickets": zod.number().min(updateAdminPatchResponseOnePackTicketsMin).max(updateAdminPatchResponseOnePackTicketsMax).default(updateAdminPatchResponseOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(updateAdminPatchResponseOneArtCardIdMax).regex(updateAdminPatchResponseOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),
@@ -399,6 +425,10 @@ export const previewAdminPatchResponsePatchOnePackTicketsDefault = 0;
 export const previewAdminPatchResponsePatchOnePackTicketsMin = 0;
 export const previewAdminPatchResponsePatchOnePackTicketsMax = 1;
 
+export const previewAdminPatchResponsePatchOneArtCardIdMax = 80;
+
+
+export const previewAdminPatchResponsePatchOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const previewAdminPatchResponsePatchTwoIntendedCountMin = 0;
 
 export const previewAdminPatchResponsePatchTwoDeliveredCountMin = 0;
@@ -428,7 +458,8 @@ export const PreviewAdminPatchResponse = zod.object({
   "buffs": zod.array(zod.string().min(1).max(previewAdminPatchResponsePatchOneBuffsItemMax)).max(previewAdminPatchResponsePatchOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(previewAdminPatchResponsePatchOneChangesItemMax)).max(previewAdminPatchResponsePatchOneChangesMax),
   "softCurrency": zod.number().min(previewAdminPatchResponsePatchOneSoftCurrencyMin).max(previewAdminPatchResponsePatchOneSoftCurrencyMax).default(previewAdminPatchResponsePatchOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(previewAdminPatchResponsePatchOnePackTicketsMin).max(previewAdminPatchResponsePatchOnePackTicketsMax).default(previewAdminPatchResponsePatchOnePackTicketsDefault)
+  "packTickets": zod.number().min(previewAdminPatchResponsePatchOnePackTicketsMin).max(previewAdminPatchResponsePatchOnePackTicketsMax).default(previewAdminPatchResponsePatchOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(previewAdminPatchResponsePatchOneArtCardIdMax).regex(previewAdminPatchResponsePatchOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),
@@ -496,6 +527,10 @@ export const publishAdminPatchResponseOnePackTicketsDefault = 0;
 export const publishAdminPatchResponseOnePackTicketsMin = 0;
 export const publishAdminPatchResponseOnePackTicketsMax = 1;
 
+export const publishAdminPatchResponseOneArtCardIdMax = 80;
+
+
+export const publishAdminPatchResponseOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const publishAdminPatchResponseTwoIntendedCountMin = 0;
 
 export const publishAdminPatchResponseTwoDeliveredCountMin = 0;
@@ -512,7 +547,8 @@ export const PublishAdminPatchResponse = zod.object({
   "buffs": zod.array(zod.string().min(1).max(publishAdminPatchResponseOneBuffsItemMax)).max(publishAdminPatchResponseOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(publishAdminPatchResponseOneChangesItemMax)).max(publishAdminPatchResponseOneChangesMax),
   "softCurrency": zod.number().min(publishAdminPatchResponseOneSoftCurrencyMin).max(publishAdminPatchResponseOneSoftCurrencyMax).default(publishAdminPatchResponseOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(publishAdminPatchResponseOnePackTicketsMin).max(publishAdminPatchResponseOnePackTicketsMax).default(publishAdminPatchResponseOnePackTicketsDefault)
+  "packTickets": zod.number().min(publishAdminPatchResponseOnePackTicketsMin).max(publishAdminPatchResponseOnePackTicketsMax).default(publishAdminPatchResponseOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(publishAdminPatchResponseOneArtCardIdMax).regex(publishAdminPatchResponseOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),
@@ -559,6 +595,10 @@ export const resumeAdminPatchDeliveryResponseOnePackTicketsDefault = 0;
 export const resumeAdminPatchDeliveryResponseOnePackTicketsMin = 0;
 export const resumeAdminPatchDeliveryResponseOnePackTicketsMax = 1;
 
+export const resumeAdminPatchDeliveryResponseOneArtCardIdMax = 80;
+
+
+export const resumeAdminPatchDeliveryResponseOneArtCardIdRegExp = new RegExp('^[a-z0-9-]+$');
 export const resumeAdminPatchDeliveryResponseTwoIntendedCountMin = 0;
 
 export const resumeAdminPatchDeliveryResponseTwoDeliveredCountMin = 0;
@@ -575,7 +615,8 @@ export const ResumeAdminPatchDeliveryResponse = zod.object({
   "buffs": zod.array(zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneBuffsItemMax)).max(resumeAdminPatchDeliveryResponseOneBuffsMax),
   "changes": zod.array(zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneChangesItemMax)).max(resumeAdminPatchDeliveryResponseOneChangesMax),
   "softCurrency": zod.number().min(resumeAdminPatchDeliveryResponseOneSoftCurrencyMin).max(resumeAdminPatchDeliveryResponseOneSoftCurrencyMax).default(resumeAdminPatchDeliveryResponseOneSoftCurrencyDefault),
-  "packTickets": zod.number().min(resumeAdminPatchDeliveryResponseOnePackTicketsMin).max(resumeAdminPatchDeliveryResponseOnePackTicketsMax).default(resumeAdminPatchDeliveryResponseOnePackTicketsDefault)
+  "packTickets": zod.number().min(resumeAdminPatchDeliveryResponseOnePackTicketsMin).max(resumeAdminPatchDeliveryResponseOnePackTicketsMax).default(resumeAdminPatchDeliveryResponseOnePackTicketsDefault),
+  "artCardId": zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneArtCardIdMax).regex(resumeAdminPatchDeliveryResponseOneArtCardIdRegExp).nullable().describe('Catalog character whose original artwork headlines this patch.')
 }).and(zod.object({
   "id": zod.string().uuid(),
   "status": zod.enum(['draft', 'published']),

@@ -44,4 +44,4 @@ export type AdminPatch = PatchInput & ({
   lastError: string | null;
   /** @nullable */
   campaignId: string | null;
-}), 'softCurrency' | 'packTickets'>>;
+}), 'softCurrency' | 'packTickets' | 'artCardId'>>;

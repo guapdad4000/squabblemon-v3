@@ -145,4 +145,42 @@ test('a changed draft blocks publication and refreshes editor before a new previ
   await page.getByTestId('button-confirm-publish').click();
   await expect(page.getByText(/Published copy is locked/)).toBeVisible();
   expect(attempts).toBe(2);
+});test('patch notes headline original character art that actually loads', async ({ page }) => {
+  await signIn(page);
+  await page.route('**/api/events/patches', route => route.fulfill({ json: [{ ...published, artCardId: 'red-side-2' }] }));
+  await page.goto('/squabblemon/game/events?patch=1.4.2');
+  const art = page.getByTestId('patch-detail').getByTestId('patch-art');
+  await expect(art).toContainText('OG Red Night', { timeout: 30_000 });
+  const image = art.locator('img');
+  await expect(image).toHaveAttribute('alt', 'OG Red Night artwork');
+  await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 15_000 }).toBe(true);
+  await expect(page.getByTestId('button-patch-1.4.2').locator('.patch-art--thumb img')).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
+});
+test('prepared notes become ordinary drafts with art and the capped gift, never publications', async ({ page }) => {
+  await signIn(page);
+  const drafts: Record<string, unknown>[] = [];
+  let publishCalls = 0;
+  await page.route('**/api/admin/patches**', route => {
+    const request = route.request();
+    if (new URL(request.url()).pathname.endsWith('/publish')) { publishCalls++; return route.fulfill({ status: 500, json: {} }); }
+    if (request.method() === 'GET') return route.fulfill({ json: drafts });
+    const body = request.postDataJSON();
+    const draft = { ...body, id: `draft-${drafts.length + 1}`, status: 'draft', createdAt: '2026-09-29T12:00:00Z', updatedAt: '2026-09-29T12:00:00Z', createdBy: 'editor', publishedBy: null, intendedCount: 0, deliveredCount: 0, failedCount: 0, lastError: null, campaignId: null };
+    drafts.push(draft);
+    return route.fulfill({ status: 201, json: draft });
+  });
+  await page.goto('/squabblemon/game/admin/patches');
+  await expect(page.getByTestId('panel-prepared-patches')).toContainText('6 prepared notes', { timeout: 30_000 });
+  await page.getByTestId('button-import-prepared').click();
+  await expect(page.getByTestId('panel-prepared-patches')).toHaveCount(0);
+  expect(drafts.map(draft => draft.version)).toEqual(['1.1', '1.2', '1.3', '1.4', '1.5', '1.6']);
+  for (const draft of drafts) {
+    expect(draft).toMatchObject({ softCurrency: 100, packTickets: 1 });
+    expect(typeof draft.artCardId).toBe('string');
+  }
+  expect(publishCalls).toBe(0);
+  await page.getByTestId('button-edit-patch-draft-6').click();
+  await expect(page.getByTestId('select-patch-art')).toHaveValue('cracked-head');
+  await expect(page.getByTestId('input-patch-title')).toHaveValue('Earn Your Block');
 });

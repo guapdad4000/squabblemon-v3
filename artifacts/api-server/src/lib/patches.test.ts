@@ -183,15 +183,17 @@ test("private patch administration requires an allowlisted Clerk identity and re
     changes: [],
     softCurrency: 50,
     packTickets: 1,
+    artCardId: "sherlock",
   };
-  const { softCurrency: _defaultClout, packTickets: _defaultTickets, ...withoutGift } = body;
+  const { softCurrency: _defaultClout, packTickets: _defaultTickets, artCardId: _defaultArt, ...withoutGift } = body;
   const defaultResponse = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json", "x-test-user-id": "listed-admin", origin, "sec-fetch-site": "same-origin" },
     body: JSON.stringify({ ...withoutGift, version: `${body.version}-default` }),
   });
   assert.equal(defaultResponse.status, 201);
-  const defaultDraft = await defaultResponse.json() as { id: string; softCurrency: number; packTickets: number };
+  const defaultDraft = await defaultResponse.json() as { id: string; softCurrency: number; packTickets: number; artCardId: string | null };
+  assert.equal(defaultDraft.artCardId, null);
   assert.equal(defaultDraft.softCurrency, 50);
   assert.equal(defaultDraft.packTickets, 0);
   await db.delete(patchDraftsTable).where(eq(patchDraftsTable.id, defaultDraft.id));
@@ -214,6 +216,15 @@ test("private patch administration requires an allowlisted Clerk identity and re
     });
     assert.equal(overCapResponse.status, 400);
   }
+  // Patch art must name an original catalog character, never a support card or unknown ID.
+  for (const artCardId of ["soul-food", "not-a-card", "__proto__"]) {
+    const badArt = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-test-user-id": "listed-admin", origin, "sec-fetch-site": "same-origin" },
+      body: JSON.stringify({ ...body, version: `${body.version}-art-${artCardId}`, artCardId }),
+    });
+    assert.equal(badArt.status, 400, artCardId);
+  }
   const longMailTitle = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json", "x-test-user-id": "listed-admin", origin, "sec-fetch-site": "same-origin" },
@@ -222,9 +233,11 @@ test("private patch administration requires an allowlisted Clerk identity and re
   assert.equal(longMailTitle.status, 400);
   const created = await post({ origin, "sec-fetch-site": "same-origin" });
   assert.equal(created.status, 201);
-  const draft = await created.json() as { id: string; updatedAt: string; version: string; title: string; date: string; overview: string; buffs: string[]; changes: string[]; softCurrency: number; packTickets: number };
+  const draft = await created.json() as { id: string; artCardId: string | null; updatedAt: string; version: string; title: string; date: string; overview: string; buffs: string[]; changes: string[]; softCurrency: number; packTickets: number };
+  assert.equal(draft.artCardId, "sherlock");
   const preview = await previewPatch(draft.id);
   assert.ok(preview);
+  assert.equal(preview.patch.artCardId, "sherlock");
   await db.update(playerProfilesTable).set({
     inbox: [{
       id: preview.letter.id,
@@ -255,7 +268,9 @@ test("private patch administration requires an allowlisted Clerk identity and re
     headers: { "content-type": "application/json", "x-test-user-id": "listed-admin", origin, "sec-fetch-site": "same-origin" },
   });
   assert.equal(resumeResponse.status, 200);
-  assert.equal((await listPublicPatches()).find(patch => patch.version === draft.version)?.mailStatus, "complete");
+  const publicCopy = (await listPublicPatches()).find(patch => patch.version === draft.version);
+  assert.equal(publicCopy?.mailStatus, "complete");
+  assert.equal(publicCopy?.artCardId, "sherlock");
   const patchInput = {
     version: draft.version,
     title: draft.title,

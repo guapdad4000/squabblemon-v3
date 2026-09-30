@@ -50,4 +50,12 @@ export interface PatchInput {
      * @maximum 1
      */
   packTickets?: number;
+  /**
+     * Catalog character whose original artwork headlines this patch.
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     * @pattern ^[a-z0-9-]+$
+     */
+  artCardId?: string | null;
 }
