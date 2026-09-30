@@ -46,6 +46,7 @@ import { playVoiceLine } from '../lib/sfx';
 import { useBattleAnnouncer } from '../lib/useBattleAnnouncer';
 import { useTutorialVoice } from '../lib/useTutorialVoice';
 import { describeTutorialEvent, describeTutorialBoard } from './tutorialRecap';
+import { BattlePhaseStatusChip, GuidedReadingPanel, describeBattlePhase, type GuidedReadingCue } from './BattleReadingCue';
 
 export type BattleHistoryEntry = Pick<EffectLogEntry, 'sequence' | 'round' | 'type' | 'owner' | 'note' | 'cardId'> & Partial<EffectLogEntry>;
 export type OnlineBattlePresentation = {
@@ -234,17 +235,17 @@ function MechanicLessonOverlay({ lesson, onDismiss }: { lesson: MechanicLesson; 
         initial={{ y: 18, scale: 0.97 }}
         animate={{ y: 0, scale: 1 }}
         exit={{ y: 12, scale: 0.98 }}
-        className="referee-clipboard relative grid w-full max-w-xl grid-cols-[76px_1fr] gap-4 overflow-hidden border border-primary/45 bg-[#07101bf2] p-5 shadow-[0_24px_90px_#000]"
+        className="referee-clipboard mechanic-lesson-card relative grid w-full max-w-xl grid-cols-[76px_minmax(0,1fr)] gap-4 border border-primary/45 bg-[#07101bf2] p-5 shadow-[0_24px_90px_#000]"
       >
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
-        <div className="relative h-24 overflow-hidden border-b-2 border-primary/70">
+        <div className="mechanic-lesson-portrait" aria-hidden="true">
           <DrFadeReferee />
         </div>
-        <div className="min-w-0">
+        <div className="mechanic-lesson-copy min-w-0">
           <div className="font-mono text-[9px] uppercase tracking-[.22em] text-primary">Dr. Fade · First sighting</div>
           <h2 id="mechanic-lesson-title" className="mt-1 font-display text-3xl font-black italic uppercase text-white">{lesson.name}</h2>
           <p id="mechanic-lesson-description" className="mt-2 text-sm leading-relaxed text-white/75">{lesson.summary}</p>
-          <p className="mt-3 border-l-2 border-primary/60 pl-3 text-xs leading-relaxed text-primary/90"><b>Coach’s call:</b> {lesson.tacticalTip}</p>
+          <p className="mechanic-lesson-tip mt-3 border-l-2 border-primary/60 pl-3 text-xs leading-relaxed text-primary/90"><b>Coach’s call:</b> {lesson.tacticalTip}</p>
           <button type="button" autoFocus data-testid="button-dismiss-mechanic-lesson" onClick={onDismiss} className="mt-5 min-h-11 w-full bg-primary px-5 py-3 font-display text-sm font-black uppercase tracking-wider text-black hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             Back to the battle
           </button>
@@ -284,6 +285,7 @@ export function Battle({
   feedbackPreferences, setFeedbackPreferences, decisionStartedAt, equippedVariants, authoritativeHistory,
   replay, onReplayStep, onExitReplay, onFeedback,
   playedSpecialMoves, online: onlineInput, helpOpen = false,
+  guidedReadingCue, onContinueGuidedReading, reviewingFinalBoard = false,
 }: any) {
   const squabbleCinematicLaneValue = squabbleCinematicLane as Lane | null | undefined;
   const m = match as Match;
@@ -360,9 +362,10 @@ export function Battle({
     || (m.round === 4 && activeTutorialGuidance?.id === 'r4_arm_squabble');
   const tutorialMenuEndTurnAllowed = tutorialEndTurnAllowed
     && !(activeTutorialGuidance?.focus === 'end-turn' && Boolean(selectedCard));
-  const canSkip = !online && ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result'].includes(phase);
-  const showCinematic = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'match-finish'].includes(phase) && (phase !== 'round-intro' || m.round === 1);
-  const blocksFastForward = Boolean(online) || showCinematic;
+  const readingCue = (guidedReadingCue ?? null) as GuidedReadingCue | null;
+  const canSkip = !online && !readingCue && ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'round-result'].includes(phase);
+  const showCinematic = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal', 'round-intro', 'match-finish'].includes(phase) && (phase !== 'round-intro' || m.round === 1) && !(reviewingFinalBoard && phase === 'match-finish') && !(readingCue && phase !== 'match-finish');
+  const blocksFastForward = Boolean(online) || showCinematic || Boolean(readingCue) || reviewingFinalBoard;
   const showStartArt = ['versus', 'countdown-3', 'countdown-2', 'countdown-1', 'squabble', 'deal'].includes(phase);
   const broadcastArtwork = phase === 'round-intro' && m.round >= 1 && m.round <= 6
     ? `round-${String(m.round).padStart(2, '0')}`
@@ -507,7 +510,7 @@ export function Battle({
 
   const getActionState = () => {
     if (drag.drag) return { label: drag.drag.choice?.allowed ? 'Release to play' : 'Choose a valid lane', disabled: true, type: 'secondary', testId: 'button-dragging' };
-    if (!interactive) return { label: online ? online.status : canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
+    if (!interactive) return { label: online ? online.status : reviewingFinalBoard ? 'Match complete' : canSkip ? 'Continue' : 'Resolving...', disabled: !canSkip, onClick: canSkip ? skipSequence : undefined, type: canSkip ? 'secondary' : 'disabled', testId: 'button-resolving' };
     if (m.phase === 'complete') return { label: 'Archive Fade', disabled: false, onClick: archiveMatch, type: 'primary', testId: 'button-archive-match' };
     if (activeTutorialGuidance?.id === 'r3_bank_motion' && selectedCard) {
       return { label: 'Clear Card to Bank Motion', disabled: true, type: 'disabled', testId: 'button-tutorial-clear-card' };
@@ -569,7 +572,7 @@ export function Battle({
   const showsChainBanner = !!(presentedEffect?.chain && presentedEffect.chain.total > 1 && actor);
   const showsAttackCaption = showsAttack && !!presentedEffect && actor?.id !== 'dr-fade'
     && ((presentedEffect.type === 'ability' && (presentedEffect.chain?.total ?? 0) < 2) || eventIntensity(presentedEffect) === 'squabble');
-  return <div {...drag.rootProps} data-testid="battle-arena" data-attack-caption={showsAttackCaption || undefined} data-chain-banner={showsChainBanner || undefined} data-replaying={showsAttack && replaying ? true : undefined} data-tutorial-focus={tutorialCoach && interactive ? (tutorialGuidance as TutorialGuidance | null)?.focus : undefined} data-presentation-phase={phase} data-engine-phase={m.phase} data-impact-strength={effectLanded && presentedEffect ? eventIntensity(presentedEffect) : 'none'} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena battle-hud world-decor-host phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
+  return <div {...drag.rootProps} data-testid="battle-arena" data-attack-caption={(showsAttackCaption && !readingCue) || undefined} data-chain-banner={(showsChainBanner && !readingCue) || undefined} data-reading-cue={readingCue ? readingCue.kind : undefined} data-replaying={showsAttack && replaying ? true : undefined} data-tutorial-focus={tutorialCoach && interactive ? (tutorialGuidance as TutorialGuidance | null)?.focus : undefined} data-presentation-phase={phase} data-engine-phase={m.phase} data-impact-strength={effectLanded && presentedEffect ? eventIntensity(presentedEffect) : 'none'} data-reduced-motion={reducedMotion ? 'true' : 'false'} data-venue={venue.id} data-venue-tone={venue.tone} className={`battle-arena battle-hud world-decor-host phase-${phase} ${squabble ? 'is-squabble-armed' : ''} flex flex-col h-full w-full max-w-full mx-auto overflow-hidden relative z-10 bg-[#0d0d0d]`} aria-label={`Battle phase: ${phaseMessage}`}>
     <PageDecor theme="battle" />
     <BattleDragOverlay controller={drag} card={m.playerHand.find(card => card.instanceId === drag.drag?.instanceId)} variantId={getEquippedVariant(equippedVariants, m.playerHand.find(card => card.instanceId === drag.drag?.instanceId)?.id ?? '')} squabble={squabble} />
     <BattleArtPreload />
@@ -594,7 +597,7 @@ export function Battle({
     </AnimatePresence>
 
     <AnimatePresence>{!interactive && showCinematic && (canSkip ? <motion.button type="button" onClick={skipSequence} aria-label={`Continue past ${phaseMessage}`} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20">{showStartArt ? <BattleStartArt phase={phase} player={deck} rival={rivalDeck} /> : broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(phase === 'round-intro' ? `assets/fight-night/${broadcastArtwork}.webp` : `assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className={`cinematic-callout ${phase === 'squabble' ? 'text-accent' : 'text-white'}`}>{phaseMessage}</span>}</motion.button> : <motion.div role="status" aria-label={phaseMessage} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="broadcast-overlay absolute inset-0 z-40 grid place-items-center bg-black/20 pointer-events-none">{broadcastArtwork ? <img data-testid={`broadcast-${broadcastArtwork}`} src={getAssetUrl(phase === 'round-intro' ? `assets/fight-night/${broadcastArtwork}.webp` : `assets/broadcast/${broadcastArtwork}.webp`)} alt="" aria-hidden="true" /> : <span className="cinematic-callout text-white">{phaseMessage}</span>}</motion.div>)}</AnimatePresence>
-    {presentedEffect?.chain && presentedEffect.chain.total > 1 && actor && <div className="ability-chain-banner" data-testid="ability-chain" key={presentedEffect.chain.id}><span>CHAIN {presentedEffect.chain.index} / {presentedEffect.chain.total}</span><strong>{actor.name} · {presentedEffect.abilityMetadata?.upgradeName ?? actor.ability}</strong><div>{Array.from({ length: presentedEffect.chain.total }, (_, index) => <i key={index} className={index < presentedEffect.chain!.index ? 'is-fired' : ''} />)}</div></div>}
+    {!readingCue && presentedEffect?.chain && presentedEffect.chain.total > 1 && actor && <div className="ability-chain-banner" data-testid="ability-chain" key={presentedEffect.chain.id}><span>CHAIN {presentedEffect.chain.index} / {presentedEffect.chain.total}</span><strong>{actor.name} · {presentedEffect.abilityMetadata?.upgradeName ?? actor.ability}</strong><div>{Array.from({ length: presentedEffect.chain.total }, (_, index) => <i key={index} className={index < presentedEffect.chain!.index ? 'is-fired' : ''} />)}</div></div>}
     {presentedEffect && actor && !['player-travel', 'rival-travel'].includes(phase) && ['play', 'ability', 'expiration'].includes(presentedEffect.type) && presentedEffect.kind !== 'story' && <BattleAttack key={presentedEffect.sequence} card={actor} effect={presentedEffect} impact={effectLanded} replaying={replaying} audioEnabled={!online && (feedback?.audioEnabled ?? false)} playedSpecialMoves={playedSpecialMoves} />}
     {crewView && <BattleCrew name={districts[crewView.lane].name} crew={m.boards[crewView.lane].filter(card => card.owner === crewView.owner)} onClose={() => setCrewView(null)} onInspect={setInspect} />}
     <div className={`battle-header ${online ? 'battle-header--pvp pvp-topbar ' : ''}relative z-30 shrink-0`}>
@@ -635,13 +638,15 @@ export function Battle({
     <div className={`battle-guidance relative z-30 shrink-0 w-full ${tutorialCoach ? 'battle-guidance--coached' : ''}`}>
       {tutorialCoach && <div className="dr-fade-coach-frame"><DrFadePortrait pose="right" className="dr-fade-coach" /></div>}
       <div className="min-w-0">
+        <BattlePhaseStatusChip status={describeBattlePhase(reviewingFinalBoard ? 'match-finish' : phase, m.phase === 'complete', m.round, presentedEffect, presentedEffect ? cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId) : undefined)} onlineLabel={online && online.status && phase !== 'effects' ? String(online.status) : undefined} />
         <div className="battle-guidance-kicker" data-testid={coachedTitle && interactive ? 'tutorial-step-' + (tutorialGuidance as TutorialGuidance).id : undefined}>{tutorialCoach && <span className="dr-fade-coach__name">DR. FADE · </span>}{replaying ? `Replay · ${replay.step === 'before' ? 'Before' : 'After'}` : interactive ? coachedTitle ?? 'Your decision' : presentedEffect ? `${presentedEffect.owner === 'player' ? 'Your' : 'Rival'} ${presentedEffect.type}` : 'Fade flow'}</div>
-        <div data-testid="battle-guidance" className="battle-guidance-message">{presentedEffect && <span className={`effect-kind-chip kind-${presentedEffect.kind}`}>{presentedEffect.kind}{presentedEffect.durationLabel ? ` · ${presentedEffect.durationLabel}` : ''}</span>} {phase === 'round-result' || (phase === 'round-intro' && m.round > 1) ? <BattleRound match={m} phase={phase} /> : interactive ? coachedDecision : phaseMessage}</div>
+        {!readingCue && <div data-testid="battle-guidance" className="battle-guidance-message">{presentedEffect && <span className={`effect-kind-chip kind-${presentedEffect.kind}`}>{presentedEffect.kind}{presentedEffect.durationLabel ? ` · ${presentedEffect.durationLabel}` : ''}</span>} {reviewingFinalBoard ? <span data-testid="final-board-review" className="battle-final-review">Final board · inspect any card</span> : phase === 'round-result' || (phase === 'round-intro' && m.round > 1) ? <BattleRound match={m} phase={phase} /> : interactive ? coachedDecision : phaseMessage}</div>}
         {tutorialCoach && interactive && <button type="button" className="text-[11px] underline text-primary" aria-expanded={showCoachTip} onClick={() => setShowCoachTip(value => !value)}>{showCoachTip ? 'Hide coach tip' : 'Reopen coach tip'}</button>}
-        {tutorialCoach && phase === 'round-result' && <p role="status" data-testid="tutorial-round-summary" className="text-xs text-white/85">{describeTutorialBoard(m)}</p>}
+        {tutorialCoach && !readingCue && phase === 'round-result' && <p role="status" data-testid="tutorial-round-summary" className="text-xs text-white/85">{describeTutorialBoard(m)}</p>}
         {tutorialCoach && interactive && recentActions.length > 0 && <details className="text-xs text-white/80"><summary>Review what just changed</summary><ol className="max-h-32 overflow-y-auto">{recentActions.slice(0, 4).map(event => <li key={event.sequence} className="py-1 border-b border-white/10">{describeTutorialEvent(event as EffectLogEntry, m)}</li>)}</ol></details>}
-        {tutorialCoach && presentedEffect?.impact && !interactive && <p role="status" data-testid="tutorial-event-summary" className="text-xs text-white/85">{describeTutorialEvent(presentedEffect, m)}</p>}
-        {presentedEffect && <div data-testid="effect-causality" className={replaying ? "battle-causality" : "battle-causality--live"}>{triggeredUpgradeName(presentedEffect) && <span data-testid="effect-upgrade-trigger" className="mr-1 font-mono text-[9px] uppercase text-primary">Upgrade · {triggeredUpgradeName(presentedEffect)} · </span>}<b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
+        {tutorialCoach && !readingCue && presentedEffect?.impact && !interactive && <p role="status" data-testid="tutorial-event-summary" className="text-xs text-white/85">{describeTutorialEvent(presentedEffect, m)}</p>}
+        {presentedEffect && !readingCue && <div data-testid="effect-causality" className={replaying ? "battle-causality" : "battle-causality--live"}>{triggeredUpgradeName(presentedEffect) && <span data-testid="effect-upgrade-trigger" className="mr-1 font-mono text-[9px] uppercase text-primary">Upgrade · {triggeredUpgradeName(presentedEffect)} · </span>}<b>{cardName(presentedEffect.source?.cardInstanceId ?? presentedEffect.cardInstanceId, presentedEffect.cardId)}</b>{presentedEffect.targetIds.length > 0 ? ` affected ${presentedEffect.targetIds.map(id => cardName(id)).join(', ')}` : ` affected district ${presentedEffect.lane + 1}`}. Score: Rival {presentedEffect.scores.before[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.before[presentedEffect.lane]?.player ?? 0} → Rival {presentedEffect.scores.after[presentedEffect.lane]?.cpu ?? 0} / You {presentedEffect.scores.after[presentedEffect.lane]?.player ?? 0}.</div>}
+        {readingCue && <GuidedReadingPanel cue={readingCue} onContinue={onContinueGuidedReading} />}
         {replaying && <div data-testid="replay-controls" className="mt-2 flex flex-wrap items-center gap-2"><button type="button" disabled={replay.step === 'before'} onClick={() => onReplayStep(replay.event, 'before')} className="battle-utility">Before</button><button type="button" disabled={replay.step === 'after'} onClick={() => onReplayStep(replay.event, 'after')} className="battle-utility">After</button><button type="button" onClick={onExitReplay} className="battle-fast-forward">Return to live battle</button><span className="w-full text-[10px] text-white/60">{[replay.event.source, ...replay.event.targets].filter(Boolean).map(participantChange).join(' · ')}</span></div>}
       </div>
       <span data-testid="claims-live" className="battle-claims" aria-label={`District claims: you ${playerClaims}, rival ${cpuClaims}. Win two districts.`} title="Win two districts"><Flag size={13} aria-hidden="true" /><b className="claims-player">{playerClaims}</b><span className="claims-divider">/</span><b className="claims-rival">{cpuClaims}</b><span className="sr-only"> district claims</span></span>

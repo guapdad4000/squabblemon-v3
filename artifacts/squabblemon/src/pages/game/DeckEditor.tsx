@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation, useParams } from 'wouter';
+import { useLocation, useParams, useSearch } from 'wouter';
 import { PlayerBootstrap, getGetPlayerBootstrapQueryKey } from '@workspace/api-client-react';
 import { useDeckPersistence } from '../../lib/useDeckPersistence';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,7 +8,8 @@ import { DeckWorkbench } from '../../components/DeckWorkbench';
 import type { DeckDraft } from '../../lib/deckWorkshop';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { getDeckSelectionStorage, persistDeckSelection } from '../../lib/deckSelection';
-import { deckEditorPath, decksPath, deckTestPath } from '../../lib/deckJourney';
+import { deckEditorPath, decksPath, deckTestPath, storyDeckReturnPath } from '../../lib/deckJourney';
+import { ArrowLeft } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -19,6 +20,9 @@ import { GangBackdrop } from '../../components/GangBackdrop';
 export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const { deckId = '' } = useParams();
   const [, setLocation] = useLocation();
+  const search = useSearch();
+  const returnToStory = storyDeckReturnPath(search);
+  const returnQuery = returnToStory ? `?returnTo=${encodeURIComponent(returnToStory)}` : '';
   const { save, remove } = useDeckPersistence(bootstrap);
   const queryClient = useQueryClient();
   const [error, setError] = useState('');
@@ -62,6 +66,9 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   return <div className="deck-editor-screen world-decor-host">
     <GangBackdrop />
     <PageDecor theme="crew" />
+    {returnToStory && <button type="button" className="deck-editor-screen__story-return" onClick={() => setLocation(returnToStory)}>
+      <ArrowLeft size={17} aria-hidden="true" /> Back to story crew selection
+    </button>}
     <DeckWorkbench key={`${bootstrap.profile.id}:${deckId}`} initial={initial} ownedCardIds={bootstrap.profile.ownedCardIds} equippedVariants={bootstrap.profile.equippedVariants}
       showBackdrop={false} externalError={error} deleting={remove.isPending}
       subtitle={recipe ? 'Learning example · save to make it yours' : undefined}
@@ -71,7 +78,7 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
           const res = await remove.mutateAsync({ deckId });
           queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
           setDirty(false);
-          runWithoutDeckExitGuard(() => setLocation(decksPath(), { replace: true }));
+          runWithoutDeckExitGuard(() => setLocation(returnToStory ?? decksPath(), { replace: true }));
         }
         catch { setError('Could not delete your deck. Please retry.'); }
       } : undefined}
@@ -80,13 +87,13 @@ export function DeckEditor({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       onSave={async draft => {
         const id = await persist(draft);
         setDirty(false);
-        if (recipe) runWithoutDeckExitGuard(() => setLocation(deckEditorPath(id), { replace: true }));
+        if (recipe) runWithoutDeckExitGuard(() => setLocation(`${deckEditorPath(id)}${returnQuery}`, { replace: true }));
       }}
       onTest={async draft => {
         const id = await persist(draft);
         setDirty(false);
         if (recipe) {
-          runWithoutDeckExitGuard(() => setLocation(deckEditorPath(id), { replace: true }));
+          runWithoutDeckExitGuard(() => setLocation(`${deckEditorPath(id)}${returnQuery}`, { replace: true }));
           window.setTimeout(() => runWithoutDeckExitGuard(() => setLocation(deckTestPath(id))), 0);
         } else {
           runWithoutDeckExitGuard(() => setLocation(deckTestPath(id)));

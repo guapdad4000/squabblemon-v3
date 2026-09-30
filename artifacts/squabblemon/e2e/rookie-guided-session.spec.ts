@@ -118,6 +118,9 @@ async function installDisposableAccountApi(page: Page) {
   let completion: MatchCompletion | null = null;
   let rejectedTranscript: string | null = null;
   let movesReceived: TranscriptMove[] = [];
+  let bootstrapRequests = 0;
+  let completionRequests = 0;
+  const onboardingActions: string[] = [];
 
   const bootstrap = () => playerBootstrap(step, deckCards);
   await page.route('**/api/player/**', async route => {
@@ -125,6 +128,7 @@ async function installDisposableAccountApi(page: Page) {
     const url = new URL(request.url());
 
     if (request.method() === 'GET' && url.pathname.endsWith('/bootstrap')) {
+      bootstrapRequests++;
       return route.fulfill({ json: bootstrap() });
     }
 
@@ -162,6 +166,7 @@ async function installDisposableAccountApi(page: Page) {
 
     const completeMatch = url.pathname.match(/\/matches\/([^/]+)\/complete$/);
     if (request.method() === 'POST' && completeMatch) {
+      completionRequests++;
       const body = request.postDataJSON() as { moves: TranscriptMove[] };
       movesReceived = body.moves;
       if (!verifiedMatchId || completeMatch[1] !== verifiedMatchId) {
@@ -218,6 +223,7 @@ async function installDisposableAccountApi(page: Page) {
 
     if (request.method() === 'POST' && url.pathname.endsWith('/onboarding')) {
       const { action } = request.postDataJSON() as { action: string };
+      onboardingActions.push(action);
       if (action === 'complete-tutorial') {
         if (!completion) return route.fulfill({ status: 409, json: { error: 'A verified Rookie Road match is required.' } });
         step = 'reward';
@@ -242,6 +248,9 @@ async function installDisposableAccountApi(page: Page) {
     rejectedTranscript: () => rejectedTranscript,
     movesReceived: () => movesReceived,
     onboardingStep: () => step,
+    bootstrapRequests: () => bootstrapRequests,
+    completionRequests: () => completionRequests,
+    onboardingActions: () => onboardingActions,
   };
 }
 
@@ -254,15 +263,110 @@ async function clickCurrentCoachTarget(page: Page) {
   await page.locator(selector!).click();
 }
 
-async function waitForDecisionOrResult(page: Page) {
+/** Geometry of the coach feedback actually on screen: guidance strip, reading cue, Dr. Fade spotlight. */
+async function assertCoachFeedbackReadable(page: Page, label: string) {
+  const report = await page.evaluate(() => {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    // Method syntax stays self-contained when tsx serializes this browser callback.
+    const geometry = {
+      box(el: Element | null) { return el ? el.getBoundingClientRect() : null; },
+      visible(r: DOMRect | null) { return !!r && r.width > 0 && r.height > 0; },
+      overlap(a: DOMRect, b: DOMRect) { return a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1; },
+      inView(r: DOMRect) { return r.left >= -1 && r.top >= -1 && r.right <= vw + 1 && r.bottom <= vh + 1; },
+      topmost(el: Element) { const r = el.getBoundingClientRect(); const h = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!h && (h === el || el.contains(h)); },
+    };
+    const { box, visible, overlap, inView, topmost } = geometry;
+    const problems: string[] = [];
+    const guidance = document.querySelector('.battle-guidance');
+    const frame = box(guidance?.querySelector('.dr-fade-coach-frame') ?? null);
+    const copy = guidance?.querySelector(':scope > .min-w-0') ?? null;
+    if (!guidance || !visible(box(guidance))) problems.push('guidance strip missing');
+    if (frame && visible(frame) && copy) {
+      for (const el of copy.querySelectorAll('[data-testid="battle-phase-status"], .battle-guidance-kicker, [data-testid="battle-guidance"], .guided-reading-cue h3, .guided-reading-cue__body')) {
+        const r = el.getBoundingClientRect();
+        if (visible(r) && overlap(frame, r)) problems.push(`coach portrait overlaps ${el.className || el.getAttribute('data-testid')}`);
+      }
+    }
+    const status = document.querySelector('[data-testid="battle-phase-status"]');
+    if (!status) problems.push('phase status missing');
+    else if (!inView(status.getBoundingClientRect()) || !topmost(status)) problems.push('phase status covered or off-screen');
+    const tip = document.querySelector('[data-testid="fade-spotlight"] .fade-tip');
+    if (tip && visible(box(tip))) {
+      const t = tip.getBoundingClientRect();
+      if (!inView(t)) problems.push('spotlight tip off-screen');
+      const portrait = tip.querySelector(':scope > img.dr-fade-portrait');
+      if (!portrait) problems.push('spotlight coach portrait missing');
+      const text = tip.querySelectorAll('h2, p, .fade-eyebrow');
+      const pr = box(portrait);
+      if (pr && visible(pr)) for (const el of text) { const r = el.getBoundingClientRect(); if (visible(r) && overlap(pr, r)) problems.push(`spotlight portrait overlaps ${el.tagName}`); }
+      for (const b of tip.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (visible(r) && (!inView(r) || !topmost(b))) problems.push(`spotlight control unreachable: ${b.textContent}`); }
+    }
+    for (const id of ['button-continue-guided-reading', 'button-lock', 'button-next-round', 'button-resolving']) {
+      const b = document.querySelector(`[data-testid="${id}"]`);
+      const r = box(b);
+      if (b && visible(r) && (!inView(r!) || !topmost(b))) problems.push(`${id} unreachable`);
+    }
+    return { problems, cue: !!document.querySelector('[data-testid="guided-reading-cue"]'), spotlight: !!tip, phase: document.querySelector('[data-testid="battle-arena"]')?.getAttribute('data-presentation-phase') };
+  });
+  expect(report.problems, `${label}: coach feedback must be bounded and reachable (${JSON.stringify(report)})`).toEqual([]);
+  return report;
+}
+
+type ReadingEvidence = {
+  plugFeedback: string[];
+  lessonSources: string[];
+  cornballHeld: boolean;
+  readingCues: string[];
+  rivalVoiceChecked: boolean;
+};
+
+async function waitForDecisionOrResult(page: Page, evidence: ReadingEvidence) {
   await expect.poll(async () => {
     const firstSighting = page.getByRole('button', { name: 'Back to the battle' });
     if (await firstSighting.isVisible().catch(() => false)) {
+      evidence.lessonSources.push(await page.getByTestId('effect-causality').innerText());
+      const geometry = await page.getByTestId('mechanic-lesson').evaluate(root => {
+        const image = root.querySelector('.mechanic-lesson-portrait')!.getBoundingClientRect();
+        const copy = root.querySelector('.mechanic-lesson-copy')!.getBoundingClientRect();
+        return image.right <= copy.left || image.left >= copy.right || image.bottom <= copy.top;
+      });
+      expect(geometry, 'The real first-sighting portrait must not cover the explanation').toBe(true);
+      const dismissBox = await firstSighting.boundingBox();
+      const viewport = page.viewportSize()!;
+      expect(dismissBox && dismissBox.y >= 0 && dismissBox.y + dismissBox.height <= viewport.height, 'First-sighting dismiss control is reachable').toBe(true);
       // The modal unmounts during its click. Do not wait indefinitely for an
       // element that no longer exists while the presentation advances.
       await firstSighting.click({ noWaitAfter: true, timeout: 3000 }).catch(async error => {
         if (await firstSighting.isVisible().catch(() => false)) throw error;
       });
+      return 'transitioning';
+    }
+    const cue = page.getByTestId('guided-reading-cue');
+    if (await cue.isVisible().catch(() => false)) {
+      const text = await cue.innerText();
+      evidence.readingCues.push(text);
+      const firstRivalCue = await cue.getAttribute('data-cue-kind') === 'event' && !evidence.rivalVoiceChecked;
+      if (firstRivalCue) {
+        await expect.poll(() => page.evaluate(() =>
+          (window as typeof window & { __rivalReadingAudio: HTMLAudioElement[] }).__rivalReadingAudio.length,
+        )).toBe(1);
+      }
+      const phase = await page.getByTestId('battle-arena').getAttribute('data-presentation-phase');
+      if (/Cornball/i.test(text) && phase === 'effects' && !evidence.cornballHeld) {
+        await page.waitForTimeout(2600);
+        await expect(cue).toHaveText(text, { useInnerText: true });
+        await expect(page.getByTestId('battle-phase-status')).toContainText('Effects resolve');
+        await expect(page.getByTestId('button-fast-forward')).toHaveCount(0);
+        evidence.cornballHeld = true;
+      }
+      await page.getByTestId('button-continue-guided-reading').click();
+      if (firstRivalCue) {
+        await expect.poll(() => page.evaluate(() => {
+          const audio = (window as typeof window & { __rivalReadingAudio: HTMLAudioElement[] }).__rivalReadingAudio[0];
+          return { paused: audio.paused, released: !audio.hasAttribute('src') };
+        })).toEqual({ paused: true, released: true });
+        evidence.rivalVoiceChecked = true;
+      }
       return 'transitioning';
     }
     if (await page.getByTestId('button-complete-tutorial').isVisible().catch(() => false)) return 'result';
@@ -272,9 +376,23 @@ async function waitForDecisionOrResult(page: Page) {
   }, { timeout: 90_000 }).not.toBe('transitioning');
 }
 
-test('real Rookie Road route issues and verifies the guided four-round fade', async ({ page }) => {
-  test.setTimeout(180_000);
+test('real Rookie Road route issues and verifies the guided four-round fade', async ({ page }, testInfo) => {
+  test.setTimeout(240_000);
+  // Observe the real audio elements without replacing play, pause, or the media decoder.
+  await page.addInitScript({ content: `(() => {
+    const NativeAudio = window.Audio;
+    window.__rivalReadingAudio = [];
+    window.Audio = function (src) {
+      const audio = new NativeAudio(src);
+      if (typeof src === 'string' && src.includes('/expanded-rival-reading-pause.')) {
+        window.__rivalReadingAudio.push(audio);
+      }
+      return audio;
+    };
+    window.Audio.prototype = NativeAudio.prototype;
+  })()` });
   const api = await installDisposableAccountApi(page);
+  const evidence: ReadingEvidence = { plugFeedback: [], lessonSources: [], cornballHeld: false, readingCues: [], rivalVoiceChecked: false };
 
   await page.goto('/squabblemon/sign-up');
   await page.getByRole('button', { name: 'Create disposable test account' }).click();
@@ -293,7 +411,7 @@ test('real Rookie Road route issues and verifies the guided four-round fade', as
     playerDeckId: ROOKIE_DECK_ID,
   });
   await expect(page.getByTestId('battle-arena')).toBeVisible();
-  await waitForDecisionOrResult(page);
+  await waitForDecisionOrResult(page, evidence);
 
   // Rules/help is a real control during the coached turn, not a harness modal.
   await page.locator('details.battle-tools > summary').click();
@@ -307,7 +425,7 @@ test('real Rookie Road route issues and verifies the guided four-round fade', as
   const committedActions: string[] = [];
   for (let actionIndex = 0; actionIndex < 20; actionIndex += 1) {
     const completionButton = page.getByTestId('button-complete-tutorial');
-    await waitForDecisionOrResult(page);
+    await waitForDecisionOrResult(page, evidence);
     if (await completionButton.isVisible().catch(() => false)) break;
 
     const arena = page.getByTestId('battle-arena');
@@ -324,7 +442,20 @@ test('real Rookie Road route issues and verifies the guided four-round fade', as
     } else if (focus === 'play') {
       await expect(page.getByTestId('button-lock')).toBeEnabled();
       committedActions.push(stepId!);
+      const boardPlugs = page.locator('[data-card-zone="board"][data-card-id="plug"]');
+      const plugsBefore = await boardPlugs.count();
       await page.getByTestId('button-lock').click();
+      // Identify the real Plug play by the board, not by an assumed popup.
+      if (!evidence.plugFeedback.length) {
+        await expect.poll(() => boardPlugs.count(), { timeout: 8000 }).toBeGreaterThan(plugsBefore);
+        const during = await assertCoachFeedbackReadable(page, 'During the real Plug play');
+        evidence.plugFeedback.push(`during:${during.phase}`);
+        await page.screenshot({ path: testInfo.outputPath('guided-plug-feedback-during.png') });
+        await waitForDecisionOrResult(page, evidence);
+        const after = await assertCoachFeedbackReadable(page, 'Immediately after the real Plug play');
+        evidence.plugFeedback.push(`after:${after.phase}`);
+        await page.screenshot({ path: testInfo.outputPath('guided-plug-feedback-after.png') });
+      }
     } else if (focus === 'end-turn') {
       await expect(page.getByTestId('button-next-round')).toBeEnabled();
       committedActions.push(stepId!);
@@ -337,6 +468,17 @@ test('real Rookie Road route issues and verifies the guided four-round fade', as
   await expect(page.getByTestId('button-complete-tutorial')).toBeEnabled({ timeout: 90_000 });
   expect(api.rejectedTranscript(), 'The server-side transcript verifier must accept the actual clicks').toBeNull();
   expect(api.completion()).not.toBeNull();
+  expect(api.completionRequests()).toBe(1);
+  // Current behavior: the real first sightings are triggered by other cards' effects (observed: Wifey),
+  // not by Plug. Require that real lessons were exercised; Plug's own feedback is proven separately.
+  expect(evidence.lessonSources.length, 'Real first-sighting mechanic lessons were exercised').toBeGreaterThan(0);
+  expect(evidence.plugFeedback, 'The real Plug play and its immediate coach feedback were checked').toHaveLength(2);
+  expect(evidence.cornballHeld, 'The actual rival Cornball ability must wait for Continue, including reduced motion').toBe(true);
+  expect(evidence.rivalVoiceChecked, 'The first rival cue plays the recorded voice line and stops on Continue').toBe(true);
+  expect(await page.evaluate(() =>
+    (window as typeof window & { __rivalReadingAudio: HTMLAudioElement[] }).__rivalReadingAudio.length,
+  ), 'The rival pause line plays only once per match').toBe(1);
+  expect(evidence.readingCues.filter(text => /Round recap/i.test(text))).toHaveLength(3);
   expect(api.movesReceived().filter(move => move.endTurn)).toHaveLength(4);
   expect(api.movesReceived().filter(move => !move.endTurn)).toHaveLength(3);
   expect(committedActions.filter(id => id?.endsWith('_play_card') || id?.endsWith('_play_squabble'))).toHaveLength(3);
@@ -353,10 +495,42 @@ test('real Rookie Road route issues and verifies the guided four-round fade', as
   }
   await expect(teachBack).toContainText('5 of 5 answered · 5 correct');
 
+  await page.getByTestId('button-inspect-final-board').click();
+  await expect(page.getByTestId('final-board-review')).toBeVisible();
+  await expect(page.getByTestId('battle-phase-status')).toContainText('Match complete');
+  await expect(page.locator('.broadcast-overlay')).toHaveCount(0);
+  await page.locator('[data-card-zone="board"][data-card-id="plug"]').first().click();
+  await expect(page.getByRole('dialog', { name: /Plug battle details/i })).toBeVisible();
+
+  // A real reconnect refetch returns the newly saved reward step. It must not
+  // replace an open card or the tutorial result with the next lesson.
+  const readsBefore = api.bootstrapRequests();
+   // Ensure the bootstrap query is stale regardless of the journey's speed.
+   // Age Date only; do not fast-forward any battle or presentation timers.
+   await page.clock.setFixedTime(new Date(Date.now() + 31_000));
+  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  await page.waitForTimeout(50);
+  await page.evaluate(() => window.dispatchEvent(new Event('online')));
+  await expect.poll(() => api.bootstrapRequests(), { timeout: 10_000 }).toBeGreaterThan(readsBefore);
+  await page.waitForTimeout(1800);
+  await expect(page.getByRole('dialog', { name: /Plug battle details/i })).toBeVisible();
+  await expect(page.getByTestId('rookie-post-fight-handoff')).toHaveCount(0);
+  await expect(page.getByTestId('rookie-reward-primer')).toHaveCount(0);
+  expect(api.onboardingActions()).toEqual([]);
+  await page.getByTestId('button-close-inspector').click();
+  await page.screenshot({ path: testInfo.outputPath('guided-final-board.png') });
+  await page.getByRole('button', { name: 'View result', exact: true }).click();
+  await expect(page.getByTestId('battle-result-screen')).toBeVisible();
+  await page.waitForTimeout(1800);
+  await expect(page.getByTestId('button-complete-tutorial')).toBeEnabled();
+  expect(api.completionRequests()).toBe(1);
+  await page.screenshot({ path: testInfo.outputPath('guided-stable-result.png') });
+
   await page.getByTestId('button-complete-tutorial').click();
   await expect(page.getByTestId('rookie-post-fight-handoff')).toBeVisible();
   await expect(page.getByTestId('rookie-post-fight-handoff')).toContainText('run a no-pressure practice fade, or head into Chapter One.');
   await page.getByRole('button', { name: 'See reward & next steps' }).click();
+  await expect.poll(() => api.onboardingActions()).toEqual(['complete-tutorial']);
   await expect(page.getByTestId('rookie-reward-primer')).toBeVisible();
   await page.getByRole('dialog').getByRole('button', { name: 'Keep going' }).click();
   await expect(page.getByTestId('rookie-reward-primer')).toContainText('no-pressure practice fade');

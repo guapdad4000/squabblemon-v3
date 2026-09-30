@@ -7,8 +7,15 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY', PromoCodeReward> = {
   DEVSTOCKZ: { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] },
+  // Possession-based tester codes: intentionally available in production.
+  DEVBLUEGANG: { code: 'DEVBLUEGANG', packTickets: 0, softCurrency: 0, styleShards: 0,
+    cardIds: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'] },
+  DEVREDGANG: { code: 'DEVREDGANG', packTickets: 0, softCurrency: 0, styleShards: 0,
+    cardIds: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'] },
+  DEVWITCHMONKEY: { code: 'DEVWITCHMONKEY', packTickets: 0, softCurrency: 0, styleShards: 0,
+    cardIds: ['wicked-witch', 'flying-monkeys'] },
   KYLE: { code: 'KYLE', packTickets: 25, softCurrency: 20_000, styleShards: 0, cardIds: ['kyle'] },
   DEVTEST: { code: 'DEVTEST', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },
   DEVTEST2: { code: 'DEVTEST2', packTickets: 100, softCurrency: 25_000, styleShards: 5_000 },

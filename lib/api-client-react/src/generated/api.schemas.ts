@@ -1304,6 +1304,14 @@ export const StoryCampaignBossStatus = {
   cleared: 'cleared',
 } as const;
 
+/**
+ * One-time rewards and confirmed player state from historical story payout reconciliation on GET /player/story.
+ */
+export type StoryCampaignCatchUp = {
+  rewards: StoryGrantedReward[];
+  bootstrap: PlayerBootstrap;
+};
+
 export interface StoryCampaign {
   contentVersion: number;
   chapters: StoryChapterProgress[];
@@ -1314,6 +1322,8 @@ export interface StoryCampaign {
   completedNodes: number;
   seasons?: StorySeasonProgress[];
   bossStatus: StoryCampaignBossStatus;
+  /** One-time rewards and confirmed player state from historical story payout reconciliation on GET /player/story. */
+  catchUp?: StoryCampaignCatchUp;
 }
 
 export type StoryMatchMetadataOutcome = typeof StoryMatchMetadataOutcome[keyof typeof StoryMatchMetadataOutcome];

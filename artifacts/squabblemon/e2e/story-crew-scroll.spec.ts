@@ -7,19 +7,18 @@ import {
   ROOKIE_FOUNDATION_IDS,
   catalogIdsToEngineIds,
   completeEngineCrew,
+  starterRecipes,
 } from '@workspace/squabblemon-engine/data';
 
 const NODE_ID = 'receipts-on-camera';
 const STORY_CONTENT_VERSION = 5;
 const SELECTED_DECK_ID = 'camera-crew';
+const ownedCards = [...new Set([...ROOKIE_FOUNDATION_IDS, ...starterRecipes.flatMap(recipe => recipe.catalogCardIds)])];
 const viewports = [
-  { width: 745, height: 807 },
-  { width: 899, height: 768 },
-  { width: 1366, height: 768 },
-  { width: 1440, height: 900 },
-  { width: 390, height: 844 },
+  { width: 492, height: 940 },
   { width: 320, height: 568 },
   { width: 844, height: 390 },
+  { width: 1366, height: 768 },
 ] as const;
 
 const decks = [
@@ -68,8 +67,8 @@ function bootstrap(): PlayerBootstrap {
       ageConfirmedAt: new Date(0).toISOString(),
       termsAcceptedAt: new Date(0).toISOString(),
       settings: { reducedMotion: true, turnTimerEnabled: false },
-      ownedCardIds: [...ROOKIE_FOUNDATION_IDS],
-      discoveredCardIds: [...ROOKIE_FOUNDATION_IDS],
+      ownedCardIds: ownedCards,
+      discoveredCardIds: ownedCards,
       ownedVariants: [],
       equippedVariants: {},
       cardProgression: {},
@@ -193,15 +192,24 @@ async function installApi(page: Page, failFirstStart: boolean) {
   const districtSnapshot = createDistrictSnapshot(`story-node-v1:${NODE_ID}`);
   const requests: Request[] = [];
   let starts = 0;
+  const player = bootstrap();
 
   await page.addInitScript(() => {
     localStorage.setItem('squabblemon_e2e_user', 'signed-in');
+    localStorage.removeItem('squabblemon:last-deck:v1:story-scroll-player');
   });
   await page.route('**/api/player/**', async route => {
     const request = route.request();
     const path = new URL(request.url()).pathname;
     if (request.method() === 'GET' && path.endsWith('/bootstrap')) {
-      return route.fulfill({ json: bootstrap() });
+      return route.fulfill({ json: player });
+    }
+    if (request.method() === 'PUT' && /\/decks\/[^/]+$/.test(path)) {
+      const deckId = decodeURIComponent(path.split('/').at(-1)!);
+      const draft = request.postDataJSON() as { name: string; cardIds: string[]; heroCardId: string; recipeId?: string };
+      const saved = { ...draft, id: deckId, recipeId: draft.recipeId ?? null, valid: true, issues: [] };
+      player.profile.savedDecks = [...player.profile.savedDecks.filter(deck => deck.id !== deckId), saved];
+      return route.fulfill({ json: player });
     }
     if (request.method() === 'GET' && path.endsWith('/story')) {
       return route.fulfill({ json: campaign() });
@@ -217,7 +225,7 @@ async function installApi(page: Page, failFirstStart: boolean) {
         playerDeckId: string;
         storyNodeId?: string;
       };
-      const chosen = decks.find(deck => deck.id === body.playerDeckId);
+      const chosen = player.profile.savedDecks.find(deck => deck.id === body.playerDeckId);
       if (!chosen) {
         return route.fulfill({ status: 400, json: { error: 'Unknown fixture deck' } });
       }
@@ -259,69 +267,64 @@ async function expectFullyHitTestable(locator: ReturnType<Page['locator']>) {
   })).toBe(true);
 }
 
-async function scrollLikeAUser(page: Page) {
-  const region = page.getByRole('region', { name: 'Choose your story gang' });
-  const geometry = await region.evaluate(element => ({
-    top: element.getBoundingClientRect().top,
-    left: element.getBoundingClientRect().left,
-    width: element.getBoundingClientRect().width,
-    height: element.getBoundingClientRect().height,
-    scrollTop: element.scrollTop,
-    scrollHeight: element.scrollHeight,
-    clientHeight: element.clientHeight,
-  }));
-  await region.focus();
-  await page.mouse.move(
-    geometry.left + geometry.width / 2,
-    geometry.top + Math.min(geometry.height / 2, geometry.height - 2),
-  );
-  await page.mouse.wheel(0, 1600);
-  await page.keyboard.press('PageDown');
-  if (geometry.scrollHeight > geometry.clientHeight + 1) {
-    await expect.poll(async () => region.evaluate(element => element.scrollTop)).toBeGreaterThan(geometry.scrollTop);
-  }
-}
-
-test.describe('immersive story crew selector scrolling', () => {
+test.describe('story crew editor and fight', () => {
   for (const viewport of viewports) {
-    test(`${viewport.width}x${viewport.height}: Enter fight is user-reachable and starts the authored story battle`, async ({ page }, testInfo) => {
+    test(`${viewport.width}x${viewport.height}: edit selected deck, return and enter fight`, async ({ page }, testInfo) => {
       test.skip(testInfo.project.name !== 'chromium-desktop', 'The viewport matrix is exercised once in Chromium.');
       await page.setViewportSize(viewport);
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      const starts = await installApi(page, viewport.width === 745 && viewport.height === 807);
+      const starts = await installApi(page, false);
 
       await page.goto(`/squabblemon/game/story/play/${NODE_ID}`);
-      await expect(page.getByRole('heading', { name: 'Who are you bringing?' })).toBeVisible({ timeout: 60_000 });
-
+      const selector = page.getByRole('region', { name: 'Select your story crew' });
+      await expect(selector).toBeVisible({ timeout: 60_000 });
+      const edit = page.getByRole('link', { name: 'Edit deck: Camera Crew' });
       const enterFight = page.getByRole('button', { name: 'Enter fight', exact: true });
-      await expectFullyHitTestable(enterFight);
-      await scrollLikeAUser(page);
-
-      const carousel = page.getByTestId('deck-carousel');
-      await expect(carousel).toBeVisible();
-      const deckViewport = carousel.getByLabel('Decks. Use left and right arrow keys to browse.');
-      await deckViewport.focus();
-      await page.keyboard.press('Home');
-      await page.keyboard.press('ArrowRight');
-      await expect(carousel).toHaveAttribute('data-selected-deck', SELECTED_DECK_ID);
-      const selectedCrew = carousel.getByRole('group', { name: /Camera Crew/ });
-      await expect(selectedCrew.getByText('Camera Crew', { exact: true })).toBeVisible();
-      await expect(selectedCrew.getByText('Battle ready', { exact: true })).toBeVisible();
-
-      await expectFullyHitTestable(enterFight);
-
-      if (viewport.width === 745 && viewport.height === 807) {
+      await expect(page.getByRole('link', { name: 'Edit deck: Home Crew' })).toBeVisible();
+      await expect(page.getByRole('group', { name: 'Available crews' }).getByRole('button', { name: 'Camera Crew' })).toBeVisible();
+      await page.getByRole('group', { name: 'Available crews' }).getByRole('button', { name: 'Camera Crew' }).click();
+      await edit.scrollIntoViewIfNeeded();
+      await expectFullyHitTestable(edit);
+      await expect(page.getByRole('link', { name: 'Edit deck: Home Crew' })).toHaveCount(0);
+      await expect(page.locator('.story-crew-select__grid button[aria-pressed="true"]')).toHaveCount(1);
+      expect(await page.locator('.story-crew-select__body').evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+      if (viewport.width === 320 || viewport.width === 844) {
         await page.screenshot({
-          path: 'e2e/screenshots/story-crew-enter-fight-745x807.png',
+          path: `e2e/screenshots/story-crew-${viewport.width}x${viewport.height}-street-file.png`,
           animations: 'disabled',
         });
       }
 
-      await enterFight.click({ position: { x: 20, y: 20 } });
-      if (viewport.width === 745 && viewport.height === 807) {
-        await expect(page.getByRole('alert')).toContainText('Story encounter temporarily unavailable');
-        await page.getByRole('button', { name: 'Retry', exact: true }).click();
+      await page.locator('.story-crew-select__grid button').last().scrollIntoViewIfNeeded();
+      await expectFullyHitTestable(page.locator('.story-crew-select__grid button').last());
+      await page.locator('.crew-case__photo').last().scrollIntoViewIfNeeded();
+      await expect(page.locator('.crew-case__photo').last()).toBeInViewport();
+      await page.locator('.story-crew-select__body').evaluate(element => { element.scrollTop = element.scrollHeight; });
+      await enterFight.scrollIntoViewIfNeeded();
+      await expectFullyHitTestable(enterFight);
+      expect(await page.locator('.crew-case').evaluate((element) =>
+        element.getBoundingClientRect().bottom <= document.querySelector('.story-crew-select footer')!.getBoundingClientRect().top + 1
+      )).toBe(true);
+      await page.screenshot({
+        path: `e2e/screenshots/story-crew-${viewport.width}x${viewport.height}.png`,
+        animations: 'disabled',
+      });
+      if (viewport.width === 492) {
+        await edit.focus();
+        await page.keyboard.press('Enter');
+      } else {
+        await edit.click();
       }
+      await expect(page).toHaveURL(new RegExp(`/game/decks/${SELECTED_DECK_ID}\\?returnTo=`));
+      await expect(page.getByRole('textbox', { name: 'Deck name' })).toHaveValue('Camera Crew');
+      const returnButton = page.getByRole('button', { name: 'Back to story crew selection' });
+      await returnButton.click();
+      await expect(selector).toBeVisible();
+      await expect(edit).toBeVisible();
+      await enterFight.scrollIntoViewIfNeeded();
+      await expectFullyHitTestable(enterFight);
+      await enterFight.click();
 
       await expect(page.locator('.battle-arena')).toBeVisible();
       await expect(page.locator('.battle-arena')).toHaveAttribute('aria-label', /ROUND 1.*YOUR MOVE/, {
@@ -333,7 +336,47 @@ test.describe('immersive story crew selector scrolling', () => {
         storyNodeId: NODE_ID,
         playerDeckId: SELECTED_DECK_ID,
       });
-      expect(starts).toHaveLength(viewport.width === 745 && viewport.height === 807 ? 2 : 1);
+      expect(starts).toHaveLength(1);
     });
   }
+
+  test('starter recipe save keeps story return and picks the newly saved deck; dirty exit asks first', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-desktop');
+    await page.setViewportSize({ width: 390, height: 844 });
+    await installApi(page, false);
+    await page.goto(`/squabblemon/game/story/play/${NODE_ID}`);
+    // Any available starter recipe is enough; its editor must create a saved copy.
+    const recipes = page.locator('.story-crew-select__grid button').filter({ hasNotText: /Home Crew|Camera Crew/ });
+    await recipes.first().click();
+    const edit = page.getByRole('link', { name: /^Edit deck:/ });
+    await edit.click();
+    await expect(page.getByText('Learning example · save to make it yours')).toBeVisible();
+    const name = page.getByRole('textbox', { name: 'Deck name' });
+    await name.fill('New Story Gang');
+    const returnButton = page.getByRole('button', { name: 'Back to story crew selection' });
+    await returnButton.click();
+    const dialog = page.getByRole('alertdialog');
+    await expect(dialog).toContainText('Save your deck changes?');
+    await dialog.getByRole('button', { name: 'Stay here' }).click();
+    await expect(name).toHaveValue('New Story Gang');
+    await page.getByRole('button', { name: 'Save deck', exact: true }).click();
+    await expect(page).toHaveURL(/\/game\/decks\/[^/]+\?returnTo=/);
+    await expect(name).toHaveValue('New Story Gang');
+    await returnButton.click();
+    await expect(page.getByRole('region', { name: 'Select your story crew' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Edit deck: New Story Gang' })).toBeVisible();
+    await expect(page.locator('.story-crew-select__grid button[aria-pressed="true"]')).toContainText('New Story Gang');
+    await page.getByRole('link', { name: 'Edit deck: New Story Gang' }).click();
+    await name.fill('Renamed Story Gang');
+    await returnButton.click();
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole('button', { name: 'Save and leave' }).click();
+    await expect(page.getByRole('region', { name: 'Select your story crew' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Edit deck: Renamed Story Gang' })).toBeVisible();
+    await expect(page.locator('.story-crew-select__grid button[aria-pressed="true"]')).toContainText('Renamed Story Gang');
+    await page.getByRole('link', { name: 'Edit deck: Renamed Story Gang' }).click();
+    await expect(name).toHaveValue('Renamed Story Gang');
+    await returnButton.click();
+    await expect(page.getByRole('button', { name: 'Enter fight' })).toBeVisible();
+  });
 });

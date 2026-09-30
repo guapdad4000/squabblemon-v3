@@ -330,6 +330,12 @@
     "revision": "3aeb74d74da5"
   },
   {
+    "id": "expanded-rival-reading-pause",
+    "text": "Hold up. That was the rival's move. Check the card and what changed on the board. Tap Continue the play when you're ready.",
+    "duration": 8.59,
+    "revision": "1529362afa44"
+  },
+  {
     "id": "expanded-next-card",
     "text": "Every district changes the fight. Choose an affordable card, then check where its ability and the district rule will help most.",
     "duration": 9.2,

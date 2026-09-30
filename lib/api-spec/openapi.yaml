@@ -2260,6 +2260,17 @@ components:
         bossStatus:
           type: string
           enum: [locked, available, in-progress, cleared]
+        catchUp:
+          description: One-time rewards and confirmed player state from historical story payout reconciliation on GET /player/story.
+          type: object
+          properties:
+            rewards:
+              type: array
+              items:
+                $ref: "#/components/schemas/StoryGrantedReward"
+            bootstrap:
+              $ref: "#/components/schemas/PlayerBootstrap"
+          required: [rewards, bootstrap]
       required: [contentVersion, chapters, nodes, recommendedNodeId, totalStars, completedNodes, bossStatus]
     StorySeasonProgress:
       type: object

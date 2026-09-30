@@ -98,10 +98,22 @@ test('stable Rookie Road context routes only truthful cues; missing coverage sta
   assert.deepEqual(rookieRoadCues('r4_choose_district', { fadeHighlighted: false }), []);
   assert.deepEqual(rookieRoadCues('r4_choose_district', { fadeHighlighted: true }), ['expanded-fade-district']);
   assert.deepEqual(rookieRoadCues('r4_end_turn', { squabbleThisRound: false }), ['expanded-end-turn']);
+  assert.deepEqual(rookieRoadCues('rival-reading-pause'), ['expanded-rival-reading-pause']);
   assert.deepEqual(rookieRoadCues('result'), ['expanded-result']);
   assert.deepEqual(rookieRoadCues('handoff'), ['expanded-handoff']);
   assert.deepEqual(rookieRoadCues('unrecorded-reward-total'), []);
   assert.deepEqual(tutorialClipsForText('Tap another card. It costs 7 Motion in THE TRAP.'), []);
+});
+
+test('the rival-reading line plays in the coached pause and stops when the player continues', async t => {
+  const e = environment(t);
+  const stop = playTutorialSequence(rookieRoadCues('rival-reading-pause'));
+  await settle();
+  assert.equal(e.instances.length, 1);
+  assert.match(e.instances[0].src, /expanded-rival-reading-pause\.ogg\?v=1529362afa44/);
+  assert.equal(e.instances[0].paused, false);
+  stop();
+  assert.equal(e.instances[0].paused, true);
 });
 
 test('sequences advance, duck music, and stop completely when a new prompt takes over', async t => {

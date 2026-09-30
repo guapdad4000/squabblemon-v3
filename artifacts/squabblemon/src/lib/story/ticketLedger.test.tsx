@@ -7,9 +7,9 @@ import { ChapterTicketProgress } from '../../components/story/ChapterTicketProgr
 import { summarizeChapterTickets } from './ticketLedger';
 
 const emptyProgress = {};
-// Season One's issued finale rewards stay at their original value even when
-// newly authored story chapters use a different ticket rate.
-const seasonOneFinaleTickets = 10;
+const directTickets = (chapter: NonNullable<ReturnType<typeof getStoryChapter>>) =>
+  chapter.nodes.flatMap(node => node.rewards).filter(reward => reward.kind === 'pack-ticket')
+    .reduce((sum, reward) => sum + reward.amount, 0);
 
 test('chapter ticket totals include direct finale and optional-node rewards', () => {
   const chapterOne = getStoryChapter('block-party');
@@ -19,13 +19,15 @@ test('chapter ticket totals include direct finale and optional-node rewards', ()
 
   const first = summarizeChapterTickets(chapterOne, emptyProgress);
   assert.equal(first.perfectTicketsAvailable, 7);
-  assert.equal(first.directTicketsAvailable, seasonOneFinaleTickets);
-  assert.equal(first.ticketsAvailable, 7 + seasonOneFinaleTickets);
+  assert.equal(first.directTicketsAvailable, directTickets(chapterOne));
+  assert.equal(first.ticketsAvailable, 7 + directTickets(chapterOne));
+  assert(chapterOne.nodes.every(node => node.rewards.some(reward => reward.kind === 'pack-ticket')));
 
   const second = summarizeChapterTickets(chapterTwo, emptyProgress);
   assert.equal(second.perfectTicketsAvailable, 6);
-  assert.equal(second.directTicketsAvailable, seasonOneFinaleTickets + 1);
-  assert.equal(second.ticketsAvailable, 6 + seasonOneFinaleTickets + 1);
+  assert.equal(second.directTicketsAvailable, directTickets(chapterTwo));
+  assert.equal(second.ticketsAvailable, 6 + directTickets(chapterTwo));
+  assert(chapterTwo.nodes.every(node => node.rewards.some(reward => reward.kind === 'pack-ticket')));
 });
 
 test('direct ticket rewards become earned when their reward nodes clear', () => {
@@ -37,9 +39,12 @@ test('direct ticket rewards become earned when their reward nodes clear', () => 
   };
 
   const summary = summarizeChapterTickets(chapterTwo, progress);
-  assert.equal(summary.directTicketsEarned, seasonOneFinaleTickets + 1);
-  assert.equal(summary.ticketsEarned, seasonOneFinaleTickets + 1);
-  assert.equal(summary.ticketsRemaining, 6);
+  const earned = chapterTwo.nodes.filter(node => progress[node.id as keyof typeof progress])
+    .flatMap(node => node.rewards).filter(reward => reward.kind === 'pack-ticket')
+    .reduce((sum, reward) => sum + reward.amount, 0);
+  assert.equal(summary.directTicketsEarned, earned);
+  assert.equal(summary.ticketsEarned, earned);
+  assert.equal(summary.ticketsRemaining, summary.ticketsAvailable - earned);
 });
 
 test('chapter ticket UI separates perfect-clear and direct reward totals', () => {
@@ -49,9 +54,9 @@ test('chapter ticket UI separates perfect-clear and direct reward totals', () =>
     <ChapterTicketProgress chapter={chapterTwo} nodeProgressById={emptyProgress} />,
   );
 
-  assert.match(html, new RegExp(`0 / ${6 + seasonOneFinaleTickets + 1}`));
+  assert.match(html, new RegExp(`0 / ${6 + directTickets(chapterTwo)}`));
   assert.match(html, /Perfect clears/);
   assert.match(html, /0 \/ 6/);
   assert.match(html, /Direct rewards/);
-  assert.match(html, new RegExp(`0 / ${seasonOneFinaleTickets + 1}`));
+  assert.match(html, new RegExp(`0 / ${directTickets(chapterTwo)}`));
 });

@@ -6,6 +6,8 @@ import {
   deckTestPath,
   readDeckListContext,
   saveDeckListContext,
+  storyDeckEditorPath,
+  storyDeckReturnPath,
 } from './deckJourney';
 
 class MemoryStorage {
@@ -18,6 +20,10 @@ describe('deck journey', () => {
   it('builds encoded nested routes', () => {
     assert.equal(deckEditorPath('starter / one'), '/game/decks/starter%20%2F%20one');
     assert.equal(deckTestPath('starter / one'), '/game/decks/starter%20%2F%20one/test');
+    const storyLink = storyDeckEditorPath('starter / one', 'receipts-on-camera');
+    assert.equal(storyDeckReturnPath(storyLink.split('?')[1]), '/game/story/play/receipts-on-camera');
+    assert.equal(storyDeckReturnPath('returnTo=https://example.com'), null);
+    assert.equal(storyDeckReturnPath('returnTo=%2Fgame%2Fstory%2Fplay%2Fnode%2F..'), null);
   });
 
   it('restores valid per-player list context safely', () => {

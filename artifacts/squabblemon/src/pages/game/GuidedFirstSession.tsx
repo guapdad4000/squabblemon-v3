@@ -16,7 +16,7 @@ import homeLessons from '../../lib/safehouseTour.json';
 
 export function RookieHandoff({ onReview, onComplete }: { onReview: () => void; onComplete: () => void }) {
   useTutorialVoice('Rookie Road handoff', true, rookieRoadCues('handoff'));
-  return <section className="rookie-review" data-testid="rookie-post-fight-handoff">
+  return <section className="rookie-review" data-testid="rookie-post-fight-handoff" role="region" aria-label="Rookie Road handoff" tabIndex={0}>
     <div>
       <img src={getAssetUrl('scenes/safehouse/concept.png')} alt="" />
       <span className="venue-kicker">ROOKIE ROAD / FIRST FADE COMPLETE</span>
@@ -46,7 +46,7 @@ export function GuidedFirstSession({ bootstrap, onCollect, onComplete }: { boots
     initialDeckId={ROOKIE_DECK_ID} initialRivalId="vibes" equippedVariants={bootstrap.profile.equippedVariants}
     customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your first gang', accent: 'ROOKIE', plan: 'Follow Dr. Fade’s highlighted moves.' }}
     onExit={() => setStage('deck')} onTutorialComplete={() => setStage('handoff')} />;
-  if (stage === 'fight-brief' && playing) return <section className="rookie-review" data-testid="rookie-fight-brief">
+  if (stage === 'fight-brief' && playing) return <section className="rookie-review" data-testid="rookie-fight-brief" role="region" aria-label="First fight briefing" tabIndex={0}>
     <div>
       <img src={getAssetUrl('scenes/safehouse/concept.png')} alt="" />
       <span className="venue-kicker">ROOKIE ROAD / BEFORE THE FADE</span>

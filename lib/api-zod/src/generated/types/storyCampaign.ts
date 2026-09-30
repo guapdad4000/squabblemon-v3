@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { StoryCampaignBossStatus } from './storyCampaignBossStatus';
+import type { StoryCampaignCatchUp } from './storyCampaignCatchUp';
 import type { StoryChapterProgress } from './storyChapterProgress';
 import type { StoryNodeProgress } from './storyNodeProgress';
 import type { StorySeasonProgress } from './storySeasonProgress';
@@ -20,4 +21,6 @@ export interface StoryCampaign {
   completedNodes: number;
   seasons?: StorySeasonProgress[];
   bossStatus: StoryCampaignBossStatus;
+  /** One-time rewards and confirmed player state from historical story payout reconciliation on GET /player/story. */
+  catchUp?: StoryCampaignCatchUp;
 }

@@ -1069,3 +1069,61 @@ test('older Shiesty clone snapshots still resolve the revisioned character portr
   assert.equal(getCardImage('shiesty'), getCardImage(cards.shiesty.id));
   assert.match(getCardImage('shiesty'), /shiesty-yn\.webp\?v=/);
 });
+
+test('guided reading cue renders a stable panel with continue and hides skip controls', () => {
+  const match = createMatch('block', 'combo');
+  const body = 'Rival Plug drained Motion. '.repeat(40);
+  const html = renderBattle(match, {
+    presentationPhase: 'round-result', phaseMessage: 'ROUND 1 RESULT',
+    guidedReadingCue: { kind: 'round', title: 'Round one settled', body, continueLabel: 'Continue to round two' },
+    onContinueGuidedReading: noop,
+  });
+  assert.match(html, /data-testid="guided-reading-cue"/);
+  assert.match(openingButton(html, 'button-continue-guided-reading'), /Continue|type="button"/);
+  assert.doesNotMatch(openingButton(html, 'button-continue-guided-reading'), /disabled/);
+  assert.match(html, /Continue to round two/);
+  assert.doesNotMatch(html, /data-testid="battle-guidance"/);
+  assert.match(html, /data-testid="battle-phase-status"/);
+  assert.match(html, /data-reading-cue="round"/);
+  assert.doesNotMatch(html, /data-testid="button-fast-forward"/);
+  assert.doesNotMatch(html, /aria-label="Continue past/);
+  assert.match(html, /data-testid="button-battle-history"/);
+  const without = renderBattle(match, { presentationPhase: 'round-result', phaseMessage: 'ROUND 1 RESULT' });
+  assert.doesNotMatch(without, /guided-reading-cue/);
+  assert.match(without, /data-testid="button-fast-forward"/);
+});
+
+test('phase status names the actual presentation phase in plain language', () => {
+  const match = createMatch('block', 'combo');
+  const status = (props: Record<string, unknown>) => renderBattle(match, props).match(/data-testid="battle-phase-status" data-phase-status="([^"]+)"/)?.[1];
+  assert.equal(status({ presentationPhase: 'player-ready' }), 'your-turn');
+  assert.equal(status({ presentationPhase: 'rival-reveal' }), 'rival-reveal');
+  assert.equal(status({ presentationPhase: 'round-result' }), 'round-result');
+  assert.equal(status({ presentationPhase: 'match-finish' }), 'match-complete');
+  const card = match.cpuHand[0]!;
+  const effect = { sequence: 5, kind: 'normal', type: 'ability', cardInstanceId: card.instanceId, cardId: card.cardId, owner: 'cpu', lane: 0, targetIds: [], targets: [], note: 'x', source: null, round: 1, scores: { before: [], after: [] } };
+  const html = renderBattle(match, { presentationPhase: 'effects', activeEffect: effect });
+  assert.match(html, /data-phase-status="effects"/);
+  assert.match(html, /Effects resolve<\/b><span>Rival /);
+});
+
+test('reviewing the final board suppresses the finish cinematic but keeps a compact status', () => {
+  const match = createMatch('block', 'combo');
+  const cinematic = renderBattle(match, { presentationPhase: 'match-finish', phaseMessage: 'FINAL DISTRICTS' });
+  assert.match(cinematic, /broadcast-overlay/);
+  const review = renderBattle(match, { presentationPhase: 'match-finish', phaseMessage: 'FINAL DISTRICTS', reviewingFinalBoard: true });
+  assert.doesNotMatch(review, /broadcast-overlay/);
+  assert.match(review, /data-testid="final-board-review"/);
+  assert.doesNotMatch(review, /data-testid="button-fast-forward"/);
+  assert.match(review, /battle-guidance-message">[^]*data-testid="final-board-review"/);
+  assert.match(review, /data-phase-status="match-complete"/);
+  assert.match(review, /data-testid="button-resolving"[^>]*>(?:<[^>]*>)*Match complete/);
+  assert.doesNotMatch(review, /Resolving\.\.\./);
+});
+
+test('mechanic lesson portrait is boxed separately from its text', () => {
+  const html = renderBattle(createMatch('block', 'combo'), { presentationPhase: 'effects', mechanicLesson: MECHANIC_LESSONS.burn, onDismissMechanicLesson: noop });
+  assert.match(html, /mechanic-lesson-card/);
+  assert.match(html, /class="mechanic-lesson-portrait"[^>]*><img class="dr-fade-referee"/);
+  assert.match(html, /mechanic-lesson-copy/);
+});

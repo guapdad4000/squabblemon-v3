@@ -26,6 +26,7 @@ export function rookieRoadCues(
     case 'r1_choose_district': return ['expanded-first-district'];
     case 'r1_play_card': case 'r2_play_card': return ['expanded-preview'];
     case 'r1_end_turn': case 'r2_end_turn': return ['expanded-end-turn'];
+    case 'rival-reading-pause': return ['expanded-rival-reading-pause'];
     case 'r2_choose_card': return ['expanded-next-card'];
     case 'r2_choose_district': return ['expanded-spread'];
     case 'r3_bank_motion': return [context.cardSelected ? 'expanded-clear-card' : 'expanded-bank'];

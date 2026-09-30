@@ -43,7 +43,7 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
     const res = await save.mutateAsync({ deckId: ROOKIE_DECK_ID, data: draft });
     queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
   }
-  if (playing && fightBrief) return <section className="rookie-review" data-testid="rookie-practice-brief"><div>
+  if (playing && fightBrief) return <section className="rookie-review" data-testid="rookie-practice-brief" role="region" aria-label="Practice fight briefing" tabIndex={0}><div>
     <img src={getCardImage(playing.heroCardId)} alt={`${playing.name} cover`} />
     <span className="venue-kicker">ROOKIE ROAD / PRACTICE GOAL</span>
     <h1>Try your idea.</h1>
@@ -55,7 +55,7 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
     customPlayerDeck={{ id: ROOKIE_DECK_ID, name: playing.name, cards: playing.cardIds, hero: playing.heroCardId, archetype: 'Your gang', accent: 'TEST', plan: 'Try your idea. There is no win requirement.' }}
     equippedVariants={bootstrap.profile.equippedVariants} onVerifiedComplete={match => { setResult(match); trackEvent('rookie_test_completed', { rounds: match.round }); }}
      onExit={() => { setPlaying(null); setFightBrief(false); setReview(tested); setPrimer(!tested); }} />;
-  if (review && tested) return <section className="rookie-review"><div>
+   if (review && tested) return <section className="rookie-review" data-testid="rookie-lesson-complete" role="region" aria-label="Lesson complete review" tabIndex={0}><div>
      <img src={getCardImage(saved?.heroCardId || 'hooper')} alt={`${saved?.name ?? 'Your gang'} cover`} />
     <span className="venue-kicker">ROOKIE ROAD / LESSON COMPLETE</span><h1>You built this gang.</h1>
      <p>{result ? summarizeDeckTest(result, focus) : 'Your first practice fade is saved. Review what happened, adjust your lineup, or head to Chapter One when you’re ready.'}</p>
@@ -64,7 +64,7 @@ export function FirstDeckWorkshop({ bootstrap, onComplete }: { bootstrap: Player
      {progressionPrimer}
      <nav><button className="venue-button" data-testid="button-review-setup-lesson" onClick={() => setReview(false)}>Review setup lesson</button><button className="venue-button" data-testid="button-practice-another-fade" onClick={() => { setReview(false); setResult(null); setPlaying(latestDraft); setFightBrief(true); }}>Practice another fade</button><button className="venue-button venue-button--gold" data-testid="button-claim-reward-enter-story" onClick={onComplete}>Claim reward & enter Chapter One</button></nav>
   </div></section>;
-  if (primer && !tested) return <section className="rookie-review" data-testid="rookie-reward-primer"><div>
+   if (primer && !tested) return <section className="rookie-review" data-testid="rookie-reward-primer" role="region" aria-label="Welcome reward review" tabIndex={0}><div>
     <img src={getCardImage(latestDraft.heroCardId)} alt={`${latestDraft.name} cover`} />
     <span className="venue-kicker">ROOKIE ROAD / YOUR WELCOME REWARD</span>
     <h1>Your first haul is ready.</h1>

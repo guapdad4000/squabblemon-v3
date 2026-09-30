@@ -32,6 +32,7 @@ import { PlayLoop } from '../../components/PlayLoop';
 import { CardView } from '../../components/CardView';
 import { e2eAuthEnabled } from '../../lib/auth';
 import { usePersistentDeckSelection } from '../../lib/deckSelection';
+import { storyDeckEditorPath } from '../../lib/deckJourney';
 import '../../styles/studio.css';
 import '../../styles/activity-stage.css';
 
@@ -196,8 +197,9 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       />
     );
   const fightButton = (
-    <button className="studio-action studio-action--gold" onClick={enterFight} style={{ width: '100%' }}>
-      <GameGlyph name="fight" /> Enter fight <ArrowRight size={17} />
+    <button className={`studio-action ${storyNodeId ? 'story-crew-select__fight' : 'studio-action--gold'}`} onClick={enterFight} style={{ width: '100%' }}>
+      {storyNodeId ? <Swords size={21} aria-hidden="true" /> : <GameGlyph name="fight" />}
+      <span>Enter fight</span> <ArrowRight size={19} aria-hidden="true" />
     </button>
   );
   const setup = (
@@ -423,7 +425,7 @@ export function PlayerDeckPlay({ bootstrap, storyNodeId }: { bootstrap: PlayerBo
       }
     >
       {storyNodeId ? (
-        <StoryCrewSelect decks={crews} selectedId={chosen?.id ?? ""} onSelect={setCrewId} onBack={goBack} action={crews.length > 0 ? fightButton : null} />
+        <StoryCrewSelect decks={crews} selectedId={chosen?.id ?? ""} onSelect={setCrewId} editHref={id => storyDeckEditorPath(id, storyNodeId)} onBack={goBack} action={crews.length > 0 ? fightButton : null} />
       ) : setup}
     </section>
   );

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardCatalog, catalogCardById, type CardRarity } from "@workspace/squabblemon-engine/data";
+import { cardCatalog, catalogCardById, STORY_ONLY_CARD_IDS, type CardRarity } from "@workspace/squabblemon-engine/data";
 import {
   choosePackCardFromTier,
   STREET_PACK_RARITY_WEIGHTS,
@@ -10,6 +10,7 @@ import {
   drawGameplayCard,
   generateStreetPack,
   generateStreetTenPull,
+  isStreetPackCard,
   STREET_PACK_CONFIG,
   STREET_PACK_TEN_PULL_CONFIG,
 } from "./collectionEconomy";
@@ -18,6 +19,29 @@ const zero = () => 0;
 const high = (max: number) => max - 1;
 const allCardIds = cardCatalog.map(card => card.catalogId);
 const allVariantIds = cardCatalog.flatMap(card => card.variantSlots.map(variant => variant.id));
+
+test("story-earned fighters stay out of Street Packs until the story grants them", () => {
+  const storyOnly = new Set<string>(STORY_ONLY_CARD_IDS);
+  for (const id of storyOnly) {
+    const card = catalogCardById[id];
+    assert.ok(card, `${id} must be a playable catalog card`);
+    assert.equal(isStreetPackCard(card), false, `${id} must not be drawn in a pack`);
+    assert.deepEqual(card.acquisitionSources, ["Story Rewards"]);
+  }
+  assert.equal(isStreetPackCard(catalogCardById["red-side-1"]), true);
+
+  // Force the variant bonus with every ordinary variant exhausted. Unearned story
+  // character variants must not reveal a story prize through a pack either.
+  const otherVariants = cardCatalog.filter(isStreetPackCard)
+    .flatMap(card => card.variantSlots.map(variant => variant.id));
+  const pack = generateStreetPack({
+    ownedCardIds: [], discoveredCardIds: [], ownedVariants: otherVariants,
+    pity: STREET_PACK_RULES.pityLimit - 1,
+  }, high);
+  for (const reward of pack.rewards) {
+    assert.ok(!reward.cardId || !storyOnly.has(reward.cardId), "unearned story card leaked into a pack");
+  }
+});
 
 test("published v7 rules disclose the authoritative independent rarity and bonus behavior", () => {
   assert.equal(STREET_PACK_CONFIG.oddsVersion, "street-pack-v7");

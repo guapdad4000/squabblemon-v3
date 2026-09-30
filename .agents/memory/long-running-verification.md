@@ -14,3 +14,9 @@ Native test startup can appear idle while enumerating the cold, lazily mounted N
 **Why:** Directory enumeration blocked before PostgreSQL initialization even though the installed toolchain already supplied the required binaries. This was environment startup work, not a database connection failure.
 
 **How to apply:** Prefer installed toolchain discovery before a full store search. Keep tests on their owned disposable database; do not switch to an inherited database to work around slow provisioning.
+
+The owned campaign test runner requires the package-manager script environment. Invoking it with `pnpm exec node` does not supply `npm_execpath`, even though the command is launched by pnpm.
+
+**Why:** A direct exec of the runner failed its guard before creating the disposable test database; `pnpm run` supplied the required environment and completed the targeted suite.
+
+**How to apply:** Use a package script when invoking guarded database tests, and scope long suites to relevant groups rather than relying on a foreground run that may time out before buffered output is printed.

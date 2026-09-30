@@ -3,6 +3,7 @@ import { randomInt } from "node:crypto";
 import {
   cardCatalog,
   catalogCardById,
+  STORY_ONLY_CARD_IDS,
   type CardRarity,
 } from "@workspace/squabblemon-engine/data";
 import {
@@ -94,8 +95,14 @@ const currencyReward = (amount: number): ApiPackReward => ({
   rarity: null, isNew: false, amount,
 });
 
-function availableVariants(ownedVariants: ReadonlySet<string>) {
-  return cardCatalog.flatMap(card => card.variantSlots
+const storyOnlyCardIds = new Set<string>(STORY_ONLY_CARD_IDS);
+
+export function isStreetPackCard(card: Pick<(typeof cardCatalog)[number], "catalogId">) {
+  return !storyOnlyCardIds.has(card.catalogId);
+}
+
+function availableVariants(ownedVariants: ReadonlySet<string>, ownedCardIds: ReadonlySet<string>) {
+  return cardCatalog.filter(card => isStreetPackCard(card) || ownedCardIds.has(card.catalogId)).flatMap(card => card.variantSlots
     .filter(variant => !ownedVariants.has(variant.id))
     .map(variant => ({ card, variant })));
 }
@@ -104,7 +111,7 @@ type CardPools = Readonly<Record<PackRarity, readonly (typeof cardCatalog)[numbe
 const catalogPools = Object.fromEntries(
   Object.keys(STREET_PACK_RARITY_WEIGHTS).map(rarity => [
     rarity,
-    cardCatalog.filter(card => card.rarity === rarity),
+    cardCatalog.filter(card => card.rarity === rarity && isStreetPackCard(card)),
   ]),
 ) as unknown as CardPools;
 
@@ -152,7 +159,7 @@ export function generateStreetPack(
     }
   }
 
-  const variants = availableVariants(ownedVariants);
+  const variants = availableVariants(ownedVariants, ownedCards);
   const forceStyle = variants.length > 0 && current.pity >= STREET_PACK_RULES.pityLimit - 1;
   const bonusRoll = forceStyle ? 9999 : rng(10000);
   const styleOutcome = forceStyle || bonusRoll >= 9500;

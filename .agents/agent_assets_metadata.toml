@@ -84,3 +84,17 @@ mtime_ms = 1790676465937
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/489186c3-e546-4687-af9b-724e92bd96f4/918118c1-b17a-403c-a311-5c80299c0ad6"
 storage_version_token = "1790677166840944"
 content_type = "image/png"
+
+[[outputs]]
+id = "BEpMY00Uy7e2zjgJTkr2c"
+uri = "file://docs/beta-feedback-plan-2026-09-29.md"
+type = "text"
+title = "Beta feedback intake and fix plan"
+description = "All 19 consolidated feedback items, current-code findings, prioritized fixes, dependencies, and acceptance tests."
+logical_id = "4b1fbe7b-c4a9-4c84-b0a8-eed92f3530a1"
+content_hash = "sha256:98ab6d84ae39497d70122b4e654f9dd41a84af829b7a804c80e74beff809db6f"
+size = 20314
+mtime_ms = 1790722496528
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4b1fbe7b-c4a9-4c84-b0a8-eed92f3530a1/c482ee41-3109-492e-b9c5-088b5f0abb18"
+storage_version_token = "1790722512262469"
+content_type = "text/markdown"

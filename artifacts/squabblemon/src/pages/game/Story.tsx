@@ -1,15 +1,16 @@
 import { setScopedMusicMode } from '../../musicStore';
 import { GameBackButton } from '../../components/venue/GameBackButton';
 import { useViewMemory } from '../../lib/navigationMemory';
-import { rewardReceipts } from '../../lib/rewardReceipts';
+import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Crown, LockKeyhole, MessageCircle, Star, Ticket } from 'lucide-react';
+import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket, X } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
 import '../../styles/story-briefing.css';
+import '../../styles/story-rewards.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useSearch } from 'wouter';
@@ -32,6 +33,7 @@ import {
   getStorySeason,
   getStorySeasonForChapter,
   type StoryBattleNode,
+  type StoryChapter,
   type StoryDialogueLine,
   type StoryNode,
   type StoryReward,
@@ -91,8 +93,52 @@ function rewardLabel(reward: StoryReward | StoryGrantedReward) {
   return reward.id === 'clout' ? `+${reward.amount} Clout · Training fund` : `+${reward.amount} Account XP`;
 }
 
+const resolveStoryRewardCharacter = (id: string) => STORY_CHARACTERS.find(character => character.id === id);
+
+function RewardPrize({ reward, compact = false }: { reward: StoryReward | StoryGrantedReward; compact?: boolean }) {
+  const character = reward.kind === 'character-unlock' ? STORY_CHARACTERS.find(item => item.id === reward.id) : undefined;
+  const image = reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : character?.portraitAssetId ? getAssetUrl(character.portraitAssetId) : undefined;
+  const amount = reward.kind === 'currency' || reward.kind === 'pack-ticket' ? reward.amount : undefined;
+  return <div className={`story-prize ${compact ? 'story-prize--compact' : ''}`} data-testid={`story-prize-${reward.kind}-${reward.id}`}>
+    <span className="story-prize__icon">
+      {image ? <img src={image} alt="" loading="lazy" /> : reward.kind === 'pack-ticket' ? <Ticket size={compact ? 21 : 27} /> : reward.kind === 'chapter-key' ? <LockKeyhole size={compact ? 21 : 27} /> : reward.kind === 'currency' ? <GameGlyph name={reward.id === 'clout' ? 'cloutStack' : 'xp'} /> : <Star size={compact ? 21 : 27} />}
+    </span>
+    <span className="story-prize__copy">
+      <strong>{amount !== undefined ? `+${amount} ${reward.kind === 'pack-ticket' ? 'Pack Tickets' : reward.id === 'clout' ? 'Clout' : 'Account XP'}` : reward.kind === 'card' ? cards[reward.id]?.name ?? reward.id : reward.kind === 'chapter-key' ? 'Chapter key' : character?.name ?? reward.id}</strong>
+      {!compact && <small>{reward.kind === 'card' ? 'Card reward · duplicate converts to shards' : reward.kind === 'pack-ticket' && reward.amount === 10 ? 'Upgraded ten-pull' : reward.kind === 'character-unlock' ? 'Story character' : reward.kind === 'chapter-key' ? 'Unlock the next chapter' : reward.kind === 'cosmetic' ? 'Cosmetic reward' : 'Added to your account'}</small>}
+    </span>
+  </div>;
+}
+
+function ChapterRewardStop({ node, progress, finale, onSelect }: {
+  node: StoryChapter['nodes'][number];
+  progress: StoryCampaign['nodes'][number] | undefined;
+  finale: boolean;
+  onSelect: () => void;
+}) {
+  const locked = !progress || progress.status === 'locked';
+  const earned = !!progress?.cleared;
+  const portrait = node.kind === 'battle' ? node.encounter.enemy.portraitAssetId : node.scenes.at(-1)?.portraitAssetId;
+  return <article className={`story-award-stop ${finale ? 'story-award-stop--finale' : ''} ${locked ? 'is-locked' : earned ? 'is-earned' : 'is-available'}`} data-testid={`story-reward-stop-${node.id}`}>
+    <div className="story-award-stop__art" style={{ backgroundImage: `url("${getAssetUrl(node.cinematic.environmentAssetId)}")` }}>
+      {portrait && <img src={getAssetUrl(portrait)} alt="" loading="lazy" />}
+      <span className="story-award-stop__number">{finale ? 'FINALE' : node.kind === 'battle' ? 'ENCOUNTER' : 'STORY SCENE'}</span>
+    </div>
+    <div className="story-award-stop__details">
+      <div className="story-award-stop__top"><span className="story-award-stop__state">{locked ? <LockKeyhole size={12} /> : earned ? <Check size={12} /> : <Star size={12} />}{locked ? 'Locked' : earned ? 'Earned' : 'Not earned'}</span>{node.kind === 'battle' && <span className="story-award-stop__stars">{progress?.stars ?? 0} / 3 stars</span>}</div>
+      <h3>{node.title}</h3>
+      <div className="story-award-stop__prizes">
+        {node.rewards.length ? node.rewards.map((reward, index) => <RewardPrize key={`${reward.kind}-${reward.id}-${index}`} reward={reward} compact />) : <span className="story-award-stop__none">No first-clear award</span>}
+      </div>
+      {node.kind === 'battle' && <div className={`story-award-stop__bonus ${progress?.stars === 3 ? 'is-earned' : ''}`}><Star size={13} fill={progress?.stars === 3 ? 'currentColor' : 'none'} /><span>Perfect clear bonus</span><strong>+1 Pack Ticket</strong></div>}
+      <button type="button" disabled={locked} onClick={onSelect} className="story-award-stop__action" data-testid={`button-open-story-stop-${node.id}`}>{locked ? 'Keep playing to unlock' : earned ? node.kind === 'battle' ? 'Replay battle' : 'Visit scene' : node.kind === 'battle' ? 'Start battle' : 'Play scene'} {!locked && <ArrowRight size={15} />}</button>
+    </div>
+  </article>;
+}
+
 export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const storyQuery = useGetPlayerStory();
+  const queryClient = useQueryClient();
   const mapViewport = useRef<HTMLDivElement>(null);
   const mapDrag = useRef<{ x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
   const [location, setLocation] = useLocation();
@@ -103,11 +149,39 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const [rewardsOpen, setRewardsOpen] = useState(false);
 
   useEffect(() => {
+    if (!rewardsOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setRewardsOpen(false); };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [rewardsOpen]);
+
+  useEffect(() => {
     setScopedMusicMode(activeSeasonId || selectedNodeId ? 'story' : null);
     return () => setScopedMusicMode(null);
   }, [activeSeasonId, selectedNodeId]);
 
   const campaign = storyQuery.data;
+  useEffect(() => {
+    const catchUp = campaign?.catchUp;
+    if (!campaign || !catchUp?.rewards.length) return;
+    queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), catchUp.bootstrap);
+    const chapter = campaign.chapters.find(item => item.status !== 'locked') ?? campaign.chapters[0];
+    revealStoryRewards({
+      nodeId: 'campaign-catch-up',
+      title: 'Past Rewards, Delivered',
+      story: {
+        chapterTitle: 'The Neighborhood Remembers',
+        backgroundAssetId: chapter?.mapAssetId ?? 'assets/story/chapter-one/environments/map.webp',
+        portraitAssetId: 'assets/characters/dr-fade.webp',
+      },
+      rewards: catchUp.rewards,
+      bootstrap: catchUp.bootstrap,
+      resolveCharacter: resolveStoryRewardCharacter,
+    });
+    // Remove the one-shot acknowledgement from the cache. Revisiting the map
+    // must not stage the same collection from a cached GET response.
+    queryClient.setQueryData(getGetPlayerStoryQueryKey(), { ...campaign, catchUp: undefined });
+  }, [campaign, queryClient]);
   useEffect(() => {
     if (!campaign || typeof campaign !== 'object' || !Array.isArray(campaign.nodes)) return;
     const params = new URLSearchParams(search);
@@ -345,7 +419,8 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             type="button"
             className="story-atlas__rewards-fab"
             onClick={() => setRewardsOpen(true)}
-            aria-label="Open chapter ticket rewards"
+            aria-label="Open chapter rewards"
+            data-testid="button-open-chapter-rewards"
           >
             <Ticket size={14} />
             <span>Rewards</span>
@@ -368,34 +443,37 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             role="dialog"
-            aria-label="Chapter ticket rewards"
+            aria-label="Chapter rewards"
+            aria-modal="true"
           >
-            <div className="story-atlas__rewards-art" style={{ backgroundImage: `linear-gradient(0deg, #080b10, #080b1020), url("${getAssetUrl(chapterContent.mapAssetId)}")` }} aria-hidden="true" />
             <div className="story-atlas__rewards-panel__head">
-              <span className="story-atlas__rewards-panel__title">
-                <Ticket size={14} />
-                <strong>Chapter rewards</strong>
-                <em>{currentChapter.title}</em>
-              </span>
+              <span className="story-atlas__rewards-panel__title"><Ticket size={16} /><strong>Chapter awards</strong></span>
               <button
                 type="button"
                 className="story-atlas__rewards-panel__close"
                 onClick={() => setRewardsOpen(false)}
                 aria-label="Close rewards"
-              >
-                ×
-              </button>
+                data-testid="button-close-chapter-rewards"
+              ><X size={19} /></button>
             </div>
             <div className="story-atlas__rewards-panel__body">
-              <p className="story-reward-explainer">Battle rewards are saved after a verified win. Perfect clears add a ticket. Finish the reward scenes below to collect their separate rewards.</p>
-              {chapterContent.nodes.filter(node => node.kind !== 'battle' && node.rewards.length > 0).map(node => {
-                const progress = campaign.nodes.find(item => item.nodeId === node.id);
-                return <button key={node.id} className="story-reward-stop" disabled={progress?.status === 'locked'} onClick={() => { setLocation(`/game/story?node=${encodeURIComponent(node.id)}`); setRewardsOpen(false); }}>
-                  <span>{progress?.cleared ? 'Collected' : progress?.status === 'locked' ? 'Locked' : 'Finish scene to collect'}</span>
-                  <strong>{node.title}</strong><small>{node.rewards.map(rewardLabel).join(' · ')}</small>
-                </button>;
-              })}
-
+              <section className="story-awards-hero" style={{ backgroundImage: `linear-gradient(90deg, #0c1718 6%, #0c1718ce 50%, #0c171830), url("${getAssetUrl(chapterContent.mapAssetId)}")` }}>
+                <span className="story-awards-hero__kicker">The neighborhood remembers</span>
+                <h2>{currentChapter.title}</h2>
+                <p>Every stop has its own prize. Clear a battle to earn its awards; finish a scene to claim what waits there.</p>
+                <div className="story-awards-hero__count"><span>{chapterContent.nodes.filter(node => campaign.nodes.find(progress => progress.nodeId === node.id)?.cleared).length}<small> / {chapterContent.nodes.length}</small></span> stops cleared</div>
+              </section>
+              <div className="story-awards-section-heading"><span>THE REWARD ROUTE</span><small>First-clear awards are granted once</small></div>
+              <div className="story-awards-route">
+                {chapterContent.nodes.map((node) => <ChapterRewardStop
+                  key={node.id}
+                  node={node}
+                  progress={campaign.nodes.find(item => item.nodeId === node.id)}
+                  finale={node.id === chapterContent.nodes.filter(item => !item.optional).at(-1)?.id}
+                  onSelect={() => { setRewardsOpen(false); setLocation(`/game/story?node=${encodeURIComponent(node.id)}`); }}
+                />)}
+              </div>
+              <div className="story-awards-section-heading story-awards-section-heading--ledger"><span>PERFECT CLEAR LEDGER</span><small>One bonus ticket for each three-star battle</small></div>
               <ChapterTicketProgress
                 chapter={chapterContent}
                 nodeProgressById={Object.fromEntries(
@@ -513,9 +591,10 @@ export function NodeOverlay({
       } });
       applyCampaign(result.campaign, result.bootstrap);
       setGrantedRewards(result.rewards);
-      setDeliveryStatus(result.rewards.length ? 'Rewards saved to your account.' : 'These rewards were already saved to your account.');
-      rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: storyNode.title, story: rewardArt,
-        items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const })) });
+      setDeliveryStatus(result.rewards.length
+        ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
+        : 'These rewards were already saved to your account.');
+      revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
       setScreen('completed');
     } catch {
       setActionError('Rewards could not be saved. Try again; the same reward cannot be granted twice.');
@@ -540,7 +619,10 @@ export function NodeOverlay({
         });
         applyCampaign(result.campaign, result.bootstrap);
         setGrantedRewards(result.rewards);
-        rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(reward => reward.id).join(',')}`, title: storyNode.title, story: rewardArt, items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+        setDeliveryStatus(result.rewards.length
+          ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
+          : 'These rewards were already saved to your account.');
+        revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
         setScreen('completed');
         return;
       }
@@ -622,7 +704,10 @@ export function NodeOverlay({
           onCompleted={(result) => {
             applyCampaign(result.campaign, result.bootstrap);
             setGrantedRewards(result.rewards);
-            rewardReceipts.show({ id: `story:${nodeId}:${result.rewards.map(r => r.id).join(',')}`, title: storyNode.title, story: rewardArt, items: result.rewards.map(reward => ({ label: rewardLabel(reward), glyph: reward.kind === 'pack-ticket' ? 'ticket' as const : reward.kind === 'currency' ? (reward.id === 'clout' ? 'cloutStack' as const : 'xp' as const) : 'mastery' as const, image: reward.kind === 'card' ? getCardImage(cards[reward.id]?.id ?? reward.id) : undefined })) });
+            setDeliveryStatus(result.rewards.length
+              ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
+              : 'These rewards were already saved to your account.');
+            revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
             setScreen('completed');
           }}
           onClose={onClose}
@@ -630,40 +715,28 @@ export function NodeOverlay({
       )}
 
       {replayIndex === null && screen === 'completed' && !isBattle && (
-        <div className="story-reward-completion grid h-full place-items-center overflow-y-auto p-6 text-center" style={{ backgroundImage: `linear-gradient(0deg, #080b10f5, #080b1080), url("${getAssetUrl(rewardArt?.backgroundAssetId ?? storyNode.cinematic.environmentAssetId)}")` }}>
-          <div className="max-w-md">
-            <img
-              src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')}
-              alt=""
-              className="mx-auto mb-4 h-40 w-40 object-contain drop-shadow-2xl"
-            />
-            <div className="font-mono text-[9px] uppercase tracking-[.25em] text-primary">
-              {nodeProgress.cleared ? 'Location secured' : 'Ready to claim'}
+        <div className="story-reward-completion" style={{ backgroundImage: `linear-gradient(100deg, #0b1715ed, #0b1715c9), url("${getAssetUrl(storyNode.cinematic.environmentAssetId)}")` }}>
+          <div className="story-complete-layout">
+            <div className="story-complete-scene" style={{ backgroundImage: `url("${getAssetUrl(storyNode.cinematic.environmentAssetId)}")` }}>
+              <div className="story-complete-scene__stamp">{isCleared ? <Check size={16} /> : <Star size={16} />} {isCleared ? 'SCENE COMPLETE' : 'SCENE READY'}</div>
+              <img src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')} alt="" className="story-complete-scene__character" />
+              <span className="story-complete-scene__caption">A NEW PAGE IN THE NEIGHBORHOOD</span>
             </div>
-            <h2 className="mt-2 font-display text-4xl font-black italic uppercase">{storyNode.title}</h2>
-            {storyNode.puzzle && nodeProgress.cleared && (
-              <p role="status" className="mt-4 text-sm leading-relaxed text-white/80">
-                {nodeProgress.lastOutcome === 'puzzle-skipped' ? storyNode.puzzle.skipText : storyNode.puzzle.solvedText}
-              </p>
-            )}
-            {!!storyNode.rewards.length && (
-              <div className="mt-5 border border-primary/25 bg-primary/5 p-4 text-left">
-                <div className="font-mono text-[8px] uppercase tracking-widest text-primary">
-                  {grantedRewards.length ? 'Rewards received' : isCleared ? 'Scene cleared · first-clear rewards' : 'Not collected yet'}
-                </div>
-                {(grantedRewards.length ? grantedRewards : storyNode.rewards).map((reward, index) => (
-                  <div key={`${reward.id}-${index}`} className="mt-2 text-sm text-white/75">{rewardLabel(reward)}</div>
-                ))}
+            <div className="story-complete-content">
+              <span className="story-complete-content__eyebrow">{rewardChapter?.title ?? 'Story'} <span>/</span> {storyNode.kind === 'reward' ? 'Reward stop' : 'Story scene'}</span>
+              <h2>{storyNode.title}</h2>
+              {storyNode.puzzle && nodeProgress.cleared && <p role="status" className="story-complete-content__outcome">{nodeProgress.lastOutcome === 'puzzle-skipped' ? storyNode.puzzle.skipText : storyNode.puzzle.solvedText}</p>}
+              <div className="story-complete-content__divider"><span>{grantedRewards.length ? 'JUST ADDED TO YOUR COLLECTION' : isCleared ? 'FIRST-CLEAR AWARDS' : 'WAITING TO BE CLAIMED'}</span></div>
+              <div className="story-complete-prizes" data-testid="story-completed-rewards">
+                {(grantedRewards.length ? grantedRewards : storyNode.rewards).length ? (grantedRewards.length ? grantedRewards : storyNode.rewards).map((reward, index) => <RewardPrize reward={reward} key={`${reward.kind}-${reward.id}-${index}`} />) : <p className="story-complete-prizes__empty">The scene itself is the reward. Your place in this story is saved.</p>}
               </div>
-            )}
-            {actionError && <p role="alert" className="mt-4 text-red-200">{actionError}</p>}
-            {deliveryStatus && <p role="status" className="mt-4 text-primary">{deliveryStatus}</p>}
-            {!hasPuzzle && <button type="button" disabled={pending} onClick={() => void recoverSceneRewards()} className="mt-5 min-h-12 bg-primary px-7 py-3 font-display font-black uppercase text-black">{pending ? 'Checking rewards…' : isCleared ? 'Check reward delivery' : 'Collect story rewards'}</button>}
-            <div className="mt-6 flex justify-center gap-2 story-briefing__history">
-              {historyButton}
-              <button type="button" onClick={onClose} className="bg-primary px-7 py-3 font-display font-black italic uppercase text-black">
-                Return to Map
-              </button>
+              {actionError && <p role="alert" className="story-complete-content__error">{actionError}</p>}
+              {deliveryStatus && <p role="status" className="story-complete-content__status">{deliveryStatus}</p>}
+              {!hasPuzzle && <button type="button" data-testid="button-collect-story-rewards" disabled={pending} onClick={() => void recoverSceneRewards()} className="story-complete-content__claim">{pending ? 'Checking delivery…' : isCleared ? 'Check reward delivery' : 'Collect story rewards'} <ArrowRight size={17} /></button>}
+              <div className="story-complete-actions">
+                <button type="button" onClick={onClose} data-testid="button-return-story-map" className="story-complete-actions__map">Return to map <ArrowRight size={16} /></button>
+                <div className="story-complete-actions__secondary">{historyButton}</div>
+              </div>
             </div>
           </div>
         </div>

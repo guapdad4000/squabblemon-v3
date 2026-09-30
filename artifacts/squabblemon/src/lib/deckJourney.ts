@@ -38,6 +38,15 @@ export function deckEditorPath(deckId: string) {
   return `/game/decks/${encodeURIComponent(deckId)}`;
 }
 
+export function storyDeckEditorPath(deckId: string, nodeId: string) {
+  return `${deckEditorPath(deckId)}?returnTo=${encodeURIComponent(`/game/story/play/${encodeURIComponent(nodeId)}`)}`;
+}
+
+export function storyDeckReturnPath(search: string) {
+  const path = new URLSearchParams(search).get('returnTo');
+  return path && /^\/game\/story\/play\/[a-zA-Z0-9-]+$/.test(path) ? path : null;
+}
+
 export function deckTestPath(deckId: string) {
   return `${deckEditorPath(deckId)}/test`;
 }

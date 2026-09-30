@@ -39,6 +39,37 @@ test('all 100 OpenArt finishers resolve through engine and artwork IDs, preserve
   }
 });
 
+test('new Side, story-reward and Wiz finishers match their playable fighters', () => {
+  const assigned = {
+    blueside1: 'oa-blue-side-1-v1',
+    blueside2: 'oa-blue-side-2-v1',
+    blueside3: 'oa-blue-side-3-v1',
+    blueside4: 'oa-blue-side-4-v1',
+    blueside5: 'oa-blue-side-5-v1',
+    redside1: 'oa-red-side-1-v1',
+    redside2: 'oa-red-side-2-v1',
+    redside3: 'oa-red-side-3-v1',
+    redside5: 'oa-red-side-5-v1',
+    'ganger-blue': 'oa-ganger-blue-v1',
+    'ganger-red': 'oa-ganger-red-v1',
+    wickedwitch: 'oa-wicked-witch-v1',
+    flyingmonkeys: 'oa-flying-monkeys-v1',
+  };
+  for (const [cardId, clipId] of Object.entries(assigned)) {
+    const clip = resolveSpecialMove(cardId);
+    assert.equal(clip?.id, clipId, cardId);
+    assert.equal(clip?.move, cards[cardId].ability);
+    assert.equal(clip?.startSeconds, 0);
+    assert.equal(clip?.durationMs, 5167);
+    assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId })?.id, clipId);
+  }
+  assert.equal(new Set(Object.values(assigned)).size, 13, 'duplicate Red Robber render is not assigned twice');
+  assert.equal(resolveSpecialMove('redside4'), null, 'no Red Hexer clip was supplied');
+  for (const missing of ['snitch', 'cracked-head']) {
+    assert.equal(resolveSpecialMove(missing), null, 'no special-move video was supplied for this story reward card');
+  }
+});
+
 test('Demario uses the approved tool-based retry and matching Special Delivery title', () => {
   const source = openart.clips.find(clip => clip.engineId === 'demario')!;
   assert.equal(source.generationId, 'Gzt40FX7fhe6HBiIqnd5');

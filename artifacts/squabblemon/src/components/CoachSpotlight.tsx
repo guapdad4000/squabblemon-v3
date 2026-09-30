@@ -84,7 +84,7 @@ export function CoachSpotlight({ target, title, children, step, onNext, nextLabe
   const battleDiagram = step.startsWith('ROUND') ? target.includes('squabble') ? 'double' : target.includes('lane-') ? 'districts' : target.includes('next-round') ? 'bank' : target.includes('card-') ? 'card' : 'play' : null;
   const atBottom = rect ? rect.top < window.innerHeight * .48 : true;
   const beside = rect && innerWidth > 1000 ? rect.left + rect.width + 565 < innerWidth ? 'right' : rect.left > 565 ? 'left' : null : null;
-  const sideStyle = rect && beside ? { left: beside === 'right' ? rect.left + rect.width + 24 : rect.left - 554, top: Math.max(16, Math.min(innerHeight - 260, rect.top)), bottom: 'auto', transform: 'none' } : undefined;
+  const sideStyle = rect && beside ? { left: beside === 'right' ? rect.left + rect.width + 24 : rect.left - 554, top: Math.max(16, Math.min(innerHeight - (panel.current?.offsetHeight ?? 260) - 16, rect.top)), bottom: 'auto', transform: 'none' } : undefined;
   return createPortal(<div className="fade-spotlight" data-testid="fade-spotlight" data-coach-target={target} data-revealed={revealed} data-nonblocking={nonBlocking}>
     {rect ? <>
       <div className="fade-mask" style={{ inset: '0 0 auto', height: rect.top }} />

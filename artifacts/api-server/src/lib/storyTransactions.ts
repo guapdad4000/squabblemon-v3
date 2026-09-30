@@ -22,7 +22,7 @@ import {
   ticketsForStars,
   type StoryReward,
 } from "@workspace/squabblemon-engine/story";
-import { getPlayerBootstrap } from "./playerState";
+import { ensurePlayer, getPlayerBootstrap } from "./playerState";
 import {
   ACCOUNT_XP_PER_LEVEL,
   STORY_DUPLICATE_STYLE_SHARDS,
@@ -41,6 +41,9 @@ export type GrantedStoryReward = PlayerStoryReward & {
   duplicateShards: number;
   description: string;
 };
+
+export const STORY_PAYOUT_MAKE_GOOD_REWARD_KEY_PREFIX = "story-payout-make-good:v1:";
+export const STORY_CARD_REWARD_CLAIM_KEY_PREFIX = "story-card-reward:v1:";
 
 type StoryActionKind = "complete" | "dialogue" | "puzzle";
 export const isDevelopmentStoryResetEnabled = (
@@ -163,6 +166,250 @@ export async function getClaimedStoryRewards(
     .map((claim) => describeClaim(claim.rewardKey, claim.reward));
 }
 
+/**
+ * Repairs a previously-cleared node against the current payout contract.
+ * Claim history, not the mutable profile balance, is authoritative. The
+ * caller holds the profile row lock; claim insertion and balance credit share
+ * that same transaction so retries and concurrent checks cannot mint twice.
+ */
+export async function grantStoryPayoutMakeGood(
+  tx: StoryTx,
+  userId: string,
+  chapterId: string,
+  nodeId: string,
+  stars: number,
+): Promise<GrantedStoryReward[]> {
+  const node = getStoryNode(nodeId);
+  if (!node) return [];
+  const claims = await tx
+    .select()
+    .from(playerStoryRewardClaimsTable)
+    .where(
+      and(
+        eq(playerStoryRewardClaimsTable.clerkUserId, userId),
+        eq(playerStoryRewardClaimsTable.nodeId, nodeId),
+      ),
+    );
+  const targetClout = node.rewards
+    .filter((reward) => reward.kind === "currency" && reward.id === "clout")
+    .reduce((sum, reward) => sum + reward.amount, 0);
+  const targetTickets = node.rewards
+    .filter((reward) => reward.kind === "pack-ticket" && reward.id === "street-pack-ticket")
+    .reduce((sum, reward) => sum + reward.amount, 0);
+  const creditedClout = claims
+    .filter((claim) => claim.reward.kind === "currency" && claim.reward.id === "clout")
+    .reduce((sum, claim) => sum + claim.reward.amount, 0);
+  const isLegacyCourierDirectTicket =
+    nodeId === "red-tapes-courier-table" && stars < MAX_STARS_PER_BATTLE;
+  const creditedTickets = claims
+    .filter(
+      (claim) =>
+        claim.reward.kind === "pack-ticket" &&
+        claim.reward.id === "street-pack-ticket" &&
+        (!claim.rewardKey.endsWith(`:stars:${MAX_STARS_PER_BATTLE}:auto-ticket:v1`) ||
+          isLegacyCourierDirectTicket),
+    )
+    .reduce((sum, claim) => sum + claim.reward.amount, 0);
+  const deficits = [
+    {
+      kind: "currency" as const,
+      id: "clout",
+      amount: Math.max(0, targetClout - creditedClout),
+      rewardKey: `${STORY_PAYOUT_MAKE_GOOD_REWARD_KEY_PREFIX}${nodeId}:clout`,
+    },
+    {
+      kind: "pack-ticket" as const,
+      id: "street-pack-ticket",
+      amount: Math.max(0, targetTickets - creditedTickets),
+      rewardKey: `${STORY_PAYOUT_MAKE_GOOD_REWARD_KEY_PREFIX}${nodeId}:tickets`,
+    },
+  ];
+  const granted: GrantedStoryReward[] = [];
+  for (const deficit of deficits) {
+    if (deficit.amount <= 0) continue;
+    const reward: PlayerStoryReward = {
+      kind: deficit.kind,
+      id: deficit.id,
+      amount: deficit.amount,
+    };
+    const [claim] = await tx
+      .insert(playerStoryRewardClaimsTable)
+      .values({ clerkUserId: userId, chapterId, nodeId, rewardKey: deficit.rewardKey, reward })
+      .onConflictDoNothing()
+      .returning();
+    if (!claim) continue;
+    if (deficit.kind === "currency") {
+      await tx
+        .update(playerProfilesTable)
+        .set({
+          softCurrency: sql`${playerProfilesTable.softCurrency} + ${deficit.amount}`,
+        })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+    } else {
+      await tx
+        .update(playerProfilesTable)
+        .set({
+          packTickets: sql`${playerProfilesTable.packTickets} + ${deficit.amount}`,
+        })
+        .where(eq(playerProfilesTable.clerkUserId, userId));
+    }
+    granted.push(describeClaim(deficit.rewardKey, reward));
+  }
+  return granted;
+}
+
+/**
+ * Delivers only the explicitly versioned card contract for a cleared node.
+ * The separate claim-key namespace keeps these collection catch-ups distinct
+ * from historical currency/ticket receipts and other node rewards.
+ */
+async function grantStoryCardContractRewards(
+  tx: StoryTx,
+  userId: string,
+  chapterId: string,
+  node: NonNullable<ReturnType<typeof getStoryNode>>,
+): Promise<GrantedStoryReward[]> {
+  const configuredCards = node.rewards.filter(
+    (reward) =>
+      reward.kind === "card" &&
+      reward.claimKey?.startsWith(STORY_CARD_REWARD_CLAIM_KEY_PREFIX),
+  );
+  if (!configuredCards.length) return [];
+
+  const progressRows = await tx
+    .select()
+    .from(playerStoryNodesTable)
+    .where(eq(playerStoryNodesTable.clerkUserId, userId));
+  const clearedNodes = new Set(
+    progressRows.filter((row) => row.cleared).map((row) => row.nodeId),
+  );
+  if (
+    !clearedNodes.has(node.id) ||
+    !node.prerequisites.every((prerequisite) => clearedNodes.has(prerequisite))
+  ) {
+    return [];
+  }
+
+  const [profile] = await tx
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  if (!profile) throw new StoryRequestError(404, "Player profile not found");
+
+  const granted: GrantedStoryReward[] = [];
+  const owned = new Set(profile.ownedCardIds);
+  const discovered = new Set(profile.discoveredCardIds);
+  let styleShards = profile.styleShards;
+  for (const configured of configuredCards) {
+    const card = catalogCardById[configured.id] ?? catalogCardByEngineId[configured.id];
+    if (!card) throw new StoryRequestError(500, "Story reward card is unknown");
+    const rewardKey = configured.claimKey!;
+    const duplicateShards = owned.has(card.catalogId)
+      ? STORY_DUPLICATE_STYLE_SHARDS
+      : 0;
+    const reward: PlayerStoryReward = {
+      kind: "card",
+      id: configured.id,
+      amount: configured.amount,
+      ...(duplicateShards ? { duplicateShards } : {}),
+    };
+    const [claim] = await tx
+      .insert(playerStoryRewardClaimsTable)
+      .values({ clerkUserId: userId, chapterId, nodeId: node.id, rewardKey, reward })
+      .onConflictDoNothing()
+      .returning();
+    if (!claim) continue;
+
+    discovered.add(card.catalogId);
+    owned.add(card.catalogId);
+    styleShards += duplicateShards;
+    await tx
+      .update(playerProfilesTable)
+      .set({
+        ownedCardIds: [...owned],
+        discoveredCardIds: [...discovered],
+        collectionProgress: owned.size,
+        styleShards,
+      })
+      .where(eq(playerProfilesTable.clerkUserId, userId));
+    granted.push({
+      ...reward,
+      rewardKey,
+      duplicateShards,
+      description: duplicateShards
+        ? `${card.name} duplicate converted to ${duplicateShards} Style Shards`
+        : `${card.name} unlocked`,
+    });
+  }
+  return granted;
+}
+
+type StoryCampaignWithPayoutCatchUp = Awaited<
+  ReturnType<typeof getPlayerStoryCampaign>
+> & {
+  catchUp?: {
+    rewards: GrantedStoryReward[];
+    bootstrap: Awaited<ReturnType<typeof getPlayerBootstrap>>;
+  };
+};
+
+/**
+ * GET /player/story-only payout reconciliation. Its single profile lock
+ * serializes all cleared-node claim checks; grants and claims commit together.
+ * Ordinary campaign reads used inside mutations intentionally do not invoke
+ * this path, so they cannot alter a mutation's receipt.
+ */
+export async function getPlayerStoryCampaignWithPayoutCatchUp(
+  userId: string,
+): Promise<StoryCampaignWithPayoutCatchUp> {
+  await ensurePlayer(userId);
+  const rewards = await db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select ${playerProfilesTable.clerkUserId} from ${playerProfilesTable} where ${playerProfilesTable.clerkUserId} = ${userId} for update`,
+    );
+    const clearedRows = await tx
+      .select()
+      .from(playerStoryNodesTable)
+      .where(
+        and(
+          eq(playerStoryNodesTable.clerkUserId, userId),
+          eq(playerStoryNodesTable.cleared, true),
+        ),
+      );
+    const granted: GrantedStoryReward[] = [];
+    for (const row of clearedRows) {
+      granted.push(
+        ...(await grantStoryPayoutMakeGood(
+          tx,
+          userId,
+          row.chapterId,
+          row.nodeId,
+          row.stars,
+        )),
+      );
+      const node = getStoryNode(row.nodeId);
+      if (node) {
+        granted.push(
+          ...(await grantStoryCardContractRewards(
+            tx,
+            userId,
+            row.chapterId,
+            node,
+          )),
+        );
+      }
+    }
+    return granted;
+  });
+  const [campaign, bootstrap] = await Promise.all([
+    getPlayerStoryCampaign(userId),
+    getPlayerBootstrap(userId),
+  ]);
+  return rewards.length
+    ? { ...campaign, catchUp: { rewards, bootstrap } }
+    : campaign;
+}
+
 export async function grantStoryRewards(
   tx: StoryTx,
   userId: string,
@@ -171,7 +418,21 @@ export async function grantStoryRewards(
   rewards: readonly StoryReward[],
 ): Promise<GrantedStoryReward[]> {
   const granted: GrantedStoryReward[] = [];
-  for (const [index, configured] of rewards.entries()) {
+  const snapshotRewardKeys = new Set(
+    rewards.map((reward, index) =>
+      reward.claimKey ?? `${nodeId}:${index}:${reward.kind}:${reward.id}`,
+    ),
+  );
+  const currentContractRewards = getStoryNode(nodeId)?.rewards.filter(
+    (reward) =>
+      reward.claimKey !== undefined &&
+      (reward.claimKey.startsWith("story-payout-contract:v1:") ||
+        (reward.kind === "card" &&
+          reward.claimKey.startsWith(STORY_CARD_REWARD_CLAIM_KEY_PREFIX))) &&
+      !snapshotRewardKeys.has(reward.claimKey),
+  ) ?? [];
+  const payout = [...rewards, ...currentContractRewards];
+  for (const [index, configured] of payout.entries()) {
     if (
       (configured.kind === "cosmetic" && !isStoryCosmeticId(configured.id)) ||
       (configured.kind === "chapter-key" && !configured.id.startsWith("story-key:")) ||
@@ -371,9 +632,18 @@ export async function completeNonBattleStoryNode(
       { dialogueSeen },
     );
     if (action.alreadyApplied) {
+      const priorClear = rows.find((row) => row.nodeId === nodeId);
       return {
         alreadyCompleted: true,
-        rewards: await getClaimedStoryRewards(tx, userId, nodeId),
+        rewards: priorClear?.cleared
+          ? await grantStoryPayoutMakeGood(
+              tx,
+              userId,
+              chapter.id,
+              node.id,
+              priorClear.stars,
+            )
+          : [],
       };
     }
     const existing = rows.find((row) => row.nodeId === nodeId);
@@ -409,13 +679,21 @@ export async function completeNonBattleStoryNode(
           lastPlayedAt: now,
         },
       });
-    const rewards = await grantStoryRewards(
-      tx,
-      userId,
-      chapter.id,
-      node.id,
-      node.rewards,
-    );
+    const rewards = alreadyCompleted
+      ? await grantStoryPayoutMakeGood(
+          tx,
+          userId,
+          chapter.id,
+          node.id,
+          existing?.stars ?? 0,
+        )
+      : await grantStoryRewards(
+          tx,
+          userId,
+          chapter.id,
+          node.id,
+          node.rewards,
+        );
     const chapterNumber = Math.max(1, chapter.order);
     const nodeNumber = chapter.nodes.findIndex((item) => item.id === node.id) + 1;
     await tx
@@ -510,13 +788,21 @@ export async function completeStoryPuzzle(
           lastPlayedAt: now,
         },
       });
-    const rewards = await grantStoryRewards(
-      tx,
-      userId,
-      chapter.id,
-      node.id,
-      node.rewards,
-    );
+    const rewards = alreadyCompleted
+      ? await grantStoryPayoutMakeGood(
+          tx,
+          userId,
+          chapter.id,
+          node.id,
+          existing?.stars ?? 0,
+        )
+      : await grantStoryRewards(
+          tx,
+          userId,
+          chapter.id,
+          node.id,
+          node.rewards,
+        );
     const chapterNumber = Math.max(1, chapter.order);
     const nodeNumber =
       chapter.nodes.findIndex((item) => item.id === node.id) + 1;

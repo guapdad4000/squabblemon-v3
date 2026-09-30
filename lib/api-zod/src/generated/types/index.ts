@@ -128,6 +128,7 @@ export * from './socialStateCounts';
 export * from './socialUsernameInput';
 export * from './storyCampaign';
 export * from './storyCampaignBossStatus';
+export * from './storyCampaignCatchUp';
 export * from './storyChapterProgress';
 export * from './storyChapterProgressBossStatus';
 export * from './storyChapterProgressStatus';

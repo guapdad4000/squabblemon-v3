@@ -16,3 +16,78 @@
 .reward-reveal--story .reward-reveal__backdrop{opacity:1;filter:none}.reward-reveal--story .reward-reveal__stage{background:linear-gradient(90deg,#080b1040,#080b10e8)}.reward-reveal--story .reward-reveal__bag{max-height:580px;object-fit:contain;align-self:end}.reward-reveal--story .reward-reveal__receipt{background:#090e16d9;border:1px solid #d6b06b66;backdrop-filter:blur(8px)}.reward-reveal .reward-reveal__chapter{color:#eac783;font:700 12px/1.5 var(--font-mono,monospace);letter-spacing:.12em;text-transform:uppercase}.story-reward-completion{background-size:cover;background-position:center}.story-reward-completion>div{width:100%;padding:24px;background:#090e16df;border:1px solid #c5a36c55}
 .reward-reveal--story .reward-reveal__items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.reward-reveal--story .reward-reveal__items>div{max-width:none;min-width:0}.reward-reveal--story .reward-reveal__items>div:last-child:nth-child(odd){grid-column:1/-1}.reward-reveal--story .reward-reveal__chapter{margin:0 0 8px}.reward-reveal--story h2{margin:8px 0 18px}
 @media(max-width:639px){.reward-reveal--story .reward-reveal__stage{padding:12px;gap:4px}.reward-reveal--story .reward-reveal__bag{height:82px;width:110px}.reward-reveal--story .reward-reveal__receipt{padding:12px}.reward-reveal--story h2{font-size:27px;margin:8px 0 12px}.reward-reveal--story .reward-reveal__items{gap:8px}.reward-reveal--story .reward-reveal__items .game-glyph{--glyph-size:42px}.reward-reveal--story .reward-reveal__items>div>img,.reward-reveal--story .reward-reveal__items .reward-reveal__flip img{width:60px;height:74px}.reward-reveal--story .reward-reveal__items span{font-size:11px}.reward-reveal--story .reward-reveal__receipt>p{margin:12px 0}.reward-reveal--story .reward-reveal__receipt>.reward-reveal__chapter{margin:0}.story-reward-completion>div{padding:18px}}
+
+/* Story receipts have their own scroll owner and a persistent dismissal control.
+   The generic results/level reveal above intentionally keeps its original layout. */
+.reward-reveal--story {
+  width: min(920px, calc(100vw - 16px));
+  height: min(770px, calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+  max-height: none;
+  overflow: hidden;
+  border: 1px solid #e4bc76;
+  background: #0e201c;
+  box-shadow: 0 30px 90px #000c, inset 0 0 0 4px #1c332d;
+}
+.reward-reveal--story .reward-reveal__story-shell { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.reward-reveal--story .reward-reveal__story-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #cba36b #132721; flex: 1; }
+.reward-reveal--story .reward-reveal__story-hero { position: relative; isolation: isolate; min-height: 232px; overflow: hidden; display: flex; align-items: end; padding: 26px 34px; border-bottom: 2px solid #d7ad68; }
+.reward-reveal--story .reward-reveal__story-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.reward-reveal--story .reward-reveal__story-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #10231be9 5%, #10231baa 56%, #10231b40), linear-gradient(0deg, #10231b, transparent 60%); }
+.reward-reveal--story .reward-reveal__story-portrait { position: absolute; right: 0; bottom: -15px; height: 115%; max-width: 52%; object-fit: contain; object-position: bottom right; filter: drop-shadow(-8px 4px 12px #07140d); z-index: -1; }
+.reward-reveal--story .reward-reveal__story-heading { position: relative; max-width: 69%; text-align: left; }
+.reward-reveal--story .studio-eyebrow { color: #f1d293; font-size: 10px; font-weight: 800; letter-spacing: .18em; }
+.reward-reveal--story .reward-reveal__chapter { margin: 7px 0 0; color: #ccdac6; font-size: 10px; }
+.reward-reveal--story h2 { margin: 8px 0 0; font-size: clamp(31px, 5vw, 57px); line-height: .95; color: #fff3d3; overflow-wrap: anywhere; }
+.reward-reveal--story .reward-reveal__collection { position: relative; min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 36px; border-bottom: 1px solid #d7ad6877; background: radial-gradient(circle at 20% 60%, #70512285, transparent 50%), #1c3028; }
+.reward-reveal--story .reward-reveal__token-origin { position: relative; display: flex; gap: 10px; align-items: center; color: #fce0a1; font: 900 21px var(--font-display, Impact, sans-serif); text-transform: uppercase; white-space: nowrap; }
+.reward-reveal--story .reward-reveal__token-origin .game-glyph { --glyph-size: 65px; }
+.reward-reveal--story .reward-reveal__measure-token, .reward-reveal--story .reward-reveal__travel-token { position: absolute; width: 52px; height: 52px; object-fit: contain; left: 6px; top: 50%; margin-top: -26px; pointer-events: none; }
+.reward-reveal--story .reward-reveal__measure-token { visibility: hidden; }
+.reward-reveal--story .reward-reveal__travel-token { z-index: 3; filter: drop-shadow(0 0 18px #ffe29a); }
+.reward-reveal--story .reward-reveal__wallet { min-width: 135px; padding: 9px 18px; border: 1px solid #e9bc79; background: #14251e; text-align: right; white-space: nowrap; }
+.reward-reveal--story .reward-reveal__wallet > span { display: block; color: #c6d5bf; font: 800 9px var(--font-mono, monospace); letter-spacing: .1em; text-transform: uppercase; }
+.reward-reveal--story .reward-reveal__wallet strong { display: block; margin-top: 2px; color: #ffe0a0; font: 900 31px var(--font-display, Impact, sans-serif); }
+.reward-reveal--story .reward-reveal__skip { position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); color: #e9d6ac; text-decoration: underline; font: 700 10px var(--font-mono, monospace); }
+.reward-reveal--story .reward-reveal__story-content { padding: 23px 34px 36px; }
+.reward-reveal--story .reward-reveal__story-section { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-bottom: 12px; color: #e5c68b; text-transform: uppercase; letter-spacing: .12em; font: 800 10px var(--font-mono, monospace); }
+.reward-reveal--story .reward-reveal__story-section small { color: #becdb9; font-size: 10px; white-space: nowrap; }
+.reward-reveal--story .reward-reveal__items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.reward-reveal--story .reward-reveal__items > .reward-reveal__story-item { display: flex; flex-direction: row; align-items: center; max-width: none; min-width: 0; gap: 12px; padding: 9px 12px; border: 1px solid #bda26870; background: #1a3028; text-align: left; }
+.reward-reveal--story .reward-reveal__items > .reward-reveal__story-item:last-child:nth-child(odd) { grid-column: auto; }
+.reward-reveal--story .reward-reveal__story-item-art { width: 76px; height: 78px; flex: none; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #b08a4d47, transparent 75%); }
+.reward-reveal--story .reward-reveal__story-item-art img { display: block; max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: contain; }
+.reward-reveal--story .reward-reveal__story-item-art .game-glyph { --glyph-size: 68px; }
+.reward-reveal--story .reward-reveal__story-item-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow-wrap: anywhere; }
+.reward-reveal--story .reward-reveal__story-item-copy strong { color: #ffe2a6; font: 900 24px var(--font-display, Impact, sans-serif); }
+.reward-reveal--story .reward-reveal__story-item-copy span { color: #f5ead3; line-height: 1.3; font-size: 12px; font-weight: 800; }
+.reward-reveal--story .reward-reveal__saved { margin: 18px 0 0; color: #c0d1bb; font-size: 11px; }
+.reward-reveal--story .reward-reveal__story-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 75px; padding: 11px max(26px, env(safe-area-inset-right)) max(11px, env(safe-area-inset-bottom)) max(26px, env(safe-area-inset-left)); border-top: 1px solid #d7ad68; background: #14251f; }
+.reward-reveal--story .reward-reveal__story-footer [role="status"] { color: #d6e3cb; font-size: 11px; line-height: 1.4; }
+.reward-reveal--story .reward-reveal__story-footer button { flex: none; min-height: 43px; padding: 9px 21px; color: #17231c; background: #f1ca84; font: 900 14px var(--font-display, Impact, sans-serif); text-transform: uppercase; }
+.reward-reveal--story button:focus-visible { outline: 3px solid #fff2c3; outline-offset: 3px; }
+@media(max-width: 639px) {
+  .reward-reveal--story .reward-reveal__story-hero { min-height: clamp(128px, 25dvh, 190px); padding: 15px 18px; }
+  .reward-reveal--story .reward-reveal__story-heading { max-width: 77%; }
+  .reward-reveal--story h2 { font-size: clamp(26px, 8vw, 38px); }
+  .reward-reveal--story .reward-reveal__collection { min-height: 86px; padding: 11px 13px 19px; }
+  .reward-reveal--story .reward-reveal__token-origin { font-size: 16px; gap: 3px; }
+  .reward-reveal--story .reward-reveal__token-origin .game-glyph { --glyph-size: 43px; }
+  .reward-reveal--story .reward-reveal__measure-token, .reward-reveal--story .reward-reveal__travel-token { width: 38px; height: 38px; left: 2px; margin-top: -19px; }
+  .reward-reveal--story .reward-reveal__wallet { min-width: 102px; padding: 6px 9px; }
+  .reward-reveal--story .reward-reveal__wallet strong { font-size: 22px; }
+  .reward-reveal--story .reward-reveal__story-content { padding: 13px 12px 25px; }
+  .reward-reveal--story .reward-reveal__items { gap: 6px; }
+  .reward-reveal--story .reward-reveal__items > .reward-reveal__story-item { gap: 5px; padding: 5px; }
+  .reward-reveal--story .reward-reveal__story-item-art { width: 49px; height: 60px; }
+  .reward-reveal--story .reward-reveal__story-item-art .game-glyph { --glyph-size: 46px; }
+  .reward-reveal--story .reward-reveal__story-item-copy strong { font-size: 18px; }
+  .reward-reveal--story .reward-reveal__story-item-copy span { font-size: 10px; }
+  .reward-reveal--story .reward-reveal__story-footer { min-height: 62px; padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+  .reward-reveal--story .reward-reveal__story-footer button { min-height: 42px; padding: 7px 11px; font-size: 12px; }
+}
+@media(max-width: 350px) {
+  .reward-reveal--story .reward-reveal__items { grid-template-columns: 1fr; }
+}
+@media(prefers-reduced-motion: reduce) {
+  .reward-reveal--story .reward-reveal__story-item { transition: none; }
+}

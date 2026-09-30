@@ -15,7 +15,6 @@ import {
 } from "@workspace/api-zod";
 import { ensurePlayer } from "../lib/playerState";
 import {
-  getPlayerStoryCampaign,
   StoryRequestError,
 } from "../lib/storyService";
 import {
@@ -24,6 +23,7 @@ import {
   saveStoryDialogue,
   resetStoryDevelopment,
   isDevelopmentStoryResetEnabled,
+  getPlayerStoryCampaignWithPayoutCatchUp,
 } from "../lib/storyTransactions";
 
 const router: IRouter = Router();
@@ -40,7 +40,11 @@ function userId(req: Request, res: Response): string | null {
 router.get("/player/story", async (req, res): Promise<void> => {
   const id = userId(req, res);
   if (!id) return;
-  res.json(GetPlayerStoryResponse.parse(await getPlayerStoryCampaign(id)));
+  res.json(
+    GetPlayerStoryResponse.parse(
+      await getPlayerStoryCampaignWithPayoutCatchUp(id),
+    ),
+  );
 });
 
 router.post("/player/story/development/reset", async (req, res): Promise<void> => {

@@ -17,6 +17,7 @@ import { cellblockWaveCards } from './cellblockWave';
 import { afterHoursWaveCards } from './afterHoursWave';
 import { elementalBondWaveCards } from './elementalBondWave';
 import { sideOzWaveCards, sideOzWaveFactions } from './sideOzWave';
+import { storyCharacterWaveCards } from './storyCharacterWave';
 export { createDistrictSnapshot, validateDistrictSnapshot, DISTRICT_CATALOG } from './districts';
 export type { DistrictSnapshot, DistrictId, DistrictDisplay } from './districts';
 import {
@@ -1318,7 +1319,7 @@ const targetEnemy = (m: Match, source: CardInstance, target: CardInstance, apply
 const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -2381,6 +2382,70 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       ? { ...result, lastRevealedCardId: source.cardId,
         entranceHistory: [...(result.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] }
       : result;
+  }
+  if (Object.hasOwn(storyCharacterWaveCards, source.cardId)) {
+    let succeeded = false;
+    const allies = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner && c.instanceId !== source.instanceId
+      && c.kind !== 'support');
+    const enemiesHere = () => inLane(m, enemy, l);
+    const addHands = (target: CardInstance, amount: number, text: string) => {
+      targetIds.add(target.instanceId);
+      m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount, lastEffectNote: text }));
+      succeeded = true;
+    };
+    if (source.cardId === 'ganger-blue') {
+      const ally = lowest(allies.filter(c => c.lane !== l));
+      if (ally) {
+        addHands(ally, 2, 'Blue Side Cover: +2 Hands and Protected.');
+        const wasProtected = ally.statuses.protected;
+        m = grantProtection(m, source, ally.instanceId);
+        succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
+      } else {
+        addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: no remote ally, +1 Hand.');
+      }
+    } else if (source.cardId === 'ganger-red') {
+      const target = highest(enemiesHere());
+      if (target) {
+        targetIds.add(target.instanceId);
+        const oldModifier = target.powerModifier;
+        m = targetEnemyPowerReduction(m, source, target, 2, 'Red Side Retaliation: -2 Hands.');
+        const current = findCard(m, target.instanceId);
+        succeeded = !current || current.powerModifier < oldModifier;
+        if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: hit landed, +1 Hand.');
+      }
+    } else if (source.cardId === 'snitch') {
+      const target = highest(enemiesHere());
+      if (target) {
+        targetIds.add(target.instanceId);
+        const status = target.statuses.silenced ? 'weakened' : 'silenced';
+        const beforeStatus = target.statuses[status];
+        m = hostileEffect(m, source, target, (state, actual) => queueDisruptionReactions(
+          state, modify(state, actual.instanceId, card => ({
+            ...card, statuses: { ...card.statuses, [status]: true },
+            lastEffectNote: `Loose Lips: ${status === 'silenced' ? 'Silenced' : 'Weakened'}.`,
+          })), source, actual.instanceId,
+        ), false, false, true);
+        succeeded = !beforeStatus && !!findCard(m, target.instanceId)?.statuses[status];
+      }
+    } else if (source.cardId === 'cracked-head') {
+      const targets = enemiesHere().sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a)
+        || a.instanceId.localeCompare(b.instanceId)).slice(0, 3);
+      let damaged = 0;
+      for (const target of targets) {
+        targetIds.add(target.instanceId);
+        const oldModifier = target.powerModifier;
+        m = targetEnemyPowerReduction(m, source, target, 1, 'Block Crowned: -1 Hand.');
+        const current = findCard(m, target.instanceId);
+        if (!current || current.powerModifier < oldModifier) damaged++;
+      }
+      if (damaged) {
+        addHands(findCard(m, source.instanceId)!, Math.min(2, damaged), `Block Crowned: +${Math.min(2, damaged)} Hands.`);
+      }
+    }
+    note(succeeded ? `${source.ability} resolved.` : `${source.ability} found no legal target or its effect was blocked.`);
+    if (succeeded && !echoed) m = trainWaveAbility(m, source.instanceId);
+    return !echoed ? { ...m, lastRevealedCardId: source.cardId,
+      entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : m;
   }
   if (Object.hasOwn(fairytaleCards, source.cardId)) {
     const result = resolveFairytaleAbility(m, source, echoed);

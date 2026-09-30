@@ -2,9 +2,49 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import test from 'node:test';
 import { CARD_XP_CAP } from '@workspace/squabblemon-engine/cardProgression';
-import { catalogCardById } from '@workspace/squabblemon-engine/data';
+import { catalogCardById, STORY_ONLY_CARD_IDS, validateSavedDeck } from '@workspace/squabblemon-engine/data';
 import { planShopPurchase, type ShopWallet } from '@workspace/squabblemon-engine/economy';
+import { getStoryNode } from '@workspace/squabblemon-engine/story';
+import { isStreetPackCard } from './collectionEconomy';
 import { findPromoCode, isDevelopmentPromoCodeEnabled } from './promoCodes';
+
+const testerGrants = {
+  DEVBLUEGANG: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'],
+  DEVREDGANG: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'],
+  DEVWITCHMONKEY: ['wicked-witch', 'flying-monkeys'],
+} as const;
+
+test('tester codes grant exactly their catalog characters with no currency in development and production', () => {
+  const allIds = Object.values(testerGrants).flat();
+  assert.equal(new Set(allIds).size, 14);
+  for (const [code, cardIds] of Object.entries(testerGrants)) {
+    const expected = { code, packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: [...cardIds] };
+    for (const environment of ['development', 'production']) {
+      assert.deepEqual(findPromoCode(`  ${code.toLowerCase()}  `, environment), expected);
+    }
+    assert.equal(new Set(cardIds).size, cardIds.length, code);
+    for (const id of cardIds) {
+      assert.equal(catalogCardById[id]?.catalogId, id, id);
+      assert.equal(catalogCardById[id]?.kind, 'character', id);
+    }
+  }
+  for (const input of ['DEV BLUEGANG', 'DEVREDGANG!', 'DEVWITCHMONKEY EXTRA', 'DEVBLUEGANG\u0000', '__proto__']) {
+    assert.equal(findPromoCode(input, 'production'), null, input);
+  }
+});
+
+test('tester grants do not alter story rewards or the story-only pack exclusion', () => {
+  assert(STORY_ONLY_CARD_IDS.includes('ganger-blue'));
+  assert(STORY_ONLY_CARD_IDS.includes('ganger-red'));
+  assert.equal(isStreetPackCard(catalogCardById['ganger-blue']), false);
+  assert.equal(isStreetPackCard(catalogCardById['ganger-red']), false);
+  assert.deepEqual(getStoryNode('welcome-to-the-block')?.rewards.filter(reward => reward.kind === 'card'), [
+    { kind: 'card', id: 'ganger-blue', amount: 1, claimKey: 'story-card-reward:v1:welcome-to-the-block:ganger-blue' },
+  ]);
+  assert.deepEqual(getStoryNode('receipts-on-camera')?.rewards.filter(reward => reward.kind === 'card'), [
+    { kind: 'card', id: 'ganger-red', amount: 1, claimKey: 'story-card-reward:v1:receipts-on-camera:ganger-red' },
+  ]);
+});
 
 test('public promo lookup accepts normalization and rejects unknown or inherited keys', () => {
   assert.deepEqual(findPromoCode(' simmyfoodz ', 'production'), { code: 'SIMMYFOODZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['simmy', 'foodz'] });
@@ -59,7 +99,7 @@ test('promo redemption persists rewards once and works with the real economy', {
     else process.env.NODE_ENV = originalNodeEnvironment;
   });
   const { default: express } = await import('express');
-  const { db, playerProfilesTable, playerCollectionClaimsTable } = await import('@workspace/db');
+  const { db, playerProfilesTable, playerCollectionClaimsTable, playerStoryNodesTable, playerStoryRewardClaimsTable } = await import('@workspace/db');
   const { eq } = await import('drizzle-orm');
   const { default: router } = await import('../routes/promoCodes');
   const { redeemPromoCode } = await import('./promoCodeTransactions');
@@ -109,9 +149,77 @@ test('promo redemption persists rewards once and works with the real economy', {
 
   await t.test('requires Rookie Road without consuming the code', async () => {
     const id = await createPlayer({ onboardingStep: 'identity' });
-    assert.equal((await post({ code: 'DEVTEST' }, id)).status, 409);
+    assert.equal((await post({ code: 'DEVBLUEGANG' }, id)).status, 409);
     assert.equal((await claims(id)).length, 0);
     assert.equal((await profile(id)).softCurrency, 700);
+  });
+
+  await t.test('each tester code redeems through the production HTTP route exactly once per account', async () => {
+    const previousEnvironment = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+    try {
+      for (const [code, cardIds] of Object.entries(testerGrants)) {
+        const id = await createPlayer();
+        const result = await post({ code: ` ${code.toLowerCase()} ` }, id);
+        assert.equal(result.status, 200, code + JSON.stringify(result.body));
+        assert.equal(result.body.alreadyRedeemed, false);
+        assert.deepEqual(result.body.receipt, { code, packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: [...cardIds] });
+        const current = await profile(id);
+        assert.deepEqual(new Set(current.ownedCardIds), new Set(['cornball', ...cardIds]));
+        assert(cardIds.every(cardId => current.discoveredCardIds.includes(cardId)));
+        assert.equal(current.collectionProgress, current.ownedCardIds.length);
+        for (const cardId of cardIds) {
+          assert.deepEqual(current.cardProgression[cardId], { xp: 0, level: 1, moveTier: 0 }, cardId);
+          assert(result.body.bootstrap.profile.ownedCardIds.includes(cardId), cardId);
+        }
+        assert.equal(current.packTickets, 3);
+        assert.equal(current.softCurrency, 700);
+        assert.equal(current.styleShards, 20);
+        assert.equal((await db.select().from(playerStoryNodesTable).where(eq(playerStoryNodesTable.clerkUserId, id))).length, 0);
+        assert.equal((await db.select().from(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId, id))).length, 0);
+        const retries = await Promise.all(Array.from({ length: 4 }, () => post({ code }, id)));
+        assert(retries.every(retry => retry.status === 200 && retry.body.alreadyRedeemed));
+        for (const retry of retries) assert.deepEqual(retry.body.receipt, result.body.receipt);
+        assert.deepEqual((await claims(id)).map(claim => claim.milestoneKey), [`promo:${code}`]);
+        assert.deepEqual((await profile(id)).ownedCardIds, current.ownedCardIds);
+      }
+      const id = await createPlayer();
+      assert.equal((await post({ code: 'DEV BLUEGANG' }, id)).status, 400);
+      assert.equal((await claims(id)).length, 0);
+    } finally {
+      if (previousEnvironment === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = previousEnvironment;
+    }
+  });
+
+  await t.test('concurrent tester claims are independent, preserve pre-owned progress and make legal crews', async () => {
+    const id = await createPlayer({
+      ownedCardIds: ['cornball', 'ganger-blue', 'blue-side-2'],
+      discoveredCardIds: ['cornball', 'ganger-blue', 'blue-side-2'],
+      cardProgression: { 'ganger-blue': { xp: 300, level: 3, moveTier: 1 }, 'blue-side-2': { xp: 300, level: 3, moveTier: 1 } },
+    });
+    const requests = ['DEVBLUEGANG', 'DEVBLUEGANG', 'DEVREDGANG', 'DEVREDGANG', 'DEVWITCHMONKEY', 'DEVWITCHMONKEY'];
+    const results = await Promise.all(requests.map(code => redeemPromoCode(id, code)));
+    for (const code of Object.keys(testerGrants)) {
+      assert.equal(results.filter(result => result.receipt.code === code && !result.alreadyRedeemed).length, 1, code);
+      assert.equal(results.filter(result => result.receipt.code === code && result.alreadyRedeemed).length, 1, code);
+    }
+    const current = await profile(id);
+    const allIds = Object.values(testerGrants).flat();
+    assert.deepEqual(new Set(current.ownedCardIds), new Set(['cornball', ...allIds]));
+    assert.equal(current.ownedCardIds.length, 15);
+    assert.deepEqual(current.cardProgression['ganger-blue'], { xp: 300, level: 3, moveTier: 1 });
+    assert.deepEqual(current.cardProgression['blue-side-2'], { xp: 300, level: 3, moveTier: 1 });
+    assert.deepEqual(current.cardProgression['wicked-witch'], { xp: 0, level: 1, moveTier: 0 });
+    assert.equal(current.packTickets, 3);
+    assert.equal(current.softCurrency, 700);
+    assert.equal(current.styleShards, 20);
+    assert.deepEqual((await claims(id)).map(claim => claim.milestoneKey).sort(), Object.keys(testerGrants).map(code => `promo:${code}`).sort());
+    assert.equal((await db.select().from(playerStoryNodesTable).where(eq(playerStoryNodesTable.clerkUserId, id))).length, 0);
+    assert.equal((await db.select().from(playerStoryRewardClaimsTable).where(eq(playerStoryRewardClaimsTable.clerkUserId, id))).length, 0);
+    const crew = [...testerGrants.DEVBLUEGANG, ...testerGrants.DEVREDGANG.slice(0, 4)];
+    assert.equal(validateSavedDeck(crew, current.ownedCardIds, 'ganger-blue').valid, true);
+    assert.equal(validateSavedDeck(crew, (await getPlayerBootstrap(id)).profile.ownedCardIds, 'ganger-blue').valid, true);
   });
 
   await t.test('HTTP redemption returns credited balances and a durable retry receipt', async () => {

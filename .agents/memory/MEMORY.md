@@ -20,6 +20,8 @@
 - [Startup loading truth](startup-loading-truth.md) — Loading UI follows real app/account/profile/route gates; optional video must never delay core startup.
 - [Speech playback verification](speech-playback-verification.md) — Diagnose encoded clips first; preserve pauses and distinguish natural endings from interruptions.
 - [Story save evolution](story-save-evolution.md) — Presentation grouping must not rename progression/reward identities or invalidate positional dialogue history.
+- [Story payout reconciliation](story-payout-reconciliation.md) — Settle historical reward gaps on authenticated campaign entry, not internal post-mutation reads.
+- [Story-earned cards](story-earned-cards.md) — Story fighters are playable collection cards, but packs and unearned variants must not bypass their milestones.
 - [iPad keyed battle video](ipad-keyed-battle-video.md) — VP9 video layers can expose encoded matte colors on iPad; verify transparency from rendered pixels.
 - [Long-running verification](long-running-verification.md) — Use explicit background tasks; shell detachment alone may be cleaned up before evidence is written.
 - [Guarded browser traversal](guarded-browser-traversal.md) — Dirty-route guards must cover router pushes and indexed Back/Forward traversal; never assume every popstate is Back.
@@ -41,9 +43,13 @@
 - [Battle style invalidation](battle-style-invalidation.md) — No ancestor :has() on the arena and no per-frame vars on <html>; both restyle the whole battle.
 - [Social load evidence](social-load-evidence.md) — Include pool/reconnect effects; neither local throughput nor rate-capped runtime samples establishes hosted capacity.
 - [Social identity compatibility](social-identity-compatibility.md) — Replacing visible friend codes must not invalidate existing contacts or previously shared links.
-- [Render-test environment](render-test-environment.md) — Keep Vite environment emulation in the Node rendering harness, not production routing or authentication.
+- [Render-test environment](render-test-environment.md) — Keep environment emulation in tests; browser callbacks must not depend on Node transpiler helpers.
 - [Story-passive timing](story-passive-timing.md) — Evaluate story before round-start summons for new locks, then after summons for power-triggered phases.
 - [Guided browser journeys](guided-browser-journeys.md) — Freeze watched files during a live onboarding run; a Vite reload resets the unsaved encounter and creates misleading timeouts.
+- [Guided reading and review control](guided-reading-review-control.md) — Save completion promptly, but let players acknowledge lessons and leave results; reduced motion must not shorten reading.
 - [WebGL preview fallback](webgl-preview-fallback.md) — Replit screenshots can lack WebGL even when the model works; keep a still from the actual model and verify animation separately.
+- [Special-move preview checks](special-move-preview-checks.md) — A screenshot's "clip unavailable" can be a false negative; compare an old clip and verify live playback in Chromium.
 - [Story portrait cache revisions](story-portrait-cache.md) — Revised character art must refresh raw story asset URLs as well as catalog card images.
 - [Blue Scarf turn choice](blue-scarf-turn-choice.md) — User confirmed one random 50/50 give-or-steal choice each turn, not a fixed choice or a roll for each ally.
+- [Story deck editor return](story-deck-editor-return.md) — Preserve a validated story return destination through starter-recipe saves; browser history alone cannot recover it.
+- [Story reward import boundary](story-reward-import-boundary.md) — Keep story-only lookups behind the lazy story route so shared reward UI does not load the full story catalog in the game shell.

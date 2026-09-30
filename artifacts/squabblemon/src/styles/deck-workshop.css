@@ -1,5 +1,7 @@
 .deck-editor-screen{height:100%;display:flex;flex-direction:column;min-height:0;padding-bottom:0;background:#0d100f}
 .deck-editor-screen>.deck-workbench{background:transparent}
+.deck-editor-screen__story-return{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;flex:none;min-height:44px;margin:4px var(--arsenal-gutter) 0;padding:8px 12px;color:#f7e4af;background:#173b2d;border:2px solid #d7ba73;font:800 12px/1.2 var(--font-sans);text-transform:uppercase;cursor:pointer;z-index:3}
+.deck-editor-screen__story-return:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .deck-workbench{display:flex;flex-direction:column;min-height:0;height:100%;padding:0 var(--arsenal-gutter);color:#f6f1e4;isolation:isolate}
 .deck-workbench__header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;flex:none}
 .deck-workbench__title{min-width:0;flex:1}
@@ -95,8 +97,11 @@
 .deck-workbench__ideas strong{display:block;font-size:13px;color:#f1d28b}
 .deck-workbench__ideas span,.deck-workbench__ideas p{font-size:11px;color:#b6bdab;line-height:1.5}
 .rookie-workshop{height:100dvh;display:flex;flex-direction:column}
-.rookie-review{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(at top,#354334,#090d0c 65%);color:var(--sq-paper)}
-.rookie-review>div{max-width:650px;text-align:center}
+.rookie-review{box-sizing:border-box;height:100dvh;min-height:0;min-width:0;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:24px 24px max(24px,env(safe-area-inset-bottom));background:radial-gradient(at top,#354334,#090d0c 65%);color:var(--sq-paper)}
+.rookie-review:focus-visible{outline:2px solid #f3d98c;outline-offset:-3px}
+/* In a constrained game route, the review itself owns scrolling, not the outer stage. */
+.game-route-stage>.rookie-review{height:100%}
+.rookie-review>div{flex:none;width:100%;max-width:650px;margin-block:auto;text-align:center}
 .rookie-review img{height:210px;max-width:100%;object-fit:contain;margin:auto}
 .rookie-review h1{font-family:var(--font-display);font-size:40px;font-weight:900;margin:16px 0}
 .rookie-review p{font-size:16px;line-height:1.7;color:#d2d5c9;margin:16px 0}

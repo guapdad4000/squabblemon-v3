@@ -1070,6 +1070,41 @@ export const GetPlayerBootstrapResponse = zod.object({
 /**
  * @summary Load canonical chapter and node progression
  */
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionLevelMax = 10;
+
+
+
 export const GetPlayerStoryResponse = zod.object({
   "contentVersion": zod.number(),
   "chapters": zod.array(zod.object({
@@ -1132,7 +1167,157 @@ export const GetPlayerStoryResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesRareMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(getPlayerStoryResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(getPlayerStoryResponseCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionMoveTierMin).max(getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(getPlayerStoryResponseCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 })
 
 
@@ -1146,6 +1331,41 @@ export const resetPlayerStoryDevelopmentBodySelectNodeIdMax = 80;
 export const ResetPlayerStoryDevelopmentBody = zod.object({
   "selectNodeId": zod.string().max(resetPlayerStoryDevelopmentBodySelectNodeIdMax).nullable()
 })
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionLevelMax = 10;
+
+
 
 export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "contentVersion": zod.number(),
@@ -1209,7 +1429,157 @@ export const ResetPlayerStoryDevelopmentResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesRareMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionMoveTierMin).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(resetPlayerStoryDevelopmentResponseCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 })
 
 
@@ -1238,6 +1608,39 @@ export const CompletePlayerStoryNodeBody = zod.object({
   "idempotencyKey": zod.string().min(completePlayerStoryNodeBodyIdempotencyKeyMin).max(completePlayerStoryNodeBodyIdempotencyKeyMax),
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryNodeBodyDialogueSeenItemMax)).max(completePlayerStoryNodeBodyDialogueSeenMax)
 })
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax = 10;
 
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
 export const completePlayerStoryNodeResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
@@ -1337,7 +1740,157 @@ export const CompletePlayerStoryNodeResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(completePlayerStoryNodeResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 }),
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -1518,6 +2071,39 @@ export const CompletePlayerStoryPuzzleBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(completePlayerStoryPuzzleBodyDialogueSeenItemMax)).max(completePlayerStoryPuzzleBodyDialogueSeenMax).optional()
 })
 
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax = 10;
+
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
 export const completePlayerStoryPuzzleResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
 
@@ -1616,7 +2202,157 @@ export const CompletePlayerStoryPuzzleResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(completePlayerStoryPuzzleResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 }),
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -1797,6 +2533,39 @@ export const SavePlayerStoryDialogueBody = zod.object({
   "dialogueSeen": zod.array(zod.string().max(savePlayerStoryDialogueBodyDialogueSeenItemMax)).max(savePlayerStoryDialogueBodyDialogueSeenMax)
 })
 
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax = 10;
+
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMin = 0;
 export const savePlayerStoryDialogueResponseBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
 
@@ -1895,7 +2664,157 @@ export const SavePlayerStoryDialogueResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMin).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(savePlayerStoryDialogueResponseCampaignCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 }),
   "bootstrap": zod.object({
   "profile": zod.object({
@@ -2784,6 +3703,39 @@ export const completePlayerMatchResponseProfileCardProgressionXpMin = 0;
 
 export const completePlayerMatchResponseProfileCardProgressionLevelMax = 10;
 
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesCommonMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesCommonMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesUncommonMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesUncommonMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesRareMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesRareMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesEpicMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesEpicMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMax = 2147483647;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax = 64;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax = 80;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersMax = 3;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsReactionTrayMax = 4;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionMoveTierMin = 0;
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionMoveTierMax = 3;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionXpMin = 0;
+
+export const completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionLevelMax = 10;
+
 
 
 export const CompletePlayerMatchResponse = zod.object({
@@ -2980,7 +3932,157 @@ export const CompletePlayerMatchResponse = zod.object({
   "clearedNodes": zod.number(),
   "totalNodes": zod.number()
 })).optional(),
-  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared'])
+  "bossStatus": zod.enum(['locked', 'available', 'in-progress', 'cleared']),
+  "catchUp": zod.object({
+  "rewards": zod.array(zod.object({
+  "rewardKey": zod.string(),
+  "kind": zod.enum(['currency', 'card', 'chapter-key', 'pack-ticket', 'cosmetic', 'character-unlock']),
+  "id": zod.string(),
+  "amount": zod.number(),
+  "duplicateShards": zod.number(),
+  "description": zod.string()
+})),
+  "bootstrap": zod.object({
+  "profile": zod.object({
+  "id": zod.string(),
+  "displayName": zod.string(),
+  "avatarKey": zod.string(),
+  "onboardingStep": zod.enum(['profile', 'tutorial', 'crew', 'reward', 'complete']),
+  "starterDeckId": zod.string().nullable(),
+  "streetRep": zod.number(),
+  "xp": zod.number(),
+  "level": zod.number(),
+  "softCurrency": zod.number(),
+  "packTickets": zod.number(),
+  "styleShards": zod.number(),
+  "styleShardBalances": zod.object({
+  "Common": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesCommonMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesCommonMax).optional(),
+  "Uncommon": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesUncommonMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesUncommonMax).optional(),
+  "Rare": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesRareMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesRareMax).optional(),
+  "Epic": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesEpicMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesEpicMax).optional(),
+  "Legendary": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesLegendaryMax).optional(),
+  "Mythical": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileStyleShardBalancesMythicalMax).optional()
+}).optional().describe('Matching rarity currencies. Super Common uses Common. Absent balances are zero; styleShards remains universal.'),
+  "packPity": zod.number(),
+  "deckSlots": zod.number(),
+  "cosmeticCurrency": zod.number(),
+  "collectionProgress": zod.number(),
+  "storyChapter": zod.number(),
+  "storyNode": zod.number(),
+  "tutorialCompleted": zod.boolean(),
+  "starterRewardClaimed": zod.boolean(),
+  "ageConfirmedAt": zod.coerce.date().nullable(),
+  "termsAcceptedAt": zod.coerce.date().nullable(),
+  "settings": zod.object({
+  "cosmetics": zod.object({
+  "bannerCardId": zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsBannerCardIdMax).nullish(),
+  "bannerFinish": zod.enum(['base', 'silver']).optional(),
+  "stickers": zod.array(zod.string().max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersItemMax)).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsCosmeticsStickersMax).optional(),
+  "cardBackgrounds": zod.record(zod.string(), zod.enum(['blue-hour'])).optional()
+}).optional(),
+  "reactionTray": zod.array(zod.string()).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileSettingsReactionTrayMax).optional(),
+  "reducedMotion": zod.boolean(),
+  "turnTimerEnabled": zod.boolean()
+}),
+  "ownedCardIds": zod.array(zod.string()),
+  "cardProgression": zod.record(zod.string(), zod.object({
+  "moveTier": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionMoveTierMin).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionMoveTierMax).optional(),
+  "xp": zod.number().min(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionXpMin),
+  "level": zod.number().min(1).max(completePlayerMatchResponseCampaignOneCatchUpBootstrapProfileCardProgressionLevelMax)
+})),
+  "discoveredCardIds": zod.array(zod.string()),
+  "ownedVariants": zod.array(zod.string()),
+  "equippedVariants": zod.record(zod.string(), zod.string()),
+  "unlockedCosmeticIds": zod.array(zod.string()),
+  "unlockedCharacterIds": zod.array(zod.string()),
+  "savedDecks": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "cardIds": zod.array(zod.string()),
+  "heroCardId": zod.string(),
+  "recipeId": zod.string().nullable(),
+  "valid": zod.boolean(),
+  "issues": zod.array(zod.string())
+})),
+  "storyProgress": zod.record(zod.string(), zod.unknown()),
+  "inbox": zod.array(zod.record(zod.string(), zod.unknown())),
+  "packHistory": zod.array(zod.object({
+  "id": zod.string(),
+  "oddsVersion": zod.string(),
+  "paymentMethod": zod.enum(['ticket', 'softCurrency']),
+  "cost": zod.number(),
+  "pullCount": zod.number(),
+  "rewards": zod.array(zod.object({
+  "kind": zod.enum(['card', 'styleShards', 'softCurrency', 'variant']),
+  "cardId": zod.string().nullable(),
+  "variantId": zod.string().nullable(),
+  "name": zod.string().nullable(),
+  "rarity": zod.string().nullable(),
+  "shardRarity": zod.union([zod.literal('Common'),zod.literal('Uncommon'),zod.literal('Rare'),zod.literal('Epic'),zod.literal('Legendary'),zod.literal('Mythical'),zod.literal(null)]).nullish().describe('Explicit currency issued. Missing or null means universal, including historical duplicate receipts.'),
+  "isNew": zod.boolean(),
+  "amount": zod.number()
+})),
+  "pityBefore": zod.number(),
+  "pityAfter": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "lastActiveAt": zod.coerce.date()
+}),
+  "missions": zod.array(zod.object({
+  "id": zod.string(),
+  "cadence": zod.enum(['onboarding', 'daily', 'weekly']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "progress": zod.number(),
+  "goal": zod.number(),
+  "rewardCurrency": zod.enum(['softCurrency', 'packTickets']),
+  "rewardAmount": zod.number(),
+  "status": zod.enum(['active', 'claimable', 'claimed']),
+  "resetAt": zod.coerce.date().nullable()
+})),
+  "nextAction": zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "destination": zod.enum(['onboarding', 'play', 'story', 'collection', 'missions', 'shop']),
+  "rewardLabel": zod.string().nullable()
+}),
+  "packConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "softCurrencyCost": zod.number(),
+  "ticketCost": zod.number(),
+  "rewardsPerPack": zod.number(),
+  "pityLimit": zod.number(),
+  "odds": zod.array(zod.object({
+  "label": zod.string(),
+  "chance": zod.number(),
+  "detail": zod.string()
+}))
+}),
+  "tenPullConfig": zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "oddsVersion": zod.string(),
+  "pullCount": zod.number(),
+  "ticketCost": zod.number(),
+  "softCurrencyCost": zod.number(),
+  "rewardsPerPull": zod.number(),
+  "rarePityBonusPerPull": zod.number()
+}),
+  "collectionRoad": zod.array(zod.object({
+  "id": zod.string(),
+  "threshold": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "rewardLabel": zod.string(),
+  "cardId": zod.string().nullable(),
+  "status": zod.enum(['locked', 'claimable', 'claimed'])
+}))
+})
+}).optional().describe('One-time rewards and confirmed player state from historical story payout reconciliation on GET \/player\/story.')
 }),zod.null()]),
   "story": zod.union([zod.object({
   "nodeId": zod.string(),

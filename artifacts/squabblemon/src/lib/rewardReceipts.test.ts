@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
-import { rewardReceipts, revealProfileRewards } from './rewardReceipts';
+import { rewardReceipts, revealProfileRewards, revealStoryRewards } from './rewardReceipts';
+import type { StoryGrantedReward } from '@workspace/api-client-react';
 import { selectedChallengeRun } from './challengeJourney';
 const bootstrap = (currency: number, cards: string[] = []) => ({ profile: { id:'receipt-test', softCurrency:currency, packTickets:1, styleShards:0, streetRep:0, xp:0, ownedCardIds:cards, unlockedCosmeticIds:[] } }) as unknown as PlayerBootstrap;
+const resolveCharacter = (id: string) => id === 'dr-fade'
+  ? { name: 'Dr. Fade', portraitAssetId: 'assets/characters/dr-fade.webp' }
+  : undefined;
 test('confirmed reward receipts show only increases, deduplicate claims, and clear with account scope', () => {
   rewardReceipts.reset();
   revealProfileRewards(bootstrap(100),bootstrap(50),'spend','Purchase');
@@ -13,6 +17,34 @@ test('confirmed reward receipts show only increases, deduplicate claims, and cle
   assert.equal(receipt.items[0].amount,50);assert.equal(receipt.items[1].label,'STOCKZ');
   rewardReceipts.dismiss();revealProfileRewards(bootstrap(100),bootstrap(150,['stockz']),'claim','Bounty');
   assert.equal(rewardReceipts.current(),null);
+  rewardReceipts.reset();
+});
+
+test('story receipt derives the token counter from the confirmed wallet and only newly delivered grants', () => {
+  rewardReceipts.reset();
+  const rewards = [
+    { kind: 'currency', id: 'clout', amount: 250, rewardKey: 'story-payout-make-good:v1:finale:clout', duplicateShards: 0, description: '+250 Clout' },
+    { kind: 'pack-ticket', id: 'street-pack-ticket', amount: 8, rewardKey: 'story-payout-make-good:v1:finale:tickets', duplicateShards: 0, description: '+8 tickets' },
+  ] as StoryGrantedReward[];
+  assert.equal(revealStoryRewards({ nodeId: 'finale', title: 'Finale', rewards, bootstrap: bootstrap(900), resolveCharacter }), true);
+  const receipt = rewardReceipts.current()!;
+  assert.deepEqual(receipt.story?.cloutBalance, { from: 650, to: 900 });
+  assert.equal(receipt.story?.catchUp, true);
+  assert.deepEqual(receipt.items.map(item => item.amount), [250, 8]);
+  rewardReceipts.dismiss();
+  assert.equal(revealStoryRewards({ nodeId: 'finale', title: 'Finale', rewards, bootstrap: bootstrap(900), resolveCharacter }), true);
+  assert.equal(rewardReceipts.current(), null, 'repeated checks never replay the same claim receipt');
+  assert.equal(revealStoryRewards({ nodeId: 'finale', title: 'Finale', rewards: [], bootstrap: bootstrap(900), resolveCharacter }), false);
+  rewardReceipts.reset();
+});
+test('story character grants keep their name and portrait without loading story content in the game shell', () => {
+  rewardReceipts.reset();
+  const rewards = [
+    { kind: 'character-unlock', id: 'dr-fade', amount: 1, rewardKey: 'story:dr-fade', duplicateShards: 0, description: 'Dr. Fade unlocked' },
+  ] as StoryGrantedReward[];
+  revealStoryRewards({ nodeId: 'unlock', title: 'Unlock', rewards, bootstrap: bootstrap(0), resolveCharacter });
+  assert.equal(rewardReceipts.current()?.items[0].label, 'Dr. Fade unlocked');
+  assert.match(rewardReceipts.current()?.items[0].image ?? '', /assets\/characters\/dr-fade\.webp(?:\?v=[a-f0-9]+)?$/);
   rewardReceipts.reset();
 });
 test('saved challenge runs stay on the road until the player explicitly continues', () => {

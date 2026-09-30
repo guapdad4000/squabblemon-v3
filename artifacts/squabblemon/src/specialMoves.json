@@ -2232,6 +2232,149 @@
       "durationMs": 5167,
       "playbackRate": 1,
       "revision": "12cfc7c7c59aa2f0"
+    },
+    "oa-blue-side-1-v1": {
+      "file": "oa-blue-side-1-v1.mp4",
+      "label": "OG Blue",
+      "move": "Crossfire",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "74a9b03b9037a07b"
+    },
+    "oa-blue-side-2-v1": {
+      "file": "oa-blue-side-2-v1.mp4",
+      "label": "lil Blue",
+      "move": "Stand Behind Me",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "0954669f02a6e37e"
+    },
+    "oa-blue-side-3-v1": {
+      "file": "oa-blue-side-3-v1.mp4",
+      "label": "Blue Scarf crashout",
+      "move": "Clear the Route",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "b6179272dc687c36"
+    },
+    "oa-blue-side-4-v1": {
+      "file": "oa-blue-side-4-v1.mp4",
+      "label": "Blue loco",
+      "move": "Steady Nerves",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "7e97e4b64309131c"
+    },
+    "oa-blue-side-5-v1": {
+      "file": "oa-blue-side-5-v1.mp4",
+      "label": "Blue Big Trippin",
+      "move": "Measured Strike",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "60435160c084bb14"
+    },
+    "oa-red-side-1-v1": {
+      "file": "oa-red-side-1-v1.mp4",
+      "label": "Red Plaid Petey",
+      "move": "Take the Shortcut",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "6e86868c738df3bd"
+    },
+    "oa-red-side-2-v1": {
+      "file": "oa-red-side-2-v1.mp4",
+      "label": "OG Red Night",
+      "move": "Eyes on the Crossing",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "291cd5ddaa8c216f"
+    },
+    "oa-red-side-3-v1": {
+      "file": "oa-red-side-3-v1.mp4",
+      "label": "Red Robber",
+      "move": "Check In",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "c8936cbe0f64a8a0"
+    },
+    "oa-red-side-5-v1": {
+      "file": "oa-red-side-5-v1.mp4",
+      "label": "Ruby Shades",
+      "move": "Raise the Colors",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "cdb294f88f494235"
+    },
+    "oa-wicked-witch-v1": {
+      "file": "oa-wicked-witch-v1.mp4",
+      "label": "Wicked Witch",
+      "move": "Voice of the West",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "bc4530d758cc17d4"
+    },
+    "oa-flying-monkeys-v1": {
+      "file": "oa-flying-monkeys-v1.mp4",
+      "label": "Flying Monkeys",
+      "move": "Snatch and Scatter",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "dbfbc59fd588b2ca"
+    },
+    "oa-ganger-blue-v1": {
+      "file": "oa-ganger-blue-v1.mp4",
+      "label": "Ganger Blue",
+      "move": "Blue Ruin",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "f6c43baaf1df460c"
+    },
+    "oa-ganger-red-v1": {
+      "file": "oa-ganger-red-v1.mp4",
+      "label": "Ganger Red",
+      "move": "Reach Out",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "fb2d5be9d654d9f9"
     }
   },
   "assignments": {
@@ -2424,6 +2567,19 @@
     "teacher": "oa-teacher-v1",
     "slipstream": "oa-slipstream-v1",
     "yn-atv-lord": "oa-yn-atv-lord-v1",
-    "yn-gokarter": "oa-yn-gokarter-v1"
+    "yn-gokarter": "oa-yn-gokarter-v1",
+    "blueside1": "oa-blue-side-1-v1",
+    "blueside2": "oa-blue-side-2-v1",
+    "blueside3": "oa-blue-side-3-v1",
+    "blueside4": "oa-blue-side-4-v1",
+    "blueside5": "oa-blue-side-5-v1",
+    "redside1": "oa-red-side-1-v1",
+    "redside2": "oa-red-side-2-v1",
+    "redside3": "oa-red-side-3-v1",
+    "redside5": "oa-red-side-5-v1",
+    "ganger-blue": "oa-ganger-blue-v1",
+    "ganger-red": "oa-ganger-red-v1",
+    "wickedwitch": "oa-wicked-witch-v1",
+    "flyingmonkeys": "oa-flying-monkeys-v1"
   }
 }

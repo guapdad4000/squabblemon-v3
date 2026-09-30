@@ -15,9 +15,12 @@ import { fairytaleCards, fairytaleRarities, fairytaleUpgradeEffects, FAIRYTALE_A
 import { afterHoursWaveCards, afterHoursWaveRarities, afterHoursWaveUpgradeEffects } from './afterHoursWave';
 import { elementalBondWaveCards, elementalBondWaveRarities, elementalBondWaveUpgradeEffects } from './elementalBondWave';
 import { sideOzWaveCards, sideOzWaveRarities, sideOzWaveUpgradeEffects, sideOzWaveFactions } from './sideOzWave';
+import { storyCharacterWaveCards, storyCharacterWaveRarities, storyCharacterWaveUpgradeEffects } from './storyCharacterWave';
 
 export const DECK_SIZE = 10;
 export const MAX_MOTION = 9;
+/** Cards acquired only through their authored story rewards; excluded from random packs. */
+export const STORY_ONLY_CARD_IDS = ['ganger-blue', 'ganger-red', 'snitch', 'cracked-head'] as const;
 
 /** Rock was merged into Earth; older battle snapshots can still carry its former name. */
 export const canonicalElement = (type: string): string => type === 'Rock' ? 'Earth' : type;
@@ -111,6 +114,7 @@ const upgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = {
   ...afterHoursWaveUpgradeEffects,
   ...elementalBondWaveUpgradeEffects,
   ...sideOzWaveUpgradeEffects,
+  ...storyCharacterWaveUpgradeEffects,
   ...blockbusterWaveUpgradeEffects,
   bossbabe: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
   scammer: Array.from({ length: 3 }, () => ({ kind: "self-power" as const, amount: 1 as const, trigger: "base-success" as const })),
@@ -263,6 +267,7 @@ export const cards: Record<string, Card> = {
   ...afterHoursWaveCards,
   ...elementalBondWaveCards,
   ...sideOzWaveCards,
+  ...storyCharacterWaveCards,
   ...blockbusterWaveCards,
   kyle: { id: 'kyle', name: 'KYLE', kind: 'character', type: 'Fire', cost: 4, power: 4, ability: 'Smile Bombs', effect: 'On Reveal: Plant 4 Smile Bombs in random enemy districts. At the start of the next round, each explodes for -2 Hands to one random enemy in its district. KYLE gains +1 Hands for every enemy hit, plus +1 more if that enemy is destroyed.', roles: ['Disruption', 'Growth'], artworkLayout: 'portrait', abilityUpgrades: upgrades('kyle', [['Good Company', 'Keep smiling.', 'Big Grin', 'Turn up the pressure.', 'Last Laugh', 'Make it count.']]), entryVfx: { accent: '#ffe02e' }, portraitAccent: '#ffe02e' },
   stockz: { id: 'stockz', name: 'STOCKZ', kind: 'character', type: 'Electric', cost: 3, power: 3, ability: 'Compound Interest', effect: 'Ongoing: After you play another character in any district, gain +1 Hand. This continues for the rest of the game.', roles: ['Growth', 'Combo'], artworkLayout: 'portrait', abilityUpgrades: upgrades('stockz', [['Seed Money', 'Build your position.', 'Reinvest', 'Let the gains compound.', 'Long Game', 'Stay invested.']]), entryVfx: { accent: '#8aff68' }, portraitAccent: '#8aff68' },
@@ -319,6 +324,7 @@ export const rarityByEngineId = {
   ...afterHoursWaveRarities,
   ...elementalBondWaveRarities,
   ...sideOzWaveRarities,
+  ...storyCharacterWaveRarities,
   ...blockbusterWaveRarities,
   // City Legends overrides: four utility focused legends sit below the Mythical finishers.
   dragonflyjones: "Legendary",
@@ -450,6 +456,7 @@ const sourceByEngineId: Record<string, string[]> = {
   ...Object.fromEntries(Object.keys(afterHoursWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(elementalBondWaveCards).map(id => [id, ['Street Packs']])),
   ...Object.fromEntries(Object.keys(sideOzWaveCards).map(id => [id, ['Street Packs']])),
+  ...Object.fromEntries(STORY_ONLY_CARD_IDS.map(id => [id, ['Story Rewards']])),
   ...Object.fromEntries(Object.keys(cellblockWaveCards).map(id => [id, ['Street Packs']])),
   buddy: ["Street Packs"],
   folks: ["Street Packs"],

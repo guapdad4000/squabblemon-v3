@@ -28,7 +28,11 @@ import { isActivityId } from '@workspace/squabblemon-engine/activities';
 import { createLocalPracticeMatch } from '../lib/localPracticeMatch';
 import { playTurnCard, revealCpuTurn } from '../gameEngine';
 import { getAssetUrl } from '../lib/assets';
+import { playTutorialSequence, rookieRoadCues } from '../lib/tutorialVoice';
 import { warmMatchArtwork } from '../lib/battleAssetWarmup';
+import { describeTutorialBoard, describeTutorialEvent } from './tutorialRecap';
+import { getMatchRoundLimit } from '../gameEngine';
+import { guidedNoteDuration, MatchCompletionGate, PresentationReadingGate, type GuidedReadingCue } from '../lib/playerControlledPresentation';
 import {
   findFirstUnseenMechanicLesson,
   getTutorialGuidance,
@@ -129,6 +133,13 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const [showRules, setShowRules] = useState(false), [inspect, setInspect] = useState<CardInstance | Card | null>(null);
   const [tutorialPlaysByRound, setTutorialPlaysByRound] = useState<Record<number, number>>({});
   const [mechanicLesson, setMechanicLesson] = useState<MechanicLesson | null>(null);
+  const [guidedReadingCue, setGuidedReadingCue] = useState<GuidedReadingCue | null>(null);
+  const readingGate = useRef(new PresentationReadingGate());
+  const rivalReadingVoicePlayed = useRef(false);
+  const completionGate = useRef(new MatchCompletionGate());
+  const matchGeneration = useRef(0);
+  const helpOpenRef = useRef(false);
+  helpOpenRef.current = Boolean(inspect || showRules || mechanicLesson);
   const mechanicLessonResolverRef = useRef<(() => void) | null>(null);
   const seenMechanicsRef = useRef<Set<MechanicLessonId> | null>(null);
   const tutorialStepRef = useRef<{ id: TutorialStepId; round: number } | null>(null);
@@ -157,13 +168,38 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     resolve?.();
   }, [mechanicLesson]);
 
+  const pauseForGuidedReading = useCallback(async (cue: Omit<GuidedReadingCue, 'key'>, key: string, generation: number) => {
+    if (mode !== 'tutorial') return true;
+    if (generation !== timeline.current.id) return false;
+    const continued = readingGate.current.hold(key);
+    setGuidedReadingCue({ ...cue, key });
+    let stopVoice: (() => void) | undefined;
+    if (cue.kind === 'event' && !rivalReadingVoicePlayed.current) {
+      rivalReadingVoicePlayed.current = true;
+      stopVoice = playTutorialSequence(rookieRoadCues('rival-reading-pause'));
+    }
+    try {
+      return await continued && generation === timeline.current.id;
+    } finally {
+      stopVoice?.();
+    }
+  }, [mode]);
+  const continueGuidedReading = useCallback(() => {
+    if (guidedReadingCue && readingGate.current.continue(guidedReadingCue.key)) setGuidedReadingCue(null);
+  }, [guidedReadingCue]);
+
   // Exiting cinematic buttons can retain an older React event handler. Read the
   // current phase through a ref so a late click cannot restart a committed turn.
   const livePresentation = useRef({ match, presentationPhase });
   livePresentation.current = { match, presentationPhase };
   const deck = customPlayerDeck || decks.find(d => d.id === deckId) || decks[0];
   const rivalDeck: Deck = match?.storyEncounter ? { id: match.storyEncounter.enemy.deckId, name: match.storyEncounter.enemy.name, archetype: match.storyEncounter.enemy.behaviorProfile, accent: 'STORY', plan: 'A server-issued story encounter.', cards: [...match.storyEncounter.enemy.cardIds], hero: cards[match.storyEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero } : decks.find(d => d.id === rival) || decks[0];
-  const cancelTimers = useCallback(() => { feedback.current.reset(); timeline.current.cancelAll(); }, []);
+  const cancelTimers = useCallback(() => {
+    feedback.current.reset();
+    timeline.current.cancelAll();
+    readingGate.current.cancel();
+    setGuidedReadingCue(null);
+  }, []);
   const wait = useCallback((ms: number, id: number) => timeline.current.wait(ms, id), []);
   const waitForBeat = useCallback((normalMs: number, reducedMs: number, id: number, fast = false) =>
     wait(broadcastDelay(normalMs, reducedMs, isReducedMotionRequested(
@@ -174,6 +210,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const resetPresentation = useCallback(() => { setSelectedInstanceId(null); setSelectedLane(null); setSquabble(false); setShowRules(false); setInspect(null); setStagedRival(null); setStagedPlayer(null); setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setPresentationScores(null); setReplay(null); replayLiveFrame.current = null; replayLiveTimer.current = null; }, []);
   useEffect(() => {
     return () => {
+      matchGeneration.current++;
       cancelTimers();
       mechanicLessonResolverRef.current?.();
       mechanicLessonResolverRef.current = null;
@@ -197,6 +234,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const runIntro = useCallback(async (round = 1) => { cancelTimers(); const id = timeline.current.id; const beats: Array<[PresentationPhase, string, number]> = [['versus', 'YOU  VS  RIVAL', 1100], ['countdown-3', '3', 700], ['countdown-2', '2', 700], ['countdown-1', '1', 700], ['squabble', 'SQUABBLE!', 900], ['deal', 'GANG UP', 850]]; for (const [phase, message, duration] of beats) { if (id !== timeline.current.id) return; setPresentationPhase(phase); setPhaseMessage(message); if (!await waitForBeat(duration, 90, id)) return; } if (id === timeline.current.id) void enterPlayerTurn(round); }, [cancelTimers, enterPlayerTurn, waitForBeat]);
   const [restoredComplete, setRestoredComplete] = useState(false);
   const beginMatch = useCallback((initial: Match, committedMoves: MatchMove[] = []) => {
+    matchGeneration.current++;
+    rivalReadingVoicePlayed.current = false;
+    setReviewBoard(false);
     warmMatchArtwork(initial, equippedVariants);
     cancelTimers(); setServerReward(null); setServerRewardError(false); setStoryMetadata(null); setTutorialPlaysByRound({}); tutorialStepRef.current = null; seenMechanicsRef.current = null; setMechanicLesson(null); playerMovesRef.current = [...committedMoves]; districtOwnersRef.current = getDistrictResults(initial).map(result => result.winner); playedSpecialMovesRef.current.clear(); setBattleStartEffectVisible(true); setMatch(initial); setVisualFrame(initial); resetPresentation(); setScreen('battle'); locked.current = true;
     setRestoredComplete(initial.phase === 'complete');
@@ -264,18 +304,33 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   }, [beginMatch, challengeRunId, customPlayerDeck, deckId, mode, rival, startLocalMatch, startPlayerMatch, storyNodeId, activity, draftWeek, draftPicks]);
   useEffect(() => { if (hideLobby && !match && !autoStartRef.current) { autoStartRef.current = true; void start(); } }, [hideLobby, match, start]);
 
-  const finishMatchSession = useCallback(async (_finalMatch: Match) => {
-    if (mode !== 'guest' && serverMatchId) try {
-      const res = await completePlayerMatch.mutateAsync({ matchId: serverMatchId, data: { moves: playerMovesRef.current } });
-      if (mode !== 'tutorial') queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), (old: any) => old ? { ...old, profile: res.profile, missions: res.missions, nextAction: res.nextAction } : old);
-      if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
-      else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
-      setServerReward(res.reward); setStoryMetadata(res.story); setServerRewardError(false); onVerifiedComplete?.(_finalMatch, serverMatchId);
-    } catch { setServerRewardError(true); }
-    else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
-    setReviewBoard(false);
-    setScreen('result');
+  const finishMatchSession = useCallback(async (finalMatch: Match) => {
+    const generation = matchGeneration.current;
+    if (mode !== 'guest' && serverMatchId) {
+      try {
+        await completionGate.current.run(serverMatchId, async () => {
+          setServerRewardError(false);
+          const res = await completePlayerMatch.mutateAsync({ matchId: serverMatchId, data: { moves: [...playerMovesRef.current] } });
+          if (generation !== matchGeneration.current) return;
+          if (mode !== 'tutorial') queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), (old: any) => old ? { ...old, profile: res.profile, missions: res.missions, nextAction: res.nextAction } : old);
+          if (res.campaign) queryClient.setQueryData(getGetPlayerStoryQueryKey(), res.campaign);
+          else if (mode === 'story') void queryClient.invalidateQueries({ queryKey: getGetPlayerStoryQueryKey() });
+          setServerReward(res.reward);
+          setStoryMetadata(res.story);
+          setServerRewardError(false);
+          onVerifiedComplete?.(finalMatch, serverMatchId);
+        });
+      } catch {
+        if (generation === matchGeneration.current) setServerRewardError(true);
+      }
+    } else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
+    // Saving/retrying a receipt must never dismiss a card, final-board review,
+    // or results. Presentation navigation belongs to the player's controls.
   }, [completePlayerMatch, mode, queryClient, serverMatchId, onVerifiedComplete]);
+  const showResults = useCallback(() => {
+    if (helpOpenRef.current) setReviewBoard(true);
+    setScreen('result');
+  }, []);
   // A checkpoint can contain the final move when saving the outcome was interrupted.
   // Recover the receipt instead of unlocking a completed board for another turn.
   const recoveredCompletion = useRef<string | null>(null);
@@ -283,8 +338,11 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     if (!challengeRunId || !serverMatchId || match?.phase !== 'complete' ||
         !restoredComplete || recoveredCompletion.current === serverMatchId) return;
     recoveredCompletion.current = serverMatchId;
+    setPresentationPhase('match-finish');
+    setPhaseMessage('Match complete');
+    showResults();
     void finishMatchSession(match);
-  }, [challengeRunId, serverMatchId, match, restoredComplete, finishMatchSession]);
+  }, [challengeRunId, serverMatchId, match, restoredComplete, finishMatchSession, showResults]);
 
   /** Build the play-once key for a fighter's special move from the active effect. */
   const buildMoveKey = (effect: EffectLogEntry, move: { id: string }) => ({ owner: effect.owner, sourceInstanceId: effect.source?.cardInstanceId ?? effect.cardInstanceId, moveId: move.id });
@@ -335,7 +393,14 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
         if (id !== timeline.current.id) return false;
         unseenLesson = findFirstUnseenMechanicLesson(effect, seenMechanics);
       }
-      if (!await waitForBeat(effect.type === 'reveal' ? 120 : effect.note.includes('SQUABBLE') ? 1000 : isPlay ? 450 : (() => {
+      const needsReading = mode === 'tutorial' && effect.owner === 'cpu' && (isPlay || effect.type === 'ability');
+      if (needsReading && !await pauseForGuidedReading({
+        kind: 'event',
+        title: `Rival · ${cards[effect.cardId]?.name ?? effect.cardId}`,
+        body: describeTutorialEvent(effect, resolved),
+        continueLabel: 'Continue the play',
+      }, `${id}:event:${effect.sequence}`, id)) return false;
+      const afterMs = effect.type === 'reveal' ? 120 : effect.note.includes('SQUABBLE') ? 1000 : isPlay ? 450 : (() => {
         const move = specialMoveForEvent(effect, readMoveOverrides());
         const key = move ? buildMoveKey(effect, move) : null;
         const plan = key
@@ -346,13 +411,33 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
           document.documentElement.dataset.reduceMotion === 'true',
         )) markSpecialMovePlayed(playedSpecialMovesRef.current, key);
         return plan.durationMs;
-      })(), EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast)) return false;
+      })();
+      const canReadNote = mode === 'tutorial' && !needsReading && effect.type !== 'reveal' && !fast && !fastForwardRef.current;
+      const finishedBeat = canReadNote
+        ? await wait(guidedNoteDuration(effect.note, afterMs), id)
+        : await waitForBeat(afterMs, EFFECT_PRESENTATION_TIMING.reduced.afterMs, id, fast);
+      if (!finishedBeat) return false;
       setSquabbleCinematicLane(null);
       setStagedPlayer(null); setStagedRival(null);
     }
     setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setImpactLane(null); return true;
-  }, [setVisualFrame, showMechanicLesson, waitForBeat]);
-  const advanceRoundBoundary = useCallback(async (resolved: Match, id: number, fast = false) => { const next = nextRound(resolved); setMatch(next); if (!await presentEvents(next, resolved.nextEventSequence, id, fast)) return; setVisualFrame(next); if (next.phase === 'complete') { setPresentationPhase('match-finish'); setPhaseMessage('FINAL DISTRICTS'); if (!await waitForBeat(1500, 120, id, fast)) return; void finishMatchSession(next); return; } setPresentationScores(null); void enterPlayerTurn(next.round, fast); }, [enterPlayerTurn, finishMatchSession, presentEvents, setVisualFrame, waitForBeat]);
+  }, [mode, pauseForGuidedReading, setVisualFrame, showMechanicLesson, wait, waitForBeat]);
+  const advanceRoundBoundary = useCallback(async (resolved: Match, id: number, fast = false) => {
+    const next = nextRound(resolved);
+    setMatch(next);
+    if (!await presentEvents(next, resolved.nextEventSequence, id, fast)) return;
+    setVisualFrame(next);
+    if (next.phase === 'complete') {
+      setPresentationPhase('match-finish');
+      setPhaseMessage('FINAL DISTRICTS');
+      // Finalize promptly, independently of the player's reading/inspection.
+      void finishMatchSession(next);
+      if (await waitForBeat(1500, 120, id, fast)) showResults();
+      return;
+    }
+    setPresentationScores(null);
+    void enterPlayerTurn(next.round, fast);
+  }, [enterPlayerTurn, finishMatchSession, presentEvents, setVisualFrame, showResults, waitForBeat]);
   const finishRound = useCallback(async (resolved: Match, id: number) => {
     const owners = getDistrictResults(resolved).map(result => result.winner);
     const changedLanes = changedDistrictControl(districtOwnersRef.current, owners);
@@ -369,8 +454,16 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     }
     const claims = getDistrictResults(resolved).map(result => `${getMatchDistricts(resolved)[result.lane].name} ${result.player}–${result.cpu}`).join(' · ');
     setPresentationPhase('round-result'); setPhaseMessage(`ROUND ${resolved.round}: ${claims}`);
+    if (mode === 'tutorial' && resolved.round < getMatchRoundLimit(resolved)) {
+      if (!await pauseForGuidedReading({
+        kind: 'round',
+        title: `Round ${resolved.round} result`,
+        body: `${describeTutorialBoard(resolved)} New cards draw at the start of the next round while your deck has cards.`,
+        continueLabel: `Start round ${resolved.round + 1}`,
+      }, `${id}:round:${resolved.round}`, id)) return;
+    }
     if (await waitForBeat(changedLanes.length > 0 ? 1300 : 1700, 120, id)) await advanceRoundBoundary(resolved, id, fastForwardRef.current);
-  }, [advanceRoundBoundary, waitForBeat]);
+  }, [advanceRoundBoundary, mode, pauseForGuidedReading, waitForBeat]);
   const runRival = useCallback(async (afterPlayer: Match, id: number) => {
     setPresentationPhase('rival-thinking'); setPhaseMessage('RIVAL THINKING');
     if (!await waitForBeat(1100, 90, id)) return;
@@ -509,6 +602,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   useEffect(() => { if (!effectiveTurnTimerEnabled || screen !== 'battle' || presentationPhase !== 'player-ready' || replay || showRules || inspect || mechanicLesson || tabHidden) return; const interval = setInterval(() => setTimerSeconds(v => Math.max(0, v - 1)), 1000); return () => clearInterval(interval); }, [effectiveTurnTimerEnabled, inspect, mechanicLesson, presentationPhase, replay, screen, showRules, tabHidden]);
   useEffect(() => { if (effectiveTurnTimerEnabled && timerSeconds === 0 && presentationPhase === 'player-ready' && !replay && !mechanicLesson && match) void commit(false, true); }, [commit, effectiveTurnTimerEnabled, match, mechanicLesson, presentationPhase, replay, timerSeconds]);
   const skipSequence = () => {
+    if (guidedReadingCue || mechanicLesson) return;
     const { match, presentationPhase } = livePresentation.current;
     if (!match) return;
     if (!tryLockInteraction(skipTransitionRef)) return;
@@ -527,13 +621,13 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       skipTransitionRef.current = false;
     }
   };
-  const handleRestart = () => { autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  const handleRestart = () => { cancelTimers(); matchGeneration.current++; autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
     {e2eAuthEnabled && mode === 'tutorial' && match && (
       <button
         type="button"
         className="absolute left-2 top-2 z-[80] border border-primary bg-black px-3 py-2 font-mono text-[9px] uppercase text-primary"
-        onClick={() => void finishMatchSession(match)}
+        onClick={() => { showResults(); void finishMatchSession(match); }}
       >
         Complete guided test fade
       </button>
@@ -559,7 +653,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     {battleStartEffectVisible && screen === 'battle' && visualMatch && !encounterCinematic && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
     )}
-    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} /></LayoutGroup>}
+    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} guidedReadingCue={guidedReadingCue} onContinueGuidedReading={continueGuidedReading} reviewingFinalBoard={screen === 'result' && reviewBoard} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { showResults(); if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} /></LayoutGroup>}
     {screen === 'result' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="result-stage__return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
     <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen challenge={Boolean(challengeRunId)} tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
   </div>;

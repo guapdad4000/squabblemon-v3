@@ -16,7 +16,10 @@ import { readSocialDestination } from '../../lib/socialDestinations';
 import { basePath } from '../../lib/routing';
 
 export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
-  const step = bootstrap.profile.onboardingStep;
+  // A match receipt or background refresh can advance the saved account before
+  // the player has left its results. Only an explicit onboarding action replaces
+  // the current lesson; a reload still starts at the latest saved step.
+  const [step, setStep] = useState(bootstrap.profile.onboardingStep);
   const advance = useAdvancePlayerOnboarding();
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
@@ -26,6 +29,7 @@ export function Onboarding({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     setError(null);
     try {
       const res = await advance.mutateAsync({ data: payload });
+      setStep(res.profile.onboardingStep);
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
       if (payload.action === 'complete-tutorial') rewardReceipts.show({ id: `${res.profile.id}:rookie-graduation`, title: 'You earned your corner.', achievement: true, items: [{ label: 'Rookie Road complete', glyph: 'mastery' }, { label: 'Dr. Fade is in your corner', image: getCardImage('dr-fade') }] });
       if (payload.action === 'claim-reward') {

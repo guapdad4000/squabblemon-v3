@@ -1,0 +1,43 @@
+/* Phase status: one compact line, never a banner. */
+.battle-phase-status{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-width:0;margin-bottom:2px;font:700 9px/1.2 var(--font-mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#e9dfc4}
+.battle-phase-status i{flex:none;width:7px;height:7px;border-radius:50%;background:#8b9a86}
+.battle-phase-status b{white-space:nowrap}
+.battle-phase-status span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#e9dfc4b0;letter-spacing:.06em;text-transform:none;font-weight:500}
+.battle-phase-status.is-your-turn i{background:#f5c542}
+.battle-phase-status.is-your-turn b{color:#f5c542}
+.battle-phase-status.is-rival-reveal i{background:#e2556b}
+.battle-phase-status.is-effects i{background:#7fc4b0}
+.battle-phase-status.is-round-result i,.battle-phase-status.is-match-complete i{background:#e9dfc4}
+
+/* Reading cue: lives inside the guidance strip, bounded height, own scroll for body only. */
+.battle-arena .battle-guidance:has(.guided-reading-cue){align-items:flex-start}
+.guided-reading-cue{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:4px;margin-top:4px;max-height:min(34dvh,220px);padding:8px 10px;border-left:3px solid #cbb975;background:#10151ce6;color:#f1ead6;text-shadow:none}
+.guided-reading-cue__kicker{font:700 8px/1 var(--font-mono,monospace);letter-spacing:.2em;text-transform:uppercase;color:#d5c58c}
+.guided-reading-cue h3{margin:0;font:900 italic 15px/1.1 var(--font-display,inherit);text-transform:uppercase;color:#fff}
+.guided-reading-cue__body{min-height:0;overflow-y:auto;overscroll-behavior:contain;font-size:12.5px;line-height:1.45;color:#f1ead6e6;white-space:pre-line;padding-right:4px}
+.guided-reading-cue__body:focus-visible,.guided-reading-cue button:focus-visible{outline:2px solid #f5c542;outline-offset:2px}
+.guided-reading-cue button{justify-self:start;min-height:40px;padding:8px 16px;background:#f5c542;color:#14110a;font:900 12px/1 var(--font-display,inherit);letter-spacing:.06em;text-transform:uppercase}
+.guided-reading-cue button:hover{background:#ffd966}
+@media (max-height:620px){.guided-reading-cue{max-height:min(40dvh,170px)}.guided-reading-cue h3{font-size:13px}.guided-reading-cue__body{font-size:12px}.guided-reading-cue button{min-height:36px}}
+
+/* Coach portrait never overlaps guidance text. */
+.battle-arena .battle-guidance.battle-guidance--coached{display:flex;align-items:flex-start}
+.battle-arena .battle-guidance.battle-guidance--coached>.dr-fade-coach-frame{position:relative;isolation:isolate;contain:paint;z-index:0}
+.battle-arena .battle-guidance.battle-guidance--coached>.min-w-0{position:relative;z-index:1}
+
+/* Mechanic lesson: portrait gets its own box instead of the clipboard's absolute float. */
+.mechanic-lesson-card.referee-clipboard{padding:48px 18px 18px!important;max-height:calc(100dvh - 24px);overflow-y:auto!important;overscroll-behavior:contain;align-items:start}
+.mechanic-lesson-card .mechanic-lesson-portrait{position:relative;width:76px;height:96px;overflow:hidden;border-bottom:2px solid #69503699}
+.mechanic-lesson-card .mechanic-lesson-portrait .dr-fade-referee{position:absolute;inset:0;left:0;top:0;width:100%;height:100%;object-position:center top;animation:none}
+.mechanic-lesson-card h2{color:#1d231c!important;overflow-wrap:anywhere}
+.mechanic-lesson-card .mechanic-lesson-copy p{color:#2c302b!important}
+.mechanic-lesson-card .mechanic-lesson-tip{border-color:#43634899!important;color:#2f4a33!important}
+@media (max-width:420px){.mechanic-lesson-card.referee-clipboard{grid-template-columns:56px minmax(0,1fr)!important;gap:12px!important;padding:44px 12px 14px!important}.mechanic-lesson-card .mechanic-lesson-portrait{width:56px;height:72px}.mechanic-lesson-card h2{font-size:1.4rem!important}}
+@media (max-height:600px){.mechanic-lesson-card.referee-clipboard{padding-top:36px!important}.mechanic-lesson-card h2{font-size:1.35rem!important}.mechanic-lesson-card .mechanic-lesson-copy button{margin-top:12px!important}}
+
+/* Final board review: compact tag instead of the full-screen cinematic. */
+.battle-final-review{display:inline-block;padding:2px 8px;background:#10151ce6;border:1px solid #cbb97599;font:700 9px/1.4 var(--font-mono,monospace);letter-spacing:.16em;text-transform:uppercase;color:#e9dfc4;white-space:normal}
+
+/* Transient attack/chain captions yield to an active reading cue; BattleAttack stays mounted for video/audio/impact. */
+.battle-arena[data-reading-cue] .attack-caption,
+.battle-arena[data-reading-cue] .ability-chain-banner{display:none!important}
