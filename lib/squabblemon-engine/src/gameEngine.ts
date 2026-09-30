@@ -10,6 +10,7 @@ import { validateDistrictSnapshot, type DistrictSnapshot, type DistrictDisplay }
 import { expansionCards } from './blockExpansion';
 import { streetWaveCards } from './streetWave';
 import { mythicLegendCards } from './mythicLegends';
+import { CANNOT_LOSE_HANDS_CARD_IDS, GANG_BY_CARD_ID, GANG_LABEL, TRIPLE_OG_LANE, UNSILENCEABLE_CARD_IDS, tripleOgCards, type GangColor } from './tripleOgs';
 import { characterWaveCards } from './characterWave';
 import { fairytaleCards } from './fairytaleWave';
 import { neighborhoodWaveCards, DEMARIO_MUSHROOM, LUIGION_POWERED } from './neighborhoodWave';
@@ -142,6 +143,10 @@ export type CardInstance = Card & {
   aliceReady?: boolean;
   /** Mr Rabbit's one-use discount granted when this character last returned to hand. */
   rabbitReturnDiscount?: boolean;
+  /** Set on a character put on by INITIATION; purely an identity tag. */
+  gangTag?: GangColor;
+  /** LOOK OUT is watching for the opponent's next district. */
+  lookoutReady?: boolean;
   bankedMotion?: number;
   burnSource?: { instanceId: string; owner: Owner };
   wildInvestment?: number;
@@ -199,7 +204,7 @@ export type TimedEffect = {
 };
 export type DiscountToken = {
   startsAtRound?: number;
-  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local';
+  id: string; owner: Owner; sourceInstanceId: string; eligibility: 'any' | 'red-side' | 'printed-two-cost' | 'printed-four-plus' | 'another-district' | 'livewire-cross-district' | 'electric-delivery' | 'homecoming' | 'poison-character' | 'wiseman-prediction' | 'creative-local' | 'lookout-watch';
   targetLane?: Lane;
   targetInstanceId?: string;
   bonusHandsOnUse?: number;
@@ -223,7 +228,7 @@ type LeaderKind = 'church' | 'nightmedic' | 'piratedj' | 'promoter' | 'gamer' | 
   | 'streetapostle' | 'fangirl' | 'asphaltapostle' | 'passportbro';
 type LeaderReaction = { kind: LeaderKind; owner: Owner; sourceInstanceId: string; targetInstanceId: string; amount?: number; triggerLane?: Lane };
 export type LingeringScent = { owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; triggeredRound?: number };
-export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman' | 'dead-air'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
+export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman' | 'dead-air' | 'initiation' | 'spinner'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
 export type Match = {
   afterParty?: boolean;
   laneDamage?: LaneDamage[];
@@ -584,6 +589,7 @@ const tokenEligible = (token: DiscountToken, card: CardInstance, targetLane: Lan
     && card.type === 'Electric' && (card.kind ?? 'character') === 'character' && !card.hazard)
   || ((token.eligibility === 'wiseman-prediction' || token.eligibility === 'creative-local') && token.targetLane === targetLane
     && (card.kind ?? 'character') === 'character' && !card.hazard)
+  || (token.eligibility === 'lookout-watch' && token.targetLane === targetLane)
   || (token.eligibility === 'poison-character'
     && card.type === 'Poison' && (card.kind ?? 'character') === 'character' && !card.hazard);
 const discountFor = (match: Match, owner: Owner, card: CardInstance, targetLane: Lane) =>
@@ -660,7 +666,9 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
       text: t.kind === 'wiseman' ? 'Told You · next enemy character: here = Weaken; elsewhere = predictor gets −2 Motion here · through R' + t.expiresAfterRound
         : (t.kind === 'stakeout' ? 'Stakeout · next enemy entrance canceled'
           : t.kind === 'dead-air' ? 'Dead Air · first enemy played or moved here: Silence'
-          : 'Take a Number · next enemy: +1 Motion') + ' · through R' + t.expiresAfterRound })),
+          : t.kind === 'initiation' ? 'Marked Territory · your next character here gets put on: +1 Hand'
+          : t.kind === 'spinner' ? 'Spinning · next enemy played here: 1 Burn'
+          : 'Take a Number · next enemy: +1 Motion') + (t.kind === 'initiation' ? '' : ' · through R' + t.expiresAfterRound) })),
     ...(match.lingeringScents ?? []).filter(s => s.expiresAfterRound >= match.round).map(s => ({
       owner: s.owner, lane: s.lane, text: 'Scent · ' + (s.triggeredRound === match.round ? 'spent this round' : 'next enemy: 2 Burn') + ' · through R' + s.expiresAfterRound,
     })),
@@ -676,18 +684,23 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
 export const getDiscountedCardCost = getLegalCardCost;
 export function canAffordSelection(match: Match, owner: Owner, instanceId: string, targetLane: Lane): boolean {
   const card = (owner === "player" ? match.playerHand : match.cpuHand).find((c) => c.instanceId === instanceId);
-  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane) && getLegalCardCost(match, owner, card, targetLane) + (card.cardId === 'the-dice-game' ? 1 : 0) <= (owner === "player" ? match.playerMotion : match.cpuMotion)
+  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane)
+    && (TRIPLE_OG_LANE[card.cardId] === undefined || TRIPLE_OG_LANE[card.cardId] === targetLane)
+    && getLegalCardCost(match, owner, card, targetLane) + (card.cardId === 'the-dice-game' ? 1 : 0) <= (owner === "player" ? match.playerMotion : match.cpuMotion)
     && (card.cardId !== 'the-dice-game' || (owner === 'player' ? match.cpuMotion : match.playerMotion) >= 1);
 }
 
+/** Cards whose Hands can never be reduced. Extend through the Triple OG set, not new hardcodes. */
+const cannotLoseHands = (card: Pick<CardInstance, 'cardId'>) => (CANNOT_LOSE_HANDS_CARD_IDS as readonly string[]).includes(card.cardId);
+const cannotLoseHandsLabel = (card: Pick<CardInstance, 'cardId' | 'name'>) => card.cardId === 'blueside1' ? 'OG Blue' : card.name;
 const activeAbility = (card: CardInstance) => !card.hazard && !card.statuses.silenced && !card.statuses.frozen && !card.statuses.weakened;
 const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
   const before = m.boards.flat().find(c => c.instanceId === id);
   if (!before) return m;
   let after = change(before);
-  if (before.cardId === 'blueside1' && after.powerModifier < before.powerModifier) {
+  if (cannotLoseHands(before) && after.powerModifier < before.powerModifier) {
     after = { ...after, powerModifier: before.powerModifier,
-      lastEffectNote: after.lastEffectNote + ' OG Blue cannot lose Hands.' };
+      lastEffectNote: after.lastEffectNote + ` ${cannotLoseHandsLabel(before)} cannot lose Hands.` };
   }
   if(after.powerModifier<before.powerModifier) {
     const prevented=creativePreventDamage(m,before,before.powerModifier-after.powerModifier,m[DAMAGE_OWNER]);
@@ -1357,8 +1370,8 @@ const removeDestroyedCard = (m: Match, id: string): Match => {
 
 /** Damage is evaluated on the actual recipient after interception and shields. */
 const reduceHands = (m: Match, target: CardInstance, amount: number, note: string, burnStacks?: number): Match => {
-  if (target.cardId === 'blueside1') return modify(m, target.instanceId, c => ({
-    ...c, lastEffectNote: note + ' (no effect: OG Blue cannot lose Hands).',
+  if (cannotLoseHands(target)) return modify(m, target.instanceId, c => ({
+    ...c, lastEffectNote: note + ` (no effect: ${cannotLoseHandsLabel(target)} cannot lose Hands).`,
   }));
   if (target.statuses.uncounterable) return modify(m, target.instanceId, c => ({ ...c, lastEffectNote: note + ' (no effect: uncounterable).' }));
   const mitigation = m.timedEffects.find(e => e.kind === 'nail-mitigation' && e.targetInstanceId === target.instanceId);
@@ -1399,6 +1412,63 @@ const forceMoveUnshielded = (state: Match, actual: CardInstance, destination: La
     return move(state, actual, destination, 'Wrong Block: forced into another district.');
 };
 
+/** INITIATION: the marked district puts your next character on with the set already standing there. */
+const laneGangColor = (m: Match, owner: Owner, lane: Lane, exceptId: string): GangColor | undefined => {
+  const tally: Record<GangColor, number> = { blue: 0, red: 0 };
+  for (const card of inLane(m, owner, lane)) {
+    if (card.instanceId === exceptId) continue;
+    const color = card.gangTag ?? GANG_BY_CARD_ID[card.cardId];
+    if (color) tally[color]++;
+  }
+  if (tally.blue === tally.red) return undefined;
+  return tally.blue > tally.red ? 'blue' : 'red';
+};
+function applyInitiationMark(m: Match, id: string, owner: Owner, lane: Lane): Match {
+  const entrant = findCard(m, id);
+  if (!entrant || entrant.hazard || (entrant.kind ?? 'character') !== 'character') return m;
+  const mark = (m.districtTraps ?? []).find(t => t.kind === 'initiation' && t.owner === owner && t.lane === lane);
+  if (!mark) return m;
+  const before = m;
+  const color = laneGangColor(m, owner, lane, id);
+  m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== mark) };
+  m = modify(m, id, c => ({ ...c, ...(color ? { gangTag: color } : {}), powerModifier: c.powerModifier + 1,
+    lastEffectNote: color ? `Marked Territory: put on by the ${GANG_LABEL[color]}; +1 Hand.` : 'Marked Territory: claimed the block; +1 Hand.' }));
+  return addEvent(before, m, { type: 'ability', sourceId: mark.source.instanceId, owner, lane, targetIds: [id],
+    note: color ? `${entrant.name} was initiated into the ${GANG_LABEL[color]}: +1 Hand.` : `${entrant.name} claimed the marked district: +1 Hand.` });
+}
+/** BLOCK SPINNER: the spinning block burns the next enemy played into the district. */
+function applySpinnerTrap(m: Match, id: string, lane: Lane): Match {
+  const entrant = findCard(m, id);
+  if (!entrant || entrant.hazard || (entrant.kind ?? 'character') !== 'character') return m;
+  const trap = (m.districtTraps ?? []).find(t => {
+    if (t.kind !== 'spinner' || t.owner === entrant.owner || t.lane !== lane || t.expiresAfterRound < m.round) return false;
+    const spinner = findCard(m, t.source.instanceId);
+    return spinner?.lane === lane && activeAbility(spinner);
+  });
+  if (!trap) return m;
+  const before = m;
+  m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
+  m = applyBurn(m, findCard(m, trap.source.instanceId)!, entrant, 1, 'Spin the Block: caught coming in; 1 Burn.');
+  return addEvent(before, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner, lane,
+    targetIds: [id], note: `${entrant.name} walked into the spinning block and took 1 Burn.` });
+}
+/** LOOK OUT: calls out the opponent's next district and discounts your next card there. */
+function applyLookoutWatch(m: Match, owner: Owner, lane: Lane): Match {
+  const watchers = m.boards.flat().filter(c => c.owner !== owner && c.lookoutReady && activeAbility(c));
+  for (const watcher of watchers) {
+    const before = m;
+    const order = m.nextDiscountOrder ?? 1;
+    m = modify(m, watcher.instanceId, c => ({ ...c, lookoutReady: false,
+      lastEffectNote: `On Point: called out district ${lane + 1}.` }));
+    m = { ...m, nextDiscountOrder: order + 1, discountTokens: [...(m.discountTokens ?? []), {
+      id: `discount:${watcher.owner}:${order}`, owner: watcher.owner, sourceInstanceId: watcher.instanceId,
+      eligibility: 'lookout-watch' as const, targetLane: lane, sourceLane: watcher.lane, createdOrder: order,
+    }] };
+    m = addEvent(before, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, lane,
+      targetIds: [watcher.instanceId], note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.` });
+  }
+  return m;
+}
 const applyScentEntry = (m: Match, id: string): Match => {
   let result = m;
   const card = findCard(m, id);
@@ -2110,7 +2180,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   const l = source.lane!, enemy = source.owner === 'player' ? 'cpu' : 'player', kind = source.type === 'Fire' ? 'fire' : source.type === 'Water' ? 'water' : 'ability';
   let m = match;
   const targetIds = new Set<string>();
-  const note = (text: string, timing: 'instant' | 'timed' = 'instant', duration: EventDuration | null = null) => {
+  const note = (text: string, timing: 'instant' | 'timed' = 'instant', duration: EventDuration | null = null, from?: Match) => {
     const changed = before.boards.flat().filter((old) => {
       const current = findCard(m, old.instanceId);
       return current && JSON.stringify(cardState(old)) !== JSON.stringify(cardState(current));
@@ -2129,10 +2199,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     });
     // Delayed counters may already have emitted their own authoritative transition.
     // A wrapper note starts from the settled state so replay frames never repeat it.
-    const eventBefore = m.effectLog.length > before.effectLog.length ? m : before;
+    const eventBefore = from ?? (m.effectLog.length > before.effectLog.length ? m : before);
     m = addEvent(eventBefore, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner, targetIds: [...targetIds, ...changed], note: text, kind: moved ? 'move' : kind, timing, duration });
   };
-  if (source.statuses.silenced || source.statuses.frozen || source.statuses.weakened) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
+  if ((source.statuses.silenced || source.statuses.frozen || source.statuses.weakened)
+    && !(UNSILENCEABLE_CARD_IDS as readonly string[]).includes(source.cardId)) { note('Ability did not fire (silenced, frozen, or weakened).'); return m; }
   const homecoming = homecomingReveal(m, source, homecomingTools(), echoed);
   if (homecoming) return !echoed ? { ...homecoming, lastRevealedCardId: source.cardId,
     entranceHistory: [...(homecoming.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : homecoming;
@@ -2146,6 +2217,105 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     note(result.note);
     return echoed ? m : { ...m, lastRevealedCardId: source.cardId,
       entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] };
+  }
+  if (Object.hasOwn(tripleOgCards, source.cardId)) {
+    const id = source.cardId;
+    // Movement and interception emit their own authoritative frames. The wrapper
+    // note must start from the settled state of the last one, or replay jumps
+    // over everything this reveal did afterwards.
+    let tail: Match | undefined;
+    const noteFromTail = (text: string) => note(text, 'instant', null, tail);
+    const step = (next: Match): Match => {
+      if (next.effectLog.length > m.effectLog.length) tail = next;
+      return next;
+    };
+    const roomFor = (side: Owner, destination: Lane) => destination !== l
+      && !getStoryLockedLanes(m, side).includes(destination) && inLane(m, side, destination).length < 4;
+    const respectLane = (side: Owner): Lane | undefined => ([0, 1, 2] as Lane[]).filter(d => roomFor(side, d))[0];
+    if (id === 'triple-og-blue') {
+      const behind = getLaneScoreForMatch(m, inLane(m, source.owner, l), l, source.owner)
+        < getLaneScoreForMatch(m, inLane(m, enemy, l), l, enemy);
+      let homage = 0;
+      if (behind) {
+        for (const ally of m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
+          && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character')) {
+          const before = findCard(m, ally.instanceId);
+          // Nobody is taxed off the board: an ally at 1 Hand keeps it.
+          if (!before || getEffectiveCardPower(before) < 2 || cannotLoseHands(before)) continue;
+          m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier - 1,
+            lastEffectNote: `${source.ability}: paid 1 Hand to ${source.name}.` }));
+          const after = findCard(m, ally.instanceId);
+          if (after && after.powerModifier < before.powerModifier) { homage++; targetIds.add(ally.instanceId); }
+        }
+        if (homage) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + homage,
+          lastEffectNote: `${source.ability}: collected ${homage} Hand${homage === 1 ? '' : 's'}.` }));
+      }
+      const weakest = lowest(inLane(m, enemy, l));
+      let sent = false;
+      if (weakest) {
+        const destination = ([0, 1, 2] as Lane[]).filter(d => roomFor(weakest.owner, d))
+          .sort((a, b) => getLaneScoreForMatch(m, inLane(m, source.owner, b), b, source.owner)
+            - getLaneScoreForMatch(m, inLane(m, source.owner, a), a, source.owner) || a - b)[0];
+        if (destination !== undefined) {
+          targetIds.add(weakest.instanceId);
+          m = step(forceEnemyMove(m, source, weakest, destination));
+          const moved = findCard(m, weakest.instanceId);
+          if (moved?.lane === destination) {
+            sent = true;
+            m = step(targetEnemyPowerReduction(m, source, moved, -1, `${source.ability}: -1 Hand on the way out.`));
+          }
+        }
+      }
+      noteFromTail(`${source.ability}: ${behind ? homage ? `the whole side paid up for +${homage} Hands.` : 'the side had nothing to give.' : 'this district was not losing, so no homage was owed.'}`
+        + (sent ? ` ${weakest!.name} was sent to your strongest district with -1 Hand.` : ''));
+    } else if (id === 'triple-og-red') {
+      let taken = 0, respected = 0;
+      const lineup = [...inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId), ...inLane(m, enemy, l)]
+        .filter(c => (c.kind ?? 'character') === 'character');
+      for (const other of lineup) {
+        const before = findCard(m, other.instanceId);
+        if (!before) continue;
+        const shielded = before.statuses.protected || before.statuses.uncounterable || cannotLoseHands(before);
+        if (shielded) {
+          const destination = respectLane(before.owner);
+          if (destination === undefined) continue;
+          targetIds.add(before.instanceId);
+          m = step(before.owner === source.owner
+            ? move(m, before, destination, `${source.ability}: moved out of respect.`)
+            : forceEnemyMove(m, source, before, destination));
+          if (findCard(m, before.instanceId)?.lane === destination) respected++;
+          continue;
+        }
+        // Allies take the same destruction-aware damage as enemies, so a 1-Hand
+        // ally leaves the board instead of lingering at zero.
+        m = step(before.owner === source.owner
+          ? reduceHands(m, before, 1, `${source.ability}: -1 Hand.`)
+          : targetEnemyPowerReduction(m, source, before, -1, `${source.ability}: -1 Hand.`));
+        const after = findCard(m, before.instanceId);
+        if (!after || after.powerModifier < before.powerModifier) { taken++; targetIds.add(before.instanceId); }
+      }
+      if (taken) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + taken,
+        lastEffectNote: `${source.ability}: took ${taken} Hand${taken === 1 ? '' : 's'} off the district.` }));
+      noteFromTail(`${source.ability}: ${taken} card${taken === 1 ? '' : 's'} lost a Hand and ${source.name} gained +${taken}.`
+        + (respected ? ` ${respected} untouchable card${respected === 1 ? ' was' : 's were'} moved out of respect.` : ''));
+    } else if (id === 'initiation') {
+      m = { ...m, districtTraps: [...(m.districtTraps ?? [])
+        .filter(t => !(t.kind === 'initiation' && t.owner === source.owner && t.lane === l)),
+        { kind: 'initiation' as const, owner: source.owner, lane: l, source, expiresAfterRound: 99 }] };
+      noteFromTail(`${source.ability}: this district is marked. Your next character here gets put on by your set.`);
+    } else if (id === 'block-spinner') {
+      const target = highest(inLane(m, enemy, l));
+      if (target) { targetIds.add(target.instanceId); m = step(applyBurn(m, source, target, 1, `${source.ability}: 1 Burn.`)); }
+      m = { ...m, districtTraps: [...(m.districtTraps ?? [])
+        .filter(t => !(t.kind === 'spinner' && t.owner === source.owner && t.lane === l)),
+        { kind: 'spinner' as const, owner: source.owner, lane: l, source, expiresAfterRound: m.round + 2 }] };
+      noteFromTail(`${source.ability}: ${target ? `${target.name} took 1 Burn.` : 'nobody was here to burn.'} The block keeps spinning for the next enemy played here.`);
+    } else if (id === 'look-out') {
+      m = modify(m, source.instanceId, c => ({ ...c, lookoutReady: true, lastEffectNote: `${source.ability}: watching the block.` }));
+      noteFromTail(`${source.ability}: the next district your opponent plays into is called out; your next card there costs 1 less Motion.`);
+    }
+    return echoed ? m : { ...m, lastRevealedCardId: source.cardId,
+      entranceHistory: [...(m.entranceHistory ?? []).filter(id2 => id2 !== source.instanceId), source.instanceId] };
   }
   if (Object.hasOwn(afterHoursWaveCards, source.cardId)) {
     const allies = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId);
@@ -3633,6 +3803,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (getStoryLockedLanes(match, owner).includes(targetLane)) throw new Error('Lane is locked');
   const handKey = owner === 'player' ? 'playerHand' : 'cpuHand', motionKey = owner === 'player' ? 'playerMotion' : 'cpuMotion', card = match[handKey].find((c) => c.instanceId === instanceId);
   if (!card) throw new Error('Card is not in this hand');
+  const homeLane = TRIPLE_OG_LANE[card.cardId];
+  if (homeLane !== undefined && targetLane !== homeLane) throw new Error(`${card.name} only sets up in the ${homeLane === 0 ? 'left' : 'right'} district`);
   if (squabble && (match.squabbleByOwner ? match.squabbleByOwner[owner] : owner !== 'player' || match.squabbleUsed)) throw new Error('SQUABBLE is unavailable');
   const cost = getLegalCardCost(match, owner, card, targetLane);
   if (match[motionKey] < cost) throw new Error('Not enough Motion');
@@ -3718,6 +3890,9 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     note: `${card.name} was played in district ${targetLane + 1} for ${cost} Motion.${usedToken ? ` ${usedToken.eligibility} discount used.` : ''}${taxed ? " Rent Due added 1 Motion." : ""}${squabble ? ' SQUABBLE doubled its base Hands.' : ''}`,
   });
   m = deadAirArrival(m, instanceId, targetLane);
+  m = applyInitiationMark(m, instanceId, owner, targetLane);
+  m = applySpinnerTrap(m, instanceId, targetLane);
+  m = applyLookoutWatch(m, owner, targetLane);
   const nextBonus = m.blueNextBonus?.[owner] ?? 0;
   if (nextBonus > 0) {
     const beforeBonus = m;
