@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { previewBattlePlay } from './battlePreview';
-import { createMatch, createCardInstance, getDistrictResults, playCard } from './gameEngine';
+import { createMatch, createCardInstance, getDistrictResults, playCard, playTurnCard, type Lane, type Match } from './gameEngine';
 
 test('known-board preview predicts a freeze and leaves the live fade untouched', () => {
   const match=createMatch('block','combo');
@@ -28,3 +28,27 @@ test('preview respects unaffordable choices and includes the armed Squabble', ()
   assert.equal(previewBattlePlay({...match,playerMotion:0},card.instanceId,0),null);
   assert.deepEqual(previewBattlePlay(match,card.instanceId,0,true)!.after,getDistrictResults(playCard(match,'player',card.instanceId,0,true)));
 });
+
+for (const [cardId, homeLane] of [['triple-og-blue', 0], ['triple-og-red', 2]] as const) {
+  test(`${cardId} selection previews only its legal district without throwing or changing the live match`, () => {
+    const card = createCardInstance(cardId, 'player', 'og-preview', 0);
+    const ally = { ...createCardInstance('hooper', 'player', 'og-preview', 1), lane: 1 as const };
+    const enemy = { ...createCardInstance('oink', 'cpu', 'og-preview', 2), lane: homeLane, powerModifier: 20 };
+    const match: Match = { ...createMatch('block', 'combo'), round: 3, playerMotion: 8,
+      playerHand: [card], boards: [homeLane === 0 ? [enemy] : [], [ally], homeLane === 2 ? [enemy] : []] };
+    const before = JSON.stringify(match);
+    // Battle computes all three previews immediately on card selection, before
+    // the player chooses a district. Reproduce that exact rendering input.
+    const previews = ([0, 1, 2] as Lane[]).map(lane => previewBattlePlay(match, card.instanceId, lane));
+    for (const lane of [0, 1, 2] as Lane[]) {
+      if (lane === homeLane) {
+        assert(previews[lane], 'the legal district keeps its real effect preview');
+        assert.deepEqual(previews[lane]!.after, getDistrictResults(playTurnCard(match, 'player', card.instanceId, lane)));
+      } else {
+        assert.equal(previews[lane], null, 'illegal districts have no preview');
+      }
+    }
+    assert.equal(JSON.stringify(match), before, 'preview cannot mutate the live match');
+    assert.equal(previewBattlePlay({ ...match, playerMotion: 0 }, card.instanceId, homeLane), null);
+  });
+}

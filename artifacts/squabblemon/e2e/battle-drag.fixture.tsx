@@ -13,6 +13,41 @@ import '../src/styles/multiplayer.css';
 const params = new URLSearchParams(location.search);
 const locations: DistrictSnapshot = { version: 1, locations: ['bodega', 'corrupt-church', 'the-subway'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'] };
 function waveFixture(match: Match): Match {
+  const tripleOg = params.get('tripleOg');
+  if (tripleOg === 'blue' || tripleOg === 'red') {
+    const cardId = tripleOg === 'blue' ? 'triple-og-blue' : 'triple-og-red';
+    const targetLane: Lane = tripleOg === 'blue' ? 0 : 2;
+    // Avoid unrelated Bodega discounts, Church tithe, and Subway movement so
+    // this fixture isolates Triple OG placement and reveal effects.
+    const tripleOgLocations: DistrictSnapshot = {
+      version: 1,
+      locations: ['time-square', 'county-jail', 'magic-city'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'],
+    };
+    const unit = (id: string, owner: 'player' | 'cpu', lane: Lane, index: number) =>
+      ({ ...createCardInstance(id, owner, 'triple-og-e2e-board', index), lane });
+    const strongEnemy = unit('oink', 'cpu', targetLane, 31);
+    strongEnemy.powerModifier = 20;
+    const losingLane: Match['boards'][number] = [
+      unit('hooper', 'player', targetLane, 30),
+      strongEnemy,
+      unit('snow', 'cpu', targetLane, 32),
+    ];
+    const boards: Match['boards'] = [[], [], []];
+    boards[targetLane] = losingLane;
+    if (tripleOg === 'blue') {
+      // Cooky's reveal should collect Homage from allies and move the
+      // weakest enemy into a stronger other district.
+      boards[1] = [unit('hooper', 'player', 1, 33), unit('hooper', 'player', 1, 34)];
+    } else {
+      // Keep a populated right-hand board for RED PUNCH's real reveal too.
+      boards[1] = [unit('hooper', 'player', 1, 33)];
+    }
+    const hand = [
+      createCardInstance(cardId, 'player', 'triple-og-e2e-hand', 0),
+      createCardInstance('plug', 'player', 'triple-og-e2e-hand', 1),
+    ];
+    return { ...match, districtSnapshot: tripleOgLocations, round: 3, playerMotion: 9, cpuMotion: 9, playerHand: hand, boards };
+  }
   if (params.has('fairytale')) {
     const dmv = { ...createCardInstance('dmvworker', 'cpu', 'fairytale', 8), lane: 0 as Lane };
     const sherlock = { ...createCardInstance('sherlock', 'cpu', 'fairytale', 9), lane: 2 as Lane };
@@ -38,6 +73,7 @@ function Solo() {
     if (params.has('locked')) match.storyEncounter = { id: 'drag-lock', enemy: { id: 'rival', name: 'Rival', portraitAssetId: '', deckId: 'vibes', cardIds: [], behaviorProfile: '' }, battlefieldAssetId: '', soundHooks: {} };
     return waveFixture(match);
   });
+  const [playCount, setPlayCount] = useState(0);
   const [selected, setSelected] = useState<string | null>(null), [lane, setLane] = useState<Lane | null>(null), [squabble, setSquabble] = useState(false);
   const [enabled, setEnabled] = useState(true);
   useEffect(() => {
@@ -46,9 +82,17 @@ function Solo() {
     return () => clearTimeout(timer);
   }, []);
   const play = (instanceId: string, target: Lane, armed: boolean, investment = 0) => {
+    setPlayCount(count => count + 1);
     setMatch(m => playTurnCard(m, 'player', instanceId, target, armed, investment)); setSelected(null); setLane(null); setSquabble(false);
   };
-  return <div style={{ height: '100dvh', color: 'white' }}><Battle match={match} deck={decks[0]} rivalDeck={decks[1]}
+  const tripleOgEvidence = params.get('tripleOg') === 'blue' || params.get('tripleOg') === 'red';
+  const targetId = tripleOgEvidence ? `triple-og-${params.get('tripleOg')}` : '';
+  return <div style={{ height: '100dvh', color: 'white' }}>
+    {tripleOgEvidence && <output data-testid="triple-og-evidence" data-play-count={playCount}
+      data-motion={match.playerMotion} data-hand-count={match.playerHand.length}
+      data-board-count={match.boards.flat().filter(card => card.owner === 'player').length}
+      data-target-id={targetId} data-target-lane={params.get('tripleOg') === 'blue' ? '0' : '2'} />}
+    <Battle match={match} deck={decks[0]} rivalDeck={decks[1]}
     selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane} squabble={squabble} setSquabble={setSquabble}
     onPlayCard={play} commit={() => { if (selected && lane !== null) play(selected, lane, squabble); }}
     endTurn={() => setMatch(m => nextRound(revealCpuTurn(pass(m, 'player'))))} skipSequence={() => {}}

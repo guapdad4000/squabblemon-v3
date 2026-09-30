@@ -31,6 +31,30 @@ import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS, getTutorialGuidance } from './tu
 const noop = () => {};
 const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
 const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
+const createTripleOgUiMatch = () => {
+  const match = createMatch('block', 'combo');
+  const blue = createCardInstance('triple-og-blue', 'player', 'triple-og-ui', 0);
+  const red = createCardInstance('triple-og-red', 'player', 'triple-og-ui', 1);
+  match.playerHand = [blue, red];
+  match.playerMotion = 10;
+  return { match, blue, red };
+};
+const onlinePresentationFor = (match: Match, lockedLanes: number[] = []) => ({
+  districts: getMatchDistricts(match),
+  scores: getDistrictResults(match),
+  costs: Object.fromEntries(match.playerHand.map(card => [card.instanceId, [4, 4, 4]])),
+  lockedLanes,
+  covered: new Set<string>(),
+  history: [],
+  turnSeconds: 20,
+  clockRunning: false,
+  yourTurn: true,
+  mode: 'ranked',
+  status: 'Your move',
+  rivalHandCount: 0,
+});
+const getRenderedLaneButton = (html: string, lane: number) =>
+  html.match(new RegExp(`<button type="button" data-testid="lane-${lane}"[^>]*>`))?.[0] ?? '';
 
 test('battle venues map deterministically for training, story, and replay frames', () => {
   const trainingAssignments = {
@@ -594,6 +618,72 @@ test('unavailable cards explain the exact Motion shortfall', () => {
   const html = renderBattle(match, { selectedLane: 0 });
   assert.match(html, new RegExp(`costs ${unavailable.cost} Motion in`));
   assert.match(html, new RegExp(`${unavailable.cost - match.playerMotion} short`));
+});
+
+test('Triple OG selection exposes previews and legal lane guidance only for its home district', () => {
+  for (const [cardId, homeLane, wrongLane, side] of [
+    ['triple-og-blue', 0, 2, 'left'],
+    ['triple-og-red', 2, 0, 'right'],
+  ] as const) {
+    const { match, blue, red } = createTripleOgUiMatch();
+    const card = cardId === 'triple-og-blue' ? blue : red;
+
+    const noLaneHtml = renderBattle(match, { selectedInstanceId: card.instanceId });
+    assert.match(noLaneHtml, new RegExp(`Choose only the ${side} district`));
+    assert.match(noLaneHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
+    for (const lane of [0, 1, 2].filter(value => value !== homeLane)) {
+      assert.doesNotMatch(noLaneHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
+      assert.match(getRenderedLaneButton(noLaneHtml, lane), /aria-disabled="true"/);
+      assert.match(getRenderedLaneButton(noLaneHtml, lane), new RegExp(`only ${side} district`));
+    }
+    assert.match(noLaneHtml, new RegExp(`<button[^>]*data-testid="button-pick-district"[^>]*disabled=""[^>]*title="Only the ${side} district is legal`));
+
+    const legalHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
+    assert.match(legalHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
+    for (const lane of [0, 1, 2].filter(value => value !== homeLane)) {
+      assert.doesNotMatch(legalHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
+      assert.match(getRenderedLaneButton(legalHtml, lane), /aria-disabled="true"/);
+    }
+    assert.match(legalHtml, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
+    assert.match(legalHtml, /Play card · 4 Motion/);
+    assert.doesNotMatch(legalHtml, /<button[^>]*data-testid="button-lock"[^>]*disabled=""/);
+
+    const illegalHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: wrongLane });
+    assert.match(illegalHtml, new RegExp(`data-testid="lane-container-${wrongLane}"[^>]*is-illegal`));
+    assert.match(getRenderedLaneButton(illegalHtml, wrongLane), /aria-disabled="true"/);
+    assert.match(getRenderedLaneButton(illegalHtml, wrongLane), new RegExp(`only ${side} district`));
+    assert.match(illegalHtml, new RegExp(`<button[^>]*data-testid="button-lock"[^>]*disabled=""[^>]*title="${card.name} can only be played in the ${side} district`));
+    assert.match(illegalHtml, new RegExp(`Only ${side} district`));
+    assert.match(illegalHtml, new RegExp(`Cannot play: only the ${side} district is legal`));
+  }
+});
+
+test('Triple OG home districts stay unavailable when locked, while ordinary cards keep all district previews', () => {
+  for (const [cardId, homeLane, side] of [
+    ['triple-og-blue', 0, 'left'],
+    ['triple-og-red', 2, 'right'],
+  ] as const) {
+    const { match, blue, red } = createTripleOgUiMatch();
+    const card = cardId === 'triple-og-blue' ? blue : red;
+    const html = renderBattle(match, {
+      selectedInstanceId: card.instanceId,
+      online: onlinePresentationFor(match, [homeLane]),
+    });
+    assert.match(html, new RegExp(`Only the ${side} district is available`));
+    assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="true"/);
+    assert.match(getRenderedLaneButton(html, homeLane), /district is locked this round/);
+    assert.match(html, new RegExp(`<button[^>]*data-testid="button-pick-district"[^>]*disabled=""[^>]*title="Only the ${side} district is legal`));
+  }
+
+  const match = createMatch('block', 'combo');
+  const normalCard = createCardInstance('buddy', 'player', 'normal-card-ui', 0);
+  match.playerHand = [normalCard];
+  match.playerMotion = 10;
+  const html = renderBattle(match, { selectedInstanceId: normalCard.instanceId });
+  for (const lane of [0, 1, 2]) {
+    assert.match(html, new RegExp(`data-testid="preview-lane-${lane}"`));
+    assert.match(getRenderedLaneButton(html, lane), /aria-disabled="false"/);
+  }
 });
 
 test('decision handlers and commits remain privacy-safe and functional', () => {
