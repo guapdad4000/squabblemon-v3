@@ -20,8 +20,10 @@ test("season expansion preserves every legacy progression, encounter and reward 
       return rest;
     }),
   }));
+  // Baseline includes the story-earned card rewards, story payout contract and
+  // Cracked Head's Block Crowned focus-card hint. Reward changes must update it deliberately.
   assert.equal(createHash("sha256").update(JSON.stringify(mechanics)).digest("hex"),
-    "9db094cb3a342736a8042b80703146556538096e2cfeb3b73b7304818b38ebe9",
+    "342f4990396bcad4bd0eb1492ac8852ed6ffb60e3d13162dfef3bd855209ec30",
     "Existing saves and issued matches depend on unchanged Season One identities/rules/rewards.");
   assert.equal(storyDialogueToken("welcome-to-the-block", "pre", 0), "welcome-to-the-block:script-v4:pre:0");
 });
