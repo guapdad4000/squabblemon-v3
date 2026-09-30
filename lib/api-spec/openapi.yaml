@@ -77,6 +77,111 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/FeedbackError' }
         '503': { description: Submission could not be confirmed; retry with the same retry ID, content: { application/json: { schema: { $ref: '#/components/schemas/FeedbackError' } } } }
+  /events/patches:
+    get:
+      operationId: listPublishedPatches
+      tags: [events]
+      summary: List the latest 100 published game patches and delivery progress
+      security: []
+      responses:
+        '200':
+          description: Published patches
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/PublicPatch' }
+  /admin/patches:
+    get:
+      operationId: listAdminPatches
+      tags: [events]
+      summary: List the latest 100 private patch drafts and publication status
+      responses:
+        '200':
+          description: Patch records
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/AdminPatch' }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account }
+    post:
+      operationId: createAdminPatch
+      tags: [events]
+      summary: Create a persistent patch draft
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PatchInput' } } } }
+      responses:
+        '201':
+          description: Created patch draft
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminPatch' }
+        '400': { description: Invalid patch draft }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account }
+  /admin/patches/{id}:
+    put:
+      operationId: updateAdminPatch
+      tags: [events]
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PatchInput' } } } }
+      responses:
+        '200':
+          description: Updated patch draft
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminPatch' }
+        '400': { description: Invalid patch draft }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account or request origin }
+        '404': { description: Draft not found }
+        '409': { description: Published patches cannot be edited }
+  /admin/patches/{id}/preview:
+    get:
+      operationId: previewAdminPatch
+      tags: [events]
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          description: Patch draft and exact proposed mail with current audience count
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PatchPreview' }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account }
+        '404': { description: Draft not found }
+  /admin/patches/{id}/publish:
+    post:
+      operationId: publishAdminPatch
+      tags: [events]
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PatchPublishInput' } } } }
+      responses:
+        '200':
+          description: Published patch, fixed recipient snapshot and first delivery progress
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminPatch' }
+        '400': { description: Invalid confirmation version }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account or request origin }
+        '404': { description: Draft not found }
+        '409': { description: Draft changed or was already published }
+  /admin/patches/{id}/deliver:
+    post:
+      operationId: resumeAdminPatchDelivery
+      tags: [events]
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          description: Patch delivery progress after one bounded batch
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminPatch' }
+        '401': { description: Authentication required }
+        '403': { description: Patch administration is not enabled for this account or request origin }
+        '404': { description: Published patch not found }
   /social:
     get:
       operationId: getSocialState
@@ -921,6 +1026,80 @@ components:
       type: http
       scheme: bearer
   schemas:
+    PatchInput:
+      type: object
+      additionalProperties: false
+      required: [version, title, date, overview, buffs, changes]
+      properties:
+        version: { type: string, minLength: 1, maxLength: 40 }
+        title: { type: string, minLength: 1, maxLength: 120 }
+        date: { type: string, minLength: 10, maxLength: 10, pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' }
+        overview: { type: string, minLength: 1, maxLength: 3000 }
+        buffs: { type: array, maxItems: 50, items: { type: string, minLength: 1, maxLength: 500 } }
+        changes: { type: array, maxItems: 50, items: { type: string, minLength: 1, maxLength: 500 } }
+        softCurrency: { type: integer, minimum: 0, maximum: 100, default: 50 }
+        packTickets: { type: integer, minimum: 0, maximum: 1, default: 0 }
+    PatchPublishInput:
+      type: object
+      additionalProperties: false
+      required: [confirmVersion]
+      properties:
+        confirmVersion: { type: string, minLength: 1, maxLength: 64 }
+    PublicPatch:
+      type: object
+      additionalProperties: false
+      required: [version, title, date, overview, buffs, changes, publishedAt, mailStatus]
+      properties:
+        version: { type: string }
+        title: { type: string, maxLength: 120 }
+        date: { type: string, minLength: 10, maxLength: 10, pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' }
+        overview: { type: string }
+        buffs: { type: array, items: { type: string } }
+        changes: { type: array, items: { type: string } }
+        publishedAt: { type: string, format: date-time }
+        mailStatus: { type: string, enum: [delivering, partial, complete] }
+    AdminPatch:
+      allOf:
+        - $ref: '#/components/schemas/PatchInput'
+        - type: object
+          required: [version, title, date, overview, buffs, changes, softCurrency, packTickets, id, status, createdAt, updatedAt, createdBy, publishedBy, intendedCount, deliveredCount, failedCount, lastError, campaignId]
+          properties:
+            id: { type: string, format: uuid }
+            status: { type: string, enum: [draft, published] }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
+            createdBy: { type: string }
+            publishedBy: { type: [string, 'null'] }
+            intendedCount: { type: integer, minimum: 0 }
+            deliveredCount: { type: integer, minimum: 0 }
+            failedCount: { type: integer, minimum: 0 }
+            lastError: { type: [string, 'null'] }
+            campaignId: { type: [string, 'null'] }
+    PatchLetter:
+      type: object
+      additionalProperties: false
+      required: [id, title, body, sender, gift]
+      properties:
+        id: { type: string, maxLength: 100 }
+        title: { type: string, maxLength: 120 }
+        body: { type: string }
+        sender: { type: string }
+        gift:
+          type: object
+          additionalProperties: false
+          required: [softCurrency, packTickets, styleShards]
+          properties:
+            softCurrency: { type: integer, minimum: 0, maximum: 100 }
+            packTickets: { type: integer, minimum: 0, maximum: 1 }
+            styleShards: { type: integer, const: 0 }
+    PatchPreview:
+      type: object
+      additionalProperties: false
+      required: [patch, letter, audienceCount]
+      properties:
+        patch: { $ref: '#/components/schemas/AdminPatch' }
+        letter: { $ref: '#/components/schemas/PatchLetter' }
+        audienceCount: { type: integer, minimum: 0 }
     EventFeedbackCategory:
       type: string
       enum: [bug, suggestion, general]

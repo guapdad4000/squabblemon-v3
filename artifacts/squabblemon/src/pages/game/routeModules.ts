@@ -4,6 +4,7 @@ import { lazy } from 'react';
 const loaders = {
   Home: () => import('./Home').then(m => ({ default: m.Home })),
   Events: () => import('./Events').then(m => ({ default: m.Events })),
+  PatchDesk: () => import('./PatchDesk').then(m => ({ default: m.PatchDesk })),
   Inventory: () => import('./Inventory').then(m => ({ default: m.Inventory })),
   CharacterStyles: () => import('./CharacterStyles').then(m => ({ default: m.CharacterStyles })),
   CharacterCollections: () => import('./CharacterCollections').then(m => ({ default: m.CharacterCollections })),
@@ -23,6 +24,7 @@ const loaders = {
 
 export const Home = lazy(loaders.Home);
 export const Events = lazy(loaders.Events);
+export const PatchDesk = lazy(loaders.PatchDesk);
 export const Inventory = lazy(loaders.Inventory);
 export const CharacterStyles = lazy(loaders.CharacterStyles);
 export const CharacterCollections = lazy(loaders.CharacterCollections);
@@ -43,6 +45,7 @@ export function gameRouteKey(path: string): keyof typeof loaders | undefined {
   const pathname = path.split(/[?#]/, 1)[0].replace(/\/+$/, '');
   if (pathname === '/game') return 'Home';
   if (pathname === '/game/events') return 'Events';
+  if (pathname === '/game/admin/patches') return 'PatchDesk';
   if (pathname === '/game/onboarding') return 'Onboarding';
   if (/^\/game\/(training|challenges|play)$/.test(pathname)) return 'ChallengesHub';
   if (/^\/game\/online(?:\/[^/]+)?$/.test(pathname)) return 'Multiplayer';
@@ -71,7 +74,7 @@ export function preloadGameRoute(path: string) {
 
 /** After the game shell is up, quietly warm every screen so later taps never wait on a download. */
 export function preloadAllGameRoutes() {
-  const keys = Object.keys(loaders) as (keyof typeof loaders)[];
+  const keys = (Object.keys(loaders) as (keyof typeof loaders)[]).filter(key => key !== 'PatchDesk');
   let index = 0;
   const idle = (cb: () => void) => { if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(cb, { timeout: 2000 }); else setTimeout(cb, 200); };
   const next = () => {

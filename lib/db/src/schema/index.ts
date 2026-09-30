@@ -9,3 +9,4 @@ export * from "./challengeRuns";
 export * from './paymentOrders';
 export * from './social';
 export * from './eventFeedback';
+export * from './patches';

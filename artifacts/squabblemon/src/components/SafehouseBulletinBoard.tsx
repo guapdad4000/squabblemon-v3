@@ -3,6 +3,8 @@ import { Link } from 'wouter';
 import { ArrowRight, CalendarDays, ChevronDown, Clock3, Hammer, ListChecks, MessageSquareText, X } from 'lucide-react';
 import { getAssetUrl } from '../lib/assets';
 import { bulletinBoard, BULLETIN_SEEN_STORAGE_KEY, FEEDBACK_HREF, type BulletinEvent } from '../content/bulletinBoard';
+import { PatchNotes } from './PatchNotes';
+import { markPatchBoardRead, usePublishedPatches } from '../hooks/use-patches';
 import '../styles/safehouse-bulletin.css';
 
 const supplied = (name: string) => getAssetUrl(`assets/events/supplied/${name}.png`);
@@ -28,7 +30,7 @@ function ExpandedEvent({ event, onNavigate, headingRef, idPrefix }: { event: Bul
   </section>;
 }
 
-export function SafehouseBulletinBoardContent({ compact = false, onNavigate, children }: { compact?: boolean; onNavigate?: () => void; children?: ReactNode }) {
+export function SafehouseBulletinBoardContent({ playerId, compact = false, onNavigate, children }: { playerId: string; compact?: boolean; onNavigate?: () => void; children?: ReactNode }) {
   const [expandedId, setExpandedId] = useState<string>(bulletinBoard.events[0].id);
   const pendingReveal = useRef(false);
   const detailRef = useRef<HTMLDivElement>(null);
@@ -65,6 +67,7 @@ export function SafehouseBulletinBoardContent({ compact = false, onNavigate, chi
       </div>
     </header>
 
+    <PatchNotes playerId={playerId} compact={compact} />
     <section className="bulletin-section" aria-labelledby={`${idPrefix}-events-title`}>
       <div className="bulletin-section__title bulletin-section__title--yellow"><img className="bulletin-calendar" src={supplied('calendar')} alt="" aria-hidden="true" /><div><small>Pull up</small><h3 id={`${idPrefix}-events-title`}>Events</h3></div></div>
       <div className="bulletin-event-grid">
@@ -97,12 +100,14 @@ export function SafehouseBulletinBoardContent({ compact = false, onNavigate, chi
   </div>;
 }
 
-export function SafehouseBulletinBoard({ open, onClose, onViewed }: {
+export function SafehouseBulletinBoard({ playerId, open, onClose, onViewed }: {
+  playerId: string;
   open: boolean;
   onClose: () => void;
   onViewed?: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const patches = usePublishedPatches(playerId);
   const onViewedRef = useRef(onViewed);
   onViewedRef.current = onViewed;
   useEffect(() => {
@@ -110,10 +115,14 @@ export function SafehouseBulletinBoard({ open, onClose, onViewed }: {
     if (!node) return;
     if (open && !node.open) {
       node.showModal();
-      try { localStorage.setItem(BULLETIN_SEEN_STORAGE_KEY, bulletinBoard.edition); } catch { /* Storage is optional. */ }
+      // A failed query must never acknowledge an unseen publication.
+      if (patches.data) markPatchBoardRead(patches.data);
       onViewedRef.current?.();
     } else if (!open && node.open) node.close();
   }, [open]);
+  useEffect(() => {
+    if (open && patches.data) { markPatchBoardRead(patches.data); onViewedRef.current?.(); }
+  }, [open, patches.data]);
   useEffect(() => () => { if (dialog.current?.open) dialog.current.close(); }, []);
 
   const close = () => { if (dialog.current?.open) dialog.current.close(); onClose(); };
@@ -121,6 +130,6 @@ export function SafehouseBulletinBoard({ open, onClose, onViewed }: {
     onCancel={event => { event.preventDefault(); close(); }}
     onClick={event => { if (event.target === event.currentTarget) close(); }}>
     <div className="bulletin-dialog__controls"><button type="button" className="bulletin-close" onClick={close} aria-label="Close bulletin board" data-testid="button-close-bulletin"><X aria-hidden="true" /></button></div>
-    {open && <SafehouseBulletinBoardContent compact onNavigate={close} />}
+    {open && <SafehouseBulletinBoardContent playerId={playerId} compact onNavigate={close} />}
   </dialog>;
 }

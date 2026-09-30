@@ -5,6 +5,163 @@
  * Squabblemon player and game-loop API
  * OpenAPI spec version: 0.2.0
  */
+export interface PatchInput {
+  /**
+     * @minLength 1
+     * @maxLength 40
+     */
+  version: string;
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  title: string;
+  /**
+     * @minLength 10
+     * @maxLength 10
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  date: string;
+  /**
+     * @minLength 1
+     * @maxLength 3000
+     */
+  overview: string;
+  /**
+     * @maxItems 50
+     * @items.minLength 1
+     * @items.maxLength 500
+     */
+  buffs: string[];
+  /**
+     * @maxItems 50
+     * @items.minLength 1
+     * @items.maxLength 500
+     */
+  changes: string[];
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  softCurrency?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  packTickets?: number;
+}
+
+export interface PatchPublishInput {
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  confirmVersion: string;
+}
+
+export type PublicPatchMailStatus = typeof PublicPatchMailStatus[keyof typeof PublicPatchMailStatus];
+
+
+export const PublicPatchMailStatus = {
+  delivering: 'delivering',
+  partial: 'partial',
+  complete: 'complete',
+} as const;
+
+export interface PublicPatch {
+  version: string;
+  /** @maxLength 120 */
+  title: string;
+  /**
+     * @minLength 10
+     * @maxLength 10
+     * @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+     */
+  date: string;
+  overview: string;
+  buffs: string[];
+  changes: string[];
+  publishedAt: string;
+  mailStatus: PublicPatchMailStatus;
+}
+
+export type AdminPatchStatus = typeof AdminPatchStatus[keyof typeof AdminPatchStatus];
+
+
+export const AdminPatchStatus = {
+  draft: 'draft',
+  published: 'published',
+} as const;
+
+export type AdminPatch = PatchInput & ({
+  id: string;
+  status: AdminPatchStatus;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  /** @nullable */
+  publishedBy: string | null;
+  /** @minimum 0 */
+  intendedCount: number;
+  /** @minimum 0 */
+  deliveredCount: number;
+  /** @minimum 0 */
+  failedCount: number;
+  /** @nullable */
+  lastError: string | null;
+  /** @nullable */
+  campaignId: string | null;
+}) & Required<Pick<PatchInput & ({
+  id: string;
+  status: AdminPatchStatus;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  /** @nullable */
+  publishedBy: string | null;
+  /** @minimum 0 */
+  intendedCount: number;
+  /** @minimum 0 */
+  deliveredCount: number;
+  /** @minimum 0 */
+  failedCount: number;
+  /** @nullable */
+  lastError: string | null;
+  /** @nullable */
+  campaignId: string | null;
+}), 'softCurrency' | 'packTickets'>>;
+
+export type PatchLetterGift = {
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  softCurrency: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  packTickets: number;
+  styleShards: 0;
+};
+
+export interface PatchLetter {
+  /** @maxLength 100 */
+  id: string;
+  /** @maxLength 120 */
+  title: string;
+  body: string;
+  sender: string;
+  gift: PatchLetterGift;
+}
+
+export interface PatchPreview {
+  patch: AdminPatch;
+  letter: PatchLetter;
+  /** @minimum 0 */
+  audienceCount: number;
+}
+
 export type EventFeedbackCategory = typeof EventFeedbackCategory[keyof typeof EventFeedbackCategory];
 
 

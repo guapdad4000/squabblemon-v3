@@ -35,7 +35,7 @@ let started = false;
 let child;
 const environment = {
   PATH: process.env.PATH, HOME: process.env.HOME,
-  NODE_ENV: "test", DATABASE_POOL_MAX: "5", EVENTS_FEEDBACK_TEST_OWNED: "1",
+  NODE_ENV: "test", DATABASE_POOL_MAX: "5", EVENTS_FEEDBACK_TEST_OWNED: "1", PATCHES_TEST_OWNED: "1",
 };
 function run(command, args, label, visible = false) {
   return new Promise((resolve, reject) => {
@@ -89,6 +89,16 @@ async function verify(client) {
   if (!constraints.rows.some(row => row.conname.endsWith("_fkey"))) throw new Error("Missing feedback author foreign key.");
   const columns = await client.query("SELECT datetime_precision FROM information_schema.columns WHERE table_name='event_feedback' AND column_name='created_at'");
   if (columns.rows[0]?.datetime_precision !== 3) throw new Error("Feedback timestamp precision is not milliseconds.");
+  const giftCheck = await client.query("SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid='patch_drafts'::regclass AND conname='patch_drafts_gift_check'");
+  if (!giftCheck.rows[0]?.definition.includes("soft_currency <= 100") || !giftCheck.rows[0]?.definition.includes("pack_tickets <= 1")) {
+    throw new Error("Patch gift database bounds are not 100 Clout and 1 ticket.");
+  }
+  const targetForeignKeys = await client.query("SELECT conname FROM pg_constraint WHERE conrelid='patch_delivery_targets'::regclass AND contype='f'");
+  if (targetForeignKeys.rows.some(row => row.conname.includes("clerk_user_id"))) {
+    throw new Error("Patch recipient snapshot must survive profile deletion.");
+  }
+  const deliveryCheck = await client.query("SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid='patch_delivery_targets'::regclass AND conname='patch_delivery_status_check'");
+  if (!deliveryCheck.rows[0]?.definition.includes("missing")) throw new Error("Patch delivery ledger is missing the terminal missing state.");
 }
 const interrupt = () => child?.kill("SIGTERM");
 process.on("SIGINT", interrupt);
@@ -124,7 +134,7 @@ try {
   const pnpm = process.env.npm_execpath ? [process.execPath, process.env.npm_execpath] : ["pnpm"];
   const browserOnly = process.argv.includes("--browser-only");
   const migrationsOnly = process.argv.includes("--migrations-only");
-  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1", "src/lib/eventFeedback.test.ts"]);
+  if (!browserOnly && !migrationsOnly) await runTests(pnpm[0], [...pnpm.slice(1), "--filter", "@workspace/api-server", "exec", "tsx", "--test", "--test-concurrency=1", "src/lib/eventFeedback.test.ts", "src/lib/patches.test.ts"]);
   if (browserOnly || process.argv.includes("--browser")) {
     const separator = process.argv.indexOf("--");
     const browserArgs = separator < 0 ? [] : process.argv.slice(separator + 1);

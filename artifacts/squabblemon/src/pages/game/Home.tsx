@@ -14,6 +14,7 @@ import { AccountRewards } from '../../components/AccountRewards';
 import { MusicControls } from '../../components/MusicControls';
 import { SafehouseMail, useSafehouseMail } from '../../components/SafehouseMail';
 import { hasUnreadBulletin, SafehouseBulletinBoard } from '../../components/SafehouseBulletinBoard';
+import { hasUnreadPatchBoard, usePublishedPatches } from '../../hooks/use-patches';
 import { useMusic, musicActions } from '../../musicStore';
 import { catalogCardById, getCardImage } from '../../data';
 import { soundtrack } from '../../musicPlayer';
@@ -101,7 +102,9 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
   const [mailOpen, setMailOpen] = useState(false);
   const [bulletinOpen, setBulletinOpen] = useState(false);
   const [bulletinUnread, setBulletinUnread] = useState(hasUnreadBulletin);
-  const markBulletinViewed = useCallback(() => setBulletinUnread(false), []);
+  const publishedPatches = usePublishedPatches(bootstrap.profile.id);
+  useEffect(() => { if (publishedPatches.data) setBulletinUnread(hasUnreadPatchBoard(publishedPatches.data)); }, [publishedPatches.data]);
+  const markBulletinViewed = useCallback(() => setBulletinUnread(hasUnreadPatchBoard(publishedPatches.data)), [publishedPatches.data]);
   const noticeSearch = useSearch();
   useEffect(() => {
     const notice = new URLSearchParams(noticeSearch).get('notice');
@@ -263,7 +266,7 @@ export function Home({ bootstrap, onGuideComplete }: { bootstrap: PlayerBootstra
       <LobbyDepth />
       <AccountRewards bootstrap={bootstrap} open={growthOpen} onOpenChange={setGrowthOpen} />
       <SafehouseMail playerId={bootstrap.profile.id} open={mailOpen} onClose={() => { setMailOpen(false); explore('room'); }} />
-      <SafehouseBulletinBoard open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
+      <SafehouseBulletinBoard playerId={bootstrap.profile.id} open={bulletinOpen} onViewed={markBulletinViewed} onClose={() => { setBulletinOpen(false); explore('room'); }} />
       <Link className="safehouse-bounty-logo" href="/game/missions" aria-label={`Open bounties${claimed ? ` · ${claimed} ready` : ''}`}><img src={getAssetUrl('assets/bounty-hunter/hero.webp')} alt="" /><span className="sr-only">Bounties</span><Attention section="missions" />{claimed > 0 && <b>{claimed}</b>}</Link>
       <StarterMythic bootstrap={bootstrap} placement="shortcut" autoShow={!onGuideComplete && view === 'room' && !growthOpen && !mailOpen && !bulletinOpen} />
       <SceneFrame kind="safehouse" frameRef={frame} poster={`${import.meta.env.BASE_URL}scenes/safehouse/concept.png`}

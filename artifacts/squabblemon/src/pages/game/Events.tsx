@@ -23,7 +23,7 @@ export function Events({ playerId }: { playerId: string }) {
 
   return <main ref={main} className="events-page" aria-labelledby="events-title" data-testid="page-events">
     <div className="events-page__bar"><Link href="/game" className="events-page__back" data-testid="link-back-safehouse"><ArrowLeft size={15} aria-hidden="true" />Back to Safehouse</Link></div>
-    <SafehouseBulletinBoardContent>
+    <SafehouseBulletinBoardContent playerId={playerId}>
       <EventFeedbackSection playerId={playerId} />
     </SafehouseBulletinBoardContent>
   </main>;

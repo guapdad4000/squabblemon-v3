@@ -1,5 +1,7 @@
 # Events feedback release checks
 
+Official patch notes appear beside the existing Events content, not in the player feedback feed. The private draft and mail workflow is documented in [Publishing Squabblemon patches](patch-publications.md).
+
 Feedback is a shared board for every signed-in player. Submissions use the existing game session and save a snapshot of the in-game display name. The public feed exposes only post ID, display name, category, message, and creation time; account IDs, email addresses, and retry IDs are never returned. Clients must render messages as text, never as HTML.
 
 One account can create at most **5 new posts per rolling 10 minutes** and **20 new posts per rolling 24 hours**. PostgreSQL transaction-scoped advisory locking serializes new submissions per account across instances. Identical requests with the same author and retry UUID replay the original saved receipt (even when the account is throttled); changing the trimmed category or message returns 409. A 429 includes `Retry-After` seconds. If persistence cannot be confirmed, retry with the **same** UUID. This feature does not change profile balances or mail.

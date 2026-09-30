@@ -53,3 +53,4 @@
 - [Blue Scarf turn choice](blue-scarf-turn-choice.md) — User confirmed one random 50/50 give-or-steal choice each turn, not a fixed choice or a roll for each ally.
 - [Story deck editor return](story-deck-editor-return.md) — Preserve a validated story return destination through starter-recipe saves; browser history alone cannot recover it.
 - [Story reward import boundary](story-reward-import-boundary.md) — Keep story-only lookups behind the lazy story route so shared reward UI does not load the full story catalog in the game shell.
+- [Patch publication audience](patch-publication-audience.md) — Freeze the approved audience; only all-delivered is complete, while missing or exhausted targets remain partial.

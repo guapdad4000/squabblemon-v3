@@ -75,6 +75,522 @@ export const SubmitEventFeedbackResponse = zod.object({
 })
 
 
+/**
+ * @summary List the latest 100 published game patches and delivery progress
+ */
+export const listPublishedPatchesResponseTitleMax = 120;
+
+export const listPublishedPatchesResponseDateMin = 10;
+export const listPublishedPatchesResponseDateMax = 10;
+
+
+export const listPublishedPatchesResponseDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+
+export const ListPublishedPatchesResponseItem = zod.object({
+  "version": zod.string(),
+  "title": zod.string().max(listPublishedPatchesResponseTitleMax),
+  "date": zod.string().min(listPublishedPatchesResponseDateMin).max(listPublishedPatchesResponseDateMax).regex(listPublishedPatchesResponseDateRegExp),
+  "overview": zod.string(),
+  "buffs": zod.array(zod.string()),
+  "changes": zod.array(zod.string()),
+  "publishedAt": zod.coerce.date(),
+  "mailStatus": zod.enum(['delivering', 'partial', 'complete'])
+})
+export const ListPublishedPatchesResponse = zod.array(ListPublishedPatchesResponseItem)
+
+
+/**
+ * @summary List the latest 100 private patch drafts and publication status
+ */
+export const listAdminPatchesResponseOneVersionMax = 40;
+
+export const listAdminPatchesResponseOneTitleMax = 120;
+
+export const listAdminPatchesResponseOneDateMin = 10;
+export const listAdminPatchesResponseOneDateMax = 10;
+
+
+export const listAdminPatchesResponseOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const listAdminPatchesResponseOneOverviewMax = 3000;
+
+export const listAdminPatchesResponseOneBuffsItemMax = 500;
+
+export const listAdminPatchesResponseOneBuffsMax = 50;
+
+export const listAdminPatchesResponseOneChangesItemMax = 500;
+
+export const listAdminPatchesResponseOneChangesMax = 50;
+
+export const listAdminPatchesResponseOneSoftCurrencyDefault = 50;
+export const listAdminPatchesResponseOneSoftCurrencyMin = 0;
+export const listAdminPatchesResponseOneSoftCurrencyMax = 100;
+
+export const listAdminPatchesResponseOnePackTicketsDefault = 0;
+export const listAdminPatchesResponseOnePackTicketsMin = 0;
+export const listAdminPatchesResponseOnePackTicketsMax = 1;
+
+export const listAdminPatchesResponseTwoIntendedCountMin = 0;
+
+export const listAdminPatchesResponseTwoDeliveredCountMin = 0;
+
+export const listAdminPatchesResponseTwoFailedCountMin = 0;
+
+
+
+export const ListAdminPatchesResponseItem = zod.object({
+  "version": zod.string().min(1).max(listAdminPatchesResponseOneVersionMax),
+  "title": zod.string().min(1).max(listAdminPatchesResponseOneTitleMax),
+  "date": zod.string().min(listAdminPatchesResponseOneDateMin).max(listAdminPatchesResponseOneDateMax).regex(listAdminPatchesResponseOneDateRegExp),
+  "overview": zod.string().min(1).max(listAdminPatchesResponseOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(listAdminPatchesResponseOneBuffsItemMax)).max(listAdminPatchesResponseOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(listAdminPatchesResponseOneChangesItemMax)).max(listAdminPatchesResponseOneChangesMax),
+  "softCurrency": zod.number().min(listAdminPatchesResponseOneSoftCurrencyMin).max(listAdminPatchesResponseOneSoftCurrencyMax).default(listAdminPatchesResponseOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(listAdminPatchesResponseOnePackTicketsMin).max(listAdminPatchesResponseOnePackTicketsMax).default(listAdminPatchesResponseOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(listAdminPatchesResponseTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(listAdminPatchesResponseTwoDeliveredCountMin),
+  "failedCount": zod.number().min(listAdminPatchesResponseTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+}))
+export const ListAdminPatchesResponse = zod.array(ListAdminPatchesResponseItem)
+
+
+/**
+ * @summary Create a persistent patch draft
+ */
+export const createAdminPatchBodyVersionMax = 40;
+
+export const createAdminPatchBodyTitleMax = 120;
+
+export const createAdminPatchBodyDateMin = 10;
+export const createAdminPatchBodyDateMax = 10;
+
+
+export const createAdminPatchBodyDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const createAdminPatchBodyOverviewMax = 3000;
+
+export const createAdminPatchBodyBuffsItemMax = 500;
+
+export const createAdminPatchBodyBuffsMax = 50;
+
+export const createAdminPatchBodyChangesItemMax = 500;
+
+export const createAdminPatchBodyChangesMax = 50;
+
+export const createAdminPatchBodySoftCurrencyDefault = 50;
+export const createAdminPatchBodySoftCurrencyMin = 0;
+export const createAdminPatchBodySoftCurrencyMax = 100;
+
+export const createAdminPatchBodyPackTicketsDefault = 0;
+export const createAdminPatchBodyPackTicketsMin = 0;
+export const createAdminPatchBodyPackTicketsMax = 1;
+
+
+
+export const CreateAdminPatchBody = zod.object({
+  "version": zod.string().min(1).max(createAdminPatchBodyVersionMax),
+  "title": zod.string().min(1).max(createAdminPatchBodyTitleMax),
+  "date": zod.string().min(createAdminPatchBodyDateMin).max(createAdminPatchBodyDateMax).regex(createAdminPatchBodyDateRegExp),
+  "overview": zod.string().min(1).max(createAdminPatchBodyOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(createAdminPatchBodyBuffsItemMax)).max(createAdminPatchBodyBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(createAdminPatchBodyChangesItemMax)).max(createAdminPatchBodyChangesMax),
+  "softCurrency": zod.number().min(createAdminPatchBodySoftCurrencyMin).max(createAdminPatchBodySoftCurrencyMax).default(createAdminPatchBodySoftCurrencyDefault),
+  "packTickets": zod.number().min(createAdminPatchBodyPackTicketsMin).max(createAdminPatchBodyPackTicketsMax).default(createAdminPatchBodyPackTicketsDefault)
+})
+
+export const createAdminPatchResponseOneVersionMax = 40;
+
+export const createAdminPatchResponseOneTitleMax = 120;
+
+export const createAdminPatchResponseOneDateMin = 10;
+export const createAdminPatchResponseOneDateMax = 10;
+
+
+export const createAdminPatchResponseOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const createAdminPatchResponseOneOverviewMax = 3000;
+
+export const createAdminPatchResponseOneBuffsItemMax = 500;
+
+export const createAdminPatchResponseOneBuffsMax = 50;
+
+export const createAdminPatchResponseOneChangesItemMax = 500;
+
+export const createAdminPatchResponseOneChangesMax = 50;
+
+export const createAdminPatchResponseOneSoftCurrencyDefault = 50;
+export const createAdminPatchResponseOneSoftCurrencyMin = 0;
+export const createAdminPatchResponseOneSoftCurrencyMax = 100;
+
+export const createAdminPatchResponseOnePackTicketsDefault = 0;
+export const createAdminPatchResponseOnePackTicketsMin = 0;
+export const createAdminPatchResponseOnePackTicketsMax = 1;
+
+export const createAdminPatchResponseTwoIntendedCountMin = 0;
+
+export const createAdminPatchResponseTwoDeliveredCountMin = 0;
+
+export const createAdminPatchResponseTwoFailedCountMin = 0;
+
+
+
+export const CreateAdminPatchResponse = zod.object({
+  "version": zod.string().min(1).max(createAdminPatchResponseOneVersionMax),
+  "title": zod.string().min(1).max(createAdminPatchResponseOneTitleMax),
+  "date": zod.string().min(createAdminPatchResponseOneDateMin).max(createAdminPatchResponseOneDateMax).regex(createAdminPatchResponseOneDateRegExp),
+  "overview": zod.string().min(1).max(createAdminPatchResponseOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(createAdminPatchResponseOneBuffsItemMax)).max(createAdminPatchResponseOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(createAdminPatchResponseOneChangesItemMax)).max(createAdminPatchResponseOneChangesMax),
+  "softCurrency": zod.number().min(createAdminPatchResponseOneSoftCurrencyMin).max(createAdminPatchResponseOneSoftCurrencyMax).default(createAdminPatchResponseOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(createAdminPatchResponseOnePackTicketsMin).max(createAdminPatchResponseOnePackTicketsMax).default(createAdminPatchResponseOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(createAdminPatchResponseTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(createAdminPatchResponseTwoDeliveredCountMin),
+  "failedCount": zod.number().min(createAdminPatchResponseTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+}))
+
+
+export const UpdateAdminPatchParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const updateAdminPatchBodyVersionMax = 40;
+
+export const updateAdminPatchBodyTitleMax = 120;
+
+export const updateAdminPatchBodyDateMin = 10;
+export const updateAdminPatchBodyDateMax = 10;
+
+
+export const updateAdminPatchBodyDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const updateAdminPatchBodyOverviewMax = 3000;
+
+export const updateAdminPatchBodyBuffsItemMax = 500;
+
+export const updateAdminPatchBodyBuffsMax = 50;
+
+export const updateAdminPatchBodyChangesItemMax = 500;
+
+export const updateAdminPatchBodyChangesMax = 50;
+
+export const updateAdminPatchBodySoftCurrencyDefault = 50;
+export const updateAdminPatchBodySoftCurrencyMin = 0;
+export const updateAdminPatchBodySoftCurrencyMax = 100;
+
+export const updateAdminPatchBodyPackTicketsDefault = 0;
+export const updateAdminPatchBodyPackTicketsMin = 0;
+export const updateAdminPatchBodyPackTicketsMax = 1;
+
+
+
+export const UpdateAdminPatchBody = zod.object({
+  "version": zod.string().min(1).max(updateAdminPatchBodyVersionMax),
+  "title": zod.string().min(1).max(updateAdminPatchBodyTitleMax),
+  "date": zod.string().min(updateAdminPatchBodyDateMin).max(updateAdminPatchBodyDateMax).regex(updateAdminPatchBodyDateRegExp),
+  "overview": zod.string().min(1).max(updateAdminPatchBodyOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(updateAdminPatchBodyBuffsItemMax)).max(updateAdminPatchBodyBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(updateAdminPatchBodyChangesItemMax)).max(updateAdminPatchBodyChangesMax),
+  "softCurrency": zod.number().min(updateAdminPatchBodySoftCurrencyMin).max(updateAdminPatchBodySoftCurrencyMax).default(updateAdminPatchBodySoftCurrencyDefault),
+  "packTickets": zod.number().min(updateAdminPatchBodyPackTicketsMin).max(updateAdminPatchBodyPackTicketsMax).default(updateAdminPatchBodyPackTicketsDefault)
+})
+
+export const updateAdminPatchResponseOneVersionMax = 40;
+
+export const updateAdminPatchResponseOneTitleMax = 120;
+
+export const updateAdminPatchResponseOneDateMin = 10;
+export const updateAdminPatchResponseOneDateMax = 10;
+
+
+export const updateAdminPatchResponseOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const updateAdminPatchResponseOneOverviewMax = 3000;
+
+export const updateAdminPatchResponseOneBuffsItemMax = 500;
+
+export const updateAdminPatchResponseOneBuffsMax = 50;
+
+export const updateAdminPatchResponseOneChangesItemMax = 500;
+
+export const updateAdminPatchResponseOneChangesMax = 50;
+
+export const updateAdminPatchResponseOneSoftCurrencyDefault = 50;
+export const updateAdminPatchResponseOneSoftCurrencyMin = 0;
+export const updateAdminPatchResponseOneSoftCurrencyMax = 100;
+
+export const updateAdminPatchResponseOnePackTicketsDefault = 0;
+export const updateAdminPatchResponseOnePackTicketsMin = 0;
+export const updateAdminPatchResponseOnePackTicketsMax = 1;
+
+export const updateAdminPatchResponseTwoIntendedCountMin = 0;
+
+export const updateAdminPatchResponseTwoDeliveredCountMin = 0;
+
+export const updateAdminPatchResponseTwoFailedCountMin = 0;
+
+
+
+export const UpdateAdminPatchResponse = zod.object({
+  "version": zod.string().min(1).max(updateAdminPatchResponseOneVersionMax),
+  "title": zod.string().min(1).max(updateAdminPatchResponseOneTitleMax),
+  "date": zod.string().min(updateAdminPatchResponseOneDateMin).max(updateAdminPatchResponseOneDateMax).regex(updateAdminPatchResponseOneDateRegExp),
+  "overview": zod.string().min(1).max(updateAdminPatchResponseOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(updateAdminPatchResponseOneBuffsItemMax)).max(updateAdminPatchResponseOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(updateAdminPatchResponseOneChangesItemMax)).max(updateAdminPatchResponseOneChangesMax),
+  "softCurrency": zod.number().min(updateAdminPatchResponseOneSoftCurrencyMin).max(updateAdminPatchResponseOneSoftCurrencyMax).default(updateAdminPatchResponseOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(updateAdminPatchResponseOnePackTicketsMin).max(updateAdminPatchResponseOnePackTicketsMax).default(updateAdminPatchResponseOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(updateAdminPatchResponseTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(updateAdminPatchResponseTwoDeliveredCountMin),
+  "failedCount": zod.number().min(updateAdminPatchResponseTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+}))
+
+
+export const PreviewAdminPatchParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const previewAdminPatchResponsePatchOneVersionMax = 40;
+
+export const previewAdminPatchResponsePatchOneTitleMax = 120;
+
+export const previewAdminPatchResponsePatchOneDateMin = 10;
+export const previewAdminPatchResponsePatchOneDateMax = 10;
+
+
+export const previewAdminPatchResponsePatchOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const previewAdminPatchResponsePatchOneOverviewMax = 3000;
+
+export const previewAdminPatchResponsePatchOneBuffsItemMax = 500;
+
+export const previewAdminPatchResponsePatchOneBuffsMax = 50;
+
+export const previewAdminPatchResponsePatchOneChangesItemMax = 500;
+
+export const previewAdminPatchResponsePatchOneChangesMax = 50;
+
+export const previewAdminPatchResponsePatchOneSoftCurrencyDefault = 50;
+export const previewAdminPatchResponsePatchOneSoftCurrencyMin = 0;
+export const previewAdminPatchResponsePatchOneSoftCurrencyMax = 100;
+
+export const previewAdminPatchResponsePatchOnePackTicketsDefault = 0;
+export const previewAdminPatchResponsePatchOnePackTicketsMin = 0;
+export const previewAdminPatchResponsePatchOnePackTicketsMax = 1;
+
+export const previewAdminPatchResponsePatchTwoIntendedCountMin = 0;
+
+export const previewAdminPatchResponsePatchTwoDeliveredCountMin = 0;
+
+export const previewAdminPatchResponsePatchTwoFailedCountMin = 0;
+
+export const previewAdminPatchResponseLetterIdMax = 100;
+
+export const previewAdminPatchResponseLetterTitleMax = 120;
+
+export const previewAdminPatchResponseLetterGiftSoftCurrencyMin = 0;
+export const previewAdminPatchResponseLetterGiftSoftCurrencyMax = 100;
+
+export const previewAdminPatchResponseLetterGiftPackTicketsMin = 0;
+export const previewAdminPatchResponseLetterGiftPackTicketsMax = 1;
+
+export const previewAdminPatchResponseAudienceCountMin = 0;
+
+
+
+export const PreviewAdminPatchResponse = zod.object({
+  "patch": zod.object({
+  "version": zod.string().min(1).max(previewAdminPatchResponsePatchOneVersionMax),
+  "title": zod.string().min(1).max(previewAdminPatchResponsePatchOneTitleMax),
+  "date": zod.string().min(previewAdminPatchResponsePatchOneDateMin).max(previewAdminPatchResponsePatchOneDateMax).regex(previewAdminPatchResponsePatchOneDateRegExp),
+  "overview": zod.string().min(1).max(previewAdminPatchResponsePatchOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(previewAdminPatchResponsePatchOneBuffsItemMax)).max(previewAdminPatchResponsePatchOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(previewAdminPatchResponsePatchOneChangesItemMax)).max(previewAdminPatchResponsePatchOneChangesMax),
+  "softCurrency": zod.number().min(previewAdminPatchResponsePatchOneSoftCurrencyMin).max(previewAdminPatchResponsePatchOneSoftCurrencyMax).default(previewAdminPatchResponsePatchOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(previewAdminPatchResponsePatchOnePackTicketsMin).max(previewAdminPatchResponsePatchOnePackTicketsMax).default(previewAdminPatchResponsePatchOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(previewAdminPatchResponsePatchTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(previewAdminPatchResponsePatchTwoDeliveredCountMin),
+  "failedCount": zod.number().min(previewAdminPatchResponsePatchTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+})),
+  "letter": zod.object({
+  "id": zod.string().max(previewAdminPatchResponseLetterIdMax),
+  "title": zod.string().max(previewAdminPatchResponseLetterTitleMax),
+  "body": zod.string(),
+  "sender": zod.string(),
+  "gift": zod.object({
+  "softCurrency": zod.number().min(previewAdminPatchResponseLetterGiftSoftCurrencyMin).max(previewAdminPatchResponseLetterGiftSoftCurrencyMax),
+  "packTickets": zod.number().min(previewAdminPatchResponseLetterGiftPackTicketsMin).max(previewAdminPatchResponseLetterGiftPackTicketsMax),
+  "styleShards": zod.number()
+})
+}),
+  "audienceCount": zod.number().min(previewAdminPatchResponseAudienceCountMin)
+})
+
+
+export const PublishAdminPatchParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const publishAdminPatchBodyConfirmVersionMax = 64;
+
+
+
+export const PublishAdminPatchBody = zod.object({
+  "confirmVersion": zod.string().min(1).max(publishAdminPatchBodyConfirmVersionMax)
+})
+
+export const publishAdminPatchResponseOneVersionMax = 40;
+
+export const publishAdminPatchResponseOneTitleMax = 120;
+
+export const publishAdminPatchResponseOneDateMin = 10;
+export const publishAdminPatchResponseOneDateMax = 10;
+
+
+export const publishAdminPatchResponseOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const publishAdminPatchResponseOneOverviewMax = 3000;
+
+export const publishAdminPatchResponseOneBuffsItemMax = 500;
+
+export const publishAdminPatchResponseOneBuffsMax = 50;
+
+export const publishAdminPatchResponseOneChangesItemMax = 500;
+
+export const publishAdminPatchResponseOneChangesMax = 50;
+
+export const publishAdminPatchResponseOneSoftCurrencyDefault = 50;
+export const publishAdminPatchResponseOneSoftCurrencyMin = 0;
+export const publishAdminPatchResponseOneSoftCurrencyMax = 100;
+
+export const publishAdminPatchResponseOnePackTicketsDefault = 0;
+export const publishAdminPatchResponseOnePackTicketsMin = 0;
+export const publishAdminPatchResponseOnePackTicketsMax = 1;
+
+export const publishAdminPatchResponseTwoIntendedCountMin = 0;
+
+export const publishAdminPatchResponseTwoDeliveredCountMin = 0;
+
+export const publishAdminPatchResponseTwoFailedCountMin = 0;
+
+
+
+export const PublishAdminPatchResponse = zod.object({
+  "version": zod.string().min(1).max(publishAdminPatchResponseOneVersionMax),
+  "title": zod.string().min(1).max(publishAdminPatchResponseOneTitleMax),
+  "date": zod.string().min(publishAdminPatchResponseOneDateMin).max(publishAdminPatchResponseOneDateMax).regex(publishAdminPatchResponseOneDateRegExp),
+  "overview": zod.string().min(1).max(publishAdminPatchResponseOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(publishAdminPatchResponseOneBuffsItemMax)).max(publishAdminPatchResponseOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(publishAdminPatchResponseOneChangesItemMax)).max(publishAdminPatchResponseOneChangesMax),
+  "softCurrency": zod.number().min(publishAdminPatchResponseOneSoftCurrencyMin).max(publishAdminPatchResponseOneSoftCurrencyMax).default(publishAdminPatchResponseOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(publishAdminPatchResponseOnePackTicketsMin).max(publishAdminPatchResponseOnePackTicketsMax).default(publishAdminPatchResponseOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(publishAdminPatchResponseTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(publishAdminPatchResponseTwoDeliveredCountMin),
+  "failedCount": zod.number().min(publishAdminPatchResponseTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+}))
+
+
+export const ResumeAdminPatchDeliveryParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const resumeAdminPatchDeliveryResponseOneVersionMax = 40;
+
+export const resumeAdminPatchDeliveryResponseOneTitleMax = 120;
+
+export const resumeAdminPatchDeliveryResponseOneDateMin = 10;
+export const resumeAdminPatchDeliveryResponseOneDateMax = 10;
+
+
+export const resumeAdminPatchDeliveryResponseOneDateRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const resumeAdminPatchDeliveryResponseOneOverviewMax = 3000;
+
+export const resumeAdminPatchDeliveryResponseOneBuffsItemMax = 500;
+
+export const resumeAdminPatchDeliveryResponseOneBuffsMax = 50;
+
+export const resumeAdminPatchDeliveryResponseOneChangesItemMax = 500;
+
+export const resumeAdminPatchDeliveryResponseOneChangesMax = 50;
+
+export const resumeAdminPatchDeliveryResponseOneSoftCurrencyDefault = 50;
+export const resumeAdminPatchDeliveryResponseOneSoftCurrencyMin = 0;
+export const resumeAdminPatchDeliveryResponseOneSoftCurrencyMax = 100;
+
+export const resumeAdminPatchDeliveryResponseOnePackTicketsDefault = 0;
+export const resumeAdminPatchDeliveryResponseOnePackTicketsMin = 0;
+export const resumeAdminPatchDeliveryResponseOnePackTicketsMax = 1;
+
+export const resumeAdminPatchDeliveryResponseTwoIntendedCountMin = 0;
+
+export const resumeAdminPatchDeliveryResponseTwoDeliveredCountMin = 0;
+
+export const resumeAdminPatchDeliveryResponseTwoFailedCountMin = 0;
+
+
+
+export const ResumeAdminPatchDeliveryResponse = zod.object({
+  "version": zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneVersionMax),
+  "title": zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneTitleMax),
+  "date": zod.string().min(resumeAdminPatchDeliveryResponseOneDateMin).max(resumeAdminPatchDeliveryResponseOneDateMax).regex(resumeAdminPatchDeliveryResponseOneDateRegExp),
+  "overview": zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneOverviewMax),
+  "buffs": zod.array(zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneBuffsItemMax)).max(resumeAdminPatchDeliveryResponseOneBuffsMax),
+  "changes": zod.array(zod.string().min(1).max(resumeAdminPatchDeliveryResponseOneChangesItemMax)).max(resumeAdminPatchDeliveryResponseOneChangesMax),
+  "softCurrency": zod.number().min(resumeAdminPatchDeliveryResponseOneSoftCurrencyMin).max(resumeAdminPatchDeliveryResponseOneSoftCurrencyMax).default(resumeAdminPatchDeliveryResponseOneSoftCurrencyDefault),
+  "packTickets": zod.number().min(resumeAdminPatchDeliveryResponseOnePackTicketsMin).max(resumeAdminPatchDeliveryResponseOnePackTicketsMax).default(resumeAdminPatchDeliveryResponseOnePackTicketsDefault)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "status": zod.enum(['draft', 'published']),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date(),
+  "createdBy": zod.string(),
+  "publishedBy": zod.string().nullable(),
+  "intendedCount": zod.number().min(resumeAdminPatchDeliveryResponseTwoIntendedCountMin),
+  "deliveredCount": zod.number().min(resumeAdminPatchDeliveryResponseTwoDeliveredCountMin),
+  "failedCount": zod.number().min(resumeAdminPatchDeliveryResponseTwoFailedCountMin),
+  "lastError": zod.string().nullable(),
+  "campaignId": zod.string().nullable()
+}))
+
+
 export const GetSocialStateResponse = zod.object({
   "self": zod.object({
   "username": zod.string(),

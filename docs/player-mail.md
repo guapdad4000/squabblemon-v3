@@ -2,7 +2,7 @@
 
 The wooden door in the safehouse shows unread deliveries and knocks until they have been read. Clicking it opens the door, moves the camera, and opens the Mailman's delivery screen. Reduced-motion settings suppress the knocking. Reading and claiming are separate: a read letter can still have an unclaimed gift. The client refreshes every 30 seconds while active, on window focus, and when opening the inbox.
 
-Mail is saved in `player_profiles.inbox`. Authenticated players can only list, read, or claim their own mail. Gifts currently support Clout (`softCurrency`), Pack Tickets (`packTickets`), and Style Shards (`styleShards`). Claims lock the profile row and update the gift and wallet in one transaction. Repeat claims never credit twice. No schema migration is needed.
+Mail is saved in `player_profiles.inbox`. Authenticated players can only list, read, or claim their own mail. Gifts currently support Clout (`softCurrency`), Pack Tickets (`packTickets`), and Style Shards (`styleShards`). Claims lock the profile row and update the gift and wallet in one transaction. Repeat claims never credit twice. No migration is needed for the mailbox itself. Published patch letters have a separate persistent campaign and recipient ledger; see [Publishing Squabblemon patches](patch-publications.md).
 
 ## Developer delivery
 
@@ -29,7 +29,7 @@ pnpm --filter @workspace/api-server exec tsx src/tools/mail-ops.ts /absolute/pat
 
 Replace `all` with one Clerk user ID or comma-separated IDs for targeted packages. `all` targets profiles that exist when the command starts, not future signups. Omit `gift` for an announcement. A dry run validates recipients and conflicting campaign content without changing accounts. Currency amounts must be nonnegative integers up to 1,000,000 per gift field.
 
-Use a unique, stable ID per campaign. Re-running the same ID and content resumes an interrupted delivery without duplicate gifts. Reusing it with different content is rejected. Sends are atomic per recipient, not across the entire audience. If interrupted, rerun the same command; existing deliveries and claim state are preserved. Re-running `all` later also includes any accounts created since the first run. This version has no scheduled sends, attachments, expiry, or developer web dashboard.
+Use a unique, stable ID per campaign. Re-running the same ID and content resumes an interrupted delivery without duplicate gifts. Reusing it with different content is rejected. Sends are atomic per recipient, not across the entire audience. If interrupted, rerun the same command; existing deliveries and claim state are preserved. Re-running `all` later also includes any accounts created since the first run. This *operator tool* has no scheduled sends, attachments, expiry, or developer web dashboard; the dedicated patch workflow has its own admin desk, fixed publication audience, and scheduled delivery worker.
 
 ## Verification
 

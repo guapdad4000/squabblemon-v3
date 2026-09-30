@@ -11,6 +11,11 @@ globalThis.Netlify = { env: { get: key => process.env[key] } };
 const { default: handler, config } = await import('../artifacts/api-server/dist/netlify-functions/api.mjs');
 assert.equal(typeof handler, 'function');
 assert.deepEqual(config.path, ['/api', '/api/*']);
+// Netlify discovers scheduled functions from the exported config on the
+// packaged function entrypoint; ensure bundling preserved that metadata.
+const { default: patchDelivery, config: patchDeliveryConfig } = await import('../artifacts/api-server/dist/netlify-functions/patch-delivery.mjs');
+assert.equal(typeof patchDelivery, 'function');
+assert.equal(patchDeliveryConfig.schedule, '* * * * *');
 for (const [path, status] of [
   ['/api/healthz', 200],
   ['/api/player/bootstrap', 401],

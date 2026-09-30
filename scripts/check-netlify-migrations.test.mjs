@@ -16,7 +16,7 @@ function fixture(t) {
 }
 
 test('current native history covers development SQL, schema, and consolidated online-room baseline', () => {
-  assert.equal(checkNetlifyMigrationCoverage().tables, 17);
+  assert.equal(checkNetlifyMigrationCoverage().tables, 19);
 });
 
 test('historical social uniqueness cannot be removed by editing an applied migration', t => {

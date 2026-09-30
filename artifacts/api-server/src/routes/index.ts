@@ -17,6 +17,7 @@ import mailRouter from './mail';
 import notificationsRouter from './notifications';
 import socialRouter from './social';
 import eventFeedbackRouter from './eventFeedback';
+import patchesRouter from './patches';
 
 const router: IRouter = Router();
 
@@ -35,6 +36,7 @@ router.use(starterMythicRouter);
 router.use(mailRouter);
 router.use(notificationsRouter);
 router.use(eventFeedbackRouter);
+router.use(patchesRouter);
 router.use(stockzRouter);
 router.use(socialRouter);
 
