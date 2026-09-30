@@ -41,7 +41,7 @@ function BootstrapError({
   return (
     <div className="min-h-[100dvh] bg-background text-white p-6 flex flex-col items-center justify-center text-center">
       <img
-        src={`${import.meta.env.BASE_URL}brand/prismatic/marks/impact-standard-gold.webp`}
+        src={`${import.meta.env.BASE_URL}brand/prismatic/marks/impact-sm-gold.webp`}
         alt=""
         className="h-28 w-28 object-contain mb-5 opacity-90"
       />

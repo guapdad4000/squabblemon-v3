@@ -10,7 +10,10 @@ test('missing hashed assets return 404 before the SPA fallback', () => {
   const spaRule = config.indexOf('from = "/*"');
   assert.ok(assetRule >= 0 && assetRule < spaRule);
   assert.match(config.slice(assetRule, spaRule), /to = "\/404\.html"\s+status = 404/);
-  assert.match(notFound, /Asset not found/);
+  assert.match(notFound, /404 — Unknown Street/);
+  assert.match(notFound, /brand\/not-found-sm-gold\.webp/);
+  assert.match(notFound, /name="robots" content="noindex"/);
+  assert.doesNotMatch(notFound, /<script\b[^>]*\bsrc=/);
 });
 
 test('hashed assets are immutable while the HTML manifest revalidates', () => {

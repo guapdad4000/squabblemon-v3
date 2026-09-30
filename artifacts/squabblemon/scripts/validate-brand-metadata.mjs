@@ -171,6 +171,23 @@ async function validateBuild(basePath) {
     assert.equal(`${dimensions.width}x${dimensions.height}`, icon.sizes,
       `Manifest icon ${index + 1} must match its declared size`);
   }
+
+  const errorHtml = readFileSync(path.join(outputDir, '404.html'), 'utf8');
+  assert.ok(!errorHtml.includes('__SQUABBLEMON_ASSET_BASE__'),
+    'Static 404 must resolve its asset base before publication');
+  const errorArt = extractAttribute(errorHtml, 'the illustrated 404 image',
+    /<img\b(?=[^>]*\bclass="art")[^>]*\bsrc="([^"]+)"/);
+  const errorArtReference = assertScopedAsset(errorArt, basePath, '404 illustration');
+  const errorArtDimensions = await sharp(errorArtReference.emittedPath).metadata();
+  assert.deepEqual([errorArtDimensions.width, errorArtDimensions.height], [1200, 900],
+    '404 illustration must preserve the supplied artwork aspect ratio');
+  const errorWordmark = extractAttribute(errorHtml, 'the 404 wordmark',
+    /<img\b(?=[^>]*\bclass="wordmark")[^>]*\bsrc="([^"]+)"/);
+  assertScopedAsset(errorWordmark, basePath, '404 wordmark');
+  const errorHome = extractAttribute(errorHtml, 'the 404 return link',
+    /<a\b[^>]*\bhref="([^"]+)"/);
+  assert.equal(new URL(errorHome, publicOrigin).pathname, basePath,
+    '404 return link must stay inside the artifact base path');
 }
 
 for (const basePath of basePaths) {

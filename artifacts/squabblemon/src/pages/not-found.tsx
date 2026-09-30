@@ -1,23 +1,33 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { useEffect } from 'react';
+import { Link } from 'wouter';
+import { getAssetUrl } from '../lib/assets';
+import './not-found.css';
 
 export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              404 Page Not Found
-            </h1>
-          </div>
+  useEffect(() => {
+    const title = document.title;
+    const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const robots = existingRobots ?? document.createElement('meta');
+    const previousRobots = robots.getAttribute('content');
+    robots.name = 'robots';
+    robots.content = 'noindex';
+    if (!existingRobots) document.head.appendChild(robots);
+    document.title = '404 — Page not found | Squabblemon';
+    return () => {
+      document.title = title;
+      if (!existingRobots) robots.remove();
+      else if (previousRobots === null) robots.removeAttribute('content');
+      else robots.content = previousRobots;
+    };
+  }, []);
 
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+  return (
+    <main className="not-found-page" aria-labelledby="not-found-title">
+      <img className="not-found-wordmark" src={getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp')} alt="Squabblemon" width="180" />
+      <img className="not-found-art" data-testid="not-found-art" src={getAssetUrl('brand/not-found-sm-gold.webp')} alt="" aria-hidden="true" width="1200" height="900" draggable={false} />
+      <h1 id="not-found-title"><span className="sr-only">404 — </span>Unknown Street</h1>
+      <p>This page doesn’t exist. Head back to Squabblemon.</p>
+      <Link href="/" className="not-found-home" data-testid="not-found-home">Back to Squabblemon</Link>
+    </main>
   );
 }

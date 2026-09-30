@@ -212,6 +212,6 @@ export default function HowToPlay() {
         ].map(([question, answer]) => <details className="guide-disclosure" key={question}><summary>{question}<ChevronRight size={18} /></summary><div><p>{answer}</p></div></details>)}
       </div></section>
     </main>
-    <footer className="guide-footer"><img src={getAssetUrl('brand/prismatic/marks/impact-standard-gold.webp')} alt="" loading="lazy" /><div><strong>KNOW THE BLOCK. MAKE YOUR MOVE.</strong><p>Squabblemon field guide · Current game rules · Balance values may evolve.</p></div><a href="#guide-top">Back to top ↑</a></footer>
+    <footer className="guide-footer"><img src={getAssetUrl('brand/prismatic/marks/impact-sm-gold.webp')} alt="" loading="lazy" /><div><strong>KNOW THE BLOCK. MAKE YOUR MOVE.</strong><p>Squabblemon field guide · Current game rules · Balance values may evolve.</p></div><a href="#guide-top">Back to top ↑</a></footer>
   </div>;
 }

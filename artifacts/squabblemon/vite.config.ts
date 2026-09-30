@@ -1,4 +1,5 @@
 import path from 'path';
+import { readFileSync } from 'node:fs';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin } from 'vite';
@@ -91,6 +92,29 @@ function bundleBudgetReport(): Plugin {
   };
 }
 
+/** Error documents can be returned at deep missing-asset URLs, so relative
+ * image links cannot be resolved against the browser's current directory. */
+function brandedNotFoundPage(): Plugin {
+  let assetBase = '/';
+  const render = () => readFileSync(path.resolve(import.meta.dirname, 'public/404.html'), 'utf8')
+    .replaceAll('__SQUABBLEMON_ASSET_BASE__', assetBase);
+  return {
+    name: 'squabblemon-branded-not-found',
+    configResolved(config) { assetBase = config.base; },
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        if (request.url?.split('?')[0] !== `${assetBase}404.html`) return next();
+        response.statusCode = 404;
+        response.setHeader('Content-Type', 'text/html; charset=utf-8');
+        response.end(render());
+      });
+    },
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: '404.html', source: render() });
+    },
+  };
+}
+
 export default defineConfig({
   // Keep nested preview paths canonical for Vite's public asset rewriting.
   base: basePath.endsWith('/') ? basePath : `${basePath}/`,
@@ -107,6 +131,7 @@ export default defineConfig({
       },
     },
     bundleBudgetReport(),
+    brandedNotFoundPage(),
     react(),
     // Minify/optimize CSS for production builds only; dev keeps fast rebuilds.
     tailwindcss({ optimize: process.env.NODE_ENV === 'production' }),

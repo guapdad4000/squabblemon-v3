@@ -23,6 +23,7 @@ const GameSoundtrack = lazy(() => import('./components/GameSoundtrack'));
 const MoveStudio = lazy(() => import('./pages/MoveStudio'));
 const StoryStudio = lazy(() => import('./pages/StoryStudio'));
 const HowToPlay = lazy(() => import('./pages/HowToPlay'));
+const NotFound = lazy(() => import('./pages/not-found'));
 const SupportPage = lazy(() =>
   import('./pages/CustomerPolicy').then((module) => ({ default: module.SupportPage })),
 );
@@ -172,7 +173,7 @@ function ClerkProviderWithRoutes() {
               <Route path="/moves" component={MoveStudio} />
               <Route path="/story-studio" component={StoryStudio} />
               <Route path="/game/*?" component={GameApp} />
-              <Route component={() => <div className="min-h-[100dvh] bg-black text-white p-6 font-display font-black uppercase">404 — Unknown Street</div>} />
+              <Route component={NotFound} />
             </Switch>
           </Suspense>
         </MotionConfig>
