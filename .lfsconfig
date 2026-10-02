@@ -1,0 +1,4 @@
+[lfs]
+	# Historical benchmark payloads are restored separately; game assets are not excluded.
+	# See docs/benchmark-archives.md before running an archived analysis.
+	fetchexclude = scripts/results/**

@@ -20,3 +20,9 @@ Large Git tree mutations may need smaller incremental requests even after all bl
 **Why:** A hundreds-of-path mutation returned a server error; smaller mutations against successive unreferenced trees produced the exact target tree. Individual large blob transfers were not the blocker.
 
 **How to apply:** Persist intermediate tree hashes and applied-path progress, then compare the final complete tree to the frozen source before creating a commit or new branch. Do not publish an intermediate tree, omit files, or change existing refs to work around an API error.
+
+An unset Netlify `GIT_LFS_ENABLED` does not prove that repository checkout skips LFS.
+
+**Why:** A plain Git checkout still ran its installed LFS smudge filter and failed on unavailable historical benchmark payloads before the application build started.
+
+**How to apply:** Verify checkout with an empty LFS object store. If archival evidence is deliberately restored separately, scope the exclusion to that evidence and retain verified recovery instructions; never disable downloads for game assets just to make deployment pass.

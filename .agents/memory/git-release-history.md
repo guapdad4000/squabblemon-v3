@@ -56,6 +56,12 @@ When remote `main` is an ancestor of local commits that are unsigned, recreate e
 
 **How to apply:** Read the metadata from `git cat-file commit`, confirm there is no `gpgsig` header and the timezone is UTC, and compare each returned SHA to the local SHA before the non-forced ref update.
 
+Fetch a GitHub-authored commit to align the local branch; do not reconstruct its raw Git object from the REST response.
+
+**Why:** REST timestamps can be normalized to UTC while the actual commit retains a different timezone offset, and its message formatting can differ. Reconstruction from those normalized fields does not reproduce the commit hash.
+
+**How to apply:** Verify the fetched commit and complete tree against the release receipt, preserve the previous workspace history, and update the local branch only if it has not moved.
+
 Run the Netlify build's own test gates (`scripts/build-netlify.mjs`) locally before pushing to `main`; root typecheck and focused API tests do not cover them.
 
 **Why:** A push that added four story-earned cards failed the hosted build on hard-coded catalog counts and a Season One save-compatibility fingerprint, even though typecheck and API tests had passed.
