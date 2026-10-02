@@ -1,6 +1,6 @@
 # Patch 1.8 release preview
 
-Status: prepared locally, not published or mailed. Gameplay commit: f2a8e59.
+Status: published on production at 2026-10-02T23:08:17.749Z. Gameplay commit: f2a8e59. Release preset commit: b6ac4c77.
 
 ## Events
 
@@ -37,8 +37,8 @@ Changes
 • Base cards are the focus of this balance pass. XP progression and upgrade unlocks are unchanged.
 • Build a Blood or Crips crew, swap sides with a friend, and send your match feedback through Events. Tell us which turn swung the game.
 
-## Proposed gift and publication
+## Gift and publication
 
-50 Clout, 0 Pack Tickets. Claimed once through Mailman; no gift has been granted.
+50 Clout, 0 Pack Tickets. Mail delivered to 34/34 current recipients, with 0 failed and 0 remaining. Clout is claimed once through Mailman; delivery does not automatically credit the wallet.
 
-Load prepared patch 1.8 in the private patch desk, save and preview the draft, and review its live audience and deployment readiness before publication. The release date is a draft date, not a scheduled send. Publishing is a separate action.
+Published through the authenticated production patch desk after previewing the exact Events copy, letter, gift, and audience. Public Events API content matches the prepared JSON and reports delivery complete. The live workflow also delivers the letter to future players on their next visit.
