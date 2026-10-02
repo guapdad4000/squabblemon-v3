@@ -1,0 +1,260 @@
+{
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "balanceVersion": 35,
+  "types": [
+    {
+      "type": "Fire",
+      "cardId": "guap",
+      "cardName": "GUAP",
+      "crews": [],
+      "note": "Excluded from all test decks at the user’s request."
+    },
+    {
+      "type": "Water",
+      "cardId": "monsoonanchor",
+      "cardName": "Gas Station Sushi Chef",
+      "crews": [
+        {
+          "id": "element-water",
+          "name": "Water",
+          "otherSameTypeCharacters": [
+            "conductor",
+            "vibe",
+            "waterboy",
+            "laundry",
+            "alchy",
+            "icecream",
+            "stillwatermedic",
+            "riptidebruiser",
+            "watson"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Electric",
+      "cardId": "piratedj",
+      "cardName": "Pirate Radio DJ",
+      "crews": [
+        {
+          "id": "element-electric",
+          "name": "Electric",
+          "otherSameTypeCharacters": [
+            "circuitcaptain",
+            "tron",
+            "plug",
+            "wiretap",
+            "batteryback",
+            "livewire",
+            "tinman",
+            "techbro",
+            "bossbabe"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Light",
+      "cardId": "abuela",
+      "cardName": "Abuela",
+      "crews": [
+        {
+          "id": "element-light",
+          "name": "Light",
+          "otherSameTypeCharacters": [
+            "church",
+            "nightmedic",
+            "foodz",
+            "drfade",
+            "pinaynurse",
+            "crossingguard",
+            "leroy",
+            "yasuke",
+            "homeless-wiseman"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Plant",
+      "cardId": "gardener",
+      "cardName": "Rooftop Gardener",
+      "crews": [
+        {
+          "id": "element-plant",
+          "name": "Plant",
+          "otherSameTypeCharacters": [
+            "canopykeeper",
+            "ashlee",
+            "sprout",
+            "rootnurse",
+            "gardenwall",
+            "streetapostle",
+            "homelesslegend",
+            "rastamon",
+            "lola"
+          ]
+        },
+        {
+          "id": "mushroom-plant",
+          "name": "Mushroom Garden",
+          "otherSameTypeCharacters": [
+            "demario",
+            "sprout",
+            "rootnurse",
+            "canopykeeper",
+            "gardenwall"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Earth",
+      "cardId": "torta",
+      "cardName": "Torta",
+      "crews": [
+        {
+          "id": "focus-earth-tax",
+          "name": "Earth Tax and Finishers",
+          "otherSameTypeCharacters": [
+            "landlord",
+            "bigzoey",
+            "stud",
+            "concrete",
+            "mansamusa",
+            "johnhenry",
+            "partytitan",
+            "asphaltapostle",
+            "failedathlete"
+          ]
+        },
+        {
+          "id": "element-earth",
+          "name": "Earth",
+          "otherSameTypeCharacters": [
+            "concrete",
+            "mansamusa",
+            "johnhenry",
+            "asphaltapostle",
+            "landlord",
+            "bigzoey",
+            "stud",
+            "bouncer",
+            "lion"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Air",
+      "cardId": "slipstream",
+      "cardName": "The Flight Plug",
+      "crews": [
+        {
+          "id": "element-air",
+          "name": "Air",
+          "otherSameTypeCharacters": [
+            "promoter",
+            "captainjigga",
+            "honestthot",
+            "gust",
+            "crosswind",
+            "cloudbreak",
+            "ptang",
+            "ogdominican",
+            "cheshire"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Dark",
+      "cardId": "gamer",
+      "cardName": "Gamer",
+      "crews": [
+        {
+          "id": "starter-combo",
+          "name": "WHO YOU KNOW",
+          "otherSameTypeCharacters": []
+        },
+        {
+          "id": "starter-compound",
+          "name": "COMPOUND INTEREST",
+          "otherSameTypeCharacters": []
+        },
+        {
+          "id": "focus-counterplay-coherent",
+          "name": "Counterplay — Dark Control",
+          "otherSameTypeCharacters": [
+            "counter",
+            "gothkid",
+            "nerd",
+            "redpill"
+          ]
+        },
+        {
+          "id": "element-dark",
+          "name": "Dark",
+          "otherSameTypeCharacters": [
+            "counter",
+            "gothkid",
+            "nerd",
+            "redpill",
+            "shonuff",
+            "queenofhearts",
+            "repoman",
+            "thefeds",
+            "chessregular"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Poison",
+      "cardId": "nail",
+      "cardName": "Nail Tech",
+      "crews": [
+        {
+          "id": "focus-poison-entry",
+          "name": "Poison Entry Punishment",
+          "otherSameTypeCharacters": [
+            "bottle",
+            "colognecriminal",
+            "mural",
+            "fein",
+            "simmy"
+          ]
+        },
+        {
+          "id": "element-poison",
+          "name": "Poison",
+          "otherSameTypeCharacters": [
+            "bottle",
+            "mural",
+            "fein",
+            "simmy",
+            "colognecriminal",
+            "seafoodassassin",
+            "godofhookah"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Normal",
+      "cardId": "barber",
+      "cardName": "Barber Bro",
+      "crews": [],
+      "note": "Normal bonus is live, but none of the frozen comparison decks contains Barber Bro."
+    }
+  ],
+  "interpretation": "Carrier membership is not activation telemetry. These results compare fixed crews; they do not test every live carrier or measure an isolated card effect."
+}

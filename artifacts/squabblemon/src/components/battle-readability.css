@@ -10,15 +10,15 @@
 .battle-arena .district-lane { transition:background 600ms ease-out,border-color 500ms ease-out,box-shadow 500ms ease-out; }
 .battle-arena .district-lane[data-contested='true'] { box-shadow:inset 2px 0 #e6bc5455,inset -2px 0 #65cfee55; }
 .battle-arena .district-lane[data-rival-interest='true']::before { display:block;position:absolute;inset:0 20% auto;height:3px;background:#7dd3fc;opacity:.55;box-shadow:0 0 10px #38bdf8;animation:rival-interest 3s ease-in-out infinite; }
-.battle-arena .district-lane[data-settled='true'] .district-score-row { animation:score-settle 600ms ease-out both; }
-.battle-arena .district-lane[data-settled='true']:nth-child(2) .district-score-row { animation-delay:140ms; }
-.battle-arena .district-lane[data-settled='true']:nth-child(3) .district-score-row { animation-delay:280ms; }
+.battle-arena .district-lane[data-settled='true'] .district-score-row { animation:score-settle calc(600ms / var(--presentation-speed, 1)) ease-out both; }
+.battle-arena .district-lane[data-settled='true']:nth-child(2) .district-score-row { animation-delay:calc(140ms / var(--presentation-speed, 1)); }
+.battle-arena .district-lane[data-settled='true']:nth-child(3) .district-score-row { animation-delay:calc(280ms / var(--presentation-speed, 1)); }
 .district-preview { grid-column:1/-1;display:grid;gap:3px;margin-top:5px;padding:6px;border:1px solid #facc1555;border-radius:5px;background:#1f201ae8;text-align:center;font:600 11px/1.2 var(--font-sans);color:#f1edce; }
 .district-preview b { color:#fde68a; }
 .district-preview small { color:#a7acb5;font-size:8px;font-weight:400; }
 .battle-arena .battle-board-card.preview-target { outline:2px dashed #fde68a;outline-offset:3px;filter:drop-shadow(0 0 6px #facc1544); }
-.battle-arena .battle-board-card.card-reveal-flip { animation:reveal-front 400ms cubic-bezier(.2,.7,.2,1) both!important;transform-origin:center;box-shadow:0 10px 16px #0008; }
-.battle-arena .battle-hand-card.portrait-pop { animation:draw-into-hand 800ms cubic-bezier(.2,.8,.2,1) both; }
+.battle-arena .battle-board-card.card-reveal-flip { animation:reveal-front calc(400ms / var(--presentation-speed, 1)) cubic-bezier(.2,.7,.2,1) both!important;transform-origin:center;box-shadow:0 10px 16px #0008; }
+.battle-arena .battle-hand-card.portrait-pop { animation:draw-into-hand calc(800ms / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
 .round-recap { display:flex;align-items:center;gap:12px;min-height:42px; }
 .round-recap>span { display:grid;gap:2px;font:700 12px/1.2 var(--font-sans); }
 .round-recap small { font-size:8px;font-weight:500;color:#a7b2c1; }
@@ -29,9 +29,9 @@
 .ability-chain-banner strong { font:700 12px/1.15 var(--font-sans);color:white; }
 .ability-chain-banner>div { display:flex;gap:3px; }.ability-chain-banner i { width:16px;height:2px;background:#ffffff30; }.ability-chain-banner i.is-fired { background:#c4b5fd;box-shadow:0 0 6px #a78bfa; }
 .battle-arena[data-chain-banner] .battle-guidance-message { visibility:hidden; }.battle-arena[data-chain-banner] .battle-guidance { min-height:56px; }
-.chain-link { stroke:#c4b5fd;stroke-width:3;fill:none;stroke-dasharray:.07 .04;animation:chain-pass 450ms ease-out both;filter:drop-shadow(0 0 6px #a78bfa); }
+.chain-link { stroke:#c4b5fd;stroke-width:3;fill:none;stroke-dasharray:.07 .04;animation:chain-pass calc(450ms / var(--presentation-speed, 1)) ease-out both;filter:drop-shadow(0 0 6px #a78bfa); }
 .status-release { position:absolute;translate:-50% -50%;color:#a5f3fc; }.status-release.is-shattering { color:#fde68a; }.status-release.is-restoring { color:#a7f3d0; }
-.status-release i { position:absolute;left:50%;top:50%;width:9px;height:18px;background:currentColor;clip-path:polygon(20% 0,100% 35%,70% 100%,0 65%);animation:status-shard 600ms ease-out both;filter:drop-shadow(0 0 4px currentColor); }
+.status-release i { position:absolute;left:50%;top:50%;width:9px;height:18px;background:currentColor;clip-path:polygon(20% 0,100% 35%,70% 100%,0 65%);animation:status-shard calc(600ms / var(--presentation-speed, 1)) ease-out both;filter:drop-shadow(0 0 4px currentColor); }
 .battle-inspector { background:#02060b99;backdrop-filter:blur(4px); }.battle-inspector>.collector-inspector-backdrop { display:none; }
 .battle-power-breakdown { margin-top:16px;padding:12px;border:1px solid #ffffff25;background:#07101acf;border-radius:8px; }
 .battle-power-breakdown header { font:700 11px/1.4 var(--font-sans);color:#fde68a;margin-bottom:10px; }
@@ -48,4 +48,4 @@
 @media(max-height:580px) { .ability-chain-banner { top:48px;height:36px; }.district-preview small { display:none; }.district-preview { padding:2px;gap:1px; } }
 @media(prefers-reduced-motion:reduce) { .battle-arena .battle-board-card.card-reveal-flip,.status-release i,.rival-presence *,.chain-link { animation:none!important; }.status-release,.chain-link { display:none; } }
 .battle-arena[data-reduced-motion='true'] .battle-board-card.card-reveal-flip { animation:none!important; }.battle-arena[data-reduced-motion='true'] .status-release,.battle-arena[data-reduced-motion='true'] .chain-link { display:none; }
-.battle-arena .battle-board-card.card-reveal-flip.major-reveal { animation-duration:600ms!important;box-shadow:0 12px 24px #0009,0 0 18px #facc1533; }
+.battle-arena .battle-board-card.card-reveal-flip.major-reveal { animation-duration:calc(600ms / var(--presentation-speed, 1))!important;box-shadow:0 12px 24px #0009,0 0 18px #facc1533; }

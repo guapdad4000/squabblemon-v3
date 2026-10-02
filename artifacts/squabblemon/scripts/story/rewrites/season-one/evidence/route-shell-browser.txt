@@ -1,0 +1,50 @@
+
+Running 10 tests using 1 worker
+
+[1/10] [chromium-desktop] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 375x667
+[2/10] [chromium-desktop] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 390x844
+[3/10] [chromium-desktop] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 768x1024
+[4/10] [chromium-desktop] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 1440x900
+[5/10] [chromium-desktop] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 844x390
+[6/10] [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 375x667
+[7/10] [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 390x844
+[8/10] [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 768x1024
+  1) [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 768x1024 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('button-collect-story-rewards')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('button-collect-story-rewards') with timeout 5000ms
+      - waiting for getByTestId('button-collect-story-rewards')
+
+
+      445 |   await expect(page.getByRole("status")).toContainText("already saved");
+      446 |   await page.reload();
+    > 447 |   await expect(page.getByTestId("button-collect-story-rewards")).toBeVisible();
+          |                                                                  ^
+      448 |   await page.getByTestId("button-collect-story-rewards").click();
+      449 |   await expect.poll(() => api.completionBodies.length).toBe(3);
+      450 |   assert.equal(api.bootstrap.profile.softCurrency, firstCurrency);
+        at /home/runner/workspace/artifacts/squabblemon/e2e/story-route-shell.spec.ts:447:66
+
+    Error Context: test-results/story-route-shell-mounted--1150c--retries-safely-at-768x1024-chromium-phone/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/story-route-shell-mounted--1150c--retries-safely-at-768x1024-chromium-phone/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/story-route-shell-mounted--1150c--retries-safely-at-768x1024-chromium-phone/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/10] [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 1440x900
+[10/10] [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 844x390
+  1 failed
+    [chromium-phone] › e2e/story-route-shell.spec.ts:318:1 › mounted story route saves, resumes, replays and retries safely at 768x1024 
+  9 passed (4.5m)

@@ -25,11 +25,11 @@ export function homecomingReveal(m: Match, s: CardInstance, t: HomecomingTools, 
     const target=strongest(crew(m).filter(c => c.owner!==s.owner && c.lane===lane),t);
     if (target) {
       targets.push(target.instanceId);
-      m=t.hit(m,s,target,2,'Wheel & Come Again: opening shot, -2 Hands.');
+      m=t.hit(m,s,target,3,'Wheel & Come Again: opening shot, -3 Hands.');
       const hit=find(m,target.instanceId);
       success=!hit || hit.powerModifier<target.powerModifier;
     }
-    note='Wheel & Come Again: opening shot. Up to two cross-district encores, once per round.';
+    note='Wheel & Come Again: opening shot, -3 Hands. Up to two cross-district encores for -2 Hands, once per round.';
   } else if (s.cardId==='concrete') {
     for (const destination of lanes.filter(l=>l!==lane)) {
       if ((m.creativeMarks??[]).some(x=>x.kind==='home-parcel' && x.owner===s.owner && x.lane===destination && x.expires>=m.round)) continue;
@@ -103,8 +103,9 @@ export function homecomingArrival(m: Match, id: string, t: CreativeTools): Match
   if (!parcel) return m;
   const before=m;
   m={...m,creativeMarks:m.creativeMarks!.filter(x=>x.id!==parcel.id)};
-  m=give(t.cleanse(m,id),c,1,t);
-  return t.event(before,m,parcel.source,[id],'From Home, With Love: package opened, +1 Hand and cleansed.');
+  const amount=c.type==='Earth' || c.type==='Rock'?2:1;
+  m=give(t.cleanse(m,id),c,amount,t);
+  return t.event(before,m,parcel.source,[id],`From Home, With Love: package opened, +${amount} ${amount===1?'Hand':'Hands'} and cleansed.`);
 }
 
 export function homecomingAfterPlay(m: Match, placed: CardInstance, t: CreativeTools): Match {

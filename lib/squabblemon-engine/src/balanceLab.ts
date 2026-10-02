@@ -19,7 +19,13 @@ import {
   type Owner,
 } from './gameEngine';
 
-export const BALANCE_LAB_SCHEMA_VERSION = 1 as const;
+export const BALANCE_LAB_SCHEMA_VERSION = 2 as const;
+export const BALANCE_TELEMETRY_SEMANTICS = {
+  squabbles: 'Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.',
+  legacyAbilityCounters: 'abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.',
+  abilityEvidence: 'Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.',
+  abilitySuccessRate: 'Unavailable: emitted events do not prove base-ability attempts or eligible opportunities.',
+} as const;
 export type BalanceTier = 0 | 3;
 export type BalanceSeat = 'a-player' | 'b-player';
 export type BalanceLabMode = 'smoke' | 'full';
@@ -69,17 +75,40 @@ export type BalanceMatchInput = BalanceSimulationOptions & {
   readonly seat: BalanceSeat;
 };
 
+export type BalanceAbilityEvidence = {
+  readonly baseEvents: number;
+  readonly baseDirectEffectEvents: number;
+  readonly baseNoObservedEffectEvents: number;
+  readonly baseNestedEffectEvents: number;
+  readonly baseNestedNoObservedEffectEvents: number;
+  readonly baseUnknownEvents: number;
+  readonly upgradeEvents: number;
+  readonly upgradeAppliedEvents: number;
+};
+
+export type BalanceSquabbleEvidence = {
+  readonly activatedPlays: number;
+  readonly normalPlays: number;
+  readonly unknownPlays: number;
+};
+
 export type BalanceCardObservation = {
   readonly cardId: string;
   readonly played: number;
+  /** @deprecated Raw mixed event count, not base-ability attempts. See telemetrySemantics. */
   readonly abilityTriggers: number;
+  /** @deprecated Legacy per-event delta heuristic, including upgrades and excluding nested wrappers. */
   readonly abilitySuccesses: number;
+  readonly abilityEvidence: BalanceAbilityEvidence;
+  readonly squabbleEvidence: BalanceSquabbleEvidence;
   readonly finalCopies: number;
   readonly finalPower: number;
   readonly squabbles: number;
 };
 
 export type BalanceMatchResult = {
+  readonly telemetrySchemaVersion: typeof BALANCE_LAB_SCHEMA_VERSION;
+  readonly telemetrySemantics: typeof BALANCE_TELEMETRY_SEMANTICS;
   readonly districtSeed: string;
   readonly districtIds: readonly string[];
   readonly rotation: number;
@@ -147,6 +176,8 @@ export type BalanceCardSummary = BalanceRate & {
   readonly abilityTriggers: number;
   readonly abilitySuccesses: number;
   readonly abilitySuccessRate: number | null;
+  readonly abilityEvidence: BalanceAbilityEvidence;
+  readonly squabbleEvidence: BalanceSquabbleEvidence;
   readonly averageFinalPowerWhenPresent: number;
   readonly squabbles: number;
 };
@@ -176,6 +207,8 @@ export type BalanceFailureSummary = {
 };
 
 export type BalanceMatrixReport = {
+  readonly telemetrySchemaVersion: typeof BALANCE_LAB_SCHEMA_VERSION;
+  readonly telemetrySemantics: typeof BALANCE_TELEMETRY_SEMANTICS;
   readonly id: string;
   readonly matchCount: number;
   readonly successfulMatches: number;
@@ -287,9 +320,9 @@ function comparableAbilityCard(card: CardInstance | undefined): Omit<CardInstanc
 }
 
 /**
- * Classify ability success from the authoritative event delta rather than presentation copy.
- * This keeps true fallback effects successful while rejecting notes that describe an attempted
- * ability with no mechanical result (for example, no status to cleanse or no ally to support).
+ * Legacy single-event delta heuristic, retained for historical raw-counter compatibility.
+ * False means no effect observed in THIS frame, not an unsuccessful base ability.
+ * Use classifyBalanceAbilityEvent with the transcript for new audit evidence.
  */
 export function isSuccessfulBalanceAbilityEvent(event: EffectLogEntry): boolean {
   if (event.type !== 'ability') return false;
@@ -315,6 +348,85 @@ export function isSuccessfulBalanceAbilityEvent(event: EffectLogEntry): boolean 
   if (event.replay.after.timedEffects.some((effect) => !beforeTimedEffects.has(effect.id))) return true;
 
   return NON_MUTATING_ABILITY_SUCCESS_NOTE.test(event.note);
+}
+
+export type BalanceAbilityEventEvidence = {
+  readonly attribution: 'base' | 'upgrade';
+  readonly outcome: 'direct-effect' | 'no-observed-effect' | 'nested-effect' | 'nested-no-observed-effect' | 'unknown';
+  readonly evidence: 'upgrade-metadata' | 'event-delta-or-known-non-mutating-effect' | 'staff-echo-round-mark-and-target-events' | 'settled-wrapper-without-causal-metadata' | 'no-event-delta';
+  readonly nestedEventSequences: readonly number[];
+};
+
+/** A play's replay frames record consumption independently of its name or presentation copy. */
+export function classifyBalanceSquabblePlay(event: EffectLogEntry): 'activated' | 'normal' | 'unknown' {
+  if (event.type !== 'play') return 'unknown';
+  const consumed = (state: EffectLogEntry['replay']['before']): boolean | undefined =>
+    state.squabbleByOwner?.[event.owner] ?? (event.owner === 'player' ? state.squabbleUsed : undefined);
+  const before = consumed(event.replay.before);
+  const after = consumed(event.replay.after);
+  if (typeof before !== 'boolean' || typeof after !== 'boolean' || (before && !after)) return 'unknown';
+  return !before && after ? 'activated' : 'normal';
+}
+
+/**
+ * Attribute emitted events, not ability reliability. Only Teknician's replay-safe reveal
+ * mark plus its explicit staff target and intervening source events proves this nested echo.
+ * Other settled wrappers lack causal metadata and remain unknown rather than failed.
+ */
+export function classifyBalanceAbilityEvent(
+  event: EffectLogEntry,
+  transcript: readonly EffectLogEntry[] = [],
+): BalanceAbilityEventEvidence | null {
+  if (event.type !== 'ability') return null;
+  const result = (
+    outcome: BalanceAbilityEventEvidence['outcome'],
+    evidence: BalanceAbilityEventEvidence['evidence'],
+    nestedEventSequences: readonly number[] = [],
+  ): BalanceAbilityEventEvidence => ({
+    attribution: event.abilityMetadata ? 'upgrade' : 'base', outcome, evidence, nestedEventSequences,
+  });
+  if (event.abilityMetadata) return result('direct-effect', 'upgrade-metadata');
+  const earlier = transcript.filter(entry => entry.sequence < event.sequence && entry.round === event.round);
+  const play = [...earlier].reverse().find(entry => entry.type === 'play');
+  if (event.cardId === 'squabblehouse-teknician' && play?.cardInstanceId === event.cardInstanceId) {
+    const atPlay = play.replay.after.boards.flat().find(card => card.instanceId === event.cardInstanceId);
+    const atWrapper = event.replay.before.boards.flat().find(card => card.instanceId === event.cardInstanceId);
+    if (atPlay && atWrapper && atPlay.squabblehouseTeknicianRevealRound !== event.round
+        && atWrapper.squabblehouseTeknicianRevealRound === event.round) {
+      const staffIds = new Set(event.targets.map(target => target.cardInstanceId));
+      const nested = earlier.filter(entry => entry.sequence > play.sequence && entry.type === 'ability'
+        && !entry.abilityMetadata && entry.owner === event.owner && staffIds.has(entry.cardInstanceId));
+      if (nested.length) return result(
+        nested.some(entry => isSuccessfulBalanceAbilityEvent(entry)) ? 'nested-effect' : 'nested-no-observed-effect',
+        'staff-echo-round-mark-and-target-events', nested.map(entry => entry.sequence),
+      );
+      return result('unknown', 'settled-wrapper-without-causal-metadata');
+    }
+  }
+  if (isSuccessfulBalanceAbilityEvent(event)) return result('direct-effect', 'event-delta-or-known-non-mutating-effect');
+  const source = event.replay.before.boards.flat().find(card => card.instanceId === event.cardInstanceId);
+  if (event.cardId === 'squabblehouse-teknician'
+      && source?.squabblehouseTeknicianRevealRound === event.round && event.targets.length) {
+    return result('unknown', 'settled-wrapper-without-causal-metadata');
+  }
+  const previous = earlier.at(-1);
+  if (previous && previous.type !== 'play' && previous.type !== 'pass'
+      && JSON.stringify(previous.replay.after) === JSON.stringify(event.replay.before)) {
+    return result('unknown', 'settled-wrapper-without-causal-metadata');
+  }
+  return result('no-observed-effect', 'no-event-delta');
+}
+
+function emptyAbilityEvidence(): { -readonly [K in keyof BalanceAbilityEvidence]: number } {
+  return {
+    baseEvents: 0, baseDirectEffectEvents: 0, baseNoObservedEffectEvents: 0,
+    baseNestedEffectEvents: 0, baseNestedNoObservedEffectEvents: 0, baseUnknownEvents: 0,
+    upgradeEvents: 0, upgradeAppliedEvents: 0,
+  };
+}
+
+function emptySquabbleEvidence(): { -readonly [K in keyof BalanceSquabbleEvidence]: number } {
+  return { activatedPlays: 0, normalPlays: 0, unknownPlays: 0 };
 }
 
 function hashSeed(value: string): number {
@@ -421,7 +533,7 @@ export function listLegalBalancePlays(match: Match, owner: Owner, allowSquabble 
         squabble: false,
         preview: playTurnCard(match, owner, card.instanceId, targetLane, false),
       });
-      if (allowSquabble && ownerSquabbleAvailable(match, owner)) result.push({
+      if (allowSquabble && card.kind !== 'support' && ownerSquabbleAvailable(match, owner)) result.push({
         instanceId: card.instanceId,
         cardId: card.cardId,
         lane: targetLane,
@@ -458,12 +570,14 @@ export const seededLegalBalancePolicy: BalancePolicy = ({ legalPlays, seed, acti
   return legalPlays[index];
 };
 
-function cardObservations(match: Match, owner: Owner, deck: BalanceDeck): BalanceCardObservation[] {
+export function observeBalanceCards(match: Readonly<Match>, owner: Owner, deck: BalanceDeck): BalanceCardObservation[] {
   const byId = new Map(deck.cardIds.map((cardId) => [cardId, {
     cardId,
     played: 0,
     abilityTriggers: 0,
     abilitySuccesses: 0,
+    abilityEvidence: emptyAbilityEvidence(),
+    squabbleEvidence: emptySquabbleEvidence(),
     finalCopies: 0,
     finalPower: 0,
     squabbles: 0,
@@ -473,11 +587,29 @@ function cardObservations(match: Match, owner: Owner, deck: BalanceDeck): Balanc
     const observed = byId.get(event.cardId)!;
     if (event.type === 'play') {
       observed.played += 1;
-      if (/SQUABBLE/i.test(event.note)) observed.squabbles += 1;
+      const squabble = classifyBalanceSquabblePlay(event);
+      if (squabble === 'activated') {
+        observed.squabbles += 1;
+        observed.squabbleEvidence.activatedPlays += 1;
+      } else if (squabble === 'normal') observed.squabbleEvidence.normalPlays += 1;
+      else observed.squabbleEvidence.unknownPlays += 1;
     }
     if (event.type === 'ability') {
       observed.abilityTriggers += 1;
       if (isSuccessfulBalanceAbilityEvent(event)) observed.abilitySuccesses += 1;
+      const evidence = classifyBalanceAbilityEvent(event, match.effectLog)!;
+      const totals = observed.abilityEvidence;
+      if (evidence.attribution === 'upgrade') {
+        totals.upgradeEvents += 1;
+        totals.upgradeAppliedEvents += 1;
+      } else {
+        totals.baseEvents += 1;
+        if (evidence.outcome === 'direct-effect') totals.baseDirectEffectEvents += 1;
+        else if (evidence.outcome === 'no-observed-effect') totals.baseNoObservedEffectEvents += 1;
+        else if (evidence.outcome === 'nested-effect') totals.baseNestedEffectEvents += 1;
+        else if (evidence.outcome === 'nested-no-observed-effect') totals.baseNestedNoObservedEffectEvents += 1;
+        else totals.baseUnknownEvents += 1;
+      }
     }
   }
   for (const card of match.boards.flat().filter((item) => item.owner === owner && byId.has(item.cardId))) {
@@ -556,6 +688,8 @@ export function simulateBalanceMatch(input: BalanceMatchInput): BalanceMatchResu
   const districtResults = getDistrictResults(match);
   const bOwner = opponentOf(aOwner);
   return {
+    telemetrySchemaVersion: BALANCE_LAB_SCHEMA_VERSION,
+    telemetrySemantics: BALANCE_TELEMETRY_SEMANTICS,
     districtSeed: input.districtSeed,
     districtIds: match.districtSnapshot?.locations.map((location) => location.id) ?? [],
     rotation: input.rotation,
@@ -573,8 +707,8 @@ export function simulateBalanceMatch(input: BalanceMatchInput): BalanceMatchResu
     plays: match.effectLog.filter((event) => event.type === 'play').length,
     passes: match.effectLog.filter((event) => event.type === 'pass').length,
     effectEvents: match.effectLog.length,
-    cardsA: cardObservations(match, aOwner, input.deckA),
-    cardsB: cardObservations(match, bOwner, input.deckB),
+    cardsA: observeBalanceCards(match, aOwner, input.deckA),
+    cardsB: observeBalanceCards(match, bOwner, input.deckB),
   };
 }
 
@@ -601,6 +735,8 @@ type MutableCardSummary = MutableRate & {
   plays: number;
   abilityTriggers: number;
   abilitySuccesses: number;
+  abilityEvidence: { -readonly [K in keyof BalanceAbilityEvidence]: number };
+  squabbleEvidence: { -readonly [K in keyof BalanceSquabbleEvidence]: number };
   finalPower: number;
   finalCopies: number;
   squabbles: number;
@@ -644,12 +780,19 @@ function addCardObservation(
   const current = summaries.get(observation.cardId) ?? {
     ...emptyRate(), cardId: observation.cardId, appearances: 0, plays: 0,
     abilityTriggers: 0, abilitySuccesses: 0, finalPower: 0, finalCopies: 0, squabbles: 0,
+    abilityEvidence: emptyAbilityEvidence(), squabbleEvidence: emptySquabbleEvidence(),
   };
   addOutcome(current, outcome);
   current.appearances += 1;
   current.plays += observation.played;
   current.abilityTriggers += observation.abilityTriggers;
   current.abilitySuccesses += observation.abilitySuccesses;
+  for (const key of Object.keys(current.abilityEvidence) as (keyof BalanceAbilityEvidence)[]) {
+    current.abilityEvidence[key] += observation.abilityEvidence[key];
+  }
+  for (const key of Object.keys(current.squabbleEvidence) as (keyof BalanceSquabbleEvidence)[]) {
+    current.squabbleEvidence[key] += observation.squabbleEvidence[key];
+  }
   current.finalPower += observation.finalPower;
   current.finalCopies += observation.finalCopies;
   current.squabbles += observation.squabbles;
@@ -772,7 +915,9 @@ export function runBalanceMatrix(config: BalanceMatrixConfig): BalanceMatrixRepo
     playRate: summary.appearances ? summary.plays / summary.appearances : 0,
     abilityTriggers: summary.abilityTriggers,
     abilitySuccesses: summary.abilitySuccesses,
-    abilitySuccessRate: summary.abilityTriggers ? summary.abilitySuccesses / summary.abilityTriggers : null,
+    abilitySuccessRate: null,
+    abilityEvidence: summary.abilityEvidence,
+    squabbleEvidence: summary.squabbleEvidence,
     averageFinalPowerWhenPresent: summary.finalCopies ? summary.finalPower / summary.finalCopies : 0,
     squabbles: summary.squabbles,
   })).sort((left, right) => left.cardId.localeCompare(right.cardId));
@@ -816,14 +961,11 @@ export function runBalanceMatrix(config: BalanceMatrixConfig): BalanceMatrixRepo
   for (const card of cardReports) {
     if (card.appearances >= minimumSampleSize && card.playRate < 0.35) flags.push({ severity: 'review', code: 'low-play-rate', subject: card.cardId,
       message: `${card.cardName} was played in ${(card.playRate * 100).toFixed(1)}% of appearances.`, value: card.playRate, threshold: 0.35 });
-    if (card.abilityTriggers >= minimumSampleSize && card.abilitySuccessRate !== null && card.abilitySuccessRate < 0.3) flags.push({
-      severity: 'review', code: 'low-ability-success', subject: card.cardId,
-      message: `${card.cardName}'s observed ability events succeeded ${(card.abilitySuccessRate * 100).toFixed(1)}% of the time.`,
-      value: card.abilitySuccessRate, threshold: 0.3,
-    });
   }
 
   return {
+    telemetrySchemaVersion: BALANCE_LAB_SCHEMA_VERSION,
+    telemetrySemantics: BALANCE_TELEMETRY_SEMANTICS,
     id: config.id,
     matchCount: completed,
     successfulMatches,
@@ -1222,6 +1364,11 @@ export function renderBalanceLabMarkdown(report: BalanceLabReport): string {
     `- Player seat score: **${percent(report.matrix.seat.scoreRate)}**`,
     `- Human playtest gate: **${report.humanPlaytest.status.toUpperCase()}** (\`${report.humanPlaytest.protocol}\`)`,
     `- Flags: **${report.flags.filter((flag) => flag.severity === 'blocker').length} blocker / ${report.flags.filter((flag) => flag.severity === 'review').length} review**`,
+    '',
+    '## Telemetry limits',
+    '',
+    `Telemetry schema ${BALANCE_LAB_SCHEMA_VERSION}: SQUABBLE counts use owner-consumption replay transitions, not card-name text. Unknown activation evidence is reported separately.`,
+    'Legacy abilityTriggers/abilitySuccesses are mixed raw event counters, not base-ability reliability. Structured abilityEvidence separates base effects, proven nested staff echoes, no-observed-effect frames, unknown wrappers, and upgrades. abilitySuccessRate is null and cannot generate low-ability-success flags; eligibility and unlogged passives are not proved by these logs.',
     '',
     '## Deck score rates',
     '',

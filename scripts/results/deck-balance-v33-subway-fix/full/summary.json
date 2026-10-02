@@ -1,0 +1,5940 @@
+{
+  "generatedAt": "2026-10-01T23:54:52.360Z",
+  "balanceVersion": 33,
+  "rulesVersion": 33,
+  "sourceHash": "8c429a01fc75dbec7086da879b00ee837db90bebf9b0c899d86aa6d42ad8c732",
+  "successfulMatches": 3392,
+  "failedMatches": 0,
+  "leagueTable": [
+    {
+      "id": "focus-wonderland",
+      "name": "Wonderland Return",
+      "all": {
+        "games": 352,
+        "wins": 289,
+        "losses": 47,
+        "draws": 16,
+        "winRate": 0.8210227272727273,
+        "scoreRate": 0.84375
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 150,
+        "losses": 17,
+        "draws": 9,
+        "winRate": 0.8522727272727273,
+        "scoreRate": 0.8778409090909091
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 139,
+        "losses": 30,
+        "draws": 7,
+        "winRate": 0.7897727272727273,
+        "scoreRate": 0.8096590909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 148,
+        "losses": 19,
+        "draws": 9,
+        "winRate": 0.8409090909090909,
+        "scoreRate": 0.8664772727272727
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 141,
+        "losses": 28,
+        "draws": 7,
+        "winRate": 0.8011363636363636,
+        "scoreRate": 0.8210227272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 135,
+        "losses": 30,
+        "draws": 11,
+        "winRate": 0.7670454545454546,
+        "scoreRate": 0.7982954545454546
+      },
+      "second": {
+        "games": 176,
+        "wins": 154,
+        "losses": 17,
+        "draws": 5,
+        "winRate": 0.875,
+        "scoreRate": 0.8892045454545454
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 77,
+        "losses": 7,
+        "draws": 4,
+        "winRate": 0.875,
+        "scoreRate": 0.8977272727272727
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 73,
+        "losses": 10,
+        "draws": 5,
+        "winRate": 0.8295454545454546,
+        "scoreRate": 0.8579545454545454
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 71,
+        "losses": 12,
+        "draws": 5,
+        "winRate": 0.8068181818181818,
+        "scoreRate": 0.8352272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 68,
+        "losses": 18,
+        "draws": 2,
+        "winRate": 0.7727272727272727,
+        "scoreRate": 0.7840909090909091
+      }
+    },
+    {
+      "id": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "all": {
+        "games": 352,
+        "wins": 238,
+        "losses": 92,
+        "draws": 22,
+        "winRate": 0.6761363636363636,
+        "scoreRate": 0.7073863636363636
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 131,
+        "losses": 38,
+        "draws": 7,
+        "winRate": 0.7443181818181818,
+        "scoreRate": 0.7642045454545454
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 107,
+        "losses": 54,
+        "draws": 15,
+        "winRate": 0.6079545454545454,
+        "scoreRate": 0.6505681818181818
+      },
+      "base": {
+        "games": 176,
+        "wins": 128,
+        "losses": 36,
+        "draws": 12,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.7613636363636364
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 110,
+        "losses": 56,
+        "draws": 10,
+        "winRate": 0.625,
+        "scoreRate": 0.6534090909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 109,
+        "losses": 55,
+        "draws": 12,
+        "winRate": 0.6193181818181818,
+        "scoreRate": 0.6534090909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 129,
+        "losses": 37,
+        "draws": 10,
+        "winRate": 0.7329545454545454,
+        "scoreRate": 0.7613636363636364
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 71,
+        "losses": 14,
+        "draws": 3,
+        "winRate": 0.8068181818181818,
+        "scoreRate": 0.8238636363636364
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 60,
+        "losses": 24,
+        "draws": 4,
+        "winRate": 0.6818181818181818,
+        "scoreRate": 0.7045454545454546
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 57,
+        "losses": 22,
+        "draws": 9,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6988636363636364
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 50,
+        "losses": 32,
+        "draws": 6,
+        "winRate": 0.5681818181818182,
+        "scoreRate": 0.6022727272727273
+      }
+    },
+    {
+      "id": "focus-wiz",
+      "name": "The Wiz",
+      "all": {
+        "games": 352,
+        "wins": 233,
+        "losses": 94,
+        "draws": 25,
+        "winRate": 0.6619318181818182,
+        "scoreRate": 0.6974431818181818
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 127,
+        "losses": 38,
+        "draws": 11,
+        "winRate": 0.7215909090909091,
+        "scoreRate": 0.7528409090909091
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 106,
+        "losses": 56,
+        "draws": 14,
+        "winRate": 0.6022727272727273,
+        "scoreRate": 0.6420454545454546
+      },
+      "base": {
+        "games": 176,
+        "wins": 121,
+        "losses": 43,
+        "draws": 12,
+        "winRate": 0.6875,
+        "scoreRate": 0.7215909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 112,
+        "losses": 51,
+        "draws": 13,
+        "winRate": 0.6363636363636364,
+        "scoreRate": 0.6732954545454546
+      },
+      "first": {
+        "games": 176,
+        "wins": 105,
+        "losses": 62,
+        "draws": 9,
+        "winRate": 0.5965909090909091,
+        "scoreRate": 0.6221590909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 128,
+        "losses": 32,
+        "draws": 16,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.7727272727272727
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 64,
+        "losses": 20,
+        "draws": 4,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.75
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 63,
+        "losses": 18,
+        "draws": 7,
+        "winRate": 0.7159090909090909,
+        "scoreRate": 0.7556818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 57,
+        "losses": 23,
+        "draws": 8,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6931818181818182
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 49,
+        "losses": 33,
+        "draws": 6,
+        "winRate": 0.5568181818181818,
+        "scoreRate": 0.5909090909090909
+      }
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "all": {
+        "games": 352,
+        "wins": 206,
+        "losses": 118,
+        "draws": 28,
+        "winRate": 0.5852272727272727,
+        "scoreRate": 0.625
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 97,
+        "losses": 64,
+        "draws": 15,
+        "winRate": 0.5511363636363636,
+        "scoreRate": 0.59375
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 109,
+        "losses": 54,
+        "draws": 13,
+        "winRate": 0.6193181818181818,
+        "scoreRate": 0.65625
+      },
+      "base": {
+        "games": 176,
+        "wins": 99,
+        "losses": 65,
+        "draws": 12,
+        "winRate": 0.5625,
+        "scoreRate": 0.5965909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 107,
+        "losses": 53,
+        "draws": 16,
+        "winRate": 0.6079545454545454,
+        "scoreRate": 0.6534090909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 91,
+        "losses": 72,
+        "draws": 13,
+        "winRate": 0.5170454545454546,
+        "scoreRate": 0.5539772727272727
+      },
+      "second": {
+        "games": 176,
+        "wins": 115,
+        "losses": 46,
+        "draws": 15,
+        "winRate": 0.6534090909090909,
+        "scoreRate": 0.6960227272727273
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 48,
+        "losses": 34,
+        "draws": 6,
+        "winRate": 0.5454545454545454,
+        "scoreRate": 0.5795454545454546
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 49,
+        "losses": 30,
+        "draws": 9,
+        "winRate": 0.5568181818181818,
+        "scoreRate": 0.6079545454545454
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 51,
+        "losses": 31,
+        "draws": 6,
+        "winRate": 0.5795454545454546,
+        "scoreRate": 0.6136363636363636
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 58,
+        "losses": 23,
+        "draws": 7,
+        "winRate": 0.6590909090909091,
+        "scoreRate": 0.6988636363636364
+      }
+    },
+    {
+      "id": "focus-fire-guap",
+      "name": "Fire and GUAP",
+      "all": {
+        "games": 352,
+        "wins": 200,
+        "losses": 129,
+        "draws": 23,
+        "winRate": 0.5681818181818182,
+        "scoreRate": 0.6008522727272727
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 108,
+        "losses": 53,
+        "draws": 15,
+        "winRate": 0.6136363636363636,
+        "scoreRate": 0.65625
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 92,
+        "losses": 76,
+        "draws": 8,
+        "winRate": 0.5227272727272727,
+        "scoreRate": 0.5454545454545454
+      },
+      "base": {
+        "games": 176,
+        "wins": 120,
+        "losses": 42,
+        "draws": 14,
+        "winRate": 0.6818181818181818,
+        "scoreRate": 0.7215909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 80,
+        "losses": 87,
+        "draws": 9,
+        "winRate": 0.45454545454545453,
+        "scoreRate": 0.48011363636363635
+      },
+      "first": {
+        "games": 176,
+        "wins": 86,
+        "losses": 75,
+        "draws": 15,
+        "winRate": 0.48863636363636365,
+        "scoreRate": 0.53125
+      },
+      "second": {
+        "games": 176,
+        "wins": 114,
+        "losses": 54,
+        "draws": 8,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6704545454545454
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 66,
+        "losses": 14,
+        "draws": 8,
+        "winRate": 0.75,
+        "scoreRate": 0.7954545454545454
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 42,
+        "losses": 39,
+        "draws": 7,
+        "winRate": 0.4772727272727273,
+        "scoreRate": 0.5170454545454546
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 54,
+        "losses": 28,
+        "draws": 6,
+        "winRate": 0.6136363636363636,
+        "scoreRate": 0.6477272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 38,
+        "losses": 48,
+        "draws": 2,
+        "winRate": 0.4318181818181818,
+        "scoreRate": 0.4431818181818182
+      }
+    },
+    {
+      "id": "starter-receipts",
+      "name": "RECEIPTS",
+      "all": {
+        "games": 352,
+        "wins": 142,
+        "losses": 173,
+        "draws": 37,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.4559659090909091
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 75,
+        "losses": 81,
+        "draws": 20,
+        "winRate": 0.42613636363636365,
+        "scoreRate": 0.48295454545454547
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 67,
+        "losses": 92,
+        "draws": 17,
+        "winRate": 0.3806818181818182,
+        "scoreRate": 0.4289772727272727
+      },
+      "base": {
+        "games": 176,
+        "wins": 68,
+        "losses": 90,
+        "draws": 18,
+        "winRate": 0.38636363636363635,
+        "scoreRate": 0.4375
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 74,
+        "losses": 83,
+        "draws": 19,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.4744318181818182
+      },
+      "first": {
+        "games": 176,
+        "wins": 51,
+        "losses": 103,
+        "draws": 22,
+        "winRate": 0.2897727272727273,
+        "scoreRate": 0.3522727272727273
+      },
+      "second": {
+        "games": 176,
+        "wins": 91,
+        "losses": 70,
+        "draws": 15,
+        "winRate": 0.5170454545454546,
+        "scoreRate": 0.5596590909090909
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 36,
+        "losses": 43,
+        "draws": 9,
+        "winRate": 0.4090909090909091,
+        "scoreRate": 0.4602272727272727
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 39,
+        "losses": 38,
+        "draws": 11,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.5056818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 47,
+        "draws": 9,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.4147727272727273
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 35,
+        "losses": 45,
+        "draws": 8,
+        "winRate": 0.3977272727272727,
+        "scoreRate": 0.4431818181818182
+      }
+    },
+    {
+      "id": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "all": {
+        "games": 352,
+        "wins": 125,
+        "losses": 188,
+        "draws": 39,
+        "winRate": 0.35511363636363635,
+        "scoreRate": 0.41051136363636365
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 62,
+        "losses": 95,
+        "draws": 19,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.40625
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 63,
+        "losses": 93,
+        "draws": 20,
+        "winRate": 0.35795454545454547,
+        "scoreRate": 0.4147727272727273
+      },
+      "base": {
+        "games": 176,
+        "wins": 59,
+        "losses": 99,
+        "draws": 18,
+        "winRate": 0.3352272727272727,
+        "scoreRate": 0.38636363636363635
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 66,
+        "losses": 89,
+        "draws": 21,
+        "winRate": 0.375,
+        "scoreRate": 0.4346590909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 50,
+        "losses": 108,
+        "draws": 18,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3352272727272727
+      },
+      "second": {
+        "games": 176,
+        "wins": 75,
+        "losses": 80,
+        "draws": 21,
+        "winRate": 0.42613636363636365,
+        "scoreRate": 0.48579545454545453
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 28,
+        "losses": 51,
+        "draws": 9,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3693181818181818
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 34,
+        "losses": 44,
+        "draws": 10,
+        "winRate": 0.38636363636363635,
+        "scoreRate": 0.4431818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 31,
+        "losses": 48,
+        "draws": 9,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.4034090909090909
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 32,
+        "losses": 45,
+        "draws": 11,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.42613636363636365
+      }
+    },
+    {
+      "id": "starter-slide",
+      "name": "SLIDE THRU",
+      "all": {
+        "games": 352,
+        "wins": 119,
+        "losses": 195,
+        "draws": 38,
+        "winRate": 0.3380681818181818,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 48,
+        "losses": 108,
+        "draws": 20,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.32954545454545453
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 71,
+        "losses": 87,
+        "draws": 18,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.45454545454545453
+      },
+      "base": {
+        "games": 176,
+        "wins": 49,
+        "losses": 102,
+        "draws": 25,
+        "winRate": 0.2784090909090909,
+        "scoreRate": 0.3494318181818182
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 70,
+        "losses": 93,
+        "draws": 13,
+        "winRate": 0.3977272727272727,
+        "scoreRate": 0.4346590909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 48,
+        "losses": 112,
+        "draws": 16,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.3181818181818182
+      },
+      "second": {
+        "games": 176,
+        "wins": 71,
+        "losses": 83,
+        "draws": 22,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.4659090909090909
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 17,
+        "losses": 59,
+        "draws": 12,
+        "winRate": 0.19318181818181818,
+        "scoreRate": 0.26136363636363635
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 49,
+        "draws": 8,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.3977272727272727
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 43,
+        "draws": 13,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.4375
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 39,
+        "losses": 44,
+        "draws": 5,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.4715909090909091
+      }
+    },
+    {
+      "id": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "all": {
+        "games": 352,
+        "wins": 113,
+        "losses": 205,
+        "draws": 34,
+        "winRate": 0.3210227272727273,
+        "scoreRate": 0.3693181818181818
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 63,
+        "losses": 99,
+        "draws": 14,
+        "winRate": 0.35795454545454547,
+        "scoreRate": 0.3977272727272727
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 50,
+        "losses": 106,
+        "draws": 20,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3409090909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 60,
+        "losses": 100,
+        "draws": 16,
+        "winRate": 0.3409090909090909,
+        "scoreRate": 0.38636363636363635
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 53,
+        "losses": 105,
+        "draws": 18,
+        "winRate": 0.30113636363636365,
+        "scoreRate": 0.3522727272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 35,
+        "losses": 124,
+        "draws": 17,
+        "winRate": 0.19886363636363635,
+        "scoreRate": 0.2471590909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 78,
+        "losses": 81,
+        "draws": 17,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.4914772727272727
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 51,
+        "draws": 5,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 48,
+        "draws": 9,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.4034090909090909
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 28,
+        "losses": 49,
+        "draws": 11,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3806818181818182
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 22,
+        "losses": 57,
+        "draws": 9,
+        "winRate": 0.25,
+        "scoreRate": 0.30113636363636365
+      }
+    },
+    {
+      "id": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "all": {
+        "games": 352,
+        "wins": 113,
+        "losses": 215,
+        "draws": 24,
+        "winRate": 0.3210227272727273,
+        "scoreRate": 0.35511363636363635
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 55,
+        "losses": 108,
+        "draws": 13,
+        "winRate": 0.3125,
+        "scoreRate": 0.3494318181818182
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 58,
+        "losses": 107,
+        "draws": 11,
+        "winRate": 0.32954545454545453,
+        "scoreRate": 0.36079545454545453
+      },
+      "base": {
+        "games": 176,
+        "wins": 57,
+        "losses": 107,
+        "draws": 12,
+        "winRate": 0.32386363636363635,
+        "scoreRate": 0.35795454545454547
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 56,
+        "losses": 108,
+        "draws": 12,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3522727272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 39,
+        "losses": 124,
+        "draws": 13,
+        "winRate": 0.2215909090909091,
+        "scoreRate": 0.2585227272727273
+      },
+      "second": {
+        "games": 176,
+        "wins": 74,
+        "losses": 91,
+        "draws": 11,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.45170454545454547
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 30,
+        "losses": 49,
+        "draws": 9,
+        "winRate": 0.3409090909090909,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 25,
+        "losses": 59,
+        "draws": 4,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3068181818181818
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 27,
+        "losses": 58,
+        "draws": 3,
+        "winRate": 0.3068181818181818,
+        "scoreRate": 0.32386363636363635
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 49,
+        "draws": 8,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.3977272727272727
+      }
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "all": {
+        "games": 352,
+        "wins": 84,
+        "losses": 239,
+        "draws": 29,
+        "winRate": 0.23863636363636365,
+        "scoreRate": 0.27982954545454547
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 31,
+        "losses": 130,
+        "draws": 15,
+        "winRate": 0.17613636363636365,
+        "scoreRate": 0.21875
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 53,
+        "losses": 109,
+        "draws": 14,
+        "winRate": 0.30113636363636365,
+        "scoreRate": 0.3409090909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 29,
+        "losses": 133,
+        "draws": 14,
+        "winRate": 0.16477272727272727,
+        "scoreRate": 0.20454545454545456
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 55,
+        "losses": 106,
+        "draws": 15,
+        "winRate": 0.3125,
+        "scoreRate": 0.35511363636363635
+      },
+      "first": {
+        "games": 176,
+        "wins": 33,
+        "losses": 128,
+        "draws": 15,
+        "winRate": 0.1875,
+        "scoreRate": 0.23011363636363635
+      },
+      "second": {
+        "games": 176,
+        "wins": 51,
+        "losses": 111,
+        "draws": 14,
+        "winRate": 0.2897727272727273,
+        "scoreRate": 0.32954545454545453
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 13,
+        "losses": 69,
+        "draws": 6,
+        "winRate": 0.14772727272727273,
+        "scoreRate": 0.18181818181818182
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 18,
+        "losses": 61,
+        "draws": 9,
+        "winRate": 0.20454545454545456,
+        "scoreRate": 0.2556818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 16,
+        "losses": 64,
+        "draws": 8,
+        "winRate": 0.18181818181818182,
+        "scoreRate": 0.22727272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 37,
+        "losses": 45,
+        "draws": 6,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.45454545454545453
+      }
+    },
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "all": {
+        "games": 352,
+        "wins": 74,
+        "losses": 241,
+        "draws": 37,
+        "winRate": 0.21022727272727273,
+        "scoreRate": 0.2627840909090909
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 22,
+        "losses": 138,
+        "draws": 16,
+        "winRate": 0.125,
+        "scoreRate": 0.17045454545454544
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 52,
+        "losses": 103,
+        "draws": 21,
+        "winRate": 0.29545454545454547,
+        "scoreRate": 0.35511363636363635
+      },
+      "base": {
+        "games": 176,
+        "wins": 30,
+        "losses": 132,
+        "draws": 14,
+        "winRate": 0.17045454545454544,
+        "scoreRate": 0.21022727272727273
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 44,
+        "losses": 109,
+        "draws": 23,
+        "winRate": 0.25,
+        "scoreRate": 0.3153409090909091
+      },
+      "first": {
+        "games": 176,
+        "wins": 30,
+        "losses": 131,
+        "draws": 15,
+        "winRate": 0.17045454545454544,
+        "scoreRate": 0.21306818181818182
+      },
+      "second": {
+        "games": 176,
+        "wins": 44,
+        "losses": 110,
+        "draws": 22,
+        "winRate": 0.25,
+        "scoreRate": 0.3125
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 6,
+        "losses": 77,
+        "draws": 5,
+        "winRate": 0.06818181818181818,
+        "scoreRate": 0.09659090909090909
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 16,
+        "losses": 61,
+        "draws": 11,
+        "winRate": 0.18181818181818182,
+        "scoreRate": 0.24431818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 24,
+        "losses": 55,
+        "draws": 9,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.32386363636363635
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 28,
+        "losses": 48,
+        "draws": 12,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.38636363636363635
+      }
+    }
+  ],
+  "dinerTable": [
+    {
+      "opponentId": "focus-wonderland",
+      "opponent": "Wonderland Return",
+      "all": {
+        "games": 96,
+        "wins": 29,
+        "losses": 61,
+        "draws": 6,
+        "winRate": 0.3020833333333333,
+        "scoreRate": 0.3333333333333333
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 15,
+        "losses": 30,
+        "draws": 3,
+        "winRate": 0.3125,
+        "scoreRate": 0.34375
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 14,
+        "losses": 31,
+        "draws": 3,
+        "winRate": 0.2916666666666667,
+        "scoreRate": 0.3229166666666667
+      },
+      "base": {
+        "games": 48,
+        "wins": 13,
+        "losses": 32,
+        "draws": 3,
+        "winRate": 0.2708333333333333,
+        "scoreRate": 0.3020833333333333
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 16,
+        "losses": 29,
+        "draws": 3,
+        "winRate": 0.3333333333333333,
+        "scoreRate": 0.3645833333333333
+      },
+      "first": {
+        "games": 48,
+        "wins": 12,
+        "losses": 33,
+        "draws": 3,
+        "winRate": 0.25,
+        "scoreRate": 0.28125
+      },
+      "second": {
+        "games": 48,
+        "wins": 17,
+        "losses": 28,
+        "draws": 3,
+        "winRate": 0.3541666666666667,
+        "scoreRate": 0.3854166666666667
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 8,
+        "losses": 15,
+        "draws": 1,
+        "winRate": 0.3333333333333333,
+        "scoreRate": 0.3541666666666667
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 7,
+        "losses": 15,
+        "draws": 2,
+        "winRate": 0.2916666666666667,
+        "scoreRate": 0.3333333333333333
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 5,
+        "losses": 17,
+        "draws": 2,
+        "winRate": 0.20833333333333334,
+        "scoreRate": 0.25
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 9,
+        "losses": 14,
+        "draws": 1,
+        "winRate": 0.375,
+        "scoreRate": 0.3958333333333333
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 10,
+          "losses": 20,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 5,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 5,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "base": {
+          "games": 16,
+          "wins": 4,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 10,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "first": {
+          "games": 16,
+          "wins": 4,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.25,
+          "scoreRate": 0.25
+        },
+        "second": {
+          "games": 16,
+          "wins": 6,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.4375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 19,
+          "losses": 41,
+          "draws": 4,
+          "winRate": 0.296875,
+          "scoreRate": 0.328125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 10,
+          "losses": 20,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 9,
+          "losses": 21,
+          "draws": 2,
+          "winRate": 0.28125,
+          "scoreRate": 0.3125
+        },
+        "base": {
+          "games": 32,
+          "wins": 9,
+          "losses": 22,
+          "draws": 1,
+          "winRate": 0.28125,
+          "scoreRate": 0.296875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 10,
+          "losses": 19,
+          "draws": 3,
+          "winRate": 0.3125,
+          "scoreRate": 0.359375
+        },
+        "first": {
+          "games": 32,
+          "wins": 8,
+          "losses": 21,
+          "draws": 3,
+          "winRate": 0.25,
+          "scoreRate": 0.296875
+        },
+        "second": {
+          "games": 32,
+          "wins": 11,
+          "losses": 20,
+          "draws": 1,
+          "winRate": 0.34375,
+          "scoreRate": 0.359375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 6,
+          "losses": 10,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 4,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 3,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.1875,
+          "scoreRate": 0.21875
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-counterplay-coherent",
+      "opponent": "Counterplay — Dark Control",
+      "all": {
+        "games": 96,
+        "wins": 54,
+        "losses": 39,
+        "draws": 3,
+        "winRate": 0.5625,
+        "scoreRate": 0.578125
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 32,
+        "losses": 15,
+        "draws": 1,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.6770833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 22,
+        "losses": 24,
+        "draws": 2,
+        "winRate": 0.4583333333333333,
+        "scoreRate": 0.4791666666666667
+      },
+      "base": {
+        "games": 48,
+        "wins": 27,
+        "losses": 20,
+        "draws": 1,
+        "winRate": 0.5625,
+        "scoreRate": 0.5729166666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 27,
+        "losses": 19,
+        "draws": 2,
+        "winRate": 0.5625,
+        "scoreRate": 0.5833333333333334
+      },
+      "first": {
+        "games": 48,
+        "wins": 24,
+        "losses": 22,
+        "draws": 2,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 30,
+        "losses": 17,
+        "draws": 1,
+        "winRate": 0.625,
+        "scoreRate": 0.6354166666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 15,
+        "losses": 9,
+        "draws": 0,
+        "winRate": 0.625,
+        "scoreRate": 0.625
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 17,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7291666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 12,
+        "losses": 11,
+        "draws": 1,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 10,
+        "losses": 13,
+        "draws": 1,
+        "winRate": 0.4166666666666667,
+        "scoreRate": 0.4375
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "base": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "second": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 34,
+          "losses": 27,
+          "draws": 3,
+          "winRate": 0.53125,
+          "scoreRate": 0.5546875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.59375,
+          "scoreRate": 0.609375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 15,
+          "losses": 15,
+          "draws": 2,
+          "winRate": 0.46875,
+          "scoreRate": 0.5
+        },
+        "base": {
+          "games": 32,
+          "wins": 18,
+          "losses": 13,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.578125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 16,
+          "losses": 14,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 32,
+          "wins": 13,
+          "losses": 17,
+          "draws": 2,
+          "winRate": 0.40625,
+          "scoreRate": 0.4375
+        },
+        "second": {
+          "games": 32,
+          "wins": 21,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.65625,
+          "scoreRate": 0.671875
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-fire-guap",
+      "opponent": "Fire and GUAP",
+      "all": {
+        "games": 96,
+        "wins": 52,
+        "losses": 34,
+        "draws": 10,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.59375
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 26,
+        "losses": 17,
+        "draws": 5,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.59375
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 26,
+        "losses": 17,
+        "draws": 5,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.59375
+      },
+      "base": {
+        "games": 48,
+        "wins": 19,
+        "losses": 22,
+        "draws": 7,
+        "winRate": 0.3958333333333333,
+        "scoreRate": 0.46875
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 33,
+        "losses": 12,
+        "draws": 3,
+        "winRate": 0.6875,
+        "scoreRate": 0.71875
+      },
+      "first": {
+        "games": 48,
+        "wins": 21,
+        "losses": 22,
+        "draws": 5,
+        "winRate": 0.4375,
+        "scoreRate": 0.4895833333333333
+      },
+      "second": {
+        "games": 48,
+        "wins": 31,
+        "losses": 12,
+        "draws": 5,
+        "winRate": 0.6458333333333334,
+        "scoreRate": 0.6979166666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 9,
+        "losses": 11,
+        "draws": 4,
+        "winRate": 0.375,
+        "scoreRate": 0.4583333333333333
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 17,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7291666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 10,
+        "losses": 11,
+        "draws": 3,
+        "winRate": 0.4166666666666667,
+        "scoreRate": 0.4791666666666667
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 16,
+        "losses": 6,
+        "draws": 2,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.7083333333333334
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 16,
+          "losses": 15,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.515625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 8,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "second": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 36,
+          "losses": 19,
+          "draws": 9,
+          "winRate": 0.5625,
+          "scoreRate": 0.6328125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 8,
+          "draws": 5,
+          "winRate": 0.59375,
+          "scoreRate": 0.671875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 17,
+          "losses": 11,
+          "draws": 4,
+          "winRate": 0.53125,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 32,
+          "wins": 11,
+          "losses": 15,
+          "draws": 6,
+          "winRate": 0.34375,
+          "scoreRate": 0.4375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 25,
+          "losses": 4,
+          "draws": 3,
+          "winRate": 0.78125,
+          "scoreRate": 0.828125
+        },
+        "first": {
+          "games": 32,
+          "wins": 14,
+          "losses": 13,
+          "draws": 5,
+          "winRate": 0.4375,
+          "scoreRate": 0.515625
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 6,
+          "draws": 4,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 6,
+          "losses": 6,
+          "draws": 4,
+          "winRate": 0.375,
+          "scoreRate": 0.5
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 5,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        }
+      }
+    },
+    {
+      "opponentId": "starter-vibes",
+      "opponent": "GOOD VIBES ONLY",
+      "all": {
+        "games": 96,
+        "wins": 56,
+        "losses": 34,
+        "draws": 6,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6145833333333334
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 28,
+        "losses": 17,
+        "draws": 3,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6145833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 28,
+        "losses": 17,
+        "draws": 3,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6145833333333334
+      },
+      "base": {
+        "games": 48,
+        "wins": 29,
+        "losses": 14,
+        "draws": 5,
+        "winRate": 0.6041666666666666,
+        "scoreRate": 0.65625
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 27,
+        "losses": 20,
+        "draws": 1,
+        "winRate": 0.5625,
+        "scoreRate": 0.5729166666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 23,
+        "losses": 21,
+        "draws": 4,
+        "winRate": 0.4791666666666667,
+        "scoreRate": 0.5208333333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 13,
+        "draws": 2,
+        "winRate": 0.6875,
+        "scoreRate": 0.7083333333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 16,
+        "losses": 6,
+        "draws": 2,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.7083333333333334
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 12,
+        "losses": 11,
+        "draws": 1,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 13,
+        "losses": 8,
+        "draws": 3,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.6041666666666666
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 15,
+        "losses": 9,
+        "draws": 0,
+        "winRate": 0.625,
+        "scoreRate": 0.625
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 25,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.78125,
+          "scoreRate": 0.78125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 31,
+          "losses": 27,
+          "draws": 6,
+          "winRate": 0.484375,
+          "scoreRate": 0.53125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 15,
+          "losses": 14,
+          "draws": 3,
+          "winRate": 0.46875,
+          "scoreRate": 0.515625
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 16,
+          "losses": 13,
+          "draws": 3,
+          "winRate": 0.5,
+          "scoreRate": 0.546875
+        },
+        "base": {
+          "games": 32,
+          "wins": 16,
+          "losses": 11,
+          "draws": 5,
+          "winRate": 0.5,
+          "scoreRate": 0.578125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 15,
+          "losses": 16,
+          "draws": 1,
+          "winRate": 0.46875,
+          "scoreRate": 0.484375
+        },
+        "first": {
+          "games": 32,
+          "wins": 12,
+          "losses": 16,
+          "draws": 4,
+          "winRate": 0.375,
+          "scoreRate": 0.4375
+        },
+        "second": {
+          "games": 32,
+          "wins": 19,
+          "losses": 11,
+          "draws": 2,
+          "winRate": 0.59375,
+          "scoreRate": 0.625
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-wiz",
+      "opponent": "The Wiz",
+      "all": {
+        "games": 96,
+        "wins": 55,
+        "losses": 33,
+        "draws": 8,
+        "winRate": 0.5729166666666666,
+        "scoreRate": 0.6145833333333334
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 29,
+        "losses": 16,
+        "draws": 3,
+        "winRate": 0.6041666666666666,
+        "scoreRate": 0.6354166666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 26,
+        "losses": 17,
+        "draws": 5,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.59375
+      },
+      "base": {
+        "games": 48,
+        "wins": 27,
+        "losses": 16,
+        "draws": 5,
+        "winRate": 0.5625,
+        "scoreRate": 0.6145833333333334
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 28,
+        "losses": 17,
+        "draws": 3,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6145833333333334
+      },
+      "first": {
+        "games": 48,
+        "wins": 22,
+        "losses": 20,
+        "draws": 6,
+        "winRate": 0.4583333333333333,
+        "scoreRate": 0.5208333333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 13,
+        "draws": 2,
+        "winRate": 0.6875,
+        "scoreRate": 0.7083333333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 17,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7291666666666666
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 12,
+        "losses": 10,
+        "draws": 2,
+        "winRate": 0.5,
+        "scoreRate": 0.5416666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 10,
+        "losses": 10,
+        "draws": 4,
+        "winRate": 0.4166666666666667,
+        "scoreRate": 0.5
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 16,
+        "losses": 7,
+        "draws": 1,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.6875
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 17,
+          "losses": 11,
+          "draws": 4,
+          "winRate": 0.53125,
+          "scoreRate": 0.59375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 5,
+          "draws": 3,
+          "winRate": 0.5,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 16,
+          "wins": 9,
+          "losses": 4,
+          "draws": 3,
+          "winRate": 0.5625,
+          "scoreRate": 0.65625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "second": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.5
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 38,
+          "losses": 22,
+          "draws": 4,
+          "winRate": 0.59375,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 18,
+          "losses": 12,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 32,
+          "wins": 18,
+          "losses": 12,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "first": {
+          "games": 32,
+          "wins": 15,
+          "losses": 14,
+          "draws": 3,
+          "winRate": 0.46875,
+          "scoreRate": 0.515625
+        },
+        "second": {
+          "games": 32,
+          "wins": 23,
+          "losses": 8,
+          "draws": 1,
+          "winRate": 0.71875,
+          "scoreRate": 0.734375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 7,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.4375,
+          "scoreRate": 0.5
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        }
+      }
+    },
+    {
+      "opponentId": "starter-voltage",
+      "opponent": "VOLTAGE IN MOTION",
+      "all": {
+        "games": 96,
+        "wins": 56,
+        "losses": 32,
+        "draws": 8,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.625
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 36,
+        "losses": 8,
+        "draws": 4,
+        "winRate": 0.75,
+        "scoreRate": 0.7916666666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 20,
+        "losses": 24,
+        "draws": 4,
+        "winRate": 0.4166666666666667,
+        "scoreRate": 0.4583333333333333
+      },
+      "base": {
+        "games": 48,
+        "wins": 35,
+        "losses": 10,
+        "draws": 3,
+        "winRate": 0.7291666666666666,
+        "scoreRate": 0.7604166666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 21,
+        "losses": 22,
+        "draws": 5,
+        "winRate": 0.4375,
+        "scoreRate": 0.4895833333333333
+      },
+      "first": {
+        "games": 48,
+        "wins": 23,
+        "losses": 20,
+        "draws": 5,
+        "winRate": 0.4791666666666667,
+        "scoreRate": 0.53125
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 12,
+        "draws": 3,
+        "winRate": 0.6875,
+        "scoreRate": 0.71875
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 21,
+        "losses": 2,
+        "draws": 1,
+        "winRate": 0.875,
+        "scoreRate": 0.8958333333333334
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 15,
+        "losses": 6,
+        "draws": 3,
+        "winRate": 0.625,
+        "scoreRate": 0.6875
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 14,
+        "losses": 8,
+        "draws": 2,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.625
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 6,
+        "losses": 16,
+        "draws": 2,
+        "winRate": 0.25,
+        "scoreRate": 0.2916666666666667
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.4375
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 36,
+          "losses": 24,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 24,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 12,
+          "losses": 18,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        },
+        "base": {
+          "games": 32,
+          "wins": 22,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 14,
+          "losses": 16,
+          "draws": 2,
+          "winRate": 0.4375,
+          "scoreRate": 0.46875
+        },
+        "first": {
+          "games": 32,
+          "wins": 14,
+          "losses": 15,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.484375
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.703125
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 3,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.1875,
+          "scoreRate": 0.21875
+        }
+      }
+    },
+    {
+      "opponentId": "starter-receipts",
+      "opponent": "RECEIPTS",
+      "all": {
+        "games": 96,
+        "wins": 59,
+        "losses": 27,
+        "draws": 10,
+        "winRate": 0.6145833333333334,
+        "scoreRate": 0.6666666666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 32,
+        "losses": 12,
+        "draws": 4,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.7083333333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 27,
+        "losses": 15,
+        "draws": 6,
+        "winRate": 0.5625,
+        "scoreRate": 0.625
+      },
+      "base": {
+        "games": 48,
+        "wins": 32,
+        "losses": 11,
+        "draws": 5,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.71875
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 27,
+        "losses": 16,
+        "draws": 5,
+        "winRate": 0.5625,
+        "scoreRate": 0.6145833333333334
+      },
+      "first": {
+        "games": 48,
+        "wins": 28,
+        "losses": 16,
+        "draws": 4,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.625
+      },
+      "second": {
+        "games": 48,
+        "wins": 31,
+        "losses": 11,
+        "draws": 6,
+        "winRate": 0.6458333333333334,
+        "scoreRate": 0.7083333333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 18,
+        "losses": 5,
+        "draws": 1,
+        "winRate": 0.75,
+        "scoreRate": 0.7708333333333334
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 14,
+        "losses": 7,
+        "draws": 3,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6458333333333334
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 14,
+        "losses": 6,
+        "draws": 4,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6666666666666666
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 13,
+        "losses": 9,
+        "draws": 2,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.5833333333333334
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "base": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 8,
+          "draws": 1,
+          "winRate": 0.4375,
+          "scoreRate": 0.46875
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 39,
+          "losses": 17,
+          "draws": 8,
+          "winRate": 0.609375,
+          "scoreRate": 0.671875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 20,
+          "losses": 9,
+          "draws": 3,
+          "winRate": 0.625,
+          "scoreRate": 0.671875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 19,
+          "losses": 8,
+          "draws": 5,
+          "winRate": 0.59375,
+          "scoreRate": 0.671875
+        },
+        "base": {
+          "games": 32,
+          "wins": 22,
+          "losses": 6,
+          "draws": 4,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 17,
+          "losses": 11,
+          "draws": 4,
+          "winRate": 0.53125,
+          "scoreRate": 0.59375
+        },
+        "first": {
+          "games": 32,
+          "wins": 21,
+          "losses": 8,
+          "draws": 3,
+          "winRate": 0.65625,
+          "scoreRate": 0.703125
+        },
+        "second": {
+          "games": 32,
+          "wins": 18,
+          "losses": 9,
+          "draws": 5,
+          "winRate": 0.5625,
+          "scoreRate": 0.640625
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.625,
+          "scoreRate": 0.71875
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-cellblock",
+      "opponent": "Cellblock Lane Sequence",
+      "all": {
+        "games": 96,
+        "wins": 61,
+        "losses": 29,
+        "draws": 6,
+        "winRate": 0.6354166666666666,
+        "scoreRate": 0.6666666666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 30,
+        "losses": 13,
+        "draws": 5,
+        "winRate": 0.625,
+        "scoreRate": 0.6770833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 31,
+        "losses": 16,
+        "draws": 1,
+        "winRate": 0.6458333333333334,
+        "scoreRate": 0.65625
+      },
+      "base": {
+        "games": 48,
+        "wins": 32,
+        "losses": 11,
+        "draws": 5,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.71875
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 29,
+        "losses": 18,
+        "draws": 1,
+        "winRate": 0.6041666666666666,
+        "scoreRate": 0.6145833333333334
+      },
+      "first": {
+        "games": 48,
+        "wins": 28,
+        "losses": 15,
+        "draws": 5,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6354166666666666
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 14,
+        "draws": 1,
+        "winRate": 0.6875,
+        "scoreRate": 0.6979166666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 16,
+        "losses": 4,
+        "draws": 4,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.75
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 14,
+        "losses": 9,
+        "draws": 1,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6041666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 16,
+        "losses": 7,
+        "draws": 1,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.6875
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 15,
+        "losses": 9,
+        "draws": 0,
+        "winRate": 0.625,
+        "scoreRate": 0.625
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 22,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.703125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "first": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 39,
+          "losses": 20,
+          "draws": 5,
+          "winRate": 0.609375,
+          "scoreRate": 0.6484375
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 8,
+          "draws": 5,
+          "winRate": 0.59375,
+          "scoreRate": 0.671875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 32,
+          "wins": 20,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 19,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.59375,
+          "scoreRate": 0.609375
+        },
+        "first": {
+          "games": 32,
+          "wins": 18,
+          "losses": 10,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "second": {
+          "games": 32,
+          "wins": 21,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.65625,
+          "scoreRate": 0.671875
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 2,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-detective",
+      "opponent": "Sherlock and Watson",
+      "all": {
+        "games": 96,
+        "wins": 63,
+        "losses": 28,
+        "draws": 5,
+        "winRate": 0.65625,
+        "scoreRate": 0.6822916666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 38,
+        "losses": 9,
+        "draws": 1,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.8020833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 25,
+        "losses": 19,
+        "draws": 4,
+        "winRate": 0.5208333333333334,
+        "scoreRate": 0.5625
+      },
+      "base": {
+        "games": 48,
+        "wins": 33,
+        "losses": 14,
+        "draws": 1,
+        "winRate": 0.6875,
+        "scoreRate": 0.6979166666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 30,
+        "losses": 14,
+        "draws": 4,
+        "winRate": 0.625,
+        "scoreRate": 0.6666666666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 29,
+        "losses": 17,
+        "draws": 2,
+        "winRate": 0.6041666666666666,
+        "scoreRate": 0.625
+      },
+      "second": {
+        "games": 48,
+        "wins": 34,
+        "losses": 11,
+        "draws": 3,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7395833333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 21,
+        "losses": 3,
+        "draws": 0,
+        "winRate": 0.875,
+        "scoreRate": 0.875
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 17,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7291666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 12,
+        "losses": 11,
+        "draws": 1,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 13,
+        "losses": 8,
+        "draws": 3,
+        "winRate": 0.5416666666666666,
+        "scoreRate": 0.6041666666666666
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "base": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "first": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 43,
+          "losses": 16,
+          "draws": 5,
+          "winRate": 0.671875,
+          "scoreRate": 0.7109375
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 25,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 18,
+          "losses": 10,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 32,
+          "wins": 23,
+          "losses": 8,
+          "draws": 1,
+          "winRate": 0.71875,
+          "scoreRate": 0.734375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 20,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "second": {
+          "games": 32,
+          "wins": 23,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.71875,
+          "scoreRate": 0.765625
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 4,
+          "draws": 3,
+          "winRate": 0.5625,
+          "scoreRate": 0.65625
+        }
+      }
+    },
+    {
+      "opponentId": "focus-earth-tax",
+      "opponent": "Earth Tax and Finishers",
+      "all": {
+        "games": 96,
+        "wins": 66,
+        "losses": 22,
+        "draws": 8,
+        "winRate": 0.6875,
+        "scoreRate": 0.7291666666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 34,
+        "losses": 11,
+        "draws": 3,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7395833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 32,
+        "losses": 11,
+        "draws": 5,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.71875
+      },
+      "base": {
+        "games": 48,
+        "wins": 30,
+        "losses": 14,
+        "draws": 4,
+        "winRate": 0.625,
+        "scoreRate": 0.6666666666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 36,
+        "losses": 8,
+        "draws": 4,
+        "winRate": 0.75,
+        "scoreRate": 0.7916666666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 33,
+        "losses": 11,
+        "draws": 4,
+        "winRate": 0.6875,
+        "scoreRate": 0.7291666666666666
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 11,
+        "draws": 4,
+        "winRate": 0.6875,
+        "scoreRate": 0.7291666666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 16,
+        "losses": 7,
+        "draws": 1,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.6875
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 18,
+        "losses": 4,
+        "draws": 2,
+        "winRate": 0.75,
+        "scoreRate": 0.7916666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 14,
+        "losses": 7,
+        "draws": 3,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.6458333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 18,
+        "losses": 4,
+        "draws": 2,
+        "winRate": 0.75,
+        "scoreRate": 0.7916666666666666
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 18,
+          "losses": 10,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "base": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 48,
+          "losses": 12,
+          "draws": 4,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 26,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.828125
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 22,
+          "losses": 7,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.734375
+        },
+        "base": {
+          "games": 32,
+          "wins": 22,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 26,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "first": {
+          "games": 32,
+          "wins": 26,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.828125
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 7,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.734375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 14,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.90625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        }
+      }
+    },
+    {
+      "opponentId": "focus-poison-entry",
+      "opponent": "Poison Entry Punishment",
+      "all": {
+        "games": 96,
+        "wins": 70,
+        "losses": 18,
+        "draws": 8,
+        "winRate": 0.7291666666666666,
+        "scoreRate": 0.7708333333333334
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 41,
+        "losses": 4,
+        "draws": 3,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8854166666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 29,
+        "losses": 14,
+        "draws": 5,
+        "winRate": 0.6041666666666666,
+        "scoreRate": 0.65625
+      },
+      "base": {
+        "games": 48,
+        "wins": 38,
+        "losses": 5,
+        "draws": 5,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.84375
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 32,
+        "losses": 13,
+        "draws": 3,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.6979166666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 37,
+        "losses": 8,
+        "draws": 3,
+        "winRate": 0.7708333333333334,
+        "scoreRate": 0.8020833333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 33,
+        "losses": 10,
+        "draws": 5,
+        "winRate": 0.6875,
+        "scoreRate": 0.7395833333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 21,
+        "losses": 2,
+        "draws": 1,
+        "winRate": 0.875,
+        "scoreRate": 0.8958333333333334
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 20,
+        "losses": 2,
+        "draws": 2,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.875
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 17,
+        "losses": 3,
+        "draws": 4,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7916666666666666
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 12,
+        "losses": 11,
+        "draws": 1,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 23,
+          "losses": 5,
+          "draws": 4,
+          "winRate": 0.71875,
+          "scoreRate": 0.78125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 47,
+          "losses": 13,
+          "draws": 4,
+          "winRate": 0.734375,
+          "scoreRate": 0.765625
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 27,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.84375,
+          "scoreRate": 0.859375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 20,
+          "losses": 9,
+          "draws": 3,
+          "winRate": 0.625,
+          "scoreRate": 0.671875
+        },
+        "base": {
+          "games": 32,
+          "wins": 26,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 21,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.65625,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 32,
+          "wins": 25,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 7,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.734375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        }
+      }
+    },
+    {
+      "opponentId": "starter-slide",
+      "opponent": "SLIDE THRU",
+      "all": {
+        "games": 96,
+        "wins": 72,
+        "losses": 18,
+        "draws": 6,
+        "winRate": 0.75,
+        "scoreRate": 0.78125
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 40,
+        "losses": 6,
+        "draws": 2,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.8541666666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 32,
+        "losses": 12,
+        "draws": 4,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.7083333333333334
+      },
+      "base": {
+        "games": 48,
+        "wins": 41,
+        "losses": 3,
+        "draws": 4,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8958333333333334
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 31,
+        "losses": 15,
+        "draws": 2,
+        "winRate": 0.6458333333333334,
+        "scoreRate": 0.6666666666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 34,
+        "losses": 9,
+        "draws": 5,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7604166666666666
+      },
+      "second": {
+        "games": 48,
+        "wins": 38,
+        "losses": 9,
+        "draws": 1,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.8020833333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 21,
+        "losses": 1,
+        "draws": 2,
+        "winRate": 0.875,
+        "scoreRate": 0.9166666666666666
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 19,
+        "losses": 5,
+        "draws": 0,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.7916666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 20,
+        "losses": 2,
+        "draws": 2,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.875
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 12,
+        "losses": 10,
+        "draws": 2,
+        "winRate": 0.5,
+        "scoreRate": 0.5416666666666666
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.828125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 15,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.96875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 46,
+          "losses": 13,
+          "draws": 5,
+          "winRate": 0.71875,
+          "scoreRate": 0.7578125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 25,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.78125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 21,
+          "losses": 8,
+          "draws": 3,
+          "winRate": 0.65625,
+          "scoreRate": 0.703125
+        },
+        "base": {
+          "games": 32,
+          "wins": 26,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.8125,
+          "scoreRate": 0.859375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "first": {
+          "games": 32,
+          "wins": 21,
+          "losses": 7,
+          "draws": 4,
+          "winRate": 0.65625,
+          "scoreRate": 0.71875
+        },
+        "second": {
+          "games": 32,
+          "wins": 25,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 13,
+          "losses": 1,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        }
+      }
+    },
+    {
+      "opponentId": "starter-block",
+      "opponent": "THE BLOCK IS HOT",
+      "all": {
+        "games": 96,
+        "wins": 74,
+        "losses": 16,
+        "draws": 6,
+        "winRate": 0.7708333333333334,
+        "scoreRate": 0.8020833333333334
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 39,
+        "losses": 5,
+        "draws": 4,
+        "winRate": 0.8125,
+        "scoreRate": 0.8541666666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 35,
+        "losses": 11,
+        "draws": 2,
+        "winRate": 0.7291666666666666,
+        "scoreRate": 0.75
+      },
+      "base": {
+        "games": 48,
+        "wins": 38,
+        "losses": 6,
+        "draws": 4,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.8333333333333334
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 36,
+        "losses": 10,
+        "draws": 2,
+        "winRate": 0.75,
+        "scoreRate": 0.7708333333333334
+      },
+      "first": {
+        "games": 48,
+        "wins": 33,
+        "losses": 10,
+        "draws": 5,
+        "winRate": 0.6875,
+        "scoreRate": 0.7395833333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 41,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8645833333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 22,
+        "losses": 0,
+        "draws": 2,
+        "winRate": 0.9166666666666666,
+        "scoreRate": 0.9583333333333334
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 17,
+        "losses": 5,
+        "draws": 2,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.75
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 16,
+        "losses": 6,
+        "draws": 2,
+        "winRate": 0.6666666666666666,
+        "scoreRate": 0.7083333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 19,
+        "losses": 5,
+        "draws": 0,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.7916666666666666
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 48,
+          "losses": 10,
+          "draws": 6,
+          "winRate": 0.75,
+          "scoreRate": 0.796875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 25,
+          "losses": 3,
+          "draws": 4,
+          "winRate": 0.78125,
+          "scoreRate": 0.84375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 23,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.71875,
+          "scoreRate": 0.75
+        },
+        "base": {
+          "games": 32,
+          "wins": 24,
+          "losses": 4,
+          "draws": 4,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 24,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "first": {
+          "games": 32,
+          "wins": 21,
+          "losses": 6,
+          "draws": 5,
+          "winRate": 0.65625,
+          "scoreRate": 0.734375
+        },
+        "second": {
+          "games": 32,
+          "wins": 27,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.84375,
+          "scoreRate": 0.859375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        }
+      }
+    },
+    {
+      "opponentId": "starter-combo",
+      "opponent": "WHO YOU KNOW",
+      "all": {
+        "games": 96,
+        "wins": 75,
+        "losses": 16,
+        "draws": 5,
+        "winRate": 0.78125,
+        "scoreRate": 0.8072916666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 45,
+        "losses": 3,
+        "draws": 0,
+        "winRate": 0.9375,
+        "scoreRate": 0.9375
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 30,
+        "losses": 13,
+        "draws": 5,
+        "winRate": 0.625,
+        "scoreRate": 0.6770833333333334
+      },
+      "base": {
+        "games": 48,
+        "wins": 45,
+        "losses": 2,
+        "draws": 1,
+        "winRate": 0.9375,
+        "scoreRate": 0.9479166666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 30,
+        "losses": 14,
+        "draws": 4,
+        "winRate": 0.625,
+        "scoreRate": 0.6666666666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 36,
+        "losses": 8,
+        "draws": 4,
+        "winRate": 0.75,
+        "scoreRate": 0.7916666666666666
+      },
+      "second": {
+        "games": 48,
+        "wins": 39,
+        "losses": 8,
+        "draws": 1,
+        "winRate": 0.8125,
+        "scoreRate": 0.8229166666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 24,
+        "losses": 0,
+        "draws": 0,
+        "winRate": 1,
+        "scoreRate": 1
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 21,
+        "losses": 3,
+        "draws": 0,
+        "winRate": 0.875,
+        "scoreRate": 0.875
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 21,
+        "losses": 2,
+        "draws": 1,
+        "winRate": 0.875,
+        "scoreRate": 0.8958333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 9,
+        "losses": 11,
+        "draws": 4,
+        "winRate": 0.375,
+        "scoreRate": 0.4583333333333333
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 27,
+          "losses": 2,
+          "draws": 3,
+          "winRate": 0.84375,
+          "scoreRate": 0.890625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 2,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.78125
+        },
+        "base": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "first": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.5,
+          "scoreRate": 0.6875
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 48,
+          "losses": 14,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.765625
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 29,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.90625,
+          "scoreRate": 0.90625
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 19,
+          "losses": 11,
+          "draws": 2,
+          "winRate": 0.59375,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 32,
+          "wins": 30,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.953125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 18,
+          "losses": 13,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.578125
+        },
+        "first": {
+          "games": 32,
+          "wins": 22,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "second": {
+          "games": 32,
+          "wins": 26,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.90625
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 5,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        }
+      }
+    },
+    {
+      "opponentId": "starter-crashout",
+      "opponent": "CRASHOUT SEASON",
+      "all": {
+        "games": 96,
+        "wins": 78,
+        "losses": 11,
+        "draws": 7,
+        "winRate": 0.8125,
+        "scoreRate": 0.8489583333333334
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 39,
+        "losses": 5,
+        "draws": 4,
+        "winRate": 0.8125,
+        "scoreRate": 0.8541666666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 39,
+        "losses": 6,
+        "draws": 3,
+        "winRate": 0.8125,
+        "scoreRate": 0.84375
+      },
+      "base": {
+        "games": 48,
+        "wins": 41,
+        "losses": 5,
+        "draws": 2,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.875
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 37,
+        "losses": 6,
+        "draws": 5,
+        "winRate": 0.7708333333333334,
+        "scoreRate": 0.8229166666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 41,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8645833333333334
+      },
+      "second": {
+        "games": 48,
+        "wins": 37,
+        "losses": 5,
+        "draws": 6,
+        "winRate": 0.7708333333333334,
+        "scoreRate": 0.8333333333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 22,
+        "losses": 1,
+        "draws": 1,
+        "winRate": 0.9166666666666666,
+        "scoreRate": 0.9375
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 17,
+        "losses": 4,
+        "draws": 3,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7708333333333334
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 19,
+        "losses": 4,
+        "draws": 1,
+        "winRate": 0.7916666666666666,
+        "scoreRate": 0.8125
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 20,
+        "losses": 2,
+        "draws": 2,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.875
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 25,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.78125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "first": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 53,
+          "losses": 6,
+          "draws": 5,
+          "winRate": 0.828125,
+          "scoreRate": 0.8671875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 27,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.84375,
+          "scoreRate": 0.875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 26,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.8125,
+          "scoreRate": 0.859375
+        },
+        "base": {
+          "games": 32,
+          "wins": 28,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.890625
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 25,
+          "losses": 3,
+          "draws": 4,
+          "winRate": 0.78125,
+          "scoreRate": 0.84375
+        },
+        "first": {
+          "games": 32,
+          "wins": 28,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.890625
+        },
+        "second": {
+          "games": 32,
+          "wins": 25,
+          "losses": 3,
+          "draws": 4,
+          "winRate": 0.78125,
+          "scoreRate": 0.84375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 1,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.875
+        }
+      }
+    },
+    {
+      "opponentId": "focus-late-scaling",
+      "opponent": "Late Scaling",
+      "all": {
+        "games": 96,
+        "wins": 81,
+        "losses": 13,
+        "draws": 2,
+        "winRate": 0.84375,
+        "scoreRate": 0.8541666666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 47,
+        "losses": 0,
+        "draws": 1,
+        "winRate": 0.9791666666666666,
+        "scoreRate": 0.9895833333333334
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 34,
+        "losses": 13,
+        "draws": 1,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.71875
+      },
+      "base": {
+        "games": 48,
+        "wins": 46,
+        "losses": 2,
+        "draws": 0,
+        "winRate": 0.9583333333333334,
+        "scoreRate": 0.9583333333333334
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 35,
+        "losses": 11,
+        "draws": 2,
+        "winRate": 0.7291666666666666,
+        "scoreRate": 0.75
+      },
+      "first": {
+        "games": 48,
+        "wins": 40,
+        "losses": 6,
+        "draws": 2,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.8541666666666666
+      },
+      "second": {
+        "games": 48,
+        "wins": 41,
+        "losses": 7,
+        "draws": 0,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8541666666666666
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 24,
+        "losses": 0,
+        "draws": 0,
+        "winRate": 1,
+        "scoreRate": 1
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 23,
+        "losses": 0,
+        "draws": 1,
+        "winRate": 0.9583333333333334,
+        "scoreRate": 0.9791666666666666
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 22,
+        "losses": 2,
+        "draws": 0,
+        "winRate": 0.9166666666666666,
+        "scoreRate": 0.9166666666666666
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 12,
+        "losses": 11,
+        "draws": 1,
+        "winRate": 0.5,
+        "scoreRate": 0.5208333333333334
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 31,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.96875,
+          "scoreRate": 0.984375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 24,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.765625
+        },
+        "base": {
+          "games": 32,
+          "wins": 32,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 23,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.71875,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 32,
+          "wins": 26,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 32,
+          "wins": 29,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.90625,
+          "scoreRate": 0.90625
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 15,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.96875
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        }
+      }
+    },
+    {
+      "opponentId": "starter-compound",
+      "opponent": "COMPOUND INTEREST",
+      "all": {
+        "games": 96,
+        "wins": 81,
+        "losses": 10,
+        "draws": 5,
+        "winRate": 0.84375,
+        "scoreRate": 0.8697916666666666
+      },
+      "greedy": {
+        "games": 48,
+        "wins": 47,
+        "losses": 1,
+        "draws": 0,
+        "winRate": 0.9791666666666666,
+        "scoreRate": 0.9791666666666666
+      },
+      "seededLegal": {
+        "games": 48,
+        "wins": 34,
+        "losses": 9,
+        "draws": 5,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7604166666666666
+      },
+      "base": {
+        "games": 48,
+        "wins": 44,
+        "losses": 1,
+        "draws": 3,
+        "winRate": 0.9166666666666666,
+        "scoreRate": 0.9479166666666666
+      },
+      "upgraded": {
+        "games": 48,
+        "wins": 37,
+        "losses": 9,
+        "draws": 2,
+        "winRate": 0.7708333333333334,
+        "scoreRate": 0.7916666666666666
+      },
+      "first": {
+        "games": 48,
+        "wins": 40,
+        "losses": 4,
+        "draws": 4,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.875
+      },
+      "second": {
+        "games": 48,
+        "wins": 41,
+        "losses": 6,
+        "draws": 1,
+        "winRate": 0.8541666666666666,
+        "scoreRate": 0.8645833333333334
+      },
+      "greedyBase": {
+        "games": 24,
+        "wins": 24,
+        "losses": 0,
+        "draws": 0,
+        "winRate": 1,
+        "scoreRate": 1
+      },
+      "greedyUpgraded": {
+        "games": 24,
+        "wins": 23,
+        "losses": 1,
+        "draws": 0,
+        "winRate": 0.9583333333333334,
+        "scoreRate": 0.9583333333333334
+      },
+      "seededBase": {
+        "games": 24,
+        "wins": 20,
+        "losses": 1,
+        "draws": 3,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.8958333333333334
+      },
+      "seededUpgraded": {
+        "games": 24,
+        "wins": 14,
+        "losses": 8,
+        "draws": 2,
+        "winRate": 0.5833333333333334,
+        "scoreRate": 0.625
+      },
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.8125,
+          "scoreRate": 0.859375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.625,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 31,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.96875,
+          "scoreRate": 0.96875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 24,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "base": {
+          "games": 32,
+          "wins": 30,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.953125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 25,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        "first": {
+          "games": 32,
+          "wins": 28,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.890625
+        },
+        "second": {
+          "games": 32,
+          "wins": 27,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.84375,
+          "scoreRate": 0.859375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.90625
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        }
+      }
+    }
+  ],
+  "dinerCards": [
+    {
+      "cardId": "squabble-house-manager",
+      "games": 1632,
+      "gamesPlayed": 1622,
+      "gamesSurviving": 1616,
+      "deployments": 1622,
+      "finalHands": 17469,
+      "playRate": 0.9938725490196079,
+      "averageFinalHandsWhenPresent": 10.810024752475247
+    },
+    {
+      "cardId": "squabblehouse-bus-boy",
+      "games": 1632,
+      "gamesPlayed": 1603,
+      "gamesSurviving": 1529,
+      "deployments": 1603,
+      "finalHands": 9168,
+      "playRate": 0.9822303921568627,
+      "averageFinalHandsWhenPresent": 5.996075866579464
+    },
+    {
+      "cardId": "squabblehouse-cashier",
+      "games": 1632,
+      "gamesPlayed": 1469,
+      "gamesSurviving": 1455,
+      "deployments": 1469,
+      "finalHands": 9353,
+      "playRate": 0.9001225490196079,
+      "averageFinalHandsWhenPresent": 6.428178694158076
+    },
+    {
+      "cardId": "squabblehouse-security",
+      "games": 1632,
+      "gamesPlayed": 1230,
+      "gamesSurviving": 1226,
+      "deployments": 1230,
+      "finalHands": 8752,
+      "playRate": 0.7536764705882353,
+      "averageFinalHandsWhenPresent": 7.138662316476346
+    },
+    {
+      "cardId": "squabblehouse-teknician",
+      "games": 1632,
+      "gamesPlayed": 1142,
+      "gamesSurviving": 1141,
+      "deployments": 1142,
+      "finalHands": 8258,
+      "playRate": 0.6997549019607843,
+      "averageFinalHandsWhenPresent": 7.237510955302366
+    },
+    {
+      "cardId": "griddle-master",
+      "games": 1632,
+      "gamesPlayed": 1281,
+      "gamesSurviving": 1252,
+      "deployments": 1281,
+      "finalHands": 7270,
+      "playRate": 0.7849264705882353,
+      "averageFinalHandsWhenPresent": 5.806709265175719
+    },
+    {
+      "cardId": "inmate-reformed",
+      "games": 1632,
+      "gamesPlayed": 1216,
+      "gamesSurviving": 1204,
+      "deployments": 1216,
+      "finalHands": 8431,
+      "playRate": 0.7450980392156863,
+      "averageFinalHandsWhenPresent": 7.00249169435216
+    },
+    {
+      "cardId": "janitor",
+      "games": 1632,
+      "gamesPlayed": 870,
+      "gamesSurviving": 870,
+      "deployments": 870,
+      "finalHands": 4774,
+      "playRate": 0.5330882352941176,
+      "averageFinalHandsWhenPresent": 5.487356321839081
+    },
+    {
+      "cardId": "waffle-warlord",
+      "games": 1632,
+      "gamesPlayed": 1069,
+      "gamesSurviving": 1067,
+      "deployments": 1069,
+      "finalHands": 7060,
+      "playRate": 0.6550245098039216,
+      "averageFinalHandsWhenPresent": 6.616682286785379
+    },
+    {
+      "cardId": "sideofhands",
+      "games": 1632,
+      "gamesPlayed": 1312,
+      "gamesSurviving": 3,
+      "deployments": 1312,
+      "finalHands": 0,
+      "playRate": 0.803921568627451,
+      "averageFinalHandsWhenPresent": 0
+    }
+  ],
+  "manager": {
+    "gamesPlayed": 1622,
+    "meanPeakHands": 11.819975339087547,
+    "meanPeakAura": 5.633785450061652,
+    "maximumPeakHands": 25,
+    "maximumPeakAura": 7
+  },
+  "dinerOverall": {
+    "all": {
+      "games": 1632,
+      "wins": 1082,
+      "losses": 441,
+      "draws": 109,
+      "winRate": 0.6629901960784313,
+      "scoreRate": 0.6963848039215687
+    },
+    "greedy": {
+      "games": 816,
+      "wins": 598,
+      "losses": 172,
+      "draws": 46,
+      "winRate": 0.7328431372549019,
+      "scoreRate": 0.7610294117647058
+    },
+    "seededLegal": {
+      "games": 816,
+      "wins": 484,
+      "losses": 269,
+      "draws": 63,
+      "winRate": 0.5931372549019608,
+      "scoreRate": 0.6317401960784313
+    },
+    "base": {
+      "games": 816,
+      "wins": 570,
+      "losses": 188,
+      "draws": 58,
+      "winRate": 0.6985294117647058,
+      "scoreRate": 0.7340686274509803
+    },
+    "upgraded": {
+      "games": 816,
+      "wins": 512,
+      "losses": 253,
+      "draws": 51,
+      "winRate": 0.6274509803921569,
+      "scoreRate": 0.6587009803921569
+    },
+    "first": {
+      "games": 816,
+      "wins": 504,
+      "losses": 248,
+      "draws": 64,
+      "winRate": 0.6176470588235294,
+      "scoreRate": 0.6568627450980392
+    },
+    "second": {
+      "games": 816,
+      "wins": 578,
+      "losses": 193,
+      "draws": 45,
+      "winRate": 0.7083333333333334,
+      "scoreRate": 0.7359068627450981
+    },
+    "greedyBase": {
+      "games": 408,
+      "wins": 315,
+      "losses": 72,
+      "draws": 21,
+      "winRate": 0.7720588235294118,
+      "scoreRate": 0.7977941176470589
+    },
+    "greedyUpgraded": {
+      "games": 408,
+      "wins": 283,
+      "losses": 100,
+      "draws": 25,
+      "winRate": 0.6936274509803921,
+      "scoreRate": 0.7242647058823529
+    },
+    "seededBase": {
+      "games": 408,
+      "wins": 255,
+      "losses": 116,
+      "draws": 37,
+      "winRate": 0.625,
+      "scoreRate": 0.6703431372549019
+    },
+    "seededUpgraded": {
+      "games": 408,
+      "wins": 229,
+      "losses": 153,
+      "draws": 26,
+      "winRate": 0.5612745098039216,
+      "scoreRate": 0.5931372549019608
+    }
+  },
+  "note": "Deterministic bot samples, not player win rates or isolated causal card strength. Draws count as half a point. Source-attributed event counts are descriptive, not eligible-opportunity success rates."
+}

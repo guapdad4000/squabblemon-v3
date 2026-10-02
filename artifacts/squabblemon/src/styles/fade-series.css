@@ -1,0 +1,80 @@
+/* Room series scoreboard: torn paper tally taped over the arcade surfaces. */
+.fade-series {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 18px 9px;
+  color: #1b2f21;
+  background: linear-gradient(180deg, #f4e3b6, #e2caa0);
+  border: 2px solid #1b3021;
+  box-shadow: 3px 4px 0 #050d0980, inset 0 0 0 1px #fff2cf;
+  clip-path: polygon(0 4px, 6px 0, 42% 3px, 60% 0, 100% 4px, calc(100% - 3px) 50%, 100% calc(100% - 4px), 64% 100%, 38% calc(100% - 3px), 5px 100%, 0 calc(100% - 5px));
+  transform: rotate(-.8deg);
+}
+.fade-series__tag {
+  color: #6a5a38;
+  font: 500 8px 'DM Mono', monospace;
+  letter-spacing: .16em;
+}
+.fade-series__line {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.fade-series__line > em {
+  color: #8a7a52;
+  font-style: normal;
+  font-weight: 900;
+}
+.fade-series__side {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.fade-series__side small {
+  max-width: 108px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #4b5c45;
+  font: 900 10px 'Barlow Condensed', sans-serif;
+  letter-spacing: .1em;
+}
+.fade-series__count {
+  display: inline-block;
+  perspective: 300px;
+}
+.fade-series__count b {
+  display: inline-block;
+  min-width: 18px;
+  text-align: center;
+  color: #163620;
+  font: italic 1000 30px/1 'Barlow Condensed', sans-serif;
+  text-shadow: 1px 2px 0 #c1a770;
+  transform-origin: top center;
+}
+.fade-series__count[data-tone='rival'] b { color: #8a3527; text-shadow: 1px 2px 0 #d6b98c; }
+.fade-series__count[data-tone='draw'] b { font-size: 17px; color: #4a5a4c; }
+.fade-series__draws {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #59503a;
+  font: 900 9px 'Barlow Condensed', sans-serif;
+  letter-spacing: .12em;
+}
+
+/* Over the dark result receipt the sign keeps its paper, not the panel colour. */
+.fade-series--result {
+  margin: 9px auto 2px;
+  transform: rotate(.9deg);
+}
+.park-result .fade-series--result { color: #1b2f21; }
+
+@media (max-width: 500px) {
+  .fade-series { padding: 6px 12px 7px; }
+  .fade-series__count b { font-size: 25px; }
+  .fade-series__side small { max-width: 78px; }
+}

@@ -262,6 +262,10 @@ export function CardInspector({ card, onClose, bootstrap, variantId, initialPrev
                 <div className="dossier-vital__label">Modifier</div>
                 <div className="dossier-vital__value">{instance.powerModifier > 0 ? `+${instance.powerModifier}` : instance.powerModifier}</div>
               </div>
+              {(instance.continuousPower ?? 0) !== 0 && <div className="dossier-vital">
+                <div className="dossier-vital__label">Ongoing</div>
+                <div className="dossier-vital__value">{instance.continuousPower! > 0 ? `+${instance.continuousPower}` : instance.continuousPower}</div>
+              </div>}
               <div className="dossier-vital">
                 <div className="dossier-vital__label">Effective</div>
                 <div className="dossier-vital__value">{effectivePower}</div>

@@ -1,0 +1,36 @@
+{
+  "verified": true,
+  "mode": "full",
+  "completedAt": "2026-09-30T22:58:43.247Z",
+  "deterministicScheduleFingerprint": "9b967a0c76e6fa159a2c53d5ea1ec2cab1050f7fa1f26380e76a9624dad16569",
+  "sourceFingerprints": {
+    "lib/squabblemon-engine/package.json": "27f97a16ae49b07d4d9d78ee482b4c87fb9a0691a85a24d570b19a7beb390b07",
+    "lib/squabblemon-engine/src/balanceLab.ts": "9cf3a58f55acd46dec503475f0b792ca110ad289df03e91880ad0296ee30b0bf",
+    "lib/squabblemon-engine/src/data.ts": "104e11bbec457acb3b884be214e2ae23fd5e17a7f15208b06e72fbfbcc4c2cd1",
+    "lib/squabblemon-engine/src/gameEngine.ts": "8ffaea2c231d748222791cda43ea55fc8173ad70328aa280af715a6061b59b2b",
+    "lib/squabblemon-engine/src/districts.ts": "839d7d8fcb53a4118d9248bcc16542fac4ff39fccc42b1e2a75a5cf795d7a60b",
+    "lib/squabblemon-engine/src/squabblehouseWave.ts": "6802611f4244063ba0f30500e8104f1fe93cce6d1cbb981b5192b159a942773b",
+    "lib/squabblemon-engine/src/creativeReworks.ts": "b54dcb273db662f7685fda347b724189b631c2e9633ac3ae6642063f8cd43f14",
+    "lib/squabblemon-engine/src/rosterBalance.ts": "d09a6648c78735f04df2acdb03d6602adb73dc96fcd37eaf6be1bdcf53f5a288",
+    "lib/squabblemon-engine/src/multiplayer.ts": "50272aacb47da4c671be2c839dab7aac9d88a308996c4a578e1d59c985244380",
+    "scripts/src/balance-sweep-telemetry.ts": "2f9b0ee1e4674f25ddc185fd10bebcfdc839b3ec4280babe94e2ec2e83ecf696",
+    "scripts/src/squabblehouse-balance-sweep.ts": "447589621bfef8431af85c019d97598338a5c9cee0153ad291f2136b523896c9",
+    "scripts/src/squabblehouse-diner-comparison.ts": "a0c71ba0851f6a671807fd92d3aeed6766b9199949cfc648dbf01913c3862226"
+  },
+  "crewRoles": {
+    "current-baseline": "frozen-original-staff-shell",
+    "diner": "authored-current-shift-nine-staff-plus-support"
+  },
+  "exactShardCountPerCrew": 9,
+  "uniqueCasesPerCrew": {
+    "current-baseline": 1008,
+    "diner": 1008
+  },
+  "totalPairedUniqueCases": 2016,
+  "matrixFailures": 0,
+  "rawFailures": 0,
+  "matrixRawParity": "all match blocks have all four parity flags true; matrix and raw counts equal each exact Cartesian schedule",
+  "accountingNote": "Matrix validation replays are duplicate concordance executions and are not additional independent samples.",
+  "inputMode": "shards",
+  "inputRoot": "scripts/results/squabblehouse-diner-comparison"
+}

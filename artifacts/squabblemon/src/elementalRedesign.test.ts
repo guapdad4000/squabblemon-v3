@@ -156,7 +156,7 @@ for (const owner of ['player', 'cpu'] as const) {
       const m = blank(), ally = unit(plant ? 'rastamon' : 'cornball', owner, 0, 1);
       m.boards[0] = [ally];
       const vegan = cast(m, 'sprout', owner);
-      assert.equal(find(vegan.after, ally).powerModifier, plant ? 1 : 0);
+      assert.equal(find(vegan.after, ally).powerModifier, plant ? 2 : 0);
       assert.equal(find(vegan.after, vegan.source).powerModifier, plant ? 1 : 0);
     }
     const m = blank(), ally = unit('cornball', owner, 0, 1), local = unit('cornball', enemy, 0, 2, 20), remote = unit('cornball', enemy, 2, 3);

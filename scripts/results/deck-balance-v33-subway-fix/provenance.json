@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-01T23:56:31.641Z",
+  "baseline": "baseline.json",
+  "originalEvidenceDirectory": "../deck-balance-v33-onshift",
+  "baselineGitHead": "9c4bebdfc4b9ee9263882c7441e8c4578c3b9127",
+  "oldSourceHash": "f9bfa32d48e5d06ed2fba8ba7193c58b243510794ab7c23b50958f4a78a117ab",
+  "newSourceHash": "8c429a01fc75dbec7086da879b00ee837db90bebf9b0c899d86aa6d42ad8c732",
+  "sourceManifest": {
+    "files": 61,
+    "unchangedFiles": 59,
+    "scope": "All recursively discovered engine src .ts files plus scripts/src/deck-balance-audit.ts and scripts/src/deck-balance-audit-report.ts; test files excluded.",
+    "fingerprintMethod": "SHA-256 of sorted repository-relative path, NUL, file bytes, NUL for each scoped file.",
+    "manifestMethod": "Reconstruct the current path-to-file-SHA256 object from baseline.hashes excluding scripts/results paths, replacing the two changed entries below. Insert entries in JavaScript Array.sort() default UTF-16 path order (not localeCompare order), then SHA-256 its compact JSON serialization.",
+    "manifestSha256": "34fa98e9a658e2db4d4c8bdd6a6b86b7662a6d68abbe2b7227c8d05990c777c9",
+    "changed": [
+      {
+        "file": "lib/squabblemon-engine/src/gameEngine.ts",
+        "oldSha256": "f6f5a98d293704c90df59c43dae75d03e5a46bc9ec9a18f5739b581a1bd4c636",
+        "newSha256": "4746569875ee05b468a94c31138109b00cdab1623e8f3a4ecde2fa5f47f247a4"
+      },
+      {
+        "file": "scripts/src/deck-balance-audit.ts",
+        "oldSha256": "da0e4f787b85291cf3d49351539251e5215690a7fd3968d355a74db05a6da667",
+        "newSha256": "1a3101f2246ce1a26f2d71a0c57d1e523c2df4813ad1bd763e99ed9a34ea82e4"
+      }
+    ]
+  },
+  "frozenEvidence": {
+    "files": 11,
+    "unchanged": true,
+    "sha256": {
+      "scripts/results/deck-balance-v33-onshift/findings.json": "bcab9fc59f5d8a41813c4578efef0cd09d23dfa9e6a14f5277011b024cb2ea3e",
+      "scripts/results/deck-balance-v33-onshift/findings.md": "2e37559a0007d905e574baca5b108f6cbc76ee1ae4462399408d3d5420589deb",
+      "scripts/results/deck-balance-v33-onshift/plan.json": "bb156e449ec1ea3642a114d158739bdebc1f0d7add4eca36ac15c3e81b9a909f",
+      "scripts/results/deck-balance-v33-onshift/worker-0.json": "b9063956598a8f5908d5c0ff2a1e3376499f7de3550a4b9e0d18eab62c62bf39",
+      "scripts/results/deck-balance-v33-onshift/worker-1.json": "45c162e4a59007af9aeeb5d98621af4d2a6132f8544e92e30a7891a49e905f90",
+      "scripts/results/deck-balance-v33-onshift/worker-2.json": "283791bdeec28fe1cb0bfb85fd71796902cabd4a64793ffc8b63bbca43ab20cc",
+      "scripts/results/deck-balance-v33-onshift/worker-3.json": "5b8d47a646883120ce3cd5d068304b5115ae55821430b12e0c768d2ab2a147d3",
+      "scripts/results/deck-balance-v33-onshift/worker-4.json": "1ffbfad179b5fe36511bd23150085012e5a56e12562d9b75b70d0b338561c16a",
+      "scripts/results/deck-balance-v33-onshift/worker-5.json": "ff17d3618aab19ce8c966c566cbaf0fb16db766f23e5187aff01b0240471d5ba",
+      "scripts/results/deck-balance-v33-onshift/worker-6.json": "1b953562113d514d48c29593159e9504a02e6e7c376b9af628b79893fb193568",
+      "scripts/results/deck-balance-v33-onshift/worker-7.json": "eee5102670eba3dfc986f025dae60f02037ae50e5e1c35b87a4309ae883028da"
+    }
+  },
+  "checks": {
+    "exactOriginalOrderedSchedule": true,
+    "exactDecksIdsOrderKeys": true,
+    "originalFindingsMatchShards": true,
+    "exactAllOriginalFailedKeysInPlanOrder": true,
+    "completeUniqueFullCases": true,
+    "zeroFailures": true,
+    "resultAxesAndWinnerSeatMapping": true,
+    "perDeckTelemetryRoster": true,
+    "sourceConsistent": true,
+    "balance33Rules33Unchanged": true,
+    "baselineCopyMatchesPreEdit": true,
+    "commandsAllSucceeded": true,
+    "storedSummaryMatchesCompleteSampleRenderingExceptGeneratedAt": true,
+    "storedReportMatchesCompleteSampleRendering": true
+  },
+  "counts": {
+    "planned": 3392,
+    "fullSuccessful": 3392,
+    "fullFailed": 0,
+    "phases": { "league": 2112, "counter-screen": 192, "confirmation": 1088 },
+    "originalSuccessful": 3374,
+    "originalFailed": 18,
+    "replaySuccessful": 18,
+    "replayFailed": 0,
+    "leagueCrews": 12,
+    "totalCrews": 18,
+    "leagueGamesPerCrew": 352,
+    "dinerGames": 1632,
+    "dinerOpponents": 17,
+    "dinerGamesPerOpponent": 96,
+    "dinerPrimaryGamesPerOpponent": 32,
+    "dinerConfirmationGamesPerOpponent": 64
+  },
+  "parity": {
+    "comparison": "Exact complete row comparison, including scenario, all result telemetry and dinerTrace; no outcome-only shortcut.",
+    "replayFullExactRows": 18,
+    "replayFullCompared": 18,
+    "oldSuccessfulExactRows": 3374,
+    "oldSuccessfulCompared": 3374,
+    "oldSuccessfulChangedRows": [],
+    "keyDigestMethod": "SHA-256 of compact JSON ordered case-key array.",
+    "caseKeysSha256": "a1b705c2091a90a941135209099570fcca4b2666edd1c511356aaddd3fc08f9c",
+    "originalFailedCaseKeysSha256": "c8a0c0ed453d1d9b5e00b3faefd3b89bc9575e9732b4d52469877ff52175ac35",
+    "originalFailedKeysFile": "failed-cases/replay-summary.json"
+  },
+  "execution": {
+    "commands": 13,
+    "allExitZero": true,
+    "startedAt": "2026-10-01T23:50:56.405Z",
+    "finishedAt": "2026-10-01T23:54:52.417Z",
+    "wallMs": 236012,
+    "failedWorker": { "index": 0, "successful": 18, "failed": 0, "elapsedMs": 6799 },
+    "fullWorkers": [
+      { "index": 0, "successful": 424, "failed": 0, "elapsedMs": 145317 },
+      { "index": 1, "successful": 424, "failed": 0, "elapsedMs": 144719 },
+      { "index": 2, "successful": 424, "failed": 0, "elapsedMs": 226114 },
+      { "index": 3, "successful": 424, "failed": 0, "elapsedMs": 223428 },
+      { "index": 4, "successful": 424, "failed": 0, "elapsedMs": 146511 },
+      { "index": 5, "successful": 424, "failed": 0, "elapsedMs": 145212 },
+      { "index": 6, "successful": 424, "failed": 0, "elapsedMs": 220380 },
+      { "index": 7, "successful": 424, "failed": 0, "elapsedMs": 219540 }
+    ],
+    "commandsAndExitEvidence": "execution.json"
+  },
+  "metrics": {
+    "dinerOverall": { "games": 1632, "wins": 1082, "losses": 441, "draws": 109, "winRate": 0.6629901960784313, "scoreRate": 0.6963848039215687 },
+    "dinerLeague": { "games": 352, "wins": 238, "losses": 92, "draws": 22, "winRate": 0.6761363636363636, "scoreRate": 0.7073863636363636 },
+    "manager": { "gamesPlayed": 1622, "meanPeakHands": 11.819975339087547, "meanPeakAura": 5.633785450061652, "maximumPeakHands": 25, "maximumPeakAura": 7 },
+    "caveat": "Fixed deterministic greedy and seeded-legal bot samples, not player win rates, optimized crew strength or causal card strength. Draws count as half a point. Source-attributed events do not establish ability reliability."
+  },
+  "freshEvidenceSha256": {
+    "baseline.json": "abd6da54011a2d7cf5b5c5d90f8c105edff92b3044e5b0b8ac8e5f8c9ca4762b",
+    "execution.json": "aaca25c9dec17723f9a3f3a81ebb00756218bdf48aec1e8ebe302897d4024268",
+    "failed-cases/plan.json": "2b568c3726c85c07da335d167f02a4d47cab3a1a79eb285ab29adb5516ff7381",
+    "failed-cases/worker-0.json": "7d02dcb5116a2793522e83c8e9841b7b38e52f5c1f06ad65b17563c5eb580ad8",
+    "failed-cases/replay-summary.json": "ee4c1aa1cc6b15015b04b4cad96cdf7728f5197c6947f8e98430f56f1c7b0d85",
+    "full/plan.json": "a7d8a95e9273e6c63897aac96364870d61baff778d05c54185c5f88e5589064f",
+    "full/worker-0.json": "b694b506bb0c65146620d2f78fbdb728edc757ae8495ceaf6acb872b5feef923",
+    "full/worker-1.json": "ba98e5b69799c34373783858c244eae814e9dc2402cd31a82c96020561fc8351",
+    "full/worker-2.json": "cc088143bfd4ea9ba6dfc64658264b4fe603f3100ba2d0c21883394606d177cf",
+    "full/worker-3.json": "5dcc25c025bf2ff66bc6aa261e6c35ed89e741c972948ff34b6d1606b6032e22",
+    "full/worker-4.json": "6fc3f36ad1a21a203476a89c62f44689f0a108ac75add91adbfe00a8bf5af014",
+    "full/worker-5.json": "cd7ea7b661b65bc19bbae86c2664293e7401eef3061e09e255be299584e8891c",
+    "full/worker-6.json": "f3bbd522cbcd0685126cf75b0430aaf44ca27b02ea7703c16096521257600612",
+    "full/worker-7.json": "24466c1f7ad9de0037a68846da2b460f7907171bb7f114899990a7617250ff73",
+    "full/summary.json": "8b6ba6e4237132711ed3bf5228193f9e73536953d252cc63b3a86cd9fd00fc11",
+    "full/report.md": "ee2e56365c5cbc7444d323e82239292d77fa2e08dc39a24578842ff43a55deee"
+  },
+  "verificationScope": {
+    "independentEvidenceChecks": "Read-only validation of source/file hashes, exact schedules, complete shard partitions, axes, winner-seat mapping, telemetry rosters, exact row parity, stored summary/report rendering and execution exits; no gameplay rerun.",
+    "legalGameplayRegressionEvidence": "Parent-reported 14 direct/legal/UI-preview Subway tests pass; verification/subway-before-fix.log and verification/subway-after-fix.log.",
+    "otherParentReportedChecks": "28 balanceLab/telemetry/audit tests pass; engine/staff/replay suite 261 pass and 2 pre-existing campaign failures reproduced against original git HEAD engine; engine/frontend/scripts typechecks pass.",
+    "knownSeparateFollowups": [
+      "Nonlethal replay arrival-order duplication: verification/nonlethal-replay-observation.json; proposed task 276.",
+      "Two pre-existing campaign transcript assertion failures: verification/engine-suite.log and verification/baseline-campaign-tests.log; proposed task 277."
+    ]
+  }
+}

@@ -21,6 +21,7 @@ import {
   joinOnlineRoom,
   memberSeat,
   onlineRoomView,
+  roomSeries,
   OnlineError,
   type OnlineCommand,
   type OnlineMember,
@@ -146,8 +147,12 @@ export async function createFriendRoom(
 }
 
 export async function listFriendRooms(userId: string) {
+  const now = Date.now();
   const rows = await db
-    .select({ code: onlineRoomsTable.code, state: onlineRoomsTable.state })
+    .select({
+      code: onlineRoomsTable.code, state: onlineRoomsTable.state,
+      updatedAt: onlineRoomsTable.updatedAt, expiresAt: onlineRoomsTable.expiresAt,
+    })
     .from(onlineRoomsTable)
     .where(
       and(
@@ -155,20 +160,28 @@ export async function listFriendRooms(userId: string) {
           eq(onlineRoomsTable.hostUserId, userId),
           eq(onlineRoomsTable.guestUserId, userId),
         ),
-        gt(onlineRoomsTable.expiresAt, new Date()),
+        gt(onlineRoomsTable.expiresAt, new Date(now)),
       ),
     )
     .orderBy(desc(onlineRoomsTable.updatedAt))
     .limit(20);
   return rows.filter(row => !restore(row.state).ranked).map((row) => {
-    const room = expireOnlineRoom(restore(row.state), Date.now());
+    const room = expireOnlineRoom(restore(row.state), now);
+    const seat = memberSeat(room, userId);
+    const series = roomSeries(room);
     return {
       code: row.code,
       status: room.status,
       rival:
-        room.members[memberSeat(room, userId) === "player" ? "cpu" : "player"]
+        room.members[seat === "player" ? "cpu" : "player"]
           ?.name ?? "Waiting for a friend",
       gameNumber: room.gameNumber,
+      // Do not use the transient expiry produced by expireOnlineRoom on this read.
+      expiresAt: row.expiresAt.getTime(),
+      lastActivityAt: row.updatedAt.getTime(),
+      lastPlayedAt: room.lastPlayedAt ?? null,
+      // Seat-relative so each player reads their own side of the series.
+      series: { you: series[seat], rival: series[seat === "player" ? "cpu" : "player"], draws: series.draws },
     };
   });
 }
@@ -259,8 +272,14 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
           // Plays and end-turns always require the exact board revision.
           const seat = memberSeat(room, userId);
           const rival = seat === "player" ? "cpu" : "player";
+          // Returning to the lobby and leaving never touch a board, so a rival
+          // who reopened the room first must not turn this into an error.
+          const roomIntent =
+            mutation.command.type === "lobby" ||
+            mutation.command.type === "leave";
           const concurrentVote =
-            mutation.expectedRevision === room.revision - 1 &&
+            roomIntent ||
+            (mutation.expectedRevision === room.revision - 1 &&
             ((mutation.command.type === "ready" &&
               room.status === "waiting" &&
               !room.members[seat]!.ready &&
@@ -268,7 +287,7 @@ async function accessFriendRoomOperation(code: string, userId: string, mutation?
               (mutation.command.type === "rematch" &&
                 room.status === "complete" &&
                 !room.rematch[seat] &&
-                room.rematch[rival]));
+                room.rematch[rival])));
           if (room.revision !== mutation.expectedRevision && !concurrentVote)
             throw new OnlineError(
               "The fade changed. Your board has been refreshed; choose your next action.",

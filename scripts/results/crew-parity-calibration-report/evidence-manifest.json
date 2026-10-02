@@ -1,0 +1,40 @@
+{
+  "summaryHash": "481f70d86928910c35b1981f1a69a7bdb40aeb7c1f03485c6fef44f8f142f87e",
+  "pairedCasesHash": "21059c5a5cf8079abcfa10bb33120710aee638746eac0c0ddad93a4f3ec66fb4",
+  "before": {
+    "carrier-coverage.json": "a3d81b8c17d31aaeaad326f1dcac004d0751ce459bec7ddf44236e497614c99b",
+    "catalog-snapshot.json": "aaf93ec902fbcf447aa032d0557d5bfcda5ddb56d523ef9550b88df50c77a0ee",
+    "comparison-plan-proof.json": "6674a612a688bd2f060a27a89e12b7c98044e922ebd748663dd9c2c0d45fb620",
+    "comparison.csv": "d3c492e94882f727cc7abf965803884e324133a9475a65a8c0011529440755b5",
+    "comparison.json": "18d7a636ab3d319dd07307325e114787fccc16c2ab6c4b4b60737bf186962808",
+    "comparison.md": "4a4aa8e985f144f1b1f944c316f680831aa91863ab15471e3626a61e5a5e0035",
+    "decklists.csv": "7465e3a48a11dc4c4169ee6fafe03f1890ae7821dd4eacb68f77cb4a0b2f2ae1",
+    "plan.json": "c66a4750576d7c20bed056bb1cd109ac6894b4bc5a5e5fad84ad1890833da2b0",
+    "ranking.csv": "94fe13e27fd6380a78bd05ac893e4ee9d1530c5a8d6d50c43492763c27339f6d",
+    "replay-check.json": "c2e024b1585996bfe316124c49ed54de0d92055256e6442c67707d735e2fb5a8",
+    "report.md": "6fb94ae8832f562ee178ff6a82b984b9a77863bdec5c20e107167a623289c8ff",
+    "runner-sources.json": "2a5bf9cc454bd18862b500f6edc796228b1167b0b57461552c022f557c39e35c",
+    "seed-sensitivity.json": "1081c81578018b009a6ae0541f65893d50bb1a384c2744752a628f97a90f99b7",
+    "summary.json": "97d5aab442e03467099a968210c0bb8b51af982c5845104e0f1f544a3e3ede97",
+    "verification.json": "117904da98b078057a458ec980de877600bc30635a5803f807edccb210e32c90",
+    "worker-0.json": "033b67b40538b6af2433451b5767cff91a6679008b578027a288a520a883d821",
+    "worker-1.json": "93b01c8cd4f985847c1268b6fbfbac82ff786b4b20a6e7d353fb77003afcac22",
+    "worker-2.json": "c96ece434160e3477ae8abe3dc853543733368a91dd672813ff1d43001e81a8e",
+    "worker-3.json": "babd8864ebf0db02f3b5b9b836df1e376deaafbec1d2815f12de417188b79c3f",
+    "worker-4.json": "88361bcf37b175a3a20cd3917e7216660d39b6aff35e055f5c5cc77e874d7919",
+    "worker-5.json": "820999d393ff33fb3897f078a56d919be01580822d10ffe1619186b82e5dadf0",
+    "worker-6.json": "73e9f1fb10640e0d20a8ed687bafe4b8d1bc44bac898f3717fd81c389e5144f9"
+  },
+  "candidate": {
+    "plan.json": "61d1298a17b24fd4d25f1296d5b4e2e5058ff86e3fdbe67f6620ee8457358664",
+    "source-archive.json": "ff38cb1b6aee87e6178478e833bbd93567f9820ec5e1509b365832e01886cf84",
+    "harness-source.ts": "e1097a4720d49fc77c1ddeb83889f5324947ca78ca2c886bd0c3624e558e7778",
+    "worker-0.json": "353b3881d8ab1aa8c37cbc2b69bbfd65c38cfcaecd2640859b73e36be405c143",
+    "worker-1.json": "1dbe81d0356af38cc3ddc00998967a411c78c05ac10dc7fa4177d9f4a9e9f9c4",
+    "worker-2.json": "9294017c70051a48524a03c5859bf16c64f9cb7eec75340b460cd0978dc84788",
+    "worker-3.json": "81d7403f600fd936af476a477564d8a6d1ed6d1bfa592ef30e0ecbb87f7a164f",
+    "worker-4.json": "ffc0fca961eeb200c46fd44004a23fbe715595edff72a607d5e196182cd246d9",
+    "worker-5.json": "deda9ee1e169222ceca38d45b53bc60f9578af218cf60544f0eccae367642c2c",
+    "worker-6.json": "b33423c419e3baa79313fd9713f68d7fc0bb06c8c4d8e295b6d3a24b3cdbfd3e"
+  }
+}

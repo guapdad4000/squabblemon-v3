@@ -11,6 +11,13 @@ export type RoomSummary = {
   status: OnlineRoomView["status"];
   rival: string;
   gameNumber: number;
+  /** Stored server timestamps, in epoch milliseconds. */
+  expiresAt: number;
+  lastActivityAt: number;
+  /** Null for unplayed rooms and legacy rooms without a gameplay timestamp. */
+  lastPlayedAt: number | null;
+  /** Seat-relative series record for the games played in this room. */
+  series: { you: number; rival: number; draws: number };
 };
 // A stalled mobile request must release the poll/mutation so reconnection can recover.
 export const request = async <T>(
@@ -50,7 +57,7 @@ export const createFriendMatch = (deckId: string, requestId: string) =>
   request<OnlineRoomView>("", { deckId, requestId });
 export const joinFriendMatch = (code: string, deckId: string) =>
   request<OnlineRoomView>(`/${code}/join`, { deckId });
-export const listFriendMatches = () => request<{ rooms: RoomSummary[] }>("");
+export const listFriendMatches = () => request<{ rooms: RoomSummary[]; serverNow: number }>("");
 export function onlineErrorMessage(error: unknown) {
   if (
     error instanceof ApiError &&

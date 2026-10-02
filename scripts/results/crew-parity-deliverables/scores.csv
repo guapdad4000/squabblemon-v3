@@ -1,0 +1,31 @@
+block,crew,deck_id,group,group_value,games_per_version,before_wins,before_losses,before_draws,before_score_percent,after_wins,after_losses,after_draws,after_score_percent,change_percentage_points,paired_improved,paired_worsened,paired_unchanged
+calibration,Crips,focused-blue-set,opponent_scope,All 36 opponents,576,197,334,45,38.107639,271,259,46,51.041667,12.934028,111,20,445
+calibration,Crips,focused-blue-set,opponent_scope,32 non-target opponents,512,184,290,38,39.648438,252,219,41,53.222656,13.574219,100,17,395
+calibration,Crips,focused-blue-set,opponent_scope,Other 4 target crews,64,13,44,7,25.78125,19,40,5,33.59375,7.8125,11,3,50
+calibration,Sherlock,focus-detective,opponent_scope,All 36 opponents,576,273,244,59,52.517361,294,229,53,55.642361,3.125,57,33,486
+calibration,Sherlock,focus-detective,opponent_scope,32 non-target opponents,512,248,215,49,53.222656,269,197,46,57.03125,3.808594,51,24,437
+calibration,Sherlock,focus-detective,opponent_scope,Other 4 target crews,64,25,29,10,46.875,25,32,7,44.53125,-2.34375,6,9,49
+calibration,Plant,element-plant,opponent_scope,All 36 opponents,576,262,262,52,50.0,298,224,54,56.423611,6.423611,81,21,474
+calibration,Plant,element-plant,opponent_scope,32 non-target opponents,512,241,228,43,51.269531,274,192,46,58.007812,6.738281,71,16,425
+calibration,Plant,element-plant,opponent_scope,Other 4 target crews,64,21,34,9,39.84375,24,32,8,43.75,3.90625,10,5,49
+calibration,Dark,element-dark,opponent_scope,All 36 opponents,576,368,157,51,68.315972,370,160,46,68.229167,-0.086806,23,22,531
+calibration,Dark,element-dark,opponent_scope,32 non-target opponents,512,325,140,47,68.066406,332,141,39,68.652344,0.585938,21,15,476
+calibration,Dark,element-dark,opponent_scope,Other 4 target crews,64,43,17,4,70.3125,38,19,7,64.84375,-5.46875,2,7,55
+calibration,Earth,element-earth,opponent_scope,All 36 opponents,576,337,196,43,62.239583,336,190,50,62.673611,0.434028,23,21,532
+calibration,Earth,element-earth,opponent_scope,32 non-target opponents,512,296,177,39,61.621094,299,170,43,62.597656,0.976562,21,14,477
+calibration,Earth,element-earth,opponent_scope,Other 4 target crews,64,41,19,4,67.1875,37,20,7,63.28125,-3.90625,2,7,55
+holdout,Crips,focused-blue-set,opponent_scope,All 36 opponents,1152,271,807,74,26.736111,363,715,74,34.722222,7.986111,154,37,961
+holdout,Crips,focused-blue-set,opponent_scope,32 non-target opponents,1024,249,713,62,27.34375,335,621,68,36.035156,8.691406,143,29,852
+holdout,Crips,focused-blue-set,opponent_scope,Other 4 target crews,128,22,94,12,21.875,28,94,6,24.21875,2.34375,11,8,109
+holdout,Sherlock,focus-detective,opponent_scope,All 36 opponents,1152,579,481,92,54.253472,632,423,97,59.071181,4.817708,125,49,978
+holdout,Sherlock,focus-detective,opponent_scope,32 non-target opponents,1024,525,414,85,55.419922,573,362,89,60.302734,4.882812,111,42,871
+holdout,Sherlock,focus-detective,opponent_scope,Other 4 target crews,128,54,67,7,44.921875,59,61,8,49.21875,4.296875,14,7,107
+holdout,Plant,element-plant,opponent_scope,All 36 opponents,1152,633,421,98,59.201389,681,387,84,62.760417,3.559028,105,48,999
+holdout,Plant,element-plant,opponent_scope,32 non-target opponents,1024,569,368,87,59.814453,617,335,72,63.769531,3.955078,96,40,888
+holdout,Plant,element-plant,opponent_scope,Other 4 target crews,128,64,53,11,54.296875,64,52,12,54.6875,0.390625,9,8,111
+holdout,Dark,element-dark,opponent_scope,All 36 opponents,1152,723,325,104,67.274306,742,309,101,68.793403,1.519097,60,43,1049
+holdout,Dark,element-dark,opponent_scope,32 non-target opponents,1024,637,291,96,66.894531,661,270,93,69.091797,2.197266,56,31,937
+holdout,Dark,element-dark,opponent_scope,Other 4 target crews,128,86,34,8,70.3125,81,39,8,66.40625,-3.90625,4,12,112
+holdout,Earth,element-earth,opponent_scope,All 36 opponents,1152,702,366,84,64.583333,711,370,71,64.800347,0.217014,38,32,1082
+holdout,Earth,element-earth,opponent_scope,32 non-target opponents,1024,631,317,76,65.332031,643,316,65,65.966797,0.634766,32,23,969
+holdout,Earth,element-earth,opponent_scope,Other 4 target crews,128,71,49,8,58.59375,68,54,6,55.46875,-3.125,6,9,113

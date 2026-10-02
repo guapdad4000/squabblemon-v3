@@ -7,7 +7,7 @@ import { validateStoryPuzzle, type StoryPuzzleDefinition } from "./storyPuzzles"
 import { seasonTwoChapters } from "./seasonTwo";
 import { extendedStoryChapters } from "./storyExpansions";
 import { specialPresentationChapters } from "./storySpecials";
-import { hasSeasonOneRewrite, rewriteSeasonOne } from "./seasonOneRewrite";
+import { hasSeasonOneRewrite, rewriteSeasonOne, seasonOneRewriteRevision } from "./seasonOneRewrite";
 import { expandSeasonTwoDialogue } from "./seasonTwoDialogueExpansion";
 export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
 export { isStoryPuzzleSolution, type StoryPuzzleDefinition } from "./storyPuzzles";
@@ -252,7 +252,12 @@ export function validateStoryContent(content: StoryContent): StoryContent {
   return content;
 }
 const screenplay = chapterOneDialogue as Record<string, Partial<Record<'pre' | 'post' | 'main', StoryDialogueLine[]>>>;
-export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => `${nodeId}:${hasSeasonOneRewrite(nodeId) ? "script-v4" : "script-v3"}:${section}:${index}`;
+export const storyDialogueToken = (nodeId: string, section: 'pre' | 'post' | 'main', index: number) => {
+  if (!hasSeasonOneRewrite(nodeId)) return `${nodeId}:script-v3:${section}:${index}`;
+  const revision = seasonOneRewriteRevision(nodeId);
+  if (!revision) throw new Error(`Season One screenplay has no read revision for ${nodeId}`);
+  return `${nodeId}:script-${revision}:${section}:${index}`;
+};
 const storyPayoutContractKey = (nodeId: string, reward: "clout" | "ticket") =>
   `story-payout-contract:v1:${nodeId}:${reward}`;
 function applyStoryPayoutContract(chapters: readonly StoryChapter[]): StoryChapter[] {

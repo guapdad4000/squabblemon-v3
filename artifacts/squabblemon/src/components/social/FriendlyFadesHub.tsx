@@ -2,13 +2,14 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { Link, useLocation, useSearch } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import type { SocialInvitation } from '@workspace/api-client-react';
-import { ArrowUpRight, Check, KeyRound, Send, Swords, UserPlus } from 'lucide-react';
+import { Check, KeyRound, Send, Swords, UserPlus } from 'lucide-react';
 import { useSocial } from '../../lib/social';
 import { listFriendMatches } from '../../lib/multiplayer';
 import { getAssetUrl } from '../../lib/assets';
 import { CompactDeckPicker, type PickerDeck } from '../CompactDeckPicker';
 import { SectionHead, SocialPlayerRow } from './SocialPlayerRow';
 import { InvitationList } from './InvitationList';
+import { FriendlyRoomList } from './FriendlyRoomList';
 import { expiresIn, FRIEND_CODE_PATTERN, normalizeCode, socialError, statusCopy } from './format';
 import '../../styles/friendly-fades.css';
 
@@ -139,13 +140,7 @@ export function FriendlyFadesHub({ accountId, crews, crewId, onCrew, roomBusy, o
           {rooms.isError ? <p className="sq-empty">Rooms did not load. <button type="button" className="sq-btn" onClick={() => void rooms.refetch()}>Retry</button></p>
             : rooms.isPending ? <div className="sq-skeleton" aria-busy="true" aria-label="Loading rooms"><i /></div>
             : !rooms.data.rooms.length ? <p className="sq-empty">No rooms yet.</p>
-            : <ul className="sq-list" data-testid="list-rooms">{rooms.data.rooms.map(item => <li key={item.code} className="sq-row">
-              <Link className="ff-room" to={`/game/online/${item.code}`} data-testid={`link-room-${item.code}`}>
-                <span className="sq-pill" data-status={item.status === 'active' ? 'accepted' : item.status === 'waiting' ? 'pending' : 'closed'}>
-                  {item.status === 'active' ? 'Live' : item.status === 'waiting' ? 'Waiting' : 'Final'}</span>
-                <strong className="sq-row__name">{item.rival}</strong>
-                <span className="sq-code">{item.code} <ArrowUpRight size={14} aria-hidden="true" /></span>
-              </Link></li>)}</ul>}
+            : <FriendlyRoomList rooms={rooms.data.rooms} serverNow={rooms.data.serverNow} receivedAt={rooms.dataUpdatedAt} />}
         </section>
       </section>
     </div>

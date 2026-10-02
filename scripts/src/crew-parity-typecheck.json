@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "types": ["node"],
+    "baseUrl": "../..",
+    "paths": {
+      "@workspace/squabblemon-engine": [".local/crew-parity-v35-source/lib/squabblemon-engine/src/gameEngine.ts"],
+      "@workspace/squabblemon-engine/*": [".local/crew-parity-v35-source/lib/squabblemon-engine/src/*"]
+    }
+  },
+  "include": ["crew-parity-harness.ts", "crew-parity-harness.test.ts"]
+}

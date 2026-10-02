@@ -61,7 +61,7 @@ test('damage after Fanboy interception triggers only watchers in the actual reci
 });
 test('new district state is replayed before/after and a full solo transcript verifies with Alice returns', () => {
   const trap=cast(blank(),'sherlock').after.effectLog.at(-1)!;
-  assert.deepEqual(trap.replay.before.districtTraps,[]);assert.equal(trap.replay.after.districtTraps?.length,1);
+  assert.deepEqual(trap.replay.before.districtTraps,[]);assert.equal(trap.replay.after.districtTraps?.length,2);
   const ids=['alice','tinman','scarecrow','cheshire','dorothy','sherlock','watson','queenofhearts','oz','lion'];
   let m=createMatchFromEngineCards('fairytale',ids,'block',[...decks.find(d=>d.id==='block')!.cards]);
   const moves: PlayerMove[]=[];
@@ -81,7 +81,7 @@ test('new district state is replayed before/after and a full solo transcript ver
 
 test('all 22 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition', () => {
   assert.equal(FAIRYTALE_WAVE.length, 22); assert.equal(FAIRYTALE_ALTERNATE_ART.length, 8);
-  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 206);
+  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 215);
   assert.equal(catalogCardById['mr-rabbit'].faction, 'Wonderland');
   assert.equal(catalogCardById['mr-rabbit'].rarity, 'Rare');
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
@@ -90,6 +90,15 @@ test('all 22 identities, approved costs, artwork, eight alternate pairs and trai
     assert(catalogCardById[art].acquisitionSources.includes('Street Packs'));
     assert(existsSync(path.resolve('public/assets/characters', art + '.webp')));
     validateCardAbilityUpgrades({ [id]: cards[id] });
+  }
+  assert.equal(cards.squabblecook.id, 'squabble-house-male');
+  assert.equal(cards.squabbleserver.id, 'squabble-house-female');
+  assert.equal(cards.squabblecook.ability, 'Hands on the Clock');
+  assert.equal(cards.squabbleserver.ability, 'Fresh Pot');
+  for (const engineId of ['squabblecook', 'squabbleserver']) {
+    const card = cardCatalog.find(entry => entry.engineId === engineId)!;
+    assert.equal(card.faction, 'Squabblehouse');
+    assert.ok(card.crewTags.includes('Squabblehouse'));
   }
   for (const id of FAIRYTALE_ALTERNATE_ART) {
     assert(catalogCardById[id].variantSlots.some(v => v.id === id + ':alternate'));
@@ -410,7 +419,7 @@ test('Sherlock visibly cancels one entrance, expires, and does not erase passive
   let m=cast(blank(),'sherlock').after;
   assert(getCharacterDistrictMarks(m).some(t=>t.text.includes('Stakeout')));
   const trap=m.districtTraps![0], passive=cast(m,'tinman','cpu',trap.lane);
-  assert.equal(passive.after.districtTraps?.length,1);
+  assert.equal(passive.after.districtTraps?.length,2);
   const reveal=cast(passive.after,'cornball','cpu',trap.lane);
   assert.equal(reveal.after.districtTraps?.length,0);assert(!find(reveal.after,passive.source).statuses.silenced);
   m=advance(advance(m));assert(!getCharacterDistrictMarks(m).some(t=>t.text.includes('Stakeout')));
@@ -652,8 +661,8 @@ for (const owner of ['player', 'cpu'] as const) {
       assert.equal(find(hit, placed.source)?.powerModifier ?? 0, 0);
       assert.equal(hit.districtTraps?.length, 0);
     }
-    const placed = cast(blank(), 'sherlock', owner), lane = placed.after.districtTraps![0].lane;
-    const avoided = cast(placed.after, 'cornball', enemy, ((lane + 1) % 3) as Lane).after;
+    const placed = cast(blank(), 'sherlock', owner);
+    const avoided = cast(placed.after, 'plug', enemy, find(placed.after, placed.source).lane!).after;
     assert.equal(find(avoided, placed.source).powerModifier, 0);
     const expired = advance(advance(avoided));
     assert(!getCharacterDistrictMarks(expired).some(mark => mark.text.includes('Stakeout')));

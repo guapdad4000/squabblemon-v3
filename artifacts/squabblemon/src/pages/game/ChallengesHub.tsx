@@ -15,6 +15,7 @@ import { useFadecadeMusic } from '../../components/fadecade/FadecadeMusic';
 import { getMatchWinner } from '../../gameEngine';
 import '../../styles/challenges-hub.css';
 import { type ActivityId } from '@workspace/squabblemon-engine/activities';
+import { isTrainingCircuitActivity } from '../../lib/resultBroadcastEligibility';
 
 export type BattleConfig = {
   mode: 'practice' | 'guest';
@@ -55,6 +56,7 @@ export function ChallengesHub({ bootstrap, trainingOnly = false }: { bootstrap: 
         hideLobby
         challengeRunId={battleConfig.challengeRunId}
         activity={battleConfig.activity}
+        trainingCircuit={isTrainingCircuitActivity(battleConfig.activity)}
         customPlayerDeck={battleConfig.customPlayerDeck}
         initialDeckId={battleConfig.initialDeckId}
         draftWeek={battleConfig.draftWeek}

@@ -79,6 +79,7 @@ test('mock signed-in player can claim, spend, refresh, and keep accurate goals',
 
   await page.addInitScript(() => localStorage.setItem('squabblemon_e2e_user', 'signed-in'));
   await page.route('**/api/player/bootstrap', route => route.fulfill({ json: state }));
+  await page.route('**/api/player/packs/welcome', route => route.fulfill({ json: { available: false } }));
   await page.route('**/api/e2e/complete-fade', route => {
     state = {
       ...state,
@@ -160,8 +161,8 @@ test('mock signed-in player can claim, spend, refresh, and keep accurate goals',
 
   await page.goto('/squabblemon/game/shop?view=training');
   await waitForGameRoute();
-  await expect(page.getByRole('button', { name: 'Practice Session 100 Clout' })).toBeVisible();
-  await page.getByRole('button', { name: /Buy · 100 Clout/ }).click();
+  await expect(page.getByRole('button', { name: 'Train · 100 Clout' })).toBeVisible();
+  await page.getByRole('button', { name: 'Train · 100 Clout' }).click();
   await expect(page.getByText('Cornball: +100 XP (level 2).')).toBeVisible();
   await page.reload();
   await waitForGameRoute();
@@ -213,7 +214,7 @@ test('public How To Play renders authoritative starter and Street Pack disclosur
     await expect(packs.getByText(disclosure.label, { exact: true })).toBeVisible();
     await expect(packs).toContainText(disclosure.detail);
   }
-  await expect(packs).toContainText(`${STREET_PACK_RULES.duplicateStyleShards} Style Shards`);
+  await expect(packs).toContainText(`${STREET_PACK_RULES.duplicateStyleShards} Universal Style Shards`);
   await expect(packs).toContainText(`${STREET_PACK_RULES.bonus.exhaustedStyleClout} Clout`);
 
   for (const stale of [

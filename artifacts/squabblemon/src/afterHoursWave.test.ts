@@ -28,7 +28,7 @@ test('after-hours catalog exposes exact identities, rarity, variants, upgrades, 
   validateCardAbilityUpgrades();
   const expected = {
     sugarfoot: 'Uncommon', 'yn-gokarter': 'Rare', 'yn-atv-lord': 'Epic', janitor: 'Uncommon',
-    'homeless-wiseman': 'Legendary', 'juneteenth-chair-guy': 'Mythical', 'squabble-house-manager': 'Rare',
+    'homeless-wiseman': 'Legendary', 'juneteenth-chair-guy': 'Mythical', 'squabble-house-manager': 'Legendary',
   };
   for (const [id, name] of AFTER_HOURS_WAVE) {
     const card = catalogCardById[id];
@@ -38,6 +38,11 @@ test('after-hours catalog exposes exact identities, rarity, variants, upgrades, 
     assert.deepEqual(card.acquisitionSources, ['Street Packs']);
     assert.equal(card.abilityUpgrades.length, 3); assert.ok(card.variantSlots.length > 0);
   }
+  const manager = catalogCardById['squabble-house-manager'];
+  assert.deepEqual([manager.cost, manager.power], [1, 2]);
+  assert.match(manager.effect, /If an enemy is here, gain \+1 Hand/i);
+  assert.match(manager.effect, /each other friendly Squabblehouse staff member anywhere on the board/i);
+  assert.match(manager.effect, /first enemy played or moved here each round loses 1 Hand/i);
   const other = cardCatalog.filter(card => !ids.includes(card.engineId as typeof ids[number])).slice(0, 3).map(card => card.catalogId);
   const deck = [...ids, ...other];
   assert.equal(deck.length, 10);
@@ -163,7 +168,8 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(find(after, 'techbro').statuses.weakened, false);
     assert.equal(find(after, 'janitor').powerModifier, 3);
     assert.equal(after.effectLog.filter(event => event.abilityMetadata?.sourceCardId === 'janitor').length, 3);
-    assert.match(getCharacterDistrictMarks(after).find(mark => mark.owner === owner && mark.lane === 0)!.text, /spent this round/);
+    assert.match(getCharacterDistrictMarks(after).find(mark => mark.owner === owner && mark.lane === 0)!.text,
+      /harm spent · staff ready/);
     assert.equal(after.janitorReversals?.length, 1);
     after = cast(after, 'sugarfoot', enemy);
     assert.equal(find(after, 'techbro').powerModifier, 2);
@@ -171,7 +177,8 @@ for (const owner of ['player', 'cpu'] as const) {
     assert.equal(after.janitorReversals?.length, 1);
 
     after = nextRound({ ...after, phase: 'resolved', playerHand: [], cpuHand: [] });
-    assert.match(getCharacterDistrictMarks(after).find(mark => mark.owner === owner && mark.lane === 0)!.text, /first hostile effect/);
+    assert.match(getCharacterDistrictMarks(after).find(mark => mark.owner === owner && mark.lane === 0)!.text,
+      /harm ready · staff ready/);
     after = { ...after, [enemy === 'player' ? 'playerMotion' : 'cpuMotion']: 9 };
     after = cast(after, 'inmate-informant', enemy);
     assert.equal(find(after, 'techbro').powerModifier, 4);

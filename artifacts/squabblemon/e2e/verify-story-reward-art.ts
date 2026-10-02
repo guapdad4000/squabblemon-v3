@@ -113,6 +113,19 @@ async function checkChapter(page: Page, chapter: StoryChapter, viewport: typeof 
       await page.screenshot({ path: `/tmp/story-rewards-${snapshot}.png` });
     }
     await page.goto(`${origin}/e2e/story-reward-recovery.fixture.html?node=${scene.id}`);
+    const completion = page.locator('.story-complete-scene');
+    await completion.waitFor();
+    const completionPortrait = scene.scenes.at(-1)?.portraitAssetId;
+    if (completionPortrait) {
+      assert((await completion.locator('.story-complete-scene__character').getAttribute('src'))?.includes(`/${completionPortrait}`),
+        `${chapter.id}/${scene.id}: completion portrait must use the delivered last speaker`);
+      if (completionPortrait === 'assets/characters/player.webp') {
+        assert.equal(await completion.locator('.story-complete-scene__character').getAttribute('data-story-player'), 'true',
+          'Player completion artwork must receive the high-contrast backdrop');
+        await page.screenshot({ path: `/tmp/story-player-completion-${viewport.name}.png` });
+      }
+    }
+    await checkArt(page, '.story-complete-scene', scene.cinematic.environmentAssetId);
     await page.getByTestId('button-collect-story-rewards').click();
     const receipt = page.locator('dialog[open].reward-reveal--story');
     await receipt.waitFor();
@@ -123,6 +136,11 @@ async function checkChapter(page: Page, chapter: StoryChapter, viewport: typeof 
     if (portrait) assert((await receipt.locator('.reward-reveal__story-portrait').getAttribute('src'))?.includes(`/${portrait}`),
       `${chapter.id}/${scene.id}: receipt portrait must be mounted`);
     await checkArt(page, 'dialog[open].reward-reveal--story .reward-reveal__story-hero');
+    if (portrait === 'assets/characters/player.webp') {
+      assert.equal(await receipt.locator('.reward-reveal__story-portrait').getAttribute('data-story-player'), 'true',
+        'Player receipt artwork must receive the high-contrast backdrop');
+      await page.screenshot({ path: `/tmp/story-player-receipt-${viewport.name}.png` });
+    }
     if (screenshots.has(snapshot) && !screenshots.has(`${snapshot}-receipt`)) {
       screenshots.add(`${snapshot}-receipt`);
       await page.screenshot({ path: `/tmp/story-receipt-${snapshot}.png` });

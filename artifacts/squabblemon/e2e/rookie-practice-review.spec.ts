@@ -1,4 +1,4 @@
-import { expect, test, type Page, type Route, type TestInfo } from '@playwright/test';
+import { expect, test, type Locator, type Page, type Route, type TestInfo } from '@playwright/test';
 import type { MatchCompletion, PlayerBootstrap } from '@workspace/api-client-react';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { createDistrictSnapshot } from '@workspace/squabblemon-engine/districts';
@@ -116,20 +116,68 @@ async function installApi(page: Page) {
   };
 }
 
-async function readyToEndTurn(page: Page) {
+async function clickVisible(locator: Locator) {
+  if (!await locator.isVisible().catch(() => false)) return false;
+  try {
+    await locator.click({ noWaitAfter: true, timeout: 3000 });
+    return true;
+  } catch (error) {
+    if (await locator.isVisible().catch(() => false)) throw error;
+    return false;
+  }
+}
+
+async function isUnobstructed(locator: Locator) {
+  return locator.evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    const hit = document.elementFromPoint(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+    return Boolean(hit && (hit === element || element.contains(hit)));
+  }).catch(() => false);
+}
+
+async function currentRound(page: Page) {
+  const label = await page.locator('.battle-round').first().getAttribute('aria-label').catch(() => null);
+  const match = label?.match(/^Round (\d+) of 6$/);
+  return match ? Number(match[1]) : null;
+}
+
+async function serviceBattleHold(page: Page) {
+  // A single effect can introduce more than one mechanic; acknowledge each
+  // readable lesson separately before touching a skippable presentation.
+  const mechanicLesson = page.getByTestId('button-dismiss-mechanic-lesson');
+  if (await mechanicLesson.isVisible().catch(() => false)) {
+    await expect(mechanicLesson).toHaveAccessibleName('Back to the battle');
+    return clickVisible(mechanicLesson);
+  }
+  if (await page.getByTestId('guided-reading-cue').isVisible().catch(() => false)) {
+    const continueReading = page.getByTestId('button-continue-guided-reading');
+    if (await continueReading.isEnabled().catch(() => false)) await continueReading.click({ noWaitAfter: true, timeout: 3000 });
+    return true;
+  }
+  if (await clickVisible(page.getByRole('button', { name: /^Continue past / }))) return true;
+  if (await clickVisible(page.getByTestId('button-fast-forward'))) return true;
+  const resolving = page.getByTestId('button-resolving');
+  if (await resolving.isVisible().catch(() => false) &&
+      await resolving.isEnabled().catch(() => false) &&
+      await isUnobstructed(resolving)) {
+    return clickVisible(resolving);
+  }
+  return false;
+}
+
+async function readyToEndTurn(page: Page, expectedRound: number) {
   await expect.poll(async () => {
-    const tip = page.getByRole('button', { name: 'Back to the battle' });
-    if (await tip.isVisible().catch(() => false)) {
-      await tip.click({ noWaitAfter: true, timeout: 3000 }).catch(async error => {
-        if (await tip.isVisible().catch(() => false)) throw error;
-      });
-    }
+    if (await serviceBattleHold(page)) return false;
     const arena = page.getByTestId('battle-arena');
     if (await arena.isVisible().catch(() => false) &&
+        await currentRound(page) === expectedRound &&
         await arena.getAttribute('data-presentation-phase') === 'player-ready' &&
-        await page.getByTestId('button-next-round').isEnabled().catch(() => false)) return true;
-    const skip = page.getByTestId('button-fast-forward');
-    if (await skip.isVisible().catch(() => false)) await skip.click({ timeout: 3000 }).catch(() => {});
+        await arena.getAttribute('data-engine-phase') === 'player' &&
+        !await page.locator('[data-card-zone="hand"][aria-pressed="true"]').count() &&
+        await page.getByTestId('button-next-round').isEnabled().catch(() => false)) {
+      await expect(page.getByTestId('button-next-round')).toHaveText('End Turn');
+      return true;
+    }
     return false;
   }, { timeout: 90_000 }).toBe(true);
 }
@@ -137,16 +185,24 @@ async function readyToEndTurn(page: Page) {
 async function waitForFinalResult(page: Page) {
   await expect.poll(async () => {
     if (await page.getByTestId('battle-result-screen').isVisible().catch(() => false)) return true;
-    const tip = page.getByRole('button', { name: 'Back to the battle' });
-    if (await tip.isVisible().catch(() => false)) {
-      await tip.click({ noWaitAfter: true, timeout: 3000 }).catch(async error => {
-        if (await tip.isVisible().catch(() => false)) throw error;
-      });
-    }
-    const skip = page.getByTestId('button-fast-forward');
-    if (await skip.isVisible().catch(() => false)) await skip.click({ timeout: 3000 }).catch(() => {});
+    const arena = page.getByTestId('battle-arena');
     const archive = page.getByTestId('button-archive-match');
-    if (await archive.isVisible().catch(() => false)) await archive.click({ timeout: 3000 }).catch(() => {});
+    if (await arena.isVisible().catch(() => false) &&
+        await arena.getAttribute('data-engine-phase') === 'complete' &&
+        await archive.isVisible().catch(() => false) &&
+        await archive.isEnabled().catch(() => false)) {
+      await clickVisible(archive);
+      return false;
+    }
+    await serviceBattleHold(page);
+    return false;
+  }, { timeout: 90_000 }).toBe(true);
+}
+
+async function waitForRoundAdvance(page: Page, expectedRound: number) {
+  await expect.poll(async () => {
+    if (await currentRound(page) === expectedRound) return true;
+    await serviceBattleHold(page);
     return false;
   }, { timeout: 90_000 }).toBe(true);
 }
@@ -179,11 +235,12 @@ test('saved Rookie practice keeps result, board and card readable after a late r
   await page.getByTestId('button-start-practice-fade').click();
   await expect(page.getByTestId('battle-arena')).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('turn-timer')).toHaveCount(0);
-  await readyToEndTurn(page);
+  await readyToEndTurn(page, 1);
   await attach(page, testInfo, 'rookie-practice-board');
   for (let round = 1; round <= 6; round += 1) {
-    if (round > 1) await readyToEndTurn(page);
+    await readyToEndTurn(page, round);
     await page.getByTestId('button-next-round').click();
+    if (round < 6) await waitForRoundAdvance(page, round + 1);
   }
   await waitForFinalResult(page);
   await expect.poll(api.count, { timeout: 90_000 }).toBe(1);

@@ -73,6 +73,49 @@ const end = (m: Match) => nextRound({ ...m, phase: "resolved" });
 const kinds = (m: Match) => m.creativeMarks?.map((x) => x.kind) ?? [];
 for (const owner of ["player", "cpu"] as const) {
   const enemy: Owner = owner === "player" ? "cpu" : "player";
+  test(`${owner}: Hold Our Ground protects only the weakest other Earth ally and keeps delayed thresholds`, () => {
+    assert.equal(cards.torta.elementalBond, "Earth");
+    assert.match(cards.torta.effect, /each gains \+3 Hands/);
+    assert.match(cards.torta.effect, /While .* is in your hand, your other Earth characters.*\+1 Hands/);
+    const ally = unit("landlord", owner, 0);
+    for (const failure of ["none", "losing", "moved", "replaced"] as const) {
+      const m = blank();
+      m.boards[0] = [ally];
+      const { after, source } = cast(m, "torta", owner);
+      assert.equal(find(after, ally)?.statuses.protected, true);
+      assert.equal(find(after, source)?.statuses.protected, false);
+      assert.equal(find(after, ally)?.powerModifier, 0, "no immediate Hands");
+      assert.equal(after.creativeMarks?.filter(x => x.kind === "ground").length, 1);
+      const state = json(after);
+      if (failure === "losing") state.boards[0].push({ ...unit("og", enemy, 0), basePower: 99 });
+      if (failure === "moved") {
+        state.boards[0] = state.boards[0].filter(c => c.instanceId !== ally.instanceId);
+        state.boards[1].push({ ...ally, lane: 1 });
+      }
+      if (failure === "replaced") state.boards[0] = state.boards[0].map(c =>
+        c.instanceId === ally.instanceId ? { ...c, instanceId: c.instanceId + ":replacement" } : c);
+      const first = end(state);
+      assert.equal(find(first, source)?.powerModifier, 0, "must wait until next round end");
+      const paid = end(first);
+      assert.equal(find(paid, source)?.powerModifier, failure === "none" ? 3 : 0);
+      assert(!kinds(paid).includes("ground"), "failed or paid pair expires once");
+      if (failure === "none") assert.equal(find(paid, ally)?.powerModifier, 3);
+    }
+    for (const nonEarth of [false, true]) {
+      const m = blank();
+      if (nonEarth) m.boards[0] = [unit("cornball", owner, 0)];
+      const { after, source } = cast(m, "torta", owner);
+      assert(!kinds(after).includes("ground"));
+      assert.equal(find(after, source)?.statuses.protected, false);
+      assert(after.boards[0].every(c => !c.statuses.protected));
+    }
+    const final = { ...blank(), round: 6 };
+    final.boards[0] = [ally];
+    const last = cast(final, "torta", owner);
+    const paid = end(last.after);
+    assert.equal(find(paid, ally)?.powerModifier, 3);
+    assert.equal(find(paid, last.source)?.powerModifier, 3);
+  });
   for (const id of Object.keys(CREATIVE_KITS))
     test(`${owner}: ${id} rework preserves deterministic state and capacity`, () => {
       const m = blank();
@@ -473,11 +516,11 @@ for (const owner of ["player", "cpu"] as const) {
     m.boards = [[a, b], [], []];
     m = cast(m, "torta", owner).after;
     m = end(end(m));
-    assert.equal(find(m, a)?.powerModifier, 2);
+    assert.equal(find(m, a)?.powerModifier, 3);
     assert.equal(find(m, b)?.powerModifier, 0);
     assert.equal(
       m.boards.flat().find((c) => c.cardId === "torta")?.powerModifier,
-      2,
+      3,
     );
     m = blank();
     const child = unit("edgar", owner, 0);

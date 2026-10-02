@@ -1,89 +1,124 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { getAssetUrl } from '../lib/assets';
+import { currentLoadingScene, retainLoadingEpisode } from '../lib/loadingScenes';
+import { canPlayOptionalBroadcast } from '../lib/optionalBroadcastMedia';
 import './LoadingScreen.css';
 
 export type LoadingPhase = 'application' | 'account' | 'player' | 'scene';
 
-type NetworkInformation = {
-  saveData?: boolean;
-  effectiveType?: string;
-};
+type NetworkInformation = { saveData?: boolean; effectiveType?: string; downlink?: number };
 
-const STAGES: Array<{ phase: LoadingPhase; short: string; status: string; character: string }> = [
-  { phase: 'application', short: 'App', status: 'Downloading the broadcast', character: 'dr-fade' },
-  { phase: 'account', short: 'Account', status: 'Checking your fighter tag', character: 'stylist' },
-  { phase: 'player', short: 'Profile', status: 'Loading your gang and rewards', character: 'sneaker-reseller' },
-  { phase: 'scene', short: 'Block', status: 'Opening the next block', character: 'barber-bro' },
+const STAGES: Array<{ phase: LoadingPhase; short: string; status: string }> = [
+  { phase: 'application', short: 'App', status: 'Downloading the broadcast' },
+  { phase: 'account', short: 'Account', status: 'Checking your fighter tag' },
+  { phase: 'player', short: 'Profile', status: 'Loading your gang and rewards' },
+  { phase: 'scene', short: 'Block', status: 'Opening the next block' },
 ];
 
 export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase }) {
+  const [scene] = useState(currentLoadingScene);
   const [readyAssets, setReadyAssets] = useState<Set<string>>(() => new Set());
   const [failedAssets, setFailedAssets] = useState<Set<string>>(() => new Set());
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [videoDue, setVideoDue] = useState(false);
-  const stageIndex = Math.max(0, STAGES.findIndex((stage) => stage.phase === phase));
+  const [visible, setVisible] = useState(() => typeof document === 'undefined' || !document.hidden);
+  const [, refreshMediaPolicy] = useState(0);
+  const [manuallyPaused, setManuallyPaused] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const stageIndex = Math.max(0, STAGES.findIndex(stage => stage.phase === phase));
   const activeStage = STAGES[stageIndex];
-  const connection = typeof navigator === 'undefined'
-    ? undefined
-    : (navigator as Navigator & { connection?: NetworkInformation }).connection;
-  const reduceMotion = typeof window !== 'undefined'
-    && (window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      || document.documentElement.dataset.reduceMotion === 'true');
-  const allowVideo = phase !== 'application'
-    && !reduceMotion
-    && !connection?.saveData
-    && connection?.effectiveType !== 'slow-2g'
-    && connection?.effectiveType !== '2g';
+  const posterUrl = getAssetUrl(scene.poster);
+  const wordmarkUrl = getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp');
+  const visualAssets = useMemo(() => [posterUrl, wordmarkUrl], [posterUrl, wordmarkUrl]);
+  const allowVideo = phase !== 'application' && visible && canPlayOptionalBroadcast() && !videoFailed;
+  const cropStyle = {
+    '--sbl-portrait-position': scene.portraitPosition,
+    '--sbl-landscape-position': scene.landscapePosition,
+  } as CSSProperties;
 
-  // Short transitions use the existing poster. Give route code and actual game
-  // artwork a head start before downloading the optional 7 MB broadcast loop.
+  useEffect(() => retainLoadingEpisode(), []);
+
   useEffect(() => {
-    if (!allowVideo) { setVideoDue(false); return; }
+    const onVisibility = () => setVisible(!document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  useEffect(() => {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = (navigator as Navigator & { connection?: NetworkInformation & EventTarget }).connection;
+    const refresh = () => refreshMediaPolicy(value => value + 1);
+    motion.addEventListener('change', refresh);
+    connection?.addEventListener?.('change', refresh);
+    const observer = new MutationObserver(refresh);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduce-motion'] });
+    return () => {
+      observer.disconnect();
+      motion.removeEventListener('change', refresh);
+      connection?.removeEventListener?.('change', refresh);
+    };
+  }, []);
+
+  // No optional media is requested during app boot or short waits. The image
+  // underneath remains visible until actual playback, never merely canplay.
+  useEffect(() => {
+    if (!allowVideo) { setVideoDue(false); setVideoPlaying(false); return; }
     const timer = window.setTimeout(() => setVideoDue(true), 1200);
     return () => window.clearTimeout(timer);
   }, [allowVideo]);
-  const characterUrl = getAssetUrl(`assets/characters/${activeStage.character}.webp`);
-  const posterUrl = getAssetUrl('brand/loading-scenes.webp');
-  const wordmarkUrl = getAssetUrl('brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp');
-  const visualAssets = useMemo(
-    () => [posterUrl, characterUrl, wordmarkUrl],
-    [characterUrl, posterUrl, wordmarkUrl],
-  );
+
+  useEffect(() => {
+    if (!videoDue || !allowVideo) return;
+    const video = videoRef.current;
+    if (manuallyPaused) video?.pause();
+    return () => {
+      if (!video) return;
+      video.pause();
+      video.removeAttribute('src');
+      video.querySelector('source')?.removeAttribute('src');
+      video.load();
+    };
+  }, [videoDue, allowVideo]);
 
   useEffect(() => {
     let mounted = true;
     setReadyAssets(new Set());
     setFailedAssets(new Set());
-    visualAssets.forEach((src) => {
+    visualAssets.forEach(src => {
       const img = new Image();
       img.onload = () => {
         if (!mounted) return;
-        setReadyAssets((current) => {
-          if (current.has(src)) return current;
-          const next = new Set(current);
-          next.add(src);
-          return next;
-        });
+        setReadyAssets(current => new Set(current).add(src));
       };
       img.onerror = () => {
         if (!mounted) return;
-        setFailedAssets((current) => new Set(current).add(src));
+        setFailedAssets(current => new Set(current).add(src));
       };
       img.src = src;
     });
     return () => { mounted = false; };
   }, [visualAssets]);
 
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (manuallyPaused) {
+      setManuallyPaused(false);
+      void video.play().catch(() => { setVideoPlaying(false); setVideoFailed(true); });
+    } else {
+      setManuallyPaused(true);
+      video.pause();
+      setVideoPlaying(false);
+    }
+  };
+
   return (
-    <div
-      className="street-broadcast-loader"
-      data-phase={phase}
-      data-testid="loading-screen"
-      aria-busy="true"
-    >
+    <div className="street-broadcast-loader" style={cropStyle} data-phase={phase} data-scene={scene.id} data-testid="loading-screen" aria-busy="true">
       <img className="sbl-background" src={posterUrl} alt="" aria-hidden="true" />
       {allowVideo && videoDue && (
         <video
+          ref={videoRef}
           className="sbl-video"
           data-playing={videoPlaying}
           poster={posterUrl}
@@ -92,45 +127,29 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
           playsInline
           autoPlay
           preload="metadata"
-          onCanPlay={() => setVideoPlaying(true)}
-          onError={() => setVideoPlaying(false)}
+          onPlaying={() => { if (!manuallyPaused) setVideoPlaying(true); }}
+          onPause={() => setVideoPlaying(false)}
+          onError={() => { setVideoPlaying(false); setVideoFailed(true); }}
           aria-hidden="true"
         >
-          <source src={getAssetUrl('brand/loading-scenes.webm')} type="video/webm" />
+          <source src={getAssetUrl(scene.video)} type={scene.video.endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
         </video>
       )}
       <div className="sbl-grade" aria-hidden="true" />
-      <div className="sbl-noise" aria-hidden="true" />
-
       <header className="sbl-broadcast-head">
-        <div className="sbl-rec">
-          <span className="sbl-rec-dot" aria-hidden="true" />
-          Squabble City Live
-        </div>
-        <span>Feed 04 · Fight Night</span>
+        <span className="sbl-rec"><span className="sbl-rec-dot" aria-hidden="true" /> Squabble City Live</span>
+        <span className="sbl-feed">On the block / {scene.label}</span>
       </header>
 
       <main className="sbl-stage">
         <div className="sbl-wordmark-wrap">
-          <span className="sbl-kicker">Tonight on the block</span>
+          <span className="sbl-kicker">From the streets of Squabble City</span>
           <img src={wordmarkUrl} alt="Squabblemon" className="sbl-wordmark" />
-          <strong>Build your gang. Own the city.</strong>
         </div>
-        <img
-          src={characterUrl}
-          alt=""
-          className="sbl-character"
-          onError={(event) => { event.currentTarget.hidden = true; }}
-        />
       </main>
 
       <div className="sbl-lower-third">
-        <div className="sbl-chyron">
-          <div className="sbl-chyron-track" aria-hidden="true">
-            <span>Squabblemon · The city is watching · Build your gang · Read the room · Own two districts · </span>
-            <span>Squabblemon · The city is watching · Build your gang · Read the room · Own two districts · </span>
-          </div>
-        </div>
+        <div className="sbl-scene-caption"><span>Now showing</span><strong>{scene.label}</strong></div>
         <div className="sbl-status-card">
           <div className="sbl-status-copy" role="status" aria-live="polite">
             <span>Now loading</span>
@@ -142,19 +161,18 @@ export function LoadingScreen({ phase = 'application' }: { phase?: LoadingPhase 
           </div>
           <ol className="sbl-stages" aria-label="Loading progress">
             {STAGES.map((stage, index) => (
-              <li
-                key={stage.phase}
-                data-state={index < stageIndex ? 'complete' : index === stageIndex ? 'active' : 'waiting'}
-                aria-current={index === stageIndex ? 'step' : undefined}
-              >
-                <i aria-hidden="true">{index < stageIndex ? '✓' : index + 1}</i>
+              <li key={stage.phase} data-state={index < stageIndex ? 'complete' : index === stageIndex ? 'active' : 'waiting'} aria-current={index === stageIndex ? 'step' : undefined}>
+                <i aria-hidden="true">{index < stageIndex ? '·' : index + 1}</i>
                 <span>{stage.short}</span>
               </li>
             ))}
           </ol>
-          <div className="sbl-stage-meter" aria-hidden="true">
-            <span style={{ width: `${(stageIndex / STAGES.length) * 100}%` }} />
-          </div>
+          {allowVideo && videoDue && (
+            <button type="button" className="sbl-motion-control" onClick={togglePlayback} data-testid="button-toggle-loading-motion" aria-label={manuallyPaused ? 'Play loading scene' : 'Pause loading scene'}>
+              {manuallyPaused ? 'Play scene' : 'Pause scene'}
+            </button>
+          )}
+          <div className="sbl-stage-meter" aria-hidden="true"><span style={{ width: `${(stageIndex / STAGES.length) * 100}%` }} /></div>
         </div>
       </div>
     </div>

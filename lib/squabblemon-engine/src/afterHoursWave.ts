@@ -5,10 +5,12 @@ export const AFTER_HOURS_WAVE = [
   ['sugarfoot', 'Sugarfoot', 'Uncommon', 'Dark', 2, 2, 'Sweet Weakness', 'On Reveal: Weaken the strongest enemy here. If it was already Weakened, gain +1 Hand.', 'Disruption'],
   ['yn-gokarter', 'YN Gokarter', 'Rare', 'Electric', 2, 2, 'Victory Lap', 'On Reveal: Move to your weakest other open district. If the move succeeds, give the weakest other ally there +1 Hand.', 'Movement'],
   ['yn-atv-lord', 'YN ATV Lord', 'Epic', 'Earth', 3, 4, 'Trail Guide', 'On Reveal: Move your weakest other ally here to your weakest other open district. If the move succeeds, give it +1 Hand.', 'Movement'],
-  ['janitor', 'Janitor', 'Uncommon', 'Water', 3, 2, 'Turn It Around', 'Ongoing: The first hostile Hands reduction or harmful status that would affect a friendly card in this district each round is negated. That card gains +2 Hands instead. Disabled Janitors cannot reverse an attack; duplicate Janitors share one district trigger.', 'Support'],
+  ['janitor', 'Janitor', 'Uncommon', 'Water', 3, 3, 'Turn It Around', 'Ongoing: Two charges/district/round separately reverse first enemy Hands loss/harmful status on any ally and first enemy-forced move/return/execution on staff; +2 Hands each. Duplicates share both; damage deaths use harm.', 'Support'],
   ['homeless-wiseman', 'Homeless Wiseman', 'Legendary', 'Light', 4, 4, "Told You.", "On Reveal: Predict the enemy's weakest open district from the public board through next round. Their next character played there is Weakened; played elsewhere, your next character in the predicted district costs 2 less Motion (minimum 1) through next round. One prediction per side. Protection and immunity can block Weaken.", 'Disruption'],
   ['juneteenth-chair-guy', 'Juneteenth Chair Guy', 'Mythical', 'Fire', 5, 5, 'Fold-Out Justice', 'On Reveal: Give the strongest enemy here -2 Hands, then Protect your weakest other ally here. Protection and immunity can block the hit.', 'Disruption'],
-  ['squabble-house-manager', 'Squabble House Manager', 'Rare', 'Normal', 1, 2, 'Home Advantage', 'On Reveal: If an enemy is here, gain +1 Hand.', 'Pressure'],
+  ['squabble-house-manager', 'Squabble House Manager', 'Legendary', 'Normal', 1, 2, 'Home Advantage',
+    'On Reveal: If an enemy is here, gain +1 Hand. Ongoing: Gain +1 Hand for each other friendly Squabblehouse staff member anywhere on the board; Manager does not count himself. The first enemy played or moved here each round loses 1 Hand. Protection, immunity, and movement locks can stop the hostile effect.',
+    'Pressure'],
 ] as const;
 
 export const afterHoursWaveUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(

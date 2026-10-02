@@ -86,6 +86,7 @@ test(
         body: (await response.json()) as OnlineRoomView & ReactionView & {
           error?: string;
           rooms?: unknown[];
+          serverNow?: number;
         },
       };
     };
@@ -117,6 +118,10 @@ test(
     });
     assert.equal(created.status, 201, JSON.stringify(created.body));
     const code = created.body.code;
+    const initialList = await request(users[0]);
+    const initialSummary = (initialList.body.rooms as { code: string; lastPlayedAt: number | null }[]).find(room => room.code === code)!;
+    assert.equal(initialSummary.lastPlayedAt, null, "opening a room does not claim it was played");
+    assert.ok(Number.isFinite(initialList.body.serverNow), "relative labels have a server clock");
     assert.equal(
       (await request(users[0], "", { deckId: "custom", requestId: createId }))
         .body.code,
@@ -323,6 +328,81 @@ test(
       409,
     );
     assert.equal((await request(users[0], `/${code}`)).body.reason, "timeout");
+
+    // The room keeps a server-owned record of both games and stays re-enterable.
+    const hostView = (await request(users[0], `/${code}`)).body,
+      guestView = (await request(users[1], `/${code}`)).body;
+    assert.deepEqual(hostView.series, guestView.series, "both seats read the same record");
+    assert.equal(
+      hostView.series.player + hostView.series.cpu + hostView.series.draws,
+      2,
+      "one entry per completed fade, including the timeout",
+    );
+    const listedRooms = ((await request(users[1], "")).body.rooms ?? []) as {
+      code: string;
+      status: string;
+      series: { you: number; rival: number; draws: number };
+      expiresAt: number;
+      lastActivityAt: number;
+      lastPlayedAt: number | null;
+    }[];
+    const listed = listedRooms.find((item) => item.code === code)!;
+    assert.equal(listed.status, "complete", "a finished room stays in the room list");
+    assert.deepEqual(listed.series, {
+      you: hostView.series.cpu,
+      rival: hostView.series.player,
+      draws: hostView.series.draws,
+    }, "the list reads the series from the guest's side");
+    const [activityRecord] = await db.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.code, code));
+    assert.equal(listed.expiresAt, activityRecord.expiresAt.getTime(), "expiry comes from the stored column");
+    assert.equal(listed.lastActivityAt, activityRecord.updatedAt.getTime());
+    assert.equal(listed.lastPlayedAt, (activityRecord.state as unknown as OnlineRoom).lastPlayedAt);
+    // Clients cannot post their own tally.
+    assert.equal(
+      (await action(users[0], hostView, { type: "lobby", series: { player: 9, cpu: 0, draws: 0 } } as never)).status,
+      400,
+    );
+    const reopened = (await action(users[1], guestView, { type: "lobby" })).body;
+    assert.equal(reopened.status, "waiting");
+    assert.equal(reopened.gameNumber, 3);
+    assert.deepEqual(reopened.series, hostView.series, "reopening keeps the record");
+    const rejoined = (await request(users[0], `/${code}`)).body;
+    assert.equal(rejoined.status, "waiting", "the rival re-enters the same room");
+    assert.deepEqual(rejoined.series, hostView.series);
+    const [reopenedRecord] = await db
+      .select()
+      .from(onlineRoomsTable)
+      .where(eq(onlineRoomsTable.code, code));
+    assert(
+      new Date(reopenedRecord!.expiresAt).getTime() > Date.now(),
+      "returning to the lobby extends the room",
+    );
+    const listAfterLobby = ((await request(users[0])).body.rooms ?? []) as typeof listedRooms;
+    assert.equal(listAfterLobby.find(room => room.code === code)!.lastPlayedAt, listed.lastPlayedAt, "reopening does not change last played");
+    // Old stored rooms still list accurately; never derive expiry from activity or JSON state.
+    const storedExpiry = new Date(Date.now() + 3 * 60_000);
+    const legacyState = { ...reopenedRecord.state };
+    delete legacyState.lastPlayedAt;
+    await db.update(onlineRoomsTable).set({
+      state: legacyState, expiresAt: storedExpiry,
+    }).where(eq(onlineRoomsTable.id, reopenedRecord.id));
+    const legacyList = ((await request(users[1])).body.rooms ?? []) as typeof listedRooms;
+    const legacySummary = legacyList.find(room => room.code === code)!;
+    assert.equal(legacySummary.lastPlayedAt, null);
+    assert.equal(legacySummary.expiresAt, storedExpiry.getTime(), "column expiry wins even when the room JSON differs");
+    const [afterListRead] = await db.select().from(onlineRoomsTable).where(eq(onlineRoomsTable.id, reopenedRecord.id));
+    assert.equal(afterListRead.updatedAt.getTime(), reopenedRecord.updatedAt.getTime(), "listing is not room activity");
+    // Deliberately leaving closes the room for both players and frees the slot.
+    assert.equal((await action(users[0], rejoined, { type: "leave" })).status, 200);
+    const afterLeave = (await request(users[1], `/${code}`)).body;
+    assert.equal(afterLeave.status, "closed");
+    assert.equal(afterLeave.reason, "left");
+    assert.equal(afterLeave.closedBy, "player", "the rival is told who closed the room");
+    const remaining = ((await request(users[1], "")).body.rooms ?? []) as { code: string }[];
+    assert(
+      !remaining.some((item) => item.code === code),
+      "a closed room leaves the room list",
+    );
 
     // Four more waiting rooms reach the cap; the completed match must not count.
     for (let n = 0; n < 4; n++) {

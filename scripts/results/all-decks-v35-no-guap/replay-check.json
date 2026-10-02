@@ -1,0 +1,45 @@
+{
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "checked": [
+    {
+      "caseIndex": 0,
+      "key": "starter-block|starter-slide|greedy|all-decks-ranking-fresh-a|0|0|a-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 1,
+      "key": "starter-block|starter-slide|greedy|all-decks-ranking-fresh-a|0|0|b-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 2,
+      "key": "starter-block|starter-slide|greedy|all-decks-ranking-fresh-a|0|3|a-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 7,
+      "key": "starter-block|starter-slide|greedy|all-decks-ranking-fresh-b|0|3|b-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 10655,
+      "key": "cellblock-pressure|mushroom-plant|seeded-legal|all-decks-ranking-fresh-b|0|3|b-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 10654,
+      "key": "cellblock-pressure|mushroom-plant|seeded-legal|all-decks-ranking-fresh-b|0|3|a-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 483,
+      "key": "starter-block|element-air|greedy|all-decks-ranking-fresh-a|0|3|b-player",
+      "exactOutcomeReplay": true
+    },
+    {
+      "caseIndex": 435,
+      "key": "starter-block|element-dark|greedy|all-decks-ranking-fresh-a|0|3|b-player",
+      "exactOutcomeReplay": true
+    }
+  ]
+}

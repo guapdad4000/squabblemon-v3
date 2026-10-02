@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { PlayerBootstrap } from '@workspace/api-client-react';
-import { rewardReceipts, revealProfileRewards, revealStoryRewards } from './rewardReceipts';
+import { canPresentRewardStinger, rewardReceipts, revealProfileRewards, revealStoryRewards } from './rewardReceipts';
 import type { StoryGrantedReward } from '@workspace/api-client-react';
 import { selectedChallengeRun } from './challengeJourney';
 const bootstrap = (currency: number, cards: string[] = []) => ({ profile: { id:'receipt-test', softCurrency:currency, packTickets:1, styleShards:0, streetRep:0, xp:0, ownedCardIds:cards, unlockedCosmeticIds:[] } }) as unknown as PlayerBootstrap;
@@ -17,6 +17,16 @@ test('confirmed reward receipts show only increases, deduplicate claims, and cle
   assert.equal(receipt.items[0].amount,50);assert.equal(receipt.items[1].label,'STOCKZ');
   rewardReceipts.dismiss();revealProfileRewards(bootstrap(100),bootstrap(150,['stockz']),'claim','Bounty');
   assert.equal(rewardReceipts.current(),null);
+  rewardReceipts.reset();
+});
+
+test('reward presentation eligibility is explicit and only confirmed producers opt in', () => {
+  rewardReceipts.reset();
+  revealProfileRewards(bootstrap(10), bootstrap(20), 'login-catchup', 'Rewards', undefined);
+  assert.equal(rewardReceipts.current()?.presentation, undefined);
+  rewardReceipts.dismiss();
+  revealProfileRewards(bootstrap(10), bootstrap(20), 'mission', 'Bounty collected', 'mission');
+  assert.equal(rewardReceipts.current()?.presentation, 'mission');
   rewardReceipts.reset();
 });
 
@@ -36,6 +46,67 @@ test('story receipt derives the token counter from the confirmed wallet and only
   assert.equal(rewardReceipts.current(), null, 'repeated checks never replay the same claim receipt');
   assert.equal(revealStoryRewards({ nodeId: 'finale', title: 'Finale', rewards: [], bootstrap: bootstrap(900), resolveCharacter }), false);
   rewardReceipts.reset();
+});
+
+test('story receipts opt into stingers only for non-catch-up non-Clout scene grants', () => {
+  rewardReceipts.reset();
+  const reward = { kind: 'pack-ticket', id: 'street-pack-ticket', amount: 1, rewardKey: 'story:ticket', duplicateShards: 0, description: 'Ticket' } as StoryGrantedReward;
+  revealStoryRewards({ nodeId: 'scene', title: 'Scene', rewards: [reward], bootstrap: bootstrap(10), resolveCharacter, presentation: 'story' });
+  assert.equal(rewardReceipts.current()?.presentation, 'story');
+  rewardReceipts.reset();
+  const clout = { kind: 'currency', id: 'clout', amount: 5, rewardKey: 'story:clout', duplicateShards: 0, description: 'Clout' } as StoryGrantedReward;
+  revealStoryRewards({ nodeId: 'scene', title: 'Scene', rewards: [clout], bootstrap: bootstrap(15), resolveCharacter, presentation: 'story' });
+  assert.equal(rewardReceipts.current()?.presentation, undefined, 'the existing Clout collection ceremony remains the only payoff');
+  rewardReceipts.reset();
+  const catchUp = { ...reward, rewardKey: 'story-payout-make-good:v1:scene:ticket' };
+  revealStoryRewards({ nodeId: 'scene', title: 'Catch-up', rewards: [catchUp], bootstrap: bootstrap(10), resolveCharacter, presentation: 'story' });
+  assert.equal(rewardReceipts.current()?.presentation, undefined);
+  rewardReceipts.reset();
+});
+
+test('stinger policy rejects Clout and catch-up receipts even if a producer accidentally opts them in', () => {
+  assert.equal(canPresentRewardStinger({
+    id: 'clout', title: 'Scene', presentation: 'story',
+    story: { chapterTitle: 'Chapter', backgroundAssetId: 'backdrop', cloutBalance: { from: 0, to: 5 } },
+    items: [{ label: 'Clout', amount: 5 }],
+  }), false);
+  assert.equal(canPresentRewardStinger({
+    id: 'catch-up', title: 'Scene', presentation: 'story',
+    story: { chapterTitle: 'Chapter', backgroundAssetId: 'backdrop', catchUp: true },
+    items: [{ label: 'Ticket', amount: 1 }],
+  }), false);
+  assert.equal(canPresentRewardStinger({
+    id: 'mission', title: 'Mission', presentation: 'mission', items: [{ label: 'Clout', amount: 5 }],
+  }, true), false, 'reduced motion never enables an optional reward video');
+});
+
+test('stinger selection and consumption are receipt-scoped, stable on remount, and FIFO-safe', () => {
+  rewardReceipts.reset();
+  rewardReceipts.show({ id: 'one', title: 'Mission', presentation: 'mission', items: [{ label: 'Clout', amount: 1 }] });
+  rewardReceipts.show({ id: 'two', title: 'Promo', presentation: 'promo', items: [{ label: 'Ticket', amount: 1 }] });
+  let selected = 0;
+  const firstCut = rewardReceipts.stingerSelection('one', () => ({ id: ++selected }));
+  assert.equal(rewardReceipts.stingerSelection('one', () => ({ id: ++selected })), firstCut);
+  assert.equal(selected, 1);
+  assert.equal(rewardReceipts.beginStinger('one'), true);
+  assert.equal(rewardReceipts.beginStinger('one'), false, 'a remount cannot replay an already-started stinger');
+  assert.equal(rewardReceipts.stingerWasStarted('one'), true);
+  const beforeSkip = rewardReceipts.current();
+  const snapshots: Array<ReturnType<typeof rewardReceipts.current>> = [];
+  const unsubscribe = rewardReceipts.subscribe(() => snapshots.push(rewardReceipts.current()));
+  rewardReceipts.consumeStinger('one');
+  unsubscribe();
+  assert.equal(rewardReceipts.stingerWasConsumed('one'), true);
+  assert.notEqual(rewardReceipts.current(), beforeSkip, 'Skip publishes a new external-store snapshot so mounted consumers rerender');
+  assert.equal(snapshots.at(-1), rewardReceipts.current(), 'subscribers observe the replacement receipt snapshot on Skip');
+  assert.equal(rewardReceipts.stingerSelection('one', () => ({ id: ++selected })), undefined);
+  assert.equal(rewardReceipts.current()?.id, 'one', 'consuming or skipping the stinger leaves this receipt in place');
+  rewardReceipts.dismiss('one');
+  assert.equal(rewardReceipts.current()?.id, 'two', 'skipping a stinger advances no queue item; only receipt dismissal does');
+  rewardReceipts.consumeStinger('one');
+  assert.equal(rewardReceipts.stingerWasConsumed('two'), false, 'a late callback cannot consume the next receipt');
+  rewardReceipts.reset();
+  assert.equal(rewardReceipts.stingerWasConsumed('one'), false, 'account reset clears presentation state');
 });
 test('story character grants keep their name and portrait without loading story content in the game shell', () => {
   rewardReceipts.reset();

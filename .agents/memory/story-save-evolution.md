@@ -1,6 +1,6 @@
 ---
 name: Story save evolution
-description: Why seasons and later screenplay expansions must preserve the legacy campaign identity model.
+description: Preserve campaign/reward identities, and distinguish append-only expansion from approved node-versioned dialogue replacement.
 ---
 
 Season and special-presentation organization is additive navigation, not a reason to rebase chapter order, rename existing progression identities, replace reward claims, or restart the campaign.
@@ -9,8 +9,8 @@ Season and special-presentation organization is additive navigation, not a reaso
 
 **How to apply:** Preserve the existing progression and reward identities when adding presentations. New chapters receive new identities and explicit prerequisites. Keep battle returns pointed at the exact node rather than forcing a fresh theater selection.
 
-Older dialogue history is positional. Append new material to existing sections instead of reordering the original lines or globally changing their token generation.
+Older dialogue history is positional. Ordinary expansions should append to existing sections. A deliberately approved replacement must instead create fresh, content-derived reading identities for each changed node, without globally changing other seasons' tokens.
 
-**Why:** An editorial-only change can otherwise make previously seen dialogue appear unseen or cause different lines to be skipped. Keeping earlier lines as exact prefixes lets the expanded screenplay coexist with older saves.
+**Why:** Reusing positional markers after replacing text silently skips different dialogue. Globally bumping a version also invalidates untouched scenes. The approved full Season One replacement intentionally makes its rewritten eligible dialogue unread while preserving fights, stars, wallets, cards, and reward claims.
 
-**How to apply:** Treat changing or removing existing dialogue positions as a separate, deliberate migration, not a routine writing edit.
+**How to apply:** Treat changing or removing existing dialogue positions as a separate, deliberate migration, not a routine writing edit. Version only changed nodes from their authored section tuples; retain old stored markers and all progression/claim records, but send only current eligible markers in bounded save requests. Unchanged seasons retain their prior token generation.

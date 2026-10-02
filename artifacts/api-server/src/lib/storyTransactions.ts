@@ -18,6 +18,7 @@ import {
   isStoryPuzzleSolution,
   isStoryCharacterId,
   isStoryCosmeticId,
+  storyDialogueToken,
   storyContent,
   ticketsForStars,
   type StoryReward,
@@ -855,6 +856,21 @@ export async function saveStoryDialogue(
       ) {
         throw error;
       }
+    }
+    if (
+      node.kind === "battle" &&
+      !existing?.cleared &&
+      dialogueSeen.some((token) =>
+        node.postDialogue.some(
+          (_line, index) =>
+            token === storyDialogueToken(node.id, "post", index),
+        ),
+      )
+    ) {
+      throw new StoryRequestError(
+        409,
+        "Post-match dialogue requires a verified story win",
+      );
     }
     const action = await claimStoryAction(
       tx,

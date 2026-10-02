@@ -24,7 +24,7 @@ export function BountyMachine({ bootstrap, cadence }: { bootstrap: PlayerBootstr
       const res = await claimMission.mutateAsync({ missionId });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res);
       setIsOpen(false);
-      revealProfileRewards(bootstrap, res, missionId, 'Bounty collected');
+      revealProfileRewards(bootstrap, res, missionId, 'Bounty collected', 'mission');
     } catch {
       setError('The reward could not be confirmed. Try claiming again; already saved rewards cannot be paid twice.');
     } finally {

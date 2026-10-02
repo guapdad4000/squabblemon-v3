@@ -1767,9 +1767,9 @@
       "enabled": true,
       "chroma": "cyan",
       "startSeconds": 0,
-      "durationMs": 5167,
+      "durationMs": 5184,
       "playbackRate": 1,
-      "revision": "a5df0574d4f4b1a0"
+      "revision": "e783b77753e5b856"
     },
     "oa-krump-dancer-v1": {
       "file": "oa-krump-dancer-v1.mp4",
@@ -2375,6 +2375,94 @@
       "durationMs": 5167,
       "playbackRate": 1,
       "revision": "fb2d5be9d654d9f9"
+    },
+    "oa-blue-nose-pit-v1": {
+      "file": "oa-blue-nose-pit-v1.mp4",
+      "label": "Blue Nose Pit",
+      "move": "Pit Pack Rush",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "b524d0bfca08caf5"
+    },
+    "oa-cane-corso-red-v1": {
+      "file": "oa-cane-corso-red-v1.mp4",
+      "label": "Cane Corso Red",
+      "move": "Cane Corso Crush",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "91009991b2391786"
+    },
+    "oa-inmate-reformed-v1": {
+      "file": "oa-inmate-reformed-v1.mp4",
+      "label": "Inmate Reformed",
+      "move": "Second Chance",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "b64ea8ab8121c146"
+    },
+    "oa-squabblehouse-security-v1": {
+      "file": "oa-squabblehouse-security-v1.mp4",
+      "label": "Squabblehouse Security",
+      "move": "Security Lockdown",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "370702f684c75aa8"
+    },
+    "oa-griddle-master-v1": {
+      "file": "oa-griddle-master-v1.mp4",
+      "label": "Griddle Master",
+      "move": "Order Up",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "0f3e4df4f1749a2e"
+    },
+    "oa-squabblehouse-teknician-v1": {
+      "file": "oa-squabblehouse-teknician-v1.mp4",
+      "label": "Squabblehouse Teknician",
+      "move": "Clipboard Check",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5167,
+      "playbackRate": 1,
+      "revision": "b818cba6b4c0a5d3"
+    },
+    "oa-triple-og-blue-v1": {
+      "file": "oa-triple-og-blue-v1.mp4",
+      "label": "CLUE COOKY",
+      "move": "Homage",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5042,
+      "playbackRate": 1,
+      "revision": "559a5735e3c3e5d4"
+    },
+    "oa-triple-og-red-v1": {
+      "file": "oa-triple-og-red-v1.mp4",
+      "label": "RED PUNCH",
+      "move": "Roll Call",
+      "enabled": true,
+      "chroma": "cyan",
+      "startSeconds": 0,
+      "durationMs": 5042,
+      "playbackRate": 1,
+      "revision": "98cb5395483bbd4c"
     }
   },
   "assignments": {
@@ -2549,6 +2637,14 @@
     "hater": "oa-hater-v1",
     "stillwatermedic": "oa-stillwater-medic-v1",
     "inmate-kingpin": "oa-inmate-kingpin-v1",
+    "triple-og-blue": "oa-triple-og-blue-v1",
+    "triple-og-red": "oa-triple-og-red-v1",
+    "blue-nose-pit": "oa-blue-nose-pit-v1",
+    "cane-corso-red": "oa-cane-corso-red-v1",
+    "squabblehouse-security": "oa-squabblehouse-security-v1",
+    "squabblehouse-teknician": "oa-squabblehouse-teknician-v1",
+    "griddle-master": "oa-griddle-master-v1",
+    "inmate-reformed": "oa-inmate-reformed-v1",
     "janitor": "oa-janitor-v1",
     "lawyer": "oa-lawyer-v1",
     "live-streamer-male": "oa-live-streamer-male-v1",

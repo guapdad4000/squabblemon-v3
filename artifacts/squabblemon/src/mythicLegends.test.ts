@@ -147,7 +147,7 @@ for (const owner of ['player', 'cpu'] as const) test(`all nine City Legend revea
     }
     if (id === 'counter') {
       assert.equal(self.powerModifier, 0);
-      assert.equal(rival.powerModifier, 0, 'Shotta fires for 2 instead of copying cost');
+      assert.equal(rival.powerModifier, -1, 'Shotta opening shot fires for 3 instead of copying cost');
       assert.equal(self.statuses.protected, false);
     }
   }

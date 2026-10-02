@@ -308,3 +308,10 @@ test('KYLE uses the delivered Smile Bombs animation once per fade', () => {
   assert.equal(gateSpecialMoveReplay(clip, key, played), null);
   assert.equal(planSpecialMoveBeat(clip, key, played, 650).durationMs, 650);
 });
+
+test('Waffle Warlord uses character-art fallback until its own special-move clip is delivered', () => {
+  assert.equal(cards['waffle-warlord'].ability, 'All-Star Hands');
+  assert.equal(moveAssignments['waffle-warlord'], null);
+  assert.equal(resolveSpecialMove('waffle-warlord'), null);
+  assert.equal(specialMoveForEvent({ type: 'ability', kind: 'ability', cardId: 'waffle-warlord' }), null);
+});

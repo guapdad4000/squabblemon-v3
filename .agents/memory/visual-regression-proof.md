@@ -64,3 +64,15 @@ Exercise modal dismissal after both a visible trigger and automatic deep-link en
 **Why:** Trigger-based checks passed while a deep-linked popup opened before its scene marker became focusable. Dismissal silently lost the attempted focus restoration.
 
 **How to apply:** Check close and Escape from both entry paths. If restoration must wait for layout, stop waiting when the player chooses another control or leaves the route; delayed focus must not override their next action.
+
+For new battle cards, exercise selection before committing a play. Successful engine tests and guarded commit handlers do not establish that render-time previews are safe.
+
+**Why:** Both lane-restricted OGs passed engine tests, but selecting either made React preview every district and throw on an illegal one before any play was committed.
+
+**How to apply:** Assert no browser errors immediately after selection, legal-only previews and targeting controls, rejected taps/drops without spending, and a successful legal play followed by continued gameplay. Cover normal and reduced motion without weakening the authoritative engine's rejection of illegal moves.
+
+Battle journey readiness must identify the expected engine round, not merely a previously enabled End Turn control. Terminal helpers must accept the result screen rather than waiting exclusively for an archive control that may already have unmounted.
+
+**Why:** Fast test inputs can hit stale presentation controls and be rejected by interaction locks; a successful automatic result transition also made archive-only helpers report a failure after the match had already completed.
+
+**How to apply:** Acknowledge reading/lesson holds, require the expected round and player phase before each move, and verify the submitted transcript with the shared engine. Observe short broadcasts concurrently with the final action so an already-ended clip is not mistaken for a missing one.

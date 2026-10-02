@@ -61,3 +61,27 @@ Run the Netlify build's own test gates (`scripts/build-netlify.mjs`) locally bef
 **Why:** A push that added four story-earned cards failed the hosted build on hard-coded catalog counts and a Season One save-compatibility fingerprint, even though typecheck and API tests had passed.
 
 **How to apply:** When cards or legacy story rewards change, update the count and fingerprint assertions deliberately. Keep the fingerprint covering all current rewards; excluding reward namespaces weakens save protection.
+
+Freeze an isolated release candidate before final verification when other task agents can merge into the active workspace.
+
+**Why:** A task merge during a successful release build made its output insufficient evidence for one coherent source tree. A narrowed candidate also avoided unintentionally releasing unrelated completed work.
+
+**How to apply:** Build the candidate from current remote main plus the approved changes, and run the final gates there. When reusing installed dependencies, preserve candidate-local workspace-package links rather than linking entire package dependency directories back to the changing workspace. Finish dependency setup before starting checks, then require the uploaded and fetched full Git trees to match the tested candidate.
+
+Keep release candidates and approval metadata in ignored workspace storage when preparation may span task reconciliation or later turns; do not assume `/tmp` survives.
+
+**Why:** A candidate and its verification metadata disappeared from `/tmp` between preparation and a subsequent hotfix, while the workspace and Git references persisted.
+
+**How to apply:** Verify any remembered candidate path exists before reusing it. Store durable preparation evidence under `.local/releases/` without adding its nested checkout, dependencies, or build outputs to the release. Also require `git rev-parse --show-toplevel` to equal the candidate directory before staging: a missing nested Git link can make `git -C` silently discover the outer workspace instead.
+
+Nested checkout sources and worktree metadata can survive reconstruction while the checkout's `.git` link does not. Use Git's own `worktree repair` and verify the repaired repository root before reusing such a candidate.
+
+**Why:** An ignored release candidate retained its frozen files and staged tree, but a later turn found its `.git` link missing. Commands in that directory initially referred to the parent workspace, which could have mixed unrelated changes into a release.
+
+**How to apply:** Validate the candidate's Git root, parent commit, and staged tree at every release handoff; directory existence alone is insufficient. Repair the Git link rather than rewriting or discarding the candidate source.
+
+Allow GitHub pull-request state to settle after a direct fast-forward update of the base branch.
+
+**Why:** An immediate read reported the request as open and unmerged even though the verified head was already on the base branch. A subsequent read showed it automatically merged and closed.
+
+**How to apply:** Verify the base branch's commit and tree first. Recheck pull-request state after the deployment starts before manually closing it or reporting that the changes remain unmerged.

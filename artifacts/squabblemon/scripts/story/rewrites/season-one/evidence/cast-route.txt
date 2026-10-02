@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [chromium-phone] › e2e/story-route-shell.spec.ts:132:1 › Player, rear-view listening pose and Rae render in the mounted Season One route
+  1 passed (23.5s)

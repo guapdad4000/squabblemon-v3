@@ -38,13 +38,12 @@
   <body>
     <div id="root">
       <div class="first-paint-loader" role="status" aria-label="Loading Squabblemon">
-        <img class="first-paint-loader__backdrop" src="/brand/loading-scenes.webp" alt="" aria-hidden="true" />
+        <img id="first-paint-loading-scene" class="first-paint-loader__backdrop" alt="" aria-hidden="true" fetchpriority="high" />
         <div class="first-paint-loader__shade" aria-hidden="true"></div>
-        <header><b><i></i> Squabble City Live</b><span>Feed 04 · Fight Night</span></header>
+        <header><b><i></i> Squabble City Live</b><span>On the block</span></header>
         <div class="first-paint-loader__title">
-          <small>Tonight on the block</small>
+           <small>From the streets of Squabble City</small>
           <img src="/brand/prismatic/logos/squabblemon-wordmark-standard-gold.webp" alt="" aria-hidden="true" />
-          <strong>Build your gang. Own the city.</strong>
         </div>
         <footer>
           <span>Now loading</span>
@@ -53,6 +52,27 @@
         </footer>
       </div>
     </div>
+    <script>
+      // The tiny first paint and React loader share one episode selection.
+      // Only its poster is requested; no video or reward library is preloaded.
+      (function () {
+        var scenes = [
+          ['loading-sunset-street', 'sunset-street', 'center 54%', 'center 50%'],
+          ['loading-squabblehouse', 'squabblehouse', 'center 48%', 'center 50%'],
+          ['loading-fade-park', 'fade-park', 'center 50%', 'center 51%']
+        ];
+        var last = '';
+        try { last = localStorage.getItem('squabblemon:last-loading-scene') || ''; } catch (_) {}
+        var previous = scenes.findIndex(function (scene) { return scene[0] === last; });
+        var selected = scenes[(previous + 1) % scenes.length];
+        document.getElementById('root').dataset.bootLoadingScene = selected[0];
+        try { localStorage.setItem('squabblemon:last-loading-scene', selected[0]); } catch (_) {}
+        var poster = document.getElementById('first-paint-loading-scene');
+        poster.style.setProperty('--portrait-position', selected[2]);
+        poster.style.setProperty('--landscape-position', selected[3]);
+        poster.src = '%BASE_URL%brand/broadcast/loading/' + selected[1] + '.jpg';
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <style>
       html, body, #root { min-height: 100%; margin: 0; background: #070707; }
@@ -60,12 +80,12 @@
         position: fixed; inset: 0; overflow: hidden; color: #f8eed8; background: #080907;
         font: 800 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-transform: uppercase;
       }
-      .first-paint-loader .first-paint-loader__backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; z-index: 0; }
-      .first-paint-loader .first-paint-loader__shade { position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,#040605eb 0%,#04060561 55%,#04060525 75%),linear-gradient(0deg,#040504e8,transparent 58%); }
+       .first-paint-loader .first-paint-loader__backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--portrait-position, center); z-index: 0; }
+       .first-paint-loader .first-paint-loader__shade { position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#0b0f10bd,transparent 24%,transparent 47%,#0a0e0e5c 71%,#0a0e0eeb); }
       .first-paint-loader header { position:absolute;z-index:2;top:max(18px,env(safe-area-inset-top));left:5vw;right:5vw;display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #f8eed859;letter-spacing:.16em;color:#f8eed8bf; }
       .first-paint-loader header b { color:#fff4d8; }
       .first-paint-loader header i { display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:#e44430;box-shadow:0 0 12px #e44430;animation:first-paint-blink 1.1s steps(2,end) infinite; }
-      .first-paint-loader__title { position:absolute;z-index:2;left:7vw;top:50%;width:min(48vw,510px);transform:translateY(-58%); }
+       .first-paint-loader__title { position:absolute;z-index:2;left:5vw;top:max(66px,calc(env(safe-area-inset-top) + 54px));width:min(55vw,245px); }
       .first-paint-loader__title small { display:block;margin-bottom:10px;color:#dcad50;letter-spacing:.24em; }
       .first-paint-loader__title img { display:block;width:100%;height:auto;filter:drop-shadow(0 16px 26px #000c); }
       .first-paint-loader__title strong { display:block;margin-top:9px;font:italic 900 clamp(18px,2.4vw,32px)/1 Impact,sans-serif;letter-spacing:.04em; }
@@ -78,9 +98,12 @@
       @keyframes first-paint-blink { 50% { opacity:.25; } }
       @media (max-width: 620px) {
         .first-paint-loader header span { display:none; }
-        .first-paint-loader__title { top:42%;left:7vw;width:76vw; }
+         .first-paint-loader__title { left:20px; }
         .first-paint-loader footer { grid-template-columns:1fr;justify-items:center;gap:7px;text-align:center; }
       }
+       @media (orientation: landscape), (min-width: 768px) {
+         .first-paint-loader .first-paint-loader__backdrop { object-position: var(--landscape-position, center); }
+       }
       @media (prefers-reduced-motion: reduce) {
         .first-paint-loader header i { animation: none; }
       }

@@ -139,7 +139,7 @@ export function Market({ bootstrap, openPacks }: { bootstrap: PlayerBootstrap; o
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
       const purchaseTake = request.idempotencyKey.charCodeAt(0) % 2 ? 'purchase-a' : 'purchase-b';
       playVoiceLine(purchaseTake, loadFeedbackPreferences().audioEnabled);
-      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag');
+      revealProfileRewards(bootstrap, result.bootstrap, request.idempotencyKey, 'Added to your bag', isTraining(offer.id) ? undefined : 'shop');
       clearShopRequest(sessionStorage, profile.id);
       setPending(null);
       setReceipt(result.receipt);

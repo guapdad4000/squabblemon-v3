@@ -1,0 +1,687 @@
+{
+  "schemaVersion": 1,
+  "experiment": "six-arm-squabblehouse-counter-revision",
+  "verifiedAt": "2026-10-01T09:40:43.673Z",
+  "definitions": {
+    "strictWinPercent": "100 * wins / cases; draws are not wins",
+    "halfDrawScorePercent": "100 * (wins + draws / 2) / cases",
+    "scope": "Fixed diner crew and fixed bot policies on identical corrected shared rules; not human win rates or general card-strength estimates",
+    "original": "Authentic original three abilities on corrected shared rules; historical global-engine defects are not restored"
+  },
+  "accounting": {
+    "uniqueScheduledCases": 6048,
+    "validationReplays": 6048,
+    "totalEngineExecutions": 12096,
+    "pilotsExcludedFromTheseTotals": true
+  },
+  "verification": "verification.json",
+  "sourceProof": "source-proof.json",
+  "arms": [
+    {
+      "arm": "corrected-original",
+      "sourceReport": "corrected-original/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 224,
+        "draws": 82,
+        "losses": 702,
+        "strictWinPercent": 22.2,
+        "halfDrawPoints": 265,
+        "halfDrawScorePercent": 26.3
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 94,
+        "draws": 34,
+        "losses": 304,
+        "strictWinPercent": 21.8,
+        "halfDrawPoints": 111,
+        "halfDrawScorePercent": 25.7
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 99,
+        "draws": 35,
+        "losses": 298,
+        "strictWinPercent": 22.9,
+        "halfDrawPoints": 116.5,
+        "halfDrawScorePercent": 27
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 31,
+        "draws": 13,
+        "losses": 100,
+        "strictWinPercent": 21.5,
+        "halfDrawPoints": 37.5,
+        "halfDrawScorePercent": 26
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 44,
+          "draws": 23,
+          "losses": 269,
+          "strictWinPercent": 13.1,
+          "halfDrawPoints": 55.5,
+          "halfDrawScorePercent": 16.5
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 99,
+          "draws": 38,
+          "losses": 199,
+          "strictWinPercent": 29.5,
+          "halfDrawPoints": 118,
+          "halfDrawScorePercent": 35.1
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 81,
+          "draws": 21,
+          "losses": 234,
+          "strictWinPercent": 24.1,
+          "halfDrawPoints": 91.5,
+          "halfDrawScorePercent": 27.2
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 91,
+          "draws": 43,
+          "losses": 370,
+          "strictWinPercent": 18.1,
+          "halfDrawPoints": 112.5,
+          "halfDrawScorePercent": 22.3
+        },
+        "3": {
+          "cases": 504,
+          "wins": 133,
+          "draws": 39,
+          "losses": 332,
+          "strictWinPercent": 26.4,
+          "halfDrawPoints": 152.5,
+          "halfDrawScorePercent": 30.3
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 70,
+          "draws": 32,
+          "losses": 402,
+          "strictWinPercent": 13.9,
+          "halfDrawPoints": 86,
+          "halfDrawScorePercent": 17.1
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 154,
+          "draws": 50,
+          "losses": 300,
+          "strictWinPercent": 30.6,
+          "halfDrawPoints": 179,
+          "halfDrawScorePercent": 35.5
+        }
+      }
+    },
+    {
+      "arm": "current-v31",
+      "sourceReport": "current-v31/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 219,
+        "draws": 85,
+        "losses": 704,
+        "strictWinPercent": 21.7,
+        "halfDrawPoints": 261.5,
+        "halfDrawScorePercent": 25.9
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 81,
+        "draws": 38,
+        "losses": 313,
+        "strictWinPercent": 18.8,
+        "halfDrawPoints": 100,
+        "halfDrawScorePercent": 23.1
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 103,
+        "draws": 35,
+        "losses": 294,
+        "strictWinPercent": 23.8,
+        "halfDrawPoints": 120.5,
+        "halfDrawScorePercent": 27.9
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 35,
+        "draws": 12,
+        "losses": 97,
+        "strictWinPercent": 24.3,
+        "halfDrawPoints": 41,
+        "halfDrawScorePercent": 28.5
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 46,
+          "draws": 25,
+          "losses": 265,
+          "strictWinPercent": 13.7,
+          "halfDrawPoints": 58.5,
+          "halfDrawScorePercent": 17.4
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 97,
+          "draws": 36,
+          "losses": 203,
+          "strictWinPercent": 28.9,
+          "halfDrawPoints": 115,
+          "halfDrawScorePercent": 34.2
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 76,
+          "draws": 24,
+          "losses": 236,
+          "strictWinPercent": 22.6,
+          "halfDrawPoints": 88,
+          "halfDrawScorePercent": 26.2
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 85,
+          "draws": 45,
+          "losses": 374,
+          "strictWinPercent": 16.9,
+          "halfDrawPoints": 107.5,
+          "halfDrawScorePercent": 21.3
+        },
+        "3": {
+          "cases": 504,
+          "wins": 134,
+          "draws": 40,
+          "losses": 330,
+          "strictWinPercent": 26.6,
+          "halfDrawPoints": 154,
+          "halfDrawScorePercent": 30.6
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 74,
+          "draws": 30,
+          "losses": 400,
+          "strictWinPercent": 14.7,
+          "halfDrawPoints": 89,
+          "halfDrawScorePercent": 17.7
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 145,
+          "draws": 55,
+          "losses": 304,
+          "strictWinPercent": 28.8,
+          "halfDrawPoints": 172.5,
+          "halfDrawScorePercent": 34.2
+        }
+      }
+    },
+    {
+      "arm": "cashier-only",
+      "sourceReport": "cashier-only/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 220,
+        "draws": 90,
+        "losses": 698,
+        "strictWinPercent": 21.8,
+        "halfDrawPoints": 265,
+        "halfDrawScorePercent": 26.3
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 84,
+        "draws": 38,
+        "losses": 310,
+        "strictWinPercent": 19.4,
+        "halfDrawPoints": 103,
+        "halfDrawScorePercent": 23.8
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 101,
+        "draws": 40,
+        "losses": 291,
+        "strictWinPercent": 23.4,
+        "halfDrawPoints": 121,
+        "halfDrawScorePercent": 28
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 35,
+        "draws": 12,
+        "losses": 97,
+        "strictWinPercent": 24.3,
+        "halfDrawPoints": 41,
+        "halfDrawScorePercent": 28.5
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 45,
+          "draws": 24,
+          "losses": 267,
+          "strictWinPercent": 13.4,
+          "halfDrawPoints": 57,
+          "halfDrawScorePercent": 17
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 98,
+          "draws": 36,
+          "losses": 202,
+          "strictWinPercent": 29.2,
+          "halfDrawPoints": 116,
+          "halfDrawScorePercent": 34.5
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 77,
+          "draws": 30,
+          "losses": 229,
+          "strictWinPercent": 22.9,
+          "halfDrawPoints": 92,
+          "halfDrawScorePercent": 27.4
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 84,
+          "draws": 49,
+          "losses": 371,
+          "strictWinPercent": 16.7,
+          "halfDrawPoints": 108.5,
+          "halfDrawScorePercent": 21.5
+        },
+        "3": {
+          "cases": 504,
+          "wins": 136,
+          "draws": 41,
+          "losses": 327,
+          "strictWinPercent": 27,
+          "halfDrawPoints": 156.5,
+          "halfDrawScorePercent": 31.1
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 74,
+          "draws": 33,
+          "losses": 397,
+          "strictWinPercent": 14.7,
+          "halfDrawPoints": 90.5,
+          "halfDrawScorePercent": 18
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 146,
+          "draws": 57,
+          "losses": 301,
+          "strictWinPercent": 29,
+          "halfDrawPoints": 174.5,
+          "halfDrawScorePercent": 34.6
+        }
+      }
+    },
+    {
+      "arm": "griddle-only",
+      "sourceReport": "griddle-only/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 219,
+        "draws": 89,
+        "losses": 700,
+        "strictWinPercent": 21.7,
+        "halfDrawPoints": 263.5,
+        "halfDrawScorePercent": 26.1
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 82,
+        "draws": 40,
+        "losses": 310,
+        "strictWinPercent": 19,
+        "halfDrawPoints": 102,
+        "halfDrawScorePercent": 23.6
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 104,
+        "draws": 36,
+        "losses": 292,
+        "strictWinPercent": 24.1,
+        "halfDrawPoints": 122,
+        "halfDrawScorePercent": 28.2
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 33,
+        "draws": 13,
+        "losses": 98,
+        "strictWinPercent": 22.9,
+        "halfDrawPoints": 39.5,
+        "halfDrawScorePercent": 27.4
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 46,
+          "draws": 26,
+          "losses": 264,
+          "strictWinPercent": 13.7,
+          "halfDrawPoints": 59,
+          "halfDrawScorePercent": 17.6
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 99,
+          "draws": 36,
+          "losses": 201,
+          "strictWinPercent": 29.5,
+          "halfDrawPoints": 117,
+          "halfDrawScorePercent": 34.8
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 74,
+          "draws": 27,
+          "losses": 235,
+          "strictWinPercent": 22,
+          "halfDrawPoints": 87.5,
+          "halfDrawScorePercent": 26
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 86,
+          "draws": 47,
+          "losses": 371,
+          "strictWinPercent": 17.1,
+          "halfDrawPoints": 109.5,
+          "halfDrawScorePercent": 21.7
+        },
+        "3": {
+          "cases": 504,
+          "wins": 133,
+          "draws": 42,
+          "losses": 329,
+          "strictWinPercent": 26.4,
+          "halfDrawPoints": 154,
+          "halfDrawScorePercent": 30.6
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 73,
+          "draws": 32,
+          "losses": 399,
+          "strictWinPercent": 14.5,
+          "halfDrawPoints": 89,
+          "halfDrawScorePercent": 17.7
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 146,
+          "draws": 57,
+          "losses": 301,
+          "strictWinPercent": 29,
+          "halfDrawPoints": 174.5,
+          "halfDrawScorePercent": 34.6
+        }
+      }
+    },
+    {
+      "arm": "janitor-only",
+      "sourceReport": "janitor-only/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 219,
+        "draws": 86,
+        "losses": 703,
+        "strictWinPercent": 21.7,
+        "halfDrawPoints": 262,
+        "halfDrawScorePercent": 26
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 81,
+        "draws": 38,
+        "losses": 313,
+        "strictWinPercent": 18.8,
+        "halfDrawPoints": 100,
+        "halfDrawScorePercent": 23.1
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 103,
+        "draws": 36,
+        "losses": 293,
+        "strictWinPercent": 23.8,
+        "halfDrawPoints": 121,
+        "halfDrawScorePercent": 28
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 35,
+        "draws": 12,
+        "losses": 97,
+        "strictWinPercent": 24.3,
+        "halfDrawPoints": 41,
+        "halfDrawScorePercent": 28.5
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 46,
+          "draws": 25,
+          "losses": 265,
+          "strictWinPercent": 13.7,
+          "halfDrawPoints": 58.5,
+          "halfDrawScorePercent": 17.4
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 97,
+          "draws": 36,
+          "losses": 203,
+          "strictWinPercent": 28.9,
+          "halfDrawPoints": 115,
+          "halfDrawScorePercent": 34.2
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 76,
+          "draws": 25,
+          "losses": 235,
+          "strictWinPercent": 22.6,
+          "halfDrawPoints": 88.5,
+          "halfDrawScorePercent": 26.3
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 85,
+          "draws": 46,
+          "losses": 373,
+          "strictWinPercent": 16.9,
+          "halfDrawPoints": 108,
+          "halfDrawScorePercent": 21.4
+        },
+        "3": {
+          "cases": 504,
+          "wins": 134,
+          "draws": 40,
+          "losses": 330,
+          "strictWinPercent": 26.6,
+          "halfDrawPoints": 154,
+          "halfDrawScorePercent": 30.6
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 74,
+          "draws": 30,
+          "losses": 400,
+          "strictWinPercent": 14.7,
+          "halfDrawPoints": 89,
+          "halfDrawScorePercent": 17.7
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 145,
+          "draws": 56,
+          "losses": 303,
+          "strictWinPercent": 28.8,
+          "halfDrawPoints": 173,
+          "halfDrawScorePercent": 34.3
+        }
+      }
+    },
+    {
+      "arm": "combined-v32",
+      "sourceReport": "combined-v32/diner/current-rules.json",
+      "simulationFailures": 0,
+      "validationReplays": 1008,
+      "overall": {
+        "cases": 1008,
+        "wins": 221,
+        "draws": 93,
+        "losses": 694,
+        "strictWinPercent": 21.9,
+        "halfDrawPoints": 267.5,
+        "halfDrawScorePercent": 26.5
+      },
+      "primaryGreedy": {
+        "cases": 432,
+        "wins": 85,
+        "draws": 39,
+        "losses": 308,
+        "strictWinPercent": 19.7,
+        "halfDrawPoints": 104.5,
+        "halfDrawScorePercent": 24.2
+      },
+      "primarySeededLegal": {
+        "cases": 432,
+        "wins": 103,
+        "draws": 41,
+        "losses": 288,
+        "strictWinPercent": 23.8,
+        "halfDrawPoints": 123.5,
+        "halfDrawScorePercent": 28.6
+      },
+      "freshConfirmation": {
+        "cases": 144,
+        "wins": 33,
+        "draws": 13,
+        "losses": 98,
+        "strictWinPercent": 22.9,
+        "halfDrawPoints": 39.5,
+        "halfDrawScorePercent": 27.4
+      },
+      "byOpponent": {
+        "focus-wonderland": {
+          "cases": 336,
+          "wins": 45,
+          "draws": 25,
+          "losses": 266,
+          "strictWinPercent": 13.4,
+          "halfDrawPoints": 57.5,
+          "halfDrawScorePercent": 17.1
+        },
+        "focus-fire-guap": {
+          "cases": 336,
+          "wins": 100,
+          "draws": 36,
+          "losses": 200,
+          "strictWinPercent": 29.8,
+          "halfDrawPoints": 118,
+          "halfDrawScorePercent": 35.1
+        },
+        "focus-wiz": {
+          "cases": 336,
+          "wins": 76,
+          "draws": 32,
+          "losses": 228,
+          "strictWinPercent": 22.6,
+          "halfDrawPoints": 92,
+          "halfDrawScorePercent": 27.4
+        }
+      },
+      "byTier": {
+        "0": {
+          "cases": 504,
+          "wins": 85,
+          "draws": 51,
+          "losses": 368,
+          "strictWinPercent": 16.9,
+          "halfDrawPoints": 110.5,
+          "halfDrawScorePercent": 21.9
+        },
+        "3": {
+          "cases": 504,
+          "wins": 136,
+          "draws": 42,
+          "losses": 326,
+          "strictWinPercent": 27,
+          "halfDrawPoints": 157,
+          "halfDrawScorePercent": 31.2
+        }
+      },
+      "bySeat": {
+        "a-player": {
+          "cases": 504,
+          "wins": 73,
+          "draws": 35,
+          "losses": 396,
+          "strictWinPercent": 14.5,
+          "halfDrawPoints": 90.5,
+          "halfDrawScorePercent": 18
+        },
+        "b-player": {
+          "cases": 504,
+          "wins": 148,
+          "draws": 58,
+          "losses": 298,
+          "strictWinPercent": 29.4,
+          "halfDrawPoints": 177,
+          "halfDrawScorePercent": 35.1
+        }
+      }
+    }
+  ]
+}

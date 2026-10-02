@@ -1,0 +1,522 @@
+{
+  "generatedAt": "2026-10-01T23:50:56.885Z",
+  "balanceVersion": 33,
+  "rulesVersion": 33,
+  "sourceHash": "8c429a01fc75dbec7086da879b00ee837db90bebf9b0c899d86aa6d42ad8c732",
+  "decks": [
+    {
+      "id": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "cardIds": [
+        "cornball",
+        "snow",
+        "roaster",
+        "rastamon",
+        "wifey",
+        "oink",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-slide",
+      "name": "SLIDE THRU",
+      "cardIds": [
+        "cornball",
+        "bikelife",
+        "vibe",
+        "plug",
+        "snow",
+        "hooper",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "gamer",
+        "techbro",
+        "vibe",
+        "wifey",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-receipts",
+      "name": "RECEIPTS",
+      "cardIds": [
+        "cornball",
+        "roaster",
+        "nerd",
+        "snow",
+        "plug",
+        "baby",
+        "hooper",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "cardIds": [
+        "cornball",
+        "rastamon",
+        "snow",
+        "wifey",
+        "baby",
+        "hooper",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "cardIds": [
+        "rastamon",
+        "wifey",
+        "snow",
+        "vibe",
+        "hooper",
+        "oink",
+        "plug",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "rastamon",
+        "gamer",
+        "techbro",
+        "wifey",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "cardIds": [
+        "batteryback",
+        "circuitcaptain",
+        "wiretap",
+        "livewire",
+        "stockz",
+        "bossbabe",
+        "plug",
+        "streamer",
+        "techbro",
+        "bikelife"
+      ]
+    },
+    {
+      "id": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "cardIds": [
+        "squabble-house-manager",
+        "squabblehouse-bus-boy",
+        "squabblehouse-cashier",
+        "squabblehouse-security",
+        "squabblehouse-teknician",
+        "griddle-master",
+        "inmate-reformed",
+        "janitor",
+        "waffle-warlord",
+        "sideofhands"
+      ]
+    },
+    {
+      "id": "focus-wonderland",
+      "name": "Wonderland Return",
+      "cardIds": [
+        "alice",
+        "cheshire",
+        "queenofhearts",
+        "mrrabbit",
+        "dorothy",
+        "laundry",
+        "waterboy",
+        "guap",
+        "alchy",
+        "madhatter"
+      ]
+    },
+    {
+      "id": "focus-wiz",
+      "name": "The Wiz",
+      "cardIds": [
+        "dorothy",
+        "scarecrow",
+        "tinman",
+        "oz",
+        "lion",
+        "passportbro",
+        "break",
+        "bboy",
+        "wickedwitch",
+        "flyingmonkeys"
+      ]
+    },
+    {
+      "id": "focus-fire-guap",
+      "name": "Fire and GUAP",
+      "cardIds": [
+        "guap",
+        "folks",
+        "hooper",
+        "bbldemon",
+        "cornercoach",
+        "cognac",
+        "krump",
+        "dancecaptain",
+        "og",
+        "baby"
+      ]
+    },
+    {
+      "id": "focus-earth-tax",
+      "name": "Earth Tax and Finishers",
+      "cardIds": [
+        "landlord",
+        "bigzoey",
+        "stud",
+        "torta",
+        "concrete",
+        "mansamusa",
+        "johnhenry",
+        "partytitan",
+        "asphaltapostle",
+        "failedathlete"
+      ]
+    },
+    {
+      "id": "focus-detective",
+      "name": "Sherlock and Watson",
+      "cardIds": [
+        "sherlock",
+        "watson",
+        "crossingguard",
+        "nightmedic",
+        "wifey",
+        "counter",
+        "oz",
+        "rastamon",
+        "bustdown",
+        "tinman"
+      ]
+    },
+    {
+      "id": "focus-poison-entry",
+      "name": "Poison Entry Punishment",
+      "cardIds": [
+        "bottle",
+        "colognecriminal",
+        "nail",
+        "mural",
+        "fein",
+        "simmy",
+        "bbldemon",
+        "roaster",
+        "plug",
+        "wifey"
+      ]
+    },
+    {
+      "id": "focus-cellblock",
+      "name": "Cellblock Lane Sequence",
+      "cardIds": [
+        "inmate-crafty",
+        "inmate-boyfriend",
+        "inmate-informant",
+        "inmate-contraband",
+        "inmate-kingpin",
+        "lebron-james",
+        "bustdown",
+        "cognac",
+        "rastamon",
+        "wifey"
+      ]
+    },
+    {
+      "id": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "buddy",
+        "wifey",
+        "pinaynurse",
+        "plug",
+        "bustdown"
+      ]
+    },
+    {
+      "id": "focus-late-scaling",
+      "name": "Late Scaling",
+      "cardIds": [
+        "alchy",
+        "icecream",
+        "waterboy",
+        "laundry",
+        "stonersr",
+        "foodz",
+        "buspass",
+        "soulfood",
+        "cognac",
+        "bustdown"
+      ]
+    }
+  ],
+  "leagueIds": [
+    "starter-block",
+    "starter-slide",
+    "starter-combo",
+    "starter-receipts",
+    "starter-crashout",
+    "starter-vibes",
+    "starter-compound",
+    "starter-voltage",
+    "starter-squabblehouse-shift",
+    "focus-wonderland",
+    "focus-wiz",
+    "focus-fire-guap"
+  ],
+  "counterIds": [
+    "focus-earth-tax",
+    "focus-detective",
+    "focus-poison-entry",
+    "focus-cellblock",
+    "focus-counterplay-coherent",
+    "focus-late-scaling"
+  ],
+  "cases": [
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-block",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-block",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-block",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|0|b-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-slide",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 0,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-slide",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-combo",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 0,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-combo",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 0,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-receipts",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 0,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-receipts",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-receipts",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-crashout",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 0,
+      "seat": "b-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-crashout",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-vibes|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "starter-vibes",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "focus-earth-tax",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 0,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "focus-earth-tax",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 0,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+      "phase": "confirmation",
+      "policy": "seeded-legal",
+      "a": "starter-squabblehouse-shift",
+      "b": "focus-earth-tax",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 7,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|focus-detective|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "focus-detective",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    },
+    {
+      "key": "confirmation|greedy|starter-squabblehouse-shift|focus-poison-entry|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+      "phase": "confirmation",
+      "policy": "greedy",
+      "a": "starter-squabblehouse-shift",
+      "b": "focus-poison-entry",
+      "seed": "deck-balance-v33-onshift-fresh-04",
+      "rotation": 2,
+      "tier": 3,
+      "seat": "a-player"
+    }
+  ],
+  "replay": {
+    "originalDirectory": "/home/runner/workspace/scripts/results/deck-balance-v33-onshift",
+    "originalSourceHash": "f9bfa32d48e5d06ed2fba8ba7193c58b243510794ab7c23b50958f4a78a117ab"
+  }
+}

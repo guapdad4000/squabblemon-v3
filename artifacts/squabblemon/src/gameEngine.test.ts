@@ -6,7 +6,7 @@ import {
   getCardCostExplanation, getDistrictCardBonus, getLaneScore, getLegalCardCost, getMatchWinner, getRivalIntent, nextRound, pass, playCard, revealCpu, verifyMatchTranscript,
   createAbilityUpgradeSnapshot, validateAbilityUpgradeSnapshot, type Match,
 } from './gameEngine';
-import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades } from './data';
+import { ABILITY_UPGRADE_UNLOCK_LEVELS, cards, starterRecipes, validateCardAbilityUpgrades, validateSavedDeck } from './data';
 import { generateStreetPack } from '../../api-server/src/lib/collectionEconomy';
 
 const custom = (id: string, owner: 'player' | 'cpu', index: number) => createCardInstance(id, owner, 'test', index);
@@ -151,6 +151,7 @@ test('initial hands are stable, owner-specific instances', () => {
 
 test('every starter opens with multiple legal card and district decisions', () => {
   for (const deck of starterRecipes) {
+    assert.equal(validateSavedDeck(deck.catalogCardIds, deck.catalogCardIds, deck.hero).valid, true, `${deck.id} should remain a legal ten-card deck`);
     const match = createMatch(deck.id, 'combo');
     const legalCards = match.playerHand.filter(card => ([0, 1, 2] as const).some(lane => canAffordSelection(match, 'player', card.instanceId, lane)));
     assert(legalCards.length >= 2, `${deck.id} should open with a choice`);
@@ -583,8 +584,8 @@ test('round-end statuses and hand bonds persist into the next round and final sc
 
 test('former pure bonds retain upgrade IDs but do not grant trained growth from hand', () => {
   const bondCases = [
-    ['honestthot', 'roaster'], ['abuela', 'pinaynurse'], ['icecream', 'vibe'],
-    ['gardener', 'rastamon'], ['incel', 'gamer'], ['torta', 'manman'], ['concrete', 'landlord'],
+    ['honestthot', 'roaster'], ['icecream', 'vibe'],
+    ['incel', 'gamer'], ['concrete', 'landlord'],
   ] as const;
   for (const [caseIndex, [bondId, targetId]] of bondCases.entries()) {
     assert.equal(cards[bondId].elementalBond,undefined);
@@ -627,7 +628,7 @@ test('Elemental Bond Wave catalog entries retain collection identity and a mono-
     ['canopykeeper', 'Plant', 'Rare'], ['slipstream', 'Air', 'Rare'],
   ] as const) {
     const catalog = cardCatalog.find(entry => entry.engineId === bondId);
-    assert.equal(cards[bondId].elementalBond, bondId === 'monsoonanchor' ? element : undefined);
+    assert.equal(cards[bondId].elementalBond, bondId === 'monsoonanchor' || bondId === 'slipstream' ? element : undefined);
     assert.equal(catalog?.rarity, rarity);
   }
   const featured = decks.find(deck => deck.id === 'voltage');
@@ -654,8 +655,8 @@ test('remaining dual-purpose bonds grant only their own element growth', () => {
   const byId = new Map(after.boards.flat().map(card => [card.instanceId, card]));
   assert.equal(byId.get(water.instanceId)?.powerModifier, 1, 'only Sushi Chef retains the Water bond');
   assert.equal(byId.get(electric.instanceId)?.powerModifier, 1, 'only DJ retains the Electric bond');
-  assert.equal(byId.get(plant.instanceId)?.powerModifier, 0, 'Plant sources now need board actions');
-  assert.equal(byId.get(air.instanceId)?.powerModifier, 0, 'Air sources now need board actions');
+  assert.equal(byId.get(plant.instanceId)?.powerModifier, 1, 'only Gardener grants the Plant hand bonus');
+  assert.equal(byId.get(air.instanceId)?.powerModifier, 1, 'only Slipstream grants the Air hand bonus');
   assert.equal(byId.get(fire.instanceId)?.powerModifier, 1, 'GUAP stacks independently for Fire');
 });
 
@@ -665,7 +666,7 @@ test('only the remaining Water bond applies its trained hand-bond upgrade path',
     ['canopykeeper', 'sprout'], ['slipstream', 'gust'],
   ] as const;
   for (const [index, [bondId, targetId]] of bondCases.entries()) {
-    assert.equal(!!cards[bondId].elementalBond,bondId==='monsoonanchor');
+    assert.equal(!!cards[bondId].elementalBond,bondId==='monsoonanchor'||bondId==='slipstream');
     assert.equal(cards[bondId].abilityUpgrades.length,3);
     for (let tier = 0; tier <= 3; tier++) {
       const bond = custom(bondId, 'player', 800 + index * 10 + tier);
@@ -678,7 +679,7 @@ test('only the remaining Water bond applies its trained hand-bond upgrade path',
         }),
       };
       const after = nextRound(match);
-      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, bondId==='monsoonanchor' ? 1 + tier : 0, `${bondId} tier ${tier}`);
+      assert.equal(after.boards[0].find(card => card.instanceId === target.instanceId)?.powerModifier, bondId==='monsoonanchor' ? 1 + tier : bondId==='slipstream' ? 1 : 0, `${bondId} tier ${tier}`);
     }
   }
 });

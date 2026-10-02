@@ -108,3 +108,15 @@ long-task time ~30 s → ~19–21 s, p95 frame 217–267 ms → 133 ms, style re
 The pre-existing budget (18 long tasks) was already exceeded ~10× by the baseline on
 this runner and is still not met; remaining cost is forced layout from framer-motion
 projection and attack geometry measurement, plus special-move chroma drawing.
+
+Commit pass: attack geometry, score/Motion/district change markers and special-move
+playback status no longer round-trip through React state. Geometry and playback
+status are written to the overlay DOM after the board commits; change markers are
+derived during render and expire by hiding their own node. Standard commits
+222 → 93–94, reduced 140 → 76–77 (budget 105); p95 frame 100–117 ms standard,
+133–167 ms reduced (budgets 125/175); React render time ~1.5–1.8 s. Long tasks
+(~160–185 standard, ~63–72 reduced) and long-task time (~15–18 s / ~6–7 s) still
+exceed the 18-task / 1.8 s budget on this GPU-less runner. The CPU profile is
+dominated by native style/layout/raster work, special-move frame drawing (~6 s,
+software video readback), framer-motion `measureScroll` (~3.5 s) and board-wide
+attack measurement (~3 s). Confirm on physical phones before a deeper rework.

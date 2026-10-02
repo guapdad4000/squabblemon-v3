@@ -1,4 +1,5 @@
 import characterRevisions from '../characterRevisions.json';
+import storyPortraitRevisions from './storyPortraitRevisions.json';
 import { elementalStandin } from './elementalStandins';
 
 export const getAssetUrl = (path: string) => {
@@ -7,12 +8,18 @@ export const getAssetUrl = (path: string) => {
   // Story dialogue and battle opponents use asset paths, not catalog IDs. Give
   // those portraits the same revision as collection and card views.
   const artworkId = /^assets\/characters\/([^/]+)\.webp$/.exec(cleanPath)?.[1];
-  const revision = artworkId && (characterRevisions as Record<string, string>)[artworkId];
+  const revision = artworkId && ((storyPortraitRevisions as Record<string, string>)[artworkId]
+    ?? (characterRevisions as Record<string, string>)[artworkId]);
   return revision ? `${url}?v=${revision}` : url;
 };
 
 // Older saved battles used the gameplay ID for these summoned portraits.
-const legacyPortraitIds: Record<string, string> = { shiesty: 'shiesty-yn', grin: 'cheshire', cardguard: 'queen-of-hearts' };
+const legacyPortraitIds: Record<string, string> = {
+  shiesty: 'shiesty-yn',
+  grin: 'cheshire',
+  cardguard: 'queen-of-hearts',
+  sideofhands: 'a-side-of-hands',
+};
 export const getCardImage = (cardId: string, variantId?: string | null) => {
   const standin = elementalStandin(cardId);
   if (standin) return standin;

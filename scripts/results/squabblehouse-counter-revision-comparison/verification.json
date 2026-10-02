@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "experiment": "six-arm-squabblehouse-counter-revision",
+  "verified": true,
+  "completedAt": "2026-10-01T09:40:43.673Z",
+  "arms": [
+    "corrected-original",
+    "current-v31",
+    "cashier-only",
+    "griddle-only",
+    "janitor-only",
+    "combined-v32"
+  ],
+  "uniqueCasesPerArm": 1008,
+  "expectedCasesPerArm": 1008,
+  "shardCountPerArm": 9,
+  "exactCaseKeyCoverage": true,
+  "identicalCaseKeysAcrossArms": true,
+  "identicalCrewOrderAndOpponentLists": true,
+  "nonselectedAbilityIsolation": true,
+  "exactEngineHashesAndFingerprintsChecked": true,
+  "duplicateExecutionsAreValidationReplays": true
+}

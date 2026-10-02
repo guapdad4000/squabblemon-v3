@@ -530,7 +530,7 @@
 .staged-player-focus,
 .staged-rival-focus { animation: card-focus .48s ease-in-out infinite alternate; }
 .staged-rival-reveal,
-.staged-player-reveal { animation: card-reveal .3s ease-out both; }
+.staged-player-reveal { animation: card-reveal calc(.3s / var(--presentation-speed, 1)) ease-out both; }
 .effect-kind-chip {
   flex: none;
   padding: .15rem .35rem;
@@ -543,11 +543,11 @@
 .effect-kind-chip.kind-fire { background: #fb923c; }
 .effect-kind-chip.kind-move { background: #c084fc; }
 .effect-kind-chip.kind-blocked { color: white; background: var(--color-accent); }
-.battle-arena.phase-deal #hand-tray button { animation: deal-card .55s cubic-bezier(.2,.8,.2,1) both; }
-.battle-arena.phase-deal #hand-tray button:nth-child(2) { animation-delay:.06s; }
-.battle-arena.phase-deal #hand-tray button:nth-child(3) { animation-delay:.12s; }
-.battle-arena.phase-deal #hand-tray button:nth-child(4) { animation-delay:.18s; }
-.battle-arena.phase-deal #hand-tray button:nth-child(5) { animation-delay:.24s; }
+.battle-arena.phase-deal #hand-tray button { animation: deal-card calc(.55s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+.battle-arena.phase-deal #hand-tray button:nth-child(2) { animation-delay:calc(.06s / var(--presentation-speed, 1)); }
+.battle-arena.phase-deal #hand-tray button:nth-child(3) { animation-delay:calc(.12s / var(--presentation-speed, 1)); }
+.battle-arena.phase-deal #hand-tray button:nth-child(4) { animation-delay:calc(.18s / var(--presentation-speed, 1)); }
+.battle-arena.phase-deal #hand-tray button:nth-child(5) { animation-delay:calc(.24s / var(--presentation-speed, 1)); }
 .battle-start-smoke {
   position: absolute;
   inset: 0;
@@ -589,8 +589,8 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .phase-rival-reveal .broadcast-overlay { align-items: start; background: transparent; }
 .phase-player-reveal .broadcast-overlay img,
 .phase-rival-reveal .broadcast-overlay img { width: min(42vw, 440px); max-height: 22vh; }
-.district-impact { animation: district-hit .72s cubic-bezier(.2,.8,.2,1); }
-.district-verdict { animation: verdict-pulse .7s ease-in-out 2; }
+.district-impact { animation: district-hit calc(.72s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1); }
+.district-verdict { animation: verdict-pulse calc(.7s / var(--presentation-speed, 1)) ease-in-out 2; }
 .district-verdict.verdict-player { box-shadow:inset 0 0 28px rgba(250,204,21,.35); }
 .district-verdict.verdict-cpu { box-shadow:inset 0 0 28px rgba(225,29,72,.35); }
 .district-verdict.verdict-draw { box-shadow:inset 0 0 28px rgba(255,255,255,.25); }
@@ -598,7 +598,7 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
   content: ""; position: absolute; inset: 12%; z-index: 30; pointer-events: none;
   border: 4px solid var(--impact-color, var(--color-primary)); border-radius: 50%;
   box-shadow: 0 0 24px var(--impact-color, var(--color-primary));
-  animation: impact-ring .72s ease-out forwards;
+  animation: impact-ring calc(.72s / var(--presentation-speed, 1)) ease-out forwards;
 }
 .lane-impact-art {
   position:absolute;
@@ -615,7 +615,7 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
   background-position:31% 0%;
   mix-blend-mode:multiply;
   filter:saturate(1.45) contrast(1.2) drop-shadow(0 0 16px var(--impact-color));
-  animation:lane-fx-pop .78s cubic-bezier(.2,.8,.2,1) forwards;
+  animation:lane-fx-pop calc(.78s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) forwards;
 }
 .lane-impact-art.kind-water { background-position:37% 100%; }
 .lane-impact-art.kind-fire { background-position:29% 100%; }
@@ -625,13 +625,13 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .district-squabble-impact::before {
   content:"SQUABBLE"; position:absolute; inset:8%; z-index:31; display:grid; place-items:center; pointer-events:none;
   color:white; background:rgba(159,18,57,.3); border:3px solid #fb7185; font:900 italic clamp(.8rem,2.8vw,2rem)/1 var(--font-display);
-  text-shadow:0 3px #000,0 0 18px #fb7185; animation:squabble-impact .48s cubic-bezier(.2,.8,.2,1) forwards;
+  text-shadow:0 3px #000,0 0 18px #fb7185; animation:squabble-impact calc(.48s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) forwards;
 }
 .district-lane-0 { --impact-color: #fb923c; }
 .district-lane-1 { --impact-color: #c084fc; }
 .district-lane-2 { --impact-color: #22d3ee; }
-.phase-match-finish .district-verdict.verdict-player { animation: final-player .9s cubic-bezier(.2,.8,.2,1) both; }
-.phase-match-finish .district-verdict.verdict-cpu { animation: final-cpu .9s cubic-bezier(.2,.8,.2,1) both; }
+.phase-match-finish .district-verdict.verdict-player { animation: final-player calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+.phase-match-finish .district-verdict.verdict-cpu { animation: final-cpu calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
 .card-bevel {
   clip-path: polygon(
     min(10px, 8%) 0,
@@ -768,8 +768,8 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .variant-portrait-chrome { filter: saturate(.7) contrast(1.18) drop-shadow(0 0 14px rgba(103,232,249,.65)); }
 .variant-portrait-prismatic { filter: saturate(1.08) contrast(1.1) drop-shadow(-3px 0 0 rgba(66,238,255,.5)) drop-shadow(3px 0 0 rgba(238,73,255,.4)); }
 .variant-portrait-crazy { filter: saturate(1.14) contrast(1.08) drop-shadow(0 0 16px rgba(239,68,68,.5)); }
-.effect-source { animation: effect-source .78s ease-in-out; }
-.effect-target { animation: effect-target .78s ease-in-out; }
+.effect-source { animation: effect-source calc(.78s / var(--presentation-speed, 1)) ease-in-out; }
+.effect-target { animation: effect-target calc(.78s / var(--presentation-speed, 1)) ease-in-out; }
 .effect-kind-fire { --effect-color: #fb923c; }
 .effect-kind-water { --effect-color: #38bdf8; }
 .effect-kind-move { --effect-color: #c084fc; }
@@ -777,8 +777,8 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .effect-source,
 .effect-target { filter: drop-shadow(0 0 9px var(--effect-color, var(--color-primary))); }
 .effect-connection { position:absolute; inset:0; z-index:35; overflow:hidden; pointer-events:none; }
-.effect-connection::before { content:""; position:absolute; inset:7% 4%; border:2px solid rgba(255,255,255,.75); box-shadow:0 0 18px var(--color-primary); animation: effect-flash .82s ease-out; }
-.effect-connection span { position:absolute; top:10%; bottom:10%; left:50%; width:3px; background:linear-gradient(180deg,transparent,var(--color-accent),#fff,var(--color-primary),transparent); animation: effect-beam-vertical .82s ease-out; }
+.effect-connection::before { content:""; position:absolute; inset:7% 4%; border:2px solid rgba(255,255,255,.75); box-shadow:0 0 18px var(--color-primary); animation: effect-flash calc(.82s / var(--presentation-speed, 1)) ease-out; }
+.effect-connection span { position:absolute; top:10%; bottom:10%; left:50%; width:3px; background:linear-gradient(180deg,transparent,var(--color-accent),#fff,var(--color-primary),transparent); animation: effect-beam-vertical calc(.82s / var(--presentation-speed, 1)) ease-out; }
 .card-status-stack {
   display: grid;
   grid-template-columns: repeat(2, 1.15rem);
@@ -875,11 +875,11 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
   position: relative;
   padding: 0 .25rem;
   border-radius: 4px;
-  animation: score-color-flash .9s ease-out;
+  animation: score-color-flash calc(.9s / var(--presentation-speed, 1)) ease-out;
 }
 .score-tick--player { --score-color: var(--color-primary); }
 .score-tick--rival { --score-color: var(--color-accent); }
-.score-tick--changed { animation: score-tick-bump .9s cubic-bezier(.2,.8,.2,1), score-color-flash .9s ease-out; }
+.score-tick--changed { animation: score-tick-bump calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2,.8,.2,1), score-color-flash calc(.9s / var(--presentation-speed, 1)) ease-out; }
 :root[data-reduce-motion='true'] .score-tick--changed { animation: score-color-flash .4s ease-out; }
 .district-prompt.is-selected { color:#000; background:#fff; border-color:#fff; }
 .district-lane.is-selected { box-shadow:inset 0 0 0 3px #fff, 0 0 22px rgba(255,255,255,.3); }
@@ -1054,23 +1054,23 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 @keyframes immersive-particles { 0% { transform: translateY(8px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-12px); opacity: 0; } }
 @keyframes squabble-confetti { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--cx, 60px), var(--cy, -40px)) rotate(720deg); opacity: 0; } }
 
-.portrait-pop { animation: portrait-pop .55s cubic-bezier(.2, .8, .2, 1) both; }
+.portrait-pop { animation: portrait-pop calc(.55s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1) both; }
 .battle-board-card { will-change: transform; }
 .battle-board-card.is-alive-owner { animation: idle-breathe-player 4s ease-in-out infinite; transform-origin: center bottom; }
 .battle-board-card.is-alive-rival { animation: idle-breathe-rival 4s ease-in-out infinite; transform-origin: center bottom; }
-.battle-board-card.is-leading { animation: lean-into-lead .9s cubic-bezier(.2, .8, .2, 1); }
-.battle-board-card.is-trailing { animation: lean-out-of-lead .9s cubic-bezier(.2, .8, .2, 1); }
+.battle-board-card.is-leading { animation: lean-into-lead calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); }
+.battle-board-card.is-trailing { animation: lean-out-of-lead calc(.9s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); }
 .battle-board-card.is-frozen { animation: none; }
 .battle-board-card.is-silenced { animation: none; }
 .battle-board-card.is-blocked { animation: none; }
-.entry-burst { --entry-color: var(--color-primary); animation: entry-burst .7s cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
-.entry-burst--rival { --entry-color: var(--color-accent); animation: entry-rival-burst .7s cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
-.district-cinematic { animation: squabble-cinematic-bump 1.4s cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
-.score-slowmo { animation: score-slowmo-tick 1.1s cubic-bezier(.2, .8, .2, 1); }
+.entry-burst { --entry-color: var(--color-primary); animation: entry-burst calc(.7s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
+.entry-burst--rival { --entry-color: var(--color-accent); animation: entry-rival-burst calc(.7s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
+.district-cinematic { animation: squabble-cinematic-bump calc(1.4s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); transform-origin: center; }
+.score-slowmo { animation: score-slowmo-tick calc(1.1s / var(--presentation-speed, 1)) cubic-bezier(.2, .8, .2, 1); }
 
 .victory-ring-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 45; display: grid; place-items: center; }
-.victory-ring-overlay::before, .victory-ring-overlay::after { content: ''; position: absolute; inset: 8%; border-radius: 50%; border: 4px solid var(--ring-color, var(--color-accent)); box-shadow: 0 0 28px var(--ring-color, var(--color-accent)); animation: victory-ring 1.4s ease-out forwards; }
-.victory-ring-overlay::after { animation-delay: .15s; inset: 14%; }
+.victory-ring-overlay::before, .victory-ring-overlay::after { content: ''; position: absolute; inset: 8%; border-radius: 50%; border: 4px solid var(--ring-color, var(--color-accent)); box-shadow: 0 0 28px var(--ring-color, var(--color-accent)); animation: victory-ring calc(1.4s / var(--presentation-speed, 1)) ease-out forwards; }
+.victory-ring-overlay::after { animation-delay: calc(.15s / var(--presentation-speed, 1)); inset: 14%; }
 .victory-ring-overlay--player { --ring-color: var(--color-primary); }
 .victory-ring-overlay--rival { --ring-color: var(--color-accent); }
 
@@ -1080,16 +1080,16 @@ html[data-reduce-motion="true"] .battle-start-smoke { display: none; }
 .immersive-scene__fg { position: absolute; inset: 0; background-size: contain; background-position: center bottom; background-repeat: no-repeat; animation: immersive-fg-zoom 4s ease-in-out infinite; filter: drop-shadow(0 12px 30px rgba(0,0,0,.9)); }
 .immersive-scene__particles { position: absolute; inset: 0; pointer-events: none; }
 .immersive-scene__particles::before, .immersive-scene__particles::after { content: ''; position: absolute; left: 35%; top: 60%; width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 12px var(--color-primary); animation: immersive-particles 2.4s ease-in-out infinite; }
-.immersive-scene__particles::after { left: 60%; background: var(--color-accent); box-shadow: 0 0 12px var(--color-accent); animation-delay: 1.2s; }
+.immersive-scene__particles::after { left: 60%; background: var(--color-accent); box-shadow: 0 0 12px var(--color-accent); animation-delay: calc(1.2s / var(--presentation-speed, 1)); }
 .immersive-scene__badge { position: absolute; top: 12px; right: 12px; z-index: 4; font-family: var(--font-mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,.6); padding: 4px 8px; border: 1px solid rgba(255,255,255,.2); }
 
-.squabble-confetti { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; pointer-events: none; z-index: 50; border-radius: 1px; animation: squabble-confetti 1.4s ease-out forwards; }
+.squabble-confetti { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; pointer-events: none; z-index: 50; border-radius: 1px; animation: squabble-confetti calc(1.4s / var(--presentation-speed, 1)) ease-out forwards; }
 .squabble-confetti:nth-child(1) { --cx: 80px; --cy: -60px; background: var(--color-primary); }
-.squabble-confetti:nth-child(2) { --cx: -90px; --cy: -50px; background: var(--color-accent); animation-delay: .05s; }
-.squabble-confetti:nth-child(3) { --cx: 60px; --cy: 70px; background: #fff; animation-delay: .1s; }
-.squabble-confetti:nth-child(4) { --cx: -70px; --cy: 80px; background: var(--color-primary); animation-delay: .15s; }
-.squabble-confetti:nth-child(5) { --cx: 100px; --cy: 20px; background: var(--color-accent); animation-delay: .2s; }
-.squabble-confetti:nth-child(6) { --cx: -100px; --cy: 30px; background: #fff; animation-delay: .25s; }
+.squabble-confetti:nth-child(2) { --cx: -90px; --cy: -50px; background: var(--color-accent); animation-delay: calc(.05s / var(--presentation-speed, 1)); }
+.squabble-confetti:nth-child(3) { --cx: 60px; --cy: 70px; background: #fff; animation-delay: calc(.1s / var(--presentation-speed, 1)); }
+.squabble-confetti:nth-child(4) { --cx: -70px; --cy: 80px; background: var(--color-primary); animation-delay: calc(.15s / var(--presentation-speed, 1)); }
+.squabble-confetti:nth-child(5) { --cx: 100px; --cy: 20px; background: var(--color-accent); animation-delay: calc(.2s / var(--presentation-speed, 1)); }
+.squabble-confetti:nth-child(6) { --cx: -100px; --cy: 30px; background: #fff; animation-delay: calc(.25s / var(--presentation-speed, 1)); }
 
 :root[data-reduce-motion='true'] .portrait-pop,
 :root[data-reduce-motion='true'] .is-alive-owner,

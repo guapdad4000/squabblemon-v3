@@ -1,0 +1,1513 @@
+{
+  "generatedAt": "2026-10-02T09:34:47.723Z",
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "harnessHash": "5a784d72c46f54dbbbdb33f470720f66f4d3dc7cb940887a87eae1431ceb5dc1",
+  "planHash": "9dbaf385d334745ea6f233bb55b951a915821dd196eee8b5a52e7beb86676ac1",
+  "balanceVersion": 35,
+  "rulesVersion": 35,
+  "schedule": {
+    "seeds": [
+      "air-water-v35-holdout-01",
+      "air-water-v35-holdout-02",
+      "air-water-v35-holdout-03",
+      "air-water-v35-holdout-04",
+      "air-water-v35-holdout-05",
+      "air-water-v35-holdout-06",
+      "air-water-v35-holdout-07",
+      "air-water-v35-holdout-08"
+    ],
+    "rotations": [
+      0
+    ],
+    "tiers": [
+      0,
+      3
+    ],
+    "seats": [
+      "a-player",
+      "b-player"
+    ],
+    "policies": [
+      "greedy",
+      "seeded-legal"
+    ],
+    "allowSquabble": true
+  },
+  "baseline": {
+    "directory": "scripts/results/all-decks-v35-no-guap",
+    "seeds": [
+      "all-decks-ranking-fresh-a",
+      "all-decks-ranking-fresh-b"
+    ],
+    "files": {
+      "carrier-coverage.json": "a3d81b8c17d31aaeaad326f1dcac004d0751ce459bec7ddf44236e497614c99b",
+      "catalog-snapshot.json": "aaf93ec902fbcf447aa032d0557d5bfcda5ddb56d523ef9550b88df50c77a0ee",
+      "comparison-plan-proof.json": "6674a612a688bd2f060a27a89e12b7c98044e922ebd748663dd9c2c0d45fb620",
+      "comparison.csv": "d3c492e94882f727cc7abf965803884e324133a9475a65a8c0011529440755b5",
+      "comparison.json": "18d7a636ab3d319dd07307325e114787fccc16c2ab6c4b4b60737bf186962808",
+      "comparison.md": "4a4aa8e985f144f1b1f944c316f680831aa91863ab15471e3626a61e5a5e0035",
+      "decklists.csv": "7465e3a48a11dc4c4169ee6fafe03f1890ae7821dd4eacb68f77cb4a0b2f2ae1",
+      "plan.json": "c66a4750576d7c20bed056bb1cd109ac6894b4bc5a5e5fad84ad1890833da2b0",
+      "ranking.csv": "94fe13e27fd6380a78bd05ac893e4ee9d1530c5a8d6d50c43492763c27339f6d",
+      "replay-check.json": "c2e024b1585996bfe316124c49ed54de0d92055256e6442c67707d735e2fb5a8",
+      "report.md": "6fb94ae8832f562ee178ff6a82b984b9a77863bdec5c20e107167a623289c8ff",
+      "runner-sources.json": "2a5bf9cc454bd18862b500f6edc796228b1167b0b57461552c022f557c39e35c",
+      "seed-sensitivity.json": "1081c81578018b009a6ae0541f65893d50bb1a384c2744752a628f97a90f99b7",
+      "summary.json": "97d5aab442e03467099a968210c0bb8b51af982c5845104e0f1f544a3e3ede97",
+      "verification.json": "117904da98b078057a458ec980de877600bc30635a5803f807edccb210e32c90",
+      "worker-0.json": "033b67b40538b6af2433451b5767cff91a6679008b578027a288a520a883d821",
+      "worker-1.json": "93b01c8cd4f985847c1268b6fbfbac82ff786b4b20a6e7d353fb77003afcac22",
+      "worker-2.json": "c96ece434160e3477ae8abe3dc853543733368a91dd672813ff1d43001e81a8e",
+      "worker-3.json": "babd8864ebf0db02f3b5b9b836df1e376deaafbec1d2815f12de417188b79c3f",
+      "worker-4.json": "88361bcf37b175a3a20cd3917e7216660d39b6aff35e055f5c5cc77e874d7919",
+      "worker-5.json": "820999d393ff33fb3897f078a56d919be01580822d10ffe1619186b82e5dadf0",
+      "worker-6.json": "73e9f1fb10640e0d20a8ed687bafe4b8d1bc44bac898f3717fd81c389e5144f9"
+    }
+  },
+  "workers": [
+    {
+      "index": 0,
+      "matches": 650,
+      "elapsedMs": 293519,
+      "evidenceHash": "cefb648cc928b03771c799c10dc1ee131a7df3ccec777fa6a1f0b882d34f8115"
+    },
+    {
+      "index": 1,
+      "matches": 649,
+      "elapsedMs": 293511,
+      "evidenceHash": "d014c390ad1bb3c326f3e46aaa97e39a3d9e41188c116da9696b50e50a798b6c"
+    },
+    {
+      "index": 2,
+      "matches": 649,
+      "elapsedMs": 293519,
+      "evidenceHash": "582efcb4fe00a3db2558e347a0dbb424ce0392432b4a327552eb41d41cdc8f28"
+    },
+    {
+      "index": 3,
+      "matches": 649,
+      "elapsedMs": 293916,
+      "evidenceHash": "3a4c1b5b6de1f51f647c0a984212f0bc0e0055d8fa077546f2f9d50ac468be14"
+    },
+    {
+      "index": 4,
+      "matches": 649,
+      "elapsedMs": 293924,
+      "evidenceHash": "c3fd8dcab1b82e130f64293e73e2563b5e74bfaa335efc2b6135f39030c131d1"
+    },
+    {
+      "index": 5,
+      "matches": 649,
+      "elapsedMs": 293537,
+      "evidenceHash": "5423e35e3ab8874744c358e31fb40bfade2f2802ea48ce2f5627109a381f89e3"
+    },
+    {
+      "index": 6,
+      "matches": 649,
+      "elapsedMs": 293495,
+      "evidenceHash": "e8132204102c1a0ce4a56668cc8d428609942e0b1bfbb34e5df6208a1708f9d4"
+    }
+  ],
+  "previousSample": [
+    {
+      "deckId": "element-air",
+      "rank": 1,
+      "all": {
+        "games": 576,
+        "wins": 433,
+        "losses": 111,
+        "draws": 32,
+        "winRate": 0.7517361111111112,
+        "scoreRate": 0.7795138888888888
+      }
+    },
+    {
+      "deckId": "element-water",
+      "rank": 2,
+      "all": {
+        "games": 576,
+        "wins": 433,
+        "losses": 115,
+        "draws": 28,
+        "winRate": 0.7517361111111112,
+        "scoreRate": 0.7760416666666666
+      }
+    }
+  ],
+  "limitations": [
+    "Fixed-deck bot comparison on eight predeclared fresh seed labels; no gameplay or roster changes and no tuning between seeds.",
+    "Only Air and Water are tested against the field. This does not rerank all 37 decks or establish an overall best deck.",
+    "Score is (wins + half draws) / games, not a player win rate. Repeated policy/tier/seat cases are not independent human samples.",
+    "Seed labels change districts, deck shuffles and seeded-policy choices. New labels need not yield unique district layouts; observed ordered layouts are recorded per seed.",
+    "The 35 shared opponents are also reported separately from the Air–Water head-to-head; the shared match is simulated only once.",
+    "GUAP is excluded. These frozen rosters contain no Barber Bro, so Normal’s hand bonus is not measured.",
+    "Bot movement choices are not optimized; ability-driven movement still runs."
+  ],
+  "checks": {
+    "complete": true,
+    "uniqueMatches": 4544,
+    "freshMatches": 4544,
+    "reusedMatches": 0,
+    "casesPerPair": 64,
+    "gamesPerSubject": 2304,
+    "opponentsPerSubject": 36,
+    "commonOpponents": 35,
+    "failures": 0
+  },
+  "subjects": [
+    {
+      "deckId": "element-air",
+      "name": "Air",
+      "cardIds": [
+        "slipstream",
+        "promoter",
+        "captainjigga",
+        "honestthot",
+        "gust",
+        "crosswind",
+        "cloudbreak",
+        "ptang",
+        "ogdominican",
+        "cheshire"
+      ],
+      "all": {
+        "games": 2304,
+        "wins": 1603,
+        "losses": 557,
+        "draws": 144,
+        "winRate": 0.6957465277777778,
+        "scoreRate": 0.7269965277777778
+      },
+      "commonField": {
+        "games": 2240,
+        "wins": 1576,
+        "losses": 525,
+        "draws": 139,
+        "winRate": 0.7035714285714286,
+        "scoreRate": 0.7345982142857143
+      },
+      "headToHead": {
+        "games": 64,
+        "wins": 27,
+        "losses": 32,
+        "draws": 5,
+        "winRate": 0.421875,
+        "scoreRate": 0.4609375
+      },
+      "bySeed": [
+        {
+          "seed": "air-water-v35-holdout-01",
+          "games": 288,
+          "wins": 204,
+          "losses": 70,
+          "draws": 14,
+          "winRate": 0.7083333333333334,
+          "scoreRate": 0.7326388888888888
+        },
+        {
+          "seed": "air-water-v35-holdout-02",
+          "games": 288,
+          "wins": 183,
+          "losses": 78,
+          "draws": 27,
+          "winRate": 0.6354166666666666,
+          "scoreRate": 0.6822916666666666
+        },
+        {
+          "seed": "air-water-v35-holdout-03",
+          "games": 288,
+          "wins": 211,
+          "losses": 62,
+          "draws": 15,
+          "winRate": 0.7326388888888888,
+          "scoreRate": 0.7586805555555556
+        },
+        {
+          "seed": "air-water-v35-holdout-04",
+          "games": 288,
+          "wins": 197,
+          "losses": 78,
+          "draws": 13,
+          "winRate": 0.6840277777777778,
+          "scoreRate": 0.7065972222222222
+        },
+        {
+          "seed": "air-water-v35-holdout-05",
+          "games": 288,
+          "wins": 198,
+          "losses": 64,
+          "draws": 26,
+          "winRate": 0.6875,
+          "scoreRate": 0.7326388888888888
+        },
+        {
+          "seed": "air-water-v35-holdout-06",
+          "games": 288,
+          "wins": 206,
+          "losses": 69,
+          "draws": 13,
+          "winRate": 0.7152777777777778,
+          "scoreRate": 0.7378472222222222
+        },
+        {
+          "seed": "air-water-v35-holdout-07",
+          "games": 288,
+          "wins": 211,
+          "losses": 56,
+          "draws": 21,
+          "winRate": 0.7326388888888888,
+          "scoreRate": 0.7690972222222222
+        },
+        {
+          "seed": "air-water-v35-holdout-08",
+          "games": 288,
+          "wins": 193,
+          "losses": 80,
+          "draws": 15,
+          "winRate": 0.6701388888888888,
+          "scoreRate": 0.6961805555555556
+        }
+      ],
+      "byPolicy": [
+        {
+          "policy": "greedy",
+          "games": 1152,
+          "wins": 894,
+          "losses": 209,
+          "draws": 49,
+          "winRate": 0.7760416666666666,
+          "scoreRate": 0.7973090277777778
+        },
+        {
+          "policy": "seeded-legal",
+          "games": 1152,
+          "wins": 709,
+          "losses": 348,
+          "draws": 95,
+          "winRate": 0.6154513888888888,
+          "scoreRate": 0.6566840277777778
+        }
+      ],
+      "byTier": [
+        {
+          "tier": 0,
+          "games": 1152,
+          "wins": 866,
+          "losses": 213,
+          "draws": 73,
+          "winRate": 0.7517361111111112,
+          "scoreRate": 0.7834201388888888
+        },
+        {
+          "tier": 3,
+          "games": 1152,
+          "wins": 737,
+          "losses": 344,
+          "draws": 71,
+          "winRate": 0.6397569444444444,
+          "scoreRate": 0.6705729166666666
+        }
+      ],
+      "bySeat": [
+        {
+          "seat": "player",
+          "games": 1152,
+          "wins": 741,
+          "losses": 323,
+          "draws": 88,
+          "winRate": 0.6432291666666666,
+          "scoreRate": 0.6814236111111112
+        },
+        {
+          "seat": "cpu",
+          "games": 1152,
+          "wins": 862,
+          "losses": 234,
+          "draws": 56,
+          "winRate": 0.7482638888888888,
+          "scoreRate": 0.7725694444444444
+        }
+      ],
+      "byOpponent": [
+        {
+          "deckId": "starter-block",
+          "name": "THE BLOCK IS HOT",
+          "games": 64,
+          "wins": 52,
+          "losses": 9,
+          "draws": 3,
+          "winRate": 0.8125,
+          "scoreRate": 0.8359375
+        },
+        {
+          "deckId": "starter-slide",
+          "name": "SLIDE THRU",
+          "games": 64,
+          "wins": 48,
+          "losses": 9,
+          "draws": 7,
+          "winRate": 0.75,
+          "scoreRate": 0.8046875
+        },
+        {
+          "deckId": "starter-combo",
+          "name": "WHO YOU KNOW",
+          "games": 64,
+          "wins": 56,
+          "losses": 5,
+          "draws": 3,
+          "winRate": 0.875,
+          "scoreRate": 0.8984375
+        },
+        {
+          "deckId": "starter-receipts",
+          "name": "RECEIPTS",
+          "games": 64,
+          "wins": 50,
+          "losses": 8,
+          "draws": 6,
+          "winRate": 0.78125,
+          "scoreRate": 0.828125
+        },
+        {
+          "deckId": "starter-crashout",
+          "name": "CRASHOUT SEASON",
+          "games": 64,
+          "wins": 52,
+          "losses": 7,
+          "draws": 5,
+          "winRate": 0.8125,
+          "scoreRate": 0.8515625
+        },
+        {
+          "deckId": "starter-vibes",
+          "name": "GOOD VIBES ONLY",
+          "games": 64,
+          "wins": 48,
+          "losses": 11,
+          "draws": 5,
+          "winRate": 0.75,
+          "scoreRate": 0.7890625
+        },
+        {
+          "deckId": "starter-compound",
+          "name": "COMPOUND INTEREST",
+          "games": 64,
+          "wins": 54,
+          "losses": 7,
+          "draws": 3,
+          "winRate": 0.84375,
+          "scoreRate": 0.8671875
+        },
+        {
+          "deckId": "starter-voltage",
+          "name": "VOLTAGE IN MOTION",
+          "games": 64,
+          "wins": 38,
+          "losses": 20,
+          "draws": 6,
+          "winRate": 0.59375,
+          "scoreRate": 0.640625
+        },
+        {
+          "deckId": "starter-squabblehouse-shift",
+          "name": "SQUABBLEHOUSE SHIFT",
+          "games": 64,
+          "wins": 29,
+          "losses": 30,
+          "draws": 5,
+          "winRate": 0.453125,
+          "scoreRate": 0.4921875
+        },
+        {
+          "deckId": "focus-wave7-legends",
+          "name": "Wave 7 Legends",
+          "games": 64,
+          "wins": 43,
+          "losses": 16,
+          "draws": 5,
+          "winRate": 0.671875,
+          "scoreRate": 0.7109375
+        },
+        {
+          "deckId": "focus-wave7-tempo",
+          "name": "Wave 7 Tempo",
+          "games": 64,
+          "wins": 59,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.921875,
+          "scoreRate": 0.9375
+        },
+        {
+          "deckId": "focus-air-bond",
+          "name": "Air Bond",
+          "games": 64,
+          "wins": 47,
+          "losses": 14,
+          "draws": 3,
+          "winRate": 0.734375,
+          "scoreRate": 0.7578125
+        },
+        {
+          "deckId": "focus-late-scaling",
+          "name": "Late Scaling",
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        {
+          "deckId": "focus-counterplay",
+          "name": "Counterplay",
+          "games": 64,
+          "wins": 53,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.828125,
+          "scoreRate": 0.84375
+        },
+        {
+          "deckId": "focus-earth-tax",
+          "name": "Earth Tax and Finishers",
+          "games": 64,
+          "wins": 36,
+          "losses": 26,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.578125
+        },
+        {
+          "deckId": "focus-detective",
+          "name": "Sherlock and Watson",
+          "games": 64,
+          "wins": 48,
+          "losses": 12,
+          "draws": 4,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        {
+          "deckId": "focus-wiz",
+          "name": "The Wiz",
+          "games": 64,
+          "wins": 36,
+          "losses": 23,
+          "draws": 5,
+          "winRate": 0.5625,
+          "scoreRate": 0.6015625
+        },
+        {
+          "deckId": "focus-wonderland",
+          "name": "Wonderland Return",
+          "games": 64,
+          "wins": 32,
+          "losses": 27,
+          "draws": 5,
+          "winRate": 0.5,
+          "scoreRate": 0.5390625
+        },
+        {
+          "deckId": "focus-fire-guap",
+          "name": "Fire Pressure",
+          "games": 64,
+          "wins": 53,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.828125,
+          "scoreRate": 0.84375
+        },
+        {
+          "deckId": "focus-poison-entry",
+          "name": "Poison Entry Punishment",
+          "games": 64,
+          "wins": 44,
+          "losses": 18,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.703125
+        },
+        {
+          "deckId": "focus-cellblock",
+          "name": "Cellblock Lane Sequence",
+          "games": 64,
+          "wins": 45,
+          "losses": 15,
+          "draws": 4,
+          "winRate": 0.703125,
+          "scoreRate": 0.734375
+        },
+        {
+          "deckId": "focus-cellblock-classic",
+          "name": "Cellblock — No Kingpin",
+          "games": 64,
+          "wins": 50,
+          "losses": 12,
+          "draws": 2,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        {
+          "deckId": "focus-demario-luigion",
+          "name": "Demario and Luigion",
+          "games": 64,
+          "wins": 51,
+          "losses": 9,
+          "draws": 4,
+          "winRate": 0.796875,
+          "scoreRate": 0.828125
+        },
+        {
+          "deckId": "focus-counterplay-coherent",
+          "name": "Counterplay — Dark Control",
+          "games": 64,
+          "wins": 41,
+          "losses": 18,
+          "draws": 5,
+          "winRate": 0.640625,
+          "scoreRate": 0.6796875
+        },
+        {
+          "deckId": "element-light",
+          "name": "Light",
+          "games": 64,
+          "wins": 36,
+          "losses": 24,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        {
+          "deckId": "element-water",
+          "name": "Water",
+          "games": 64,
+          "wins": 27,
+          "losses": 32,
+          "draws": 5,
+          "winRate": 0.421875,
+          "scoreRate": 0.4609375
+        },
+        {
+          "deckId": "element-plant",
+          "name": "Plant",
+          "games": 64,
+          "wins": 42,
+          "losses": 16,
+          "draws": 6,
+          "winRate": 0.65625,
+          "scoreRate": 0.703125
+        },
+        {
+          "deckId": "element-electric",
+          "name": "Electric",
+          "games": 64,
+          "wins": 45,
+          "losses": 14,
+          "draws": 5,
+          "winRate": 0.703125,
+          "scoreRate": 0.7421875
+        },
+        {
+          "deckId": "element-dark",
+          "name": "Dark",
+          "games": 64,
+          "wins": 29,
+          "losses": 27,
+          "draws": 8,
+          "winRate": 0.453125,
+          "scoreRate": 0.515625
+        },
+        {
+          "deckId": "element-earth",
+          "name": "Earth",
+          "games": 64,
+          "wins": 40,
+          "losses": 19,
+          "draws": 5,
+          "winRate": 0.625,
+          "scoreRate": 0.6640625
+        },
+        {
+          "deckId": "element-fire",
+          "name": "Fire",
+          "games": 64,
+          "wins": 53,
+          "losses": 11,
+          "draws": 0,
+          "winRate": 0.828125,
+          "scoreRate": 0.828125
+        },
+        {
+          "deckId": "element-poison",
+          "name": "Poison",
+          "games": 64,
+          "wins": 48,
+          "losses": 13,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.7734375
+        },
+        {
+          "deckId": "focused-red-set",
+          "name": "Blood / Red Set",
+          "games": 64,
+          "wins": 39,
+          "losses": 16,
+          "draws": 9,
+          "winRate": 0.609375,
+          "scoreRate": 0.6796875
+        },
+        {
+          "deckId": "focused-blue-set",
+          "name": "Crip / Blue Set",
+          "games": 64,
+          "wins": 58,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.90625,
+          "scoreRate": 0.921875
+        },
+        {
+          "deckId": "cellblock-pressure",
+          "name": "Cellblock Pressure",
+          "games": 64,
+          "wins": 39,
+          "losses": 22,
+          "draws": 3,
+          "winRate": 0.609375,
+          "scoreRate": 0.6328125
+        },
+        {
+          "deckId": "mushroom-plant",
+          "name": "Mushroom Garden",
+          "games": 64,
+          "wins": 27,
+          "losses": 35,
+          "draws": 2,
+          "winRate": 0.421875,
+          "scoreRate": 0.4375
+        }
+      ]
+    },
+    {
+      "deckId": "element-water",
+      "name": "Water",
+      "cardIds": [
+        "monsoonanchor",
+        "conductor",
+        "vibe",
+        "waterboy",
+        "laundry",
+        "alchy",
+        "icecream",
+        "stillwatermedic",
+        "riptidebruiser",
+        "watson"
+      ],
+      "all": {
+        "games": 2304,
+        "wins": 1627,
+        "losses": 535,
+        "draws": 142,
+        "winRate": 0.7061631944444444,
+        "scoreRate": 0.7369791666666666
+      },
+      "commonField": {
+        "games": 2240,
+        "wins": 1595,
+        "losses": 508,
+        "draws": 137,
+        "winRate": 0.7120535714285714,
+        "scoreRate": 0.7426339285714286
+      },
+      "headToHead": {
+        "games": 64,
+        "wins": 32,
+        "losses": 27,
+        "draws": 5,
+        "winRate": 0.5,
+        "scoreRate": 0.5390625
+      },
+      "bySeed": [
+        {
+          "seed": "air-water-v35-holdout-01",
+          "games": 288,
+          "wins": 182,
+          "losses": 90,
+          "draws": 16,
+          "winRate": 0.6319444444444444,
+          "scoreRate": 0.6597222222222222
+        },
+        {
+          "seed": "air-water-v35-holdout-02",
+          "games": 288,
+          "wins": 197,
+          "losses": 68,
+          "draws": 23,
+          "winRate": 0.6840277777777778,
+          "scoreRate": 0.7239583333333334
+        },
+        {
+          "seed": "air-water-v35-holdout-03",
+          "games": 288,
+          "wins": 201,
+          "losses": 69,
+          "draws": 18,
+          "winRate": 0.6979166666666666,
+          "scoreRate": 0.7291666666666666
+        },
+        {
+          "seed": "air-water-v35-holdout-04",
+          "games": 288,
+          "wins": 226,
+          "losses": 49,
+          "draws": 13,
+          "winRate": 0.7847222222222222,
+          "scoreRate": 0.8072916666666666
+        },
+        {
+          "seed": "air-water-v35-holdout-05",
+          "games": 288,
+          "wins": 170,
+          "losses": 98,
+          "draws": 20,
+          "winRate": 0.5902777777777778,
+          "scoreRate": 0.625
+        },
+        {
+          "seed": "air-water-v35-holdout-06",
+          "games": 288,
+          "wins": 240,
+          "losses": 40,
+          "draws": 8,
+          "winRate": 0.8333333333333334,
+          "scoreRate": 0.8472222222222222
+        },
+        {
+          "seed": "air-water-v35-holdout-07",
+          "games": 288,
+          "wins": 224,
+          "losses": 40,
+          "draws": 24,
+          "winRate": 0.7777777777777778,
+          "scoreRate": 0.8194444444444444
+        },
+        {
+          "seed": "air-water-v35-holdout-08",
+          "games": 288,
+          "wins": 187,
+          "losses": 81,
+          "draws": 20,
+          "winRate": 0.6493055555555556,
+          "scoreRate": 0.6840277777777778
+        }
+      ],
+      "byPolicy": [
+        {
+          "policy": "greedy",
+          "games": 1152,
+          "wins": 870,
+          "losses": 237,
+          "draws": 45,
+          "winRate": 0.7552083333333334,
+          "scoreRate": 0.7747395833333334
+        },
+        {
+          "policy": "seeded-legal",
+          "games": 1152,
+          "wins": 757,
+          "losses": 298,
+          "draws": 97,
+          "winRate": 0.6571180555555556,
+          "scoreRate": 0.69921875
+        }
+      ],
+      "byTier": [
+        {
+          "tier": 0,
+          "games": 1152,
+          "wins": 771,
+          "losses": 297,
+          "draws": 84,
+          "winRate": 0.6692708333333334,
+          "scoreRate": 0.7057291666666666
+        },
+        {
+          "tier": 3,
+          "games": 1152,
+          "wins": 856,
+          "losses": 238,
+          "draws": 58,
+          "winRate": 0.7430555555555556,
+          "scoreRate": 0.7682291666666666
+        }
+      ],
+      "bySeat": [
+        {
+          "seat": "player",
+          "games": 1152,
+          "wins": 758,
+          "losses": 309,
+          "draws": 85,
+          "winRate": 0.6579861111111112,
+          "scoreRate": 0.6948784722222222
+        },
+        {
+          "seat": "cpu",
+          "games": 1152,
+          "wins": 869,
+          "losses": 226,
+          "draws": 57,
+          "winRate": 0.7543402777777778,
+          "scoreRate": 0.7790798611111112
+        }
+      ],
+      "byOpponent": [
+        {
+          "deckId": "starter-block",
+          "name": "THE BLOCK IS HOT",
+          "games": 64,
+          "wins": 52,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        {
+          "deckId": "starter-slide",
+          "name": "SLIDE THRU",
+          "games": 64,
+          "wins": 49,
+          "losses": 13,
+          "draws": 2,
+          "winRate": 0.765625,
+          "scoreRate": 0.78125
+        },
+        {
+          "deckId": "starter-combo",
+          "name": "WHO YOU KNOW",
+          "games": 64,
+          "wins": 60,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.9453125
+        },
+        {
+          "deckId": "starter-receipts",
+          "name": "RECEIPTS",
+          "games": 64,
+          "wins": 56,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.890625
+        },
+        {
+          "deckId": "starter-crashout",
+          "name": "CRASHOUT SEASON",
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        {
+          "deckId": "starter-vibes",
+          "name": "GOOD VIBES ONLY",
+          "games": 64,
+          "wins": 51,
+          "losses": 11,
+          "draws": 2,
+          "winRate": 0.796875,
+          "scoreRate": 0.8125
+        },
+        {
+          "deckId": "starter-compound",
+          "name": "COMPOUND INTEREST",
+          "games": 64,
+          "wins": 55,
+          "losses": 5,
+          "draws": 4,
+          "winRate": 0.859375,
+          "scoreRate": 0.890625
+        },
+        {
+          "deckId": "starter-voltage",
+          "name": "VOLTAGE IN MOTION",
+          "games": 64,
+          "wins": 44,
+          "losses": 14,
+          "draws": 6,
+          "winRate": 0.6875,
+          "scoreRate": 0.734375
+        },
+        {
+          "deckId": "starter-squabblehouse-shift",
+          "name": "SQUABBLEHOUSE SHIFT",
+          "games": 64,
+          "wins": 30,
+          "losses": 30,
+          "draws": 4,
+          "winRate": 0.46875,
+          "scoreRate": 0.5
+        },
+        {
+          "deckId": "focus-wave7-legends",
+          "name": "Wave 7 Legends",
+          "games": 64,
+          "wins": 40,
+          "losses": 19,
+          "draws": 5,
+          "winRate": 0.625,
+          "scoreRate": 0.6640625
+        },
+        {
+          "deckId": "focus-wave7-tempo",
+          "name": "Wave 7 Tempo",
+          "games": 64,
+          "wins": 61,
+          "losses": 1,
+          "draws": 2,
+          "winRate": 0.953125,
+          "scoreRate": 0.96875
+        },
+        {
+          "deckId": "focus-air-bond",
+          "name": "Air Bond",
+          "games": 64,
+          "wins": 42,
+          "losses": 16,
+          "draws": 6,
+          "winRate": 0.65625,
+          "scoreRate": 0.703125
+        },
+        {
+          "deckId": "focus-late-scaling",
+          "name": "Late Scaling",
+          "games": 64,
+          "wins": 60,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.9453125
+        },
+        {
+          "deckId": "focus-counterplay",
+          "name": "Counterplay",
+          "games": 64,
+          "wins": 55,
+          "losses": 4,
+          "draws": 5,
+          "winRate": 0.859375,
+          "scoreRate": 0.8984375
+        },
+        {
+          "deckId": "focus-earth-tax",
+          "name": "Earth Tax and Finishers",
+          "games": 64,
+          "wins": 46,
+          "losses": 14,
+          "draws": 4,
+          "winRate": 0.71875,
+          "scoreRate": 0.75
+        },
+        {
+          "deckId": "focus-detective",
+          "name": "Sherlock and Watson",
+          "games": 64,
+          "wins": 53,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.828125,
+          "scoreRate": 0.84375
+        },
+        {
+          "deckId": "focus-wiz",
+          "name": "The Wiz",
+          "games": 64,
+          "wins": 39,
+          "losses": 23,
+          "draws": 2,
+          "winRate": 0.609375,
+          "scoreRate": 0.625
+        },
+        {
+          "deckId": "focus-wonderland",
+          "name": "Wonderland Return",
+          "games": 64,
+          "wins": 21,
+          "losses": 40,
+          "draws": 3,
+          "winRate": 0.328125,
+          "scoreRate": 0.3515625
+        },
+        {
+          "deckId": "focus-fire-guap",
+          "name": "Fire Pressure",
+          "games": 64,
+          "wins": 53,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.828125,
+          "scoreRate": 0.84375
+        },
+        {
+          "deckId": "focus-poison-entry",
+          "name": "Poison Entry Punishment",
+          "games": 64,
+          "wins": 47,
+          "losses": 9,
+          "draws": 8,
+          "winRate": 0.734375,
+          "scoreRate": 0.796875
+        },
+        {
+          "deckId": "focus-cellblock",
+          "name": "Cellblock Lane Sequence",
+          "games": 64,
+          "wins": 49,
+          "losses": 13,
+          "draws": 2,
+          "winRate": 0.765625,
+          "scoreRate": 0.78125
+        },
+        {
+          "deckId": "focus-cellblock-classic",
+          "name": "Cellblock — No Kingpin",
+          "games": 64,
+          "wins": 49,
+          "losses": 13,
+          "draws": 2,
+          "winRate": 0.765625,
+          "scoreRate": 0.78125
+        },
+        {
+          "deckId": "focus-demario-luigion",
+          "name": "Demario and Luigion",
+          "games": 64,
+          "wins": 48,
+          "losses": 11,
+          "draws": 5,
+          "winRate": 0.75,
+          "scoreRate": 0.7890625
+        },
+        {
+          "deckId": "focus-counterplay-coherent",
+          "name": "Counterplay — Dark Control",
+          "games": 64,
+          "wins": 39,
+          "losses": 20,
+          "draws": 5,
+          "winRate": 0.609375,
+          "scoreRate": 0.6484375
+        },
+        {
+          "deckId": "element-light",
+          "name": "Light",
+          "games": 64,
+          "wins": 34,
+          "losses": 25,
+          "draws": 5,
+          "winRate": 0.53125,
+          "scoreRate": 0.5703125
+        },
+        {
+          "deckId": "element-plant",
+          "name": "Plant",
+          "games": 64,
+          "wins": 42,
+          "losses": 13,
+          "draws": 9,
+          "winRate": 0.65625,
+          "scoreRate": 0.7265625
+        },
+        {
+          "deckId": "element-electric",
+          "name": "Electric",
+          "games": 64,
+          "wins": 39,
+          "losses": 21,
+          "draws": 4,
+          "winRate": 0.609375,
+          "scoreRate": 0.640625
+        },
+        {
+          "deckId": "element-dark",
+          "name": "Dark",
+          "games": 64,
+          "wins": 27,
+          "losses": 32,
+          "draws": 5,
+          "winRate": 0.421875,
+          "scoreRate": 0.4609375
+        },
+        {
+          "deckId": "element-earth",
+          "name": "Earth",
+          "games": 64,
+          "wins": 41,
+          "losses": 19,
+          "draws": 4,
+          "winRate": 0.640625,
+          "scoreRate": 0.671875
+        },
+        {
+          "deckId": "element-fire",
+          "name": "Fire",
+          "games": 64,
+          "wins": 45,
+          "losses": 16,
+          "draws": 3,
+          "winRate": 0.703125,
+          "scoreRate": 0.7265625
+        },
+        {
+          "deckId": "element-air",
+          "name": "Air",
+          "games": 64,
+          "wins": 32,
+          "losses": 27,
+          "draws": 5,
+          "winRate": 0.5,
+          "scoreRate": 0.5390625
+        },
+        {
+          "deckId": "element-poison",
+          "name": "Poison",
+          "games": 64,
+          "wins": 49,
+          "losses": 12,
+          "draws": 3,
+          "winRate": 0.765625,
+          "scoreRate": 0.7890625
+        },
+        {
+          "deckId": "focused-red-set",
+          "name": "Blood / Red Set",
+          "games": 64,
+          "wins": 43,
+          "losses": 19,
+          "draws": 2,
+          "winRate": 0.671875,
+          "scoreRate": 0.6875
+        },
+        {
+          "deckId": "focused-blue-set",
+          "name": "Crip / Blue Set",
+          "games": 64,
+          "wins": 52,
+          "losses": 7,
+          "draws": 5,
+          "winRate": 0.8125,
+          "scoreRate": 0.8515625
+        },
+        {
+          "deckId": "cellblock-pressure",
+          "name": "Cellblock Pressure",
+          "games": 64,
+          "wins": 40,
+          "losses": 15,
+          "draws": 9,
+          "winRate": 0.625,
+          "scoreRate": 0.6953125
+        },
+        {
+          "deckId": "mushroom-plant",
+          "name": "Mushroom Garden",
+          "games": 64,
+          "wins": 29,
+          "losses": 28,
+          "draws": 7,
+          "winRate": 0.453125,
+          "scoreRate": 0.5078125
+        }
+      ]
+    }
+  ],
+  "perSeed": [
+    {
+      "seed": "air-water-v35-holdout-01",
+      "observedDistrictTriples": [
+        [
+          "rush-hour",
+          "waff-l-house",
+          "dive-bar"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-01",
+        "games": 288,
+        "wins": 204,
+        "losses": 70,
+        "draws": 14,
+        "winRate": 0.7083333333333334,
+        "scoreRate": 0.7326388888888888
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-01",
+        "games": 288,
+        "wins": 182,
+        "losses": 90,
+        "draws": 16,
+        "winRate": 0.6319444444444444,
+        "scoreRate": 0.6597222222222222
+      },
+      "airMinusWaterPercentagePoints": 7.2916666666666625
+    },
+    {
+      "seed": "air-water-v35-holdout-02",
+      "observedDistrictTriples": [
+        [
+          "penthouse",
+          "barbershop",
+          "mirror-arcade"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-02",
+        "games": 288,
+        "wins": 183,
+        "losses": 78,
+        "draws": 27,
+        "winRate": 0.6354166666666666,
+        "scoreRate": 0.6822916666666666
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-02",
+        "games": 288,
+        "wins": 197,
+        "losses": 68,
+        "draws": 23,
+        "winRate": 0.6840277777777778,
+        "scoreRate": 0.7239583333333334
+      },
+      "airMinusWaterPercentagePoints": -4.166666666666674
+    },
+    {
+      "seed": "air-water-v35-holdout-03",
+      "observedDistrictTriples": [
+        [
+          "the-trap",
+          "time-square",
+          "pawn-shop"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-03",
+        "games": 288,
+        "wins": 211,
+        "losses": 62,
+        "draws": 15,
+        "winRate": 0.7326388888888888,
+        "scoreRate": 0.7586805555555556
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-03",
+        "games": 288,
+        "wins": 201,
+        "losses": 69,
+        "draws": 18,
+        "winRate": 0.6979166666666666,
+        "scoreRate": 0.7291666666666666
+      },
+      "airMinusWaterPercentagePoints": 2.951388888888895
+    },
+    {
+      "seed": "air-water-v35-holdout-04",
+      "observedDistrictTriples": [
+        [
+          "rooftop-garden",
+          "pirate-radio",
+          "flood-channel"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-04",
+        "games": 288,
+        "wins": 197,
+        "losses": 78,
+        "draws": 13,
+        "winRate": 0.6840277777777778,
+        "scoreRate": 0.7065972222222222
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-04",
+        "games": 288,
+        "wins": 226,
+        "losses": 49,
+        "draws": 13,
+        "winRate": 0.7847222222222222,
+        "scoreRate": 0.8072916666666666
+      },
+      "airMinusWaterPercentagePoints": -10.069444444444443
+    },
+    {
+      "seed": "air-water-v35-holdout-05",
+      "observedDistrictTriples": [
+        [
+          "o-block",
+          "blackout-block",
+          "vip-section"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-05",
+        "games": 288,
+        "wins": 198,
+        "losses": 64,
+        "draws": 26,
+        "winRate": 0.6875,
+        "scoreRate": 0.7326388888888888
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-05",
+        "games": 288,
+        "wins": 170,
+        "losses": 98,
+        "draws": 20,
+        "winRate": 0.5902777777777778,
+        "scoreRate": 0.625
+      },
+      "airMinusWaterPercentagePoints": 10.763888888888884
+    },
+    {
+      "seed": "air-water-v35-holdout-06",
+      "observedDistrictTriples": [
+        [
+          "nail-salon",
+          "corrupt-church",
+          "magic-city"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-06",
+        "games": 288,
+        "wins": 206,
+        "losses": 69,
+        "draws": 13,
+        "winRate": 0.7152777777777778,
+        "scoreRate": 0.7378472222222222
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-06",
+        "games": 288,
+        "wins": 240,
+        "losses": 40,
+        "draws": 8,
+        "winRate": 0.8333333333333334,
+        "scoreRate": 0.8472222222222222
+      },
+      "airMinusWaterPercentagePoints": -10.9375
+    },
+    {
+      "seed": "air-water-v35-holdout-07",
+      "observedDistrictTriples": [
+        [
+          "penthouse",
+          "underground-ring",
+          "nail-salon"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-07",
+        "games": 288,
+        "wins": 211,
+        "losses": 56,
+        "draws": 21,
+        "winRate": 0.7326388888888888,
+        "scoreRate": 0.7690972222222222
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-07",
+        "games": 288,
+        "wins": 224,
+        "losses": 40,
+        "draws": 24,
+        "winRate": 0.7777777777777778,
+        "scoreRate": 0.8194444444444444
+      },
+      "airMinusWaterPercentagePoints": -5.034722222222221
+    },
+    {
+      "seed": "air-water-v35-holdout-08",
+      "observedDistrictTriples": [
+        [
+          "rooftop-garden",
+          "time-square",
+          "magic-city"
+        ]
+      ],
+      "air": {
+        "seed": "air-water-v35-holdout-08",
+        "games": 288,
+        "wins": 193,
+        "losses": 80,
+        "draws": 15,
+        "winRate": 0.6701388888888888,
+        "scoreRate": 0.6961805555555556
+      },
+      "water": {
+        "seed": "air-water-v35-holdout-08",
+        "games": 288,
+        "wins": 187,
+        "losses": 81,
+        "draws": 20,
+        "winRate": 0.6493055555555556,
+        "scoreRate": 0.6840277777777778
+      },
+      "airMinusWaterPercentagePoints": 1.215277777777779
+    }
+  ],
+  "airMinusWaterPercentagePoints": -0.998263888888884,
+  "commonFieldAirMinusWaterPercentagePoints": -0.8035714285714368,
+  "districtCoverage": {
+    "observedOrderedTriples": 8,
+    "observedDistinctDistricts": 19,
+    "byLane": [
+      {
+        "lane": 1,
+        "districtIds": [
+          "nail-salon",
+          "o-block",
+          "penthouse",
+          "rooftop-garden",
+          "rush-hour",
+          "the-trap"
+        ]
+      },
+      {
+        "lane": 2,
+        "districtIds": [
+          "barbershop",
+          "blackout-block",
+          "corrupt-church",
+          "pirate-radio",
+          "time-square",
+          "underground-ring",
+          "waff-l-house"
+        ]
+      },
+      {
+        "lane": 3,
+        "districtIds": [
+          "dive-bar",
+          "flood-channel",
+          "magic-city",
+          "mirror-arcade",
+          "nail-salon",
+          "pawn-shop",
+          "vip-section"
+        ]
+      }
+    ]
+  },
+  "seedsLed": {
+    "air": 4,
+    "water": 4,
+    "tied": 0
+  }
+}

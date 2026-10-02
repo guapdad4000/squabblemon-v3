@@ -35,7 +35,7 @@ function setup(id: string, owner: Owner) {
   return { source, ally, second, item, enemy, match };
 }
 
-for (const owner of ['player', 'cpu'] as const) test(`six support effects respect targets and Motion limits for ${owner}`, () => {
+for (const owner of ['player', 'cpu'] as const) test(`seven support effects respect targets and Motion limits for ${owner}`, () => {
   for (const id of supportCardIds) {
     const { source, ally, second, item, enemy, match } = setup(id, owner);
     ally.statuses.frozen = true; second.statuses.silenced = true;
@@ -48,7 +48,12 @@ for (const owner of ['player', 'cpu'] as const) test(`six support effects respec
     if (id === 'subwaymap') { assert.equal(find(ally.instanceId).lane, 1); assert.equal(find(ally.instanceId).powerModifier, 1); }
     if (id === 'workboots') { assert.equal(find(ally.instanceId).statuses.protected, true); assert.equal(find(ally.instanceId).powerModifier, 2); assert.equal(after.timedEffects.at(-1)?.targetInstanceId, ally.instanceId); }
     assert.equal(find(item.instanceId).powerModifier, 0);
-    assert.equal(find(enemy.instanceId).powerModifier, 0);
+    if (id === 'sideofhands') {
+      assert.equal(find(ally.instanceId).powerModifier, 2);
+      assert.equal(find(enemy.instanceId).powerModifier, -2);
+    } else {
+      assert.equal(find(enemy.instanceId).powerModifier, 0);
+    }
     const event = after.effectLog.find(e => e.type === 'ability')!;
     assert(event); assert.equal(event.replay.after.playerMotion, after.playerMotion);
   }

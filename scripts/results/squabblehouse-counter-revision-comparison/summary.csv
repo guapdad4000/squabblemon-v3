@@ -1,0 +1,7 @@
+arm,cases,wins,draws,losses,strict_win_percent,half_draw_score_percent,alice_wins,alice_win_percent,guap_wins,guap_win_percent,wiz_wins,wiz_win_percent,primary_greedy_wins,primary_greedy_win_percent,primary_seeded_legal_wins,primary_seeded_legal_win_percent,fresh_confirmation_wins,fresh_confirmation_win_percent,fresh_confirmation_score_percent,a_player_win_percent,b_player_win_percent,simulation_failures
+corrected-original,1008,224,82,702,22.2,26.3,44,13.1,99,29.5,81,24.1,94,21.8,99,22.9,31,21.5,26,13.9,30.6,0
+current-v31,1008,219,85,704,21.7,25.9,46,13.7,97,28.9,76,22.6,81,18.8,103,23.8,35,24.3,28.5,14.7,28.8,0
+cashier-only,1008,220,90,698,21.8,26.3,45,13.4,98,29.2,77,22.9,84,19.4,101,23.4,35,24.3,28.5,14.7,29,0
+griddle-only,1008,219,89,700,21.7,26.1,46,13.7,99,29.5,74,22,82,19,104,24.1,33,22.9,27.4,14.5,29,0
+janitor-only,1008,219,86,703,21.7,26,46,13.7,97,28.9,76,22.6,81,18.8,103,23.8,35,24.3,28.5,14.7,28.8,0
+combined-v32,1008,221,93,694,21.9,26.5,45,13.4,100,29.8,76,22.6,85,19.7,103,23.8,33,22.9,27.4,14.5,29.4,0

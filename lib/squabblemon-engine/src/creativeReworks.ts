@@ -209,7 +209,7 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
   ],
   torta: [
     "Hold Our Ground",
-    "On Reveal: Pair yourself with your weakest other Earth ally here. At next round end, if both remain here and you are not losing this district, each gains +2 Hands. One pair per side.",
+    "On Reveal: Pair yourself with your weakest other Earth ally here and Protect that partner. At next round end (or final round end), if both remain here and you are not losing this district, each gains +3 Hands. One pair per side.",
   ],
   gardener: [
     "Rooftop Harvest",
@@ -234,15 +234,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
 };
 export const REPLACED_BONDS = new Set([
   "honestthot",
-  "abuela",
   "icecream",
-  "torta",
   "concrete",
-  "gardener",
   "incel",
   "circuitcaptain",
   "canopykeeper",
-  "slipstream",
 ]);
 export function applyCreativeCardKits(cards: Record<string, Card>): void {
   for (const [id, [ability, effect]] of Object.entries(CREATIVE_KITS)) {
@@ -262,6 +258,11 @@ export function applyCreativeCardKits(cards: Record<string, Card>): void {
             : "give your weakest other ally here +1 Hand."),
     }));
   }
+  // These existing IDs use the homecoming runtime, not creative reveal or upgrades.
+  cards.counter.effect =
+    "On Reveal: Hit the strongest enemy here for 3. Ongoing: After you play another character in a different district, fire 2 at its strongest enemy. Two encores per match, at most one per round.";
+  cards.concrete.effect =
+    "On Reveal: Leave a care package in each other district through next round. The next ally played or moved there gains +1 Hand (+2 if Earth) and is cleansed. One package per district per side.";
 }
 
 export type CreativeMark = {
@@ -487,7 +488,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     kit: "emergency-kit",
   };
   const labels: Record<string, string> = {
-    "home-parcel": "next friendly play or move here: +1 and cleanse",
+    "home-parcel": "next friendly play or move here: +1 (+2 if Earth) and cleanse",
     "home-dinner": "return home at round end: +1 if successful",
     fitting: "next successful move refreshes Protection",
     key: "next different friendly arrival: Protection",
@@ -533,7 +534,7 @@ export function creativeDistrictMarks(m: Match): CharacterDistrictMark[] {
     kit: "next enemy damage: prevent up to 2",
     welcome: "next Air arrival: +2",
     treat: "next other friendly arrival: +2",
-    ground: "hold this district together: +2 each",
+    ground: "hold this district together: +3 each",
     anchor: "block one forced move: +2",
     seed: "this round end: weakest Plant here +3",
     promise: "help this ally to fulfill the promise",
@@ -1007,7 +1008,10 @@ export function creativeReveal(
       break;
     case "torta": {
       const p = [s, ...a.filter((c) => element(c) === "Earth").slice(0, 1)];
-      if (p.length === 2) put("ground", p);
+      if (p.length === 2) {
+        put("ground", p);
+        cover(p[1]);
+      }
       break;
     }
     case "gardener":
@@ -2088,7 +2092,7 @@ export function creativeRoundEnd(m: Match, t: CreativeTools): Match {
           x.targets.every((id) => card(m, id)?.lane === x.lane) &&
           t.score(m, x.owner, x.lane) >= t.score(m, rival(x.owner), x.lane)
         )
-          for (const id of x.targets) m = buff(m, id, 2, t);
+          for (const id of x.targets) m = buff(m, id, 3, t);
       }
       if (x.kind === "seed") {
         m = remove(m, x.id);

@@ -10,7 +10,7 @@ import { validateDistrictSnapshot, type DistrictSnapshot, type DistrictDisplay }
 import { expansionCards } from './blockExpansion';
 import { streetWaveCards } from './streetWave';
 import { mythicLegendCards } from './mythicLegends';
-import { CANNOT_LOSE_HANDS_CARD_IDS, GANG_BY_CARD_ID, GANG_LABEL, TRIPLE_OG_LANE, UNSILENCEABLE_CARD_IDS, tripleOgCards, type GangColor } from './tripleOgs';
+import { CANNOT_LOSE_HANDS_CARD_IDS, GANG_BY_CARD_ID, GANG_LABEL, isMythicalTripleOg, TRIPLE_OG_LANE, UNSILENCEABLE_CARD_IDS, tripleOgCards, type GangColor } from './tripleOgs';
 import { characterWaveCards } from './characterWave';
 import { fairytaleCards } from './fairytaleWave';
 import { neighborhoodWaveCards, DEMARIO_MUSHROOM, LUIGION_POWERED } from './neighborhoodWave';
@@ -19,6 +19,10 @@ import { afterHoursWaveCards } from './afterHoursWave';
 import { elementalBondWaveCards } from './elementalBondWave';
 import { sideOzWaveCards, sideOzWaveFactions } from './sideOzWave';
 import { storyCharacterWaveCards } from './storyCharacterWave';
+import { squabblehouseWaveCards, squabblehouseStaffCardIds } from './squabblehouseWave';
+import {
+  CONTINUOUS_POWER_DEPARTURES, rawCombatPower, syncContinuousPower,
+} from './continuousPower';
 export { createDistrictSnapshot, validateDistrictSnapshot, DISTRICT_CATALOG } from './districts';
 export type { DistrictSnapshot, DistrictId, DistrictDisplay } from './districts';
 import {
@@ -32,6 +36,8 @@ export {
 } from "./abilityUpgrades";
 export type { AbilityUpgradeSnapshot, CardAbilityUpgradeSnapshot } from "./abilityUpgrades";
 import { elementalWaveCards } from './elementalWave';
+
+export { isMythicalTripleOg };
 
 export type Owner = 'player' | 'cpu';
 export type Phase = 'player' | 'cpu-reveal' | 'resolved' | 'complete';
@@ -109,7 +115,7 @@ export type StoryRuntime = {
 export type Statuses = { frozen: boolean; silenced: boolean; protected: boolean; blocked: boolean; uncounterable: boolean; weakened: boolean; locked: boolean; boosted: boolean; burnStacks: number };
 export type CardInstance = Card & {
   instanceId: string; cardId: string; owner: Owner; lane: Lane | null; playedRound: number | null;
-  basePower: number; powerModifier: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
+  basePower: number; powerModifier: number; continuousPower?: number; moved: boolean; statuses: Statuses; lastEffectNote: string;
   /** Bounded progress for the creative card kits. */
   creativeEntranceSucceeded?: boolean;
   creativeTipIds?: string[];
@@ -169,6 +175,17 @@ export type CardInstance = Card & {
   sportsComebackArmed?: boolean;
   sportsComebackUsed?: boolean;
   sportsComebackUntilRound?: number;
+  /** Squabblehouse per-instance round marks are replay-safe and reset by round comparison. */
+  squabblehouseEffectRound?: number;
+  squabblehouseGuardRound?: number;
+  squabblehouseSecurityRound?: number;
+  squabblehouseTeknicianRound?: number;
+  squabblehouseTeknicianRevealRound?: number;
+  squabblehouseManagerRound?: number;
+  squabblehouseBusBoyPatrolRound?: number;
+  squabblehouseBusBoyDirection?: -1 | 1;
+  /** Cashier's instance-scoped movement lock lasts through this round number. */
+  squabblehouseCannotMoveThroughRound?: number;
 };
 
 export type EffectKind = 'ability' | 'fire' | 'water' | 'move' | 'blocked' | 'story';
@@ -193,7 +210,7 @@ export type ReplayState = Pick<Match,
   'nextArrivalOrder' | 'afterParty' | 'laneDamage' | 'diceResult' |
   'playerDrawIndex' | 'cpuDrawIndex' | 'squabbleUsed' | 'plugDiscountLane' |
   'cheapBuffsUsed' | 'timedEffects' | 'discountTokens' | 'nextDiscountOrder' | 'landlordTaxUsed' |
-  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime' | 'blueNextBonus'
+  'creativeMarks' | 'districtTraps' | 'janitorReversals' | 'lastMovedAlly' | 'roundMovedIds' | 'entranceHistory' | 'guapRounds' | 'cheshireRounds' | 'electricPlays' | 'leaderRounds' | 'pendingLeaderReactions' | 'lingeringScents' | 'sneakerTriggered' | 'storyRuntime' | 'abilityUpgradeSnapshot' | 'squabbleByOwner' | 'districtSnapshot' | 'districtRuntime' | 'blueNextBonus' | 'squabblehouseRevealHistory'
 >;
 
 export type TimedEffect = {
@@ -228,7 +245,12 @@ type LeaderKind = 'church' | 'nightmedic' | 'piratedj' | 'promoter' | 'gamer' | 
   | 'streetapostle' | 'fangirl' | 'asphaltapostle' | 'passportbro';
 type LeaderReaction = { kind: LeaderKind; owner: Owner; sourceInstanceId: string; targetInstanceId: string; amount?: number; triggerLane?: Lane };
 export type LingeringScent = { owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; triggeredRound?: number };
-export type DistrictTrap = { kind: 'stakeout' | 'dmv' | 'wiseman' | 'dead-air' | 'initiation' | 'spinner'; owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number };
+export type DistrictTrap = {
+  kind: 'stakeout' | 'dmv' | 'wiseman' | 'dead-air' | 'initiation' | 'spinner' | 'open-tab';
+  owner: Owner; lane: Lane; source: CardInstance; expiresAfterRound: number; spentRound?: number;
+  /** An echoed setup keeps its base payoff, but cannot award ability training. */
+  echoed?: boolean;
+};
 export type Match = {
   afterParty?: boolean;
   laneDamage?: LaneDamage[];
@@ -236,8 +258,14 @@ export type Match = {
   diceResult?: DiceResult;
   creativeMarks?: CreativeMark[];
   districtTraps?: DistrictTrap[];
-  /** One shared Turn It Around trigger per friendly district each round. */
-  janitorReversals?: { owner: Owner; lane: Lane; round: number; sourceInstanceId: string; targetInstanceId: string }[];
+  /** Delayed recruitment training remains spent even after its support leaves play. */
+  initiationTrainedIds?: string[];
+  /** Turn It Around damage/status and staff-removal charges, shared per district/round. */
+  /** Missing charge tags on legacy records mean the original shared trigger was spent. */
+  janitorReversals?: {
+    owner: Owner; lane: Lane; round: number; sourceInstanceId: string; targetInstanceId: string;
+    charge?: 'harm' | 'staff';
+  }[];
   lastMovedAlly?: Partial<Record<Owner, { instanceId: string; round: number }>>;
   /** Successful board moves in the current round; unlike CardInstance.moved this expires each round. */
   roundMovedIds?: Record<Owner, string[]>;
@@ -250,6 +278,7 @@ export type Match = {
   lingeringScents?: LingeringScent[];
   [DAMAGE_OWNER]?: Owner;
   [SUPPRESS_PRESENTATION_EVENTS]?: true;
+  [CONTINUOUS_POWER_DEPARTURES]?: CardInstance[];
   /** Absent only for pre-location matches and their legacy transcripts. */
   districtSnapshot?: DistrictSnapshot;
   districtRuntime?: DistrictRuntime;
@@ -270,17 +299,21 @@ export type Match = {
   lastRevealedCardId: string | null;
   /** Resolved entrance sources retained for Oz's once-per-match historical echo. */
   entranceHistory?: string[];
+  /** Played Squabblehouse staff On Reveals, retained so Teknician can skip dead or disabled entries. */
+  squabblehouseRevealHistory?: { owner: Owner; sourceInstanceId: string; cardId: string; round: number }[];
   guapRounds?: Partial<Record<Owner, number>>;
   storyEncounter?: StoryEncounterSnapshot; storyRuntime?: StoryRuntime;
   abilityUpgradeSnapshot: AbilityUpgradeSnapshot;
 };
 /** Search copies skip expensive presentation snapshots while preserving rules. */
 export function suppressMatchPresentationEvents(match: Match): Match {
-  return {
+  const suppressed: Match = {
     ...match,
     [SUPPRESS_PRESENTATION_EVENTS]: true,
     effectLog: [],
   };
+  delete suppressed[CONTINUOUS_POWER_DEPARTURES];
+  return suppressed;
 }
 const lane = (n: number): Lane => n as Lane;
 const emptyStatuses = (): Statuses => ({ frozen: false, silenced: false, protected: false, blocked: false, uncounterable: false, weakened: false, locked: false, boosted: false, burnStacks: 0 });
@@ -378,9 +411,20 @@ export function createMatchFromCatalog(
 }
 
 export function getEffectiveCardPower(card: CardInstance): number {
-  return card.hazard || card.statuses.frozen ? 0 : Math.max(0, card.basePower + card.powerModifier);
+  return card.hazard || card.statuses.frozen ? 0 : rawCombatPower(card);
 }
+export const getRawCombatPower = rawCombatPower;
 export const effectiveCardPower = getEffectiveCardPower;
+const clearContinuousPowerDepartures = (match: Match): Match => {
+  if (!match[CONTINUOUS_POWER_DEPARTURES]?.length) return match;
+  const result = { ...match };
+  delete result[CONTINUOUS_POWER_DEPARTURES];
+  return result;
+};
+const reconcileContinuousPower = (match: Match): Match => {
+  const synced = syncContinuousPower(match);
+  return synced[SUPPRESS_PRESENTATION_EVENTS] ? clearContinuousPowerDepartures(synced) : synced;
+};
 export function getLaneScore(cardsInLane: CardInstance[], laneIndex: number): number {
   return cardsInLane.reduce((total, card) => {
     if (card.hazard) return total;
@@ -617,12 +661,14 @@ export function getLegalCardCost(match: Match, owner: Owner, card: CardInstance,
   const token = discountFor(match, owner, card, targetLane);
   const discount = token || legacyDiscount || buddyLaneDiscount;
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
+  const ignoresLocationMotionPenalty = isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] === targetLane;
   const aliceReturnDiscount = card.cardId === 'alice' && !!card.aliceReady;
   const minimum = aliceReturnDiscount || card.rabbitReturnDiscount || token?.eligibility === 'homecoming' || token?.eligibility === 'wiseman-prediction' || token?.eligibility === 'creative-local' ? 1 : 0;
   const reduction = discount ? (token?.eligibility === 'wiseman-prediction' ? 2 : 1)
     : districtDiscount(match, owner, card, targetLane);
   return Math.max(minimum, card.cost - reduction - (aliceReturnDiscount ? 1 : 0) - (card.rabbitReturnDiscount ? 1 : 0))
-    + (taxed ? 1 : 0) + districtTax(match, owner, targetLane) + (dmvTax(match, owner, targetLane) ? 1 : 0);
+    + (taxed ? 1 : 0) + (ignoresLocationMotionPenalty ? 0 : districtTax(match, owner, targetLane))
+    + (dmvTax(match, owner, targetLane) ? 1 : 0);
 }
 export function getCardCostExplanation(match: Match, owner: Owner, card: CardInstance, targetLane: Lane): string {
   const token = discountFor(match, owner, card, targetLane);
@@ -630,6 +676,7 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   const buddyLaneDiscount = inLane(match, owner, targetLane).some(buddy =>
     buddy.cardId === 'buddy' && buddy.buddyForm !== 'squabble-earth' && activeAbility(buddy));
   const taxed = activeLandlord(match, owner, targetLane) && !(match.landlordTaxUsed?.[owner]?.[targetLane] ?? false);
+  const ignoresLocationMotionPenalty = isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] === targetLane;
   const parts = [`${card.cost} base`];
   if (token || legacy) parts.push(token?.eligibility === "wiseman-prediction" ? "−2 Told You discount" : "−1 discount");
   else if (buddyLaneDiscount) parts.push("−1 BUDDY district discount");
@@ -641,7 +688,8 @@ export function getCardCostExplanation(match: Match, owner: Owner, card: CardIns
   if (card.rabbitReturnDiscount) parts.push("−1 Pocket Watch return discount (minimum 1 Motion)");
   if (dmvTax(match, owner, targetLane)) parts.push("+1 Take a Number");
   if (taxed) parts.push("+1 Rent Due tax");
-  if (districtTax(match, owner, targetLane)) parts.push("+1 Corrupt Church tithe");
+  if (districtTax(match, owner, targetLane) && !ignoresLocationMotionPenalty) parts.push("+1 Corrupt Church tithe");
+  else if (districtTax(match, owner, targetLane) && ignoresLocationMotionPenalty) parts.push("Corrupt Church tithe ignored for home-side Triple OG");
   return parts.join(" · ");
 }
 const dmvTax = (m: Match, owner: Owner, lane: Lane) => (m.districtTraps ?? []).some(t => t.kind === "dmv" && t.owner !== owner && t.lane === lane && t.expiresAfterRound >= m.round);
@@ -653,9 +701,15 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
         .filter(card => abilityCardId(card) === 'janitor' && activeAbility(card))
         .sort((a, b) => a.instanceId.localeCompare(b.instanceId))[0];
       if (!janitor) return [];
-      const spent = (match.janitorReversals ?? []).some(item =>
+      const reversals = (match.janitorReversals ?? []).filter(item =>
         item.owner === owner && item.lane === targetLane && item.round === match.round);
-      return [{ owner, lane: targetLane, text: `Turn It Around · ${spent ? 'spent this round' : 'first hostile effect becomes +2 Hands'}` }];
+      const spent = (charge: 'harm' | 'staff') =>
+        reversals.some(item => item.charge === undefined || item.charge === charge);
+      return [{
+        owner,
+        lane: targetLane,
+        text: `Turn It Around · harm ${spent('harm') ? 'spent' : 'ready'} · staff ${spent('staff') ? 'spent' : 'ready'}`,
+      }];
     }));
   return [
     ...janitorMarks,
@@ -668,7 +722,8 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
           : t.kind === 'dead-air' ? 'Dead Air · first enemy played or moved here: Silence'
           : t.kind === 'initiation' ? 'Marked Territory · your next character here gets put on: +1 Hand'
           : t.kind === 'spinner' ? 'Spinning · next enemy played here: 1 Burn'
-          : 'Take a Number · next enemy: +1 Motion') + (t.kind === 'initiation' ? '' : ' · through R' + t.expiresAfterRound) })),
+           : t.kind === 'open-tab' ? `Open Tab · ${t.spentRound === match.round ? 'spent' : 'ready'} this round · through R${t.expiresAfterRound}`
+           : 'Take a Number · next enemy: +1 Motion') + (t.kind === 'initiation' || t.kind === 'open-tab' ? '' : ' · through R' + t.expiresAfterRound) })),
     ...(match.lingeringScents ?? []).filter(s => s.expiresAfterRound >= match.round).map(s => ({
       owner: s.owner, lane: s.lane, text: 'Scent · ' + (s.triggeredRound === match.round ? 'spent this round' : 'next enemy: 2 Burn') + ' · through R' + s.expiresAfterRound,
     })),
@@ -684,8 +739,9 @@ export function getCharacterDistrictMarks(match: Match): CharacterDistrictMark[]
 export const getDiscountedCardCost = getLegalCardCost;
 export function canAffordSelection(match: Match, owner: Owner, instanceId: string, targetLane: Lane): boolean {
   const card = (owner === "player" ? match.playerHand : match.cpuHand).find((c) => c.instanceId === instanceId);
-  return !!card && !getStoryLockedLanes(match, owner).includes(targetLane)
-    && (TRIPLE_OG_LANE[card.cardId] === undefined || TRIPLE_OG_LANE[card.cardId] === targetLane)
+  return !!card
+    && (!isMythicalTripleOg(card.cardId) || TRIPLE_OG_LANE[card.cardId] === targetLane)
+    && (isMythicalTripleOg(card.cardId) || !getStoryLockedLanes(match, owner).includes(targetLane))
     && getLegalCardCost(match, owner, card, targetLane) + (card.cardId === 'the-dice-game' ? 1 : 0) <= (owner === "player" ? match.playerMotion : match.cpuMotion)
     && (card.cardId !== 'the-dice-game' || (owner === 'player' ? match.cpuMotion : match.playerMotion) >= 1);
 }
@@ -709,13 +765,19 @@ const modify = (m: Match, id: string, change: (c: CardInstance) => CardInstance,
     after={...after,powerModifier:before.powerModifier-prevented.amount,...(absorbed?{lastEffectNote:after.lastEffectNote+' Emergency Kit prevented '+absorbed+' Hands of damage.'}:{})};
   }
   const delta = after.powerModifier - before.powerModifier;
-  if (abilityCardId(before) === 'homelesslegend' && delta < 0) {
-    after = { ...after, recoverableDamage: (before.recoverableDamage ?? 0) + Math.min(-delta, Math.max(0, before.basePower + before.powerModifier)) };
+  let result = reconcileContinuousPower({ ...m, boards: m.boards.map(items => items.map(c => c.instanceId === id ? after : c)) as Match['boards'] });
+  const damagedState = findCard(result, id) ?? after;
+  const actualDamage = Math.min(
+    Math.max(0, rawCombatPower(before) - rawCombatPower(damagedState)),
+    Math.max(0, before.powerModifier - after.powerModifier),
+  );
+  if (abilityCardId(before) === 'homelesslegend' && actualDamage > 0) {
+    result = { ...result, boards: result.boards.map(items => items.map(c => c.instanceId === id
+      ? { ...c, recoverableDamage: (before.recoverableDamage ?? 0) + actualDamage } : c)) as Match['boards'] };
   }
-  let result = { ...m, boards: m.boards.map(items => items.map(c => c.instanceId === id ? after : c)) as Match['boards'] };
   if (delta < 0 && before.lane !== null && !before.hazard && !m.repeatingLaneDamage) {
     result = { ...result, laneDamage: [...(m.laneDamage ?? []).filter(d => d.round === m.round), {
-      round: m.round, lane: before.lane, instanceId: id, amount: Math.min(-delta, Math.max(0, before.basePower + before.powerModifier)),
+      round: m.round, lane: before.lane, instanceId: id, amount: actualDamage,
     }].filter(d => d.amount > 0) };
   }
   if (delta <= 0 || before.lane === null || before.hazard) return result;
@@ -745,6 +807,10 @@ const nextArrivalOrder = (m: Match): number => Math.max(
 const inLane = (m: Match, owner: Owner, target: Lane) => m.boards[target].filter((c) => !c.hazard && c.owner === owner);
 const highest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0];
 const lowest = (items: CardInstance[]) => items.filter(card => !card.hazard).sort((a, b) => getEffectiveCardPower(a) - getEffectiveCardPower(b) || a.instanceId.localeCompare(b.instanceId))[0];
+const squabblehouseMovementLocked = (m: Match, card: CardInstance) =>
+  (card.squabblehouseCannotMoveThroughRound ?? 0) >= m.round;
+const isSquabblehouseStaffCharacter = (card: CardInstance) =>
+  (card.kind ?? 'character') === 'character' && !card.hazard && squabblehouseStaffCardIds.has(card.cardId);
 function deadAirArrival(m: Match, id: string, lane: Lane): Match {
   const entrant = findCard(m, id);
   if (!entrant || entrant.hazard || (entrant.kind ?? 'character') !== 'character') return m;
@@ -769,16 +835,40 @@ function deadAirArrival(m: Match, id: string, lane: Lane): Match {
       ? 'Dead Air Silenced the first enemy entering this district before its ability.'
       : 'Dead Air triggered, but the arriving enemy resisted or intercepted its Silence.' });
 }
-const move = (m: Match, card: CardInstance, destination: Lane, note: string, deferArrival = false): Match => {
+function movementCapacityAvailable(
+  m: Match, card: CardInstance, destination: Lane, vacatingInstanceIds: readonly string[] = [],
+): boolean {
+  const vacating = new Set(vacatingInstanceIds);
+  return inLane(m, card.owner, destination).filter(candidate => !vacating.has(candidate.instanceId)).length < 4;
+}
+const move = (
+  m: Match, card: CardInstance, destination: Lane, note: string,
+  deferArrival = false, captureBeforeArrival = false, skipOpenTab = false, allowFullDestination = false,
+): Match => {
   if (card.hazard) return m;
   const sourceLane = card.lane ?? m.boards.findIndex((items) => items.some((candidate) => candidate.instanceId === card.instanceId)) as Lane;
   if (sourceLane === destination) return m;
   if (m.districtRuntime?.detainedCardIds.includes(card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'COUNTY JAIL blocked movement.' }));
   }
+  if (getStoryRuleLockedLanes(m, card.owner).includes(destination)) {
+    return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'Lane lock blocked movement.' }));
+  }
+  if (squabblehouseMovementLocked(m, card)) {
+    return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'Pay Your Tab: cannot move through the end of next round.' }));
+  }
   if (card.statuses.locked && !creativeCanCross(m,card.instanceId)) {
     return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'LOCKED: cannot be moved.' }));
   }
+  if (!allowFullDestination && !movementCapacityAvailable(m, card, destination)) {
+    return modify(m, card.instanceId, c => ({ ...c, lastEffectNote: 'DISTRICT FULL: cannot be moved there.' }));
+  }
+  if (!skipOpenTab) {
+    const departure = openTabDeparture(m, card);
+    m = departure.match;
+    if (departure.stopped) return m;
+  }
+  card = findCard(m, card.instanceId) ?? card;
   const beforeMove = m;
   const effect = m.districtSnapshot?.locations[destination].effect;
   const trapBonus = effect?.kind === 'move-bonus' && !m.districtRuntime!.trappedCardIds.includes(card.instanceId) ? effect.amount : 0;
@@ -788,28 +878,46 @@ const move = (m: Match, card: CardInstance, destination: Lane, note: string, def
   if (trapBonus) moved = modify(moved, card.instanceId, c => ({ ...c, powerModifier: c.powerModifier + trapBonus }));
   if (abilityCardId(card) === 'gothkid') moved = { ...moved,
     districtTraps: (moved.districtTraps ?? []).filter(t => t.kind !== 'dead-air' || t.source.instanceId !== card.instanceId) };
+  const recordMovedInstance = (state: Match): Match => ({
+    ...state,
+    lastMovedAlly: { ...state.lastMovedAlly, [card.owner]: { instanceId: card.instanceId, round: state.round } },
+    roundMovedIds: {
+      player: [...new Set([...(state.roundMovedIds?.player ?? []), ...(card.owner === 'player' ? [card.instanceId] : [])])],
+      cpu: [...new Set([...(state.roundMovedIds?.cpu ?? []), ...(card.owner === 'cpu' ? [card.instanceId] : [])])],
+    },
+  });
+  if (captureBeforeArrival) moved = recordMovedInstance(moved);
+  // Some movers need a distinct movement frame before arrival reactions resolve.
+  let moveFrameCaptured = false;
+  if (captureBeforeArrival) {
+    moved = addEvent(beforeMove, moved, { type: 'ability', kind: 'move', sourceId: card.instanceId,
+      owner: card.owner, lane: destination, targetIds: [card.instanceId],
+      note: `${card.name} moved from district ${sourceLane + 1} to district ${destination + 1}.` });
+    moveFrameCaptured = true;
+  }
   // Preserve the move as its own replay frame before the arrival consumes the trap.
-  if ((card.kind ?? 'character') === 'character' && (moved.districtTraps ?? []).some(t =>
+  if (!moveFrameCaptured && (card.kind ?? 'character') === 'character' && (moved.districtTraps ?? []).some(t =>
     t.kind === 'dead-air' && t.owner !== card.owner && t.lane === destination && t.expiresAfterRound >= moved.round
     && moved.boards[destination].some(c => c.instanceId === t.source.instanceId && activeAbility(c)))) {
     moved = addEvent(beforeMove, moved, { type: 'ability', kind: 'move', sourceId: card.instanceId, owner: card.owner,
       lane: destination, targetIds: [card.instanceId], note: card.name + ' moved into district ' + (destination + 1) + '.' });
   }
+  if (['cane-corso-red', 'blue-nose-pit'].includes(card.cardId)
+    && moved.effectLog.length === beforeMove.effectLog.length) {
+    moved = addEvent(beforeMove, moved, { type: 'ability', kind: 'move', sourceId: card.instanceId,
+      owner: card.owner, lane: destination, targetIds: [card.instanceId],
+      note: `${card.name} walked one adjacent lane toward its matching OG.` });
+  }
   moved = deadAirArrival(moved, card.instanceId, destination);
+  moved = squabblehouseSecurityArrival(moved, card.instanceId);
+  moved = squabblehouseManagerArrival(moved, card.instanceId);
   moved = queueLeaderReaction(moved, 'promoter', card.instanceId, m);
   const enemy = card.owner === 'player' ? 'cpu' : 'player';
   if (getLaneScoreForMatch(m, inLane(m, card.owner, sourceLane), sourceLane, card.owner)
     < getLaneScoreForMatch(m, inLane(m, enemy, sourceLane), sourceLane, enemy)) {
     moved = queueLeaderReaction(moved, 'passportbro', card.instanceId, m);
   }
-  moved = {
-    ...moved,
-    lastMovedAlly: { ...moved.lastMovedAlly, [card.owner]: { instanceId: card.instanceId, round: moved.round } },
-    roundMovedIds: {
-      player: [...new Set([...(moved.roundMovedIds?.player ?? []), ...(card.owner === 'player' ? [card.instanceId] : [])])],
-      cpu: [...new Set([...(moved.roundMovedIds?.cpu ?? []), ...(card.owner === 'cpu' ? [card.instanceId] : [])])],
-    },
-  };
+  if (!captureBeforeArrival) moved = recordMovedInstance(moved);
   if (deferArrival) return moved;
   moved = fairytaleDeparture(moved, card);
   moved = fairytaleArrival(moved, card.instanceId, true);
@@ -1015,7 +1123,7 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
     if (!currentBurning) continue;
     const damage = currentBurning.statuses.uncounterable ? 0 : currentBurning.statuses.burnStacks;
     const janitorReversal = damage > 0 && currentBurning.burnSource
-      ? reverseWithJanitor(result, currentBurning, currentBurning.burnSource.owner, c => ({
+      ? reverseWithJanitor(result, currentBurning, currentBurning.burnSource.owner, 'harm', c => ({
         ...c, statuses: { ...c.statuses, burnStacks: 0 }, burnSource: undefined,
         lastEffectNote: 'Turn It Around: enemy Burn negated; +2 Hands.',
       })) : null;
@@ -1027,9 +1135,7 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       powerModifier: c.powerModifier - damage, statuses: { ...c.statuses, burnStacks: 0 },
       lastEffectNote: 'BURN: −' + damage + ' Hands at round end.',
     })));
-    const afterBurn = findCard(result, card.instanceId);
-    if (damage > 0 && currentBurning.basePower + currentBurning.powerModifier > 0
-      && (!afterBurn || afterBurn.basePower + afterBurn.powerModifier < currentBurning.basePower + currentBurning.powerModifier)) {
+    if (damage > 0 && directDamageAmount(beforeBurn, result, currentBurning) > 0) {
       const enemy = card.owner === 'player' ? 'cpu' : 'player';
       (burnedLanes[enemy] ??= new Set()).add(card.lane!);
     }
@@ -1090,14 +1196,14 @@ const applyOngoingRoundEndEffects = (m: Match): Match => {
       recoverableDamage: Math.max(0, (c.recoverableDamage ?? 0) - restored), lastEffectNote: 'Built Different: recovered ' + restored + ' lost Hands.' }));
     result = trainWaveAbility(result, card.instanceId);
   }
-  return result;
+  return reconcileContinuousPower(result);
 };
 
 /**
  * Hand-resident ongoing effects that fire at round end. GUAP set the template:
  * while an elemental-bond card is in its owner's hand, every other friendly
- * character of the same type gains +1 Hands. Each element has at least one
- * bond card so the elemental hierarchy reads at every layer.
+ * character of the same type gains +1 Hands. All ten types, including Normal,
+ * have a carrier declared in ELEMENTAL_HAND_BONUS_CARDS.
  */
 const applyOngoingRoundEndHandEffects = (m: Match): Match => {
   let result = m;
@@ -1205,6 +1311,7 @@ const summonCard = (
     nextArrivalOrder: arrivalOrder + 1,
     boards: m.boards.map((items, i) => i === lane ? [...items, instance] : items) as Match['boards'],
   };
+  result = reconcileContinuousPower(result);
   if (!instance.hazard && (instance.kind ?? 'character') !== 'support') {
     const activeBuddies = result.boards.flat().filter(buddy => buddy.instanceId !== instanceId
       && buddy.cardId === 'buddy' && buddy.buddyForm === 'squabble-earth'
@@ -1232,7 +1339,8 @@ function withDamageOwner(m:Match,owner:Owner|undefined,apply:(m:Match)=>Match):M
 }
 /** One hostile package: interception and Protection run once, before its effects. */
 const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
-  apply: (match: Match, card: CardInstance) => Match, bypassWifeyGuard = false, intercepted = false, honorImmunity = false): Match => {
+  apply: (match: Match, card: CardInstance) => Match, bypassWifeyGuard = false, intercepted = false,
+  honorImmunity = false, breakTargetProtection = false, captureDamageBeforeWatchers = false): Match => {
   const current = m.boards.flat().find(c => c.instanceId === target.instanceId);
   if (!current) return m;
   target = current;
@@ -1242,7 +1350,8 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   if (!intercepted) {
     const intercept = creativeIntercept(m, target, creativeTools());
     if (intercept.interceptor) {
-      const hit = hostileEffect(intercept.match, source, intercept.interceptor, apply, bypassWifeyGuard, true, honorImmunity);
+      const hit = hostileEffect(intercept.match, source, intercept.interceptor, apply, bypassWifeyGuard, true,
+        honorImmunity, false, captureDamageBeforeWatchers);
       return creativeFinishIntercept(hit, intercept.interceptor, creativeTools());
     }
   }
@@ -1251,11 +1360,13 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   if (fan) {
     const before = m;
     let result = modify(m, fan.instanceId, c => ({ ...c, fanRound: m.round, lastEffectNote: 'He Doesn’t Know You: intercepted the attack on ' + target.name + '.' }));
-    result = hostileEffect(result, source, fan, apply, bypassWifeyGuard, true, honorImmunity);
+    result = hostileEffect(result, source, fan, apply, bypassWifeyGuard, true, honorImmunity,
+      false, captureDamageBeforeWatchers);
     const hit = findCard(result, fan.instanceId);
-    const tookHit = !hit || hit.powerModifier < fan.powerModifier || hit.lane !== fan.lane
+    const tookHit = directDamageAmount(m, result, fan) > 0 || (!!hit && (
+      hit.lane !== fan.lane
       || ['frozen', 'silenced', 'weakened', 'locked'].some(k => !fan.statuses[k as keyof Statuses] && hit.statuses[k as keyof Statuses])
-      || hit.statuses.burnStacks > fan.statuses.burnStacks;
+      || hit.statuses.burnStacks > fan.statuses.burnStacks));
     if (hit && tookHit && inLane(before, fan.owner, fan.lane!).some(c => abilityCardId(c) === 'fangirl')) {
       result = modify(result, fan.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'Fan Club: took the hit with Fangirl here; +2 Hands.' }));
     }
@@ -1263,7 +1374,7 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
     return addEvent(before, result, { type: 'ability', sourceId: fan.instanceId, owner: fan.owner,
       targetIds: [fan.instanceId, target.instanceId], note: 'He Doesn’t Know You: intercepted the hostile ability aimed at ' + target.name + '.' });
   }
-  const shield = m.timedEffects.find(e => (e.kind === 'church-protection' || e.kind === 'salon-protection') && e.targetInstanceId === target.instanceId);
+  const shield = breakTargetProtection ? undefined : m.timedEffects.find(e => (e.kind === 'church-protection' || e.kind === 'salon-protection') && e.targetInstanceId === target.instanceId);
   if (shield) {
     const remaining = m.timedEffects.filter(e => e.id !== shield.id);
     const cleared = modify(m, target.instanceId, c => ({ ...c, statuses: { ...c.statuses,
@@ -1277,6 +1388,11 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
   if (guard && !bypassWifeyGuard) return creativeShieldBroken(queueLeaderReaction(modify(m, guard.instanceId, c => ({
     ...c, statuses: { ...c.statuses, blocked: true }, lastEffectNote: 'Side Eye blocked a targeted effect.',
   })), 'church', target.instanceId, m), source, target, creativeTools());
+  if (!intercepted && !target.statuses.uncounterable && ['triple-og-red', 'triple-og-blue'].includes(target.cardId)) {
+    const interceptedMatch = squabblehouseIntercept(m, source, target, apply, bypassWifeyGuard,
+      honorImmunity, captureDamageBeforeWatchers);
+    if (interceptedMatch !== m) return interceptedMatch;
+  }
   const attempted = withDamageOwner(m,abilityCardId(source)==='thefeds'?undefined:source.owner,state=>apply(state,target));
   const attemptedTarget = findCard(attempted, target.instanceId);
   const harmfulStatus = attemptedTarget && (
@@ -1284,21 +1400,34 @@ const hostileEffect = (m: Match, source: CardInstance, target: CardInstance,
     || (!target.statuses.silenced && attemptedTarget.statuses.silenced)
     || (!target.statuses.weakened && attemptedTarget.statuses.weakened)
     || (!target.statuses.locked && attemptedTarget.statuses.locked)
+    || (attemptedTarget.squabblehouseCannotMoveThroughRound ?? 0) > (target.squabblehouseCannotMoveThroughRound ?? 0)
     || attemptedTarget.statuses.burnStacks > target.statuses.burnStacks
   );
   const kitSpent=m.creativeMarks?.some(x=>x.kind==='kit'&&x.targets.includes(target.instanceId)&&!attempted.creativeMarks?.some(y=>y.id===x.id));
-  const harmful = !attemptedTarget || attemptedTarget.powerModifier < target.powerModifier || harmfulStatus || kitSpent;
+  const execution = source.cardId === 'queenofhearts' && !attemptedTarget;
+  const hostileMove = !!attemptedTarget && attemptedTarget.lane !== target.lane;
+  const lostHands = directDamageAmount(m, attempted, target) > 0;
+  const staffRemoval = (!!hostileMove && isSquabblehouseStaffCharacter(target))
+    || (execution && isSquabblehouseStaffCharacter(target));
+  const harmful = lostHands || staffRemoval
+    || harmfulStatus || kitSpent;
   if (harmful) {
-    const reversed = reverseWithJanitor(m, target, source.owner);
+    const reversed = reverseWithJanitor(m, target, source.owner, staffRemoval ? 'staff' : 'harm');
     if (reversed) return reversed;
   }
   const appealed = creativeAppeal(m, attempted, target, source, creativeTools()) ?? attempted;
-  const after = creativeStatusApplied(m,appealed,source,target.instanceId);
+  let after = creativeStatusApplied(m,appealed,source,target.instanceId);
+  if (captureDamageBeforeWatchers && abilityCardId(source) !== 'thefeds') {
+    const amount = directDamageAmount(m, after, target);
+    if (amount > 0) after = addEvent(m, after, { type: 'ability', sourceId: source.instanceId,
+      owner: source.owner, lane: target.lane ?? undefined, targetIds: [target.instanceId],
+      note: `Home Advantage: committed ${amount} direct Hand damage to ${target.name} before damage reactions.` });
+  }
   return abilityCardId(source) === 'thefeds' ? after : recordDamage(m, after, source, target);
 };
 /** Focused reversal shared by targeted hostile packages and enemy-sourced Burn ticks. */
 function reverseWithJanitor(
-  m: Match, target: CardInstance, sourceOwner: Owner,
+  m: Match, target: CardInstance, sourceOwner: Owner, charge: 'harm' | 'staff',
   afterReward: (card: CardInstance) => CardInstance = card => card,
 ): Match | null {
   if (sourceOwner === target.owner || target.lane === null) return null;
@@ -1307,13 +1436,14 @@ function reverseWithJanitor(
     .filter(card => abilityCardId(card) === 'janitor' && activeAbility(card))
     .sort((a, b) => a.instanceId.localeCompare(b.instanceId))[0];
   if (!janitor || (m.janitorReversals ?? [])
-    .some(item => item.owner === target.owner && item.lane === targetLane && item.round === m.round)) return null;
+    .some(item => item.owner === target.owner && item.lane === targetLane && item.round === m.round
+      && (item.charge === undefined || item.charge === charge))) return null;
   const beforeReverse = m;
   let reversed: Match = {
     ...m,
     janitorReversals: [...(m.janitorReversals ?? []), {
       owner: target.owner, lane: targetLane, round: m.round,
-      sourceInstanceId: janitor.instanceId, targetInstanceId: target.instanceId,
+      sourceInstanceId: janitor.instanceId, targetInstanceId: target.instanceId, charge,
     }],
   };
   reversed = modify(reversed, target.instanceId, card => afterReward({
@@ -1323,16 +1453,99 @@ function reverseWithJanitor(
   reversed = trainWaveAbility(reversed, janitor.instanceId);
   return addEvent(beforeReverse, reversed, { type: 'ability', sourceId: janitor.instanceId, owner: janitor.owner,
     lane: targetLane, targetIds: [target.instanceId],
-    note: `Turn It Around negated the first hostile effect in district ${targetLane + 1} this round; ${target.name} gained +2 Hands.` });
+    note: `Turn It Around negated the first hostile ${charge} effect in district ${targetLane + 1} this round; ${target.name} gained +2 Hands.` });
+}
+function openTabDeparture(m: Match, target: CardInstance): { match: Match; stopped: boolean } {
+  if (target.lane === null || (target.kind ?? 'character') !== 'character') return { match: m, stopped: false };
+  const receipt = (m.districtTraps ?? []).find(t => t.kind === 'open-tab' && t.owner !== target.owner
+    && t.lane === target.lane && t.expiresAfterRound >= m.round && t.spentRound !== m.round);
+  if (!receipt) return { match: m, stopped: false };
+  let stopped = false;
+  const before = m;
+  let result = hostileEffect(m, receipt.source, target, (state, actual) => {
+    const live = (state.districtTraps ?? []).find(t => t === receipt);
+    if (!live) return state;
+    if (actual.instanceId === target.instanceId) stopped = true;
+    let spent: Match = { ...state, districtTraps: state.districtTraps!.map(t => t === live ? { ...t, spentRound: state.round } : t) };
+    return stopped ? modify(spent, actual.instanceId, c => ({ ...c, lastEffectNote: 'Open Tab blocked departure.' })) : spent;
+  }, false, false, true);
+  if (stopped) result = addEvent(before, result, { type: 'ability', sourceId: receipt.source.instanceId, owner: receipt.owner,
+    lane: receipt.lane, targetIds: [target.instanceId], note: `Open Tab blocked ${target.name}.`, kind: 'blocked' });
+  return { match: result, stopped };
 }
 const targetEnemy = (m: Match, source: CardInstance, target: CardInstance, apply: (c: CardInstance) => CardInstance, bypassWifeyGuard = false): Match =>
   hostileEffect(m, source, target, (before, actual) =>
     queueDisruptionReactions(before, modify(before, actual.instanceId, apply), source, actual.instanceId), bypassWifeyGuard);
 
+const squabblehouseDogForOg = (match: Match, og: CardInstance): CardInstance | undefined => {
+  const dogId = og.cardId === 'triple-og-red' ? 'cane-corso-red'
+    : og.cardId === 'triple-og-blue' ? 'blue-nose-pit' : undefined;
+  if (!dogId) return undefined;
+  return match.boards.flat().filter(card => card.owner === og.owner && card.cardId === dogId
+    && activeAbility(card) && card.squabblehouseGuardRound !== match.round
+    && card.lane !== null && (card.lane === og.lane || (!card.statuses.locked
+      && !match.districtRuntime?.detainedCardIds.includes(card.instanceId)
+      && !getStoryLockedLanes(match, card.owner).includes(og.lane!))))
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+};
+
+/** Redirect a whole canonical hostile package onto the live dog instance. */
+const squabblehouseIntercept = (
+  match: Match, source: CardInstance, og: CardInstance,
+  apply: (match: Match, card: CardInstance) => Match,
+  bypassWifeyGuard: boolean, honorImmunity: boolean, captureDamageBeforeWatchers = false,
+): Match => {
+  const dog = squabblehouseDogForOg(match, og);
+  if (!dog) return match;
+  const destination = og.lane;
+  if (dog.lane !== destination && (dog.statuses.locked
+    || match.districtRuntime?.detainedCardIds.includes(dog.instanceId)
+    || destination === null || getStoryLockedLanes(match, dog.owner).includes(destination))) return match;
+  let marked = modify(match, dog.instanceId, card => ({ ...card, squabblehouseGuardRound: match.round,
+    lastEffectNote: `Guarding ${og.name}: intercepted one hostile package this round.` }));
+  let currentDog = findCard(marked, dog.instanceId);
+  if (!currentDog) return match;
+  if (currentDog.lane !== destination && destination !== null) {
+    const beforeMove = marked;
+    const moved = move(marked, currentDog, destination, `Emergency Guard: leapt to protect ${og.name}.`);
+    currentDog = findCard(moved, dog.instanceId);
+    if (currentDog?.lane === destination) {
+      marked = moved.effectLog.length === beforeMove.effectLog.length
+        ? addEvent(beforeMove, moved, { type: 'ability', kind: 'move', sourceId: dog.instanceId,
+          owner: dog.owner, lane: destination, targetIds: [dog.instanceId, og.instanceId],
+          note: `${dog.name} emergency-jumped to ${og.name}'s district.` })
+        : moved;
+    } else marked = moved;
+  }
+  currentDog = findCard(marked, dog.instanceId);
+  const liveOg = findCard(marked, og.instanceId);
+  if (!currentDog || !activeAbility(currentDog) || !liveOg || currentDog.lane !== liveOg.lane) return marked;
+  const packageBefore = marked;
+  const result = hostileEffect(marked, source, currentDog, apply, bypassWifeyGuard, true, honorImmunity,
+    false, captureDamageBeforeWatchers);
+  if (result.effectLog.length === packageBefore.effectLog.length) {
+    return addEvent(packageBefore, result, { type: 'ability', sourceId: source.instanceId, owner: source.owner,
+      lane: currentDog.lane ?? 0, targetIds: [dog.instanceId, og.instanceId],
+      note: `${dog.name} intercepted the complete hostile package; ${og.name} was protected.` });
+  }
+  // A nested Janitor/creative reaction owns the transition. Include both the
+  // actual recipient and protected OG as participants without overlapping frames.
+  const last = result.effectLog.at(-1);
+  if (!last) return result;
+  const extra = [dog.instanceId, og.instanceId]
+    .filter(id => !last.targets.some(target => target.cardInstanceId === id))
+    .map(id => participant(packageBefore, result, id))
+    .filter((entry): entry is EventParticipant => !!entry);
+  return { ...result, effectLog: result.effectLog.map(event => event.sequence === last.sequence
+    ? { ...event, targets: [...event.targets, ...extra] } : event) };
+};
+
 const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  // Initiation has recipient upgrades and uses its own delayed-payoff ledger.
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -1354,18 +1567,18 @@ const trainWaveAbility = (m: Match, id: string): Match => {
 
 const removeDestroyedCard = (m: Match, id: string): Match => {
   const card = findCard(m, id);
-  if (!card || card.basePower + card.powerModifier > 0) return m;
+  if (!card || rawCombatPower(card) > 0) return m;
   if (abilityCardId(card) === 'homelesslegend' && !card.legendSaved && activeAbility(card)) {
     // Overkill never becomes recoverable growth; the saved Hand was not lost.
-    const saved = modify(m, id, c => ({ ...c, legendSaved: true, powerModifier: 1 - c.basePower,
+    const saved = modify(m, id, c => ({ ...c, legendSaved: true, powerModifier: 1 - c.basePower - (c.continuousPower ?? 0),
       recoverableDamage: Math.max(0, (c.recoverableDamage ?? 0) - 1), lastEffectNote: 'Built Different: survived at 1 Hand.' }), true);
     return trainWaveAbility(saved, id);
   }
-  return { ...m, boards: m.boards.map(items => items.filter(item => item.instanceId !== id)) as Match['boards'],
+  return reconcileContinuousPower({ ...m, boards: m.boards.map(items => items.filter(item => item.instanceId !== id)) as Match['boards'],
     timedEffects: m.timedEffects.filter(effect => effect.targetInstanceId !== id),
     ...(card.cardId === 'blueside5' && activeAbility(card)
       ? { blueNextBonus: { ...m.blueNextBonus, [card.owner]: (m.blueNextBonus?.[card.owner] ?? 0) + 1 } }
-      : {}) };
+      : {}) });
 };
 
 /** Damage is evaluated on the actual recipient after interception and shields. */
@@ -1382,8 +1595,11 @@ const reduceHands = (m: Match, target: CardInstance, amount: number, note: strin
   if (damage > 0) result = removeDestroyedCard(result, target.instanceId);
   return result;
 };
-const targetEnemyPowerReduction = (m: Match, source: CardInstance, target: CardInstance, amount: number, note: string): Match =>
-  hostileEffect(m, source, target, (state, actual) => reduceHands(state, actual, Math.abs(amount), note), false, false, true);
+const targetEnemyPowerReduction = (
+  m: Match, source: CardInstance, target: CardInstance, amount: number, note: string,
+  captureDamageBeforeWatchers = false,
+): Match => hostileEffect(m, source, target, (state, actual) => reduceHands(state, actual, Math.abs(amount), note),
+  false, false, true, false, captureDamageBeforeWatchers);
 const targetEnemyBurnAndPowerReduction = (
   m: Match, source: CardInstance, target: CardInstance, stacks: number, amount: number, note: string,
 ): Match => hostileEffect(m, source, target, (state, actual) => {
@@ -1391,13 +1607,260 @@ const targetEnemyBurnAndPowerReduction = (
   return modify(result, actual.instanceId, c => ({ ...c, burnSource: { instanceId: source.instanceId, owner: source.owner } }));
 }, false, false, true);
 
+const SQUABBLEHOUSE_TECH_STAFF = new Set([
+  'squabblehouse-security', 'griddle-master', 'inmate-reformed', 'squabble-house-manager',
+  'squabblehouse-bus-boy', 'squabblehouse-cashier', 'waffle-warlord',
+]);
+const SQUABBLEHOUSE_STAFF = new Set([
+  ...squabblehouseStaffCardIds, 'squabblehouse-teknician',
+]);
+const isSquabblehouseStaff = (card: CardInstance): boolean =>
+  SQUABBLEHOUSE_STAFF.has(card.cardId);
+
+const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance): Match => {
+  const ogId = dog.cardId === 'cane-corso-red' ? 'triple-og-red'
+    : dog.cardId === 'blue-nose-pit' ? 'triple-og-blue' : undefined;
+  if (!ogId || !activeAbility(dog) || dog.squabblehouseEffectRound === match.round) return match;
+  const og = match.boards.flat().filter(card => card.owner === dog.owner && card.cardId === ogId)
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+  if (!og || og.lane === null || dog.lane !== og.lane) return match;
+  const ogLane = og.lane;
+  const before = match;
+  let result = modify(match, dog.instanceId, card => ({ ...card, squabblehouseEffectRound: match.round }));
+  const liveDog = findCard(result, dog.instanceId)!;
+  let targetIds = [og.instanceId];
+  if (dog.cardId === 'blue-nose-pit') {
+    result = modify(result, og.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
+      lastEffectNote: `${dog.name}: +1 Hand; matching Blue OG support.` }));
+  } else {
+    const victim = highest(inLane(result, og.owner === 'player' ? 'cpu' : 'player', ogLane));
+    if (victim) {
+      targetIds.push(victim.instanceId);
+      result = targetEnemyPowerReduction(result, liveDog, victim, 1,
+        `${dog.name}: matching Red OG attack, -1 Hand.`);
+    }
+  }
+  result = addEvent(before, result, { type: 'ability', sourceId: dog.instanceId, owner: dog.owner,
+    lane: ogLane, targetIds, note: dog.cardId === 'blue-nose-pit'
+      ? `${dog.name} backed up triple-og-blue for +1 Hand.`
+      : `${dog.name} attacked the strongest enemy in triple-og-red's district for -1 Hand.` });
+  // A dog played before its OG can earn training on the later, real backup.
+  return dog.cardId === 'blue-nose-pit' ? trainWaveAbility(result, dog.instanceId) : result;
+};
+
+const resolveSquabblehouseRoundStart = (match: Match): Match => {
+  let result = match;
+  const dogs = result.boards.flat().filter(card => ['cane-corso-red', 'blue-nose-pit'].includes(card.cardId))
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId));
+  for (const original of dogs) {
+    let dog = findCard(result, original.instanceId);
+    if (!dog || !activeAbility(dog) || dog.lane === null || dog.statuses.locked
+      || result.districtRuntime?.detainedCardIds.includes(dog.instanceId)) continue;
+    const ogId = dog.cardId === 'cane-corso-red' ? 'triple-og-red' : 'triple-og-blue';
+    const og = result.boards.flat().filter(card => card.owner === dog!.owner && card.cardId === ogId)
+      .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+        || a.instanceId.localeCompare(b.instanceId))[0];
+    if (!og || og.lane === null) continue;
+    const from = dog.lane;
+    if (from !== og.lane) {
+      const destination = (from + (og.lane > from ? 1 : -1)) as Lane;
+      if (!getStoryLockedLanes(result, dog.owner).includes(destination)) {
+        result = move(result, dog, destination, `Toward ${og.name}: walked one adjacent lane.`);
+        dog = findCard(result, dog.instanceId);
+      }
+    }
+    if (dog && activeAbility(dog)) result = resolveSquabblehouseDogReveal(result, dog);
+  }
+  return result;
+};
+
+const squabblehouseSecurityArrival = (match: Match, entrantId: string): Match => {
+  const entrant = findCard(match, entrantId);
+  if (!entrant || entrant.lane === null || (entrant.kind ?? 'character') !== 'character') return match;
+  const security = inLane(match, entrant.owner === 'player' ? 'cpu' : 'player', entrant.lane)
+    .filter(card => abilityCardId(card) === 'squabblehouse-security' && activeAbility(card)
+      && card.squabblehouseSecurityRound !== match.round)
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+  if (!security) return match;
+  const before = match;
+  let result = modify(match, security.instanceId, card => ({ ...card,
+    squabblehouseSecurityRound: match.round,
+    lastEffectNote: 'Keep the Peace: first enemy arrival this round checked.' }));
+  const target = findCard(result, entrantId);
+  const originalTarget = findCard(match, entrantId);
+  if (target) result = targetEnemyPowerReduction(result, security, target, 1,
+    'Keep the Peace: first enemy arrival lost 1 Hand.');
+  const reductionLanded = !!originalTarget && directDamageAmount(match, result, originalTarget) > 0;
+  if (reductionLanded) {
+    const currentSecurity = findCard(result, security.instanceId);
+    if (currentSecurity) result = modify(result, security.instanceId, card => ({ ...card,
+      powerModifier: card.powerModifier + 1,
+      lastEffectNote: 'Keep the Peace: first enemy arrival, +1 Hand.' }));
+  }
+  return addEvent(before, result, { type: 'ability', sourceId: security.instanceId, owner: security.owner,
+    lane: entrant.lane, targetIds: [security.instanceId, entrantId],
+    note: reductionLanded
+      ? 'Keep the Peace: the first enemy played or moved into this district lost 1 Hand; Security gained +1 Hand.'
+      : 'Keep the Peace: the first enemy arrival was checked, but its Hands loss was blocked; Security gained no Hands.' });
+};
+
+const squabblehouseManagerArrival = (match: Match, entrantId: string): Match => {
+  const entrant = findCard(match, entrantId);
+  if (!entrant || entrant.lane === null || entrant.hazard || (entrant.kind ?? 'character') !== 'character') return match;
+  const manager = inLane(match, entrant.owner === 'player' ? 'cpu' : 'player', entrant.lane)
+    .filter(card => card.cardId === 'squabble-house-manager' && activeAbility(card)
+      && card.squabblehouseManagerRound !== match.round)
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+  if (!manager) return match;
+
+  const beforeMark = match;
+  const marked = modify(match, manager.instanceId, card => ({ ...card,
+    squabblehouseManagerRound: match.round,
+    lastEffectNote: 'Home Advantage: first enemy arrival this round checked.',
+  }));
+  let result = addEvent(beforeMark, marked, { type: 'ability', sourceId: manager.instanceId, owner: manager.owner,
+    lane: entrant.lane, targetIds: [entrantId], note: 'Home Advantage: Manager committed its first-enemy check for this district this round.' });
+  const beforeAttempt = result;
+  const target = findCard(result, entrantId);
+  if (target) result = targetEnemyPowerReduction(result, findCard(result, manager.instanceId)!, target, 1,
+    'Home Advantage: first enemy arrival lost 1 Hand.', true);
+  const reactionCapturedAttempt = result.effectLog.length > beforeAttempt.effectLog.length;
+  const damagedRecipients = beforeAttempt.boards.flat().filter(old => old.owner === entrant.owner)
+    .filter(old => {
+      const damageSince = (state: Match) => (state.laneDamage ?? [])
+        .filter(entry => entry.round === state.round && entry.instanceId === old.instanceId)
+        .reduce((total, entry) => total + entry.amount, 0);
+      return damageSince(result) > damageSince(beforeAttempt);
+    }).map(card => card.instanceId);
+  const landed = damagedRecipients.length > 0;
+  if (!reactionCapturedAttempt) {
+    result = addEvent(beforeAttempt, result, { type: 'ability', sourceId: manager.instanceId, owner: manager.owner, lane: entrant.lane,
+      targetIds: landed ? damagedRecipients : [entrantId], note: landed
+        ? 'Home Advantage: the committed arrival hit landed.'
+        : 'Home Advantage: Protection, immunity, or an arrival defense stopped the hit.' });
+  }
+  if (landed) result = trainWaveAbility(result, manager.instanceId);
+  return result;
+};
+
+const resolveSquabblehouseBusBoyPatrols = (match: Match): Match => {
+  let result = match;
+  const patrols = result.boards.flat().filter(card => card.cardId === 'squabblehouse-bus-boy')
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId));
+  for (const scheduled of patrols) {
+    const busBoy = findCard(result, scheduled.instanceId);
+    if (!busBoy || busBoy.lane === null || !activeAbility(busBoy)
+      || busBoy.squabblehouseBusBoyPatrolRound === result.round
+      || result.districtRuntime?.detainedCardIds.includes(busBoy.instanceId)) continue;
+    let direction = busBoy.squabblehouseBusBoyDirection ?? (busBoy.lane === 2 ? -1 : 1);
+    let destination = busBoy.lane + direction;
+    if (destination < 0 || destination > 2) {
+      direction = direction === 1 ? -1 : 1;
+      destination = busBoy.lane + direction;
+    }
+    const from = busBoy.lane;
+    const beforeMark = result;
+    result = modify(result, busBoy.instanceId, card => ({ ...card,
+      squabblehouseBusBoyPatrolRound: result.round,
+      squabblehouseBusBoyDirection: direction,
+      lastEffectNote: `Clear the Table patrol: attempted district ${destination + 1}.`,
+    }));
+    result = addEvent(beforeMark, result, { type: 'ability', sourceId: busBoy.instanceId, owner: busBoy.owner,
+      lane: from, targetIds: [busBoy.instanceId], note: `Clear the Table patrol marked its one ${result.round} move.` });
+    const currentBusBoy = findCard(result, busBoy.instanceId);
+    if (!currentBusBoy) continue;
+    const beforeMove = result;
+    result = move(result, currentBusBoy, destination as Lane, 'Clear the Table patrol moved one adjacent district.', false, true);
+    const postMove = findCard(result, busBoy.instanceId);
+    if (postMove?.lane === from && result.effectLog.length === beforeMove.effectLog.length) {
+      result = addEvent(beforeMove, result, { type: 'ability', kind: 'move', sourceId: busBoy.instanceId,
+        owner: busBoy.owner, lane: from, targetIds: [busBoy.instanceId],
+        note: `Clear the Table patrol could not enter district ${destination + 1}: ${postMove.lastEffectNote}` });
+    }
+    result = settleLeaderReactions(result);
+    const arrived = findCard(result, busBoy.instanceId);
+    if (!arrived || arrived.lane !== destination || !activeAbility(arrived)) continue;
+
+    let triggered = false;
+    for (const ally of inLane(result, arrived.owner, destination as Lane).filter(card =>
+      card.instanceId !== arrived.instanceId && (card.kind ?? 'character') === 'character' && card.statuses.weakened)) {
+      const beforeCleanse = result;
+      result = cleanseAlly(result, ally.instanceId, card => ({ ...card,
+        statuses: { ...card.statuses, weakened: false },
+        lastEffectNote: 'Clear the Table patrol: Weakened cleared.',
+      }));
+      if (findCard(result, ally.instanceId)?.statuses.weakened === false) {
+        triggered = true;
+        result = addEvent(beforeCleanse, result, { type: 'ability', sourceId: arrived.instanceId, owner: arrived.owner,
+          lane: destination as Lane, targetIds: [ally.instanceId], note: `Clear the Table patrol cleansed Weakened from ${ally.name}.` });
+      }
+    }
+    result = settleLeaderReactions(result);
+    const recipient = lowest(inLane(result, arrived.owner, destination as Lane).filter(card =>
+      card.instanceId !== arrived.instanceId && (card.kind ?? 'character') === 'character'));
+    if (recipient) {
+      const beforeReward = result;
+      result = modify(result, recipient.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
+        lastEffectNote: 'Clear the Table patrol: weakest other character, +1 Hand.',
+      }));
+      triggered = true;
+      result = addEvent(beforeReward, result, { type: 'ability', sourceId: arrived.instanceId, owner: arrived.owner,
+        lane: destination as Lane, targetIds: [recipient.instanceId], note: `Clear the Table patrol gave ${recipient.name} +1 Hand.` });
+    }
+    if (triggered) result = trainWaveAbility(result, arrived.instanceId);
+  }
+  return result;
+};
+
+const resolveSquabblehouseStaffEcho = (
+  match: Match, teknician: CardInstance, staff: CardInstance, trigger: 'reveal' | 'arrival' = 'arrival',
+): Match => {
+  if (!activeAbility(teknician) || !activeAbility(staff) || staff.owner !== teknician.owner
+    || !SQUABBLEHOUSE_TECH_STAFF.has(staff.cardId) || staff.instanceId === teknician.instanceId) return match;
+  const mark = trigger === 'reveal' ? 'squabblehouseTeknicianRevealRound' : 'squabblehouseTeknicianRound';
+  if (teknician[mark] === match.round) return match;
+  let marked = modify(match, teknician.instanceId, card => ({ ...card,
+    [mark]: match.round,
+    lastEffectNote: `Run It Back: repeated ${staff.name}'s On Reveal once this round.` }));
+  const beforeEcho = marked;
+  const result = resolveAbility(marked, findCard(marked, staff.instanceId)!, { echoed: true });
+  if (result.effectLog.length > beforeEcho.effectLog.length) return result;
+  return addEvent(beforeEcho, result, { type: 'ability', sourceId: teknician.instanceId, owner: teknician.owner,
+    lane: teknician.lane ?? 0, targetIds: [staff.instanceId],
+    note: `Run It Back repeated ${staff.name}'s On Reveal once.` });
+};
+
+const squabblehouseStaffWasPlayed = (match: Match, staffId: string): Match => {
+  const staff = findCard(match, staffId);
+  if (!staff || !SQUABBLEHOUSE_TECH_STAFF.has(staff.cardId)) return match;
+  let result: Match = { ...match, squabblehouseRevealHistory: [
+    ...(match.squabblehouseRevealHistory ?? []).filter(entry => entry.sourceInstanceId !== staff.instanceId),
+    { owner: staff.owner, sourceInstanceId: staff.instanceId, cardId: staff.cardId, round: match.round },
+  ].slice(-24) };
+  if (!activeAbility(staff)) return result;
+  const live = findCard(result, staffId)!;
+  const teknician = result.boards.flat().filter(card => card.owner === live.owner
+    && card.cardId === 'squabblehouse-teknician' && card.lane === live.lane && activeAbility(card)
+    && card.squabblehouseTeknicianRound !== result.round)
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+  if (teknician && teknician.instanceId !== live.instanceId) result = resolveSquabblehouseStaffEcho(result, teknician, live);
+  return result;
+};
+
 const forceEnemyMove = (m: Match, source: CardInstance, target: CardInstance, destination: Lane): Match =>
   hostileEffect(m, source, target, (state, actual) => forceMoveUnshielded(state, actual, destination), false, false, true);
 const forceMoveUnshielded = (state: Match, actual: CardInstance, destination: Lane): Match => {
     const anchored = creativeAnchor(state, actual, creativeTools());
     if (anchored) return anchored;
     if (actual.statuses.uncounterable || (actual.statuses.locked && !creativeCanCross(state,actual.instanceId)) || state.districtRuntime?.detainedCardIds.includes(actual.instanceId)
-      || actual.lane === destination || getStoryLockedLanes(state, actual.owner).includes(destination)) {
+      || squabblehouseMovementLocked(state, actual) || actual.lane === destination
+      || getStoryLockedLanes(state, actual.owner).includes(destination)) {
       return modify(state, actual.instanceId, c => ({ ...c, lastEffectNote: 'Wrong Block: movement blocked.' }));
     }
     const apostle = actual.type === 'Earth' && state.leaderRounds?.[actual.owner]?.asphaltapostle !== state.round
@@ -1431,10 +1894,24 @@ function applyInitiationMark(m: Match, id: string, owner: Owner, lane: Lane): Ma
   const before = m;
   const color = laneGangColor(m, owner, lane, id);
   m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== mark) };
-  m = modify(m, id, c => ({ ...c, ...(color ? { gangTag: color } : {}), powerModifier: c.powerModifier + 1,
-    lastEffectNote: color ? `Marked Territory: put on by the ${GANG_LABEL[color]}; +1 Hand.` : 'Marked Territory: claimed the block; +1 Hand.' }));
-  return addEvent(before, m, { type: 'ability', sourceId: mark.source.instanceId, owner, lane, targetIds: [id],
-    note: color ? `${entrant.name} was initiated into the ${GANG_LABEL[color]}: +1 Hand.` : `${entrant.name} claimed the marked district: +1 Hand.` });
+  m = modify(m, id, c => ({ ...c, ...(color ? { gangTag: color } : {}), powerModifier: c.powerModifier + 2,
+    lastEffectNote: color ? `Marked Territory: put on by the ${GANG_LABEL[color]}; +2 Hands.` : 'Marked Territory: claimed the block; +2 Hands.' }));
+  m = addEvent(before, m, { type: 'ability', sourceId: mark.source.instanceId, owner, lane, targetIds: [id],
+    note: color ? `${entrant.name} was initiated into the ${GANG_LABEL[color]}: +2 Hands.` : `${entrant.name} claimed the marked district: +2 Hands.` });
+  if (mark.echoed || m.initiationTrainedIds?.includes(mark.source.instanceId)) return m;
+  m = { ...m, initiationTrainedIds: [...(m.initiationTrainedIds ?? []), mark.source.instanceId] };
+  for (const upgrade of snapshotUpgradesForCard(m.abilityUpgradeSnapshot, owner, mark.source.cardId)) {
+    if (upgrade.effect.kind !== 'target-power' || upgrade.effect.target !== 'friendly') continue;
+    const beforeUpgrade = m;
+    m = modify(m, id, c => ({ ...c, powerModifier: c.powerModifier + upgrade.effect.amount,
+      lastEffectNote: `${upgrade.name}: +${upgrade.effect.amount} Hand (recruitment, once per match).` }));
+    m = addEvent(beforeUpgrade, m, { type: 'ability', sourceId: mark.source.instanceId, owner, lane, targetIds: [id],
+      note: `${upgrade.name}: ${entrant.name} gained +${upgrade.effect.amount} Hand on recruitment.`,
+      abilityMetadata: { upgradeId: upgrade.id, upgradeName: upgrade.name,
+        sourceCardId: mark.source.cardId, sourceInstanceId: mark.source.instanceId,
+        targetInstanceIds: [id], result: 'applied' } });
+  }
+  return m;
 }
 /** BLOCK SPINNER: the spinning block burns the next enemy played into the district. */
 function applySpinnerTrap(m: Match, id: string, lane: Lane): Match {
@@ -1466,6 +1943,7 @@ function applyLookoutWatch(m: Match, owner: Owner, lane: Lane): Match {
     }] };
     m = addEvent(before, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, lane,
       targetIds: [watcher.instanceId], note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.` });
+    m = trainWaveAbility(m, watcher.instanceId);
   }
   return m;
 }
@@ -1536,9 +2014,22 @@ function refundMotion(m: Match, owner: Owner, amount: number): Match {
     ? { ...c, bankedMotion: Math.min(3, (c.bankedMotion ?? 0) + refunded), lastEffectNote: 'Overtime: ' + Math.min(3, (c.bankedMotion ?? 0) + refunded) + '/3 refunded Motion banked.' } : c) };
   return creativeRefund(m, refundedMatch, owner, creativeTools());
 }
+const directDamageAmount = (before: Match, after: Match, victim: CardInstance): number => {
+  const current = after.boards.flat().find(c => c.instanceId === victim.instanceId);
+  const laneDamageTotal = (match: Match) => (match.laneDamage ?? [])
+    .filter(entry => entry.round === match.round && entry.instanceId === victim.instanceId)
+    .reduce((total, entry) => total + entry.amount, 0);
+  const removedLoss = Math.max(0, laneDamageTotal(after) - laneDamageTotal(before));
+  return current
+    ? Math.min(
+      Math.max(0, rawCombatPower(victim) - rawCombatPower(current)),
+      Math.max(0, victim.powerModifier - current.powerModifier),
+    )
+    : removedLoss;
+};
 function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'instanceId' | 'owner'>, victim: CardInstance, ability = true, burn = false): Match {
   const current = after.boards.flat().find(c => c.instanceId === victim.instanceId);
-  const amount = Math.max(0, Math.max(0, victim.basePower + victim.powerModifier) - Math.max(0, current ? current.basePower + current.powerModifier : 0));
+  const amount = directDamageAmount(before, after, victim);
   if (!amount) return after;
   let m = after;
   if (current && abilityCardId(victim) !== 'homelesslegend') m = modify(m, current.instanceId, c => ({ ...c, recoverableDamage: (c.recoverableDamage ?? 0) + amount }));
@@ -1578,21 +2069,34 @@ function recordDamage(before: Match, after: Match, source: Pick<CardInstance, 'i
       m = addEvent(start, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, targetIds: targets, note: watcher.ability + ' reacted to ' + amount + ' damage.' });
     }
   }
-  return creativeDamage(before, m, source, victim, creativeTools(), burn);
+  const creativeVictim = current
+    ? { ...victim, continuousPower: current.continuousPower ?? 0 }
+    : { ...victim, basePower: amount, powerModifier: 0, continuousPower: 0 };
+  return creativeDamage(before, m, source, creativeVictim, { ...creativeTools(), power: rawCombatPower }, burn);
 }
 function returnToHand(m: Match, source: CardInstance, target: CardInstance, discount = false): Match {
   if (target.lane === null || (target.kind ?? 'character') !== 'character' || !m.boards.flat().some(c => c.instanceId === target.instanceId)) return m;
+  if (squabblehouseMovementLocked(m, target)) return m;
+  const departure = openTabDeparture(m, target);
+  m = departure.match;
+  if (departure.stopped) return m;
+  if (source.owner !== target.owner && isSquabblehouseStaffCharacter(target)) {
+    const reversed = reverseWithJanitor(m, findCard(m, target.instanceId) ?? target, source.owner, 'staff');
+    if (reversed) return reversed;
+  }
   const before = m, printed = cards[target.cardId], hand = target.owner === 'player' ? 'playerHand' : 'cpuHand';
+  const { continuousPower: _continuousPower, ...returnedTarget } = target;
   const rabbitInHand = m[hand].find(c => c.instanceId !== target.instanceId && abilityCardId(c) === 'mrrabbit' && activeAbility(c));
-  const returned: CardInstance = { ...target, ...printed, basePower: printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
+  const returned: CardInstance = { ...returnedTarget, ...printed, basePower: printed.power, powerModifier: source.cardId === 'madhatter' ? 1 : 0, lane: null, playedRound: null,
+    squabblehouseBusBoyPatrolRound: undefined, squabblehouseBusBoyDirection: undefined,
     statuses: emptyStatuses(), copiedAbilityCardId: undefined, recoverableDamage: 0, burnSource: undefined, moved: false,
     rabbitReturnDiscount: !!rabbitInHand,
     lastEffectNote: source.cardId === 'madhatter'
       ? 'Change Places!: returned with +1 Hand and a one-use −1 Motion credit.'
       : 'Returned to hand by ' + source.name + '.' };
-  m = { ...m, [hand]: [...m[hand], returned], boards: m.boards.map(items => items.filter(c => c.instanceId !== target.instanceId)) as Match['boards'],
+  m = reconcileContinuousPower({ ...m, [hand]: [...m[hand], returned], boards: m.boards.map(items => items.filter(c => c.instanceId !== target.instanceId)) as Match['boards'],
     timedEffects: m.timedEffects.filter(e => e.targetInstanceId !== target.instanceId && !(e.sourceInstanceId === target.instanceId && e.kind === 'wifey-protection')),
-    discountTokens: m.discountTokens.filter(t => t.targetInstanceId !== target.instanceId) };
+    discountTokens: m.discountTokens.filter(t => t.targetInstanceId !== target.instanceId) });
   if (discount) {
     m = addDiscountToken(m, target.owner, source, 'homecoming');
     m = { ...m, discountTokens: m.discountTokens.map(t => t.createdOrder === m.nextDiscountOrder - 1
@@ -1627,14 +2131,23 @@ function returnToHand(m: Match, source: CardInstance, target: CardInstance, disc
 function returnAliceAtRoundEnd(m: Match): Match {
   if (m.round >= getMatchRoundLimit(m)) return m;
   for (const alice of m.boards.flat().filter(c => abilityCardId(c) === 'alice' && activeAbility(c) && !c.waveOnce?.alice)) {
-    m = modify(m, alice.instanceId, c => ({ ...c, waveOnce: { ...c.waveOnce, alice: true }, aliceReady: true }));
-    m = returnToHand(m, alice, findCard(m, alice.instanceId)!);
+    if (squabblehouseMovementLocked(m, alice)) continue;
+    const prepared = { ...alice, waveOnce: { ...alice.waveOnce, alice: true }, aliceReady: true };
+    const returned = returnToHand(m, alice, prepared);
+    m = returned;
   }
   return m;
 }
 function canMoveTo(m: Match, card: CardInstance, destination: Lane): boolean {
   return card.lane !== null && card.lane !== destination && !card.hazard && (!card.statuses.locked || creativeCanCross(m,card.instanceId))
-    && !m.districtRuntime?.detainedCardIds.includes(card.instanceId) && !getStoryLockedLanes(m, card.owner).includes(destination);
+    && !m.districtRuntime?.detainedCardIds.includes(card.instanceId) && !getStoryRuleLockedLanes(m, card.owner).includes(destination);
+}
+function moveRouteLegal(m: Match, card: CardInstance, destination: Lane): boolean {
+  return card.lane !== null && card.lane !== destination && !card.hazard
+    && !m.districtRuntime?.detainedCardIds.includes(card.instanceId)
+    && !getStoryRuleLockedLanes(m, card.owner).includes(destination)
+    && !squabblehouseMovementLocked(m, card)
+    && (!card.statuses.locked || creativeCanCross(m, card.instanceId));
 }
 function undercovaReaction(m: Match, beforePlay: Match, id: string, origin: Lane, owner: Owner): Match {
   for (const previous of beforePlay.boards[origin].filter(c => c.owner !== owner && abilityCardId(c) === 'undercova')) {
@@ -1645,8 +2158,7 @@ function undercovaReaction(m: Match, beforePlay: Match, id: string, origin: Lane
     m = modify(m, spy.instanceId, c => ({ ...c, waveOnce: { ...c.waveOnce, undercova: true } }));
     if (target) m = hostileEffect(m, spy, target, (state, actual) => {
       const reduced = reduceHands(state, actual, 1, 'Inside Man: stole 1 Hand.');
-      const remaining = findCard(reduced, actual.instanceId);
-      const stolen = Math.min(1, Math.max(0, getEffectiveCardPower(actual) - (remaining ? getEffectiveCardPower(remaining) : 0)));
+      const stolen = Math.min(1, directDamageAmount(state, reduced, actual));
       return stolen ? modify(reduced, spy.instanceId, c => ({ ...c, powerModifier: c.powerModifier + stolen })) : reduced;
     }, false, false, true);
     const survivor = m.boards.flat().find(c => c.instanceId === spy.instanceId);
@@ -1698,10 +2210,9 @@ function clearBlueScarfRoute(m: Match, source: CardInstance): {
     }
     const victim = highest(inLane(m, enemy, destination));
     if (!victim) continue;
-    const previous = victim.powerModifier;
+    const beforeHit = m;
     m = targetEnemyPowerReduction(m, currentSource, victim, 1, 'Clear the Route: stole 1 Hand.');
-    const survivor = findCard(m, victim.instanceId);
-    if (!survivor || survivor.powerModifier < previous) {
+    if (directDamageAmount(beforeHit, m, victim) > 0) {
       targets.push(victim.instanceId);
       m = modify(m, id, card => ({ ...card, powerModifier: card.powerModifier + 1,
         lastEffectNote: 'Clear the Route: stole +1 Hand.' }));
@@ -1726,22 +2237,21 @@ function resolveRedNightSteal(m: Match, source: CardInstance): {
   const enemyHere = inLane(m, enemy, current.lane);
   const target = enemyHere.length
     ? highest(enemyHere.filter(card => card.cardId !== 'blueside1' && !card.statuses.uncounterable
-      && getEffectiveCardPower(card) > 0))
+      && rawCombatPower(card) > 0))
     : highest(inLane(m, current.owner, current.lane)
     .filter(card => card.instanceId !== current.instanceId && card.kind !== 'support'
       && card.cardId !== 'blueside1' && !card.statuses.uncounterable
-      && getEffectiveCardPower(card) > 1));
+      && rawCombatPower(card) > 1));
   if (!target) return { match: m, targetIds: [], succeeded: false,
     note: enemyHere.length
       ? 'Eyes on the Crossing found no enemy it could steal from; allies are safe while enemies remain.'
       : 'Eyes on the Crossing found no ally with a Hand to spare.' };
   const enemyTarget = target.owner !== current.owner;
-  const previous = getEffectiveCardPower(target);
+  const beforeHit = m;
   m = enemyTarget
     ? targetEnemyPowerReduction(m, current, target, 1, 'Eyes on the Crossing: stole 1 Hand.')
     : reduceHands(m, target, 1, 'Eyes on the Crossing: gave 1 Hand to OG Red Night.');
-  const remaining = findCard(m, target.instanceId);
-  const succeeded = !remaining || getEffectiveCardPower(remaining) < previous;
+  const succeeded = directDamageAmount(beforeHit, m, target) > 0;
   if (succeeded) m = modify(m, current.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
     lastEffectNote: `Eyes on the Crossing: stole 1 Hand from ${enemyTarget ? 'an enemy' : 'an ally'}.` }));
   return { match: m, targetIds: [target.instanceId, ...(succeeded ? [current.instanceId] : [])],
@@ -1786,10 +2296,9 @@ function resolveSideOzAbility(m: Match, source: CardInstance, echoed: boolean): 
   const damage = (target: CardInstance | undefined, amount: number) => {
     if (!target) return false;
     targets.push(target.instanceId);
-    const oldPower = target.powerModifier;
+    const beforeDamage = m;
     m = targetEnemyPowerReduction(m, source, target, amount, `${source.ability}: -${amount} Hands.`);
-    const current = findCard(m, target.instanceId);
-    return !current || current.powerModifier < oldPower;
+    return directDamageAmount(beforeDamage, m, target) > 0;
   };
   const alliesHere = () => inLane(m, source.owner, lane).filter(card => card.instanceId !== source.instanceId && !card.hazard);
 
@@ -1821,10 +2330,9 @@ function resolveSideOzAbility(m: Match, source: CardInstance, echoed: boolean): 
       targets.push(copy.instanceId);
       const foe = highest(inLane(m, enemy, destination));
       if (foe) {
-        const previous = foe.powerModifier;
+        const beforeDamage = m;
         m = targetEnemyPowerReduction(m, copy, foe, 1, 'Check In: summoned Red Robber dealt 1 damage.');
-        const remaining = findCard(m, foe.instanceId);
-        if (!remaining || remaining.powerModifier < previous) targets.push(foe.instanceId);
+        if (directDamageAmount(beforeDamage, m, foe) > 0) targets.push(foe.instanceId);
       }
       succeeded = true;
       resolution = 'Check In hit here and summoned one Red Robber in another district.';
@@ -1917,17 +2425,33 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
   const buff = (target: CardInstance, amount: number) => { targets.push(target.instanceId); m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + amount })); succeeded = true; };
   if (id === 'dorothy') {
     const target = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character' && c.cost <= 2));
-    if (target) { targets.push(target.instanceId); m = returnToHand(m, source, target, true); succeeded = true; }
+    if (target) {
+      const returned = returnToHand(m, source, target, true);
+      const hand = target.owner === 'player' ? returned.playerHand : returned.cpuHand;
+      m = returned;
+      if (hand.some(card => card.instanceId === target.instanceId)) {
+        targets.push(target.instanceId);
+        succeeded = true;
+      }
+    }
   } else if (id === 'scarecrow') {
-    const ally = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.lane !== l && !c.hazard && c.lane !== null && canMoveTo(m, source, c.lane) && canMoveTo(m, c, l)));
+    const ally = lowest(m.boards.flat().filter(c => c.owner === source.owner && c.lane !== l && !c.hazard && c.lane !== null
+      && moveRouteLegal(m, source, c.lane) && moveRouteLegal(m, c, l)
+      && movementCapacityAvailable(m, source, c.lane, [c.instanceId])
+      && movementCapacityAvailable(m, c, l, [source.instanceId])));
     if (ally) {
-      m = move(m, source, ally.lane!, 'Wrong Turn, Right Place: swapped districts.');
+      const firstDeparture = openTabDeparture(m, source);
+      const secondDeparture = firstDeparture.stopped ? firstDeparture : openTabDeparture(firstDeparture.match, ally);
+      if (secondDeparture.stopped) m = secondDeparture.match;
+      else m = move(secondDeparture.match, source, ally.lane!, 'Wrong Turn, Right Place: swapped districts.', false, false, true, true);
       const traveled = findCard(m, source.instanceId);
       const partner = findCard(m, ally.instanceId);
-      if (traveled?.lane === ally.lane && activeAbility(traveled) && partner) {
-        m = move(m, partner, l, 'Wrong Turn, Right Place: swapped districts.');
-        if (findCard(m, ally.instanceId)?.lane === l) {
-          buff(findCard(m, source.instanceId)!, 1); buff(findCard(m, ally.instanceId)!, 1);
+      if (traveled?.lane === ally.lane && partner) {
+        m = move(m, partner, l, 'Wrong Turn, Right Place: swapped districts.', false, false, true);
+        const movedSource = findCard(m, source.instanceId);
+        const movedPartner = findCard(m, ally.instanceId);
+        if (movedSource && movedPartner?.lane === l) {
+          buff(movedSource, 1); buff(movedPartner, 1);
         }
       }
     } else {
@@ -1963,20 +2487,27 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
     const target = lowest(inLane(m, enemy, l));
     if (target && getEffectiveCardPower(target) <= 6) {
       targets.push(target.instanceId);
+      let executedInstanceId: string | undefined;
       m = hostileEffect(m, source, target, (state, actual) => {
         if (getEffectiveCardPower(actual) > 6) return state;
-        let result = removeDestroyedCard(modify(state, actual.instanceId, c => ({ ...c, powerModifier: -c.basePower, lastEffectNote: 'Off With Their Heads: executed.' })), actual.instanceId);
+        executedInstanceId = actual.instanceId;
+        let result = removeDestroyedCard(modify(state, actual.instanceId, c => ({
+          ...c, powerModifier: -c.basePower - (c.continuousPower ?? 0), lastEffectNote: 'Off With Their Heads: executed.',
+        })), actual.instanceId);
         if (!findCard(result, actual.instanceId)) { result = summonCard(result, source.owner, l, SUMMON_TEMPLATES.cardguard, 'cardguard', source, false, 'queen-of-hearts'); succeeded = true; }
         return result;
       }, false, false, true);
+      succeeded = !!executedInstanceId && !findCard(m, executedInstanceId);
     }
   } else if (id === 'sherlock' || id === 'dmvworker') {
-    const destination = id === 'dmvworker' ? l : ([0, 1, 2] as Lane[]).filter(x => x !== l && !getStoryLockedLanes(m, enemy).includes(x))
-      .sort((a, b) => getLaneScoreForMatch(m, inLane(m, enemy, b), b, enemy) - getLaneScoreForMatch(m, inLane(m, enemy, a), a, enemy) || a - b)[0];
-    if (destination !== undefined) {
+    const destinations = id === 'dmvworker' ? [l]
+      : ([0, 1, 2] as Lane[]).filter(x => x !== l && !getStoryLockedLanes(m, enemy).includes(x));
+    if (destinations.length) {
       const kind = id === 'sherlock' ? 'stakeout' : 'dmv';
-      m = { ...m, districtTraps: [...(m.districtTraps ?? []).filter(t => !(t.kind === kind && t.owner === source.owner && t.lane === destination)),
-        { kind, owner: source.owner, lane: destination, source, expiresAfterRound: m.round + 1 }] }; succeeded = true;
+      m = { ...m, districtTraps: [...(m.districtTraps ?? []).filter(t => !(t.kind === kind
+        && t.owner === source.owner && (id === 'sherlock' || destinations.includes(t.lane)))),
+        ...destinations.map((destination): DistrictTrap => ({ kind, owner: source.owner, lane: destination, source,
+          expiresAfterRound: m.round + 1 }))] }; succeeded = true;
     }
   } else if (id === 'watson') {
     const target = lowest(inLane(m, source.owner, l).filter(c => (c.recoverableDamage ?? 0) > 0));
@@ -1996,7 +2527,7 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       }
     }
   } else if (id === 'thefeds') {
-    const removable = (c: CardInstance) => Math.max(0, c.basePower + c.powerModifier - c.power);
+    const removable = (c: CardInstance) => Math.max(0, rawCombatPower(c) - (c.continuousPower ?? 0) - c.power);
     const candidates = inLane(m, enemy, l);
     const target = candidates.some(c => removable(c) > 0)
       ? [...candidates].sort((a,b) => removable(b) - removable(a) || getEffectiveCardPower(b) - getEffectiveCardPower(a) || a.instanceId.localeCompare(b.instanceId))[0]
@@ -2004,7 +2535,7 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
     if (target) {
       targets.push(target.instanceId);
       m = hostileEffect(m, source, target, (state, actual) => {
-        const seized = Math.min(4, Math.max(0, actual.basePower + actual.powerModifier - actual.power));
+        const seized = Math.min(4, Math.max(0, rawCombatPower(actual) - (actual.continuousPower ?? 0) - actual.power));
         succeeded = seized > 0 || !actual.statuses.locked;
         return modifyWithoutDamage(state, actual, c => ({ ...c, powerModifier: c.powerModifier - seized, statuses: { ...c.statuses, locked: true }, lastEffectNote: 'Asset Seizure: removed ' + seized + ' bonus Hands; Locked.' }));
       }, false, false, true);
@@ -2016,7 +2547,7 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       m = hostileEffect(m, source, target, (state, actual) => {
         let result = reduceHands(state, actual, 2, 'Belt Check: 2 damage.');
         const survivor = result.boards.flat().find(c => c.instanceId === actual.instanceId);
-        const damageLanded = !!survivor && survivor.powerModifier < actual.powerModifier;
+        const damageLanded = directDamageAmount(state, result, actual) > 0;
         if (survivor) {
           const destination = [((survivor.lane! + 1) % 3) as Lane, ((survivor.lane! + 2) % 3) as Lane]
             .find(x => !getStoryLockedLanes(result, survivor.owner).includes(x)
@@ -2025,7 +2556,7 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
         }
         const after = findCard(result, actual.instanceId);
         const moved = !!after && after.lane !== actual.lane;
-        succeeded = !after || after.powerModifier < actual.powerModifier || moved;
+        succeeded = damageLanded || moved;
         if (damageLanded && after && !moved) {
           const tang = findCard(result, source.instanceId);
           if (tang) {
@@ -2039,16 +2570,19 @@ function resolveFairytaleAbility(m: Match, source: CardInstance, echoed: boolean
       }, false, false, true);
     }
   } else if (id === 'corruptpastor') {
-    for (const ally of inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && getEffectiveCardPower(c) > 1)) {
+    for (const ally of inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && rawCombatPower(c) > 1)) {
+      const beforePayment = m;
       m = modifyWithoutDamage(m, ally, c => ({ ...c, powerModifier: c.powerModifier - 1 }));
-      buff(findCard(m, source.instanceId)!, 2); targets.push(ally.instanceId);
+      if (directDamageAmount(beforePayment, m, ally) > 0) {
+        buff(findCard(m, source.instanceId)!, 2); targets.push(ally.instanceId);
+      }
     }
   } else if (id === 'powerhouse' && (source.bankedMotion ?? 0) > 0) {
     for (const target of inLane(m, enemy, l)) {
       targets.push(target.instanceId);
+      const beforeDamage = m;
       m = targetEnemyPowerReduction(m, source, target, source.bankedMotion!, 'Overtime: ' + source.bankedMotion + ' banked damage.');
-      const after = findCard(m, target.instanceId);
-      succeeded ||= !after || after.powerModifier < target.powerModifier;
+      succeeded ||= directDamageAmount(beforeDamage, m, target) > 0;
     }
   } else if (id === 'squabbleserver') {
     const target = lowest(inLane(m, source.owner, l).filter(c => c.statuses.frozen || c.statuses.burnStacks > 0));
@@ -2111,7 +2645,7 @@ const applyStoryEffect = (match: Match, effect: StoryEffect, effectId: string): 
   }
   return storyLog(before, m, effectId, effect.kind === "motion" || effect.kind === "reinforcement" ? effect.owner : "cpu", `Story effect ${effectId}: ${effect.kind}.`);
 };
-function applyStoryEffects(match: Match): Match {
+function applyStoryEffects(match: Match, roundStartOnly = false): Match {
   if (!match.storyEncounter || !match.storyRuntime) return match;
   let m = match;
   const snapshot = match.storyEncounter;
@@ -2123,6 +2657,20 @@ function applyStoryEffects(match: Match): Match {
   }
   const phases = snapshot.phases ?? [];
   let next = match.storyRuntime.activePhaseIndex + 1;
+  if (roundStartOnly) {
+    while (next < phases.length && phases[next].trigger.kind === "round"
+      && storyTriggerMet(m, phases[next].trigger)) {
+      const phase = phases[next];
+      const beforePhase = m;
+      m = { ...m, storyRuntime: { ...m.storyRuntime!, activePhaseIndex: next } };
+      m = storyLog(beforePhase, m, `phase:${phase.id}`, "cpu", `Story phase entered: ${phase.name}.`);
+      for (const [effectIndex, effect] of (phase.onEnter ?? []).entries()) {
+        m = applyStoryEffect(m, effect, `phase:${phase.id}:${effectIndex}`);
+      }
+      next += 1;
+    }
+    return m;
+  }
   while (next < phases.length && storyTriggerMet(m, phases[next].trigger)) {
     const phase = phases[next];
     const beforePhase = m;
@@ -2144,15 +2692,19 @@ export function getActiveStoryPhase(match: Match): NonNullable<StoryEncounterSna
   return index >= 0 ? match.storyEncounter?.phases?.[index] ?? null : null;
 }
 export function getStoryLockedLanes(match: Match, owner: Owner = "player"): Lane[] {
+  const storyLocked = getStoryRuleLockedLanes(match, owner);
+  const closed = (match.districtSnapshot?.locations ?? []).flatMap((d, i) =>
+    d.effect.kind === 'close-lane' && match.round >= d.effect.atRound ? [i as Lane] : []);
+  return [...new Set([...storyLocked, ...closed])].sort() as Lane[];
+}
+function getStoryRuleLockedLanes(match: Match, owner: Owner): Lane[] {
   const scheduled = (match.storyEncounter?.modifiers?.laneLocks ?? [])
     .filter((lock) => lock.round === match.round && (lock.owner === owner || lock.owner === "both"))
     .flatMap((lock) => lock.lanes);
   const entered = (match.storyRuntime?.laneLocks ?? [])
     .filter((lock) => lock.owner === owner || lock.owner === "both")
     .flatMap((lock) => lock.lanes);
-  const closed = (match.districtSnapshot?.locations ?? []).flatMap((d, i) =>
-    d.effect.kind === 'close-lane' && match.round >= d.effect.atRound ? [i as Lane] : []);
-  return [...new Set([...scheduled, ...entered, ...closed])].sort() as Lane[];
+  return [...new Set([...scheduled, ...entered])].sort() as Lane[];
 }
 export function getStoryModifierSummaries(value: Match | StoryEncounterSnapshot): string[] {
   const snapshot = "round" in value ? value.storyEncounter : value;
@@ -2218,6 +2770,190 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     return echoed ? m : { ...m, lastRevealedCardId: source.cardId,
       entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] };
   }
+  if (Object.hasOwn(squabblehouseWaveCards, source.cardId)) {
+    let succeeded = false;
+    let detail = '';
+    if (source.cardId === 'cane-corso-red' || source.cardId === 'blue-nose-pit') {
+      m = resolveSquabblehouseDogReveal(m, source);
+      succeeded = findCard(m, source.instanceId)?.squabblehouseEffectRound === m.round;
+      const ogId = source.cardId === 'cane-corso-red' ? 'triple-og-red' : 'triple-og-blue';
+      detail = succeeded ? `${source.name} found its matching ${ogId} and backed it up.`
+        : `${source.name} waits; its matching OG is not on the board.`;
+    } else if (source.cardId === 'squabblehouse-bus-boy') {
+      const passenger = lowest(inLane(m, source.owner, l).filter(card => card.instanceId !== source.instanceId
+        && isSquabblehouseStaffCharacter(card)));
+      const destinations = ([0, 1, 2] as Lane[]).filter(destination => destination !== l
+        && inLane(m, source.owner, destination).length < 4
+        && !getStoryLockedLanes(m, source.owner).includes(destination))
+        .sort((a, b) => getLaneScoreForMatch(m, inLane(m, source.owner, a), a, source.owner)
+          - getLaneScoreForMatch(m, inLane(m, source.owner, b), b, source.owner) || a - b);
+      const destination = destinations[0];
+      const movable = passenger && !passenger.statuses.frozen && !passenger.statuses.locked
+        && !m.districtRuntime?.detainedCardIds.includes(passenger.instanceId)
+        && !squabblehouseMovementLocked(m, passenger);
+      if (passenger && destination !== undefined && movable) {
+        const from = passenger.lane;
+        const moved = move(m, passenger, destination, 'Clear the Table moved this staff member.', false, true);
+        if (findCard(moved, passenger.instanceId)?.lane === destination && from !== destination) {
+          const beforeReward = moved;
+          m = modify(beforeReward, passenger.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
+            lastEffectNote: 'Clear the Table: successful move, +1 Hand.' }));
+          m = addEvent(beforeReward, m, { type: 'ability', sourceId: source.instanceId, owner: source.owner,
+            lane: destination, targetIds: [passenger.instanceId],
+            note: 'Clear the Table: after arrival effects, the moved staff member gained +1 Hand.' });
+          targetIds.add(passenger.instanceId);
+          succeeded = true;
+        } else m = moved;
+      }
+      detail = succeeded
+        ? 'Clear the Table moved the weakest other friendly staff member to the weakest open district and gave it +1 Hand.'
+        : 'Clear the Table found no movable staff member and legal open destination.';
+    } else if (source.cardId === 'squabblehouse-cashier') {
+      const target = highest(inLane(m, enemy, l).filter(card => (card.kind ?? 'character') === 'character'));
+      let lockedTargetId: string | undefined;
+      const beforeLockAttempt = m;
+      if (target) {
+        targetIds.add(target.instanceId);
+        m = hostileEffect(m, source, target, (state, actual) => {
+          lockedTargetId = actual.instanceId;
+          return modify(state, actual.instanceId, card => ({
+            ...card,
+            squabblehouseCannotMoveThroughRound: Math.max(card.squabblehouseCannotMoveThroughRound ?? 0, state.round + 1),
+            lastEffectNote: 'Pay Your Tab: cannot move or return through the end of next round.',
+          }));
+        }, false, false, true);
+      }
+      const beforeLockedTarget = lockedTargetId ? findCard(beforeLockAttempt, lockedTargetId) : undefined;
+      const committedLockedTarget = lockedTargetId ? findCard(m, lockedTargetId) : undefined;
+      const lockApplied = !!beforeLockedTarget && !!committedLockedTarget
+        && (committedLockedTarget.squabblehouseCannotMoveThroughRound ?? 0)
+          > (beforeLockedTarget.squabblehouseCannotMoveThroughRound ?? 0);
+      if (lockApplied && lockedTargetId) targetIds.add(lockedTargetId);
+      const isReceipt = (t: DistrictTrap) => t.kind === 'open-tab' && t.owner === source.owner && t.lane === l;
+      const old = (m.districtTraps ?? []).find(isReceipt);
+      const expiresAfterRound = Math.max(old?.expiresAfterRound ?? 0, m.round + 1);
+      const extended = !old || expiresAfterRound > old.expiresAfterRound;
+      if (extended) {
+        const receipt = { kind: 'open-tab' as const, owner: source.owner, lane: l, source: { ...source, statuses: { ...source.statuses } }, expiresAfterRound, spentRound: old?.spentRound };
+        m = { ...m, districtTraps: [...(m.districtTraps ?? []).filter(t => !isReceipt(t)), receipt] };
+      }
+      succeeded = lockApplied || extended;
+      const effects: string[] = [];
+      if (lockApplied && target) effects.push(`${target.name} locked through R${m.round + 1}`);
+      effects.push(extended
+        ? `Open Tab covers enemy departures through R${expiresAfterRound}`
+        : `Open Tab already covers departures through R${expiresAfterRound}`);
+      detail = effects.join('; ') + '.';
+    } else if (source.cardId === 'waffle-warlord') {
+      const staffedEverywhere = ([0, 1, 2] as Lane[]).every(district =>
+        inLane(m, source.owner, district).some(isSquabblehouseStaffCharacter));
+      const amount = staffedEverywhere ? 2 : 1;
+      for (const district of [0, 1, 2] as Lane[]) {
+        const ally = lowest(inLane(m, source.owner, district).filter(card =>
+          card.instanceId !== source.instanceId && isSquabblehouseStaffCharacter(card)));
+        if (!ally) continue;
+        m = modify(m, ally.instanceId, card => ({ ...card, powerModifier: card.powerModifier + amount,
+          lastEffectNote: `All-Star Hands: +${amount} Hand${amount === 1 ? '' : 's'}.` }));
+        targetIds.add(ally.instanceId);
+        succeeded = true;
+      }
+      detail = succeeded
+        ? `All-Star Hands gave the weakest other staff member in each eligible district +${amount} Hand${amount === 1 ? '' : 's'}.`
+        : 'All-Star Hands found no other staff member to boost.';
+    } else if (source.cardId === 'squabblehouse-security') {
+      const target = highest(inLane(m, enemy, l));
+      if (target) {
+        targetIds.add(target.instanceId);
+        const prior = findCard(m, target.instanceId);
+        const beforeDamage = m;
+        m = targetEnemyPowerReduction(m, source, target, 2, 'Keep the Peace: strongest enemy -2 Hands.');
+        succeeded = !!prior && directDamageAmount(beforeDamage, m, prior) > 0;
+      }
+      detail = target ? 'Keep the Peace checked the strongest enemy for -2 Hands.'
+        : 'Keep the Peace found no enemy in this district.';
+    } else if (source.cardId === 'squabblehouse-teknician') {
+      const staff = [...(m.squabblehouseRevealHistory ?? [])].reverse()
+    .filter(entry => entry.owner === source.owner && SQUABBLEHOUSE_TECH_STAFF.has(entry.cardId)
+          && entry.sourceInstanceId !== source.instanceId)
+        .map(entry => findCard(m, entry.sourceInstanceId))
+        .find((card): card is CardInstance => !!card && activeAbility(card)
+          && SQUABBLEHOUSE_TECH_STAFF.has(card.cardId));
+      if (staff) {
+        m = resolveSquabblehouseStaffEcho(m, findCard(m, source.instanceId) ?? source, staff, 'reveal');
+        succeeded = findCard(m, source.instanceId)?.squabblehouseTeknicianRevealRound === m.round;
+        targetIds.add(staff.instanceId);
+      }
+      detail = staff ? `Run It Back repeated ${staff.name}'s On Reveal once.`
+        : 'Run It Back found no eligible friendly Squabblehouse staff On Reveal.';
+    } else if (source.cardId === 'griddle-master') {
+      const target = highest(inLane(m, enemy, l));
+      let after: CardInstance | undefined;
+      let damageResolved = 3;
+      if (target) {
+        targetIds.add(target.instanceId);
+        const prior = findCard(m, target.instanceId)!;
+        const beforeDamage = m;
+        const breakProtection = target.statuses.protected;
+        m = hostileEffect(m, source, target, (state, actual) => {
+          let result = state;
+          if (breakProtection) {
+            const protectedCard = findCard(result, target.instanceId);
+            if (protectedCard) {
+              result = { ...result, timedEffects: result.timedEffects.filter(effect =>
+                !((effect.kind === 'church-protection' || effect.kind === 'salon-protection')
+                  && effect.targetInstanceId === protectedCard.instanceId)) };
+              result = modify(result, protectedCard.instanceId, card => ({ ...card,
+                statuses: { ...card.statuses, protected: false },
+                lastEffectNote: 'Hot Off the Griddle: Protection removed before the attack.' }));
+            }
+          }
+          const damageTarget = findCard(result, actual.instanceId) ?? actual;
+          const damage = actual.statuses.burnStacks > 0 ? 5 : 3;
+          damageResolved = damage;
+          result = reduceHands(result, damageTarget, damage,
+            `Hot Off the Griddle: ${damage} damage and 1 Burn.`, damageTarget.statuses.burnStacks + 1);
+          return modify(result, actual.instanceId, card => ({
+            ...card, burnSource: { instanceId: source.instanceId, owner: source.owner },
+          }));
+        }, false, false, true, breakProtection);
+        after = findCard(m, target.instanceId);
+        const dogTookPackage = m.boards.flat().some(card => card.owner === enemy && card.lane === l
+          && ['cane-corso-red', 'blue-nose-pit'].includes(card.cardId)
+          && card.lastEffectNote.includes('Hot Off the Griddle'));
+        const protectionRemoved = !!after && prior.statuses.protected && !after.statuses.protected;
+        succeeded = directDamageAmount(beforeDamage, m, prior) > 0 || (!!after && protectionRemoved)
+          || (after?.statuses.burnStacks ?? 0) > prior.statuses.burnStacks || dogTookPackage;
+      }
+      if (target) {
+        const pieces = [`${target.name} took ${damageResolved} damage and 1 Burn`];
+        if (target.statuses.protected && !findCard(m, target.instanceId)?.statuses.protected) {
+          pieces.push('Protection broken');
+        }
+        detail = `${pieces.join('; ')}.`;
+      } else detail = 'No enemy here.';
+    } else if (source.cardId === 'inmate-reformed') {
+      const hasStaff = inLane(m, source.owner, l).some(card => card.instanceId !== source.instanceId
+        && isSquabblehouseStaff(card) && (card.kind ?? 'character') === 'character');
+      if (hasStaff) {
+        m = modify(m, source.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
+          lastEffectNote: 'Second Chance: friendly house staff here, +2 Hands.' }));
+        succeeded = true;
+      }
+      const target = highest(inLane(m, enemy, l));
+      if (target) {
+        targetIds.add(target.instanceId);
+        const beforeDamage = m;
+        m = targetEnemyPowerReduction(m, source, target, 1, 'Second Chance: strongest enemy -1 Hand.');
+        succeeded ||= directDamageAmount(beforeDamage, m, target) > 0;
+      }
+      detail = `Second Chance${hasStaff ? ' found staff here and gained +2 Hands' : ' had no staff bonus'}`
+        + (target ? '; it checked the strongest enemy for -1 Hand.' : '; no enemy was here to check.');
+    }
+    note(succeeded ? `${source.ability} resolved. ${detail}` : `${source.ability}: ${detail}`);
+    if (succeeded) m = trainWaveAbility(m, source.instanceId);
+    return !echoed ? { ...m, lastRevealedCardId: source.cardId,
+      entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : m;
+  }
   if (Object.hasOwn(tripleOgCards, source.cardId)) {
     const id = source.cardId;
     // Movement and interception emit their own authoritative frames. The wrapper
@@ -2241,11 +2977,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character')) {
           const before = findCard(m, ally.instanceId);
           // Nobody is taxed off the board: an ally at 1 Hand keeps it.
-          if (!before || getEffectiveCardPower(before) < 2 || cannotLoseHands(before)) continue;
+          if (!before || rawCombatPower(before) < 2 || cannotLoseHands(before)) continue;
+          const beforePayment = m;
           m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier - 1,
             lastEffectNote: `${source.ability}: paid 1 Hand to ${source.name}.` }));
-          const after = findCard(m, ally.instanceId);
-          if (after && after.powerModifier < before.powerModifier) { homage++; targetIds.add(ally.instanceId); }
+          if (directDamageAmount(beforePayment, m, before) > 0) { homage++; targetIds.add(ally.instanceId); }
         }
         if (homage) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + homage,
           lastEffectNote: `${source.ability}: collected ${homage} Hand${homage === 1 ? '' : 's'}.` }));
@@ -2268,6 +3004,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       }
       noteFromTail(`${source.ability}: ${behind ? homage ? `the whole side paid up for +${homage} Hands.` : 'the side had nothing to give.' : 'this district was not losing, so no homage was owed.'}`
         + (sent ? ` ${weakest!.name} was sent to your strongest district with -1 Hand.` : ''));
+      if (!echoed && (homage > 0 || sent)) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'triple-og-red') {
       let taken = 0, respected = 0;
       const lineup = [...inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId), ...inLane(m, enemy, l)]
@@ -2288,11 +3025,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         }
         // Allies take the same destruction-aware damage as enemies, so a 1-Hand
         // ally leaves the board instead of lingering at zero.
+        const beforeDamage = m;
         m = step(before.owner === source.owner
           ? reduceHands(m, before, 1, `${source.ability}: -1 Hand.`)
           : targetEnemyPowerReduction(m, source, before, -1, `${source.ability}: -1 Hand.`));
-        const after = findCard(m, before.instanceId);
-        if (!after || after.powerModifier < before.powerModifier) { taken++; targetIds.add(before.instanceId); }
+        if (rawCombatPower(before) > 0 && directDamageAmount(beforeDamage, m, before) > 0) {
+          taken++; targetIds.add(before.instanceId);
+        }
       }
       if (taken) m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + taken,
         lastEffectNote: `${source.ability}: took ${taken} Hand${taken === 1 ? '' : 's'} off the district.` }));
@@ -2301,7 +3040,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else if (id === 'initiation') {
       m = { ...m, districtTraps: [...(m.districtTraps ?? [])
         .filter(t => !(t.kind === 'initiation' && t.owner === source.owner && t.lane === l)),
-        { kind: 'initiation' as const, owner: source.owner, lane: l, source, expiresAfterRound: 99 }] };
+        { kind: 'initiation' as const, owner: source.owner, lane: l, source, expiresAfterRound: 99,
+          ...(echoed ? { echoed: true } : {}) }] };
       noteFromTail(`${source.ability}: this district is marked. Your next character here gets put on by your set.`);
     } else if (id === 'block-spinner') {
       const target = highest(inLane(m, enemy, l));
@@ -2384,10 +3124,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const target = highest(inLane(m, enemy, l));
       if (target) {
         targetIds.add(target.instanceId);
-        const old = target.powerModifier;
+        const beforeDamage = m;
         m = targetEnemyPowerReduction(m, source, target, 2, 'Fold-Out Justice: -2 Hands.');
-        const current = findCard(m, target.instanceId);
-        succeeded ||= !current || current.powerModifier < old;
+        succeeded ||= directDamageAmount(beforeDamage, m, target) > 0;
       }
       const ally = lowest(allies);
       if (ally) {
@@ -2433,7 +3172,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         m = targetEnemyPowerReduction(m, source, target, 3, 'Quiet Tip: -3 Hands.');
         // Count actual damage (including an intercepted hit), not a consumed shield.
         succeeded = before.boards.flat().some(old => old.owner === enemy
-          && (!findCard(m, old.instanceId) || findCard(m, old.instanceId)!.powerModifier < old.powerModifier));
+          && directDamageAmount(before, m, old) > 0);
       }
     } else if (source.cardId === 'inmate-contraband' && allies.some(c => (c.kind ?? 'character') === 'character')) {
       const key = source.owner === 'player' ? 'playerMotion' : 'cpuMotion';
@@ -2566,7 +3305,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     if (source.cardId === 'ganger-blue') {
       const ally = lowest(allies.filter(c => c.lane !== l));
       if (ally) {
-        addHands(ally, 2, 'Blue Side Cover: +2 Hands and Protected.');
+        const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 4 : 3;
+        addHands(ally, amount, `Blue Side Cover: +${amount} Hands and Protected.`);
         const wasProtected = ally.statuses.protected;
         m = grantProtection(m, source, ally.instanceId);
         succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
@@ -2577,10 +3317,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const target = highest(enemiesHere());
       if (target) {
         targetIds.add(target.instanceId);
-        const oldModifier = target.powerModifier;
+        const beforeDamage = m;
         m = targetEnemyPowerReduction(m, source, target, 2, 'Red Side Retaliation: -2 Hands.');
-        const current = findCard(m, target.instanceId);
-        succeeded = !current || current.powerModifier < oldModifier;
+        succeeded = directDamageAmount(beforeDamage, m, target) > 0;
         if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: hit landed, +1 Hand.');
       }
     } else if (source.cardId === 'snitch') {
@@ -2603,10 +3342,9 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       let damaged = 0;
       for (const target of targets) {
         targetIds.add(target.instanceId);
-        const oldModifier = target.powerModifier;
+        const beforeDamage = m;
         m = targetEnemyPowerReduction(m, source, target, 1, 'Block Crowned: -1 Hand.');
-        const current = findCard(m, target.instanceId);
-        if (!current || current.powerModifier < oldModifier) damaged++;
+        if (directDamageAmount(beforeDamage, m, target) > 0) damaged++;
       }
       if (damaged) {
         addHands(findCard(m, source.instanceId)!, Math.min(2, damaged), `Block Crowned: +${Math.min(2, damaged)} Hands.`);
@@ -2910,6 +3648,26 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
   else if (source.cardId === 'buspass') {
     m = addDiscountToken(m, source.owner, source, 'any');
     note('All-Day Transfer: your next card costs 1 less Motion.');
+  }
+  else if (source.cardId === 'sideofhands') {
+    const ally = lowest(inLane(m, source.owner, l).filter(card => card.instanceId !== source.instanceId
+      && (card.kind ?? 'character') === 'character'));
+    const target = highest(inLane(m, enemy, l).filter(card => (card.kind ?? 'character') === 'character'));
+    if (ally) {
+      targetIds.add(ally.instanceId);
+      m = modify(m, ally.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
+        lastEffectNote: 'A Side of Hands: +2 Hands.' }));
+    }
+    let hostileLanded = false;
+    if (target) {
+      targetIds.add(target.instanceId);
+      const beforeDamage = m;
+      m = hostileEffect(m, source, target, (state, actual) =>
+        reduceHands(state, actual, 2, 'Side Order: -2 Hands.'), false, false, true);
+      hostileLanded = directDamageAmount(beforeDamage, m, target) > 0;
+    }
+    note(`A Side of Hands: ${ally ? `${ally.name} gained +2 Hands.` : 'no friendly character was here.'} `
+      + (hostileLanded ? `${target!.name} lost 2 Hands.` : target ? 'the hostile reduction was blocked.' : 'no enemy character was here.'));
   }
   else if (source.cardId === 'energydrink' || source.cardId === 'charger') {
     const eligible = inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId && c.kind !== 'support').length;
@@ -3264,10 +4022,8 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           targetIds.add(target.instanceId);
           m = hostileEffect(m, source, target, (state, actual) => {
             if (actual.statuses.uncounterable) return state;
-            const beforePower = Math.max(0, actual.basePower + actual.powerModifier);
             let after = reduceHands(state, actual, 2, 'Nothing to Lose: up to 2 Hands stolen.');
-            const remaining = findCard(after, actual.instanceId);
-            const stolen = Math.max(0, Math.min(2, beforePower - (remaining ? Math.max(0, remaining.basePower + remaining.powerModifier) : 0)));
+            const stolen = Math.min(2, directDamageAmount(state, after, actual));
             if (stolen) after = modify(after, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier + stolen }));
             return after;
           }, false, false, true);
@@ -3547,11 +4303,10 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     const reduce = (target: CardInstance | undefined, amount: number) => {
       if (!target) return false;
       targetIds.add(target.instanceId);
-      const oldModifier = target.powerModifier;
+      const beforeDamage = m;
       const reduction = amount + elementalMatchupBonus(source.type, target.type);
       m = targetEnemyPowerReduction(m, source, target, -reduction, `${source.ability}: -${reduction} Hands.`);
-      const current = findCard(m, target.instanceId);
-      return !current || current.powerModifier < oldModifier;
+      return directDamageAmount(beforeDamage, m, target) > 0;
     };
     const travel = (card: CardInstance) => {
       targetIds.add(card.instanceId);
@@ -3575,7 +4330,11 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     } else if (id === 'rootnurse') {
       const remaining = source.owner === 'player' ? m.playerMotion : m.cpuMotion;
       if (remaining >= 4) buff(findCard(m, source.instanceId), 2);
-      else cleanse(lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced)));
+      else {
+        const patient = lowest(allies.filter(c => c.statuses.frozen || c.statuses.silenced));
+        if (patient) cleanse(patient);
+        else buff(lowest(allies.filter(c => c.type === 'Plant')), 1);
+      }
     } else if (id === 'rainmaker') {
       targetIds.add(source.instanceId);
       m = modify(m, source.instanceId, c => ({ ...c, powerModifier: c.powerModifier - 2,
@@ -3597,10 +4356,12 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       if (travel(source)) reduce(lowest(inLane(m, enemy, findCard(m, source.instanceId)!.lane!)), 1);
     } else if (id === 'sprout') {
       const plant = lowest(allies.filter(c => c.type === 'Plant'));
-      if (plant) { buff(plant, 1); buff(findCard(m, source.instanceId), 1); }
+      if (plant) { buff(plant, 2); buff(findCard(m, source.instanceId), 1); }
     } else if (id === 'gardenwall') {
       reduce(highest(m.boards.flat().filter(c => !c.hazard && c.owner === enemy && c.lane !== l)), 2);
       buff(lowest(allies), 1);
+      buff(lowest(m.boards.flat().filter(c => !c.hazard && c.kind !== 'support'
+        && c.owner === source.owner && c.type === 'Plant' && c.lane !== l)), 1);
     } else if (id === 'crosswind') {
       weaken(highest(enemies));
       const traveler = lowest(allies);
@@ -3787,7 +4548,10 @@ function applyDistrictDeparture(match: Match, owner: Owner, instanceId: string, 
   if (!card) return match;
   const destination = lane((targetLane + 1) % 3);
   const after = move(match, card, destination, `THE SUBWAY: rode to ${match.districtSnapshot.locations[destination].name}.`);
-  const moved = findCard(after, instanceId)!;
+  const moved = findCard(after, instanceId);
+  // Arrival effects can defeat the rider. Keep their committed state and replay
+  // events without inventing a final movement target for a card that is gone.
+  if (!moved) return after;
   return addEvent(match, after, { type: 'ability', owner, lane: destination, targetIds: [instanceId],
     kind: moved.lane === destination ? 'move' : 'blocked', note: moved.lastEffectNote,
   });
@@ -3800,11 +4564,17 @@ export function playTurnCard(match: Match, owner: Owner, instanceId: string, tar
 function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetLane: Lane, squabble: boolean, endTurn: boolean, investment = 0): Match {
   if (![0, 1, 2].includes(targetLane)) throw new Error('Choose a valid district');
   if ((owner === 'player' && match.phase !== 'player') || (owner === 'cpu' && match.phase !== 'cpu-reveal')) throw new Error('Owner cannot play in this phase');
-  if (getStoryLockedLanes(match, owner).includes(targetLane)) throw new Error('Lane is locked');
   const handKey = owner === 'player' ? 'playerHand' : 'cpuHand', motionKey = owner === 'player' ? 'playerMotion' : 'cpuMotion', card = match[handKey].find((c) => c.instanceId === instanceId);
   if (!card) throw new Error('Card is not in this hand');
-  const homeLane = TRIPLE_OG_LANE[card.cardId];
-  if (homeLane !== undefined && targetLane !== homeLane) throw new Error(`${card.name} only sets up in the ${homeLane === 0 ? 'left' : 'right'} district`);
+  if (squabblehouseMovementLocked(match, card)) {
+    throw new Error(`Pay Your Tab prevents redeployment through round ${card.squabblehouseCannotMoveThroughRound}`);
+  }
+  if (isMythicalTripleOg(card.cardId) && TRIPLE_OG_LANE[card.cardId] !== targetLane) {
+    const side = TRIPLE_OG_LANE[card.cardId] === 0 ? 'left' : 'right';
+    throw new Error(`${card.name} only sets up in the ${side} district`);
+  }
+  if (!isMythicalTripleOg(card.cardId) && getStoryLockedLanes(match, owner).includes(targetLane)) throw new Error('Lane is locked');
+  if (card.cardId === 'sideofhands' && squabble) throw new Error('Support cards cannot use SQUABBLE');
   if (squabble && (match.squabbleByOwner ? match.squabbleByOwner[owner] : owner !== 'player' || match.squabbleUsed)) throw new Error('SQUABBLE is unavailable');
   const cost = getLegalCardCost(match, owner, card, targetLane);
   if (match[motionKey] < cost) throw new Error('Not enough Motion');
@@ -3864,7 +4634,7 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
   if (card.cardId === 'luigion') placed = { ...placed, luigionMushroomUsed: false };
   if (card.cardId === 'luigion' && squabble) placed = { ...placed, ...LUIGION_POWERED };
   if (card.cardId === 'homelessguy') placed = { ...placed, wildInvestment: investment, wildEmptyWallet: match[motionKey] === cost };
-  m = { ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] };
+  m = reconcileContinuousPower({ ...m, boards: m.boards.map((items, i) => i === targetLane ? [...items, placed] : items) as Match['boards'] });
   {
     const activeBuddies = m.boards.flat().filter(buddy => buddy.instanceId !== instanceId && buddy.cardId === 'buddy'
       && buddy.buddyForm === 'squabble-earth' && (buddy.buddyEarthExpiresAtRound ?? 0) > m.round
@@ -3925,6 +4695,8 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     note: `${card.name} revealed in district ${targetLane + 1}.`,
   });
   m = applyDistrictArrival(m, owner, instanceId, targetLane);
+  m = squabblehouseSecurityArrival(m, instanceId);
+  m = squabblehouseManagerArrival(m, instanceId);
   m = recordElectricPlay(m, placed);
   m = homecomingArrival(fairytaleArrival(m, instanceId), instanceId, homecomingTools());
   m = applyScentEntry(m, instanceId);
@@ -4012,7 +4784,9 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
     const entrance = survivingReveal ? hasEntrance(survivingReveal) : false;
     if (trap && survivingReveal && entrance) {
       const beforeTrap = m;
-      m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
+      // Both watched districts share one case, not one cancellation per lane.
+      m = { ...m, districtTraps: m.districtTraps!.filter(t => !(t.kind === 'stakeout'
+        && t.owner === trap.owner && t.source.instanceId === trap.source.instanceId)) };
       m = modify(m, instanceId, c => ({ ...c, lastEffectNote: 'Stakeout canceled this entrance.' }));
       const detective = m.boards.flat().find(c => c.instanceId === trap.source.instanceId);
       const rewardedIds: string[] = [];
@@ -4032,9 +4806,23 @@ function resolveCardPlay(match: Match, owner: Owner, instanceId: string, targetL
       const queued = creativeBeforeEntrance(m, survivingReveal, creativeTools());
       m = queued.match;
       const live = findCard(m, survivingReveal.instanceId);
-      if (!queued.delayed && live) m = resolveAbility(m, live);
+      if (!queued.delayed && live) {
+        m = resolveAbility(m, live);
+        if (live.cardId === 'sideofhands' && findCard(m, live.instanceId)) {
+          const beforeCleanup = m;
+          const cleaned = {
+            ...m,
+            boards: m.boards.map(items => items.filter(card => card.instanceId !== live.instanceId)) as Match['boards'],
+            timedEffects: m.timedEffects.filter(effect => effect.sourceInstanceId !== live.instanceId
+              && effect.targetInstanceId !== live.instanceId),
+          };
+          m = addEvent(beforeCleanup, cleaned, { type: 'ability', sourceId: live.instanceId, owner,
+            lane: targetLane, targetIds: [live.instanceId], note: 'A Side of Hands resolved and left the district.' });
+        }
+      }
     }
   }
+  m = squabblehouseStaffWasPlayed(m, instanceId);
   m = undercovaReaction(m, match, instanceId, targetLane, owner);
   m = applyDistrictDeparture(m, owner, instanceId, targetLane);
   m = settleLeaderReactions(m);
@@ -4216,7 +5004,7 @@ function spawnHandDemarioMushrooms(match: Match, log: boolean): Match {
 }
 const smileBombSeed = (match: Match, id: string, draw: number) =>
   JSON.stringify([id, draw, match.round, match.nextEventSequence, match.districtSnapshot,
-    match.boards.map(lane => lane.map(card => [card.instanceId, card.basePower + card.powerModifier]))]);
+    match.boards.map(lane => lane.map(card => [card.instanceId, rawCombatPower(card)]))]);
 
 const buddySeed = (match: Match, source: CardInstance) => JSON.stringify([
   'buddy-buds', source.instanceId, match.round,
@@ -4255,7 +5043,7 @@ const applyBuddyEarthToTarget = (match: Match, source: CardInstance, target: Car
   if (!before) return match;
   const after = targetEnemyPowerReduction(match, source, before, -1, 'Earth Squabble: -1 Hand for two rounds.');
   const changed = findCard(after, target.instanceId);
-  if (!changed || changed.powerModifier >= before.powerModifier) return after;
+  if (!changed || directDamageAmount(match, after, before) <= 0) return after;
   return buddyTimedEffect(after, source, changed, -1);
 };
 
@@ -4388,7 +5176,7 @@ function detonateSmileBombs(match: Match): Match {
     if (target) {
       m = targetEnemyPowerReduction(m, source ?? { ...bomb, owner: payload.sourceOwner }, target, -2, 'Smile Bomb: -2 Hands.');
       killed = !findCard(m, target.instanceId);
-      damaged = killed || (findCard(m, target.instanceId)?.powerModifier ?? target.powerModifier) < target.powerModifier;
+      damaged = directDamageAmount(before, m, target) > 0;
       if (damaged && source && source.owner === payload.sourceOwner && source.lane !== null) {
         reward = killed ? 2 : 1;
         m = modify(m, source.instanceId, card => ({ ...card, powerModifier: card.powerModifier + reward,
@@ -4424,6 +5212,8 @@ export function nextRound(match: Match): Match {
   const expiring = roundEnded.timedEffects.filter((effect) => effect.expiresAtRound === next);
   let m: Match = {
     ...roundEnded,
+    districtTraps: (roundEnded.districtTraps ?? []).filter(trap =>
+      trap.kind !== 'open-tab' || trap.expiresAfterRound >= next),
     lastRevealedCardId: null,
     laneDamage: [],
     roundMovedIds: { player: [], cpu: [] },
@@ -4479,6 +5269,7 @@ export function nextRound(match: Match): Match {
   m = creativeRoundStart(m, creativeTools());
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
+  m = resolveSquabblehouseRoundStart(m);
   const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && activeAbility(card));
   for (const guard of guards) {
     m = modify(m, guard.instanceId, (card) => ({ ...card, statuses: { ...card.statuses, protected: true, blocked: false }, lastEffectNote: 'Side Eye refreshed for this round.' }));
@@ -4494,6 +5285,12 @@ export function nextRound(match: Match): Match {
     duration: guards.length ? { unit: 'round', startsAtRound: next, expiresAtRound: next + 1, expiration: 'round-start' } : null,
     note: `Round ${next} started.`,
   });
+  if (m.boards.flat().some(card => card.cardId === 'squabblehouse-bus-boy'
+    && card.lane !== null && activeAbility(card))) {
+    // Settle new-round story locks before Bus Boy chooses its automatic route.
+    m = applyStoryEffects(m, true);
+    m = resolveSquabblehouseBusBoyPatrols(m);
+  }
   m = detonateSmileBombs(m);
   m = applyStoryEffects(m);
   m = spawnHandDemarioMushrooms(m, true);
@@ -4742,6 +5539,7 @@ export type EventType = 'play' | 'reveal' | 'ability' | 'pass' | 'round-start' |
 export type EventParticipant = {
   cardInstanceId: string; cardId: string; owner: Owner;
   before: CardEventState | null; after: CardEventState | null;
+  departureCause?: 'aura-loss';
 };
 
 const roundState = (m: Match): RoundState => ({
@@ -4769,6 +5567,7 @@ const participant = (before: Match, after: Match, id: string): EventParticipant 
 const cardState = (card: CardInstance | undefined): CardEventState | null => card ? ({
   cardInstanceId: card.instanceId, cardId: card.cardId, owner: card.owner, lane: card.lane,
   power: getEffectiveCardPower(card), basePower: card.basePower, powerModifier: card.powerModifier,
+  ...(card.continuousPower ? { continuousPower: card.continuousPower } : {}),
   moved: card.moved, statuses: { ...card.statuses }, lastEffectNote: card.lastEffectNote,
   ...(card.buddyForm ? { buddyForm: card.buddyForm } : {}),
   ...(card.buddyGrowthAtRound !== undefined ? { buddyGrowthAtRound: card.buddyGrowthAtRound } : {}),
@@ -4824,11 +5623,15 @@ const replayState = (m: Match): ReplayState => JSON.parse(JSON.stringify({
   timedEffects: m.timedEffects,
   storyRuntime: m.storyRuntime,
   abilityUpgradeSnapshot: m.abilityUpgradeSnapshot,
+  squabblehouseRevealHistory: m.squabblehouseRevealHistory ?? [],
 })) as ReplayState;
 
 export type ScoreState = { lane: Lane; player: number; cpu: number };
 
 const addEvent = (before: Match, after: Match, input: EventInput): Match => {
+  after = reconcileContinuousPower(after);
+  const neutralDepartures = after[CONTINUOUS_POWER_DEPARTURES] ?? [];
+  after = clearContinuousPowerDepartures(after);
   if (
     before[SUPPRESS_PRESENTATION_EVENTS] ||
     after[SUPPRESS_PRESENTATION_EVENTS]
@@ -4840,9 +5643,19 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
       effectLog: [],
     };
   }
-  const source = input.sourceId ? participant(before, after, input.sourceId) : null;
-  const targetIds = [...new Set(input.targetIds ?? [])].filter((id) => id !== input.sourceId);
+  const neutralById = new Map(neutralDepartures.map(card => [card.instanceId, card]));
+  const eventParticipant = (id: string): EventParticipant | null => {
+    const departure = neutralById.get(id);
+    return departure
+      ? { cardInstanceId: departure.instanceId, cardId: departure.cardId, owner: departure.owner,
+        before: cardState(departure), after: null, departureCause: 'aura-loss' }
+      : participant(before, after, id);
+  };
+  const source = input.sourceId ? eventParticipant(input.sourceId) : null;
+  const targetIds = [...new Set([...(input.targetIds ?? []), ...neutralDepartures.map(card => card.instanceId)])]
+    .filter((id) => id !== input.sourceId);
   const sourceCard = input.sourceId ? findCard(after, input.sourceId) ?? findCard(before, input.sourceId) : undefined;
+  const neutralIds = new Set(neutralDepartures.map(card => card.instanceId));
   const event: EffectLogEntry = {
     sequence: after.nextEventSequence,
     round: after.round,
@@ -4850,7 +5663,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     timing: input.timing ?? 'instant',
     duration: input.duration ?? null,
     source,
-    targets: targetIds.map((id) => participant(before, after, id)).filter((x): x is EventParticipant => x !== null),
+    targets: targetIds.map(eventParticipant).filter((x): x is EventParticipant => x !== null),
     scores: { before: scores(before), after: scores(after) },
     resources: { before: resources(before), after: resources(after) },
     state: { before: roundState(before), after: roundState(after) },
@@ -4860,7 +5673,10 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
     owner: sourceCard?.owner ?? input.owner,
     lane: input.lane ?? sourceCard?.lane ?? 0,
     kind: input.kind ?? 'ability',
-    note: input.note + targetIds.filter(id => findCard(before, id) && !findCard(after, id)).map(id => ` ${findCard(before, id)!.name} was destroyed.`).join(''),
+    note: input.note
+      + targetIds.filter(id => findCard(before, id) && !findCard(after, id) && !neutralIds.has(id))
+        .map(id => ` ${findCard(before, id)!.name} was destroyed.`).join('')
+      + neutralDepartures.map(card => ` ${card.name} was destroyed when its Manager aura expired.`).join(''),
     ...(input.abilityMetadata ? { abilityMetadata: input.abilityMetadata } : {}),
   };
   return { ...after, nextEventSequence: after.nextEventSequence + 1, effectLog: [...after.effectLog, event] };
@@ -4869,6 +5685,7 @@ const addEvent = (before: Match, after: Match, input: EventInput): Match => {
 export type CardEventState = {
   cardInstanceId: string; cardId: string; owner: Owner; lane: Lane | null;
   power: number; basePower: number; powerModifier: number; moved: boolean;
+  continuousPower?: number;
   statuses: Statuses; lastEffectNote: string;
   buddyForm?: 'earth' | 'squabble-earth';
   buddyGrowthAtRound?: number;
@@ -4883,7 +5700,8 @@ function blockbusterTools(): BlockbusterTools {
     status: (m, source, target, status, note) => hostileEffect(m, source, target, (state, actual) => modify(state, actual.instanceId,
       c => ({ ...c, statuses: { ...c.statuses, [status]: true }, lastEffectNote: note })), false, false, true),
     burn: (m, source, target) => targetEnemyBurnAndPowerReduction(m, source, target, 1, 2, 'Chain Reaction: -2 Hands and 1 Burn.'),
-    create: createCardInstance, locked: getStoryLockedLanes, power: getEffectiveCardPower, random: seededIndex };
+    create: createCardInstance, locked: getStoryLockedLanes, power: getEffectiveCardPower, rawPower: rawCombatPower,
+    sync: syncContinuousPower, random: seededIndex };
 }
 function applyBurntPlates(match: Match): Match {
   let m = match;
@@ -5055,15 +5873,21 @@ function creativeMovePair(
   if (
     first.instanceId === second.instanceId ||
     first.owner !== second.owner ||
-    !canMoveTo(m, first, destination) ||
-    !canMoveTo(m, second, destination) ||
+    !moveRouteLegal(m, first, destination) ||
+    !moveRouteLegal(m, second, destination) ||
     m.boards[destination].filter((c) => c.owner === first.owner).length > 2
   )
     return m;
   const before = m;
-  m = move(m, first, destination, note, true);
+  const firstDeparture = openTabDeparture(m, first);
+  if (firstDeparture.stopped) return firstDeparture.match;
+  const liveSecond = findCard(firstDeparture.match, second.instanceId);
+  if (!liveSecond) return firstDeparture.match;
+  const secondDeparture = openTabDeparture(firstDeparture.match, liveSecond);
+  if (secondDeparture.stopped) return secondDeparture.match;
+  m = move(secondDeparture.match, first, destination, note, true, false, true);
   const passenger = findCard(m, second.instanceId);
-  if (passenger) m = move(m, passenger, destination, note, true);
+  if (passenger) m = move(m, passenger, destination, note, true, false, true);
   for (const original of [first, second]) {
     m = fairytaleDeparture(m, original);
     m = fairytaleArrival(m, original.instanceId, findCard(m, original.instanceId)?.lane === destination);

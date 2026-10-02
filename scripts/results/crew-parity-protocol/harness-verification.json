@@ -1,0 +1,29 @@
+{
+  "syntheticTests": {
+    "command": "cd scripts && node --import tsx --test src/crew-parity-harness.test.ts",
+    "passed": 4,
+    "failed": 0,
+    "covers": [
+      "5440 canonical holdout cases and 1152 appearances per focus crew",
+      "2720 historical calibration case keys",
+      "half-draw paired score and actual seat/shared/mutual accounting",
+      "source/harness/protocol/plan mismatch rejection",
+      "failed/partial/duplicate/reused result rejection",
+      "roster order/order-key/orientation/seed mismatch rejection"
+    ]
+  },
+  "isolatedTypecheck": {
+    "command": "pnpm --filter @workspace/scripts exec tsc -p src/crew-parity-typecheck.json",
+    "passed": true,
+    "engineResolution": "frozen-v35"
+  },
+  "liveWorkspaceTypecheck": {
+    "command": "pnpm --filter @workspace/scripts exec tsc -p tsconfig.json --noEmit --incremental false",
+    "passedAtCheck": false,
+    "errorsInOwnedHarnessFiles": 0,
+    "blockingLiveSourceAtCheck": "lib/squabblemon-engine/src/gameEngine.ts:2507 TS2322 DistrictTrap.kind widened to string during concurrent candidate editing"
+  },
+  "beforeHoldoutInitialized": "scripts/results/crew-parity-before-holdout",
+  "holdoutOutcomesInspected": false,
+  "backgroundLaunchBlocked": "The delegated ShellExec tool schema provides command/timeout_ms/max_output_chars only; no explicit background task option or handle API is exposed. A foreground seven-worker supervisor command is ready for the parent to launch through its supported explicit background mechanism."
+}

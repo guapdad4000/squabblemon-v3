@@ -1,0 +1,46 @@
+[
+  {
+    "sequence": 1,
+    "kind": "ability",
+    "note": "Cornball was played in district 3 for 1 Motion.",
+    "riderAfter": 2,
+    "guardBefore": 0,
+    "guardAfter": 0
+  },
+  {
+    "sequence": 2,
+    "kind": "ability",
+    "note": "Cornball revealed in district 3.",
+    "riderBefore": 2,
+    "riderAfter": 2,
+    "guardBefore": 0,
+    "guardAfter": 0
+  },
+  {
+    "sequence": 3,
+    "kind": "ability",
+    "note": "Scare the Hoes found no enemies.",
+    "riderBefore": 2,
+    "riderAfter": 2,
+    "guardBefore": 0,
+    "guardAfter": 0
+  },
+  {
+    "sequence": 4,
+    "kind": "ability",
+    "note": "Keep the Peace: the first enemy played or moved into this district lost 1 Hand; Security gained +1 Hand.",
+    "riderBefore": 0,
+    "riderAfter": 0,
+    "guardBefore": 0,
+    "guardAfter": 1
+  },
+  {
+    "sequence": 5,
+    "kind": "move",
+    "note": "Keep the Peace: first enemy arrival lost 1 Hand.",
+    "riderBefore": 2,
+    "riderAfter": 0,
+    "guardBefore": 0,
+    "guardAfter": 1
+  }
+]

@@ -1,0 +1,5297 @@
+{
+  "generatedAt": "2026-10-02T08:56:15.639Z",
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "baselineSourceHash": "f72206f9c74374837a718865dfd7fbd9a3975269015732d9f8fa2a68c9ea7747",
+  "baselineVersion": 34,
+  "currentVersion": 35,
+  "identicalOrderedDecksAndCases": true,
+  "freshMatches": 10656,
+  "reusedMatches": 0,
+  "changedWinnerOutcomes": 756,
+  "unchangedRosterControlCases": 4800,
+  "changedControlResults": 0,
+  "baselineFilesUnchanged": true,
+  "carriers": [
+    {
+      "type": "Fire",
+      "cardId": "guap",
+      "cardName": "GUAP",
+      "crews": [],
+      "note": "Excluded from all test decks at the user’s request."
+    },
+    {
+      "type": "Water",
+      "cardId": "monsoonanchor",
+      "cardName": "Gas Station Sushi Chef",
+      "crews": [
+        {
+          "id": "element-water",
+          "name": "Water",
+          "otherSameTypeCharacters": [
+            "conductor",
+            "vibe",
+            "waterboy",
+            "laundry",
+            "alchy",
+            "icecream",
+            "stillwatermedic",
+            "riptidebruiser",
+            "watson"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Electric",
+      "cardId": "piratedj",
+      "cardName": "Pirate Radio DJ",
+      "crews": [
+        {
+          "id": "element-electric",
+          "name": "Electric",
+          "otherSameTypeCharacters": [
+            "circuitcaptain",
+            "tron",
+            "plug",
+            "wiretap",
+            "batteryback",
+            "livewire",
+            "tinman",
+            "techbro",
+            "bossbabe"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Light",
+      "cardId": "abuela",
+      "cardName": "Abuela",
+      "crews": [
+        {
+          "id": "element-light",
+          "name": "Light",
+          "otherSameTypeCharacters": [
+            "church",
+            "nightmedic",
+            "foodz",
+            "drfade",
+            "pinaynurse",
+            "crossingguard",
+            "leroy",
+            "yasuke",
+            "homeless-wiseman"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Plant",
+      "cardId": "gardener",
+      "cardName": "Rooftop Gardener",
+      "crews": [
+        {
+          "id": "element-plant",
+          "name": "Plant",
+          "otherSameTypeCharacters": [
+            "canopykeeper",
+            "ashlee",
+            "sprout",
+            "rootnurse",
+            "gardenwall",
+            "streetapostle",
+            "homelesslegend",
+            "rastamon",
+            "lola"
+          ]
+        },
+        {
+          "id": "mushroom-plant",
+          "name": "Mushroom Garden",
+          "otherSameTypeCharacters": [
+            "demario",
+            "sprout",
+            "rootnurse",
+            "canopykeeper",
+            "gardenwall"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Earth",
+      "cardId": "torta",
+      "cardName": "Torta",
+      "crews": [
+        {
+          "id": "focus-earth-tax",
+          "name": "Earth Tax and Finishers",
+          "otherSameTypeCharacters": [
+            "landlord",
+            "bigzoey",
+            "stud",
+            "concrete",
+            "mansamusa",
+            "johnhenry",
+            "partytitan",
+            "asphaltapostle",
+            "failedathlete"
+          ]
+        },
+        {
+          "id": "element-earth",
+          "name": "Earth",
+          "otherSameTypeCharacters": [
+            "concrete",
+            "mansamusa",
+            "johnhenry",
+            "asphaltapostle",
+            "landlord",
+            "bigzoey",
+            "stud",
+            "bouncer",
+            "lion"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Air",
+      "cardId": "slipstream",
+      "cardName": "The Flight Plug",
+      "crews": [
+        {
+          "id": "element-air",
+          "name": "Air",
+          "otherSameTypeCharacters": [
+            "promoter",
+            "captainjigga",
+            "honestthot",
+            "gust",
+            "crosswind",
+            "cloudbreak",
+            "ptang",
+            "ogdominican",
+            "cheshire"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Dark",
+      "cardId": "gamer",
+      "cardName": "Gamer",
+      "crews": [
+        {
+          "id": "starter-combo",
+          "name": "WHO YOU KNOW",
+          "otherSameTypeCharacters": []
+        },
+        {
+          "id": "starter-compound",
+          "name": "COMPOUND INTEREST",
+          "otherSameTypeCharacters": []
+        },
+        {
+          "id": "focus-counterplay-coherent",
+          "name": "Counterplay — Dark Control",
+          "otherSameTypeCharacters": [
+            "counter",
+            "gothkid",
+            "nerd",
+            "redpill"
+          ]
+        },
+        {
+          "id": "element-dark",
+          "name": "Dark",
+          "otherSameTypeCharacters": [
+            "counter",
+            "gothkid",
+            "nerd",
+            "redpill",
+            "shonuff",
+            "queenofhearts",
+            "repoman",
+            "thefeds",
+            "chessregular"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Poison",
+      "cardId": "nail",
+      "cardName": "Nail Tech",
+      "crews": [
+        {
+          "id": "focus-poison-entry",
+          "name": "Poison Entry Punishment",
+          "otherSameTypeCharacters": [
+            "bottle",
+            "colognecriminal",
+            "mural",
+            "fein",
+            "simmy"
+          ]
+        },
+        {
+          "id": "element-poison",
+          "name": "Poison",
+          "otherSameTypeCharacters": [
+            "bottle",
+            "mural",
+            "fein",
+            "simmy",
+            "colognecriminal",
+            "seafoodassassin",
+            "godofhookah"
+          ]
+        }
+      ],
+      "note": null
+    },
+    {
+      "type": "Normal",
+      "cardId": "barber",
+      "cardName": "Barber Bro",
+      "crews": [],
+      "note": "Normal bonus is live, but none of the frozen comparison decks contains Barber Bro."
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "tied": false,
+      "deckId": "element-air",
+      "name": "Air",
+      "previousRank": 10,
+      "placesUp": 9,
+      "games": 576,
+      "wins": 433,
+      "losses": 111,
+      "draws": 32,
+      "winRate": 0.7517361111111112,
+      "scoreRate": 0.7795138888888888,
+      "previousScoreRate": 0.5894097222222222,
+      "changePercentagePoints": 19.010416666666664,
+      "carriersInDeck": [
+        {
+          "type": "Air",
+          "cardId": "slipstream",
+          "name": "The Flight Plug",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 165,
+            "losses": 101,
+            "draws": 22,
+            "winRate": 0.5729166666666666,
+            "scoreRate": 0.6111111111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 234,
+            "losses": 40,
+            "draws": 14,
+            "winRate": 0.8125,
+            "scoreRate": 0.8368055555555556
+          },
+          "changePercentagePoints": 22.569444444444443
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 144,
+            "losses": 105,
+            "draws": 39,
+            "winRate": 0.5,
+            "scoreRate": 0.5677083333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 199,
+            "losses": 71,
+            "draws": 18,
+            "winRate": 0.6909722222222222,
+            "scoreRate": 0.7222222222222222
+          },
+          "changePercentagePoints": 15.451388888888884
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 171,
+            "losses": 83,
+            "draws": 34,
+            "winRate": 0.59375,
+            "scoreRate": 0.6527777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 231,
+            "losses": 40,
+            "draws": 17,
+            "winRate": 0.8020833333333334,
+            "scoreRate": 0.8315972222222222
+          },
+          "changePercentagePoints": 17.881944444444443
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 138,
+            "losses": 123,
+            "draws": 27,
+            "winRate": 0.4791666666666667,
+            "scoreRate": 0.5260416666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 202,
+            "losses": 71,
+            "draws": 15,
+            "winRate": 0.7013888888888888,
+            "scoreRate": 0.7274305555555556
+          },
+          "changePercentagePoints": 20.138888888888896
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 136,
+            "losses": 127,
+            "draws": 25,
+            "winRate": 0.4722222222222222,
+            "scoreRate": 0.515625
+          },
+          "current": {
+            "games": 288,
+            "wins": 201,
+            "losses": 70,
+            "draws": 17,
+            "winRate": 0.6979166666666666,
+            "scoreRate": 0.7274305555555556
+          },
+          "changePercentagePoints": 21.180555555555557
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 173,
+            "losses": 79,
+            "draws": 36,
+            "winRate": 0.6006944444444444,
+            "scoreRate": 0.6631944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 232,
+            "losses": 41,
+            "draws": 15,
+            "winRate": 0.8055555555555556,
+            "scoreRate": 0.8315972222222222
+          },
+          "changePercentagePoints": 16.84027777777778
+        }
+      }
+    },
+    {
+      "rank": 2,
+      "tied": false,
+      "deckId": "element-water",
+      "name": "Water",
+      "previousRank": 1,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 433,
+      "losses": 115,
+      "draws": 28,
+      "winRate": 0.7517361111111112,
+      "scoreRate": 0.7760416666666666,
+      "previousScoreRate": 0.8055555555555556,
+      "changePercentagePoints": -2.951388888888895,
+      "carriersInDeck": [
+        {
+          "type": "Water",
+          "cardId": "monsoonanchor",
+          "name": "Gas Station Sushi Chef",
+          "newBonus": false
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 238,
+            "losses": 40,
+            "draws": 10,
+            "winRate": 0.8263888888888888,
+            "scoreRate": 0.84375
+          },
+          "current": {
+            "games": 288,
+            "wins": 228,
+            "losses": 49,
+            "draws": 11,
+            "winRate": 0.7916666666666666,
+            "scoreRate": 0.8107638888888888
+          },
+          "changePercentagePoints": -3.298611111111116
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 212,
+            "losses": 58,
+            "draws": 18,
+            "winRate": 0.7361111111111112,
+            "scoreRate": 0.7673611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 205,
+            "losses": 66,
+            "draws": 17,
+            "winRate": 0.7118055555555556,
+            "scoreRate": 0.7413194444444444
+          },
+          "changePercentagePoints": -2.604166666666674
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 224,
+            "losses": 48,
+            "draws": 16,
+            "winRate": 0.7777777777777778,
+            "scoreRate": 0.8055555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 209,
+            "losses": 62,
+            "draws": 17,
+            "winRate": 0.7256944444444444,
+            "scoreRate": 0.7552083333333334
+          },
+          "changePercentagePoints": -5.034722222222221
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 226,
+            "losses": 50,
+            "draws": 12,
+            "winRate": 0.7847222222222222,
+            "scoreRate": 0.8055555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 224,
+            "losses": 53,
+            "draws": 11,
+            "winRate": 0.7777777777777778,
+            "scoreRate": 0.796875
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 208,
+            "losses": 57,
+            "draws": 23,
+            "winRate": 0.7222222222222222,
+            "scoreRate": 0.7621527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 201,
+            "losses": 66,
+            "draws": 21,
+            "winRate": 0.6979166666666666,
+            "scoreRate": 0.734375
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 242,
+            "losses": 41,
+            "draws": 5,
+            "winRate": 0.8402777777777778,
+            "scoreRate": 0.8489583333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 232,
+            "losses": 49,
+            "draws": 7,
+            "winRate": 0.8055555555555556,
+            "scoreRate": 0.8177083333333334
+          },
+          "changePercentagePoints": -3.125
+        }
+      }
+    },
+    {
+      "rank": 3,
+      "tied": false,
+      "deckId": "mushroom-plant",
+      "name": "Mushroom Garden",
+      "previousRank": 2,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 413,
+      "losses": 117,
+      "draws": 46,
+      "winRate": 0.7170138888888888,
+      "scoreRate": 0.7569444444444444,
+      "previousScoreRate": 0.7725694444444444,
+      "changePercentagePoints": -1.5625,
+      "carriersInDeck": [
+        {
+          "type": "Plant",
+          "cardId": "gardener",
+          "name": "Rooftop Gardener",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 211,
+            "losses": 58,
+            "draws": 19,
+            "winRate": 0.7326388888888888,
+            "scoreRate": 0.765625
+          },
+          "current": {
+            "games": 288,
+            "wins": 206,
+            "losses": 61,
+            "draws": 21,
+            "winRate": 0.7152777777777778,
+            "scoreRate": 0.7517361111111112
+          },
+          "changePercentagePoints": -1.388888888888884
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 213,
+            "losses": 52,
+            "draws": 23,
+            "winRate": 0.7395833333333334,
+            "scoreRate": 0.7795138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 207,
+            "losses": 56,
+            "draws": 25,
+            "winRate": 0.71875,
+            "scoreRate": 0.7621527777777778
+          },
+          "changePercentagePoints": -1.736111111111105
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 214,
+            "losses": 56,
+            "draws": 18,
+            "winRate": 0.7430555555555556,
+            "scoreRate": 0.7743055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 213,
+            "losses": 55,
+            "draws": 20,
+            "winRate": 0.7395833333333334,
+            "scoreRate": 0.7743055555555556
+          },
+          "changePercentagePoints": 0
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 210,
+            "losses": 54,
+            "draws": 24,
+            "winRate": 0.7291666666666666,
+            "scoreRate": 0.7708333333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 200,
+            "losses": 62,
+            "draws": 26,
+            "winRate": 0.6944444444444444,
+            "scoreRate": 0.7395833333333334
+          },
+          "changePercentagePoints": -3.125
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 187,
+            "losses": 79,
+            "draws": 22,
+            "winRate": 0.6493055555555556,
+            "scoreRate": 0.6875
+          },
+          "current": {
+            "games": 288,
+            "wins": 182,
+            "losses": 79,
+            "draws": 27,
+            "winRate": 0.6319444444444444,
+            "scoreRate": 0.6788194444444444
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 237,
+            "losses": 31,
+            "draws": 20,
+            "winRate": 0.8229166666666666,
+            "scoreRate": 0.8576388888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 231,
+            "losses": 38,
+            "draws": 19,
+            "winRate": 0.8020833333333334,
+            "scoreRate": 0.8350694444444444
+          },
+          "changePercentagePoints": -2.256944444444442
+        }
+      }
+    },
+    {
+      "rank": 4,
+      "tied": false,
+      "deckId": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "previousRank": 3,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 411,
+      "losses": 131,
+      "draws": 34,
+      "winRate": 0.7135416666666666,
+      "scoreRate": 0.7430555555555556,
+      "previousScoreRate": 0.7690972222222222,
+      "changePercentagePoints": -2.604166666666663,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 235,
+            "losses": 38,
+            "draws": 15,
+            "winRate": 0.8159722222222222,
+            "scoreRate": 0.8420138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 230,
+            "losses": 47,
+            "draws": 11,
+            "winRate": 0.7986111111111112,
+            "scoreRate": 0.8177083333333334
+          },
+          "changePercentagePoints": -2.430555555555547
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 189,
+            "losses": 76,
+            "draws": 23,
+            "winRate": 0.65625,
+            "scoreRate": 0.6961805555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 181,
+            "losses": 84,
+            "draws": 23,
+            "winRate": 0.6284722222222222,
+            "scoreRate": 0.6684027777777778
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 224,
+            "losses": 47,
+            "draws": 17,
+            "winRate": 0.7777777777777778,
+            "scoreRate": 0.8072916666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 215,
+            "losses": 55,
+            "draws": 18,
+            "winRate": 0.7465277777777778,
+            "scoreRate": 0.7777777777777778
+          },
+          "changePercentagePoints": -2.951388888888884
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 200,
+            "losses": 67,
+            "draws": 21,
+            "winRate": 0.6944444444444444,
+            "scoreRate": 0.7309027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 196,
+            "losses": 76,
+            "draws": 16,
+            "winRate": 0.6805555555555556,
+            "scoreRate": 0.7083333333333334
+          },
+          "changePercentagePoints": -2.256944444444442
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 195,
+            "losses": 70,
+            "draws": 23,
+            "winRate": 0.6770833333333334,
+            "scoreRate": 0.7170138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 190,
+            "losses": 78,
+            "draws": 20,
+            "winRate": 0.6597222222222222,
+            "scoreRate": 0.6944444444444444
+          },
+          "changePercentagePoints": -2.256944444444442
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 229,
+            "losses": 44,
+            "draws": 15,
+            "winRate": 0.7951388888888888,
+            "scoreRate": 0.8211805555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 221,
+            "losses": 53,
+            "draws": 14,
+            "winRate": 0.7673611111111112,
+            "scoreRate": 0.7916666666666666
+          },
+          "changePercentagePoints": -2.951388888888895
+        }
+      }
+    },
+    {
+      "rank": 5,
+      "tied": false,
+      "deckId": "focus-wonderland",
+      "name": "Wonderland Return",
+      "previousRank": 4,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 394,
+      "losses": 129,
+      "draws": 53,
+      "winRate": 0.6840277777777778,
+      "scoreRate": 0.7300347222222222,
+      "previousScoreRate": 0.7621527777777778,
+      "changePercentagePoints": -3.211805555555558,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 220,
+            "losses": 45,
+            "draws": 23,
+            "winRate": 0.7638888888888888,
+            "scoreRate": 0.8038194444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 207,
+            "losses": 56,
+            "draws": 25,
+            "winRate": 0.71875,
+            "scoreRate": 0.7621527777777778
+          },
+          "changePercentagePoints": -4.1666666666666625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 194,
+            "losses": 67,
+            "draws": 27,
+            "winRate": 0.6736111111111112,
+            "scoreRate": 0.7204861111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 187,
+            "losses": 73,
+            "draws": 28,
+            "winRate": 0.6493055555555556,
+            "scoreRate": 0.6979166666666666
+          },
+          "changePercentagePoints": -2.256944444444453
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 212,
+            "losses": 50,
+            "draws": 26,
+            "winRate": 0.7361111111111112,
+            "scoreRate": 0.78125
+          },
+          "current": {
+            "games": 288,
+            "wins": 204,
+            "losses": 57,
+            "draws": 27,
+            "winRate": 0.7083333333333334,
+            "scoreRate": 0.7552083333333334
+          },
+          "changePercentagePoints": -2.604166666666663
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 202,
+            "losses": 62,
+            "draws": 24,
+            "winRate": 0.7013888888888888,
+            "scoreRate": 0.7430555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 190,
+            "losses": 72,
+            "draws": 26,
+            "winRate": 0.6597222222222222,
+            "scoreRate": 0.7048611111111112
+          },
+          "changePercentagePoints": -3.819444444444442
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 181,
+            "losses": 76,
+            "draws": 31,
+            "winRate": 0.6284722222222222,
+            "scoreRate": 0.6822916666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 171,
+            "losses": 84,
+            "draws": 33,
+            "winRate": 0.59375,
+            "scoreRate": 0.6510416666666666
+          },
+          "changePercentagePoints": -3.125
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 233,
+            "losses": 36,
+            "draws": 19,
+            "winRate": 0.8090277777777778,
+            "scoreRate": 0.8420138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 223,
+            "losses": 45,
+            "draws": 20,
+            "winRate": 0.7743055555555556,
+            "scoreRate": 0.8090277777777778
+          },
+          "changePercentagePoints": -3.298611111111105
+        }
+      }
+    },
+    {
+      "rank": 6,
+      "tied": false,
+      "deckId": "cellblock-pressure",
+      "name": "Cellblock Pressure",
+      "previousRank": 5,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 373,
+      "losses": 148,
+      "draws": 55,
+      "winRate": 0.6475694444444444,
+      "scoreRate": 0.6953125,
+      "previousScoreRate": 0.7196180555555556,
+      "changePercentagePoints": -2.430555555555558,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 210,
+            "losses": 54,
+            "draws": 24,
+            "winRate": 0.7291666666666666,
+            "scoreRate": 0.7708333333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 201,
+            "losses": 59,
+            "draws": 28,
+            "winRate": 0.6979166666666666,
+            "scoreRate": 0.7465277777777778
+          },
+          "changePercentagePoints": -2.430555555555558
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 178,
+            "losses": 81,
+            "draws": 29,
+            "winRate": 0.6180555555555556,
+            "scoreRate": 0.6684027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 172,
+            "losses": 89,
+            "draws": 27,
+            "winRate": 0.5972222222222222,
+            "scoreRate": 0.6440972222222222
+          },
+          "changePercentagePoints": -2.430555555555558
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 199,
+            "losses": 60,
+            "draws": 29,
+            "winRate": 0.6909722222222222,
+            "scoreRate": 0.7413194444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 191,
+            "losses": 70,
+            "draws": 27,
+            "winRate": 0.6631944444444444,
+            "scoreRate": 0.7100694444444444
+          },
+          "changePercentagePoints": -3.125
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 189,
+            "losses": 75,
+            "draws": 24,
+            "winRate": 0.65625,
+            "scoreRate": 0.6979166666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 182,
+            "losses": 78,
+            "draws": 28,
+            "winRate": 0.6319444444444444,
+            "scoreRate": 0.6805555555555556
+          },
+          "changePercentagePoints": -1.736111111111105
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 164,
+            "losses": 91,
+            "draws": 33,
+            "winRate": 0.5694444444444444,
+            "scoreRate": 0.6267361111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 156,
+            "losses": 99,
+            "draws": 33,
+            "winRate": 0.5416666666666666,
+            "scoreRate": 0.5989583333333334
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 224,
+            "losses": 44,
+            "draws": 20,
+            "winRate": 0.7777777777777778,
+            "scoreRate": 0.8125
+          },
+          "current": {
+            "games": 288,
+            "wins": 217,
+            "losses": 49,
+            "draws": 22,
+            "winRate": 0.7534722222222222,
+            "scoreRate": 0.7916666666666666
+          },
+          "changePercentagePoints": -2.083333333333337
+        }
+      }
+    },
+    {
+      "rank": 7,
+      "tied": false,
+      "deckId": "element-dark",
+      "name": "Dark",
+      "previousRank": 13,
+      "placesUp": 6,
+      "games": 576,
+      "wins": 368,
+      "losses": 157,
+      "draws": 51,
+      "winRate": 0.6388888888888888,
+      "scoreRate": 0.6831597222222222,
+      "previousScoreRate": 0.5659722222222222,
+      "changePercentagePoints": 11.71875,
+      "carriersInDeck": [
+        {
+          "type": "Dark",
+          "cardId": "gamer",
+          "name": "Gamer",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 161,
+            "losses": 89,
+            "draws": 38,
+            "winRate": 0.5590277777777778,
+            "scoreRate": 0.625
+          },
+          "current": {
+            "games": 288,
+            "wins": 196,
+            "losses": 66,
+            "draws": 26,
+            "winRate": 0.6805555555555556,
+            "scoreRate": 0.7256944444444444
+          },
+          "changePercentagePoints": 10.069444444444443
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 125,
+            "losses": 121,
+            "draws": 42,
+            "winRate": 0.4340277777777778,
+            "scoreRate": 0.5069444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 172,
+            "losses": 91,
+            "draws": 25,
+            "winRate": 0.5972222222222222,
+            "scoreRate": 0.640625
+          },
+          "changePercentagePoints": 13.368055555555557
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 142,
+            "losses": 96,
+            "draws": 50,
+            "winRate": 0.4930555555555556,
+            "scoreRate": 0.5798611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 188,
+            "losses": 74,
+            "draws": 26,
+            "winRate": 0.6527777777777778,
+            "scoreRate": 0.6979166666666666
+          },
+          "changePercentagePoints": 11.805555555555546
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 144,
+            "losses": 114,
+            "draws": 30,
+            "winRate": 0.5,
+            "scoreRate": 0.5520833333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 180,
+            "losses": 83,
+            "draws": 25,
+            "winRate": 0.625,
+            "scoreRate": 0.6684027777777778
+          },
+          "changePercentagePoints": 11.631944444444443
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 114,
+            "losses": 137,
+            "draws": 37,
+            "winRate": 0.3958333333333333,
+            "scoreRate": 0.4600694444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 154,
+            "losses": 105,
+            "draws": 29,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5850694444444444
+          },
+          "changePercentagePoints": 12.5
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 172,
+            "losses": 73,
+            "draws": 43,
+            "winRate": 0.5972222222222222,
+            "scoreRate": 0.671875
+          },
+          "current": {
+            "games": 288,
+            "wins": 214,
+            "losses": 52,
+            "draws": 22,
+            "winRate": 0.7430555555555556,
+            "scoreRate": 0.78125
+          },
+          "changePercentagePoints": 10.9375
+        }
+      }
+    },
+    {
+      "rank": 8,
+      "tied": false,
+      "deckId": "element-electric",
+      "name": "Electric",
+      "previousRank": 6,
+      "placesUp": -2,
+      "games": 576,
+      "wins": 364,
+      "losses": 166,
+      "draws": 46,
+      "winRate": 0.6319444444444444,
+      "scoreRate": 0.671875,
+      "previousScoreRate": 0.7005208333333334,
+      "changePercentagePoints": -2.864583333333337,
+      "carriersInDeck": [
+        {
+          "type": "Electric",
+          "cardId": "piratedj",
+          "name": "Pirate Radio DJ",
+          "newBonus": false
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 177,
+            "losses": 90,
+            "draws": 21,
+            "winRate": 0.6145833333333334,
+            "scoreRate": 0.6510416666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 164,
+            "losses": 101,
+            "draws": 23,
+            "winRate": 0.5694444444444444,
+            "scoreRate": 0.609375
+          },
+          "changePercentagePoints": -4.1666666666666625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 205,
+            "losses": 61,
+            "draws": 22,
+            "winRate": 0.7118055555555556,
+            "scoreRate": 0.75
+          },
+          "current": {
+            "games": 288,
+            "wins": 200,
+            "losses": 65,
+            "draws": 23,
+            "winRate": 0.6944444444444444,
+            "scoreRate": 0.734375
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 194,
+            "losses": 70,
+            "draws": 24,
+            "winRate": 0.6736111111111112,
+            "scoreRate": 0.7152777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 185,
+            "losses": 79,
+            "draws": 24,
+            "winRate": 0.6423611111111112,
+            "scoreRate": 0.6840277777777778
+          },
+          "changePercentagePoints": -3.125
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 188,
+            "losses": 81,
+            "draws": 19,
+            "winRate": 0.6527777777777778,
+            "scoreRate": 0.6857638888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 179,
+            "losses": 87,
+            "draws": 22,
+            "winRate": 0.6215277777777778,
+            "scoreRate": 0.6597222222222222
+          },
+          "changePercentagePoints": -2.604166666666663
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 167,
+            "losses": 98,
+            "draws": 23,
+            "winRate": 0.5798611111111112,
+            "scoreRate": 0.6197916666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 162,
+            "losses": 104,
+            "draws": 22,
+            "winRate": 0.5625,
+            "scoreRate": 0.6006944444444444
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 215,
+            "losses": 53,
+            "draws": 20,
+            "winRate": 0.7465277777777778,
+            "scoreRate": 0.78125
+          },
+          "current": {
+            "games": 288,
+            "wins": 202,
+            "losses": 62,
+            "draws": 24,
+            "winRate": 0.7013888888888888,
+            "scoreRate": 0.7430555555555556
+          },
+          "changePercentagePoints": -3.819444444444442
+        }
+      }
+    },
+    {
+      "rank": 9,
+      "tied": false,
+      "deckId": "element-light",
+      "name": "Light",
+      "previousRank": 11,
+      "placesUp": 2,
+      "games": 576,
+      "wins": 351,
+      "losses": 171,
+      "draws": 54,
+      "winRate": 0.609375,
+      "scoreRate": 0.65625,
+      "previousScoreRate": 0.5842013888888888,
+      "changePercentagePoints": 7.204861111111116,
+      "carriersInDeck": [
+        {
+          "type": "Light",
+          "cardId": "abuela",
+          "name": "Abuela",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 178,
+            "losses": 81,
+            "draws": 29,
+            "winRate": 0.6180555555555556,
+            "scoreRate": 0.6684027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 179,
+            "losses": 87,
+            "draws": 22,
+            "winRate": 0.6215277777777778,
+            "scoreRate": 0.6597222222222222
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 129,
+            "losses": 129,
+            "draws": 30,
+            "winRate": 0.4479166666666667,
+            "scoreRate": 0.5
+          },
+          "current": {
+            "games": 288,
+            "wins": 172,
+            "losses": 84,
+            "draws": 32,
+            "winRate": 0.5972222222222222,
+            "scoreRate": 0.6527777777777778
+          },
+          "changePercentagePoints": 15.277777777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 168,
+            "losses": 88,
+            "draws": 32,
+            "winRate": 0.5833333333333334,
+            "scoreRate": 0.6388888888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 197,
+            "losses": 65,
+            "draws": 26,
+            "winRate": 0.6840277777777778,
+            "scoreRate": 0.7291666666666666
+          },
+          "changePercentagePoints": 9.027777777777779
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 139,
+            "losses": 122,
+            "draws": 27,
+            "winRate": 0.4826388888888889,
+            "scoreRate": 0.5295138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 154,
+            "losses": 106,
+            "draws": 28,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5833333333333334
+          },
+          "changePercentagePoints": 5.3819444444444535
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 115,
+            "losses": 142,
+            "draws": 31,
+            "winRate": 0.3993055555555556,
+            "scoreRate": 0.453125
+          },
+          "current": {
+            "games": 288,
+            "wins": 147,
+            "losses": 114,
+            "draws": 27,
+            "winRate": 0.5104166666666666,
+            "scoreRate": 0.5572916666666666
+          },
+          "changePercentagePoints": 10.416666666666663
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 192,
+            "losses": 68,
+            "draws": 28,
+            "winRate": 0.6666666666666666,
+            "scoreRate": 0.7152777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 204,
+            "losses": 57,
+            "draws": 27,
+            "winRate": 0.7083333333333334,
+            "scoreRate": 0.7552083333333334
+          },
+          "changePercentagePoints": 3.993055555555558
+        }
+      }
+    },
+    {
+      "rank": 10,
+      "tied": false,
+      "deckId": "focused-red-set",
+      "name": "Blood / Red Set",
+      "previousRank": 8,
+      "placesUp": -2,
+      "games": 576,
+      "wins": 337,
+      "losses": 187,
+      "draws": 52,
+      "winRate": 0.5850694444444444,
+      "scoreRate": 0.6302083333333334,
+      "previousScoreRate": 0.6440972222222222,
+      "changePercentagePoints": -1.388888888888884,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 180,
+            "losses": 89,
+            "draws": 19,
+            "winRate": 0.625,
+            "scoreRate": 0.6579861111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 177,
+            "losses": 92,
+            "draws": 19,
+            "winRate": 0.6145833333333334,
+            "scoreRate": 0.6475694444444444
+          },
+          "changePercentagePoints": -1.041666666666674
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 164,
+            "losses": 89,
+            "draws": 35,
+            "winRate": 0.5694444444444444,
+            "scoreRate": 0.6302083333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 160,
+            "losses": 95,
+            "draws": 33,
+            "winRate": 0.5555555555555556,
+            "scoreRate": 0.6128472222222222
+          },
+          "changePercentagePoints": -1.736111111111116
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 201,
+            "losses": 67,
+            "draws": 20,
+            "winRate": 0.6979166666666666,
+            "scoreRate": 0.7326388888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 198,
+            "losses": 72,
+            "draws": 18,
+            "winRate": 0.6875,
+            "scoreRate": 0.71875
+          },
+          "changePercentagePoints": -1.388888888888884
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 143,
+            "losses": 111,
+            "draws": 34,
+            "winRate": 0.4965277777777778,
+            "scoreRate": 0.5555555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 139,
+            "losses": 115,
+            "draws": 34,
+            "winRate": 0.4826388888888889,
+            "scoreRate": 0.5416666666666666
+          },
+          "changePercentagePoints": -1.388888888888895
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 135,
+            "losses": 124,
+            "draws": 29,
+            "winRate": 0.46875,
+            "scoreRate": 0.5190972222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 130,
+            "losses": 131,
+            "draws": 27,
+            "winRate": 0.4513888888888889,
+            "scoreRate": 0.4982638888888889
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 209,
+            "losses": 54,
+            "draws": 25,
+            "winRate": 0.7256944444444444,
+            "scoreRate": 0.7690972222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 207,
+            "losses": 56,
+            "draws": 25,
+            "winRate": 0.71875,
+            "scoreRate": 0.7621527777777778
+          },
+          "changePercentagePoints": -0.694444444444442
+        }
+      }
+    },
+    {
+      "rank": 11,
+      "tied": false,
+      "deckId": "focus-wiz",
+      "name": "The Wiz",
+      "previousRank": 7,
+      "placesUp": -4,
+      "games": 576,
+      "wins": 336,
+      "losses": 191,
+      "draws": 49,
+      "winRate": 0.5833333333333334,
+      "scoreRate": 0.6258680555555556,
+      "previousScoreRate": 0.6657986111111112,
+      "changePercentagePoints": -3.993055555555558,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 208,
+            "losses": 57,
+            "draws": 23,
+            "winRate": 0.7222222222222222,
+            "scoreRate": 0.7621527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 194,
+            "losses": 73,
+            "draws": 21,
+            "winRate": 0.6736111111111112,
+            "scoreRate": 0.7100694444444444
+          },
+          "changePercentagePoints": -5.2083333333333375
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 148,
+            "losses": 108,
+            "draws": 32,
+            "winRate": 0.5138888888888888,
+            "scoreRate": 0.5694444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 142,
+            "losses": 118,
+            "draws": 28,
+            "winRate": 0.4930555555555556,
+            "scoreRate": 0.5416666666666666
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 176,
+            "losses": 84,
+            "draws": 28,
+            "winRate": 0.6111111111111112,
+            "scoreRate": 0.6597222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 165,
+            "losses": 95,
+            "draws": 28,
+            "winRate": 0.5729166666666666,
+            "scoreRate": 0.6215277777777778
+          },
+          "changePercentagePoints": -3.819444444444442
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 180,
+            "losses": 81,
+            "draws": 27,
+            "winRate": 0.625,
+            "scoreRate": 0.671875
+          },
+          "current": {
+            "games": 288,
+            "wins": 171,
+            "losses": 96,
+            "draws": 21,
+            "winRate": 0.59375,
+            "scoreRate": 0.6302083333333334
+          },
+          "changePercentagePoints": -4.1666666666666625
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 161,
+            "losses": 97,
+            "draws": 30,
+            "winRate": 0.5590277777777778,
+            "scoreRate": 0.6111111111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 151,
+            "losses": 108,
+            "draws": 29,
+            "winRate": 0.5243055555555556,
+            "scoreRate": 0.5746527777777778
+          },
+          "changePercentagePoints": -3.645833333333337
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 195,
+            "losses": 68,
+            "draws": 25,
+            "winRate": 0.6770833333333334,
+            "scoreRate": 0.7204861111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 185,
+            "losses": 83,
+            "draws": 20,
+            "winRate": 0.6423611111111112,
+            "scoreRate": 0.6770833333333334
+          },
+          "changePercentagePoints": -4.340277777777779
+        }
+      }
+    },
+    {
+      "rank": 12,
+      "tied": false,
+      "deckId": "element-earth",
+      "name": "Earth",
+      "previousRank": 18,
+      "placesUp": 6,
+      "games": 576,
+      "wins": 337,
+      "losses": 196,
+      "draws": 43,
+      "winRate": 0.5850694444444444,
+      "scoreRate": 0.6223958333333334,
+      "previousScoreRate": 0.5251736111111112,
+      "changePercentagePoints": 9.722222222222221,
+      "carriersInDeck": [
+        {
+          "type": "Earth",
+          "cardId": "torta",
+          "name": "Torta",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 159,
+            "losses": 108,
+            "draws": 21,
+            "winRate": 0.5520833333333334,
+            "scoreRate": 0.5885416666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 211,
+            "losses": 59,
+            "draws": 18,
+            "winRate": 0.7326388888888888,
+            "scoreRate": 0.7638888888888888
+          },
+          "changePercentagePoints": 17.53472222222222
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 118,
+            "losses": 140,
+            "draws": 30,
+            "winRate": 0.4097222222222222,
+            "scoreRate": 0.4618055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 126,
+            "losses": 137,
+            "draws": 25,
+            "winRate": 0.4375,
+            "scoreRate": 0.4809027777777778
+          },
+          "changePercentagePoints": 1.909722222222221
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 156,
+            "losses": 97,
+            "draws": 35,
+            "winRate": 0.5416666666666666,
+            "scoreRate": 0.6024305555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 181,
+            "losses": 81,
+            "draws": 26,
+            "winRate": 0.6284722222222222,
+            "scoreRate": 0.6736111111111112
+          },
+          "changePercentagePoints": 7.118055555555558
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 121,
+            "losses": 151,
+            "draws": 16,
+            "winRate": 0.4201388888888889,
+            "scoreRate": 0.4479166666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 156,
+            "losses": 115,
+            "draws": 17,
+            "winRate": 0.5416666666666666,
+            "scoreRate": 0.5711805555555556
+          },
+          "changePercentagePoints": 12.32638888888889
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 115,
+            "losses": 151,
+            "draws": 22,
+            "winRate": 0.3993055555555556,
+            "scoreRate": 0.4375
+          },
+          "current": {
+            "games": 288,
+            "wins": 147,
+            "losses": 116,
+            "draws": 25,
+            "winRate": 0.5104166666666666,
+            "scoreRate": 0.5538194444444444
+          },
+          "changePercentagePoints": 11.631944444444443
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 162,
+            "losses": 97,
+            "draws": 29,
+            "winRate": 0.5625,
+            "scoreRate": 0.6128472222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 190,
+            "losses": 80,
+            "draws": 18,
+            "winRate": 0.6597222222222222,
+            "scoreRate": 0.6909722222222222
+          },
+          "changePercentagePoints": 7.8125
+        }
+      }
+    },
+    {
+      "rank": 13,
+      "tied": false,
+      "deckId": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "previousRank": 12,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 324,
+      "losses": 197,
+      "draws": 55,
+      "winRate": 0.5625,
+      "scoreRate": 0.6102430555555556,
+      "previousScoreRate": 0.5798611111111112,
+      "changePercentagePoints": 3.038194444444442,
+      "carriersInDeck": [
+        {
+          "type": "Dark",
+          "cardId": "gamer",
+          "name": "Gamer",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 153,
+            "losses": 110,
+            "draws": 25,
+            "winRate": 0.53125,
+            "scoreRate": 0.5746527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 152,
+            "losses": 110,
+            "draws": 26,
+            "winRate": 0.5277777777777778,
+            "scoreRate": 0.5729166666666666
+          },
+          "changePercentagePoints": -0.17361111111111605
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 149,
+            "losses": 100,
+            "draws": 39,
+            "winRate": 0.5173611111111112,
+            "scoreRate": 0.5850694444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 172,
+            "losses": 87,
+            "draws": 29,
+            "winRate": 0.5972222222222222,
+            "scoreRate": 0.6475694444444444
+          },
+          "changePercentagePoints": 6.25
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 134,
+            "losses": 113,
+            "draws": 41,
+            "winRate": 0.4652777777777778,
+            "scoreRate": 0.5364583333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 154,
+            "losses": 103,
+            "draws": 31,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5885416666666666
+          },
+          "changePercentagePoints": 5.208333333333326
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 168,
+            "losses": 97,
+            "draws": 23,
+            "winRate": 0.5833333333333334,
+            "scoreRate": 0.6232638888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 170,
+            "losses": 94,
+            "draws": 24,
+            "winRate": 0.5902777777777778,
+            "scoreRate": 0.6319444444444444
+          },
+          "changePercentagePoints": 0.868055555555558
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 135,
+            "losses": 125,
+            "draws": 28,
+            "winRate": 0.46875,
+            "scoreRate": 0.5173611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 143,
+            "losses": 122,
+            "draws": 23,
+            "winRate": 0.4965277777777778,
+            "scoreRate": 0.5364583333333334
+          },
+          "changePercentagePoints": 1.909722222222221
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 167,
+            "losses": 85,
+            "draws": 36,
+            "winRate": 0.5798611111111112,
+            "scoreRate": 0.6423611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 181,
+            "losses": 75,
+            "draws": 32,
+            "winRate": 0.6284722222222222,
+            "scoreRate": 0.6840277777777778
+          },
+          "changePercentagePoints": 4.1666666666666625
+        }
+      }
+    },
+    {
+      "rank": 14,
+      "tied": false,
+      "deckId": "focus-wave7-legends",
+      "name": "Wave 7 Legends",
+      "previousRank": 9,
+      "placesUp": -5,
+      "games": 576,
+      "wins": 290,
+      "losses": 214,
+      "draws": 72,
+      "winRate": 0.5034722222222222,
+      "scoreRate": 0.5659722222222222,
+      "previousScoreRate": 0.5963541666666666,
+      "changePercentagePoints": -3.038194444444442,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 154,
+            "losses": 104,
+            "draws": 30,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5868055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 144,
+            "losses": 112,
+            "draws": 32,
+            "winRate": 0.5,
+            "scoreRate": 0.5555555555555556
+          },
+          "changePercentagePoints": -3.125
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 153,
+            "losses": 92,
+            "draws": 43,
+            "winRate": 0.53125,
+            "scoreRate": 0.6059027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 146,
+            "losses": 102,
+            "draws": 40,
+            "winRate": 0.5069444444444444,
+            "scoreRate": 0.5763888888888888
+          },
+          "changePercentagePoints": -2.951388888888895
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 137,
+            "losses": 111,
+            "draws": 40,
+            "winRate": 0.4756944444444444,
+            "scoreRate": 0.5451388888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 131,
+            "losses": 119,
+            "draws": 38,
+            "winRate": 0.4548611111111111,
+            "scoreRate": 0.5208333333333334
+          },
+          "changePercentagePoints": -2.430555555555547
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 170,
+            "losses": 85,
+            "draws": 33,
+            "winRate": 0.5902777777777778,
+            "scoreRate": 0.6475694444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 159,
+            "losses": 95,
+            "draws": 34,
+            "winRate": 0.5520833333333334,
+            "scoreRate": 0.6111111111111112
+          },
+          "changePercentagePoints": -3.645833333333326
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 132,
+            "losses": 125,
+            "draws": 31,
+            "winRate": 0.4583333333333333,
+            "scoreRate": 0.5121527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 126,
+            "losses": 130,
+            "draws": 32,
+            "winRate": 0.4375,
+            "scoreRate": 0.4930555555555556
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 175,
+            "losses": 71,
+            "draws": 42,
+            "winRate": 0.6076388888888888,
+            "scoreRate": 0.6805555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 164,
+            "losses": 84,
+            "draws": 40,
+            "winRate": 0.5694444444444444,
+            "scoreRate": 0.6388888888888888
+          },
+          "changePercentagePoints": -4.166666666666674
+        }
+      }
+    },
+    {
+      "rank": 15,
+      "tied": false,
+      "deckId": "focus-earth-tax",
+      "name": "Earth Tax and Finishers",
+      "previousRank": 19,
+      "placesUp": 4,
+      "games": 576,
+      "wins": 299,
+      "losses": 225,
+      "draws": 52,
+      "winRate": 0.5190972222222222,
+      "scoreRate": 0.5642361111111112,
+      "previousScoreRate": 0.5217013888888888,
+      "changePercentagePoints": 4.253472222222232,
+      "carriersInDeck": [
+        {
+          "type": "Earth",
+          "cardId": "torta",
+          "name": "Torta",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 134,
+            "losses": 127,
+            "draws": 27,
+            "winRate": 0.4652777777777778,
+            "scoreRate": 0.5121527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 154,
+            "losses": 114,
+            "draws": 20,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5694444444444444
+          },
+          "changePercentagePoints": 5.7291666666666625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 138,
+            "losses": 120,
+            "draws": 30,
+            "winRate": 0.4791666666666667,
+            "scoreRate": 0.53125
+          },
+          "current": {
+            "games": 288,
+            "wins": 145,
+            "losses": 111,
+            "draws": 32,
+            "winRate": 0.5034722222222222,
+            "scoreRate": 0.5590277777777778
+          },
+          "changePercentagePoints": 2.777777777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 140,
+            "losses": 112,
+            "draws": 36,
+            "winRate": 0.4861111111111111,
+            "scoreRate": 0.5486111111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 154,
+            "losses": 103,
+            "draws": 31,
+            "winRate": 0.5347222222222222,
+            "scoreRate": 0.5885416666666666
+          },
+          "changePercentagePoints": 3.993055555555547
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 132,
+            "losses": 135,
+            "draws": 21,
+            "winRate": 0.4583333333333333,
+            "scoreRate": 0.4947916666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 145,
+            "losses": 122,
+            "draws": 21,
+            "winRate": 0.5034722222222222,
+            "scoreRate": 0.5399305555555556
+          },
+          "changePercentagePoints": 4.513888888888889
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 111,
+            "losses": 146,
+            "draws": 31,
+            "winRate": 0.3854166666666667,
+            "scoreRate": 0.4392361111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 125,
+            "losses": 132,
+            "draws": 31,
+            "winRate": 0.4340277777777778,
+            "scoreRate": 0.4878472222222222
+          },
+          "changePercentagePoints": 4.861111111111111
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 161,
+            "losses": 101,
+            "draws": 26,
+            "winRate": 0.5590277777777778,
+            "scoreRate": 0.6041666666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 174,
+            "losses": 93,
+            "draws": 21,
+            "winRate": 0.6041666666666666,
+            "scoreRate": 0.640625
+          },
+          "changePercentagePoints": 3.645833333333337
+        }
+      }
+    },
+    {
+      "rank": 16,
+      "tied": false,
+      "deckId": "focus-air-bond",
+      "name": "Air Bond",
+      "previousRank": 15,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 276,
+      "losses": 245,
+      "draws": 55,
+      "winRate": 0.4791666666666667,
+      "scoreRate": 0.5269097222222222,
+      "previousScoreRate": 0.5477430555555556,
+      "changePercentagePoints": -2.083333333333337,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 167,
+            "losses": 98,
+            "draws": 23,
+            "winRate": 0.5798611111111112,
+            "scoreRate": 0.6197916666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 161,
+            "losses": 105,
+            "draws": 22,
+            "winRate": 0.5590277777777778,
+            "scoreRate": 0.5972222222222222
+          },
+          "changePercentagePoints": -2.256944444444442
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 121,
+            "losses": 135,
+            "draws": 32,
+            "winRate": 0.4201388888888889,
+            "scoreRate": 0.4756944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 115,
+            "losses": 140,
+            "draws": 33,
+            "winRate": 0.3993055555555556,
+            "scoreRate": 0.4565972222222222
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 128,
+            "losses": 125,
+            "draws": 35,
+            "winRate": 0.4444444444444444,
+            "scoreRate": 0.5052083333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 120,
+            "losses": 130,
+            "draws": 38,
+            "winRate": 0.4166666666666667,
+            "scoreRate": 0.4826388888888889
+          },
+          "changePercentagePoints": -2.2569444444444473
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 160,
+            "losses": 108,
+            "draws": 20,
+            "winRate": 0.5555555555555556,
+            "scoreRate": 0.5902777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 156,
+            "losses": 115,
+            "draws": 17,
+            "winRate": 0.5416666666666666,
+            "scoreRate": 0.5711805555555556
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 120,
+            "losses": 140,
+            "draws": 28,
+            "winRate": 0.4166666666666667,
+            "scoreRate": 0.4652777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 117,
+            "losses": 146,
+            "draws": 25,
+            "winRate": 0.40625,
+            "scoreRate": 0.4496527777777778
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 168,
+            "losses": 93,
+            "draws": 27,
+            "winRate": 0.5833333333333334,
+            "scoreRate": 0.6302083333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 159,
+            "losses": 99,
+            "draws": 30,
+            "winRate": 0.5520833333333334,
+            "scoreRate": 0.6041666666666666
+          },
+          "changePercentagePoints": -2.604166666666674
+        }
+      }
+    },
+    {
+      "rank": 17,
+      "tied": false,
+      "deckId": "focus-detective",
+      "name": "Sherlock and Watson",
+      "previousRank": 17,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 273,
+      "losses": 244,
+      "draws": 59,
+      "winRate": 0.4739583333333333,
+      "scoreRate": 0.5251736111111112,
+      "previousScoreRate": 0.5390625,
+      "changePercentagePoints": -1.388888888888884,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 136,
+            "losses": 119,
+            "draws": 33,
+            "winRate": 0.4722222222222222,
+            "scoreRate": 0.5295138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 134,
+            "losses": 124,
+            "draws": 30,
+            "winRate": 0.4652777777777778,
+            "scoreRate": 0.5173611111111112
+          },
+          "changePercentagePoints": -1.215277777777768
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 142,
+            "losses": 114,
+            "draws": 32,
+            "winRate": 0.4930555555555556,
+            "scoreRate": 0.5486111111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 139,
+            "losses": 120,
+            "draws": 29,
+            "winRate": 0.4826388888888889,
+            "scoreRate": 0.5329861111111112
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 129,
+            "losses": 122,
+            "draws": 37,
+            "winRate": 0.4479166666666667,
+            "scoreRate": 0.5121527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 127,
+            "losses": 130,
+            "draws": 31,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4947916666666667
+          },
+          "changePercentagePoints": -1.7361111111111105
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 149,
+            "losses": 111,
+            "draws": 28,
+            "winRate": 0.5173611111111112,
+            "scoreRate": 0.5659722222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 146,
+            "losses": 114,
+            "draws": 28,
+            "winRate": 0.5069444444444444,
+            "scoreRate": 0.5555555555555556
+          },
+          "changePercentagePoints": -1.041666666666663
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 127,
+            "losses": 128,
+            "draws": 33,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4982638888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 127,
+            "losses": 134,
+            "draws": 27,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4878472222222222
+          },
+          "changePercentagePoints": -1.0416666666666685
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 151,
+            "losses": 105,
+            "draws": 32,
+            "winRate": 0.5243055555555556,
+            "scoreRate": 0.5798611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 146,
+            "losses": 110,
+            "draws": 32,
+            "winRate": 0.5069444444444444,
+            "scoreRate": 0.5625
+          },
+          "changePercentagePoints": -1.736111111111116
+        }
+      }
+    },
+    {
+      "rank": 18,
+      "tied": false,
+      "deckId": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "previousRank": 16,
+      "placesUp": -2,
+      "games": 576,
+      "wins": 273,
+      "losses": 250,
+      "draws": 53,
+      "winRate": 0.4739583333333333,
+      "scoreRate": 0.5199652777777778,
+      "previousScoreRate": 0.5434027777777778,
+      "changePercentagePoints": -2.34375,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 112,
+            "losses": 154,
+            "draws": 22,
+            "winRate": 0.3888888888888889,
+            "scoreRate": 0.4270833333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 108,
+            "losses": 161,
+            "draws": 19,
+            "winRate": 0.375,
+            "scoreRate": 0.4079861111111111
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 173,
+            "losses": 81,
+            "draws": 34,
+            "winRate": 0.6006944444444444,
+            "scoreRate": 0.6597222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 165,
+            "losses": 89,
+            "draws": 34,
+            "winRate": 0.5729166666666666,
+            "scoreRate": 0.6319444444444444
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 151,
+            "losses": 111,
+            "draws": 26,
+            "winRate": 0.5243055555555556,
+            "scoreRate": 0.5694444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 144,
+            "losses": 116,
+            "draws": 28,
+            "winRate": 0.5,
+            "scoreRate": 0.5486111111111112
+          },
+          "changePercentagePoints": -2.083333333333326
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 134,
+            "losses": 124,
+            "draws": 30,
+            "winRate": 0.4652777777777778,
+            "scoreRate": 0.5173611111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 129,
+            "losses": 134,
+            "draws": 25,
+            "winRate": 0.4479166666666667,
+            "scoreRate": 0.4913194444444444
+          },
+          "changePercentagePoints": -2.604166666666674
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 127,
+            "losses": 135,
+            "draws": 26,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4861111111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 122,
+            "losses": 144,
+            "draws": 22,
+            "winRate": 0.4236111111111111,
+            "scoreRate": 0.4618055555555556
+          },
+          "changePercentagePoints": -2.4305555555555527
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 158,
+            "losses": 100,
+            "draws": 30,
+            "winRate": 0.5486111111111112,
+            "scoreRate": 0.6006944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 151,
+            "losses": 106,
+            "draws": 31,
+            "winRate": 0.5243055555555556,
+            "scoreRate": 0.578125
+          },
+          "changePercentagePoints": -2.256944444444442
+        }
+      }
+    },
+    {
+      "rank": 19,
+      "tied": false,
+      "deckId": "focus-cellblock",
+      "name": "Cellblock Lane Sequence",
+      "previousRank": 14,
+      "placesUp": -5,
+      "games": 576,
+      "wins": 271,
+      "losses": 253,
+      "draws": 52,
+      "winRate": 0.4704861111111111,
+      "scoreRate": 0.515625,
+      "previousScoreRate": 0.5564236111111112,
+      "changePercentagePoints": -4.079861111111116,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 162,
+            "losses": 106,
+            "draws": 20,
+            "winRate": 0.5625,
+            "scoreRate": 0.5972222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 152,
+            "losses": 120,
+            "draws": 16,
+            "winRate": 0.5277777777777778,
+            "scoreRate": 0.5555555555555556
+          },
+          "changePercentagePoints": -4.1666666666666625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 129,
+            "losses": 120,
+            "draws": 39,
+            "winRate": 0.4479166666666667,
+            "scoreRate": 0.515625
+          },
+          "current": {
+            "games": 288,
+            "wins": 119,
+            "losses": 133,
+            "draws": 36,
+            "winRate": 0.4131944444444444,
+            "scoreRate": 0.4756944444444444
+          },
+          "changePercentagePoints": -3.993055555555558
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 152,
+            "losses": 105,
+            "draws": 31,
+            "winRate": 0.5277777777777778,
+            "scoreRate": 0.5815972222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 141,
+            "losses": 121,
+            "draws": 26,
+            "winRate": 0.4895833333333333,
+            "scoreRate": 0.5347222222222222
+          },
+          "changePercentagePoints": -4.6875
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 139,
+            "losses": 121,
+            "draws": 28,
+            "winRate": 0.4826388888888889,
+            "scoreRate": 0.53125
+          },
+          "current": {
+            "games": 288,
+            "wins": 130,
+            "losses": 132,
+            "draws": 26,
+            "winRate": 0.4513888888888889,
+            "scoreRate": 0.4965277777777778
+          },
+          "changePercentagePoints": -3.472222222222221
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 118,
+            "losses": 142,
+            "draws": 28,
+            "winRate": 0.4097222222222222,
+            "scoreRate": 0.4583333333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 106,
+            "losses": 156,
+            "draws": 26,
+            "winRate": 0.3680555555555556,
+            "scoreRate": 0.4131944444444444
+          },
+          "changePercentagePoints": -4.513888888888889
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 173,
+            "losses": 84,
+            "draws": 31,
+            "winRate": 0.6006944444444444,
+            "scoreRate": 0.6545138888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 165,
+            "losses": 97,
+            "draws": 26,
+            "winRate": 0.5729166666666666,
+            "scoreRate": 0.6180555555555556
+          },
+          "changePercentagePoints": -3.645833333333326
+        }
+      }
+    },
+    {
+      "rank": 20,
+      "tied": false,
+      "deckId": "element-plant",
+      "name": "Plant",
+      "previousRank": 20,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 262,
+      "losses": 262,
+      "draws": 52,
+      "winRate": 0.4548611111111111,
+      "scoreRate": 0.5,
+      "previousScoreRate": 0.5017361111111112,
+      "changePercentagePoints": -0.17361111111111605,
+      "carriersInDeck": [
+        {
+          "type": "Plant",
+          "cardId": "gardener",
+          "name": "Rooftop Gardener",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 132,
+            "losses": 124,
+            "draws": 32,
+            "winRate": 0.4583333333333333,
+            "scoreRate": 0.5138888888888888
+          },
+          "current": {
+            "games": 288,
+            "wins": 137,
+            "losses": 122,
+            "draws": 29,
+            "winRate": 0.4756944444444444,
+            "scoreRate": 0.5260416666666666
+          },
+          "changePercentagePoints": 1.215277777777779
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 128,
+            "losses": 134,
+            "draws": 26,
+            "winRate": 0.4444444444444444,
+            "scoreRate": 0.4895833333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 125,
+            "losses": 140,
+            "draws": 23,
+            "winRate": 0.4340277777777778,
+            "scoreRate": 0.4739583333333333
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 152,
+            "losses": 97,
+            "draws": 39,
+            "winRate": 0.5277777777777778,
+            "scoreRate": 0.5954861111111112
+          },
+          "current": {
+            "games": 288,
+            "wins": 151,
+            "losses": 102,
+            "draws": 35,
+            "winRate": 0.5243055555555556,
+            "scoreRate": 0.5850694444444444
+          },
+          "changePercentagePoints": -1.041666666666674
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 108,
+            "losses": 161,
+            "draws": 19,
+            "winRate": 0.375,
+            "scoreRate": 0.4079861111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 111,
+            "losses": 160,
+            "draws": 17,
+            "winRate": 0.3854166666666667,
+            "scoreRate": 0.4149305555555556
+          },
+          "changePercentagePoints": 0.6944444444444475
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 116,
+            "losses": 143,
+            "draws": 29,
+            "winRate": 0.4027777777777778,
+            "scoreRate": 0.453125
+          },
+          "current": {
+            "games": 288,
+            "wins": 121,
+            "losses": 143,
+            "draws": 24,
+            "winRate": 0.4201388888888889,
+            "scoreRate": 0.4618055555555556
+          },
+          "changePercentagePoints": 0.868055555555558
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 144,
+            "losses": 115,
+            "draws": 29,
+            "winRate": 0.5,
+            "scoreRate": 0.5503472222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 141,
+            "losses": 119,
+            "draws": 28,
+            "winRate": 0.4895833333333333,
+            "scoreRate": 0.5381944444444444
+          },
+          "changePercentagePoints": -1.215277777777779
+        }
+      }
+    },
+    {
+      "rank": 21,
+      "tied": false,
+      "deckId": "focus-poison-entry",
+      "name": "Poison Entry Punishment",
+      "previousRank": 21,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 241,
+      "losses": 269,
+      "draws": 66,
+      "winRate": 0.4184027777777778,
+      "scoreRate": 0.4756944444444444,
+      "previousScoreRate": 0.4696180555555556,
+      "changePercentagePoints": 0.607638888888884,
+      "carriersInDeck": [
+        {
+          "type": "Poison",
+          "cardId": "nail",
+          "name": "Nail Tech",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 122,
+            "losses": 131,
+            "draws": 35,
+            "winRate": 0.4236111111111111,
+            "scoreRate": 0.484375
+          },
+          "current": {
+            "games": 288,
+            "wins": 125,
+            "losses": 127,
+            "draws": 36,
+            "winRate": 0.4340277777777778,
+            "scoreRate": 0.4965277777777778
+          },
+          "changePercentagePoints": 1.215277777777779
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 117,
+            "losses": 143,
+            "draws": 28,
+            "winRate": 0.40625,
+            "scoreRate": 0.4548611111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 116,
+            "losses": 142,
+            "draws": 30,
+            "winRate": 0.4027777777777778,
+            "scoreRate": 0.4548611111111111
+          },
+          "changePercentagePoints": 0
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 104,
+            "losses": 146,
+            "draws": 38,
+            "winRate": 0.3611111111111111,
+            "scoreRate": 0.4270833333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 107,
+            "losses": 147,
+            "draws": 34,
+            "winRate": 0.3715277777777778,
+            "scoreRate": 0.4305555555555556
+          },
+          "changePercentagePoints": 0.34722222222222654
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 135,
+            "losses": 128,
+            "draws": 25,
+            "winRate": 0.46875,
+            "scoreRate": 0.5121527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 134,
+            "losses": 122,
+            "draws": 32,
+            "winRate": 0.4652777777777778,
+            "scoreRate": 0.5208333333333334
+          },
+          "changePercentagePoints": 0.868055555555558
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 106,
+            "losses": 150,
+            "draws": 32,
+            "winRate": 0.3680555555555556,
+            "scoreRate": 0.4236111111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 106,
+            "losses": 148,
+            "draws": 34,
+            "winRate": 0.3680555555555556,
+            "scoreRate": 0.4270833333333333
+          },
+          "changePercentagePoints": 0.347222222222221
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 133,
+            "losses": 124,
+            "draws": 31,
+            "winRate": 0.4618055555555556,
+            "scoreRate": 0.515625
+          },
+          "current": {
+            "games": 288,
+            "wins": 135,
+            "losses": 121,
+            "draws": 32,
+            "winRate": 0.46875,
+            "scoreRate": 0.5243055555555556
+          },
+          "changePercentagePoints": 0.868055555555558
+        }
+      }
+    },
+    {
+      "rank": 22,
+      "tied": false,
+      "deckId": "element-fire",
+      "name": "Fire",
+      "previousRank": 23,
+      "placesUp": 1,
+      "games": 576,
+      "wins": 234,
+      "losses": 289,
+      "draws": 53,
+      "winRate": 0.40625,
+      "scoreRate": 0.4522569444444444,
+      "previousScoreRate": 0.4618055555555556,
+      "changePercentagePoints": -0.954861111111116,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 123,
+            "losses": 145,
+            "draws": 20,
+            "winRate": 0.4270833333333333,
+            "scoreRate": 0.4618055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 120,
+            "losses": 148,
+            "draws": 20,
+            "winRate": 0.4166666666666667,
+            "scoreRate": 0.4513888888888889
+          },
+          "changePercentagePoints": -1.0416666666666685
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 116,
+            "losses": 138,
+            "draws": 34,
+            "winRate": 0.4027777777777778,
+            "scoreRate": 0.4618055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 114,
+            "losses": 141,
+            "draws": 33,
+            "winRate": 0.3958333333333333,
+            "scoreRate": 0.453125
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 150,
+            "losses": 108,
+            "draws": 30,
+            "winRate": 0.5208333333333334,
+            "scoreRate": 0.5729166666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 148,
+            "losses": 111,
+            "draws": 29,
+            "winRate": 0.5138888888888888,
+            "scoreRate": 0.5642361111111112
+          },
+          "changePercentagePoints": -0.8680555555555469
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 89,
+            "losses": 175,
+            "draws": 24,
+            "winRate": 0.3090277777777778,
+            "scoreRate": 0.3506944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 86,
+            "losses": 178,
+            "draws": 24,
+            "winRate": 0.2986111111111111,
+            "scoreRate": 0.3402777777777778
+          },
+          "changePercentagePoints": -1.041666666666663
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 78,
+            "losses": 178,
+            "draws": 32,
+            "winRate": 0.2708333333333333,
+            "scoreRate": 0.3263888888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 76,
+            "losses": 182,
+            "draws": 30,
+            "winRate": 0.2638888888888889,
+            "scoreRate": 0.3159722222222222
+          },
+          "changePercentagePoints": -1.0416666666666685
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 161,
+            "losses": 105,
+            "draws": 22,
+            "winRate": 0.5590277777777778,
+            "scoreRate": 0.5972222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 158,
+            "losses": 107,
+            "draws": 23,
+            "winRate": 0.5486111111111112,
+            "scoreRate": 0.5885416666666666
+          },
+          "changePercentagePoints": -0.868055555555558
+        }
+      }
+    },
+    {
+      "rank": 23,
+      "tied": false,
+      "deckId": "focus-cellblock-classic",
+      "name": "Cellblock — No Kingpin",
+      "previousRank": 21,
+      "placesUp": -2,
+      "games": 576,
+      "wins": 228,
+      "losses": 290,
+      "draws": 58,
+      "winRate": 0.3958333333333333,
+      "scoreRate": 0.4461805555555556,
+      "previousScoreRate": 0.4696180555555556,
+      "changePercentagePoints": -2.34375,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 127,
+            "losses": 134,
+            "draws": 27,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4878472222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 124,
+            "losses": 143,
+            "draws": 21,
+            "winRate": 0.4305555555555556,
+            "scoreRate": 0.4670138888888889
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 111,
+            "losses": 139,
+            "draws": 38,
+            "winRate": 0.3854166666666667,
+            "scoreRate": 0.4513888888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 104,
+            "losses": 147,
+            "draws": 37,
+            "winRate": 0.3611111111111111,
+            "scoreRate": 0.4253472222222222
+          },
+          "changePercentagePoints": -2.6041666666666687
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 121,
+            "losses": 129,
+            "draws": 38,
+            "winRate": 0.4201388888888889,
+            "scoreRate": 0.4861111111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 115,
+            "losses": 140,
+            "draws": 33,
+            "winRate": 0.3993055555555556,
+            "scoreRate": 0.4565972222222222
+          },
+          "changePercentagePoints": -2.9513888888888893
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 117,
+            "losses": 144,
+            "draws": 27,
+            "winRate": 0.40625,
+            "scoreRate": 0.453125
+          },
+          "current": {
+            "games": 288,
+            "wins": 113,
+            "losses": 150,
+            "draws": 25,
+            "winRate": 0.3923611111111111,
+            "scoreRate": 0.4357638888888889
+          },
+          "changePercentagePoints": -1.7361111111111105
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 92,
+            "losses": 165,
+            "draws": 31,
+            "winRate": 0.3194444444444444,
+            "scoreRate": 0.3732638888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 91,
+            "losses": 169,
+            "draws": 28,
+            "winRate": 0.3159722222222222,
+            "scoreRate": 0.3645833333333333
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 146,
+            "losses": 108,
+            "draws": 34,
+            "winRate": 0.5069444444444444,
+            "scoreRate": 0.5659722222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 137,
+            "losses": 121,
+            "draws": 30,
+            "winRate": 0.4756944444444444,
+            "scoreRate": 0.5277777777777778
+          },
+          "changePercentagePoints": -3.819444444444442
+        }
+      }
+    },
+    {
+      "rank": 24,
+      "tied": false,
+      "deckId": "element-poison",
+      "name": "Poison",
+      "previousRank": 25,
+      "placesUp": 1,
+      "games": 576,
+      "wins": 219,
+      "losses": 298,
+      "draws": 59,
+      "winRate": 0.3802083333333333,
+      "scoreRate": 0.4314236111111111,
+      "previousScoreRate": 0.4149305555555556,
+      "changePercentagePoints": 1.6493055555555525,
+      "carriersInDeck": [
+        {
+          "type": "Poison",
+          "cardId": "nail",
+          "name": "Nail Tech",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 108,
+            "losses": 148,
+            "draws": 32,
+            "winRate": 0.375,
+            "scoreRate": 0.4305555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 116,
+            "losses": 143,
+            "draws": 29,
+            "winRate": 0.4027777777777778,
+            "scoreRate": 0.453125
+          },
+          "changePercentagePoints": 2.256944444444442
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 98,
+            "losses": 156,
+            "draws": 34,
+            "winRate": 0.3402777777777778,
+            "scoreRate": 0.3993055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 103,
+            "losses": 155,
+            "draws": 30,
+            "winRate": 0.3576388888888889,
+            "scoreRate": 0.4097222222222222
+          },
+          "changePercentagePoints": 1.041666666666663
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 100,
+            "losses": 148,
+            "draws": 40,
+            "winRate": 0.3472222222222222,
+            "scoreRate": 0.4166666666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 104,
+            "losses": 145,
+            "draws": 39,
+            "winRate": 0.3611111111111111,
+            "scoreRate": 0.4288194444444444
+          },
+          "changePercentagePoints": 1.2152777777777735
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 106,
+            "losses": 156,
+            "draws": 26,
+            "winRate": 0.3680555555555556,
+            "scoreRate": 0.4131944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 115,
+            "losses": 153,
+            "draws": 20,
+            "winRate": 0.3993055555555556,
+            "scoreRate": 0.4340277777777778
+          },
+          "changePercentagePoints": 2.083333333333337
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 88,
+            "losses": 173,
+            "draws": 27,
+            "winRate": 0.3055555555555556,
+            "scoreRate": 0.3524305555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 98,
+            "losses": 168,
+            "draws": 22,
+            "winRate": 0.3402777777777778,
+            "scoreRate": 0.3784722222222222
+          },
+          "changePercentagePoints": 2.604166666666663
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 118,
+            "losses": 131,
+            "draws": 39,
+            "winRate": 0.4097222222222222,
+            "scoreRate": 0.4774305555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 121,
+            "losses": 130,
+            "draws": 37,
+            "winRate": 0.4201388888888889,
+            "scoreRate": 0.484375
+          },
+          "changePercentagePoints": 0.694444444444442
+        }
+      }
+    },
+    {
+      "rank": 25,
+      "tied": false,
+      "deckId": "focus-fire-guap",
+      "name": "Fire Pressure",
+      "previousRank": 24,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 215,
+      "losses": 303,
+      "draws": 58,
+      "winRate": 0.3732638888888889,
+      "scoreRate": 0.4236111111111111,
+      "previousScoreRate": 0.4505208333333333,
+      "changePercentagePoints": -2.690972222222221,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 133,
+            "losses": 135,
+            "draws": 20,
+            "winRate": 0.4618055555555556,
+            "scoreRate": 0.4965277777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 125,
+            "losses": 143,
+            "draws": 20,
+            "winRate": 0.4340277777777778,
+            "scoreRate": 0.46875
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 96,
+            "losses": 151,
+            "draws": 41,
+            "winRate": 0.3333333333333333,
+            "scoreRate": 0.4045138888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 90,
+            "losses": 160,
+            "draws": 38,
+            "winRate": 0.3125,
+            "scoreRate": 0.3784722222222222
+          },
+          "changePercentagePoints": -2.6041666666666687
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 148,
+            "losses": 101,
+            "draws": 39,
+            "winRate": 0.5138888888888888,
+            "scoreRate": 0.5815972222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 141,
+            "losses": 112,
+            "draws": 35,
+            "winRate": 0.4895833333333333,
+            "scoreRate": 0.5503472222222222
+          },
+          "changePercentagePoints": -3.125
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 81,
+            "losses": 185,
+            "draws": 22,
+            "winRate": 0.28125,
+            "scoreRate": 0.3194444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 74,
+            "losses": 191,
+            "draws": 23,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.296875
+          },
+          "changePercentagePoints": -2.256944444444442
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 89,
+            "losses": 173,
+            "draws": 26,
+            "winRate": 0.3090277777777778,
+            "scoreRate": 0.3541666666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 82,
+            "losses": 181,
+            "draws": 25,
+            "winRate": 0.2847222222222222,
+            "scoreRate": 0.328125
+          },
+          "changePercentagePoints": -2.6041666666666687
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 140,
+            "losses": 113,
+            "draws": 35,
+            "winRate": 0.4861111111111111,
+            "scoreRate": 0.546875
+          },
+          "current": {
+            "games": 288,
+            "wins": 133,
+            "losses": 122,
+            "draws": 33,
+            "winRate": 0.4618055555555556,
+            "scoreRate": 0.5190972222222222
+          },
+          "changePercentagePoints": -2.777777777777779
+        }
+      }
+    },
+    {
+      "rank": 26,
+      "tied": false,
+      "deckId": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "previousRank": 26,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 188,
+      "losses": 317,
+      "draws": 71,
+      "winRate": 0.3263888888888889,
+      "scoreRate": 0.3880208333333333,
+      "previousScoreRate": 0.4131944444444444,
+      "changePercentagePoints": -2.5173611111111107,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 101,
+            "losses": 155,
+            "draws": 32,
+            "winRate": 0.3506944444444444,
+            "scoreRate": 0.40625
+          },
+          "current": {
+            "games": 288,
+            "wins": 93,
+            "losses": 165,
+            "draws": 30,
+            "winRate": 0.3229166666666667,
+            "scoreRate": 0.375
+          },
+          "changePercentagePoints": -3.125
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 99,
+            "losses": 145,
+            "draws": 44,
+            "winRate": 0.34375,
+            "scoreRate": 0.4201388888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 95,
+            "losses": 152,
+            "draws": 41,
+            "winRate": 0.3298611111111111,
+            "scoreRate": 0.4010416666666667
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 82,
+            "losses": 156,
+            "draws": 50,
+            "winRate": 0.2847222222222222,
+            "scoreRate": 0.3715277777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 77,
+            "losses": 167,
+            "draws": 44,
+            "winRate": 0.2673611111111111,
+            "scoreRate": 0.34375
+          },
+          "changePercentagePoints": -2.777777777777779
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 118,
+            "losses": 144,
+            "draws": 26,
+            "winRate": 0.4097222222222222,
+            "scoreRate": 0.4548611111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 111,
+            "losses": 150,
+            "draws": 27,
+            "winRate": 0.3854166666666667,
+            "scoreRate": 0.4322916666666667
+          },
+          "changePercentagePoints": -2.256944444444442
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 73,
+            "losses": 168,
+            "draws": 47,
+            "winRate": 0.2534722222222222,
+            "scoreRate": 0.3350694444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 68,
+            "losses": 178,
+            "draws": 42,
+            "winRate": 0.2361111111111111,
+            "scoreRate": 0.3090277777777778
+          },
+          "changePercentagePoints": -2.604166666666663
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 127,
+            "losses": 132,
+            "draws": 29,
+            "winRate": 0.4409722222222222,
+            "scoreRate": 0.4913194444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 120,
+            "losses": 139,
+            "draws": 29,
+            "winRate": 0.4166666666666667,
+            "scoreRate": 0.4670138888888889
+          },
+          "changePercentagePoints": -2.4305555555555527
+        }
+      }
+    },
+    {
+      "rank": 27,
+      "tied": false,
+      "deckId": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "previousRank": 27,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 197,
+      "losses": 334,
+      "draws": 45,
+      "winRate": 0.3420138888888889,
+      "scoreRate": 0.3810763888888889,
+      "previousScoreRate": 0.3940972222222222,
+      "changePercentagePoints": -1.3020833333333315,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 62,
+            "losses": 200,
+            "draws": 26,
+            "winRate": 0.2152777777777778,
+            "scoreRate": 0.2604166666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 60,
+            "losses": 206,
+            "draws": 22,
+            "winRate": 0.20833333333333334,
+            "scoreRate": 0.2465277777777778
+          },
+          "changePercentagePoints": -1.3888888888888895
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 139,
+            "losses": 123,
+            "draws": 26,
+            "winRate": 0.4826388888888889,
+            "scoreRate": 0.5277777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 137,
+            "losses": 128,
+            "draws": 23,
+            "winRate": 0.4756944444444444,
+            "scoreRate": 0.515625
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 100,
+            "losses": 155,
+            "draws": 33,
+            "winRate": 0.3472222222222222,
+            "scoreRate": 0.4045138888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 96,
+            "losses": 162,
+            "draws": 30,
+            "winRate": 0.3333333333333333,
+            "scoreRate": 0.3854166666666667
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 101,
+            "losses": 168,
+            "draws": 19,
+            "winRate": 0.3506944444444444,
+            "scoreRate": 0.3836805555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 101,
+            "losses": 172,
+            "draws": 15,
+            "winRate": 0.3506944444444444,
+            "scoreRate": 0.3767361111111111
+          },
+          "changePercentagePoints": -0.6944444444444475
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 84,
+            "losses": 177,
+            "draws": 27,
+            "winRate": 0.2916666666666667,
+            "scoreRate": 0.3385416666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 81,
+            "losses": 185,
+            "draws": 22,
+            "winRate": 0.28125,
+            "scoreRate": 0.3194444444444444
+          },
+          "changePercentagePoints": -1.9097222222222265
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 117,
+            "losses": 146,
+            "draws": 25,
+            "winRate": 0.40625,
+            "scoreRate": 0.4496527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 116,
+            "losses": 149,
+            "draws": 23,
+            "winRate": 0.4027777777777778,
+            "scoreRate": 0.4427083333333333
+          },
+          "changePercentagePoints": -0.6944444444444475
+        }
+      }
+    },
+    {
+      "rank": 28,
+      "tied": false,
+      "deckId": "starter-receipts",
+      "name": "RECEIPTS",
+      "previousRank": 29,
+      "placesUp": 1,
+      "games": 576,
+      "wins": 174,
+      "losses": 338,
+      "draws": 64,
+      "winRate": 0.3020833333333333,
+      "scoreRate": 0.3576388888888889,
+      "previousScoreRate": 0.3689236111111111,
+      "changePercentagePoints": -1.128472222222221,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 85,
+            "losses": 182,
+            "draws": 21,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3315972222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 80,
+            "losses": 186,
+            "draws": 22,
+            "winRate": 0.2777777777777778,
+            "scoreRate": 0.3159722222222222
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 96,
+            "losses": 150,
+            "draws": 42,
+            "winRate": 0.3333333333333333,
+            "scoreRate": 0.40625
+          },
+          "current": {
+            "games": 288,
+            "wins": 94,
+            "losses": 152,
+            "draws": 42,
+            "winRate": 0.3263888888888889,
+            "scoreRate": 0.3993055555555556
+          },
+          "changePercentagePoints": -0.694444444444442
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 87,
+            "losses": 171,
+            "draws": 30,
+            "winRate": 0.3020833333333333,
+            "scoreRate": 0.3541666666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 85,
+            "losses": 174,
+            "draws": 29,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3454861111111111
+          },
+          "changePercentagePoints": -0.868055555555558
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 94,
+            "losses": 161,
+            "draws": 33,
+            "winRate": 0.3263888888888889,
+            "scoreRate": 0.3836805555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 89,
+            "losses": 164,
+            "draws": 35,
+            "winRate": 0.3090277777777778,
+            "scoreRate": 0.3697916666666667
+          },
+          "changePercentagePoints": -1.3888888888888895
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 58,
+            "losses": 198,
+            "draws": 32,
+            "winRate": 0.2013888888888889,
+            "scoreRate": 0.2569444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 57,
+            "losses": 198,
+            "draws": 33,
+            "winRate": 0.19791666666666666,
+            "scoreRate": 0.2552083333333333
+          },
+          "changePercentagePoints": -0.1736111111111105
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 123,
+            "losses": 134,
+            "draws": 31,
+            "winRate": 0.4270833333333333,
+            "scoreRate": 0.4809027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 117,
+            "losses": 140,
+            "draws": 31,
+            "winRate": 0.40625,
+            "scoreRate": 0.4600694444444444
+          },
+          "changePercentagePoints": -2.083333333333337
+        }
+      }
+    },
+    {
+      "rank": 29,
+      "tied": false,
+      "deckId": "focus-demario-luigion",
+      "name": "Demario and Luigion",
+      "previousRank": 28,
+      "placesUp": -1,
+      "games": 576,
+      "wins": 180,
+      "losses": 349,
+      "draws": 47,
+      "winRate": 0.3125,
+      "scoreRate": 0.3532986111111111,
+      "previousScoreRate": 0.3723958333333333,
+      "changePercentagePoints": -1.909722222222221,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 75,
+            "losses": 193,
+            "draws": 20,
+            "winRate": 0.2604166666666667,
+            "scoreRate": 0.2951388888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 71,
+            "losses": 198,
+            "draws": 19,
+            "winRate": 0.2465277777777778,
+            "scoreRate": 0.2795138888888889
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 113,
+            "losses": 142,
+            "draws": 33,
+            "winRate": 0.3923611111111111,
+            "scoreRate": 0.4496527777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 109,
+            "losses": 151,
+            "draws": 28,
+            "winRate": 0.3784722222222222,
+            "scoreRate": 0.4270833333333333
+          },
+          "changePercentagePoints": -2.2569444444444473
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 85,
+            "losses": 174,
+            "draws": 29,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3454861111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 83,
+            "losses": 179,
+            "draws": 26,
+            "winRate": 0.2881944444444444,
+            "scoreRate": 0.3333333333333333
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 103,
+            "losses": 161,
+            "draws": 24,
+            "winRate": 0.3576388888888889,
+            "scoreRate": 0.3993055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 97,
+            "losses": 170,
+            "draws": 21,
+            "winRate": 0.3368055555555556,
+            "scoreRate": 0.3732638888888889
+          },
+          "changePercentagePoints": -2.6041666666666687
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 74,
+            "losses": 189,
+            "draws": 25,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.3003472222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 72,
+            "losses": 194,
+            "draws": 22,
+            "winRate": 0.25,
+            "scoreRate": 0.2881944444444444
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 114,
+            "losses": 146,
+            "draws": 28,
+            "winRate": 0.3958333333333333,
+            "scoreRate": 0.4444444444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 108,
+            "losses": 155,
+            "draws": 25,
+            "winRate": 0.375,
+            "scoreRate": 0.4184027777777778
+          },
+          "changePercentagePoints": -2.604166666666663
+        }
+      }
+    },
+    {
+      "rank": 30,
+      "tied": false,
+      "deckId": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "previousRank": 30,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 164,
+      "losses": 360,
+      "draws": 52,
+      "winRate": 0.2847222222222222,
+      "scoreRate": 0.3298611111111111,
+      "previousScoreRate": 0.3342013888888889,
+      "changePercentagePoints": -0.434027777777779,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 89,
+            "losses": 181,
+            "draws": 18,
+            "winRate": 0.3090277777777778,
+            "scoreRate": 0.3402777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 90,
+            "losses": 181,
+            "draws": 17,
+            "winRate": 0.3125,
+            "scoreRate": 0.3420138888888889
+          },
+          "changePercentagePoints": 0.1736111111111105
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 76,
+            "losses": 175,
+            "draws": 37,
+            "winRate": 0.2638888888888889,
+            "scoreRate": 0.328125
+          },
+          "current": {
+            "games": 288,
+            "wins": 74,
+            "losses": 179,
+            "draws": 35,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.3177083333333333
+          },
+          "changePercentagePoints": -1.0416666666666685
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 74,
+            "losses": 187,
+            "draws": 27,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.3038194444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 75,
+            "losses": 185,
+            "draws": 28,
+            "winRate": 0.2604166666666667,
+            "scoreRate": 0.3090277777777778
+          },
+          "changePercentagePoints": 0.520833333333337
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 91,
+            "losses": 169,
+            "draws": 28,
+            "winRate": 0.3159722222222222,
+            "scoreRate": 0.3645833333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 89,
+            "losses": 175,
+            "draws": 24,
+            "winRate": 0.3090277777777778,
+            "scoreRate": 0.3506944444444444
+          },
+          "changePercentagePoints": -1.3888888888888895
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 65,
+            "losses": 194,
+            "draws": 29,
+            "winRate": 0.22569444444444445,
+            "scoreRate": 0.2760416666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 63,
+            "losses": 199,
+            "draws": 26,
+            "winRate": 0.21875,
+            "scoreRate": 0.2638888888888889
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 100,
+            "losses": 162,
+            "draws": 26,
+            "winRate": 0.3472222222222222,
+            "scoreRate": 0.3923611111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 101,
+            "losses": 161,
+            "draws": 26,
+            "winRate": 0.3506944444444444,
+            "scoreRate": 0.3958333333333333
+          },
+          "changePercentagePoints": 0.347222222222221
+        }
+      }
+    },
+    {
+      "rank": 31,
+      "tied": false,
+      "deckId": "focus-counterplay",
+      "name": "Counterplay",
+      "previousRank": 31,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 150,
+      "losses": 366,
+      "draws": 60,
+      "winRate": 0.2604166666666667,
+      "scoreRate": 0.3125,
+      "previousScoreRate": 0.3324652777777778,
+      "changePercentagePoints": -1.996527777777779,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 65,
+            "losses": 188,
+            "draws": 35,
+            "winRate": 0.22569444444444445,
+            "scoreRate": 0.2864583333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 63,
+            "losses": 194,
+            "draws": 31,
+            "winRate": 0.21875,
+            "scoreRate": 0.2725694444444444
+          },
+          "changePercentagePoints": -1.3888888888888895
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 92,
+            "losses": 162,
+            "draws": 34,
+            "winRate": 0.3194444444444444,
+            "scoreRate": 0.3784722222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 87,
+            "losses": 172,
+            "draws": 29,
+            "winRate": 0.3020833333333333,
+            "scoreRate": 0.3524305555555556
+          },
+          "changePercentagePoints": -2.604166666666663
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 45,
+            "losses": 201,
+            "draws": 42,
+            "winRate": 0.15625,
+            "scoreRate": 0.22916666666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 43,
+            "losses": 210,
+            "draws": 35,
+            "winRate": 0.14930555555555555,
+            "scoreRate": 0.21006944444444445
+          },
+          "changePercentagePoints": -1.909722222222221
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 112,
+            "losses": 149,
+            "draws": 27,
+            "winRate": 0.3888888888888889,
+            "scoreRate": 0.4357638888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 107,
+            "losses": 156,
+            "draws": 25,
+            "winRate": 0.3715277777777778,
+            "scoreRate": 0.4149305555555556
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 53,
+            "losses": 206,
+            "draws": 29,
+            "winRate": 0.1840277777777778,
+            "scoreRate": 0.234375
+          },
+          "current": {
+            "games": 288,
+            "wins": 51,
+            "losses": 211,
+            "draws": 26,
+            "winRate": 0.17708333333333334,
+            "scoreRate": 0.2222222222222222
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 104,
+            "losses": 144,
+            "draws": 40,
+            "winRate": 0.3611111111111111,
+            "scoreRate": 0.4305555555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 99,
+            "losses": 155,
+            "draws": 34,
+            "winRate": 0.34375,
+            "scoreRate": 0.4027777777777778
+          },
+          "changePercentagePoints": -2.777777777777779
+        }
+      }
+    },
+    {
+      "rank": 32,
+      "tied": false,
+      "deckId": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "previousRank": 32,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 145,
+      "losses": 375,
+      "draws": 56,
+      "winRate": 0.2517361111111111,
+      "scoreRate": 0.3003472222222222,
+      "previousScoreRate": 0.3168402777777778,
+      "changePercentagePoints": -1.649305555555558,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 66,
+            "losses": 188,
+            "draws": 34,
+            "winRate": 0.22916666666666666,
+            "scoreRate": 0.2881944444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 61,
+            "losses": 199,
+            "draws": 28,
+            "winRate": 0.21180555555555555,
+            "scoreRate": 0.2604166666666667
+          },
+          "changePercentagePoints": -2.7777777777777732
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 85,
+            "losses": 174,
+            "draws": 29,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3454861111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 84,
+            "losses": 176,
+            "draws": 28,
+            "winRate": 0.2916666666666667,
+            "scoreRate": 0.3402777777777778
+          },
+          "changePercentagePoints": -0.5208333333333315
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 68,
+            "losses": 187,
+            "draws": 33,
+            "winRate": 0.2361111111111111,
+            "scoreRate": 0.2934027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 64,
+            "losses": 195,
+            "draws": 29,
+            "winRate": 0.2222222222222222,
+            "scoreRate": 0.2725694444444444
+          },
+          "changePercentagePoints": -2.083333333333337
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 83,
+            "losses": 175,
+            "draws": 30,
+            "winRate": 0.2881944444444444,
+            "scoreRate": 0.3402777777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 81,
+            "losses": 180,
+            "draws": 27,
+            "winRate": 0.28125,
+            "scoreRate": 0.328125
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 49,
+            "losses": 209,
+            "draws": 30,
+            "winRate": 0.1701388888888889,
+            "scoreRate": 0.2222222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 50,
+            "losses": 214,
+            "draws": 24,
+            "winRate": 0.1736111111111111,
+            "scoreRate": 0.2152777777777778
+          },
+          "changePercentagePoints": -0.694444444444442
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 102,
+            "losses": 153,
+            "draws": 33,
+            "winRate": 0.3541666666666667,
+            "scoreRate": 0.4114583333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 95,
+            "losses": 161,
+            "draws": 32,
+            "winRate": 0.3298611111111111,
+            "scoreRate": 0.3854166666666667
+          },
+          "changePercentagePoints": -2.604166666666663
+        }
+      }
+    },
+    {
+      "rank": 33,
+      "tied": false,
+      "deckId": "focus-late-scaling",
+      "name": "Late Scaling",
+      "previousRank": 33,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 128,
+      "losses": 391,
+      "draws": 57,
+      "winRate": 0.2222222222222222,
+      "scoreRate": 0.2717013888888889,
+      "previousScoreRate": 0.2890625,
+      "changePercentagePoints": -1.7361111111111105,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 54,
+            "losses": 209,
+            "draws": 25,
+            "winRate": 0.1875,
+            "scoreRate": 0.2309027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 49,
+            "losses": 212,
+            "draws": 27,
+            "winRate": 0.1701388888888889,
+            "scoreRate": 0.2170138888888889
+          },
+          "changePercentagePoints": -1.3888888888888895
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 85,
+            "losses": 173,
+            "draws": 30,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3472222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 79,
+            "losses": 179,
+            "draws": 30,
+            "winRate": 0.2743055555555556,
+            "scoreRate": 0.3263888888888889
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 45,
+            "losses": 210,
+            "draws": 33,
+            "winRate": 0.15625,
+            "scoreRate": 0.21354166666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 41,
+            "losses": 212,
+            "draws": 35,
+            "winRate": 0.1423611111111111,
+            "scoreRate": 0.203125
+          },
+          "changePercentagePoints": -1.0416666666666656
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 94,
+            "losses": 172,
+            "draws": 22,
+            "winRate": 0.3263888888888889,
+            "scoreRate": 0.3645833333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 87,
+            "losses": 179,
+            "draws": 22,
+            "winRate": 0.3020833333333333,
+            "scoreRate": 0.3402777777777778
+          },
+          "changePercentagePoints": -2.4305555555555527
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 56,
+            "losses": 206,
+            "draws": 26,
+            "winRate": 0.19444444444444445,
+            "scoreRate": 0.23958333333333334
+          },
+          "current": {
+            "games": 288,
+            "wins": 52,
+            "losses": 211,
+            "draws": 25,
+            "winRate": 0.18055555555555555,
+            "scoreRate": 0.22395833333333334
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 83,
+            "losses": 176,
+            "draws": 29,
+            "winRate": 0.2881944444444444,
+            "scoreRate": 0.3385416666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 76,
+            "losses": 180,
+            "draws": 32,
+            "winRate": 0.2638888888888889,
+            "scoreRate": 0.3194444444444444
+          },
+          "changePercentagePoints": -1.9097222222222265
+        }
+      }
+    },
+    {
+      "rank": 34,
+      "tied": false,
+      "deckId": "starter-slide",
+      "name": "SLIDE THRU",
+      "previousRank": 34,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 116,
+      "losses": 417,
+      "draws": 43,
+      "winRate": 0.2013888888888889,
+      "scoreRate": 0.2387152777777778,
+      "previousScoreRate": 0.2526041666666667,
+      "changePercentagePoints": -1.3888888888888895,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 63,
+            "losses": 209,
+            "draws": 16,
+            "winRate": 0.21875,
+            "scoreRate": 0.2465277777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 60,
+            "losses": 213,
+            "draws": 15,
+            "winRate": 0.20833333333333334,
+            "scoreRate": 0.234375
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 59,
+            "losses": 198,
+            "draws": 31,
+            "winRate": 0.2048611111111111,
+            "scoreRate": 0.2586805555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 56,
+            "losses": 204,
+            "draws": 28,
+            "winRate": 0.19444444444444445,
+            "scoreRate": 0.24305555555555555
+          },
+          "changePercentagePoints": -1.5625000000000027
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 41,
+            "losses": 221,
+            "draws": 26,
+            "winRate": 0.1423611111111111,
+            "scoreRate": 0.1875
+          },
+          "current": {
+            "games": 288,
+            "wins": 41,
+            "losses": 225,
+            "draws": 22,
+            "winRate": 0.1423611111111111,
+            "scoreRate": 0.18055555555555555
+          },
+          "changePercentagePoints": -0.6944444444444448
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 81,
+            "losses": 186,
+            "draws": 21,
+            "winRate": 0.28125,
+            "scoreRate": 0.3177083333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 75,
+            "losses": 192,
+            "draws": 21,
+            "winRate": 0.2604166666666667,
+            "scoreRate": 0.296875
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 36,
+            "losses": 225,
+            "draws": 27,
+            "winRate": 0.125,
+            "scoreRate": 0.171875
+          },
+          "current": {
+            "games": 288,
+            "wins": 35,
+            "losses": 229,
+            "draws": 24,
+            "winRate": 0.12152777777777778,
+            "scoreRate": 0.16319444444444445
+          },
+          "changePercentagePoints": -0.8680555555555552
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 86,
+            "losses": 182,
+            "draws": 20,
+            "winRate": 0.2986111111111111,
+            "scoreRate": 0.3333333333333333
+          },
+          "current": {
+            "games": 288,
+            "wins": 81,
+            "losses": 188,
+            "draws": 19,
+            "winRate": 0.28125,
+            "scoreRate": 0.3142361111111111
+          },
+          "changePercentagePoints": -1.909722222222221
+        }
+      }
+    },
+    {
+      "rank": 35,
+      "tied": false,
+      "deckId": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "previousRank": 35,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 105,
+      "losses": 424,
+      "draws": 47,
+      "winRate": 0.18229166666666666,
+      "scoreRate": 0.2230902777777778,
+      "previousScoreRate": 0.23524305555555555,
+      "changePercentagePoints": -1.2152777777777763,
+      "carriersInDeck": [
+        {
+          "type": "Dark",
+          "cardId": "gamer",
+          "name": "Gamer",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 34,
+            "losses": 232,
+            "draws": 22,
+            "winRate": 0.11805555555555555,
+            "scoreRate": 0.15625
+          },
+          "current": {
+            "games": 288,
+            "wins": 31,
+            "losses": 236,
+            "draws": 21,
+            "winRate": 0.1076388888888889,
+            "scoreRate": 0.1440972222222222
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 76,
+            "losses": 183,
+            "draws": 29,
+            "winRate": 0.2638888888888889,
+            "scoreRate": 0.3142361111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 74,
+            "losses": 188,
+            "draws": 26,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.3020833333333333
+          },
+          "changePercentagePoints": -1.215277777777779
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 25,
+            "losses": 236,
+            "draws": 27,
+            "winRate": 0.08680555555555555,
+            "scoreRate": 0.13368055555555555
+          },
+          "current": {
+            "games": 288,
+            "wins": 24,
+            "losses": 240,
+            "draws": 24,
+            "winRate": 0.08333333333333333,
+            "scoreRate": 0.125
+          },
+          "changePercentagePoints": -0.8680555555555552
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 85,
+            "losses": 179,
+            "draws": 24,
+            "winRate": 0.2951388888888889,
+            "scoreRate": 0.3368055555555556
+          },
+          "current": {
+            "games": 288,
+            "wins": 81,
+            "losses": 184,
+            "draws": 23,
+            "winRate": 0.28125,
+            "scoreRate": 0.3211805555555556
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 36,
+            "losses": 228,
+            "draws": 24,
+            "winRate": 0.125,
+            "scoreRate": 0.16666666666666666
+          },
+          "current": {
+            "games": 288,
+            "wins": 35,
+            "losses": 230,
+            "draws": 23,
+            "winRate": 0.12152777777777778,
+            "scoreRate": 0.16145833333333334
+          },
+          "changePercentagePoints": -0.5208333333333315
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 74,
+            "losses": 187,
+            "draws": 27,
+            "winRate": 0.2569444444444444,
+            "scoreRate": 0.3038194444444444
+          },
+          "current": {
+            "games": 288,
+            "wins": 70,
+            "losses": 194,
+            "draws": 24,
+            "winRate": 0.24305555555555555,
+            "scoreRate": 0.2847222222222222
+          },
+          "changePercentagePoints": -1.909722222222221
+        }
+      }
+    },
+    {
+      "rank": 36,
+      "tied": false,
+      "deckId": "focus-wave7-tempo",
+      "name": "Wave 7 Tempo",
+      "previousRank": 36,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 101,
+      "losses": 432,
+      "draws": 43,
+      "winRate": 0.1753472222222222,
+      "scoreRate": 0.2126736111111111,
+      "previousScoreRate": 0.22395833333333334,
+      "changePercentagePoints": -1.1284722222222237,
+      "carriersInDeck": [],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 55,
+            "losses": 218,
+            "draws": 15,
+            "winRate": 0.1909722222222222,
+            "scoreRate": 0.2170138888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 53,
+            "losses": 220,
+            "draws": 15,
+            "winRate": 0.1840277777777778,
+            "scoreRate": 0.21006944444444445
+          },
+          "changePercentagePoints": -0.6944444444444448
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 51,
+            "losses": 206,
+            "draws": 31,
+            "winRate": 0.17708333333333334,
+            "scoreRate": 0.2309027777777778
+          },
+          "current": {
+            "games": 288,
+            "wins": 48,
+            "losses": 212,
+            "draws": 28,
+            "winRate": 0.16666666666666666,
+            "scoreRate": 0.2152777777777778
+          },
+          "changePercentagePoints": -1.5625
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 24,
+            "losses": 235,
+            "draws": 29,
+            "winRate": 0.08333333333333333,
+            "scoreRate": 0.13368055555555555
+          },
+          "current": {
+            "games": 288,
+            "wins": 24,
+            "losses": 236,
+            "draws": 28,
+            "winRate": 0.08333333333333333,
+            "scoreRate": 0.13194444444444445
+          },
+          "changePercentagePoints": -0.1736111111111105
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 82,
+            "losses": 189,
+            "draws": 17,
+            "winRate": 0.2847222222222222,
+            "scoreRate": 0.3142361111111111
+          },
+          "current": {
+            "games": 288,
+            "wins": 77,
+            "losses": 196,
+            "draws": 15,
+            "winRate": 0.2673611111111111,
+            "scoreRate": 0.2934027777777778
+          },
+          "changePercentagePoints": -2.0833333333333313
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 26,
+            "losses": 245,
+            "draws": 17,
+            "winRate": 0.09027777777777778,
+            "scoreRate": 0.11979166666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 26,
+            "losses": 247,
+            "draws": 15,
+            "winRate": 0.09027777777777778,
+            "scoreRate": 0.11631944444444445
+          },
+          "changePercentagePoints": -0.3472222222222224
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 80,
+            "losses": 179,
+            "draws": 29,
+            "winRate": 0.2777777777777778,
+            "scoreRate": 0.328125
+          },
+          "current": {
+            "games": 288,
+            "wins": 75,
+            "losses": 185,
+            "draws": 28,
+            "winRate": 0.2604166666666667,
+            "scoreRate": 0.3090277777777778
+          },
+          "changePercentagePoints": -1.909722222222221
+        }
+      }
+    },
+    {
+      "rank": 37,
+      "tied": false,
+      "deckId": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "previousRank": 37,
+      "placesUp": 0,
+      "games": 576,
+      "wins": 91,
+      "losses": 433,
+      "draws": 52,
+      "winRate": 0.1579861111111111,
+      "scoreRate": 0.203125,
+      "previousScoreRate": 0.21006944444444445,
+      "changePercentagePoints": -0.6944444444444448,
+      "carriersInDeck": [
+        {
+          "type": "Dark",
+          "cardId": "gamer",
+          "name": "Gamer",
+          "newBonus": true
+        }
+      ],
+      "splits": {
+        "greedy": {
+          "previous": {
+            "games": 288,
+            "wins": 30,
+            "losses": 244,
+            "draws": 14,
+            "winRate": 0.10416666666666667,
+            "scoreRate": 0.1284722222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 28,
+            "losses": 246,
+            "draws": 14,
+            "winRate": 0.09722222222222222,
+            "scoreRate": 0.12152777777777778
+          },
+          "changePercentagePoints": -0.6944444444444433
+        },
+        "seeded": {
+          "previous": {
+            "games": 288,
+            "wins": 63,
+            "losses": 183,
+            "draws": 42,
+            "winRate": 0.21875,
+            "scoreRate": 0.2916666666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 63,
+            "losses": 187,
+            "draws": 38,
+            "winRate": 0.21875,
+            "scoreRate": 0.2847222222222222
+          },
+          "changePercentagePoints": -0.6944444444444475
+        },
+        "base": {
+          "previous": {
+            "games": 288,
+            "wins": 31,
+            "losses": 227,
+            "draws": 30,
+            "winRate": 0.1076388888888889,
+            "scoreRate": 0.1597222222222222
+          },
+          "current": {
+            "games": 288,
+            "wins": 31,
+            "losses": 229,
+            "draws": 28,
+            "winRate": 0.1076388888888889,
+            "scoreRate": 0.15625
+          },
+          "changePercentagePoints": -0.347222222222221
+        },
+        "upgraded": {
+          "previous": {
+            "games": 288,
+            "wins": 62,
+            "losses": 200,
+            "draws": 26,
+            "winRate": 0.2152777777777778,
+            "scoreRate": 0.2604166666666667
+          },
+          "current": {
+            "games": 288,
+            "wins": 60,
+            "losses": 204,
+            "draws": 24,
+            "winRate": 0.20833333333333334,
+            "scoreRate": 0.25
+          },
+          "changePercentagePoints": -1.0416666666666685
+        },
+        "first": {
+          "previous": {
+            "games": 288,
+            "wins": 33,
+            "losses": 231,
+            "draws": 24,
+            "winRate": 0.11458333333333333,
+            "scoreRate": 0.15625
+          },
+          "current": {
+            "games": 288,
+            "wins": 33,
+            "losses": 234,
+            "draws": 21,
+            "winRate": 0.11458333333333333,
+            "scoreRate": 0.15104166666666666
+          },
+          "changePercentagePoints": -0.5208333333333343
+        },
+        "second": {
+          "previous": {
+            "games": 288,
+            "wins": 60,
+            "losses": 196,
+            "draws": 32,
+            "winRate": 0.20833333333333334,
+            "scoreRate": 0.2638888888888889
+          },
+          "current": {
+            "games": 288,
+            "wins": 58,
+            "losses": 199,
+            "draws": 31,
+            "winRate": 0.2013888888888889,
+            "scoreRate": 0.2552083333333333
+          },
+          "changePercentagePoints": -0.868055555555558
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Fixed-deck bot results, not player win rates or optimized deck strength.",
+    "Score is (wins + half draws) / games.",
+    "Two identical seeded schedules are reused for comparability; this is not a new holdout.",
+    "All ten live types have a carrier, but these frozen rosters contain neither GUAP nor Barber Bro; Fire and Normal bonuses are not tested here.",
+    "Carrier membership is not activation telemetry; changes do not isolate a single card effect."
+  ]
+}

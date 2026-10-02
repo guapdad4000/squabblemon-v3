@@ -28,13 +28,13 @@ import {
 } from "./gameEngine";
 
 /** Bumped whenever a persisted online room can no longer be replayed safely. */
-export const ONLINE_RULES_VERSION = 26;
+export const ONLINE_RULES_VERSION = 36;
 /**
  * Card values and trigger semantics are part of a reward match's issued
  * snapshot.  Keep this separate from the transport rules version so a
  * cosmetic/network change does not invalidate an in-progress reward fade.
  */
-export const CARD_BALANCE_VERSION = 26;
+export const CARD_BALANCE_VERSION = 36;
 export const TURN_SECONDS = 75;
 export const ROOM_LIFETIME_MS = 30 * 60 * 1000;
 export type Seat = Owner;
@@ -59,14 +59,21 @@ export type OnlineMember = {
   ready: boolean;
 };
 export type OnlineCommand =
-  | { type: "ready" | "end-turn" | "surrender" | "rematch" }
+  | { type: "ready" | "end-turn" | "surrender" | "rematch" | "lobby" | "leave" }
   | { type: "play"; instanceId: string; lane: Lane; squabble: boolean; investment?: number };
+
+/** Head-to-head record for the friendly games played inside one room. */
+export type SeriesRecord = { player: number; cpu: number; draws: number };
 export type OnlineRoom = {
   reactions?: ReactionChannel;
   ranked?: { redirectCode?: string; queuedAt: number; heartbeatAt: number; botAfter: number; bot: boolean; botNextAt?: number; ratings: { player: number; cpu?: number }; settlement?: Partial<Record<Seat, RankedResult>> };
   rulesVersion: number;
   revision: number;
   gameNumber: number;
+  /** Server-owned friendly series tally. Absent on rooms stored before it existed. */
+  series?: SeriesRecord;
+  /** Seat that deliberately left/closed the room, for the rival's closed screen. */
+  closedBy?: Seat | null;
   members: { player: OnlineMember; cpu: OnlineMember | null };
   status: "waiting" | "active" | "complete" | "closed";
   match: Match | null;
@@ -75,10 +82,27 @@ export type OnlineRoom = {
   turnsEnded: number;
   deadline: number | null;
   expiresAt: number;
+  /** Last gameplay activity, not lobby votes/reads. Absent on older stored rooms. */
+  lastPlayedAt?: number;
   winner: Seat | "draw" | null;
-  reason: "districts" | "surrender" | "timeout" | "expired" | null;
+  reason: "districts" | "surrender" | "timeout" | "expired" | "left" | null;
   rematch: Record<Seat, boolean>;
 };
+
+/**
+ * Records one completed friendly game. Only the transition into "complete"
+ * calls this, so a result is counted exactly once. Ranked rooms never tally.
+ */
+function recordSeries(
+  room: OnlineRoom,
+  winner: Seat | "draw" | null,
+): SeriesRecord | undefined {
+  if (room.ranked || winner === null) return room.series;
+  const series = roomSeries(room);
+  return winner === "draw"
+    ? { ...series, draws: series.draws + 1 }
+    : { ...series, [winner]: series[winner] + 1 };
+}
 export class OnlineError extends Error {
   constructor(
     message: string,
@@ -101,6 +125,8 @@ export function createOnlineRoom(
     rulesVersion: ONLINE_RULES_VERSION,
     revision: 0,
     gameNumber: 1,
+    series: { player: 0, cpu: 0, draws: 0 },
+    closedBy: null,
     members: { player: { ...host, ready: false }, cpu: null },
     status: "waiting",
     match: null,
@@ -139,13 +165,16 @@ export function expireOnlineRoom(room: OnlineRoom, now: number): OnlineRoom {
     room.deadline !== null &&
     now >= room.deadline
   ) {
+    const winner = otherSeat(room.activeSeat);
     return {
       ...room,
       revision: room.revision + 1,
       status: "complete",
-      winner: otherSeat(room.activeSeat),
+      winner,
+      series: recordSeries(room, winner),
       reason: "timeout",
       deadline: null,
+      lastPlayedAt: room.deadline,
       expiresAt: now + ROOM_LIFETIME_MS,
     };
   }
@@ -181,6 +210,7 @@ function startOnlineMatch(room: OnlineRoom, now: number): OnlineRoom {
   return {
     ...room,
     status: "active",
+    lastPlayedAt: now,
     match,
     activeSeat: room.openingSeat,
     turnsEnded: 0,
@@ -205,13 +235,60 @@ export function applyOnlineCommand(
   if (command.type === "surrender") {
     if (room.status !== "active" && room.status !== "waiting")
       throw new OnlineError("This fade has already ended.");
+    const winner = room.status === "active" ? otherSeat(seat) : null;
     return {
       ...next,
       status: room.status === "active" ? "complete" : "closed",
-      winner: room.status === "active" ? otherSeat(seat) : null,
+      winner,
+      series: recordSeries(room, winner),
       reason: "surrender",
+      ...(winner === null ? {} : { lastPlayedAt: now }),
+      ...(winner === null ? { closedBy: seat } : {}),
       deadline: null,
       expiresAt: now + ROOM_LIFETIME_MS,
+    };
+  }
+  // Deliberately closing a room that is between games, so the rival sees why.
+  if (command.type === "leave") {
+    if (room.ranked)
+      throw new OnlineError("Return to Fade Park to leave a ranked match.");
+    if (room.status === "active")
+      throw new OnlineError("Surrender before leaving an active fade.");
+    if (room.status === "closed") return room;
+    return {
+      ...next,
+      status: "closed",
+      reason: "left",
+      closedBy: seat,
+      deadline: null,
+    };
+  }
+  // Either player can reopen a finished friendly room for the next game.
+  if (command.type === "lobby") {
+    if (room.ranked)
+      throw new OnlineError(
+        "Return to Fade Park to find your next ranked opponent.",
+      );
+    if (!room.members.cpu)
+      throw new OnlineError("Wait for a rival to join this room.");
+    if (room.status === "waiting") return room;
+    if (room.status !== "complete")
+      throw new OnlineError("Finish this fade first.");
+    return {
+      ...next,
+      status: "waiting",
+      gameNumber: room.gameNumber + 1,
+      match: null,
+      openingSeat: otherSeat(room.openingSeat),
+      members: {
+        player: { ...room.members.player, ready: false },
+        cpu: { ...room.members.cpu, ready: false },
+      },
+      winner: null,
+      reason: null,
+      deadline: null,
+      expiresAt: now + ROOM_LIFETIME_MS,
+      rematch: { player: false, cpu: false },
     };
   }
   if (command.type === "ready") {
@@ -253,6 +330,7 @@ export function applyOnlineCommand(
   if (room.deadline !== null && now >= room.deadline)
     throw new OnlineError("The turn deadline has passed.");
   if (room.activeSeat !== seat) throw new OnlineError("Wait for your turn.");
+  next.lastPlayedAt = now;
   if (command.type === "play") {
     if (![0, 1, 2].includes(command.lane))
       throw new OnlineError("Choose a valid district.", 400);
@@ -289,16 +367,19 @@ export function applyOnlineCommand(
     };
   }
   match = nextRound({ ...match, phase: "resolved" });
-  if (match.phase === "complete")
+  if (match.phase === "complete") {
+    const winner = getMatchWinner(match);
     return {
       ...next,
       match,
       status: "complete",
-      winner: getMatchWinner(match),
+      winner,
+      series: recordSeries(room, winner),
       reason: "districts",
       deadline: null,
       expiresAt: now + ROOM_LIFETIME_MS,
     };
+  }
   const activeSeat =
     match.round % 2 === 1 ? room.openingSeat : otherSeat(room.openingSeat);
   return {
@@ -325,6 +406,9 @@ export type PublicCard = {
   buddyEarthExpiresAtRound?: number;
   /** Stable summon/play order survives lane movement and reconnects. */
   arrivalOrder?: number;
+  squabblehouseManagerRound?: CardInstance['squabblehouseManagerRound'];
+  squabblehouseBusBoyPatrolRound?: CardInstance['squabblehouseBusBoyPatrolRound'];
+  squabblehouseBusBoyDirection?: CardInstance['squabblehouseBusBoyDirection'];
   kind?: CardInstance['kind'];
   type: CardInstance['type'];
   hazard: boolean;
@@ -339,9 +423,13 @@ export type PublicCard = {
   power: number;
   basePower: number;
   powerModifier: number;
+  /** Snapshot-owned ongoing Hands; not a permanent buff or client-derived aura. */
+  continuousPower?: number;
   statuses: Statuses;
   covered: boolean;
   moved: boolean;
+  /** Active Cashier movement lock is surfaced for client status/HUD rendering. */
+  movementLockedThroughRound?: number;
   costs: [number, number, number];
 };
 export type PublicEvent = {
@@ -358,10 +446,12 @@ export type PublicEvent = {
   participants?: PublicParticipant[];
   scores?: EffectLogEntry['scores'];
 };
-export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; moved: boolean; statuses: Statuses };
-export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null };
-const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
-  state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier, moved: state.moved, statuses: state.statuses } : null;
+export type PublicParticipantState = { lane: Lane; power: number; basePower: number; powerModifier: number; continuousPower?: number; moved: boolean; statuses: Statuses };
+export type PublicParticipant = { cardInstanceId: string; cardId: string; owner: Seat; before: PublicParticipantState | null; after: PublicParticipantState | null; departureCause?: 'aura-loss' };
+const publicParticipantState = (state: { lane: Lane | null; power: number; basePower: number; powerModifier: number; continuousPower?: number; moved: boolean; statuses: Statuses } | null): PublicParticipantState | null =>
+  state && state.lane !== null ? { lane: state.lane, power: state.power, basePower: state.basePower, powerModifier: state.powerModifier,
+    ...(state.continuousPower ? { continuousPower: state.continuousPower } : {}),
+    moved: state.moved, statuses: state.statuses } : null;
 export type OnlineRoomView = {
   ranked?: { opponent: "player" | "bot" | "searching"; queuedAt: number; botAfter: number; rating: number; result: RankedResult | null };
   lockedLanes?: Lane[];
@@ -391,6 +481,9 @@ export type OnlineRoomView = {
   squabble: Record<Seat, boolean>;
   winner: OnlineRoom["winner"];
   reason: OnlineRoom["reason"];
+  /** Server-owned tally of this room's friendly games. Clients never send it. */
+  series: SeriesRecord;
+  closedBy: Seat | null;
   rematch: Record<Seat, boolean>;
 };
 /** Explicit allowlist: full engine snapshots, event replays, user IDs and rival hands NEVER cross this boundary. */
@@ -398,7 +491,8 @@ function publicPresentation(event: EffectLogEntry): Pick<PublicEvent, 'sourceId'
   const participants = [event.source, ...event.targets].flatMap((p) => {
     if (!p) return [];
     const before = publicParticipantState(p.before), after = publicParticipantState(p.after);
-    return before || after ? [{ cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: p.owner, before, after }] : [];
+    return before || after ? [{ cardInstanceId: p.cardInstanceId, cardId: p.cardId, owner: p.owner, before, after,
+      ...(p.departureCause ? { departureCause: p.departureCause } : {}) }] : [];
   });
   const sourceOnBoard = event.source && participants.some((p) => p.cardInstanceId === event.source!.cardInstanceId);
   return { ...(sourceOnBoard ? { sourceId: event.source!.cardInstanceId } : {}), participants, scores: event.scores };
@@ -420,6 +514,9 @@ export function onlineRoomView(
     ...(card.buddyBud ? { buddyBud: { ...card.buddyBud } } : {}),
     ...(card.buddyEarthExpiresAtRound !== undefined ? { buddyEarthExpiresAtRound: card.buddyEarthExpiresAtRound } : {}),
     ...(card.arrivalOrder !== undefined ? { arrivalOrder: card.arrivalOrder } : {}),
+    ...(card.squabblehouseManagerRound !== undefined ? { squabblehouseManagerRound: card.squabblehouseManagerRound } : {}),
+    ...(card.squabblehouseBusBoyPatrolRound !== undefined ? { squabblehouseBusBoyPatrolRound: card.squabblehouseBusBoyPatrolRound } : {}),
+    ...(card.squabblehouseBusBoyDirection !== undefined ? { squabblehouseBusBoyDirection: card.squabblehouseBusBoyDirection } : {}),
     kind: card.kind ?? 'character',
     type: card.type,
     hazard: !!card.hazard,
@@ -434,9 +531,13 @@ export function onlineRoomView(
     power: getEffectiveCardPower(card),
     basePower: card.basePower,
     powerModifier: card.powerModifier,
+    ...(card.continuousPower ? { continuousPower: card.continuousPower } : {}),
     statuses: { ...card.statuses },
     covered: match?.timedEffects.some(effect => (effect.kind === 'church-protection' || effect.kind === 'salon-protection') && effect.targetInstanceId === card.instanceId) ?? false,
     moved: card.moved,
+    ...(card.squabblehouseCannotMoveThroughRound !== undefined
+      && card.squabblehouseCannotMoveThroughRound >= (match?.round ?? 1)
+      ? { movementLockedThroughRound: card.squabblehouseCannotMoveThroughRound } : {}),
     costs: [0, 1, 2].map((lane) =>
       getLegalCardCost(match!, card.owner, card, lane as Lane),
     ) as [number, number, number],
@@ -505,6 +606,15 @@ export function onlineRoomView(
     squabble: match?.squabbleByOwner ?? { player: false, cpu: false },
     winner: room.winner,
     reason: room.reason,
+    series: roomSeries(room),
+    closedBy: room.closedBy ?? null,
     rematch: room.rematch,
   };
 }
+
+/** Rooms stored before the series existed read as an empty record. */
+export const roomSeries = (room: { series?: SeriesRecord }): SeriesRecord => ({
+  player: room.series?.player ?? 0,
+  cpu: room.series?.cpu ?? 0,
+  draws: room.series?.draws ?? 0,
+});

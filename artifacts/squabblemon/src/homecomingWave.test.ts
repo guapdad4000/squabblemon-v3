@@ -15,6 +15,8 @@ test('replacements retain collection, variant, training and purchased cosmetic i
  assert.equal(catalogCardById.concrete.name, 'Balikbayan Box Bot');
  assert.equal(cards.counter.abilityUpgrades[0].id, 'counter:upgrade:1');
  assert.equal(cards.concrete.abilityUpgrades[0].id, 'concrete:upgrade:1');
+ assert.match(cards.counter.effect, /strongest enemy here for 3/);
+ assert.match(cards.concrete.effect, /\+2 if Earth/);
  assert(catalogCardById.counter.variantSlots.some(v => v.id === 'counter:chrome'));
  assert(styleSetFor('counter')!.stickers.every(s => s.image?.includes('characters/counter.webp')));
  for (const id of ['lola', 'repoman', 'madhatter']) {
@@ -33,7 +35,7 @@ for (const owner of ['player', 'cpu'] as const) {
   const m=blank(), foe={...unit('og',enemy,0),basePower:10}, remote={...unit('hooper',enemy,1),basePower:20};
   m.boards=[[foe],[remote],[]];
   const {source,after}=cast(m,'counter',owner);
-  assert.equal(find(after,foe).powerModifier,-2);
+   assert.equal(find(after,foe).powerModifier,-3);
   let state=cast(after,'plug',owner,1).after;
   assert.equal(find(state,remote).powerModifier,-2);
   state=cast(state,'plug',owner,1).after;
@@ -67,6 +69,26 @@ for (const owner of ['player', 'cpu'] as const) {
   assert.equal(result.creativeMarks?.filter(x=>x.kind==='home-parcel').length,1);
   const expired=end(end(result));assert.equal(expired.creativeMarks?.filter(x=>x.kind==='home-parcel').length,0);
  });
+  test('Box Bot gives Earth +2 on remote placements and moves, without local or hand bonuses: '+owner,()=>{
+   let m=cast(blank(),'concrete',owner).after;
+   const earth=createCardInstance('landlord',owner,'earth-parcel',50);
+   earth.statuses.silenced=true;earth.statuses.frozen=true;
+   const hand=owner==='player'?'playerHand':'cpuHand';
+   const placed=playTurnCard({...m,phase:owner==='player'?'player':'cpu-reveal',[hand]:[earth]},owner,earth.instanceId,1);
+   assert.equal(find(placed,earth).powerModifier,2);
+   assert.equal(find(placed,earth).statuses.silenced,false);
+   assert.equal(find(placed,earth).statuses.frozen,false);
+   const second=cast(placed,'cornball',owner,1).after;
+   assert.equal(second.boards[1].find(c=>c.cardId==='cornball')?.powerModifier,0,'parcel was consumed');
+   const local=cast(second,'landlord',owner,0);
+   assert.equal(find(local.after,local.source).powerModifier,0,'no local package');
+   assert.equal(cards.concrete.elementalBond,undefined,'no hand aura');
+   const guest=unit('landlord',owner,1), setup=blank();setup.boards=[[],[guest],[]];
+   m=end(cast(cast(setup,'concrete',owner).after,'lola',owner).after);
+   assert.equal(find(m,guest).lane,1);
+   assert.equal(find(m,guest).powerModifier,4,'dinner +1, Earth parcel +2, leftovers +1');
+   assert.equal(m.creativeMarks?.filter(x=>x.kind==='home-parcel').length,1);
+  });
  test('Lola hosts two remote guests, cleanses them, then returns them with leftovers: '+owner,()=>{
   const m=blank(), a=unit('cornball',owner,1), b=unit('og',owner,2);
   a.statuses.frozen=true;b.statuses.silenced=true;m.boards=[[],[a],[b]];

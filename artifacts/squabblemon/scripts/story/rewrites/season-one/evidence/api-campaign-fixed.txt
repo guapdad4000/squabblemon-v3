@@ -1,0 +1,43 @@
+
+> workspace@0.0.0 test:campaign:db /home/runner/workspace
+> node scripts/test-api-database.mjs campaign
+
+Reading config file '/home/runner/workspace/artifacts/gameplay-test-db/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[✓] Changes applied
+Using owned in-memory PGlite database on 127.0.0.1:36033.
+✖ new account completes every campaign node through HTTP with isolated, idempotent persistence (140588.294686ms)
+✔ fresh rookie crew solves the guided opening within the node ceiling (1291.434111ms)
+✔ OG Uncle boss keeps both phases and has a bounded fresh-roster win (1749.613971ms)
+✔ Bar Fight keeps its center lock and has a bounded fresh-roster win (770.8721ms)
+✔ Crown Open Entry keeps its guided length and has a bounded fresh-roster win (854.742815ms)
+✔ Crown Hooper keeps its semifinal phase and has a bounded fresh-roster win (3185.072714ms)
+✔ Baby Momma's Terms has a bounded win with the owned rookie core crew (1891.522395ms)
+✔ Published Exhibition has a bounded win with the saved Dr Fade crew (2568.239819ms)
+✔ Pledge Drive Final keeps its announced phases and has a bounded campaign-crew win (6923.336567ms)
+✔ suppressed presentation events preserve complete boss gameplay state (3815.409662ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 175241.521363
+
+✖ failing tests:
+
+test at src/lib/newAccountCampaignRoutes.test.ts:1:1163
+✖ new account completes every campaign node through HTTP with isolated, idempotent persistence (140588.294686ms)
+  Error: s2-first-night-watch: Story solver exceeded its 10000ms / 40000-expansion per-node budget after 11852 expansions
+      at completeNode (/home/runner/workspace/artifacts/api-server/src/lib/newAccountCampaignRoutes.test.ts:417:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/newAccountCampaignRoutes.test.ts:482:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+undefined
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx --test --test-concurrency=1 src/lib/newAccountCampaignRoutes.test.ts src/lib/storyMoveSolver.test.ts
+ ELIFECYCLE  Command failed with exit code 1.

@@ -138,7 +138,7 @@ export function ProfileSettings({
       await queryClient.cancelQueries({ queryKey: getGetPlayerBootstrapQueryKey() });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), result.bootstrap);
       if (!result.alreadyRedeemed) {
-        revealProfileRewards(before, result.bootstrap, `promo:${result.receipt.code}`, 'Promo rewards');
+        revealProfileRewards(before, result.bootstrap, `promo:${result.receipt.code}`, 'Promo rewards', 'promo');
       }
       const { receipt } = result;
       const names = receipt.cardIds?.map(id => catalogCardById[id]?.name ?? id).join(' and ');

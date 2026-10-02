@@ -14,3 +14,9 @@ Concurrent Vite processes must not share an optimized-dependency cache, even whe
 **Why:** Vite begins dependency optimization before detecting a port collision. A failed replacement startup overwrote files used by the still-running preview, mixing React dependency generations and crashing an otherwise valid first hook on a lazy route. React deduplication alone cannot prevent this. Process-isolated caches intentionally trade some warm-start speed for runtime consistency.
 
 **How to apply:** Keep each Vite process's default cache isolated, preserve explicit isolated fixture caches, and verify a mounted page can enter lazy routes after a competing startup fails. Do not rewrite valid hooks to conceal this environment failure.
+
+Socket diagnostics must tolerate missing optional tools and IPv6 proc files.
+
+**Why:** This workspace lacked both `ss` and `/proc/net/tcp6`; assuming a complete Linux networking toolbox interrupted diagnosis before the stale listeners were identified.
+
+**How to apply:** Use available process/socket information, skip absent protocol tables, and still verify service ownership before stopping anything.

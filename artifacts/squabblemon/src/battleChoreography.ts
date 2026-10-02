@@ -1,7 +1,19 @@
 import type { EffectLogEntry, EventParticipant } from './gameEngine';
 
+type CauseAwareParticipant = EventParticipant & { departureCause?: 'aura-loss' };
+
+export function isAuraLossDeparture(participant: EventParticipant) {
+  return (participant as CauseAwareParticipant).departureCause === 'aura-loss'
+    && !!participant.before
+    && !participant.after;
+}
+
 export function participantPower(state: EventParticipant['before']) {
-  return !state || state.statuses.frozen ? 0 : Math.max(0, state.basePower + state.powerModifier);
+  return !state || state.statuses.frozen ? 0 : Math.max(0, state.basePower + state.powerModifier + (state.continuousPower ?? 0));
+}
+
+function permanentParticipantPower(state: EventParticipant['before']) {
+  return state ? state.basePower + state.powerModifier : 0;
 }
 
 export function battleChanges(event: EffectLogEntry) {
@@ -10,9 +22,11 @@ export function battleChanges(event: EffectLogEntry) {
     if (participant) participants.set(participant.cardInstanceId, participant);
   }
   return [...participants.values()].map(participant => {
+    const auraLossDeparture = isAuraLossDeparture(participant);
     const delta = participantPower(participant.after) - participantPower(participant.before);
+    const permanentDelta = permanentParticipantPower(participant.after) - permanentParticipantPower(participant.before);
     const labels: string[] = [];
-    if (participant.before && !participant.after) labels.push('Destroyed');
+    if (participant.before && !participant.after) labels.push(auraLossDeparture ? 'Ongoing aura faded' : 'Destroyed');
     if (participant.before && participant.after) {
       for (const [key, label] of [['frozen', 'Frozen'], ['silenced', 'Silenced'], ['protected', 'Shielded'], ['blocked', 'Blocked']] as const) {
         if (!participant.before.statuses[key] && participant.after.statuses[key]) labels.push(label);
@@ -20,7 +34,7 @@ export function battleChanges(event: EffectLogEntry) {
       }
       if (participant.before.lane !== participant.after.lane) labels.push('Moved');
     }
-    return { ...participant, delta, labels };
+    return { ...participant, delta, permanentDelta, labels };
   });
 }
 

@@ -1,0 +1,31 @@
+{
+  "description": "Paired v35/v36 fixed-roster bot comparisons; score counts draws as half. Not player win rates or a new 37-deck ranking.",
+  "guap_in_test_rosters": false,
+  "changed_air_water_reference_kits": false,
+  "source_blocks": [
+    {
+      "block": "calibration",
+      "before_source_hash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+      "candidate_source_hash": "a27701b1432bd9798f45a665baddcf81efdabf4cff480cf45265611cb70f0b48",
+      "unique_pairs": 2720,
+      "historical_before": true
+    },
+    {
+      "block": "holdout",
+      "before_source_hash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+      "candidate_source_hash": "a27701b1432bd9798f45a665baddcf81efdabf4cff480cf45265611cb70f0b48",
+      "unique_pairs": 5440,
+      "historical_before": false
+    }
+  ],
+  "fresh_matches": 13600,
+  "fresh_confirmation_matches": 10880,
+  "confirmation_appearances_per_subject_per_version": 1152,
+  "simulation_failures": 0,
+  "confirmation_seeds": 4,
+  "files": {
+    "scores.csv": "828403e5a197e5a85f1ff305858448e27c85479918ff511366312f28bd357d59",
+    "breakdowns.csv": "8d5a856ba50f64dcef3f6d2e3b19bdca8abfee6169ef721cee736063ffe3edcb",
+    "paired-matches.csv": "267dbbd4dfb021035773b7f0cf7b9b65090d68c0dbc987b3dd55baa724e75e2d"
+  }
+}

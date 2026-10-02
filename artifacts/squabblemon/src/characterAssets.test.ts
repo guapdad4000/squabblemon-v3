@@ -19,6 +19,44 @@ const VISIBLE_ALPHA_MIN = 128;
 const MIN_TRANSPARENT_COVERAGE = 0.2;
 const MIN_VISIBLE_COVERAGE = 0.1;
 const SUMMON_ARTWORK_IDS = ['guyana', 'steward'] as const;
+const SQUABBLEHOUSE_SUPPLIED_ARTWORK = [
+  {
+    engineId: 'squabblehouse-bus-boy',
+    artworkId: 'squabblehouse-bus-boy',
+    source: '13317d89-fd08-4259-a13b-abc9c748d296_1790802321353.png',
+    width: 1086,
+    height: 1448,
+    hasAlpha: true,
+  },
+  {
+    engineId: 'squabblehouse-cashier',
+    artworkId: 'squabblehouse-cashier',
+    source: 'e9a8934c-c434-4db0-a98a-d2a734dade02_1790802359775.png',
+    width: 1024,
+    height: 1365,
+    hasAlpha: false,
+  },
+  {
+    engineId: 'waffle-warlord',
+    artworkId: 'waffle-warlord',
+    source: 'ChatGPT_Image_Sep_30,_2026,_01_54_16_PM_(Edited)_1790802321353.png',
+    width: 493,
+    height: 654,
+    hasAlpha: true,
+  },
+  {
+    engineId: 'sideofhands',
+    artworkId: 'a-side-of-hands',
+    source: 'ChatGPT_Image_Sep_30,_2026,_01_54_16_PM_(Edited_2)_1790802321352.png',
+    width: 659,
+    height: 373,
+    hasAlpha: true,
+  },
+] as const;
+const MINIMUM_ARTWORK_DIMENSIONS: Record<string, [number, number]> = {
+  'waffle-warlord': [493, 654],
+  'a-side-of-hands': [659, 373],
+};
 
 type WebpMetadata = {
   width: number;
@@ -32,11 +70,15 @@ const readUint24LE = (bytes: Buffer, offset: number) =>
 function readWebpMetadata(bytes: Buffer): WebpMetadata {
   assert.equal(bytes.subarray(0, 4).toString("ascii"), "RIFF", "must be a RIFF file");
   assert.equal(bytes.subarray(8, 12).toString("ascii"), "WEBP", "must be a WebP file");
-  assert.equal(
-    bytes.subarray(12, 16).toString("ascii"),
-    "VP8X",
-    "must use extended WebP so transparency and dimensions are explicit",
-  );
+  const chunk = bytes.subarray(12, 16).toString("ascii");
+  if (chunk === 'VP8 ') {
+    return {
+      hasAlpha: false,
+      width: bytes.readUInt16LE(26) & 0x3fff,
+      height: bytes.readUInt16LE(28) & 0x3fff,
+    };
+  }
+  assert.equal(chunk, "VP8X", "must use a supported extended or opaque WebP format");
 
   return {
     hasAlpha: (bytes[20] & 0x10) !== 0,
@@ -147,11 +189,12 @@ test("every catalog card and deck hero has one valid local character image", asy
       assert(metadata.hasAlpha, `${expectedFile} must retain transparency`);
       assertUsefulCutout(expectedFile, await readAlphaChannel(bytes));
     }
-    assert(
-      metadata.width >= MIN_CHARACTER_WIDTH &&
-        metadata.height >= MIN_CHARACTER_HEIGHT,
-      `${expectedFile} is unexpectedly small (${metadata.width}x${metadata.height})`,
-    );
+    const [minWidth, minHeight] = MINIMUM_ARTWORK_DIMENSIONS[artworkId] ?? [
+      MIN_CHARACTER_WIDTH,
+      MIN_CHARACTER_HEIGHT,
+    ];
+    assert(metadata.width >= minWidth && metadata.height >= minHeight,
+      `${expectedFile} is unexpectedly small (${metadata.width}x${metadata.height})`);
 
     const digest = createHash("sha256").update(bytes).digest("hex");
     assert.equal((characterRevisions as Record<string, string>)[artworkId], digest.slice(0, 16), `${expectedFile}: run scripts/sync-character-revisions.cjs after replacing artwork`);
@@ -162,6 +205,37 @@ test("every catalog card and deck hero has one valid local character image", asy
       `${expectedFile} duplicates roster artwork from ${existingOwner}`,
     );
     contentOwners.set(digest, expectedFile);
+  }
+});
+
+test('Squabblehouse portraits and A Side of Hands use the supplied artwork and preserve source alpha', async () => {
+  for (const asset of SQUABBLEHOUSE_SUPPLIED_ARTWORK) {
+    const catalogCard = cardCatalog.find(card => card.engineId === asset.engineId);
+    assert.ok(catalogCard, `${asset.engineId} must be registered in the catalog`);
+    assert.equal(catalogCard.artworkId, asset.artworkId);
+
+    const expectedFile = `${asset.artworkId}.webp`;
+    const revision = (characterRevisions as Record<string, string>)[asset.artworkId];
+    assert.ok(revision, `${expectedFile} must have a cache revision`);
+    assert.equal(getCardImage(asset.engineId), `/assets/characters/${expectedFile}?v=${revision}`);
+
+    const targetPath = join(CHARACTER_DIRECTORY, expectedFile);
+    const sourcePath = fileURLToPath(new URL(`../../../attached_assets/${asset.source}`, import.meta.url));
+    const source = await readFile(sourcePath);
+    const imported = await readFile(targetPath);
+    const metadata = readWebpMetadata(imported);
+    assert.deepEqual([metadata.width, metadata.height], [asset.width, asset.height]);
+    assert.equal(metadata.hasAlpha, asset.hasAlpha, `${expectedFile} should retain its supplied alpha channel`);
+
+    if (asset.hasAlpha) {
+      const sourceAlpha = await sharp(source).extractChannel('alpha').raw().toBuffer();
+      const importedAlpha = await sharp(imported).extractChannel('alpha').raw().toBuffer();
+      assert.deepEqual(importedAlpha, sourceAlpha, `${expectedFile} must preserve supplied transparency exactly`);
+      assertUsefulCutout(expectedFile, await readAlphaChannel(imported));
+    }
+
+    const digest = createHash('sha256').update(imported).digest('hex').slice(0, 16);
+    assert.equal(revision, digest, `${expectedFile} revision should match the optimized WebP`);
   }
 });
 
@@ -246,6 +320,15 @@ test('Simmy has no opaque black matte, while Foodz retains the supplied portrait
     'block-spinner',
     'look-out',
     ...BLOCKBUSTERS.map(([id]) => id),
+    'squabblehouse-security',
+    'squabblehouse-teknician',
+    'griddle-master',
+    'inmate-reformed',
+    'squabblehouse-bus-boy',
+    'squabblehouse-cashier',
+    'waffle-warlord',
+    'cane-corso-red',
+    'blue-nose-pit',
     'kyle',
     'stockz',
   ]);

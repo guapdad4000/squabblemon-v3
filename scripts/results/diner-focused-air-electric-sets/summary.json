@@ -1,0 +1,273 @@
+{
+  "planned": 160,
+  "completed": 160,
+  "failures": 0,
+  "sourceHash": "aa071715717c5ac5075c6317419ed3783a95301a062dcdbe5cb9eb908d635a93",
+  "summary": [
+    {
+      "opponent": "Air",
+      "all": {
+        "games": 32,
+        "wins": 18,
+        "losses": 12,
+        "draws": 2,
+        "scoreRate": 0.59375
+      },
+      "greedy": {
+        "games": 16,
+        "wins": 9,
+        "losses": 5,
+        "draws": 2,
+        "scoreRate": 0.625
+      },
+      "seeded": {
+        "games": 16,
+        "wins": 9,
+        "losses": 7,
+        "draws": 0,
+        "scoreRate": 0.5625
+      },
+      "base": {
+        "games": 16,
+        "wins": 11,
+        "losses": 5,
+        "draws": 0,
+        "scoreRate": 0.6875
+      },
+      "upgraded": {
+        "games": 16,
+        "wins": 7,
+        "losses": 7,
+        "draws": 2,
+        "scoreRate": 0.5
+      },
+      "first": {
+        "games": 16,
+        "wins": 9,
+        "losses": 6,
+        "draws": 1,
+        "scoreRate": 0.59375
+      },
+      "second": {
+        "games": 16,
+        "wins": 9,
+        "losses": 6,
+        "draws": 1,
+        "scoreRate": 0.59375
+      },
+      "elapsedMs": 11123
+    },
+    {
+      "opponent": "Electric",
+      "all": {
+        "games": 32,
+        "wins": 13,
+        "losses": 14,
+        "draws": 5,
+        "scoreRate": 0.484375
+      },
+      "greedy": {
+        "games": 16,
+        "wins": 10,
+        "losses": 3,
+        "draws": 3,
+        "scoreRate": 0.71875
+      },
+      "seeded": {
+        "games": 16,
+        "wins": 3,
+        "losses": 11,
+        "draws": 2,
+        "scoreRate": 0.25
+      },
+      "base": {
+        "games": 16,
+        "wins": 6,
+        "losses": 8,
+        "draws": 2,
+        "scoreRate": 0.4375
+      },
+      "upgraded": {
+        "games": 16,
+        "wins": 7,
+        "losses": 6,
+        "draws": 3,
+        "scoreRate": 0.53125
+      },
+      "first": {
+        "games": 16,
+        "wins": 7,
+        "losses": 7,
+        "draws": 2,
+        "scoreRate": 0.5
+      },
+      "second": {
+        "games": 16,
+        "wins": 6,
+        "losses": 7,
+        "draws": 3,
+        "scoreRate": 0.46875
+      },
+      "elapsedMs": 11626
+    },
+    {
+      "opponent": "Cellblock Lane Sequence",
+      "all": {
+        "games": 32,
+        "wins": 16,
+        "losses": 10,
+        "draws": 6,
+        "scoreRate": 0.59375
+      },
+      "greedy": {
+        "games": 16,
+        "wins": 12,
+        "losses": 3,
+        "draws": 1,
+        "scoreRate": 0.78125
+      },
+      "seeded": {
+        "games": 16,
+        "wins": 4,
+        "losses": 7,
+        "draws": 5,
+        "scoreRate": 0.40625
+      },
+      "base": {
+        "games": 16,
+        "wins": 7,
+        "losses": 7,
+        "draws": 2,
+        "scoreRate": 0.5
+      },
+      "upgraded": {
+        "games": 16,
+        "wins": 9,
+        "losses": 3,
+        "draws": 4,
+        "scoreRate": 0.6875
+      },
+      "first": {
+        "games": 16,
+        "wins": 11,
+        "losses": 5,
+        "draws": 0,
+        "scoreRate": 0.6875
+      },
+      "second": {
+        "games": 16,
+        "wins": 5,
+        "losses": 5,
+        "draws": 6,
+        "scoreRate": 0.5
+      },
+      "elapsedMs": 10679
+    },
+    {
+      "opponent": "Blood / Red Set",
+      "all": {
+        "games": 32,
+        "wins": 8,
+        "losses": 16,
+        "draws": 8,
+        "scoreRate": 0.375
+      },
+      "greedy": {
+        "games": 16,
+        "wins": 4,
+        "losses": 9,
+        "draws": 3,
+        "scoreRate": 0.34375
+      },
+      "seeded": {
+        "games": 16,
+        "wins": 4,
+        "losses": 7,
+        "draws": 5,
+        "scoreRate": 0.40625
+      },
+      "base": {
+        "games": 16,
+        "wins": 3,
+        "losses": 10,
+        "draws": 3,
+        "scoreRate": 0.28125
+      },
+      "upgraded": {
+        "games": 16,
+        "wins": 5,
+        "losses": 6,
+        "draws": 5,
+        "scoreRate": 0.46875
+      },
+      "first": {
+        "games": 16,
+        "wins": 4,
+        "losses": 9,
+        "draws": 3,
+        "scoreRate": 0.34375
+      },
+      "second": {
+        "games": 16,
+        "wins": 4,
+        "losses": 7,
+        "draws": 5,
+        "scoreRate": 0.40625
+      },
+      "elapsedMs": 10517
+    },
+    {
+      "opponent": "Crip / Blue Set",
+      "all": {
+        "games": 32,
+        "wins": 27,
+        "losses": 4,
+        "draws": 1,
+        "scoreRate": 0.859375
+      },
+      "greedy": {
+        "games": 16,
+        "wins": 15,
+        "losses": 1,
+        "draws": 0,
+        "scoreRate": 0.9375
+      },
+      "seeded": {
+        "games": 16,
+        "wins": 12,
+        "losses": 3,
+        "draws": 1,
+        "scoreRate": 0.78125
+      },
+      "base": {
+        "games": 16,
+        "wins": 14,
+        "losses": 2,
+        "draws": 0,
+        "scoreRate": 0.875
+      },
+      "upgraded": {
+        "games": 16,
+        "wins": 13,
+        "losses": 2,
+        "draws": 1,
+        "scoreRate": 0.84375
+      },
+      "first": {
+        "games": 16,
+        "wins": 15,
+        "losses": 0,
+        "draws": 1,
+        "scoreRate": 0.96875
+      },
+      "second": {
+        "games": 16,
+        "wins": 12,
+        "losses": 4,
+        "draws": 0,
+        "scoreRate": 0.75
+      },
+      "elapsedMs": 10112
+    }
+  ]
+}
