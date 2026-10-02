@@ -1,0 +1,65 @@
+{
+  "source_tree": "9b4f98c28977347c21a19b00c2e3368f794a2126",
+  "bundle": {
+    "path": "handoff-lfs-objects.tar.gz",
+    "size": 17964429,
+    "sha256": "6c3e7e1493875e17471dd1ea9b788bf5936cc49355ede70c2fce661cb1c958cc"
+  },
+  "objects": [
+    {
+      "path": "scripts/results/squabblehouse-counter-comparison/after/diner/current-rules.json",
+      "oid": "86091cbb59e6f4d31bf81e766f14b27a406873c242f71fc7d4834f3ee0184258",
+      "size": 54344058
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-comparison/before/diner/current-rules.json",
+      "oid": "d9d6e253fabc22c60ac1904cd19eda7df305b0e9f4a25be9a913345a4a92d492",
+      "size": 53870612
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/cashier-only/diner/current-rules.json",
+      "oid": "5943992f40ec2dc33a749f4919c38622120551f493d933a73c614b20375a7a14",
+      "size": 54070124
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/combined-v32/diner/current-rules.json",
+      "oid": "30e1d378e7b769bcf577d5c5a2a7ee09e8a6050675690a53a76b2cfffab2e3e3",
+      "size": 54063528
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/corrected-original/diner/current-rules.json",
+      "oid": "eed086aee2d62518578aa5f185f3b59ccb2fb36ab4b1151c4865f5611ba8e144",
+      "size": 53507026
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/current-v31/diner/current-rules.json",
+      "oid": "a7aeebfaeebb6255f964fa074fb1660d198f792b48776b9e7f8ad2c875ee59ee",
+      "size": 53994328
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/griddle-only/diner/current-rules.json",
+      "oid": "6ad712a2591fb2c64a283e29c52a888c062bde5c730d071498f583befbf9ada3",
+      "size": 53991404
+    },
+    {
+      "path": "scripts/results/squabblehouse-counter-revision-comparison/janitor-only/diner/current-rules.json",
+      "oid": "2062f06658bdd42563ba3fdd72bfd9b6d39852c627616738f35e0ceb88dfd7f0",
+      "size": 53999852
+    },
+    {
+      "path": "scripts/results/squabblehouse-diner-comparison/current-baseline/current-rules.json",
+      "oid": "0467fe35b9a6879ac11f9b846a219ecb7587d814784d4c8c94591cbc8065122c",
+      "size": 57651757
+    },
+    {
+      "path": "scripts/results/squabblehouse-diner-comparison/diner/current-rules.json",
+      "oid": "78c90831f48f04337a380f8f4d40b041a97c7ecbcd8afb34f7c2946eb81e853b",
+      "size": 53544884
+    },
+    {
+      "path": "scripts/results/squabblehouse-staff-balance/squabblehouse-staff-balance-current-rules.json",
+      "oid": "4f55c3f79827da57a777c4d1defb8f073ef796ff77eea67316d7a612ac426574",
+      "size": 57634051
+    }
+  ]
+}

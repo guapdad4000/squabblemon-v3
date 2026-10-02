@@ -1,1 +1,0 @@
-export type FeedbackPreferences = { audioEnabled: boolean; hapticsEnabled: boolean };
