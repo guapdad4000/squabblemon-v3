@@ -1,0 +1,4 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["rivalry-playtest.fixture.tsx", "rivalry-playtest.spec.ts", "crew-balance.fixture.tsx", "crew-balance.spec.ts", "playwright.rivalry.config.ts"]
+}

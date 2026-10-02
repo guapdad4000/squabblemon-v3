@@ -780,7 +780,7 @@ test('mythical Triple OGs preview and target only their own side', () => {
     assert.match(legalHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
     assert.match(getRenderedLaneButton(legalHtml, homeLane), /aria-disabled="false"/);
     assert.match(legalHtml, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
-    assert.match(legalHtml, /Play card · 4 Motion/);
+    assert.match(legalHtml, new RegExp(`Play card · ${card.cost} Motion`));
     assert.doesNotMatch(legalHtml, /<button[^>]*data-testid="button-lock"[^>]*disabled=""/);
 
     for (const lane of wrongLanes) {
@@ -856,7 +856,7 @@ test('a mythical Triple OG keeps its projected ability preview in a locked distr
   assert.match(html, /Play card · \d+ Motion/);
 });
 
-test('both mythical Triple OGs have no Corrupt Church home surcharge at exactly 4 Motion', () => {
+test('both mythical Triple OGs have no Corrupt Church home surcharge at their printed Motion', () => {
   for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
     const homeLane = cardId === 'triple-og-blue' ? 0 : 2;
     const locations = ['time-square', 'county-jail', 'magic-city'];
@@ -864,14 +864,14 @@ test('both mythical Triple OGs have no Corrupt Church home surcharge at exactly 
     const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(locations));
     const card = createCardInstance(cardId, 'player', 'triple-og-church-cost', homeLane);
     match.playerHand = [card];
-    match.playerMotion = 4;
+    match.playerMotion = card.cost;
     const html = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
 
     assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
-    assert.match(html, /Play card · 4 Motion/);
+    assert.match(html, new RegExp(`Play card · ${card.cost} Motion`));
     assert.match(html, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
     assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="false"/);
-    assert.doesNotMatch(html, /Need 5 Motion|costs 5 Motion/);
+    assert.doesNotMatch(html, new RegExp(`Need ${card.cost + 1} Motion|costs ${card.cost + 1} Motion`));
   }
 });
 

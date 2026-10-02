@@ -26,7 +26,7 @@ export const BALANCE_TELEMETRY_SEMANTICS = {
   abilityEvidence: 'Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.',
   abilitySuccessRate: 'Unavailable: emitted events do not prove base-ability attempts or eligible opportunities.',
 } as const;
-export type BalanceTier = 0 | 3;
+export type BalanceTier = 0 | 1 | 2 | 3;
 export type BalanceSeat = 'a-player' | 'b-player';
 export type BalanceLabMode = 'smoke' | 'full';
 
@@ -461,7 +461,7 @@ function validateBalanceDeck(deck: BalanceDeck): void {
 
 function progressionFor(cardIds: readonly string[], tier: BalanceTier) {
   if (tier === 0) return {};
-  return Object.fromEntries(cardIds.map((cardId) => [cardId, { xp: 2800, level: 8, moveTier: 3 }]));
+  return Object.fromEntries(cardIds.map((cardId) => [cardId, { xp: 2800, level: 8, moveTier: tier }]));
 }
 
 function opponentOf(owner: Owner): Owner {

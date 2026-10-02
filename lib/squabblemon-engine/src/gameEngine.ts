@@ -153,6 +153,9 @@ export type CardInstance = Card & {
   gangTag?: GangColor;
   /** LOOK OUT is watching for the opponent's next district. */
   lookoutReady?: boolean;
+  /** A lookout can make at most three calls, and at most one each round. */
+  lookoutCalls?: number;
+  lookoutCallRound?: number;
   bankedMotion?: number;
   burnSource?: { instanceId: string; owner: Owner };
   wildInvestment?: number;
@@ -1545,7 +1548,7 @@ const trainWaveAbility = (m: Match, id: string): Match => {
   const card = m.boards.flat().find(c => c.instanceId === id)
     ?? [...m.playerHand, ...m.cpuHand].find(c => c.instanceId === id && c.cardId === 'cheshire');
   // Initiation has recipient upgrades and uses its own delayed-payoff ledger.
-  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
+  if (!card || !(HOMECOMING_KIT_IDS.has(card.cardId) || ['triple-og-blue', 'triple-og-red', 'block-spinner', 'look-out'].includes(card.cardId) || Object.hasOwn(characterWaveCards, card.cardId) || Object.hasOwn(fairytaleCards, card.cardId) || Object.hasOwn(neighborhoodWaveCards, card.cardId) || Object.hasOwn(cellblockWaveCards, card.cardId) || Object.hasOwn(afterHoursWaveCards, card.cardId) || Object.hasOwn(sideOzWaveCards, card.cardId) || Object.hasOwn(storyCharacterWaveCards, card.cardId) || Object.hasOwn(squabblehouseWaveCards, card.cardId)) || card.waveTrainingUsed) return m;
   const update = (state: Match, change: (c: CardInstance) => CardInstance, copiedGain = false): Match => {
     if (card.lane !== null) return modify(state, id, change, copiedGain);
     const hand = card.owner === 'player' ? 'playerHand' : 'cpuHand';
@@ -1617,7 +1620,7 @@ const SQUABBLEHOUSE_STAFF = new Set([
 const isSquabblehouseStaff = (card: CardInstance): boolean =>
   SQUABBLEHOUSE_STAFF.has(card.cardId);
 
-const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance): Match => {
+const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance, echoed = false): Match => {
   const ogId = dog.cardId === 'cane-corso-red' ? 'triple-og-red'
     : dog.cardId === 'blue-nose-pit' ? 'triple-og-blue' : undefined;
   if (!ogId || !activeAbility(dog) || dog.squabblehouseEffectRound === match.round) return match;
@@ -1630,9 +1633,17 @@ const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance): Match =
   let result = modify(match, dog.instanceId, card => ({ ...card, squabblehouseEffectRound: match.round }));
   const liveDog = findCard(result, dog.instanceId)!;
   let targetIds = [og.instanceId];
+  let backup: CardInstance | undefined;
   if (dog.cardId === 'blue-nose-pit') {
     result = modify(result, og.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 1,
       lastEffectNote: `${dog.name}: +1 Hand; matching Blue OG support.` }));
+    backup = lowest(result.boards.flat().filter(card => !card.hazard && card.owner === dog.owner
+      && card.lane !== ogLane && (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue'));
+    if (backup) {
+      targetIds.push(backup.instanceId);
+      result = modify(result, backup.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
+        lastEffectNote: `${dog.name}: remote Blue Set backup, +2 Hands.` }));
+    }
   } else {
     const victim = highest(inLane(result, og.owner === 'player' ? 'cpu' : 'player', ogLane));
     if (victim) {
@@ -1643,10 +1654,27 @@ const resolveSquabblehouseDogReveal = (match: Match, dog: CardInstance): Match =
   }
   result = addEvent(before, result, { type: 'ability', sourceId: dog.instanceId, owner: dog.owner,
     lane: ogLane, targetIds, note: dog.cardId === 'blue-nose-pit'
-      ? `${dog.name} backed up triple-og-blue for +1 Hand.`
+      ? `${dog.name} backed up triple-og-blue for +1 Hand.` + (backup ? ` ${backup.name} gained +2 Hands in another district.` : '')
       : `${dog.name} attacked the strongest enemy in triple-og-red's district for -1 Hand.` });
   // A dog played before its OG can earn training on the later, real backup.
-  return dog.cardId === 'blue-nose-pit' ? trainWaveAbility(result, dog.instanceId) : result;
+  const succeeded = dog.cardId === 'blue-nose-pit' || before.boards.flat().some(card =>
+    card.owner !== dog.owner && directDamageAmount(before, result, card) > 0);
+  return succeeded && !echoed ? trainWaveAbility(result, dog.instanceId) : result;
+};
+
+/** One bounded approach step, shared by play and round-start support. */
+const approachSquabblehouseOg = (match: Match, id: string): Match => {
+  const dog = findCard(match, id);
+  if (!dog || !activeAbility(dog) || dog.lane === null || dog.statuses.locked
+    || match.districtRuntime?.detainedCardIds.includes(dog.instanceId)) return match;
+  const ogId = dog.cardId === 'cane-corso-red' ? 'triple-og-red' : 'triple-og-blue';
+  const og = match.boards.flat().filter(card => card.owner === dog.owner && card.cardId === ogId)
+    .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
+      || a.instanceId.localeCompare(b.instanceId))[0];
+  if (!og || og.lane === null || dog.lane === og.lane) return match;
+  const destination = (dog.lane + (og.lane > dog.lane ? 1 : -1)) as Lane;
+  if (getStoryLockedLanes(match, dog.owner).includes(destination)) return match;
+  return move(match, dog, destination, `Toward ${og.name}: walked one adjacent lane.`);
 };
 
 const resolveSquabblehouseRoundStart = (match: Match): Match => {
@@ -1658,19 +1686,8 @@ const resolveSquabblehouseRoundStart = (match: Match): Match => {
     let dog = findCard(result, original.instanceId);
     if (!dog || !activeAbility(dog) || dog.lane === null || dog.statuses.locked
       || result.districtRuntime?.detainedCardIds.includes(dog.instanceId)) continue;
-    const ogId = dog.cardId === 'cane-corso-red' ? 'triple-og-red' : 'triple-og-blue';
-    const og = result.boards.flat().filter(card => card.owner === dog!.owner && card.cardId === ogId)
-      .sort((a, b) => (a.arrivalOrder ?? Number.MAX_SAFE_INTEGER) - (b.arrivalOrder ?? Number.MAX_SAFE_INTEGER)
-        || a.instanceId.localeCompare(b.instanceId))[0];
-    if (!og || og.lane === null) continue;
-    const from = dog.lane;
-    if (from !== og.lane) {
-      const destination = (from + (og.lane > from ? 1 : -1)) as Lane;
-      if (!getStoryLockedLanes(result, dog.owner).includes(destination)) {
-        result = move(result, dog, destination, `Toward ${og.name}: walked one adjacent lane.`);
-        dog = findCard(result, dog.instanceId);
-      }
-    }
+    result = approachSquabblehouseOg(result, dog.instanceId);
+    dog = findCard(result, dog.instanceId);
     if (dog && activeAbility(dog)) result = resolveSquabblehouseDogReveal(result, dog);
   }
   return result;
@@ -1913,6 +1930,10 @@ function applyInitiationMark(m: Match, id: string, owner: Owner, lane: Lane): Ma
   }
   return m;
 }
+const burnLanded = (before: Match, after: Match, sourceId: string): boolean =>
+  after.boards.flat().some(card => card.burnSource?.instanceId === sourceId
+    && card.statuses.burnStacks > (findCard(before, card.instanceId)?.statuses.burnStacks ?? 0));
+
 /** BLOCK SPINNER: the spinning block burns the next enemy played into the district. */
 function applySpinnerTrap(m: Match, id: string, lane: Lane): Match {
   const entrant = findCard(m, id);
@@ -1926,23 +1947,31 @@ function applySpinnerTrap(m: Match, id: string, lane: Lane): Match {
   const before = m;
   m = { ...m, districtTraps: m.districtTraps!.filter(t => t !== trap) };
   m = applyBurn(m, findCard(m, trap.source.instanceId)!, entrant, 1, 'Spin the Block: caught coming in; 1 Burn.');
-  return addEvent(before, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner, lane,
+  m = addEvent(before, m, { type: 'ability', sourceId: trap.source.instanceId, owner: trap.owner, lane,
     targetIds: [id], note: `${entrant.name} walked into the spinning block and took 1 Burn.` });
+  return !trap.echoed && burnLanded(before, m, trap.source.instanceId) ? trainWaveAbility(m, trap.source.instanceId) : m;
 }
 /** LOOK OUT: calls out the opponent's next district and discounts your next card there. */
 function applyLookoutWatch(m: Match, owner: Owner, lane: Lane): Match {
-  const watchers = m.boards.flat().filter(c => c.owner !== owner && c.lookoutReady && activeAbility(c));
+  const watchers = m.boards.flat().filter(c => c.owner !== owner && c.lookoutReady && (c.lookoutCalls ?? 0) < 3
+    && c.lookoutCallRound !== m.round && activeAbility(c));
   for (const watcher of watchers) {
     const before = m;
     const order = m.nextDiscountOrder ?? 1;
-    m = modify(m, watcher.instanceId, c => ({ ...c, lookoutReady: false,
+    m = modify(m, watcher.instanceId, c => ({ ...c, lookoutReady: false, lookoutCalls: (c.lookoutCalls ?? 0) + 1, lookoutCallRound: m.round,
       lastEffectNote: `On Point: called out district ${lane + 1}.` }));
     m = { ...m, nextDiscountOrder: order + 1, discountTokens: [...(m.discountTokens ?? []), {
       id: `discount:${watcher.owner}:${order}`, owner: watcher.owner, sourceInstanceId: watcher.instanceId,
       eligibility: 'lookout-watch' as const, targetLane: lane, sourceLane: watcher.lane, createdOrder: order,
     }] };
+    const ally = lowest(m.boards.flat().filter(c => !c.hazard && c.owner === watcher.owner
+      && c.instanceId !== watcher.instanceId && (c.gangTag ?? GANG_BY_CARD_ID[c.cardId]) === 'blue'));
+    if (ally) m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2,
+      lastEffectNote: 'On Point: Blue Set backup, +2 Hands.' }));
     m = addEvent(before, m, { type: 'ability', sourceId: watcher.instanceId, owner: watcher.owner, lane,
-      targetIds: [watcher.instanceId], note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.` });
+      targetIds: [watcher.instanceId, ...(ally ? [ally.instanceId] : [])],
+      note: `${watcher.name} called out district ${lane + 1}: your next card there costs 1 less Motion.`
+        + (ally ? ` ${ally.name} gained +2 Hands for Blue Set backup.` : '') });
     m = trainWaveAbility(m, watcher.instanceId);
   }
   return m;
@@ -2352,8 +2381,11 @@ function resolveSideOzAbility(m: Match, source: CardInstance, echoed: boolean): 
     const target = highest(m.boards.flat().filter(card => !card.hazard && card.owner === enemy && card.lane !== lane));
     const hit = damage(target, 3);
     const blueCount = own().filter(card => sideOzWaveFactions[card.cardId] === 'Blue Side').length;
-    buff(findCard(m, source.instanceId)!, blueCount, `Crossfire: +${blueCount} Hands from Blue Side allies.`);
-    resolution = `Crossfire ${hit ? 'dealt 3 damage' : 'found no unprotected target'} and gained +${blueCount} Hands.`;
+    const remoteBlueDistricts = new Set(own().filter(card => card.lane !== null && card.lane !== lane
+      && (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue').map(card => card.lane)).size;
+    const gain = blueCount + remoteBlueDistricts;
+    buff(findCard(m, source.instanceId)!, gain, `Crossfire: +${blueCount} from Blue Side allies and +${remoteBlueDistricts} from other Blue Set districts.`);
+    resolution = `Crossfire ${hit ? 'dealt 3 damage' : 'found no unprotected target'} and gained +${gain} Hands.`;
   } else if (source.cardId === 'blueside2') {
     buff(findCard(m, source.instanceId)!, 1, 'Stand Behind Me: +1 Hand; next ally gains Protection.');
     m = modify(m, source.instanceId, card => ({ ...card, blueCoverReady: true }));
@@ -2774,11 +2806,13 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     let succeeded = false;
     let detail = '';
     if (source.cardId === 'cane-corso-red' || source.cardId === 'blue-nose-pit') {
-      m = resolveSquabblehouseDogReveal(m, source);
+      if (!echoed) m = approachSquabblehouseOg(m, source.instanceId);
+      const liveDog = findCard(m, source.instanceId);
+      if (liveDog) m = resolveSquabblehouseDogReveal(m, liveDog, echoed);
       succeeded = findCard(m, source.instanceId)?.squabblehouseEffectRound === m.round;
       const ogId = source.cardId === 'cane-corso-red' ? 'triple-og-red' : 'triple-og-blue';
       detail = succeeded ? `${source.name} found its matching ${ogId} and backed it up.`
-        : `${source.name} waits; its matching OG is not on the board.`;
+        : `${source.name} waits for a support opportunity in its matching OG’s district.`;
     } else if (source.cardId === 'squabblehouse-bus-boy') {
       const passenger = lowest(inLane(m, source.owner, l).filter(card => card.instanceId !== source.instanceId
         && isSquabblehouseStaffCharacter(card)));
@@ -2950,7 +2984,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         + (target ? '; it checked the strongest enemy for -1 Hand.' : '; no enemy was here to check.');
     }
     note(succeeded ? `${source.ability} resolved. ${detail}` : `${source.ability}: ${detail}`);
-    if (succeeded) m = trainWaveAbility(m, source.instanceId);
+    if (succeeded && !['cane-corso-red', 'blue-nose-pit'].includes(source.cardId)) m = trainWaveAbility(m, source.instanceId);
     return !echoed ? { ...m, lastRevealedCardId: source.cardId,
       entranceHistory: [...(m.entranceHistory ?? []).filter(id => id !== source.instanceId), source.instanceId] } : m;
   }
@@ -2971,13 +3005,24 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
     if (id === 'triple-og-blue') {
       const behind = getLaneScoreForMatch(m, inLane(m, source.owner, l), l, source.owner)
         < getLaneScoreForMatch(m, inLane(m, enemy, l), l, enemy);
-      let homage = 0;
+      let homage = 0, blueHomage = 0;
       if (behind) {
-        for (const ally of m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
-          && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character')) {
+        const allies = m.boards.flat().filter(c => !c.hazard && c.owner === source.owner
+          && c.instanceId !== source.instanceId && (c.kind ?? 'character') === 'character');
+        const blueSet = (card: CardInstance) => (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue';
+        // Blue loyalty fills the capped rally before any ordinary ally is taxed.
+        const donors = [...allies.filter(blueSet), ...allies.filter(card => !blueSet(card))];
+        for (const ally of donors) {
+          if (homage >= 4) break;
           const before = findCard(m, ally.instanceId);
-          // Nobody is taxed off the board: an ally at 1 Hand keeps it.
-          if (!before || rawCombatPower(before) < 2 || cannotLoseHands(before)) continue;
+          if (!before) continue;
+          if (blueSet(before)) {
+            homage++; blueHomage++;
+            targetIds.add(before.instanceId);
+            continue;
+          }
+          // Ordinary allies still pay, but never give their last Hand.
+          if (rawCombatPower(before) < 2 || cannotLoseHands(before)) continue;
           const beforePayment = m;
           m = modify(m, ally.instanceId, c => ({ ...c, powerModifier: c.powerModifier - 1,
             lastEffectNote: `${source.ability}: paid 1 Hand to ${source.name}.` }));
@@ -3002,9 +3047,21 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
           }
         }
       }
-      noteFromTail(`${source.ability}: ${behind ? homage ? `the whole side paid up for +${homage} Hands.` : 'the side had nothing to give.' : 'this district was not losing, so no homage was owed.'}`
-        + (sent ? ` ${weakest!.name} was sent to your strongest district with -1 Hand.` : ''));
-      if (!echoed && (homage > 0 || sent)) m = trainWaveAbility(m, source.instanceId);
+      let reinforced = 0;
+      for (const district of ([0, 1, 2] as Lane[]).filter(d => d !== l)) {
+        const ally = lowest(inLane(m, source.owner, district)
+          .filter(card => (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue'));
+        if (!ally) continue;
+        targetIds.add(ally.instanceId);
+        m = modify(m, ally.instanceId, card => ({ ...card, powerModifier: card.powerModifier + 2,
+          lastEffectNote: `${source.ability}: Blue Set reinforcement, +2 Hands.` }));
+        m = grantProtection(m, source, ally.instanceId);
+        reinforced++;
+      }
+      noteFromTail(`${source.ability}: ${behind ? homage ? `collected +${homage} Hands (${blueHomage} from Blue Set without Hands loss; ${homage - blueHomage} paid by other allies).` : 'the side had nothing to give.' : 'this district was not losing, so no homage was owed.'}`
+        + (sent ? ` ${weakest!.name} was sent to your strongest district with -1 Hand.` : '')
+        + (reinforced ? ` Reinforced the weakest Blue Set ally in ${reinforced} other district${reinforced === 1 ? '' : 's'} for +2 Hands and Protection each.` : ''));
+      if (!echoed && (homage > 0 || sent || reinforced > 0)) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'triple-og-red') {
       let taken = 0, respected = 0;
       const lineup = [...inLane(m, source.owner, l).filter(c => c.instanceId !== source.instanceId), ...inLane(m, enemy, l)]
@@ -3037,6 +3094,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         lastEffectNote: `${source.ability}: took ${taken} Hand${taken === 1 ? '' : 's'} off the district.` }));
       noteFromTail(`${source.ability}: ${taken} card${taken === 1 ? '' : 's'} lost a Hand and ${source.name} gained +${taken}.`
         + (respected ? ` ${respected} untouchable card${respected === 1 ? ' was' : 's were'} moved out of respect.` : ''));
+      if (!echoed && (taken > 0 || respected > 0)) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'initiation') {
       m = { ...m, districtTraps: [...(m.districtTraps ?? [])
         .filter(t => !(t.kind === 'initiation' && t.owner === source.owner && t.lane === l)),
@@ -3045,13 +3103,16 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       noteFromTail(`${source.ability}: this district is marked. Your next character here gets put on by your set.`);
     } else if (id === 'block-spinner') {
       const target = highest(inLane(m, enemy, l));
+      const beforeBurn = m;
       if (target) { targetIds.add(target.instanceId); m = step(applyBurn(m, source, target, 1, `${source.ability}: 1 Burn.`)); }
+      const burned = burnLanded(beforeBurn, m, source.instanceId);
       m = { ...m, districtTraps: [...(m.districtTraps ?? [])
         .filter(t => !(t.kind === 'spinner' && t.owner === source.owner && t.lane === l)),
-        { kind: 'spinner' as const, owner: source.owner, lane: l, source, expiresAfterRound: m.round + 2 }] };
+        { kind: 'spinner' as const, owner: source.owner, lane: l, source, expiresAfterRound: m.round + 2, ...(echoed ? { echoed: true } : {}) }] };
       noteFromTail(`${source.ability}: ${target ? `${target.name} took 1 Burn.` : 'nobody was here to burn.'} The block keeps spinning for the next enemy played here.`);
+      if (burned && !echoed) m = trainWaveAbility(m, source.instanceId);
     } else if (id === 'look-out') {
-      m = modify(m, source.instanceId, c => ({ ...c, lookoutReady: true, lastEffectNote: `${source.ability}: watching the block.` }));
+      m = modify(m, source.instanceId, c => ({ ...c, lookoutReady: (c.lookoutCalls ?? 0) < 3 && c.lookoutCallRound !== m.round, lastEffectNote: `${source.ability}: watching the block.` }));
       noteFromTail(`${source.ability}: the next district your opponent plays into is called out; your next card there costs 1 less Motion.`);
     }
     return echoed ? m : { ...m, lastRevealedCardId: source.cardId,
@@ -3307,6 +3368,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       if (ally) {
         const amount = (ally.gangTag ?? GANG_BY_CARD_ID[ally.cardId]) === 'blue' ? 4 : 3;
         addHands(ally, amount, `Blue Side Cover: +${amount} Hands and Protected.`);
+        if (amount === 4) addHands(findCard(m, source.instanceId)!, 1, 'Blue Side Cover: backed Blue Set, +1 Hand.');
         const wasProtected = ally.statuses.protected;
         m = grantProtection(m, source, ally.instanceId);
         succeeded ||= !wasProtected && !!findCard(m, ally.instanceId)?.statuses.protected;
@@ -3319,8 +3381,12 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
         targetIds.add(target.instanceId);
         const beforeDamage = m;
         m = targetEnemyPowerReduction(m, source, target, 2, 'Red Side Retaliation: -2 Hands.');
-        succeeded = directDamageAmount(beforeDamage, m, target) > 0;
-        if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: hit landed, +1 Hand.');
+        const protectionConsumed = beforeDamage.timedEffects.some(effect =>
+          effect.targetInstanceId === target.instanceId
+          && (effect.kind === 'church-protection' || effect.kind === 'salon-protection')
+          && !m.timedEffects.some(remaining => remaining.id === effect.id));
+        succeeded = directDamageAmount(beforeDamage, m, target) > 0 || protectionConsumed;
+        if (succeeded) addHands(findCard(m, source.instanceId)!, 1, 'Red Side Retaliation: damage landed or Protection consumed, +1 Hand.');
       }
     } else if (source.cardId === 'snitch') {
       const target = highest(enemiesHere());
@@ -5270,6 +5336,13 @@ export function nextRound(match: Match): Match {
   m = resolveBuddyGrowthAtRoundStart(m);
   m = sproutBuddyBuds(m);
   m = resolveSquabblehouseRoundStart(m);
+  for (const lookout of m.boards.flat().filter(card => card.cardId === 'look-out' && activeAbility(card)
+    && (card.lookoutCalls ?? 0) < 3 && card.lookoutCallRound !== m.round)) {
+    const hasCrew = m.boards.flat().some(card => !card.hazard && card.owner === lookout.owner
+      && card.instanceId !== lookout.instanceId && (card.gangTag ?? GANG_BY_CARD_ID[card.cardId]) === 'blue');
+    if (hasCrew) m = modify(m, lookout.instanceId, card => ({ ...card, lookoutReady: true,
+      lastEffectNote: 'On Point: Blue Set is posted; watching again this round.' }));
+  }
   const guards = m.boards.flat().filter((card) => abilityCardId(card) === 'wifey' && activeAbility(card));
   for (const guard of guards) {
     m = modify(m, guard.instanceId, (card) => ({ ...card, statuses: { ...card.statuses, protected: true, blocked: false }, lastEffectNote: 'Side Eye refreshed for this round.' }));

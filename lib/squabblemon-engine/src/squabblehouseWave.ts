@@ -16,10 +16,10 @@ export const SQUABBLEHOUSE_WAVE = [
     'On Reveal: Through next round: lock strongest enemy character (no moves/returns); Open Tab stops one legal enemy exit/return/round. Arrivals ignored. Defenses apply; echoes extend expiry, never recharge.'],
   ['waffle-warlord', 'Waffle Warlord', 'Legendary', 'Fire', 5, 5, 'All-Star Hands',
     'On Reveal: Give the weakest other friendly Squabblehouse staff member in each staffed district +1 Hand, or +2 Hands if you have staff in all three districts. Waffle Warlord is excluded from its own bonus.'],
-  ['cane-corso-red', 'Cane Corso (Red)', 'Rare', 'Fire', 2, 2, 'Red-Line Bodyguard',
-    'On Reveal and at each round start: while in your Red Triple OG’s district, the strongest enemy here loses 1 Hand once this round. Walk one adjacent lane toward Red OG at round start. If Red OG is attacked, jump to it from anywhere and tank one counterable attack per round. Disabled or movement-locked dogs cannot jump.'],
+  ['cane-corso-red', 'Cane Corso (Red)', 'Rare', 'Fire', 2, 3, 'Red-Line Bodyguard',
+    'When played, walk one adjacent lane toward your Red Triple OG. On Reveal and at each round start: while in your Red Triple OG’s district, the strongest enemy here loses 1 Hand once this round. Walk one adjacent lane toward Red OG at round start. If Red OG is attacked, jump to it from anywhere and tank one counterable attack per round. Disabled or movement-locked dogs cannot jump.'],
   ['blue-nose-pit', 'Blue-Nose Pit', 'Rare', 'Water', 2, 2, 'Blue-Nose Backup',
-    'On Reveal and at each round start: while in your Blue Triple OG’s district, give it +1 Hand once this round. Walk one adjacent lane toward Blue OG at round start. If Blue OG is attacked, jump to it from anywhere and tank one counterable attack per round. Disabled or movement-locked dogs cannot jump; Blue OG keeps its immunity to Hands loss.'],
+    'When played, walk one adjacent lane toward your Blue Triple OG. On Reveal and at each round start: while in your Blue Triple OG’s district, give it +1 Hand and your weakest Blue Set ally in another district +2 Hands, once this round. Walk one adjacent lane toward Blue OG at round start. If Blue OG is attacked, jump to it from anywhere and tank one counterable attack per round. Disabled or movement-locked dogs cannot jump; Blue OG keeps its immunity to Hands loss.'],
 ] as const;
 
 export const squabblehouseRarityById: Record<string, CardRarity> = Object.fromEntries(

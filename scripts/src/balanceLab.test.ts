@@ -334,3 +334,17 @@ test('high-risk echo probes are owner symmetric and exercise the real resolution
   assert.equal(player.finalSwing, cpu.finalSwing);
   assert.equal(player.effectNotes.some((note) => /Mirror|Act Up/i.test(note)), true);
 });
+
+for (const tier of [1, 2] as const) test(`intermediate balance tier ${tier} preserves the requested training snapshot`, () => {
+  const [deckA, deckB] = createDefaultBalanceDecks();
+  let inspected = false;
+  const policy: BalancePolicy = ({ match, legalPlays }) => {
+    for (const side of ['player', 'cpu'] as const) {
+      assert(match.abilityUpgradeSnapshot[side].every(entry => entry.moveTier === tier));
+    }
+    inspected = true;
+    return legalPlays.find(option => !option.squabble) ?? null;
+  };
+  simulateBalanceMatch({ deckA, deckB, districtSeed: 'intermediate-tier', rotation: 0, tier, seat: 'a-player', policy });
+  assert(inspected);
+});

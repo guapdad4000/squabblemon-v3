@@ -1,0 +1,2763 @@
+{
+  "excludedCardIds": [
+    "guap"
+  ],
+  "hash": "06d8fe6010daabca5291cb499619dc7ce049cebb49c6965baa5cd2ea96b49e92",
+  "version": 41,
+  "decks": [
+    {
+      "id": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "cardIds": [
+        "triple-og-blue",
+        "look-out",
+        "blueside1",
+        "ganger-blue",
+        "blue-nose-pit",
+        "initiation",
+        "waterboy",
+        "alchy",
+        "cognac",
+        "bustdown"
+      ]
+    },
+    {
+      "id": "focused-red-set",
+      "name": "Blood / Red Set",
+      "cardIds": [
+        "triple-og-red",
+        "block-spinner",
+        "redside1",
+        "ganger-red",
+        "cane-corso-red",
+        "initiation",
+        "redneck-evil",
+        "folks",
+        "cognac",
+        "bustdown"
+      ]
+    }
+  ],
+  "summary": {
+    "focused-red-set": {
+      "all": {
+        "games": 64,
+        "score": 0.609375
+      },
+      "greedy": {
+        "games": 32,
+        "score": 0.578125
+      },
+      "seeded": {
+        "games": 32,
+        "score": 0.640625
+      },
+      "tier0": {
+        "games": 32,
+        "score": 0.484375
+      },
+      "tier3": {
+        "games": 32,
+        "score": 0.734375
+      },
+      "a-player": {
+        "games": 32,
+        "score": 0.546875
+      },
+      "b-player": {
+        "games": 32,
+        "score": 0.671875
+      }
+    }
+  },
+  "rows": [
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          6,
+          -5,
+          10
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -3,
+          12,
+          -1
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          8,
+          -11,
+          24
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 137
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -6,
+          0,
+          -11
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 151
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -8,
+          0,
+          15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 98
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -3,
+          -4,
+          -12
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          27,
+          -7,
+          4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 141
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -3,
+          -7,
+          -21
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 141
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          11,
+          -1,
+          -7
+        ],
+        "plays": 16,
+        "passes": 12,
+        "effectEvents": 79
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -15,
+          4,
+          9
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 81
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          17,
+          -1,
+          -11
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 116
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -20,
+          0,
+          7
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 118
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          13,
+          -1,
+          0
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 83
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -10,
+          12,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 90
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 3,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          9,
+          1,
+          15
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 121
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -5,
+          6,
+          -10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 136
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          16,
+          -6,
+          -7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -3,
+          2,
+          6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          19,
+          -4,
+          -14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 132
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -7,
+          -4,
+          14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 121
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          10,
+          -6,
+          -7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 3,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          5,
+          2,
+          7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          28,
+          -6,
+          -9
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 124
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -4,
+          1,
+          5
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 131
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          25,
+          5,
+          -12
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -19,
+          5,
+          0
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          7,
+          11,
+          -12
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 139
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -26,
+          -6,
+          8
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 129
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          23,
+          -8,
+          -8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -20,
+          -2,
+          10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 88
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          28,
+          -15,
+          12
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 128
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -22,
+          -3,
+          4
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 127
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -5,
+          11,
+          -8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          1,
+          -5,
+          -8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          7,
+          14,
+          -10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 117
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -3,
+          -31,
+          6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 120
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -3,
+          -6,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -12,
+          5,
+          -2
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 102
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          14,
+          -2,
+          7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 130
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-a",
+        "districtIds": [
+          "blackout-block",
+          "waff-l-house",
+          "nail-salon"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -7,
+          2,
+          -5
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 121
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          9,
+          17,
+          -16
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 85
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -15,
+          -10,
+          11
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 87
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          39,
+          7,
+          -21
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 117
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -16,
+          -33,
+          31
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 109
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          14,
+          11,
+          -13
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 88
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -26,
+          -5,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 90
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          25,
+          9,
+          -10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-b",
+        "districtIds": [
+          "construction-site",
+          "magic-city",
+          "pirate-radio"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -23,
+          -35,
+          25
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          15,
+          -5,
+          -2
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -6,
+          7,
+          -17
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          15,
+          -5,
+          -3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 128
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -25,
+          3,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          8,
+          -4,
+          -8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -10,
+          2,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          2,
+          0,
+          14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 133
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-c",
+        "districtIds": [
+          "waff-l-house",
+          "mirror-arcade",
+          "night-market"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          13,
+          3,
+          -31
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 128
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -1,
+          -1,
+          12
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -18,
+          -3,
+          10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          9,
+          9,
+          -15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -21,
+          8,
+          -8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 136
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          11,
+          0,
+          -9
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -8,
+          3,
+          3
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          33,
+          11,
+          -21
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 119
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blue-blood-rivalry-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blue-blood-rivalry-d",
+        "districtIds": [
+          "time-square",
+          "bodega",
+          "barbershop"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          1,
+          4,
+          -13
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 130
+      }
+    }
+  ]
+}

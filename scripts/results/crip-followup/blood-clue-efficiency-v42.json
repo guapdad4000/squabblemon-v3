@@ -1,0 +1,5459 @@
+{
+  "excludedCardIds": [
+    "guap"
+  ],
+  "hash": "e3268be35f91b89c98a0e3883bb85ab324bd3e4b8641af5a9432481599be24e2",
+  "version": 42,
+  "decks": [
+    {
+      "id": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "cardIds": [
+        "triple-og-blue",
+        "look-out",
+        "blueside1",
+        "ganger-blue",
+        "blue-nose-pit",
+        "initiation",
+        "waterboy",
+        "alchy",
+        "cognac",
+        "bustdown"
+      ]
+    },
+    {
+      "id": "focused-red-set",
+      "name": "Blood / Red Set",
+      "cardIds": [
+        "triple-og-red",
+        "block-spinner",
+        "redside1",
+        "ganger-red",
+        "cane-corso-red",
+        "initiation",
+        "redneck-evil",
+        "folks",
+        "cognac",
+        "bustdown"
+      ]
+    }
+  ],
+  "summary": {
+    "focused-red-set": {
+      "all": {
+        "games": 128,
+        "score": 0.51171875
+      },
+      "greedy": {
+        "games": 64,
+        "score": 0.4375
+      },
+      "seeded": {
+        "games": 64,
+        "score": 0.5859375
+      },
+      "tier0": {
+        "games": 32,
+        "score": 0.40625
+      },
+      "tier1": {
+        "games": 32,
+        "score": 0.40625
+      },
+      "tier2": {
+        "games": 32,
+        "score": 0.6875
+      },
+      "tier3": {
+        "games": 32,
+        "score": 0.546875
+      },
+      "a-player": {
+        "games": 64,
+        "score": 0.46875
+      },
+      "b-player": {
+        "games": 64,
+        "score": 0.5546875
+      }
+    }
+  },
+  "rows": [
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          22,
+          3,
+          -3
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          0,
+          -8,
+          -1
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          25,
+          -1,
+          -6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 109
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          4,
+          -11,
+          -9
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 107
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          27,
+          -3,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 124
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -9,
+          -14,
+          1
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          30,
+          -4,
+          -3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 139
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -12,
+          -17,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 141
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          14,
+          2,
+          -7
+        ],
+        "plays": 17,
+        "passes": 12,
+        "effectEvents": 87
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -14,
+          8,
+          -6
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          16,
+          5,
+          -12
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 106
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -9,
+          -7,
+          7
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          21,
+          6,
+          -16
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 120
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -10,
+          -1,
+          -13
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 124
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          25,
+          7,
+          -19
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 135
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -8,
+          -1,
+          -17
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 133
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          4,
+          -2,
+          -4
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 87
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -5,
+          4,
+          5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 86
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -1,
+          -5,
+          9
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -5,
+          5,
+          5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          12,
+          -10,
+          -10
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 116
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -1,
+          -5,
+          -3
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 111
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          16,
+          -15,
+          -6
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 131
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -12,
+          -3,
+          6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 135
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          14,
+          -7,
+          -6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 89
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -12,
+          4,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 89
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          10,
+          -6,
+          -5
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 103
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -18,
+          2,
+          8
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 102
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          9,
+          -7,
+          -9
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 114
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -9,
+          -1,
+          15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 119
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          8,
+          -9,
+          -2
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 135
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -6,
+          3,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 131
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          29,
+          -20,
+          -20
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -7,
+          -16,
+          14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          22,
+          -17,
+          -16
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 104
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          12,
+          -18,
+          5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 102
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          35,
+          -21,
+          -19
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 124
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          22,
+          -20,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 119
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          39,
+          -22,
+          -20
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 140
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          1,
+          -22,
+          -3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 137
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          17,
+          -9,
+          -7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 89
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          12,
+          -13,
+          3
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          19,
+          12,
+          -12
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 104
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -2,
+          -14,
+          4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 111
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          13,
+          26,
+          -21
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -20,
+          -4,
+          7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          20,
+          -10,
+          -2
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 140
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -18,
+          -7,
+          6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 140
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          5,
+          -4,
+          -1
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 83
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -5,
+          4,
+          -1
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 82
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          27,
+          0,
+          -6
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 98
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -11,
+          3,
+          2
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          4,
+          -6,
+          5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 112
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -28,
+          6,
+          1
+        ],
+        "plays": 16,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          12,
+          0,
+          -3
+        ],
+        "plays": 16,
+        "passes": 12,
+        "effectEvents": 117
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -25,
+          7,
+          0
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 125
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          23,
+          -4,
+          -7
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 84
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -23,
+          6,
+          3
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 84
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          18,
+          -11,
+          -5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 102
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -38,
+          13,
+          5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 100
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          24,
+          -10,
+          -4
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 114
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -46,
+          17,
+          6
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 114
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          24,
+          -7,
+          -5
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 128
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "greedy",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -35,
+          11,
+          8
+        ],
+        "plays": 18,
+        "passes": 12,
+        "effectEvents": 130
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          27,
+          -4,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 95
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -8,
+          -6,
+          5
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 93
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          17,
+          10,
+          -14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 107
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          0,
+          -21,
+          7
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 109
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 3,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          14,
+          5,
+          2
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -27,
+          -1,
+          17
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 116
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          11,
+          0,
+          -12
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 132
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -15,
+          0,
+          -15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 136
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          15,
+          -3,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -8,
+          6,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          11,
+          -1,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 109
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -21,
+          3,
+          1
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 105
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          4,
+          -3,
+          17
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 120
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -14,
+          -6,
+          14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 115
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          19,
+          23,
+          -27
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 134
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-a",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-a",
+        "districtIds": [
+          "nail-salon",
+          "construction-site",
+          "county-jail"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -27,
+          3,
+          14
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 130
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          3,
+          0,
+          -12
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 97
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -7,
+          -5,
+          22
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          5,
+          0,
+          -15
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 104
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -6,
+          -1,
+          -3
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 99
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          9,
+          2,
+          -5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -6,
+          -6,
+          -3
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 109
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          4,
+          1,
+          -7
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 126
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -25,
+          1,
+          3
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 137
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          8,
+          -15,
+          3
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -6,
+          4,
+          4
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          9,
+          2,
+          -16
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 105
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -9,
+          5,
+          3
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 107
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 3,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          4,
+          1,
+          5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 116
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -33,
+          5,
+          15
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 122
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          12,
+          17,
+          -11
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-b",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-b",
+        "districtIds": [
+          "blackout-block",
+          "dive-bar",
+          "magic-city"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          2,
+          0,
+          -18
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 121
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -4,
+          13,
+          -1
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 88
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -13,
+          12,
+          -6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 89
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          28,
+          -28,
+          1
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 107
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -25,
+          16,
+          15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 103
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          19,
+          10,
+          -6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 119
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -41,
+          10,
+          24
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 112
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          33,
+          -24,
+          -6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 123
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -24,
+          -16,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 120
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          9,
+          -12,
+          -4
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 92
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -21,
+          12,
+          5
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 90
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          19,
+          20,
+          -17
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 100
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -17,
+          -23,
+          10
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 104
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          18,
+          38,
+          -11
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 122
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -25,
+          -27,
+          15
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 125
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          24,
+          0,
+          0
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 140
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-c",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-c",
+        "districtIds": [
+          "o-block",
+          "rooftop-garden",
+          "the-trap"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -28,
+          8,
+          6
+        ],
+        "plays": 19,
+        "passes": 12,
+        "effectEvents": 135
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          8,
+          0,
+          -10
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -19,
+          3,
+          5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 96
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          19,
+          -4,
+          -7
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 106
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -4,
+          10,
+          2
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 106
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -6,
+          11,
+          5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 127
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -15,
+          9,
+          5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 122
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          25,
+          4,
+          -9
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 135
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 0,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 0,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -7,
+          10,
+          -1
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 125
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          9,
+          -10,
+          -10
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 98
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 0,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 0,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "player",
+        "logicalWinner": "b",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -15,
+          10,
+          1
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 94
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "cpu",
+        "logicalWinner": "b",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          8,
+          -4,
+          -4
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 111
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 1,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 1,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "draw",
+        "logicalWinner": "draw",
+        "playerDistricts": 1,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          -13,
+          0,
+          9
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 110
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 0,
+        "laneMargins": [
+          12,
+          0,
+          1
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 120
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 2,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 2,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 0,
+        "cpuDistricts": 3,
+        "laneMargins": [
+          -10,
+          -1,
+          -5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 122
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "a-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "a-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-blue-set",
+        "cpuDeckId": "focused-red-set",
+        "winner": "player",
+        "logicalWinner": "a",
+        "playerDistricts": 2,
+        "cpuDistricts": 1,
+        "laneMargins": [
+          17,
+          6,
+          -6
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 131
+      }
+    },
+    {
+      "opponent": "focused-red-set",
+      "policy": "seeded",
+      "seed": "blood-repair-paired-d",
+      "rotation": 5,
+      "tier": 3,
+      "seat": "b-player",
+      "result": {
+        "telemetrySchemaVersion": 2,
+        "telemetrySemantics": {
+          "squabbles": "Confirmed owner-consumption transitions in play replay frames; unknown plays are counted separately.",
+          "legacyAbilityCounters": "abilityTriggers and abilitySuccesses are legacy mixed event counters, including upgrades; never base-ability reliability.",
+          "abilityEvidence": "Source-attributed emitted events only. No observed effect is not a failed ability; unlogged passives and eligibility are unknown.",
+          "abilitySuccessRate": "Unavailable: emitted events do not prove base-ability attempts or eligible opportunities."
+        },
+        "districtSeed": "blood-repair-paired-d",
+        "districtIds": [
+          "bodega",
+          "the-subway",
+          "dive-bar"
+        ],
+        "rotation": 5,
+        "tier": 3,
+        "seat": "b-player",
+        "deckAId": "focused-blue-set",
+        "deckBId": "focused-red-set",
+        "playerDeckId": "focused-red-set",
+        "cpuDeckId": "focused-blue-set",
+        "winner": "cpu",
+        "logicalWinner": "a",
+        "playerDistricts": 1,
+        "cpuDistricts": 2,
+        "laneMargins": [
+          -8,
+          -9,
+          5
+        ],
+        "plays": 20,
+        "passes": 12,
+        "effectEvents": 142
+      }
+    }
+  ]
+}

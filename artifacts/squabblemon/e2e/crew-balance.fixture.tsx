@@ -5,6 +5,7 @@ import { Battle } from '../src/components/Battle';
 import { CardInspector } from '../src/components/CardInspector';
 import { buildReplayFrame, type PresentationEffect } from '../src/components/PlayLoop';
 import {
+  createAbilityUpgradeSnapshot,
   createCardInstance,
   createMatch,
   getEffectiveCardPower,
@@ -45,9 +46,39 @@ function counterMatch() {
   return match;
 }
 
+function rivalryMatch(blue = false) {
+  const match = createMatch('block', 'block');
+  match.round = 3;
+  match.playerMotion = 9;
+  match.cpuMotion = 9;
+  const leader = blue ? 'triple-og-blue' : 'triple-og-red';
+  match.playerHand = [createCardInstance(leader, 'player', 'rivalry-ui', 0)];
+  match.cpuHand = [];
+  match.boards = blue ? [[], [onBoard('look-out', 'player', 1, 1)], []] : [[], [], [onBoard('hooper', 'cpu', 2, 1)]];
+  match.abilityUpgradeSnapshot = createAbilityUpgradeSnapshot([leader], [], {
+    player: { [leader]: { xp: 4500, level: 10, moveTier: 3 } },
+  });
+  return match;
+}
+
+function bloodBuffMatch() {
+  const match = createMatch('block', 'block');
+  match.round = 3;
+  match.playerMotion = 9;
+  match.playerHand = ['ganger-red', 'cane-corso-red'].map((id, i) => createCardInstance(id, 'player', 'blood-base', i));
+  match.cpuHand = [];
+  const target = onBoard('hooper', 'cpu', 2, 10);
+  target.statuses.protected = true;
+  match.boards = [[], [], [target, onBoard('triple-og-red', 'player', 2, 11)]];
+  match.timedEffects.push({ id: 'base-cover', kind: 'church-protection', owner: 'cpu',
+    sourceInstanceId: target.instanceId, targetInstanceId: target.instanceId, lane: 2,
+    startsAtRound: 1, expiresAtRound: 99, expiration: 'match-complete' });
+  return match;
+}
+
 function Fixture() {
-  const mode = new URLSearchParams(location.search).get('mode') === 'counter' ? 'counter' : 'detective';
-  const [live, setLive] = useState<Match>(() => mode === 'counter' ? counterMatch() : detectiveMatch());
+  const mode = new URLSearchParams(location.search).get('mode') ?? 'detective';
+  const [live, setLive] = useState<Match>(() => mode === 'blood-buffs' ? bloodBuffMatch() : mode === 'crip' ? rivalryMatch(true) : mode === 'blood' ? rivalryMatch() : mode === 'counter' ? counterMatch() : detectiveMatch());
   const [visual, setVisual] = useState<Match>(live);
   const [selected, setSelected] = useState<string | null>(null);
   const [lane, setLane] = useState<Lane | null>(null);
@@ -96,6 +127,12 @@ function Fixture() {
     <output
       data-testid="crew-balance-state"
       data-mode={mode}
+      data-ganger-power={live.boards.flat().find(card => card.cardId === 'ganger-red')?.powerModifier ?? ''}
+      data-corso-lane={live.boards.flat().find(card => card.cardId === 'cane-corso-red')?.lane ?? ''}
+      data-rival-protected={rival?.statuses.protected ? 'true' : 'false'}
+      data-rival-modifier={rival?.powerModifier ?? ''}
+      data-blood-power={live.boards.flat().find(card => card.cardId === 'triple-og-red')?.powerModifier ?? ''}
+      data-blood-upgrades={live.effectLog.filter(event => event.abilityMetadata?.sourceCardId === 'triple-og-red').length}
       data-sherlock-power={sherlock ? getEffectiveCardPower(sherlock) : ''}
       data-watson-power={watson ? getEffectiveCardPower(watson) : ''}
       data-cancellation-targets={cancellation?.targets.map(target => target.cardInstanceId).join(',') ?? ''}

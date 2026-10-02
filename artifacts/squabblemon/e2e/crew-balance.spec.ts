@@ -124,3 +124,49 @@ test('coherent Counterplay mounted battle converts Nerd silence into both leader
   await expectReachable(page.locator('.battle-actions'), page);
   await page.screenshot({ path: `../../screenshots/four-crews-counterplay-${testInfo.project.name}.png`, fullPage: true });
 });
+
+test('Blood trained reveal pays all three upgrades in the mounted battle and replay', async ({ page }) => {
+  await page.goto(appPath('/e2e/crew-balance.fixture.html?mode=blood'));
+  await playCard(page, 'triple-og-red', 2);
+  await expect(page.getByTestId('crew-balance-state')).toHaveAttribute('data-blood-power', '4');
+  await expect(page.getByTestId('crew-balance-state')).toHaveAttribute('data-blood-upgrades', '3');
+  const red = page.locator('[data-card-zone="board"][data-card-id="triple-og-red"]');
+  await expect(red).toHaveAttribute('data-card-power', '7');
+  await page.getByLabel('Battle menu').click();
+  await page.getByTestId('button-battle-history').click();
+  const payout = page.getByTestId('battle-history').locator('li').filter({ hasText: '+1 Hand (once per match)' }).first();
+  await payout.getByRole('button', { name: 'Replay step by step' }).click();
+  await expect(page.getByTestId('replay-controls')).toBeVisible();
+  await page.getByLabel('Battle menu').click();
+  await page.getByRole('button', { name: 'After' }).click();
+  await expect(red).toBeVisible();
+  await page.getByRole('button', { name: 'Return to live battle' }).click();
+  await expect(red).toHaveAttribute('data-card-power', '7');
+});
+
+
+test('Crip leader shows four Motion and grants two Hands plus Protection in mounted battle', async ({ page }) => {
+  await page.goto(appPath('/e2e/crew-balance.fixture.html?mode=crip'));
+  await expect(page.locator('[data-card-zone="hand"][data-card-id="triple-og-blue"]')).toHaveAttribute('data-card-cost', '4');
+  await playCard(page, 'triple-og-blue', 0);
+  await expect(page.locator('[data-card-zone="board"][data-card-id="triple-og-blue"]')).toHaveAttribute('data-card-power', '9');
+  const ally = page.locator('[data-card-zone="board"][data-card-id="look-out"]');
+  await expect(ally).toHaveAttribute('data-card-power', '4');
+  await ally.click();
+  await expect(page.getByRole('dialog')).toContainText(/Protected|Protection/i);
+});
+
+test('Blood base buffs consume cover and bring the three-Hands dog to its OG', async ({ page }) => {
+  await page.goto(appPath('/e2e/crew-balance.fixture.html?mode=blood-buffs'));
+  const state = page.getByTestId('crew-balance-state');
+  await expect(page.locator('[data-card-zone="hand"][data-card-id="cane-corso-red"]')).toHaveAttribute('data-card-power', '3');
+  await playCard(page, 'ganger-red', 2);
+  await expect(state).toHaveAttribute('data-ganger-power', '1');
+  await expect(state).toHaveAttribute('data-rival-protected', 'false');
+  await expect(state).toHaveAttribute('data-rival-modifier', '0');
+  await expect(page.locator('[data-card-zone="board"][data-card-id="ganger-red"]')).toHaveAttribute('data-card-power', '5');
+  await playCard(page, 'cane-corso-red', 1);
+  await expect(state).toHaveAttribute('data-corso-lane', '2');
+  await expect(state).toHaveAttribute('data-rival-modifier', '-1');
+  await expect(page.locator('[data-card-zone="board"][data-card-id="cane-corso-red"]')).toBeVisible();
+});

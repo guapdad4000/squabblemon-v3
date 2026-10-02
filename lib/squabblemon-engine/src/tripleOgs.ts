@@ -31,7 +31,7 @@ export const CANNOT_LOSE_HANDS_CARD_IDS = ['blueside1', 'triple-og-blue'] as con
 
 const definitions = [
   ['triple-og-blue', 'triple-og-blue', 'CLUE COOKY', 'Mythical', 'Water', 4, 6, 'Homage', 'character',
-    "Only playable in the left district, even when its location adds Motion or the lane is locked. On Reveal: If you are losing this district, every other friendly character on the board pays homage — each gives up 1 Hand and CLUE COOKY takes all of it. Then send the weakest enemy here to your strongest district with -1 Hand. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
+    "Only playable in the left district, even when its location adds Motion or the lane is locked. On Reveal: If you are losing this district, collect up to +4 Hands in homage per reveal. Other friendly Blue Set characters each contribute +1 without losing Hands and count first; other friendly characters pay 1 Hand each toward the remaining total, keeping at least 1. Then send the weakest enemy here to your strongest district with -1 Hand. Give your weakest Blue Set ally in each other district +2 Hands and Protection. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
     'Pressure'],
   ['triple-og-red', 'triple-og-red', 'RED PUNCH', 'Mythical', 'Fire', 4, 3, 'Roll Call', 'character',
     "Only playable in the right district, even when its location adds Motion or the lane is locked. On Reveal: Give every other character in this district, allies included, -1 Hand, and gain +1 Hand for each one that takes it. Anyone RED PUNCH cannot touch is moved to another district out of respect. This ability cannot be Silenced.",
@@ -43,7 +43,7 @@ const definitions = [
     'On Reveal: Put 1 Burn on one enemy here, and leave the block spinning: the next enemy played here takes 1 Burn too.',
     'Disruption'],
   ['look-out', 'look-out', 'LOOK OUT', 'Epic', 'Air', 1, 2, 'On Point', 'character',
-    'On Reveal: Watch the block. The next district your opponent plays into is called out, and your next card there costs 1 less Motion.',
+    'On Reveal: Watch the block. The next district your opponent plays into is called out, and your next card there costs 1 less Motion. When you make the call, give your weakest other Blue Set ally +2 Hands. At round start, watch again if you have another Blue Set ally. Maximum one call per round and three calls per match.',
     'Tempo'],
 ] as const;
 
@@ -73,7 +73,7 @@ export const tripleOgCards: Record<string, Card> = Object.fromEntries(definition
         : engineId === 'look-out'
         ? 'Once per match, after calling the enemy district, this card gains +1 Hand.'
         : engineId === 'triple-og-blue'
-        ? 'Once per match, after collecting homage or displacing an enemy, this card gains +1 Hand.'
+        ? 'Once per match, after collecting homage, displacing an enemy, or reinforcing Blue Set, this card gains +1 Hand.'
         : 'After the base ability succeeds, this card gains +1 Hand.',
       unlockLevel, effect: tripleOgUpgradeEffects[engineId][index],
     })),

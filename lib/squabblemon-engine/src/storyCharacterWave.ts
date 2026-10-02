@@ -2,10 +2,10 @@ import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
 
 /** Story character cards are also regular collectible cards for saved crews. */
 export const STORY_CHARACTER_WAVE = [
-  ['ganger-blue', 'Ganger Blue', 'Epic', 'Water', 3, 3, 'Blue Side Cover',
-    'On Reveal: Give your weakest other ally in another district +3 Hands and Protection (+4 Hands if it is Blue Set). If there is no other ally in another district, gain +1 Hand.', 'Support'],
+  ['ganger-blue', 'Ganger Blue', 'Epic', 'Water', 2, 3, 'Blue Side Cover',
+    'On Reveal: Give your weakest other ally in another district +3 Hands and Protection (+4 Hands if it is Blue Set, and gain +1 Hand yourself). If there is no other ally in another district, gain +1 Hand.', 'Support'],
   ['ganger-red', 'Ganger Red', 'Epic', 'Fire', 3, 4, 'Red Side Retaliation',
-    'On Reveal: Deal 2 damage to the strongest enemy here. If damage lands, gain +1 Hand.', 'Disruption'],
+    'On Reveal: Deal 2 damage to the strongest enemy here. If damage lands or this attack consumes Protection, gain +1 Hand.', 'Disruption'],
   ['snitch', 'Snitch', 'Mythical', 'Dark', 3, 3, 'Loose Lips',
     'On Reveal: Silence the strongest enemy here. If it is already Silenced, Weaken it instead. Protection and immunity can block the effect.', 'Disruption'],
   ['cracked-head', 'Cracked Head', 'Legendary', 'Earth', 5, 5, 'Block Crowned',

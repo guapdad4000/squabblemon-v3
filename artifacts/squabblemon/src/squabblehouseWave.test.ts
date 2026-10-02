@@ -66,7 +66,7 @@ test('Squabblehouse wave definitions expose all nine playable identities, budget
     'squabblehouse-bus-boy': ['Uncommon', 1, 2, 'Water'],
     'squabblehouse-cashier': ['Rare', 2, 3, 'Earth'],
     'waffle-warlord': ['Legendary', 5, 5, 'Fire'],
-    'cane-corso-red': ['Rare', 2, 2, 'Fire'],
+    'cane-corso-red': ['Rare', 2, 3, 'Fire'],
     'blue-nose-pit': ['Rare', 2, 2, 'Water'],
   };
   for (const id of IDS) {
@@ -120,10 +120,7 @@ test('dogs support their OG only after reaching its district', () => {
     match = cast(match, dogId, 'player', startLane, 3);
     const dog = find(match, dogId)!;
     assert.equal(dog.squabblehouseEffectRound, undefined, 'remote On Reveal does not support the OG');
-    match = beginNextRound(match);
-    assert.equal(findInstance(match, dog.instanceId)?.lane, 1);
-    assert.equal(findInstance(match, dog.instanceId)?.squabblehouseEffectRound, undefined,
-      'a dog still walking cannot buff or attack remotely');
+    assert.equal(findInstance(match, dog.instanceId)?.lane, 1, 'reveal approaches by one district');
     match = beginNextRound(match);
     assert.equal(findInstance(match, dog.instanceId)?.lane, ogLane);
     assert.equal(findInstance(match, dog.instanceId)?.squabblehouseEffectRound, match.round,
@@ -190,7 +187,7 @@ test('Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn 
   match = withBoard(match, og, dog);
   const after = cast(match, 'griddle-master', 'player', 2);
   assert.equal(findInstance(after, og.instanceId)?.powerModifier, 0, 'the OG remains protected');
-  assert.equal(findInstance(after, dog.instanceId), undefined, '2 damage destroys the 2-Hands bodyguard');
+  assert.equal(findInstance(after, dog.instanceId), undefined, '3 damage destroys the 3-Hands bodyguard');
   const jump = after.effectLog.find(event => event.cardInstanceId === dog.instanceId && event.kind === 'move');
   assert.ok(jump, 'emergency movement is a canonical movement event');
   assert.equal(jump.replay.before.boards.flat().find(card => card.instanceId === dog.instanceId)?.lane, 0);
@@ -201,7 +198,7 @@ test('Red dog leaps two lanes to intercept one complete Griddle damage-and-Burn 
   assert.ok(guardHit, 'damage event names the real dog recipient');
   assert.ok(guardHit.targets.some(target => target.cardInstanceId === og.instanceId),
     'the same event names the protected OG');
-  assert.equal(guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)?.before?.power, 2);
+  assert.equal(guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)?.before?.power, 3);
   assert.equal(guardHit.targets.find(target => target.cardInstanceId === dog.instanceId)?.after, null);
 });
 
@@ -253,15 +250,14 @@ test('Blue dog grants Blue OG once per round; OG Hands-loss immunity remains aut
   match = withBoard(match, og);
   match = cast(match, 'blue-nose-pit', 'player', 2, 3);
   assert.equal(findInstance(match, og.instanceId)?.powerModifier, 0);
-  assert.equal(find(match, 'blue-nose-pit')?.lane, 2, 'the On Reveal bonus does not teleport it');
+  assert.equal(find(match, 'blue-nose-pit')?.lane, 1, 'playing the dog advances only one adjacent lane');
   const blueHandsBeforeRoundTwo = findInstance(match, og.instanceId)?.powerModifier ?? 0;
   match = beginNextRound(match);
-  assert.equal(find(match, 'blue-nose-pit')?.lane, 1);
-  assert.equal(findInstance(match, og.instanceId)?.powerModifier, blueHandsBeforeRoundTwo,
-    'a dog still travelling does not buff the OG');
+  assert.equal(find(match, 'blue-nose-pit')?.lane, 0);
+  assert.equal(findInstance(match, og.instanceId)?.powerModifier, blueHandsBeforeRoundTwo + 1,
+    'the dog supports its OG upon arrival at round start');
   const blueHandsBeforeRoundThree = findInstance(match, og.instanceId)?.powerModifier ?? 0;
   match = beginNextRound(match);
-  assert.equal(find(match, 'blue-nose-pit')?.lane, 0);
   assert.equal(findInstance(match, og.instanceId)?.powerModifier, blueHandsBeforeRoundThree + 1);
 
   const redSource = unit('cane-corso-red', 'cpu', 2, 4);

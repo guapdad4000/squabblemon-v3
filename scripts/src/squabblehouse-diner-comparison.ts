@@ -257,7 +257,7 @@ export function assertCompleteBlock(
       throw new Error(`${schedule} raw match has wrong crew/opponent identity or telemetry schema`);
     }
     if (!expectedSeeds.includes(result.districtSeed) || !expectedRotationSet.has(result.rotation)
-      || !tiers.includes(result.tier) || !(['a-player', 'b-player'] as const).includes(result.seat)) {
+      || !(tiers as readonly number[]).includes(result.tier) || !(['a-player', 'b-player'] as const).includes(result.seat)) {
       throw new Error(`${schedule} raw match has an unexpected seed, rotation, tier, or seat`);
     }
     const key = caseKey(result);

@@ -51,13 +51,14 @@ function cover(m: Match, c: CardInstance) {
 }
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
-test('crew parity ships under balance/rules 36 without changing any printed cost or Hands', () => {
-  assert.equal(CARD_BALANCE_VERSION, 36);
-  assert.equal(ONLINE_RULES_VERSION, 36);
+test('crew parity rules 44 preserves other stats outside approved Ganger Blue and Corso buffs', () => {
+  assert.equal(CARD_BALANCE_VERSION, 44);
+  assert.equal(ONLINE_RULES_VERSION, 44);
   assert.equal(frozen.balanceVersion, 35);
   for (const [id, old] of Object.entries(frozen.cards) as [string, { cost: number; power: number }][]) {
-    assert.equal(cards[id].cost, old.cost, `${id} Motion`);
-    assert.equal(cards[id].power, old.power, `${id} printed Hands`);
+    const discounted: Record<string, number> = { 'ganger-blue': 2 };
+    assert.equal(cards[id].cost, discounted[id] ?? old.cost, `${id} Motion`);
+    assert.equal(cards[id].power, id === 'cane-corso-red' ? 3 : old.power, `${id} printed Hands`);
   }
 });
 
@@ -220,10 +221,10 @@ test('Blue-Nose Pit first delayed OG support trains once, with OG +1 and no dog 
     const og = cast(dog.after, 'triple-og-blue', owner, 0);
     const supported = advance(og.after);
     assert.equal(find(supported, dog.source).lane, 0);
-    assert.equal(find(supported, dog.source).powerModifier, tier);
+    assert.equal(find(supported, dog.source).powerModifier, tier + 2);
     assert.equal(find(supported, og.source).powerModifier, 1);
     const again = advance(supported);
-    assert.equal(find(again, dog.source).powerModifier, tier, 'later support cannot repeat first-success training');
+    assert.equal(find(again, dog.source).powerModifier, tier + 2, 'later support cannot repeat first-success training');
     assert.equal(find(again, og.source).powerModifier, 2, 'base OG support remains once per round');
   }
 });

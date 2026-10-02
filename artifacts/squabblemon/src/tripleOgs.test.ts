@@ -165,14 +165,14 @@ test('home-side OGs waive only Corrupt Church Motion while preserving other cost
     const { source, match } = build(cardId, 'corrupt-church');
     match.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
       laneLocks: [{ owner: 'player', lanes: [homeLane] }] };
-    assert.equal(getLegalCardCost(match, 'player', source, homeLane), 4);
+    assert.equal(getLegalCardCost(match, 'player', source, homeLane), cards[cardId].cost);
     const explanation = getCardCostExplanation(match, 'player', source, homeLane);
     assert.match(explanation, /Corrupt Church tithe ignored for home-side Triple OG/);
     assert.doesNotMatch(explanation, /\+1 Corrupt Church tithe/);
     assert(canAffordSelection(match, 'player', source.instanceId, homeLane),
-      'home lane ignores its lock and location tithe at the printed 4-Motion cost');
+      'home lane ignores its lock and location tithe at the printed Motion cost');
     const after = playTurnCard(match, 'player', source.instanceId, homeLane);
-    assert.equal(after.playerMotion, 0, 'the home-side OG enters at exactly four Motion');
+    assert.equal(after.playerMotion, 4 - cards[cardId].cost, 'the home-side OG pays its printed Motion');
 
     const unlocked = { ...match, storyRuntime: undefined };
     for (const regularId of ['hooper', 'blueside1', 'redside2']) {
