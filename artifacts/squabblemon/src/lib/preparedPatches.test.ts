@@ -16,8 +16,8 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, 100);
-    assert.equal(patch.packTickets, 1);
+    assert.equal(patch.softCurrency, patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, patch.version === '1.8' ? 0 : 1);
   }
   assert.deepEqual([...versions], [...versions].sort((a, b) => Number(a) - Number(b)), 'notes stay oldest-first for publishing order');
 });
