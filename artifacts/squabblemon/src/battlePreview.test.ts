@@ -30,25 +30,32 @@ test('preview respects unaffordable choices and includes the armed Squabble', ()
 });
 
 for (const [cardId, homeLane] of [['triple-og-blue', 0], ['triple-og-red', 2]] as const) {
-  test(`${cardId} selection previews only its legal district without throwing or changing the live match`, () => {
+  test(`${cardId} selection previews its home district and rejects off-side placement`, () => {
     const card = createCardInstance(cardId, 'player', 'og-preview', 0);
-    const ally = { ...createCardInstance('hooper', 'player', 'og-preview', 1), lane: 1 as const };
+    const ally = { ...createCardInstance('hooper', 'player', 'og-preview', 1), lane: homeLane };
     const enemy = { ...createCardInstance('oink', 'cpu', 'og-preview', 2), lane: homeLane, powerModifier: 20 };
     const match: Match = { ...createMatch('block', 'combo'), round: 3, playerMotion: 8,
-      playerHand: [card], boards: [homeLane === 0 ? [enemy] : [], [ally], homeLane === 2 ? [enemy] : []] };
+      playerHand: [card], boards: ([0, 1, 2] as Lane[]).map(lane => lane === homeLane ? [ally, enemy] : []) as Match['boards'] };
     const before = JSON.stringify(match);
     // Battle computes all three previews immediately on card selection, before
     // the player chooses a district. Reproduce that exact rendering input.
     const previews = ([0, 1, 2] as Lane[]).map(lane => previewBattlePlay(match, card.instanceId, lane));
     for (const lane of [0, 1, 2] as Lane[]) {
       if (lane === homeLane) {
-        assert(previews[lane], 'the legal district keeps its real effect preview');
+        assert(previews[lane], 'the assigned home district keeps its real effect preview');
         assert.deepEqual(previews[lane]!.after, getDistrictResults(playTurnCard(match, 'player', card.instanceId, lane)));
       } else {
-        assert.equal(previews[lane], null, 'illegal districts have no preview');
+        assert.equal(previews[lane], null, 'other-side districts cannot be previewed');
       }
     }
     assert.equal(JSON.stringify(match), before, 'preview cannot mutate the live match');
     assert.equal(previewBattlePlay({ ...match, playerMotion: 0 }, card.instanceId, homeLane), null);
+
+    const locked = { ...match, storyRuntime: { activePhaseIndex: 0, appliedEffectIds: [],
+      lanePowerBonuses: [], laneLocks: [{ owner: 'player' as const, lanes: [homeLane] }] } };
+    assert(previewBattlePlay(locked, card.instanceId, homeLane), 'a mythical OG retains its effect preview in a locked home lane');
+    const ordinary = createCardInstance('hooper', 'player', 'og-preview', 3);
+    assert.equal(previewBattlePlay({ ...locked, playerHand: [ordinary] }, ordinary.instanceId, homeLane), null,
+      'ordinary card previews remain blocked by the same lane lock');
   });
 }

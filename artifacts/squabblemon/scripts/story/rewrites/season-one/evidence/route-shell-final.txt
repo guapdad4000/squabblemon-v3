@@ -1,0 +1,35 @@
+
+Running 2 tests using 1 worker
+
+[1/2] [chromium-phone] › e2e/story-route-shell.spec.ts:132:1 › Player, rear-view listening pose and Rae render in the mounted Season One route
+  1) [chromium-phone] › e2e/story-route-shell.spec.ts:132:1 › Player, rear-view listening pose and Rae render in the mounted Season One route 
+
+    AssertionError: The expression evaluated to a falsy value:
+
+      assert(castCase.index >= 0)
+
+
+      143 |   const artifactPath = new URL(String(testInfo.project.use.baseURL)).pathname.replace(/\/+$/, "");
+      144 |   for (const [caseIndex, castCase] of cases.entries()) {
+    > 145 |     assert(castCase.index >= 0);
+          |     ^
+      146 |     await page.unrouteAll();
+      147 |     const api = makeStoryApi(page);
+      148 |     const base = api.campaign();
+        at /home/runner/workspace/artifacts/squabblemon/e2e/story-route-shell.spec.ts:145:5
+
+    Error Context: test-results/story-route-shell-Player-r-d1c5f-he-mounted-Season-One-route-chromium-phone/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/story-route-shell-Player-r-d1c5f-he-mounted-Season-One-route-chromium-phone/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/story-route-shell-Player-r-d1c5f-he-mounted-Season-One-route-chromium-phone/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/2] [chromium-phone] › e2e/story-route-shell.spec.ts:385:1 › mounted story route saves, resumes, replays and retries safely at 768x1024
+  1 failed
+    [chromium-phone] › e2e/story-route-shell.spec.ts:132:1 › Player, rear-view listening pose and Rae render in the mounted Season One route 
+  1 passed (55.4s)

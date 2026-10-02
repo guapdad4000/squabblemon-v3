@@ -7,7 +7,7 @@ import { PlayerLevelCelebration } from '../../components/AccountRewards';
 import { CityHeader } from '../../components/venue/CityHeader';
 import { rewardReceipts } from '../../lib/rewardReceipts';
 import { CosmeticProvider } from '../../components/CosmeticContext';
-import { RewardReveal } from '../../components/RewardReveal';
+import { RewardRevealGate } from '../../components/RewardRevealGate';
 import { clearAfterSignIn, e2eAuthEnabled, useAppAuth } from '../../lib/auth';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { readPreviewDecks } from '../../lib/previewDecks';
@@ -122,7 +122,7 @@ function GameRoutes({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     <SocialProvider key={bootstrap.profile.id} accountId={bootstrap.profile.id} enabled={bootstrap.profile.onboardingStep === 'complete'}>
     <CosmeticProvider profile={bootstrap.profile}>
     <NotificationProvider key={bootstrap.profile.id} bootstrap={bootstrap}>
-    <RewardReveal />
+    <RewardRevealGate />
     <PlayerLevelCelebration profile={bootstrap.profile} />
     <Suspense fallback={<LoadingScreen phase="scene" />}>
     <Switch>

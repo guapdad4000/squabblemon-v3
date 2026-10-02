@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, cardCatalog, catalogCardById, validateCardAbilityUpgrades } from './data';
+import { DISTRICT_CATALOG, createDistrictSnapshot, type DistrictSnapshot } from '../../../lib/squabblemon-engine/src/districts';
+import { isMythicalTripleOg, TRIPLE_OG_LANE } from '../../../lib/squabblemon-engine/src/tripleOgs';
 import { STREET_PACK_RARITY_WEIGHTS } from '../../../lib/squabblemon-engine/src/packRules';
-import { createMatch, createCardInstance, playTurnCard, getEffectiveCardPower, getCharacterDistrictMarks,
+import { canAffordSelection, createMatch, createCardInstance, playTurnCard, getEffectiveCardPower, getCharacterDistrictMarks,
+  getCardCostExplanation, getDistrictResults, getLegalCardCost,
   type Match, type Owner, type Lane, type CardInstance } from './gameEngine';
 
 const blank = (): Match => ({ ...createMatch('block', 'block'), round: 3, playerMotion: 9, cpuMotion: 9,
@@ -19,6 +22,11 @@ function cast(m: Match, id: string, lane: Lane, owner: Owner = 'player') {
 }
 
 test('the Triple OG set ships as a complete, pullable catalog wave', () => {
+  assert.deepEqual(TRIPLE_OG_LANE, { 'triple-og-blue': 0, 'triple-og-red': 2 });
+  assert.equal(isMythicalTripleOg('triple-og-blue'), true);
+  assert.equal(isMythicalTripleOg('triple-og-red'), true);
+  assert.equal(isMythicalTripleOg('blueside1'), false);
+  assert.equal(isMythicalTripleOg('redside2'), false);
   validateCardAbilityUpgrades();
   const expected: Record<string, [string, string, number, number]> = {
     'triple-og-blue': ['CLUE COOKY', 'Mythical', 4, 6],
@@ -42,14 +50,182 @@ test('the Triple OG set ships as a complete, pullable catalog wave', () => {
   assert.equal(cardCatalog.filter(card => card.faction === 'Triple OGs').length, 5);
 });
 
-test('each Triple OG only sets up on their own side of the board', () => {
+test('mythical Triple OGs remain on their assigned board sides', () => {
   const m = blank();
-  assert.throws(() => cast(m, 'triple-og-blue', 1), /left district/);
-  assert.throws(() => cast(m, 'triple-og-blue', 2), /left district/);
-  assert.throws(() => cast(m, 'triple-og-red', 0), /right district/);
-  assert.throws(() => cast(m, 'triple-og-red', 1), /right district/);
-  assert.equal(find(cast(m, 'triple-og-blue', 0), 'triple-og-blue').lane, 0);
-  assert.equal(find(cast(m, 'triple-og-red', 2), 'triple-og-red').lane, 2);
+  for (const [id, homeLane, otherLanes, side] of [
+    ['triple-og-blue', 0, [1, 2], 'left'],
+    ['triple-og-red', 2, [0, 1], 'right'],
+  ] as const) {
+    assert.equal(find(cast(m, id, homeLane), id).lane, homeLane);
+    for (const lane of otherLanes as readonly Lane[]) {
+      const source = createCardInstance(id, 'player', 'side-test', lane);
+      const candidate = { ...m, playerHand: [source] };
+      assert.equal(canAffordSelection(candidate, 'player', source.instanceId, lane), false);
+      assert.throws(() => playTurnCard(candidate, 'player', source.instanceId, lane), new RegExp(`${side} district`));
+    }
+  }
+});
+
+test('home-side Triple OG reveals resolve in story-scheduled, runtime-locked, and closed districts', () => {
+  const snapshot = createDistrictSnapshot('triple-og-locks');
+  const location = (id: string) => DISTRICT_CATALOG.find(district => district.id === id)!;
+  const runtime = () => ({
+    plays: { player: [0, 0, 0] as [number, number, number], cpu: [0, 0, 0] as [number, number, number] },
+    roundPlays: { player: [0, 0, 0] as [number, number, number], cpu: [0, 0, 0] as [number, number, number] },
+    trailing: { player: [false, false, false] as [boolean, boolean, boolean], cpu: [false, false, false] as [boolean, boolean, boolean] },
+    trappedCardIds: [], detainedCardIds: [],
+  });
+  for (const [id, homeLane] of [['triple-og-blue', 0], ['triple-og-red', 2]] as const) {
+    for (const lockKind of ['scheduled', 'runtime', 'close-lane'] as const) {
+      const source = createCardInstance(id, 'player', `locked-${lockKind}`, homeLane);
+      const boards: Match['boards'] = [[], [], []];
+      if (id === 'triple-og-blue') {
+        boards[homeLane] = [unit('hooper', 'player', homeLane, 40), { ...unit('oink', 'cpu', homeLane, 41), powerModifier: 20 }];
+      } else {
+        boards[homeLane] = [unit('hooper', 'cpu', homeLane, 42)];
+      }
+      let match: Match = { ...blank(), round: 4, playerMotion: 4, boards, playerHand: [source] };
+      if (lockKind === 'scheduled') match.storyEncounter = {
+        id: 'scheduled-lane-lock',
+        enemy: { id: 'test', name: 'Test', portraitAssetId: 'test', deckId: 'block', cardIds: [], behaviorProfile: 'balanced' },
+        battlefieldAssetId: 'test', soundHooks: {},
+        modifiers: { laneLocks: [{ round: 4, owner: 'player', lanes: [homeLane] }] },
+      };
+      if (lockKind === 'runtime') match.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [],
+        lanePowerBonuses: [], laneLocks: [{ owner: 'player', lanes: [homeLane] }] };
+      if (lockKind === 'close-lane') {
+        const ids = homeLane === 0 ? ['construction-site', 'bodega', 'vip-section'] : ['bodega', 'vip-section', 'construction-site'];
+        match = { ...match, districtSnapshot: { ...snapshot, locations: ids.map(location) as unknown as typeof snapshot.locations },
+          districtRuntime: runtime() };
+      }
+      assert(canAffordSelection(match, 'player', source.instanceId, homeLane), `${id} may enter its ${lockKind}-locked home`);
+      const after = playTurnCard(match, 'player', source.instanceId, homeLane);
+      assert.equal(find(after, id).lane, homeLane);
+      if (id === 'triple-og-blue') {
+        assert.equal(getEffectiveCardPower(find(after, 'triple-og-blue')), 7,
+          `CLUE COOKY still receives homage in its ${lockKind}-locked home`);
+        assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), 4);
+      } else {
+        assert.equal(getEffectiveCardPower(find(after, 'triple-og-red')), 4,
+          `RED PUNCH still gains for its reveal in its ${lockKind}-locked home`);
+        assert.equal(getEffectiveCardPower(after.boards[homeLane].find(card => card.cardId === 'hooper')!), cards.hooper.power - 1);
+      }
+      const ordinary = createCardInstance('hooper', 'player', 'ordinary-locked', 0);
+      const blocked = { ...match, playerHand: [ordinary] };
+      assert.equal(canAffordSelection(blocked, 'player', ordinary.instanceId, homeLane), false);
+      assert.throws(() => playTurnCard(blocked, 'player', ordinary.instanceId, homeLane), /locked/);
+    }
+  }
+
+  for (const [id, homeLane, wrongLane, side] of [
+    ['triple-og-blue', 0, 2, 'left'],
+    ['triple-og-red', 2, 0, 'right'],
+  ] as const) {
+    const wrong = createCardInstance(id, 'player', 'wrong-side', 0);
+    const candidate = { ...blank(), playerHand: [wrong] };
+    assert.equal(canAffordSelection(candidate, 'player', wrong.instanceId, wrongLane), false);
+    assert.throws(() => playTurnCard(candidate, 'player', wrong.instanceId, wrongLane), new RegExp(`${side} district`));
+  }
+
+  const marked = cast(blank(), 'initiation', 0);
+  const lockedMark: Match = { ...marked, storyRuntime: { activePhaseIndex: 0, appliedEffectIds: [],
+    lanePowerBonuses: [], laneLocks: [{ owner: 'player', lanes: [0] }] } };
+  const entrant = createCardInstance('triple-og-blue', 'player', 'locked-mark', 1);
+  const initiated = playTurnCard({ ...lockedMark, playerHand: [entrant] }, 'player', entrant.instanceId, 0);
+  assert.equal(getEffectiveCardPower(find(initiated, entrant.cardId)), 7,
+    'a legal home-lane OG entering a locked district still consumes INITIATION');
+  assert(!getCharacterDistrictMarks(initiated).some(mark => mark.lane === 0 && /Marked Territory/.test(mark.text)));
+});
+
+test('home-side OGs waive only Corrupt Church Motion while preserving other cost rules', () => {
+  const location = (id: string) => DISTRICT_CATALOG.find(district => district.id === id)!;
+  const districtRuntime = () => ({
+    plays: { player: [0, 0, 0] as [number, number, number], cpu: [0, 0, 0] as [number, number, number] },
+    roundPlays: { player: [0, 0, 0] as [number, number, number], cpu: [0, 0, 0] as [number, number, number] },
+    trailing: { player: [false, false, false] as [boolean, boolean, boolean], cpu: [false, false, false] as [boolean, boolean, boolean] },
+    trappedCardIds: [], detainedCardIds: [],
+  });
+  const build = (cardId: string, homeEffect: string) => {
+    const homeLane = TRIPLE_OG_LANE[cardId];
+    const ids = ['bodega', 'vip-section', 'corrupt-church', 'dive-bar']
+      .filter(id => id !== homeEffect).slice(0, 2);
+    ids.splice(homeLane, 0, homeEffect);
+    const source = createCardInstance(cardId, 'player', `cost-${homeEffect}`, 0);
+    return {
+      source,
+      match: {
+        ...blank(), round: 4, playerMotion: 4, playerHand: [source],
+        districtSnapshot: { ...createDistrictSnapshot(`og-cost-${cardId}-${homeEffect}`),
+          locations: ids.map(location) as unknown as DistrictSnapshot['locations'] },
+        districtRuntime: districtRuntime(),
+      } as Match,
+    };
+  };
+  for (const [cardId, homeLane] of [['triple-og-blue', 0], ['triple-og-red', 2]] as const) {
+    const { source, match } = build(cardId, 'corrupt-church');
+    match.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+      laneLocks: [{ owner: 'player', lanes: [homeLane] }] };
+    assert.equal(getLegalCardCost(match, 'player', source, homeLane), 4);
+    const explanation = getCardCostExplanation(match, 'player', source, homeLane);
+    assert.match(explanation, /Corrupt Church tithe ignored for home-side Triple OG/);
+    assert.doesNotMatch(explanation, /\+1 Corrupt Church tithe/);
+    assert(canAffordSelection(match, 'player', source.instanceId, homeLane),
+      'home lane ignores its lock and location tithe at the printed 4-Motion cost');
+    const after = playTurnCard(match, 'player', source.instanceId, homeLane);
+    assert.equal(after.playerMotion, 0, 'the home-side OG enters at exactly four Motion');
+
+    const unlocked = { ...match, storyRuntime: undefined };
+    for (const regularId of ['hooper', 'blueside1', 'redside2']) {
+      const regular = createCardInstance(regularId, 'player', 'church-tax', 1);
+      assert.equal(getLegalCardCost(unlocked, 'player', regular, homeLane), cards[regularId].cost + 1,
+        `${regularId} still pays Corrupt Church`);
+    }
+  }
+
+  const { source, match } = build('triple-og-blue', 'corrupt-church');
+  const landlord = unit('landlord', 'cpu', 0, 90);
+  const dmv = createCardInstance('dmvworker', 'cpu', 'card-origin-tax', 91);
+  const taxed: Match = {
+    ...match,
+    playerMotion: 6,
+    boards: [[landlord], [], []],
+    districtTraps: [{ kind: 'dmv', owner: 'cpu', lane: 0, source: dmv, expiresAfterRound: 5 }],
+    storyRuntime: { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+      laneLocks: [{ owner: 'player', lanes: [0] }] },
+  };
+  assert.equal(getLegalCardCost(taxed, 'player', source, 0), 6,
+    'Rent Due and Take a Number remain even when the location tithe is waived');
+  assert.match(getCardCostExplanation(taxed, 'player', source, 0), /\+1 Rent Due tax/);
+  assert.match(getCardCostExplanation(taxed, 'player', source, 0), /\+1 Take a Number/);
+  const taxedPlay = playTurnCard(taxed, 'player', source.instanceId, 0);
+  assert.equal(taxedPlay.playerMotion, 0);
+
+  for (const [effectId, extra] of [['bodega', 1], ['dive-bar', 1]] as const) {
+    const { source: discounted, match: discountMatch } = build('triple-og-blue', effectId);
+    assert.equal(getLegalCardCost(discountMatch, 'player', discounted, 0), discounted.cost - extra,
+      `${effectId} continues to discount the home-side OG`);
+    discountMatch.playerMotion = discounted.cost - extra;
+    discountMatch.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+      laneLocks: [{ owner: 'player', lanes: [0] }] };
+    assert(canAffordSelection(discountMatch, 'player', discounted.instanceId, 0),
+      `${effectId} discount still helps a locked-home OG afford its play`);
+  }
+  const { source: buddyDiscounted, match: buddyMatch } = build('triple-og-blue', 'vip-section');
+  buddyMatch.boards[0] = [unit('buddy', 'player', 0, 92)];
+  assert.equal(getLegalCardCost(buddyMatch, 'player', buddyDiscounted, 0), buddyDiscounted.cost - 1,
+    'BUDDY’s card-origin discount remains');
+  buddyMatch.playerMotion = buddyDiscounted.cost - 1;
+  buddyMatch.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+    laneLocks: [{ owner: 'player', lanes: [0] }] };
+  assert(canAffordSelection(buddyMatch, 'player', buddyDiscounted.instanceId, 0));
+  const { source: plugDiscounted, match: plugMatch } = build('triple-og-blue', 'vip-section');
+  plugMatch.plugDiscountLane.player = 1;
+  assert.equal(getLegalCardCost(plugMatch, 'player', plugDiscounted, 0), plugDiscounted.cost - 1,
+    'PLUG’s card-origin discount remains');
+  plugMatch.playerMotion = plugDiscounted.cost - 1;
+  plugMatch.storyRuntime = { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+    laneLocks: [{ owner: 'player', lanes: [0] }] };
+  assert(canAffordSelection(plugMatch, 'player', plugDiscounted.instanceId, 0));
 });
 
 test('CLUE COOKY collects homage only while losing, and never loses Hands', () => {

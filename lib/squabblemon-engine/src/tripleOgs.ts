@@ -1,8 +1,10 @@
 import type { AbilityUpgradeEffect, Card, CardRarity } from './data';
+import type { Lane } from './gameEngine';
 
 /**
- * Triple OG set. The two Triple OGs are set leaders: each answers to one side of
- * the board only, and neither can be talked down (their reveal ignores Silence).
+ * Triple OG set. The two Triple OGs are set leaders and neither can be talked
+ * down (their reveal ignores Silence). Blue stays on the left and Red stays
+ * on the right, though both may enter their home district through location locks.
  * Initiation marks a district so the next character played there joins the set
  * already standing in it. The two inmates are the cheap street-level pieces.
  */
@@ -17,8 +19,11 @@ export const GANG_BY_CARD_ID: Record<string, GangColor> = {
 export const GANG_LABEL: Record<GangColor, string> = { blue: 'Blue Set', red: 'Red Set' };
 export const GANG_ACCENT: Record<GangColor, string> = { blue: '#2f6fe0', red: '#d3352f' };
 
-/** Left district for the Blue OG, right district for the Red OG. */
-export const TRIPLE_OG_LANE: Record<string, 0 | 2> = { 'triple-og-blue': 0, 'triple-og-red': 2 };
+/** Home-side lanes for the two mythical leaders. */
+export const TRIPLE_OG_LANE: Record<string, Lane> = { 'triple-og-blue': 0, 'triple-og-red': 2 };
+/** True only for the two Mythical Triple OGs; legacy side OGs keep ordinary placement rules. */
+export const isMythicalTripleOg = (cardId: string): boolean =>
+  cardId === 'triple-og-blue' || cardId === 'triple-og-red';
 /** Neither OG's reveal can be shut down by Silence, Freeze, or Weaken. */
 export const UNSILENCEABLE_CARD_IDS = ['triple-og-blue', 'triple-og-red'] as const;
 /** The Blue OG never loses Hands, matching OG Blue's existing protection. */
@@ -26,10 +31,10 @@ export const CANNOT_LOSE_HANDS_CARD_IDS = ['blueside1', 'triple-og-blue'] as con
 
 const definitions = [
   ['triple-og-blue', 'triple-og-blue', 'CLUE COOKY', 'Mythical', 'Water', 4, 6, 'Homage', 'character',
-    "Only playable in the left district. On Reveal: If you are losing this district, every other friendly character on the board pays homage — each gives up 1 Hand and CLUE COOKY takes all of it. Then send the weakest enemy here to your strongest district with -1 Hand. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
+    "Only playable in the left district, even when its location adds Motion or the lane is locked. On Reveal: If you are losing this district, every other friendly character on the board pays homage — each gives up 1 Hand and CLUE COOKY takes all of it. Then send the weakest enemy here to your strongest district with -1 Hand. CLUE COOKY cannot lose Hands, and this ability cannot be Silenced.",
     'Pressure'],
   ['triple-og-red', 'triple-og-red', 'RED PUNCH', 'Mythical', 'Fire', 4, 3, 'Roll Call', 'character',
-    "Only playable in the right district. On Reveal: Give every other character in this district, allies included, -1 Hand, and gain +1 Hand for each one that takes it. Anyone RED PUNCH cannot touch is moved to another district out of respect. This ability cannot be Silenced.",
+    "Only playable in the right district, even when its location adds Motion or the lane is locked. On Reveal: Give every other character in this district, allies included, -1 Hand, and gain +1 Hand for each one that takes it. Anyone RED PUNCH cannot touch is moved to another district out of respect. This ability cannot be Silenced.",
     'Disruption'],
   ['initiation', 'initiation', 'INITIATION', 'Legendary', 'Dark', 1, 0, 'Marked Territory', 'support',
     "On Reveal: Mark this district as your territory. The next character you play here is put on by the set you already have here: it takes their colors and gains +1 Hand. With no set of yours here, it still gains +1 Hand. The mark holds until it is used.",

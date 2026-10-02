@@ -1,0 +1,48 @@
+
+> workspace@0.0.0 test:campaign:db /home/runner/workspace
+> node scripts/test-api-database.mjs story-rewards
+
+Reading config file '/home/runner/workspace/artifacts/gameplay-test-db/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[✓] Changes applied
+Using owned in-memory PGlite database on 127.0.0.1:46195.
+✔ campaign exposes authoritative summaries for every authored season (69.178692ms)
+✔ puzzle completion validates authority, solutions, bypass, and idempotency (260.188519ms)
+✔ an exact solved puzzle replay is stable and grants authored rewards once (116.779228ms)
+✔ story nodes persist normalized progress and merged dialogue (195.32264ms)
+✔ Chapter Two opens after the Crown and hands off to Chapter Three (247.275472ms)
+✔ Courier Table separates a legacy perfect ticket from its direct-clear payout (138.143923ms)
+✔ story campaign GET backfills the lower-star Courier ticket once with confirmed bootstrap (120.812746ms)
+✔ story-earned cards are delivered on first clear and replayed idempotently (18.68977ms)
+✔ authenticated campaign entry catches up earned cards without replaying money (158.994658ms)
+✔ campaign catch-up does not grant cards for uncleared story nodes (55.964026ms)
+✔ concurrent story campaign GETs reconcile all cleared nodes once and exclude perfect tickets (95.001953ms)
+✔ all eight chapters unlock in order and the final reward is claimed once (678.928756ms)
+✔ every exported story node meets the direct-clear payout contract (0.940372ms)
+✔ completed nodes return only one-time Clout and direct-ticket make-good rewards (106.509625ms)
+✔ concurrent completed-node checks make-good each historical payout gap once (63.095823ms)
+✔ server registry prerequisites reject out-of-order completion (6.292152ms)
+✔ optional Side Alley never gates required completion or recommendation (15.625547ms)
+✔ development story reset guard is disabled outside development (0.220486ms)
+✔ concurrent story reward completion grants immutable rewards once (59.706269ms)
+✔ story action keys reject cross-node, action, and payload reuse (49.350674ms)
+✔ dialogue actions persist on unlocked battle nodes without clearing (50.808059ms)
+✔ season-one screenplay tokens fit bounded save actions without changing other-season tokens (1.302455ms)
+✔ unverified story battle results cannot unlock post-match dialogue (18.9784ms)
+✔ cleared battle dialogue saves retain rewards, clear metadata, legacy markers, and issued snapshots (49.837684ms)
+✔ story transcript verification uses explicit immutable snapshot and cards (201.745167ms)
+✔ story fade progression snapshot survives a later content revision (0.320079ms)
+✔ old issued battle rewards stay immutable while first-clear delivery fills the current contract (15.743481ms)
+✔ perfect-battle ticket remains distinct from the direct-clear ticket (12.76333ms)
+✔ stored story fade result reconstructs byte-equivalent retry metadata (4.468286ms)
+✔ saved closing dialogue can recover rewards and repeated delivery checks never mint twice (118.093182ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25023.266783

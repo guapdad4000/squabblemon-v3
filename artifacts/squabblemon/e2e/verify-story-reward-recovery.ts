@@ -2,6 +2,7 @@ import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { storyContent, storyDialogueToken } from '@workspace/squabblemon-engine/story';
 const origin = process.env.UI_ORIGIN ?? 'http://localhost:4210';
+const appBasePath = new URL(origin).pathname.replace(/\/+$/, '');
 const browser = await chromium.launch();
 try {
  const page = await browser.newPage({reducedMotion:'reduce'});
@@ -42,7 +43,8 @@ try {
    assert.equal(await page.locator('dialog[open].reward-reveal--story').count(),0);
   await page.getByRole('button',{name:'Collect story rewards',exact:true}).click();
   await page.locator('dialog[open].reward-reveal--story').waitFor();
-   assert.equal(await page.locator('.reward-reveal__story-backdrop').getAttribute('src'),'/'+chapter.mapAssetId);
+    const backdropPath = new URL(await page.locator('.reward-reveal__story-backdrop').getAttribute('src')!, origin).pathname;
+    assert.equal(backdropPath,`${appBasePath}/${chapter.mapAssetId.replace(/^\/+/, '')}`);
    assert.equal(await page.locator('.reward-reveal__travel-token').count(),0,'reduced motion has no traveling token');
    assert.equal(await page.locator('.reward-reveal__collection').getAttribute('data-collected'),'true');
   await page.waitForFunction(()=>Array.from(document.querySelectorAll('.reward-reveal img')).every((i:any)=>i.complete&&i.naturalWidth>0));
@@ -79,24 +81,15 @@ try {
    await animated.getByTestId('show-animated-story-receipt').waitFor();
   // Observe the production receipt in the browser while the token is in flight,
   // rather than racing Playwright against its short exit animation.
-  const flight=await animated.evaluate(`(async()=>{
-     document.querySelector('[data-testid="show-animated-story-receipt"]').click();
-    const token=await new Promise((resolve,reject)=>{
-      const end=performance.now()+2000;
-      const tick=()=>{
-        const target=document.querySelector('.reward-reveal__travel-token');
-        if(target)resolve(target);
-        else if(performance.now()>end)reject(new Error('Travel token did not mount'));
-        else requestAnimationFrame(tick);
-      };
-      tick();
-    });
-    const start=token.getBoundingClientRect().x;
-    const wallet=document.querySelector('.reward-reveal__wallet').getBoundingClientRect().x;
-    await new Promise(resolve=>setTimeout(resolve,420));
-    return {start,wallet,mid:token.getBoundingClientRect().x};
-  })()`) as {start:number;wallet:number;mid:number};
-  assert(flight.start<flight.wallet && flight.mid>flight.start+10,'actual Clout token moves toward on-screen balance');
+   await animated.getByTestId('show-animated-story-receipt').click();
+   const token=animated.locator('.reward-reveal__travel-token');
+   await token.waitFor({state:'visible'});
+   const startBox=await token.boundingBox();
+   const walletBox=await animated.locator('.reward-reveal__wallet').boundingBox();
+   assert(startBox && walletBox,'the animated receipt exposes its traveling token and wallet');
+   await animated.waitForTimeout(420);
+   const midBox=await token.boundingBox();
+   assert(midBox && startBox.x<walletBox.x && midBox.x>startBox.x+10,'actual Clout token moves toward on-screen balance');
   await animated.locator('.reward-reveal__collection[data-collected="true"]').waitFor();
   await animated.getByRole('status').filter({hasText:'Balance 925 Clout'}).waitFor();
   await animated.keyboard.press('Escape');

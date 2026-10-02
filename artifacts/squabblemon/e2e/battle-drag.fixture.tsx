@@ -16,37 +16,42 @@ function waveFixture(match: Match): Match {
   const tripleOg = params.get('tripleOg');
   if (tripleOg === 'blue' || tripleOg === 'red') {
     const cardId = tripleOg === 'blue' ? 'triple-og-blue' : 'triple-og-red';
-    const targetLane: Lane = tripleOg === 'blue' ? 0 : 2;
-    // Avoid unrelated Bodega discounts, Church tithe, and Subway movement so
-    // this fixture isolates Triple OG placement and reveal effects.
+    const homeLane: Lane = tripleOg === 'blue' ? 0 : 2;
+    const targetLane = Number(params.get('targetLane') ?? homeLane) as Lane;
+    const churchHome = params.has('churchHome');
+    const locationIds = ['time-square', 'county-jail', 'magic-city'];
+    if (churchHome) locationIds[homeLane] = 'corrupt-church';
     const tripleOgLocations: DistrictSnapshot = {
       version: 1,
-      locations: ['time-square', 'county-jail', 'magic-city'].map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'],
+      locations: locationIds.map(id => DISTRICT_CATALOG.find(d => d.id === id)!) as DistrictSnapshot['locations'],
     };
     const unit = (id: string, owner: 'player' | 'cpu', lane: Lane, index: number) =>
       ({ ...createCardInstance(id, owner, 'triple-og-e2e-board', index), lane });
-    const strongEnemy = unit('oink', 'cpu', targetLane, 31);
+    const strongEnemy = unit('oink', 'cpu', homeLane, 31);
     strongEnemy.powerModifier = 20;
     const losingLane: Match['boards'][number] = [
-      unit('hooper', 'player', targetLane, 30),
+      unit('hooper', 'player', homeLane, 30),
       strongEnemy,
-      unit('snow', 'cpu', targetLane, 32),
+      unit('snow', 'cpu', homeLane, 32),
     ];
     const boards: Match['boards'] = [[], [], []];
-    boards[targetLane] = losingLane;
+    boards[homeLane] = losingLane;
     if (tripleOg === 'blue') {
-      // Cooky's reveal should collect Homage from allies and move the
-      // weakest enemy into a stronger other district.
+      // Cooky's reveal should collect Homage from both allies and move the
+      // weakest enemy into the player's strongest other district (the middle).
       boards[1] = [unit('hooper', 'player', 1, 33), unit('hooper', 'player', 1, 34)];
     } else {
       // Keep a populated right-hand board for RED PUNCH's real reveal too.
       boards[1] = [unit('hooper', 'player', 1, 33)];
     }
-    const hand = [
-      createCardInstance(cardId, 'player', 'triple-og-e2e-hand', 0),
-      createCardInstance('plug', 'player', 'triple-og-e2e-hand', 1),
-    ];
-    return { ...match, districtSnapshot: tripleOgLocations, round: 3, playerMotion: 9, cpuMotion: 9, playerHand: hand, boards };
+    const hand = churchHome
+      ? [createCardInstance(cardId, 'player', 'triple-og-e2e-hand', 0), createCardInstance('plug', 'player', 'triple-og-e2e-hand', 2)]
+      : [
+        createCardInstance(cardId, 'player', 'triple-og-e2e-hand', 0),
+        createCardInstance(cardId, 'player', 'triple-og-e2e-hand', 1),
+        createCardInstance('plug', 'player', 'triple-og-e2e-hand', 2),
+      ];
+    return { ...match, districtSnapshot: tripleOgLocations, round: 3, playerMotion: churchHome ? 4 : 9, cpuMotion: 9, playerHand: hand, boards };
   }
   if (params.has('fairytale')) {
     const dmv = { ...createCardInstance('dmvworker', 'cpu', 'fairytale', 8), lane: 0 as Lane };
@@ -69,8 +74,12 @@ function Solo() {
   const [match, setMatch] = useState(() => {
     const match = createMatch('block', 'vibes', undefined, undefined, locations);
     match.playerHand = ['cornball', 'plug', 'roaster', 'wifey', 'hooper', 'snow', 'og'].map((id, i) => createCardInstance(id, 'player', 'drag', i));
-    if (params.has('locked')) match.storyRuntime = { activePhaseIndex: -1, appliedEffectIds: [], lanePowerBonuses: [], laneLocks: [{ owner: 'player', lanes: [1] }] };
-    if (params.has('locked')) match.storyEncounter = { id: 'drag-lock', enemy: { id: 'rival', name: 'Rival', portraitAssetId: '', deckId: 'vibes', cardIds: [], behaviorProfile: '' }, battlefieldAssetId: '', soundHooks: {} };
+    if (params.has('locked') || params.has('lockedLane')) {
+      const lockedLane = Number(params.get('lockedLane') ?? 1);
+      match.storyRuntime = { activePhaseIndex: -1, appliedEffectIds: [], lanePowerBonuses: [], laneLocks: [{ owner: 'player', lanes: [lockedLane as Lane] }] };
+      match.storyEncounter = { id: 'drag-lock', enemy: { id: 'rival', name: 'Rival', portraitAssetId: '', deckId: 'vibes', cardIds: [], behaviorProfile: '' }, battlefieldAssetId: '', soundHooks: {} };
+    }
+    if (params.has('ordinaryLocked')) match.playerHand = [createCardInstance('plug', 'player', 'ordinary-locked-hand', 0)];
     return waveFixture(match);
   });
   const [playCount, setPlayCount] = useState(0);
@@ -87,11 +96,19 @@ function Solo() {
   };
   const tripleOgEvidence = params.get('tripleOg') === 'blue' || params.get('tripleOg') === 'red';
   const targetId = tripleOgEvidence ? `triple-og-${params.get('tripleOg')}` : '';
+  const lastEffect = match.effectLog.at(-1);
+  const lastPlayEffect = [...match.effectLog].reverse().find(event => event.type === 'play' && event.cardId === targetId);
+  const lastOgAbility = [...match.effectLog].reverse().find(event => event.type === 'ability' && event.cardId === targetId);
   return <div style={{ height: '100dvh', color: 'white' }}>
     {tripleOgEvidence && <output data-testid="triple-og-evidence" data-play-count={playCount}
       data-motion={match.playerMotion} data-hand-count={match.playerHand.length}
       data-board-count={match.boards.flat().filter(card => card.owner === 'player').length}
-      data-target-id={targetId} data-target-lane={params.get('tripleOg') === 'blue' ? '0' : '2'} />}
+       data-target-id={targetId} data-target-lane={params.get('targetLane') ?? (params.get('tripleOg') === 'blue' ? '0' : '2')}
+       data-home-lane={params.get('tripleOg') === 'blue' ? '0' : '2'}
+      data-effect-count={match.effectLog.length} data-last-effect-type={lastEffect?.type ?? ''}
+      data-last-play-effect-type={lastPlayEffect?.type ?? ''} data-last-play-effect-card-id={lastPlayEffect?.cardId ?? ''}
+      data-last-play-effect-lane={lastPlayEffect?.lane ?? ''} data-og-ability-effect-type={lastOgAbility?.type ?? ''}
+      data-og-ability-effect-lane={lastOgAbility?.lane ?? ''} data-og-ability-effect-note={lastOgAbility?.note ?? ''} />}
     <Battle match={match} deck={decks[0]} rivalDeck={decks[1]}
     selectedInstanceId={selected} setSelectedInstanceId={setSelected} selectedLane={lane} setSelectedLane={setLane} squabble={squabble} setSquabble={setSquabble}
     onPlayCard={play} commit={() => { if (selected && lane !== null) play(selected, lane, squabble); }}

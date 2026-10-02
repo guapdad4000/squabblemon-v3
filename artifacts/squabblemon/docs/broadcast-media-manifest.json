@@ -1,0 +1,1031 @@
+{
+  "task": 265,
+  "step": 1,
+  "catalogContract": {
+    "loadingScenes": [
+      "id",
+      "label",
+      "video",
+      "poster",
+      "portraitPosition",
+      "landscapePosition"
+    ],
+    "rewardClips": [
+      "id",
+      "video",
+      "poster",
+      "duration",
+      "style",
+      "tags"
+    ],
+    "rewardStyle": [
+      "anime",
+      "live-action"
+    ],
+    "rewardTags": [
+      "victory",
+      "defeat",
+      "draw",
+      "reward"
+    ],
+    "paths": "Base-relative; no leading slash.",
+    "runtimeRules": "Metadata only; unique IDs; no original montage or contact sheet URL; every clip has >=1 reachable tag."
+  },
+  "sources": [
+    {
+      "id": "loading-sunset-street",
+      "path": "../../attached_assets/grok-video-d94e8556-0973-42a4-9c71-93ab89f91961_(1)_1790777681163.mp4",
+      "bytes": 8495224,
+      "duration": 6.041667,
+      "dimensions": "1280x720",
+      "streams": [
+        "h264 1280x720",
+        "aac",
+        "mjpeg 1280x720"
+      ],
+      "use": "Landscape loading-scene loop; primary video stream only in public derivative."
+    },
+    {
+      "id": "loading-squabblehouse",
+      "path": "../../attached_assets/grok-video-f8ade026-eb3d-443d-9f78-75819c986e38_(1)_1790777700939.mp4",
+      "bytes": 4508046,
+      "duration": 6.041667,
+      "dimensions": "1280x720",
+      "streams": [
+        "h264 1280x720",
+        "aac",
+        "mjpeg 1280x720"
+      ],
+      "use": "Landscape loading-scene loop; primary video stream only in public derivative."
+    },
+    {
+      "id": "loading-fade-park",
+      "path": "../../attached_assets/grok-video-537afb19-2f61-48ab-bd14-8cdd47ae03ac_1790777728143.mp4",
+      "bytes": 9724784,
+      "duration": 6.041667,
+      "dimensions": "1264x720",
+      "streams": [
+        "h264 1264x720",
+        "aac",
+        "mjpeg 1264x720"
+      ],
+      "use": "Landscape loading-scene loop; primary video stream only in public derivative."
+    },
+    {
+      "id": "source-a-live-action",
+      "path": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "bytes": 35231797,
+      "duration": 90.034,
+      "dimensions": "720x1280",
+      "streams": [
+        "h264 720x1280",
+        "aac"
+      ],
+      "use": "Source for 12 short silent live-action edits; original is not a runtime asset."
+    },
+    {
+      "id": "source-b-anime",
+      "path": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "bytes": 28381289,
+      "duration": 90.034,
+      "dimensions": "720x1280",
+      "streams": [
+        "h264 720x1280",
+        "aac"
+      ],
+      "use": "Source for 10 short silent anime edits; original is not a runtime asset."
+    }
+  ],
+  "loadingScenes": [
+    {
+      "id": "loading-sunset-street",
+      "label": "Sunset street brawl",
+      "source": "../../attached_assets/grok-video-d94e8556-0973-42a4-9c71-93ab89f91961_(1)_1790777681163.mp4",
+      "sourceRange": {
+        "start": 0,
+        "end": 6.041667
+      },
+      "duration": 6.041667,
+      "video": "brand/broadcast/loading/sunset-street.mp4",
+      "videoBytes": 1341438,
+      "poster": "brand/broadcast/loading/sunset-street.jpg",
+      "posterBytes": 150134,
+      "videoCodec": "h264",
+      "audio": "removed",
+      "portraitPosition": "center 54%",
+      "landscapePosition": "center 50%"
+    },
+    {
+      "id": "loading-squabblehouse",
+      "label": "Nighttime Squabblehouse",
+      "source": "../../attached_assets/grok-video-f8ade026-eb3d-443d-9f78-75819c986e38_(1)_1790777700939.mp4",
+      "sourceRange": {
+        "start": 0,
+        "end": 6.041667
+      },
+      "duration": 6.041667,
+      "video": "brand/broadcast/loading/squabblehouse.mp4",
+      "videoBytes": 639366,
+      "poster": "brand/broadcast/loading/squabblehouse.jpg",
+      "posterBytes": 109355,
+      "videoCodec": "h264",
+      "audio": "removed",
+      "portraitPosition": "center 48%",
+      "landscapePosition": "center 50%"
+    },
+    {
+      "id": "loading-fade-park",
+      "label": "Crowded Fade Park",
+      "source": "../../attached_assets/grok-video-537afb19-2f61-48ab-bd14-8cdd47ae03ac_1790777728143.mp4",
+      "sourceRange": {
+        "start": 0,
+        "end": 6.041667
+      },
+      "duration": 6.041667,
+      "video": "brand/broadcast/loading/fade-park.mp4",
+      "videoBytes": 1609163,
+      "poster": "brand/broadcast/loading/fade-park.jpg",
+      "posterBytes": 135451,
+      "videoCodec": "h264",
+      "audio": "removed",
+      "portraitPosition": "center 50%",
+      "landscapePosition": "center 51%"
+    }
+  ],
+  "rewardClips": [
+    {
+      "id": "anime-opponent-down",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 24,
+        "end": 25
+      },
+      "duration": 1,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/anime-opponent-down.mp4",
+      "videoBytes": 87747,
+      "poster": "brand/broadcast/rewards/anime-opponent-down.jpg",
+      "posterBytes": 34826,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "The blue-bandana fighter falls and lies down as the opponent remains standing; cut before the K.O. title.",
+      "edit": "Source frames 24.00–25.00 only; excludes the K.O. title that starts at 25.00.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-crowd-draw",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 59,
+        "end": 60
+      },
+      "duration": 1,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/anime-crowd-draw.mp4",
+      "videoBytes": 112286,
+      "poster": "brand/broadcast/rewards/anime-crowd-draw.jpg",
+      "posterBytes": 35223,
+      "style": "anime",
+      "tags": [
+        "draw"
+      ],
+      "description": "Wide, unresolved brawl beat with several fighters still active and no clear winner.",
+      "edit": "Color-only wide cut before the close first-punch insert at source 60.00; valid only for draw outcomes.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-first-impact",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 60,
+        "end": 60.5
+      },
+      "duration": 1,
+      "playbackSpeed": 0.5,
+      "video": "brand/broadcast/rewards/anime-first-impact.mp4",
+      "videoBytes": 109332,
+      "poster": "brand/broadcast/rewards/anime-first-impact.jpg",
+      "posterBytes": 34119,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "First face punch from the later fight sequence.",
+      "edit": "Continuous colored impact action, slowed from 0.50 s at 0.5x to a 1.00 s output; ends before the boot/cloth insert.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-second-impact",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 63.25,
+        "end": 64
+      },
+      "duration": 1.041667,
+      "playbackSpeed": 0.75,
+      "video": "brand/broadcast/rewards/anime-second-impact.mp4",
+      "videoBytes": 169406,
+      "poster": "brand/broadcast/rewards/anime-second-impact.jpg",
+      "posterBytes": 26861,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "A distinct later face punch by a different fighter in the second brawl sequence.",
+      "edit": "Continuous color punch take after monochrome panels; 0.75 s source retimed to 1.00 s at 0.75x, before the sunny street cut.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-uppercut-safe-edit",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 65.25,
+        "end": 65.75
+      },
+      "duration": 1.041667,
+      "playbackSpeed": 0.5,
+      "video": "brand/broadcast/rewards/anime-uppercut-safe-edit.mp4",
+      "videoBytes": 149518,
+      "poster": "brand/broadcast/rewards/anime-uppercut-safe-edit.jpg",
+      "posterBytes": 27913,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "The later uppercut/third-punch beat followed by the opponent's reaction.",
+      "edit": "Safe continuous color action starts after monochrome panels at 64.75–65.25; 0.50 s source retimed to 1.00 s at 0.5x, before unrelated street/car shots.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-car-launch",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 69,
+        "end": 69.75
+      },
+      "duration": 1.041667,
+      "playbackSpeed": 0.75,
+      "video": "brand/broadcast/rewards/anime-car-launch.mp4",
+      "videoBytes": 108259,
+      "poster": "brand/broadcast/rewards/anime-car-launch.jpg",
+      "posterBytes": 29436,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "A fighter is thrown beside a parked car in a brief action insert.",
+      "edit": "0.75 s continuous car-side action retimed to 1.00 s at 0.75x; ends before the chef-at-the-window scene.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-fight-clears",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 66,
+        "end": 68
+      },
+      "duration": 2,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/anime-fight-clears.mp4",
+      "videoBytes": 148826,
+      "poster": "brand/broadcast/rewards/anime-fight-clears.jpg",
+      "posterBytes": 34809,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "Wide fight-clears aftermath with a standing fighter and several opponents down on the street.",
+      "edit": "Continuous color street aftermath at 66.00–68.00, distinct from the earlier unresolved crowd brawl; no title or monochrome flash.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-chef-forward-punch",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 70.5,
+        "end": 72
+      },
+      "duration": 1.5,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/anime-chef-forward-punch.mp4",
+      "videoBytes": 162515,
+      "poster": "brand/broadcast/rewards/anime-chef-forward-punch.jpg",
+      "posterBytes": 44295,
+      "style": "anime",
+      "tags": [
+        "victory"
+      ],
+      "description": "The Squabblehouse-apron fighter steps forward and thrusts a fist from the kitchen doorway.",
+      "edit": "Continuous kitchen-doorway action from 70.50–72.00 includes the turn, windup, and forward-fist extension at 71.75; ends before the unrelated night-street cut.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-falling-bandana",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 61.25,
+        "end": 62.4
+      },
+      "duration": 1.166667,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/anime-falling-bandana.mp4",
+      "videoBytes": 115727,
+      "poster": "brand/broadcast/rewards/anime-falling-bandana.jpg",
+      "posterBytes": 27251,
+      "style": "anime",
+      "tags": [
+        "reward"
+      ],
+      "description": "A red bandana drifts against a dark field, with only partial raised hands at the lower edge; no punch landing or KO is shown.",
+      "edit": "Context-neutral object insert; ends before the next face-punch shot at source 62.50.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "anime-street-aftermath",
+      "source": "../../attached_assets/openart-c9e95da7-239_3660c019_1790762667633_1790778146400.mp4",
+      "sourceRange": {
+        "start": 84.25,
+        "end": 84.75
+      },
+      "duration": 1.041667,
+      "playbackSpeed": 0.5,
+      "video": "brand/broadcast/rewards/anime-street-aftermath.mp4",
+      "videoBytes": 71399,
+      "poster": "brand/broadcast/rewards/anime-street-aftermath.jpg",
+      "posterBytes": 29725,
+      "style": "anime",
+      "tags": [
+        "defeat"
+      ],
+      "description": "Quiet lamp-lit street with a fallen fighter, after the action has cleared.",
+      "edit": "Stable-lit 0.50 s view of the fallen fighter retimed to 1.00 s at 0.5x; excludes later alternating lamp/dark frames.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-first-impact",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 16,
+        "end": 17.8
+      },
+      "duration": 1.791667,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-first-impact.mp4",
+      "videoBytes": 115127,
+      "poster": "brand/broadcast/rewards/live-first-impact.jpg",
+      "posterBytes": 23400,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "Close-range punch lands against the blue-bandana fighter.",
+      "edit": "Different action and live-action framing from the later faceoff punches; no frame inversion or inserted monochrome flash.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-finishing-punch",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 22.25,
+        "end": 23.25
+      },
+      "duration": 1,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-finishing-punch.mp4",
+      "videoBytes": 72754,
+      "poster": "brand/broadcast/rewards/live-finishing-punch.jpg",
+      "posterBytes": 21790,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "A gloved fist connects in the close-range finishing punch.",
+      "edit": "Isolated the point of contact and immediate settle; continuous color frames.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-knockdown",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 25.5,
+        "end": 27.3
+      },
+      "duration": 1.791667,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-knockdown.mp4",
+      "videoBytes": 194472,
+      "poster": "brand/broadcast/rewards/live-knockdown.jpg",
+      "posterBytes": 37541,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "The opponent lies on the ground while the red-bandana fighter stands; no title card.",
+      "edit": "Outcome aftermath only; does not claim a player-specific result.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-isolated-fist",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 32,
+        "end": 33.5
+      },
+      "duration": 1.5,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-isolated-fist.mp4",
+      "videoBytes": 114953,
+      "poster": "brand/broadcast/rewards/live-isolated-fist.jpg",
+      "posterBytes": 25352,
+      "style": "live-action",
+      "tags": [
+        "reward"
+      ],
+      "description": "A ring-gloved fist held close to camera with no target/person visible.",
+      "edit": "Tight object-only crop, deliberately context-neutral; the fist does not strike anyone.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-sunglasses-jab",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 39.5,
+        "end": 40.75
+      },
+      "duration": 1.25,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-sunglasses-jab.mp4",
+      "videoBytes": 210467,
+      "poster": "brand/broadcast/rewards/live-sunglasses-jab.jpg",
+      "posterBytes": 25503,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "The sunglasses fighter's separate jab, with the red-suited figure only in the background.",
+      "edit": "The 39.50–40.75 jab take is separate from the later red-suited boss hold/entrance.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-side-kick",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 34.5,
+        "end": 35.25
+      },
+      "duration": 1.041667,
+      "playbackSpeed": 0.75,
+      "video": "brand/broadcast/rewards/live-side-kick.mp4",
+      "videoBytes": 136839,
+      "poster": "brand/broadcast/rewards/live-side-kick.jpg",
+      "posterBytes": 21784,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "The side kick and opponent recoil, distinct from either close-up punch.",
+      "edit": "0.75 s continuous side-kick/recoil take retimed to 1.00 s at 0.75x; cuts before the red-plaid close-up.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-chef-counter",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 52.25,
+        "end": 54.05
+      },
+      "duration": 1.833333,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-chef-counter.mp4",
+      "videoBytes": 308274,
+      "poster": "brand/broadcast/rewards/live-chef-counter.jpg",
+      "posterBytes": 25014,
+      "style": "live-action",
+      "tags": [
+        "victory"
+      ],
+      "description": "Chef counterattack in the crowd brawl.",
+      "edit": "Brief action-specific cut; inspected for continuity and high-contrast frames.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-falling-bandana",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 61.25,
+        "end": 62.95
+      },
+      "duration": 1.708333,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-falling-bandana.mp4",
+      "videoBytes": 186229,
+      "poster": "brand/broadcast/rewards/live-falling-bandana.jpg",
+      "posterBytes": 21459,
+      "style": "live-action",
+      "tags": [
+        "reward"
+      ],
+      "description": "The red bandana falls and comes to rest on the pavement; no target or KO is visible.",
+      "edit": "Starts on cloth motion rather than the preceding fist insert; ends on the fabric alone.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-ground-fist",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 60.25,
+        "end": 61.25
+      },
+      "duration": 1,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-ground-fist.mp4",
+      "videoBytes": 132426,
+      "poster": "brand/broadcast/rewards/live-ground-fist.jpg",
+      "posterBytes": 21682,
+      "style": "live-action",
+      "tags": [
+        "draw"
+      ],
+      "description": "A ground-fist impact against pavement with no opponent struck and no outcome shown.",
+      "edit": "Combat-only impact insert, not eligible for reward; cuts before the falling-bandana composition.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-crowd-draw",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 57.75,
+        "end": 59.75
+      },
+      "duration": 2,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-crowd-draw.mp4",
+      "videoBytes": 154173,
+      "poster": "brand/broadcast/rewards/live-crowd-draw.jpg",
+      "posterBytes": 28591,
+      "style": "live-action",
+      "tags": [
+        "draw"
+      ],
+      "description": "Several fighters exchange blows in a wide street view with no clear winner.",
+      "edit": "Wide unresolved fight view; starts after the doorway faceoff, ends before the ground-fist close-up.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-last-collapse",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 78.25,
+        "end": 79.75
+      },
+      "duration": 1.5,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-last-collapse.mp4",
+      "videoBytes": 145431,
+      "poster": "brand/broadcast/rewards/live-last-collapse.jpg",
+      "posterBytes": 24429,
+      "style": "live-action",
+      "tags": [
+        "defeat"
+      ],
+      "description": "The final fighter collapses onto the pavement after the red-eyed figure's approach.",
+      "edit": "Action/reaction frames only; starts after the separate threat portrait and is not the later quiet hold.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    },
+    {
+      "id": "live-quiet-aftermath",
+      "source": "../../attached_assets/d779446a-0f1_ae3862ef_1790742851727_1790778124763.mp4",
+      "sourceRange": {
+        "start": 83.75,
+        "end": 85.75
+      },
+      "duration": 2,
+      "playbackSpeed": 1,
+      "video": "brand/broadcast/rewards/live-quiet-aftermath.mp4",
+      "videoBytes": 114384,
+      "poster": "brand/broadcast/rewards/live-quiet-aftermath.jpg",
+      "posterBytes": 19309,
+      "style": "live-action",
+      "tags": [
+        "defeat"
+      ],
+      "description": "Quiet street closing shot with a fallen fighter under the lamp.",
+      "edit": "Single aftermath composition; avoids the red-eyed figure's approach.",
+      "videoCodec": "h264",
+      "dimensions": "540x960",
+      "audio": "removed"
+    }
+  ],
+  "portraitAudit": {
+    "contactSheets": [
+      "docs/media-audit/contact-sheets/anime-0-30-halfsec.jpg",
+      "docs/media-audit/contact-sheets/anime-30-60-halfsec.jpg",
+      "docs/media-audit/contact-sheets/anime-60-90-halfsec.jpg",
+      "docs/media-audit/contact-sheets/anime-boundary-24-29.jpg",
+      "docs/media-audit/contact-sheets/anime-boundary-58-66.jpg",
+      "docs/media-audit/contact-sheets/anime-boundary-62-67.jpg",
+      "docs/media-audit/contact-sheets/anime-boundary-69-74.jpg",
+      "docs/media-audit/contact-sheets/anime-boundary-84-90.jpg",
+      "docs/media-audit/contact-sheets/anime-chef-forward-punch-71-30fps.jpg",
+      "docs/media-audit/contact-sheets/anime-detail-15-27-quartersec.jpg",
+      "docs/media-audit/contact-sheets/anime-detail-31-42-quartersec.jpg",
+      "docs/media-audit/contact-sheets/anime-detail-51-57-quartersec.jpg",
+      "docs/media-audit/contact-sheets/anime-detail-60-72-quartersec.jpg",
+      "docs/media-audit/contact-sheets/anime-detail-78-90-quartersec.jpg",
+      "docs/media-audit/contact-sheets/anime-fight-clears-66-68-30fps.jpg",
+      "docs/media-audit/contact-sheets/exported-clips-review.jpg",
+      "docs/media-audit/contact-sheets/live-0-30-halfsec.jpg",
+      "docs/media-audit/contact-sheets/live-30-60-halfsec.jpg",
+      "docs/media-audit/contact-sheets/live-60-90-halfsec.jpg",
+      "docs/media-audit/contact-sheets/live-boundary-38-43.jpg",
+      "docs/media-audit/contact-sheets/live-boundary-56-62.jpg",
+      "docs/media-audit/contact-sheets/live-boundary-60-66.jpg",
+      "docs/media-audit/contact-sheets/live-boundary-77-82.jpg",
+      "docs/media-audit/contact-sheets/live-boundary-80-88.jpg",
+      "docs/media-audit/contact-sheets/live-chef-counter-52-54-24fps.jpg",
+      "docs/media-audit/contact-sheets/live-detail-15-27-quartersec.jpg",
+      "docs/media-audit/contact-sheets/live-detail-31-42-quartersec.jpg",
+      "docs/media-audit/contact-sheets/live-detail-51-57-quartersec.jpg",
+      "docs/media-audit/contact-sheets/live-detail-60-72-quartersec.jpg",
+      "docs/media-audit/contact-sheets/live-detail-78-90-quartersec.jpg",
+      "docs/media-audit/contact-sheets/live-sunglasses-jab-39-41-quartersec.jpg",
+      "docs/media-audit/contact-sheets/loading-source-1.jpg",
+      "docs/media-audit/contact-sheets/loading-source-2.jpg",
+      "docs/media-audit/contact-sheets/loading-source-3.jpg"
+    ],
+    "notes": [
+      "Half-second full-timeline and quarter-second action-window contact sheets reviewed visually.",
+      "Manga monochrome impact panels and abrupt black/white alternation were excluded from exports; see report for identified intervals.",
+      "Faceoffs, FIGHT title, entrances, threat portraits, lone red-eyed figure, and opening-only establishing footage are audit-only.",
+      "Reward-tagged clips are limited to isolated fist/falling fabric with no visible punch-on-person or KO; crowd brawls and ground-fist impacts are draw-only combat footage.",
+      "Draw pool includes actual unresolved action/crowd-fight material and is not treated as a generic noncombat reward.",
+      "Distinct action differences between source A and B are recorded in the candidate table below.",
+      "No added audio, generated content, original montages or audit contact sheets are shipped as runtime media."
+    ],
+    "candidates": [
+      {
+        "source": "A",
+        "range": "0–9",
+        "moment": "Crowd gathers / arena arrival",
+        "disposition": "Opening-only establishing material; deferred, not exported."
+      },
+      {
+        "source": "B",
+        "range": "0–9.5",
+        "moment": "Squabblehouse arrival / crowd",
+        "disposition": "Opening-only establishing material; deferred, not exported."
+      },
+      {
+        "source": "B",
+        "range": "9.5–11",
+        "moment": "Split-bandana eyes and FIGHT title",
+        "disposition": "Pre-fight title/faceoff; deferred."
+      },
+      {
+        "source": "A",
+        "range": "9–15",
+        "moment": "Bandana fighters square up",
+        "disposition": "Faceoff; deferred."
+      },
+      {
+        "source": "B",
+        "range": "11–15",
+        "moment": "Bandana fighters square up",
+        "disposition": "Faceoff; deferred."
+      },
+      {
+        "source": "A",
+        "range": "15–18.5",
+        "moment": "Fist toward camera / impact close-up",
+        "disposition": "Exported as live-first-impact (16.00–17.80); outcome-specific victory."
+      },
+      {
+        "source": "B",
+        "range": "15–17.5",
+        "moment": "First monochrome impact",
+        "disposition": "High-contrast monochrome impact panel; excluded for rapid flash risk."
+      },
+      {
+        "source": "A",
+        "range": "18.5–21",
+        "moment": "Crowd arena view",
+        "disposition": "Repeated establishing view; excluded and opening use is deferred."
+      },
+      {
+        "source": "B",
+        "range": "17.5–21",
+        "moment": "Arena/crowd view",
+        "disposition": "A wide unresolved brawl take at 59–60 is exported as anime-crowd-draw; the earlier arena establishing view remains deferred."
+      },
+      {
+        "source": "A",
+        "range": "21–24",
+        "moment": "Close-range finishing punch",
+        "disposition": "Exported as live-finishing-punch (22.25–23.25); victory."
+      },
+      {
+        "source": "B",
+        "range": "21–24",
+        "moment": "Close-range finishing punch",
+        "disposition": "Mostly setup/pose; impact is followed by monochrome panels, excluded as an unsafe near-duplicate."
+      },
+      {
+        "source": "A",
+        "range": "24–27",
+        "moment": "Opponent down / K.O. beat",
+        "disposition": "Exported as live-knockdown (25.50–27.30), title omitted; victory-only."
+      },
+      {
+        "source": "B",
+        "range": "24–27",
+        "moment": "Opponent down / K.O. title",
+        "disposition": "Frames 24.00–25.00 are exported as anime-opponent-down; the K.O. title starts at 25.00 and is excluded."
+      },
+      {
+        "source": "A",
+        "range": "27–31",
+        "moment": "New challenger squares up",
+        "disposition": "Faceoff material; deferred."
+      },
+      {
+        "source": "B",
+        "range": "27–30.5",
+        "moment": "New challenger squares up",
+        "disposition": "Faceoff material; deferred."
+      },
+      {
+        "source": "A",
+        "range": "31–33",
+        "moment": "Ring-fist / sunglasses punch",
+        "disposition": "Ring-fist object detail exported as live-isolated-fist (32.00–33.50) for reward only; no person is hit."
+      },
+      {
+        "source": "B",
+        "range": "30.5–33",
+        "moment": "Ring-fist / sunglasses punch",
+        "disposition": "Fast portrait-to-punch transition and white/monochrome frames; excluded for flash risk."
+      },
+      {
+        "source": "A",
+        "range": "33–36",
+        "moment": "Side kick / opponent recoils",
+        "disposition": "Exported as live-side-kick (34.50–35.25), retimed from 0.75 s to 1.00 s to avoid the red-plaid close-up; victory."
+      },
+      {
+        "source": "B",
+        "range": "33–35.5",
+        "moment": "Side kick / opponent recoils",
+        "disposition": "The presumed kick is a monochrome/white flash sequence; the remaining color interval cuts directly into the red-plaid threat portrait, leaving no safe coherent >=1-second take. Deferred/excluded."
+      },
+      {
+        "source": "A",
+        "range": "36–39",
+        "moment": "Red-plaid fighter grin/portrait",
+        "disposition": "Threat portrait; opening placement deferred."
+      },
+      {
+        "source": "B",
+        "range": "35.5–39",
+        "moment": "Red-plaid fighter grin/monochrome portrait",
+        "disposition": "Threat portrait and high-contrast manga flashes; deferred/excluded."
+      },
+      {
+        "source": "A",
+        "range": "39–42",
+        "moment": "Sunglasses boxer and red-suited boss",
+        "disposition": "The red-suited boss portrait remains deferred; the separate sunglasses-boxer jab is exported as live-sunglasses-jab (39.50–40.75), victory."
+      },
+      {
+        "source": "B",
+        "range": "39–41.5",
+        "moment": "Red-eyed figure arrives",
+        "disposition": "Threat/entrance portrait; deferred."
+      },
+      {
+        "source": "A",
+        "range": "42–45",
+        "moment": "Red-eyed figure arrival/close-up",
+        "disposition": "Threat portrait; deferred."
+      },
+      {
+        "source": "B",
+        "range": "41.5–45.5",
+        "moment": "Red-eyed figure arrival/close-up",
+        "disposition": "Threat portrait; deferred."
+      },
+      {
+        "source": "A",
+        "range": "45–48",
+        "moment": "Chef at window",
+        "disposition": "Entrance/portrait; deferred."
+      },
+      {
+        "source": "B",
+        "range": "45.5–48.5",
+        "moment": "Chef at window",
+        "disposition": "Entrance/portrait; deferred."
+      },
+      {
+        "source": "A",
+        "range": "48–51",
+        "moment": "Chef emerges/winds up",
+        "disposition": "Chef entrance; deferred."
+      },
+      {
+        "source": "B",
+        "range": "48.5–51.5",
+        "moment": "Chef dining/portrait",
+        "disposition": "Unrelated held food portrait; not a distinct reward action, excluded."
+      },
+      {
+        "source": "A",
+        "range": "51–54",
+        "moment": "Chef counterattack / impact",
+        "disposition": "Exported as live-chef-counter (52.25–54.05); victory."
+      },
+      {
+        "source": "B",
+        "range": "51.5–54.5",
+        "moment": "Chef at the table / eating",
+        "disposition": "Not a combat counterattack in inspected frames; held eating portrait, excluded."
+      },
+      {
+        "source": "A",
+        "range": "54–57",
+        "moment": "Doorway challenge",
+        "disposition": "Faceoff/challenge; deferred."
+      },
+      {
+        "source": "B",
+        "range": "54.5–58",
+        "moment": "Doorway challenge",
+        "disposition": "Faceoff/challenge; deferred."
+      },
+      {
+        "source": "A",
+        "range": "57–60",
+        "moment": "Full crowd brawl",
+        "disposition": "Exported as live-crowd-draw (57.75–59.75), draw-only: broad unresolved combat, never a noncombat reward."
+      },
+      {
+        "source": "B",
+        "range": "58–60",
+        "moment": "Crowd brawl",
+        "disposition": "Exported as anime-crowd-draw (59.00–60.00), draw-only: several fighters remain active with no declared winner."
+      },
+      {
+        "source": "A",
+        "range": "60–61",
+        "moment": "Ground-fist insert",
+        "disposition": "Exported as live-ground-fist (60.25–61.25), draw-only combat impact; not context-neutral and never a generic reward."
+      },
+      {
+        "source": "B",
+        "range": "60–61.2",
+        "moment": "First face punch",
+        "disposition": "Exported as anime-first-impact (60.00–60.50), a continuous color hit slowed from 0.50 s to 1.00 s; victory."
+      },
+      {
+        "source": "A",
+        "range": "61–63",
+        "moment": "Falling red bandana",
+        "disposition": "Exported as live-falling-bandana (61.25–62.95) as isolated falling cloth; reward-only."
+      },
+      {
+        "source": "B",
+        "range": "61.2–62.5",
+        "moment": "Falling red bandana",
+        "disposition": "Exported as anime-falling-bandana (61.25–62.40), ending before the next person-impact shot; reward-only."
+      },
+      {
+        "source": "A",
+        "range": "63–66",
+        "moment": "Ground reaction",
+        "disposition": "The face reaction is a very brief, motion-blurred close-up followed immediately by lights/pavement; no coherent >=1-second portrait take, so audit-only."
+      },
+      {
+        "source": "B",
+        "range": "62.5–64",
+        "moment": "Second face punch",
+        "disposition": "A distinct later punch by a different fighter is exported as anime-second-impact (63.25–64.00) at 0.75x, victory; separate from the first punch at 60–61.2."
+      },
+      {
+        "source": "B",
+        "range": "64–66",
+        "moment": "Third face punch / uppercut",
+        "disposition": "Monochrome panels at 64.75–65.25 are excluded; a color-only uppercut/reaction edit is exported as anime-uppercut-safe-edit (65.25–65.75) at 0.5x, victory."
+      },
+      {
+        "source": "A",
+        "range": "66–69",
+        "moment": "Fight clears / fighters down",
+        "disposition": "Crowded multi-fall brawl has no clean short single-take outcome; excluded, not collapsed into a neutral reward or one winner."
+      },
+      {
+        "source": "B",
+        "range": "66–69",
+        "moment": "Fight clears / fighters down",
+        "disposition": "Continuous, color-only street aftermath exported as anime-fight-clears (66.00–68.00): one fighter remains upright while several others are down, distinct from the earlier wide draw brawl."
+      },
+      {
+        "source": "B",
+        "range": "69–70",
+        "moment": "Car-side launch",
+        "disposition": "Exported as anime-car-launch (69.00–69.75) at 0.75x; ends before the following unrelated shot."
+      },
+      {
+        "source": "B",
+        "range": "70–72",
+        "moment": "Chef-forward punch",
+        "disposition": "The Squabblehouse-apron fighter turns and thrusts a fist; exported as anime-chef-forward-punch (70.50–72.00), victory, ending before the night-street cut."
+      },
+      {
+        "source": "A",
+        "range": "69–78",
+        "moment": "Lone threatening figure after brawl",
+        "disposition": "Threat/entrance material; deferred, not a reward outcome."
+      },
+      {
+        "source": "B",
+        "range": "72–78",
+        "moment": "Lone threatening figure after brawl",
+        "disposition": "Threat/entrance material; deferred."
+      },
+      {
+        "source": "A",
+        "range": "78–81",
+        "moment": "Last fighter collapses",
+        "disposition": "Exported as live-last-collapse (78.25–79.75), defeat-only action, separate from the later quiet aftermath."
+      },
+      {
+        "source": "B",
+        "range": "78–81",
+        "moment": "Last fighter collapses",
+        "disposition": "Outcome frames mix standing threat and falls; excluded for clarity."
+      },
+      {
+        "source": "A",
+        "range": "81–90",
+        "moment": "Quiet street / fallen fighter under lamp",
+        "disposition": "One static closing composition exported as live-quiet-aftermath (83.75–85.75); defeat-only, separate from live-last-collapse."
+      },
+      {
+        "source": "B",
+        "range": "81–90",
+        "moment": "Quiet street / fallen fighter under lamp",
+        "disposition": "One stable-light composition exported as anime-street-aftermath (84.25–84.75) at half speed; later alternating lamp/dark frames are omitted."
+      }
+    ]
+  },
+  "totals": {
+    "loadingVideoBytes": 3589967,
+    "loadingPosterBytes": 394940,
+    "rewardVideoBytes": 3120544,
+    "rewardPosterBytes": 620312,
+    "runtimeBytes": 7725763
+  }
+}

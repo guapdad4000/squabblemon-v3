@@ -1,0 +1,56 @@
+{
+  "verified": true,
+  "completedAt": "2026-10-01T00:53:09.822Z",
+  "experiment": "paired-squabblehouse-counterbenchmark-v30-v31",
+  "matchPairId": "squabblehouse-diner-v30-v31-same-crew-shell-v1",
+  "phaseRoles": {
+    "before": "before-v30-same-authored-diner-crew",
+    "after": "after-v31-same-authored-diner-crew"
+  },
+  "engineVersions": {
+    "before": 30,
+    "after": 31
+  },
+  "sourceRoots": {
+    "before": {
+      "path": "/home/runner/workspace/.local/squabblehouse-counterbenchmark-v30",
+      "kind": "git-archive",
+      "commit": "b3387f68bc3c7ac5e85a536a327e700222ab5fd0"
+    },
+    "after": {
+      "path": "/home/runner/workspace",
+      "kind": "live-checkout",
+      "commit": "b3387f68bc3c7ac5e85a536a327e700222ab5fd0"
+    }
+  },
+  "crew": {
+    "id": "squabblehouse-staff-shell",
+    "name": "Current SQUABBLEHOUSE SHIFT: nine staff and Side of Hands support",
+    "cardIds": [
+      "squabble-house-manager",
+      "squabblehouse-bus-boy",
+      "squabblehouse-cashier",
+      "squabblehouse-security",
+      "squabblehouse-teknician",
+      "griddle-master",
+      "inmate-reformed",
+      "janitor",
+      "waffle-warlord",
+      "sideofhands"
+    ],
+    "orderKey": "squabblehouse-balance-shell-v1"
+  },
+  "sharedOrderKey": "squabblehouse-balance-shell-v1",
+  "exactShardCountPerPhase": 9,
+  "uniqueCasesPerPhase": {
+    "before": 1008,
+    "after": 1008
+  },
+  "matchedCartesianBlocks": 9,
+  "totalUniqueVersionedCases": 2016,
+  "matrixFailures": 0,
+  "rawFailures": 0,
+  "matrixRawParity": "All blocks have exact Cartesian keys, zero failures, and matrix success/failure/outcome tallies independently recomputed from raw results.",
+  "runtimeKitPair": "Opponent kits match byte-for-byte including printed stats, cost, and rarity; crew kits differ only in ability metadata for the three selected cards.",
+  "accountingNote": "Each phase records 1,008 requested cases; matrix replays validate raw samples and are not independent cases."
+}

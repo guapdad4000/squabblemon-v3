@@ -99,7 +99,7 @@ export function Collection({ bootstrap }: { bootstrap: PlayerBootstrap }) {
     try {
       const res = await claimMilestone.mutateAsync({ milestoneId });
       queryClient.setQueryData(getGetPlayerBootstrapQueryKey(), res.bootstrap);
-      revealProfileRewards(bootstrap, res.bootstrap, milestoneId, 'Gang Wall reward');
+      revealProfileRewards(bootstrap, res.bootstrap, milestoneId, 'Gang Wall reward', 'collection');
     } catch { setClaimError('Could not claim this reward. Please try again.'); }
   }
 

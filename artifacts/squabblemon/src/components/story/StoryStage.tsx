@@ -1,5 +1,5 @@
 import { StoryEnvironmentProp } from './StoryEnvironmentProp';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   getStoryNode,
@@ -75,15 +75,115 @@ export type StoryStageProps = {
 export type DialogueTapResult = 'ignore' | 'reveal' | 'advance';
 export type DialogueRevealRun = { complete: () => void; cancel: () => void };
 
+type DialogueMarkupToken = { kind: 'text' | 'emphasis' | 'strong' | 'direction'; text: string; children?: DialogueMarkupToken[] };
+const DIALOGUE_MARKUP = /\*\(([^)]*)\)\*|\*\*((?:[^*]|\*(?!\*))+?)\*\*|\*([^*]+)\*/g;
+
+function pairSplitEmphasis(text: string): string {
+  const markupRanges = [...text.matchAll(DIALOGUE_MARKUP)].map(match => {
+    const start = match.index ?? 0;
+    return [start, start + match[0].length] as const;
+  });
+  const unmatchedSingles: number[] = [];
+  for (let index = 0; index < text.length; index += 1) {
+    if (text[index] !== '*' || text[index - 1] === '*' || text[index + 1] === '*') continue;
+    if (!markupRanges.some(([start, end]) => index >= start && index < end)) unmatchedSingles.push(index);
+  }
+  if (unmatchedSingles.length % 2 === 0 || !unmatchedSingles.length) return text;
+
+  const opening = unmatchedSingles.find(index =>
+    (!index || /\s|[([{—]/.test(text[index - 1]))
+    && index + 1 < text.length
+    && !/\s/.test(text[index + 1]));
+  if (opening !== undefined) return `${text.slice(0, opening)}${text.slice(opening)}*`;
+
+  const closing = unmatchedSingles.find(index =>
+    index > 0
+    && !/\s/.test(text[index - 1])
+    && (!text[index + 1] || /\s|[.,;:!?)}\]]/.test(text[index + 1])));
+  if (closing !== undefined) return `*${text.slice(0, closing)}*${text.slice(closing + 1)}`;
+  return text;
+}
+
+/** Parse the screenplay's small, non-HTML inline vocabulary for all story views. */
+export function tokenizeDialogueMarkup(text: string): DialogueMarkupToken[] {
+  text = pairSplitEmphasis(text);
+  const tokens: DialogueMarkupToken[] = [];
+  let cursor = 0;
+  const addPlainText = (value: string) => {
+    const visible = value.replaceAll('*', '');
+    if (visible) tokens.push({ kind: 'text', text: visible });
+  };
+  for (const match of text.matchAll(DIALOGUE_MARKUP)) {
+    const index = match.index ?? 0;
+    if (index > cursor) addPlainText(text.slice(cursor, index));
+    const tokenText = match[1] !== undefined ? `(${match[1]})` : match[2] ?? match[3] ?? '';
+    const kind = match[1] !== undefined ? 'direction' : match[2] !== undefined ? 'strong' : 'emphasis';
+    if (kind === 'strong') {
+      tokens.push({ kind, text: tokenText, children: tokenizeDialogueMarkup(tokenText) });
+    } else if (kind === 'direction') {
+      tokens.push({
+        kind,
+        text: tokenText,
+        children: [
+          { kind: 'text', text: '(' },
+          ...tokenizeDialogueMarkup(match[1] ?? ''),
+          { kind: 'text', text: ')' },
+        ],
+      });
+    } else {
+      tokens.push({ kind, text: tokenText });
+    }
+    cursor = index + match[0].length;
+  }
+  if (cursor < text.length) addPlainText(text.slice(cursor));
+  return tokens;
+}
+
+export function plainDialogueText(text: string): string {
+  const plainTokens = (tokens: readonly DialogueMarkupToken[]): string =>
+    tokens.map(token => token.children ? plainTokens(token.children) : token.text).join('');
+  return plainTokens(tokenizeDialogueMarkup(text));
+}
+
+export function resolveDialoguePortrait(speaker: string, portraitAssetId: string, isListener: boolean): string {
+  if (speaker.toLowerCase() !== 'player') return portraitAssetId;
+  return `assets/characters/${isListener ? 'player-rear' : 'player'}.webp`;
+}
+
+export function formatDialogueText(text: string, visibleCharacters = Number.POSITIVE_INFINITY): ReactNode[] {
+  const renderTokens = (tokens: readonly DialogueMarkupToken[], limit: number, prefix: string): { nodes: ReactNode[]; used: number } => {
+    const nodes: ReactNode[] = [];
+    let used = 0;
+    tokens.forEach((token, index) => {
+      const available = Math.max(0, limit - used);
+      if (!available) return;
+      const content = token.children
+        ? renderTokens(token.children, available, `${prefix}-${index}`)
+        : { nodes: [token.text.slice(0, available)], used: Math.min(token.text.length, available) };
+      if (!content.used) return;
+      used += content.used;
+      if (token.kind === 'text') nodes.push(...content.nodes);
+      else if (token.kind === 'strong') nodes.push(<strong key={`${prefix}-${token.kind}-${index}`} className="story-dialogue-strong">{content.nodes}</strong>);
+      else if (token.kind === 'emphasis') nodes.push(<em key={`${prefix}-${token.kind}-${index}`} className="story-dialogue-emphasis">{content.nodes}</em>);
+      else {
+        nodes.push(<span key={`${prefix}-${token.kind}-${index}`} className="story-dialogue-direction">{content.nodes}</span>);
+      }
+    });
+    return { nodes, used };
+  };
+  return renderTokens(tokenizeDialogueMarkup(text), Math.max(0, visibleCharacters), 'dialogue').nodes;
+}
+
 export function createDialogueRevealRun({
   text,
   onReveal,
   schedule,
 }: {
   text: string;
-  onReveal: (value: string) => void;
+  onReveal: (value: number) => void;
   schedule: (tick: () => void) => () => void;
 }): DialogueRevealRun {
+  const visibleText = plainDialogueText(text);
   let index = 0;
   let active = true;
   let stop: () => void = () => {};
@@ -95,14 +195,14 @@ export function createDialogueRevealRun({
   stop = schedule(() => {
     if (!active) return;
     index += 1;
-    onReveal(text.slice(0, index));
-    if (index >= text.length) cancel();
+    onReveal(index);
+    if (index >= visibleText.length) cancel();
   });
   return {
     cancel,
     complete: () => {
       cancel();
-      onReveal(text);
+      onReveal(visibleText.length);
     },
   };
 }
@@ -127,11 +227,12 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const [still, setStill] = useState(false);
   const systemReducedMotion = useReducedMotion();
   const lineKey = `${nodeId}:${section}:${position}`;
-  const [revealed, setRevealed] = useState(systemReducedMotion ? line.text : '');
+  const fullText = plainDialogueText(line.text);
+  const [revealed, setRevealed] = useState(systemReducedMotion ? fullText.length : 0);
   const lastTap = useRef(0);
   const lineRef = useRef(lineKey);
   const revealRun = useRef<DialogueRevealRun | null>(null);
-  const revealComplete = revealed.length >= line.text.length;
+  const revealComplete = revealed >= fullText.length;
   const motionOff = still || systemReducedMotion;
 
   // Keep the reveal local to the authored line key. This is intentionally not
@@ -142,7 +243,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
     revealRun.current = null;
     lineRef.current = lineKey;
     lastTap.current = 0;
-    setRevealed(motionOff ? line.text : '');
+    setRevealed(motionOff ? fullText.length : 0);
     if (motionOff) return;
     const run = createDialogueRevealRun({
       text: line.text,
@@ -157,7 +258,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
       run.cancel();
       if (revealRun.current === run) revealRun.current = null;
     };
-  }, [lineKey, line.text, motionOff]);
+  }, [lineKey, line.text, fullText.length, motionOff]);
 
   const advanceFromSurface = () => {
     if (pending || lineRef.current !== lineKey) return;
@@ -184,7 +285,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const previous = lines.slice(0, position - 1).findLast((item) => item.speaker !== line.speaker);
   const interruption = nodeId === 'block-crowned' && line.speaker === 'Baby Momma';
   const dramatic = (node?.kind === 'battle' && node.battleType === 'boss') || interruption;
-  const shouting = /[A-Z]{4,}|!/.test(line.text);
+  const shouting = /[A-Z]{4,}|!/.test(fullText);
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
     <section className={`story-stage ${scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
@@ -207,17 +308,17 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
           <><small>ENTRANCE MUSIC</small><strong>BATTERY LOW</strong><span>PLEASE CHARGE YOUR DEVICE</span></>}
       </div>}
       <div className="story-stage__cast" aria-hidden="true">
-        {previous && <div key={previous.speaker} className="story-stage__actor story-stage__actor--listener"><img src={getAssetUrl(previous.portraitAssetId)} alt="" /></div>}
-        <div key={`${line.speaker}:${shouting}`} className={`story-stage__actor story-stage__actor--speaker ${shouting ? 'story-stage__actor--emphatic' : ''}`}><img src={getAssetUrl(line.portraitAssetId)} alt="" /></div>
+        {previous && <div key={previous.speaker} className={`story-stage__actor story-stage__actor--listener${previous.speaker.toLowerCase() === 'player' ? ' story-stage__actor--player story-stage__actor--player-rear' : ''}`}><img src={getAssetUrl(resolveDialoguePortrait(previous.speaker, previous.portraitAssetId, true))} alt="" /></div>}
+        <div key={`${line.speaker}:${shouting}`} className={`story-stage__actor story-stage__actor--speaker${line.speaker.toLowerCase() === 'player' ? ' story-stage__actor--player story-stage__actor--player-side' : ''} ${shouting ? 'story-stage__actor--emphatic' : ''}`}><img src={getAssetUrl(resolveDialoguePortrait(line.speaker, line.portraitAssetId, false))} alt="" /></div>
       </div>
       <div className="story-stage__vignette" />
       <div className="story-stage__script">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div key={lineKey} className="story-stage__speaker" initial={motionOff ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={motionOff ? undefined : { opacity: 0, y: -8 }} transition={{ duration: motionOff ? 0 : .22 }}>
-            <span>{line.speaker}</span><small>{section === 'post' ? 'AFTERMATH' : 'ON THE BLOCK'} · {position.toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}</small>
+            <span className={`story-stage__speaker-name${line.speaker.toLowerCase() === 'player' ? ' story-stage__speaker-name--player' : ''}`}>{line.speaker}</span><small>{section === 'post' ? 'AFTERMATH' : 'ON THE BLOCK'} · {position.toString().padStart(2, '0')} / {total.toString().padStart(2, '0')}</small>
           </motion.div>
         </AnimatePresence>
-        <motion.p key={lineKey} className="story-stage__line" aria-live="polite" initial={motionOff ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionOff ? 0 : .22 }}>{revealed}<span className="story-stage__caret" aria-hidden="true">{revealComplete ? '' : '▌'}</span></motion.p>
+        <motion.p key={lineKey} className="story-stage__line" aria-live="polite" initial={motionOff ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionOff ? 0 : .22 }}>{formatDialogueText(line.text, revealed)}<span className="story-stage__caret" aria-hidden="true">{revealComplete ? '' : '▌'}</span></motion.p>
         {error && <p className="story-stage__error" role="alert">{error}</p>}
         <footer>
           <div><button type="button" onClick={isolate(onHistory ?? (() => undefined))} disabled={!onHistory || historyDisabled}>Transcript</button><button type="button" onClick={isolate(onSkip)} disabled={pending}>Skip scene</button></div>

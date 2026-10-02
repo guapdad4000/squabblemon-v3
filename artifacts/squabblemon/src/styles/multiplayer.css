@@ -158,6 +158,12 @@
   border: 1px solid #897654;
   margin-left: 8px;
 }
+.online-exit-error {
+  flex: 1 1 100%;
+  margin-top: 6px;
+  color: #ffbfae;
+  font: 600 13px/1.4 'Inter', sans-serif;
+}
 .online-squabble {
   background: #691f2b;
   color: #ffe4b5;

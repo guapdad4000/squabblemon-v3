@@ -10,11 +10,14 @@ import {
   countBalanceMatrixMatches,
   createBalanceMatrixConfig,
   createDefaultBalanceDecks,
+  BALANCE_LAB_SCHEMA_VERSION,
   isSuccessfulBalanceAbilityEvent,
   runBalanceMatrix,
   runHighRiskComboProbe,
   runPairedCardSwaps,
   seededDeckRotation,
+  listLegalBalancePlays,
+  greedyBalancePolicy,
   simulateBalanceMatch,
   firstLegalBalancePolicy,
   seededLegalBalancePolicy,
@@ -66,15 +69,15 @@ test('four-crew evidence preserves the historical shell and adds a legal explici
 
 test('ability success classification rejects real no-effect engine outcomes', () => {
   const noCleanse = playAbilityEvent('rastamon');
-  assert.match(noCleanse.note, /found no status to cleanse/i);
+  assert.match(noCleanse.note, /found no other ally/i);
   assert.equal(isSuccessfulBalanceAbilityEvent(noCleanse), false);
 
-  const noSupport = playAbilityEvent('techbro');
-  assert.match(noSupport.note, /needs another friendly card/i);
-  assert.equal(isSuccessfulBalanceAbilityEvent(noSupport), false);
+  const noSecurityTarget = playAbilityEvent('squabblehouse-security');
+  assert.match(noSecurityTarget.note, /found no enemy/i);
+  assert.equal(isSuccessfulBalanceAbilityEvent(noSecurityTarget), false);
 
-  const noEnemy = playAbilityEvent('cornball');
-  assert.match(noEnemy.note, /found no enemies/i);
+  const noEnemy = playAbilityEvent('griddle-master');
+  assert.match(noEnemy.note, /\b(?:found )?no enemy(?: here)?\b/i);
   assert.equal(isSuccessfulBalanceAbilityEvent(noEnemy), false);
 });
 
@@ -94,9 +97,12 @@ test('ability success classification preserves mechanical fallbacks and real eff
   assert.match(cleansed.note, /cleansed an ally/i);
   assert.equal(isSuccessfulBalanceAbilityEvent(cleansed), true);
 
-  const fallback = playAbilityEvent('mural');
-  assert.match(fallback.note, /needs another friendly type/i);
-  assert.equal(isSuccessfulBalanceAbilityEvent(fallback), true, 'Fresh Color still grants its fallback +1 Hands');
+  const cleanAlly = { ...frozenAlly, statuses: { ...frozenAlly.statuses, frozen: false } };
+  const fallback = playAbilityEvent('rastamon', match => ({
+    ...match, boards: [[cleanAlly], [], []] as Match['boards'],
+  }));
+  assert.match(fallback.note, /gave another ally \+1 Hand/i);
+  assert.equal(isSuccessfulBalanceAbilityEvent(fallback), true, 'Natural Cure still buffs an ally when there is no status to cleanse');
 
   const revealed = playAbilityEvent('promoter', (match) => ({
     ...match,
@@ -115,6 +121,7 @@ test('the CLI writes both reports before returning its intentional blocker exit'
       readFile(result.markdownPath, 'utf8'),
     ]);
     const report = JSON.parse(json) as {
+      schemaVersion: number;
       mode: string;
       matrix: { matchCount: number };
       deterministicFingerprint: string;
@@ -123,9 +130,11 @@ test('the CLI writes both reports before returning its intentional blocker exit'
     assert.equal(result.exitCode, 2);
     assert.equal(result.blockerCount > 0, true);
     assert.equal(report.mode, 'smoke');
+    assert.equal(report.schemaVersion, BALANCE_LAB_SCHEMA_VERSION);
     assert.equal(report.matrix.matchCount, countBalanceMatrixMatches(createBalanceMatrixConfig('smoke')));
     assert.match(report.deterministicFingerprint, /^[0-9a-f]{8}$/);
     assert.match(markdown, /deterministic balance lab/i);
+    assert.match(markdown, /abilitySuccessRate is null/i);
   } finally {
     await rm(outputDirectory, { recursive: true, force: true });
   }
@@ -179,6 +188,20 @@ test('the matrix mirrors seats, tiers and deck order deterministically', () => {
   const first = runBalanceMatrix(config);
   const repeated = runBalanceMatrix(config);
   assert.deepEqual(first, repeated);
+  assert.equal(first.telemetrySchemaVersion, 2);
+  assert.match(first.telemetrySemantics.legacyAbilityCounters, /never base-ability reliability/);
+  assert.equal(first.flags.some(flag => flag.code === 'low-ability-success'), false);
+  for (const card of first.cards) {
+    assert.equal(card.abilitySuccessRate, null);
+    const evidence = card.abilityEvidence;
+    assert.equal(evidence.baseEvents + evidence.upgradeEvents, card.abilityTriggers);
+    assert.equal(evidence.baseDirectEffectEvents + evidence.baseNoObservedEffectEvents
+      + evidence.baseNestedEffectEvents + evidence.baseNestedNoObservedEffectEvents + evidence.baseUnknownEvents,
+    evidence.baseEvents);
+    assert.equal(card.squabbleEvidence.activatedPlays, card.squabbles);
+    assert.equal(card.squabbleEvidence.activatedPlays + card.squabbleEvidence.normalPlays
+      + card.squabbleEvidence.unknownPlays, card.plays);
+  }
   assert.equal(first.matchCount, 8);
   assert.equal(first.seat.games, 8);
   assert.deepEqual(first.tiers.map(({ tier, games }) => [tier, games]), [[0, 4], [3, 4]]);
@@ -214,6 +237,76 @@ test('a custom side-neutral policy hook drives both owners to a complete match',
   assert.equal(result.passes, 12);
   assert.equal(calls.player > 0, true);
   assert.equal(calls.cpu > 0, true);
+});
+
+test('support cards stay available as normal plays but are never offered SQUABBLE to either owner', () => {
+  const match = createMatch('vibes', 'vibes');
+  const supportCards = ['sideofhands', 'energydrink', 'boombox'].map((cardId, index) =>
+    createCardInstance(cardId, 'player', 'balance-support-test', index));
+  const character = createCardInstance('counter', 'player', 'balance-support-test', 3);
+  const playerHand = [...supportCards, character];
+  const cpuHand = playerHand.map((card, index) =>
+    createCardInstance(card.cardId, 'cpu', 'balance-support-cpu-test', index));
+  const ready = {
+    ...match,
+    playerMotion: 20,
+    cpuMotion: 20,
+    playerHand,
+    cpuHand,
+    squabbleByOwner: { player: false, cpu: false },
+  };
+
+  for (const [owner, hand] of [['player', playerHand], ['cpu', cpuHand]] as const) {
+    const legalPlays = listLegalBalancePlays({
+      ...ready, phase: owner === 'player' ? 'player' : 'cpu-reveal',
+    }, owner);
+    for (const support of hand.filter(card => card.kind === 'support')) {
+      const plays = legalPlays.filter(option => option.instanceId === support.instanceId);
+      assert.ok(plays.some(option => !option.squabble), `${support.cardId} remains playable normally for ${owner}`);
+      assert.equal(plays.some(option => option.squabble), false, `${support.cardId} is never offered SQUABBLE for ${owner}`);
+    }
+    assert.ok(legalPlays.some(option => option.instanceId === hand[3].instanceId && option.squabble),
+      `character SQUABBLE remains available for ${owner}`);
+  }
+});
+
+test('greedy and seeded legal policies complete matched diner games with support cards on either seat', () => {
+  const defaultDecks = createDefaultBalanceDecks();
+  const dinerBase = defaultDecks.find(deck => deck.id === 'focus-counterplay')!;
+  const diner: typeof dinerBase = {
+    ...dinerBase,
+    id: 'support-containing-diner',
+    name: 'Support-containing diner regression crew',
+    cardIds: [
+      'squabble-house-manager', 'squabblehouse-bus-boy', 'squabblehouse-cashier',
+      'squabblehouse-security', 'squabblehouse-teknician', 'griddle-master',
+      'inmate-reformed', 'janitor', 'sideofhands', 'energydrink',
+    ],
+  };
+  const opponents = ['focus-wonderland', 'focus-fire-guap', 'focus-wiz']
+    .map(id => defaultDecks.find(deck => deck.id === id)!);
+
+  for (const opponent of opponents) {
+    for (const policy of [greedyBalancePolicy, seededLegalBalancePolicy]) {
+      for (const seat of ['a-player', 'b-player'] as const) {
+        const result = simulateBalanceMatch({
+          deckA: diner,
+          deckB: opponent,
+          districtSeed: 'primary-district01',
+          rotation: 0,
+          tier: 0,
+          seat,
+          policy,
+          allowSquabble: true,
+        });
+        assert.ok(['player', 'cpu', 'draw'].includes(result.winner));
+        const side = result.cardsA.find(card => card.cardId === 'sideofhands');
+        const drink = result.cardsA.find(card => card.cardId === 'energydrink');
+        assert.equal(side?.squabbleEvidence.activatedPlays, 0);
+        assert.equal(drink?.squabbleEvidence.activatedPlays, 0);
+      }
+    }
+  }
 });
 
 test('paired card swaps hold seeds, rotations, seats and tiers constant', () => {

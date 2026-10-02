@@ -61,7 +61,7 @@ export function CareerBoard({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         },
       );
       client.setQueryData(getGetPlayerBootstrapQueryKey(), result);
-      revealProfileRewards(bootstrap, result, cardId, "New gang member");
+      revealProfileRewards(bootstrap, result, cardId, "New gang member", "recruit");
       setSelected(null);
     } catch (reason) {
       setError(

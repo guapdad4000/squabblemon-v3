@@ -65,6 +65,8 @@ export type BlockbusterTools = {
   ) => CardInstance;
   locked: (m: Match, owner: Owner) => Lane[];
   power: (card: CardInstance) => number;
+  rawPower: (card: CardInstance) => number;
+  sync: (match: Match) => Match;
   random: (seed: string, count: number) => number;
 };
 const lanes = [0, 1, 2] as const;
@@ -142,7 +144,7 @@ export function resolveBlockbusterWave(
       const current = m.boards
         .flat()
         .find((c) => c.instanceId === old.instanceId);
-      return !current || current.powerModifier < old.powerModifier;
+      return !current || t.rawPower(current) < t.rawPower(old);
     });
   };
   const restore = (card: CardInstance | undefined, protect = false) => {
@@ -328,9 +330,9 @@ export function resolveBlockbusterWave(
           t,
         );
       if (sacrifice && recipient) {
-        const amount = t.power(sacrifice) + 2;
+        const amount = t.rawPower(sacrifice) + 2;
         targets.add(sacrifice.instanceId);
-        m = {
+        m = t.sync({
           ...m,
           boards: m.boards.map((cs) =>
             cs.filter((c) => c.instanceId !== sacrifice.instanceId),
@@ -340,7 +342,7 @@ export function resolveBlockbusterWave(
               e.targetInstanceId !== sacrifice.instanceId ||
               e.amount === undefined,
           ),
-        };
+        });
         buff(recipient, amount);
         note = `The Setup sacrificed ${sacrifice.name}; ${recipient.name} inherited ${amount} Hands.`;
       } else note = "The Setup needs two friendly characters in this lane.";

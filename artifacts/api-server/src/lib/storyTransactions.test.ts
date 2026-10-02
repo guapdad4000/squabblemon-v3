@@ -14,6 +14,7 @@ import {
   blockPartyChapter,
   getStoryBattle,
   storyContent,
+  storyDialogueToken,
   storySeasons,
 } from "@workspace/squabblemon-engine/story";
 import {
@@ -822,6 +823,209 @@ test("dialogue actions persist on unlocked battle nodes without clearing", async
   assert.equal(row.cleared, false);
   assert.equal(row.attempts, 0);
   assert.deepEqual(row.dialogueSeen, ["pre:0", "skip:pre"]);
+});
+
+test("season-one screenplay tokens fit bounded save actions without changing other-season tokens", () => {
+  const seasonOne = storySeasons.find((season) => season.id === "season-1");
+  assert.ok(seasonOne);
+  const chapters = storyContent.chapters.filter((chapter) =>
+    seasonOne.chapterIds.includes(chapter.id),
+  );
+  assert.equal(chapters.length, seasonOne.chapterIds.length);
+
+  for (const chapter of chapters) {
+    for (const node of chapter.nodes) {
+      const sections = node.kind === "battle"
+        ? [
+            ["pre", node.preDialogue],
+            ["post", node.postDialogue],
+          ] as const
+        : [["main", node.scenes]] as const;
+      for (const [section, dialogue] of sections) {
+        const tokens = dialogue.map((_line, index) =>
+          storyDialogueToken(node.id, section, index),
+        );
+        assert(
+          tokens.length <= 100,
+          `${node.id}/${section} must fit the API's 100-token action limit`,
+        );
+        assert(
+          tokens.every((token) => token.length <= 120),
+          `${node.id}/${section} tokens must fit the API's 120-character limit`,
+        );
+      }
+    }
+  }
+
+  assert.equal(
+    storyDialogueToken("sherlock-thirteenth-bell-clocks", "main", 0),
+    "sherlock-thirteenth-bell-clocks:script-v3:main:0",
+    "Season One revisions must not invalidate another presentation's save tokens",
+  );
+});
+
+test("unverified story battle results cannot unlock post-match dialogue", async (t) => {
+  const userId = await storyPlayer(t, "story-post-gating");
+  const battle = getStoryBattle("welcome-to-the-block");
+  assert.ok(battle);
+  const postDialogue = battle.postDialogue.map((_line, index) =>
+    storyDialogueToken(battle.id, "post", index),
+  );
+
+  await assert.rejects(
+    saveStoryDialogue(userId, battle.id, randomUUID(), [postDialogue[0]]),
+    (error) =>
+      error instanceof StoryRequestError &&
+      error.status === 409 &&
+      error.message.includes("verified"),
+  );
+
+  const campaign = await getPlayerStoryCampaign(userId);
+  const progress = campaign.nodes.find((node) => node.nodeId === battle.id);
+  assert.equal(progress?.cleared, false);
+  assert.equal(progress?.attempts, 0);
+  assert.deepEqual(progress?.dialogueSeen, []);
+});
+
+test("cleared battle dialogue saves retain rewards, clear metadata, legacy markers, and issued snapshots", async (t) => {
+  const userId = await storyPlayer(t, "story-cleared-dialogue-refresh");
+  const battle = getStoryBattle("welcome-to-the-block");
+  const chapter = storyContent.chapters.find((item) => item.id === "block-party");
+  const recipe = starterRecipes[0];
+  assert.ok(battle);
+  assert.ok(chapter);
+  assert.ok(recipe);
+
+  const granted = await db.transaction((tx) =>
+    grantStoryRewards(tx, userId, chapter.id, battle.id, battle.rewards),
+  );
+  assert(granted.some((reward) => reward.kind === "card"));
+  const oldMarkers = [
+    `${battle.id}:script-v3:post:0`,
+    "legacy-post-dialogue-marker",
+  ];
+  const currentPostTokens = battle.postDialogue.map((_line, index) =>
+    storyDialogueToken(battle.id, "post", index),
+  );
+  const firstClearedAt = new Date("2025-01-01T00:00:00.000Z");
+  const lastPlayedAt = new Date("2025-01-02T00:00:00.000Z");
+  await db.insert(playerStoryNodesTable).values({
+    clerkUserId: userId,
+    chapterId: chapter.id,
+    nodeId: battle.id,
+    cleared: true,
+    stars: 3,
+    attempts: 2,
+    wins: 2,
+    lastOutcome: "win",
+    dialogueSeen: oldMarkers,
+    firstClearedAt,
+    lastPlayedAt,
+  });
+
+  const issuedProgressionSnapshot = createStoryMatchProgressionSnapshot(
+    storyContent.version,
+    chapter,
+    battle,
+  );
+  const issuedEncounterSnapshot = structuredClone(battle.encounter);
+  const issuedMechanicsSnapshot = {
+    version: 1,
+    cards: recipe.cards.map((cardId) => ({ cardId, xp: 0, level: 1 })),
+    abilityUpgradeSnapshot: { version: 1, player: [], cpu: [] },
+    districtSnapshot: {
+      version: 1,
+      encounter: battle.encounter.id,
+      issuedForNode: battle.id,
+    },
+  };
+  const [issuedMatch] = await db
+    .insert(playerMatchesTable)
+    .values({
+      clerkUserId: userId,
+      mode: "story",
+      playerDeckId: recipe.id,
+      rivalDeckId: battle.encounter.enemy.deckId,
+      storyNodeId: battle.id,
+      storyContentVersion: storyContent.version,
+      storyEncounterSnapshot:
+        issuedEncounterSnapshot as unknown as Record<string, unknown>,
+      storyProgressionSnapshot:
+        issuedProgressionSnapshot as unknown as Record<string, unknown>,
+      playerEngineCardIds: [...recipe.cards],
+      playerCardProgressionSnapshot: issuedMechanicsSnapshot,
+      outcome: "win",
+      rounds: 6,
+      storyFirstClear: true,
+      storyStars: 3,
+      storyBossHighestPhase: 0,
+      completedAt: firstClearedAt,
+    })
+    .returning();
+
+  const [profileBefore] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  const claimsBefore = await db
+    .select()
+    .from(playerStoryRewardClaimsTable)
+    .where(eq(playerStoryRewardClaimsTable.clerkUserId, userId));
+  const saved = await saveStoryDialogue(
+    userId,
+    battle.id,
+    randomUUID(),
+    currentPostTokens,
+  );
+  assert.equal(saved.alreadyApplied, false);
+  assert.equal(saved.node.cleared, true);
+  assert.equal(saved.node.stars, 3);
+  assert.equal(saved.node.attempts, 2);
+  assert.equal(saved.node.wins, 2);
+  assert.equal(saved.node.lastOutcome, "win");
+  assert.deepEqual(saved.node.dialogueSeen, [...oldMarkers, ...currentPostTokens]);
+
+  const freshCampaign = await getPlayerStoryCampaign(userId);
+  const freshNode = freshCampaign.nodes.find((item) => item.nodeId === battle.id);
+  assert.equal(freshNode?.status, "cleared");
+  assert.equal(freshNode?.cleared, true);
+  assert.equal(freshNode?.stars, 3);
+  assert.equal(freshNode?.attempts, 2);
+  assert.deepEqual(freshNode?.dialogueSeen, [...oldMarkers, ...currentPostTokens]);
+
+  const [profileAfter] = await db
+    .select()
+    .from(playerProfilesTable)
+    .where(eq(playerProfilesTable.clerkUserId, userId));
+  assert.equal(profileAfter.softCurrency, profileBefore.softCurrency);
+  assert.equal(profileAfter.packTickets, profileBefore.packTickets);
+  assert.deepEqual(profileAfter.ownedCardIds, profileBefore.ownedCardIds);
+  assert.deepEqual(profileAfter.discoveredCardIds, profileBefore.discoveredCardIds);
+  const claimsAfter = await db
+    .select()
+    .from(playerStoryRewardClaimsTable)
+    .where(eq(playerStoryRewardClaimsTable.clerkUserId, userId));
+  assert.deepEqual(
+    claimsAfter.map((claim) => claim.rewardKey).sort(),
+    claimsBefore.map((claim) => claim.rewardKey).sort(),
+  );
+
+  const [matchAfter] = await db
+    .select()
+    .from(playerMatchesTable)
+    .where(eq(playerMatchesTable.id, issuedMatch.id));
+  assert.deepEqual(
+    matchAfter.storyEncounterSnapshot,
+    issuedEncounterSnapshot,
+  );
+  assert.deepEqual(
+    parseStoryMatchProgressionSnapshot(matchAfter.storyProgressionSnapshot),
+    issuedProgressionSnapshot,
+  );
+  assert.deepEqual(
+    matchAfter.playerCardProgressionSnapshot,
+    issuedMechanicsSnapshot,
+  );
 });
 
 test("story transcript verification uses explicit immutable snapshot and cards", () => {

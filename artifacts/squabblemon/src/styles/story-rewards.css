@@ -1,3 +1,10 @@
+.story-award-stop__art img[data-story-player],
+.story-complete-scene__character[data-story-player] {
+  /* Preserve the user's dark transparent artwork against the scene plate. */
+  background: radial-gradient(ellipse at 50% 45%, #e9d7acb3, #b9d5c955 40%, transparent 66%);
+  filter: drop-shadow(0 0 2px #e7e9d1) drop-shadow(0 0 16px #d9e2ba88);
+  bottom: 0;
+}
 /* The chapter route is a collectible playbill, not an inventory table. */
 .story-atlas .story-atlas__rewards-panel {
   inset: auto max(18px, env(safe-area-inset-right)) calc(var(--fan-clearance, 0px) + 24px) auto;

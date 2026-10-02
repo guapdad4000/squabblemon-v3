@@ -1,0 +1,746 @@
+{
+  "all-decks-ranking-fresh-a": [
+    {
+      "deckId": "element-water",
+      "name": "Water",
+      "games": 288,
+      "wins": 218,
+      "losses": 55,
+      "draws": 15,
+      "scoreRate": 0.7829861111111112,
+      "rank": 1
+    },
+    {
+      "deckId": "mushroom-plant",
+      "name": "Mushroom Garden",
+      "games": 288,
+      "wins": 202,
+      "losses": 58,
+      "draws": 28,
+      "scoreRate": 0.75,
+      "rank": 2
+    },
+    {
+      "deckId": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "games": 288,
+      "wins": 209,
+      "losses": 65,
+      "draws": 14,
+      "scoreRate": 0.75,
+      "rank": 2
+    },
+    {
+      "deckId": "cellblock-pressure",
+      "name": "Cellblock Pressure",
+      "games": 288,
+      "wins": 193,
+      "losses": 64,
+      "draws": 31,
+      "scoreRate": 0.7239583333333334,
+      "rank": 4
+    },
+    {
+      "deckId": "element-air",
+      "name": "Air",
+      "games": 288,
+      "wins": 194,
+      "losses": 71,
+      "draws": 23,
+      "scoreRate": 0.7135416666666666,
+      "rank": 5
+    },
+    {
+      "deckId": "focus-wonderland",
+      "name": "Wonderland Return",
+      "games": 288,
+      "wins": 187,
+      "losses": 71,
+      "draws": 30,
+      "scoreRate": 0.7013888888888888,
+      "rank": 6
+    },
+    {
+      "deckId": "element-light",
+      "name": "Light",
+      "games": 288,
+      "wins": 190,
+      "losses": 76,
+      "draws": 22,
+      "scoreRate": 0.6979166666666666,
+      "rank": 7
+    },
+    {
+      "deckId": "focus-wiz",
+      "name": "The Wiz",
+      "games": 288,
+      "wins": 180,
+      "losses": 79,
+      "draws": 29,
+      "scoreRate": 0.6753472222222222,
+      "rank": 8
+    },
+    {
+      "deckId": "element-dark",
+      "name": "Dark",
+      "games": 288,
+      "wins": 176,
+      "losses": 81,
+      "draws": 31,
+      "scoreRate": 0.6649305555555556,
+      "rank": 9
+    },
+    {
+      "deckId": "focused-red-set",
+      "name": "Blood / Red Set",
+      "games": 288,
+      "wins": 178,
+      "losses": 89,
+      "draws": 21,
+      "scoreRate": 0.6545138888888888,
+      "rank": 10
+    },
+    {
+      "deckId": "element-electric",
+      "name": "Electric",
+      "games": 288,
+      "wins": 158,
+      "losses": 104,
+      "draws": 26,
+      "scoreRate": 0.59375,
+      "rank": 11
+    },
+    {
+      "deckId": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "games": 288,
+      "wins": 154,
+      "losses": 100,
+      "draws": 34,
+      "scoreRate": 0.59375,
+      "rank": 11
+    },
+    {
+      "deckId": "element-earth",
+      "name": "Earth",
+      "games": 288,
+      "wins": 157,
+      "losses": 106,
+      "draws": 25,
+      "scoreRate": 0.5885416666666666,
+      "rank": 13
+    },
+    {
+      "deckId": "focus-air-bond",
+      "name": "Air Bond",
+      "games": 288,
+      "wins": 146,
+      "losses": 112,
+      "draws": 30,
+      "scoreRate": 0.5590277777777778,
+      "rank": 14
+    },
+    {
+      "deckId": "focus-wave7-legends",
+      "name": "Wave 7 Legends",
+      "games": 288,
+      "wins": 135,
+      "losses": 111,
+      "draws": 42,
+      "scoreRate": 0.5416666666666666,
+      "rank": 15
+    },
+    {
+      "deckId": "focus-detective",
+      "name": "Sherlock and Watson",
+      "games": 288,
+      "wins": 137,
+      "losses": 115,
+      "draws": 36,
+      "scoreRate": 0.5381944444444444,
+      "rank": 16
+    },
+    {
+      "deckId": "element-plant",
+      "name": "Plant",
+      "games": 288,
+      "wins": 141,
+      "losses": 120,
+      "draws": 27,
+      "scoreRate": 0.5364583333333334,
+      "rank": 17
+    },
+    {
+      "deckId": "element-fire",
+      "name": "Fire",
+      "games": 288,
+      "wins": 135,
+      "losses": 121,
+      "draws": 32,
+      "scoreRate": 0.5243055555555556,
+      "rank": 18
+    },
+    {
+      "deckId": "focus-earth-tax",
+      "name": "Earth Tax and Finishers",
+      "games": 288,
+      "wins": 128,
+      "losses": 126,
+      "draws": 34,
+      "scoreRate": 0.5034722222222222,
+      "rank": 19
+    },
+    {
+      "deckId": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "games": 288,
+      "wins": 130,
+      "losses": 129,
+      "draws": 29,
+      "scoreRate": 0.5017361111111112,
+      "rank": 20
+    },
+    {
+      "deckId": "focus-cellblock",
+      "name": "Cellblock Lane Sequence",
+      "games": 288,
+      "wins": 131,
+      "losses": 131,
+      "draws": 26,
+      "scoreRate": 0.5,
+      "rank": 21
+    },
+    {
+      "deckId": "focus-fire-guap",
+      "name": "Fire Pressure",
+      "games": 288,
+      "wins": 129,
+      "losses": 129,
+      "draws": 30,
+      "scoreRate": 0.5,
+      "rank": 21
+    },
+    {
+      "deckId": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "games": 288,
+      "wins": 120,
+      "losses": 131,
+      "draws": 37,
+      "scoreRate": 0.4809027777777778,
+      "rank": 23
+    },
+    {
+      "deckId": "focus-cellblock-classic",
+      "name": "Cellblock — No Kingpin",
+      "games": 288,
+      "wins": 111,
+      "losses": 143,
+      "draws": 34,
+      "scoreRate": 0.4444444444444444,
+      "rank": 24
+    },
+    {
+      "deckId": "starter-receipts",
+      "name": "RECEIPTS",
+      "games": 288,
+      "wins": 108,
+      "losses": 143,
+      "draws": 37,
+      "scoreRate": 0.4392361111111111,
+      "rank": 25
+    },
+    {
+      "deckId": "focus-poison-entry",
+      "name": "Poison Entry Punishment",
+      "games": 288,
+      "wins": 98,
+      "losses": 150,
+      "draws": 40,
+      "scoreRate": 0.4097222222222222,
+      "rank": 26
+    },
+    {
+      "deckId": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "games": 288,
+      "wins": 107,
+      "losses": 162,
+      "draws": 19,
+      "scoreRate": 0.4045138888888889,
+      "rank": 27
+    },
+    {
+      "deckId": "element-poison",
+      "name": "Poison",
+      "games": 288,
+      "wins": 97,
+      "losses": 163,
+      "draws": 28,
+      "scoreRate": 0.3854166666666667,
+      "rank": 28
+    },
+    {
+      "deckId": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "games": 288,
+      "wins": 91,
+      "losses": 168,
+      "draws": 29,
+      "scoreRate": 0.3663194444444444,
+      "rank": 29
+    },
+    {
+      "deckId": "focus-demario-luigion",
+      "name": "Demario and Luigion",
+      "games": 288,
+      "wins": 87,
+      "losses": 176,
+      "draws": 25,
+      "scoreRate": 0.3454861111111111,
+      "rank": 30
+    },
+    {
+      "deckId": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "games": 288,
+      "wins": 82,
+      "losses": 183,
+      "draws": 23,
+      "scoreRate": 0.3246527777777778,
+      "rank": 31
+    },
+    {
+      "deckId": "focus-counterplay",
+      "name": "Counterplay",
+      "games": 288,
+      "wins": 74,
+      "losses": 180,
+      "draws": 34,
+      "scoreRate": 0.3159722222222222,
+      "rank": 32
+    },
+    {
+      "deckId": "focus-late-scaling",
+      "name": "Late Scaling",
+      "games": 288,
+      "wins": 62,
+      "losses": 195,
+      "draws": 31,
+      "scoreRate": 0.2690972222222222,
+      "rank": 33
+    },
+    {
+      "deckId": "focus-wave7-tempo",
+      "name": "Wave 7 Tempo",
+      "games": 288,
+      "wins": 45,
+      "losses": 222,
+      "draws": 21,
+      "scoreRate": 0.19270833333333334,
+      "rank": 34
+    },
+    {
+      "deckId": "starter-slide",
+      "name": "SLIDE THRU",
+      "games": 288,
+      "wins": 45,
+      "losses": 224,
+      "draws": 19,
+      "scoreRate": 0.1892361111111111,
+      "rank": 35
+    },
+    {
+      "deckId": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "games": 288,
+      "wins": 40,
+      "losses": 226,
+      "draws": 22,
+      "scoreRate": 0.17708333333333334,
+      "rank": 36
+    },
+    {
+      "deckId": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "games": 288,
+      "wins": 33,
+      "losses": 229,
+      "draws": 26,
+      "scoreRate": 0.1597222222222222,
+      "rank": 37
+    }
+  ],
+  "all-decks-ranking-fresh-b": [
+    {
+      "deckId": "element-air",
+      "name": "Air",
+      "games": 288,
+      "wins": 239,
+      "losses": 40,
+      "draws": 9,
+      "scoreRate": 0.8454861111111112,
+      "rank": 1
+    },
+    {
+      "deckId": "element-water",
+      "name": "Water",
+      "games": 288,
+      "wins": 215,
+      "losses": 60,
+      "draws": 13,
+      "scoreRate": 0.7690972222222222,
+      "rank": 2
+    },
+    {
+      "deckId": "mushroom-plant",
+      "name": "Mushroom Garden",
+      "games": 288,
+      "wins": 211,
+      "losses": 59,
+      "draws": 18,
+      "scoreRate": 0.7638888888888888,
+      "rank": 3
+    },
+    {
+      "deckId": "focus-wonderland",
+      "name": "Wonderland Return",
+      "games": 288,
+      "wins": 207,
+      "losses": 58,
+      "draws": 23,
+      "scoreRate": 0.7586805555555556,
+      "rank": 4
+    },
+    {
+      "deckId": "element-electric",
+      "name": "Electric",
+      "games": 288,
+      "wins": 206,
+      "losses": 62,
+      "draws": 20,
+      "scoreRate": 0.75,
+      "rank": 5
+    },
+    {
+      "deckId": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "games": 288,
+      "wins": 202,
+      "losses": 66,
+      "draws": 20,
+      "scoreRate": 0.7361111111111112,
+      "rank": 6
+    },
+    {
+      "deckId": "element-dark",
+      "name": "Dark",
+      "games": 288,
+      "wins": 192,
+      "losses": 76,
+      "draws": 20,
+      "scoreRate": 0.7013888888888888,
+      "rank": 7
+    },
+    {
+      "deckId": "cellblock-pressure",
+      "name": "Cellblock Pressure",
+      "games": 288,
+      "wins": 180,
+      "losses": 84,
+      "draws": 24,
+      "scoreRate": 0.6666666666666666,
+      "rank": 8
+    },
+    {
+      "deckId": "element-earth",
+      "name": "Earth",
+      "games": 288,
+      "wins": 180,
+      "losses": 90,
+      "draws": 18,
+      "scoreRate": 0.65625,
+      "rank": 9
+    },
+    {
+      "deckId": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "games": 288,
+      "wins": 170,
+      "losses": 97,
+      "draws": 21,
+      "scoreRate": 0.6267361111111112,
+      "rank": 10
+    },
+    {
+      "deckId": "focus-earth-tax",
+      "name": "Earth Tax and Finishers",
+      "games": 288,
+      "wins": 171,
+      "losses": 99,
+      "draws": 18,
+      "scoreRate": 0.625,
+      "rank": 11
+    },
+    {
+      "deckId": "element-light",
+      "name": "Light",
+      "games": 288,
+      "wins": 161,
+      "losses": 95,
+      "draws": 32,
+      "scoreRate": 0.6145833333333334,
+      "rank": 12
+    },
+    {
+      "deckId": "focused-red-set",
+      "name": "Blood / Red Set",
+      "games": 288,
+      "wins": 159,
+      "losses": 98,
+      "draws": 31,
+      "scoreRate": 0.6059027777777778,
+      "rank": 13
+    },
+    {
+      "deckId": "focus-wave7-legends",
+      "name": "Wave 7 Legends",
+      "games": 288,
+      "wins": 155,
+      "losses": 103,
+      "draws": 30,
+      "scoreRate": 0.5902777777777778,
+      "rank": 14
+    },
+    {
+      "deckId": "focus-wiz",
+      "name": "The Wiz",
+      "games": 288,
+      "wins": 156,
+      "losses": 112,
+      "draws": 20,
+      "scoreRate": 0.5763888888888888,
+      "rank": 15
+    },
+    {
+      "deckId": "focus-poison-entry",
+      "name": "Poison Entry Punishment",
+      "games": 288,
+      "wins": 143,
+      "losses": 119,
+      "draws": 26,
+      "scoreRate": 0.5416666666666666,
+      "rank": 16
+    },
+    {
+      "deckId": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "games": 288,
+      "wins": 143,
+      "losses": 121,
+      "draws": 24,
+      "scoreRate": 0.5381944444444444,
+      "rank": 17
+    },
+    {
+      "deckId": "focus-cellblock",
+      "name": "Cellblock Lane Sequence",
+      "games": 288,
+      "wins": 140,
+      "losses": 122,
+      "draws": 26,
+      "scoreRate": 0.53125,
+      "rank": 18
+    },
+    {
+      "deckId": "focus-detective",
+      "name": "Sherlock and Watson",
+      "games": 288,
+      "wins": 136,
+      "losses": 129,
+      "draws": 23,
+      "scoreRate": 0.5121527777777778,
+      "rank": 19
+    },
+    {
+      "deckId": "focus-air-bond",
+      "name": "Air Bond",
+      "games": 288,
+      "wins": 130,
+      "losses": 133,
+      "draws": 25,
+      "scoreRate": 0.4947916666666667,
+      "rank": 20
+    },
+    {
+      "deckId": "element-poison",
+      "name": "Poison",
+      "games": 288,
+      "wins": 122,
+      "losses": 135,
+      "draws": 31,
+      "scoreRate": 0.4774305555555556,
+      "rank": 21
+    },
+    {
+      "deckId": "element-plant",
+      "name": "Plant",
+      "games": 288,
+      "wins": 121,
+      "losses": 142,
+      "draws": 25,
+      "scoreRate": 0.4635416666666667,
+      "rank": 22
+    },
+    {
+      "deckId": "focus-cellblock-classic",
+      "name": "Cellblock — No Kingpin",
+      "games": 288,
+      "wins": 117,
+      "losses": 147,
+      "draws": 24,
+      "scoreRate": 0.4479166666666667,
+      "rank": 23
+    },
+    {
+      "deckId": "element-fire",
+      "name": "Fire",
+      "games": 288,
+      "wins": 99,
+      "losses": 168,
+      "draws": 21,
+      "scoreRate": 0.3802083333333333,
+      "rank": 24
+    },
+    {
+      "deckId": "focus-demario-luigion",
+      "name": "Demario and Luigion",
+      "games": 288,
+      "wins": 93,
+      "losses": 173,
+      "draws": 22,
+      "scoreRate": 0.3611111111111111,
+      "rank": 25
+    },
+    {
+      "deckId": "focused-blue-set",
+      "name": "Crip / Blue Set",
+      "games": 288,
+      "wins": 90,
+      "losses": 172,
+      "draws": 26,
+      "scoreRate": 0.3576388888888889,
+      "rank": 26
+    },
+    {
+      "deckId": "focus-fire-guap",
+      "name": "Fire Pressure",
+      "games": 288,
+      "wins": 86,
+      "losses": 174,
+      "draws": 28,
+      "scoreRate": 0.3472222222222222,
+      "rank": 27
+    },
+    {
+      "deckId": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "games": 288,
+      "wins": 82,
+      "losses": 177,
+      "draws": 29,
+      "scoreRate": 0.3350694444444444,
+      "rank": 28
+    },
+    {
+      "deckId": "focus-counterplay",
+      "name": "Counterplay",
+      "games": 288,
+      "wins": 76,
+      "losses": 186,
+      "draws": 26,
+      "scoreRate": 0.3090277777777778,
+      "rank": 29
+    },
+    {
+      "deckId": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "games": 288,
+      "wins": 68,
+      "losses": 186,
+      "draws": 34,
+      "scoreRate": 0.2951388888888889,
+      "rank": 30
+    },
+    {
+      "deckId": "starter-slide",
+      "name": "SLIDE THRU",
+      "games": 288,
+      "wins": 71,
+      "losses": 193,
+      "draws": 24,
+      "scoreRate": 0.2881944444444444,
+      "rank": 31
+    },
+    {
+      "deckId": "starter-receipts",
+      "name": "RECEIPTS",
+      "games": 288,
+      "wins": 66,
+      "losses": 195,
+      "draws": 27,
+      "scoreRate": 0.2760416666666667,
+      "rank": 32
+    },
+    {
+      "deckId": "focus-late-scaling",
+      "name": "Late Scaling",
+      "games": 288,
+      "wins": 66,
+      "losses": 196,
+      "draws": 26,
+      "scoreRate": 0.2743055555555556,
+      "rank": 33
+    },
+    {
+      "deckId": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "games": 288,
+      "wins": 65,
+      "losses": 198,
+      "draws": 25,
+      "scoreRate": 0.2690972222222222,
+      "rank": 34
+    },
+    {
+      "deckId": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "games": 288,
+      "wins": 58,
+      "losses": 204,
+      "draws": 26,
+      "scoreRate": 0.2465277777777778,
+      "rank": 35
+    },
+    {
+      "deckId": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "games": 288,
+      "wins": 54,
+      "losses": 207,
+      "draws": 27,
+      "scoreRate": 0.234375,
+      "rank": 36
+    },
+    {
+      "deckId": "focus-wave7-tempo",
+      "name": "Wave 7 Tempo",
+      "games": 288,
+      "wins": 56,
+      "losses": 210,
+      "draws": 22,
+      "scoreRate": 0.2326388888888889,
+      "rank": 37
+    }
+  ]
+}

@@ -41,7 +41,7 @@ import {
 import { STORY_DUPLICATE_STYLE_SHARDS } from '@workspace/squabblemon-engine/economy';
 import { cards, catalogCardByEngineId, getAssetUrl, getCardImage, CARD_RARITY_DEFINITIONS } from '../../data';
 import { getMatchRoundLimit, getStoryModifierSummaries } from '../../gameEngine';
-import { StoryStage } from '../../components/story/StoryStage';
+import { formatDialogueText, StoryStage } from '../../components/story/StoryStage';
 import { ChapterTickets } from '../../components/story/ChapterTickets';
 import {
   ChapterTicketProgress,
@@ -121,7 +121,7 @@ function ChapterRewardStop({ node, progress, finale, onSelect }: {
   const portrait = node.kind === 'battle' ? node.encounter.enemy.portraitAssetId : node.scenes.at(-1)?.portraitAssetId;
   return <article className={`story-award-stop ${finale ? 'story-award-stop--finale' : ''} ${locked ? 'is-locked' : earned ? 'is-earned' : 'is-available'}`} data-testid={`story-reward-stop-${node.id}`}>
     <div className="story-award-stop__art" style={{ backgroundImage: `url("${getAssetUrl(node.cinematic.environmentAssetId)}")` }}>
-      {portrait && <img src={getAssetUrl(portrait)} alt="" loading="lazy" />}
+      {portrait && <img src={getAssetUrl(portrait)} alt="" loading="lazy" data-story-player={portrait === 'assets/characters/player.webp' || undefined} />}
       <span className="story-award-stop__number">{finale ? 'FINALE' : node.kind === 'battle' ? 'ENCOUNTER' : 'STORY SCENE'}</span>
     </div>
     <div className="story-award-stop__details">
@@ -594,7 +594,7 @@ export function NodeOverlay({
       setDeliveryStatus(result.rewards.length
         ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
         : 'These rewards were already saved to your account.');
-      revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
+      revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
       setScreen('completed');
     } catch {
       setActionError('Rewards could not be saved. Try again; the same reward cannot be granted twice.');
@@ -622,7 +622,7 @@ export function NodeOverlay({
         setDeliveryStatus(result.rewards.length
           ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
           : 'These rewards were already saved to your account.');
-        revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
+        revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
         setScreen('completed');
         return;
       }
@@ -707,7 +707,7 @@ export function NodeOverlay({
             setDeliveryStatus(result.rewards.length
               ? result.alreadyCompleted ? 'Missing first-clear rewards were added to your account.' : 'Rewards saved to your account.'
               : 'These rewards were already saved to your account.');
-            revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter });
+            revealStoryRewards({ nodeId, title: storyNode.title, story: rewardArt, rewards: result.rewards, bootstrap: result.bootstrap, resolveCharacter: resolveStoryRewardCharacter, presentation: 'story' });
             setScreen('completed');
           }}
           onClose={onClose}
@@ -719,7 +719,7 @@ export function NodeOverlay({
           <div className="story-complete-layout">
             <div className="story-complete-scene" style={{ backgroundImage: `url("${getAssetUrl(storyNode.cinematic.environmentAssetId)}")` }}>
               <div className="story-complete-scene__stamp">{isCleared ? <Check size={16} /> : <Star size={16} />} {isCleared ? 'SCENE COMPLETE' : 'SCENE READY'}</div>
-              <img src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')} alt="" className="story-complete-scene__character" />
+              <img src={getAssetUrl(storyNode.scenes.at(-1)?.portraitAssetId ?? 'assets/characters/snitch.webp')} alt="" className="story-complete-scene__character" data-story-player={storyNode.scenes.at(-1)?.portraitAssetId === 'assets/characters/player.webp' || undefined} />
               <span className="story-complete-scene__caption">A NEW PAGE IN THE NEIGHBORHOOD</span>
             </div>
             <div className="story-complete-content">
@@ -758,7 +758,7 @@ export function NodeOverlay({
               {history.map((entry) => (
                 <div key={entry.token} className="border-l-2 border-primary bg-white/5 p-3">
                   <div className="font-mono text-[8px] uppercase tracking-widest text-primary">{entry.line.speaker}</div>
-                  <p className="mt-1 text-sm text-white/75">{entry.line.text}</p>
+                  <p className="mt-1 text-sm text-white/75">{formatDialogueText(entry.line.text)}</p>
                 </div>
               ))}
               {!history.length && <p className="text-sm text-white/45">No saved dialogue yet.</p>}

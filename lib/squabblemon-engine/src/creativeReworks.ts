@@ -234,15 +234,11 @@ export const CREATIVE_KITS: Record<string, readonly [string, string]> = {
 };
 export const REPLACED_BONDS = new Set([
   "honestthot",
-  "abuela",
   "icecream",
-  "torta",
   "concrete",
-  "gardener",
   "incel",
   "circuitcaptain",
   "canopykeeper",
-  "slipstream",
 ]);
 export function applyCreativeCardKits(cards: Record<string, Card>): void {
   for (const [id, [ability, effect]] of Object.entries(CREATIVE_KITS)) {

@@ -43,6 +43,29 @@ test("story-earned fighters stay out of Street Packs until the story grants them
   }
 });
 
+test("new Squabblehouse cards are part of their regular rarity pools, not story rewards", () => {
+  const ids = [
+    "squabblehouse-security", "squabblehouse-teknician", "griddle-master",
+    "inmate-reformed", "cane-corso-red", "blue-nose-pit",
+  ];
+  const rarityOrder = Object.keys(STREET_PACK_RARITY_WEIGHTS) as CardRarity[];
+  for (const id of ids) {
+    const card = catalogCardById[id];
+    assert.ok(card, id);
+    assert.equal(isStreetPackCard(card), true);
+    assert.deepEqual(card.acquisitionSources, ["Street Packs"]);
+    const tier = cardCatalog.filter(candidate => candidate.rarity === card.rarity && isStreetPackCard(candidate));
+    const priorWeight = rarityOrder.slice(0, rarityOrder.indexOf(card.rarity))
+      .reduce((total, rarity) => total + STREET_PACK_RARITY_WEIGHTS[rarity], 0);
+    let call = 0;
+    const picked = drawGameplayCard({
+      pulledCardIds: new Set(), ownedCardIds: new Set(), protectNew: true,
+      rng: () => call++ === 0 ? Math.floor(priorWeight * 100) : tier.findIndex(candidate => candidate.catalogId === id),
+    });
+    assert.equal(picked.catalogId, id, `${id} is selected by the authoritative Street Pack rarity pool`);
+  }
+});
+
 test("published v7 rules disclose the authoritative independent rarity and bonus behavior", () => {
   assert.equal(STREET_PACK_CONFIG.oddsVersion, "street-pack-v7");
   assert.equal(STREET_PACK_TEN_PULL_CONFIG.oddsVersion, "street-pack-ten-v3");

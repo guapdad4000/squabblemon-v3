@@ -50,18 +50,18 @@ test('Shiesty YN deterministically repeats its 50% self-summon with an eight-cop
   assert.match(cards.shiesty.effect, /50% chance.*repeats.*8 extra/);
 });
 
-test('Torta and Concrete retain Earth identity without hand-bond metadata', () => {
+test('Torta restores the Earth hand bond while Concrete keeps only its board kit', () => {
   for (const [id, element] of [['torta', 'Earth'], ['concrete', 'Earth']] as const) {
-    assert.equal(cards[id].elementalBond, undefined);
+    assert.equal(cards[id].elementalBond, id === 'torta' ? element : undefined);
     assert.equal(find(reveal(id, m => ({ ...m, boards: [[instance('hooper', 'player')], [], []] })), id).powerModifier, 0);
   }
 });
 
-test('Torta no longer buffs Earth allies from hand', () => {
+test('Torta buffs Earth allies from hand', () => {
   const earthAlly = instance('manman', 'player', 7);
   const holder = instance('torta', 'player', 8);
   const after = nextRound({ ...fresh(), phase: 'resolved', playerHand: [holder], boards: [[earthAlly], [], []] });
-  assert.equal(find(after, 'manman').powerModifier, 0);
+  assert.equal(find(after, 'manman').powerModifier, 1);
 });
 test('Water Boy restores exactly one Motion for either owner, and needs company', () => {
   for (const owner of ['player', 'cpu'] as const) {
@@ -174,7 +174,7 @@ test('new cards can complete a deterministic six-round fade and server replay', 
 test('Rock merges into Earth without changing catalog, rarity, stats or upgrade IDs', () => {
   assert(!cardCatalog.some(c => c.type === 'Rock' || c.elementalBond === 'Rock'));
   const earth = cardCatalog.filter(c => c.type === 'Earth' && (c.kind ?? 'character') === 'character');
-  assert.equal(earth.length, 25);
+  assert.equal(earth.length, 27);
   assert(earth.some(c => c.engineId === 'buddy'), 'Earth cardinality includes Buddy’s new Earth identity');
   for (const [id, catalogId, rarity, cost, power] of [
     ['concrete', 'concrete', 'SuperCommon', 1, 1],
@@ -191,7 +191,7 @@ test('Rock merges into Earth without changing catalog, rarity, stats or upgrade 
   assert.match(cards.concrete.effect, /care package in each other district/);
 });
 
-for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete do not stack passive hand growth for ' + owner, () => {
+for (const owner of ['player', 'cpu'] as const) test('only Torta grants Earth hand growth alongside retired Concrete for ' + owner, () => {
   const enemy = owner === 'player' ? 'cpu' : 'player';
   const m: Match = { ...fresh(), phase: 'resolved', playerHand: [], cpuHand: [],
     [owner === 'player' ? 'playerHand' : 'cpuHand']: [instance('torta', owner, 20), instance('concrete', owner, 21)],
@@ -200,7 +200,7 @@ for (const owner of ['player', 'cpu'] as const) test('Torta and Concrete do not 
       [{ ...instance('johnhenry', owner, 4), lane: 2 }, { ...instance('hooper', owner, 5), lane: 2 }]],
   };
   const before = JSON.stringify(m), after = nextRound(m);
-  for (const id of ['manman', 'landlord', 'johnhenry']) assert.equal(find(after, id).powerModifier, 0);
+  for (const id of ['manman', 'landlord', 'johnhenry']) assert.equal(find(after, id).powerModifier, 1);
   assert.equal(after.boards[0].find(c => c.owner === enemy)!.powerModifier, 0);
   assert.equal(find(after, 'hooper').powerModifier, 0);
   assert.equal(JSON.stringify(m), before, 'round resolution does not mutate the saved input');

@@ -66,11 +66,21 @@ function parseCommand(value: unknown): OnlineCommand {
     };
   }
   if (
-    !["ready", "end-turn", "surrender", "rematch"].includes(String(c.type)) ||
+    !["ready", "end-turn", "surrender", "rematch", "lobby", "leave"].includes(
+      String(c.type),
+    ) ||
     Object.keys(c).length !== 1
   )
     throw new OnlineError("Invalid action.", 400);
-  return { type: c.type as "ready" | "end-turn" | "surrender" | "rematch" };
+  return {
+    type: c.type as
+      | "ready"
+      | "end-turn"
+      | "surrender"
+      | "rematch"
+      | "lobby"
+      | "leave",
+  };
 }
 const endpoint =
   (action: (req: Request, userId: string) => Promise<unknown>, status = 200) =>
@@ -98,7 +108,7 @@ const endpoint =
   };
 router.get(
   "/multiplayer",
-  endpoint(async (_req, userId) => ({ rooms: await listFriendRooms(userId) })),
+  endpoint(async (_req, userId) => ({ rooms: await listFriendRooms(userId), serverNow: Date.now() })),
 );
 router.post(
   "/multiplayer",

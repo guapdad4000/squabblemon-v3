@@ -14,6 +14,7 @@ import {
 import { MultiplayerBattle } from "../../components/MultiplayerBattle";
 import { FadeRules, FriendlyFadesHub } from "../../components/social/FriendlyFadesHub";
 import { FadeAlleyScene } from "../../components/social/FadeAlleyScene";
+import { FadeSeriesBoard } from "../../components/social/FadeSeriesBoard";
 import { CompactDeckPicker } from '../../components/CompactDeckPicker';
 import { useSocial } from "../../lib/social";
 import type { OnlineCommand } from "@workspace/squabblemon-engine/multiplayer";
@@ -135,19 +136,26 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
       <button className="sq-btn" onClick={leave}>Back to Friendly Fades</button>
     </div>;
   } else if (room?.status === "closed") {
+    const rivalLeft = room.reason === 'left' && room.closedBy && room.closedBy !== room.seat;
+    const youLeft = room.reason === 'left' && room.closedBy === room.seat;
     screen = <div className="sq-state">
-      <h2>This room has closed.</h2>
-      <p>{targeted ? `The invite with ${targeted.player.displayName} is ${targeted.status}.` : 'Open a fresh challenge to play again.'}</p>
+      <h2>{rivalLeft ? `${room.members[room.seat === 'player' ? 'cpu' : 'player']?.name ?? 'Your rival'} left the room.` : youLeft ? 'You left this room.' : 'This room has closed.'}</h2>
+      <p>{rivalLeft ? 'The series in this room is over. Open a fresh challenge to play again.'
+        : targeted ? `The invite with ${targeted.player.displayName} is ${targeted.status}.` : 'Open a fresh challenge to play again.'}</p>
       <button className="sq-btn sq-btn--primary" onClick={leave}>Back to Friendly Fades</button>
     </div>;
   } else if (room) {
     const opponentSeat = room.seat === 'player' ? 'cpu' : 'player';
     const opponentJoined = !!room.members[opponentSeat];
+    const played = room.series.player + room.series.cpu + room.series.draws;
     screen = <>
       <div className="fa-lobby fa-lobby--room">
         <section className="fa-control" aria-label="Room controls">
           <div className="fa-sectionhead">
             <h2 data-testid="online-room">{opponentJoined ? 'Rival joined' : invitedPlayer ? `Waiting on ${invitedPlayer.displayName}` : 'Room open'}</h2>
+            {opponentJoined && (room.gameNumber > 1 || played > 0) && <FadeSeriesBoard variant="lobby" reducedMotion={profile.settings.reducedMotion}
+              gameNumber={room.gameNumber} rivalName={room.members[opponentSeat]?.name}
+              series={{ you: room.series[room.seat], rival: room.series[opponentSeat], draws: room.series.draws }} />}
             {!invitedPlayer && room.seat === 'player' && !opponentJoined && <div className="fa-session__code">
               <span>ROOM CODE</span><strong data-testid="online-room-code">{room.code}</strong>
               <button type="button" onClick={() => void copyInvite()} data-testid="button-copy-room" aria-label={copied ? 'Link copied' : 'Copy invite link'}>
@@ -167,7 +175,8 @@ export function Multiplayer({ bootstrap, code }: { bootstrap: PlayerBootstrap; c
                 {room.members[room.seat]!.ready ? 'Ready. Waiting for your rival…' : !opponentJoined ? 'Waiting for your rival to join' : 'Ready to squabble'}</button>
               {invitedPlayer && targeted?.status === 'pending' && room.seat === 'player' && !opponentJoined && <button className="fa-button fa-button--secondary" disabled={working || social.busy} data-testid="button-cancel-targeted"
                 onClick={() => { if (window.confirm(`Call off the invite to ${invitedPlayer.displayName}?`)) void social.respondInvitation(targeted.id, 'cancel').catch(reason => setError(onlineErrorMessage(reason))); }}>Cancel invite</button>}
-              <button className="fa-button fa-button--secondary" disabled={working} onClick={() => void send({ type: "surrender" })}>Close room</button>
+              <button className="fa-button fa-button--secondary" data-testid="button-close-room" disabled={working}
+                onClick={() => { if (!opponentJoined || window.confirm('Close this room for both of you? The series ends here.')) void send({ type: "leave" }); }}>Close room</button>
               <button className="fa-button fa-button--secondary" onClick={leave}>Back to Friendly Fades</button>
             </div>
           </div>

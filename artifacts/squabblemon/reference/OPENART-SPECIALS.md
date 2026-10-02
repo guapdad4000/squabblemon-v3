@@ -2,7 +2,7 @@
 
 All 100 completed non-fairytale character renders are assigned as game defaults at the user's request: “implement them all and we will swap out over time.” They join the 103 existing clips. Known visual defects remain in these source renders; installation does not mean clean visual or subjective audio acceptance.
 
-`openart-specials.json` records each character, engine ID, stable clip ID, source generation, SHA-256, native dimensions, measured duration, and replacement notes. Detailed sampled-frame findings remain in `../../deliverables/openart-specials/review/visual-findings.json`.
+`openart-specials.json` records each character, engine ID, stable clip ID, source generation, SHA-256, native dimensions, measured duration, and replacement notes. Its `sha256` is the installed runtime file digest; transformed user-supplied media also records the original `sourceSha256` and exact ZIP entry under `suppliedArchive`. Replaced Janitor CDN provenance remains intact under `previousSource`. Detailed sampled-frame findings remain in `../../deliverables/openart-specials/review/visual-findings.json`.
 
 - Runtime files: `../public/assets/special-moves/oa-<catalog-id>-v1.mp4`.
 - Defaults and timing: `../src/specialMoves.json`. Explicit assignments take precedence over procedural fallbacks.

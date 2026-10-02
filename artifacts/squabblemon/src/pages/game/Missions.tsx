@@ -90,7 +90,7 @@ export function Missions({ bootstrap }: { bootstrap: PlayerBootstrap }) {
         finishRef.current = null;
         claimLock.current = false;
         setClaimState(null);
-        revealProfileRewards(bootstrap, res, missionId, 'Bounty collected');
+        revealProfileRewards(bootstrap, res, missionId, 'Bounty collected', 'mission');
       };
       finishRef.current = doReveal;
       const reducedMotion = profileReducedMotion

@@ -5,6 +5,7 @@ import {
   getStorySeasonForChapter, isStoryPuzzleSolution, storyContent, storySeasons,
   storyDialogueToken, validateStoryContent,
 } from "@workspace/squabblemon-engine/story";
+import screenplay from "../../../lib/squabblemon-engine/src/storyChapters/seasonOneRewrite.json";
 
 const legacyIds = ["block-party", "red-side-tapes", "blue-side-blues", "side-show", "old-heads-know", "the-function", "return-of-the-block", "the-crown"];
 
@@ -25,7 +26,8 @@ test("season expansion preserves every legacy progression, encounter and reward 
   assert.equal(createHash("sha256").update(JSON.stringify(mechanics)).digest("hex"),
     "342f4990396bcad4bd0eb1492ac8852ed6ffb60e3d13162dfef3bd855209ec30",
     "Existing saves and issued matches depend on unchanged Season One identities/rules/rewards.");
-  assert.equal(storyDialogueToken("welcome-to-the-block", "pre", 0), "welcome-to-the-block:script-v4:pre:0");
+  assert.equal(storyDialogueToken("welcome-to-the-block", "pre", 0),
+    `welcome-to-the-block:script-${screenplay.revisions["welcome-to-the-block"]}:pre:0`);
 });
 
 test("each chapter has exactly one presentation and every advertised chapter exists", () => {

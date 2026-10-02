@@ -1,0 +1,225 @@
+{
+  "startedAt": "2026-10-01T23:50:56.405Z",
+  "finishedAt": "2026-10-01T23:54:52.417Z",
+  "success": true,
+  "executions": [
+    {
+      "label": "failed-init",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/failed-cases",
+        "--init-failures",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-onshift"
+      ],
+      "startedAt": "2026-10-01T23:50:56.406Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:50:57.270Z"
+    },
+    {
+      "label": "failed-worker",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/failed-cases",
+        "--worker",
+        "0",
+        "1"
+      ],
+      "startedAt": "2026-10-01T23:50:57.270Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:51:04.576Z"
+    },
+    {
+      "label": "failed-merge",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/failed-cases",
+        "--merge",
+        "1"
+      ],
+      "startedAt": "2026-10-01T23:51:04.577Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:51:05.048Z"
+    },
+    {
+      "label": "full-init",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--init",
+        "--from-plan",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-onshift/plan.json"
+      ],
+      "startedAt": "2026-10-01T23:51:05.048Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:51:05.222Z"
+    },
+    {
+      "label": "full-worker-0",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "0",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.223Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:53:30.954Z"
+    },
+    {
+      "label": "full-worker-1",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "1",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.225Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:53:30.422Z"
+    },
+    {
+      "label": "full-worker-2",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "2",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.227Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:54:51.816Z"
+    },
+    {
+      "label": "full-worker-3",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "3",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.229Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:54:49.131Z"
+    },
+    {
+      "label": "full-worker-4",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "4",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.230Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:53:32.196Z"
+    },
+    {
+      "label": "full-worker-5",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "5",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.232Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:53:30.872Z"
+    },
+    {
+      "label": "full-worker-6",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "6",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.235Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:54:45.992Z"
+    },
+    {
+      "label": "full-worker-7",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--worker",
+        "7",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:51:05.237Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:54:45.216Z"
+    },
+    {
+      "label": "full-merge",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--import",
+        "tsx",
+        "src/deck-balance-audit.ts",
+        "--out",
+        "/home/runner/workspace/scripts/results/deck-balance-v33-subway-fix/full",
+        "--merge",
+        "8"
+      ],
+      "startedAt": "2026-10-01T23:54:51.816Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-01T23:54:52.415Z"
+    }
+  ]
+}

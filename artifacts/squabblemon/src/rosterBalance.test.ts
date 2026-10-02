@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cards, cardCatalog } from './data';
 import { ROSTER_REVISION_IDS, isActiveOngoing } from '../../../lib/squabblemon-engine/src/rosterBalance';
+import { CARD_BALANCE_VERSION, ONLINE_RULES_VERSION } from '../../../lib/squabblemon-engine/src/multiplayer';
 import { createMatch, createCardInstance, playTurnCard, nextRound, suppressMatchPresentationEvents, type Match, type Owner, type Lane, type CardInstance } from './gameEngine';
 
 const blank = (): Match => ({ ...createMatch('block', 'block'), round: 3, boards: [[], [], []], playerHand: [], cpuHand: [], playerMotion: 9, cpuMotion: 9 });
@@ -9,6 +10,17 @@ const unit = (id: string, owner: Owner, lane: Lane, index = 0): CardInstance => 
 const find = (m: Match, c: CardInstance) => m.boards.flat().find(x => x.instanceId === c.instanceId)!;
 const mark = (m: Match, kind: string) => m.creativeMarks?.find(x => x.kind === kind);
 const end = (m: Match) => nextRound({ ...m, phase: 'resolved' });
+function moveFixtureCard(m: Match, card: CardInstance, lane: Lane): Match {
+  const current = find(m, card);
+  return {
+    ...m,
+    boards: m.boards.map((board, index) => {
+      const remaining = board.filter(candidate => candidate.instanceId !== current.instanceId);
+      // Keep the relocated fixture out of the next weakest-ally selection.
+      return index === lane ? [...remaining, { ...current, lane, basePower: 99 }] : remaining;
+    }) as Match['boards'],
+  };
+}
 function cast(m: Match, id: string, owner: Owner, lane: Lane = 0) {
   const source = createCardInstance(id, owner, 'play', m.nextEventSequence);
   return { source, after: playTurnCard({ ...m, phase: owner === 'player' ? 'player' : 'cpu-reveal', [owner === 'player' ? 'playerHand' : 'cpuHand']: [source], playerMotion: 9, cpuMotion: 9 }, owner, source.instanceId, lane) };
@@ -18,8 +30,10 @@ function unprotect(m: Match, target: CardInstance): Match {
 }
 
 test('40 revisions preserve collectible identities and instantiate their new budgets', () => {
+  assert.equal(CARD_BALANCE_VERSION, 35);
+  assert.equal(ONLINE_RULES_VERSION, 35);
   assert.equal(new Set(ROSTER_REVISION_IDS).size, 40);
-  assert.equal(cardCatalog.length, 227);
+  assert.equal(cardCatalog.length, 237);
   const budgets: Record<string, [number, number]> = { 'atl-scammer': [2, 2], failedathlete: [3, 3], lawyer: [3, 3], 'tattoo-artist': [3, 3], 'inmate-kingpin': [1, 2], 'juneteenth-chair-guy': [4, 4], livewire: [3, 3], subwaymagician: [3, 3], squabbleserver: [1, 2], stylist: [2, 2] };
   for (const [id, pair] of Object.entries(budgets)) {
     const c = createCardInstance(id, 'player');
@@ -162,6 +176,7 @@ for (const owner of ['player', 'cpu'] as const) {
     let m = { ...blank(), boards: [[busker], [a], [b]] as Match['boards'] };
     const firstVibe = cast(m, 'vibe', owner); m = firstVibe.after;
     assert.equal(find(m, a).powerModifier, 2); // first tip + Vibe
+    m = moveFixtureCard(m, firstVibe.source, 1); // free a slot without making the old Vibe the next weakest visitor
     const secondVibe = cast(m, 'vibe', owner); m = secondVibe.after;
     assert.equal(find(m, a).powerModifier, 2); assert.equal(find(m, firstVibe.source).powerModifier, 1);
     assert.equal(find(m, secondVibe.source).powerModifier, 3); assert.equal(find(m, b).powerModifier, 1);
@@ -170,8 +185,9 @@ for (const owner of ['player', 'cpu'] as const) {
   test(`${owner}: Dance Captain lets an ordinary character follow a dancer once`, () => {
     const dancer = { ...unit('break', owner, 1), basePower: 1 }, follower = unit('og', owner, 2), captain = unit('dancecaptain', owner, 0);
     let m = { ...blank(), boards: [[captain], [dancer], [follower]] as Match['boards'] };
-    m = cast(m, 'vibe', owner).after;
+    const firstVibe = cast(m, 'vibe', owner); m = firstVibe.after;
     assert.equal(find(m, dancer).powerModifier, 1);
+    m = moveFixtureCard(m, firstVibe.source, 1); // leave a legal destination slot for the second arrival
     m = cast(m, 'vibe', owner).after;
     assert.equal(find(m, follower).powerModifier, 3); assert.equal(find(m, captain).creativeCount, 1);
   });

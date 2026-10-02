@@ -53,8 +53,20 @@ interface CardViewProps {
   scoreStance?: 'leading' | 'trailing' | 'tied';
   /** Show the per-card portrait pop animation on first hand-draw render. */
   portraitPop?: boolean;
-  /** Current match round, used to show Buddy's temporary form countdown. */
+  /** Current match round, used for temporary-form and movement-lock countdowns. */
   currentRound?: number;
+}
+
+type MovementLockProjection = CardInstance & { movementLockedThroughRound?: number };
+function movementLockCue(instance: CardInstance | null, currentRound?: number) {
+  if (!instance || currentRound === undefined) return null;
+  const throughRound = (instance as MovementLockProjection).movementLockedThroughRound
+    ?? instance.squabblehouseCannotMoveThroughRound;
+  if (throughRound === undefined || throughRound < currentRound) return null;
+  return {
+    throughRound,
+    label: `Movement locked through the end of round ${throughRound}.`,
+  };
 }
 
 function CardViewComponent({
@@ -106,7 +118,10 @@ function CardViewComponent({
   const isBurntPlate = instance?.cardId === 'burnt-plate';
   const fuseRound = instance?.smileBomb?.detonatesAtRound;
   const fuseDescription = isBurntPlate ? ' At each round end, gives a random friendly character here 1 Burn. Persists and adds no lane Hands.' : isBuddyBud ? ` ${buddyBudDescription}` : card.hazard ? ` Explodes ${fuseRound ? `at the start of round ${fuseRound}` : "next round"}: -1 Hand to one random enemy here. Adds no lane Hands.` : "";
-  const displayPower = card.hazard ? 0 : effectivePower ?? card.power;
+  const ongoingHands = instance?.continuousPower ?? 0;
+  const displayPower = card.hazard ? 0 : effectivePower ?? (instance
+    ? instance.statuses.frozen ? 0 : Math.max(0, instance.basePower + instance.powerModifier + ongoingHands)
+    : card.power);
   const displayCost = cost ?? card.cost;
   const motionLabel = isBurntPlate ? 'Each round' : isBuddyBud ? 'Matures' : card.hazard ? 'Explodes' : 'Motion';
   const motionValue = isBuddyBud && instance?.buddyBud
@@ -120,6 +135,7 @@ function CardViewComponent({
   const burnStacks = instance?.statuses?.burnStacks ?? 0;
   const isWeakened = instance?.statuses?.weakened;
   const isLocked = instance?.statuses?.locked;
+  const movementLock = movementLockCue(instance, currentRound);
   const isBoosted = instance?.statuses?.boosted;
   const isMoved = instance?.moved;
   const boardStatusLabel = [
@@ -133,10 +149,13 @@ function CardViewComponent({
     burnStacks > 0 ? `Burning: ${burnStacks} burn stack${burnStacks === 1 ? '' : 's'}.` : '',
     isWeakened ? 'Weakened.' : '',
     isLocked ? 'Locked.' : '',
+    movementLock?.label ?? '',
     isBoosted ? 'Boosted.' : '',
     isMoved ? 'Moved.' : '',
+    ongoingHands ? `Ongoing: +${ongoingHands} Hands from other clocked-in staff.` : '',
   ].filter(Boolean).join(' ');
   const powerModifier = instance?.powerModifier ?? 0;
+  const handsDelta = powerModifier + ongoingHands;
   const variantKind = getVariantKind(variantId);
   const rarity = getCardRarity(instance?.cardId ?? card.id, card.kind);
   const entryAccent = cardEntryAccent(card);
@@ -261,12 +280,18 @@ function CardViewComponent({
               <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{motionValue}</span>
             </div>
 
-            <div className={`px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${powerModifier > 0 ? 'bg-green-400 text-black' : powerModifier < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
+            <div className={`px-1.5 py-1 min-w-[1.5rem] md:min-w-[2.25rem] flex flex-col items-center justify-center shadow-md border-l border-b border-black/30 ${handsDelta > 0 ? 'bg-green-400 text-black' : handsDelta < 0 ? 'bg-accent text-white' : 'bg-zinc-200 text-black'}`} style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}>
               {isLarge && <span className="text-[5px] md:text-[7px] font-mono uppercase tracking-widest leading-none opacity-80 mb-0.5">{isBuddyBud ? 'Payoff' : 'Hands'}</span>}
               <span className={`font-display font-black leading-none ${isBoard ? 'text-sm' : 'text-lg md:text-xl'}`}>{isBuddyBud ? '+3' : displayPower}</span>
               {powerModifier !== 0 && isBoard && (
                 <span className="text-[5px] font-mono font-bold block -mt-0.5 tracking-tighter">
                   {powerModifier > 0 ? `+${powerModifier}` : powerModifier}
+                </span>
+              )}
+              {ongoingHands > 0 && isBoard && (
+                <span className="text-[5px] font-mono font-bold block tracking-tighter" data-testid="card-ongoing-hands"
+                  style={{ fontSize: '6px', lineHeight: 1, whiteSpace: 'nowrap' }}>
+                  +{ongoingHands} ongoing
                 </span>
               )}
             </div>
@@ -288,6 +313,7 @@ function CardViewComponent({
               {burnStacks > 0 && <div data-card-status="burn" title={`Burning: ${burnStacks} burn stack${burnStacks === 1 ? '' : 's'}`} className="card-status bg-orange-500 text-black"><Flame size={8} strokeWidth={3} /><span>{burnStacks}</span></div>}
               {isWeakened && <div data-card-status="weakened" title="Weakened" className="card-status bg-rose-400 text-black"><TrendingDown size={8} strokeWidth={3} /></div>}
               {isLocked && <div data-card-status="locked" title="Locked" className="card-status bg-slate-200 text-black"><LockKeyhole size={8} strokeWidth={3} /></div>}
+              {movementLock && <div data-card-status="movement-locked" title={movementLock.label} className="card-status bg-amber-300 text-black"><LockKeyhole size={8} strokeWidth={3} /><span>R{movementLock.throughRound}</span></div>}
               {isBoosted && <div data-card-status="boosted" title="Boosted" className="card-status bg-emerald-400 text-black"><Sparkles size={8} strokeWidth={3} /></div>}
               {isMoved && <div data-card-status="moved" title="Moved" className="card-status bg-purple-500 text-white"><Wind size={8} strokeWidth={3} /></div>}
             </div>

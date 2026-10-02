@@ -6,9 +6,14 @@ const LOAD_TIMEOUT_MS = 2_000;
 const source = getAssetUrl('assets/effects/battle-start-smoke.webp');
 
 /** True-alpha image playback avoids mobile WebM decoders that discard alpha. */
-export function BattleStartSmoke({ onComplete }: { onComplete: () => void }) {
+export function BattleStartSmoke({ onComplete, speed = 1 }: { onComplete: () => void; speed?: number }) {
   const imageRef = useRef<HTMLImageElement>(null);
   const onCompleteRef = useRef(onComplete);
+  // The dust must clear with the accelerated intro instead of hanging over the
+  // first decision.
+  const durationMs = Math.round(BATTLE_DUST_DURATION_MS / (speed > 0 ? speed : 1));
+  const durationRef = useRef(durationMs);
+  durationRef.current = durationMs;
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
@@ -44,7 +49,7 @@ export function BattleStartSmoke({ onComplete }: { onComplete: () => void }) {
       window.clearTimeout(loadingTimer);
       image.dataset.ready = 'true';
       // Image animation has no ended event. Never leave its last frame mounted.
-      playbackTimer = window.setTimeout(finish, BATTLE_DUST_DURATION_MS);
+      playbackTimer = window.setTimeout(finish, durationRef.current);
     };
     const onVisibilityChange = () => {
       if (document.hidden) finish();
@@ -87,7 +92,7 @@ export function BattleStartSmoke({ onComplete }: { onComplete: () => void }) {
       className="battle-start-smoke"
       data-source={source}
       data-ready="false"
-      style={{ '--battle-dust-duration': `${BATTLE_DUST_DURATION_MS}ms` } as CSSProperties}
+      style={{ '--battle-dust-duration': `${durationMs}ms` } as CSSProperties}
       alt=""
       aria-hidden="true"
       draggable={false}

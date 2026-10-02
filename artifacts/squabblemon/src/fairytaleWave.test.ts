@@ -81,7 +81,7 @@ test('new district state is replayed before/after and a full solo transcript ver
 
 test('all 22 identities, approved costs, artwork, eight alternate pairs and training integrate with acquisition', () => {
   assert.equal(FAIRYTALE_WAVE.length, 22); assert.equal(FAIRYTALE_ALTERNATE_ART.length, 8);
-  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 206);
+  assert.equal(cardCatalog.filter(c => (c.kind ?? 'character') === 'character').length, 215);
   assert.equal(catalogCardById['mr-rabbit'].faction, 'Wonderland');
   assert.equal(catalogCardById['mr-rabbit'].rarity, 'Rare');
   for (const [id, art, name, rarity, , cost, power] of FAIRYTALE_WAVE) {
@@ -90,6 +90,15 @@ test('all 22 identities, approved costs, artwork, eight alternate pairs and trai
     assert(catalogCardById[art].acquisitionSources.includes('Street Packs'));
     assert(existsSync(path.resolve('public/assets/characters', art + '.webp')));
     validateCardAbilityUpgrades({ [id]: cards[id] });
+  }
+  assert.equal(cards.squabblecook.id, 'squabble-house-male');
+  assert.equal(cards.squabbleserver.id, 'squabble-house-female');
+  assert.equal(cards.squabblecook.ability, 'Hands on the Clock');
+  assert.equal(cards.squabbleserver.ability, 'Fresh Pot');
+  for (const engineId of ['squabblecook', 'squabbleserver']) {
+    const card = cardCatalog.find(entry => entry.engineId === engineId)!;
+    assert.equal(card.faction, 'Squabblehouse');
+    assert.ok(card.crewTags.includes('Squabblehouse'));
   }
   for (const id of FAIRYTALE_ALTERNATE_ART) {
     assert(catalogCardById[id].variantSlots.some(v => v.id === id + ':alternate'));

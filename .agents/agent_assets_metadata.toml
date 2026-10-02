@@ -98,3 +98,227 @@ mtime_ms = 1790722496528
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4b1fbe7b-c4a9-4c84-b0a8-eed92f3530a1/c482ee41-3109-492e-b9c5-088b5f0abb18"
 storage_version_token = "1790722512262469"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "QFB9PhJJKldeXmXcJMEMd"
+uri = "file://attached_assets/generated_images/triple-og-patch-1-7.jpg"
+type = "image"
+title = "Triple OGs — Patch 1.7 Banner"
+description = "1920×1080 banner featuring CLUE COOKY, RED PUNCH and their pitbulls, with blue/red alley lighting and gold arcade lettering."
+logical_id = "a8771fab-7e57-4c07-bd6b-d8ffd53fc27c"
+content_hash = "sha256:c523bd23874d5c7fc390b4dc53dc5f17304d5a1ed054960d74686f01be105fd7"
+size = 733554
+mtime_ms = 1790744181592
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/a8771fab-7e57-4c07-bd6b-d8ffd53fc27c/992edc34-ba17-4441-a796-2ea862cfc58e"
+storage_version_token = "1790744432863890"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "xPIQrdvzLW5NalHaRW7qI"
+uri = "file://scripts/results/squabblehouse-balance/squabblehouse-balance-current-rules.md"
+type = "text"
+title = "Squabblehouse Balance Sweep"
+description = "Full matchup results, exact decks, first-move and upgrade splits, and testing limits for 1,008 simulated games."
+logical_id = "957ed211-efb1-42ce-88bb-a15b6282e419"
+content_hash = "sha256:ca7dc21d7c6dba56e84aff6e173271acb15b2190f05e876145b43cf7488b54c4"
+size = 7288
+mtime_ms = 1790797533785
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/957ed211-efb1-42ce-88bb-a15b6282e419/bce859fa-aecd-4bab-8c11-5317a3341540"
+storage_version_token = "1790797588361133"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "gyLUAJ_Rw_3i7lsXMid3P"
+uri = "file://scripts/results/squabblehouse-staff-balance/squabblehouse-staff-balance-current-rules.md"
+type = "text"
+title = "Squabblehouse staff-only balance report"
+description = "Corrected ten-card crew, three opponents, mirrored seats, two upgrade tiers, two bot policies, fresh holdout seeds, and full verification accounting. No dogs or Triple OGs; no card balance changes."
+logical_id = "34ae94a7-8908-4fbf-a8aa-88f247b401b8"
+content_hash = "sha256:fe996abf8b2a5621daa42830685c705fb17290cd7724644213bf88a281cf0bc4"
+size = 5833
+mtime_ms = 1790799677549
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/34ae94a7-8908-4fbf-a8aa-88f247b401b8/f8812ca1-dde2-4f08-8bfe-71c3e6d7ca64"
+storage_version_token = "1790799875687378"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "UeuCuO7xtDHyHohhz6cUg"
+uri = "file://scripts/results/squabblehouse-counter-revision-comparison/summary.csv"
+type = "table"
+title = "Squabblehouse retest — results summary"
+description = "All six versions: matchup wins, policy and fresh-confirmation splits, draw-half scores, and mirrored seats. 6,048 unique cases; zero simulation failures."
+logical_id = "d5bd93e9-20a1-4c64-a90c-4bbfc886dfe9"
+content_hash = "sha256:0989af1bdb6d4a89de722bbb9d6d9edfc11b539d181a4900ff3ae3396013c200"
+size = 1031
+mtime_ms = 1790847969404
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/d5bd93e9-20a1-4c64-a90c-4bbfc886dfe9/3d575209-2d40-4623-b106-ea1ecd4971d8"
+storage_version_token = "1790848186929419"
+content_type = "text/csv"
+
+[[outputs]]
+id = "I-r4G06ylRdLt-STmlWAw"
+uri = "file://scripts/results/squabblehouse-counter-revision-comparison/README.md"
+type = "text"
+title = "Squabblehouse retest — full report"
+description = "Verified methods, limits, test results, and links to the retained raw reports. The combined package shows only a small, mixed change."
+logical_id = "1d95e0cd-6094-4c2e-8a2f-c8dc7bf3cacb"
+content_hash = "sha256:5f177e734e3bf37ffd97bcfca55a3c7ba26cc5ca2be0c84e18a8e5d0a9f5576b"
+size = 6049
+mtime_ms = 1790847912752
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/1d95e0cd-6094-4c2e-8a2f-c8dc7bf3cacb/8cbe689b-b3fb-4171-a6c9-0d489e679050"
+storage_version_token = "1790848187894471"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "HtJ81_vn4n13cV-mGpzD4"
+uri = "file://scripts/results/squabblehouse-counter-revision-comparison/comparison.json"
+type = "unspecified"
+title = "Squabblehouse retest — detailed totals"
+description = "Raw-derived aggregates for every version, opponent, policy, upgrade tier, and seat."
+logical_id = "81070cae-76fa-46ea-bf47-b37354572514"
+content_hash = "sha256:251097dec27a93e223a35cafced982a162ed65aa1a438db22e28d77c7f451140"
+size = 17585
+mtime_ms = 1790847969400
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/81070cae-76fa-46ea-bf47-b37354572514/0f84c449-f72e-4b0e-a5cf-ca4dddbd1130"
+storage_version_token = "1790848188753183"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "wbcHkPxVmE8nURLR3SS0T"
+uri = "file://scripts/results/squabblehouse-counter-revision-comparison/source-proof.json"
+type = "unspecified"
+title = "Squabblehouse retest — source isolation proof"
+description = "Snapshot identities and approved source-region checks confirming shared corrected rules and isolated ability revisions."
+logical_id = "99c91e48-adde-4ccb-8716-cd4a655c808e"
+content_hash = "sha256:54cc7ca1b3c355888a8015577d4cb37b367200e712e36eb3139ad9ff19ac82a8"
+size = 81111
+mtime_ms = 1790847969464
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/99c91e48-adde-4ccb-8716-cd4a655c808e/a46878a3-69b0-4354-b2f1-b27b02eaa81f"
+storage_version_token = "1790848189531915"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "Fg9SBrXcbS51u3zBh4MMa"
+uri = "file://scripts/results/all-decks-v34-ranking/ranking.csv"
+type = "table"
+title = "Full ranking — 37 decks"
+description = "All 10,656 match results summarized by deck, bot style, upgrade tier, and seat. Scores count draws as half a win."
+logical_id = "4835fda8-c0f3-4c68-93c8-be7f18ec0ed8"
+content_hash = "sha256:006d0ea6d7304dc0d5171fa8e2a0f0d3376005dfe50d8c2b70b22c3a0cfc1f9d"
+size = 18456
+mtime_ms = 1790926355154
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4835fda8-c0f3-4c68-93c8-be7f18ec0ed8/9338c058-b678-45ba-8452-974d3c46b488"
+storage_version_token = "1790926580835351"
+content_type = "text/csv"
+
+[[outputs]]
+id = "2Zbw5vReHerqGKmhZHuCx"
+uri = "file://scripts/results/all-decks-v34-ranking/decklists.csv"
+type = "table"
+title = "Exact deck lists — all 37 builds"
+description = "The ten cards used in every tested build, ordered by the final deck ranking."
+logical_id = "2df7dd46-d3bb-4f57-b5e6-30b37221a89e"
+content_hash = "sha256:855716a9ebe7cf2682289563fd5d4d0839df2bb50a9ae325f07ff8ec0f7f6d57"
+size = 10762
+mtime_ms = 1790926355154
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/2df7dd46-d3bb-4f57-b5e6-30b37221a89e/39789415-cb77-4b91-a62f-46e46c1f0d3a"
+storage_version_token = "1790926581510474"
+content_type = "text/csv"
+
+[[outputs]]
+id = "LBt8dRB1v7JF0S5-u8qUL"
+uri = "file://scripts/results/all-decks-v34-no-guap/ranking.csv"
+type = "table"
+title = "GUAP-free rankings — all 37 decks"
+description = "Updated ranking: 2,208 affected matches rerun, 8,448 identical matchups retained. All test decks exclude GUAP."
+logical_id = "bfd1abe6-2bd6-446f-b77f-e1d3201ddfd0"
+content_hash = "sha256:354bdfb865ec77f84a0e5f907607790ac913301aebedd6dc0686c98434b8d7ee"
+size = 18416
+mtime_ms = 1790927910318
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/bfd1abe6-2bd6-446f-b77f-e1d3201ddfd0/8ac172d0-d8fc-4866-817a-2906cfff36fc"
+storage_version_token = "1790927963820415"
+content_type = "text/csv"
+
+[[outputs]]
+id = "X7TsIpFGR6_nRyT2CD1Ny"
+uri = "file://scripts/results/all-decks-v34-no-guap/decklists.csv"
+type = "table"
+title = "GUAP-free deck lists"
+description = "Exact ten-card builds. Redneck Evil replaces GUAP in the four affected test lists; no live cards or player decks were changed."
+logical_id = "9274548b-c87f-4a10-8e37-4df72c1ced3b"
+content_hash = "sha256:55e24dd6eed70b3d153a0f2175153aa60a4175d02a0a4095a307b23750875391"
+size = 10826
+mtime_ms = 1790927910318
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/9274548b-c87f-4a10-8e37-4df72c1ced3b/9da9a996-914e-4106-8818-c4b87669a6e7"
+storage_version_token = "1790927964468500"
+content_type = "text/csv"
+
+[[outputs]]
+id = "PMF5144CT_w1nyqfW3r3B"
+uri = "file://scripts/results/all-decks-v35-no-guap/ranking.csv"
+type = "table"
+title = "GUAP-free rankings — all 37 decks"
+description = "10,656 fresh matches under the new hand-bonus rules, including wins, losses, draws and policy, upgrade-tier and seat splits."
+logical_id = "4ee352bc-2837-4898-b897-caff4409d0e9"
+content_hash = "sha256:94fe13e27fd6380a78bd05ac893e4ee9d1530c5a8d6d50c43492763c27339f6d"
+size = 18425
+mtime_ms = 1790931121017
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/4ee352bc-2837-4898-b897-caff4409d0e9/40cd7560-a1b2-46c1-a971-8976795f04f4"
+storage_version_token = "1790931515032038"
+content_type = "text/csv"
+
+[[outputs]]
+id = "UOLNbSTZcAVshaxCRDhpw"
+uri = "file://scripts/results/all-decks-v35-no-guap/comparison.csv"
+type = "table"
+title = "Before-and-after ranking comparison"
+description = "All 37 unchanged decks: previous and current ranks, score changes and hand-bonus carrier coverage."
+logical_id = "48074608-7858-4d2f-b2f0-ae9dd18336e3"
+content_hash = "sha256:d3c492e94882f727cc7abf965803884e324133a9475a65a8c0011529440755b5"
+size = 5286
+mtime_ms = 1790931375638
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/48074608-7858-4d2f-b2f0-ae9dd18336e3/aa1efa23-b73f-4922-a1fc-fdea5e1ece9b"
+storage_version_token = "1790931515874686"
+content_type = "text/csv"
+
+[[outputs]]
+id = "WNzQK-oFMtRaf5WYCdE7G"
+uri = "file://scripts/results/air-water-v35-holdout/summary.csv"
+type = "table"
+title = "Air vs Water — fresh-seed results"
+description = "Overall, shared-field and head-to-head scores, plus policy, upgrade-tier and seat breakdowns. 4,544 fresh matches with no failures."
+logical_id = "fbe49edb-8bbf-4a8d-84ec-4cf62f86f2c7"
+content_hash = "sha256:00bb3c6c9d6097be8f96fcc524c406fc117067870f34a44ff7295dc2e0f4f238"
+size = 1631
+mtime_ms = 1790933687722
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/fbe49edb-8bbf-4a8d-84ec-4cf62f86f2c7/188c6b72-7fb3-45e1-9493-03f632331a96"
+storage_version_token = "1790933897121341"
+content_type = "text/csv"
+
+[[outputs]]
+id = "WqED0-AuYt8KH_4GYFiHP"
+uri = "file://scripts/results/air-water-v35-holdout/by-seed.csv"
+type = "table"
+title = "Eight-seed comparison"
+description = "Air and Water scores on each fresh seed, with the observed district layouts."
+logical_id = "b38e4df2-7a97-478b-b56c-4f528d7a3c9c"
+content_hash = "sha256:802c6debd0b6fee897a3bbf1ea093cf646e732354b0f19a27e6adf199f76ffa4"
+size = 1194
+mtime_ms = 1790933687722
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/b38e4df2-7a97-478b-b56c-4f528d7a3c9c/03a87ef4-3972-4f2a-b250-631138461257"
+storage_version_token = "1790933898008017"
+content_type = "text/csv"
+
+[[outputs]]
+id = "l5RGXGP9YOxy5Eilr3WGW"
+uri = "file://scripts/results/air-water-v35-holdout/matchups.csv"
+type = "table"
+title = "All opponent matchups"
+description = "Results against all 36 opponents for each deck: 64 games per matchup, including wins, losses, draws and scores."
+logical_id = "93997b21-b216-4365-aea6-0647f2dddeea"
+content_hash = "sha256:6bbc056d6d0ee48df6adce594d7a72f65ad3fae277f5cf0e0d6173e286b71d4e"
+size = 3818
+mtime_ms = 1790933687722
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:f6c7bc74-707e-448e-afb9-8d74dab3ccfc/93997b21-b216-4365-aea6-0647f2dddeea/6933d9e3-6e77-4756-9f32-00bdfec253ba"
+storage_version_token = "1790933898663475"
+content_type = "text/csv"

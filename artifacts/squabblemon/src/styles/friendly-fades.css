@@ -24,6 +24,12 @@
 .ff-homie svg { color: #d9a23b; }
 .ff-room { flex: 1; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: inherit; text-decoration: none; }
 .ff-room .sq-row__name { flex: 1 1 120px; }
+.ff-room__series { padding: 2px 7px; color: #1b2f21; background: #f0dcab; border: 1px solid #8d784b; font: 900 11px 'Barlow Condensed',sans-serif; letter-spacing: .08em; }
+.ff-room__activity { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; line-height: 1.5; color: var(--sq-cream-dim); }
+.ff-room__expiry { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.sq-row.ff-room-row[data-expiring] { border-left-color: #f3bd5b; background: #70431f66; }
+.ff-room-row[data-expiring] .ff-room__expiry { color: #ffda92; }
+.ff-room-row[data-expired] { opacity: .65; }
 .ff-code { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px; border-radius: 10px; border: 1px dashed #d9a23b66; }
 .ff-code span { font: 700 10px var(--font-mono); letter-spacing: .14em; color: #b9b395; }
 .ff-code strong { flex: 1 1 auto; font: 700 18px var(--font-mono); letter-spacing: .12em; color: #d9a23b; user-select: all; overflow-wrap: anywhere; }

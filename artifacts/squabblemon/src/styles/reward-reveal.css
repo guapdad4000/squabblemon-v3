@@ -1,5 +1,23 @@
+.reward-reveal--story .reward-reveal__story-portrait[data-story-player] {
+  /* Light is added around the supplied figure, never to its body pixels. */
+  background: radial-gradient(ellipse at 50% 48%, #e6d4abbb, #c6decd55 40%, transparent 69%);
+  filter: drop-shadow(0 0 2px #e7e9d1) drop-shadow(0 0 14px #e2ddae88);
+  bottom: 0;
+  height: 98%;
+  width: 48%;
+  max-width: none;
+  object-position: center bottom;
+}
 .reward-reveal { margin: auto; border: 1px solid #9f7936; padding: 0; width: min(1040px, 96vw); max-height: 94dvh; color: #fff0cf; background: #17120c; overflow: auto; }
 .reward-reveal::backdrop { background: #050403e8; backdrop-filter: blur(8px); }
+.reward-reveal--stinger { width: min(560px, calc(100vw - 24px)); max-height: min(820px, calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); overflow: hidden; background: #080909; border-color: #d4aa61; }
+.reward-reveal__stinger { position: relative; width: 100%; height: min(760px, calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); min-height: 180px; display: grid; place-items: center; }
+.reward-reveal__stinger-title { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.reward-reveal--stinger .reward-stinger { width: 100%; height: 100%; min-height: 0; }
+.reward-reveal--stinger .reward-stinger__frame { background: #080909; }
+.reward-reveal--stinger .reward-stinger__frame img, .reward-reveal--stinger .reward-stinger__frame video { object-fit: contain; }
+.reward-reveal--stinger .reward-stinger header { z-index: 1; }
+.reward-reveal--stinger .reward-stinger__skip { z-index: 2; }
 .reward-reveal__stage { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; min-height: 560px; padding: 30px; background: radial-gradient(ellipse at 22% 50%, #b587303b, transparent 60%); }
 .reward-reveal__bag { width: 100%; filter: drop-shadow(0 14px 30px var(--sq-ink)); }
 .reward-reveal__receipt { padding: 24px; text-align: center; }

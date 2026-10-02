@@ -4,13 +4,11 @@ import './special-moves.css';
 import { createChromaRenderer } from '../lib/chromaRenderer';
 
 /** Video is decorative: decoding or autoplay failure must never hold up a battle. */
-export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: MoveClip; onStatus?: (status: string) => void; audioEnabled?: boolean }) {
+export function SpecialMove({ clip, onStatus, audioEnabled = false, speed = 1 }: { clip: MoveClip; onStatus?: (status: string) => void; audioEnabled?: boolean; speed?: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const media = useRef<HTMLVideoElement | null>(null);
   const audioRequested = useRef(audioEnabled);
   const resumePlayback = useRef<(() => void) | null>(null);
-  const [muted, setMuted] = useState(true);
-  const [ready, setReady] = useState(false);
   const [useGpu, setUseGpu] = useState(true);
   useEffect(() => {
     audioRequested.current = audioEnabled;
@@ -20,9 +18,13 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
     }
   }, [audioEnabled]);
   useEffect(() => {
-    setReady(false);
     const surface = canvas.current;
     if (!surface) return;
+    // Playback status is written to the canvas directly: state here re-rendered the
+    // whole battle twice per clip.
+    const setReady = (ready: boolean) => { surface.dataset.ready = String(ready); };
+    const setMuted = (muted: boolean) => { surface.dataset.muted = String(muted); };
+    setReady(false);
     let renderer: ReturnType<typeof createChromaRenderer>;
     try { renderer = createChromaRenderer(surface, `move-${clip.chroma}`, pixels => keyChromaPixels(pixels, clip.chroma), useGpu); }
     catch { setUseGpu(false); return; }
@@ -81,7 +83,7 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
         surface.width = Math.min(288, video.videoWidth || 288);
         surface.height = Math.round(surface.width * (video.videoHeight / video.videoWidth || 16 / 9));
         video.currentTime = Math.max(0, Math.min(clip.startSeconds, Math.max(0, video.duration - .1)));
-        video.playbackRate = clip.playbackRate;
+        video.playbackRate = clip.playbackRate * (speed > 0 ? speed : 1);
         void play();
       };
       video.onerror = fail;
@@ -117,5 +119,9 @@ export function SpecialMove({ clip, onStatus, audioEnabled = false }: { clip: Mo
       }
     };
   }, [clip, onStatus, useGpu]);
-  return <canvas key={useGpu ? 'gpu' : 'cpu'} ref={canvas} className="special-move-canvas" data-testid="special-move-canvas" data-ready={ready} data-muted={muted} aria-hidden="true" />;
+  // A speed change mid-clip retimes the running video rather than restarting it.
+  useEffect(() => {
+    if (media.current) media.current.playbackRate = clip.playbackRate * (speed > 0 ? speed : 1);
+  }, [clip.playbackRate, speed]);
+  return <canvas key={useGpu ? 'gpu' : 'cpu'} ref={canvas} className="special-move-canvas" data-testid="special-move-canvas" data-ready="false" data-muted="true" aria-hidden="true" />;
 }

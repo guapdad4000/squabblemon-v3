@@ -5,7 +5,7 @@
 - [Battle audio mixing](battle-audio-mixing.md) — Music and synthesized cues share an output context but keep independent gains and lifecycles; hardware mixing still needs phone checks.
 - [Reward-verified battles](reward-verified-battles.md) — Rewarded matches replay exact player moves with the shared deterministic engine; never trust client-reported outcomes.
 - [Profile economy lock](profile-economy-lock.md) — Inventory normalization and mutation must share the profile row lock or concurrent reads can erase rewards.
-- [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full presentation lifecycles in an optimized profiling build, not synthetic snapshots or animation startup.
+- [Battle performance fidelity](battle-performance-fidelity.md) — Benchmark full lifecycles in a profiling build; transient battle markers must never cost extra React commits.
 - [Battle replay snapshots](battle-replay-snapshots.md) — Historical replay needs complete engine-captured frames; reversing only event participants creates contradictory hybrid boards.
 - [Card rarity identity](card-rarity-identity.md) — Rarity is catalog-owned collection identity; cosmetics layer above it and combat must never derive stats from it.
 - [Preview banner geometry](preview-banner-geometry.md) — Replit’s development banner can shift full-viewport app geometry; verify edge clipping in a production preview.
@@ -39,7 +39,8 @@
 - [Service worker caching](service-worker-caching.md) — Cache-first only hashed build files; unversioned art revalidates; never cache API.
 - [Card buff constraints](card-buff-constraints.md) — Hands ≤ cost+1, starter cards drive tutorial lines, bump balance versions on every card change.
 - [GitHub proxy release staging](github-proxy-release-staging.md) — CodeExecution shell runs outside the workspace; use explicit cwd and tolerate normalized whitespace in git index output.
-- [Balance evidence](balance-evidence.md) — Compare fixed crews and schedules; composition probes and bot scores are not causal card strength or player win rates.
+- [Balance evidence](balance-evidence.md) — Keep new tests GUAP-free; compare fixed crews and schedules, and do not treat bot scores as causal card strength or player win rates.
+- [Elemental hand-bonus parity](elemental-hand-bonus-parity.md) — All ten types, including Normal, need an in-hand Hands-bonus card; preserve that coverage through kit reworks.
 - [Battle style invalidation](battle-style-invalidation.md) — No ancestor :has() on the arena and no per-frame vars on <html>; both restyle the whole battle.
 - [Social load evidence](social-load-evidence.md) — Include pool/reconnect effects; neither local throughput nor rate-capped runtime samples establishes hosted capacity.
 - [Social identity compatibility](social-identity-compatibility.md) — Replacing visible friend codes must not invalidate existing contacts or previously shared links.
@@ -49,9 +50,17 @@
 - [Guided reading and review control](guided-reading-review-control.md) — Save completion promptly, but let players acknowledge lessons and leave results; reduced motion must not shorten reading.
 - [WebGL preview fallback](webgl-preview-fallback.md) — Replit screenshots can lack WebGL even when the model works; keep a still from the actual model and verify animation separately.
 - [Special-move preview checks](special-move-preview-checks.md) — A screenshot's "clip unavailable" can be a false negative; compare an old clip and verify live playback in Chromium.
+- [Supplied clip identity](supplied-clip-identity.md) — Compare unidentified clips with existing portraits before leaving them unused; embedded move titles are not character names.
 - [Story portrait cache revisions](story-portrait-cache.md) — Revised character art must refresh raw story asset URLs as well as catalog card images.
 - [Blue Scarf turn choice](blue-scarf-turn-choice.md) — User confirmed one random 50/50 give-or-steal choice each turn, not a fixed choice or a roll for each ally.
 - [Story deck editor return](story-deck-editor-return.md) — Preserve a validated story return destination through starter-recipe saves; browser history alone cannot recover it.
 - [Story reward import boundary](story-reward-import-boundary.md) — Keep story-only lookups behind the lazy story route so shared reward UI does not load the full story catalog in the game shell.
-- [Patch publication audience](patch-publication-audience.md) — Freeze the approved audience; only all-delivered is complete, while missing or exhausted targets remain partial.
+- [Patch publication audience](patch-publication-audience.md) — Frozen snapshot counts for publish-time players; later sign-ups still get every letter via separate late delivery.
+- [PvE presentation speed](pve-presentation-speed.md) — the speed choice retimes broadcast choreography only; never the decision clock, reading holds, or online battles.
 - [Local release gates](local-release-gates.md) — Run build gates as staging with PUBLIC_ORIGIN set; production mode needs a live Clerk key the workspace lacks.
+- [Friendly room series](friendly-room-series.md) — Tally only at the completion transition, read legacy rooms tolerantly, and let lobby/leave bypass revision checks.
+- [Reward redemption proof](reward-redemption-proof.md) — Test the exact new code through its production-mode route; existing green fixtures can omit a mixed-card grant.
+- [Reward broadcast boundaries](reward-broadcast-boundaries.md) — Confirm inside the existing result hold or bypass; use explicit neutral receipt contexts and avoid duplicate ceremonies.
+- [Action-specific movement restrictions](movement-lock-promises.md) — Distinguish play-only closures, movement locks, and hand-return restrictions when checking counters.
+- [Committed hostile outcomes](committed-hostile-outcomes.md) — Hostile callbacks are speculative; verify committed state after reversals before awarding success-only training.
+- [Ongoing stat attribution](ongoing-stat-attribution.md) — Snapshot-owned ongoing bonuses can disappear lethally, but neutral loss must never become enemy damage or credit.

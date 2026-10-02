@@ -12,6 +12,7 @@ import {
   type Seat,
 } from "../../../lib/squabblemon-engine/src/multiplayer";
 import { cards, decks } from "../../../lib/squabblemon-engine/src/data";
+import { createCardInstance, replayMatchPrefix, type Match } from "../../../lib/squabblemon-engine/src/gameEngine";
 import { onlineResultCopy } from "./components/onlineResultCopy";
 
 function fixture(opening: Seat = "player") {
@@ -31,6 +32,35 @@ function fixture(opening: Seat = "player") {
   room = applyOnlineCommand(room, "player", { type: "ready" }, 1);
   return applyOnlineCommand(room, "cpu", { type: "ready" }, 2);
 }
+test("last played follows gameplay, survives lobby activity, and timestamps timeouts at the deadline", () => {
+  let room = fixture();
+  assert.equal(room.lastPlayedAt, 2, "the fade has started");
+  room = applyOnlineCommand(room, "player", {
+    type: "play", instanceId: room.match!.playerHand[0].instanceId, lane: 0, squabble: false,
+  }, 10);
+  assert.equal(room.lastPlayedAt, 10);
+  room = applyOnlineCommand(room, "player", { type: "end-turn" }, 20);
+  assert.equal(room.lastPlayedAt, 20);
+  room = applyOnlineCommand(room, "cpu", { type: "surrender" }, 30);
+  assert.equal(room.lastPlayedAt, 30);
+  room = applyOnlineCommand(room, "player", { type: "lobby" }, 40);
+  room = applyOnlineCommand(room, "player", { type: "ready" }, 50);
+  assert.equal(room.lastPlayedAt, 30, "lobby and ready votes are not a played fade");
+  room = applyOnlineCommand(room, "cpu", { type: "ready" }, 60);
+  assert.equal(room.lastPlayedAt, 60, "a new fade refreshes gameplay activity");
+  assert.equal(expireOnlineRoom(room, room.deadline! + 500).lastPlayedAt, room.deadline);
+});
+
+test("unplayed and legacy rooms do not invent a last-played timestamp", () => {
+  const member = fixture().members.player;
+  let room = createOnlineRoom(member, "player", 100);
+  assert.equal(room.lastPlayedAt, undefined);
+  assert.equal(expireOnlineRoom(room, 100 + ROOM_LIFETIME_MS).lastPlayedAt, undefined);
+  room = fixture();
+  delete room.lastPlayedAt;
+  const legacy = applyOnlineCommand(room, "player", { type: "surrender" }, 10);
+  assert.equal(legacy.lastPlayedAt, 10, "legacy rooms gain a timestamp on actual gameplay");
+});
 test("card balance and online room versions reject incompatible in-progress fades safely", () => {
   const room = fixture();
   assert.equal(room.rulesVersion >= CARD_BALANCE_VERSION, true);
@@ -38,6 +68,42 @@ test("card balance and online room versions reject incompatible in-progress fade
     () => applyOnlineCommand({ ...room, rulesVersion: room.rulesVersion - 1 }, "player", { type: "end-turn" }, 3),
     /older rules version|new room/,
   );
+});
+
+test("locked-lane mythical plays are accepted online and reproduce in authoritative transcript replay", () => {
+  const room = fixture();
+  const source = createCardInstance('triple-og-red', 'player', 'online-og', 0);
+  const enemy = { ...createCardInstance('hooper', 'cpu', 'online-og', 1), lane: 2 as const };
+  const initial = {
+    ...room.match!,
+    playerMotion: 9,
+    playerHand: [source],
+    boards: [[], [], [enemy]] as Match['boards'],
+    storyRuntime: { activePhaseIndex: 0, appliedEffectIds: [], lanePowerBonuses: [],
+      laneLocks: [{ owner: 'player' as const, lanes: [2 as const] }] },
+  };
+  const lockedRoom = { ...room, match: initial };
+  const move = { type: 'play' as const, instanceId: source.instanceId, lane: 2 as const, squabble: false };
+  const played = applyOnlineCommand(lockedRoom, 'player', move, 10);
+  const replayed = replayMatchPrefix(initial, [{
+    cardInstanceId: source.instanceId, lane: 2, squabble: false, endTurn: false,
+  }]);
+  assert.equal(played.match!.boards[2].find(card => card.cardId === 'triple-og-red')?.lane, 2);
+  assert.equal(played.match!.boards[2].find(card => card.cardId === 'hooper')?.powerModifier, -1,
+    'RED PUNCH resolves against its actual locked district online');
+  assert.deepEqual(replayed.boards, played.match!.boards, 'authoritative replay matches the online command');
+
+  const ordinary = createCardInstance('hooper', 'player', 'online-og', 2);
+  const ordinaryRoom = { ...lockedRoom, match: { ...initial, playerHand: [ordinary] } };
+  assert.throws(() => applyOnlineCommand(ordinaryRoom, 'player', {
+    type: 'play', instanceId: ordinary.instanceId, lane: 2, squabble: false,
+  }, 11), /locked/);
+  assert.throws(() => replayMatchPrefix({ ...initial, playerHand: [ordinary] }, [{
+    cardInstanceId: ordinary.instanceId, lane: 2, squabble: false, endTurn: false,
+  }]), /locked/, 'reward replay must independently reject ordinary-card lock bypasses');
+  const wrongSideOg = createCardInstance('triple-og-red', 'player', 'online-og', 3);
+  assert.throws(() => applyOnlineCommand({ ...lockedRoom, match: { ...initial, playerHand: [wrongSideOg] } },
+    'player', { type: 'play', instanceId: wrongSideOg.instanceId, lane: 0, squabble: false }, 12), /right district/);
 });
 
 test('both players receive saved sticker avatars through ready, reconnect and rematch', () => {
@@ -377,4 +443,114 @@ test("base-strength snapshots and saved opening order survive serialization", ()
       3,
     ),
   );
+});
+
+test("a friendly room tallies every ending once and keeps the record through rematches and lobby returns", () => {
+  const surrendered = applyOnlineCommand(fixture(), "cpu", { type: "surrender" }, 3);
+  assert.deepEqual(surrendered.series, { player: 1, cpu: 0, draws: 0 });
+  const timedOut = expireOnlineRoom(fixture(), fixture().deadline!);
+  assert.deepEqual(timedOut.series, { player: 0, cpu: 1, draws: 0 });
+  assert.deepEqual(expireOnlineRoom(timedOut, timedOut.expiresAt - 1).series, { player: 0, cpu: 1, draws: 0 });
+
+  let drawn = fixture();
+  for (let turn = 0; turn < 12; turn++) drawn = applyOnlineCommand(drawn, drawn.activeSeat, { type: "end-turn" }, turn + 3);
+  assert.equal(drawn.winner, "draw");
+  assert.deepEqual(drawn.series, { player: 0, cpu: 0, draws: 1 });
+
+  // A district win for the player, carried into the next game of the same room.
+  let room = fixture();
+  room.match = { ...room.match!, boards: room.match!.boards.map((lane, index) => index < 2
+    ? [{ ...room.match!.playerHand[0], owner: "player" as const, lane: index as 0 | 1 }]
+    : lane) as typeof room.match.boards };
+  for (let turn = 0; turn < 12; turn++) room = applyOnlineCommand(room, room.activeSeat, { type: "end-turn" }, turn + 3);
+  assert.equal(room.reason, "districts");
+  assert.deepEqual(room.series, { player: 1, cpu: 0, draws: 0 });
+  const lobby = applyOnlineCommand(room, "cpu", { type: "lobby" }, 90000);
+  assert.equal(lobby.status, "waiting");
+  assert.equal(lobby.gameNumber, 2);
+  assert.equal(lobby.match, null);
+  assert.equal(lobby.members.player.ready, false);
+  assert.equal(lobby.openingSeat, "cpu");
+  assert.deepEqual(lobby.series, { player: 1, cpu: 0, draws: 0 }, "the record survives the next game starting");
+  assert.equal(lobby.expiresAt, 90000 + ROOM_LIFETIME_MS, "returning to the lobby extends the room");
+  assert.equal(applyOnlineCommand(lobby, "player", { type: "lobby" }, 90001), lobby, "a second return is a no-op");
+
+  const viaRematch = applyOnlineCommand(applyOnlineCommand(room, "player", { type: "rematch" }, 90000), "cpu", { type: "rematch" }, 90001);
+  assert.deepEqual(viaRematch.series, { player: 1, cpu: 0, draws: 0 });
+
+  // A second game in the reopened room adds to the same record.
+  let second = applyOnlineCommand(applyOnlineCommand(lobby, "player", { type: "ready" }, 90002), "cpu", { type: "ready" }, 90003);
+  second = applyOnlineCommand(second, "player", { type: "surrender" }, 90004);
+  assert.deepEqual(second.series, { player: 1, cpu: 1, draws: 0 });
+  for (const seat of ["player", "cpu"] as const)
+    assert.deepEqual(onlineRoomView(second, "SERIESROOM12", seat === "player" ? "a" : "b", 90005).series,
+      { player: 1, cpu: 1, draws: 0 }, "both seats read the same server record");
+});
+
+test("rooms stored before the series existed keep working and ranked rooms never tally", () => {
+  const legacy = JSON.parse(JSON.stringify(fixture())) as OnlineRoom;
+  delete legacy.series;
+  const completed = applyOnlineCommand(legacy, "cpu", { type: "surrender" }, 5);
+  assert.deepEqual(completed.series, { player: 1, cpu: 0, draws: 0 });
+  assert.deepEqual(onlineRoomView(legacy, "LEGACYROOM12", "a", 5).series, { player: 0, cpu: 0, draws: 0 });
+
+  const ranked: OnlineRoom = { ...fixture(), ranked: { queuedAt: 0, heartbeatAt: 0, botAfter: 0, bot: false, ratings: { player: 1000, cpu: 1000 } } };
+  const rankedDone = applyOnlineCommand(ranked, "cpu", { type: "surrender" }, 6);
+  assert.deepEqual(rankedDone.series, { player: 0, cpu: 0, draws: 0 }, "ranked results never enter a friendly series");
+  assert.throws(() => applyOnlineCommand(rankedDone, "player", { type: "lobby" }, 7), /Fade Park/);
+  assert.throws(() => applyOnlineCommand(rankedDone, "player", { type: "leave" }, 7), /Fade Park/);
+});
+
+test("leaving closes a friendly room for both players and names who closed it", () => {
+  const completed = applyOnlineCommand(fixture(), "cpu", { type: "surrender" }, 3);
+  assert.throws(() => applyOnlineCommand(fixture(), "player", { type: "leave" }, 3), /Surrender/);
+  const left = applyOnlineCommand(completed, "cpu", { type: "leave" }, 4);
+  assert.equal(left.status, "closed");
+  assert.equal(left.reason, "left");
+  assert.equal(left.closedBy, "cpu");
+  assert.equal(onlineRoomView(left, "LEFTROOM1234", "a", 5).closedBy, "cpu");
+  assert.equal(applyOnlineCommand(left, "player", { type: "leave" }, 6), left, "leaving a closed room is a no-op");
+  assert.throws(() => applyOnlineCommand(left, "player", { type: "lobby" }, 6), /Finish this fade/);
+});
+
+test("only a confirmed close leaves a friendly room; failed or offline attempts keep the player there", async () => {
+  const { resolveRoomExit } = await import("./lib/roomExit");
+  const sent: string[] = [];
+  const record = (result: unknown) => async (command: { type: string }) => {
+    sent.push(command.type);
+    if (result instanceof Error) throw result;
+    return result;
+  };
+  assert.deepEqual(
+    await resolveRoomExit("leave", { ranked: false, send: record(true) }),
+    { navigate: true, failed: null },
+  );
+  assert.deepEqual(
+    await resolveRoomExit("leave", { ranked: false, send: record(false) }),
+    { navigate: false, failed: "leave" },
+    "a rejected close must not strand the rival in an open room",
+  );
+  assert.deepEqual(
+    await resolveRoomExit("leave", { ranked: false, send: record(new Error("offline")) }),
+    { navigate: false, failed: "leave" },
+    "an offline close must not navigate either",
+  );
+  // Returning to the lobby keeps the player in the room whatever happens.
+  assert.deepEqual(
+    await resolveRoomExit("lobby", { ranked: false, send: record(true) }),
+    { navigate: false, failed: null },
+  );
+  assert.deepEqual(
+    await resolveRoomExit("lobby", { ranked: false, send: record(false) }),
+    { navigate: false, failed: "lobby" },
+  );
+  assert.deepEqual(sent, ["leave", "leave", "leave", "lobby", "lobby"]);
+  // Ranked has no room to keep: it never sends a friendly room command.
+  const rankedSent: string[] = [];
+  const rankedSend = async (command: { type: string }) => { rankedSent.push(command.type); return true; };
+  assert.deepEqual(
+    await resolveRoomExit("leave", { ranked: true, send: rankedSend }),
+    { navigate: true, failed: null },
+  );
+  assert.deepEqual(rankedSent, [], "ranked results are untouched by room intents");
 });

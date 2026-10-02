@@ -51,7 +51,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 - Page-to-page navigation should be immediate, without route wipes, fades, or slides. Keep battle animations and in-page effects separate from navigation.
 - Story, boss, training, gacha, victory, and defeat use only their dedicated music queues. General and original tracks belong only in the battle queue; never append battle tracks as fallback music for dedicated modes.
+- Loading and optional reward broadcasts use the supplied silent media derivatives only. Loading readiness, saving, grants and receipt dismissal must never depend on playback. No openings, face-offs, navigation cinematics or online-match inserts.
 
 ## Pointers
 
+- Broadcast source/edit/safety/size mapping: `artifacts/squabblemon/docs/broadcast-media-manifest.md` and `.json`. Keep the original montages in `attached_assets`, never in runtime requests. Run `test:broadcast` and `test:broadcast-browser` from the Squabblemon package for the optional-media checks.
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details

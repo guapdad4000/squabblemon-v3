@@ -1,0 +1,48 @@
+
+> @workspace/squabblemon@0.0.0 test:story:seasons /home/runner/workspace/artifacts/squabblemon
+> node ../../scripts/compile-season-one-screenplay.mjs --check && node --import ../../scripts/battle-test-css.mjs --import tsx --test src/storySeasons.test.ts src/seasonOneRewrite.test.ts src/storyAssets.test.ts src/components/story/StoryStage.test.tsx src/storyContentExpansion.test.ts src/storyExpansions.test.ts
+
+62 scenes / 113 sections / 2765 lines: /home/runner/workspace/lib/squabblemon-engine/src/storyChapters/seasonOneRewrite.json
+✔ Chapter Two stages preserve authored time and place with shipped art (2.085043ms)
+✔ unmapped stages use node cinematic art before the chapter map (0.22808ms)
+✔ dialogue taps reveal first, advance second, and reject rapid duplicate input (0.127466ms)
+✔ pending saves block dialogue surface advancement (0.076316ms)
+✔ completing a partial reveal cancels later timer writes before the next tap advances (0.651781ms)
+✔ screenplay emphasis and actor directions render as safe formatted text in stage and transcript (5.478ms)
+✔ player dialogue uses the side portrait while a listening player uses the rear portrait (0.160671ms)
+✔ directions keep their parentheses and split emphasis markers never leak into dialogue (1.131641ms)
+✔ all shipped Season One dialogue tuples render without markdown delimiter leakage (24.58214ms)
+✔ compiled tuples exactly preserve the delivered export, without fences or count annotations (8.689696ms)
+✔ the rewritten screenplay covers every Season One scene using shipped portraits (23.600434ms)
+✔ node revisions only change when that node’s screenplay changes (0.342541ms)
+✔ new dialogue cannot be skipped by an old read marker; other seasons keep theirs (0.267944ms)
+✔ theater artwork is real, optimized and within the complete scene budget (14.244612ms)
+✔ cinema props preserve transparency and proportion within a one-megabyte art budget (339.95835ms)
+✔ every new chapter's rendered background, portrait, puzzle and poster exists (7.368875ms)
+✔ authored environments cover every new story scene with all 38 supplied locations (86.908394ms)
+✔ all sixteen environment props retain transparent alpha (950.071194ms)
+✔ every Season One speaker has a decoded portrait, including rewrite-only cast (939.313466ms)
+✔ Player artwork preserves supplied alpha and dark pixels; Rae remains distinct and transparent (638.868048ms)
+✔ Season One expansion keeps every shipped line as an exact prefix (1.449297ms)
+✔ Season One expansion leaves encounters, rewards and routing untouched (3.942771ms)
+✔ Sherlock registry has unique IDs, two varied battles per chapter and one puzzle (0.359653ms)
+✔ Sherlock chapters satisfy executable story-content validation (0.426608ms)
+✔ expanded stories provide ninety connected scenes and scrambled, solvable puzzles (2.244897ms)
+✔ every new encounter reaches a final result and replays with its authored rules (14274.051208ms)
+✔ no new investigation opens with its answer already arranged (0.248515ms)
+✔ correcting the published clocks produces the authored chronology (0.606888ms)
+✔ socket and custody puzzles have exactly one connected path (3.448201ms)
+✔ combined witness and placement clues admit one answer, not several plausible orders (2.746691ms)
+✔ Alice can perform the doorway plan and Leon can meet every posted deadline (0.546475ms)
+✔ season expansion preserves every legacy progression, encounter and reward identity (2.78112ms)
+✔ each chapter has exactly one presentation and every advertised chapter exists (0.425376ms)
+✔ new seasons preserve distinct entry requirements and validate as one campaign (6.696833ms)
+✔ puzzle solutions reject omissions, duplicates, extra pieces and the wrong order (0.725113ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14794.498549

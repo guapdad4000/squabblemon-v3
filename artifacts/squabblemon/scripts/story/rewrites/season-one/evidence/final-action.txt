@@ -1,0 +1,1 @@
+Final authored Player line and real Continue callback passed; no browser errors.

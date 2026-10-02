@@ -1,0 +1,37 @@
+reduced: all 113 longest sections and reachable actions checked at 375x667.
+reduced: all 113 longest sections and reachable actions checked at 390x844.
+reduced: all 113 longest sections and reachable actions checked at 768x1024.
+reduced: all 113 longest sections and reachable actions checked at 1440x900.
+reduced: all 113 longest sections and reachable actions checked at 844x390.
+normal: all 113 longest sections and reachable actions checked at 375x667.
+normal: all 113 longest sections and reachable actions checked at 390x844.
+normal: all 113 longest sections and reachable actions checked at 768x1024.
+normal: all 113 longest sections and reachable actions checked at 1440x900.
+normal: all 113 longest sections and reachable actions checked at 844x390.
+Readthrough: 250/2765 real Continue clicks verified.
+Readthrough: 500/2765 real Continue clicks verified.
+Readthrough: 750/2765 real Continue clicks verified.
+Readthrough: 1000/2765 real Continue clicks verified.
+Readthrough: 1250/2765 real Continue clicks verified.
+Readthrough: 1500/2765 real Continue clicks verified.
+Readthrough: 1750/2765 real Continue clicks verified.
+Readthrough: 2000/2765 real Continue clicks verified.
+Readthrough: 2250/2765 real Continue clicks verified.
+Readthrough: 2500/2765 real Continue clicks verified.
+Readthrough: 2750/2765 real Continue clicks verified.
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: ReferenceError: expectedLines is not defined
+    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:39)
+    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+    at next (eval at evaluate (:311:30), <anonymous>:29:33)
+    at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at /home/runner/workspace/artifacts/squabblemon/e2e/verify-season-one-rewrite.mjs:172:12 {
+  log: []
+}
+
+Node.js v24.13.0

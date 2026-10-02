@@ -27,3 +27,18 @@ The absolute failure alone did not isolate the new renderer's contribution.
 **How to apply:** Keep the fixed release budget; collect paired runs and final
 board evidence. Do not claim the new layer meets budget just because its baseline
 also fails, and do not widen thresholds to make one noisy runner pass.
+Failed approaches on the headless 4x runner (Sep 2026; baseline ~213 long tasks / ~30 s,
+commits ~210 vs a budget of 18 / 1.8 s / 105): replacing the chroma 2D staging with
+`createImageBitmap(video, crop, resize)` ran synchronously on the main thread there and
+doubled the cost (~9.5 s vs ~5 s). Adding `layoutDependency` to hand cards did not reduce
+framer `measureScroll` time. So the forced layouts come from other layout nodes.
+**Why:** The runner has no GPU, so video frame readback costs CPU on any upload path.
+**How to apply:** Do not retry these. Getting within budget needs structural changes
+(fewer commits per presentation frame, removing projection from the battle tree),
+or a decision about the budget from the owner.
+Commit rule: transient battle markers (score/Motion/district change markers, special-move
+playback status, attack overlay geometry) must never use effect-then-setState or a
+timer-clear setState — each re-renders the whole battle. Derive change state during render
+and expire or position nodes directly in the DOM.
+**Why:** These extra commits were the bulk of the commit-budget overrun.
+**How to apply:** Any new battle overlay or marker; check the Profiler commit count.

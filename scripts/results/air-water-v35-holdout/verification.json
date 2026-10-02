@@ -1,0 +1,64 @@
+{
+  "verifiedAt": "2026-10-02T09:37:37.946Z",
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "harnessHash": "5a784d72c46f54dbbbdb33f470720f66f4d3dc7cb940887a87eae1431ceb5dc1",
+  "planHash": "9dbaf385d334745ea6f233bb55b951a915821dd196eee8b5a52e7beb86676ac1",
+  "nodeVersion": "v24.13.0",
+  "unchangedGameAndPriorRanking": true,
+  "independentOwnerBasedScoreCheck": true,
+  "verifiedCsvRows": {
+    "summary": 18,
+    "seeds": 8,
+    "matchups": 72
+  },
+  "exactReplayChecks": [
+    {
+      "caseIndex": 64,
+      "key": "starter-block|element-air|greedy|air-water-v35-holdout-01|0|0|a-player"
+    },
+    {
+      "caseIndex": 548,
+      "key": "starter-crashout|element-water|seeded-legal|air-water-v35-holdout-02|0|0|a-player"
+    },
+    {
+      "caseIndex": 1098,
+      "key": "starter-squabblehouse-shift|element-air|greedy|air-water-v35-holdout-03|0|3|a-player"
+    },
+    {
+      "caseIndex": 1582,
+      "key": "focus-late-scaling|element-water|seeded-legal|air-water-v35-holdout-04|0|3|a-player"
+    },
+    {
+      "caseIndex": 2129,
+      "key": "focus-wiz|element-air|greedy|air-water-v35-holdout-05|0|0|b-player"
+    },
+    {
+      "caseIndex": 2613,
+      "key": "focus-cellblock|element-water|seeded-legal|air-water-v35-holdout-06|0|0|b-player"
+    },
+    {
+      "caseIndex": 3163,
+      "key": "element-light|element-air|greedy|air-water-v35-holdout-07|0|3|b-player"
+    },
+    {
+      "caseIndex": 3455,
+      "key": "element-water|element-earth|seeded-legal|air-water-v35-holdout-08|0|3|b-player"
+    }
+  ],
+  "files": {
+    "by-seed.csv": "802c6debd0b6fee897a3bbf1ea093cf646e732354b0f19a27e6adf199f76ffa4",
+    "matchups.csv": "6bbc056d6d0ee48df6adce594d7a72f65ad3fae277f5cf0e0d6173e286b71d4e",
+    "plan.json": "9dbaf385d334745ea6f233bb55b951a915821dd196eee8b5a52e7beb86676ac1",
+    "report.md": "611717ecd99efe275bae7e2185df08d3e002e875b2a2686c498bd1096a15aa81",
+    "runner-sources.json": "249ee44ccaf5c25adf48a0f958f0933969ca7c3c8c46e6a8454bf1aa69befa07",
+    "summary.csv": "00bb3c6c9d6097be8f96fcc524c406fc117067870f34a44ff7295dc2e0f4f238",
+    "summary.json": "a1710f374e3e4cbdde6a13b5b9e64ed43a3c1d9fc1f9539cae812ca5ef2883d0",
+    "worker-0.json": "cefb648cc928b03771c799c10dc1ee131a7df3ccec777fa6a1f0b882d34f8115",
+    "worker-1.json": "d014c390ad1bb3c326f3e46aaa97e39a3d9e41188c116da9696b50e50a798b6c",
+    "worker-2.json": "582efcb4fe00a3db2558e347a0dbb424ce0392432b4a327552eb41d41cdc8f28",
+    "worker-3.json": "3a4c1b5b6de1f51f647c0a984212f0bc0e0055d8fa077546f2f9d50ac468be14",
+    "worker-4.json": "c3fd8dcab1b82e130f64293e73e2563b5e74bfaa335efc2b6135f39030c131d1",
+    "worker-5.json": "5423e35e3ab8874744c358e31fb40bfade2f2802ea48ce2f5627109a381f89e3",
+    "worker-6.json": "e8132204102c1a0ce4a56668cc8d428609942e0b1bfbb34e5df6208a1708f9d4"
+  }
+}

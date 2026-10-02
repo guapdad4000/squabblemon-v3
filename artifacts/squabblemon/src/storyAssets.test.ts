@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import sharp from "sharp";
 import { storyContent, storySeasons } from "@workspace/squabblemon-engine/story";
+import portraitRevisions from './lib/storyPortraitRevisions.json';
 
 const publicRoot = new URL("../public/", import.meta.url);
 const theaterArt = [
@@ -95,4 +97,60 @@ test('all sixteen environment props retain transparent alpha', async () => {
     assert.equal(metadata.hasAlpha, true, prop.asset);
     assert.equal((await sharp(buffer).stats()).isOpaque, false, prop.asset);
   }
+});
+
+test('every Season One speaker has a decoded portrait, including rewrite-only cast', async () => {
+  const ids = storySeasons.find(season => season.id === 'season-1')!.chapterIds;
+  const portraits = new Set(['assets/characters/player-rear.webp']);
+  for (const chapter of storyContent.chapters.filter(chapter => ids.includes(chapter.id))) {
+    for (const node of chapter.nodes) {
+      for (const line of node.kind === 'battle' ? [...node.preDialogue, ...node.postDialogue] : node.scenes)
+        portraits.add(line.portraitAssetId);
+    }
+  }
+  for (const asset of portraits) {
+    const buffer = await readFile(new URL(asset, publicRoot));
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.format, 'webp', asset);
+    assert.ok((metadata.width ?? 0) > 100 && (metadata.height ?? 0) > 100, asset);
+    // Force full decoding rather than accepting only a valid image header.
+    assert.ok((await sharp(buffer).raw().toBuffer()).length > 0, asset);
+  }
+});
+
+test('Player artwork preserves supplied alpha and dark pixels; Rae remains distinct and transparent', async () => {
+  const sources = {
+    player: '../reference/story-player/side.png',
+    'player-rear': '../reference/story-player/rear.png',
+  };
+  for (const [id, source] of Object.entries(sources)) {
+    const buffer = await readFile(new URL(`assets/characters/${id}.webp`, publicRoot));
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.hasAlpha, true);
+    assert.equal(metadata.height, 1200);
+    assert.ok(Math.abs(metadata.width! / metadata.height! - 941 / 1672) < .001);
+    assert.ok(buffer.length < 250_000, `${id} must remain optimized`);
+    const decoded = await sharp(buffer).ensureAlpha().raw().toBuffer();
+    const original = await sharp(await readFile(new URL(source, import.meta.url)))
+      .resize({ height: 1200, withoutEnlargement: true }).ensureAlpha().raw().toBuffer();
+    let transparent = 0, darkOpaque = 0;
+    for (let i = 0; i < decoded.length; i += 4) {
+      assert.equal(decoded[i + 3], original[i + 3], `${id}: original alpha must survive`);
+      if (decoded[i + 3] === 0) transparent++;
+      else {
+        assert.deepEqual(decoded.subarray(i, i + 3), original.subarray(i, i + 3),
+          `${id}: no replacement artwork or removed black body pixels`);
+        if (decoded[i + 3] > 240 && decoded[i] + decoded[i + 1] + decoded[i + 2] < 24) darkOpaque++;
+      }
+    }
+    assert.ok(transparent > 100_000 && darkOpaque > 100_000, id);
+    assert.equal(createHash('sha256').update(buffer).digest('hex').slice(0, 12),
+      portraitRevisions[id as keyof typeof portraitRevisions]);
+  }
+  const rae = await readFile(new URL('assets/characters/rae.webp', publicRoot));
+  assert.equal((await sharp(rae).metadata()).hasAlpha, true);
+  assert.equal((await sharp(rae).stats()).isOpaque, false);
+  assert.ok(rae.length < 250_000);
+  assert.equal(createHash('sha256').update(rae).digest('hex').slice(0, 12), portraitRevisions.rae);
+  assert.notEqual(portraitRevisions.rae, portraitRevisions.player);
 });

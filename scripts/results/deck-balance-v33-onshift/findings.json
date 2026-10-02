@@ -1,0 +1,4508 @@
+{
+  "balanceVersion": 33,
+  "rulesVersion": 33,
+  "sourceHash": "f9bfa32d48e5d06ed2fba8ba7193c58b243510794ab7c23b50958f4a78a117ab",
+  "plannedMatches": 3392,
+  "completedMatches": 3374,
+  "failedMatches": 18,
+  "fullAuditStatus": "blocked-by-engine-failures",
+  "primaryStatus": "accepted-complete",
+  "primaryMatches": 2304,
+  "league": [
+    {
+      "id": "focus-wonderland",
+      "name": "Wonderland Return",
+      "all": {
+        "games": 352,
+        "wins": 289,
+        "losses": 47,
+        "draws": 16,
+        "winRate": 0.8210227272727273,
+        "scoreRate": 0.84375
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 150,
+        "losses": 17,
+        "draws": 9,
+        "winRate": 0.8522727272727273,
+        "scoreRate": 0.8778409090909091
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 139,
+        "losses": 30,
+        "draws": 7,
+        "winRate": 0.7897727272727273,
+        "scoreRate": 0.8096590909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 148,
+        "losses": 19,
+        "draws": 9,
+        "winRate": 0.8409090909090909,
+        "scoreRate": 0.8664772727272727
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 141,
+        "losses": 28,
+        "draws": 7,
+        "winRate": 0.8011363636363636,
+        "scoreRate": 0.8210227272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 135,
+        "losses": 30,
+        "draws": 11,
+        "winRate": 0.7670454545454546,
+        "scoreRate": 0.7982954545454546
+      },
+      "second": {
+        "games": 176,
+        "wins": 154,
+        "losses": 17,
+        "draws": 5,
+        "winRate": 0.875,
+        "scoreRate": 0.8892045454545454
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 77,
+        "losses": 7,
+        "draws": 4,
+        "winRate": 0.875,
+        "scoreRate": 0.8977272727272727
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 73,
+        "losses": 10,
+        "draws": 5,
+        "winRate": 0.8295454545454546,
+        "scoreRate": 0.8579545454545454
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 71,
+        "losses": 12,
+        "draws": 5,
+        "winRate": 0.8068181818181818,
+        "scoreRate": 0.8352272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 68,
+        "losses": 18,
+        "draws": 2,
+        "winRate": 0.7727272727272727,
+        "scoreRate": 0.7840909090909091
+      }
+    },
+    {
+      "id": "starter-squabblehouse-shift",
+      "name": "SQUABBLEHOUSE SHIFT",
+      "all": {
+        "games": 352,
+        "wins": 238,
+        "losses": 92,
+        "draws": 22,
+        "winRate": 0.6761363636363636,
+        "scoreRate": 0.7073863636363636
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 131,
+        "losses": 38,
+        "draws": 7,
+        "winRate": 0.7443181818181818,
+        "scoreRate": 0.7642045454545454
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 107,
+        "losses": 54,
+        "draws": 15,
+        "winRate": 0.6079545454545454,
+        "scoreRate": 0.6505681818181818
+      },
+      "base": {
+        "games": 176,
+        "wins": 128,
+        "losses": 36,
+        "draws": 12,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.7613636363636364
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 110,
+        "losses": 56,
+        "draws": 10,
+        "winRate": 0.625,
+        "scoreRate": 0.6534090909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 109,
+        "losses": 55,
+        "draws": 12,
+        "winRate": 0.6193181818181818,
+        "scoreRate": 0.6534090909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 129,
+        "losses": 37,
+        "draws": 10,
+        "winRate": 0.7329545454545454,
+        "scoreRate": 0.7613636363636364
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 71,
+        "losses": 14,
+        "draws": 3,
+        "winRate": 0.8068181818181818,
+        "scoreRate": 0.8238636363636364
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 60,
+        "losses": 24,
+        "draws": 4,
+        "winRate": 0.6818181818181818,
+        "scoreRate": 0.7045454545454546
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 57,
+        "losses": 22,
+        "draws": 9,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6988636363636364
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 50,
+        "losses": 32,
+        "draws": 6,
+        "winRate": 0.5681818181818182,
+        "scoreRate": 0.6022727272727273
+      }
+    },
+    {
+      "id": "focus-wiz",
+      "name": "The Wiz",
+      "all": {
+        "games": 352,
+        "wins": 233,
+        "losses": 94,
+        "draws": 25,
+        "winRate": 0.6619318181818182,
+        "scoreRate": 0.6974431818181818
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 127,
+        "losses": 38,
+        "draws": 11,
+        "winRate": 0.7215909090909091,
+        "scoreRate": 0.7528409090909091
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 106,
+        "losses": 56,
+        "draws": 14,
+        "winRate": 0.6022727272727273,
+        "scoreRate": 0.6420454545454546
+      },
+      "base": {
+        "games": 176,
+        "wins": 121,
+        "losses": 43,
+        "draws": 12,
+        "winRate": 0.6875,
+        "scoreRate": 0.7215909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 112,
+        "losses": 51,
+        "draws": 13,
+        "winRate": 0.6363636363636364,
+        "scoreRate": 0.6732954545454546
+      },
+      "first": {
+        "games": 176,
+        "wins": 105,
+        "losses": 62,
+        "draws": 9,
+        "winRate": 0.5965909090909091,
+        "scoreRate": 0.6221590909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 128,
+        "losses": 32,
+        "draws": 16,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.7727272727272727
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 64,
+        "losses": 20,
+        "draws": 4,
+        "winRate": 0.7272727272727273,
+        "scoreRate": 0.75
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 63,
+        "losses": 18,
+        "draws": 7,
+        "winRate": 0.7159090909090909,
+        "scoreRate": 0.7556818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 57,
+        "losses": 23,
+        "draws": 8,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6931818181818182
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 49,
+        "losses": 33,
+        "draws": 6,
+        "winRate": 0.5568181818181818,
+        "scoreRate": 0.5909090909090909
+      }
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "all": {
+        "games": 352,
+        "wins": 206,
+        "losses": 118,
+        "draws": 28,
+        "winRate": 0.5852272727272727,
+        "scoreRate": 0.625
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 97,
+        "losses": 64,
+        "draws": 15,
+        "winRate": 0.5511363636363636,
+        "scoreRate": 0.59375
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 109,
+        "losses": 54,
+        "draws": 13,
+        "winRate": 0.6193181818181818,
+        "scoreRate": 0.65625
+      },
+      "base": {
+        "games": 176,
+        "wins": 99,
+        "losses": 65,
+        "draws": 12,
+        "winRate": 0.5625,
+        "scoreRate": 0.5965909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 107,
+        "losses": 53,
+        "draws": 16,
+        "winRate": 0.6079545454545454,
+        "scoreRate": 0.6534090909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 91,
+        "losses": 72,
+        "draws": 13,
+        "winRate": 0.5170454545454546,
+        "scoreRate": 0.5539772727272727
+      },
+      "second": {
+        "games": 176,
+        "wins": 115,
+        "losses": 46,
+        "draws": 15,
+        "winRate": 0.6534090909090909,
+        "scoreRate": 0.6960227272727273
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 48,
+        "losses": 34,
+        "draws": 6,
+        "winRate": 0.5454545454545454,
+        "scoreRate": 0.5795454545454546
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 49,
+        "losses": 30,
+        "draws": 9,
+        "winRate": 0.5568181818181818,
+        "scoreRate": 0.6079545454545454
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 51,
+        "losses": 31,
+        "draws": 6,
+        "winRate": 0.5795454545454546,
+        "scoreRate": 0.6136363636363636
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 58,
+        "losses": 23,
+        "draws": 7,
+        "winRate": 0.6590909090909091,
+        "scoreRate": 0.6988636363636364
+      }
+    },
+    {
+      "id": "focus-fire-guap",
+      "name": "Fire and GUAP",
+      "all": {
+        "games": 352,
+        "wins": 200,
+        "losses": 129,
+        "draws": 23,
+        "winRate": 0.5681818181818182,
+        "scoreRate": 0.6008522727272727
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 108,
+        "losses": 53,
+        "draws": 15,
+        "winRate": 0.6136363636363636,
+        "scoreRate": 0.65625
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 92,
+        "losses": 76,
+        "draws": 8,
+        "winRate": 0.5227272727272727,
+        "scoreRate": 0.5454545454545454
+      },
+      "base": {
+        "games": 176,
+        "wins": 120,
+        "losses": 42,
+        "draws": 14,
+        "winRate": 0.6818181818181818,
+        "scoreRate": 0.7215909090909091
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 80,
+        "losses": 87,
+        "draws": 9,
+        "winRate": 0.45454545454545453,
+        "scoreRate": 0.48011363636363635
+      },
+      "first": {
+        "games": 176,
+        "wins": 86,
+        "losses": 75,
+        "draws": 15,
+        "winRate": 0.48863636363636365,
+        "scoreRate": 0.53125
+      },
+      "second": {
+        "games": 176,
+        "wins": 114,
+        "losses": 54,
+        "draws": 8,
+        "winRate": 0.6477272727272727,
+        "scoreRate": 0.6704545454545454
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 66,
+        "losses": 14,
+        "draws": 8,
+        "winRate": 0.75,
+        "scoreRate": 0.7954545454545454
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 42,
+        "losses": 39,
+        "draws": 7,
+        "winRate": 0.4772727272727273,
+        "scoreRate": 0.5170454545454546
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 54,
+        "losses": 28,
+        "draws": 6,
+        "winRate": 0.6136363636363636,
+        "scoreRate": 0.6477272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 38,
+        "losses": 48,
+        "draws": 2,
+        "winRate": 0.4318181818181818,
+        "scoreRate": 0.4431818181818182
+      }
+    },
+    {
+      "id": "starter-receipts",
+      "name": "RECEIPTS",
+      "all": {
+        "games": 352,
+        "wins": 142,
+        "losses": 173,
+        "draws": 37,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.4559659090909091
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 75,
+        "losses": 81,
+        "draws": 20,
+        "winRate": 0.42613636363636365,
+        "scoreRate": 0.48295454545454547
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 67,
+        "losses": 92,
+        "draws": 17,
+        "winRate": 0.3806818181818182,
+        "scoreRate": 0.4289772727272727
+      },
+      "base": {
+        "games": 176,
+        "wins": 68,
+        "losses": 90,
+        "draws": 18,
+        "winRate": 0.38636363636363635,
+        "scoreRate": 0.4375
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 74,
+        "losses": 83,
+        "draws": 19,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.4744318181818182
+      },
+      "first": {
+        "games": 176,
+        "wins": 51,
+        "losses": 103,
+        "draws": 22,
+        "winRate": 0.2897727272727273,
+        "scoreRate": 0.3522727272727273
+      },
+      "second": {
+        "games": 176,
+        "wins": 91,
+        "losses": 70,
+        "draws": 15,
+        "winRate": 0.5170454545454546,
+        "scoreRate": 0.5596590909090909
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 36,
+        "losses": 43,
+        "draws": 9,
+        "winRate": 0.4090909090909091,
+        "scoreRate": 0.4602272727272727
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 39,
+        "losses": 38,
+        "draws": 11,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.5056818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 47,
+        "draws": 9,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.4147727272727273
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 35,
+        "losses": 45,
+        "draws": 8,
+        "winRate": 0.3977272727272727,
+        "scoreRate": 0.4431818181818182
+      }
+    },
+    {
+      "id": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "all": {
+        "games": 352,
+        "wins": 125,
+        "losses": 188,
+        "draws": 39,
+        "winRate": 0.35511363636363635,
+        "scoreRate": 0.41051136363636365
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 62,
+        "losses": 95,
+        "draws": 19,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.40625
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 63,
+        "losses": 93,
+        "draws": 20,
+        "winRate": 0.35795454545454547,
+        "scoreRate": 0.4147727272727273
+      },
+      "base": {
+        "games": 176,
+        "wins": 59,
+        "losses": 99,
+        "draws": 18,
+        "winRate": 0.3352272727272727,
+        "scoreRate": 0.38636363636363635
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 66,
+        "losses": 89,
+        "draws": 21,
+        "winRate": 0.375,
+        "scoreRate": 0.4346590909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 50,
+        "losses": 108,
+        "draws": 18,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3352272727272727
+      },
+      "second": {
+        "games": 176,
+        "wins": 75,
+        "losses": 80,
+        "draws": 21,
+        "winRate": 0.42613636363636365,
+        "scoreRate": 0.48579545454545453
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 28,
+        "losses": 51,
+        "draws": 9,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3693181818181818
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 34,
+        "losses": 44,
+        "draws": 10,
+        "winRate": 0.38636363636363635,
+        "scoreRate": 0.4431818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 31,
+        "losses": 48,
+        "draws": 9,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.4034090909090909
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 32,
+        "losses": 45,
+        "draws": 11,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.42613636363636365
+      }
+    },
+    {
+      "id": "starter-slide",
+      "name": "SLIDE THRU",
+      "all": {
+        "games": 352,
+        "wins": 119,
+        "losses": 195,
+        "draws": 38,
+        "winRate": 0.3380681818181818,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 48,
+        "losses": 108,
+        "draws": 20,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.32954545454545453
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 71,
+        "losses": 87,
+        "draws": 18,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.45454545454545453
+      },
+      "base": {
+        "games": 176,
+        "wins": 49,
+        "losses": 102,
+        "draws": 25,
+        "winRate": 0.2784090909090909,
+        "scoreRate": 0.3494318181818182
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 70,
+        "losses": 93,
+        "draws": 13,
+        "winRate": 0.3977272727272727,
+        "scoreRate": 0.4346590909090909
+      },
+      "first": {
+        "games": 176,
+        "wins": 48,
+        "losses": 112,
+        "draws": 16,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.3181818181818182
+      },
+      "second": {
+        "games": 176,
+        "wins": 71,
+        "losses": 83,
+        "draws": 22,
+        "winRate": 0.4034090909090909,
+        "scoreRate": 0.4659090909090909
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 17,
+        "losses": 59,
+        "draws": 12,
+        "winRate": 0.19318181818181818,
+        "scoreRate": 0.26136363636363635
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 49,
+        "draws": 8,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.3977272727272727
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 43,
+        "draws": 13,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.4375
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 39,
+        "losses": 44,
+        "draws": 5,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.4715909090909091
+      }
+    },
+    {
+      "id": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "all": {
+        "games": 352,
+        "wins": 113,
+        "losses": 205,
+        "draws": 34,
+        "winRate": 0.3210227272727273,
+        "scoreRate": 0.3693181818181818
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 63,
+        "losses": 99,
+        "draws": 14,
+        "winRate": 0.35795454545454547,
+        "scoreRate": 0.3977272727272727
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 50,
+        "losses": 106,
+        "draws": 20,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3409090909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 60,
+        "losses": 100,
+        "draws": 16,
+        "winRate": 0.3409090909090909,
+        "scoreRate": 0.38636363636363635
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 53,
+        "losses": 105,
+        "draws": 18,
+        "winRate": 0.30113636363636365,
+        "scoreRate": 0.3522727272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 35,
+        "losses": 124,
+        "draws": 17,
+        "winRate": 0.19886363636363635,
+        "scoreRate": 0.2471590909090909
+      },
+      "second": {
+        "games": 176,
+        "wins": 78,
+        "losses": 81,
+        "draws": 17,
+        "winRate": 0.4431818181818182,
+        "scoreRate": 0.4914772727272727
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 32,
+        "losses": 51,
+        "draws": 5,
+        "winRate": 0.36363636363636365,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 48,
+        "draws": 9,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.4034090909090909
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 28,
+        "losses": 49,
+        "draws": 11,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3806818181818182
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 22,
+        "losses": 57,
+        "draws": 9,
+        "winRate": 0.25,
+        "scoreRate": 0.30113636363636365
+      }
+    },
+    {
+      "id": "starter-crashout",
+      "name": "CRASHOUT SEASON",
+      "all": {
+        "games": 352,
+        "wins": 113,
+        "losses": 215,
+        "draws": 24,
+        "winRate": 0.3210227272727273,
+        "scoreRate": 0.35511363636363635
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 55,
+        "losses": 108,
+        "draws": 13,
+        "winRate": 0.3125,
+        "scoreRate": 0.3494318181818182
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 58,
+        "losses": 107,
+        "draws": 11,
+        "winRate": 0.32954545454545453,
+        "scoreRate": 0.36079545454545453
+      },
+      "base": {
+        "games": 176,
+        "wins": 57,
+        "losses": 107,
+        "draws": 12,
+        "winRate": 0.32386363636363635,
+        "scoreRate": 0.35795454545454547
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 56,
+        "losses": 108,
+        "draws": 12,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.3522727272727273
+      },
+      "first": {
+        "games": 176,
+        "wins": 39,
+        "losses": 124,
+        "draws": 13,
+        "winRate": 0.2215909090909091,
+        "scoreRate": 0.2585227272727273
+      },
+      "second": {
+        "games": 176,
+        "wins": 74,
+        "losses": 91,
+        "draws": 11,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.45170454545454547
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 30,
+        "losses": 49,
+        "draws": 9,
+        "winRate": 0.3409090909090909,
+        "scoreRate": 0.39204545454545453
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 25,
+        "losses": 59,
+        "draws": 4,
+        "winRate": 0.2840909090909091,
+        "scoreRate": 0.3068181818181818
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 27,
+        "losses": 58,
+        "draws": 3,
+        "winRate": 0.3068181818181818,
+        "scoreRate": 0.32386363636363635
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 31,
+        "losses": 49,
+        "draws": 8,
+        "winRate": 0.3522727272727273,
+        "scoreRate": 0.3977272727272727
+      }
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "all": {
+        "games": 352,
+        "wins": 84,
+        "losses": 239,
+        "draws": 29,
+        "winRate": 0.23863636363636365,
+        "scoreRate": 0.27982954545454547
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 31,
+        "losses": 130,
+        "draws": 15,
+        "winRate": 0.17613636363636365,
+        "scoreRate": 0.21875
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 53,
+        "losses": 109,
+        "draws": 14,
+        "winRate": 0.30113636363636365,
+        "scoreRate": 0.3409090909090909
+      },
+      "base": {
+        "games": 176,
+        "wins": 29,
+        "losses": 133,
+        "draws": 14,
+        "winRate": 0.16477272727272727,
+        "scoreRate": 0.20454545454545456
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 55,
+        "losses": 106,
+        "draws": 15,
+        "winRate": 0.3125,
+        "scoreRate": 0.35511363636363635
+      },
+      "first": {
+        "games": 176,
+        "wins": 33,
+        "losses": 128,
+        "draws": 15,
+        "winRate": 0.1875,
+        "scoreRate": 0.23011363636363635
+      },
+      "second": {
+        "games": 176,
+        "wins": 51,
+        "losses": 111,
+        "draws": 14,
+        "winRate": 0.2897727272727273,
+        "scoreRate": 0.32954545454545453
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 13,
+        "losses": 69,
+        "draws": 6,
+        "winRate": 0.14772727272727273,
+        "scoreRate": 0.18181818181818182
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 18,
+        "losses": 61,
+        "draws": 9,
+        "winRate": 0.20454545454545456,
+        "scoreRate": 0.2556818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 16,
+        "losses": 64,
+        "draws": 8,
+        "winRate": 0.18181818181818182,
+        "scoreRate": 0.22727272727272727
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 37,
+        "losses": 45,
+        "draws": 6,
+        "winRate": 0.42045454545454547,
+        "scoreRate": 0.45454545454545453
+      }
+    },
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "all": {
+        "games": 352,
+        "wins": 74,
+        "losses": 241,
+        "draws": 37,
+        "winRate": 0.21022727272727273,
+        "scoreRate": 0.2627840909090909
+      },
+      "greedy": {
+        "games": 176,
+        "wins": 22,
+        "losses": 138,
+        "draws": 16,
+        "winRate": 0.125,
+        "scoreRate": 0.17045454545454544
+      },
+      "seededLegal": {
+        "games": 176,
+        "wins": 52,
+        "losses": 103,
+        "draws": 21,
+        "winRate": 0.29545454545454547,
+        "scoreRate": 0.35511363636363635
+      },
+      "base": {
+        "games": 176,
+        "wins": 30,
+        "losses": 132,
+        "draws": 14,
+        "winRate": 0.17045454545454544,
+        "scoreRate": 0.21022727272727273
+      },
+      "upgraded": {
+        "games": 176,
+        "wins": 44,
+        "losses": 109,
+        "draws": 23,
+        "winRate": 0.25,
+        "scoreRate": 0.3153409090909091
+      },
+      "first": {
+        "games": 176,
+        "wins": 30,
+        "losses": 131,
+        "draws": 15,
+        "winRate": 0.17045454545454544,
+        "scoreRate": 0.21306818181818182
+      },
+      "second": {
+        "games": 176,
+        "wins": 44,
+        "losses": 110,
+        "draws": 22,
+        "winRate": 0.25,
+        "scoreRate": 0.3125
+      },
+      "greedyBase": {
+        "games": 88,
+        "wins": 6,
+        "losses": 77,
+        "draws": 5,
+        "winRate": 0.06818181818181818,
+        "scoreRate": 0.09659090909090909
+      },
+      "greedyUpgraded": {
+        "games": 88,
+        "wins": 16,
+        "losses": 61,
+        "draws": 11,
+        "winRate": 0.18181818181818182,
+        "scoreRate": 0.24431818181818182
+      },
+      "seededBase": {
+        "games": 88,
+        "wins": 24,
+        "losses": 55,
+        "draws": 9,
+        "winRate": 0.2727272727272727,
+        "scoreRate": 0.32386363636363635
+      },
+      "seededUpgraded": {
+        "games": 88,
+        "wins": 28,
+        "losses": 48,
+        "draws": 12,
+        "winRate": 0.3181818181818182,
+        "scoreRate": 0.38636363636363635
+      }
+    }
+  ],
+  "firstSeat": {
+    "games": 2112,
+    "wins": 812,
+    "draws": 176,
+    "scoreRate": 0.42613636363636365
+  },
+  "dinerPrimary": {
+    "all": {
+      "games": 544,
+      "wins": 367,
+      "losses": 146,
+      "draws": 31,
+      "winRate": 0.6746323529411765,
+      "scoreRate": 0.703125
+    },
+    "greedy": {
+      "games": 272,
+      "wins": 206,
+      "losses": 55,
+      "draws": 11,
+      "winRate": 0.7573529411764706,
+      "scoreRate": 0.7775735294117647
+    },
+    "seededLegal": {
+      "games": 272,
+      "wins": 161,
+      "losses": 91,
+      "draws": 20,
+      "winRate": 0.5919117647058824,
+      "scoreRate": 0.6286764705882353
+    },
+    "base": {
+      "games": 272,
+      "wins": 193,
+      "losses": 61,
+      "draws": 18,
+      "winRate": 0.7095588235294118,
+      "scoreRate": 0.7426470588235294
+    },
+    "upgraded": {
+      "games": 272,
+      "wins": 174,
+      "losses": 85,
+      "draws": 13,
+      "winRate": 0.6397058823529411,
+      "scoreRate": 0.6636029411764706
+    },
+    "first": {
+      "games": 272,
+      "wins": 172,
+      "losses": 82,
+      "draws": 18,
+      "winRate": 0.6323529411764706,
+      "scoreRate": 0.6654411764705882
+    },
+    "second": {
+      "games": 272,
+      "wins": 195,
+      "losses": 64,
+      "draws": 13,
+      "winRate": 0.7169117647058824,
+      "scoreRate": 0.7408088235294118
+    },
+    "greedyBase": {
+      "games": 136,
+      "wins": 109,
+      "losses": 22,
+      "draws": 5,
+      "winRate": 0.8014705882352942,
+      "scoreRate": 0.8198529411764706
+    },
+    "greedyUpgraded": {
+      "games": 136,
+      "wins": 97,
+      "losses": 33,
+      "draws": 6,
+      "winRate": 0.7132352941176471,
+      "scoreRate": 0.7352941176470589
+    },
+    "seededBase": {
+      "games": 136,
+      "wins": 84,
+      "losses": 39,
+      "draws": 13,
+      "winRate": 0.6176470588235294,
+      "scoreRate": 0.6654411764705882
+    },
+    "seededUpgraded": {
+      "games": 136,
+      "wins": 77,
+      "losses": 52,
+      "draws": 7,
+      "winRate": 0.5661764705882353,
+      "scoreRate": 0.5919117647058824
+    }
+  },
+  "dinerMatchups": [
+    {
+      "id": "focus-wonderland",
+      "opponent": "Wonderland Return",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 10,
+          "losses": 20,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 5,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 5,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "base": {
+          "games": 16,
+          "wins": 4,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 10,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "first": {
+          "games": 16,
+          "wins": 4,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.25,
+          "scoreRate": 0.25
+        },
+        "second": {
+          "games": 16,
+          "wins": 6,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.4375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 2,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 29,
+          "losses": 61,
+          "draws": 6,
+          "winRate": 0.3020833333333333,
+          "scoreRate": 0.3333333333333333
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 15,
+          "losses": 30,
+          "draws": 3,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 14,
+          "losses": 31,
+          "draws": 3,
+          "winRate": 0.2916666666666667,
+          "scoreRate": 0.3229166666666667
+        },
+        "base": {
+          "games": 48,
+          "wins": 13,
+          "losses": 32,
+          "draws": 3,
+          "winRate": 0.2708333333333333,
+          "scoreRate": 0.3020833333333333
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 16,
+          "losses": 29,
+          "draws": 3,
+          "winRate": 0.3333333333333333,
+          "scoreRate": 0.3645833333333333
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 19,
+          "losses": 41,
+          "draws": 4,
+          "winRate": 0.296875,
+          "scoreRate": 0.328125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 10,
+          "losses": 20,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.34375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 9,
+          "losses": 21,
+          "draws": 2,
+          "winRate": 0.28125,
+          "scoreRate": 0.3125
+        },
+        "base": {
+          "games": 32,
+          "wins": 9,
+          "losses": 22,
+          "draws": 1,
+          "winRate": 0.28125,
+          "scoreRate": 0.296875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 10,
+          "losses": 19,
+          "draws": 3,
+          "winRate": 0.3125,
+          "scoreRate": 0.359375
+        },
+        "first": {
+          "games": 32,
+          "wins": 8,
+          "losses": 21,
+          "draws": 3,
+          "winRate": 0.25,
+          "scoreRate": 0.296875
+        },
+        "second": {
+          "games": 32,
+          "wins": 11,
+          "losses": 20,
+          "draws": 1,
+          "winRate": 0.34375,
+          "scoreRate": 0.359375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 6,
+          "losses": 10,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 4,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.25,
+          "scoreRate": 0.3125
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 3,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.1875,
+          "scoreRate": 0.21875
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "focus-counterplay-coherent",
+      "opponent": "Counterplay — Dark Control",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "base": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "second": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 54,
+          "losses": 39,
+          "draws": 3,
+          "winRate": 0.5625,
+          "scoreRate": 0.578125
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 32,
+          "losses": 15,
+          "draws": 1,
+          "winRate": 0.6666666666666666,
+          "scoreRate": 0.6770833333333334
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 22,
+          "losses": 24,
+          "draws": 2,
+          "winRate": 0.4583333333333333,
+          "scoreRate": 0.4791666666666667
+        },
+        "base": {
+          "games": 48,
+          "wins": 27,
+          "losses": 20,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.5729166666666666
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 27,
+          "losses": 19,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.5833333333333334
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 34,
+          "losses": 27,
+          "draws": 3,
+          "winRate": 0.53125,
+          "scoreRate": 0.5546875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.59375,
+          "scoreRate": 0.609375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 15,
+          "losses": 15,
+          "draws": 2,
+          "winRate": 0.46875,
+          "scoreRate": 0.5
+        },
+        "base": {
+          "games": 32,
+          "wins": 18,
+          "losses": 13,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.578125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 16,
+          "losses": 14,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 32,
+          "wins": 13,
+          "losses": 17,
+          "draws": 2,
+          "winRate": 0.40625,
+          "scoreRate": 0.4375
+        },
+        "second": {
+          "games": 32,
+          "wins": 21,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.65625,
+          "scoreRate": 0.671875
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 6,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "focus-fire-guap",
+      "opponent": "Fire and GUAP",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 16,
+          "losses": 15,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.515625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 8,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "second": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 52,
+          "losses": 34,
+          "draws": 10,
+          "winRate": 0.5416666666666666,
+          "scoreRate": 0.59375
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 26,
+          "losses": 17,
+          "draws": 5,
+          "winRate": 0.5416666666666666,
+          "scoreRate": 0.59375
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 26,
+          "losses": 17,
+          "draws": 5,
+          "winRate": 0.5416666666666666,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 48,
+          "wins": 19,
+          "losses": 22,
+          "draws": 7,
+          "winRate": 0.3958333333333333,
+          "scoreRate": 0.46875
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 33,
+          "losses": 12,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 36,
+          "losses": 19,
+          "draws": 9,
+          "winRate": 0.5625,
+          "scoreRate": 0.6328125
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 8,
+          "draws": 5,
+          "winRate": 0.59375,
+          "scoreRate": 0.671875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 17,
+          "losses": 11,
+          "draws": 4,
+          "winRate": 0.53125,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 32,
+          "wins": 11,
+          "losses": 15,
+          "draws": 6,
+          "winRate": 0.34375,
+          "scoreRate": 0.4375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 25,
+          "losses": 4,
+          "draws": 3,
+          "winRate": 0.78125,
+          "scoreRate": 0.828125
+        },
+        "first": {
+          "games": 32,
+          "wins": 14,
+          "losses": 13,
+          "draws": 5,
+          "winRate": 0.4375,
+          "scoreRate": 0.515625
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 6,
+          "draws": 4,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 6,
+          "losses": 6,
+          "draws": 4,
+          "winRate": 0.375,
+          "scoreRate": 0.5
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 5,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.3125,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "starter-vibes",
+      "opponent": "GOOD VIBES ONLY",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 25,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.78125,
+          "scoreRate": 0.78125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 1,
+      "failedCases": [
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-vibes|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-vibes",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "focus-wiz",
+      "opponent": "The Wiz",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 17,
+          "losses": 11,
+          "draws": 4,
+          "winRate": 0.53125,
+          "scoreRate": 0.59375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 5,
+          "draws": 3,
+          "winRate": 0.5,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 16,
+          "wins": 9,
+          "losses": 4,
+          "draws": 3,
+          "winRate": 0.5625,
+          "scoreRate": 0.65625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "second": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.5
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 55,
+          "losses": 33,
+          "draws": 8,
+          "winRate": 0.5729166666666666,
+          "scoreRate": 0.6145833333333334
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 29,
+          "losses": 16,
+          "draws": 3,
+          "winRate": 0.6041666666666666,
+          "scoreRate": 0.6354166666666666
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 26,
+          "losses": 17,
+          "draws": 5,
+          "winRate": 0.5416666666666666,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 48,
+          "wins": 27,
+          "losses": 16,
+          "draws": 5,
+          "winRate": 0.5625,
+          "scoreRate": 0.6145833333333334
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 28,
+          "losses": 17,
+          "draws": 3,
+          "winRate": 0.5833333333333334,
+          "scoreRate": 0.6145833333333334
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 38,
+          "losses": 22,
+          "draws": 4,
+          "winRate": 0.59375,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 18,
+          "losses": 12,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "base": {
+          "games": 32,
+          "wins": 18,
+          "losses": 12,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "first": {
+          "games": 32,
+          "wins": 15,
+          "losses": 14,
+          "draws": 3,
+          "winRate": 0.46875,
+          "scoreRate": 0.515625
+        },
+        "second": {
+          "games": 32,
+          "wins": 23,
+          "losses": 8,
+          "draws": 1,
+          "winRate": 0.71875,
+          "scoreRate": 0.734375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 7,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.4375,
+          "scoreRate": 0.5
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "starter-voltage",
+      "opponent": "VOLTAGE IN MOTION",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "first": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 3,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.375,
+          "scoreRate": 0.4375
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 56,
+          "losses": 32,
+          "draws": 8,
+          "winRate": 0.5833333333333334,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 36,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.75,
+          "scoreRate": 0.7916666666666666
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 20,
+          "losses": 24,
+          "draws": 4,
+          "winRate": 0.4166666666666667,
+          "scoreRate": 0.4583333333333333
+        },
+        "base": {
+          "games": 48,
+          "wins": 35,
+          "losses": 10,
+          "draws": 3,
+          "winRate": 0.7291666666666666,
+          "scoreRate": 0.7604166666666666
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 21,
+          "losses": 22,
+          "draws": 5,
+          "winRate": 0.4375,
+          "scoreRate": 0.4895833333333333
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 36,
+          "losses": 24,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 24,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 12,
+          "losses": 18,
+          "draws": 2,
+          "winRate": 0.375,
+          "scoreRate": 0.40625
+        },
+        "base": {
+          "games": 32,
+          "wins": 22,
+          "losses": 8,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 14,
+          "losses": 16,
+          "draws": 2,
+          "winRate": 0.4375,
+          "scoreRate": 0.46875
+        },
+        "first": {
+          "games": 32,
+          "wins": 14,
+          "losses": 15,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.484375
+        },
+        "second": {
+          "games": 32,
+          "wins": 22,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.703125
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 3,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.1875,
+          "scoreRate": 0.21875
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "focus-cellblock",
+      "opponent": "Cellblock Lane Sequence",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 22,
+          "losses": 9,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.703125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "first": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 61,
+          "losses": 29,
+          "draws": 6,
+          "winRate": 0.6354166666666666,
+          "scoreRate": 0.6666666666666666
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 30,
+          "losses": 13,
+          "draws": 5,
+          "winRate": 0.625,
+          "scoreRate": 0.6770833333333334
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 31,
+          "losses": 16,
+          "draws": 1,
+          "winRate": 0.6458333333333334,
+          "scoreRate": 0.65625
+        },
+        "base": {
+          "games": 48,
+          "wins": 32,
+          "losses": 11,
+          "draws": 5,
+          "winRate": 0.6666666666666666,
+          "scoreRate": 0.71875
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 29,
+          "losses": 18,
+          "draws": 1,
+          "winRate": 0.6041666666666666,
+          "scoreRate": 0.6145833333333334
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 39,
+          "losses": 20,
+          "draws": 5,
+          "winRate": 0.609375,
+          "scoreRate": 0.6484375
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 19,
+          "losses": 8,
+          "draws": 5,
+          "winRate": 0.59375,
+          "scoreRate": 0.671875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 32,
+          "wins": 20,
+          "losses": 8,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 19,
+          "losses": 12,
+          "draws": 1,
+          "winRate": 0.59375,
+          "scoreRate": 0.609375
+        },
+        "first": {
+          "games": 32,
+          "wins": 18,
+          "losses": 10,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "second": {
+          "games": 32,
+          "wins": 21,
+          "losses": 10,
+          "draws": 1,
+          "winRate": 0.65625,
+          "scoreRate": 0.671875
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 2,
+          "draws": 4,
+          "winRate": 0.625,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 9,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.5625,
+          "scoreRate": 0.59375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "starter-receipts",
+      "opponent": "RECEIPTS",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 10,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        },
+        "base": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 8,
+          "draws": 1,
+          "winRate": 0.4375,
+          "scoreRate": 0.46875
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 3,
+      "failedCases": [
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-receipts",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 0,
+          "seat": "b-player"
+        },
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-receipts",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        },
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-receipts",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "b-player"
+        }
+      ]
+    },
+    {
+      "id": "focus-detective",
+      "opponent": "Sherlock and Watson",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 20,
+          "losses": 12,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 7,
+          "losses": 9,
+          "draws": 0,
+          "winRate": 0.4375,
+          "scoreRate": 0.4375
+        },
+        "base": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "first": {
+          "games": 16,
+          "wins": 9,
+          "losses": 7,
+          "draws": 0,
+          "winRate": 0.5625,
+          "scoreRate": 0.5625
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 3,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.375,
+          "scoreRate": 0.375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 1,
+      "failedCases": [
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|focus-detective|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "focus-detective",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "focus-earth-tax",
+      "opponent": "Earth Tax and Finishers",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 18,
+          "losses": 10,
+          "draws": 4,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "base": {
+          "games": 16,
+          "wins": 8,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 7,
+          "losses": 6,
+          "draws": 3,
+          "winRate": 0.4375,
+          "scoreRate": 0.53125
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 3,
+      "failedCases": [
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "focus-earth-tax",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 0,
+          "seat": "a-player"
+        },
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "focus-earth-tax",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 0,
+          "seat": "a-player"
+        },
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "focus-earth-tax",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "focus-poison-entry",
+      "opponent": "Poison Entry Punishment",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 23,
+          "losses": 5,
+          "draws": 4,
+          "winRate": 0.71875,
+          "scoreRate": 0.78125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 9,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.5625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "second": {
+          "games": 16,
+          "wins": 11,
+          "losses": 3,
+          "draws": 2,
+          "winRate": 0.6875,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "winRate": 0.625,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 1,
+      "failedCases": [
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|focus-poison-entry|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "focus-poison-entry",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "starter-slide",
+      "opponent": "SLIDE THRU",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.828125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.6875,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 15,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.96875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 11,
+          "losses": 5,
+          "draws": 0,
+          "winRate": 0.6875,
+          "scoreRate": 0.6875
+        },
+        "first": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 2,
+      "failedCases": [
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|0|b-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-slide",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 0,
+          "seat": "b-player"
+        },
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-slide",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "starter-combo",
+      "opponent": "WHO YOU KNOW",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 27,
+          "losses": 2,
+          "draws": 3,
+          "winRate": 0.84375,
+          "scoreRate": 0.890625
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 11,
+          "losses": 2,
+          "draws": 3,
+          "winRate": 0.6875,
+          "scoreRate": 0.78125
+        },
+        "base": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "first": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "second": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.5,
+          "scoreRate": 0.6875
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 2,
+      "failedCases": [
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-combo",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 0,
+          "seat": "a-player"
+        },
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-combo",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 0,
+          "seat": "b-player"
+        }
+      ]
+    },
+    {
+      "id": "starter-block",
+      "opponent": "THE BLOCK IS HOT",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 3,
+      "failedCases": [
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-block",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        },
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-block",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "b-player"
+        },
+        {
+          "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+          "phase": "confirmation",
+          "policy": "greedy",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-block",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 7,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "starter-crashout",
+      "opponent": "CRASHOUT SEASON",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 25,
+          "losses": 5,
+          "draws": 2,
+          "winRate": 0.78125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "base": {
+          "games": 16,
+          "wins": 13,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "first": {
+          "games": 16,
+          "wins": 13,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 2,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.8125
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 7,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.6875
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        }
+      },
+      "confirmationStatus": "blocked-by-engine-failures",
+      "combined": null,
+      "confirmation": null,
+      "failureCount": 2,
+      "failedCases": [
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-crashout",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 0,
+          "seat": "b-player"
+        },
+        {
+          "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+          "phase": "confirmation",
+          "policy": "seeded-legal",
+          "a": "starter-squabblehouse-shift",
+          "b": "starter-crashout",
+          "seed": "deck-balance-v33-onshift-fresh-04",
+          "rotation": 2,
+          "tier": 3,
+          "seat": "a-player"
+        }
+      ]
+    },
+    {
+      "id": "focus-late-scaling",
+      "opponent": "Late Scaling",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.8125,
+          "scoreRate": 0.8125
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 6,
+          "draws": 0,
+          "winRate": 0.625,
+          "scoreRate": 0.625
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "second": {
+          "games": 16,
+          "wins": 12,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.75,
+          "scoreRate": 0.75
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "winRate": 0.5,
+          "scoreRate": 0.5
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 81,
+          "losses": 13,
+          "draws": 2,
+          "winRate": 0.84375,
+          "scoreRate": 0.8541666666666666
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 47,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.9791666666666666,
+          "scoreRate": 0.9895833333333334
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 34,
+          "losses": 13,
+          "draws": 1,
+          "winRate": 0.7083333333333334,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 48,
+          "wins": 46,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.9583333333333334,
+          "scoreRate": 0.9583333333333334
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 35,
+          "losses": 11,
+          "draws": 2,
+          "winRate": 0.7291666666666666,
+          "scoreRate": 0.75
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 31,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.96875,
+          "scoreRate": 0.984375
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 24,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.765625
+        },
+        "base": {
+          "games": 32,
+          "wins": 32,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 23,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.71875,
+          "scoreRate": 0.75
+        },
+        "first": {
+          "games": 32,
+          "wins": 26,
+          "losses": 4,
+          "draws": 2,
+          "winRate": 0.8125,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 32,
+          "wins": 29,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.90625,
+          "scoreRate": 0.90625
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 15,
+          "losses": 0,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.96875
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 8,
+          "losses": 7,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.53125
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    },
+    {
+      "id": "starter-compound",
+      "opponent": "COMPOUND INTEREST",
+      "primary": {
+        "all": {
+          "games": 32,
+          "wins": 26,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.8125,
+          "scoreRate": 0.859375
+        },
+        "greedy": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededLegal": {
+          "games": 16,
+          "wins": 10,
+          "losses": 3,
+          "draws": 3,
+          "winRate": 0.625,
+          "scoreRate": 0.71875
+        },
+        "base": {
+          "games": 16,
+          "wins": 14,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.875,
+          "scoreRate": 0.9375
+        },
+        "upgraded": {
+          "games": 16,
+          "wins": 12,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "first": {
+          "games": 16,
+          "wins": 12,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.75,
+          "scoreRate": 0.84375
+        },
+        "second": {
+          "games": 16,
+          "wins": 14,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.875,
+          "scoreRate": 0.875
+        },
+        "greedyBase": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 8,
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "seededBase": {
+          "games": 8,
+          "wins": 6,
+          "losses": 0,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.875
+        },
+        "seededUpgraded": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.5,
+          "scoreRate": 0.5625
+        }
+      },
+      "confirmationStatus": "accepted-complete",
+      "combined": {
+        "all": {
+          "games": 96,
+          "wins": 81,
+          "losses": 10,
+          "draws": 5,
+          "winRate": 0.84375,
+          "scoreRate": 0.8697916666666666
+        },
+        "greedy": {
+          "games": 48,
+          "wins": 47,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9791666666666666,
+          "scoreRate": 0.9791666666666666
+        },
+        "seededLegal": {
+          "games": 48,
+          "wins": 34,
+          "losses": 9,
+          "draws": 5,
+          "winRate": 0.7083333333333334,
+          "scoreRate": 0.7604166666666666
+        },
+        "base": {
+          "games": 48,
+          "wins": 44,
+          "losses": 1,
+          "draws": 3,
+          "winRate": 0.9166666666666666,
+          "scoreRate": 0.9479166666666666
+        },
+        "upgraded": {
+          "games": 48,
+          "wins": 37,
+          "losses": 9,
+          "draws": 2,
+          "winRate": 0.7708333333333334,
+          "scoreRate": 0.7916666666666666
+        }
+      },
+      "confirmation": {
+        "all": {
+          "games": 64,
+          "wins": 55,
+          "losses": 7,
+          "draws": 2,
+          "winRate": 0.859375,
+          "scoreRate": 0.875
+        },
+        "greedy": {
+          "games": 32,
+          "wins": 31,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.96875,
+          "scoreRate": 0.96875
+        },
+        "seededLegal": {
+          "games": 32,
+          "wins": 24,
+          "losses": 6,
+          "draws": 2,
+          "winRate": 0.75,
+          "scoreRate": 0.78125
+        },
+        "base": {
+          "games": 32,
+          "wins": 30,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.9375,
+          "scoreRate": 0.953125
+        },
+        "upgraded": {
+          "games": 32,
+          "wins": 25,
+          "losses": 6,
+          "draws": 1,
+          "winRate": 0.78125,
+          "scoreRate": 0.796875
+        },
+        "first": {
+          "games": 32,
+          "wins": 28,
+          "losses": 3,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.890625
+        },
+        "second": {
+          "games": 32,
+          "wins": 27,
+          "losses": 4,
+          "draws": 1,
+          "winRate": 0.84375,
+          "scoreRate": 0.859375
+        },
+        "greedyBase": {
+          "games": 16,
+          "wins": 16,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "scoreRate": 1
+        },
+        "greedyUpgraded": {
+          "games": 16,
+          "wins": 15,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.9375,
+          "scoreRate": 0.9375
+        },
+        "seededBase": {
+          "games": 16,
+          "wins": 14,
+          "losses": 1,
+          "draws": 1,
+          "winRate": 0.875,
+          "scoreRate": 0.90625
+        },
+        "seededUpgraded": {
+          "games": 16,
+          "wins": 10,
+          "losses": 5,
+          "draws": 1,
+          "winRate": 0.625,
+          "scoreRate": 0.65625
+        }
+      },
+      "failureCount": 0,
+      "failedCases": []
+    }
+  ],
+  "dinerCardsPrimary": [
+    {
+      "cardId": "squabble-house-manager",
+      "games": 544,
+      "gamesPlayed": 541,
+      "gamesSurviving": 539,
+      "deployments": 541,
+      "finalHands": 5719,
+      "playRate": 0.9944852941176471,
+      "averageFinalHandsWhenPresent": 10.61038961038961
+    },
+    {
+      "cardId": "squabblehouse-bus-boy",
+      "games": 544,
+      "gamesPlayed": 533,
+      "gamesSurviving": 509,
+      "deployments": 533,
+      "finalHands": 2977,
+      "playRate": 0.9797794117647058,
+      "averageFinalHandsWhenPresent": 5.8487229862475445
+    },
+    {
+      "cardId": "squabblehouse-cashier",
+      "games": 544,
+      "gamesPlayed": 431,
+      "gamesSurviving": 427,
+      "deployments": 431,
+      "finalHands": 2832,
+      "playRate": 0.7922794117647058,
+      "averageFinalHandsWhenPresent": 6.6323185011709604
+    },
+    {
+      "cardId": "squabblehouse-security",
+      "games": 544,
+      "gamesPlayed": 412,
+      "gamesSurviving": 411,
+      "deployments": 412,
+      "finalHands": 2766,
+      "playRate": 0.7573529411764706,
+      "averageFinalHandsWhenPresent": 6.7299270072992705
+    },
+    {
+      "cardId": "squabblehouse-teknician",
+      "games": 544,
+      "gamesPlayed": 399,
+      "gamesSurviving": 398,
+      "deployments": 399,
+      "finalHands": 2835,
+      "playRate": 0.7334558823529411,
+      "averageFinalHandsWhenPresent": 7.123115577889447
+    },
+    {
+      "cardId": "griddle-master",
+      "games": 544,
+      "gamesPlayed": 405,
+      "gamesSurviving": 394,
+      "deployments": 405,
+      "finalHands": 2137,
+      "playRate": 0.7444852941176471,
+      "averageFinalHandsWhenPresent": 5.4238578680203045
+    },
+    {
+      "cardId": "inmate-reformed",
+      "games": 544,
+      "gamesPlayed": 413,
+      "gamesSurviving": 409,
+      "deployments": 413,
+      "finalHands": 2782,
+      "playRate": 0.7591911764705882,
+      "averageFinalHandsWhenPresent": 6.801955990220049
+    },
+    {
+      "cardId": "janitor",
+      "games": 544,
+      "gamesPlayed": 290,
+      "gamesSurviving": 290,
+      "deployments": 290,
+      "finalHands": 1522,
+      "playRate": 0.5330882352941176,
+      "averageFinalHandsWhenPresent": 5.248275862068965
+    },
+    {
+      "cardId": "waffle-warlord",
+      "games": 544,
+      "gamesPlayed": 392,
+      "gamesSurviving": 392,
+      "deployments": 392,
+      "finalHands": 2504,
+      "playRate": 0.7205882352941176,
+      "averageFinalHandsWhenPresent": 6.387755102040816
+    },
+    {
+      "cardId": "sideofhands",
+      "games": 544,
+      "gamesPlayed": 393,
+      "gamesSurviving": 2,
+      "deployments": 393,
+      "finalHands": 0,
+      "playRate": 0.7224264705882353,
+      "averageFinalHandsWhenPresent": 0
+    }
+  ],
+  "managerPrimary": {
+    "gamesPlayed": 541,
+    "meanPeakHands": 11.523105360443623,
+    "meanPeakAura": 5.611829944547135,
+    "maximumPeakHands": 21,
+    "maximumPeakAura": 7
+  },
+  "failures": [
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-combo",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 0,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-combo",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 0,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-receipts",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 0,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-crashout",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 0,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-block",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-receipts",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-crashout",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-vibes|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-vibes",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|focus-detective|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "focus-detective",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|focus-poison-entry|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "focus-poison-entry",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-block",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-receipts",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 2,
+        "tier": 3,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "focus-earth-tax",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 0,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "focus-earth-tax",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 0,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|0|b-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-slide",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 0,
+        "seat": "b-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+        "phase": "confirmation",
+        "policy": "greedy",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-block",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "starter-slide",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    },
+    {
+      "scenario": {
+        "key": "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+        "phase": "confirmation",
+        "policy": "seeded-legal",
+        "a": "starter-squabblehouse-shift",
+        "b": "focus-earth-tax",
+        "seed": "deck-balance-v33-onshift-fresh-04",
+        "rotation": 7,
+        "tier": 3,
+        "seat": "a-player"
+      },
+      "message": "TypeError: Cannot read properties of undefined (reading 'lane')\n    at applyDistrictDeparture (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4518:17)\n    at resolveCardPlay (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4787:7)\n    at playTurnCard (/home/runner/workspace/lib/squabblemon-engine/src/gameEngine.ts:4522:10)\n    at listLegalBalancePlays (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:534:18)\n    at simulateBalanceMatch (/home/runner/workspace/lib/squabblemon-engine/src/balanceLab.ts:663:24)\n    at runWorker (/home/runner/workspace/scripts/src/deck-balance-audit.ts:174:22)\n    at <anonymous> (/home/runner/workspace/scripts/src/deck-balance-audit.ts:231:59)\n    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    }
+  ]
+}

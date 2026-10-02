@@ -82,6 +82,16 @@
 .battle-arena.battle-hud .claims-rival { color: var(--hud-rival); }
 .battle-arena.battle-hud .claims-divider { color: #b9c7d155; font-size: 12px; }
 .battle-arena.battle-hud .battle-fast-forward { display: flex; align-items: center; gap: 5px; min-height: 36px; padding: 4px 8px; border: 0; border-radius: 20px; background: #080d143d; font-size: 9px; box-shadow: none; }
+/* Speed pill: same family as the skip control, one tap on or off. */
+.battle-arena .battle-speed-toggle {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  min-height: 36px; min-width: 42px; padding: 4px 10px; margin-left: 4px;
+  border: 1px solid #ffffff26; border-radius: 20px; background: #080d143d;
+  color: #c3c8cf; font: 800 10px/1 var(--font-mono); letter-spacing: .06em;
+  cursor: pointer; transition: color .15s ease, background .15s ease, border-color .15s ease;
+}
+.battle-arena .battle-speed-toggle:hover { background: #0b121c99; color: #f7f0df; border-color: #ffffff4d; }
+.battle-arena .battle-speed-toggle[data-speed='fast'] { background: var(--hud-gold, #e7bf72); border-color: var(--hud-gold, #e7bf72); color: #0b0f16; }
 .battle-arena.battle-hud .battlefield-grid { max-width: 1380px; padding: 8px clamp(10px, 3vw, 38px); gap: clamp(8px, 3vw, 42px); }
 .battle-arena.battle-hud .district-lane,
 .battle-arena.battle-hud .district-lane:is(.is-selected,.is-legal,.is-effect-lane,[data-contested='true']):hover {
@@ -102,7 +112,7 @@
 .battle-arena.battle-hud .score-tick--cpu { color: var(--hud-rival); }
 .battle-arena.battle-hud .score-tick--player { color: var(--hud-gold); }
 .battle-arena.battle-hud .score-tick { animation: none; padding: 0; background: none; }
-.battle-arena.battle-hud .score-tick--changed { animation: hud-score-change 600ms ease-out; }
+.battle-arena.battle-hud .score-tick--changed { animation: hud-score-change calc(600ms / var(--presentation-speed, 1)) ease-out; }
 @keyframes hud-score-change { 40% { transform: translateY(-2px) scale(1.12); text-shadow: 0 0 14px currentColor; } }
 @media (prefers-reduced-motion: reduce) { .battle-arena.battle-hud .score-tick--changed { animation: none; } }
 .battle-arena.battle-hud[data-reduced-motion='true'] .score-tick--changed { animation: none; }

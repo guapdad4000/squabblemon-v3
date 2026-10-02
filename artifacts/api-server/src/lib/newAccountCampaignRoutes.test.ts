@@ -22,7 +22,11 @@ import {
   createGuidedTutorialTranscript,
   createStoryMatch,
 } from "@workspace/squabblemon-engine/gameEngine";
-import { storyContent, type StoryNode } from "@workspace/squabblemon-engine/story";
+import {
+  storyContent,
+  storyDialogueToken,
+  type StoryNode,
+} from "@workspace/squabblemon-engine/story";
 import { WELCOME_REWARD } from "@workspace/squabblemon-engine/economy";
 import playerRouter from "../routes/player";
 import storyRouter from "../routes/story";
@@ -217,6 +221,8 @@ test("new account completes every campaign node through HTTP with isolated, idem
 
   let intentionalLossTested = false;
   let actionConflictTested = false;
+  let interruptionRetryTested = false;
+  let verifiedPostDialogueTested = false;
   let completed = 0;
   let shortenedStoryRoundPersisted = false;
   const runtimeCheckedBattleNodes = new Set<string>();
@@ -321,6 +327,73 @@ test("new account completes every campaign node through HTTP with isolated, idem
     }
 
     if (!intentionalLossTested) {
+      const preTokens = node.preDialogue.map((_line, index) =>
+        storyDialogueToken(node.id, "pre", index),
+      );
+      const beforePartialSave = await playerRequest("/player/story");
+      const previouslySavedTokens =
+        beforePartialSave.body.nodes.find(
+          (item: { nodeId: string }) => item.nodeId === node.id,
+        ).dialogueSeen;
+      const expectedPartialProgress = [
+        ...new Set([...previouslySavedTokens, ...preTokens.slice(0, 1)]),
+      ];
+      const partialSave = await playerRequest(
+        `/player/story/nodes/${node.id}/dialogue`,
+        { idempotencyKey: randomUUID(), dialogueSeen: preTokens.slice(0, 1) },
+      );
+      assert.equal(partialSave.status, 200, JSON.stringify(partialSave.body));
+      const refreshed = await playerRequest("/player/story");
+      assert.deepEqual(
+        refreshed.body.nodes.find((item: { nodeId: string }) => item.nodeId === node.id).dialogueSeen,
+        expectedPartialProgress,
+        `${node.id}: the partially read opening survives a campaign reload`,
+      );
+
+      const interrupted = await startStoryMatch();
+      const interruptedSnapshot = interrupted.started.body.encounterSnapshot;
+      const retried = await startStoryMatch();
+      assert.deepEqual(
+        retried.started.body.encounterSnapshot,
+        interruptedSnapshot,
+        `${node.id}: retry keeps the authored encounter snapshot after interruption`,
+      );
+      assert.deepEqual(
+        retried.started.body.districtSnapshot,
+        interrupted.started.body.districtSnapshot,
+        `${node.id}: retry keeps the authored district snapshot after interruption`,
+      );
+      assert.deepEqual(
+        retried.started.body.abilityUpgradeSnapshot,
+        interrupted.started.body.abilityUpgradeSnapshot,
+        `${node.id}: retry keeps the immutable progression/mechanics snapshot after interruption`,
+      );
+      assert.equal(
+        retried.started.body.encounterSnapshot.enemy.name,
+        interrupted.started.body.encounterSnapshot.enemy.name,
+      );
+      const interruptedProgress = (await playerRequest("/player/story")).body.nodes
+        .find((item: { nodeId: string }) => item.nodeId === node.id);
+      assert.equal(interruptedProgress.cleared, false);
+      assert.equal(interruptedProgress.attempts, 0);
+      assert.deepEqual(interruptedProgress.dialogueSeen, expectedPartialProgress);
+      interruptionRetryTested = true;
+
+      const postTokens = node.postDialogue.map((_line, index) =>
+        storyDialogueToken(node.id, "post", index),
+      );
+      const prematurePost = await playerRequest(
+        `/player/story/nodes/${node.id}/dialogue`,
+        { idempotencyKey: randomUUID(), dialogueSeen: postTokens.slice(0, 1) },
+      );
+      assert.equal(prematurePost.status, 409, JSON.stringify(prematurePost.body));
+      assert.equal(
+        (await playerRequest("/player/story")).body.nodes
+          .find((item: { nodeId: string }) => item.nodeId === node.id).cleared,
+        false,
+        `${node.id}: post-match dialogue remains unavailable before a verified result`,
+      );
+
       const { started, match } = await startStoryMatch();
       const moves = solveWithinNodeBudget(match, "loss", node.id);
       const loss = await playerRequest(`/player/matches/${started.body.id}/complete`, { moves });
@@ -330,6 +403,11 @@ test("new account completes every campaign node through HTTP with isolated, idem
       const state = afterLoss.body.nodes.find((item: { nodeId: string }) => item.nodeId === node.id);
       assert.equal(state.status, "available");
       assert.equal(state.attempts, 1);
+      const postAfterLoss = await playerRequest(
+        `/player/story/nodes/${node.id}/dialogue`,
+        { idempotencyKey: randomUUID(), dialogueSeen: postTokens.slice(0, 1) },
+      );
+      assert.equal(postAfterLoss.status, 409, JSON.stringify(postAfterLoss.body));
       intentionalLossTested = true;
     }
 
@@ -348,6 +426,39 @@ test("new account completes every campaign node through HTTP with isolated, idem
     assert.equal(storedMatch?.rounds, expectedRounds, `${node.id}: persisted round count`);
     if (expectedRounds < 6) shortenedStoryRoundPersisted = true;
     assert.equal(first.body.campaign.nodes.find((item: { nodeId: string }) => item.nodeId === node.id).status, "cleared");
+    if (!verifiedPostDialogueTested) {
+      const postTokens = node.postDialogue.map((_line, index) =>
+        storyDialogueToken(node.id, "post", index),
+      );
+      const postKey = randomUUID();
+      const postSave = await playerRequest(
+        `/player/story/nodes/${node.id}/dialogue`,
+        { idempotencyKey: postKey, dialogueSeen: postTokens },
+      );
+      assert.equal(postSave.status, 200, JSON.stringify(postSave.body));
+      assert.equal(
+        postSave.body.node.cleared,
+        true,
+        `${node.id}: post-match dialogue is available only after verified clear`,
+      );
+      assert.deepEqual(
+        postSave.body.node.dialogueSeen.filter((token: string) => postTokens.includes(token)),
+        postTokens,
+      );
+      const postRetry = await playerRequest(
+        `/player/story/nodes/${node.id}/dialogue`,
+        { idempotencyKey: postKey, dialogueSeen: postTokens },
+      );
+      assert.equal(postRetry.status, 200);
+      assert.equal(postRetry.body.alreadyApplied, true);
+      assert.equal(
+        (await playerRequest("/player/story")).body.nodes
+          .find((item: { nodeId: string }) => item.nodeId === node.id).dialogueSeen
+          .filter((token: string) => postTokens.includes(token)).length,
+        postTokens.length,
+      );
+      verifiedPostDialogueTested = true;
+    }
     const currency = first.body.profile.softCurrency;
     const retry = await playerRequest(`/player/matches/${started.body.id}/complete`, { moves });
     assert.equal(retry.status, 200);
@@ -381,6 +492,8 @@ test("new account completes every campaign node through HTTP with isolated, idem
   assert.equal(finalCampaign.body.recommendedNodeId, null);
   assert.equal(intentionalLossTested, true);
   assert.equal(actionConflictTested, true);
+  assert.equal(interruptionRetryTested, true);
+  assert.equal(verifiedPostDialogueTested, true);
   assert.equal(shortenedStoryRoundPersisted, true);
   const authoredBattleNodes = storyContent.chapters
     .flatMap(chapter => chapter.nodes)

@@ -1,0 +1,33 @@
+{
+  "verifiedAt": "2026-10-02T08:58:10.542Z",
+  "nodeVersion": "v24.13.0",
+  "sourceCommitAtVerification": "34065f53a3564af31cc0eb5b9da41655af6b40f6",
+  "sourceHash": "2f2060093f84c46998ed52ff3e06e3c9a70ade5415254c348b3b0aa6d6c0dc05",
+  "trackedFilesUnchanged": true,
+  "rankCsvRows": 37,
+  "comparisonCsvRows": 37,
+  "decklistCsvRows": 37,
+  "files": {
+    "carrier-coverage.json": "a3d81b8c17d31aaeaad326f1dcac004d0751ce459bec7ddf44236e497614c99b",
+    "catalog-snapshot.json": "aaf93ec902fbcf447aa032d0557d5bfcda5ddb56d523ef9550b88df50c77a0ee",
+    "comparison-plan-proof.json": "6674a612a688bd2f060a27a89e12b7c98044e922ebd748663dd9c2c0d45fb620",
+    "comparison.csv": "d3c492e94882f727cc7abf965803884e324133a9475a65a8c0011529440755b5",
+    "comparison.json": "18d7a636ab3d319dd07307325e114787fccc16c2ab6c4b4b60737bf186962808",
+    "comparison.md": "4a4aa8e985f144f1b1f944c316f680831aa91863ab15471e3626a61e5a5e0035",
+    "decklists.csv": "7465e3a48a11dc4c4169ee6fafe03f1890ae7821dd4eacb68f77cb4a0b2f2ae1",
+    "plan.json": "c66a4750576d7c20bed056bb1cd109ac6894b4bc5a5e5fad84ad1890833da2b0",
+    "ranking.csv": "94fe13e27fd6380a78bd05ac893e4ee9d1530c5a8d6d50c43492763c27339f6d",
+    "replay-check.json": "c2e024b1585996bfe316124c49ed54de0d92055256e6442c67707d735e2fb5a8",
+    "report.md": "6fb94ae8832f562ee178ff6a82b984b9a77863bdec5c20e107167a623289c8ff",
+    "runner-sources.json": "2a5bf9cc454bd18862b500f6edc796228b1167b0b57461552c022f557c39e35c",
+    "seed-sensitivity.json": "1081c81578018b009a6ae0541f65893d50bb1a384c2744752a628f97a90f99b7",
+    "summary.json": "97d5aab442e03467099a968210c0bb8b51af982c5845104e0f1f544a3e3ede97",
+    "worker-0.json": "033b67b40538b6af2433451b5767cff91a6679008b578027a288a520a883d821",
+    "worker-1.json": "93b01c8cd4f985847c1268b6fbfbac82ff786b4b20a6e7d353fb77003afcac22",
+    "worker-2.json": "c96ece434160e3477ae8abe3dc853543733368a91dd672813ff1d43001e81a8e",
+    "worker-3.json": "babd8864ebf0db02f3b5b9b836df1e376deaafbec1d2815f12de417188b79c3f",
+    "worker-4.json": "88361bcf37b175a3a20cd3917e7216660d39b6aff35e055f5c5cc77e874d7919",
+    "worker-5.json": "820999d393ff33fb3897f078a56d919be01580822d10ffe1619186b82e5dadf0",
+    "worker-6.json": "73e9f1fb10640e0d20a8ed687bafe4b8d1bc44bac898f3717fd81c389e5144f9"
+  }
+}

@@ -21,7 +21,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { applyEventState, buildReplayFrame, shouldRunTurnTimer, trackBattleFastForwarded, trackBattleTurnCommitted } from './PlayLoop';
 import { createCanonicalMatch } from './PlayLoop';
 import { trackEvent } from '../lib/analytics';
-import { DISTRICT_CATALOG, type DistrictSnapshot, createDistrictSnapshot, getMatchDistricts, playTurnCard, createCardInstance, createMatch, playCard, type Match } from '../gameEngine';
+import { DISTRICT_CATALOG, type DistrictSnapshot, createDistrictSnapshot, getCharacterDistrictMarks, getMatchDistricts, playTurnCard, createCardInstance, createMatch, playCard, type Lane, type Match } from '../gameEngine';
 import { createAbilityUpgradeSnapshot } from '@workspace/squabblemon-engine/abilityUpgrades';
 import { BattlePowerBreakdown } from './BattlePowerBreakdown';
 import { BATTLE_VENUES, resolveBattleVenue } from '../battleVenues';
@@ -31,8 +31,12 @@ import { MECHANIC_LESSONS, MECHANIC_LESSON_IDS, getTutorialGuidance } from './tu
 const noop = () => {};
 const source = readFileSync(new URL('./Battle.tsx', import.meta.url), 'utf8');
 const renderBattle = (match: Match, props: Record<string, unknown> = {}) => renderToStaticMarkup(<Battle match={match} deck={decks.find(d => d.id === match.playerDeck)} rivalDeck={decks.find(d => d.id === match.cpuDeck)} selectedInstanceId={null} setSelectedInstanceId={noop} selectedLane={null} setSelectedLane={noop} commit={noop} skipSequence={noop} presentationPhase="player-ready" phaseMessage="Your move" timerSeconds={20} timerEnabled={false} impactLane={null} stagedRival={null} stagedPlayer={null} activeEffectId={null} activeEffectLane={null} activeEffect={null} presentationScores={null} squabble={false} setSquabble={noop} setInspect={noop} archiveMatch={noop} onShowRules={noop} {...props} />);
+const districtSnapshotFor = (ids: string[]): DistrictSnapshot => ({
+  version: 1,
+  locations: ids.map(id => DISTRICT_CATALOG.find(district => district.id === id)!) as DistrictSnapshot['locations'],
+});
 const createTripleOgUiMatch = () => {
-  const match = createMatch('block', 'combo');
+  const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(['county-jail', 'magic-city', 'time-square']));
   const blue = createCardInstance('triple-og-blue', 'player', 'triple-og-ui', 0);
   const red = createCardInstance('triple-og-red', 'player', 'triple-og-ui', 1);
   match.playerHand = [blue, red];
@@ -187,6 +191,65 @@ test('board cards expose Burn, Weaken, Lock, and Boost status badges', () => {
     assert.match(html, new RegExp(`data-card-status="${status}"`));
   }
   assert.match(html, /aria-label="[^"]*Burning: 2 burn stacks\. Weakened\. Locked\. Boosted\./);
+});
+
+test('legacy Cashier movement-lock snapshots remain readable on local and online board cards', () => {
+  const card = {
+    ...createCardInstance('griddle-master', 'cpu', 'cashier-lock-ui', 1),
+    lane: 1 as Lane,
+    squabblehouseCannotMoveThroughRound: 2,
+  };
+  const match = {
+    ...createMatch('block', 'combo'),
+    round: 2,
+    boards: [[], [card], []] as Match['boards'],
+    playerHand: [],
+  };
+  const assertMovementCue = (html: string) => {
+    assert.match(html, /data-card-status="movement-locked"/);
+    assert.match(html, /title="Movement locked through the end of round 2\."/);
+    assert.match(html, /Movement locked through the end of round 2\./);
+  };
+
+  assertMovementCue(renderBattle(match));
+
+  const onlineCard = asCard({
+    ...card,
+    squabblehouseCannotMoveThroughRound: undefined,
+    movementLockedThroughRound: 2,
+  } as unknown as Parameters<typeof asCard>[0]);
+  const onlineMatch = { ...match, boards: [[], [onlineCard], []] as Match['boards'] };
+  assertMovementCue(renderBattle(onlineMatch));
+  assert.doesNotMatch(renderBattle({ ...onlineMatch, round: 3 }), /data-card-status="movement-locked"/);
+});
+
+test('the mounted Janitor marker exposes distinct spent charges locally and in public battle projection', () => {
+  const janitor = { ...createCardInstance('janitor', 'player', 'janitor-charge-ui', 0), lane: 0 as Lane };
+  const ally = { ...createCardInstance('squabblehouse-security', 'player', 'janitor-charge-ui', 1), lane: 0 as Lane };
+  const match: Match = {
+    ...createMatch('block', 'slide'),
+    boards: [[janitor, ally], [], []],
+    janitorReversals: [{
+      owner: 'player',
+      lane: 0,
+      round: 1,
+      sourceInstanceId: janitor.instanceId,
+      targetInstanceId: ally.instanceId,
+      charge: 'harm',
+    }],
+  };
+  const [janitorMark] = getCharacterDistrictMarks(match);
+  assert.equal(janitorMark?.text, 'Turn It Around · harm spent · staff ready');
+  assert.match(renderBattle(match), /Your Turn It Around · harm spent · staff ready/);
+
+  const rivalMark = { ...janitorMark!, owner: 'cpu' as const };
+  const guestHtml = renderBattle(match, {
+    online: {
+      ...onlinePresentationFor(match),
+      districtMarks: [rivalMark],
+    },
+  });
+  assert.match(guestHtml, /Rival Turn It Around · harm spent · staff ready/);
 });
 
 test('Buddy keeps plant collectible art and uses rock art for its Squabbled battle instance', () => {
@@ -369,6 +432,80 @@ test('battle inspector shows all authored upgrades without collection bootstrap'
   );
   assert.match(html, /Ability upgrades/);
   assert.equal((html.match(/data-testid="card-upgrade-/g) ?? []).length, 3);
+});
+
+test('collection uses its current card copy while battle inspectors preserve frozen card text', () => {
+  const authored = catalogCardById['squabblehouse-cashier'];
+  const move = authored.abilityUpgrades[0];
+  const collectionHtml = renderToStaticMarkup(
+    <QueryClientProvider client={new QueryClient()}>
+      <CardInspector card={authored} onClose={noop} />
+    </QueryClientProvider>,
+  );
+  assert.match(collectionHtml, new RegExp(move.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.ok(collectionHtml.includes(move.description));
+  assert.match(collectionHtml, /Pay Your Tab/);
+  assert.ok(collectionHtml.includes(authored.effect));
+
+  // This serialized battle card predates the current Cashier package and must remain frozen.
+  const instance = {
+    ...createCardInstance('squabblehouse-cashier', 'player', 'authored-move-ui', 1),
+    ability: 'Open Tab',
+    effect: 'On Reveal: Open Tab here stops the first legal enemy character move/hand return each round until next round ends. Protection/immunity apply. Echoes extend expiry, not stops.',
+  };
+  const frozenCardFace = renderToStaticMarkup(<CardView card={instance} fillContainer />);
+  const battleHtml = renderToStaticMarkup(
+    <QueryClientProvider client={new QueryClient()}>
+      <CardInspector card={instance} match={createMatch('block', 'combo')} onClose={noop} />
+    </QueryClientProvider>,
+  );
+  assert.match(battleHtml, new RegExp(move.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.ok(battleHtml.includes(move.description));
+  assert.match(battleHtml, /Open Tab/);
+  assert.match(battleHtml, /first legal enemy character move\/hand return each round until next round ends/);
+  assert.match(frozenCardFace, /Open Tab/);
+  assert.ok(frozenCardFace.includes(instance.effect));
+  assert.doesNotMatch(frozenCardFace, /Pay Your Tab/);
+});
+
+test('historical card faces preserve their battle snapshot instead of showing current catalog text', () => {
+  const snapshots = [
+    {
+      id: 'griddle-master',
+      // v31 match snapshots used this label/copy; the current catalog now uses Hot Off the Griddle.
+      ability: 'Cracked Plate',
+      effect: 'On Reveal: Remove the strongest protected enemy character’s Protection here and deal 2 damage. Else, hit the strongest enemy for 2 damage + 1 Burn, or 4 if burning. Immunity/defenses apply.',
+      currentAbility: 'Hot Off the Griddle',
+    },
+    {
+      id: 'squabblehouse-cashier',
+      // v31 match snapshots used this label/copy; the current catalog now uses Pay Your Tab.
+      ability: 'Open Tab',
+      effect: 'On Reveal: Open Tab here stops the first legal enemy character move/hand return each round until next round ends. Protection/immunity apply. Echoes extend expiry, not stops.',
+      currentAbility: 'Pay Your Tab',
+    },
+    {
+      id: 'janitor',
+      ability: 'Turn It Around',
+      effect: 'Ongoing: The first hostile Hands reduction or harmful status that would affect a friendly card in this district each round is negated. That card gains +2 Hands instead. Disabled Janitors cannot reverse an attack; duplicate Janitors share one district trigger.',
+      currentAbility: 'Turn It Around',
+    },
+  ] as const;
+
+  for (const [index, snapshot] of snapshots.entries()) {
+    const currentCard = catalogCardById[snapshot.id];
+    assert.equal(currentCard.ability, snapshot.currentAbility, `${snapshot.id} current catalog name`);
+    assert.notEqual(currentCard.effect, snapshot.effect, `${snapshot.id} current and historical effect copy`);
+    const instance = {
+      ...createCardInstance(snapshot.id, 'player', 'historic-card-ui', index),
+      ability: snapshot.ability,
+      effect: snapshot.effect,
+    };
+    const html = renderToStaticMarkup(<CardView card={instance} fillContainer />);
+    assert.ok(html.includes(snapshot.ability), `${snapshot.id} keeps its historic ability label`);
+    assert.ok(html.includes(snapshot.effect), `${snapshot.id} keeps its historic effect text`);
+    if (snapshot.id !== 'janitor') assert.ok(!html.includes(snapshot.currentAbility), `${snapshot.id} does not receive a live catalog label`);
+  }
 });
 
 test('player cards have one visual instance during travel and reveal', () => {
@@ -620,69 +757,121 @@ test('unavailable cards explain the exact Motion shortfall', () => {
   assert.match(html, new RegExp(`${unavailable.cost - match.playerMotion} short`));
 });
 
-test('Triple OG selection exposes previews and legal lane guidance only for its home district', () => {
-  for (const [cardId, homeLane, wrongLane, side] of [
-    ['triple-og-blue', 0, 2, 'left'],
-    ['triple-og-red', 2, 0, 'right'],
-  ] as const) {
+test('mythical Triple OGs preview and target only their own side', () => {
+  for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
     const { match, blue, red } = createTripleOgUiMatch();
     const card = cardId === 'triple-og-blue' ? blue : red;
+    const homeLane = cardId === 'triple-og-blue' ? 0 : 2;
+    const wrongLanes = ([0, 1, 2] as const).filter(lane => lane !== homeLane);
+    const district = homeLane === 0 ? 'left district' : 'right district';
 
     const noLaneHtml = renderBattle(match, { selectedInstanceId: card.instanceId });
-    assert.match(noLaneHtml, new RegExp(`Choose only the ${side} district`));
+    assert.match(noLaneHtml, new RegExp(`Choose only the ${district}`));
     assert.match(noLaneHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
-    for (const lane of [0, 1, 2].filter(value => value !== homeLane)) {
+    assert.match(getRenderedLaneButton(noLaneHtml, homeLane), /aria-disabled="false"/);
+    for (const lane of wrongLanes) {
       assert.doesNotMatch(noLaneHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
       assert.match(getRenderedLaneButton(noLaneHtml, lane), /aria-disabled="true"/);
-      assert.match(getRenderedLaneButton(noLaneHtml, lane), new RegExp(`only ${side} district`));
+      assert.match(getRenderedLaneButton(noLaneHtml, lane), new RegExp(`only the ${district}`));
     }
-    assert.match(noLaneHtml, new RegExp(`<button[^>]*data-testid="button-pick-district"[^>]*disabled=""[^>]*title="Only the ${side} district is legal`));
+    assert.match(noLaneHtml, /<button[^>]*data-testid="button-pick-district"[^>]*disabled=""/);
 
     const legalHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
     assert.match(legalHtml, new RegExp(`data-testid="preview-lane-${homeLane}"`));
-    for (const lane of [0, 1, 2].filter(value => value !== homeLane)) {
-      assert.doesNotMatch(legalHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
-      assert.match(getRenderedLaneButton(legalHtml, lane), /aria-disabled="true"/);
-    }
+    assert.match(getRenderedLaneButton(legalHtml, homeLane), /aria-disabled="false"/);
     assert.match(legalHtml, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
     assert.match(legalHtml, /Play card · 4 Motion/);
     assert.doesNotMatch(legalHtml, /<button[^>]*data-testid="button-lock"[^>]*disabled=""/);
 
-    const illegalHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: wrongLane });
-    assert.match(illegalHtml, new RegExp(`data-testid="lane-container-${wrongLane}"[^>]*is-illegal`));
-    assert.match(getRenderedLaneButton(illegalHtml, wrongLane), /aria-disabled="true"/);
-    assert.match(getRenderedLaneButton(illegalHtml, wrongLane), new RegExp(`only ${side} district`));
-    assert.match(illegalHtml, new RegExp(`<button[^>]*data-testid="button-lock"[^>]*disabled=""[^>]*title="${card.name} can only be played in the ${side} district`));
-    assert.match(illegalHtml, new RegExp(`Only ${side} district`));
-    assert.match(illegalHtml, new RegExp(`Cannot play: only the ${side} district is legal`));
+    for (const lane of wrongLanes) {
+      const wrongLaneHtml = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: lane });
+      assert.doesNotMatch(wrongLaneHtml, new RegExp(`data-testid="preview-lane-${lane}"`));
+      assert.match(getRenderedLaneButton(wrongLaneHtml, lane), /aria-disabled="true"/);
+      assert.match(wrongLaneHtml, /data-testid="button-lock"/);
+      assert.match(wrongLaneHtml, new RegExp(`Only ${district}`));
+    }
   }
 });
 
-test('Triple OG home districts stay unavailable when locked, while ordinary cards keep all district previews', () => {
-  for (const [cardId, homeLane, side] of [
-    ['triple-og-blue', 0, 'left'],
-    ['triple-og-red', 2, 'right'],
-  ] as const) {
-    const { match, blue, red } = createTripleOgUiMatch();
-    const card = cardId === 'triple-og-blue' ? blue : red;
-    const html = renderBattle(match, {
-      selectedInstanceId: card.instanceId,
-      online: onlinePresentationFor(match, [homeLane]),
-    });
-    assert.match(html, new RegExp(`Only the ${side} district is available`));
-    assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="true"/);
-    assert.match(getRenderedLaneButton(html, homeLane), /district is locked this round/);
-    assert.match(html, new RegExp(`<button[^>]*data-testid="button-pick-district"[^>]*disabled=""[^>]*title="Only the ${side} district is legal`));
+test('mythical Triple OGs bypass locks only in their home district; ordinary cards remain blocked', () => {
+  for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
+    const match = createTripleOgUiMatch().match;
+    match.storyEncounter = getStoryBattle('receipts-on-camera')!.encounter;
+    const card = createCardInstance(cardId, 'player', 'locked-triple-og-ui', cardId === 'triple-og-blue' ? 0 : 1);
+    match.playerHand = [card];
+    match.playerMotion = 10;
+    const homeLane = cardId === 'triple-og-blue' ? 0 : 2;
+    const wrongLanes = ([0, 1, 2] as const).filter(lane => lane !== homeLane);
+    const lockedLanes: Lane[] = [homeLane, wrongLanes[0]];
+    const district = homeLane === 0 ? 'left district' : 'right district';
+    match.storyRuntime = {
+      ...match.storyRuntime!,
+      laneLocks: [{ owner: 'player', lanes: lockedLanes }],
+    };
+    const html = renderBattle(match, { selectedInstanceId: card.instanceId });
+    assert.match(html, new RegExp(`Choose only the ${district}`));
+    assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
+    assert.match(html, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal[^>]*is-locked`));
+    assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="false"/);
+    assert.match(getRenderedLaneButton(html, homeLane), /Deploy/);
+    for (const lane of wrongLanes) {
+      assert.match(getRenderedLaneButton(html, lane), /aria-disabled="true"/);
+      assert.match(getRenderedLaneButton(html, lane), new RegExp(`only the ${district}`));
+    }
   }
 
   const match = createMatch('block', 'combo');
   const normalCard = createCardInstance('buddy', 'player', 'normal-card-ui', 0);
   match.playerHand = [normalCard];
   match.playerMotion = 10;
-  const html = renderBattle(match, { selectedInstanceId: normalCard.instanceId });
-  for (const lane of [0, 1, 2]) {
-    assert.match(html, new RegExp(`data-testid="preview-lane-${lane}"`));
-    assert.match(getRenderedLaneButton(html, lane), /aria-disabled="false"/);
+  const html = renderBattle(match, { selectedInstanceId: normalCard.instanceId, online: onlinePresentationFor(match, [1]) });
+  assert.match(getRenderedLaneButton(html, 0), /aria-disabled="false"/);
+  assert.match(getRenderedLaneButton(html, 1), /aria-disabled="true"/);
+  assert.match(getRenderedLaneButton(html, 1), /district is locked this round/);
+  assert.match(getRenderedLaneButton(html, 2), /aria-disabled="false"/);
+});
+
+test('a mythical Triple OG keeps its projected ability preview in a locked district', () => {
+  const match = createTripleOgUiMatch().match;
+  match.storyEncounter = getStoryBattle('receipts-on-camera')!.encounter;
+  match.round = 2;
+  const blue = createCardInstance('triple-og-blue', 'player', 'locked-og-preview', 0);
+  match.playerHand = [blue];
+  match.playerMotion = 10;
+  const homeLane: Lane = 0;
+  match.storyRuntime = {
+    ...match.storyRuntime!,
+    laneLocks: [{ owner: 'player', lanes: [homeLane] }],
+  };
+
+  const html = renderBattle(match, {
+    deck: decks[0],
+    rivalDeck: decks[1],
+    selectedInstanceId: blue.instanceId,
+    selectedLane: homeLane,
+  });
+  assert.match(html, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal[^>]*is-locked`));
+  assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="false"/);
+  assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
+  assert.match(html, /Play card · \d+ Motion/);
+});
+
+test('both mythical Triple OGs have no Corrupt Church home surcharge at exactly 4 Motion', () => {
+  for (const cardId of ['triple-og-blue', 'triple-og-red'] as const) {
+    const homeLane = cardId === 'triple-og-blue' ? 0 : 2;
+    const locations = ['time-square', 'county-jail', 'magic-city'];
+    locations[homeLane] = 'corrupt-church';
+    const match = createMatch('block', 'combo', undefined, undefined, districtSnapshotFor(locations));
+    const card = createCardInstance(cardId, 'player', 'triple-og-church-cost', homeLane);
+    match.playerHand = [card];
+    match.playerMotion = 4;
+    const html = renderBattle(match, { selectedInstanceId: card.instanceId, selectedLane: homeLane });
+
+    assert.match(html, new RegExp(`data-testid="preview-lane-${homeLane}"`));
+    assert.match(html, /Play card · 4 Motion/);
+    assert.match(html, new RegExp(`data-testid="lane-container-${homeLane}"[^>]*is-legal`));
+    assert.match(getRenderedLaneButton(html, homeLane), /aria-disabled="false"/);
+    assert.doesNotMatch(html, /Need 5 Motion|costs 5 Motion/);
   }
 });
 
@@ -1216,4 +1405,45 @@ test('mechanic lesson portrait is boxed separately from its text', () => {
   assert.match(html, /mechanic-lesson-card/);
   assert.match(html, /class="mechanic-lesson-portrait"[^>]*><img class="dr-fade-referee"/);
   assert.match(html, /mechanic-lesson-copy/);
+});
+
+test('PvE battles offer a 1.5x speed pill that scales presentation beats but not reading or the clock', async () => {
+  const { scaleBattleBeat, normalizeBattleSpeed, FAST_BATTLE_SPEED } = await import('../battleSpeed');
+  const { broadcastDelay } = await import('../broadcastPresentation');
+  const { guidedNoteDuration } = await import('../lib/playerControlledPresentation');
+  assert.equal(normalizeBattleSpeed('1.5'), FAST_BATTLE_SPEED);
+  assert.equal(normalizeBattleSpeed(null), 1);
+  assert.equal(normalizeBattleSpeed('2'), 1);
+  assert.equal(scaleBattleBeat(900, 1), 900);
+  assert.equal(scaleBattleBeat(900, FAST_BATTLE_SPEED), 600);
+  assert.equal(scaleBattleBeat(0, FAST_BATTLE_SPEED), 0);
+  // A skipped beat stays instant and reduced-motion beats stay proportional.
+  assert.equal(scaleBattleBeat(broadcastDelay(1100, 90, false, true), FAST_BATTLE_SPEED), 0);
+  assert.equal(scaleBattleBeat(broadcastDelay(1100, 90, true), FAST_BATTLE_SPEED), 60);
+  // Guided reading holds are measured from the note, never from the speed choice.
+  const note = 'Dr. Fade explains the freeze in enough words to need real reading time.';
+  assert.equal(guidedNoteDuration(note, 450), guidedNoteDuration(note, scaleBattleBeat(450, FAST_BATTLE_SPEED)));
+
+  const match = createMatch('block', 'combo');
+  const normal = renderBattle(match, { presentationPhase: 'effects', onToggleBattleSpeed: noop });
+  assert.match(normal, /data-testid="button-battle-speed"/);
+  assert.match(normal, /data-battle-speed="normal"/);
+  assert.match(normal, /--presentation-speed:1/);
+  const fast = renderBattle(match, { presentationPhase: 'effects', onToggleBattleSpeed: noop, battleSpeed: 1.5 });
+  assert.match(fast, /data-battle-speed="fast"/);
+  assert.match(fast, /--presentation-speed:1\.5/);
+  assert.match(fast, /data-testid="button-battle-speed"[^>]*aria-pressed="true"/);
+  // The pill sits in the same control row as skip.
+  assert.match(fast, /data-testid="button-fast-forward"[^]*?data-testid="button-battle-speed"/);
+});
+
+test('PvP battles never show the speed pill and keep normal presentation timing', () => {
+  const match = createMatch('block', 'combo');
+  const online = renderBattle(match, {
+    presentationPhase: 'effects', onToggleBattleSpeed: noop, battleSpeed: 1.5,
+    online: { mode: 'ranked', status: 'Rival turn', costs: {}, districts: getMatchDistricts(match), districtMarks: [], scores: null, rivalHandCount: 4 },
+  });
+  assert.doesNotMatch(online, /data-testid="button-battle-speed"/);
+  assert.match(online, /data-battle-speed="normal"/);
+  assert.match(online, /--presentation-speed:1[;"]/);
 });

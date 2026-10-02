@@ -24,32 +24,42 @@ export function BattleStatus({ frozen, silenced, protected: shielded }: { frozen
 }
 
 export function DistrictEffects({ winner, locked, replaying }: { winner: 'player' | 'cpu' | 'draw'; locked: boolean; replaying: boolean }) {
-  const previous = useRef(winner);
-  const [snap, setSnap] = useState(0);
+  // Derived during render so a district flip does not cost an extra battle commit.
+  const [state, setState] = useState({ winner, replaying, snap: 0 });
+  if (state.winner !== winner || state.replaying !== replaying) {
+    const changed = state.winner !== winner;
+    setState({ winner, replaying, snap: !changed || winner === 'draw' || replaying ? 0 : state.snap + 1 });
+  }
+  const snap = state.winner === winner && state.replaying === replaying ? state.snap : 0;
+  const snapNode = useRef<HTMLDivElement>(null);
+  // Expire the burst in the DOM; clearing state here re-rendered the whole battle.
   useEffect(() => {
-    const changed = previous.current !== winner;
-    previous.current = winner;
-    if (!changed || winner === 'draw' || replaying) { setSnap(0); return; }
-    setSnap(value => value + 1);
-    const timer = window.setTimeout(() => setSnap(0), 1100);
+    if (!snap) return;
+    const timer = window.setTimeout(() => { if (snapNode.current) snapNode.current.style.display = 'none'; }, 1100);
     return () => window.clearTimeout(timer);
-  }, [winner, replaying]);
+  }, [snap]);
   return <>
     {locked && <div className="district-lock-material" aria-hidden="true"><BattleStatus frozen /></div>}
-    {!!snap && <div key={snap} className={`district-snap fx-owner-${winner}`} data-battle-fx="district-snap" aria-hidden="true"><span className="district-snap-half" /><span className="district-snap-half" /><BattleBurst kind="snap" /><strong>{winner === 'player' ? 'TAKEN OVER' : 'RIVAL TERRITORY'}</strong></div>}
+    {!!snap && <div ref={snapNode} key={snap} className={`district-snap fx-owner-${winner}`} data-battle-fx="district-snap" aria-hidden="true"><span className="district-snap-half" /><span className="district-snap-half" /><BattleBurst kind="snap" /><strong>{winner === 'player' ? 'TAKEN OVER' : 'RIVAL TERRITORY'}</strong></div>}
   </>;
 }
 
 export function MotionEnergy({ value, testId, replaying = false }: { value: number; testId: string; replaying?: boolean }) {
-  const previous = useRef(value);
-  const [gain, setGain] = useState<{ amount: number; key: number } | null>(null);
+  // Derived during render so a Motion gain does not cost an extra battle commit.
+  const [state, setState] = useState<{ value: number; replaying: boolean; key: number; gain: { amount: number; key: number } | null }>({ value, replaying, key: 0, gain: null });
+  if (state.value !== value || state.replaying !== replaying) {
+    const delta = value - state.value;
+    const key = delta > 0 && !replaying ? state.key + 1 : state.key;
+    setState({ value, replaying, key, gain: delta > 0 && !replaying ? { amount: delta, key } : null });
+  }
+  const gain = state.value === value && state.replaying === replaying ? state.gain : null;
+  const gainKey = gain?.key;
+  const gainNode = useRef<HTMLSpanElement>(null);
+  // Expire the gain in the DOM; clearing state here re-rendered the whole battle.
   useEffect(() => {
-    const delta = value - previous.current;
-    previous.current = value;
-    if (delta <= 0 || replaying) { setGain(null); return; }
-    setGain(old => ({ amount: delta, key: (old?.key ?? 0) + 1 }));
-    const timer = window.setTimeout(() => setGain(null), 1000);
+    if (gainKey === undefined) return;
+    const timer = window.setTimeout(() => { if (gainNode.current) gainNode.current.style.display = 'none'; }, 1000);
     return () => window.clearTimeout(timer);
-  }, [value, replaying]);
-  return <strong className="motion-energy" data-testid={testId}>{value}{gain && <span key={gain.key} className="motion-energy-gain"><BattleBurst kind="charge" /><b>+{gain.amount}</b></span>}</strong>;
+  }, [gainKey]);
+  return <strong className="motion-energy" data-testid={testId}>{value}{gain && <span ref={gainNode} key={gain.key} className="motion-energy-gain"><BattleBurst kind="charge" /><b>+{gain.amount}</b></span>}</strong>;
 }

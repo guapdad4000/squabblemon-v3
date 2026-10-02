@@ -1,0 +1,16 @@
+{
+  "sourceHash": "f72206f9c74374837a718865dfd7fbd9a3975269015732d9f8fa2a68c9ea7747",
+  "originalSourceHash": "a2260e284dc52e7e61cf9df2360c8d3e92eecd406453667d8465fce8444759d6",
+  "checkedCases": [
+    4418,
+    4419,
+    4422,
+    4423,
+    4426,
+    4427,
+    4430,
+    4431
+  ],
+  "allMatchExactly": true,
+  "scope": "Eight unmodified Water/Squabblehouse matchups replayed under the refactored harness; both policies, seeds and seats at tier 3. These are verification replays, not extra ranked matches."
+}

@@ -1,0 +1,26 @@
+{
+  "sourceHash": "8c429a01fc75dbec7086da879b00ee837db90bebf9b0c899d86aa6d42ad8c732",
+  "originalSourceHash": "f9bfa32d48e5d06ed2fba8ba7193c58b243510794ab7c23b50958f4a78a117ab",
+  "successfulMatches": 18,
+  "failedMatches": 0,
+  "cases": [
+    "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+    "confirmation|greedy|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-block|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|0|b-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-slide|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-combo|deck-balance-v33-onshift-fresh-04|2|0|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+    "confirmation|greedy|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-receipts|deck-balance-v33-onshift-fresh-04|2|3|b-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|0|b-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-crashout|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|starter-vibes|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|0|a-player",
+    "confirmation|seeded-legal|starter-squabblehouse-shift|focus-earth-tax|deck-balance-v33-onshift-fresh-04|7|3|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|focus-detective|deck-balance-v33-onshift-fresh-04|2|3|a-player",
+    "confirmation|greedy|starter-squabblehouse-shift|focus-poison-entry|deck-balance-v33-onshift-fresh-04|2|3|a-player"
+  ]
+}

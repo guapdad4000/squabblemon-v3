@@ -1,0 +1,19 @@
+✔ compiled tuples exactly preserve the delivered export, without fences or count annotations (7.996694ms)
+✔ the rewritten screenplay covers every Season One scene using shipped portraits (20.357548ms)
+✔ node revisions only change when that node’s screenplay changes (0.349957ms)
+✔ new dialogue cannot be skipped by an old read marker; other seasons keep theirs (0.179364ms)
+✔ theater artwork is real, optimized and within the complete scene budget (649.81962ms)
+✔ cinema props preserve transparency and proportion within a one-megabyte art budget (275.420986ms)
+✔ every new chapter's rendered background, portrait, puzzle and poster exists (11.33685ms)
+✔ authored environments cover every new story scene with all 38 supplied locations (1400.811159ms)
+✔ all sixteen environment props retain transparent alpha (980.703207ms)
+✔ every Season One speaker has a decoded portrait, including rewrite-only cast (1208.528692ms)
+✔ Player artwork preserves supplied alpha and dark pixels; Rae remains distinct and transparent (878.196395ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8294.567897

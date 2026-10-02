@@ -6,9 +6,9 @@ export const modules: ModuleMap = {
   "./components/mockups/battle-workshop/ComponentWorkshop.tsx": () => import("../components/mockups/battle-workshop/ComponentWorkshop.tsx"),
   "./components/mockups/fade-alley/Current.tsx": () => import("../components/mockups/fade-alley/Current.tsx"),
   "./components/mockups/fade-alley/FadeAlley.tsx": () => import("../components/mockups/fade-alley/FadeAlley.tsx"),
-  "./components/mockups/story-cinema-current/Current.tsx": () => import("../components/mockups/story-cinema-current/Current.tsx"),
   "./components/mockups/fadebook-current/Current.tsx": () => import("../components/mockups/fadebook-current/Current.tsx"),
   "./components/mockups/fadebook-current/DeviceFrame.tsx": () => import("../components/mockups/fadebook-current/DeviceFrame.tsx"),
   "./components/mockups/fadebook-current/InvitationList.tsx": () => import("../components/mockups/fadebook-current/InvitationList.tsx"),
-  "./components/mockups/fadebook-current/SocialPlayerRow.tsx": () => import("../components/mockups/fadebook-current/SocialPlayerRow.tsx")
+  "./components/mockups/fadebook-current/SocialPlayerRow.tsx": () => import("../components/mockups/fadebook-current/SocialPlayerRow.tsx"),
+  "./components/mockups/story-cinema-current/Current.tsx": () => import("../components/mockups/story-cinema-current/Current.tsx")
 };

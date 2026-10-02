@@ -2,6 +2,8 @@ import { BattleReactions } from './BattleReactions';
 import { MatchArrival } from './MatchArrival';
 import { ParkResult } from './ParkResult';
 import { PostMatchHomie } from './social/PostMatchHomie';
+import { FadeSeriesBoard } from './social/FadeSeriesBoard';
+import { resolveRoomExit, type RoomExitIntent } from '../lib/roomExit';
 import { onlineResultCopy } from './onlineResultCopy';
 import { useBattleResultExit } from '../lib/useBattleResultExit';
 import { useTurnClockCues } from '../lib/turnClockCues';
@@ -109,6 +111,9 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
   const [surrenderFailed, setSurrenderFailed] = useState(false);
   const [submittingSurrender, setSubmittingSurrender] = useState(false);
   const surrenderLock = useRef(false);
+  const roomIntentLock = useRef(false);
+  const [exitBusy, setExitBusy] = useState(false);
+  const [exitFailed, setExitFailed] = useState<RoomExitIntent | null>(null);
   const pendingNavigation = useRef<(() => void) | null>(null);
   const [reviewBoard, setReviewBoard] = useState(false);
   const { celebrating, leaveResults } = useBattleResultExit();
@@ -206,12 +211,36 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       setSubmittingSurrender(false);
     }
   };
+  /**
+   * Every exit from a finished friendly room goes through here. Returning to the
+   * lobby keeps the room open; closing it must be confirmed by the server before
+   * navigating, or the rival would be left waiting in a room nobody is in.
+   */
+  async function roomIntent(intent: RoomExitIntent) {
+    if (roomIntentLock.current) return;
+    roomIntentLock.current = true;
+    setExitBusy(true);
+    setExitFailed(null);
+    try {
+      const outcome = await resolveRoomExit(intent, { ranked: Boolean(room.ranked), send });
+      setExitFailed(outcome.failed);
+      if (outcome.navigate) runWithoutDeckExitGuard(onLeave);
+    } finally {
+      roomIntentLock.current = false;
+      setExitBusy(false);
+    }
+  }
+  /** Back to the room lobby: the room stays open for the next fade. */
+  const backToRoom = () => leaveResults(() => { setReviewBoard(false); void roomIntent('lobby'); });
+  /** Closing the room on purpose: only leave once the server confirms it closed. */
+  const closeRoom = () => leaveResults(() => { void roomIntent('leave'); });
+  const exitResults = () => room.ranked ? leaveResults(onLeave) : backToRoom();
   const rank = room.ranked?.result;
   const resultCopy = onlineResultCopy(room);
   const latest = room.events.at(-1);
   return <main className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg" data-testid="online-battle" data-turn={myTurn ? 'you' : 'rival'} data-round={room.round} data-revision={room.revision} data-status={room.status} data-connected={connected}>
     {clockDanger && <div className="pvp-clock-glow" aria-hidden="true" data-testid="pvp-clock-glow" />}
-    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? leaveResults(onLeave) : openExit()}>Leave battle</button>}
+    {!surrender && (room.status === 'active' || reviewBoard) && <button type="button" className="pvp-exit-control" data-testid="pvp-exit" onClick={() => room.status === 'complete' ? exitResults() : openExit()}>{room.status === 'complete' && !room.ranked ? 'Back to the room' : 'Leave battle'}</button>}
     <AnimatePresence>{arrival && <MatchArrival player={room.members[room.seat]!} rival={rival} label={room.ranked?.opponent === 'bot' ? 'Park Bot found · ranked sparring' : 'Your fade is ready'} onContinue={() => setArrival(false)} />}</AnimatePresence>
     {battleStartEffectVisible && !arrival && room.status === 'active' && !reducedMotion && (
       <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
@@ -230,7 +259,7 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       presentationScores={projected.presentation.scores} timerSeconds={remaining} timerEnabled={room.status === 'active'}
       feedbackPreferences={preferences} setFeedbackPreferences={setPreferences}
       onFeedback={(cue: 'select' | 'lock') => { feedback.current?.unlockAudio(); feedback.current?.cue(cue, reducedMotion); }}
-      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? leaveResults(onLeave) : openExit()} />
+      onShowRules={() => setRules(true)} onExit={() => room.status === 'complete' ? exitResults() : openExit()} />
     </LayoutGroup>
     <AnimatePresence>{inspect && <CardInspector card={projected.match.boards.flat().find(c => c.instanceId === inspect.instanceId) ?? inspect} onClose={() => setInspect(null)} />}{rules && <RulesModal onClose={() => setRules(false)} />}</AnimatePresence>
     {room.status === 'complete' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="park-result-return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
@@ -238,11 +267,18 @@ export function MultiplayerBattle({ room, busy, connected, reducedMotion: profil
       <ParkResult outcome={room.winner === 'draw' ? 'draw' : room.winner === room.seat ? 'win' : 'loss'} ranked={Boolean(room.ranked)} rank={rank ?? undefined} reducedMotion={reducedMotion}
         title={resultCopy.title} subtitle={resultCopy.subtitle} boardNote={resultCopy.boardNote}
         claimed={room.scores.filter(s => s.winner === room.seat).length} rivalClaimed={room.scores.filter(s => s.winner === rivalSeat).length}
+         series={room.ranked ? undefined : <FadeSeriesBoard variant="result" reducedMotion={reducedMotion} gameNumber={room.gameNumber} rivalName={rival.name}
+           series={{ you: room.series[room.seat], rival: room.series[rivalSeat], draws: room.series.draws }} />}
          description={resultCopy.description}
          opponent={room.ranked?.opponent !== 'bot' ? <PostMatchHomie key={`${room.code}:${room.gameNumber}`} code={room.code} /> : undefined}>
-        {!room.ranked && <button className="online-primary" disabled={busy || !connected || room.rematch[room.seat]} onClick={() => leaveResults(() => { void act({ type: 'rematch' }); })}>{room.rematch[room.seat] ? 'Rematch requested…' : room.rematch[rivalSeat] ? 'Accept rematch' : 'Ask for a rematch'}</button>}
-        <button className="online-primary" onClick={() => leaveResults(onLeave)}>{room.ranked ? 'Back to Fade Park' : 'Back to friend fades'}</button>
+        {!room.ranked && <button className="online-primary" data-testid="button-back-to-room" disabled={exitBusy} onClick={backToRoom}>{exitBusy ? 'Opening the room…' : 'Back to the room'}</button>}
+        <button className="online-primary" data-testid="button-leave-room" disabled={exitBusy} onClick={closeRoom}>{room.ranked ? 'Back to Fade Park' : exitBusy ? 'Closing the room…' : 'Leave this room'}</button>
         <button className="online-secondary" onClick={() => setReviewBoard(true)}>Inspect final board</button>
+        {exitFailed && <p className="online-exit-error" role="alert" data-testid="room-exit-error">
+          {exitFailed === 'leave' ? 'The room could not be closed, so your rival may still be waiting in it.' : 'The room could not be reopened.'}{' '}
+          <button className="online-secondary" data-testid="button-retry-exit" disabled={exitBusy}
+            onClick={() => void roomIntent(exitFailed)}>Try again</button>
+        </p>}
       </ParkResult>
     </Dialog>
     <Dialog open={surrender && room.status === 'active'} onOpenChange={open => { if (!open && !submittingSurrender) keepPlaying(); }}><DialogContent className="street-dialog pvp-exit-dialog"><DialogTitle>Leave this fade?</DialogTitle><DialogDescription>Surrendering gives your rival the win{room.ranked ? ' and records a ranked loss' : ''}. Closing the app or leaving does not pause the server turn clock.</DialogDescription>

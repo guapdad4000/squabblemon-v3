@@ -1,0 +1,15 @@
+{
+  "executionSourceHash": "a2260e284dc52e7e61cf9df2360c8d3e92eecd406453667d8465fce8444759d6",
+  "currentSourceHash": "e48c4e4c7e117d5377e516a85fe71006af54b7c122d68ecf5d9846dfcc8a6501",
+  "changedFile": "scripts/src/all-decks-ranking-decks.ts",
+  "reason": "After the complete run and report, the same workshop-crew module was changed from a static to a runtime-only import to keep frontend Vite types outside the scripts TypeScript project.",
+  "proof": {
+    "originalHashReconstructed": true,
+    "engineAndOtherInputsUnchanged": true,
+    "exactCrewsUnchanged": true,
+    "exactScheduleUnchanged": true,
+    "versionsUnchanged": true
+  },
+  "archivedOriginalHarness": "runner-sources.json",
+  "note": "Raw plan, worker outcomes, summary and report retain the original execution fingerprint. This maintenance change did not alter or rerun any games."
+}

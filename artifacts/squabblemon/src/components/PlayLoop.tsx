@@ -16,8 +16,10 @@ import { StoryCinematic } from './StoryCinematic';
 import { PresentationTimeline } from '../presentationTimeline';
 import { readMoveOverrides, specialMoveForEvent, planSpecialMoveBeat, markSpecialMovePlayed } from '../specialMoves';
 import { broadcastDelay, changedDistrictControl, isReducedMotionRequested, type DistrictOwner } from '../broadcastPresentation';
+import { scaleBattleBeat } from '../battleSpeed';
+import { useBattleSpeed } from '../hooks/useBattleSpeed';
 import { BattleFeedback } from '../battleFeedback';
-import { createDistrictSnapshot, validateDistrictSnapshot, getMatchDistricts, replayMatchPrefix, type DistrictSnapshot, canAffordSelection, chooseCpuPlay, createMatch, createMatchFromEngineCards, createMatchFromCatalog, createStoryMatch, getDistrictResults, Match, playCard, pass, nextRound, CardInstance, type AbilityUpgradeSnapshot, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
+import { createDistrictSnapshot, validateDistrictSnapshot, getMatchDistricts, replayMatchPrefix, type DistrictSnapshot, canAffordSelection, chooseCpuPlay, createMatch, createMatchFromEngineCards, createMatchFromCatalog, createStoryMatch, getDistrictResults, getMatchWinner, Match, playCard, pass, nextRound, CardInstance, type AbilityUpgradeSnapshot, type EffectLogEntry, type Lane, type ScoreState, type StoryEncounterSnapshot } from '../gameEngine';
 import { decisionTimeBucket, trackEvent } from '../lib/analytics';
 import { getEquippedVariant, type EquippedVariantMap } from './CardVariantTreatment';
 import { settleHiddenBattlePresentation } from '../battleVisibility';
@@ -43,6 +45,13 @@ import {
   type TutorialGuidance,
   type TutorialStepId,
 } from './tutorialGuidance';
+import { DeferredRewardStinger as RewardStinger } from './DeferredRewardStinger';
+import { selectRewardClip, type RewardClip } from '../lib/rewardBroadcast';
+import {
+  claimResultBroadcastOnce,
+  isResultBroadcastEligible,
+  resultBroadcastOutcome,
+} from '../lib/resultBroadcastEligibility';
 
 export type PresentationPhase = 'versus' | 'countdown-3' | 'countdown-2' | 'countdown-1' | 'squabble' | 'deal' | 'round-intro' | 'lock-in' | 'player-ready' | 'player-travel' | 'player-reveal' | 'player-focus' | 'player-slam' | 'player-impact' | 'effects' | 'player-pass' | 'rival-thinking' | 'rival-travel' | 'rival-reveal' | 'rival-focus' | 'rival-slam' | 'rival-impact' | 'rival-pass' | 'district-flipped' | 'round-result' | 'match-finish';
 export type PresentationEffect = EffectLogEntry & { targetIds: string[]; durationLabel?: string; impact?: boolean; chain?: { id: string; index: number; total: number; fromId: string | null } };
@@ -101,10 +110,23 @@ export const shouldRunTurnTimer = (
   requested: boolean,
 ) => mode !== 'tutorial' && requested;
 
-export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, draftWeek, draftPicks }: { activity?: string; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
+const resultBroadcastHoldMs = (speed: 1 | 1.5, fast = false) => scaleBattleBeat(broadcastDelay(
+  1500,
+  120,
+  isReducedMotionRequested(
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    document.documentElement.dataset.reduceMotion === 'true',
+  ),
+  fast,
+), speed);
+
+export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVerifiedComplete, initialDeckId = 'block', initialRivalId = 'combo', hideLobby = false, turnTimerEnabled = true, customPlayerDeck, availableDeckIds, storyNodeId, challengeRunId, equippedVariants, cardProgression = {}, activity, trainingCircuit = false, draftWeek, draftPicks }: { activity?: string; trainingCircuit?: boolean; draftWeek?: string; draftPicks?: string[]; mode?: 'guest' | 'practice' | 'tutorial' | 'story'; onExit: () => void; onTutorialComplete?: () => void; onVerifiedComplete?: (match: Match, serverMatchId?: string) => void; initialDeckId?: string; initialRivalId?: string; hideLobby?: boolean; turnTimerEnabled?: boolean; customPlayerDeck?: Deck; availableDeckIds?: string[]; storyNodeId?: string; challengeRunId?: string; equippedVariants?: EquippedVariantMap; cardProgression?: CardProgressionMap }) {
   const effectiveTurnTimerEnabled = shouldRunTurnTimer(mode, turnTimerEnabled);
   const [screen, setScreen] = useState<'lobby' | 'battle' | 'result'>(hideLobby ? 'battle' : 'lobby');
   const [reviewBoard, setReviewBoard] = useState(false);
+  const screenRef = useRef(screen), reviewBoardRef = useRef(reviewBoard);
+  screenRef.current = screen;
+  reviewBoardRef.current = reviewBoard;
   const [deckId, setDeckId] = useState(customPlayerDeck?.id ?? (availableDeckIds?.includes(initialDeckId) ? initialDeckId : availableDeckIds?.[0] ?? initialDeckId));
   const [rival, setRival] = useState(initialRivalId);
   const [match, setMatch] = useState<Match | null>(null), [visualMatch, setVisualMatch] = useState<Match | null>(null);
@@ -118,6 +140,9 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const startPlayerMatch = useStartPlayerMatch(), completePlayerMatch = useCompletePlayerMatch(), queryClient = useQueryClient();
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null), [selectedLane, setSelectedLane] = useState<number | null>(null), [squabble, setSquabble] = useState(false);
   const timeline = useRef(new PresentationTimeline()), autoStartRef = useRef(false), playerMovesRef = useRef<MatchMove[]>([]), locked = useRef(false), fastForwardRef = useRef(false), skipTransitionRef = useRef(false);
+  const [battleSpeed, toggleBattleSpeed] = useBattleSpeed();
+  const battleSpeedRef = useRef(battleSpeed);
+  battleSpeedRef.current = battleSpeed;
   const decisionStartedAtRef = useRef(Date.now());
   const districtOwnersRef = useRef<DistrictOwner[]>(['draw', 'draw', 'draw']);
   /** Each fighter+move pair plays its chroma video once per match; repeat triggers get the standard beat. */
@@ -146,6 +171,15 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const [encounterCinematic, setEncounterCinematic] = useState<{ source: string, poster: string, title: string, eyebrow: string } | null>(null);
   const [feedbackPreferences, setFeedbackPreferences] = useFeedbackPreferences();
   const feedback = useRef(new BattleFeedback(feedbackPreferences));
+  const playedResultBroadcastsRef = useRef(new Set<string>());
+  const selectedResultBroadcastRef = useRef<{ matchKey: string; clip: RewardClip } | null>(null);
+  const [resultStinger, setResultStinger] = useState<{ token: string; matchGeneration: number; clip: RewardClip; manual: boolean; maxDurationMs: number } | null>(null);
+  const resultStingerRef = useRef<typeof resultStinger>(null);
+  const finishResultStingerRef = useRef<(token: string) => void>(() => {});
+  const showResultsRef = useRef<() => void>(() => {});
+  const resultBroadcastRequestRef = useRef<{ token: number; matchGeneration: number; timelineId: number; deadline: number; manual: boolean } | null>(null);
+  const resultBroadcastSequenceRef = useRef(0);
+  const manualResultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 
   const showMechanicLesson = useCallback(async (lesson: MechanicLesson) => {
@@ -190,22 +224,33 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
 
   // Exiting cinematic buttons can retain an older React event handler. Read the
   // current phase through a ref so a late click cannot restart a committed turn.
-  const livePresentation = useRef({ match, presentationPhase });
-  livePresentation.current = { match, presentationPhase };
+  const livePresentation = useRef({ match, presentationPhase, screen, reviewBoard });
+  livePresentation.current = { match, presentationPhase, screen, reviewBoard };
   const deck = customPlayerDeck || decks.find(d => d.id === deckId) || decks[0];
   const rivalDeck: Deck = match?.storyEncounter ? { id: match.storyEncounter.enemy.deckId, name: match.storyEncounter.enemy.name, archetype: match.storyEncounter.enemy.behaviorProfile, accent: 'STORY', plan: 'A server-issued story encounter.', cards: [...match.storyEncounter.enemy.cardIds], hero: cards[match.storyEncounter.enemy.cardIds[0]]?.id ?? decks[0].hero } : decks.find(d => d.id === rival) || decks[0];
+  const cancelPendingResultBroadcast = useCallback(() => {
+    resultBroadcastRequestRef.current = null;
+    resultBroadcastSequenceRef.current++;
+    if (manualResultTimeoutRef.current !== null) {
+      clearTimeout(manualResultTimeoutRef.current);
+      manualResultTimeoutRef.current = null;
+    }
+  }, []);
   const cancelTimers = useCallback(() => {
+    cancelPendingResultBroadcast();
     feedback.current.reset();
     timeline.current.cancelAll();
     readingGate.current.cancel();
     setGuidedReadingCue(null);
-  }, []);
+  }, [cancelPendingResultBroadcast]);
   const wait = useCallback((ms: number, id: number) => timeline.current.wait(ms, id), []);
+  // Broadcast beats follow the player's speed choice; reading holds and the
+  // decision clock are deliberately excluded.
   const waitForBeat = useCallback((normalMs: number, reducedMs: number, id: number, fast = false) =>
-    wait(broadcastDelay(normalMs, reducedMs, isReducedMotionRequested(
+    wait(scaleBattleBeat(broadcastDelay(normalMs, reducedMs, isReducedMotionRequested(
       window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       document.documentElement.dataset.reduceMotion === 'true',
-    ), fast || fastForwardRef.current), id), [wait]);
+    ), fast || fastForwardRef.current), battleSpeedRef.current), id), [wait]);
   const setVisualFrame = useCallback((next: Match | null) => { visualMatchRef.current = next; setVisualMatch(next); }, []);
   const resetPresentation = useCallback(() => { setSelectedInstanceId(null); setSelectedLane(null); setSquabble(false); setShowRules(false); setInspect(null); setStagedRival(null); setStagedPlayer(null); setActiveEffectId(null); setActiveEffectLane(null); setActiveEffect(null); setPresentationScores(null); setReplay(null); replayLiveFrame.current = null; replayLiveTimer.current = null; }, []);
   useEffect(() => {
@@ -220,11 +265,23 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     const onVisibility = () => {
       const hidden = document.hidden;
       setTabHidden(hidden);
-      if (hidden) settleHiddenBattlePresentation(presentationPhase, feedback.current, timeline.current, () => { fastForwardRef.current = true; });
+      if (hidden) {
+        settleHiddenBattlePresentation(presentationPhase, feedback.current, timeline.current, () => { fastForwardRef.current = true; });
+        const pendingRequest = resultBroadcastRequestRef.current;
+        if (pendingRequest) {
+          cancelPendingResultBroadcast();
+          if (pendingRequest.manual) {
+            timeline.current.completeAll();
+            showResultsRef.current();
+          }
+        }
+        const activeStinger = resultStingerRef.current;
+        if (activeStinger) finishResultStingerRef.current(activeStinger.token);
+      }
     };
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [presentationPhase]);
+  }, [cancelPendingResultBroadcast, presentationPhase]);
   useEffect(() => {
     feedback.current.setPreferences(feedbackPreferences);
   }, [feedbackPreferences]);
@@ -235,6 +292,10 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   const [restoredComplete, setRestoredComplete] = useState(false);
   const beginMatch = useCallback((initial: Match, committedMoves: MatchMove[] = []) => {
     matchGeneration.current++;
+    resultStingerRef.current = null;
+    setResultStinger(null);
+    playedResultBroadcastsRef.current.clear();
+    selectedResultBroadcastRef.current = null;
     rivalReadingVoicePlayed.current = false;
     setReviewBoard(false);
     warmMatchArtwork(initial, equippedVariants);
@@ -304,7 +365,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
   }, [beginMatch, challengeRunId, customPlayerDeck, deckId, mode, rival, startLocalMatch, startPlayerMatch, storyNodeId, activity, draftWeek, draftPicks]);
   useEffect(() => { if (hideLobby && !match && !autoStartRef.current) { autoStartRef.current = true; void start(); } }, [hideLobby, match, start]);
 
-  const finishMatchSession = useCallback(async (finalMatch: Match) => {
+  const finishMatchSession = useCallback(async (finalMatch: Match): Promise<boolean> => {
     const generation = matchGeneration.current;
     if (mode !== 'guest' && serverMatchId) {
       try {
@@ -320,17 +381,110 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
           setServerRewardError(false);
           onVerifiedComplete?.(finalMatch, serverMatchId);
         });
+        return generation === matchGeneration.current;
       } catch {
         if (generation === matchGeneration.current) setServerRewardError(true);
+        return false;
       }
     } else if (mode === 'guest') localStorage.setItem('squabblemon_guest_tutorial_complete', 'true');
     // Saving/retrying a receipt must never dismiss a card, final-board review,
     // or results. Presentation navigation belongs to the player's controls.
+    return false;
   }, [completePlayerMatch, mode, queryClient, serverMatchId, onVerifiedComplete]);
   const showResults = useCallback(() => {
+    cancelPendingResultBroadcast();
+    resultStingerRef.current = null;
+    setResultStinger(null);
     if (helpOpenRef.current) setReviewBoard(true);
     setScreen('result');
-  }, []);
+  }, [cancelPendingResultBroadcast]);
+  showResultsRef.current = showResults;
+  const startResultStinger = useCallback((completedMatch: Match, manual: boolean, maxDurationMs: number) => {
+    if (maxDurationMs <= 0 || (manual && restoredComplete) || document.hidden || screenRef.current !== 'battle' ||
+        helpOpenRef.current || reviewBoardRef.current ||
+        !isResultBroadcastEligible({ mode, trainingCircuit, phase: completedMatch.phase })) return null;
+    const matchKey = String(matchGeneration.current);
+    if (!claimResultBroadcastOnce(playedResultBroadcastsRef.current, matchKey)) return null;
+    const clip = selectedResultBroadcastRef.current?.matchKey === matchKey
+      ? selectedResultBroadcastRef.current.clip
+      : selectRewardClip(resultBroadcastOutcome(getMatchWinner(completedMatch) ?? 'draw'));
+    if (!clip) return null;
+    selectedResultBroadcastRef.current = { matchKey, clip };
+    const request = { token: `${matchKey}:result`, matchGeneration: matchGeneration.current, clip, manual, maxDurationMs };
+    resultStingerRef.current = request;
+    setResultStinger(request);
+    return request;
+  }, [mode, restoredComplete, trainingCircuit]);
+  const finishResultStinger = useCallback((token: string) => {
+    const active = resultStingerRef.current;
+    if (!active || active.token !== token || active.matchGeneration !== matchGeneration.current) return;
+    resultStingerRef.current = null;
+    setResultStinger(null);
+    if (active.manual) showResults();
+    else timeline.current.completeAll();
+  }, [showResults]);
+  finishResultStingerRef.current = finishResultStinger;
+  const archiveLiveMatch = useCallback(() => {
+    if (!match) return;
+    if (resultBroadcastRequestRef.current || resultStingerRef.current) {
+      cancelTimers();
+      resultStingerRef.current = null;
+      setResultStinger(null);
+      showResults();
+      return;
+    }
+    cancelTimers();
+    setPresentationPhase('match-finish');
+    livePresentation.current = { match, presentationPhase: 'match-finish', screen: screenRef.current, reviewBoard: reviewBoardRef.current };
+    const eligible = !restoredComplete && !fastForwardRef.current && !helpOpenRef.current &&
+      !reviewBoardRef.current && isResultBroadcastEligible({ mode, trainingCircuit, phase: match.phase });
+    if (!eligible) {
+      void finishMatchSession(match);
+      showResults();
+      return;
+    }
+    const duration = resultBroadcastHoldMs(battleSpeedRef.current);
+    if (duration <= 0) {
+      void finishMatchSession(match);
+      showResults();
+      return;
+    }
+    const request = {
+      token: ++resultBroadcastSequenceRef.current,
+      matchGeneration: matchGeneration.current,
+      timelineId: timeline.current.id,
+      deadline: performance.now() + duration,
+      manual: true,
+    };
+    resultBroadcastRequestRef.current = request;
+    manualResultTimeoutRef.current = setTimeout(() => {
+      const activeStinger = resultStingerRef.current;
+      if (resultBroadcastRequestRef.current !== request &&
+          activeStinger?.matchGeneration !== request.matchGeneration) return;
+      resultBroadcastRequestRef.current = null;
+      manualResultTimeoutRef.current = null;
+      resultStingerRef.current = null;
+      setResultStinger(null);
+      showResults();
+    }, duration);
+    void finishMatchSession(match).then(confirmed => {
+      if (resultBroadcastRequestRef.current !== request) return;
+      const remaining = Math.floor(request.deadline - performance.now());
+      const current = livePresentation.current;
+      if (!confirmed || remaining <= 0 || request.matchGeneration !== matchGeneration.current ||
+          request.timelineId !== timeline.current.id || current.screen !== 'battle' ||
+          current.presentationPhase !== 'match-finish' || current.match?.phase !== 'complete' ||
+          current.reviewBoard || helpOpenRef.current || document.hidden || fastForwardRef.current) {
+        cancelPendingResultBroadcast();
+        if (!confirmed || (current.screen === 'battle' && current.presentationPhase === 'match-finish')) showResults();
+        return;
+      }
+      resultBroadcastRequestRef.current = null;
+      resultBroadcastSequenceRef.current++;
+      const stinger = startResultStinger(match, true, remaining);
+      if (!stinger) showResults();
+    });
+  }, [cancelPendingResultBroadcast, cancelTimers, finishMatchSession, match, mode, restoredComplete, showResults, startResultStinger, trainingCircuit]);
   // A checkpoint can contain the final move when saving the outcome was interrupted.
   // Recover the receipt instead of unlocking a completed board for another turn.
   const recoveredCompletion = useRef<string | null>(null);
@@ -430,14 +584,49 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     if (next.phase === 'complete') {
       setPresentationPhase('match-finish');
       setPhaseMessage('FINAL DISTRICTS');
+      livePresentation.current = { match: next, presentationPhase: 'match-finish', screen: screenRef.current, reviewBoard: reviewBoardRef.current };
       // Finalize promptly, independently of the player's reading/inspection.
-      void finishMatchSession(next);
+      const holdDuration = resultBroadcastHoldMs(battleSpeedRef.current, fast || fastForwardRef.current);
+      const deadline = performance.now() + holdDuration;
+      const generation = matchGeneration.current;
+      const request = !fast && !fastForwardRef.current && isResultBroadcastEligible({
+        mode,
+        trainingCircuit,
+        phase: next.phase,
+      }) ? {
+        token: ++resultBroadcastSequenceRef.current,
+        matchGeneration: generation,
+        timelineId: id,
+        deadline,
+        manual: false,
+      } : null;
+      resultBroadcastRequestRef.current = request;
+      const saving = finishMatchSession(next);
+      if (request) void saving.then(confirmed => {
+        if (resultBroadcastRequestRef.current !== request) return;
+        const remaining = Math.floor(request.deadline - performance.now());
+        const current = livePresentation.current;
+        if (!confirmed || remaining <= 0 || request.matchGeneration !== matchGeneration.current ||
+            request.timelineId !== timeline.current.id || current.presentationPhase !== 'match-finish' ||
+            current.match?.phase !== 'complete' || current.screen !== 'battle' || current.reviewBoard ||
+            helpOpenRef.current || document.hidden || fastForwardRef.current) {
+          resultBroadcastRequestRef.current = null;
+          return;
+        }
+        resultBroadcastRequestRef.current = null;
+        startResultStinger(next, false, remaining);
+      });
       if (await waitForBeat(1500, 120, id, fast)) showResults();
+      const activeStinger = resultStingerRef.current;
+      if (activeStinger?.matchGeneration === matchGeneration.current) {
+        resultStingerRef.current = null;
+        setResultStinger(null);
+      }
       return;
     }
     setPresentationScores(null);
     void enterPlayerTurn(next.round, fast);
-  }, [enterPlayerTurn, finishMatchSession, presentEvents, setVisualFrame, showResults, waitForBeat]);
+  }, [enterPlayerTurn, finishMatchSession, mode, presentEvents, setVisualFrame, showResults, startResultStinger, trainingCircuit, waitForBeat]);
   const finishRound = useCallback(async (resolved: Match, id: number) => {
     const owners = getDistrictResults(resolved).map(result => result.winner);
     const changedLanes = changedDistrictControl(districtOwnersRef.current, owners);
@@ -613,7 +802,16 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
     } else if (presentationPhase === 'round-result') {
       trackBattleFastForwarded(match, presentationPhase);
       cancelTimers(); void advanceRoundBoundary(match, timeline.current.id, true);
-    } else if (presentationPhase !== 'player-ready' && presentationPhase !== 'match-finish') {
+    } else if (presentationPhase === 'match-finish') {
+      trackBattleFastForwarded(match, presentationPhase);
+      fastForwardRef.current = true;
+      const pendingRequest = resultBroadcastRequestRef.current;
+      cancelPendingResultBroadcast();
+      const activeStinger = resultStingerRef.current;
+      if (pendingRequest?.manual) showResults();
+      else if (activeStinger) finishResultStinger(activeStinger.token);
+      else timeline.current.completeAll();
+    } else if (presentationPhase !== 'player-ready') {
       trackBattleFastForwarded(match, presentationPhase);
       fastForwardRef.current = true;
       timeline.current.completeAll();
@@ -621,7 +819,7 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       skipTransitionRef.current = false;
     }
   };
-  const handleRestart = () => { cancelTimers(); matchGeneration.current++; autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
+  const handleRestart = () => { cancelTimers(); matchGeneration.current++; resultStingerRef.current = null; setResultStinger(null); autoStartRef.current = false; setStartError(null); setIsUnsavedTraining(mode === 'guest'); setMatch(null); setVisualFrame(null); setScreen(hideLobby ? 'battle' : 'lobby'); };
   return <div className="h-[100dvh] bg-black text-white font-sans flex flex-col relative overflow-hidden game-bg"><div className="noise-overlay" />
     {e2eAuthEnabled && mode === 'tutorial' && match && (
       <button
@@ -651,11 +849,23 @@ export function PlayLoop({ mode = 'practice', onExit, onTutorialComplete, onVeri
       />
     )}
     {battleStartEffectVisible && screen === 'battle' && visualMatch && !encounterCinematic && (
-      <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} />
+      <BattleStartSmoke onComplete={() => setBattleStartEffectVisible(false)} speed={battleSpeed} />
     )}
-    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} guidedReadingCue={guidedReadingCue} onContinueGuidedReading={continueGuidedReading} reviewingFinalBoard={screen === 'result' && reviewBoard} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={() => { showResults(); if (match) void finishMatchSession(match); }} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} /></LayoutGroup>}
+    {(screen === 'battle' || (screen === 'result' && reviewBoard)) && visualMatch && <LayoutGroup><Battle tutorialCoach={mode === 'tutorial'} tutorialGuidance={tutorialGuidance} guidedReadingCue={guidedReadingCue} onContinueGuidedReading={continueGuidedReading} reviewingFinalBoard={screen === 'result' && reviewBoard} helpOpen={Boolean(showRules || inspect)} mechanicLesson={mechanicLesson} onDismissMechanicLesson={dismissMechanicLesson} match={visualMatch} deck={deck} rivalDeck={rivalDeck} playedSpecialMoves={playedSpecialMovesRef.current} selectedInstanceId={selectedInstanceId} setSelectedInstanceId={setSelectedInstanceId} selectedLane={selectedLane} setSelectedLane={setSelectedLane} commit={() => void commit()} onPlayCard={(instanceId: string, lane: Lane, squabble: boolean, investment = 0) => void commit(false, false, { instanceId, lane, squabble, investment })} endTurn={() => void commit(true)} skipSequence={skipSequence} presentationPhase={presentationPhase} phaseMessage={phaseMessage} timerSeconds={timerSeconds} timerEnabled={effectiveTurnTimerEnabled} impactLane={impactLane} presentationScores={presentationScores} stagedRival={stagedRival} stagedPlayer={stagedPlayer} activeEffectId={activeEffectId} activeEffectLane={activeEffectLane} activeEffect={activeEffect} squabbleCinematicLane={squabbleCinematicLane} squabble={squabble} setSquabble={setSquabble} setInspect={setInspect} archiveMatch={archiveLiveMatch} onShowRules={() => setShowRules(true)} onExit={onExit} feedbackPreferences={feedbackPreferences} setFeedbackPreferences={setFeedbackPreferences} decisionStartedAt={decisionStartedAtRef.current} onFeedback={(cue: 'select' | 'lock') => feedback.current.cue(cue, isReducedMotionRequested(window.matchMedia('(prefers-reduced-motion: reduce)').matches, document.documentElement.dataset.reduceMotion === 'true'))} equippedVariants={equippedVariants} authoritativeHistory={match?.effectLog} replay={replay} onReplayStep={showReplayFrame} onExitReplay={exitReplay} battleSpeed={battleSpeed} onToggleBattleSpeed={toggleBattleSpeed} /></LayoutGroup>}
     {screen === 'result' && reviewBoard && (typeof document === 'undefined' ? null : createPortal(<button className="result-stage__return" onClick={() => setReviewBoard(false)}>View result</button>, document.body))}
-    <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen challenge={Boolean(challengeRunId)} tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
+     <AnimatePresence>{inspect && <CardInspector card={inspect} variantId={getEquippedVariant(equippedVariants, inspect.id)} onClose={() => setInspect(null)} match={visualMatch ?? match} />}{showRules && <RulesModal onClose={() => setShowRules(false)} />}{screen === 'result' && !reviewBoard && match && <ResultScreen challenge={Boolean(challengeRunId)} tutorial={mode === 'tutorial'} onRestart={handleRestart} onChangeDeck={() => hideLobby ? onExit() : setScreen('lobby')} onGoHome={onExit} onTutorialComplete={mode === 'tutorial' ? onTutorialComplete : undefined} onInspectBoard={() => setReviewBoard(true)} match={match} districts={districts} deckId={deckId} rivalDeck={rivalDeck} reward={serverReward} rewardError={serverRewardError} rewardPending={completePlayerMatch.isPending} onRetryReward={() => void finishMatchSession(match)} isGuest={isUnsavedTraining} customPlayerDeck={customPlayerDeck} storyMetadata={storyMetadata} equippedVariants={equippedVariants} />}</AnimatePresence>
+     {resultStinger && !tabHidden && typeof document !== 'undefined' && createPortal(
+       <div className="battle-reward-broadcast">
+         <RewardStinger
+           clip={resultStinger.clip}
+           onComplete={() => finishResultStinger(resultStinger.token)}
+           speed={battleSpeed}
+           actionLabel="Show results"
+           maxDurationMs={resultStinger.maxDurationMs}
+         />
+       </div>,
+       document.body,
+     )}
   </div>;
 }
 /*

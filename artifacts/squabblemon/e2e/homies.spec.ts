@@ -217,6 +217,63 @@ test('incoming indicator survives refresh and updates after disconnected menu re
   await expect(page.getByTestId('tab-homies').locator('.fighter-tab__badge')).toHaveCount(0, { timeout: 15_000 });
 });
 
+test('Friendly Fades room activity: server times, expiry warnings, refreshed rows and links at six sizes', async ({ page }) => {
+  await fixture(page);
+  const minute = 60_000;
+  const serverNow = Date.now() - 2 * 60 * minute;
+  let expiry = serverNow + 3 * minute;
+  let lastPlayedAt = serverNow - 8 * minute;
+  await page.route('**/api/multiplayer', route => route.fulfill({ json: {
+    serverNow,
+    rooms: [
+      { code: 'ABCDEF123456', status: 'complete', rival: 'THIS RIVAL HAS AN EXTRAORDINARILY LONG NAME',
+        gameNumber: 2, series: { you: 2, rival: 1, draws: 1 }, lastActivityAt: serverNow - minute,
+        lastPlayedAt, expiresAt: expiry },
+      { code: '123456ABCDEF', status: 'waiting', rival: 'Waiting for a friend',
+        gameNumber: 1, series: { you: 0, rival: 0, draws: 0 }, lastActivityAt: serverNow,
+        lastPlayedAt: null, expiresAt: serverNow + 30 * minute },
+      { code: 'FEDCBA654321', status: 'waiting', rival: 'Old room',
+        gameNumber: 2, series: { you: 1, rival: 0, draws: 0 }, lastActivityAt: serverNow - 20 * minute,
+        lastPlayedAt: null, expiresAt: serverNow + 10 * minute },
+    ],
+  } }));
+  await page.goto('/squabblemon/game/online?tab=friends');
+  await page.getByRole('tab', { name: /Your rooms/ }).click();
+  const list = page.getByTestId('list-rooms');
+  const nearExpiry = page.getByTestId('link-room-ABCDEF123456');
+  await expect(nearExpiry).toContainText('Last played 8m ago');
+  await expect(nearExpiry).toContainText('Expiring soon · ~3m left');
+  await expect(nearExpiry).toContainText('2–1 · 1D');
+  await expect(page.getByTestId('link-room-123456ABCDEF')).toContainText('Not played yet · Last active just now');
+  await expect(page.getByTestId('link-room-FEDCBA654321')).toContainText('Last active 20m ago');
+  // The phone's clock is two hours ahead: only the server snapshot drives labels.
+  await expect(nearExpiry).toHaveAttribute('href', /\/game\/online\/ABCDEF123456$/);
+  for (const size of sizes) {
+    await page.setViewportSize(size);
+    await list.scrollIntoViewIfNeeded();
+    await expect(nearExpiry).toBeVisible();
+    const bounds = await list.evaluate(element => {
+      const listRect = element.getBoundingClientRect();
+      const rows = Array.from(element.querySelectorAll('.ff-room__activity'));
+      return { listFits: listRect.left >= 0 && listRect.right <= innerWidth,
+        labelsFit: rows.every(row => row.scrollWidth <= row.clientWidth),
+        expiryBorder: getComputedStyle(element.querySelector('[data-expiring]')!).borderLeftColor };
+    });
+    expect(bounds.listFits).toBe(true);
+    expect(bounds.labelsFit).toBe(true);
+    expect(bounds.expiryBorder).not.toBe('rgba(0, 0, 0, 0)');
+    await shot(page, `friendly-room-activity-${size.label}`);
+  }
+  // The existing poll reflects a rival starting a new fade without reloading.
+  expiry = serverNow + 30 * minute;
+  lastPlayedAt = serverNow;
+  await expect(nearExpiry).toContainText('Last played just now', { timeout: 15_000 });
+  await expect(nearExpiry).toContainText('~30m left');
+  await expect(nearExpiry.locator('..')).not.toHaveAttribute('data-expiring', 'true');
+  await nearExpiry.click();
+  await expect(page).toHaveURL(/\/game\/online\/ABCDEF123456$/);
+});
+
 test('actual Friendly Fades shell: empty, crowded, selected homie and legal crew at six sizes', async ({ page }) => {
   test.setTimeout(120_000);
   const readyCrew = (id: string, name: string) => ({

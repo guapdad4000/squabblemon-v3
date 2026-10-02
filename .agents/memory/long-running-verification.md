@@ -20,3 +20,9 @@ The owned campaign test runner requires the package-manager script environment. 
 **Why:** A direct exec of the runner failed its guard before creating the disposable test database; `pnpm run` supplied the required environment and completed the targeted suite.
 
 **How to apply:** Use a package script when invoking guarded database tests, and scope long suites to relevant groups rather than relying on a foreground run that may time out before buffered output is printed.
+
+Background shell logs can retain carriage returns before newlines. Normalize line endings before checking whole-line completion markers.
+
+**Why:** A successful batch with exit status zero appeared to fail a shell gate because its visible completion marker ended in a carriage return, so an end-anchored pattern did not match.
+
+**How to apply:** Strip trailing carriage returns before exact line comparisons, and confirm completion with the background task's exit status and validated result files rather than one unnormalized log pattern.
