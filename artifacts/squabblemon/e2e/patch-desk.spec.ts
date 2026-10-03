@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { profileBootstrap } from './fighter-id.fixture';
+import { PREPARED_PATCHES } from '../src/lib/preparedPatches';
 
 const published = { version: '1.4.2', title: 'The corner holds', date: '2026-09-25', overview: 'A quieter opening turn.', buffs: ['Buddy gains 2 guard.'], changes: ['The first draw is clearer.'], publishedAt: '2026-09-25T12:00:00Z', mailStatus: 'delivering' };
 async function signIn(page: Page) {
@@ -157,7 +158,7 @@ test('a changed draft blocks publication and refreshes editor before a new previ
   await expect(page.getByTestId('button-patch-1.4.2').locator('.patch-art--thumb img')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
 });
-test('prepared notes become ordinary drafts with art and the capped gift, never publications', async ({ page }) => {
+test('prepared notes become ordinary drafts with reviewed art and gifts, never publications', async ({ page }) => {
   await signIn(page);
   const drafts: Record<string, unknown>[] = [];
   let publishCalls = 0;
@@ -171,16 +172,19 @@ test('prepared notes become ordinary drafts with art and the capped gift, never 
     return route.fulfill({ status: 201, json: draft });
   });
   await page.goto('/squabblemon/game/admin/patches');
-  await expect(page.getByTestId('panel-prepared-patches')).toContainText('6 prepared notes', { timeout: 30_000 });
+  await expect(page.getByTestId('panel-prepared-patches')).toContainText(`${PREPARED_PATCHES.length} prepared notes`, { timeout: 30_000 });
   await page.getByTestId('button-import-prepared').click();
   await expect(page.getByTestId('panel-prepared-patches')).toHaveCount(0);
-  expect(drafts.map(draft => draft.version)).toEqual(['1.1', '1.2', '1.3', '1.4', '1.5', '1.6']);
-  for (const draft of drafts) {
-    expect(draft).toMatchObject({ softCurrency: 100, packTickets: 1 });
-    expect(typeof draft.artCardId).toBe('string');
+  expect(drafts.map(draft => draft.version)).toEqual(PREPARED_PATCHES.map(patch => patch.version));
+  for (const [index, draft] of drafts.entries()) {
+    expect(draft).toMatchObject({
+      softCurrency: PREPARED_PATCHES[index].softCurrency,
+      packTickets: PREPARED_PATCHES[index].packTickets,
+      artCardId: PREPARED_PATCHES[index].artCardId,
+    });
   }
   expect(publishCalls).toBe(0);
-  await page.getByTestId('button-edit-patch-draft-6').click();
-  await expect(page.getByTestId('select-patch-art')).toHaveValue('cracked-head');
-  await expect(page.getByTestId('input-patch-title')).toHaveValue('Earn Your Block');
+  await page.getByTestId(`button-edit-patch-draft-${PREPARED_PATCHES.length}`).click();
+  await expect(page.getByTestId('select-patch-art')).toHaveValue('inmate-reformed');
+  await expect(page.getByTestId('input-patch-title')).toHaveValue('SquabbleHouse Clocks In');
 });
