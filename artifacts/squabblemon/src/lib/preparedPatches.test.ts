@@ -16,10 +16,23 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, patch.version === '1.9' ? 0 : patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, ['1.8', '1.9'].includes(patch.version) ? 0 : 1);
+    assert.equal(patch.softCurrency, ['1.9', '1.10'].includes(patch.version) ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, ['1.8', '1.9', '1.10'].includes(patch.version) ? 0 : 1);
   }
-  assert.deepEqual([...versions], [...versions].sort((a, b) => Number(a) - Number(b)), 'notes stay oldest-first for publishing order');
+  const versionParts = (version: string) => version.split('.').map(Number);
+  assert.deepEqual([...versions], [...versions].sort((a, b) => {
+    const [aMajor, aMinor] = versionParts(a), [bMajor, bMinor] = versionParts(b);
+    return aMajor - bMajor || aMinor - bMinor;
+  }), 'notes stay oldest-first for publishing order');
+});
+
+test('prepared patch 1.10 announces the complete player-facing SquabbleHouse cleanup', () => {
+  const patch = PREPARED_PATCHES.find(item => item.version === '1.10');
+  assert.ok(patch);
+  assert.equal(patch.artCardId, 'inmate-reformed');
+  assert.ok(patch.buffs.some(line => /transparent side padding/.test(line)));
+  assert.ok(patch.changes.some(line => /Manager.*Server/.test(line)));
+  assert.ok(![patch.overview, ...patch.buffs, ...patch.changes].some(line => /devcode|devsquabblehouse/i.test(line)));
 });
 
 test('every prepared note headlines an original character portrait', () => {

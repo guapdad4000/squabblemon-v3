@@ -119,6 +119,7 @@
 .collector-card[data-card-id="squabblehouse-security"] .collector-portrait,
 .collector-card[data-card-id="squabblehouse-teknician"] .collector-portrait,
 .collector-card[data-card-id="griddle-master"] .collector-portrait,
+.collector-card[data-card-id="inmate-reformed"] .collector-portrait,
 .collector-card[data-card-id="waffle-warlord"] .collector-portrait {
   inset-inline: auto;
   left: -7%;

@@ -7,13 +7,17 @@ export type PromoCodeReward = {
   cardIds?: string[];
 };
 
-export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV', PromoCodeReward> = {
+export const PROMO_CODES: Record<'DEVTEST' | 'DEVTEST2' | 'SIMMYFOODZ' | 'CITYLEGENDS' | 'JETSETCABIN' | 'DEVSTOCKZ' | 'KYLE' | 'DEVBLUEGANG' | 'DEVREDGANG' | 'DEVWITCHMONKEY' | 'TRIPLEOGDEV' | 'DEVSQUABBLEHOUSE', PromoCodeReward> = {
   DEVSTOCKZ: { code: 'DEVSTOCKZ', packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: ['stockz'] },
   // Possession-based tester codes: intentionally available in production.
   DEVBLUEGANG: { code: 'DEVBLUEGANG', packTickets: 0, softCurrency: 0, styleShards: 0,
     cardIds: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'] },
   DEVREDGANG: { code: 'DEVREDGANG', packTickets: 0, softCurrency: 0, styleShards: 0,
     cardIds: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'] },
+  DEVSQUABBLEHOUSE: { code: 'DEVSQUABBLEHOUSE', packTickets: 0, softCurrency: 0, styleShards: 0,
+    cardIds: ['squabble-house-manager', 'squabblehouse-bus-boy', 'squabblehouse-cashier',
+      'squabblehouse-security', 'squabblehouse-teknician', 'griddle-master', 'inmate-reformed',
+      'janitor', 'waffle-warlord', 'a-side-of-hands', 'squabble-house-male', 'squabble-house-female'] },
   // Triple OG set tester code: intentionally available in production.
   TRIPLEOGDEV: { code: 'TRIPLEOGDEV', packTickets: 0, softCurrency: 0, styleShards: 0,
     cardIds: ['triple-og-blue', 'triple-og-red', 'initiation', 'block-spinner', 'look-out'] },

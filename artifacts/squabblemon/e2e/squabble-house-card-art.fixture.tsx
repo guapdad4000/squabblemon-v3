@@ -8,7 +8,7 @@ import '../src/index.css';
 const houseIds = [
   'squabble-house-manager', 'squabbleserver', 'squabblecook', 'janitor',
   'squabblehouse-bus-boy', 'squabblehouse-cashier', 'squabblehouse-security',
-  'squabblehouse-teknician', 'griddle-master', 'waffle-warlord',
+  'squabblehouse-teknician', 'griddle-master', 'inmate-reformed', 'waffle-warlord',
 ];
 const cards = houseIds.map(id => {
   const card = cardCatalog.find(item => item.engineId === id);

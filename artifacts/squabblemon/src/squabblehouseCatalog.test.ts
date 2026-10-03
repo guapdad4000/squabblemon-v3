@@ -126,8 +126,18 @@ test('diner crew classifications retain staff identities without replacing colle
   for (const engineId of ['squabble-house-manager', 'squabblecook', 'squabbleserver']) {
     assert.equal(catalogCardByEngineId[engineId].faction, 'Squabblehouse');
   }
-  assert.equal(catalogCardByEngineId.squabblecook.name, 'Squabble House Worker — Male');
-  assert.equal(catalogCardByEngineId.squabbleserver.name, 'Squabble House Worker — Female');
+  assert.equal(catalogCardByEngineId.squabblecook.name, 'SquabbleHouse Cook');
+  assert.equal(catalogCardByEngineId.squabbleserver.name, 'SquabbleHouse Server');
+});
+
+test('every diner card display name starts with the SquabbleHouse brand', () => {
+  for (const engineId of [
+    'squabble-house-manager', 'squabblehouse-bus-boy', 'squabblehouse-cashier',
+    'squabblehouse-security', 'squabblehouse-teknician', 'griddle-master', 'inmate-reformed',
+    'janitor', 'waffle-warlord', 'sideofhands', 'squabblecook', 'squabbleserver',
+  ]) {
+    assert.match(catalogCardByEngineId[engineId].name, /^SquabbleHouse /, engineId);
+  }
 });
 
 test('Squabblehouse Shift is a legal ten-card staff recipe with no gang cards', () => {

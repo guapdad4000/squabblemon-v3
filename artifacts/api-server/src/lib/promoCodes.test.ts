@@ -11,13 +11,16 @@ import { findPromoCode, isDevelopmentPromoCodeEnabled, PROMO_CODES } from './pro
 const testerGrants = {
   DEVBLUEGANG: ['ganger-blue', 'blue-side-1', 'blue-side-2', 'blue-side-3', 'blue-side-4', 'blue-side-5'],
   DEVREDGANG: ['ganger-red', 'red-side-1', 'red-side-2', 'red-side-3', 'red-side-4', 'red-side-5'],
+  DEVSQUABBLEHOUSE: ['squabble-house-manager', 'squabblehouse-bus-boy', 'squabblehouse-cashier',
+    'squabblehouse-security', 'squabblehouse-teknician', 'griddle-master', 'inmate-reformed',
+    'janitor', 'waffle-warlord', 'a-side-of-hands', 'squabble-house-male', 'squabble-house-female'],
   DEVWITCHMONKEY: ['wicked-witch', 'flying-monkeys'],
   TRIPLEOGDEV: ['triple-og-blue', 'triple-og-red', 'initiation', 'block-spinner', 'look-out'],
 } as const;
 
 test('tester codes grant exactly their catalog cards with no currency in development and production', () => {
   const allIds = Object.values(testerGrants).flat();
-  assert.equal(new Set(allIds).size, 19);
+  assert.equal(new Set(allIds).size, 31);
   for (const [code, cardIds] of Object.entries(testerGrants)) {
     const expected = { code, packTickets: 0, softCurrency: 0, styleShards: 0, cardIds: [...cardIds] };
     for (const environment of ['development', 'production']) {
@@ -26,7 +29,7 @@ test('tester codes grant exactly their catalog cards with no currency in develop
     assert.equal(new Set(cardIds).size, cardIds.length, code);
     for (const id of cardIds) {
       assert.equal(catalogCardById[id]?.catalogId, id, id);
-      assert.equal(catalogCardById[id]?.kind, id === 'initiation' ? 'support' : 'character', id);
+      assert.equal(catalogCardById[id]?.kind, ['initiation', 'a-side-of-hands'].includes(id) ? 'support' : 'character', id);
     }
   }
   for (const input of ['DEV BLUEGANG', 'DEVREDGANG!', 'DEVWITCHMONKEY EXTRA', 'DEVBLUEGANG\u0000', '__proto__']) {

@@ -1762,7 +1762,7 @@
     },
     "oa-janitor-v1": {
       "file": "oa-janitor-v1.mp4",
-      "label": "Janitor",
+      "label": "SquabbleHouse Janitor",
       "move": "Turn It Around",
       "enabled": true,
       "chroma": "cyan",
@@ -2048,7 +2048,7 @@
     },
     "oa-squabble-house-manager-v1": {
       "file": "oa-squabble-house-manager-v1.mp4",
-      "label": "Squabble House Manager",
+      "label": "SquabbleHouse Manager",
       "move": "Home Advantage",
       "enabled": true,
       "chroma": "cyan",
@@ -2059,7 +2059,7 @@
     },
     "oa-squabble-house-female-v1": {
       "file": "oa-squabble-house-female-v1.mp4",
-      "label": "Squabble House Worker \u2014 Female",
+      "label": "SquabbleHouse Server",
       "move": "Fresh Pot",
       "enabled": true,
       "chroma": "cyan",
@@ -2070,7 +2070,7 @@
     },
     "oa-squabble-house-male-v1": {
       "file": "oa-squabble-house-male-v1.mp4",
-      "label": "Squabble House Worker \u2014 Male",
+      "label": "SquabbleHouse Cook",
       "move": "Hands on the Clock",
       "enabled": true,
       "chroma": "cyan",
@@ -2400,7 +2400,7 @@
     },
     "oa-inmate-reformed-v1": {
       "file": "oa-inmate-reformed-v1.mp4",
-      "label": "Inmate Reformed",
+      "label": "SquabbleHouse Inmate Reformed",
       "move": "Second Chance",
       "enabled": true,
       "chroma": "cyan",
@@ -2411,7 +2411,7 @@
     },
     "oa-squabblehouse-security-v1": {
       "file": "oa-squabblehouse-security-v1.mp4",
-      "label": "Squabblehouse Security",
+      "label": "SquabbleHouse Security",
       "move": "Security Lockdown",
       "enabled": true,
       "chroma": "cyan",
@@ -2422,7 +2422,7 @@
     },
     "oa-griddle-master-v1": {
       "file": "oa-griddle-master-v1.mp4",
-      "label": "Griddle Master",
+      "label": "SquabbleHouse Griddle Master",
       "move": "Order Up",
       "enabled": true,
       "chroma": "cyan",
@@ -2433,7 +2433,7 @@
     },
     "oa-squabblehouse-teknician-v1": {
       "file": "oa-squabblehouse-teknician-v1.mp4",
-      "label": "Squabblehouse Teknician",
+      "label": "SquabbleHouse Teknician",
       "move": "Clipboard Check",
       "enabled": true,
       "chroma": "cyan",

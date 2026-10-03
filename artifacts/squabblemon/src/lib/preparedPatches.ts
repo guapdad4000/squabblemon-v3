@@ -204,4 +204,20 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     softCurrency: 0,
     packTickets: 0,
   },
+  {
+    version: '1.10',
+    date: '2026-10-03',
+    title: 'SquabbleHouse Clocks In',
+    artCardId: 'inmate-reformed',
+    overview: 'The whole diner crew is reporting under one name. Every House card now carries the SquabbleHouse banner, and Inmate Reformed steps forward with a tighter full-body portrait that fills the card the way it should.',
+    buffs: [
+      'Inmate Reformed: removed the oversized transparent side padding so his full-body art reads larger in battles, decks, packs, and the collection.',
+    ],
+    changes: [
+      'Every diner card now starts with SquabbleHouse: Manager, Bus Boy, Cashier, Security, Teknician, Griddle Master, Inmate Reformed, Janitor, Waffle Warlord, A Side of Hands, Cook, and Server.',
+      'Card IDs, abilities, stats, progression, saved decks, and story rewards are unchanged by the naming cleanup.',
+    ],
+    softCurrency: 0,
+    packTickets: 0,
+  },
 ];

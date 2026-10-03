@@ -7,7 +7,7 @@ const definitions = [
   ['boombox', 'boombox', 'Boombox', 'Uncommon', 'Air', 2, 'Turn It Up', 'Give every friendly character here +1 Hands.', 'Support'],
   ['subwaymap', 'subway-map', 'Subway Map', 'Common', 'Air', 0, 'Alternate Route', 'Move your lowest-Hands friendly character here to your weakest other district. If moved, give it +1 Hands.', 'Movement'],
   ['workboots', 'work-boots', 'Buttahs', 'Common', 'Earth', 1, 'Stand Firm', 'Give your lowest-Hands friendly character here +2 Hands and protect it from one targeted hostile ability.', 'Support'],
-  ['sideofhands', 'a-side-of-hands', 'A Side of Hands', 'Rare', 'Earth', 2, 'Side Order',
+  ['sideofhands', 'a-side-of-hands', 'SquabbleHouse A Side of Hands', 'Rare', 'Earth', 2, 'Side Order',
     'On Reveal: Give your weakest friendly character here +2 Hands and your strongest enemy character here -2 Hands. Protection and immunity can block only the hostile effect.', 'Support'],
 ] as const;
 

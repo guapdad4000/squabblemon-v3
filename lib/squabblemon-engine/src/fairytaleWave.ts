@@ -22,8 +22,8 @@ export const FAIRYTALE_WAVE = [
   ['powerhouse', 'powerhouse', 'Powerhouse', 'Mythical', 'Electric', 4, 3, 'Overtime', 'Ongoing: While in your hand, bank up to 3 Motion refunded by other cards. On Reveal: Deal that much damage to every enemy here.', 'Disruption'],
   ['ronald', 'revolutionary-ronald', 'Revolutionary Ronald', 'Epic', 'Earth', 3, 4, 'WE OUTSIDE.', 'Ongoing: The first time each round an enemy damages another ally here, Protect your weakest movable character in another district, then bring it here if there is room.', 'Comeback'],
   ['trapvamp', 'trap-vamp', 'Trap Vamp', 'Legendary', 'Dark', 3, 3, 'Paid in Blood', 'Ongoing: Once per round, when your ability damages an enemy here, gain that much Hands, up to 2.', 'Growth'],
-  ['squabblecook', 'squabble-house-male', 'Squabble House Worker — Male', 'Rare', 'Fire', 2, 3, 'Hands on the Clock', 'Ongoing: Once per round, when an enemy ability damages another ally here, deal 2 damage back to its source.', 'Comeback'],
-  ['squabbleserver', 'squabble-house-female', 'Squabble House Worker — Female', 'Common', 'Water', 1, 1, 'Fresh Pot', 'On Reveal: Cleanse Burn and Freeze from your weakest affected ally here.', 'Support'],
+  ['squabblecook', 'squabble-house-male', 'SquabbleHouse Cook', 'Rare', 'Fire', 2, 3, 'Hands on the Clock', 'Ongoing: Once per round, when an enemy ability damages another ally here, deal 2 damage back to its source.', 'Comeback'],
+  ['squabbleserver', 'squabble-house-female', 'SquabbleHouse Server', 'Common', 'Water', 1, 1, 'Fresh Pot', 'On Reveal: Cleanse Burn and Freeze from your weakest affected ally here.', 'Support'],
 ] as const;
 
 export const fairytaleUpgradeEffects: Record<string, readonly AbilityUpgradeEffect[]> = Object.fromEntries(
