@@ -108,6 +108,30 @@
 .collector-card--inspector { container-type: inline-size; }
 .collector-card--inspector .collector-frame { padding: 5px; }
 .collector-card--inspector .collector-portrait { bottom: 17%; height: 79%; }
+/* The House art is composed as full-body cutouts. Use the whole frame so faces
+   stay high and readable in the hand, on the board, and in the inspector. */
+.collector-card[data-card-id="squabble-house-manager"] .collector-portrait,
+.collector-card[data-card-id="squabble-house-female"] .collector-portrait,
+.collector-card[data-card-id="squabble-house-male"] .collector-portrait,
+.collector-card[data-card-id="janitor"] .collector-portrait,
+.collector-card[data-card-id="squabblehouse-bus-boy"] .collector-portrait,
+.collector-card[data-card-id="squabblehouse-cashier"] .collector-portrait,
+.collector-card[data-card-id="squabblehouse-security"] .collector-portrait,
+.collector-card[data-card-id="squabblehouse-teknician"] .collector-portrait,
+.collector-card[data-card-id="griddle-master"] .collector-portrait,
+.collector-card[data-card-id="waffle-warlord"] .collector-portrait {
+  inset-inline: auto;
+  left: -7%;
+  bottom: 0;
+  width: 114%;
+  height: 100%;
+  max-width: none;
+}
+/* Griddle Master's landscape source has large transparent side margins. */
+.collector-card[data-card-id="griddle-master"] .collector-portrait {
+  left: -50%;
+  width: 200%;
+}
 .collector-card--inspector h4 { font-size: clamp(14px, 9cqw, 30px); }
 .collector-card--long-name h4 { overflow-wrap: anywhere; }
 .collector-card--wide-word { container-type: inline-size; }
