@@ -186,4 +186,22 @@ export const PREPARED_PATCHES: readonly PreparedPatch[] = [
     softCurrency: 50,
     packTickets: 0,
   },
+  {
+    version: '1.9',
+    date: '2026-10-03',
+    title: 'The Last Waffle: Squabble House Story',
+    artCardId: 'squabble-house-manager',
+    overview: 'The diner is open. The Last Waffle is a six-chapter Squabble House story with a cinematic in every chapter, illustrated conversations, six hands-on puzzles, and Blood and Crips rival crews. Follow the missing waffle through the late-night chaos and earn four Squabble House fighters by winning their story battles.',
+    buffs: [],
+    changes: [
+      'Now showing: a vintage Squabble House poster and a new six-chapter story arc, open from the Story theater without clearing another campaign.',
+      'Each chapter blends a 10-second cinematic with illustrated dialogue, a diner puzzle, and a battle against Blood and Crips rivals.',
+      'Solve the Booth Lineup, Receipt Run, Grill Order, Clock Shift, Wet Floor Route, and Final Evidence puzzles to uncover who took the last waffle.',
+      'Win the required House battles to add Squabble Server, Squabble Cook, Janitor, and the Squabble House Manager to your collection. These story cards stay out of random packs.',
+      'Story rewards follow the current payout schedule: each node pays at least 100 Clout and one Street Pack Ticket; chapter finales pay at least 250 Clout and ten tickets.',
+      'Open Mailman for the event announcement and jump straight into The Last Waffle.',
+    ],
+    softCurrency: 0,
+    packTickets: 0,
+  },
 ];

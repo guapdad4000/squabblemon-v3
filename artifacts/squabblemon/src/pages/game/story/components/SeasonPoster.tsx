@@ -20,6 +20,7 @@ const SEASON_POSTERS: Record<string, string> = {
   'special-yasuke': 'assets/story/posters/banner-without-master.webp',
   'special-cellblock': 'assets/story/posters/library-hour.webp',
   'special-leon': 'assets/story/posters/place-to-return.webp',
+  'special-squabble-house': 'assets/story/posters/last-waffle.webp',
 };
 
 export const SeasonPoster = forwardRef<HTMLButtonElement, SeasonPosterProps>(({

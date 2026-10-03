@@ -58,7 +58,7 @@ test.describe('season theater in the real game shell', () => {
       const region = page.locator('.theater-posters');
       await expect(region).toBeVisible();
       const posters = region.locator('.cinema-poster');
-      await expect(posters).toHaveCount(8);
+      await expect(posters).toHaveCount(9);
       await expect(page.getByTestId('button-presentation-season-1')).toBeVisible();
       await expect(page.getByTestId('button-presentation-season-2')).toBeAttached();
       await expect(page.getByTestId('button-presentation-special-sherlock')).toBeAttached();

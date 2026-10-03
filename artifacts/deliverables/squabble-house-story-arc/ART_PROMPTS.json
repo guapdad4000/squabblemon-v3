@@ -1,0 +1,41 @@
+{
+  "provider": "Built-in image_gen",
+  "poster": "Vintage Squabblemon 2:3 poster; exact Manager, Red and Blue references; The Last Waffle; A Squabble House Story; Good Food. Better Fades. Distressed paper, painted anime linework, golden nighttime diner. Reference existing block-crown poster for hierarchy and print style.",
+  "assets": [
+    {
+      "id": "map",
+      "prompt": "Create one high-resolution wide 16:9 illustrated video game story-map environment: Squabble House diner at night. Use the supplied diner interior reference for exact visual world: golden pendant lights, red vinyl booths, black cream checker tile, chrome counter, deep-blue moonlit windows. Elevated isometric cutaway overview, complete miniature diner floor with visible entrance, booths, register, kitchen pass, mop corner and back office. Gorgeous detailed cel-shaded anime comic ink, warm amber vs cool blue. No people or creatures, no arrows, no paths, no node markers, no labels or text; UI adds them. Strong navigable floor negative space through center; visually immersive game map, no blank sheet background.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "ticket",
+      "prompt": "One single game inventory prop illustration: a curled blank cream kitchen order ticket held by a chunky red spring clip, chrome kitchen order rail segment behind, small waffle sketch on the paper. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "receipt",
+      "prompt": "One single game inventory prop illustration: a cream receipt spool emerging from a retro dark register with glowing amber square keys, a few brass coins, blank receipt lines no numbers. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "booth",
+      "prompt": "One single game inventory prop illustration: a handsome miniature red vinyl diner booth seat with chrome feet and small cream tabletop with a white coffee cup. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "plate",
+      "prompt": "One single game inventory prop illustration: a circular white chrome-rimmed plate holding golden waffles, butter and two fried eggs, delicious amber highlights, a diner service bell beside it. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "cone",
+      "prompt": "One single game inventory prop illustration: a bright yellow folding wet-floor caution sign with simple slipping-person silhouette, beside a yellow mop bucket and grey mop head, polished checker floor reflection below. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    },
+    {
+      "id": "evidence",
+      "prompt": "One single game inventory prop illustration: a clipped cream evidence photograph showing a tiny grey pigeon in a black knit mask beside a golden waffle crumb, red pencil and magnifying glass resting beside the photograph. Match supplied reference diner art: premium sharp anime comic ink drawing, detailed cel shading, warm golden rim light, deep charcoal shadows. Centered complete object isolated on uniform deep charcoal #17130f background, square image, generous breathing room, no people, no words, no typography, no border or card framing, no watermark. Highly readable at 100px UI size.",
+      "ref": "/home/falcon/Documents/New project 9/artifacts/deliverables/squabble-house-pilot-the-last-waffle/04_backgrounds/BG02_booth_master.png"
+    }
+  ]
+}

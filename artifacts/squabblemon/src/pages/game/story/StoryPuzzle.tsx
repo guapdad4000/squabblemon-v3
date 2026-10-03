@@ -5,6 +5,9 @@ import { useState, useRef, useEffect, KeyboardEvent, PointerEvent as ReactPointe
 import { GripVertical } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import '../../../styles/puzzle.css';
+import '../../../styles/squabble-house.css';
+import { DinerPuzzleInstrument } from './DinerPuzzleInstrument';
+import { useStoryModalFocus } from './useStoryModalFocus';
 
 export function StoryPuzzle({
   puzzle,
@@ -25,6 +28,9 @@ export function StoryPuzzle({
   const [submitting, setSubmitting] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const listRef = useRef<HTMLUListElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const diner = puzzle.presentation?.theme === 'squabble-house';
+  useStoryModalFocus(hostRef);
   const requestLockRef = useRef(false);
   const requestIdentityRef = useRef<{ signature: string; key: string } | null>(null);
   const pointerPieceRef = useRef<string | null>(null);
@@ -62,6 +68,7 @@ export function StoryPuzzle({
 
   const moveItem = (fromIdx: number, toIdx: number) => {
     if (submitting || fromIdx === toIdx || fromIdx < 0 || toIdx < 0 || fromIdx >= pieces.length || toIdx >= pieces.length) return;
+    setErrorMsg(null);
     setPieces(prev => {
       const copy = [...prev];
       const [moved] = copy.splice(fromIdx, 1);
@@ -143,15 +150,18 @@ export function StoryPuzzle({
   }, [onClose]);
 
   return createPortal(
-    <div className="story-puzzle-host">
+    <div className={`story-puzzle-host ${diner ? 'house-puzzle' : ''}`} data-layout={puzzle.presentation?.layout}
+      ref={hostRef} role="dialog" aria-modal="true" aria-labelledby="story-puzzle-title">
       <div className="story-puzzle-bg" style={{ backgroundImage: `url(${getAssetUrl(puzzle.imageAssetId)})` }} />
       <div className="story-puzzle-content">
         <header className="story-puzzle-header">
           <button type="button" onClick={onClose} disabled={submitting} className="story-puzzle-back">&larr; Back</button>
-          <h2>{puzzle.title}</h2>
+          {diner && <span className="house-puzzle-eyebrow">Squabble House · On the clock</span>}
+          <h2 id="story-puzzle-title">{puzzle.title}</h2>
           <p>{puzzle.instruction}</p>
         </header>
 
+        {diner && <DinerPuzzleInstrument puzzle={puzzle} order={pieces} />}
         <div className="story-puzzle-main">
           <ul className="story-puzzle-list" ref={listRef} role="listbox" aria-label="Evidence pieces">
             {pieces.map((id, index) => {
@@ -172,6 +182,7 @@ export function StoryPuzzle({
                   role="option"
                   aria-selected={false}
                   aria-label={`${piece.label}, position ${index + 1} of ${pieces.length}. Use arrow keys or move buttons to reorder.`}
+                  aria-describedby={`clue-${puzzle.id}-${piece.id}`}
                   data-puzzle-piece={id}
                 >
                   <button
@@ -189,19 +200,20 @@ export function StoryPuzzle({
                   >
                     <GripVertical className="story-puzzle-grip" size={22} aria-hidden="true" />
                   </button>
-                  <div
+                  {!diner && <div
                     className="story-puzzle-item-art"
                     aria-hidden="true"
                     style={{
-                      backgroundImage: `url(${getAssetUrl(puzzle.imageAssetId)})`,
+                      backgroundImage: `url(${getAssetUrl(piece.imageAssetId ?? puzzle.imageAssetId)})`,
                       backgroundPosition: `${15 + ((evidenceIndex * 31) % 70)}% ${18 + ((evidenceIndex * 23) % 64)}%`
                     }}
                   >
                     <span>{String(index + 1).padStart(2, '0')}</span>
-                  </div>
+                  </div>}
                   <div className="story-puzzle-item-content">
+                    {diner && <small className="house-puzzle-slot">{String(index + 1).padStart(2, '0')} / {puzzle.presentation?.slotLabels[index]}</small>}
                     <strong>{piece.label}</strong>
-                    <span>{piece.detail}</span>
+                    <span id={`clue-${puzzle.id}-${piece.id}`}>{piece.detail}</span>
                   </div>
                   <div className="story-puzzle-item-controls">
                     <button type="button" aria-label={`Move ${piece.label} up`} disabled={submitting || index === 0} onClick={() => moveItem(index, index - 1)}>↑</button>
@@ -215,7 +227,8 @@ export function StoryPuzzle({
 
           <div className="story-puzzle-sidebar">
             <div className="story-puzzle-hints">
-              <h3>Notes</h3>
+              <h3>{diner ? 'Crew help' : 'Notes'}</h3>
+              {diner && <p className="house-puzzle-help">Drag the grip, use ↑ ↓ on a ticket, or tap its move buttons. Read every clue before submitting.</p>}
               {hintsUsed > 0 && (
                 <ul className="story-puzzle-hints-list">
                   {puzzle.hints.slice(0, hintsUsed).map((hint, i) => (
@@ -243,7 +256,7 @@ export function StoryPuzzle({
                 onClick={() => void handleSubmit(false)}
                 disabled={submitting}
               >
-                {submitting ? 'Checking evidence…' : 'Submit evidence'}
+                {submitting ? 'Checking evidence…' : diner ? 'Check arrangement' : 'Submit evidence'}
               </button>
               <button 
                 type="button" 

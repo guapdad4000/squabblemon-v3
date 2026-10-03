@@ -1,0 +1,209 @@
+{
+  "generatedBy": "OpenArt MiniMax H3",
+  "chapters": [
+    {
+      "chapter": 1,
+      "historyId": "I4vR5xUNTjkONckZsKTp",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790972501796_b4e84d38.mp4",
+      "assetId": "assets/story/squabble-house/media/ch01.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-01/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 7424235,
+      "sha256": "ffad5b7142d59bc79006c539a8ff1585ff7ef3b8167a56d98a8378cffcc20db3",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds for a six-chapter 60-second pilot. 1080p Lanczos, H.264 CRF20 with 8 Mbps peak cap, stereo AAC 160k, faststart."
+    },
+    {
+      "chapter": 2,
+      "historyId": "ZIBDjxvKP8Waj9gLpdsq",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975754009_021cda7b.mp4",
+      "assetId": "assets/story/squabble-house/media/ch02.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-02/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 6958099,
+      "sha256": "5c68076f6141bd2c570be71ced23059494c5b895da1c321d3dd42af12eddc7fd",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds for a six-chapter 60-second pilot. 1080p Lanczos, H.264 CRF20 with 8 Mbps peak cap, stereo AAC 160k, faststart."
+    },
+    {
+      "chapter": 3,
+      "historyId": "KjNY1QDn7jIqnz6VQzSE",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975638579_dfe848ef.mp4",
+      "assetId": "assets/story/squabble-house/media/ch03.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-03/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 9758644,
+      "sha256": "2194e05212c1c26aaf496567dc9d376056dba53e656584bdd9c548c5871a425d",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds for a six-chapter 60-second pilot. 1080p Lanczos, H.264 CRF20 with 8 Mbps peak cap, stereo AAC 160k, faststart."
+    },
+    {
+      "chapter": 4,
+      "historyId": "Eg0RkrreAcZveisBYndX",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975612041_ac837866.mp4",
+      "assetId": "assets/story/squabble-house/media/ch04.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-04/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 9014360,
+      "sha256": "b923907d819f83a15971b550a42d9bf4879fec07951b70c0944f28d61a16c1b2",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds for a six-chapter 60-second pilot. 1080p Lanczos, H.264 CRF20 with 8 Mbps peak cap, stereo AAC 160k, faststart."
+    },
+    {
+      "chapter": 5,
+      "historyId": "E8xgjSqxYY62RmadpOmU",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975705182_95a35c51.mp4",
+      "assetId": "assets/story/squabble-house/media/ch05.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-05/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 8557226,
+      "sha256": "29d4fc124292f59d6c7db656396bd28eaa547d1027ba8126fae05f6a819f0ca5",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds for a six-chapter 60-second pilot. 1080p Lanczos, H.264 CRF20 with 8 Mbps peak cap, stereo AAC 160k, faststart."
+    },
+    {
+      "chapter": 6,
+      "historyId": "pkslQVaBUwv4gLNxjEOC",
+      "sourceUrl": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790983117639_fc703fe1.mp4",
+      "assetId": "assets/story/squabble-house/media/ch06.mp4",
+      "sourceNativeFile": "artifacts/deliverables/squabble-house-openart/chapter-06/minimax_h3_native.mp4",
+      "duration": 10.0,
+      "sizeBytes": 7767897,
+      "sha256": "d81af159dfcbf70b61138b04afd4c3865aba48c67d50b35fecd5bd1e3bbe8403",
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "frameRate": "24/1",
+          "sampleRate": null,
+          "channels": null,
+          "duration": "10.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "frameRate": "0/0",
+          "sampleRate": "48000",
+          "channels": 2,
+          "duration": "10.000000"
+        }
+      ],
+      "decodeVerified": true,
+      "editorialNote": "Trimmed provider 10.125-second output to exactly 10 seconds, 1080p H.264/24fps and stereo AAC 48k; full-file decode verified."
+    }
+  ]
+}

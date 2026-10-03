@@ -1,0 +1,766 @@
+{
+  "proofs": [
+    {
+      "nodeId": "squabble-house-last-waffle-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-last-waffle-battle-4",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:4:drfade",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-last-waffle-battle:reinforcement:0:1:0:squabble-house-manager",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:0:cornball",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:1:plug",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:5:rastamon",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:2:snow",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:7:buspass",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-last-waffle-battle:reinforcement:1:2:0:squabbleserver",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:8:soulfood",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:3:wifey",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:6:roaster",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-last-waffle-battle-4:9:cognac",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    },
+    {
+      "nodeId": "squabble-house-receipts-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-receipts-battle-19",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:5:rastamon",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:1:plug",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:4:drfade",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-receipts-battle:reinforcement:0:1:0:squabbleserver",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-receipts-battle:reinforcement:1:2:0:squabblecook",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:7:buspass",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:3:wifey",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:0:cornball",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:8:soulfood",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:6:roaster",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:2:snow",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-receipts-battle-19:9:cognac",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    },
+    {
+      "nodeId": "squabble-house-family-discount-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-family-discount-battle-44",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:4:drfade",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:3:wifey",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-family-discount-battle:reinforcement:1:2:0:squabble-house-manager",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:1:plug",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:0:cornball",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-family-discount-battle:reinforcement:0:1:0:squabblecook",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:7:buspass",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:5:rastamon",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:6:roaster",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:8:soulfood",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:2:snow",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-family-discount-battle-44:9:cognac",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    },
+    {
+      "nodeId": "squabble-house-hands-on-the-clock-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-hands-on-the-clock-battle-3",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": "player:story:squabble-house-hands-on-the-clock-battle:reinforcement:0:1:0:squabblecook",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:4:drfade",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:1:plug",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:0:cornball",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:3:wifey",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:7:buspass",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-hands-on-the-clock-battle:reinforcement:1:2:0:janitor",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:5:rastamon",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:2:snow",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:8:soulfood",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:9:cognac",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-hands-on-the-clock-battle-3:6:roaster",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    },
+    {
+      "nodeId": "squabble-house-wet-floor-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-wet-floor-battle-4",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": "player:story:squabble-house-wet-floor-battle:reinforcement:0:1:0:janitor",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:1:plug",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:0:cornball",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:2:snow",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:5:rastamon",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-wet-floor-battle:reinforcement:1:2:0:squabble-house-manager",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:4:drfade",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:7:buspass",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:3:wifey",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:8:soulfood",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:6:roaster",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-wet-floor-battle-4:9:cognac",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    },
+    {
+      "nodeId": "squabble-house-real-thief-battle",
+      "recipe": "Rookie Mentor",
+      "matchDeckId": "house-proof-squabble-house-real-thief-battle-11",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "snow",
+        "wifey",
+        "drfade",
+        "rastamon",
+        "roaster",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ],
+      "moves": [
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:1:plug",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:4:drfade",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-real-thief-battle:reinforcement:0:1:0:squabble-house-manager",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:0:cornball",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:3:wifey",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:story:squabble-house-real-thief-battle:reinforcement:1:2:0:janitor",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:7:buspass",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:5:rastamon",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:6:roaster",
+          "lane": 1,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:8:soulfood",
+          "lane": 2,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:9:cognac",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": "player:house-proof-squabble-house-real-thief-battle-11:2:snow",
+          "lane": 0,
+          "squabble": false,
+          "endTurn": false
+        },
+        {
+          "cardInstanceId": null,
+          "lane": null,
+          "squabble": false,
+          "endTurn": true
+        }
+      ]
+    }
+  ]
+}

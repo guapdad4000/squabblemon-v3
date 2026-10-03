@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const port = 4179;
+const port = Number(process.env.STORY_TEST_PORT ?? 4179);
 
 export default defineConfig({
   testDir: '.',

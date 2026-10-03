@@ -5,12 +5,14 @@ import { revealStoryRewards } from '../../lib/rewardReceipts';
 import { GameGlyph } from '../../components/venue/GameGlyph';
 import { PageDecor } from '../../components/venue/PageDecor';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket, X } from 'lucide-react';
+import { ArrowRight, Check, Crown, LockKeyhole, MessageCircle, Star, Ticket, X, Film, UtensilsCrossed } from 'lucide-react';
 import '../../styles/studio.css';
 import '../../styles/story-map.css';
 import '../../styles/cinema-atlas.css';
 import '../../styles/story-briefing.css';
 import '../../styles/story-rewards.css';
+import '../../styles/squabble-house.css';
+import { StoryMovie } from './story/StoryMovie';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useSearch } from 'wouter';
@@ -292,7 +294,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
   const chapterContent = currentChapter ? getStoryChapter(currentChapter.id) : undefined;
   const recommended = nodes.find(node => node.nodeId === campaign.recommendedNodeId);
   return (
-    <div className="studio-page story-atlas world-decor-host">
+    <div className={`studio-page story-atlas world-decor-host ${currentChapter?.id.startsWith('squabble-house-') ? 'house-atlas' : ''}`}>
       {/* Knock out only the near-white matte in the supplied decorative images. */}
       <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: 'absolute' }}>
         <defs>
@@ -305,7 +307,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
       <PageDecor theme="story" />
       <header className="story-atlas__header">
 
-        <ChapterTickets chapters={campaign.chapters.filter(c => !activeSeasonId || getStorySeason(activeSeasonId)?.chapterIds.includes(c.id))} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
+        <ChapterTickets chapters={campaign.chapters.filter(c => !activeSeasonId || getStorySeason(activeSeasonId)?.chapterIds.includes(c.id)).map((chapter, index) => chapter.id.startsWith('squabble-house-') ? { ...chapter, order: index + 1 } : chapter)} activeId={currentChapter?.id} onSelect={setActiveChapterId} />
         <h1 className="story-title">{currentChapter?.title}</h1>
       </header>
 
@@ -381,7 +383,13 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                 style={{ left: `${node.mapPosition.x}%`, top: `${node.mapPosition.y}%` }}
               >
                 <span className="story-atlas__marker">
-                  {boss && content?.kind === 'battle' ? (
+                  {node.nodeId.startsWith('squabble-house-') ? (
+                    <>{content?.kind === 'battle' ? <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
+                      : content?.puzzle ? <UtensilsCrossed size={24} />
+                      : node.nodeId.endsWith('-opening') ? <Film size={25} /> : <GameGlyph name="mastery" />}
+                      {locked && <LockKeyhole className="house-node-lock" size={13} />}
+                      {cleared && <Check className="house-node-lock" size={16} />}</>
+                  ) : boss && content?.kind === 'battle' ? (
                     <img src={getAssetUrl(content.encounter.enemy.portraitAssetId)} alt="" />
                   ) : locked ? (
                     <LockKeyhole size={15} />
@@ -392,7 +400,7 @@ export function Story({ bootstrap }: { bootstrap: PlayerBootstrap }) {
                   ) : (
                     <MessageCircle size={19} />
                   )}
-                  {boss && <Crown className="story-atlas__crown" size={15} />}
+                  {boss && !node.nodeId.startsWith('squabble-house-') && <Crown className="story-atlas__crown" size={15} />}
                 </span>
                 <span className="story-atlas__label">
                   <strong>{node.title}</strong>
@@ -533,6 +541,10 @@ export function NodeOverlay({
   const [grantedRewards, setGrantedRewards] = useState<StoryGrantedReward[]>([]);
   const [deliveryStatus, setDeliveryStatus] = useState<string | null>(null);
   const [replayIndex, setReplayIndex] = useState<number | null>(null);
+  const [movieDismissed, setMovieDismissed] = useState(false);
+  const [movieReplay, setMovieReplay] = useState(false);
+  const hasMovie = nodeId.startsWith('squabble-house-') && nodeId.endsWith('-opening') && !!storyNode?.cinematic;
+  useEffect(() => { setMovieDismissed(false); setMovieReplay(false); }, [nodeId]);
 
   const entries = useMemo(() => (storyNode ? sceneEntries(storyNode) : []), [storyNode]);
   const seen = useMemo(() => new Set(nodeProgress?.dialogueSeen ?? []), [nodeProgress?.dialogueSeen]);
@@ -654,8 +666,14 @@ export function NodeOverlay({
       <button type="button" onClick={() => setReplayIndex(0)}>
         Replay scenes
       </button>
+      {hasMovie && <button type="button" onClick={() => setMovieReplay(true)}>Replay movie</button>}
     </>
   );
+
+  if (hasMovie && storyNode.cinematic && (movieReplay || (!movieDismissed && !isCleared && !history.length))) {
+    return <StoryMovie key={nodeId} cinematic={storyNode.cinematic} title={getStoryChapter(nodeProgress.chapterId)?.title ?? storyNode.title} onClose={onClose}
+      onContinue={() => { setMovieDismissed(true); setMovieReplay(false); }} />;
+  }
 
   return (
     <motion.div
@@ -821,7 +839,7 @@ function BattleBriefing({
   return (
     <div className="story-briefing">
       <div className="story-briefing__bg">
-        <img src={getAssetUrl('assets/venues/red-fence-night-court.webp')} alt="" />
+        <img src={getAssetUrl(battle.cinematic?.environmentAssetId ?? 'assets/venues/red-fence-night-court.webp')} alt="" />
       </div>
       <div className="story-briefing__container">
         <div className="story-briefing__header">

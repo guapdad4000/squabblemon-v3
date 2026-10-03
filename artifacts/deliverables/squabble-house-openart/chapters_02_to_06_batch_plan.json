@@ -1,0 +1,114 @@
+{
+  "projectId": "tZybfjIyUw5JnUpyDhFq",
+  "model": "minimax-h3",
+  "chapter1": {
+    "historyId": "I4vR5xUNTjkONckZsKTp",
+    "status": "COMPLETED",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790972501796_b4e84d38.mp4",
+    "width": 2560,
+    "height": 1440,
+    "duration": 10.125,
+    "fps": 24,
+    "hasAudio": true
+  },
+  "remainingChapters": [
+    {
+      "chapter": "CH02",
+      "title": "THE RECEIPTS",
+      "requestedDurationSeconds": 10,
+      "resolution": "2K",
+      "aspectRatio": "16:9",
+      "fullBodyAndKeyframeReferences": [
+        "C03_red.png",
+        "C02_blue.png",
+        "C12_tek_ken.png",
+        "C04_red_og.png",
+        "C05_blue_og.png",
+        "CH02_A.png",
+        "CH02_B.png",
+        "CH02_C.png"
+      ],
+      "continuityVideoSeconds": 4,
+      "estimatedCredits": 1335,
+      "status": "PREPARED"
+    },
+    {
+      "chapter": "CH03",
+      "title": "FAMILY DISCOUNT",
+      "requestedDurationSeconds": 10,
+      "resolution": "2K",
+      "aspectRatio": "16:9",
+      "fullBodyAndKeyframeReferences": [
+        "C04_red_og.png",
+        "C05_blue_og.png",
+        "C03_red.png",
+        "C02_blue.png",
+        "CH03_A.png",
+        "CH03_B.png",
+        "CH03_C.png"
+      ],
+      "continuityVideoSeconds": 4,
+      "estimatedCredits": 1310,
+      "status": "PREPARED"
+    },
+    {
+      "chapter": "CH04",
+      "title": "HANDS ON THE CLOCK",
+      "requestedDurationSeconds": 10,
+      "resolution": "2K",
+      "aspectRatio": "16:9",
+      "fullBodyAndKeyframeReferences": [
+        "C06_blue_titan.png",
+        "C11_security.png",
+        "C09_griddle.png",
+        "C08_cuff.png",
+        "C01_manager.png",
+        "CH04_A.png",
+        "CH04_B.png",
+        "CH04_C.png"
+      ],
+      "continuityVideoSeconds": 4,
+      "estimatedCredits": 1335,
+      "status": "PREPARED"
+    },
+    {
+      "chapter": "CH05",
+      "title": "WET FLOOR. DRY HUMOR.",
+      "requestedDurationSeconds": 10,
+      "resolution": "2K",
+      "aspectRatio": "16:9",
+      "fullBodyAndKeyframeReferences": [
+        "C10_mop.png",
+        "C03_red.png",
+        "C02_blue.png",
+        "CH05_A.png",
+        "CH05_B.png",
+        "CH05_C.png"
+      ],
+      "continuityVideoSeconds": 4,
+      "estimatedCredits": 1285,
+      "status": "PREPARED"
+    },
+    {
+      "chapter": "CH06",
+      "title": "THE REAL THIEF",
+      "requestedDurationSeconds": 10,
+      "resolution": "2K",
+      "aspectRatio": "16:9",
+      "fullBodyAndKeyframeReferences": [
+        "C07_pigeon.png",
+        "C01_manager.png",
+        "C03_red.png",
+        "C02_blue.png",
+        "CH06_A.png",
+        "CH06_B.png",
+        "CH06_C.png"
+      ],
+      "continuityVideoSeconds": 4,
+      "estimatedCredits": 1310,
+      "status": "PREPARED"
+    }
+  ],
+  "estimatedRemainingTotalCredits": 6575,
+  "generationReviewStatus": "New chapters are unreviewed; completed provider status alone does not validate animation or dialogue."
+}

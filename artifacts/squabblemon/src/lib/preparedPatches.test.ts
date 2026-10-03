@@ -16,8 +16,8 @@ test('prepared patch notes fit the publication contract', () => {
     for (const line of [...patch.buffs, ...patch.changes]) assert.ok(line.trim() && line.length <= 500, line);
     const letter = [patch.version, patch.title, patch.overview, ...patch.buffs, ...patch.changes].join('\n');
     assert.ok(letter.length < 5500, `${patch.version} letter too long`);
-    assert.equal(patch.softCurrency, patch.version === '1.8' ? 50 : 100);
-    assert.equal(patch.packTickets, patch.version === '1.8' ? 0 : 1);
+    assert.equal(patch.softCurrency, patch.version === '1.9' ? 0 : patch.version === '1.8' ? 50 : 100);
+    assert.equal(patch.packTickets, ['1.8', '1.9'].includes(patch.version) ? 0 : 1);
   }
   assert.deepEqual([...versions], [...versions].sort((a, b) => Number(a) - Number(b)), 'notes stay oldest-first for publishing order');
 });
@@ -57,4 +57,8 @@ test('editorial banner is version-and-art-bound with a valid bundled asset path'
   assert.equal(getPatchBanner('1.6', 'triple-og-blue'), undefined);
   assert.equal(getPatchBanner('1.7', 'cracked-head'), undefined);
   assert.equal(getPatchBanner('1.7', null), undefined);
+  const house = getPatchBanner('1.9', 'squabble-house-manager');
+  assert.deepEqual(house, PATCH_BANNERS['1.9']);
+  assert.ok(existsSync(new URL(`../../public/${house!.path}`, import.meta.url)));
+  assert.equal(getPatchBanner('1.9', 'triple-og-blue'), undefined);
 });

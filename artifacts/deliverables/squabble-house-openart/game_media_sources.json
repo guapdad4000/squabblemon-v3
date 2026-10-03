@@ -1,0 +1,102 @@
+[
+  {
+    "chapter": 1,
+    "historyId": "I4vR5xUNTjkONckZsKTp",
+    "status": "completed",
+    "id": "7mDHnUQpFUHH0TC9MrGu",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790972501796_b4e84d38.mp4",
+    "aspectRatio": "16:9",
+    "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-10-02_fb025b2d-1913-4198-a2c6-146b59d1c618_output_aigc_1790972508167_9ccf7537.webp",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  },
+  {
+    "chapter": 2,
+    "historyId": "ZIBDjxvKP8Waj9gLpdsq",
+    "status": "completed",
+    "id": "trKeQUNlmcyvVA38SXBJ",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975754009_021cda7b.mp4",
+    "aspectRatio": "16:9",
+    "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-10-02_d1f5b0e8-757a-4df0-8e63-9d43f80ee70e_output_aigc_1790975759121_811a0447.webp",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  },
+  {
+    "chapter": 3,
+    "historyId": "KjNY1QDn7jIqnz6VQzSE",
+    "status": "completed",
+    "id": "ZWC3IePN84CrZdyaNPcA",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975638579_dfe848ef.mp4",
+    "aspectRatio": "16:9",
+    "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-10-02_10224dbd-92ff-4bcd-9626-2acf6ab9e29c_output_aigc_1790975645022_432a0650.webp",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  },
+  {
+    "chapter": 4,
+    "historyId": "Eg0RkrreAcZveisBYndX",
+    "status": "completed",
+    "id": "Zptrtnl3iQL7cWPRtcIE",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975612041_ac837866.mp4",
+    "aspectRatio": "16:9",
+    "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-10-02_bb2618d0-8804-401b-b0e1-14858a457258_output_aigc_1790975618628_d1d40a62.webp",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  },
+  {
+    "chapter": 5,
+    "historyId": "E8xgjSqxYY62RmadpOmU",
+    "status": "completed",
+    "id": "cPtOxcIL7AqbxxyxntGH",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790975705182_95a35c51.mp4",
+    "aspectRatio": "16:9",
+    "thumbnailUrl": "https://cdn.openart.ai/openart/thumbnail/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/inference_output_rollout_2026-10-02_d6a9d1c0-604c-4b3d-8f64-1e24c91f861c_output_aigc_1790975711527_dc7b99b8.webp",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  },
+  {
+    "chapter": 6,
+    "historyId": "pkslQVaBUwv4gLNxjEOC",
+    "status": "completed",
+    "mediaType": "video",
+    "url": "https://cdn.openart.ai/openart-ai/production/2026-10/create-video/iN6YMNPiZDSXiQXa2Kmf/output_aigc_1790983117639_fc703fe1.mp4",
+    "aspectRatio": "16:9",
+    "metadata": {
+      "width": 2560,
+      "height": 1440,
+      "duration": 10.125,
+      "fps": 24,
+      "hasAudio": true
+    }
+  }
+]

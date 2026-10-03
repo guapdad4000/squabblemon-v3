@@ -11,7 +11,7 @@ import {
   verifyStoryMatchTranscript,
   type PlayerMove,
 } from "./gameEngine";
-const chapters = storyContent.chapters.filter((chapter) => chapter.order >= 20);
+const chapters = storyContent.chapters.filter((chapter) => chapter.order >= 20 && chapter.order < 30);
 test("expanded stories provide ninety connected scenes and scrambled, solvable puzzles", () => {
   assert.equal(chapters.length, 10);
   assert.equal(chapters.flatMap((c) => c.nodes).length, 90);
@@ -86,7 +86,7 @@ function permutations<T>(items: readonly T[]): T[][] {
 }
 
 test("no new investigation opens with its answer already arranged", () => {
-  assert.equal(auditedPuzzles.length, 27);
+  assert.equal(auditedPuzzles.length, 33);
   for (const p of auditedPuzzles)
     assert(
       !isStoryPuzzleSolution(

@@ -1,0 +1,349 @@
+{
+  "arcId": "special-squabble-house",
+  "assets": [
+    {
+      "assetId": "assets/story/squabble-house/cast/C01_manager.webp",
+      "sizeBytes": 243076,
+      "sha256": "33fda0d3c1f80795885dab4f9a02e0e22f347c32000939598b787f14a00a8ba0",
+      "width": 800,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C02_blue.webp",
+      "sizeBytes": 154570,
+      "sha256": "f2a66f414bfea2032e66160d6bbbf404b0f99de8ddcfb199975ebf0fb8e47069",
+      "width": 800,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C03_red.webp",
+      "sizeBytes": 204024,
+      "sha256": "2549a6962f70bd5b4aaa9c0ea0fcc83c76c2b115b3799aefa4bb8220e8792c8e",
+      "width": 800,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C04_red_og.webp",
+      "sizeBytes": 176152,
+      "sha256": "c2b50bcdb856479a3debeb10198b0bfb41c5c00daf43465ea243110cada0ddd3",
+      "width": 675,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C05_blue_og.webp",
+      "sizeBytes": 173194,
+      "sha256": "7c140615bbf1bfe0ee3987ae1c962604f6b44cddd207907c49a46dc526ab05b2",
+      "width": 675,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C06_blue_titan.webp",
+      "sizeBytes": 147668,
+      "sha256": "a69017c93dfcb2f23e16c0d16dbf6e87ca557316390c0143d1e31061302dd82a",
+      "width": 675,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C07_pigeon.webp",
+      "sizeBytes": 160970,
+      "sha256": "237b0561f15205d257d14c52b1de526535615992da7732fcb46ee064c6b73b13",
+      "width": 1000,
+      "height": 1000,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C08_cuff.webp",
+      "sizeBytes": 133818,
+      "sha256": "d0f7064dd5c18418edf425799ce07306e703632b908b6cc1e25c517172a74d15",
+      "width": 800,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C09_griddle.webp",
+      "sizeBytes": 76406,
+      "sha256": "a17b01eecadde4132c4a7124fdf1cbe0801e51883a0c48cd383539e84a1a88db",
+      "width": 1000,
+      "height": 667,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C10_mop.webp",
+      "sizeBytes": 110296,
+      "sha256": "3ca52e9f209a51b54ca51cf02ccb2b4401dfbbf160fcb34e758757c882eef8f6",
+      "width": 628,
+      "height": 1152,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C11_security.webp",
+      "sizeBytes": 197372,
+      "sha256": "439d635ebf1a4bacbe6bf1cb627ae8bfe20b0dcfa53bcefd984149236ff49263",
+      "width": 800,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/cast/C12_tek_ken.webp",
+      "sizeBytes": 213068,
+      "sha256": "c24e3dfefc77ae0f44f943829f52ea33a70c43b2769c17a4bb972109f0e4a002",
+      "width": 675,
+      "height": 1200,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch01.webp",
+      "sizeBytes": 465378,
+      "sha256": "71efdc74eb948cfb75a7dd4929e289f48cccb8a8da4b3d9c2f39e309c6aac87d",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch02.webp",
+      "sizeBytes": 350732,
+      "sha256": "d6bcbea7036321e6ccfb0c3b1545715e2f44e4ec5edb6b10de4d4accacc9523e",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch03.webp",
+      "sizeBytes": 345956,
+      "sha256": "4c24b6f77726e400fd76066b9f330b60c0f7a6444ce1a877c7fd2d3643d41a0f",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch04.webp",
+      "sizeBytes": 346818,
+      "sha256": "4434a7fc2461761b99ace380f7932d338b11feb3771c2f142997edd045734986",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch05.webp",
+      "sizeBytes": 364222,
+      "sha256": "c82446f58d0a5cb66b99973d580bb2d1401ab8958134a2d71307d24f7b4dd196",
+      "width": 1672,
+      "height": 940,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/environments/ch06.webp",
+      "sizeBytes": 341216,
+      "sha256": "084fef12a7e6cf8c689bedcd94aafe9099148adaa4f4a2af027f5fc8539e4c68",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch01.webp",
+      "sizeBytes": 505660,
+      "sha256": "f2f1b5f28030f109912eccc8702573379b9c3febd9b789548054a3793ebe8cdc",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch02.webp",
+      "sizeBytes": 347110,
+      "sha256": "ad501a5e9ccbb710571b44ca6110572b7bc4cc744e25baaa983f71153176ed09",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch03.webp",
+      "sizeBytes": 386730,
+      "sha256": "2fe5e5908dd2d140ca69b44e7dd1f45f321fc2f0a50ffd9872fedf91e7aecffd",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch04.webp",
+      "sizeBytes": 418014,
+      "sha256": "c14272f5ae9a384ff9137dc302712c1ec25e57be6721596a6f2e46321537b752",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch05.webp",
+      "sizeBytes": 389212,
+      "sha256": "098d227ee4fdc4d0e3619b92f6cd80d48e5275b91b8405fc55b1245a41f6bcaf",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/keyframes/ch06.webp",
+      "sizeBytes": 283528,
+      "sha256": "d8671656b3cf99c413f4168a18bbb4022e343e4dd539009aeaacffeb4bc06428",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/map.webp",
+      "sizeBytes": 516798,
+      "sha256": "8806f15b5603e11156a420741a30e2688a1d3d3639846d9818372171f194dfe4",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch01.mp4",
+      "sizeBytes": 7424235,
+      "sha256": "ffad5b7142d59bc79006c539a8ff1585ff7ef3b8167a56d98a8378cffcc20db3"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch02.mp4",
+      "sizeBytes": 6958099,
+      "sha256": "5c68076f6141bd2c570be71ced23059494c5b895da1c321d3dd42af12eddc7fd"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch03.mp4",
+      "sizeBytes": 9758644,
+      "sha256": "2194e05212c1c26aaf496567dc9d376056dba53e656584bdd9c548c5871a425d"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch04.mp4",
+      "sizeBytes": 9014360,
+      "sha256": "b923907d819f83a15971b550a42d9bf4879fec07951b70c0944f28d61a16c1b2"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch05.mp4",
+      "sizeBytes": 8557226,
+      "sha256": "29d4fc124292f59d6c7db656396bd28eaa547d1027ba8126fae05f6a819f0ca5"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch01.webp",
+      "sizeBytes": 403080,
+      "sha256": "fb83ec53bb5517af98980d9ab4df666e089df214c67c5405a2f78bb174358806",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch02.webp",
+      "sizeBytes": 300200,
+      "sha256": "90ce799feb0bfaa50ac834313276bee9b81c073dcc1c344ac70be1e15dba1853",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch03.webp",
+      "sizeBytes": 300982,
+      "sha256": "8afaeae5169714f88689882a43276bb3c91ae74c183db4f7472b5b41a631cdde",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch04.webp",
+      "sizeBytes": 306472,
+      "sha256": "a9a50250b76e6c3992c2e01977b730fd9e79d9f8350e07045cb31935ad5e16ed",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch05.webp",
+      "sizeBytes": 318368,
+      "sha256": "a94670a0ec4f8b031cceeba0804736c79e7730a82726d3d24dd5223db6b4a486",
+      "width": 1672,
+      "height": 940,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/ch06.webp",
+      "sizeBytes": 293016,
+      "sha256": "c0f81615d2c0dba516a7aa04c4970008224aee4a3236ce4c46f5fee60425a8d5",
+      "width": 1672,
+      "height": 941,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/booth.webp",
+      "sizeBytes": 44390,
+      "sha256": "afa541d6150e9d75c150a8955dd3edd93d2ec731b8c27bb7ce91104c13fd83d6",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/cone.webp",
+      "sizeBytes": 80668,
+      "sha256": "6076c66e6f16ace094fe08c25daa71c619188e63764e97e4dea99f0905d19320",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/evidence.webp",
+      "sizeBytes": 78904,
+      "sha256": "f256facec095fb63bf1ebb4e8fc0476fbf0a007f40fa044bf609fded66aeb1c1",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/plate.webp",
+      "sizeBytes": 71248,
+      "sha256": "d474990343426ecdf402026a62d8b52b94ff9f10c70f1a9dd0c8e5b44c29d8e6",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/receipt.webp",
+      "sizeBytes": 62174,
+      "sha256": "9a82ca61a57ee27d1a7826e559caad93dbed03da379d28a5b7b2d53b20a786a6",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/squabble-house/puzzles/props/ticket.webp",
+      "sizeBytes": 38184,
+      "sha256": "037fff72a0c0607f3f9f695628d4728d371e2c94434ae5eb1acb26119487f5df",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA"
+    },
+    {
+      "assetId": "assets/story/posters/last-waffle.webp",
+      "sizeBytes": 643796,
+      "sha256": "5845a861b788926ef271d6ca57ae34399c506b237ddaf498a30cfab5b472943c",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGB"
+    },
+    {
+      "assetId": "assets/story/squabble-house/media/ch06.mp4",
+      "sizeBytes": 7767897,
+      "sha256": "d81af159dfcbf70b61138b04afd4c3865aba48c67d50b35fecd5bd1e3bbe8403",
+      "durationSeconds": 10.0
+    },
+    {
+      "assetId": "assets/events/last-waffle-patch-1-9.webp",
+      "sizeBytes": 520736,
+      "sha256": "0612638e917191c383439163cacf73bffa8127f5304b430833abaaf02fda07a6",
+      "width": 2172,
+      "height": 724,
+      "mode": "RGB"
+    }
+  ],
+  "totalBytes": 59994667
+}

@@ -7,6 +7,7 @@ import { validateStoryPuzzle, type StoryPuzzleDefinition } from "./storyPuzzles"
 import { seasonTwoChapters } from "./seasonTwo";
 import { extendedStoryChapters } from "./storyExpansions";
 import { specialPresentationChapters } from "./storySpecials";
+import { squabbleHouseChapters } from "./storySquabbleHouse";
 import { hasSeasonOneRewrite, rewriteSeasonOne, seasonOneRewriteRevision } from "./seasonOneRewrite";
 import { expandSeasonTwoDialogue } from "./seasonTwoDialogueExpansion";
 export { storySeasons, getStorySeason, getStorySeasonForChapter, type StorySeasonDefinition } from "./storySeasons";
@@ -306,13 +307,13 @@ function applyStoryPayoutContract(chapters: readonly StoryChapter[]): StoryChapt
   });
 }
 export const blockPartyChapter = applyStoryPayoutContract([blockPartyChapterSource])[0];
-export const storyContent = validateStoryContent({ version: 11, chapters: withStoryEnvironments(applyStoryPayoutContract([...rewriteSeasonOne([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
+export const storyContent = validateStoryContent({ version: 12, chapters: withStoryEnvironments(applyStoryPayoutContract([...rewriteSeasonOne([{ ...blockPartyChapter, nodes: blockPartyChapter.nodes.map((node): StoryNode => {
   const dialogue = screenplay[node.id];
   if (!dialogue) return node;
   return node.kind === 'battle'
     ? { ...node, preDialogue: dialogue.pre ?? node.preDialogue, postDialogue: dialogue.post ?? node.postDialogue }
     : { ...node, scenes: dialogue.main ?? node.scenes };
-}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters])) });
+}) }, ...sequelChapters]), ...expandSeasonTwoDialogue(seasonTwoChapters), ...specialPresentationChapters, ...extendedStoryChapters, ...squabbleHouseChapters])) });
 export const getStoryChapter = (chapterId: string) => storyContent.chapters.find((chapter) => chapter.id === chapterId);
 export const getStoryNode = (nodeId: string) => storyContent.chapters.flatMap((chapter) => chapter.nodes).find((node) => node.id === nodeId);
 

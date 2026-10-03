@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-03",
+  "scope": "Clean release checkout, predeployment validation",
+  "storyTests": {
+    "focusedPassed": 19,
+    "seasonRegressionPassed": 54,
+    "sixStarterCrewWinsReplayed": true,
+    "storyPayoutContractPreserved": true
+  },
+  "puzzleAudit": {
+    "independentAuditor": "squabble_house_puzzle_audit",
+    "approved": true,
+    "logicTestsPassed": 7,
+    "permutations": 1320,
+    "uniqueSolutionForEachPuzzle": true,
+    "browserTestsPassed": 5,
+    "fullPuzzlePlaythroughs": 18,
+    "databaseTestsPassed": 16,
+    "database": "Owned, token-verified disposable PGlite; no production data",
+    "report": "PUZZLE_AUDIT.md"
+  },
+  "movieBrowser": {
+    "firstRun": {
+      "passed": 19,
+      "failed": 1,
+      "failure": "Chapter 2 desktop fixture reloaded to Mapping territory after a development-server reload"
+    },
+    "focusedRerun": {
+      "chapter": 2,
+      "device": "desktop",
+      "passed": 1
+    },
+    "actualPlayedChapters": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "allSixDecoded": true,
+    "allSixHaveAudioStreams": true,
+    "checks": [
+      "Media metadata",
+      "Playback with audio enabled",
+      "Natural end to illustrated dialogue",
+      "Skip",
+      "Replay",
+      "Escape",
+      "Missing media fallback",
+      "Fixture card reveal"
+    ]
+  },
+  "announcementBrowser": {
+    "desktopPassed": 1,
+    "phonePassed": 1,
+    "checks": [
+      "Events banner loads",
+      "Mailman banner loads",
+      "No mail gift",
+      "Story CTA navigates"
+    ]
+  },
+  "typechecks": {
+    "workspace": "passed",
+    "frontend": "passed",
+    "api": "passed"
+  },
+  "productionBuild": {
+    "status": "passed",
+    "entryKiB": 210.3,
+    "gameAppKiB": 887.6,
+    "homeKiB": 966.0,
+    "allBundleBudgetsPassed": true,
+    "log": "/tmp/squabble-house-build-final.log"
+  },
+  "limits": [
+    "Browser transport uses fixtures, not a production authenticated account.",
+    "Database victory rows are fixtures; combat legality is separately verified with six starter-crew transcripts.",
+    "Actual production patch publication and mail delivery are verified after deployment."
+  ]
+}

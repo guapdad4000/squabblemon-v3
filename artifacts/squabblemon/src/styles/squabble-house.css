@@ -1,0 +1,101 @@
+/* The Last Waffle: chrome, red vinyl, warm receipt paper, and late-night amber. */
+.house-movie { position:fixed; inset:0; z-index:1100; display:flex; flex-direction:column; background:#070706; color:#fff3cf; padding:max(16px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)); overflow:auto; }
+.house-movie header,.house-movie footer { display:flex; align-items:center; justify-content:space-between; gap:16px; width:min(1280px,100%); margin:0 auto; flex-shrink:0; }
+.house-movie header span { color:#e6b452; font:700 10px var(--font-mono); letter-spacing:.16em; text-transform:uppercase; }
+.house-movie h2 { font:900 italic clamp(22px,3vw,36px) var(--font-display); margin:3px 0 12px; }
+.house-movie button { min-height:44px; border:1px solid #74603c; padding:10px 17px; color:#ffdc81; font-weight:700; cursor:pointer; background:#1c1710; }
+.house-movie button:focus-visible { outline:3px solid #fff; outline-offset:3px; }
+.house-movie__screen { position:relative; display:grid; place-items:center; width:100%; flex:1; min-height:180px; overflow:hidden; background:black; }
+.house-movie video { width:100%; height:100%; max-height:calc(100dvh - 170px); object-fit:contain; }
+.house-movie__start { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:18px; padding:24px; text-align:center; background:linear-gradient(0deg,#000b,#0002,#0005); }
+.house-movie__start p { max-width:440px; font-size:13px; color:#fff2dc; text-shadow:0 2px 4px #000; }
+.house-movie__reel { font:700 10px var(--font-mono); letter-spacing:.3em; text-shadow:0 2px 4px #000; }
+.house-movie button.house-movie__play { background:#f1c052; color:#22170a; padding:17px 28px; border:2px solid #fff0bb; font:900 italic 24px var(--font-display); box-shadow:0 6px 38px #0009; }
+.house-movie footer { padding-top:14px; }
+.house-movie footer p { color:#a89d87; font:600 11px var(--font-mono); }
+.house-atlas .story-atlas__ornament { opacity:.25; }
+.house-atlas .story-atlas__wash { opacity:.35; }
+.house-atlas .story-atlas__terrain { min-height:320px; min-width:700px; }
+.house-atlas .story-atlas__node.is-locked { opacity:.65; }
+.house-atlas .story-atlas__marker { width:64px; height:64px; border:3px solid #eac361; background:linear-gradient(145deg,#422f16,#15100a); box-shadow:0 5px 0 #392719,0 9px 24px #000b; color:#ffd776; overflow:visible; }
+.house-atlas .story-atlas__marker img { border-radius:50%; object-fit:cover; object-position:50% 16%; }
+.house-atlas .story-atlas__label { background:#17130fe8; border:1px solid #ad85414d; padding:8px 12px; border-radius:4px; }
+.house-atlas .story-atlas__label { opacity:1; transform:translateX(-50%) translateY(2px); }
+.story-stage--house .story-stage__actor img[src$="C09_griddle.webp"] { object-fit:cover; }
+.house-atlas .is-locked .story-atlas__marker { filter:saturate(.4); }
+.house-node-lock { position:absolute; right:-4px; bottom:-4px; box-sizing:content-box; padding:5px; border-radius:50%; background:#e9c164; color:#20180a; }
+.house-puzzle { background:#130f0a; color:#ffefce; }
+.house-puzzle .story-puzzle-bg { position:fixed; opacity:.55; filter:brightness(.5); }
+.house-puzzle .story-puzzle-content { max-width:1180px; padding-bottom:24px; }
+.house-puzzle .story-puzzle-header { padding-bottom:18px; border-bottom:2px solid #bc914a66; }
+.house-puzzle .story-puzzle-header h2 { color:#ffce65; font-size:clamp(27px,3vw,39px); }
+.house-puzzle .story-puzzle-header p { max-width:950px; line-height:1.6; color:#fff0d1; }
+.house-puzzle .story-puzzle-back { color:#ead8b5; margin-bottom:4px; }
+.house-puzzle-eyebrow { display:block; color:#dcaf59; font:700 10px var(--font-mono); letter-spacing:.18em; text-transform:uppercase; margin:4px 0; }
+.house-puzzle .story-puzzle-main { gap:24px; grid-template-columns:minmax(0,1fr) 270px; }
+.house-puzzle .story-puzzle-list { gap:14px; }
+.house-puzzle .story-puzzle-item { min-height:115px; border-radius:3px; padding:14px 12px; background:#f2e2b8; border:1px solid #c9a875; box-shadow:0 6px 18px #0008; }
+.house-puzzle .story-puzzle-item:nth-child(even) { transform:none; background:#ead9ad; }
+.house-puzzle .story-puzzle-item-content strong { font-size:14px; letter-spacing:0; }
+.house-puzzle .story-puzzle-item-content span { font-size:14px; line-height:1.5; color:#473321; }
+.house-puzzle-slot { display:block; color:#976423; font:800 10px var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+.house-puzzle .story-puzzle-sidebar { padding-top:4px; }
+.house-puzzle .story-puzzle-hints { background:#17130ff5; border:1px solid #c797435e; padding:20px; }
+.house-puzzle-help { font-size:13px; color:#d3c3a4; line-height:1.6; margin-bottom:18px; }
+.house-puzzle .story-puzzle-actions { margin-top:0; position:static; padding:10px; border-radius:6px; background:#17110ff2; border:1px solid #d4aa4f66; }
+.house-puzzle .story-puzzle-submit { background:#edbb52; }
+.house-puzzle .story-puzzle-skip { color:#dfcfb1; }
+.house-puzzle-prop { display:flex; align-items:center; gap:20px; margin:0 0 22px; padding:8px 24px; min-height:125px; border:1px solid #c28e4766; background:linear-gradient(100deg,#17130fef,#352416e6); box-shadow:0 6px 22px #0007; border-radius:8px; }
+.house-puzzle-prop img { width:125px; height:125px; object-fit:contain; }
+.house-puzzle-prop strong { display:block; font:900 16px var(--font-mono); letter-spacing:.1em; color:#f7c463; }
+.house-puzzle-prop p { font-size:14px; margin-top:7px; color:#ecd9b6; }
+.house-puzzle[data-layout="tickets"] .story-puzzle-item { border-top:5px solid #9b3630; }
+.house-puzzle[data-layout="register"] .story-puzzle-item { border-bottom:3px dashed #a18664; background:#f5eaca; }
+.house-puzzle[data-layout="evidence"] .story-puzzle-item { border-left:6px solid #943630; }
+.house-puzzle[data-layout="route"] .story-puzzle-item { border-left:6px solid #ceaa44; }
+.house-booths,.house-pass,.house-route { margin:0 0 22px; padding:18px; border:1px solid #a7884c80; border-radius:8px; background:#17130feb; }
+.house-booths figcaption,.house-pass figcaption,.house-route figcaption { color:#e0b65c; font:800 11px var(--font-mono); letter-spacing:.08em; margin-bottom:14px; }
+.house-booths > div { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:9px; }
+.house-booths__seat { position:relative; display:flex; align-items:center; flex-direction:column; background:linear-gradient(#672422,#361513); border:2px solid #c88767; border-radius:15px 15px 4px 4px; box-shadow:0 5px 0 #afa48f; overflow:hidden; }
+.house-booths__seat img { width:100%; height:150px; object-fit:contain; }
+.house-booths__seat span { width:100%; background:#18100ee8; color:#ffdf8d; padding:8px 5px; font:700 11px var(--font-mono); text-align:center; }
+.house-pass__timeline { display:flex; gap:4px; }
+.house-pass__timeline > div { flex-basis:0; min-width:0; padding:12px 8px; border:1px solid #6c9472; background:#20332b; border-radius:4px; }
+.house-pass__timeline .is-late { border-color:#bc6855; background:#48281f; }
+.house-pass__timeline strong,.house-pass__timeline span,.house-pass__timeline small { display:block; font:700 11px var(--font-mono); }
+.house-pass__timeline strong { margin-bottom:8px; }
+.house-pass__timeline small { margin-top:8px; font-size:9px; color:#efdcac; }
+.house-pass p,.house-route p { font-size:12px; color:#d9c7a7; margin:12px 0 0; line-height:1.5; }
+.house-route { max-width:740px; width:100%; align-self:center; }
+.house-route figcaption { display:flex; justify-content:space-between; gap:12px; }
+.house-route__grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); position:relative; gap:3px; }
+.house-route__grid > div { height:64px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#dac493; color:#2a2111; }
+.house-route__grid .is-wet { background:repeating-linear-gradient(135deg,#243d45 0 12px,#1d3339 12px 24px); color:#92b2b9; }
+.house-route__grid strong { font:900 14px var(--font-mono); position:relative; z-index:1; background:inherit; padding:0 5px; }
+.house-route__grid small { font:700 8px var(--font-mono); z-index:1; }
+.house-route__grid svg { position:absolute; width:100%; height:100%; pointer-events:none; }
+@media(max-width:767px) {
+ .house-puzzle .story-puzzle-main { grid-template-columns:1fr; gap:18px; }
+ .house-puzzle .story-puzzle-sidebar { padding:0; }
+ .house-puzzle .story-puzzle-item { gap:10px; padding:10px 8px; }
+ .house-puzzle .story-puzzle-item-content strong { font-size:12px; }
+ .house-puzzle .story-puzzle-item-content span { font-size:13px; }
+ .house-puzzle .story-puzzle-header p { font-size:14px; }
+ .house-puzzle-prop { padding:8px 14px; gap:12px; }
+ .house-puzzle-prop img { width:90px; height:90px; }
+ .house-puzzle-prop strong { font-size:12px; }
+ .house-puzzle-prop p { font-size:12px; }
+ .house-booths { padding:10px; }
+ .house-booths > div { gap:4px; }
+ .house-booths__seat img { height:88px; }
+ .house-booths__seat span { font-size:8px; min-height:38px; }
+ .house-pass { padding:10px; }
+ .house-pass__timeline { overflow-x:auto; padding-bottom:7px; }
+ .house-pass__timeline > div { padding:10px 6px; min-width:76px; flex-shrink:0; }
+ .house-pass__timeline strong,.house-pass__timeline span { font-size:10px; }
+ .house-route figcaption { font-size:8px; letter-spacing:0; }
+ .house-movie footer { align-items:stretch; flex-direction:column; }
+ .house-movie footer p { font-size:9px; text-align:center; }
+ .house-movie header button { font-size:11px; padding:8px; }
+}
+@media(prefers-reduced-motion:reduce) { .house-puzzle *, .house-atlas * { scroll-behavior:auto!important; transition:none!important; } }

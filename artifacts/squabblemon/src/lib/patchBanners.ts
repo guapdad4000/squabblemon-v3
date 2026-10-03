@@ -3,6 +3,11 @@
  * enough: the expected original character art ID must also still be present.
  */
 export const PATCH_BANNERS = {
+  '1.9': {
+    artCardId: 'squabble-house-manager',
+    path: 'assets/events/last-waffle-patch-1-9.webp',
+    alt: 'The Last Waffle: Squabble House manager, Blue and Red rivals around the final waffle',
+  },
   '1.7': {
     artCardId: 'triple-og-blue',
     path: 'assets/events/triple-og-patch-1-7.webp',

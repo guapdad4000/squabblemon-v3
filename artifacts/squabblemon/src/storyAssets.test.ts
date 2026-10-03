@@ -68,7 +68,7 @@ test("every new chapter's rendered background, portrait, puzzle and poster exist
 });
 test('authored environments cover every new story scene with all 38 supplied locations', async () => {
   const environments = new Set<string>();
-  for (const chapter of storyContent.chapters.filter(chapter => chapter.order >= 9)) {
+  for (const chapter of storyContent.chapters.filter(chapter => chapter.order >= 9 && chapter.order < 30)) {
     assert.match(chapter.mapAssetId, /^assets\/story\/environments\/backgrounds\//);
     for (const node of chapter.nodes) {
       const asset = node.cinematic.environmentAssetId;

@@ -115,6 +115,23 @@ export const storySeasons: readonly StorySeasonDefinition[] = [
     chapterIds: ["homeless-a-place-to-return"],
     posterAssetId: "assets/cosmetics/homeless-guy/deck-cover-v3.webp",
   },
+  {
+    id: "special-squabble-house",
+    kind: "special",
+    title: "The Last Waffle",
+    subtitle: "A Squabble House Movie",
+    description:
+      "One missing waffle, two rival crews, and a night shift that throws hands. Watch six film chapters, solve the House puzzles, and earn the server, cook, Janitor, and Manager for your collection.",
+    chapterIds: [
+      "squabble-house-last-waffle",
+      "squabble-house-receipts",
+      "squabble-house-family-discount",
+      "squabble-house-hands-on-the-clock",
+      "squabble-house-wet-floor",
+      "squabble-house-real-thief",
+    ],
+    posterAssetId: "assets/story/posters/last-waffle.webp",
+  },
 ];
 
 export const getStorySeason = (id: string) =>

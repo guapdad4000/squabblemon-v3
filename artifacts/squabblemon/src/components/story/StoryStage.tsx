@@ -279,6 +279,8 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   };
   const node = getStoryNode(nodeId);
   const chapter = storyContent.chapters.find((item) => item.nodes.some((entry) => entry.id === nodeId));
+  const houseScene = chapter?.id.startsWith('squabble-house-') ?? false;
+  const displayChapter = houseScene ? storyContent.chapters.filter(item => item.id.startsWith('squabble-house-')).findIndex(item => item.id === chapter?.id) + 1 : chapter?.order ?? 1;
   const scene = resolveStoryStage(nodeId, node, chapter);
   const lines = node?.kind === 'battle' ? (section === 'post' ? node.postDialogue : node.preDialogue) : node?.scenes ?? [];
   // Only show people who have entered; the ceremony reveal stays a surprise.
@@ -288,7 +290,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
   const shouting = /[A-Z]{4,}|!/.test(fullText);
   const prop = nodeId === 'welcome-to-the-block' ? 'vip' : nodeId === 'blue-side-pressure' ? 'power' : nodeId === 'receipts-on-camera' ? 'receipt' : nodeId === 'snitch-at-the-corner' ? 'live' : nodeId === 'cracked-head-takes-the-block' && section === 'pre' && position <= 2 ? 'battery' : null;
   return (
-    <section className={`story-stage ${scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
+    <section className={`story-stage ${houseScene ? 'story-stage--house ' : ''}${houseScene || scene.backdropAssetId.includes('/story/environments/') ? 'story-stage--environment' : ''} ${still ? 'story-stage--still' : ''} ${dramatic ? 'story-stage--dramatic' : ''}`} aria-label={`${scene.place} — ${section === 'post' ? 'After the fight' : chapter?.title ?? 'Story'}`} onClick={advanceFromSurface}>
       <div className="story-stage__world" style={{ backgroundImage: `url("${getAssetUrl(scene.backdropAssetId)}")` }} />
       <img className="story-stage__beam" src={getAssetUrl('brand/story-cinematic/projector-beam.jpg')} alt="" aria-hidden="true" />
       <StoryEnvironmentProp background={scene.backdropAssetId} />
@@ -296,7 +298,7 @@ export function StoryStage({ nodeId, section, line, position, total, pending, er
       <div className="story-stage__dust" aria-hidden="true" />
       <header className="story-stage__header">
         <button onClick={isolate(onClose)} type="button">← Back</button>
-        <span>Squabblemon <i> / </i> Chapter {String(chapter?.order ?? 1).padStart(2, '0')}</span>
+        <span>Squabblemon <i> / </i> Chapter {String(displayChapter).padStart(2, '0')}</span>
         <button onClick={isolate(() => setStill(!still))} aria-pressed={still} type="button">{still ? 'Motion off' : 'Motion on'}</button>
       </header>
       <div className="story-stage__location"><span>{chapter?.title ?? 'BLOCK PARTY OPEN'}</span><h2>{scene.place}</h2><p>{scene.caption}</p></div>

@@ -17,7 +17,7 @@ try {
     page.on("pageerror", (error) => errors.push(`${name}: ${error.message}`));
     await page.goto(origin + "/e2e/season-theater.fixture.html");
     await page.locator(".cinema-poster").first().waitFor();
-    assert.equal(await page.locator(".cinema-poster").count(), 8);
+    assert.equal(await page.locator(".cinema-poster").count(), 9);
     await page.screenshot({ path: `screenshots/release/stories-${name}.png` });
     const node = storyContent.chapters
       .flatMap((chapter) => chapter.nodes)
