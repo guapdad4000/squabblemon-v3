@@ -170,3 +170,29 @@ test('Blood base buffs consume cover and bring the three-Hands dog to its OG', a
   await expect(state).toHaveAttribute('data-rival-modifier', '-1');
   await expect(page.locator('[data-card-zone="board"][data-card-id="cane-corso-red"]')).toBeVisible();
 });
+
+test('Combo base buffs show three-Motion Techbro and three-Hands Streamer', async ({ page }) => {
+  await page.goto(appPath('/e2e/crew-balance.fixture.html?mode=combo-base'));
+  const tech = page.locator('[data-card-zone="hand"][data-card-id="techbro-rich"]');
+  await expect(tech).toHaveAttribute('data-card-cost', '3');
+  await expect(tech).toHaveAttribute('data-card-power', '4');
+  await expect(page.locator('[data-card-zone="hand"][data-card-id="live-streamer"]')).toHaveAttribute('data-card-power', '3');
+  await playCard(page, 'techbro-rich', 2);
+  await expect(page.getByTestId('crew-balance-state')).toHaveAttribute('data-player-motion', '2');
+  await playCard(page, 'live-streamer', 1);
+  await expect(page.getByTestId('crew-balance-state')).toHaveAttribute('data-player-motion', '0');
+  await expect(page.locator('[data-card-zone="board"][data-card-id="techbro-rich"]')).toBeVisible();
+  await expect(page.locator('[data-card-zone="board"][data-card-id="live-streamer"]')).toBeVisible();
+});
+
+test('Combo base buffs reward both remote districts with Gamer City Tour', async ({ page }) => {
+  await page.goto(appPath('/e2e/crew-balance.fixture.html?mode=combo-tour'));
+  await playCard(page, 'gamer', 1);
+  const state = page.getByTestId('crew-balance-state');
+  await expect(state).toHaveAttribute('data-tour-left', '2');
+  await expect(state).toHaveAttribute('data-tour-right', '2');
+  const gamer = page.locator('[data-card-zone="board"][data-card-id="gamer"]');
+  await expect(gamer).toBeVisible();
+  await gamer.click();
+  await expect(page.getByRole('dialog')).toContainText('each other district +2 Hands');
+});

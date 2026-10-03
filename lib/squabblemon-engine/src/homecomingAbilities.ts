@@ -25,11 +25,11 @@ export function homecomingReveal(m: Match, s: CardInstance, t: HomecomingTools, 
     const target=strongest(crew(m).filter(c => c.owner!==s.owner && c.lane===lane),t);
     if (target) {
       targets.push(target.instanceId);
-      m=t.hit(m,s,target,3,'Wheel & Come Again: opening shot, -3 Hands.');
+      m=t.hit(m,s,target,2,'Wheel & Come Again: opening shot, -2 Hands.');
       const hit=find(m,target.instanceId);
       success=!hit || hit.powerModifier<target.powerModifier;
     }
-    note='Wheel & Come Again: opening shot, -3 Hands. Up to two cross-district encores for -2 Hands, once per round.';
+    note='Wheel & Come Again: opening shot, -2 Hands. Up to two cross-district encores for -1 Hand, once per round.';
   } else if (s.cardId==='concrete') {
     for (const destination of lanes.filter(l=>l!==lane)) {
       if ((m.creativeMarks??[]).some(x=>x.kind==='home-parcel' && x.owner===s.owner && x.lane===destination && x.expires>=m.round)) continue;
@@ -119,7 +119,7 @@ export function homecomingAfterPlay(m: Match, placed: CardInstance, t: CreativeT
     const before=m;
     // Spend before the shot, including blocked shots; no repeat from echoes or reactions.
     m=t.modify(m,s.instanceId,c=>({...c,homecomingEncoreRound:m.round,homecomingEncores:(c.homecomingEncores??0)+1}));
-    m=t.hit(m,s,target,2,'Wheel & Come Again: encore shot, -2 Hands.');
+    m=t.hit(m,s,target,1,'Wheel & Come Again: encore shot, -1 Hand.');
     const hit=find(m,target.instanceId);
     if (!hit || hit.powerModifier<target.powerModifier) m=t.train(m,s.instanceId);
     m=t.event(before,m,s,[target.instanceId],'Wheel & Come Again: cross-district encore shot (two per match, once per round).');

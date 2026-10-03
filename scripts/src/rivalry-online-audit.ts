@@ -78,5 +78,5 @@ const summary = flows.map(flow => {
     tiers: Object.fromEntries(tiers.map(t => [t, score(group.filter(r => r.tier === t))])) };
 });
 mkdirSync(`${root}/scripts/results/crip-followup`, { recursive: true });
-writeFileSync(output, JSON.stringify({ hash, schedule: { seeds, flows, tiers }, runnerHash: runnerHash.digest('hex'), excludedCardIds: ['guap'], recipes: rivalryRecipes, summary, rows }, null, 2) + '\n', { flag: 'wx' });
+writeFileSync(output, JSON.stringify({ hash, schedule: { seeds, flows, tiers }, runnerHash: runnerHash.digest('hex'), excludedCardIds: ['guap', 'folks'], recipes: rivalryRecipes, summary, rows }, null, 2) + '\n', { flag: 'wx' });
 console.log(JSON.stringify(summary));

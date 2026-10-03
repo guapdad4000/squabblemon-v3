@@ -9,8 +9,9 @@ const { recommendedWorkshopCrews } = await import(workshopModuleUrl) as {
   recommendedWorkshopCrews: Record<'cellblock' | 'mushroom', readonly string[]>;
 };
 
-export const excludedRankingCardIds = ['guap'] as const;
+export const excludedRankingCardIds = ['guap', 'folks'] as const;
 export const guapRankingReplacement = 'redneck-evil';
+export const folksRankingReplacement = 'redside5';
 
 /** Authored recipes and established comparison builds, not arbitrary card combinations. */
 export function allRankingDecks(): BalanceDeck[] {
@@ -47,7 +48,7 @@ export function allRankingDecks(): BalanceDeck[] {
   const result = [...unique.values()].map(deck => ({
     ...deck,
     name: deck.id === 'focus-fire-guap' ? 'Fire Pressure' : deck.name,
-    cardIds: deck.cardIds.map(id => id === 'guap' ? guapRankingReplacement : id),
+    cardIds: deck.cardIds.map(id => id === 'guap' ? guapRankingReplacement : id === 'folks' ? folksRankingReplacement : id),
   }));
   for (const deck of result) {
     assert.equal(deck.cardIds.length, 10);

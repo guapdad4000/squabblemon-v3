@@ -19,7 +19,7 @@ const hash = sourceHash();
 const runnerHash = createHash('sha256').update(readFileSync(new URL(import.meta.url)))
   .update(readFileSync(new URL('./rivalry-audit-policies.ts', import.meta.url))).digest('hex');
 const decks = allRankingDecks();
-for (const deck of decks) assert(!deck.cardIds.includes('guap'), `${deck.id}: forbidden GUAP`);
+for (const deck of decks) assert(!deck.cardIds.some(id => ['guap', 'folks'].includes(id)), `${deck.id}: forbidden GUAP`);
 const blue = decks.find(deck => deck.id === 'focused-blue-set')!;
 const red = decks.find(deck => deck.id === 'focused-red-set')!;
 const crews = (mode === 'field' || mode === 'outliers') ? [blue, red] : [blue];
@@ -82,6 +82,6 @@ const summary = crews.map(crew => {
     opponents: Object.fromEntries([...new Set(group.map(row => row.opponent))].map(o => [o, score(group.filter(row => row.opponent === o))])) };
 });
 mkdirSync(`${root}/scripts/results/crip-followup`, { recursive: true });
-writeFileSync(output, JSON.stringify({ mode, hash, runnerHash, version: CARD_BALANCE_VERSION, excludedCardIds: ['guap'],
+writeFileSync(output, JSON.stringify({ mode, hash, runnerHash, version: CARD_BALANCE_VERSION, excludedCardIds: ['guap', 'folks'],
   schedule: { seeds, rotations, tiers, policies: policyNames, seats: ['a-player', 'b-player'] }, decks, summary, rows }, null, 2) + '\n', { flag: 'wx' });
 console.log(JSON.stringify(summary));

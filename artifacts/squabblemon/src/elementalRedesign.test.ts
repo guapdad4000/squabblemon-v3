@@ -134,8 +134,8 @@ for (const owner of ['player', 'cpu'] as const) {
     const ordinary = playCard(ordinaryToken, owner, nextCard.instanceId, 1);
     assert.equal(find(ordinary, nextCard).powerModifier, 0, 'unrelated another-district discounts do not inherit Livewire’s reward');
   });
-  test(`Live Streamer is 2/2 and keeps its two-cheap-play cap for ${owner}`, () => {
-    assert.equal(cards.streamer.power, 2);
+  test(`Live Streamer is 2/3 and keeps its two-cheap-play cap for ${owner}`, () => {
+    assert.equal(cards.streamer.power, 3);
     let m = cast(blank(), 'streamer', owner).after;
     const first = cast(m, 'cornball', owner);
     const second = cast(first.after, 'cornball', owner);

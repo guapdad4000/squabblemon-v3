@@ -1174,7 +1174,7 @@ export function createDefaultBalanceDecks(): BalanceDeck[] {
     balanceDeck('focus-wave7-tempo', 'Wave 7 Tempo', ['tayaty', 'youngbull', 'fein', 'redpill', 'simmy', 'foodz']),
     balanceDeck('focus-air-bond', 'Air Bond', ['honestthot', 'ashlee', 'captainjigga', 'roaster', 'bikelife', 'vibe']),
     balanceDeck('focus-late-scaling', 'Late Scaling', ['alchy', 'icecream', 'waterboy', 'laundry', 'stonersr', 'foodz']),
-    balanceDeck('focus-counterplay', 'Counterplay', ['counter', 'stud', 'pinaynurse', 'wifey', 'rastamon', 'gothkid']),
+    balanceDeck('focus-counterplay', 'Counterplay — Legacy Comparison', ['counter', 'stud', 'pinaynurse', 'wifey', 'rastamon', 'gothkid']),
     balanceDeck('focus-earth-tax', 'Earth Tax and Finishers', ['landlord', 'bigzoey', 'stud', 'torta', 'concrete', 'mansamusa', 'johnhenry', 'partytitan', 'asphaltapostle', 'failedathlete']),
     balanceDeck('focus-detective', 'Sherlock and Watson', ['sherlock', 'watson', 'crossingguard', 'nightmedic', 'wifey', 'counter', 'oz', 'rastamon', 'bustdown', 'tinman']),
     balanceDeck('focus-wiz', 'The Wiz', ['dorothy', 'scarecrow', 'tinman', 'oz', 'lion', 'passportbro', 'break', 'bboy', 'wickedwitch', 'flyingmonkeys']),

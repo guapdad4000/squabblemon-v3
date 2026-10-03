@@ -51,14 +51,14 @@ function cover(m: Match, c: CardInstance) {
 }
 const traps = (m: Match, kind: string) => (m.districtTraps ?? []).filter(t => t.kind === kind);
 
-test('crew parity rules 44 preserves other stats outside approved Ganger Blue and Corso buffs', () => {
-  assert.equal(CARD_BALANCE_VERSION, 44);
-  assert.equal(ONLINE_RULES_VERSION, 44);
+test('crew parity rules 45 preserves other stats outside approved rivalry and Combo buffs', () => {
+  assert.equal(CARD_BALANCE_VERSION, 46);
+  assert.equal(ONLINE_RULES_VERSION, 46);
   assert.equal(frozen.balanceVersion, 35);
   for (const [id, old] of Object.entries(frozen.cards) as [string, { cost: number; power: number }][]) {
-    const discounted: Record<string, number> = { 'ganger-blue': 2 };
+    const discounted: Record<string, number> = { 'ganger-blue': 2, 'techbro': 3 };
     assert.equal(cards[id].cost, discounted[id] ?? old.cost, `${id} Motion`);
-    assert.equal(cards[id].power, id === 'cane-corso-red' ? 3 : old.power, `${id} printed Hands`);
+    assert.equal(cards[id].power, id === 'techbro' ? 4 : ['cane-corso-red', 'streamer'].includes(id) ? 3 : old.power, `${id} printed Hands`);
   }
 });
 
@@ -424,7 +424,7 @@ test('Concrete remote parcels cleanse, give Earth+2/others+1, and stay one-use/e
   }
 });
 
-test('Shotta opening shot is3; encores stay2, max two per match and one per round, blocked shots still spend', () => {
+test('Shotta opens for 2 and encores for 1, max two encores per match and one per round, blocked shots still spend', () => {
   for (const owner of owners) for (const blocked of [false, true]) {
     const m = blank(), foe = unit('techbro', enemyOf(owner), 0);
     foe.powerModifier = 20;
@@ -432,15 +432,15 @@ test('Shotta opening shot is3; encores stay2, max two per match and one per roun
     if (blocked) cover(m, remote);
     m.boards = [[foe], [remote], []];
     const shot = cast(m, 'counter', owner);
-    assert.equal(find(shot.after, foe).powerModifier, 17);
+    assert.equal(find(shot.after, foe).powerModifier, 18);
     const first = cast(shot.after, 'plug', owner, 1).after;
-    assert.equal(find(first, remote).powerModifier, blocked ? 20 : 18);
+    assert.equal(find(first, remote).powerModifier, blocked ? 20 : 19);
     assert.equal(find(first, shot.source).homecomingEncores, 1);
     const sameRound = cast(first, 'plug', owner, 1).after;
     assert.equal(find(sameRound, shot.source).homecomingEncores, 1);
     const second = cast(advance(sameRound), 'plug', owner, 1).after;
     assert.equal(find(second, shot.source).homecomingEncores, 2);
-    assert.equal(find(second, remote).powerModifier, blocked ? 18 : 16, 'Protection blocked/spent on first encore only');
+    assert.equal(find(second, remote).powerModifier, blocked ? 19 : 18, 'Protection blocked/spent on first encore only');
     const capped = cast(advance(second), 'plug', owner, 1).after;
     assert.equal(find(capped, shot.source).homecomingEncores, 2);
   }

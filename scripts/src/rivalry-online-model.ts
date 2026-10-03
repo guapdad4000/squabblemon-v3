@@ -7,16 +7,16 @@ import { createOnlineRoom, joinOnlineRoom, applyOnlineCommand, type OnlineRoom, 
 
 export const rivalryRecipes = {
   blue: ['triple-og-blue', 'look-out', 'blueside1', 'ganger-blue', 'blue-nose-pit', 'initiation', 'waterboy', 'alchy', 'cognac', 'bustdown'],
-  red: ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'folks', 'cognac', 'bustdown'],
+  red: ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'redside5', 'cognac', 'bustdown'],
 };
-export type RivalrySettings = { first: 'blue' | 'red'; tier: number; seed: string; openingSeat?: Owner };
+export type RivalrySettings = { first: 'blue' | 'red'; tier: number; seed: string; openingSeat?: Owner; recipes?: { blue: readonly string[]; red: readonly string[] } };
 export type RivalryCommand = { kind: 'play'; owner: Owner; id: string; lane: Lane; squabble: boolean } | { kind: 'pass'; owner: Owner };
 /** In-memory local fixture only. No room is published or network request made. */
 export function createRivalryRoom(settings: RivalrySettings): OnlineRoom {
   const other = settings.first === 'blue' ? 'red' : 'blue';
-  const order = (side: 'blue' | 'red') => seededDeckRotation(rivalryRecipes[side], `${settings.seed}:${side}`, 0);
+  const order = (side: 'blue' | 'red') => seededDeckRotation((settings.recipes ?? rivalryRecipes)[side], `${settings.seed}:${side}`, 0);
   const p = order(settings.first), c = order(other);
-  if ([...p, ...c].includes('guap')) throw new Error('GUAP is excluded');
+  if ([...p, ...c].some(id => ['guap', 'folks'].includes(id))) throw new Error('GUAP and FOLKS are excluded');
   const member = (side: 'blue' | 'red', cards: string[]): OnlineMember => ({ userId: side, name: side,
     ready: false, deck: { id: side, name: side, hero: cards[0], cards } });
   let room = createOnlineRoom(member(settings.first, p), settings.openingSeat ?? 'player', 0);

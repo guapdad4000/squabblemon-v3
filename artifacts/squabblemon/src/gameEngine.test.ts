@@ -412,10 +412,10 @@ test('movement and engine cards keep their persistent board changes', () => {
   combo = { ...combo, playerMotion: 10, playerHand: [gamer], boards: [[], [remotePlug], []] };
   combo = playCard(combo, 'player', gamer.instanceId, 0);
   assert.equal(combo.boards[0].find(c => c.instanceId === gamer.instanceId)?.powerModifier, 0);
-  assert.equal(combo.boards[1].find(c => c.instanceId === remotePlug.instanceId)?.powerModifier, 1);
+  assert.equal(combo.boards[1].find(c => c.instanceId === remotePlug.instanceId)?.powerModifier, 2);
 
   const flexed = playOne('techbro', m => ({ ...m, playerMotion: 6, boards: [[streamer], [], []] }));
-  assert.equal(flexed.playerMotion, 4);
+  assert.equal(flexed.playerMotion, 5);
   assert.equal(flexed.boards[0].find(c => c.cardId === 'techbro')?.powerModifier, 0);
 });
 

@@ -260,7 +260,7 @@ export function applyCreativeCardKits(cards: Record<string, Card>): void {
   }
   // These existing IDs use the homecoming runtime, not creative reveal or upgrades.
   cards.counter.effect =
-    "On Reveal: Hit the strongest enemy here for 3. Ongoing: After you play another character in a different district, fire 2 at its strongest enemy. Two encores per match, at most one per round.";
+    "On Reveal: Hit the strongest enemy here for 2. Ongoing: After you play another character in a different district, fire 1 at its strongest enemy. Two encores per match, at most one per round.";
   cards.concrete.effect =
     "On Reveal: Leave a care package in each other district through next round. The next ally played or moved there gains +1 Hand (+2 if Earth) and is cleansed. One package per district per side.";
 }

@@ -3,6 +3,16 @@ import test from 'node:test';
 import { recommendedWorkshopCrews, replaceDeckCard, summarizeDeckTest, workshopSuggestions } from './deckWorkshop';
 import { ROOKIE_CORE_IDS, ROOKIE_MENTOR_CORE_IDS, LATER_DROP_STARTER_IDS, STARTER_STREET_REPLACEMENTS, starterStreetCrew, catalogCardById, ROOKIE_FOUNDATION_IDS, catalogIdsToEngineIds, engineIdsToCatalogIds, decks } from '../data';
 import { createMatchFromEngineCards, pass, playCard, revealCpu, nextRound, verifyMatchTranscript } from '../gameEngine';
+import { createDefaultBalanceDecks } from '@workspace/squabblemon-engine/balanceLab';
+
+test('Counterplay audit distinguishes the legacy shell from the recommended practice crew', () => {
+  const audit = createDefaultBalanceDecks();
+  const legacy = audit.find(deck => deck.id === 'focus-counterplay')!;
+  const recommended = audit.find(deck => deck.id === 'focus-counterplay-coherent')!;
+  assert.match(legacy.name, /Legacy Comparison/);
+  assert.deepEqual(recommended.cardIds, recommendedWorkshopCrews.counterplay);
+  assert.notDeepEqual(legacy.cardIds, recommended.cardIds);
+});
 
 test('a full mixed deck keeps the replaced slot and moves its cover without duplicates', () => {
   const original = { name: 'Mine', cardIds: [...ROOKIE_CORE_IDS], heroCardId: 'rastamon', recipeId: null };
@@ -82,7 +92,7 @@ test('revised workshop copy explains the dependable setup and bounded payoff', (
   assert.match(detail('demario'), /Normal or Powered Luigion consumes it once for \+2/);
   assert.match(detail('demario'), /SQUABBLE is optional for the powered jump/i);
   assert.doesNotMatch(detail('demario'), /adds only the powered jump/i);
-  assert.match(detail('counter'), /two encore shots, once per round/i);
+  assert.match(detail('counter'), /two 1-Hand encore shots, once per round/i);
   assert.match(detail('counter'), /Gamer still rewards new Silence and Weaken/i);
   assert.doesNotMatch(detail('counter'), /Closet Nerd (?:costs|is) 3/i);
 });

@@ -15,7 +15,7 @@ test('replacements retain collection, variant, training and purchased cosmetic i
  assert.equal(catalogCardById.concrete.name, 'Balikbayan Box Bot');
  assert.equal(cards.counter.abilityUpgrades[0].id, 'counter:upgrade:1');
  assert.equal(cards.concrete.abilityUpgrades[0].id, 'concrete:upgrade:1');
- assert.match(cards.counter.effect, /strongest enemy here for 3/);
+ assert.match(cards.counter.effect, /strongest enemy here for 2/);
  assert.match(cards.concrete.effect, /\+2 if Earth/);
  assert(catalogCardById.counter.variantSlots.some(v => v.id === 'counter:chrome'));
  assert(styleSetFor('counter')!.stickers.every(s => s.image?.includes('characters/counter.webp')));
@@ -35,15 +35,15 @@ for (const owner of ['player', 'cpu'] as const) {
   const m=blank(), foe={...unit('og',enemy,0),basePower:10}, remote={...unit('hooper',enemy,1),basePower:20};
   m.boards=[[foe],[remote],[]];
   const {source,after}=cast(m,'counter',owner);
-   assert.equal(find(after,foe).powerModifier,-3);
+   assert.equal(find(after,foe).powerModifier,-2);
   let state=cast(after,'plug',owner,1).after;
-  assert.equal(find(state,remote).powerModifier,-2);
+  assert.equal(find(state,remote).powerModifier,-1);
   state=cast(state,'plug',owner,1).after;
-  assert.equal(find(state,remote).powerModifier,-2,'same round cannot fire again');
+  assert.equal(find(state,remote).powerModifier,-1,'same round cannot fire again');
   state=cast(end(state),'plug',owner,1).after;
-  assert.equal(find(state,remote).powerModifier,-4);
+  assert.equal(find(state,remote).powerModifier,-2);
   state=cast(end(state),'plug',owner,1).after;
-  assert.equal(find(state,remote).powerModifier,-4,'two encores per match');
+  assert.equal(find(state,remote).powerModifier,-2,'two encores per match');
   assert.equal(find(state,source).homecomingEncores,2);
  });
  test('Shotta blocked shots consume an encore; inactive and same-district plays do not shoot: '+owner,()=>{

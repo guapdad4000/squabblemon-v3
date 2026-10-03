@@ -262,15 +262,15 @@ for (const owner of ["player", "cpu"] as const) {
   });
   test(`${owner}: First Aid prevents lethal damage once without healing or consuming on friendly loss`, () => {
     let m = blank();
-    // Shotta now opens for 3: the kit prevents 2, leaving 1 real damage.
+    // Shotta opens for 2, so the one-use kit prevents the lethal hit.
     const target = { ...unit("cornball", owner, 0), basePower: 2 };
     m.boards = [[target], [], []];
     m = cast(m, "firstaid", owner).after;
     m = cast(m, "counter", enemy).after;
     assert(find(m, target));
-    assert.equal(find(m, target)?.powerModifier, -1);
+    assert.equal(find(m, target)?.powerModifier, 0);
     assert(!kinds(m).includes("kit"));
-    assert.equal(find(m, target)?.recoverableDamage ?? 0, 1);
+    assert.equal(find(m, target)?.recoverableDamage ?? 0, 0);
     m = cast(m, "counter", enemy).after;
     assert(!find(m, target));
   });

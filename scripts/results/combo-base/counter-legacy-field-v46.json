@@ -1,0 +1,1706 @@
+{
+  "hash": "3e441c28b7377f8e699a399d9afb37ea30293b2a9bdb0e81ddd1f9901de7d20c",
+  "excludedCardIds": [
+    "guap",
+    "folks"
+  ],
+  "tier": 0,
+  "combo": {
+    "id": "focus-counterplay",
+    "name": "Counterplay",
+    "cardIds": [
+      "counter",
+      "stud",
+      "pinaynurse",
+      "wifey",
+      "rastamon",
+      "gothkid",
+      "buspass",
+      "soulfood",
+      "cognac",
+      "bustdown"
+    ]
+  },
+  "rivals": [
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "gamer",
+        "techbro",
+        "bossbabe",
+        "wifey",
+        "buspass",
+        "stockz",
+        "sneaker"
+      ]
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "rastamon",
+        "gamer",
+        "stockz",
+        "wifey",
+        "buspass",
+        "buddy",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "cardIds": [
+        "batteryback",
+        "circuitcaptain",
+        "wiretap",
+        "livewire",
+        "stockz",
+        "bossbabe",
+        "plug",
+        "streamer",
+        "techbro",
+        "bikelife"
+      ]
+    },
+    {
+      "id": "focus-counterplay-coherent",
+      "name": "Counterplay — Dark Control",
+      "cardIds": [
+        "counter",
+        "gamer",
+        "gothkid",
+        "nerd",
+        "redpill",
+        "buddy",
+        "wifey",
+        "pinaynurse",
+        "plug",
+        "bustdown"
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "rival": "starter-combo",
+      "games": 48,
+      "score": 0.08333333333333333,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.0625
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.1875
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0
+        }
+      }
+    },
+    {
+      "rival": "starter-compound",
+      "games": 48,
+      "score": 0.2604166666666667,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.1875
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.59375
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0
+        }
+      }
+    },
+    {
+      "rival": "starter-voltage",
+      "games": 48,
+      "score": 0.2708333333333333,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.3125
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.375
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.125
+        }
+      }
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "games": 48,
+      "score": 0.19791666666666666,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.1875
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.28125
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.125
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "greedy",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "chain",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "focus-counterplay-coherent",
+      "policy": "paired-seeded",
+      "seed": "counter-study-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    }
+  ]
+}

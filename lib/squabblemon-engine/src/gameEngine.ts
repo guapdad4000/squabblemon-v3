@@ -3523,7 +3523,7 @@ function resolveAbilityBase(match: Match, source: CardInstance, { echoed = false
       const target = lowest(inLane(m, source.owner, targetLane));
       if (target) {
         targetIds.add(target.instanceId);
-        m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 1, lastEffectNote: 'City Tour: +1 Hand.' }));
+        m = modify(m, target.instanceId, c => ({ ...c, powerModifier: c.powerModifier + 2, lastEffectNote: 'City Tour: +2 Hands.' }));
         buffed++;
       }
     }

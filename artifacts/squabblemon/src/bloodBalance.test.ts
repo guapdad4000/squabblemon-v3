@@ -57,7 +57,7 @@ for (const owner of owners) for (const tier of [0, 1, 2, 3]) {
 import { decks } from './data';
 import { canAffordSelection, createMatchFromEngineCards, createDistrictSnapshot, pass, revealCpuTurn, verifyMatchTranscript, type PlayerMove } from './gameEngine';
 for (const tier of [0, 1, 2, 3]) test(`Blood crew actions replay exactly under authoritative rules (tier ${tier})`, () => {
-  const ids = ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'folks', 'cognac', 'bustdown'];
+  const ids = ['triple-og-red', 'block-spinner', 'redside1', 'ganger-red', 'cane-corso-red', 'initiation', 'redneck-evil', 'redside5', 'cognac', 'bustdown'];
   const opponent = decks.find(d => d.id === 'block')!;
   const snapshot = createAbilityUpgradeSnapshot(ids, opponent.cards, {
     player: Object.fromEntries(ids.map(id => [id, { xp: tier ? 4500 : 0, level: tier ? 10 : 1, moveTier: tier }])),

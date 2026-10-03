@@ -33,7 +33,7 @@ export const workshopSuggestions = [
   { cardId: 'bottle-girl', title: 'Chain Poison entries', detail: 'Bottle Girl rewards a later play and discounts your next Poison character. Follow with entry punishment from Cologne Criminal or Nail Tech.', testCrew: ['bottle-girl', 'colognecriminal', 'nail-tech', 'sneaker'] },
   { cardId: 'inmate-crafty', title: 'Inmates together, pressure wide', detail: 'Play another inmate or a real support card first, then follow with 2/3 Crafty for +2 Hands. Spread inmates so Boyfriend can give +2 locally and +2 across districts. Shotta and Roaster add pressure.', testCrew: catalogCrew(recommendedWorkshopCrews.cellblock) },
   { cardId: 'demario', title: 'Set up the Luigion jump', detail: 'Build Plant pressure around the 2/2 Demario and his local Mushroom. Keep Rooftop Gardener or Performative Male in hand to grow your other Plant characters. Normal or Powered Luigion consumes it once for +2; SQUABBLE is optional for the powered jump.', testCrew: catalogCrew(recommendedWorkshopCrews.mushroom) },
-  { cardId: 'counter', title: 'Spread the pressure', detail: 'Shotta opens with a 2-Hand shot. Follow with character plays in other districts to fire up to two encore shots, once per round. Gamer still rewards new Silence and Weaken effects.', testCrew: catalogCrew(recommendedWorkshopCrews.counterplay) },
+  { cardId: 'counter', title: 'Spread the pressure', detail: 'Shotta opens with a 2-Hand shot. Follow with character plays in other districts to fire up to two 1-Hand encore shots, once per round. Gamer still rewards new Silence and Weaken effects.', testCrew: catalogCrew(recommendedWorkshopCrews.counterplay) },
 ] as const;
 
 export function summarizeDeckTest(match: Match, cardId: string): string {

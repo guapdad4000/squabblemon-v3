@@ -1,0 +1,1704 @@
+{
+  "hash": "daa4bcb00549679ce5170563ed29916a8eed9c666b161ab8255758666f452b63",
+  "excludedCardIds": [
+    "guap",
+    "folks"
+  ],
+  "tier": 0,
+  "combo": {
+    "id": "starter-compound",
+    "name": "COMPOUND INTEREST",
+    "cardIds": [
+      "cornball",
+      "plug",
+      "streamer",
+      "rastamon",
+      "gamer",
+      "stockz",
+      "snow",
+      "buspass",
+      "buddy",
+      "cognac"
+    ]
+  },
+  "rivals": [
+    {
+      "id": "blue",
+      "cardIds": [
+        "triple-og-blue",
+        "look-out",
+        "blueside1",
+        "ganger-blue",
+        "blue-nose-pit",
+        "initiation",
+        "waterboy",
+        "alchy",
+        "cognac",
+        "bustdown"
+      ]
+    },
+    {
+      "id": "red",
+      "cardIds": [
+        "triple-og-red",
+        "block-spinner",
+        "redside1",
+        "ganger-red",
+        "cane-corso-red",
+        "initiation",
+        "redneck-evil",
+        "redside5",
+        "cognac",
+        "bustdown"
+      ]
+    },
+    {
+      "id": "starter-block",
+      "name": "THE BLOCK IS HOT",
+      "cardIds": [
+        "cornball",
+        "snow",
+        "roaster",
+        "rastamon",
+        "wifey",
+        "oink",
+        "baby",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-vibes",
+      "name": "GOOD VIBES ONLY",
+      "cardIds": [
+        "rastamon",
+        "wifey",
+        "snow",
+        "vibe",
+        "hooper",
+        "oink",
+        "plug",
+        "buspass",
+        "soulfood",
+        "cognac"
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "rival": "blue",
+      "games": 48,
+      "score": 0.6666666666666666,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.875
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.6875
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.4375
+        }
+      }
+    },
+    {
+      "rival": "red",
+      "games": 48,
+      "score": 0.2604166666666667,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.53125
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.25
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0
+        }
+      }
+    },
+    {
+      "rival": "starter-block",
+      "games": 48,
+      "score": 0.4583333333333333,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.3125
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.5
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.5625
+        }
+      }
+    },
+    {
+      "rival": "starter-vibes",
+      "games": 48,
+      "score": 0.5,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.5
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.375
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.625
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "blue",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "red",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "red",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-block",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "greedy",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "chain",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-vibes",
+      "policy": "paired-seeded",
+      "seed": "shotta2-acceptance-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    }
+  ]
+}

@@ -564,6 +564,7 @@ test('Janitor retains one shared hostile-effect reversal per district each round
   let match = blank();
   const janitor = unit('janitor', 'cpu', 1, 1);
   const first = unit('techbro', 'cpu', 1, 2);
+  first.basePower = 5; // Keep this reversal target stronger than Hooper regardless of printed balance.
   const second = unit('hooper', 'cpu', 1, 3);
   match = withBoard(match, janitor, first, second);
   match = cast(match, 'squabblehouse-security', 'player', 1);

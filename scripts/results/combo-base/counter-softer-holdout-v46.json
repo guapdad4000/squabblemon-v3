@@ -1,0 +1,1706 @@
+{
+  "hash": "2f5900607989f6379ffd5fea25f3958d9ea3dc22b32ae67a17179c19c8aa6245",
+  "excludedCardIds": [
+    "guap",
+    "folks"
+  ],
+  "tier": 0,
+  "combo": {
+    "id": "focus-counterplay-coherent",
+    "name": "Counterplay — Dark Control",
+    "cardIds": [
+      "counter",
+      "gamer",
+      "gothkid",
+      "nerd",
+      "stud",
+      "soulfood",
+      "wifey",
+      "pinaynurse",
+      "plug",
+      "bustdown"
+    ]
+  },
+  "rivals": [
+    {
+      "id": "starter-combo",
+      "name": "WHO YOU KNOW",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "gamer",
+        "techbro",
+        "bossbabe",
+        "wifey",
+        "buspass",
+        "stockz",
+        "sneaker"
+      ]
+    },
+    {
+      "id": "starter-compound",
+      "name": "COMPOUND INTEREST",
+      "cardIds": [
+        "cornball",
+        "plug",
+        "streamer",
+        "rastamon",
+        "gamer",
+        "stockz",
+        "wifey",
+        "buspass",
+        "buddy",
+        "cognac"
+      ]
+    },
+    {
+      "id": "starter-voltage",
+      "name": "VOLTAGE IN MOTION",
+      "cardIds": [
+        "batteryback",
+        "circuitcaptain",
+        "wiretap",
+        "livewire",
+        "stockz",
+        "bossbabe",
+        "plug",
+        "streamer",
+        "techbro",
+        "bikelife"
+      ]
+    },
+    {
+      "id": "element-fire",
+      "name": "Fire",
+      "cardIds": [
+        "redneck-evil",
+        "redside5",
+        "hooper",
+        "bbldemon",
+        "cornercoach",
+        "krump",
+        "og",
+        "baby",
+        "youngbull",
+        "kyle"
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "rival": "starter-combo",
+      "games": 48,
+      "score": 0.625,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.8125
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.6875
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.375
+        }
+      }
+    },
+    {
+      "rival": "starter-compound",
+      "games": 48,
+      "score": 0.7083333333333334,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.8125
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.8125
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0.5
+        }
+      }
+    },
+    {
+      "rival": "starter-voltage",
+      "games": 48,
+      "score": 0.4583333333333333,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 0.875
+        },
+        "chain": {
+          "games": 16,
+          "score": 0.5
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 0
+        }
+      }
+    },
+    {
+      "rival": "element-fire",
+      "games": 48,
+      "score": 1,
+      "policies": {
+        "greedy": {
+          "games": 16,
+          "score": 1
+        },
+        "chain": {
+          "games": 16,
+          "score": 1
+        },
+        "paired-seeded": {
+          "games": 16,
+          "score": 1
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-combo",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-compound",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0.5
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 0
+    },
+    {
+      "rival": "starter-voltage",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 0
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "greedy",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "chain",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-0",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-1",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-2",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "blue",
+      "openingSeat": "cpu",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "player",
+      "score": 1
+    },
+    {
+      "rival": "element-fire",
+      "policy": "paired-seeded",
+      "seed": "tune-holdout-20261003-3",
+      "first": "red",
+      "openingSeat": "cpu",
+      "score": 1
+    }
+  ]
+}

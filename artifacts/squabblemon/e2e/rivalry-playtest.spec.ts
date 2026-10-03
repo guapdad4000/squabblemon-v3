@@ -8,7 +8,9 @@ async function playFirstAvailable(page: Page) {
     const card = page.locator(`[data-card-zone="hand"][data-instance-id="${id}"]`);
     await card.click();
     for (const lane of [0, 1, 2]) {
-      await page.getByTestId(`lane-${lane}`).click();
+      const target = page.getByTestId(`lane-${lane}`);
+      if (!await target.isEnabled()) continue;
+      await target.click();
       const play = page.getByTestId('button-lock');
       if (await play.count() && await play.isEnabled()) { await play.click(); return true; }
     }
@@ -69,5 +71,45 @@ test('shared-screen game completes, exports a replay, and preserves draws on sea
   expect(swapped.match.playerCardIds).toEqual(complete.match.cpuCardIds);
   expect(swapped.match.cpuCardIds).toEqual(complete.match.playerCardIds);
   expect(swapped.commands).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+for (const matchup of [
+  { id: 'counterplay', firstCard: 'cornball', secondCard: 'counter' },
+  { id: 'compound', firstCard: 'cornball', secondCard: 'triple-og-blue' },
+] as const) test(`shared-screen ${matchup.id} base-level matchup replays with both seats`, async ({ page }) => {
+  test.setTimeout(180_000);
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/e2e/rivalry-playtest.fixture.html');
+  await page.getByLabel('Matchup').selectOption(matchup.id);
+  await page.getByLabel('Match seed').fill(`base-${matchup.id}-browser`);
+  for (const first of ['blue', 'red'] as const) {
+    await page.getByLabel('Player side').selectOption(first);
+    await page.getByRole('button', { name: 'Start game', exact: true }).click();
+    for (let turn = 0; turn < 12; turn++) {
+      const status = page.getByTestId('playtest-status');
+      await expect(status).toHaveAttribute('data-round', String(Math.floor(turn / 2) + 1));
+      if (await status.getAttribute('data-phase') === 'player') {
+        await playFirstAvailable(page);
+        await page.getByTestId('button-next-round').click();
+      } else {
+        const options = page.getByRole('region', { name: 'Second side controls' }).getByRole('button').filter({ hasText: 'Motion' });
+        if (await options.count()) await options.first().click();
+        await page.getByTestId('second-pass').click();
+      }
+    }
+    await expect(page.getByTestId('playtest-status')).toHaveAttribute('data-phase', 'complete');
+    const evidence = await exportGame(page);
+    expect(evidence.matchupId).toBe(matchup.id);
+    expect(evidence.settings.tier).toBe(0);
+    expect(evidence.completed).toBe(true);
+    expect([...evidence.match.playerCardIds, ...evidence.match.cpuCardIds]).not.toContain('guap');
+    expect([...evidence.match.playerCardIds, ...evidence.match.cpuCardIds]).not.toContain('folks');
+    expect(evidence.recipes.blue).toContain(matchup.firstCard);
+    expect(evidence.recipes.red).toContain(matchup.secondCard);
+    expect(evidence.commands.some((command: {kind: string; owner: string}) => command.kind === 'play' && command.owner === 'player')).toBe(true);
+    expect(evidence.commands.some((command: {kind: string; owner: string}) => command.kind === 'play' && command.owner === 'cpu')).toBe(true);
+  }
   expect(errors).toEqual([]);
 });

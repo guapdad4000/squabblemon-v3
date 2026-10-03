@@ -76,9 +76,26 @@ function bloodBuffMatch() {
   return match;
 }
 
+function comboBaseMatch() {
+  const match = createMatch('combo', 'block');
+  match.round = 3;
+  match.playerMotion = 3;
+  match.playerHand = ['techbro', 'streamer'].map((id, i) => createCardInstance(id, 'player', 'combo-base-ui', i));
+  match.cpuHand = [];
+  match.boards = [[], [], []];
+  return match;
+}
+
+function comboTourMatch() {
+  const match = comboBaseMatch();
+  match.playerHand = [createCardInstance('gamer', 'player', 'combo-tour-ui', 0)];
+  match.boards = [[onBoard('cornball', 'player', 0, 1)], [], [onBoard('plug', 'player', 2, 2)]];
+  return match;
+}
+
 function Fixture() {
   const mode = new URLSearchParams(location.search).get('mode') ?? 'detective';
-  const [live, setLive] = useState<Match>(() => mode === 'blood-buffs' ? bloodBuffMatch() : mode === 'crip' ? rivalryMatch(true) : mode === 'blood' ? rivalryMatch() : mode === 'counter' ? counterMatch() : detectiveMatch());
+  const [live, setLive] = useState<Match>(() => mode === 'combo-tour' ? comboTourMatch() : mode === 'combo-base' ? comboBaseMatch() : mode === 'blood-buffs' ? bloodBuffMatch() : mode === 'crip' ? rivalryMatch(true) : mode === 'blood' ? rivalryMatch() : mode === 'counter' ? counterMatch() : detectiveMatch());
   const [visual, setVisual] = useState<Match>(live);
   const [selected, setSelected] = useState<string | null>(null);
   const [lane, setLane] = useState<Lane | null>(null);
@@ -127,6 +144,9 @@ function Fixture() {
     <output
       data-testid="crew-balance-state"
       data-mode={mode}
+      data-player-motion={live.playerMotion}
+      data-tour-left={live.boards[0].find(card => card.cardId === 'cornball')?.powerModifier ?? ''}
+      data-tour-right={live.boards[2].find(card => card.cardId === 'plug')?.powerModifier ?? ''}
       data-ganger-power={live.boards.flat().find(card => card.cardId === 'ganger-red')?.powerModifier ?? ''}
       data-corso-lane={live.boards.flat().find(card => card.cardId === 'cane-corso-red')?.lane ?? ''}
       data-rival-protected={rival?.statuses.protected ? 'true' : 'false'}

@@ -271,7 +271,7 @@ for (const owner of ["player", "cpu"] as const) {
       {
         ...blank(),
         phase: owner === "player" ? "player" : "cpu-reveal",
-        [key]: 4,
+        [key]: 3,
         [hand]: [source],
       },
       owner,
@@ -666,8 +666,8 @@ for (const owner of ["player", "cpu"] as const) {
     assert(kinds(m).includes("jobs"));
     m = cast(m, "break", owner, 0).after;
     assert(!kinds(m).includes("jobs"));
-    assert.equal(find(m, a)?.powerModifier, 3);
-    assert.equal(find(m, b)?.powerModifier, 2);
+    assert.equal(find(m, a)?.powerModifier, 2);
+    assert.equal(find(m, b)?.powerModifier, 3);
     assert.equal(m[owner === "player" ? "playerMotion" : "cpuMotion"], 8);
   });
   test(`${owner}: Circuit Captain gives each distinct Electric worker +1, then +1 each once`, () => {
@@ -694,7 +694,7 @@ for (const owner of ["player", "cpu"] as const) {
     assert.equal(find(m, first.source)?.powerModifier, 2, "first worker totals +2");
     assert.equal(find(m, secondSource)?.powerModifier, 2, "second worker totals +2");
     assert(!kinds(m).includes("jobs"));
-    assert.equal(m[motionKey], 6, "the completion refund offsets the second worker's paid Motion");
+    assert.equal(m[motionKey], 7, "the completion refund and loan apply after the worker's 3 Motion cost");
 
     // The completed job is consumed across serialization; later Electric plays
     // and movement cannot re-award Hands or refund Motion.

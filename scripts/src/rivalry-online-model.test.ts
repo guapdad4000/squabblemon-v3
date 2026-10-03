@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRivalryRoom, applyRivalryCommand, rivalryRecipes } from './rivalry-online-model';
 import { allRankingDecks } from './all-decks-ranking-decks';
-for (const [side, id] of [['blue', 'focused-blue-set'], ['red', 'focused-red-set']] as const) test(`${side} playtest roster matches the audited roster and excludes GUAP`, () => {
+for (const [side, id] of [['blue', 'focused-blue-set'], ['red', 'focused-red-set']] as const) test(`${side} playtest roster matches the audited roster and excludes GUAP and FOLKS`, () => {
   assert.deepEqual(rivalryRecipes[side], allRankingDecks().find(deck => deck.id === id)!.cardIds);
-  assert(!rivalryRecipes[side].includes('guap'));
+  assert(!rivalryRecipes[side].some(id => ['guap', 'folks'].includes(id)));
 });
 for (const openingSeat of ['player', 'cpu'] as const) test(`playtest uses alternating multiplayer turns from ${openingSeat}`, () => {
   let room = createRivalryRoom({ first: 'blue', seed: 'online-model-test', tier: 2, openingSeat });
@@ -29,4 +29,10 @@ test('swapping seats retains deck-specific draws and requested intermediate upgr
   assert.deepEqual(a.cpuCardIds, b.playerCardIds);
   assert(a.abilityUpgradeSnapshot.player.every(card => card.moveTier === 2));
   assert(a.abilityUpgradeSnapshot.cpu.every(card => card.moveTier === 2));
+});
+
+for (const forbidden of ['guap', 'folks']) test('custom audit recipes reject ' + forbidden, () => {
+  const recipes = { blue: [...rivalryRecipes.blue], red: [...rivalryRecipes.red] };
+  recipes.red[7] = forbidden;
+  assert.throws(() => createRivalryRoom({ first: 'blue', tier: 0, seed: 'excluded', recipes }), /excluded/);
 });
